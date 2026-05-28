@@ -2,6 +2,8 @@ class Adm::DeficiencyReports::OfficersController < Adm::DeficiencyReports::BaseC
   include Pagy::Backend
 
   def index
+    authorize DeficiencyReport::Officer, policy_class: Adm::DeficiencyReports::OfficerPolicy
+
     @pagy, @officers = pagy(
       policy_scope(DeficiencyReport::Officer, policy_scope_class: Adm::DeficiencyReports::OfficerPolicy::Scope)
         .joins(:user)
@@ -39,5 +41,12 @@ class Adm::DeficiencyReports::OfficersController < Adm::DeficiencyReports::BaseC
 
     @officer.destroy!
     redirect_to adm_deficiency_reports_officers_path
+  end
+
+  def toggle_manage_all
+    @officer = DeficiencyReport::Officer.find(params[:id])
+    authorize @officer, :update?, policy_class: Adm::DeficiencyReports::OfficerPolicy
+
+    @officer.update!(manage_all: !@officer.manage_all)
   end
 end

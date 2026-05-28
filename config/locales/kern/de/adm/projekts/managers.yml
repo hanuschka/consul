@@ -19,7 +19,7 @@ de:
             Der „Admin"-Toggle in der Tabelle gewährt einem Projektmanager automatisch Zugriff auf alle
             Projekte der Plattform – ohne dass eine einzelne Zuweisung pro Projekt erforderlich ist.
         new:
-          title: Neuen Projektmanager hinzufügen
+          title: Neues Teammitglied hinzufügen
           search_label: Nutzer durchsuchen
           search_description: >
             Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern. Diese können Sie

@@ -1,5 +1,6 @@
 ProjektStudio.ContentBlock.Crud = {
   addContentBlockAfter: null,
+  addContentBlockAtTop: false,
 
   initialize() {
     const $document = $(document);
@@ -30,6 +31,7 @@ ProjektStudio.ContentBlock.Crud = {
     ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock);
 
     const updatedContent = ProjektStudio.utils.htmlToDomElement(templateHTML);
+    ProjektStudio.utils.removeFoundationIds(updatedContent);
     contentBlock.innerHTML = updatedContent.innerHTML;
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
 
@@ -69,8 +71,12 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   addContentBlock(previousContentBlockWrapper, contentBlockTemplate) {
-    // console.log(previousContentBlockWrapper)
-    const previousContentBlockId = previousContentBlockWrapper ? previousContentBlockWrapper.dataset.contentBlockId : null;
+    const isAtTop = this.addContentBlockAtTop;
+    this.addContentBlockAtTop = false;
+
+    const previousContentBlockId = (!isAtTop && previousContentBlockWrapper)
+      ? previousContentBlockWrapper.dataset.contentBlockId
+      : null;
     const draftContentBlockIndex = this.generateDraftIndex();
 
     ProjektStudio.ContentBlockTemplateSelector.closeDialog()
@@ -81,10 +87,21 @@ ProjektStudio.ContentBlock.Crud = {
     )
 
     const newContentBlockContainer = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
+    ProjektStudio.utils.removeFoundationIds(newContentBlockContainer);
 
     ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newContentBlockContainer);
 
-    if (previousContentBlockWrapper) {
+    if (isAtTop) {
+      const topSection = document.querySelector(".js-content-blocks-list .js-add-content-block-at-top");
+
+      if (topSection) {
+        topSection.after(newContentBlockContainer)
+      }
+      else {
+        $('.js-content-blocks-list').prepend(newContentBlockContainer)
+      }
+    }
+    else if (previousContentBlockWrapper) {
       const isFirstBlock = $(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0;
       previousContentBlockWrapper.after(newContentBlockContainer)
 
@@ -116,7 +133,7 @@ ProjektStudio.ContentBlock.Crud = {
     }
 
     $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
-    $(".js-add-first-content-block-wrapper").toggle(hasNoContentBlocks)
+    $(".js-add-content-block-at-top").toggle(!hasNoContentBlocks)
     $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
   },
 
@@ -185,11 +202,13 @@ ProjektStudio.ContentBlock.Crud = {
     const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
+    const sanitized = ProjektStudio.utils.sanitizeAdminHtml(newContent);
+
     const oldContent = contentBlock.dataset.previousContentBlockHtml
       ? contentBlock.dataset.previousContentBlockHtml
       : contentBlock.innerHTML.trim();
 
-    const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
+    const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(sanitized);
     const newContentTrimmed = updatedContentBlock.innerHTML.trim();
 
     if (resetFoundationState) {
@@ -214,6 +233,12 @@ ProjektStudio.ContentBlock.Crud = {
         html: updatedContentBlock.innerHTML
       }
     })
+      .then((response) => {
+        this.syncDomFromServer(contentBlock, response);
+        if (response && response.stripped) {
+          this.showSanitizationNotice();
+        }
+      })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -235,6 +260,20 @@ ProjektStudio.ContentBlock.Crud = {
 
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
+  },
+
+  syncDomFromServer(contentBlock, response) {
+    if (!response || typeof response.body !== "string") return
+
+    const currentContent = contentBlock.innerHTML.trim();
+    if (currentContent === response.body.trim()) return
+
+    contentBlock.innerHTML = response.body;
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+  },
+
+  showSanitizationNotice() {
+    alert("Hinweis: Einige unzulässige HTML-Inhalte (Skripte, Event-Handler oder unsichere Links) wurden beim Speichern entfernt.");
   },
 
   showDefaultContentNotification(wrapper) {

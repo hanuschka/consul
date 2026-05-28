@@ -2,7 +2,7 @@ class PollsController < ApplicationController
   include FeatureFlags
   include PollsHelper
 
-  feature_flag :polls
+  feature_flag :polls, only: :index
 
   before_action :load_poll, except: [:index]
   before_action :load_active_poll, only: :index

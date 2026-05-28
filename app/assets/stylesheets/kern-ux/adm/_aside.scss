@@ -1,9 +1,16 @@
-aside {
+#adm-sidebar {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - var(--kern-adm-header-height));
+  height: 100vh;
+  overflow-y: auto;
   padding: var(--kern-metric-space-default) var(--kern-metric-space-x-small) 0;
   background-color: var(--kern-custom-white);
+
+  @media (min-width: 992px) {
+    height: auto;
+    min-height: 100%;
+    overflow-y: visible;
+  }
 
   .adm-menu {
     flex: 1;
@@ -43,10 +50,8 @@ aside {
 }
 
 .adm-sidebar-toggle {
-  position: absolute;
-  top: var(--kern-metric-space-small);
-  right: var(--kern-metric-space-small);
-  z-index: 10;
+  position: relative;
+  z-index: 1001;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,4 +60,11 @@ aside {
   font-size: var(--kern-font-size-32);
   cursor: pointer;
   color: var(--kern-custom-white);
+
+  &--open {
+    position: fixed;
+    top: var(--kern-metric-space-small);
+    left: 290px;
+    color: var(--kern-color-layout-text-default);
+  }
 }

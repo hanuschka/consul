@@ -18,8 +18,6 @@
     <% end %>
     <%= yield :styles %>
 
-    <a href="#main-content" class="skip-link"><%= t("custom.accessibility.skip_links.skip_to_content") %></a>
-    <a href="#responsive-menu" class="skip-link"><%= t("custom.accessibility.skip_links.skip_to_navigation") %></a>
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
       <!--[if lt IE 9]>
@@ -47,10 +45,6 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
-    <% if (current_user&.administrator? || current_user&.projekt_manager?) && !embedded? %>
-      <%= render "layouts/admin_topbar" %>
-    <% end %>
-
     <% if Setting.new_design_enabled? && !embedded? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
@@ -77,11 +71,12 @@
     <% if current_user&.administrator? || current_user&.projekt_manager? %>
       <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
       <%= render Projekts::ContentBlockEditPopupsComponent.new %>
-      <%= render ProjektStudio::FileUploadDialogComponent.new %>
+      <%= render ProjektStudio::FileUploadDialogComponent.new(type: "picture") %>
+      <%= render ProjektStudio::FileUploadDialogComponent.new(type: "document") %>
     <% end %>
     <% if user_signed_in? %>
       <%
-        timeout_minutes = (Devise.timeout_in / 60).to_i
+        timeout_minutes = (User.timeout_in / 60).to_i
         warning_minutes = [5, timeout_minutes - 1].min
       %>
       <div

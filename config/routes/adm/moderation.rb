@@ -1,6 +1,17 @@
 namespace :adm do
   namespace :moderation do
-    root to: redirect("/adm/moderation/users")
+    root to: "home#show"
+
+    resource :settings, only: [:show], controller: "settings" do
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "moderation" } do
+      post :search, on: :collection
+    end
 
     resources :users, only: :index do
       member do

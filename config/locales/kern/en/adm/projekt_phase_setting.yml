@@ -1,0 +1,221 @@
+en:
+  projekt_phase_setting:
+    budget_phase:
+      feature:
+        general:
+          browse_mode_in_phase_footer: Browse mode
+          browse_mode_in_phase_footer_description: Enables browse mode in the footer area of the proposal view. Users can navigate through all proposals one by one without returning to the overview page. This improves the user experience when there are many entries. Disable this option if the overview page should be the preferred view.
+          browse_mode_in_phase_footer_by_default: Browse mode as default
+          browse_mode_in_phase_footer_by_default_description: Sets browse mode as the default view so users start directly in the single-item view and can browse through proposals when opening the page. Without this setting, users first see the list view. Enable this option when sequential display of proposals is preferred.
+        form:
+          allow_attached_image: Cover image
+          allow_attached_image_description: Lets users upload a cover image when creating a proposal. This image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if moderation should be reduced.
+          labels: Labels
+          labels_description: Enables the label feature for proposals, with which administrators can assign thematic categories or keywords. Labels are displayed as icons on proposals on the frontend and make filtering easier. Use this feature to better structure projects with many proposals.
+          sentiments: Sentiments
+          sentiments_description: Enables the sentiment feature, allowing users to express feelings or moods about a proposal. On the frontend, colored markers enable quick emotional categorization. Use this feature in projects where the emotional state of participants should also be captured.
+          show_map: Map
+          show_map_description: Shows an interactive map in the proposal view. Via the map users can grasp the spatial context of a proposal. On the frontend the map is embedded in the proposal detail view. Enable this option for projects with strong location relevance and disable it for purely thematic participation.
+          enable_geoman_controls_in_maps: Map drawing
+          enable_geoman_controls_in_maps_description: Extends the map function with drawing tools, allowing users to draw geometric shapes like rectangles, circles, and polygons on the map. Additional controls appear above the map on the frontend. Enable this option when users should mark areas or regions, not just single location pins.
+          allow_attached_documents: Documents
+          allow_attached_documents_description: Lets users attach documents like PDFs or images to a proposal. The files are displayed as download links in the detail view on the frontend. Enable this option when users should provide supplementary materials. Disable it to avoid moderation effort for file attachments.
+          enable_external_video: Video
+          enable_external_video_description: Lets users embed external videos from YouTube or Vimeo in a proposal. The video is displayed as an embedded player in the detail view on the frontend. Enable this option when multimedia content should enrich proposals. Disable it when only text-based contributions are desired.
+          show_implementation_option_fields: Implementation
+          show_implementation_option_fields_description: Adds a selection field for implementation type when creating a proposal. Users can indicate how they envision the realization of their proposal. On the frontend the field appears in the creation form and in the detail view. Enable this option for projects where the implementation path is relevant.
+          show_user_cost_estimate: Cost estimate
+          show_user_cost_estimate_description: Adds a selection field for a cost estimate when creating a proposal. Users can thus provide a rough cost estimate. On the frontend the field is shown in the form and in the detail view. Enable this option for participatory budgets where cost transparency plays an important role.
+          voice_assistant: Voice assistant
+          voice_assistant_description: "Enables an AI-supported voice assistant that helps users create proposals. A microphone icon appears in the creation form on the frontend, allowing users to dictate their proposal. Use this feature to increase accessibility and lower the input barrier for less technically inclined users."
+        resource:
+          users_can_create_investment_proposals: Submit proposals
+          users_can_create_investment_proposals_description: "Allows registered users to create their own proposals as part of the budget phase. A Create button is shown on the frontend opening the form. Disable this option if only proposals created by the administration should be available for voting and no submissions by users are desired."
+          show_report_button_in_sidebar: Report
+          show_report_button_in_sidebar_description: "Shows a Report button in the proposal sidebar, through which users can flag inappropriate content for moderation review. Enable this feature to support community-based content moderation. Disable it only if moderation is done exclusively by administrators."
+          show_follow_button_in_sidebar: Follow
+          show_follow_button_in_sidebar_description: Shows a Follow button in the proposal sidebar. Users receive notifications when changes are made to the proposal, e.g. new comments or status changes. Enable this feature to strengthen user engagement. Disable it when the notification system should not be used.
+          show_community_button_in_sidebar: Working groups
+          show_community_button_in_sidebar_description: Shows a Working group button in the proposal sidebar. Through working groups users can come together in teams and collaborate on proposals. A link to the respective working group is shown on the frontend. Enable this feature in collaborative projects with deeper cooperation.
+          show_social_share_buttons: Share
+          show_social_share_buttons_description: Shows social-share buttons in the investment sidebar. Enable this feature to extend the reach of individual proposals. Disable it when sharing via external platforms is not desired, e.g. for data-protection reasons.
+          show_related_content: Related content
+          show_related_content_description: Shows related content below a proposal, e.g. similar proposals or thematically linked debates. A dedicated section with links to relevant content appears on the frontend. Enable this feature to promote interconnection between posts and give users additional context.
+          show_comments: Comments
+          show_comments_description: Enables the comment feature for proposals in the budget phase. A comment area with reply function is displayed below each proposal on the frontend. Enable this feature to enable dialogue between users and administration. Disable it when no public discussion is desired.
+          conditional_balloting: Simplified voting
+          conditional_balloting_description: "Allows users to cast votes before completing verification. Votes are recorded but only counted after successful verification. The voting button is immediately visible on the frontend. Enable this option to lower the entry barrier and enable more participation, even when verification is pending."
+          show_video_as_link: Videos as link
+          show_video_as_link_description: Displays added videos not as an embedded player but as a clickable link. Instead of the video player, a text link to the external provider appears on the frontend. Enable this option to reduce page load time or when embedded videos should be avoided for data-protection reasons.
+          hide_ballots_count: Hide vote count during proposal voting
+          hide_ballots_count_description: Hides the current vote count during the ongoing voting phase, so users cannot see the current vote distribution. The counter is hidden on the frontend. Enable this option to prevent influence from visible results and ensure unbiased voting.
+      option:
+        resource:
+          max_submissions_per_user: Maximum submissions per user
+          max_submissions_per_user_description: Limits the number of investment proposals a single user may submit in this phase. Once the limit is reached, the Create button is disabled on the frontend and a notice appears. Empty or 0 means no limit.
+        form:
+          map_features_limit: Maximum map markers
+          map_features_limit_description: "Sets the maximum number of map markers a user can place on the map within a single session. Once the limit is reached, placing additional pins is blocked on the frontend. Use this value to prevent abuse and maintain map clarity."
+          description_max_length: Maximum description length
+          description_max_length_description: Defines the maximum number of characters a user can use for a proposal's description. A character counter on the frontend shows the remaining space. Set the value so proposals can be described in sufficient detail without becoming unwieldy.
+      selectable_setting:
+        general:
+          default_order: Default sort
+          default_order_description: "Defines the default order in which proposals are shown on the overview page. The chosen sort is applied when the page is first opened. Users can adjust the sort themselves on the frontend. Choose a sort that fits the project type, e.g. random for more fairness or by vote count for ranking."
+          default_order_options:
+            random: Random
+            total_votes: Current ranking
+            ballot_line_weight: Current vote distribution
+            newest: Newest first
+            comments_count: Most commented
+    formular_phase:
+      option:
+        general:
+          submissions_limit: Maximum submissions per user
+          submissions_limit_description: "Limits the number of form submissions a single user may submit. Once the limit is reached, the Submit button is disabled on the frontend and a notice appears. Use this value to prevent multiple submissions and ensure data quality. A value of one ensures each user can only submit once."
+          primary_formular_cutoff_date: End of phase 1
+          primary_formular_cutoff_date_description: "Sets the end date of the first form phase, after which no new submissions are possible. The form consists of two phases: In phase 1 users fill in the primary fields. After this date, the follow-up phase begins in which users can only fill in supplementary follow-up fields on existing submissions. If you don't plan follow-up fields, simply leave this field empty."
+    iframe_phase:
+      option:
+        general:
+          iframe_url: Iframe URL
+          iframe_url_description: "Defines the URL of the external website to be displayed inside an iframe in the phase. The content of the given URL is embedded on the frontend. Make sure the target page allows iframe embedding and is reachable via HTTPS. Use this feature to seamlessly embed external tools or content."
+          iframe_width: Iframe width
+          iframe_width_description: "Sets the width of the embedded iframe in pixels. This value determines how wide the iframe container is shown on the frontend. The recommended default is 1260 pixels, matching the full content width. Adjust the value if the embedded content requires a different width or a narrower layout is desired."
+          iframe_height: Iframe height
+          iframe_height_description: "Sets the height of the embedded iframe in pixels. This value determines how tall the iframe container is shown on the frontend. The recommended default is 1000 pixels, which is sufficient for most content. Adjust the value if the embedded content needs more or less vertical space."
+    question_phase:
+      feature:
+        general:
+          show_questions_list: Enable an overview of all questions
+          show_questions_list_description: Shows an overview page with all questions of the quick poll, where users can see all available questions at a glance and navigate directly. A list-based display of all questions appears on the frontend. Enable this option for extensive quick polls so users can grasp the totality of questions.
+    point_of_interest_phase:
+      feature:
+        general:
+          users_can_create_pins: Place pins
+          users_can_create_pins_description: "Allows registered users to place their own pins on the phase's map, thereby submitting location-based notes or suggestions. A Create button is shown on the map view on the frontend. Disable this option when pins should only be placed by the administration and no user input on the map is desired."
+      option:
+        form:
+          map_features_limit: Maximum map markers
+          map_features_limit_description: "Sets the maximum number of map markers a user can place on the map within a single session. Once the limit is reached, placing additional pins is blocked on the frontend. Use this value to prevent abuse and maintain map clarity."
+        general:
+          max_number_of_pins_per_user: Maximum pins per user
+          max_number_of_pins_per_user_description: Limits the total number of pins a single user may create across all sessions. Once the limit is reached, the Create button is disabled on the frontend and a notice appears. Use this value to ensure balanced participation and prevent individual users from dominating the map.
+    milestone_phase:
+      feature:
+        general:
+          newest_first: Show newest milestones first
+          newest_first_description: Sorts milestones in descending order so the newest milestone is shown first. Current progress thus appears at the top on the frontend. Enable this option when current project status should be emphasized. Disable it when chronological display is preferred.
+    event_phase:
+      feature:
+        general:
+          reverse_order_for_incoming_events: Reversed order for upcoming events
+          reverse_order_for_incoming_events_description: Reverses the sort order of events so the latest event is shown first. Upcoming events thus appear in reverse chronological order on the frontend. Enable this option when the latest event has the highest priority. Disable it for ascending sort.
+          show_on_home_page: Show event on homepage
+          show_on_home_page_description: "Controls whether the events of this phase are shown on the platform's homepage. When enabled, an events widget appears in the homepage area on the frontend. Enable this option to draw attention to upcoming events and increase visibility of the event."
+    newsfeed_phase:
+      option:
+        general:
+          newsfeed_id: Newsfeed ID
+          newsfeed_id_description: Defines the unique identifier of the news feed to be shown in this phase. The content of the assigned feed is automatically loaded and displayed on the frontend. Enter the ID provided by the feed provider here. Without a correct ID, no newsfeed content is shown on the frontend and the area remains empty.
+          newsfeed_type: Newsfeed type
+          newsfeed_type_description: "Sets the type of news feed, which determines the source from which news is loaded. On the frontend, the type influences the feed's display and loading behavior. Enter the type defined by the feed provider here. Without a correct type, the feed cannot be loaded correctly and no content is shown on the frontend."
+    proposal_phase:
+      feature:
+        general:
+          browse_mode_in_phase_footer: Browse mode
+          browse_mode_in_phase_footer_description: Enables browse mode in the footer area of the proposal view. Users can navigate through all proposals one by one without returning to the overview page. This improves the user experience when there are many entries. Disable this option if the overview page should be the preferred view.
+          browse_mode_in_phase_footer_by_default: Browse mode as default
+          browse_mode_in_phase_footer_by_default_description: Sets browse mode as the default view so users start directly in the single-item view and can browse through proposals when opening the page. Without this setting, users first see the list view. Enable this option when sequential display of proposals is preferred.
+          require_admin_acceptance: Admin approval
+          require_admin_acceptance_description: "Requires manual approval by an administrator before a user-created proposal becomes visible on the frontend. Without approval, the proposal remains in draft status. Enable this option for sensitive participation processes to ensure content quality."
+        form:
+          allow_attached_image: Cover image
+          allow_attached_image_description: "Lets users upload a cover image when creating a proposal. The image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if the moderation effort for image review should be reduced."
+          labels: Labels
+          labels_description: "Enables the label feature for proposals, with which administrators can assign thematic categories or keywords. Labels are displayed as icons on proposals on the frontend and make thematic filtering easier. Use this feature to better structure projects with many proposals."
+          sentiments: Sentiments
+          sentiments_description: "Enables the sentiment feature, allowing users to express their mood or stance on a proposal. On the frontend, colored markers enable quick emotional categorization. Use this feature in projects where, beyond content feedback, the emotional state of participants should also be captured."
+          show_map: Map
+          show_map_description: "Shows an interactive map in the proposal view, displaying the spatial context of a proposal. The map appears in the proposal detail view on the frontend. Enable this option for projects with strong location relevance, e.g. urban development or infrastructure."
+          enable_geoman_controls_in_maps: Map drawing
+          enable_geoman_controls_in_maps_description: Extends the map function with drawing tools, allowing users to draw geometric shapes like rectangles, circles, and polygons on the map. Additional controls appear above the map on the frontend. Enable this option when users should mark areas or regions, not just single location pins.
+          allow_attached_documents: Documents
+          allow_attached_documents_description: "Lets users attach documents like PDFs or images to a proposal. The attached files are displayed as download links in the detail view on the frontend. Enable this option when users should provide supplementary materials for their proposals."
+          enable_external_video: Video
+          enable_external_video_description: "Lets users embed external videos from YouTube or Vimeo in a proposal. The video is displayed as an embedded player in the detail view on the frontend. Enable this option when multimedia content should enrich proposals. Disable it when only text-based contributions are desired."
+          anonimize_authors: Anonymous contributions
+          anonimize_authors_description: "Hides author tiles and usernames on proposals on the frontend completely, so all contributions appear anonymous. Enable this option for sensitive topics to enable unbiased content evaluation of proposals. Disable it when transparency about authors is desired."
+          voice_assistant: Voice assistant
+          voice_assistant_description: "Enables an AI-supported dialogue assistant that guides users through the creation of a contribution in conversation. A chat interface appears on the frontend in which a bot asks targeted follow-up questions and formulates the contribution together with the user. This feature must be enabled in advance by demokratie.today."
+        resource:
+          show_video_as_link: Videos as link
+          show_video_as_link_description: Displays added videos not as an embedded player but as a clickable link. Instead of the video player, a text link to the external provider appears on the frontend. Enable this option to reduce page load time or when embedded videos should be avoided for data-protection reasons.
+          enable_proposal_notifications_tab: Notifications
+          enable_proposal_notifications_tab_description: Enables a notifications tab in a proposal's detail view, through which the author can send messages to all supporters of their proposal. An additional tab appears on the frontend in the proposal detail view. Enable this feature to promote communication between authors and supporters.
+          enable_proposal_milestones_tab: Milestones
+          enable_proposal_milestones_tab_description: Enables a milestones tab in a proposal's detail view, where the administration can document progress and implementation steps. An additional tab with the created milestones appears on the frontend. Use this feature to transparently present the processing state of proposals to users.
+          users_can_create_proposals: Submit proposals
+          users_can_create_proposals_description: "Allows registered users to create and submit their own proposals in the proposal phase. A Create button is shown on the frontend opening the form. Disable this option when only proposals created by the administration should be shown and no submissions by users are planned."
+          allow_voting: Support
+          allow_voting_description: "Enables the support function, with which users can support proposals with a positive vote. A Support button is shown on each proposal on the frontend. Enable this feature to let the community evaluate the relevance of proposals."
+          quorum_for_proposals: Quorum
+          quorum_for_proposals_description: "Enables a minimum quorum for proposals that must be reached for a proposal to be considered successful. A progress bar on the frontend visualizes the current status relative to the quorum. Enable this feature for projects where a minimum participation is required."
+          enable_up_and_down_voting: Thumbs up and down
+          enable_up_and_down_voting_description: "Enables the ability to rate proposals both positively and negatively. Two buttons with thumbs up and thumbs down are shown on the frontend. Enable this option when differentiated rating through approval and rejection is desired. Disable it when only positive support without rejection option is desired."
+          show_report_button_in_sidebar: Report
+          show_report_button_in_sidebar_description: "Shows a Report button in the proposal-view sidebar, through which users can flag inappropriate or rule-violating content for moderation review. Enable this feature to support community-based content moderation. Disable it only if moderation is done exclusively by administrators."
+          show_follow_button_in_proposal_sidebar: Follow
+          show_follow_button_in_proposal_sidebar_description: Shows a Follow button in a proposal's sidebar. Users receive notifications when changes are made to the proposal, e.g. new comments or status changes. Enable this feature to strengthen user engagement and keep participants informed about progress. Disable it as needed.
+          show_community_button_in_proposal_sidebar: Working groups
+          show_community_button_in_proposal_sidebar_description: Shows a Working group button in a proposal's sidebar, through which users can come together and collaborate on a proposal. A link to the respective working group is shown on the frontend. Enable this feature in collaborative projects where deeper cooperation is desired.
+          show_social_share_buttons: Share
+          show_social_share_buttons_description: Shows social-share buttons in a proposal's sidebar. Enable this feature to extend the reach of individual proposals. Disable it when sharing via external platforms is not desired, e.g. for data-protection reasons.
+          show_related_content: Related content
+          show_related_content_description: Shows related content below a proposal, e.g. thematically similar proposals or linked debates. A dedicated section with links to relevant posts appears on the frontend. Enable this feature to promote content interconnection between posts and give users additional context.
+          show_comments: Comments
+          show_comments_description: "Enables the comment feature for proposals in the proposal phase. A comment area with reply function is displayed below each proposal on the frontend. Enable this feature to enable dialogue between users and administration. Disable it for participation processes where no public discussion is planned."
+      option:
+        form:
+          map_features_limit: Maximum map markers
+          map_features_limit_description: "Sets the maximum number of map markers a user can place on the map within a single session. Once the limit is reached, placing additional pins is blocked on the frontend. Use this value to prevent abuse and maintain map clarity."
+          description_max_length: Maximum description length
+          description_max_length_description: Defines the maximum number of characters a user can use for a proposal's description. A character counter on the frontend shows the remaining space. Set the value so proposals can be formulated in sufficient detail without compromising readability with overly long texts.
+        resource:
+          votes_for_proposal_success: Votes for quorum
+          votes_for_proposal_success_description: "Sets the number of supports a proposal must reach to be considered successful. Once this value is reached, the proposal is marked as successful on the frontend and can no longer be supported. Set the value appropriate to the project scope and expected participant count to ensure realistic quorums."
+          max_submissions_per_user: Maximum submissions per user
+          max_submissions_per_user_description: Limits the number of proposals a single user may submit in this phase. Once the limit is reached, the Create button is disabled on the frontend and a notice appears. Empty or 0 means no limit.
+      selectable_setting:
+        general:
+          default_order: Default sort
+          default_order_description: Defines the default order in which proposals are shown on the overview page. The chosen sort is applied on first page load but can be changed by the user on the frontend. Choose a sort that fits the project type, e.g. random for more equal opportunity or by votes for maximum transparency.
+          default_order_options:
+            hot_score: Most active
+            created_at: Newest first
+            alphabet: Alphabetical
+            votes_up: Most upvoted
+            random: Random
+    voting_phase:
+      feature:
+        resource:
+          wizard_mode: Sequential voting
+          wizard_mode_description: "Displays the vote in wizard mode, in which questions are shown one after another. Users navigate through questions step by step on the frontend, instead of seeing all on one page. Enable this mode for extensive votes with many questions to improve clarity and reduce the drop-off rate."
+          show_on_home_page: Homepage visibility
+          show_on_home_page_description: "Controls whether the vote is shown on the platform's homepage. When enabled, a voting widget appears in the homepage area on the frontend, directly inviting users to participate. Enable this option to maximize visibility and participation in the vote."
+          show_on_index_page: Overview page visibility
+          show_on_index_page_description: "Controls whether the vote is shown on the general overview page of all votes. Note: the overview page itself must first be enabled by an administrator under Application. Disable this option if the vote should only be reachable via the direct project link."
+          results_enabled: Results
+          results_enabled_description: "Enables the display of voting results after the end of the voting phase. A results area with a graphical analysis of the vote distribution is displayed on the frontend. Enable this option to offer users transparency about the voting result. Disable it when results are only analyzed internally."
+          intermediate_poll_results_for_admins: Intermediate results (admins / project managers)
+          intermediate_poll_results_for_admins_description: "Allows administrators and project managers to view intermediate results of an ongoing vote before it is officially closed. An additional results area appears for authorized users on the frontend. Enable this option when the administration must follow voting progress in real time."
+          stats_enabled: Statistics
+          stats_enabled_description: "Enables the display of statistics for the vote after its close. A statistics area with metrics such as participation rate and demographic distribution is displayed on the frontend. Enable this option to give users a transparent overview of participation."
+          advanced_stats_enabled: Advanced statistics
+          advanced_stats_enabled_description: "Enables additional advanced statistics for the vote that go beyond the basic statistics. More detailed analyses such as age distribution and geographic origin are displayed on the frontend. Enable this option for projects where a deeper analysis of participation is desired."
+          evaluation_enabled: Show report for citizens
+          evaluation_enabled_description: "Shows an automatically generated summary evaluation of the voting results to all users. A prepared report that presents the essential results understandably appears on the frontend. Enable this option to increase the transparency of the participation process."
+          show_comments: Comments
+          show_comments_description: "Enables the comment feature for the voting module. A comment area with reply function is shown below the vote on the frontend, in which users can exchange opinions. Enable this feature to promote dialogue around the vote. Disable it for votes without accompanying discussion."
+          show_open_answer_author_name: Publish name
+          show_open_answer_author_name_description: "Shows the username of the author on open answers in the vote. The name appears next to the answer text on the frontend. Enable this option when transparency about authorship is desired. Disable it for sensitive topics to enable anonymous answers and an unbiased expression of opinion."

@@ -1,14 +1,13 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:new, :create]
+  before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
   before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
 
   def new
-    authorize [:adm, :projekts, ProjektPhase], :create?
+    authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt.page.title },
       { name: t("adm.projekts.phases.index.title"), url: phases_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
@@ -16,7 +15,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def create
-    authorize [:adm, :projekts, ProjektPhase], :create?
+    authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @projekt_phase = ProjektPhase.new(create_params.merge(active: true))
 
     if @projekt_phase.save
@@ -27,7 +26,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def reorder
-    authorize [:adm, :projekts, ProjektPhase], :update?
+    authorize @projekt, :update?, policy_class: Adm::Projekts::ProjektPhasePolicy
     ordered_ids = params[:tree].map { |item| item[:id] }
     ProjektPhase.order_phases(ordered_ids)
     head :ok
@@ -49,7 +48,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def duration
     authorize_phase(:update?)
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -58,8 +56,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def naming
     authorize_phase(:update?)
+
+    if @projekt_phase.name == "voting_phase"
+      poll = @projekt_phase.poll
+      @poll_image = poll.image || poll.build_image(user: current_user)
+      @poll_image.save!(validate: false) if @poll_image.new_record?
+    end
+
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -69,7 +73,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def restrictions
     authorize_phase(:update?)
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -96,7 +99,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def general_settings
     authorize_phase(:update?)
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -106,7 +108,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def form_author
     authorize_phase(:update?)
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -116,7 +117,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def user_functions
     authorize_phase(:update?)
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -124,41 +124,63 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def proposals
-    authorize_phase(:update?)
-    base_scope = @projekt_phase.proposals.with_hidden
-    @pagy, @proposals = pagy(ProposalsQuery.call(base_scope, params))
+    authorize_phase(:moderate?)
+    base_scope = ProposalsQuery.call(@projekt_phase.proposals.with_hidden, params)
 
-    @moderation_header_options = { filter_options: moderation_filter_options }
+    respond_to do |format|
+      format.html do
+        @pagy, @proposals = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
 
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+        @title_header_options = { search: true }
+        @moderation_header_options = { filter_options: moderation_filter_options }
+
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::ProposalsExporter.call(base_scope),
+                  filename: "proposals-#{@projekt_phase.id}-#{Time.zone.today}.csv"
+      end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:sentiment, :projekt_labels)),
+                  filename: "proposals-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
+      end
+    end
   end
 
   def comments
-    authorize_phase(:update?)
-    base_scope = comments_for_phase
-    @pagy, @comments = pagy(CommentsQuery.call(base_scope, params))
+    authorize_phase(:moderate?)
+    base_scope = CommentsQuery.call(comments_for_phase, params)
 
-    @moderation_header_options = { filter_options: moderation_filter_options }
+    respond_to do |format|
+      format.html do
+        @pagy, @comments = pagy(base_scope)
 
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+        @moderation_header_options = { filter_options: moderation_filter_options }
+
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::CommentsExporter.call(base_scope),
+                  filename: "comments-#{@projekt_phase.id}-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   def ai_user_flow
     authorize_phase(:update?)
-    @criteria = @projekt_phase.user_resource_criteria
+    @hard_criteria = @projekt_phase.user_resource_criteria.hard_kind
+    @soft_criteria = @projekt_phase.user_resource_criteria.soft_kind
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -167,11 +189,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def create_user_resource_criterion
     authorize_phase(:update?)
-    criterion = @projekt_phase.user_resource_criteria.build(criterion_params)
-    criterion.position = @projekt_phase.user_resource_criteria.maximum(:position).to_i + 1
+    kind = sanitized_kind_param
+    return render json: { errors: ["invalid kind"] }, status: :unprocessable_entity if kind.nil?
+
+    criterion = @projekt_phase.user_resource_criteria.build(criterion_create_params.merge(kind: kind))
 
     if criterion.save
-      render json: { id: criterion.id, text: criterion.text }, status: :created
+      render json: serialize_criterion(criterion), status: :created
     else
       render json: { errors: criterion.errors.full_messages }, status: :unprocessable_entity
     end
@@ -181,8 +205,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     criterion = @projekt_phase.user_resource_criteria.find(params[:criterion_id])
 
-    if criterion.update(criterion_params)
-      head :ok
+    if criterion.update(criterion_update_params)
+      render json: serialize_criterion(criterion), status: :ok
     else
       render json: { errors: criterion.errors.full_messages }, status: :unprocessable_entity
     end
@@ -197,8 +221,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def reorder_user_resource_criteria
     authorize_phase(:update?)
+    kind = sanitized_kind_param
+    return render json: { errors: ["invalid kind"] }, status: :unprocessable_entity if kind.nil?
+
+    scope = @projekt_phase.user_resource_criteria.where(kind: kind)
     params[:order].each_with_index do |id, index|
-      @projekt_phase.user_resource_criteria.where(id: id).update_all(position: index)
+      scope.where(id: id).update_all(position: index)
     end
 
     head :ok
@@ -209,7 +237,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @criteria = @projekt_phase.proposal_criteria
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -222,7 +249,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @budget_phases = @budget&.phases&.order(:id) || Budget::Phase.none
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -235,7 +261,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @heading = @budget.heading
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -243,13 +268,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   def budget_investments
-    authorize_phase(:update?)
+    authorize_phase(:moderate?)
     @budget = @projekt_phase.budget
     base_scope = BudgetInvestmentsQuery.call(@budget.investments.with_hidden.order(id: :desc), params)
 
     respond_to do |format|
       format.html do
-        @pagy, @investments = pagy(base_scope)
+        @pagy, @investments = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 
@@ -270,7 +295,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         }
 
         @breadcrumbs = [
-          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
           { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
@@ -279,6 +303,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       format.csv do
         send_data CsvServices::BudgetInvestmentsExporter.call(base_scope, request.host),
                   filename: "budget_investments-#{@projekt_phase.id}-#{Time.zone.today}.csv"
+      end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:sentiment, :projekt_labels)),
+                  filename: "budget_investments-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
       end
     end
   end
@@ -289,7 +318,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @questions = @poll.questions.root_questions.where(context_id: nil)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -303,7 +331,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @formular_fields_follow_up = @formular.formular_fields.follow_up
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -315,12 +342,10 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @formular = @projekt_phase.formular
     @formular_fields = @formular.formular_fields
     @formular_answers = @formular.formular_answers
-    @formular_follow_up_letters = @formular.formular_follow_up_letters
 
     respond_to do |format|
       format.html do
         @breadcrumbs = [
-          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
           { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
@@ -332,12 +357,25 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       end
     end
   end
+
+  def formular_follow_up_emails
+    authorize_phase(:update?)
+    @formular = @projekt_phase.formular
+    @formular_fields = @formular.formular_fields
+    @formular_answers = @formular.formular_answers
+    @formular_follow_up_letters = @formular.formular_follow_up_letters
+
+    @breadcrumbs = [
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
   def milestones
     authorize_phase(:update?)
     @milestones = @projekt_phase.milestones.order_by_publication_date
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -349,7 +387,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @progress_bars = @projekt_phase.progress_bars
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -360,7 +397,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @process = @projekt_phase.legislation_process
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -370,19 +406,87 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
 
+    @masterportal_pins_count = @projekt_phase.masterportal_pins.count
+
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
+  end
+
+  def masterportal_pins
+    authorize_phase(:update?)
+
+    @masterportal_pins_view = (params[:view] == "map") ? "map" : "list"
+    @masterportal_pins_search_query = params[:q].to_s.strip
+    @masterportal_pins_collection_ids =
+      @projekt_phase.masterportal_pins.distinct.pluck(:collection_id).compact.sort
+
+    requested_collection_id = params[:collection_id].to_s.strip.presence
+    @masterportal_pins_collection_id =
+      if @masterportal_pins_collection_ids.include?(requested_collection_id)
+        requested_collection_id
+      end
+
+    base_scope = @projekt_phase.masterportal_pins
+      .text_search(@masterportal_pins_search_query)
+
+    if @masterportal_pins_collection_id.present?
+      base_scope = base_scope.where(collection_id: @masterportal_pins_collection_id)
+    end
+
+    if @masterportal_pins_view == "map"
+      @masterportal_pins_for_map = base_scope.select(:id, :latitude, :longitude).order(:id)
+      @masterportal_pins_total_count = base_scope.count
+    else
+      list_scope = base_scope
+        .includes(:proposal, :budget_investment, :projekt_point_of_interest_pin)
+        .order(created_at: :desc)
+      @pagy_masterportal_pins, @masterportal_pins = pagy(list_scope, limit: 12)
+    end
+
+    @breadcrumbs = [
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t("adm.projekts.phases.map.title"), url: map_adm_projekts_phase_path(@projekt_phase) },
+      { name: t(".title") }
+    ]
+  end
+
+  def masterportal_pins_summary
+    authorize_phase(:update?)
+    @masterportal_pins_count = @projekt_phase.masterportal_pins.count
+
+    render layout: false
+  end
+
+  def destroy_all_masterportal_pins
+    authorize_phase(:update?)
+    Masterportal::DestroyAllPinsService.call(projekt_phase: @projekt_phase)
+
+    flash[:success] = t(".success")
+
+    redirect_to masterportal_pins_adm_projekts_phase_path(@projekt_phase)
+  end
+
+  def destroy_masterportal_pin
+    authorize_phase(:update?)
+    pin = @projekt_phase.masterportal_pins.find(params[:masterportal_pin_id])
+    Masterportal::DestroyPinService.call(masterportal_pin: pin)
+
+    flash[:success] = t(".success")
+
+    redirect_to masterportal_pins_adm_projekts_phase_path(
+      @projekt_phase,
+      params.permit(:q, :view, :page, :collection_id).to_h.compact_blank
+    )
   end
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
     @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -391,21 +495,30 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_point_of_interest_pins
     authorize_phase(:update?)
-    @pagy, @pins = pagy(@projekt_phase.projekt_point_of_interest_pins.ordered)
+    base_scope = @projekt_phase.projekt_point_of_interest_pins.ordered
 
-    @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+    respond_to do |format|
+      format.html do
+        @pagy, @pins = pagy(base_scope)
+
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.geojson do
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope),
+                  filename: "projekt_point_of_interest_pins-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
+                  type: "application/geo+json"
+      end
+    end
   end
 
   def map_resources_overview
     authorize_phase(:update?)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -417,7 +530,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @projekt_labels = @projekt_phase.projekt_labels
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -429,7 +541,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @sentiments = @projekt_phase.sentiments
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -441,7 +552,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @officing_managers = OfficingManager.all
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -457,7 +567,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @pagy, @audits = pagy(Audit.where(auditable: poll_voters).order(created_at: :desc))
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -469,7 +578,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @age_ranges = AgeRange.for_stats
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -488,12 +596,23 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def email_templates
     authorize_phase(:update?)
 
-    @email_templates = @projekt_phase.customizable_email_templates.map do |mailer_class, mailer_action|
-      @projekt_phase.email_templates.find_or_create_by!(mailer_class: mailer_class, mailer_action: mailer_action, locale: I18n.locale)
+    @email_template_groups = @projekt_phase.customizable_email_template_groups.map do |group|
+      {
+        key: group[:key],
+        entries: group[:templates].map do |tpl|
+          record = @projekt_phase.email_templates.find_or_create_by!(
+            mailer_class: tpl[:mailer_class],
+            mailer_action: tpl[:mailer_action],
+            locale: I18n.locale
+          )
+          { template: record, recipient_type: tpl[:recipient_type] }
+        end
+      }
     end
 
+    @email_templates = @email_template_groups.flat_map { |g| g[:entries].map { |e| e[:template] } }
+
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -519,7 +638,6 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
@@ -548,61 +666,102 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     redirect_to ai_settings_adm_projekts_phase_path(@projekt_phase)
   end
+
   def projekt_notifications
     authorize_phase(:update?)
     @projekt_notifications = @projekt_phase.projekt_notifications.order(created_at: :desc)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
   end
+
   def projekt_events
     authorize_phase(:update?)
     @projekt_events = @projekt_phase.projekt_events.order(datetime: :desc)
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
   end
+
   def projekt_livestreams
     authorize_phase(:update?)
     @projekt_livestreams = @projekt_phase.projekt_livestreams
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
   end
+
   def projekt_questions
     authorize_phase(:update?)
     @pagy, @projekt_questions = pagy(@projekt_phase.questions.order(id: :desc))
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
   end
+
   def projekt_arguments
     authorize_phase(:update?)
     @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro
     @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
       { name: @projekt_phase.title },
       { name: t(".title") }
     ]
+  end
+
+  def evaluation_visibility
+    authorize_phase(:update?)
+    @visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
+      @projekt_phase.build_projekt_phase_evaluation_visibility
+
+    phase_evaluation_url = evaluation_adm_projekts_projekt_path(
+      @projekt_phase.projekt,
+      anchor: "phase-#{@projekt_phase.id}"
+    )
+
+    @back_button_url = phase_evaluation_url
+
+    @breadcrumbs = [
+      {
+        name: @projekt_phase.projekt.page.title,
+        url: details_adm_projekts_projekt_path(@projekt_phase.projekt)
+      },
+      { name: @projekt_phase.title, url: phase_evaluation_url },
+      { name: t(".title") }
+    ]
+  end
+
+  def update_evaluation_visibility
+    authorize_phase(:update?)
+    visibility = @projekt_phase.projekt_phase_evaluation_visibility ||
+      @projekt_phase.build_projekt_phase_evaluation_visibility
+
+    if visibility.update(evaluation_visibility_params)
+      flash[:notice] = t(".success")
+
+      redirect_to evaluation_adm_projekts_projekt_path(
+        @projekt_phase.projekt,
+        anchor: "phase-#{@projekt_phase.id}"
+      )
+    else
+      flash[:error] = visibility.errors.full_messages.join(", ")
+
+      redirect_to evaluation_visibility_adm_projekts_phase_path(@projekt_phase)
+    end
   end
 
   private
@@ -641,6 +800,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       else
         @projekt_phase = ProjektPhase.find(params[:id])
       end
+    end
+
+    def evaluation_visibility_params
+      params.require(:projekt_phase_evaluation_visibility).permit(
+        *ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
+      )
     end
 
     def projekt_phase_params
@@ -690,7 +855,29 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       params.require(:projekt_phase).permit(:projekt_id, :type)
     end
 
-    def criterion_params
-      params.require(:user_resource_criterion).permit(:text)
+    def criterion_create_params
+      params.require(:user_resource_criterion).permit(:name, :description, :ai_instruction)
+    end
+
+    def criterion_update_params
+      params.require(:user_resource_criterion).permit(:name, :description, :ai_instruction)
+    end
+
+    def sanitized_kind_param
+      kind = params[:kind].to_s
+      return kind if UserResourceCriteria::KINDS.include?(kind)
+
+      nil
+    end
+
+    def serialize_criterion(criterion)
+      {
+        id: criterion.id,
+        kind: criterion.kind,
+        name: criterion.name,
+        description: criterion.description,
+        ai_instruction: criterion.ai_instruction,
+        position: criterion.position
+      }
     end
 end

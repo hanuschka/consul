@@ -39,7 +39,17 @@
   <p class="text-muted"><%= t('.body_help_text') %></p>
 
   <div class="kern-card p-4 mb-4">
-    <%= render template: "mailer/newsletter" %>
+    <% if Setting["advanced_newsletter"].present? %>
+      <%= render template: "mailer/newsletter" %>
+    <% else %>
+      <%= render "layouts/mailer_header" %>
+      <table cellpadding="0" cellspacing="0" border="0" style="background: #fff; margin: 0 auto; max-width: 700px; width:100%;">
+        <tbody><tr><td style="padding: 20px 0;">
+          <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 660)) %>
+        </td></tr></tbody>
+      </table>
+      <%= render "layouts/mailer_footer" %>
+    <% end %>
   </div>
 
   <div class="d-flex gap-3 mb-4">

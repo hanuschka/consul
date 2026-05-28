@@ -6,27 +6,29 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
   end
 
   def show?
-    permitted?
+    manage_permitted? || moderate_permitted? || create_on_behalf_of_permitted? || review_permitted?
   end
 
   def create?
-    permitted?
+    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
   end
 
   def update?
-    permitted?
+    manage_permitted?
   end
 
   def destroy?
-    permitted?
+    manage_permitted?
   end
 
   class Scope < Scope
     include Adm::Projekts::PermissionCheck::ScopeCheck
 
     def resolve
-      scope.where(id: managed_projekt_ids)
+      scope.regular
+        .where(id: visible_projekt_ids)
         .includes([:projekt_settings, :parent, [page: :translations]])
+        .order(updated_at: :desc)
     end
   end
 

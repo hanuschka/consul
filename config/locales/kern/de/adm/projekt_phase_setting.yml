@@ -37,6 +37,8 @@ de:
           show_follow_button_in_sidebar_description: Zeigt in der Seitenleiste der Vorschläge einen Folgen-Button an. Nutzer erhalten dadurch Benachrichtigungen bei Änderungen am Vorschlag, etwa bei neuen Kommentaren oder Statusänderungen. Aktivieren Sie diese Funktion, um die Nutzerbindung zu stärken. Deaktivieren Sie sie, wenn das Benachrichtigungssystem nicht genutzt werden soll.
           show_community_button_in_sidebar: Arbeitskreise
           show_community_button_in_sidebar_description: Zeigt in der Seitenleiste der Vorschläge einen Arbeitskreis-Button an. Über Arbeitskreise können sich Nutzer in Gruppen zusammenfinden und gemeinsam an Vorschlägen arbeiten. Im Frontend wird ein Link zum jeweiligen Arbeitskreis angezeigt. Aktivieren Sie diese Funktion bei kollaborativen Projekten mit vertiefter Zusammenarbeit.
+          show_social_share_buttons: Teilen
+          show_social_share_buttons_description: Zeigt in der Seitenleiste der Investitionsansicht Buttons zum Teilen in sozialen Netzwerken an. Aktivieren Sie diese Funktion, um die Reichweite einzelner Vorschläge zu erhöhen. Deaktivieren Sie sie, wenn das Teilen über externe Plattformen nicht erwünscht ist, etwa aus Datenschutzgründen.
           show_related_content: Verwandte Inhalte
           show_related_content_description: Zeigt unterhalb eines Vorschlags verwandte Inhalte wie ähnliche Vorschläge oder thematisch verknüpfte Debatten an. Im Frontend erscheint ein eigener Bereich mit Verlinkungen zu relevanten Inhalten. Aktivieren Sie diese Funktion, um die Vernetzung zwischen Beiträgen zu fördern und Nutzern zusätzliche Kontextinformationen zu bieten.
           show_comments: Kommentare
@@ -72,7 +74,7 @@ de:
           submissions_limit: Maximale Anzahl an Einsendungen pro Nutzer
           submissions_limit_description: "Begrenzt die Anzahl der Formulareinsendungen, die ein einzelner Nutzer abgeben darf. Im Frontend wird nach Erreichen des Limits der Absende-Button deaktiviert und ein Hinweis angezeigt. Nutzen Sie diesen Wert, um Mehrfacheinsendungen zu verhindern und die Datenqualität zu sichern. Ein Wert von eins stellt sicher, dass jeder Nutzer nur einmal."
           primary_formular_cutoff_date: Ende der 1. Phase
-          primary_formular_cutoff_date_description: "Legt das Enddatum der ersten Formularphase fest, ab dem keine neuen Einsendungen mehr möglich sind. Das Formular besteht aus zwei Phasen: In der 1. Phase füllen Nutzer die primären Felder aus. Nach Ablauf dieses Datums beginnt die Follow-up-Phase, in der Nutzer nur noch die ergänzenden Follow-up-Felder zu bestehenden Einsendungen ausfüllen können."
+          primary_formular_cutoff_date_description: "Legt das Enddatum der ersten Formularphase fest, ab dem keine neuen Einsendungen mehr möglich sind. Das Formular besteht aus zwei Phasen: In der 1. Phase füllen Nutzer die primären Felder aus. Nach Ablauf dieses Datums beginnt die Follow-up-Phase, in der Nutzer nur noch die ergänzenden Follow-up-Felder zu bestehenden Einsendungen ausfüllen können. Wenn Sie keine Follow-up-Felder planen, lassen Sie dieses Feld einfach leer."
     iframe_phase:
       option:
         general:
@@ -167,6 +169,8 @@ de:
           show_follow_button_in_proposal_sidebar_description: Zeigt in der Seitenleiste eines Vorschlags einen Folgen-Button an. Nutzer erhalten dadurch Benachrichtigungen bei Änderungen am Vorschlag, etwa bei neuen Kommentaren oder Statusänderungen. Aktivieren Sie diese Funktion, um die Nutzerbindung zu stärken und Teilnehmer über den Fortschritt auf dem Laufenden zu halten. Deaktivieren Sie sie bei Bedarf.
           show_community_button_in_proposal_sidebar: Arbeitskreise
           show_community_button_in_proposal_sidebar_description: Zeigt in der Seitenleiste eines Vorschlags einen Arbeitskreis-Button an, über den sich Nutzer zusammenfinden und gemeinsam an einem Vorschlag arbeiten können. Im Frontend wird ein Link zum jeweiligen Arbeitskreis angezeigt. Aktivieren Sie diese Funktion bei kollaborativen Projekten, in denen vertiefte Zusammenarbeit erwünscht ist.
+          show_social_share_buttons: Teilen
+          show_social_share_buttons_description: Zeigt in der Seitenleiste eines Vorschlags Buttons zum Teilen in sozialen Netzwerken an. Aktivieren Sie diese Funktion, um die Reichweite einzelner Vorschläge zu erhöhen. Deaktivieren Sie sie, wenn das Teilen über externe Plattformen nicht erwünscht ist, etwa aus Datenschutzgründen.
           show_related_content: Verwandte Inhalte
           show_related_content_description: Zeigt unterhalb eines Vorschlags verwandte Inhalte wie thematisch ähnliche Vorschläge oder verknüpfte Debatten an. Im Frontend erscheint ein eigener Bereich mit Verlinkungen zu relevanten Beiträgen. Aktivieren Sie diese Funktion, um die inhaltliche Vernetzung zwischen Beiträgen zu fördern und Nutzern zusätzliche Kontextinformationen zu bieten.
           show_comments: Kommentare

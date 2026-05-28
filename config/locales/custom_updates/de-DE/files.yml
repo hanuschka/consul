@@ -1,0 +1,95 @@
+de:
+  adm:
+    menu:
+      items:
+        files: Dateien
+        files_subitems:
+          images: Bilder
+          documents: Dokumente
+  files:
+    images:
+      index:
+        title: Übersicht aller Bilder
+    documents:
+      index:
+        title: Übersicht aller Dokumente
+    search_form:
+      placeholder: Suchen…
+      button_title: Suchen
+    filter_bar:
+      search_placeholder: Suchen…
+      extension: Dateityp
+      extension_any: Alle Dateitypen
+      size_min: Min. Größe (MB)
+      size_max: Max. Größe (MB)
+      created_from: Erstellt ab
+      created_to: Erstellt bis
+      updated_from: Geändert ab
+      updated_to: Geändert bis
+      imageable_type: Zugewiesen an
+      imageable_type_any: "Zugewiesen: Alle"
+      documentable_type: Zugewiesen an
+      documentable_type_any: "Zugewiesen: Alle"
+      admin_flag: Quelle
+      admin_flag_any: Alle Quellen
+      admin_flag_true: Admin-Uploads
+      admin_flag_false: Reguläre Uploads
+      sort_label: Sortierung
+      reset: Zurücksetzen
+      sort:
+        created_desc: Neueste zuerst
+        created_asc: Älteste zuerst
+        updated_desc: Zuletzt geändert
+        updated_asc: Am längsten unverändert
+        name_asc: Name A–Z
+        name_desc: Name Z–A
+        size_asc: Kleinste zuerst
+        size_desc: Größte zuerst
+      aria:
+        search: Dateien durchsuchen
+        filter_extension: Nach Dateityp filtern
+        filter_imageable_type: Nach Zuweisung filtern
+        filter_documentable_type: Nach Zuweisung filtern
+        filter_admin_flag: Nach Quelle filtern
+        sort: Sortieren nach
+        reset: Filter zurücksetzen
+    upload_failed: Hochladen fehlgeschlagen
+    upload_loading: Datei wird hochgeladen…
+    upload_success: Hochgeladen
+    upload_success_with_name: 'Datei "%{filename}" wurde hochgeladen.'
+    upload_failed_with_name: 'Datei "%{filename}" konnte nicht hochgeladen werden.'
+    delete_failed: Löschen fehlgeschlagen
+    delete_success_with_name: 'Datei "%{filename}" wurde gelöscht.'
+    delete_failed_with_name: 'Datei "%{filename}" konnte nicht gelöscht werden.'
+    view_mode:
+      cards: Kartenansicht
+      list: Listenansicht
+    list:
+      title: Titel
+      resource_type: Ressourcentyp
+      assigned_to: Zugewiesen an
+      size: Größe
+      modified: Geändert
+    card:
+      edit: Bearbeiten
+      delete: Löschen
+      delete_confirm: Möchten Sie dieses Element wirklich löschen?
+      upload: Hochladen
+      open_in_new_tab: In neuem Tab öffnen
+      download: Herunterladen
+      file_size: Dateigröße
+      dimensions: Abmessungen
+      uploaded: Hochgeladen
+      last_edited: Zuletzt bearbeitet
+      projekt: Projekt
+      resource_type: Ressourcentyp
+      admin_badge: Admin-Upload
+    edit_modal:
+      title: Datei bearbeiten
+      title_label: Titel
+      description: Beschreibung
+      alt_text: Alternativer Text
+      cancel: Abbrechen
+      save: Speichern
+      close: Schließen
+      update_failed: Aktualisierung fehlgeschlagen

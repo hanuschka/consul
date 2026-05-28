@@ -17,8 +17,11 @@
 <div class="kern-container my-5">
 
   <% if @unregistered_newsletter_subscribers.any? %>
-    <div class="d-flex justify-content-end mb-4">
-      <%= kern_link_button(adm_unregistered_newsletter_subscribers_path(format: :csv), text: t('.download_csv'), style: :secondary) %>
+    <div class="d-flex align-items-center justify-content-end gap-3 mb-3">
+      <a href="<%= adm_unregistered_newsletter_subscribers_path(format: :csv) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <%= t(".download_csv") %>
+      </a>
     </div>
 
     <div class="kern-table-responsive" tabindex="0">

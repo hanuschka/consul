@@ -5,6 +5,8 @@ class PendingRoleAssignment < ApplicationRecord
     LandingPageManager
   ].freeze
 
+  has_secure_token :invitation_token
+
   belongs_to :created_by, class_name: "User", optional: true
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -15,6 +17,12 @@ class PendingRoleAssignment < ApplicationRecord
 
   scope :for_email, ->(email) { where(email: email&.strip&.downcase) }
   scope :for_role_type, ->(type) { where(role_type: type) }
+
+  def self.find_by_invitation_token(token)
+    return nil if token.blank?
+
+    find_by(invitation_token: token)
+  end
 
   def fulfill!(user)
     raise ArgumentError, "Invalid role_type: #{role_type}" unless ROLE_TYPES.include?(role_type)

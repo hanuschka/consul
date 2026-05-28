@@ -5,7 +5,6 @@ class Adm::Projekts::FormularFollowUpLettersController < Adm::Projekts::BaseCont
 
   def create
     @letter = @formular.formular_follow_up_letters.new
-    @letter.formular_answer_ids = params[:formular_answer_ids]
     authorize [:adm, :projekts, @letter], policy_class: Adm::Projekts::FormularFollowUpLetterPolicy
 
     @letter.save!
@@ -15,6 +14,8 @@ class Adm::Projekts::FormularFollowUpLettersController < Adm::Projekts::BaseCont
   def edit
     authorize [:adm, :projekts, @letter], policy_class: Adm::Projekts::FormularFollowUpLetterPolicy
 
+    @formular_fields = @formular.formular_fields
+    @formular_answers = @formular.formular_answers
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
@@ -22,8 +23,10 @@ class Adm::Projekts::FormularFollowUpLettersController < Adm::Projekts::BaseCont
     authorize [:adm, :projekts, @letter], policy_class: Adm::Projekts::FormularFollowUpLetterPolicy
 
     if @letter.update(letter_params)
-      redirect_to formular_answers_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
+      redirect_to formular_follow_up_emails_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
     else
+      @formular_fields = @formular.formular_fields
+      @formular_answers = @formular.formular_answers
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.formular_follow_up_letters.edit.title"))
       render :edit, status: :unprocessable_entity
     end
@@ -33,7 +36,7 @@ class Adm::Projekts::FormularFollowUpLettersController < Adm::Projekts::BaseCont
     authorize [:adm, :projekts, @letter], policy_class: Adm::Projekts::FormularFollowUpLetterPolicy
 
     @letter.destroy!
-    redirect_to formular_answers_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
+    redirect_to formular_follow_up_emails_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
   end
 
   def send_emails
@@ -41,7 +44,7 @@ class Adm::Projekts::FormularFollowUpLettersController < Adm::Projekts::BaseCont
 
     @letter.delay.deliver
     @letter.update!(sent_at: Time.zone.now)
-    redirect_to formular_answers_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
+    redirect_to formular_follow_up_emails_adm_projekts_phase_path(@projekt_phase), notice: t(".success")
   end
 
   private
@@ -59,15 +62,14 @@ class Adm::Projekts::FormularFollowUpLettersController < Adm::Projekts::BaseCont
     end
 
     def letter_params
-      params.require(:formular_follow_up_letter).permit(:subject, :body, :show_follow_up_button)
+      params.require(:formular_follow_up_letter).permit(:subject, :body, :show_follow_up_button, formular_answer_ids: [])
     end
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
-        { name: t("adm.projekts.phases.formular_answers.title"), url: formular_answers_adm_projekts_phase_path(@projekt_phase) },
+        { name: t("adm.projekts.phases.formular_follow_up_emails.title"), url: formular_follow_up_emails_adm_projekts_phase_path(@projekt_phase) },
         { name: action_title }
       ]
     end

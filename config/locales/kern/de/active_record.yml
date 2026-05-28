@@ -6,7 +6,6 @@ de:
       site_customization/content_card/translation:
         title: Titel
       navbar_item:
-        external_title: Eigentitel
         external_url: Eigene URL
       map_location:
         rendering_library: Rendering-Bibliothek
@@ -15,6 +14,7 @@ de:
           leaflet: Leaflet
           mapbox: Mapbox
           virtualcity: Virtual City Map
+          leaflet_plus_masterportal: Masterportal
       map_layer:
         provider: URL des Kartenanbieters
         attribution: Quellenhinweis der Karte
@@ -64,3 +64,5 @@ de:
         rating_scale: Bewertungsskala
       individual_group:
         visible: Sichtbar
+      newsletter:
+        respect_newsletter_optout: Newsletter-Opt-out berücksichtigen

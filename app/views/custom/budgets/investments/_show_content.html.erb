@@ -91,9 +91,15 @@
           <% end %>
         <% end %>
 
-        <div class="resource-page--description new-card">
-          <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
-        </div>
+        <% if @investment.masterportal_pin.present? %>
+          <%= render Shared::MasterportalPinPropertiesComponent.new(
+            masterportal_pin: @investment.masterportal_pin
+          ) %>
+        <% else %>
+          <div class="resource-page--description new-card">
+            <%= auto_link_already_sanitized_html wysiwyg(@investment.description) %>
+          </div>
+        <% end %>
 
         <% if @investment.map_location.present? %>
           <div class="margin-bottom not-print">
@@ -171,7 +177,7 @@
                     <div class="fix-on-mobile">
                       <div class="text-center">
                         <div id="<%= dom_id(@investment) %>_ballot">
-                          <%= render "ballot",
+                          <%= render "budgets/investments/ballot",
                             investment: @investment,
                             investment_ids: @investment_ids,
                             ballot: @ballot %>
@@ -212,18 +218,20 @@
           <% end %>
         <% end %>
 
-        <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
-          <%= render "shared/social_share",
-            share_title: t("budgets.investments.show.share"),
-            title: @investment.title,
-            image_url: image_absolute_url(@investment.image, :thumb),
-            url: budget_investment_url(@investment.budget, @investment),
-            description: t("budgets.investments.share.message",
-                            title: @investment.title,
-                            handle: setting["org_name"]),
-            mobile: t("budgets.investments.share.message",
-                       title: @investment.title,
-                       handle: setting["twitter_handle"]) %>
+        <% if projekt_phase_feature?(@investment.projekt_phase, "resource.show_social_share_buttons") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
+            <%= render "shared/social_share",
+              share_title: t("budgets.investments.show.share"),
+              title: @investment.title,
+              image_url: image_absolute_url(@investment.image, :thumb),
+              url: budget_investment_url(@investment.budget, @investment),
+              description: t("budgets.investments.share.message",
+                              title: @investment.title,
+                              handle: setting["org_name"]),
+              mobile: t("budgets.investments.share.message",
+                         title: @investment.title,
+                         handle: setting["twitter_handle"]) %>
+          <% end %>
         <% end %>
 
         <% if projekt_phase_feature?(@investment&.projekt_phase, 'resource.show_report_button_in_sidebar') && (show_flag_action?(@investment) || show_unflag_action?(@investment)) %>

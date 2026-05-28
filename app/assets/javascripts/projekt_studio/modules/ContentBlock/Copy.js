@@ -19,6 +19,7 @@ ProjektStudio.ContentBlock.Copy = {
   copyContentBlockToClipboard(contentBlock, button) {
     const clone = contentBlock.cloneNode(true);
     this.stripSimpleEditModeControls(clone);
+    ProjektStudio.utils.removeFoundationIds(clone);
     const contentBlockHTML = clone.innerHTML.trim();
 
     navigator.clipboard.writeText(contentBlockHTML).then(() => {

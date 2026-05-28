@@ -11,5 +11,6 @@ Rails.application.config.assets.precompile += Dir.glob("#{Rails.root}/app/assets
 Rails.application.config.assets.precompile += %w[sdg/*.png]
 Rails.application.config.assets.precompile += %w[sdg/**/*.png]
 Rails.application.config.assets.precompile += %w[sdg/**/*.svg]
+Rails.application.config.assets.precompile += %w[masterportal/pins/*.png]
 
 # Loads custom images and custom fonts before app/assets/images and app/assets/fonts

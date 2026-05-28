@@ -180,6 +180,7 @@ module ProjektPhaseAdminActions
 
   def map_resources_overview
     @map_coordinates = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins).map(&:features_json_data)
+    @map_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
   end
 
   def user_functions
@@ -242,8 +243,6 @@ module ProjektPhaseAdminActions
 
     @projekt_phase_features.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_features.presence&.values&.compact.present?
     @projekt_phase_options.each { |_, v| v.delete_if { |a| a.key.in? @projekt_phase.settings_in_tabs.keys }} if @projekt_phase_options.presence&.values&.compact.present?
-
-    @apps = App.all
   end
 
   def comments
@@ -257,6 +256,13 @@ module ProjektPhaseAdminActions
     @proposals = @projekt_phase.proposals.order(id: :desc).page(params[:page])
 
     render "custom/admin/projekt_phases/proposals"
+  end
+
+  def comments
+    authorize!(:comments, @projekt_phase)
+    @comments = @projekt_phase.comments.order(id: :desc).page(params[:page])
+
+    render "custom/admin/projekt_phases/comments"
   end
 
   def projekt_labels

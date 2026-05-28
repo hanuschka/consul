@@ -12,7 +12,7 @@ class ApplicationQuery
       direction = params[:sort_direction]&.downcase
       direction = %w[asc desc].include?(direction) ? direction : "asc"
 
-      base_scope.order(field => direction)
+      base_scope.reorder(field => direction)
     end
 
     def apply_search(base_scope)

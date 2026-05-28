@@ -150,17 +150,6 @@ class Admin::MenuComponent < ApplicationComponent
         controller_name == "polls" && action_name == "booth_assignments"
     end
 
-    def matomo_link
-      return unless feature?("matomo")
-
-      [
-        t("custom.admin.menu.matomo"),
-        admin_matomo_path,
-        controller_name == "matomo",
-        class: "matomo-link"
-      ]
-    end
-
     def recipient_groups_link
       [
         t("custom.admin.menu.recipient_groups"),

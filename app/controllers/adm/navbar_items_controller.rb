@@ -24,6 +24,30 @@ module Adm
       end
     end
 
+    def edit
+      @navbar_item = NavbarItem.find(params[:id])
+      authorize [:adm, @navbar_item]
+
+      @landing_page = @navbar_item.landing_page
+      set_form_variables
+
+      @breadcrumbs = navbar_item_breadcrumbs(t(".title"))
+    end
+
+    def update
+      @navbar_item = NavbarItem.find(params[:id])
+      authorize [:adm, @navbar_item]
+
+      @landing_page = @navbar_item.landing_page
+
+      if @navbar_item.update(navbar_item_params)
+        redirect_to after_save_redirect_path
+      else
+        set_form_variables
+        render :edit
+      end
+    end
+
     def destroy
       @navbar_item = NavbarItem.find(params[:id])
       authorize [:adm, @navbar_item]
@@ -50,8 +74,8 @@ module Adm
 
       def navbar_item_params
         params.require(:navbar_item).permit(
-          :kind, :preset, :projekt_id, :external_title, :external_url,
-          :landing_page_id
+          :kind, :preset, :projekt_id, :linked_page_id, :custom_title, :external_url,
+          :landing_page_id, :open_in_new_tab
         )
       end
 
@@ -63,13 +87,13 @@ module Adm
       end
 
       def set_form_variables
-        @available_kinds = NavbarItem.kinds.keys
+        @available_kinds = %w[presets projekts landing_pages external] & NavbarItem.kinds.keys
 
         @available_presets =
           if @landing_page.present?
-            NavbarItem::PRESETS.select { |k, _| k.in?(NavbarItem::LANDING_PAGE_ALLOWED_PRESETS) }
+            NavbarItem.enabled_presets.select { |k, _| k.in?(NavbarItem::LANDING_PAGE_ALLOWED_PRESETS) }
           else
-            NavbarItem::PRESETS
+            NavbarItem.enabled_presets
           end
 
         @available_projekts =
@@ -79,8 +103,16 @@ module Adm
             Projekt.all
           end
 
+        @available_landing_pages = NavbarItem.landing_pages_for_select(@landing_page)
+
         @form_url =
-          if @landing_page.present?
+          if @navbar_item.persisted?
+            if @landing_page.present?
+              adm_landing_pages_landing_page_navbar_item_path(@landing_page, @navbar_item)
+            else
+              adm_navbar_item_path(@navbar_item)
+            end
+          elsif @landing_page.present?
             adm_landing_pages_landing_page_navbar_items_path(@landing_page)
           else
             adm_navbar_items_path

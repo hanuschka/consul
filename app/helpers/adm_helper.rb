@@ -33,6 +33,7 @@ module AdmHelper
     "budget_investments" => "savings",
     "formular" => "assignment",
     "formular_answers" => "list_alt",
+    "formular_follow_up_emails" => "forward_to_inbox",
     "officing_managers" => "badge",
     "officing_manager_audits" => "history",
     "ai_settings" => "smart_toy",
@@ -50,8 +51,10 @@ module AdmHelper
     "email_templates" => "mail"
   }.freeze
 
+  PHASE_MODERATION_ACTIONS = %w[proposals comments budget_investments].freeze
+
   def projekt_phase_table_actions(projekt_phase)
-    projekt_phase.admin_nav_bar_items.map do |action|
+    visible_phase_actions(projekt_phase).map do |action|
       {
         label: I18n.t("adm.projekts.phases.projekt_phase.#{action}"),
         url: send("#{action}_adm_projekts_phase_path", projekt_phase),
@@ -63,13 +66,20 @@ module AdmHelper
   def projekt_phase_tabs(projekt_phase, current_action: nil)
     current_action ||= action_name
 
-    projekt_phase.admin_nav_bar_items.map do |action|
+    visible_phase_actions(projekt_phase).map do |action|
       {
         label: I18n.t("adm.projekts.phases.projekt_phase.#{action}"),
         url: send("#{action}_adm_projekts_phase_path", projekt_phase),
         current: current_action == action
       }
     end
+  end
+
+  def visible_phase_actions(projekt_phase)
+    actions = projekt_phase.admin_nav_bar_items
+    return actions if policy([:adm, :projekts, projekt_phase.projekt]).update?
+
+    actions & PHASE_MODERATION_ACTIONS
   end
 
   def idea_tabs(idea, current_action: nil)
@@ -84,10 +94,25 @@ module AdmHelper
     end
   end
 
+  def projekt_event_tabs(projekt_phase, projekt_event)
+    [
+      {
+        label: I18n.t("adm.projekts.projekt_events.tabs.show"),
+        url: adm_projekts_phase_projekt_event_path(projekt_phase, projekt_event),
+        current: controller_path == "adm/projekts/projekt_events" && action_name.in?(%w[show edit update])
+      },
+      {
+        label: I18n.t("adm.projekts.projekt_events.tabs.registrations"),
+        url: adm_projekts_phase_projekt_event_registrations_path(projekt_phase, projekt_event),
+        current: controller_path == "adm/projekts/projekt_event_registrations"
+      }
+    ]
+  end
+
   def deficiency_report_tabs(deficiency_report, current_action: nil)
     current_action ||= action_name
 
-    tabs = %w[show administer audits].map do |action|
+    tabs = %w[show audits].map do |action|
       {
         label: I18n.t("adm.deficiency_reports.deficiency_reports.tabs.#{action}"),
         url: send("#{action == 'show' ? '' : "#{action}_"}adm_deficiency_reports_deficiency_report_path", deficiency_report),
@@ -136,25 +161,13 @@ module AdmHelper
     end
   end
 
-  def overview_page_tabs(current_action: nil)
+  def overview_pages_tabs(current_action: nil)
     current_action ||= action_name
 
-    %w[navigation footer].map do |action|
+    %w[projekt others].map do |action|
       {
-        label: I18n.t("adm.projekts.overview_page.tabs.#{action}"),
-        url: send("#{action}_adm_projekts_overview_page_path"),
-        current: current_action == action
-      }
-    end
-  end
-
-  def projekt_tabs(projekt, current_action: nil)
-    current_action ||= action_name
-
-    %w[details visibility projekt_managers map phases].map do |action|
-      {
-        label: I18n.t("adm.projekts.projekts.tabs.#{action}"),
-        url: send("#{action}_adm_projekts_projekt_path", projekt),
+        label: I18n.t("adm.overview_pages.tabs.#{action}"),
+        url: send("#{action}_adm_overview_pages_path"),
         current: current_action == action
       }
     end
@@ -190,4 +203,5 @@ module AdmHelper
       t("shared.moderation_statuses.flagged")
     end
   end
+
 end

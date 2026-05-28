@@ -1,0 +1,19 @@
+en:
+  adm:
+    sentiments:
+      new:
+        title: Create new sentiment
+      edit:
+        title: Edit sentiment
+      create:
+        success: Sentiment created successfully.
+      update:
+        success: Sentiment updated successfully.
+      destroy:
+        success: Sentiment deleted successfully.
+      form:
+        name_label: Name
+        name_hint: Enter the name of the sentiment.
+        color_label: Color
+        color_hint: Choose a color for the sentiment.
+        submit: Save

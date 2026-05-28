@@ -75,11 +75,48 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     @breadcrumbs = breadcrumbs_for_action(t(".title"))
   end
 
+  ADMIN_FORM_EDITORS = %w[feasibility pricing selection winner].freeze
+
   def update
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
-    if @investment.update(investment_params)
-      redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment), notice: t(".success")
+    success = @investment.update(investment_params)
+
+    if ADMIN_FORM_EDITORS.include?(params[:editor])
+      render turbo_stream: turbo_stream.replace(
+        helpers.dom_id(@investment, :admin_forms),
+        partial: "adm/projekts/budget_investments/admin_forms",
+        locals: {
+          investment: @investment,
+          projekt_phase: @projekt_phase,
+          saved_editor: success ? params[:editor] : nil
+        }
+      )
+      return
+    end
+
+    if success
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update("investment_content",
+              partial: "adm/projekts/budget_investments/show_content",
+              locals: { investment: @investment, projekt_phase: @projekt_phase }
+            ),
+            turbo_stream.append("flash-messages", html:
+              helpers.content_tag(:div, class: "kern-flash kern-flash--success", role: "alert") do
+                helpers.content_tag(:span, t("adm.attribute.update.success")) +
+                helpers.button_tag(type: "button", class: "kern-flash__close", aria: { label: "Close" }, onclick: "this.parentElement.remove()") do
+                  helpers.content_tag(:span, "close", class: "material-symbols-outlined")
+                end
+              end
+            )
+          ]
+        end
+        format.html do
+          redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment), notice: t(".success")
+        end
+      end
     else
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.budget_investments.edit.title"))
       render :edit, status: :unprocessable_entity
@@ -157,7 +194,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     end
 
     def set_investment
-      @investment = @projekt_phase.budget.investments.find(params[:id])
+      @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
     end
 
     def investment_params
@@ -194,7 +231,6 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.budget_investments.title"), url: budget_investments_adm_projekts_phase_path(@projekt_phase) },

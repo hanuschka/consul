@@ -180,6 +180,10 @@ de:
             project_summary: Projektzusammenfassung
             settings: Projekteinstellungen
             phase_summaries: Phasen-Zusammenfassungen
+          report_section_descriptions:
+            project_summary: Snapshot der Projektseite mit Untertitel, Bild und KI-Zusammenfassung des Projektinhalts.
+            settings: Überblick über die Projektkonfiguration — offene Phasen, Abstimmungen, Schlagwörter und Nachhaltigkeitsziele.
+            phase_summaries: Kurze KI-generierte Zusammenfassung für jede Projektphase.
           bulk_all_on: Alle aus
           bulk_all_off: Alle ein
           cancel: Zurück

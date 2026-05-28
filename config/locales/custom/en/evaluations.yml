@@ -180,6 +180,10 @@ en:
             project_summary: Project summary
             settings: Project settings
             phase_summaries: Phase summaries
+          report_section_descriptions:
+            project_summary: Project page snapshot with subtitle, image, and AI summary of the project content.
+            settings: Project configuration overview — open phases, polls, tags, and sustainable development goals.
+            phase_summaries: Short AI-generated summary for every projekt phase.
           bulk_all_on: Turn all off
           bulk_all_off: Turn all on
           cancel: Back

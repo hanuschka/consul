@@ -26,7 +26,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt = Projekt.new(create_params.merge(author: current_user))
 
     if @projekt.save
-      redirect_to details_adm_projekts_projekt_path(@projekt), notice: t(".success")
+      redirect_to page_path(@projekt.page.slug), notice: t(".success")
     else
       redirect_to new_adm_projekts_projekt_path, alert: @projekt.errors.full_messages.join(", ")
     end

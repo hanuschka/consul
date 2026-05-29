@@ -7,9 +7,10 @@ en:
           images: Images
           documents: Documents
   files:
-    allowed_types_note: "Allowed file types: %{types}"
-    allowed_types_admins: "Admins & project managers can upload the following file types: %{types}"
-    allowed_types_users: "Regular users can upload the following file types: %{types}"
+    allowed_types_note_html: "Allowed file types: %{types}"
+    allowed_types_admins_html: "Admins &amp; project managers can upload the following file types: %{types}"
+    allowed_types_users_html: "Regular users can upload the following file types: %{types}"
+    allowed_types_settings_link: "edit here"
     images:
       index:
         title: Overview of all images

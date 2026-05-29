@@ -1,0 +1,11 @@
+<div class="adm-files-allowed-types text-muted d-flex align-items-start gap-1">
+  <span class="material-symbols-outlined" aria-hidden="true">info</span>
+  <span class="adm-files-allowed-types--lines">
+    <% if admin_types == user_types %>
+      <%= t("files.allowed_types_note", types: admin_types) %>
+    <% else %>
+      <span><%= t("files.allowed_types_admins", types: admin_types) %></span>
+      <span><%= t("files.allowed_types_users", types: user_types) %></span>
+    <% end %>
+  </span>
+</div>

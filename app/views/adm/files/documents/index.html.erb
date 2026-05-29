@@ -13,10 +13,9 @@
   breadcrumbs: @breadcrumbs
 ) do |header| %>
   <% header.with_after_title do %>
-    <p class="adm-files-allowed-types text-muted d-flex align-items-center gap-1">
-      <span class="material-symbols-outlined" aria-hidden="true">info</span>
-      <%= t("files.allowed_types_note", types: Document.humanized_admin_accepted_content_types) %>
-    </p>
+    <%= render "adm/files/allowed_types_note",
+          admin_types: Document.humanized_admin_accepted_content_types,
+          user_types: Document.humanized_accepted_content_types %>
   <% end %>
 
   <% header.with_actions do %>

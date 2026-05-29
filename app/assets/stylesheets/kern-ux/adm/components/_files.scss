@@ -1,3 +1,8 @@
 .adm-files-allowed-types {
   margin: 0;
 }
+
+.adm-files-allowed-types--lines {
+  display: flex;
+  flex-direction: column;
+}

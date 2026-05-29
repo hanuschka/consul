@@ -472,13 +472,18 @@ export default class LeafletAdapter extends BaseAdapter {
   createMarkerIcon(color, iconName, title, feature) {
     const L = window.L
 
-    if (feature && feature.properties && feature.properties.feature_icon_url) {
-      return L.icon({
-        iconUrl: feature.properties.feature_icon_url,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -32]
-      })
+    // Temporarily disabled — masterportal pin icon set will be reimplemented.
+    // if (feature && feature.properties && feature.properties.feature_icon_url) {
+    //   return L.icon({
+    //     iconUrl: feature.properties.feature_icon_url,
+    //     iconSize: [36, 36],
+    //     iconAnchor: [18, 36],
+    //     popupAnchor: [0, -32]
+    //   })
+    // }
+
+    if (feature && feature.properties && feature.properties.resource_type === "masterportal_pin") {
+      return this.createMasterportalPinIcon()
     }
 
     color = color || getBrandColor()
@@ -490,6 +495,20 @@ export default class LeafletAdapter extends BaseAdapter {
       iconSize: [30, 30],
       iconAnchor: [15, 40],
       html: `<div class="map-icon icon-${iconName}" role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></div>`
+    })
+  }
+
+  // Temporary placeholder for masterportal pins until the icon set is reimplemented.
+  createMasterportalPinIcon() {
+    const L = window.L
+    const title = "Masterportal-Pin"
+
+    return L.divIcon({
+      className: "",
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+      popupAnchor: [0, -11],
+      html: `<div role="img" aria-label="${title}" title="${title}" style="width: 22px; height: 22px; background-color: rgba(46, 125, 50, 0.5); border: 2px solid rgba(46, 125, 50, 0.9);"></div>`
     })
   }
 

@@ -1,8 +1,13 @@
 .masterportal-square-marker {
-  width: 24px;
-  height: 24px;
-  background-color: rgba(46, 125, 50, 0.5);
-  border: 2px solid rgba(46, 125, 50, 0.9);
+  width: 42px;
+  height: 42px;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
   box-sizing: border-box;
-  margin-top: -12px;
+  margin-top: -21px;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--brand-color) 12%, transparent);
+  }
 }

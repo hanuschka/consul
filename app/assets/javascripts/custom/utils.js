@@ -19,16 +19,16 @@ App.Utils = {
   },
 
   getMasterportalSquareMarker() {
-    const size = 24;
+    const size = 42;
     const half = size / 2;
     const title = "Masterportal-Pin";
 
     return L.divIcon({
-      className: "",
+      className: "masterportal-square-marker",
       iconSize: [size, size],
-      iconAnchor: [half, 0],
-      popupAnchor: [0, -2],
-      html: '<div class="masterportal-square-marker" role="img" aria-label="' + title + '" title="' + title + '"></div>'
+      iconAnchor: [half, half],
+      popupAnchor: [0, -half],
+      html: '<div role="img" aria-label="' + title + '" title="' + title + '"></div>'
     });
   },
 

@@ -24,11 +24,11 @@ App.Utils = {
     const title = "Masterportal-Pin";
 
     return L.divIcon({
-      className: "masterportal-square-marker",
+      className: "",
       iconSize: [size, size],
       iconAnchor: [half, 0],
       popupAnchor: [0, -2],
-      html: '<div role="img" aria-label="' + title + '" title="' + title + '" style="width: ' + size + 'px; height: ' + size + 'px; background-color: rgba(46, 125, 50, 0.5); border: 2px solid rgba(46, 125, 50, 0.9); box-sizing: border-box;"></div>'
+      html: '<div class="masterportal-square-marker" role="img" aria-label="' + title + '" title="' + title + '"></div>'
     });
   },
 

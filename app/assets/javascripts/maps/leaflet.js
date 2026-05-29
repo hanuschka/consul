@@ -559,6 +559,7 @@
             popupOptions.className = "masterportal-popup-wrapper";
             popupOptions.minWidth = 260;
             popupOptions.maxWidth = 360;
+            popupOptions.offset = L.point(0, -20);
           }
 
           e.target.bindPopup(

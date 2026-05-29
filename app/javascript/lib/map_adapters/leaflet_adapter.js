@@ -517,7 +517,7 @@ export default class LeafletAdapter extends BaseAdapter {
       className: "masterportal-square-marker",
       iconSize: [size, size],
       iconAnchor: [half, half],
-      popupAnchor: [0, -half],
+      popupAnchor: [0, 0],
       html: `<div role="img" aria-label="${title}" title="${title}"></div>`
     })
   }
@@ -546,6 +546,7 @@ export default class LeafletAdapter extends BaseAdapter {
           finalOptions.className = "masterportal-popup-wrapper"
           finalOptions.minWidth = 260
           finalOptions.maxWidth = 360
+          finalOptions.offset = window.L.point(0, 0)
         }
 
         layer.bindPopup(

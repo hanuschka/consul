@@ -27,7 +27,7 @@ App.Utils = {
       className: "masterportal-square-marker",
       iconSize: [size, size],
       iconAnchor: [half, half],
-      popupAnchor: [0, -half],
+      popupAnchor: [0, 0],
       html: '<div role="img" aria-label="' + title + '" title="' + title + '"></div>'
     });
   },

@@ -58,8 +58,13 @@
             <span class="kern-switch__track" aria-hidden="true">
               <span class="kern-switch__thumb"></span>
             </span>
-            <span class="kern-switch__label">
-              <%= t(".report_sections.#{section_key}") %>
+            <span class="kern-switch__text">
+              <span class="kern-switch__label">
+                <%= t(".report_sections.#{section_key}") %>
+              </span>
+              <span class="kern-switch__description">
+                <%= t(".report_section_descriptions.#{section_key}") %>
+              </span>
             </span>
           </label>
         <% end %>
@@ -120,8 +125,13 @@
               <span class="kern-switch__track" aria-hidden="true">
                 <span class="kern-switch__thumb"></span>
               </span>
-              <span class="kern-switch__label">
-                <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
+              <span class="kern-switch__text">
+                <span class="kern-switch__label">
+                  <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
+                </span>
+                <span class="kern-switch__description">
+                  <%= t("adm.projekts.projekts.evaluation.pdf_options.section_descriptions.#{section_key}") %>
+                </span>
               </span>
             </label>
           <% end %>

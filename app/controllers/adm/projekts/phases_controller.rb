@@ -154,16 +154,25 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def comments
     authorize_phase(:moderate?)
-    base_scope = comments_for_phase
-    @pagy, @comments = pagy(CommentsQuery.call(base_scope, params))
+    base_scope = CommentsQuery.call(comments_for_phase, params)
 
-    @moderation_header_options = { filter_options: moderation_filter_options }
+    respond_to do |format|
+      format.html do
+        @pagy, @comments = pagy(base_scope)
 
-    @breadcrumbs = [
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+        @moderation_header_options = { filter_options: moderation_filter_options }
+
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::CommentsExporter.call(base_scope),
+                  filename: "comments-#{@projekt_phase.id}-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   def ai_user_flow

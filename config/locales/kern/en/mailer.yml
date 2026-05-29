@@ -6,11 +6,11 @@ en:
       recipient: The user who submitted the project idea.
     budget_investment_feasible:
       title: Project idea evaluated as feasible
-      description: Sent to the author when their project idea has been evaluated as feasible.
+      description: 'Sent during the "Feasibility review" budget phases (phase 2 + 3) to the author once a valuator has marked the project idea as feasible and set the valuation as finished. Sent only once — later changes to the verdict do not trigger another email.'
       recipient: The user who submitted the project idea.
     budget_investment_unfeasible:
       title: Project idea evaluated as unfeasible
-      description: Sent to the author when their project idea has been evaluated as unfeasible.
+      description: 'Sent during the "Feasibility review" budget phases (phase 2 + 3) to the author once a valuator has marked the project idea as unfeasible and set the valuation as finished. Sent only once — later changes to the verdict do not trigger another email.'
       recipient: The user who submitted the project idea.
     budget_investment_selected:
       title: Project idea selected

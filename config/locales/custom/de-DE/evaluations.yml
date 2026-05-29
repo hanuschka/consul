@@ -108,6 +108,23 @@ de:
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
               ai_questions: KI-Fragen
+            section_descriptions:
+              kpis: Wichtigste Kennzahlen der Phase — Teilnehmende, Vorschläge, Stimmen, Unterstützungen.
+              key_metrics: Detaillierte Aufschlüsselung der Teilnahmewerte je Metrik.
+              ranking: Balkendiagramm mit den am stärksten unterstützten Vorschlägen.
+              proposals: Karten mit den Top-Vorschlägen und deren Unterstützungszahlen.
+              questions: Abstimmungsfragen mit Antwortverteilungen und Ergebnis-Diagrammen.
+              open_responses: Frei formulierte Beiträge der Teilnehmenden.
+              ai_summary: KI-generierte Zusammenfassung der Phase als Fließtext.
+              phase_summary: Kompakter Überblick über Verlauf und Ergebnisse der Phase.
+              tone: KI-Analyse des emotionalen Tons in Beiträgen und Kommentaren.
+              timeline: Tägliche Aktivitätsübersicht mit Verlauf der Teilnahme.
+              label_sentiment: Verteilung der Beiträge nach Themenlabel und Stimmungslage.
+              user_segments: Aufteilung der Teilnehmenden nach demografischen oder Interessensgruppen.
+              key_findings: Wichtigste Erkenntnisse aus der KI-Auswertung.
+              topic_clustering: Beiträge gruppiert nach inhaltlichen Themenclustern.
+              semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.
+              ai_questions: Auf Basis der Beiträge KI-generierte Anschlussfragen.
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen
@@ -163,6 +180,10 @@ de:
             project_summary: Projektzusammenfassung
             settings: Projekteinstellungen
             phase_summaries: Phasen-Zusammenfassungen
+          report_section_descriptions:
+            project_summary: Snapshot der Projektseite mit Untertitel, Bild und KI-Zusammenfassung des Projektinhalts.
+            settings: Überblick über die Projektkonfiguration — offene Phasen, Abstimmungen, Schlagwörter und Nachhaltigkeitsziele.
+            phase_summaries: Kurze KI-generierte Zusammenfassung für jede Projektphase.
           bulk_all_on: Alle aus
           bulk_all_off: Alle ein
           cancel: Zurück

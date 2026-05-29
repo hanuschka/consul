@@ -160,6 +160,7 @@ de:
           title: Kommentare
           no_comments_title: Keine Kommentare vorhanden
           no_comments_description: Sobald Nutzer in dieser Beteiligungsphase Kommentare verfassen, werden diese hier aufgelistet und können moderiert werden. Sie haben die Möglichkeit, einzelne Kommentare herauszumoderieren, wiederherzustellen oder gemeldete Beiträge zu überprüfen. Die Tabelle zeigt Autor, Inhalt und Moderationsstatus jedes Kommentars an.
+          download_csv: CSV herunterladen
           table:
             body: Kommentar
             author: Autor

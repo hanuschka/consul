@@ -1,3 +1,4 @@
+<div class="projekt-footer--inner">
 <% if @budget.present? %>
   <%= render Pages::Projekts::BudgetsTabComponent.new(@budget, @ballot, current_user) %>
 <% end %>
@@ -69,7 +70,15 @@
             <%= render Shared::MapComponent.new(
               mappable: @projekt_phase,
               features: @investment_coordinates,
-              process: 'investments'
+              process: 'investments',
+              map_data_url: map_data_path(
+                source: "budget_phase",
+                projekt_phase_id: @projekt_phase.id,
+                filter: params[:filter],
+                search: params[:search],
+                projekt_label_ids: params[:projekt_label_ids],
+                sentiment_id: params[:sentiment_id]
+              )
             ) %>
           <% end %>
 
@@ -106,3 +115,4 @@
     <h2>Dieses Projekt Phase hat kein zugehöriges Budget</h2>
   <% end %>
 <% end %>
+</div>

@@ -7,6 +7,7 @@ en:
           images: Images
           documents: Documents
   files:
+    allowed_types_note: "Allowed file types: %{types}"
     images:
       index:
         title: Overview of all images

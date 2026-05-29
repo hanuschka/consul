@@ -6,11 +6,11 @@ de:
       recipient: Der Nutzer, der den Bürgervorschlag eingereicht hat.
     budget_investment_feasible:
       title: Vorschlag als umsetzbar bewertet
-      description: Wird an den Autor gesendet, wenn sein Vorschlag als umsetzbar bewertet wurde.
+      description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als umsetzbar bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_unfeasible:
       title: Vorschlag als nicht umsetzbar bewertet
-      description: Wird an den Autor gesendet, wenn sein Vorschlag als nicht umsetzbar bewertet wurde.
+      description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als nicht umsetzbar bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_selected:
       title: Vorschlag ausgewählt

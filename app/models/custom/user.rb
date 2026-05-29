@@ -43,6 +43,7 @@ User.class_eval do
   has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
+  has_many :projekt_imports, dependent: :destroy
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :memos
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author

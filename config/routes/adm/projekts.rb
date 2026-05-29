@@ -80,10 +80,6 @@ namespace :adm do
         get :ai_settings
         patch :update_ai_settings
 
-        # Evaluation visibility
-        get :evaluation_visibility
-        patch :update_evaluation_visibility
-
         # Dynamic resources (from resources_name)
         get :projekt_notifications
         get :projekt_events
@@ -198,6 +194,21 @@ namespace :adm do
       end
     end
 
+    resources :imports, only: [:new, :create, :show], controller: "imports/from_files" do
+      member do
+        get :status
+        post :reset
+      end
+
+      resource :chat, only: [:show], controller: "imports/chats" do
+        get :messages
+        post :message
+        post :command
+        post :extract
+        post :execute
+      end
+    end
+
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       collection do
         get :import_projekt
@@ -210,6 +221,8 @@ namespace :adm do
       get :images, on: :member
       get :documents, on: :member
       get :evaluation, on: :member
+      get :evaluation_visibility, on: :member
+      patch :update_evaluation_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member

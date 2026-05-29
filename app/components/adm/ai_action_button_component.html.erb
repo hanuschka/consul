@@ -4,13 +4,15 @@
   data-adm--ai-action-button-progress-mode-value="<%= progress_mode %>"
   data-adm--ai-action-button-status-url-value="<%= status_url %>"
   data-adm--ai-action-button-poll-interval-value="<%= poll_interval %>"
+  data-adm--ai-action-button-loading-value="<%= loading %>"
+  data-adm--ai-action-button-confirm-value="<%= confirm %>"
 >
   <%= link_to(
     url,
     class: button_classes,
+    hidden: loading,
     data: {
       turbo_method: method,
-      turbo_confirm: confirm,
       action: "click->adm--ai-action-button#start",
       "adm--ai-action-button-target": "button"
     }
@@ -31,7 +33,7 @@
     data-adm--ai-action-button-target="progress"
     role="status"
     aria-live="polite"
-    hidden
+    <%= "hidden" unless loading %>
   >
     <span class="adm-ai-action-button--progress-spinner" aria-hidden="true"></span>
     <div class="adm-ai-action-button--progress-body">

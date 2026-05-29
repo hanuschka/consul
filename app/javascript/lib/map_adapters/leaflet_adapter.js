@@ -20,6 +20,7 @@ export default class LeafletAdapter extends BaseAdapter {
     this.container = container
     this.options = options
     this.adminEditor = options.adminEditor || false
+    this.masterportalEnabled = options.masterportalEnabled || false
     this.defaultFeatureColor = this.getDefaultFeatureColor(this.adminEditor)
     this.featuresLimit = options.featuresLimit || 1
     this.clusterGroup = null
@@ -472,13 +473,18 @@ export default class LeafletAdapter extends BaseAdapter {
   createMarkerIcon(color, iconName, title, feature) {
     const L = window.L
 
-    if (feature && feature.properties && feature.properties.feature_icon_url) {
-      return L.icon({
-        iconUrl: feature.properties.feature_icon_url,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -32]
-      })
+    // Temporarily disabled — masterportal pin icon set will be reimplemented.
+    // if (feature && feature.properties && feature.properties.feature_icon_url) {
+    //   return L.icon({
+    //     iconUrl: feature.properties.feature_icon_url,
+    //     iconSize: [36, 36],
+    //     iconAnchor: [18, 36],
+    //     popupAnchor: [0, -32]
+    //   })
+    // }
+
+    if (this.isMasterportalFeature(feature)) {
+      return this.masterportalMarkerIcon()
     }
 
     color = color || getBrandColor()
@@ -490,6 +496,29 @@ export default class LeafletAdapter extends BaseAdapter {
       iconSize: [30, 30],
       iconAnchor: [15, 40],
       html: `<div class="map-icon icon-${iconName}" role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></div>`
+    })
+  }
+
+  isMasterportalFeature(feature) {
+    if (!feature || !feature.properties) return false
+
+    return this.masterportalEnabled || feature.properties.resource_type === "masterportal_pin"
+  }
+
+  // Temporary: fully replaces the default marker for masterportal pins with a
+  // half-transparent green square whose top-center sits on the pin location.
+  masterportalMarkerIcon() {
+    const L = window.L
+    const title = "Masterportal-Pin"
+    const size = 42
+    const half = size / 2
+
+    return L.divIcon({
+      className: "masterportal-square-marker",
+      iconSize: [size, size],
+      iconAnchor: [half, half],
+      popupAnchor: [0, 0],
+      html: `<div role="img" aria-label="${title}" title="${title}"></div>`
     })
   }
 
@@ -517,6 +546,7 @@ export default class LeafletAdapter extends BaseAdapter {
           finalOptions.className = "masterportal-popup-wrapper"
           finalOptions.minWidth = 260
           finalOptions.maxWidth = 360
+          finalOptions.offset = window.L.point(0, 0)
         }
 
         layer.bindPopup(

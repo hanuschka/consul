@@ -491,7 +491,9 @@
           var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
           var icon;
 
-          if (feature.properties.feature_icon_url) {
+          if (feature.properties.resource_type === "masterportal_pin") {
+            icon = App.Utils.getMasterportalSquareMarker();
+          } else if (feature.properties.feature_icon_url) {
             icon = L.icon({
               iconUrl: feature.properties.feature_icon_url,
               iconSize: [36, 36],
@@ -557,6 +559,7 @@
             popupOptions.className = "masterportal-popup-wrapper";
             popupOptions.minWidth = 260;
             popupOptions.maxWidth = 360;
+            popupOptions.offset = L.point(0, -20);
           }
 
           e.target.bindPopup(

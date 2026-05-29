@@ -33,6 +33,8 @@
 <hr class="kern-divider" aria-hidden="true" />
 
 <div class="kern-container <%= 'kern-container--form' if @narrow %>">
+  <%= before_title if before_title? %>
+
   <div class="adm-page-title-row adm-page-title-row--import <%= '-compact' if @compact %>">
     <h1 class="adm-page-title" id="adm-page-title"><%= @title %></h1>
     <%= hint if hint? %>

@@ -1,11 +1,14 @@
 class Shared::MapComponent < ApplicationComponent
+  LAZY_LOAD_THRESHOLD = 30
+
   def initialize(
     mappable: nil,
     features: {},
     editable: false,
     process: nil,
     placement: nil,
-    collapsible: false
+    collapsible: false,
+    map_data_url: nil
   )
     @mappable = mappable
     @features = features
@@ -13,6 +16,14 @@ class Shared::MapComponent < ApplicationComponent
     @process = process
     @placement = placement
     @collapsible = collapsible
+    @map_data_url = map_data_url
+  end
+
+  def lazy_load_map_data?
+    return false if @editable
+    return false if @map_data_url.blank?
+
+    features_count > LAZY_LOAD_THRESHOLD
   end
 
   def collapsible?
@@ -29,6 +40,17 @@ class Shared::MapComponent < ApplicationComponent
 
   private
 
+    def features_count
+      array =
+        if @features.is_a?(Hash)
+          @features[:features] || @features["features"]
+        else
+          @features
+        end
+
+      array.is_a?(Array) ? array.size : 0
+    end
+
     def prepare_map_settings
       options = { map: true }
 
@@ -42,7 +64,11 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:layers_data] = layers
 
-      options[:features] = @features
+      if lazy_load_map_data?
+        options[:map_data_url] = @map_data_url
+      else
+        options[:features] = @features
+      end
 
       options[:masterportal_pins_layer_label] =
         I18n.t("components.shared.map_component.layers.masterportal_pins")
@@ -107,7 +133,7 @@ class Shared::MapComponent < ApplicationComponent
                  MapLayer.default
              end
 
-      base.as_json + masterportal_wms_layer_injection
+      masterportal_wms_layer_injection + base.as_json
     end
 
     def masterportal_wms_layer_injection

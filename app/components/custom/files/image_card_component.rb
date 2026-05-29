@@ -10,6 +10,10 @@ class Files::ImageCardComponent < ApplicationComponent
 
     attr_reader :image, :type
 
+    def uploaded_by
+      image.user
+    end
+
     def filename
       attachment_filename.presence || image.title.presence || "Untitled"
     end

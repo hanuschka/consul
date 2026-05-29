@@ -9,6 +9,10 @@ class Files::DocumentRowComponent < ApplicationComponent
 
     attr_reader :document
 
+    def uploaded_by
+      document.user
+    end
+
     def filename
       attachment_filename.presence || document.title.presence || "Untitled"
     end

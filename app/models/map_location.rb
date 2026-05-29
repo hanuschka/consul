@@ -149,8 +149,9 @@ class MapLocation < ApplicationRecord
 
     {
       "resource_type" => "masterportal_pin",
-      "id" => pin.id,
-      "feature_icon_url" => pin.feature_icon_url
+      "id" => pin.id
+      # Temporarily disabled — masterportal pin icon set will be reimplemented.
+      # "feature_icon_url" => pin.feature_icon_url
     }
   end
 

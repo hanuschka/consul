@@ -19,6 +19,7 @@ window.ProjektStudio = {
 
     ProjektStudio.ProjektStart.initialize()
     ProjektStudio.BuildWithPrompt.initialize()
+    ProjektStudio.CreateContentBlockWithAi.initialize()
 
     // Initialize ContentBlock submodules
     ProjektStudio.ContentBlock.Render.initialize()

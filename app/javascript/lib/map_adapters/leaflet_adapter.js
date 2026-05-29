@@ -20,6 +20,7 @@ export default class LeafletAdapter extends BaseAdapter {
     this.container = container
     this.options = options
     this.adminEditor = options.adminEditor || false
+    this.masterportalEnabled = options.masterportalEnabled || false
     this.defaultFeatureColor = this.getDefaultFeatureColor(this.adminEditor)
     this.featuresLimit = options.featuresLimit || 1
     this.clusterGroup = null
@@ -482,8 +483,8 @@ export default class LeafletAdapter extends BaseAdapter {
     //   })
     // }
 
-    if (feature && feature.properties && feature.properties.resource_type === "masterportal_pin") {
-      return this.createMasterportalPinIcon()
+    if (this.isMasterportalFeature(feature)) {
+      return this.masterportalMarkerIcon()
     }
 
     color = color || getBrandColor()
@@ -498,17 +499,26 @@ export default class LeafletAdapter extends BaseAdapter {
     })
   }
 
-  // Temporary placeholder for masterportal pins until the icon set is reimplemented.
-  createMasterportalPinIcon() {
+  isMasterportalFeature(feature) {
+    if (!feature || !feature.properties) return false
+
+    return this.masterportalEnabled || feature.properties.resource_type === "masterportal_pin"
+  }
+
+  // Temporary: fully replaces the default marker for masterportal pins with a
+  // half-transparent green square whose top-center sits on the pin location.
+  masterportalMarkerIcon() {
     const L = window.L
     const title = "Masterportal-Pin"
+    const size = 24
+    const half = size / 2
 
     return L.divIcon({
-      className: "",
-      iconSize: [22, 22],
-      iconAnchor: [11, 11],
-      popupAnchor: [0, -11],
-      html: `<div role="img" aria-label="${title}" title="${title}" style="width: 22px; height: 22px; background-color: rgba(46, 125, 50, 0.5); border: 2px solid rgba(46, 125, 50, 0.9);"></div>`
+      className: "masterportal-square-marker",
+      iconSize: [size, size],
+      iconAnchor: [half, 0],
+      popupAnchor: [0, -2],
+      html: `<div role="img" aria-label="${title}" title="${title}" style="width: ${size}px; height: ${size}px; background-color: rgba(46, 125, 50, 0.5); border: 2px solid rgba(46, 125, 50, 0.9); box-sizing: border-box;"></div>`
     })
   }
 

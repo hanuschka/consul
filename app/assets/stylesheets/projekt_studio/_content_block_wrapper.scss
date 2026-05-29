@@ -299,3 +299,12 @@
     }
   }
 }
+
+// Give content blocks a visible minimum height while editing in studio mode, so
+// short or empty blocks stay easy to see and click. Scoped to studio view only:
+// the .projekt-content-block-wrapper exists only when studio controls are
+// rendered (never for regular users), and body.-preview-mode is excluded so the
+// min-height drops in user preview mode.
+body:not(.-preview-mode) .projekt-content-block-wrapper .projekt-content-block {
+  min-height: 55px;
+}

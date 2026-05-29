@@ -833,7 +833,7 @@ class Projekt < ApplicationRecord
           siblings.with_order_number.pluck(:order_number).each_cons(2).all? { |a, b| b == a + 1 }
         new_order = 1
         siblings.with_order_number.each do |projekt|
-          projekt.update!(order_number: new_order)
+          projekt.update_column(:order_number, new_order)
           new_order += 1
         end
       end

@@ -1,0 +1,27 @@
+<div class="adm-files-allowed-types text-muted d-flex align-items-center gap-1">
+  <span class="icon material-symbols-outlined" aria-hidden="true">info</span>
+  <span class="adm-files-allowed-types--lines">
+    <%
+      settings_link =
+        if current_user&.administrator?
+          link_to(t("files.allowed_types_settings_link"),
+                  admin_settings_path(anchor: "tab-images-and-documents"),
+                  class: "adm-files-allowed-types--settings-link",
+                  target: "_blank", rel: "noopener")
+        end
+    %>
+
+    <% if admin_types == user_types %>
+      <span>
+        <%= t("files.allowed_types_note_html", types: tag.span(admin_types, class: "adm-files-allowed-types--type")) %>
+        <% if settings_link %>(<%= settings_link %>)<% end %>
+      </span>
+    <% else %>
+      <span><%= t("files.allowed_types_admins_html", types: tag.span(admin_types, class: "adm-files-allowed-types--type")) %></span>
+      <span>
+        <%= t("files.allowed_types_users_html", types: tag.span(user_types, class: "adm-files-allowed-types--type")) %>
+        <% if settings_link %>(<%= settings_link %>)<% end %>
+      </span>
+    <% end %>
+  </span>
+</div>

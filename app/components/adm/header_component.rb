@@ -1,6 +1,7 @@
 class Adm::HeaderComponent < ApplicationComponent
   renders_one :hint, Adm::HintComponent
   renders_one :actions
+  renders_one :before_title
 
   def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, frontend_url: nil)
     @title = title

@@ -71,6 +71,7 @@ en:
       assigned_to: Assigned to
       size: Size
       modified: Modified
+      uploaded_by: Uploaded by
     card:
       edit: Edit
       delete: Delete
@@ -81,6 +82,7 @@ en:
       file_size: File size
       dimensions: Dimensions
       uploaded: Uploaded
+      uploaded_by: Uploaded by
       last_edited: Last edited
       projekt: Project
       resource_type: Resource type

@@ -18,14 +18,21 @@ class Masterportal::PinBuilder < ApplicationService
     pin.endpoint_url = @endpoint_url
     pin.collection_id = @collection_id
     pin.collection_title = @collection_title
-    pin.title = Masterportal::FeaturePropertyReader.title(@feature)
     pin.description = Masterportal::FeaturePropertyReader.description(@feature)
     pin.latitude = Masterportal::FeaturePropertyReader.latitude(@feature)
     pin.longitude = Masterportal::FeaturePropertyReader.longitude(@feature)
     pin.properties = @feature["properties"] || {}
     pin.raw_feature = @feature
     pin.last_imported_at = Time.current
+    pin.title = resolved_title(pin)
 
     pin
   end
+
+  private
+
+    def resolved_title(pin)
+      Masterportal::FeaturePropertyReader.title_value(@feature).presence ||
+        Masterportal::CategoryNameResolver.call(pin: pin)
+    end
 end

@@ -24,7 +24,7 @@ class Shared::MasterportalPinPropertiesComponent < ApplicationComponent
     end
 
     def title_key
-      @title_key ||= Masterportal::FeaturePropertyReader.title_property_key(pin.properties || {})
+      @title_key ||= Masterportal::FeaturePropertyReader.title_source_key(pin.properties || {})
     end
 
     def label_for(key)

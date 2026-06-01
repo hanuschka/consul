@@ -36,7 +36,7 @@ class Masterportal::PopupDataBuilder < ApplicationService
     end
 
     def title_key
-      @title_key ||= Masterportal::FeaturePropertyReader.title_property_key(@pin.properties.to_h)
+      @title_key ||= Masterportal::FeaturePropertyReader.title_source_key(@pin.properties.to_h)
     end
 
     def combined_address_keys

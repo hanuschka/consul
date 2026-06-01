@@ -38,39 +38,43 @@
       <%= hidden_field_tag :view, @masterportal_pins_view %>
 
       <% if @masterportal_pins_collection_ids.any? %>
-        <label
-          class="masterportal-pins-search-form--filter-label"
-          for="masterportal-pins-collection-filter"
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
-          <span class="sr-only"><%= t(".filter.label") %></span>
-        </label>
+        <div class="masterportal-pins-search-form--field">
+          <label
+            class="masterportal-pins-search-form--filter-label"
+            for="masterportal-pins-collection-filter"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
+            <span class="sr-only"><%= t(".filter.label") %></span>
+          </label>
 
-        <%= select_tag :collection_id,
-              options_for_select(
-                [[t(".filter.all"), ""]] +
-                  @masterportal_pins_collection_ids.map { |id| [id.capitalize, id] },
-                @masterportal_pins_collection_id
-              ),
-              id: "masterportal-pins-collection-filter",
-              class: "masterportal-pins-search-form--select",
-              onchange: "this.form.submit()" %>
+          <%= select_tag :collection_id,
+                options_for_select(
+                  [[t(".filter.all"), ""]] +
+                    @masterportal_pins_collection_ids.map { |id| [id.capitalize, id] },
+                  @masterportal_pins_collection_id
+                ),
+                id: "masterportal-pins-collection-filter",
+                class: "masterportal-pins-search-form--select",
+                onchange: "this.form.submit()" %>
+        </div>
       <% end %>
 
-      <label class="masterportal-pins-search-form--label" for="masterportal-pins-search-input">
-        <span class="material-symbols-outlined" aria-hidden="true">search</span>
-        <span class="sr-only"><%= t(".search.label") %></span>
-      </label>
+      <div class="masterportal-pins-search-form--field -grow">
+        <label class="masterportal-pins-search-form--label" for="masterportal-pins-search-input">
+          <span class="material-symbols-outlined" aria-hidden="true">search</span>
+          <span class="sr-only"><%= t(".search.label") %></span>
+        </label>
 
-      <input
-        id="masterportal-pins-search-input"
-        type="search"
-        name="q"
-        value="<%= @masterportal_pins_search_query %>"
-        class="masterportal-pins-search-form--input"
-        placeholder="<%= t('.search.placeholder') %>"
-        autocomplete="off"
-      >
+        <input
+          id="masterportal-pins-search-input"
+          type="search"
+          name="q"
+          value="<%= @masterportal_pins_search_query %>"
+          class="masterportal-pins-search-form--input"
+          placeholder="<%= t('.search.placeholder') %>"
+          autocomplete="off"
+        >
+      </div>
 
       <button type="submit" class="masterportal-pins-search-form--submit">
         <%= t(".search.submit") %>

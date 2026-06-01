@@ -400,6 +400,16 @@ summary.masterportal-pins-list--header {
   border-radius: 12px;
 }
 
+.masterportal-pins-search-form--field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.masterportal-pins-search-form--field.-grow {
+  flex: 1;
+}
+
 .masterportal-pins-search-form--label {
   display: inline-flex;
   align-items: center;
@@ -410,7 +420,7 @@ summary.masterportal-pins-list--header {
   color: #64748b;
 
   .material-symbols-outlined {
-    font-size: 20px;
+    font-size: 25px;
   }
 }
 
@@ -421,7 +431,6 @@ summary.masterportal-pins-list--header {
   flex-shrink: 0;
   width: 32px;
   height: 36px;
-  margin-right: -4px;
   color: #64748b;
 
   .material-symbols-outlined {

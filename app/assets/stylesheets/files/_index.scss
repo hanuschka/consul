@@ -145,6 +145,14 @@
   align-content: start;
 }
 
+.files-index--empty {
+  grid-column: 1 / -1;
+}
+
+.files-index--empty-cell {
+  padding: 0;
+}
+
 .files-index--pagination {
   display: flex;
   justify-content: center;

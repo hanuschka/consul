@@ -2,7 +2,7 @@ module Masterportal
   module FeaturePropertyReader
     REGENSBURG_BOUNDING_BOX = [12.024365, 48.962909, 12.198046, 49.080493].freeze
 
-    TITLE_KEYS = %w[NAME BEZEICHNUNG TITLE].freeze
+    TITLE_KEYS = %w[NAME BEZEICHNUNG TITLE TITEL].freeze
     CATEGORY_KEYS = %w[KATEGORIE ART_NAME ART_CATEGORY].freeze
     STREET_KEYS = %w[STRASSE STRASSENNAME STRASSE_NAME].freeze
     HOUSE_NUMBER_KEYS = %w[HAUS_NR HAUSNUMMER].freeze
@@ -33,15 +33,18 @@ module Masterportal
     end
 
     def title(feature)
-      props = feature["properties"] || {}
-
-      value_from(props, TITLE_KEYS) || external_id(feature)
+      title_value(feature) || external_id(feature)
     end
 
-    def title_property_key(properties)
+    def title_value(feature)
+      value_from(feature["properties"] || {}, TITLE_KEYS)
+    end
+
+    def title_source_key(properties)
       props = properties || {}
 
-      TITLE_KEYS.find { |key| props[key].to_s.strip.present? }
+      TITLE_KEYS.find { |key| props[key].to_s.strip.present? } ||
+        CATEGORY_KEYS.find { |key| props[key].to_s.strip.present? }
     end
 
     def category_name(feature)

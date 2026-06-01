@@ -30,7 +30,7 @@
     "material-symbols": "^0.37.0",
     "puppeteer": "^23.0.0",
     "redoc": "^3.0.0-rc.0",
-    "sass": "^1.100.0",
+    "sass": "~1.99.0",
     "select2": "^4.1.0-rc.0",
     "siriwave": "^2.4.0",
     "sortablejs": "^1.15.6"

@@ -11,9 +11,6 @@ User.class_eval do
   SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
     created_at: "created_at", verified_at: "verified_at" }.freeze
 
-  MASTERPORTAL_LOGO_PATH =
-    Rails.root.join("app", "assets", "images", "adm", "apps", "logo_masterportal.png").freeze
-
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
@@ -99,6 +96,8 @@ User.class_eval do
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
 
+  validate :only_one_system_user, if: :system_user?
+
   class << self
     def order_filter(params)
       sorting_key = params[:sort_by]&.downcase&.to_sym
@@ -128,45 +127,8 @@ User.class_eval do
       joins(:administrator).ids
     end
 
-    def masterportal
-      @masterportal_user ||= find_or_create_masterportal_user
-    end
-
-    def find_or_create_masterportal_user
-      user = User.find_by(username: "masterportal")
-
-      if user.present?
-        return user
-      end
-
-      create_masterportal_user
-    end
-
-    def create_masterportal_user
-      user = User.new(
-        username: "masterportal",
-        email: "masterportal@system.consul",
-        password: SecureRandom.hex(32)
-      )
-
-      user.skip_confirmation!
-      user.save!(validate: false)
-
-      attach_masterportal_logo(user)
-      user
-    end
-
-    def attach_masterportal_logo(user)
-      return if user.image&.attached?
-
-      image = Image.new(title: "avatar", user: user, imageable: user)
-      image.attachment.attach(
-        io: File.open(MASTERPORTAL_LOGO_PATH),
-        filename: "masterportal_logo.png",
-        content_type: "image/png"
-      )
-
-      image.save!(validate: false)
+    def system
+      @system_user ||= Users::SystemUserService.call
     end
   end
 
@@ -176,6 +138,12 @@ User.class_eval do
 
   def not_actual?
     !actual?
+  end
+
+  def only_one_system_user
+    return if User.where(system_user: true).where.not(id: id).none?
+
+    errors.add(:system_user, :taken)
   end
 
   def validate_registered_address?

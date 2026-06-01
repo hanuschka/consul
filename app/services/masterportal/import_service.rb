@@ -75,6 +75,8 @@ class Masterportal::ImportService < ApplicationService
     end
 
     def process_collection(collection_id)
+      collection = find_or_create_collection(collection_id)
+      collection.update!(import_status: "running", import_error: nil)
       count = 0
 
       OgcApiFeatures::Client.fetch_features(@endpoint_url, collection_id) do |feature|
@@ -84,11 +86,47 @@ class Masterportal::ImportService < ApplicationService
           raise "Collection #{collection_id} exceeds MAX_FEATURES_PER_RUN"
         end
 
-        process_feature(feature: feature, collection_id: collection_id)
+        process_feature(feature: feature, collection_id: collection_id, collection: collection)
       end
+
+      finalize_collection_success!(collection)
+
+      # Upsert-only by design. To keep the collection exactly in sync with the
+      # source feed, collect the external_ids seen in the loop above and delete
+      # the pins (plus their proposals/investments) that were not seen this run:
+      #
+      #   stale = collection.masterportal_pins.where.not(external_id: seen_external_ids)
+      #   stale.includes(:proposal, :budget_investment, :projekt_point_of_interest_pin)
+      #        .find_each do |pin|
+      #     pin.associated_record&.destroy!
+      #     pin.destroy!
+      #   end
+    rescue => e
+      collection&.update!(import_status: "failed", import_error: e.message.truncate(1000))
+      raise
     end
 
-    def process_feature(feature:, collection_id:)
+    def find_or_create_collection(collection_id)
+      collection =
+        @projekt_phase.masterportal_collections.find_or_initialize_by(collection_id: collection_id)
+      collection.name = collection_titles[collection_id].presence || collection.name
+      collection.endpoint_url = @endpoint_url
+      collection.create_domain_records = @create_domain_records
+      collection.save!
+
+      collection
+    end
+
+    def finalize_collection_success!(collection)
+      collection.update!(
+        import_status: "success",
+        import_error: nil,
+        last_imported_at: Time.current,
+        last_imported_count: collection.masterportal_pins.count
+      )
+    end
+
+    def process_feature(feature:, collection_id:, collection:)
       if !point_geometry?(feature)
         @stats[:skipped] += 1
         return
@@ -97,7 +135,8 @@ class Masterportal::ImportService < ApplicationService
       report_out_of_bbox(feature)
 
       ActiveRecord::Base.transaction do
-        was_new_record, pin = persist_pin(feature: feature, collection_id: collection_id)
+        was_new_record, pin =
+          persist_pin(feature: feature, collection_id: collection_id, collection: collection)
 
         if @create_domain_records && pin.associated_record.nil?
           persist_domain_record(pin)
@@ -118,12 +157,13 @@ class Masterportal::ImportService < ApplicationService
       Sentry.capture_exception(e) if defined?(Sentry)
     end
 
-    def persist_pin(feature:, collection_id:)
+    def persist_pin(feature:, collection_id:, collection:)
       pin = Masterportal::PinBuilder.call(
         projekt_phase: @projekt_phase,
         endpoint_url: @endpoint_url,
         collection_id: collection_id,
         collection_title: collection_titles[collection_id],
+        masterportal_collection: collection,
         feature: feature
       )
       was_new = pin.new_record?

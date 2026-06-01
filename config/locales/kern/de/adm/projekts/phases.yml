@@ -189,6 +189,7 @@ de:
             actions: Aktionen
         map:
           title: Karte
+          masterportal_import_success: Import erfolgreich abgeschlossen.
         masterportal_pins:
           title: Importierte Masterportal-Pins
         officing_managers:

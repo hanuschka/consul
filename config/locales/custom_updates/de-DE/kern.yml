@@ -34,7 +34,7 @@ de:
   masterportal:
     imported_proposal_default_title: "Importierter Punkt %{external_id}"
     imported_investment_default_title: "Importierter Punkt %{external_id}"
-    imported_resource_description: "Dieser Eintrag wurde aus dem Masterportal importiert. Die Detailinformationen werden direkt aus den Masterportal-Daten geladen."
+    imported_resource_description: "Dieser Eintrag gehört zu der von der Stadt Regensburg erstellten Karte der Kühlen Orten."
     description:
       properties_heading: "Eigenschaften aus dem Masterportal"
     feature:

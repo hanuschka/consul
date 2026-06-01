@@ -27,6 +27,7 @@ namespace :adm do
     get :search, on: :collection
   end
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
+  resource :system_user, controller: "system_user", only: [:edit, :update]
   resources :map_locations, only: [] do
     post :update_screenshot, on: :member
   end

@@ -10,6 +10,7 @@ en:
         create_resource_label: "Create %{resource_name}"
         create_resource_description: A module entry will be created from each imported dataset.
         create_resource_categories_note: Matching categories are created automatically from the dataset categories.
+        system_user_note: All created proposals/investments are published under the following system user.
         import_button: Import
         status:
           pending: Not yet run

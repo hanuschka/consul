@@ -226,8 +226,15 @@ export default class extends Controller {
 
     if (wasRunning && nextStatus === "success") {
       this.stopStatusPolling()
-      window.location.reload()
+      this.redirectToSummary()
     }
+  }
+
+  redirectToSummary() {
+    const url = new URL(window.location.href)
+    url.searchParams.set("masterportal_import", "success")
+    url.hash = "masterportal-pins-summary"
+    window.location.assign(url.toString())
   }
 
   setRunningUi(status) {

@@ -156,6 +156,12 @@ application.register("adm--masterportal-import-panel", AdmMasterportalImportPane
 import AdmDeleteCollectionController from "./adm/delete_collection_controller"
 application.register("adm--delete-collection", AdmDeleteCollectionController)
 
+import AdmMasterportalCollectionController from "./adm/masterportal_collection_controller"
+application.register("adm--masterportal-collection", AdmMasterportalCollectionController)
+
+import AdmMasterportalCollectionsResyncController from "./adm/masterportal_collections_resync_controller"
+application.register("adm--masterportal-collections-resync", AdmMasterportalCollectionsResyncController)
+
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 

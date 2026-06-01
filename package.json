@@ -6,6 +6,7 @@
     "@hotwired/turbo-rails": "^8.0.18",
     "@kern-ux/native": "^2.3.1",
     "@rails/activestorage": "^8.1.100",
+    "@rails/request.js": "^0.0.13",
     "@redocly/cli": "^2.9.0",
     "@simonwep/pickr": "^1.9.1",
     "ace-builds": "^1.44.0",

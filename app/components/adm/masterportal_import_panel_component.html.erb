@@ -70,6 +70,14 @@
             </span>
           </span>
         </label>
+
+        <div class="masterportal-import-panel--system-user">
+          <p class="masterportal-import-panel--system-user-note">
+            <%= t(".system_user_note", resource_name: resource_name, name: system_user.name) %>
+          </p>
+
+          <%= render Adm::SystemUserInfoComponent.new(user: system_user) %>
+        </div>
       <% end %>
 
       <button

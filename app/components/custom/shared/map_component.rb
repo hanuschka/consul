@@ -137,7 +137,7 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def masterportal_wms_layer_injection
-      return [] if map_location&.rendering_library != "leaflet_plus_masterportal"
+      return [] if !masterportal_rendering_enabled?
 
       wms_url = Rails.application.secrets.dig(:masterportal, :wms_url)
       wms_layers = Rails.application.secrets.dig(:masterportal, :wms_layers)
@@ -155,6 +155,17 @@ class Shared::MapComponent < ApplicationComponent
         "show_by_default" => true,
         "base" => false
       }]
+    end
+
+    def masterportal_rendering_enabled?
+      return true if map_location&.rendering_library == "leaflet_plus_masterportal"
+
+      context_map_location&.rendering_library == "leaflet_plus_masterportal"
+    end
+
+    def context_map_location
+      @mappable.try(:projekt_phase)&.map_location ||
+        @mappable.try(:projekt)&.map_location
     end
 
     def admin_editor?

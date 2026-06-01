@@ -1,0 +1,22 @@
+en:
+  components:
+    adm:
+      masterportal_collections_list_component:
+        title: "Imported datasets"
+        created_at: "Created"
+        pins_count: "Pins"
+        resources_count: "Created entries"
+        last_imported_at: "Last update"
+        never: "Never"
+        working: "Working…"
+        update: "Update"
+        delete: "Delete"
+        clean: "Clean up"
+        resync: "Resync data"
+        delete_confirm: 'Permanently delete dataset "%{name}" including its pins and created entries (proposals/investments)?'
+        clean_confirm: 'Permanently delete all pins of dataset "%{name}" that are no longer present in the Masterportal source, including the proposals/investments created from them? This cannot be undone.'
+        diff:
+          new_label: "new available"
+          stale_label: "no longer in source"
+          current_label: "Up to date"
+          checking_label: "Checking…"

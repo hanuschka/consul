@@ -3,6 +3,7 @@ de:
     adm:
       masterportal_collections_list_component:
         title: "Importierte Datensätze"
+        description: "Bereits importierte Datensätze. Mit „Daten abgleichen“ prüfen Sie die Quelle auf Änderungen; je Datensatz können Sie erneut importieren, verwaiste Pins bereinigen oder den Datensatz löschen."
         created_at: "Erstellt am"
         pins_count: "Pins"
         resources_count: "Erstellte Einträge"
@@ -13,6 +14,10 @@ de:
         delete: "Löschen"
         clean: "Bereinigen"
         resync: "Daten abgleichen"
+        resync_tooltip: "Prüft für alle Datensätze die Masterportal-Quelle auf neue und entfernte Pins"
+        update_tooltip: "Importiert diesen Datensatz erneut aus dem Masterportal und übernimmt Änderungen"
+        clean_tooltip: "Entfernt Pins (inkl. erstellter Vorschläge/Einreichungen), die nicht mehr in der Quelle vorhanden sind"
+        delete_tooltip: "Löscht diesen Datensatz vollständig inkl. aller Pins und erstellter Einträge"
         delete_confirm: 'Datensatz "%{name}" inkl. Pins und erstellter Einträge (Vorschläge/Einreichungen) endgültig löschen?'
         clean_confirm: 'Alle Pins des Datensatzes "%{name}", die nicht mehr in der Masterportal-Quelle vorhanden sind, inkl. der daraus erstellten Vorschläge/Einreichungen endgültig löschen? Dies kann nicht rückgängig gemacht werden.'
         diff:

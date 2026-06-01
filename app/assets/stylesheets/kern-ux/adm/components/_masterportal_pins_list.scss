@@ -202,7 +202,7 @@ summary.masterportal-pins-list--header {
   gap: 4px;
   padding: 5px 12px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 16px;
+  font-size: 15px;
   color: #1e40af;
   background: #eff6ff;
   border: 1px solid #bfdbfe;
@@ -219,7 +219,7 @@ summary.masterportal-pins-list--header {
   align-items: center;
   gap: 4px;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 16px;
+  font-size: 15px;
 
   .material-symbols-outlined {
     font-size: 15px;
@@ -297,7 +297,7 @@ summary.masterportal-pins-list--header {
   align-items: center;
   gap: 4px;
   padding: 5px 15px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #166534;
   text-decoration: none;
@@ -342,7 +342,7 @@ summary.masterportal-pins-list--header {
 
 .masterportal-pin-card--props {
   display: grid;
-  grid-template-columns: minmax(140px, max-content) 1fr;
+  grid-template-columns: 180px 1fr;
   gap: 8px 18px;
   margin: 14px 0 0;
   padding: 14px 16px;

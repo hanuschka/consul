@@ -6,6 +6,8 @@
         <%= t(".endpoint_url_label") %>
       </label>
 
+      <p class="masterportal-import-panel--hint"><%= t(".endpoint_url_hint") %></p>
+
       <div class="masterportal-import-panel--endpoint-row">
         <input
           id="masterportal-endpoint-url-<%= @projekt_phase.id %>"
@@ -18,6 +20,7 @@
         <button
           type="button"
           class="masterportal-import-panel--load-button"
+          title="<%= t(".load_collections_tooltip") %>"
           data-adm--masterportal-import-panel-target="loadCollectionsButton"
           data-action="click->adm--masterportal-import-panel#loadCollections"
         >
@@ -32,6 +35,8 @@
         <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
         <%= t(".collections_label") %>
       </div>
+
+      <p class="masterportal-import-panel--hint"><%= t(".collections_hint") %></p>
 
       <div
         class="masterportal-import-panel--tree"
@@ -83,6 +88,7 @@
       <button
         type="button"
         class="masterportal-import-panel--import-button"
+        title="<%= t(".import_button_tooltip") %>"
         data-adm--masterportal-import-panel-target="importButton"
         data-action="click->adm--masterportal-import-panel#startImport"
         disabled

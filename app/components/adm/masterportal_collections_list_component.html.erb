@@ -8,6 +8,7 @@
     <button
       type="button"
       class="adm-masterportal-collections--resync-button"
+      title="<%= t(".resync_tooltip") %>"
       data-adm--masterportal-collections-resync-target="button"
       data-action="adm--masterportal-collections-resync#resync"
     >
@@ -15,6 +16,8 @@
       <%= t(".resync") %>
     </button>
   </div>
+
+  <p class="adm-masterportal-collections--description"><%= t(".description") %></p>
 
   <div class="adm-masterportal-collections--cards">
     <% collections.each do |collection| %>
@@ -116,6 +119,7 @@
           <button
             type="button"
             class="adm-masterportal-collection-card--button -update"
+            title="<%= t(".update_tooltip") %>"
             data-action="adm--masterportal-collection#update"
           >
             <span class="material-symbols-outlined" aria-hidden="true">sync</span>
@@ -124,6 +128,7 @@
           <button
             type="button"
             class="adm-masterportal-collection-card--button -clean"
+            title="<%= t(".clean_tooltip") %>"
             data-adm--masterportal-collection-target="cleanButton"
             data-action="adm--masterportal-collection#clean"
           >
@@ -133,6 +138,7 @@
           <button
             type="button"
             class="adm-masterportal-collection-card--button -delete"
+            title="<%= t(".delete_tooltip") %>"
             data-action="adm--masterportal-collection#remove"
           >
             <span class="material-symbols-outlined" aria-hidden="true">delete</span>

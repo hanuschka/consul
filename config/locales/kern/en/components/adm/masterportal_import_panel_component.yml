@@ -4,14 +4,18 @@ en:
       masterportal_import_panel_component:
         title: Import Masterportal data
         endpoint_url_label: Endpoint URL (OGC API Features)
+        endpoint_url_hint: The OGC API Features endpoint URL of the Masterportal data source. Available datasets are fetched from this address.
         load_collections: Load collections
+        load_collections_tooltip: Loads the available datasets from the given endpoint URL
         collections_label: Available datasets
+        collections_hint: Select the datasets to import as pins into this project phase.
         tree_hint: Click "Load collections" to see available datasets.
         create_resource_label: "Create %{resource_name}"
         create_resource_description: A module entry will be created from each imported dataset.
         create_resource_categories_note: Matching categories are created automatically from the dataset categories.
         system_user_note: All created proposals/investments are published under the following system user.
         import_button: Import
+        import_button_tooltip: Imports the selected datasets as pins into this project phase
         status:
           pending: Not yet run
           running: Running…

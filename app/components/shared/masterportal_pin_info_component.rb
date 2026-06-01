@@ -12,7 +12,7 @@ class Shared::MasterportalPinInfoComponent < ApplicationComponent
     end
 
     def category
-      Masterportal::FeaturePropertyReader.category_name(feature_shell)
+      Masterportal::CategoryNameResolver.call(pin: pin)
     end
 
     def address_line
@@ -69,7 +69,4 @@ class Shared::MasterportalPinInfoComponent < ApplicationComponent
       @properties ||= pin.properties || {}
     end
 
-    def feature_shell
-      { "properties" => properties }
-    end
 end

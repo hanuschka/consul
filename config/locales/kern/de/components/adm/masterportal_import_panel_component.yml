@@ -9,6 +9,7 @@ de:
         tree_hint: Auf „Datensätze laden“ klicken, um verfügbare Daten zu sehen.
         create_resource_label: "%{resource_name} erzeugen"
         create_resource_description: Aus jedem importierten Datensatz wird zusätzlich ein Eintrag im Modul angelegt.
+        create_resource_categories_note: Passende Kategorien werden dabei automatisch aus den Datensatz-Kategorien angelegt.
         import_button: Importieren
         status:
           pending: Noch nicht ausgeführt

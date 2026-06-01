@@ -133,7 +133,7 @@ class Shared::MapComponent < ApplicationComponent
                  MapLayer.default
              end
 
-      base.as_json + masterportal_wms_layer_injection
+      masterportal_wms_layer_injection + base.as_json
     end
 
     def masterportal_wms_layer_injection

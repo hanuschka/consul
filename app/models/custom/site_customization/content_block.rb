@@ -10,7 +10,28 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   belongs_to :projekt, optional: true
   acts_as_list scope: :projekt
 
+  default_scope { where("ai_generation_data IS NULL OR ai_generation_data->>'status' = 'completed'") }
+
+  scope :with_ai_in_progress, -> {
+    unscoped.where("ai_generation_data->>'status' IN (?)", %w[pending processing cancelled failed])
+  }
+
   before_validation :repair_html_body, :sanitize_body
+
+  def ai_generation_status
+    return nil if ai_generation_data.blank?
+
+    ai_generation_data["status"]
+  end
+
+  def ai_generation_pending?
+    %w[pending processing].include?(ai_generation_status)
+  end
+
+  def mark_ai_generation_status!(status, extra = {})
+    new_data = (ai_generation_data || {}).merge("status" => status).merge(extra.stringify_keys)
+    update_column(:ai_generation_data, new_data)
+  end
 
   def self.custom_block_for(key, locale)
     locale ||= I18n.default_locale

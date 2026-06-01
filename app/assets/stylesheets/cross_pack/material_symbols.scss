@@ -1,4 +1,4 @@
-@import "outlined";
+@use "outlined";
 
 // Pin a 1em box on icons inside the public flyout so the Material Symbols
 // font load doesn't snap neighboring labels sideways. Scoped — chip/badge

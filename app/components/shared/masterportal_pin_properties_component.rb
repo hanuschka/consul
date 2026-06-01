@@ -15,8 +15,16 @@ class Shared::MasterportalPinPropertiesComponent < ApplicationComponent
 
     def rows
       @rows ||= (pin.properties || {}).reject do |key, value|
-        EXCLUDED_KEYS.include?(key.to_s) || value.to_s.strip.empty?
+        excluded_key?(key) || value.to_s.strip.empty?
       end
+    end
+
+    def excluded_key?(key)
+      EXCLUDED_KEYS.include?(key.to_s) || key.to_s == title_key
+    end
+
+    def title_key
+      @title_key ||= Masterportal::FeaturePropertyReader.title_source_key(pin.properties || {})
     end
 
     def label_for(key)

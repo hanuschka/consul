@@ -27,6 +27,7 @@
       resources :proposals, controller: "proposals", only: [:index, :create, :show, :update, :destroy] do
         member do
           patch :update_image
+          patch :publish
         end
       end
       resources :debates, only: [:create, :show, :update, :destroy]

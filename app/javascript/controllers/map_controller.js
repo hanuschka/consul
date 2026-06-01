@@ -101,6 +101,7 @@ export default class extends Controller {
       editable: this.editableValue,
       adminEditor: this.adminEditorValue,
       enableSetCenter: this.enableSetCenterValue,
+      masterportalEnabled: this.renderingLibraryValue === "leaflet_plus_masterportal",
       mapboxPublicToken: this.mapboxPublicTokenValue,
       mapboxStyleId: this.mapboxStyleIdValue,
       vcMapModuleUrl: this.vcMapModuleUrlValue

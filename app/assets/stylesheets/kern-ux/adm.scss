@@ -34,7 +34,6 @@
 @use "adm/components/admin_projekt_import";
 @use "adm/components/files";
 @use "adm/components/evaluation_report";
-@use "cross_pack/components/ai_clustering_component";
 @use "adm/components/masterportal_import_panel";
 @use "adm/components/masterportal_pins_list";
 @use "adm/components/masterportal_pins_summary";
@@ -43,8 +42,9 @@
 @use "adm/components/turbo_frame_placeholder";
 @use "adm/components/ai_action_button";
 @use "adm/components/kern_switch";
-@use "cross_pack/components/phase_key_metrics_card";
 @use "adm/components/phase_key_metrics_card_overrides";
+@use "cross_pack/components/phase_key_metrics_card";
+@use "cross_pack/components/ai_clustering_component";
 @use "cross_pack/components/phase_evaluation_sections";
 @use "cross_pack/components/shared_accordion";
 @use "cross_pack/components/ai_question_section";

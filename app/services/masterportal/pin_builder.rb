@@ -1,9 +1,10 @@
 class Masterportal::PinBuilder < ApplicationService
-  def initialize(projekt_phase:, endpoint_url:, collection_id:, feature:)
+  def initialize(projekt_phase:, endpoint_url:, collection_id:, feature:, collection_title: nil)
     @projekt_phase = projekt_phase
     @endpoint_url = endpoint_url
     @collection_id = collection_id
     @feature = feature
+    @collection_title = collection_title
   end
 
   def call
@@ -16,6 +17,7 @@ class Masterportal::PinBuilder < ApplicationService
 
     pin.endpoint_url = @endpoint_url
     pin.collection_id = @collection_id
+    pin.collection_title = @collection_title
     pin.title = Masterportal::FeaturePropertyReader.title(@feature)
     pin.description = Masterportal::FeaturePropertyReader.description(@feature)
     pin.latitude = Masterportal::FeaturePropertyReader.latitude(@feature)

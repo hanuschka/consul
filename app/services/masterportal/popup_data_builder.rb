@@ -30,8 +30,13 @@ class Masterportal::PopupDataBuilder < ApplicationService
       return true if value.to_s.strip == "0"
       return true if EXCLUDED_KEYS.include?(key.to_s.upcase)
       return true if combined_address_keys.include?(key.to_s.upcase)
+      return true if title_key.present? && key.to_s == title_key
 
       false
+    end
+
+    def title_key
+      @title_key ||= Masterportal::FeaturePropertyReader.title_property_key(@pin.properties.to_h)
     end
 
     def combined_address_keys

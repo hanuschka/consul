@@ -149,6 +149,13 @@ class ProjektPhase < ApplicationRecord
     failed: "failed"
   }, _prefix: :masterportal_import
 
+  enum masterportal_destroy_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_destroy
+
   validates :projekt, presence: true
   validate :type_must_be_valid
 

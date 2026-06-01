@@ -17,6 +17,13 @@ en:
     documents:
       index:
         title: Overview of all documents
+    empty:
+      images:
+        title: No images yet
+        description: There are no images here yet. Upload a file to get started.
+      documents:
+        title: No documents yet
+        description: There are no documents here yet. Upload a file to get started.
     search_form:
       placeholder: Search…
       button_title: Search

@@ -17,6 +17,13 @@ de:
     documents:
       index:
         title: Übersicht aller Dokumente
+    empty:
+      images:
+        title: Noch keine Bilder
+        description: Hier sind noch keine Bilder vorhanden. Laden Sie eine Datei hoch, um zu beginnen.
+      documents:
+        title: Noch keine Dokumente
+        description: Hier sind noch keine Dokumente vorhanden. Laden Sie eine Datei hoch, um zu beginnen.
     search_form:
       placeholder: Suchen…
       button_title: Suchen

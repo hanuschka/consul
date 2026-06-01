@@ -38,6 +38,12 @@ module Masterportal
       value_from(props, TITLE_KEYS) || external_id(feature)
     end
 
+    def title_property_key(properties)
+      props = properties || {}
+
+      TITLE_KEYS.find { |key| props[key].to_s.strip.present? }
+    end
+
     def category_name(feature)
       value_from(feature["properties"] || {}, CATEGORY_KEYS)
     end

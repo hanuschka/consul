@@ -463,11 +463,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def destroy_all_masterportal_pins
     authorize_phase(:update?)
-    Masterportal::DestroyAllPinsService.call(projekt_phase: @projekt_phase)
 
-    flash[:success] = t(".success")
+    @projekt_phase.update!(masterportal_destroy_status: "running", masterportal_destroy_error: nil)
+    MasterportalDestroyAllPinsJob.perform_later(projekt_phase_id: @projekt_phase.id)
 
-    redirect_to masterportal_pins_adm_projekts_phase_path(@projekt_phase)
+    render json: masterportal_destroy_status_payload, status: :accepted
+  end
+
+  def destroy_all_masterportal_pins_status
+    authorize_phase(:update?)
+
+    render json: masterportal_destroy_status_payload
   end
 
   def destroy_masterportal_pin
@@ -747,6 +753,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       else
         authorize @projekt_phase, policy_class: Adm::Projekts::ProjektPhasePolicy
       end
+    end
+
+    def masterportal_destroy_status_payload
+      {
+        status: @projekt_phase.masterportal_destroy_status,
+        error: @projekt_phase.masterportal_destroy_error
+      }
     end
 
     def find_projekt

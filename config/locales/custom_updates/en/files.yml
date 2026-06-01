@@ -7,13 +7,23 @@ en:
           images: Images
           documents: Documents
   files:
-    allowed_types_note: "Allowed file types: %{types}"
+    allowed_types_note_html: "Allowed file types: %{types}"
+    allowed_types_admins_html: "Admins &amp; project managers can upload the following file types: %{types}"
+    allowed_types_users_html: "Regular users can upload the following file types: %{types}"
+    allowed_types_settings_link: "edit here"
     images:
       index:
         title: Overview of all images
     documents:
       index:
         title: Overview of all documents
+    empty:
+      images:
+        title: No images yet
+        description: There are no images here yet. Upload a file to get started.
+      documents:
+        title: No documents yet
+        description: There are no documents here yet. Upload a file to get started.
     search_form:
       placeholder: Search…
       button_title: Search
@@ -71,16 +81,21 @@ en:
       assigned_to: Assigned to
       size: Size
       modified: Modified
+      uploaded_by: Uploaded by
     card:
       edit: Edit
       delete: Delete
       delete_confirm: Are you sure you want to delete this item?
       upload: Upload
       open_in_new_tab: Open in new tab
+      copy_url: Copy link
+      copy_url_success: Link copied to clipboard
+      copy_url_failed: Could not copy the link
       download: Download
       file_size: File size
       dimensions: Dimensions
       uploaded: Uploaded
+      uploaded_by: Uploaded by
       last_edited: Last edited
       projekt: Project
       resource_type: Resource type

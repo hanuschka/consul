@@ -12,6 +12,12 @@
   title: t("files.documents.index.title"),
   breadcrumbs: @breadcrumbs
 ) do |header| %>
+  <% header.with_after_title do %>
+    <%= render "adm/files/allowed_types_note",
+          admin_types: Document.humanized_admin_accepted_content_types,
+          user_types: Document.humanized_accepted_content_types %>
+  <% end %>
+
   <% header.with_actions do %>
     <div class="ml-auto">
       <%= render Adm::ButtonWithProgressComponent.new(
@@ -36,12 +42,7 @@
   <% end %>
 <% end %>
 
-<div class="kern-container my-5">
-  <p class="adm-files-allowed-types text-muted d-flex align-items-center gap-1 mb-4">
-    <span class="material-symbols-outlined" aria-hidden="true">info</span>
-    <%= t("files.allowed_types_note", types: Document.humanized_admin_accepted_content_types) %>
-  </p>
-
+<div class="kern-container my-3">
   <%= render Files::IndexComponent.new(
     type: "document",
     assets: @assets,

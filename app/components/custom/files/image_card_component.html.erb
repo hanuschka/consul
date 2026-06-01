@@ -115,6 +115,13 @@
         <dt><%= t("files.card.last_edited") %></dt>
         <dd><%= updated_at_formatted %></dd>
       </div>
+
+      <% if uploaded_by.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.uploaded_by") %></dt>
+          <dd><%= render Files::UploaderLinkComponent.new(user: uploaded_by) %></dd>
+        </div>
+      <% end %>
     </dl>
   </div>
 </article>

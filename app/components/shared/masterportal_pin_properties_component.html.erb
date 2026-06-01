@@ -13,12 +13,12 @@
             <% when :accessibility, :boolean %>
               <% if truthy?(value) %>
                 <span class="masterportal-pin-properties--boolean masterportal-pin-properties--boolean--true">
-                  <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                  <i class="fas fa-check-circle masterportal-pin-properties--boolean-icon" aria-hidden="true"></i>
                   <%= t(".flag_true") %>
                 </span>
               <% else %>
                 <span class="masterportal-pin-properties--boolean masterportal-pin-properties--boolean--false">
-                  <span class="material-symbols-outlined" aria-hidden="true">cancel</span>
+                  <i class="fas fa-times-circle masterportal-pin-properties--boolean-icon" aria-hidden="true"></i>
                   <%= t(".flag_false") %>
                 </span>
               <% end %>

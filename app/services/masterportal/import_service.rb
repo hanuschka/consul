@@ -8,6 +8,11 @@ class Masterportal::ImportService < ApplicationService
     "ProjektPhase::PointOfInterestPhase" => Masterportal::Converters::PointOfInterestPinBuilder
   }.freeze
 
+  CATEGORY_PHASE_TYPES = %w[
+    ProjektPhase::ProposalPhase
+    ProjektPhase::BudgetPhase
+  ].freeze
+
   def initialize(
     projekt_phase:,
     endpoint_url:,
@@ -21,12 +26,15 @@ class Masterportal::ImportService < ApplicationService
     @create_domain_records = create_domain_records
     @triggered_by_user = triggered_by_user
     @stats = { imported: 0, updated: 0, skipped: 0, failed: 0, errors: [] }
+    @projekt_labels_by_name = {}
   end
 
   def call
     return idempotency_error if already_running?
 
     start_import!
+
+    @collection_titles = fetch_collection_titles
 
     @collection_ids.each do |collection_id|
       process_collection(collection_id)
@@ -115,6 +123,7 @@ class Masterportal::ImportService < ApplicationService
         projekt_phase: @projekt_phase,
         endpoint_url: @endpoint_url,
         collection_id: collection_id,
+        collection_title: collection_titles[collection_id],
         feature: feature
       )
       was_new = pin.new_record?
@@ -128,7 +137,33 @@ class Masterportal::ImportService < ApplicationService
       return if builder.nil?
 
       record = builder.call(masterportal_pin: pin)
+      assign_label(record, pin)
       record.save!
+    end
+
+    def assign_label(record, pin)
+      return if CATEGORY_PHASE_TYPES.exclude?(@projekt_phase.type)
+
+      Masterportal::LabelAssigner.call(
+        record: record,
+        pin: pin,
+        labels_by_name: @projekt_labels_by_name
+      )
+    end
+
+    def collection_titles
+      @collection_titles || {}
+    end
+
+    def fetch_collection_titles
+      collections = OgcApiFeatures::Client.list_collections(@endpoint_url)
+
+      collections.each_with_object({}) do |collection, titles|
+        titles[collection[:id]] = collection[:title]
+      end
+    rescue => e
+      Sentry.capture_exception(e) if defined?(Sentry)
+      {}
     end
 
     def point_geometry?(feature)

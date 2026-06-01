@@ -11,6 +11,9 @@ User.class_eval do
   SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
     created_at: "created_at", verified_at: "verified_at" }.freeze
 
+  MASTERPORTAL_LOGO_PATH =
+    Rails.root.join("app", "assets", "images", "adm", "apps", "logo_masterportal.png").freeze
+
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
@@ -148,7 +151,22 @@ User.class_eval do
 
       user.skip_confirmation!
       user.save!(validate: false)
+
+      attach_masterportal_logo(user)
       user
+    end
+
+    def attach_masterportal_logo(user)
+      return if user.image&.attached?
+
+      image = Image.new(title: "avatar", user: user, imageable: user)
+      image.attachment.attach(
+        io: File.open(MASTERPORTAL_LOGO_PATH),
+        filename: "masterportal_logo.png",
+        content_type: "image/png"
+      )
+
+      image.save!(validate: false)
     end
   end
 

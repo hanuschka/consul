@@ -9,6 +9,7 @@ en:
         tree_hint: Click "Load collections" to see available datasets.
         create_resource_label: "Create %{resource_name}"
         create_resource_description: A module entry will be created from each imported dataset.
+        create_resource_categories_note: Matching categories are created automatically from the dataset categories.
         import_button: Import
         status:
           pending: Not yet run

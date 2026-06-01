@@ -64,6 +64,9 @@
             </span>
             <span class="kern-switch__description">
               <%= t(".create_resource_description") %>
+              <% if creates_categories? %>
+                <%= t(".create_resource_categories_note") %>
+              <% end %>
             </span>
           </span>
         </label>

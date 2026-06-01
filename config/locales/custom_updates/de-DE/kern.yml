@@ -4,6 +4,7 @@ de:
       delete_collection_component:
         default_headline: "Löschen läuft…"
         default_hint: "Bei großen Datenmengen kann dies einen Moment dauern. Bitte diesen Tab nicht schließen."
+        error_headline: "Löschen fehlgeschlagen. Bitte erneut versuchen."
       masterportal_import_panel_component:
         progress:
           running: "Import läuft"

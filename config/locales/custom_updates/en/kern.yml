@@ -4,6 +4,7 @@ en:
       delete_collection_component:
         default_headline: "Deleting…"
         default_hint: "This may take a moment for large datasets. Please don't close this tab."
+        error_headline: "Deletion failed. Please try again."
       masterportal_import_panel_component:
         progress:
           running: "Import is running"

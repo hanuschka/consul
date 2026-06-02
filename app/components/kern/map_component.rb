@@ -120,7 +120,37 @@ class Kern::MapComponent < ApplicationComponent
                    MapLayer.default
                end
 
-      (masterportal_wms_layer_injection + layers.as_json).to_json
+      serialized = layers.filter_map { |layer| serialize_layer(layer) }
+
+      (masterportal_wms_layer_injection + serialized).to_json
+    end
+
+    def serialize_layer(layer)
+      common = {
+        "id" => layer.id,
+        "name" => layer.name,
+        "protocol" => layer.protocol,
+        "base" => layer.base,
+        "show_by_default" => layer.show_by_default,
+        "attribution" => layer.attribution
+      }
+
+      if layer.geojson?
+        # Skip geojson layers without an attached file so data_url is never null.
+        return nil unless layer.geojson_file.attached?
+
+        common.merge(
+          "data_url" => helpers.url_for(layer.geojson_file),
+          "config" => layer.config
+        )
+      else
+        common.merge(
+          "provider" => layer.provider,
+          "layer_names" => layer.layer_names,
+          "transparent" => layer.transparent,
+          "opacity" => layer.opacity
+        )
+      end
     end
 
     def masterportal_wms_layer_injection

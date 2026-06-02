@@ -59,6 +59,10 @@ class MapLayer < ApplicationRecord
       choropleth = config["choropleth"]
       return unless choropleth.is_a?(Hash)
 
+      # Store a real boolean so the serialized JSON is unambiguous for the frontend
+      # (a checkbox submits the string "0", which would be truthy in JavaScript).
+      choropleth["enabled"] = ActiveModel::Type::Boolean.new.cast(choropleth["enabled"]) || false
+
       breaks = split_list(choropleth["breaks"])
       choropleth["breaks"] = breaks.map(&:to_f) if breaks
       colors = split_list(choropleth["colors"])

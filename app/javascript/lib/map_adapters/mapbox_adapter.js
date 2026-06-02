@@ -1,5 +1,5 @@
 import BaseAdapter from "./base_adapter"
-import { getBrandColor, hexToRgba, MapPopup } from "./map_utils"
+import { getBrandColor, hexToRgba, MapPopup, numberOrDefault } from "./map_utils"
 
 /**
  * Mapbox GL JS Adapter
@@ -344,15 +344,13 @@ export default class MapboxAdapter extends BaseAdapter {
         source: sourceId,
         paint: {
           "line-color": (cfg.style && cfg.style.color) || "#1A3C8C",
-          "line-width": (cfg.style && cfg.style.weight != null) ? parseFloat(cfg.style.weight) : 1
+          "line-width": this.geoJsonLineWidth(cfg)
         },
         layout: { visibility }
       })
 
       // geojson is always an overlay (base is forced false server-side).
       this.overlayLayers[layerData.name] = { layerId, sourceId, lineLayerId }
-
-      this.bindGeoJsonPopup(layerId, cfg)
 
       if (cfg.choropleth && cfg.choropleth.enabled) {
         this.addChoroplethLegend(cfg)
@@ -362,7 +360,11 @@ export default class MapboxAdapter extends BaseAdapter {
 
   geoJsonFillOpacity(cfg) {
     const style = cfg.style || {}
-    return style.fillOpacity != null ? parseFloat(style.fillOpacity) : 0.3
+    return numberOrDefault(style.fillOpacity, 0.3)
+  }
+
+  geoJsonLineWidth(cfg) {
+    return numberOrDefault(cfg.style && cfg.style.weight, 1)
   }
 
   // Returns a Mapbox GL paint value for fill-color: a flat color, or a
@@ -390,36 +392,6 @@ export default class MapboxAdapter extends BaseAdapter {
       step,
       ch.no_data_color || "#cccccc"
     ]
-  }
-
-  bindGeoJsonPopup(layerId, cfg) {
-    const mapboxgl = window.mapboxgl
-    const keys = (cfg.popup_properties && cfg.popup_properties.length)
-      ? cfg.popup_properties
-      : [cfg.label_property]
-    const validKeys = keys.filter(key => key != null && key !== "")
-    if (validKeys.length === 0) return
-
-    this.map.on("mouseenter", layerId, () => { this.map.getCanvas().style.cursor = "pointer" })
-    this.map.on("mouseleave", layerId, () => { this.map.getCanvas().style.cursor = "" })
-
-    this.map.on("click", layerId, (e) => {
-      const feature = e.features && e.features[0]
-      if (!feature) return
-
-      const props = feature.properties || {}
-      const rows = validKeys
-        .filter(key => props[key] != null && props[key] !== "")
-        .map(key => {
-          const safeKey = MapPopup.escapeHtml(key)
-          const safeValue = MapPopup.escapeHtml(props[key])
-          return `<div><strong>${safeKey}:</strong> ${safeValue}</div>`
-        })
-
-      if (rows.length === 0) return
-
-      new mapboxgl.Popup().setLngLat(e.lngLat).setHTML(rows.join("")).addTo(this.map)
-    })
   }
 
   addChoroplethLegend(cfg) {

@@ -288,12 +288,10 @@
           source: sourceId,
           paint: {
             'line-color': (cfg.style && cfg.style.color) || '#1A3C8C',
-            'line-width': (cfg.style && cfg.style.weight != null) ? parseFloat(cfg.style.weight) : 1
+            'line-width': this.geoJsonLineWidth(cfg)
           },
           layout: { visibility: visibility }
         });
-
-        this.bindGeoJsonPopup(layerId, cfg);
 
         if (cfg.choropleth && cfg.choropleth.enabled) {
           this.addChoroplethLegend(cfg);
@@ -303,7 +301,11 @@
 
     geoJsonFillOpacity(cfg) {
       const style = cfg.style || {};
-      return style.fillOpacity != null ? parseFloat(style.fillOpacity) : 0.3;
+      return App.Map.numberOrDefault(style.fillOpacity, 0.3);
+    }
+
+    geoJsonLineWidth(cfg) {
+      return App.Map.numberOrDefault(cfg.style && cfg.style.weight, 1);
     }
 
     // Returns a Mapbox GL paint value for fill-color: a flat color, or a
@@ -331,37 +333,6 @@
         step,
         ch.no_data_color || '#cccccc'
       ];
-    }
-
-    bindGeoJsonPopup(layerId, cfg) {
-      const instance = this;
-      const keys = (cfg.popup_properties && cfg.popup_properties.length)
-        ? cfg.popup_properties
-        : [cfg.label_property];
-      const validKeys = keys.filter(function(key) { return key != null && key !== ''; });
-      if (validKeys.length === 0) return;
-
-      this.map.on('mouseenter', layerId, function() { instance.map.getCanvas().style.cursor = 'pointer'; });
-      this.map.on('mouseleave', layerId, function() { instance.map.getCanvas().style.cursor = ''; });
-
-      this.map.on('click', layerId, function(e) {
-        const feature = e.features && e.features[0];
-        if (!feature) return;
-
-        const props = feature.properties || {};
-        const rows = validKeys
-          .filter(function(key) { return props[key] != null && props[key] !== ''; })
-          .map(function(key) {
-            return '<div><strong>' + App.MapPopup.escapeHtml(key) + ':</strong> ' + App.MapPopup.escapeHtml(props[key]) + '</div>';
-          });
-
-        if (rows.length === 0) return;
-
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML('<div class="map-geojson-popup" style="padding:2px 4px 2px 2px;line-height:1.5">' + rows.join('') + '</div>')
-          .addTo(instance.map);
-      });
     }
 
     addChoroplethLegend(cfg) {

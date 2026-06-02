@@ -1,5 +1,5 @@
 import BaseAdapter from "./base_adapter"
-import { getBrandColor, MapPopup } from "./map_utils"
+import { getBrandColor, MapPopup, numberOrDefault } from "./map_utils"
 
 /**
  * Leaflet Map Adapter
@@ -20,7 +20,6 @@ export default class LeafletAdapter extends BaseAdapter {
     this.container = container
     this.options = options
     this.adminEditor = options.adminEditor || false
-    this.editable = options.editable || false
     this.masterportalEnabled = options.masterportalEnabled || false
     this.defaultFeatureColor = this.getDefaultFeatureColor(this.adminEditor)
     this.featuresLimit = options.featuresLimit || 1
@@ -302,19 +301,14 @@ export default class LeafletAdapter extends BaseAdapter {
         const L = window.L
         const cfg = item.config || {}
 
-        // On editable/admin maps the overlay is reference context only: keep it
-        // non-interactive (and ignored by Geoman) so it never intercepts panning
-        // or drawing. Popups stay enabled on read-only public maps.
-        const interactive = !this.editable && !this.adminEditor
-
+        // Overlays are non-interactive: an interactive Leaflet canvas layer blocks
+        // map dragging everywhere except directly on a feature. pmIgnore keeps
+        // Geoman from treating the overlay as an editable shape.
         const gj = L.geoJSON(data, {
           renderer: L.canvas({ padding: 0.5 }),
-          interactive,
+          interactive: false,
           pmIgnore: true,
-          style: (feature) => this.geoJsonStyle(feature, cfg),
-          onEachFeature: interactive
-            ? (feature, layer) => this.bindGeoJsonPopup(feature, layer, cfg)
-            : undefined
+          style: (feature) => this.geoJsonStyle(feature, cfg)
         })
 
         gj.addTo(group)
@@ -330,9 +324,9 @@ export default class LeafletAdapter extends BaseAdapter {
     const style = cfg.style || {}
 
     let fillColor = style.fillColor || "#3366CC"
-    const fillOpacity = style.fillOpacity != null ? parseFloat(style.fillOpacity) : 0.3
+    const fillOpacity = numberOrDefault(style.fillOpacity, 0.3)
     const color = style.color || "#1A3C8C"
-    const weight = style.weight != null ? parseFloat(style.weight) : 1
+    const weight = numberOrDefault(style.weight, 1)
 
     if (cfg.choropleth && cfg.choropleth.enabled) {
       fillColor = this.choroplethColor(feature.properties[cfg.choropleth.property], cfg.choropleth)
@@ -352,25 +346,6 @@ export default class LeafletAdapter extends BaseAdapter {
     while (i < breaks.length && v >= parseFloat(breaks[i])) i++
 
     return colors[i] || colors[colors.length - 1] || "#cccccc"
-  }
-
-  bindGeoJsonPopup(feature, layer, cfg) {
-    const props = feature.properties || {}
-    const keys = (cfg.popup_properties && cfg.popup_properties.length)
-      ? cfg.popup_properties
-      : [cfg.label_property]
-
-    const rows = keys
-      .filter(key => key != null && key !== "" && props[key] != null)
-      .map(key => {
-        const safeKey = MapPopup.escapeHtml(key)
-        const safeValue = MapPopup.escapeHtml(props[key])
-        return `<div><strong>${safeKey}:</strong> ${safeValue}</div>`
-      })
-
-    if (rows.length === 0) return
-
-    layer.bindPopup(`<div class="map-geojson-popup" style="padding:2px 20px 2px 2px;line-height:1.5">${rows.join("")}</div>`)
   }
 
   addChoroplethLegend(cfg) {

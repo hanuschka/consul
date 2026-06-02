@@ -20,11 +20,13 @@ export default class LeafletAdapter extends BaseAdapter {
     this.container = container
     this.options = options
     this.adminEditor = options.adminEditor || false
+    this.editable = options.editable || false
     this.masterportalEnabled = options.masterportalEnabled || false
     this.defaultFeatureColor = this.getDefaultFeatureColor(this.adminEditor)
     this.featuresLimit = options.featuresLimit || 1
     this.clusterGroup = null
     this.deflateFeatures = null
+    this._geojsonLegends = []
 
     return this.loadScripts().then(() => {
       this.createMap(container, options)
@@ -36,6 +38,10 @@ export default class LeafletAdapter extends BaseAdapter {
   }
 
   destroy() {
+    if (this._geojsonLegends) {
+      this._geojsonLegends.forEach(legend => legend.remove())
+      this._geojsonLegends = []
+    }
     if (this.map) {
       this.map.off()
       this.map.remove()
@@ -252,6 +258,8 @@ export default class LeafletAdapter extends BaseAdapter {
         show_by_default: item.show_by_default,
         opacity: item.opacity || 1
       })
+    } else if (item.protocol === "geojson") {
+      layer = this.createGeoJsonOverlay(item)
     } else {
       layer = L.tileLayer(item.provider, {
         attribution: item.attribution
@@ -263,6 +271,144 @@ export default class LeafletAdapter extends BaseAdapter {
     } else {
       this.overlayLayers[item.name] = layer
     }
+  }
+
+  // Build a lazy-loading GeoJSON overlay. The layer group fetches and renders
+  // its data the first time it is added to the map (either by default or via
+  // the layer control). Returns the group so createLayer can register it as an
+  // overlay (geojson layers are never base layers).
+  createGeoJsonOverlay(item) {
+    const L = window.L
+    const group = L.layerGroup()
+
+    group.options.show_by_default = item.show_by_default
+    group._geojsonLoaded = false
+    group._mapLayerItem = item
+
+    group.on("add", () => {
+      if (!group._geojsonLoaded) {
+        group._geojsonLoaded = true
+        this.loadGeoJsonInto(group, item)
+      }
+    })
+
+    return group
+  }
+
+  loadGeoJsonInto(group, item) {
+    fetch(item.data_url)
+      .then(response => response.json())
+      .then(data => {
+        const L = window.L
+        const cfg = item.config || {}
+
+        // On editable/admin maps the overlay is reference context only: keep it
+        // non-interactive (and ignored by Geoman) so it never intercepts panning
+        // or drawing. Popups stay enabled on read-only public maps.
+        const interactive = !this.editable && !this.adminEditor
+
+        const gj = L.geoJSON(data, {
+          renderer: L.canvas({ padding: 0.5 }),
+          interactive,
+          pmIgnore: true,
+          style: (feature) => this.geoJsonStyle(feature, cfg),
+          onEachFeature: interactive
+            ? (feature, layer) => this.bindGeoJsonPopup(feature, layer, cfg)
+            : undefined
+        })
+
+        gj.addTo(group)
+
+        if (cfg.choropleth && cfg.choropleth.enabled) {
+          this.addChoroplethLegend(cfg)
+        }
+      })
+      .catch(err => console.error("Failed to load GeoJSON layer", item.name, err))
+  }
+
+  geoJsonStyle(feature, cfg) {
+    const style = cfg.style || {}
+
+    let fillColor = style.fillColor || "#3366CC"
+    const fillOpacity = style.fillOpacity != null ? parseFloat(style.fillOpacity) : 0.3
+    const color = style.color || "#1A3C8C"
+    const weight = style.weight != null ? parseFloat(style.weight) : 1
+
+    if (cfg.choropleth && cfg.choropleth.enabled) {
+      fillColor = this.choroplethColor(feature.properties[cfg.choropleth.property], cfg.choropleth)
+    }
+
+    return { fillColor, fillOpacity, color, weight }
+  }
+
+  choroplethColor(value, ch) {
+    const v = parseFloat(value)
+    if (isNaN(v)) return ch.no_data_color || "#cccccc"
+
+    const breaks = ch.breaks || []
+    const colors = ch.colors || []
+
+    let i = 0
+    while (i < breaks.length && v >= parseFloat(breaks[i])) i++
+
+    return colors[i] || colors[colors.length - 1] || "#cccccc"
+  }
+
+  bindGeoJsonPopup(feature, layer, cfg) {
+    const props = feature.properties || {}
+    const keys = (cfg.popup_properties && cfg.popup_properties.length)
+      ? cfg.popup_properties
+      : [cfg.label_property]
+
+    const rows = keys
+      .filter(key => key != null && key !== "" && props[key] != null)
+      .map(key => {
+        const safeKey = MapPopup.escapeHtml(key)
+        const safeValue = MapPopup.escapeHtml(props[key])
+        return `<div><strong>${safeKey}:</strong> ${safeValue}</div>`
+      })
+
+    if (rows.length === 0) return
+
+    layer.bindPopup(rows.join(""))
+  }
+
+  addChoroplethLegend(cfg) {
+    const L = window.L
+    const ch = cfg.choropleth || {}
+    const breaks = ch.breaks || []
+    const colors = ch.colors || []
+
+    const legend = L.control({ position: "bottomright" })
+
+    legend.onAdd = () => {
+      const container = L.DomUtil.create("div", "leaflet-control-attribution map-choropleth-legend")
+      const rows = []
+
+      if (ch.legend_title) {
+        rows.push(`<div class="map-choropleth-legend__title"><strong>${MapPopup.escapeHtml(ch.legend_title)}</strong></div>`)
+      }
+
+      for (let i = 0; i < colors.length; i++) {
+        let label
+        if (i === 0) {
+          label = `< ${MapPopup.escapeHtml(breaks[0])}`
+        } else if (i === colors.length - 1) {
+          label = `≥ ${MapPopup.escapeHtml(breaks[breaks.length - 1])}`
+        } else {
+          label = `${MapPopup.escapeHtml(breaks[i - 1])} – ${MapPopup.escapeHtml(breaks[i])}`
+        }
+
+        const swatch = `<span class="map-choropleth-legend__swatch" style="display:inline-block;width:14px;height:14px;margin-right:6px;background:${MapPopup.escapeHtml(colors[i])}"></span>`
+        rows.push(`<div class="map-choropleth-legend__row">${swatch}${label}</div>`)
+      }
+
+      container.innerHTML = rows.join("")
+      return container
+    }
+
+    legend.addTo(this.map)
+    this._geojsonLegends.push(legend)
   }
 
   ensureBaseLayerExists() {

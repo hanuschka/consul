@@ -46,11 +46,15 @@
           </label>
         </div>
       <% end %>
-      <%= f.file_field :geojson_file, accept: ".geojson,application/geo+json,application/json" %>
+      <div class="kern-form-input">
+        <%= f.file_field :geojson_file, label: false,
+              accept: ".geojson,application/geo+json,application/json",
+              class: "kern-form-input__input" %>
+      </div>
     <% end %>
 
     <%= f.fields_for :config do |cf| %>
-      <% cf.fields_for :style do |sf| %>
+      <%= cf.fields_for :style do |sf| %>
         <%= render Kern::FormFieldComponent.new(label: t(".labels.fill_color")) do %>
           <div data-controller="adm-color-picker" data-adm-color-picker-target="container">
             <div class="color-picker" data-adm-color-picker-target="picker"></div>
@@ -85,7 +89,7 @@
               value: Array(f.object.config["popup_properties"]).join(", ") %>
       <% end %>
 
-      <% cf.fields_for :choropleth do |ch| %>
+      <%= cf.fields_for :choropleth do |ch| %>
         <div data-map-layer-form-target="choroplethGroup">
           <%= ch.check_box :enabled, label: t(".labels.choropleth_enabled"), hint: t(".hints.choropleth"),
                 data: { "map-layer-form-target": "choroplethToggle", action: "map-layer-form#choroplethChanged" } %>

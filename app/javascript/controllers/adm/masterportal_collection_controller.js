@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import { get, patch, destroy } from "@rails/request.js"
 
 export default class extends Controller {
   static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText", "cleanButton"]
@@ -44,7 +43,7 @@ export default class extends Controller {
 
     this.mode = "import"
     this.showProgress()
-    this.sendRequest(patch, this.updateUrlValue)
+    this.sendRequest("PATCH", this.updateUrlValue)
   }
 
   remove(event) {
@@ -54,7 +53,7 @@ export default class extends Controller {
 
     this.mode = "destroy"
     this.showProgress()
-    this.sendRequest(destroy, this.deleteUrlValue)
+    this.sendRequest("DELETE", this.deleteUrlValue)
   }
 
   async clean(event) {
@@ -66,8 +65,8 @@ export default class extends Controller {
     this.showProgress()
 
     try {
-      const response = await destroy(this.cleanUrlValue, { responseKind: "json" })
-      if (!response.ok) throw new Error(`HTTP ${response.statusCode}`)
+      const response = await this.request("DELETE", this.cleanUrlValue)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
       window.location.reload()
     } catch (error) {
@@ -80,7 +79,7 @@ export default class extends Controller {
     this.showProgress()
 
     try {
-      const response = await patch(this.updateUrlValue, { responseKind: "json" })
+      const response = await this.request("PATCH", this.updateUrlValue)
 
       return response.ok
     } catch (error) {
@@ -95,8 +94,8 @@ export default class extends Controller {
     this.showProgress()
 
     try {
-      const response = await destroy(this.cleanUrlValue, { responseKind: "json" })
-      if (!response.ok) throw new Error(`HTTP ${response.statusCode}`)
+      const response = await this.request("DELETE", this.cleanUrlValue)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
       return true
     } catch (error) {
@@ -110,25 +109,39 @@ export default class extends Controller {
     this.showChecking()
 
     try {
-      const response = await get(this.diffUrlValue, { responseKind: "json" })
-      if (!response.ok) throw new Error(`HTTP ${response.statusCode}`)
+      const response = await this.request("GET", this.diffUrlValue)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-      const body = await response.json
+      const body = await response.json()
       this.applyDiff(body)
     } catch (error) {
       this.showDiffError(error.message)
     }
   }
 
-  async sendRequest(requestFn, url) {
+  async sendRequest(method, url) {
     try {
-      const response = await requestFn(url, { responseKind: "json" })
-      if (!response.ok) throw new Error(`HTTP ${response.statusCode}`)
+      const response = await this.request(method, url)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
       this.startPolling()
     } catch (error) {
       this.showError(error.message)
     }
+  }
+
+  request(method, url) {
+    return fetch(url, {
+      method: method,
+      headers: { Accept: "application/json", "X-CSRF-Token": this.csrfToken() },
+      credentials: "same-origin"
+    })
+  }
+
+  csrfToken() {
+    const el = document.querySelector("meta[name='csrf-token']")
+
+    return el ? el.getAttribute("content") : ""
   }
 
   startPolling() {
@@ -146,10 +159,10 @@ export default class extends Controller {
 
   async fetchStatus() {
     try {
-      const response = await get(this.statusUrlValue, { responseKind: "json" })
+      const response = await this.request("GET", this.statusUrlValue)
       if (!response.ok) return
 
-      const body = await response.json
+      const body = await response.json()
       this.applyStatus(body)
     } catch (error) {
     }

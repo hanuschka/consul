@@ -3,31 +3,12 @@ en:
     adm:
       masterportal_collections_list_component:
         title: "Imported datasets"
-        description: "Datasets that have already been imported. Use \"Resync data\" to check the source for changes; per dataset you can re-import, clean up stale pins, or delete the dataset."
-        created_at: "Created"
-        pins_count: "Pins"
-        resources_count: "Created entries"
-        last_imported_at: "Last update"
-        never: "Never"
-        working: "Working…"
-        update: "Update"
-        delete: "Delete"
-        clean: "Clean up"
+        description: "Manage the datasets that have already been imported from Masterportal into this phase — unlike the import above, which brings in brand-new datasets. \"Resync data\" only checks whether the source has changed since the last import (new or removed pins); it makes no changes itself. Each dataset offers three actions: \"Import new\" imports new and changed pins from the source (existing entries are kept). \"Import new and clean old\" imports new and changed pins and then removes pins — along with the proposals/investments created from them — that no longer exist in the source, so the dataset matches the source exactly. \"Delete\" removes the entire dataset with all its pins and created entries from this phase."
         resync: "Resync data"
         resync_tooltip: "Checks the Masterportal source of every dataset for new and removed pins"
-        update_tooltip: "Re-imports this dataset from Masterportal and applies any changes"
-        clean_tooltip: "Removes pins (and their created proposals/investments) that are no longer in the source"
-        delete_tooltip: "Deletes this dataset entirely, including all pins and created entries"
-        delete_confirm: 'Permanently delete dataset "%{name}" including its pins and created entries (proposals/investments)?'
-        clean_confirm: 'Permanently delete all pins of dataset "%{name}" that are no longer present in the Masterportal source, including the proposals/investments created from them? This cannot be undone.'
         update_all: "Update all"
         update_all_tooltip: "Re-imports all datasets from Masterportal and applies any changes"
         update_all_confirm: "Re-import all datasets from Masterportal?"
         clean_all: "Clean up all"
         clean_all_tooltip: "Removes pins (and their created proposals/investments) that are no longer in the source, for every dataset"
-        clean_all_confirm: "Remove pins that are no longer present in the Masterportal source, for every dataset, including the proposals/investments created from them? This cannot be undone."
-        diff:
-          new_label: "new available"
-          stale_label: "no longer in source"
-          current_label: "Up to date"
-          checking_label: "Checking…"
+        clean_all_confirm: "Remove pins that are no longer present in the Masterportal source — for every dataset — including the proposals/investments created from them? This cannot be undone."

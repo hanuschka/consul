@@ -48,6 +48,9 @@ application.register("icon-filter", IconFilterController)
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
 
+import AdmMapLayerFormController from "./adm/map_layer_form_controller"
+application.register("map-layer-form", AdmMapLayerFormController)
+
 import AdmCriteriaListController from "./adm/criteria_list_controller"
 application.register("adm-criteria-list", AdmCriteriaListController)
 

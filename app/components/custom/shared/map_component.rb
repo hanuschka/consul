@@ -74,7 +74,7 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:map_center_latitude] = map_location&.latitude || Setting["map.latitude"]
       options[:map_center_longitude] = map_location&.longitude || Setting["map.longitude"]
-      options[:map_zoom] = map_location&.zoom || Setting["map.zoom"]
+      options[:map_zoom] = map_zoom
       options[:placement] = @placement if @placement
 
       options[:layers_data] = layers
@@ -115,6 +115,12 @@ class Shared::MapComponent < ApplicationComponent
       "map"
     end
 
+    def map_zoom
+      context_zoom = @masterportal_focus_view ? context_map_location&.zoom : nil
+
+      context_zoom || map_location&.zoom || Setting["map.zoom"]
+    end
+
     def map_location
       @map_location ||= if @mappable.present?
                           @mappable.map_location || MapLocation.new(mappable: @mappable)
@@ -148,7 +154,18 @@ class Shared::MapComponent < ApplicationComponent
                  MapLayer.default
              end
 
-      base_layers = base.as_json
+      base_layers = base.filter_map do |layer|
+        json = layer.as_json
+
+        if layer.geojson?
+          # Skip geojson layers without an attached file so data_url is never null.
+          next nil unless layer.geojson_file.attached?
+
+          json["data_url"] = helpers.url_for(layer.geojson_file)
+        end
+
+        json
+      end
 
       if masterportal_focus?
         base_layers = base_layers.reject do |layer|

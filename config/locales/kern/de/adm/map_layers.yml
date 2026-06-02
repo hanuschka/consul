@@ -16,19 +16,47 @@ de:
         submit: Speichern
         labels:
           presentation: Kartendarstellung
+          geojson_group: GeoJSON-Ebene
+          geojson_file: GeoJSON-Datei
+          geojson_file_attached: "Hochgeladene Datei: %{filename}"
+          geojson_file_remove: Hochgeladene Datei entfernen
+          style: Darstellung (einheitlich)
+          fill_color: Füllfarbe
+          fill_opacity: Deckkraft der Füllung (0–1)
+          stroke_color: Linienfarbe
+          stroke_weight: Linienstärke
+          label_property: Beschriftungsfeld
+          popup_properties: Felder im Popup
+          choropleth: Einfärbung nach Wert (Choropleth)
+          choropleth_enabled: Einfärbung nach Wert aktivieren
+          choropleth_property: Datenfeld
+          breaks: Schwellenwerte
+          colors: Farben
+          legend_title: Titel der Legende
+          no_data_color: Farbe für fehlende Werte
         hints:
           name: Bezeichnung der Kartenebene, wie sie im Frontend für den Nutzer angezeigt wird.
+          protocol: "Art der Datenquelle: WMS-Dienst, Kachelkarte (XYZ) oder eine hochgeladene GeoJSON-Datei."
           provider: URL der externen Kartenquelle, über die die Kartenebene eingebunden wird.
-          attribution: "Text, der als Quellen- oder Lizenzhinweis unten rechts in der Karte angezeigt wird (z. B. ‚© Leaflet‘ oder ‚Daten: OpenStreetMap‘). Die Angabe ist häufig verpflichtend und sollte gemäß den Nutzungsbedingungen des Anbieters erfolgen."
+          attribution: "Text, der als Quellen- oder Lizenzhinweis unten rechts in der Karte angezeigt wird (z. B. ‚© Leaflet‘ oder ‚Daten: OpenStreetMap‘). Die Angabe ist häufig verpflichtend und sollte gemäß den Nutzungsbedingungen des Anbieters erfolgen."
           layer_names: Technischer Name der Kartenebene gemäß der Capabilities-Datei des WMS-Dienstes. Mehrere Ebenen können kommagetrennt ohne Leerzeichen angegeben werden. Dieser Name ist nicht identisch mit der Bezeichnung, die Nutzern im Kartenmenü angezeigt wird.
           presentation: Legen Sie fest, wie diese Kartenebene beim Laden der Karte angezeigt wird. Sie können die Ebene als Basiskarte festlegen, sie standardmäßig einblenden oder als transparent markieren.
           opacity: Markiert diese Kartenebene als transparent. Dadurch bleiben darunterliegende Basiskarten oder zusätzliche Layer sichtbar, wenn beide gleichzeitig angezeigt werden.
+          geojson_file: "GeoJSON-Datei mit den anzuzeigenden Geometrien (max. 20 MB). Die Datei wird beim Aktivieren der Ebene im Browser geladen und gerendert."
+          label_property: Name der Eigenschaft (Property) im GeoJSON, die als Beschriftung verwendet wird (z. B. BEZ_GEM).
+          popup_properties: Kommagetrennte Liste der Eigenschaften, die beim Klick auf ein Element im Popup angezeigt werden.
+          choropleth: Färbt die Flächen automatisch anhand eines numerischen Datenfelds ein und zeigt eine Legende an. Überschreibt die einheitliche Füllfarbe.
+          choropleth_property: Name des numerischen GeoJSON-Datenfelds, nach dem eingefärbt wird (z. B. „HTTP Downl“).
+          breaks: Kommagetrennte, aufsteigende Schwellenwerte (z. B. 10,30,50,100).
+          colors: Kommagetrennte Hex-Farben. Es muss genau eine Farbe mehr als Schwellenwerte angegeben werden.
+          no_data_color: Hex-Farbe für Elemente ohne gültigen Wert.
       map_layers:
-        title: WMS-Kartenlayer hinzufügen
-        description: Hier können zusätzliche Kartenlayer über einen WMS-Dienst eingebunden werden. Die Layer müssen als öffentliche WMS-URLs verfügbar sein.
+        title: Kartenebenen
+        description: Hier können zusätzliche Kartenebenen eingebunden werden – über einen WMS-Dienst, eine Kachelkarte (XYZ) oder als hochgeladene GeoJSON-Datei.
         table:
           name: Name der Kartenebene
           type: Typ
+          protocol: Protokoll
           layer_names: Layername
           base: Base
           layer: Layer
@@ -38,5 +66,5 @@ de:
           delete_confirm: Sind Sie sicher, dass Sie diese Kartenebene löschen möchten?
         no_layers: Keine Kartenebenen vorhanden.
         no_layers_title: Keine Kartenebenen vorhanden
-        no_layers_description: "Fügen Sie über den Button oben eine WMS-Kartenebene hinzu, um zusätzliche Layer auf der Karte darzustellen."
+        no_layers_description: "Fügen Sie über den Button oben eine Kartenebene hinzu, um zusätzliche Layer auf der Karte darzustellen."
         add_layer: Kartenebene hinzufügen

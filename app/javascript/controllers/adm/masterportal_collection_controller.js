@@ -1,7 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
+import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
-  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText", "cleanButton"]
+  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText"]
 
   static values = {
     updateUrl: String,
@@ -9,6 +10,7 @@ export default class extends Controller {
     statusUrl: String,
     diffUrl: String,
     cleanUrl: String,
+    cardUrl: String,
     confirm: String,
     cleanConfirm: String,
     newLabel: String,
@@ -41,6 +43,18 @@ export default class extends Controller {
   update(event) {
     event.preventDefault()
 
+    this.pendingClean = false
+    this.startImport()
+  }
+
+  importAndClean(event) {
+    event.preventDefault()
+
+    this.pendingClean = true
+    this.startImport()
+  }
+
+  startImport() {
     this.mode = "import"
     this.showProgress()
     this.sendRequest("PATCH", this.updateUrlValue)
@@ -56,19 +70,12 @@ export default class extends Controller {
     this.sendRequest("DELETE", this.deleteUrlValue)
   }
 
-  async clean(event) {
-    event.preventDefault()
-
-    if (this.cleanConfirmValue && !window.confirm(this.cleanConfirmValue)) return
-
-    this.mode = "destroy"
-    this.showProgress()
-
+  async runCleanThenRefresh() {
     try {
       const response = await this.request("DELETE", this.cleanUrlValue)
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-      window.location.reload()
+      this.refreshCard()
     } catch (error) {
       this.showError(error.message)
     }
@@ -133,7 +140,7 @@ export default class extends Controller {
   request(method, url) {
     return fetch(url, {
       method: method,
-      headers: { Accept: "application/json", "X-CSRF-Token": this.csrfToken() },
+      headers: { Accept: "text/vnd.turbo-stream.html, application/json", "X-CSRF-Token": this.csrfToken() },
       credentials: "same-origin"
     })
   }
@@ -180,7 +187,7 @@ export default class extends Controller {
   applyDestroyStatus(body) {
     if (body.deleted || body.destroy_status === "success") {
       this.stopPolling()
-      window.location.reload()
+      this.refreshCard()
     } else if (body.destroy_status === "failed") {
       this.stopPolling()
       this.showError(body.destroy_error)
@@ -190,10 +197,27 @@ export default class extends Controller {
   applyImportStatus(body) {
     if (body.import_status === "success") {
       this.stopPolling()
-      window.location.reload()
+
+      if (this.pendingClean) {
+        this.pendingClean = false
+        this.runCleanThenRefresh()
+      } else {
+        this.refreshCard()
+      }
     } else if (body.import_status === "failed") {
       this.stopPolling()
+      this.pendingClean = false
       this.showError(body.import_error)
+    }
+  }
+
+  async refreshCard() {
+    try {
+      const response = await this.request("GET", this.cardUrlValue)
+      if (!response.ok) return
+
+      Turbo.renderStreamMessage(await response.text())
+    } catch (error) {
     }
   }
 
@@ -202,7 +226,6 @@ export default class extends Controller {
     const staleCount = Number(body.stale_count) || 0
 
     this.renderDiff(newCount, staleCount)
-    this.updateCleanButton(staleCount)
   }
 
   renderDiff(newCount, staleCount) {
@@ -217,12 +240,6 @@ export default class extends Controller {
     this.setDiffIcon(hasChanges ? "difference" : "check_circle")
     this.diffTarget.dataset.state = hasChanges ? "changes" : "current"
     this.diffTarget.hidden = false
-  }
-
-  updateCleanButton(staleCount) {
-    if (!this.hasCleanButtonTarget) return
-
-    this.cleanButtonTarget.disabled = staleCount === 0
   }
 
   showChecking() {

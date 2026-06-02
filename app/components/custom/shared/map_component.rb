@@ -154,7 +154,18 @@ class Shared::MapComponent < ApplicationComponent
                  MapLayer.default
              end
 
-      base_layers = base.as_json
+      base_layers = base.filter_map do |layer|
+        json = layer.as_json
+
+        if layer.geojson?
+          # Skip geojson layers without an attached file so data_url is never null.
+          next nil unless layer.geojson_file.attached?
+
+          json["data_url"] = helpers.url_for(layer.geojson_file)
+        end
+
+        json
+      end
 
       if masterportal_focus?
         base_layers = base_layers.reject do |layer|

@@ -370,7 +370,7 @@ export default class LeafletAdapter extends BaseAdapter {
 
     if (rows.length === 0) return
 
-    layer.bindPopup(rows.join(""))
+    layer.bindPopup(`<div class="map-geojson-popup" style="padding:2px 20px 2px 2px;line-height:1.5">${rows.join("")}</div>`)
   }
 
   addChoroplethLegend(cfg) {

@@ -325,6 +325,8 @@
           show_by_default: (item.show_by_default),
           opacity: (item.opacity ? item.opacity : 1),
         });
+      } else if (item.protocol === 'geojson') {
+        layer = this.createGeoJsonOverlay(item);
       } else {
         layer = L.tileLayer(item.provider, {
           attribution: item.attribution
@@ -336,6 +338,139 @@
       } else {
         this.overlayLayers[item.name] = layer;
       }
+    }
+
+    createGeoJsonOverlay(item) {
+      const group = L.layerGroup();
+      group.options.show_by_default = item.show_by_default;
+      group._geojsonLoaded = false;
+
+      // Lazy-load on first display: default-on layers fetch immediately (setupLayers
+      // adds them), toggled-off layers fetch only when first enabled.
+      group.on("add", () => {
+        if (!group._geojsonLoaded) {
+          group._geojsonLoaded = true;
+          this.loadGeoJsonInto(group, item);
+        }
+      });
+
+      return group;
+    }
+
+    loadGeoJsonInto(group, item) {
+      if (!item.data_url) return;
+
+      fetch(item.data_url)
+        .then((response) => response.json())
+        .then((data) => {
+          const cfg = item.config || {};
+          // On editable/admin maps the overlay is reference context only: keep it
+          // non-interactive (and ignored by Geoman) so it never intercepts panning
+          // or drawing. Popups stay enabled on read-only public maps.
+          const interactive = !this.editable && !this.adminEditor;
+
+          const gj = L.geoJSON(data, {
+            renderer: L.canvas({ padding: 0.5 }),
+            interactive: interactive,
+            pmIgnore: true,
+            style: (feature) => this.geoJsonStyle(feature, cfg),
+            onEachFeature: interactive
+              ? (feature, layer) => this.bindGeoJsonPopup(feature, layer, cfg)
+              : undefined
+          });
+
+          gj.addTo(group);
+
+          if (cfg.choropleth && cfg.choropleth.enabled) {
+            this.addChoroplethLegend(cfg);
+          }
+        })
+        .catch((err) => console.error("Failed to load GeoJSON layer", item.name, err));
+    }
+
+    geoJsonStyle(feature, cfg) {
+      const style = cfg.style || {};
+
+      let fillColor = style.fillColor || "#3366CC";
+      const fillOpacity = style.fillOpacity != null ? parseFloat(style.fillOpacity) : 0.3;
+      const color = style.color || "#1A3C8C";
+      const weight = style.weight != null ? parseFloat(style.weight) : 1;
+
+      if (cfg.choropleth && cfg.choropleth.enabled) {
+        fillColor = this.choroplethColor(feature.properties[cfg.choropleth.property], cfg.choropleth);
+      }
+
+      return { fillColor: fillColor, fillOpacity: fillOpacity, color: color, weight: weight };
+    }
+
+    choroplethColor(value, ch) {
+      const v = parseFloat(value);
+      if (isNaN(v)) return ch.no_data_color || "#cccccc";
+
+      const breaks = ch.breaks || [];
+      const colors = ch.colors || [];
+
+      let i = 0;
+      while (i < breaks.length && v >= parseFloat(breaks[i])) i++;
+
+      return colors[i] || colors[colors.length - 1] || "#cccccc";
+    }
+
+    bindGeoJsonPopup(feature, layer, cfg) {
+      const props = feature.properties || {};
+      const keys = (cfg.popup_properties && cfg.popup_properties.length)
+        ? cfg.popup_properties
+        : [cfg.label_property];
+
+      const rows = keys
+        .filter((key) => key != null && key !== "" && props[key] != null)
+        .map((key) => {
+          const safeKey = App.MapPopup.escapeHtml(key);
+          const safeValue = App.MapPopup.escapeHtml(props[key]);
+          return "<div><strong>" + safeKey + ":</strong> " + safeValue + "</div>";
+        });
+
+      if (rows.length === 0) return;
+
+      layer.bindPopup('<div class="map-geojson-popup" style="padding:2px 20px 2px 2px;line-height:1.5">' + rows.join("") + "</div>");
+    }
+
+    addChoroplethLegend(cfg) {
+      const ch = cfg.choropleth || {};
+      const breaks = ch.breaks || [];
+      const colors = ch.colors || [];
+
+      const legend = L.control({ position: "bottomright" });
+
+      legend.onAdd = () => {
+        const container = L.DomUtil.create("div", "leaflet-control-attribution map-choropleth-legend");
+        const rows = [];
+
+        if (ch.legend_title) {
+          rows.push('<div class="map-choropleth-legend__title"><strong>' + App.MapPopup.escapeHtml(ch.legend_title) + "</strong></div>");
+        }
+
+        for (let i = 0; i < colors.length; i++) {
+          let label;
+          if (i === 0) {
+            label = "< " + App.MapPopup.escapeHtml(breaks[0]);
+          } else if (i === colors.length - 1) {
+            label = "≥ " + App.MapPopup.escapeHtml(breaks[breaks.length - 1]);
+          } else {
+            label = App.MapPopup.escapeHtml(breaks[i - 1]) + " – " + App.MapPopup.escapeHtml(breaks[i]);
+          }
+
+          const swatch = '<span class="map-choropleth-legend__swatch" style="display:inline-block;width:14px;height:14px;margin-right:6px;background:' + App.MapPopup.escapeHtml(colors[i]) + '"></span>';
+          rows.push('<div class="map-choropleth-legend__row">' + swatch + label + "</div>");
+        }
+
+        container.innerHTML = rows.join("");
+        return container;
+      };
+
+      legend.addTo(this.map);
+      this._geojsonLegends = this._geojsonLegends || [];
+      this._geojsonLegends.push(legend);
     }
 
     ensureBaseLayerExistence() {

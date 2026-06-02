@@ -32,6 +32,7 @@ class Projekt < ApplicationRecord
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
+  has_one :projekt_evaluation_visibility, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -347,6 +348,7 @@ class Projekt < ApplicationRecord
   def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
     return Projekt.none if permissions.blank?
+    return all if projekt_manager.manage_all_projekts?
 
     joins(:projekt_manager_assignments).where(
       "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
@@ -832,7 +834,7 @@ class Projekt < ApplicationRecord
           siblings.with_order_number.pluck(:order_number).each_cons(2).all? { |a, b| b == a + 1 }
         new_order = 1
         siblings.with_order_number.each do |projekt|
-          projekt.update!(order_number: new_order)
+          projekt.update_column(:order_number, new_order)
           new_order += 1
         end
       end

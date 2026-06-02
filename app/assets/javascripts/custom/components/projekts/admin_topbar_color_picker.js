@@ -1,11 +1,17 @@
 (function() {
   "use strict";
 
-  // Admin-Topbar Color Picker — sets the project brand color via PATCH endpoint.
-  // - `input` event: live preview (sets `--brand-color` on :root) + debounced PATCH
-  // - Reset button: clears color, removes inline `--brand-color`, removes the
-  //   server-rendered <style id="js-brand-color-styles"> block on success,
+  // Admin-Topbar Color Picker — sets a color setting via PATCH endpoint.
+  // Generic: each picker decides which CSS custom property to drive and which
+  // (optional) server-rendered <style> element to remove on reset, via the
+  // `data-css-variable` and `data-style-element-id` attributes on the picker.
+  // - `input` event: live preview (sets the CSS variable on :root) + debounced PATCH
+  // - Reset button: clears color, removes inline CSS variable, removes the
+  //   configured server-rendered <style> block on success (if any),
   //   PATCH `{ color: "" }`. Disabled while a request is in flight.
+  // Defaults preserve the original brand-color behavior when no data attrs are
+  // set (cssVariable defaults to "--brand-color", styleElementId defaults to
+  // "js-brand-color-styles").
   App.AdminTopbarColorPicker = {
     DEBOUNCE_MS: 500,
     SAVED_FEEDBACK_MS: 1000,
@@ -37,7 +43,7 @@
       // a separate `change` handler — avoids a flood of PATCH requests.
       input.addEventListener("input", function(event) {
         var value = event.target.value;
-        App.AdminTopbarColorPicker.applyLivePreview(value);
+        App.AdminTopbarColorPicker.applyLivePreview(picker, value);
         debouncedSave(value);
       });
 
@@ -54,22 +60,26 @@
       }
     },
 
-    applyLivePreview: function(value) {
+    applyLivePreview: function(picker, value) {
+      var cssVariable = (picker && picker.dataset.cssVariable) || "--brand-color";
       if (!value) {
-        document.documentElement.style.removeProperty("--brand-color");
+        document.documentElement.style.removeProperty(cssVariable);
         return;
       }
-      document.documentElement.style.setProperty("--brand-color", value);
+      document.documentElement.style.setProperty(cssVariable, value);
     },
 
     handleReset: function(picker) {
       var input = picker.querySelector(".js-admin-topbar-color-picker-input");
       if (!input) return Promise.resolve();
 
+      var cssVariable = picker.dataset.cssVariable || "--brand-color";
+
       // Drop the live inline preview so the cascade can fall back to the
-      // global brand color once the server-rendered <style> is removed
-      // (which happens in saveColor's success branch).
-      document.documentElement.style.removeProperty("--brand-color");
+      // global default once the server-rendered <style> is removed
+      // (which happens in saveColor's success branch — if a style element
+      // ID is configured for this picker).
+      document.documentElement.style.removeProperty(cssVariable);
 
       // Reflect the fallback in the swatch immediately. The fallback is the
       // global Setting['brand_color'] passed via data attribute — no hardcoded
@@ -113,12 +123,21 @@
           picker.dataset.currentColor = savedColor || "";
 
           // When the saved color is empty (reset), the server-rendered
-          // <style id="js-brand-color-styles"> block is still in the DOM and
-          // would keep applying the old color until reload. Remove it so the
-          // theme default takes over immediately.
+          // <style> block for this picker is still in the DOM and would keep
+          // applying the old color until reload. Remove it so the theme
+          // default takes over immediately. The element ID is configurable
+          // via `data-style-element-id` (default: "js-brand-color-styles").
+          // An empty string explicitly opts out (e.g. when there is no
+          // matching server-rendered <style> block to clean up).
           if (!savedColor) {
-            var styleEl = document.getElementById("js-brand-color-styles");
-            if (styleEl) styleEl.remove();
+            var styleElementId = picker.dataset.styleElementId;
+            if (typeof styleElementId === "undefined") {
+              styleElementId = "js-brand-color-styles";
+            }
+            if (styleElementId) {
+              var styleEl = document.getElementById(styleElementId);
+              if (styleEl) styleEl.remove();
+            }
           }
 
           App.AdminTopbarColorPicker.setStatus(picker, "ok");
@@ -128,13 +147,14 @@
         })
         .catch(function() {
           // Revert live preview to last known saved color
+          var cssVariable = picker.dataset.cssVariable || "--brand-color";
           var fallback = picker.dataset.currentColor;
           if (fallback) {
-            document.documentElement.style.setProperty("--brand-color", fallback);
+            document.documentElement.style.setProperty(cssVariable, fallback);
             var input = picker.querySelector(".js-admin-topbar-color-picker-input");
             if (input) input.value = fallback;
           } else {
-            document.documentElement.style.removeProperty("--brand-color");
+            document.documentElement.style.removeProperty(cssVariable);
           }
           App.AdminTopbarColorPicker.setStatus(picker, "error");
           window.setTimeout(function() {

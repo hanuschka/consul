@@ -370,16 +370,9 @@ class PagesController < ApplicationController
     def set_point_of_interest_phase_footer_tab_variables
       auto_sign_in_guest_for(@projekt_phase)
 
-      map_locations = MapLocation.where(
-        mappable_type: "ProjektPointOfInterestPin",
-        mappable_id: @projekt_phase.projekt_point_of_interest_pins.select(:id)
-      )
-      selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
-
-      @pin_coordinates = MapLocation.enriched_feature_collection(
-        map_locations,
-        category_icons: selected_categories&.pluck(:icon),
-        extra_features: MasterportalPin.standalone_features_for_phase(@projekt_phase)
+      @pin_coordinates = MapData::PointOfInterestPhase.call(
+        projekt_phase: @projekt_phase,
+        category_ids: params[:category_ids]
       )
     end
 

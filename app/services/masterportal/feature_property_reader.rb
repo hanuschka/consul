@@ -2,25 +2,40 @@ module Masterportal
   module FeaturePropertyReader
     REGENSBURG_BOUNDING_BOX = [12.024365, 48.962909, 12.198046, 49.080493].freeze
 
-    TITLE_KEYS = %w[NAME BEZEICHNUNG TITLE].freeze
+    TITLE_KEYS = %w[NAME BEZEICHNUNG TITLE TITEL].freeze
     CATEGORY_KEYS = %w[KATEGORIE ART_NAME ART_CATEGORY].freeze
     STREET_KEYS = %w[STRASSE STRASSENNAME STRASSE_NAME].freeze
     HOUSE_NUMBER_KEYS = %w[HAUS_NR HAUSNUMMER].freeze
     HOUSE_NUMBER_SUFFIX_KEYS = %w[HAUS_NR_ZUSATZ].freeze
+    ADDRESS_KEYS = %w[ADRESSE].freeze
     POSTCODE_KEYS = %w[PLZ POSTCODE].freeze
     CITY_KEYS = %w[ORT CITY STADT].freeze
     PHONE_KEYS = %w[TEL_NR TELEFON PHONE].freeze
     FAX_KEYS = %w[FAX_NR].freeze
     EMAIL_KEYS = %w[E_MAIL_ADRESSE EMAIL].freeze
     WEBSITE_KEYS = %w[INTERNET HOMEPAGE WEBSITE].freeze
-    DESCRIPTION_KEYS = %w[LAGEBESCHREIBUNG BESCHREIBUNG DESCRIPTION].freeze
+    DESCRIPTION_KEYS = %w[LAGEBESCHREIBUNG ALG_LAGEBESCHREIBUNG BESCHREIBUNG DESCRIPTION].freeze
+    OPENING_HOURS_KEYS = %w[OEFFNUNGSZEITEN].freeze
+    OPERATOR_KEYS = %w[TRAEGER].freeze
+    PRICE_KEYS = %w[PREIS].freeze
+    IMAGE_KEYS = %w[IMAGE].freeze
 
     ACCESSIBILITY_KEYS = %w[
       ZUGAENGLICH_VOLL ZUGAENGLICH_EINGESCHRAENKT ZUGAENGLICH_NICHT
       ZUGAENGLICH_BEGLEITPERSON ROLLSTUHL_PARKPLATZ ROLLSTUHL_WC
       HOERANLAGE_IND INFO_BLINDENSCHRIFT INFO_GEBAERDENSPRACHE
       INFO_LEICHTE_SPRACHE WELTERBERELEVANT
+      VALUE_BARRIEREFREI VALUE_SITZMOEGLICHKEITEN
+      BAR_VOLL_ZUGAENGLICH BAR_EING_ZUGAENGLICH
+      BAR_NICHT_ZUGAENGLICH BAR_BEGLEITPERS_ZUGAENGLICH
     ].freeze
+
+    TECHNICAL_KEYS = %w[
+      FID OBJID OBJIID DATAID ART_ID BEMERKUNG DENKMAL_ID BILD_NAME IMAGE
+      FLAECHE X_KOORDINATE Y_KOORDINATE DATE_TIME_UPDATE LAST_UPDATE
+    ].freeze
+
+    TECHNICAL_KEY_PREFIX = "Q__"
 
     FALSY_STRINGS = %w[0 false nein no].freeze
 
@@ -33,13 +48,57 @@ module Masterportal
     end
 
     def title(feature)
-      props = feature["properties"] || {}
+      title_value(feature) || external_id(feature)
+    end
 
-      value_from(props, TITLE_KEYS) || external_id(feature)
+    def title_value(feature)
+      value_from(feature["properties"] || {}, TITLE_KEYS)
+    end
+
+    def title_source_key(properties)
+      props = properties || {}
+
+      TITLE_KEYS.find { |key| props[key].to_s.strip.present? } ||
+        CATEGORY_KEYS.find { |key| props[key].to_s.strip.present? }
     end
 
     def category_name(feature)
       value_from(feature["properties"] || {}, CATEGORY_KEYS)
+    end
+
+    def opening_hours(props)
+      value_from(props, OPENING_HOURS_KEYS)
+    end
+
+    def operator(props)
+      value_from(props, OPERATOR_KEYS)
+    end
+
+    def price(props)
+      value_from(props, PRICE_KEYS)
+    end
+
+    def image_url(props)
+      value_from(props, IMAGE_KEYS)
+    end
+
+    def technical_key?(key)
+      normalized = key.to_s.upcase
+      return true if normalized.start_with?(TECHNICAL_KEY_PREFIX)
+
+      TECHNICAL_KEYS.include?(normalized)
+    end
+
+    def label_for(key)
+      flag_label = I18n.t("masterportal.accessibility_flags.#{key}", default: nil)
+
+      return flag_label if flag_label.present?
+
+      I18n.t("masterportal.popup.property_labels.#{key.to_s.downcase}", default: humanize_key(key))
+    end
+
+    def humanize_key(key)
+      key.to_s.tr("_", " ").downcase.gsub(/\b\w/, &:upcase)
     end
 
     def description(feature)
@@ -107,7 +166,7 @@ module Masterportal
 
     def address_line(props)
       street = value_from(props, STREET_KEYS)
-      return nil if street.blank?
+      return value_from(props, ADDRESS_KEYS) if street.blank?
 
       house = value_from(props, HOUSE_NUMBER_KEYS)
       suffix = value_from(props, HOUSE_NUMBER_SUFFIX_KEYS)

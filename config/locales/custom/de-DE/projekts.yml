@@ -44,6 +44,9 @@ de:
       content_block_templates_selector:
         loading: "Inhaltsblockvorlagen werden geladen..."
         fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
+        ai_create_button:
+          label: Mit KI erstellen
+          title: Inhaltsblock von KI erstellen lassen
         visibility:
           hidden: Versteckt
           hidden_until: "Versteckt bis %{date}"

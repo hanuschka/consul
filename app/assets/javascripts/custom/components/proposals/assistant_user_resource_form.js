@@ -33,6 +33,8 @@
 
       var editorContent = document.querySelector(".ck-content.ck-editor__editable");
       this.addChangedFieldsHighlightTo(editorContent);
+
+      setTimeout(App.AssistantUserResourceForm.refreshMaps, 200);
     },
 
     selectCategory: function(categoryId, shouldScroll) {
@@ -67,6 +69,8 @@
     },
 
     updateMapLocation: function(coordinates, shouldScroll) {
+      this.refreshMaps();
+
       if (App.Mapbox.maps.length > 0) {
         var currentMapInstance = App.Mapbox.maps[0];
 
@@ -92,6 +96,8 @@
       } else if (App.Map.maps.length > 0) {
         App.Map.setMarkerTo(coordinates[0], coordinates[1], false);
       }
+
+      setTimeout(App.AssistantUserResourceForm.refreshMaps, 300);
     },
 
     updateImage: function(image) {
@@ -189,6 +195,20 @@
 
     getMessagebar: function() {
       return document.querySelector(".js-voice-assistant-messagebar");
+    },
+
+    refreshMaps: function() {
+      App.Map.maps.forEach(function(mapInstance) {
+        var map = mapInstance.map;
+
+        if (!map) return;
+
+        if (typeof map.resize === "function") {
+          map.resize();
+        } else if (typeof map.invalidateSize === "function") {
+          map.invalidateSize();
+        }
+      });
     }
   };
 

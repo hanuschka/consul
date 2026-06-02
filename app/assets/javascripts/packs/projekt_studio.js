@@ -27,6 +27,7 @@
 //= require ../projekt_studio/modules/ContentBlock/EditModeSwitcher
 //= require ../projekt_studio/modules/ContentBlock/EditModeButtons
 //= require ../projekt_studio/modules/ContentBlock/Copy
+//= require ../projekt_studio/modules/ContentBlock/EmptyHintToggle
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/TextFormat
 //= require ../projekt_studio/modules/ContentBlock/SimpleEditMode/HeaderEdit
@@ -39,4 +40,5 @@
 //= require ../projekt_studio/modules/FileImport
 //= require ../projekt_studio/modules/ProjektStart
 //= require ../projekt_studio/modules/BuildWithPrompt
+//= require ../projekt_studio/modules/CreateContentBlockWithAi
 //= require ../projekt_studio/modules/ToggleBackground

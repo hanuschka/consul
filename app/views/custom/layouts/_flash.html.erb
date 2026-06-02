@@ -1,25 +1,41 @@
 <% flash.delete("timedout") %>
-<div class="show-for-sr js-flash-live-region" aria-live="polite" aria-atomic="true"></div>
-<% flash.each do |flash_key, flash_message| %>
-  <% if flash_key.to_sym.in?([:notice, :alert, :success, :error]) %>
-    <div
-      id="<%= flash_key %>"
-      data-alert
-      class="notice-container callout-slide js-flash-message"
-      data-closable
-      data-flash-text="<%= sanitize(flash_message) %>"
-    >
-      <div class="callout notice <%= flash_key %>">
+<%
+  toast_types = {
+    "success" => { group: "success", icon: "fa-check-circle",         autodismiss: true,  live: "polite" },
+    "notice"  => { group: "success", icon: "fa-check-circle",         autodismiss: true,  live: "polite" },
+    "info"    => { group: "info",    icon: "fa-info-circle",          autodismiss: true,  live: "polite" },
+    "warning" => { group: "warning", icon: "fa-exclamation-triangle", autodismiss: false, live: "assertive" },
+    "alert"   => { group: "alert",   icon: "fa-exclamation-circle",   autodismiss: false, live: "assertive" },
+    "error"   => { group: "alert",   icon: "fa-exclamation-circle",   autodismiss: false, live: "assertive" }
+  }
+  active_flashes = flash.select { |key, _| toast_types.key?(key.to_s) }
+%>
+<% if active_flashes.any? %>
+  <div class="toast-stack js-toast-stack">
+    <div class="show-for-sr js-flash-live-region" aria-live="polite" aria-atomic="true"></div>
+    <div class="show-for-sr js-flash-alert-region" role="alert" aria-atomic="true"></div>
+
+    <% active_flashes.each do |flash_key, flash_message| %>
+      <% type = toast_types[flash_key.to_s] %>
+      <div
+        id="<%= flash_key %>"
+        class="toast toast--<%= type[:group] %> js-flash-message"
+        data-flash-type="<%= flash_key %>"
+        data-autodismiss="<%= type[:autodismiss] %>"
+        data-live="<%= type[:live] %>"
+      >
+        <span class="toast__icon" aria-hidden="true">
+          <i class="fa <%= type[:icon] %>"></i>
+        </span>
+        <div class="toast__text"><%= sanitize(flash_message) %></div>
         <button
-          class="close-button"
-          aria-label="<%= t("application.close") %>"
+          class="toast__close js-toast-close"
           type="button"
-          data-close
+          aria-label="<%= t("application.close") %>"
         >
           <span aria-hidden="true">&times;</span>
         </button>
-        <div class="notice-text" tabindex="-1"></div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>

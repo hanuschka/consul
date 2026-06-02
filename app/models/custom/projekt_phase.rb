@@ -126,6 +126,7 @@ class ProjektPhase < ApplicationRecord
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
   has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
   has_many :masterportal_pins, dependent: :destroy
+  has_many :masterportal_collections, dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -148,6 +149,13 @@ class ProjektPhase < ApplicationRecord
     success: "success",
     failed: "failed"
   }, _prefix: :masterportal_import
+
+  enum masterportal_destroy_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_destroy
 
   validates :projekt, presence: true
   validate :type_must_be_valid
@@ -385,6 +393,17 @@ class ProjektPhase < ApplicationRecord
 
   def customizable_email_templates
     raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
+  end
+
+  def customizable_email_template_groups
+    [
+      {
+        key: nil,
+        templates: customizable_email_templates.map do |mailer_class, mailer_action|
+          { mailer_class: mailer_class, mailer_action: mailer_action, recipient_type: nil }
+        end
+      }
+    ]
   end
 
   def admin_nav_bar_items

@@ -1,23 +1,20 @@
 <div class="files-filter-bar js-fm-filter-bar">
-  <div class="files-filter-bar--field">
-    <label class="files-filter-bar--label">
-      <%= t("files.filter_bar.search_placeholder") %>
-    </label>
+  <div class="files-filter-bar--field files-filter-bar--field-search">
+    <i class="fa fa-search files-filter-bar--search-icon" aria-hidden="true"></i>
     <input
       type="search"
-      class="files-filter-bar--input js-fm-filter-search"
+      class="files-filter-bar--input files-filter-bar--input-search js-fm-filter-search"
       placeholder="<%= t("files.filter_bar.search_placeholder") %>"
+      aria-label="<%= t("files.filter_bar.aria.search") %>"
       data-action="input->files--filter-bar#inputChanged"
     >
   </div>
 
   <% if !minimal? %>
     <div class="files-filter-bar--field">
-      <label class="files-filter-bar--label">
-        <%= t("files.filter_bar.extension") %>
-      </label>
       <select
         class="files-filter-bar--input js-fm-filter-extension"
+        aria-label="<%= t("files.filter_bar.aria.filter_extension") %>"
         data-action="change->files--filter-bar#filterChanged"
       >
         <option value=""><%= t("files.filter_bar.extension_any") %></option>
@@ -35,10 +32,9 @@
         loading: "lazy",
         class: "files-filter-bar--frame" do %>
       <div class="files-filter-bar--field">
-        <label class="files-filter-bar--label">
-          <%= t("files.filter_bar.imageable_type") %>
-        </label>
-        <select class="files-filter-bar--input" disabled>
+        <select class="files-filter-bar--input"
+                aria-label="<%= t("files.filter_bar.aria.filter_imageable_type") %>"
+                disabled>
           <option value=""></option>
         </select>
       </div>
@@ -51,10 +47,9 @@
         loading: "lazy",
         class: "files-filter-bar--frame" do %>
       <div class="files-filter-bar--field">
-        <label class="files-filter-bar--label">
-          <%= t("files.filter_bar.documentable_type") %>
-        </label>
-        <select class="files-filter-bar--input" disabled>
+        <select class="files-filter-bar--input"
+                aria-label="<%= t("files.filter_bar.aria.filter_documentable_type") %>"
+                disabled>
           <option value=""></option>
         </select>
       </div>
@@ -63,11 +58,9 @@
 
   <% if !minimal? %>
     <div class="files-filter-bar--field">
-      <label class="files-filter-bar--label">
-        <%= t("files.filter_bar.admin_flag") %>
-      </label>
       <select
         class="files-filter-bar--input js-fm-filter-admin-flag"
+        aria-label="<%= t("files.filter_bar.aria.filter_admin_flag") %>"
         data-action="change->files--filter-bar#filterChanged"
       >
         <option value=""><%= t("files.filter_bar.admin_flag_any") %></option>
@@ -78,11 +71,9 @@
   <% end %>
 
   <div class="files-filter-bar--field">
-    <label class="files-filter-bar--label">
-      <%= t("files.filter_bar.sort_default") %>
-    </label>
     <select
       class="files-filter-bar--input js-fm-filter-sort"
+      aria-label="<%= t("files.filter_bar.aria.sort") %>"
       data-action="change->files--filter-bar#sortChanged"
     >
       <% Files::FilterBarComponent::SORT_OPTIONS.each do |key| %>
@@ -94,8 +85,35 @@
   <button
     type="button"
     class="files-filter-bar--reset-button js-fm-filter-reset"
+    title="<%= t("files.filter_bar.aria.reset") %>"
+    aria-label="<%= t("files.filter_bar.aria.reset") %>"
     data-action="click->files--filter-bar#resetClicked"
   >
-    <%= t("files.filter_bar.reset") %>
+    <i class="fas fa-xmark" aria-hidden="true"></i>
   </button>
+
+  <% if show_view_modes? %>
+    <div class="files-index--view-controls">
+      <button
+        type="button"
+        class="files-index--view-button -cards"
+        data-action="click->files--filter-bar#viewModeCardsClicked"
+        data-files--filter-bar-target="viewModeCardsButton"
+        title="<%= t("files.view_mode.cards") %>"
+        aria-label="<%= t("files.view_mode.cards") %>"
+      >
+        <i class="fa fa-th"></i>
+      </button>
+      <button
+        type="button"
+        class="files-index--view-button -list"
+        data-action="click->files--filter-bar#viewModeListClicked"
+        data-files--filter-bar-target="viewModeListButton"
+        title="<%= t("files.view_mode.list") %>"
+        aria-label="<%= t("files.view_mode.list") %>"
+      >
+        <i class="fa fa-list"></i>
+      </button>
+    </div>
+  <% end %>
 </div>

@@ -1,11 +1,15 @@
 class Shared::MapComponent < ApplicationComponent
+  LAZY_LOAD_THRESHOLD = 30
+
   def initialize(
     mappable: nil,
     features: {},
     editable: false,
     process: nil,
     placement: nil,
-    collapsible: false
+    collapsible: false,
+    map_data_url: nil,
+    masterportal_focus_view: false
   )
     @mappable = mappable
     @features = features
@@ -13,6 +17,15 @@ class Shared::MapComponent < ApplicationComponent
     @process = process
     @placement = placement
     @collapsible = collapsible
+    @map_data_url = map_data_url
+    @masterportal_focus_view = masterportal_focus_view
+  end
+
+  def lazy_load_map_data?
+    return false if @editable
+    return false if @map_data_url.blank?
+
+    features_count > LAZY_LOAD_THRESHOLD
   end
 
   def collapsible?
@@ -29,6 +42,30 @@ class Shared::MapComponent < ApplicationComponent
 
   private
 
+    def features_count
+      data = resolved_features
+
+      array =
+        if data.is_a?(Hash)
+          data[:features] || data["features"]
+        else
+          data
+        end
+
+      array.is_a?(Array) ? array.size : 0
+    end
+
+    def resolved_features
+      return @features if !@masterportal_focus_view
+
+      @resolved_features ||=
+        map_location.features_json_data(mark_masterportal_pin: false)
+    end
+
+    def masterportal_focus?
+      @masterportal_focus_view && masterportal_rendering_enabled?
+    end
+
     def prepare_map_settings
       options = { map: true }
 
@@ -42,7 +79,11 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:layers_data] = layers
 
-      options[:features] = @features
+      if lazy_load_map_data?
+        options[:map_data_url] = @map_data_url
+      else
+        options[:features] = resolved_features
+      end
 
       options[:masterportal_pins_layer_label] =
         I18n.t("components.shared.map_component.layers.masterportal_pins")
@@ -107,11 +148,19 @@ class Shared::MapComponent < ApplicationComponent
                  MapLayer.default
              end
 
-      base.as_json + masterportal_wms_layer_injection
+      base_layers = base.as_json
+
+      if masterportal_focus?
+        base_layers = base_layers.reject do |layer|
+          layer["protocol"] == "wms" && !layer["base"]
+        end
+      end
+
+      masterportal_wms_layer_injection + base_layers
     end
 
     def masterportal_wms_layer_injection
-      return [] if map_location&.rendering_library != "leaflet_plus_masterportal"
+      return [] if !masterportal_rendering_enabled?
 
       wms_url = Rails.application.secrets.dig(:masterportal, :wms_url)
       wms_layers = Rails.application.secrets.dig(:masterportal, :wms_layers)
@@ -129,6 +178,17 @@ class Shared::MapComponent < ApplicationComponent
         "show_by_default" => true,
         "base" => false
       }]
+    end
+
+    def masterportal_rendering_enabled?
+      return true if map_location&.rendering_library == "leaflet_plus_masterportal"
+
+      context_map_location&.rendering_library == "leaflet_plus_masterportal"
+    end
+
+    def context_map_location
+      @mappable.try(:projekt_phase)&.map_location ||
+        @mappable.try(:projekt)&.map_location
     end
 
     def admin_editor?

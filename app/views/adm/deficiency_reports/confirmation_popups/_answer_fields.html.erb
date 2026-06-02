@@ -1,0 +1,48 @@
+<div data-nested-field class="kern-card p-4 mb-3 position-relative">
+  <%= f.hidden_field :position, value: f.object.position || 0 %>
+  <%= f.hidden_field :_destroy %>
+
+  <div style="position: absolute; top: 0.75rem; right: 0.75rem;">
+    <%= kern_button icon: "close", style: :tertiary,
+          data: { action: "adm-nested-fields#remove" } %>
+  </div>
+
+  <strong class="d-block mb-4">
+    <%= t("adm.deficiency_reports.confirmation_popups.form.answer_title") %>
+  </strong>
+
+  <div class="mb-4" style="display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; align-items: center; align-self: stretch; padding-right: 2.5rem;">
+    <div class="kern-title kern-title--small">
+      <%= t("adm.deficiency_reports.confirmation_popups.form.label_label") %>
+    </div>
+    <div>
+      <%= f.text_field :label, label: false,
+            placeholder: t("adm.deficiency_reports.confirmation_popups.form.label_placeholder") %>
+    </div>
+  </div>
+
+  <div class="mb-4" style="display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; align-items: center; align-self: stretch; padding-right: 2.5rem;">
+    <div class="kern-title kern-title--small">
+      <%= t("adm.deficiency_reports.confirmation_popups.form.behavior_label") %>
+    </div>
+    <div>
+      <%= f.select :behavior,
+            DeficiencyReport::ConfirmationPopupAnswer.behaviors.keys.map { |k|
+              [t("adm.deficiency_reports.confirmation_popups.form.behaviors.#{k}"), k]
+            },
+            {},
+            { label: false } %>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; align-items: start; align-self: stretch; padding-right: 2.5rem;">
+    <div class="kern-title kern-title--small">
+      <%= t("adm.deficiency_reports.confirmation_popups.form.flash_notice_label") %>
+    </div>
+    <div>
+      <%= f.text_area :flash_notice, label: false,
+            placeholder: t("adm.deficiency_reports.confirmation_popups.form.flash_notice_placeholder"),
+            rows: 2 %>
+    </div>
+  </div>
+</div>

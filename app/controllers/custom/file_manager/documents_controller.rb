@@ -1,11 +1,11 @@
 class FileManager::DocumentsController < FileManager::BaseController
   def index
     authorize [:adm, :document], :index?
-    skip_policy_scope
 
     @documents =
       Document
         .for_studio_file_manager(current_projekt)
+        .merge(policy_scope([:adm, Document]))
         .order(created_at: :desc)
         .page(params[:page])
         .per(15)

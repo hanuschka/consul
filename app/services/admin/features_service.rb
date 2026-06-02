@@ -33,8 +33,8 @@ class Admin::FeaturesService < ApplicationService
     case Ai::Settings.current_llm_provider
     when "bedrock"
       stored_value?("bedrock", "access_key_id")
-    when "vertex_ai"
-      stored_value?("vertex_ai", "project")
+    when "vertexai"
+      stored_value?("vertexai", "project")
     when "ollama"
       false
     else

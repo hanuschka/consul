@@ -1,0 +1,6 @@
+en:
+  components:
+    adm:
+      system_user_info_component:
+        label: "Published as"
+        edit: "Edit"

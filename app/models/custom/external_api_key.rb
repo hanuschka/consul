@@ -21,7 +21,7 @@ class ExternalApiKey < ApplicationRecord
       perplexity: "https://www.perplexity.ai",
       gpustack: "https://gpustack.ai",
       bedrock: "https://aws.amazon.com/bedrock",
-      vertex_ai: "https://cloud.google.com/vertex-ai",
+      vertexai: "https://cloud.google.com/vertex-ai",
       brevo: "https://www.brevo.com"
     }
   end
@@ -138,7 +138,7 @@ class ExternalApiKey < ApplicationRecord
 
   def self.vertex_ai_project
     get_api_key_or_default(
-      "vertex_ai",
+      "vertexai",
       "project",
       Rails.application.secrets.dig(:ai, :vertex_ai_project)
     )
@@ -146,7 +146,7 @@ class ExternalApiKey < ApplicationRecord
 
   def self.vertex_ai_credentials
     get_api_key_or_default(
-      "vertex_ai",
+      "vertexai",
       "credentials",
       Rails.application.secrets.dig(:ai, :vertex_ai_credentials)
     )

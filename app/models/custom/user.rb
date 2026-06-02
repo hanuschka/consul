@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 User.class_eval do
-  audited only: [:username, :first_name, :last_name, :registered_address_id,
+  audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
 
@@ -43,6 +43,7 @@ User.class_eval do
   has_secure_token :frame_sign_in_token
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
+  has_many :projekt_imports, dependent: :destroy
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :memos
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -63,7 +64,11 @@ User.class_eval do
 
   belongs_to :api_client, optional: true
 
-  scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :projekt_managers,           -> { joins(:projekt_manager) }
+  scope :valuators,                  -> { joins(:valuator) }
+  scope :idea_managers,              -> { joins(:idea_manager) }
+  scope :officing_managers,          -> { joins(:officing_manager) }
+  scope :deficiency_report_managers, -> { joins(:deficiency_report_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
@@ -91,6 +96,8 @@ User.class_eval do
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
   validates :terms_older_than_14, acceptance: { allow_nil: false }, on: :create
+
+  validate :only_one_system_user, if: :system_user?
 
   class << self
     def order_filter(params)
@@ -121,30 +128,8 @@ User.class_eval do
       joins(:administrator).ids
     end
 
-    def masterportal
-      @masterportal_user ||= find_or_create_masterportal_user
-    end
-
-    def find_or_create_masterportal_user
-      user = User.find_by(username: "masterportal")
-
-      if user.present?
-        return user
-      end
-
-      create_masterportal_user
-    end
-
-    def create_masterportal_user
-      user = User.new(
-        username: "masterportal",
-        email: "masterportal@system.consul",
-        password: SecureRandom.hex(32)
-      )
-
-      user.skip_confirmation!
-      user.save!(validate: false)
-      user
+    def system
+      @system_user ||= Users::SystemUserService.call
     end
   end
 
@@ -154,6 +139,12 @@ User.class_eval do
 
   def not_actual?
     !actual?
+  end
+
+  def only_one_system_user
+    return if User.where(system_user: true).where.not(id: id).none?
+
+    errors.add(:system_user, :taken)
   end
 
   def validate_registered_address?

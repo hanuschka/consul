@@ -5,13 +5,32 @@ export default class extends Controller {
 
   static values = {
     chunkSize: { type: Number, default: 3 },
-    pauseMs: { type: Number, default: 8000 }
+    pauseMs: { type: Number, default: 8000 },
+    updateConfirm: String,
+    cleanConfirm: String
   }
 
-  async resync() {
+  resync(event) {
+    return this.runBulk(event, (controller) => controller.resync())
+  }
+
+  updateAll(event) {
+    if (this.updateConfirmValue && !window.confirm(this.updateConfirmValue)) return
+
+    return this.runBulk(event, (controller) => controller.kickoffUpdate(), { reloadAfter: true })
+  }
+
+  cleanAll(event) {
+    if (this.cleanConfirmValue && !window.confirm(this.cleanConfirmValue)) return
+
+    return this.runBulk(event, (controller) => controller.cleanInPlace(), { reloadAfter: true })
+  }
+
+  async runBulk(event, action, options = {}) {
     if (this.running) return
 
     this.running = true
+    this.activeButton = event ? event.currentTarget : null
     this.setRunning(true)
 
     const cards = this.cardTargets
@@ -21,15 +40,22 @@ export default class extends Controller {
 
       for (const card of chunk) {
         const controller = this.controllerFor(card)
-        if (controller) await controller.resync()
+        if (controller) await action(controller)
       }
 
       const hasMore = index + this.chunkSizeValue < cards.length
       if (hasMore) await this.pause()
     }
 
+    if (options.reloadAfter) {
+      window.location.reload()
+
+      return
+    }
+
     this.setRunning(false)
     this.running = false
+    this.activeButton = null
   }
 
   controllerFor(card) {
@@ -43,9 +69,9 @@ export default class extends Controller {
   }
 
   setRunning(isRunning) {
-    if (!this.hasButtonTarget) return
-
-    this.buttonTarget.disabled = isRunning
-    this.buttonTarget.classList.toggle("-loading", isRunning)
+    this.buttonTargets.forEach((button) => {
+      button.disabled = isRunning
+      button.classList.toggle("-loading", isRunning && button === this.activeButton)
+    })
   }
 }

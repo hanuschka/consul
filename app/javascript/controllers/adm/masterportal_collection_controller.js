@@ -75,6 +75,37 @@ export default class extends Controller {
     }
   }
 
+  async kickoffUpdate() {
+    this.mode = "import"
+    this.showProgress()
+
+    try {
+      const response = await patch(this.updateUrlValue, { responseKind: "json" })
+
+      return response.ok
+    } catch (error) {
+      this.showError(error.message)
+
+      return false
+    }
+  }
+
+  async cleanInPlace() {
+    this.mode = "destroy"
+    this.showProgress()
+
+    try {
+      const response = await destroy(this.cleanUrlValue, { responseKind: "json" })
+      if (!response.ok) throw new Error(`HTTP ${response.statusCode}`)
+
+      return true
+    } catch (error) {
+      this.showError(error.message)
+
+      return false
+    }
+  }
+
   async resync() {
     this.showChecking()
 

@@ -20,6 +20,12 @@ en:
         delete_tooltip: "Deletes this dataset entirely, including all pins and created entries"
         delete_confirm: 'Permanently delete dataset "%{name}" including its pins and created entries (proposals/investments)?'
         clean_confirm: 'Permanently delete all pins of dataset "%{name}" that are no longer present in the Masterportal source, including the proposals/investments created from them? This cannot be undone.'
+        update_all: "Update all"
+        update_all_tooltip: "Re-imports all datasets from Masterportal and applies any changes"
+        update_all_confirm: "Re-import all datasets from Masterportal?"
+        clean_all: "Clean up all"
+        clean_all_tooltip: "Removes pins (and their created proposals/investments) that are no longer in the source, for every dataset"
+        clean_all_confirm: "Remove pins that are no longer present in the Masterportal source, for every dataset, including the proposals/investments created from them? This cannot be undone."
         diff:
           new_label: "new available"
           stale_label: "no longer in source"

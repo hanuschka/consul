@@ -20,6 +20,12 @@ de:
         delete_tooltip: "Löscht diesen Datensatz vollständig inkl. aller Pins und erstellter Einträge"
         delete_confirm: 'Datensatz "%{name}" inkl. Pins und erstellter Einträge (Vorschläge/Einreichungen) endgültig löschen?'
         clean_confirm: 'Alle Pins des Datensatzes "%{name}", die nicht mehr in der Masterportal-Quelle vorhanden sind, inkl. der daraus erstellten Vorschläge/Einreichungen endgültig löschen? Dies kann nicht rückgängig gemacht werden.'
+        update_all: "Alle aktualisieren"
+        update_all_tooltip: "Importiert alle Datensätze erneut aus dem Masterportal und übernimmt Änderungen"
+        update_all_confirm: "Alle Datensätze erneut aus dem Masterportal importieren?"
+        clean_all: "Alle bereinigen"
+        clean_all_tooltip: "Entfernt für alle Datensätze Pins (inkl. erstellter Vorschläge/Einreichungen), die nicht mehr in der Quelle vorhanden sind"
+        clean_all_confirm: "Für alle Datensätze die Pins entfernen, die nicht mehr in der Masterportal-Quelle vorhanden sind (inkl. der daraus erstellten Vorschläge/Einreichungen)? Dies kann nicht rückgängig gemacht werden."
         diff:
           new_label: "neu verfügbar"
           stale_label: "nicht mehr in Quelle"

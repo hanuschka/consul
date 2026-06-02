@@ -547,13 +547,32 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     render json: { error: e.message }, status: :bad_gateway
   end
 
+  def masterportal_collection_card
+    authorize_phase(:update?)
+    collection =
+      @projekt_phase.masterportal_collections.find_by(id: params[:masterportal_collection_id])
+
+    if collection.nil?
+      render turbo_stream: turbo_stream.remove(
+        helpers.dom_id(MasterportalCollection.new(id: params[:masterportal_collection_id]))
+      )
+
+      return
+    end
+
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(collection: collection, projekt_phase: @projekt_phase)
+    )
+  end
+
   def clean_masterportal_collection_stale_pins
     authorize_phase(:update?)
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
 
-    result = Masterportal::CleanStaleService.call(masterportal_collection: collection)
+    Masterportal::CleanStaleService.call(masterportal_collection: collection)
 
-    render json: result
+    head :no_content
   rescue OgcApiFeatures::Error => e
     render json: { error: e.message }, status: :bad_gateway
   end

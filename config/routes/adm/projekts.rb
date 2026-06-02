@@ -67,6 +67,8 @@ namespace :adm do
             "phases#masterportal_collection_status", as: :masterportal_collection_status
         get "masterportal_collections/:masterportal_collection_id/diff" =>
             "phases#masterportal_collection_diff", as: :masterportal_collection_diff
+        get "masterportal_collections/:masterportal_collection_id/card" =>
+            "phases#masterportal_collection_card", as: :masterportal_collection_card
         delete "masterportal_collections/:masterportal_collection_id/stale_pins" =>
                "phases#clean_masterportal_collection_stale_pins",
                as: :clean_masterportal_collection_stale_pins

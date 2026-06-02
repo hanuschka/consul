@@ -1,29 +1,122 @@
-<%= form_with model: @map_layer, url: @form_url do |f| %>
-  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:name), hint: t(".hints.name")) do %>
-    <%= f.text_field :name, label: false, placeholder: MapLayer.human_attribute_name(:name) %>
+<%= form_with model: @map_layer, url: @form_url, multipart: true, data: { controller: "map-layer-form" } do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: t(".protocol_label"), hint: t(".hints.protocol")) do %>
+    <%= f.select :protocol, MapLayer.protocol_attributes_for_select.map(&:reverse), { label: false },
+          data: { "map-layer-form-target": "protocol", action: "map-layer-form#protocolChanged" } %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:provider), hint: t(".hints.provider")) do %>
-    <%= f.text_field :provider, label: false, placeholder: MapLayer.human_attribute_name(:provider) %>
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:name), hint: t(".hints.name")) do %>
+    <%= f.text_field :name, label: false, placeholder: MapLayer.human_attribute_name(:name) %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:attribution), hint: t(".hints.attribution")) do %>
     <%= f.text_field :attribution, label: false, placeholder: MapLayer.human_attribute_name(:attribution) %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:layer_names), hint: t(".hints.layer_names")) do %>
-    <%= f.text_field :layer_names, label: false, placeholder: MapLayer.human_attribute_name(:layer_names) %>
-  <% end %>
-
-  <%= render Kern::FormFieldComponent.new(label: t(".labels.presentation"), hint: t(".hints.presentation")) do %>
-    <%= f.check_box :base %>
+  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:show_by_default)) do %>
     <%= f.check_box :show_by_default %>
-    <%= f.check_box :transparent %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:opacity), hint: t(".hints.opacity")) do %>
-    <%= f.text_field :opacity, label: false %>
-  <% end %>
+  <div data-map-layer-form-target="wmsGroup">
+    <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:provider), hint: t(".hints.provider")) do %>
+      <%= f.text_field :provider, label: false, placeholder: MapLayer.human_attribute_name(:provider) %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:layer_names), hint: t(".hints.layer_names")) do %>
+      <%= f.text_field :layer_names, label: false, placeholder: MapLayer.human_attribute_name(:layer_names) %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t(".labels.presentation"), hint: t(".hints.presentation")) do %>
+      <%= f.check_box :base %>
+      <%= f.check_box :transparent %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:opacity), hint: t(".hints.opacity")) do %>
+      <%= f.text_field :opacity, label: false %>
+    <% end %>
+  </div>
+
+  <div data-map-layer-form-target="geojsonGroup">
+    <%= render Kern::FormFieldComponent.new(label: t(".labels.geojson_file"), hint: t(".hints.geojson_file"), stacked: true) do %>
+      <% if f.object.geojson_file.attached? %>
+        <div class="mb-3">
+          <p class="kern-body mb-2"><%= t(".labels.geojson_file_attached", filename: f.object.geojson_file.filename) %></p>
+          <label>
+            <%= check_box_tag "map_layer[remove_geojson_file]", "1", false %>
+            <%= t(".labels.geojson_file_remove") %>
+          </label>
+        </div>
+      <% end %>
+      <%= f.file_field :geojson_file, accept: ".geojson,application/geo+json,application/json" %>
+    <% end %>
+
+    <%= f.fields_for :config do |cf| %>
+      <% cf.fields_for :style do |sf| %>
+        <%= render Kern::FormFieldComponent.new(label: t(".labels.fill_color")) do %>
+          <div data-controller="adm-color-picker" data-adm-color-picker-target="container">
+            <div class="color-picker" data-adm-color-picker-target="picker"></div>
+            <%= sf.hidden_field :fillColor, value: f.object.flat_style["fillColor"].presence || "#3366CC",
+                  data: { "adm-color-picker-target": "colorInput" } %>
+          </div>
+        <% end %>
+
+        <%= render Kern::FormFieldComponent.new(label: t(".labels.stroke_color")) do %>
+          <div data-controller="adm-color-picker" data-adm-color-picker-target="container">
+            <div class="color-picker" data-adm-color-picker-target="picker"></div>
+            <%= sf.hidden_field :color, value: f.object.flat_style["color"].presence || "#1A3C8C",
+                  data: { "adm-color-picker-target": "colorInput" } %>
+          </div>
+        <% end %>
+
+        <%= render Kern::FormFieldComponent.new(label: t(".labels.fill_opacity")) do %>
+          <%= sf.text_field :fillOpacity, label: false %>
+        <% end %>
+
+        <%= render Kern::FormFieldComponent.new(label: t(".labels.stroke_weight")) do %>
+          <%= sf.text_field :weight, label: false %>
+        <% end %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(label: t(".labels.label_property"), hint: t(".hints.label_property")) do %>
+        <%= cf.text_field :label_property, label: false %>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(label: t(".labels.popup_properties"), hint: t(".hints.popup_properties")) do %>
+        <%= cf.text_field :popup_properties, label: false,
+              value: Array(f.object.config["popup_properties"]).join(", ") %>
+      <% end %>
+
+      <% cf.fields_for :choropleth do |ch| %>
+        <div data-map-layer-form-target="choroplethGroup">
+          <%= ch.check_box :enabled, label: t(".labels.choropleth_enabled"), hint: t(".hints.choropleth"),
+                data: { "map-layer-form-target": "choroplethToggle", action: "map-layer-form#choroplethChanged" } %>
+
+          <div data-map-layer-form-target="choroplethFields">
+            <%= render Kern::FormFieldComponent.new(label: t(".labels.choropleth_property"), hint: t(".hints.choropleth_property")) do %>
+              <%= ch.text_field :property, label: false %>
+            <% end %>
+
+            <%= render Kern::FormFieldComponent.new(label: t(".labels.breaks"), hint: t(".hints.breaks")) do %>
+              <%= ch.text_field :breaks, label: false,
+                    value: Array(f.object.choropleth_config["breaks"]).join(", ") %>
+            <% end %>
+
+            <%= render Kern::FormFieldComponent.new(label: t(".labels.colors"), hint: t(".hints.colors")) do %>
+              <%= ch.text_field :colors, label: false,
+                    value: Array(f.object.choropleth_config["colors"]).join(", ") %>
+            <% end %>
+
+            <%= render Kern::FormFieldComponent.new(label: t(".labels.legend_title")) do %>
+              <%= ch.text_field :legend_title, label: false %>
+            <% end %>
+
+            <%= render Kern::FormFieldComponent.new(label: t(".labels.no_data_color"), hint: t(".hints.no_data_color")) do %>
+              <%= ch.text_field :no_data_color, label: false %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 
   <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

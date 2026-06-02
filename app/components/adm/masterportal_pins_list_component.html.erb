@@ -24,6 +24,7 @@
                     <% if linked_resource_url(pin).present? %>
                       <%= link_to linked_resource_url(pin),
                         class: "masterportal-pin-card--linked",
+                        title: t(".open_linked_tooltip"),
                         target: "_blank",
                         rel: "noopener" do %>
                         <span class="material-symbols-outlined" aria-hidden="true">link</span>

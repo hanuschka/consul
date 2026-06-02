@@ -33,26 +33,33 @@ export default class extends Controller {
     this.activeButton = event ? event.currentTarget : null
     this.setRunning(true)
 
-    const cards = this.cardTargets
+    let reloading = false
 
-    for (let index = 0; index < cards.length; index += this.chunkSizeValue) {
-      const chunk = cards.slice(index, index + this.chunkSizeValue)
+    try {
+      const cards = this.cardTargets
 
-      for (const card of chunk) {
-        const controller = this.controllerFor(card)
-        if (controller) await action(controller)
+      for (let index = 0; index < cards.length; index += this.chunkSizeValue) {
+        const chunk = cards.slice(index, index + this.chunkSizeValue)
+
+        for (const card of chunk) {
+          const controller = this.controllerFor(card)
+          if (controller) await action(controller)
+        }
+
+        const hasMore = index + this.chunkSizeValue < cards.length
+        if (hasMore) await this.pause()
       }
 
-      const hasMore = index + this.chunkSizeValue < cards.length
-      if (hasMore) await this.pause()
+      if (options.reloadAfter) {
+        reloading = true
+        window.location.reload()
+      }
+    } finally {
+      if (!reloading) this.clearRunning()
     }
+  }
 
-    if (options.reloadAfter) {
-      window.location.reload()
-
-      return
-    }
-
+  clearRunning() {
     this.setRunning(false)
     this.running = false
     this.activeButton = null

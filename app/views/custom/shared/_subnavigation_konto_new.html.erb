@@ -25,7 +25,7 @@
       <% end %>
 
       <ul class="nav-flyout-block">
-        <%= render "devise/menu/login_items_user_facing" %>
+        <%= render "devise/menu/login_items_new" %>
       </ul>
   </li>
 <% end %>
@@ -33,5 +33,5 @@
 <% if placement == 'mobile' %>
   <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") %>
 
-  <%= render "devise/menu/login_items_user_facing" %>
+  <%= render "devise/menu/login_items_new" %>
 <% end %>

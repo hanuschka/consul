@@ -35,6 +35,7 @@ de:
             verify: Verifizieren
             unverify: Verifizierung aufheben
             edit: Bearbeiten
+            audits: Änderungslog
       csv_download:
         not_found: Die angeforderte Datei wurde nicht gefunden oder ist abgelaufen.
       edit:
@@ -42,6 +43,17 @@ de:
       form:
         submit_with_reverify: Speichern & Einwohnermeldeamt-Abgleich durchführen
         reverify_confirm: Sind Sie sicher?
+        hints:
+          email: Die E-Mail-Adresse dient dem Nutzer zur Anmeldung an der Plattform und ist der zentrale Weg für Benachrichtigungen. An diese Adresse werden Nachrichten wie Bestätigungen, Hinweise und Antworten auf Beiträge versendet. Achten Sie auf eine korrekte Schreibweise, da sich der Nutzer andernfalls nicht anmelden und keine Nachrichten empfangen kann.
+          first_name: Der Vorname wird gemeinsam mit dem Nachnamen zur eindeutigen Zuordnung des Nutzers verwendet und kann bei dessen Beiträgen angezeigt werden. Tragen Sie den Vornamen so ein, wie er im amtlichen Ausweisdokument steht. Eine korrekte Schreibweise ist wichtig, damit eine spätere Überprüfung der Identität reibungslos möglich ist.
+          last_name: Der Nachname wird gemeinsam mit dem Vornamen zur eindeutigen Zuordnung des Nutzers verwendet und kann bei dessen Beiträgen angezeigt werden. Tragen Sie den Nachnamen so ein, wie er im amtlichen Ausweisdokument steht. Eine korrekte Schreibweise ist wichtig, damit eine spätere Überprüfung der Identität reibungslos möglich ist.
+          date_of_birth: Das Geburtsdatum dient dazu, das für die Teilnahme erforderliche Mindestalter zu prüfen und den Nutzer eindeutig zuzuordnen. Wählen Sie das Datum über die Auswahl aus oder geben Sie es im Format TT.MM.JJJJ ein. Achten Sie auf die Richtigkeit, da das Geburtsdatum zur Überprüfung der Identität herangezogen werden kann.
+          gender: Die Angabe des Geschlechts ist freiwillig und unterstützt die anonyme statistische Auswertung der Beteiligung. Die Information wird nicht öffentlich am Profil oder an Beiträgen angezeigt. Lassen Sie das Feld leer, wenn keine Angabe gewünscht ist oder keine passende Auswahl zur Verfügung steht.
+          city_name: Der Wohnort gibt an, in welcher Stadt oder Gemeinde der Nutzer gemeldet ist, und kann für ortsbezogene Beteiligungen sowie Auswertungen genutzt werden. Tragen Sie den Ort so ein, wie er in der amtlichen Anschrift steht. Eine korrekte Angabe stellt sicher, dass der Nutzer den richtigen Bezirken und Verfahren zugeordnet wird.
+          plz: Die Postleitzahl ergänzt die Anschrift des Nutzers und unterstützt die Zuordnung zu Bezirken, Wahlkreisen oder regionalen Verfahren. Geben Sie die fünfstellige Postleitzahl des Wohnorts ein. Eine korrekte Angabe ist wichtig, damit ortsbezogene Beteiligungen und Auswertungen dem richtigen Gebiet zugeordnet werden.
+          street_name: Der Straßenname ist Teil der Anschrift des Nutzers und wird gemeinsam mit Hausnummer und Postleitzahl zur eindeutigen Bestimmung des Wohnorts verwendet. Tragen Sie ausschließlich den Straßennamen ohne Hausnummer ein. Eine korrekte Angabe ist wichtig, damit die Adresse einem Bezirk oder Verfahren zugeordnet werden kann.
+          street_number: Die Hausnummer präzisiert die Anschrift des Nutzers innerhalb der angegebenen Straße. Tragen Sie ausschließlich die Hausnummer ohne Zusätze wie Buchstaben oder Bereiche ein; solche Angaben gehören in das separate Feld. Eine korrekte Angabe stellt sicher, dass die Adresse vollständig und eindeutig zugeordnet werden kann.
+          street_number_extension: Der Zusatz zur Hausnummer ergänzt die Adresse um zusätzliche Angaben wie einen Buchstaben oder einen Bereich, zum Beispiel „a“ oder „1-3“. Tragen Sie hier ausschließlich den Zusatz ein, nicht die eigentliche Hausnummer. Das Feld kann leer bleiben, wenn die Adresse keinen solchen Zusatz enthält.
       flash:
         updated: Nutzer aktualisiert
         verified: Nutzer verifiziert

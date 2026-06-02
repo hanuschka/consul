@@ -7,6 +7,7 @@ en:
           other: imported Masterportal pins
         linked_to: "Linked to %{resource_name}"
         view_all: View all
+        view_all_tooltip: Opens the full list of all imported Masterportal pins
         resource_names:
           proposals: proposals
           budget_investments: budget investments

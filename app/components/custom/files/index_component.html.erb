@@ -8,37 +8,19 @@
     <%= render Files::FilterBarComponent.new(
       type: type,
       imageable_type_frame_src: imageable_type_frame_src,
-      documentable_type_frame_src: documentable_type_frame_src
+      documentable_type_frame_src: documentable_type_frame_src,
+      show_view_modes: supports_view_modes?
     ) %>
   </div>
 
-  <% if supports_view_modes? %>
-    <div class="files-index--view-controls">
-      <button
-        type="button"
-        class="files-index--view-button -cards"
-        data-action="click->files--filter-bar#viewModeCardsClicked"
-        data-files--filter-bar-target="viewModeCardsButton"
-        title="<%= t("files.view_mode.cards") %>"
-        aria-label="<%= t("files.view_mode.cards") %>"
-      >
-        <i class="fa fa-th"></i>
-      </button>
-      <button
-        type="button"
-        class="files-index--view-button -list"
-        data-action="click->files--filter-bar#viewModeListClicked"
-        data-files--filter-bar-target="viewModeListButton"
-        title="<%= t("files.view_mode.list") %>"
-        aria-label="<%= t("files.view_mode.list") %>"
-      >
-        <i class="fa fa-list"></i>
-      </button>
-    </div>
-  <% end %>
-
   <div class="files-index--grid" data-files--filter-bar-target="grid">
-    <%= render(card_component.with_collection(assets, type: type)) %>
+    <% if assets.any? %>
+      <%= render(card_component.with_collection(assets, type: type)) %>
+    <% else %>
+      <div class="files-index--empty">
+        <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+      </div>
+    <% end %>
   </div>
 
   <% if supports_view_modes? %>
@@ -52,11 +34,20 @@
             <th scope="col" class="kern-table__header"><%= t("files.list.assigned_to") %></th>
             <th scope="col" class="kern-table__header"><%= t("files.list.size") %></th>
             <th scope="col" class="kern-table__header"><%= t("files.list.modified") %></th>
+            <th scope="col" class="kern-table__header"><%= t("files.list.uploaded_by") %></th>
             <th scope="col" class="kern-table__header"></th>
           </tr>
         </thead>
         <tbody class="kern-table__body" data-files--filter-bar-target="list">
-          <%= render(row_component.with_collection(assets)) %>
+          <% if assets.any? %>
+            <%= render(row_component.with_collection(assets)) %>
+          <% else %>
+            <tr class="kern-table__row">
+              <td class="kern-table__cell files-index--empty-cell" colspan="8">
+                <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+              </td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>

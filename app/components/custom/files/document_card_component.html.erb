@@ -51,21 +51,36 @@
     </div>
 
     <% if document.attachment.attached? %>
-      <a
-        href="<%= attachment_url %>"
-        target="_blank"
-        rel="noopener"
-        class="files-asset-card--glass-button -top-left"
-        title="<%= t("files.card.open_in_new_tab") %>"
-        aria-label="<%= t("files.card.open_in_new_tab") %>"
-      >
-        <i class="fa fa-external-link-alt"></i>
-      </a>
+      <div class="files-asset-card--actions-left">
+        <button
+          type="button"
+          class="files-asset-card--icon-button js-files-copy-url"
+          data-action="click->files--filter-bar#copyUrlClicked"
+          data-copy-url="<%= attachment_url %>"
+          data-success-message="<%= t("files.card.copy_url_success") %>"
+          data-failed-message="<%= t("files.card.copy_url_failed") %>"
+          title="<%= t("files.card.copy_url") %>"
+          aria-label="<%= t("files.card.copy_url") %>"
+        >
+          <i class="fa fa-link"></i>
+        </button>
+
+        <a
+          href="<%= attachment_url %>"
+          target="_blank"
+          rel="noopener"
+          class="files-asset-card--icon-button"
+          title="<%= t("files.card.open_in_new_tab") %>"
+          aria-label="<%= t("files.card.open_in_new_tab") %>"
+        >
+          <i class="fa fa-external-link-alt"></i>
+        </a>
+      </div>
 
       <a
         href="<%= attachment_url %>"
         download="<%= filename %>"
-        class="files-asset-card--glass-button"
+        class="files-asset-card--icon-button -bottom-right"
         title="<%= t("files.card.download") %>"
         aria-label="<%= t("files.card.download") %>"
       >
@@ -119,6 +134,13 @@
         <dt><%= t("files.card.last_edited") %></dt>
         <dd><%= updated_at_formatted %></dd>
       </div>
+
+      <% if uploaded_by.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.uploaded_by") %></dt>
+          <dd><%= render Files::UploaderLinkComponent.new(user: uploaded_by) %></dd>
+        </div>
+      <% end %>
     </dl>
   </div>
 </article>

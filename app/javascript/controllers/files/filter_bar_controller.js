@@ -157,6 +157,24 @@ export default class extends Controller {
     }
   }
 
+  async copyUrlClicked(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const button = event.currentTarget
+    const url = button.dataset.copyUrl
+
+    if (!url) return
+
+    try {
+      await navigator.clipboard.writeText(url)
+      addFlashMessage(button.dataset.successMessage || "Link copied", "success")
+    } catch (error) {
+      console.error("Files copy url failed", error)
+      addFlashMessage(button.dataset.failedMessage || "Copy failed", "danger")
+    }
+  }
+
   deleteSuccessMessage(filename) {
     return this.applyTemplate("data-files-delete-success-template", filename) ||
       `Deleted ${filename}`

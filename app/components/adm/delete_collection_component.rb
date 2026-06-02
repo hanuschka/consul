@@ -3,6 +3,8 @@ class Adm::DeleteCollectionComponent < ApplicationComponent
     url:,
     text:,
     confirm:,
+    status_url:,
+    initial_status: nil,
     headline: nil,
     hint: nil,
     icon: "delete",
@@ -12,6 +14,8 @@ class Adm::DeleteCollectionComponent < ApplicationComponent
     @url = url
     @text = text
     @confirm = confirm
+    @status_url = status_url
+    @initial_status = initial_status
     @headline = headline
     @hint = hint
     @icon = icon
@@ -27,5 +31,5 @@ class Adm::DeleteCollectionComponent < ApplicationComponent
     @hint.presence || t(".default_hint")
   end
 
-  attr_reader :url, :text, :confirm, :icon, :style, :wrapper_classes
+  attr_reader :url, :text, :confirm, :status_url, :initial_status, :icon, :style, :wrapper_classes
 end

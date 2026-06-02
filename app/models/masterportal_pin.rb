@@ -1,5 +1,6 @@
 class MasterportalPin < ApplicationRecord
   belongs_to :projekt_phase
+  belongs_to :masterportal_collection, optional: true
   has_one :proposal, foreign_key: :masterportal_pin_id, dependent: :nullify
   has_one :budget_investment, foreign_key: :masterportal_pin_id,
           class_name: "Budget::Investment", dependent: :nullify
@@ -13,6 +14,14 @@ class MasterportalPin < ApplicationRecord
         proposals: { id: nil },
         budget_investments: { id: nil },
         projekt_point_of_interest_pins: { id: nil }
+      )
+  }
+
+  scope :with_associated_record, lambda {
+    left_outer_joins(:proposal, :budget_investment, :projekt_point_of_interest_pin)
+      .where(
+        "proposals.id IS NOT NULL OR budget_investments.id IS NOT NULL " \
+        "OR projekt_point_of_interest_pins.id IS NOT NULL"
       )
   }
 
@@ -50,7 +59,8 @@ class MasterportalPin < ApplicationRecord
       "resource_type" => "masterportal_pin",
       "id" => id
     }
-    properties["feature_icon_url"] = feature_icon_url if include_icon_url
+    # Temporarily disabled — masterportal pin icon set will be reimplemented.
+    # properties["feature_icon_url"] = feature_icon_url if include_icon_url
     properties["search_text"] = searchable_text if include_search_text
 
     {
@@ -75,11 +85,13 @@ class MasterportalPin < ApplicationRecord
   end
 
   def feature_icon_url
-    asset_name = "masterportal/pins/#{collection_id}.png"
-    path = Rails.root.join("app/assets/images/#{asset_name}")
-    return nil if !path.exist?
-
-    ActionController::Base.helpers.asset_path(asset_name)
+    # Temporarily disabled — masterportal pin icon set will be reimplemented.
+    # asset_name = "masterportal/pins/#{collection_id}.png"
+    # path = Rails.root.join("app/assets/images/#{asset_name}")
+    # return nil if !path.exist?
+    #
+    # ActionController::Base.helpers.asset_path(asset_name)
+    nil
   end
 
   def associated_resource_url

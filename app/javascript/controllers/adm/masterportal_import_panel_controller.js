@@ -101,7 +101,13 @@ export default class extends Controller {
     const ul = document.createElement("ul")
     ul.className = "masterportal-import-panel--tree-children"
 
-    node.children.forEach((child) => {
+    const sortedChildren = node.children
+      .slice()
+      .sort((a, b) => this.nodeSortLabel(a).localeCompare(
+        this.nodeSortLabel(b), "de", { sensitivity: "base", numeric: true }
+      ))
+
+    sortedChildren.forEach((child) => {
       const li = document.createElement("li")
       li.appendChild(this.buildNode(child, false))
       ul.appendChild(li)
@@ -109,6 +115,10 @@ export default class extends Controller {
 
     details.appendChild(ul)
     return details
+  }
+
+  nodeSortLabel(node) {
+    return (node.label || node.title || node.id || "").toString()
   }
 
   buildLeaf(node) {
@@ -216,8 +226,15 @@ export default class extends Controller {
 
     if (wasRunning && nextStatus === "success") {
       this.stopStatusPolling()
-      window.location.reload()
+      this.redirectToSummary()
     }
+  }
+
+  redirectToSummary() {
+    const url = new URL(window.location.href)
+    url.searchParams.set("masterportal_import", "success")
+    url.hash = "masterportal-pins-summary"
+    window.location.assign(url.toString())
   }
 
   setRunningUi(status) {

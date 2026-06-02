@@ -141,7 +141,6 @@ $civic-transition: 200ms ease;
     padding-bottom: 14px;
 
     i, .sidebar--icon {
-      color: $civic-accent !important;
       font-size: 16px;
     }
   }
@@ -237,23 +236,6 @@ $civic-transition: 200ms ease;
       font-family: $civic-body-font;
       font-size: 13px;
       color: $civic-muted-text;
-
-      span {
-        color: $civic-muted-text;
-
-        &:before {
-          color: $civic-muted-text !important;
-        }
-      }
-    }
-
-    // Phase subscription icon
-    .phase-subscription a {
-      color: $civic-accent !important;
-
-      &:hover {
-        background-color: $civic-accent-light !important;
-      }
     }
 
     // Active state

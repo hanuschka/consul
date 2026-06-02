@@ -189,6 +189,7 @@ en:
             actions: Actions
         map:
           title: Map
+          masterportal_import_success: Import completed successfully.
         masterportal_pins:
           title: Imported Masterportal pins
         officing_managers:

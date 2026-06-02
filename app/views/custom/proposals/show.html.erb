@@ -50,10 +50,6 @@
 
         <%= render "proposals/info", proposal: @proposal %>
 
-        <% if @proposal.masterportal_pin.present? %>
-          <%= render Shared::MasterportalPinInfoComponent.new(masterportal_pin: @proposal.masterportal_pin) %>
-        <% end %>
-
         <% if !@proposal.selected? && projekt_phase_feature?(@proposal.projekt_phase, "resource.show_related_content") %>
           <%= render "relationable/related_content", relationable: @proposal %>
         <% end %>

@@ -120,7 +120,7 @@ class Kern::MapComponent < ApplicationComponent
                    MapLayer.default
                end
 
-      (layers.as_json + masterportal_wms_layer_injection).to_json
+      (masterportal_wms_layer_injection + layers.as_json).to_json
     end
 
     def masterportal_wms_layer_injection

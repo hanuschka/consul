@@ -126,6 +126,7 @@ class ProjektPhase < ApplicationRecord
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
   has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
   has_many :masterportal_pins, dependent: :destroy
+  has_many :masterportal_collections, dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -148,6 +149,13 @@ class ProjektPhase < ApplicationRecord
     success: "success",
     failed: "failed"
   }, _prefix: :masterportal_import
+
+  enum masterportal_destroy_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_destroy
 
   validates :projekt, presence: true
   validate :type_must_be_valid

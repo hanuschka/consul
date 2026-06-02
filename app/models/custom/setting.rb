@@ -44,6 +44,15 @@ class Setting < ApplicationRecord
       all_settings_hash[key]
     end
 
+    def humanized_content_types_for(group, content_types = nil)
+      content_types ||= self["uploads.#{group}.content_types"].to_s.split(" ")
+      labels = mime_types[group].invert
+
+      content_types
+        .map { |content_type| (labels[content_type] || content_type.split("/").last).upcase }
+        .join(", ")
+    end
+
     def defaults
       {
         # homepage

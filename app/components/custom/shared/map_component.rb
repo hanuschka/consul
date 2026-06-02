@@ -8,7 +8,8 @@ class Shared::MapComponent < ApplicationComponent
     process: nil,
     placement: nil,
     collapsible: false,
-    map_data_url: nil
+    map_data_url: nil,
+    masterportal_focus_view: false
   )
     @mappable = mappable
     @features = features
@@ -17,6 +18,7 @@ class Shared::MapComponent < ApplicationComponent
     @placement = placement
     @collapsible = collapsible
     @map_data_url = map_data_url
+    @masterportal_focus_view = masterportal_focus_view
   end
 
   def lazy_load_map_data?
@@ -41,14 +43,27 @@ class Shared::MapComponent < ApplicationComponent
   private
 
     def features_count
+      data = resolved_features
+
       array =
-        if @features.is_a?(Hash)
-          @features[:features] || @features["features"]
+        if data.is_a?(Hash)
+          data[:features] || data["features"]
         else
-          @features
+          data
         end
 
       array.is_a?(Array) ? array.size : 0
+    end
+
+    def resolved_features
+      return @features if !@masterportal_focus_view
+
+      @resolved_features ||=
+        map_location.features_json_data(mark_masterportal_pin: false)
+    end
+
+    def masterportal_focus?
+      @masterportal_focus_view && masterportal_rendering_enabled?
     end
 
     def prepare_map_settings
@@ -67,7 +82,7 @@ class Shared::MapComponent < ApplicationComponent
       if lazy_load_map_data?
         options[:map_data_url] = @map_data_url
       else
-        options[:features] = @features
+        options[:features] = resolved_features
       end
 
       options[:masterportal_pins_layer_label] =
@@ -133,7 +148,15 @@ class Shared::MapComponent < ApplicationComponent
                  MapLayer.default
              end
 
-      masterportal_wms_layer_injection + base.as_json
+      base_layers = base.as_json
+
+      if masterportal_focus?
+        base_layers = base_layers.reject do |layer|
+          layer["protocol"] == "wms" && !layer["base"]
+        end
+      end
+
+      masterportal_wms_layer_injection + base_layers
     end
 
     def masterportal_wms_layer_injection

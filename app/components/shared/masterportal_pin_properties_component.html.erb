@@ -1,6 +1,15 @@
 <section class="masterportal-pin-properties">
   <table class="masterportal-pin-properties--table">
     <tbody>
+      <% if address_value.present? %>
+        <tr class="masterportal-pin-properties--row">
+          <th class="masterportal-pin-properties--key" scope="row">
+            <%= address_label %>
+          </th>
+          <td class="masterportal-pin-properties--value"><%= address_value %></td>
+        </tr>
+      <% end %>
+
       <% rows.each do |key, value| %>
         <% kind = value_kind(key, value) %>
         <% text = value.to_s.strip %>
@@ -22,6 +31,12 @@
                   <%= t(".flag_false") %>
                 </span>
               <% end %>
+            <% when :image %>
+              <%= image_tag text,
+                    class: "masterportal-pin-properties--image",
+                    alt: label_for(key),
+                    loading: "lazy",
+                    referrerpolicy: "no-referrer" %>
             <% when :phone %>
               <%= link_to text, "tel:#{text}", class: "masterportal-pin-properties--link" %>
             <% when :email %>

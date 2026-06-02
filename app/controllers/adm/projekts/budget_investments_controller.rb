@@ -5,7 +5,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
   before_action :set_projekt_phase
   before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits toggle_image_concealed]
-  before_action :set_tabs, only: %i[show administer people edit milestones progress_bars audits toggle_image_concealed]
+  before_action :set_tabs, only: %i[show administer people edit update milestones progress_bars audits toggle_image_concealed]
 
   def show
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
@@ -81,6 +81,11 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @investment], policy_class: Adm::Projekts::BudgetPolicy
 
     success = @investment.update(investment_params)
+
+    # A nested image `_destroy` leaves the destroyed record cached on the
+    # association, so the re-rendered show_content would show a broken image
+    # until a full reload. Reset it so the partial reflects the saved state.
+    @investment.association(:image).reset if success
 
     if ADMIN_FORM_EDITORS.include?(params[:editor])
       render turbo_stream: turbo_stream.replace(

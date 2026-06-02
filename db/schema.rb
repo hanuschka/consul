@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_01_075138) do
+ActiveRecord::Schema.define(version: 2026_06_01_171505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1595,6 +1595,24 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
   end
 
+  create_table "masterportal_collections", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.string "collection_id", null: false
+    t.string "name"
+    t.string "endpoint_url"
+    t.boolean "create_domain_records", default: false, null: false
+    t.string "import_status", default: "pending", null: false
+    t.text "import_error"
+    t.datetime "last_imported_at"
+    t.integer "last_imported_count", default: 0, null: false
+    t.string "destroy_status"
+    t.text "destroy_error"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
+    t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
+  end
+
   create_table "masterportal_pins", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.string "endpoint_url", null: false
@@ -1610,10 +1628,12 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "collection_title"
+    t.bigint "masterportal_collection_id"
     t.index "((properties)::text) gin_trgm_ops", name: "index_masterportal_pins_on_properties_text_trgm", using: :gin
     t.index ["collection_id"], name: "index_masterportal_pins_on_collection_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["description"], name: "index_masterportal_pins_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["external_id"], name: "index_masterportal_pins_on_external_id_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["masterportal_collection_id"], name: "index_masterportal_pins_on_masterportal_collection_id"
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_pins_on_phase_and_collection_id"
     t.index ["projekt_phase_id", "external_id"], name: "index_masterportal_pins_on_phase_and_external_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_pins_on_projekt_phase_id"
@@ -3265,6 +3285,7 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.string "keycloak_link"
     t.text "keycloak_id_token", default: ""
     t.string "guest_user_agent"
+    t.boolean "system_user", default: false, null: false
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -3275,6 +3296,7 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
     t.index ["registered_address_id"], name: "index_users_on_registered_address_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["system_user"], name: "index_users_on_single_system_user", unique: true, where: "(\"system_user\" = true)"
     t.index ["username"], name: "index_users_on_username"
   end
 
@@ -3480,6 +3502,8 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
   add_foreign_key "map_locations", "registered_address_districts"
+  add_foreign_key "masterportal_collections", "projekt_phases"
+  add_foreign_key "masterportal_pins", "masterportal_collections"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"

@@ -8,33 +8,59 @@ class Shared::MasterportalPinPropertiesComponent < ApplicationComponent
     attr_reader :pin
 
     def render?
-      rows.any?
+      rows.any? || address_value.present?
     end
 
-    EXCLUDED_KEYS = %w[FID ART_ID].freeze
-
     def rows
-      @rows ||= (pin.properties || {}).reject do |key, value|
+      @rows ||= properties_hash.reject do |key, value|
         excluded_key?(key) || value.to_s.strip.empty?
       end
     end
 
     def excluded_key?(key)
-      EXCLUDED_KEYS.include?(key.to_s) || key.to_s == title_key
+      Masterportal::FeaturePropertyReader.technical_key?(key) ||
+        key.to_s == title_key ||
+        address_component_keys.include?(key.to_s)
     end
 
     def title_key
-      @title_key ||= Masterportal::FeaturePropertyReader.title_source_key(pin.properties || {})
+      @title_key ||= Masterportal::FeaturePropertyReader.title_source_key(properties_hash)
     end
 
     def label_for(key)
-      key.to_s.tr("_", " ")
+      Masterportal::FeaturePropertyReader.label_for(key)
+    end
+
+    def address_label
+      Masterportal::FeaturePropertyReader.label_for("ADDRESS")
+    end
+
+    def address_value
+      return @address_value if defined?(@address_value)
+
+      line = Masterportal::FeaturePropertyReader.address_line(properties_hash)
+      @address_value = [line, post_city].compact_blank.join(", ").presence
+    end
+
+    def post_city
+      fpr = Masterportal::FeaturePropertyReader
+      [fpr.value_from(properties_hash, fpr::POSTCODE_KEYS),
+       fpr.value_from(properties_hash, fpr::CITY_KEYS)].compact.join(" ").presence
+    end
+
+    def address_component_keys
+      @address_component_keys ||= begin
+        fpr = Masterportal::FeaturePropertyReader
+        fpr::STREET_KEYS + fpr::HOUSE_NUMBER_KEYS + fpr::HOUSE_NUMBER_SUFFIX_KEYS +
+          fpr::POSTCODE_KEYS + fpr::CITY_KEYS + fpr::ADDRESS_KEYS
+      end
     end
 
     def value_kind(key, value)
       text = value.to_s.strip
 
       return :accessibility if accessibility_key?(key)
+      return :image if image_key?(key)
       return :phone if phone_key?(key)
       return :email if email_key?(key)
       return :url if website_key?(key) || url?(text)
@@ -64,6 +90,10 @@ class Shared::MasterportalPinPropertiesComponent < ApplicationComponent
       Masterportal::FeaturePropertyReader::WEBSITE_KEYS.include?(key)
     end
 
+    def image_key?(key)
+      Masterportal::FeaturePropertyReader::IMAGE_KEYS.include?(key)
+    end
+
     def url?(text)
       text.match?(/\Ahttps?:\/\//i) || text.match?(/\Awww\./i)
     end
@@ -74,5 +104,9 @@ class Shared::MasterportalPinPropertiesComponent < ApplicationComponent
 
     def url_with_protocol(text)
       text.match?(/\Ahttps?:\/\//i) ? text : "https://#{text}"
+    end
+
+    def properties_hash
+      @properties_hash ||= pin.properties || {}
     end
 end

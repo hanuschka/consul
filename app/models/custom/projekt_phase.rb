@@ -126,6 +126,7 @@ class ProjektPhase < ApplicationRecord
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
   has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
   has_many :masterportal_pins, dependent: :destroy
+  has_many :masterportal_collections, dependent: :destroy
 
   accepts_nested_attributes_for :settings
 

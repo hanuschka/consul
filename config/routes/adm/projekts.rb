@@ -59,6 +59,17 @@ namespace :adm do
         get :destroy_all_masterportal_pins_status
         delete "masterportal_pins/:masterportal_pin_id" => "phases#destroy_masterportal_pin",
                as: :destroy_masterportal_pin
+        patch "masterportal_collections/:masterportal_collection_id" =>
+              "phases#update_masterportal_collection", as: :update_masterportal_collection
+        delete "masterportal_collections/:masterportal_collection_id" =>
+               "phases#destroy_masterportal_collection", as: :destroy_masterportal_collection
+        get "masterportal_collections/:masterportal_collection_id/status" =>
+            "phases#masterportal_collection_status", as: :masterportal_collection_status
+        get "masterportal_collections/:masterportal_collection_id/diff" =>
+            "phases#masterportal_collection_diff", as: :masterportal_collection_diff
+        delete "masterportal_collections/:masterportal_collection_id/stale_pins" =>
+               "phases#clean_masterportal_collection_stale_pins",
+               as: :clean_masterportal_collection_stale_pins
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
         get :map_resources_overview

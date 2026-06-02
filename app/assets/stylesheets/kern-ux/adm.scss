@@ -11,6 +11,7 @@
 @use "adm/components/flash_component";
 @use "adm/components/empty_state";
 @use "adm/components/detail_page";
+@use "adm/components/form_image_component";
 @use "adm/components/button_with_progress";
 @use "adm/components/image_with_lightbox";
 @use "adm/components/home_dashboard";
@@ -38,6 +39,8 @@
 @use "adm/components/masterportal_pins_list";
 @use "adm/components/masterportal_pins_summary";
 @use "adm/components/masterportal_integration";
+@use "adm/components/masterportal_collections";
+@use "adm/components/system_user_info";
 @use "adm/components/delete_collection";
 @use "adm/components/turbo_frame_placeholder";
 @use "adm/components/ai_action_button";

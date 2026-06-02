@@ -74,7 +74,7 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:map_center_latitude] = map_location&.latitude || Setting["map.latitude"]
       options[:map_center_longitude] = map_location&.longitude || Setting["map.longitude"]
-      options[:map_zoom] = map_location&.zoom || Setting["map.zoom"]
+      options[:map_zoom] = map_zoom
       options[:placement] = @placement if @placement
 
       options[:layers_data] = layers
@@ -113,6 +113,12 @@ class Shared::MapComponent < ApplicationComponent
       return "default_map" if map_location.default?
 
       "map"
+    end
+
+    def map_zoom
+      context_zoom = @masterportal_focus_view ? context_map_location&.zoom : nil
+
+      context_zoom || map_location&.zoom || Setting["map.zoom"]
     end
 
     def map_location

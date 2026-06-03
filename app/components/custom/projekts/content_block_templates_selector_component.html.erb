@@ -1,7 +1,13 @@
-<div data-reveal id="contentBlockTemplatesModal" class="reveal modern-modal projekt-content-block-templates-selector-wrapper js-projekt-content-block-templates-selector">
+<%= render Shared::ModalComponent.new(
+  id: "contentBlockTemplatesModal",
+  modal_class: "modern-modal projekt-content-block-templates-selector-wrapper js-content-block-templates-selector",
+  closeable: false,
+  content_wrapper: false,
+  blur_backdrop: false
+) do %>
   <div class="projekt-content-block-templates-selector">
     <div class="content-block-templates-selector--header">
-      <div class="d-flex">
+      <div class="modern-modal--header">
         <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
         <button
           type="button"
@@ -11,14 +17,18 @@
           <i class="fas fa-magic"></i>
           <%= t('custom.projekt.content_block_templates_selector.ai_create_button.label') %>
         </button>
-        <button class="close-button round-icon-button content-block-templates-selector--close" data-close aria-label="Close Accessible Modal" type="button">
+        <button
+          class="close-button round-icon-button content-block-templates-selector--close js-shared-modal-close"
+          aria-label="<%= t('application.close') %>"
+          type="button"
+        >
           <i class="fa fa-xmark">
           </i>
         </button>
       </div>
     </div>
     <div
-      class="content-block-templates-selector--fallback-note js-content-block-templates-fallback-note"
+      class="modern-modal--note content-block-templates-selector--fallback-note js-content-block-templates-fallback-note"
       style="display: none;"
     >
       <i class="fas fa-circle-exclamation"></i> <%= t('custom.projekt.content_block_templates_selector.fallback_note') %>
@@ -26,41 +36,42 @@
     <div class="js-content-block-templates-spinner content-block-templates-selector--spinner">
       <%= render Shared::LoadingSpinnerComponent.new(
         message: t('custom.projekt.content_block_templates_selector.loading'),
-        size: "large"
+        size: "large",
+        vertical: true
       ) %>
     </div>
     <div
-      class="js-projekt-content-block-templates-selector--inner projekt-content-block-templates-selector--inner"
+      class="js-content-block-templates-selector--inner projekt-content-block-templates-selector--inner"
       style="display: none;"
     >
     </div>
   </div>
-</div>
+<% end %>
 
 
 <template class="js-content-block-templates-fallback">
-  <ul id="contentBlockSelectorTabs" class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
-    <li class="tabs projekt-content-block-templates-selector--tab tabs-title is-active">
-      <a href="#contentBlockSelectorTab--basicContent" aria-selected="true">Basisinhalte</a>
+  <ul id="contentBlockSelectorTabs" class="shared-tabs projekt-content-block-templates-selector--tabs js-tabs">
+    <li class="projekt-content-block-templates-selector--tab shared-tabs--item is-active">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--basicContent" aria-selected="true">Basisinhalte</a>
     </li>
-    <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-      <a href="#contentBlockSelectorTab--satatusAndNotes" >Status & Hinweise</a>
+    <li class="projekt-content-block-templates-selector--tab shared-tabs--item">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--satatusAndNotes">Status & Hinweise</a>
     </li>
-    <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-      <a href="#contentBlockSelectorTab--mediaAndResources" >Medien & Ressourcen</a>
+    <li class="projekt-content-block-templates-selector--tab shared-tabs--item">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--mediaAndResources">Medien & Ressourcen</a>
     </li>
-    <li class="tabs projekt-content-block-templates-selector--tab tabs-title">
-      <a href="#contentBlockSelectorTab--teasersAndPromotions" >Teaser und Werbeaktionen</a>
+    <li class="projekt-content-block-templates-selector--tab shared-tabs--item">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--teasersAndPromotions">Teaser und Werbeaktionen</a>
     </li>
-    <li class="tabs-title projekt-content-block-templates-selector--tab">
-      <a  href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
+    <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--globalContentBlocks">Interne Inhaltsblöcke</a>
     </li>
-    <li class="tabs-title projekt-content-block-templates-selector--tab">
-      <a  href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
+    <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--userContentBlocks">Eigene Inhaltsblöcke</a>
     </li>
   </ul>
-  <div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
-    <div id="contentBlockSelectorTab--basicContent" class="tabs-panel is-active">
+  <div class="shared-tabs-panels">
+    <div id="contentBlockSelectorTab--basicContent" class="shared-tabs-panel is-active">
       <% basic_content_templates.each do |template_name| %>
         <%= render Projekts::ContentBlockTemplateItemComponent.new(
           template_name: template_name,
@@ -68,7 +79,7 @@
         ) %>
     <% end %>
     </div>
-    <div id="contentBlockSelectorTab--satatusAndNotes" class="tabs-panel">
+    <div id="contentBlockSelectorTab--satatusAndNotes" class="shared-tabs-panel">
       <% status_and_notes_templates.each do |template_name| %>
         <%= render Projekts::ContentBlockTemplateItemComponent.new(
           template_name: template_name,
@@ -76,7 +87,7 @@
         ) %>
     <% end %>
     </div>
-    <div id="contentBlockSelectorTab--teasersAndPromotions" class="tabs-panel">
+    <div id="contentBlockSelectorTab--teasersAndPromotions" class="shared-tabs-panel">
       <% teasers_and_promotions.each do |template_name| %>
         <%= render Projekts::ContentBlockTemplateItemComponent.new(
           template_name: template_name,
@@ -84,7 +95,7 @@
         ) %>
     <% end %>
     </div>
-    <div id="contentBlockSelectorTab--mediaAndResources" class="tabs-panel">
+    <div id="contentBlockSelectorTab--mediaAndResources" class="shared-tabs-panel">
       <% media_and_resources_templates.each do |template_name| %>
         <%= render Projekts::ContentBlockTemplateItemComponent.new(
           template_name: template_name,
@@ -92,7 +103,7 @@
         ) %>
     <% end %>
     </div>
-    <div id="contentBlockSelectorTab--globalContentBlocks" class="tabs-panel">
+    <div id="contentBlockSelectorTab--globalContentBlocks" class="shared-tabs-panel">
       <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_explanation') %></p>
       <div
           class="add-new-saved-content-block-section js-show-content-block-templates-section"
@@ -137,7 +148,7 @@
       </div>
     </div>
 
-    <div id="contentBlockSelectorTab--userContentBlocks" class="tabs-panel">
+    <div id="contentBlockSelectorTab--userContentBlocks" class="shared-tabs-panel">
       <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_explanation') %></p>
       <div
           class="add-new-saved-content-block-section js-show-content-block-templates-section"

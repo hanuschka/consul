@@ -2,7 +2,7 @@ window.ProjektStudio = {
   modules: {},
   templateFunctions: {},
   utils: {},
-  ContentBlock: {},
+  ContentBlock: App.ContentBlockEditor,
   config: {},
 
   initialized: false,
@@ -19,16 +19,16 @@ window.ProjektStudio = {
 
     ProjektStudio.ProjektStart.initialize()
     ProjektStudio.BuildWithPrompt.initialize()
-    ProjektStudio.CreateContentBlockWithAi.initialize()
+    App.ContentBlockEditor.CreateWithAi.initialize()
 
     // Initialize ContentBlock submodules
-    ProjektStudio.ContentBlock.Render.initialize()
-    ProjektStudio.ContentBlock.DragDrop.initialize()
-    ProjektStudio.ContentBlock.DtAiEditMode.initialize()
+    App.ContentBlockEditor.Render.initialize()
+    App.ContentBlockEditor.DragDrop.initialize()
+    App.ContentBlockEditor.DtAiEditMode.initialize()
 
     App.Studio.initContentBlockModules()
 
-    ProjektStudio.SavedContentBlocks.initialize()
+    App.ContentBlockEditor.SavedContentBlocks.initialize()
     ProjektStudio.FileImport.initialize()
     ProjektStudio.ToggleBackground.initialize()
     // ExplainWithAi.initialize()

@@ -86,8 +86,8 @@ module ProjektContentBlocksAdminActions
       Ai::EditContentBlock.call(
         params[:instructions],
         params[:content_block_html],
-        @content_block.projekt.page&.title,
-        @content_block.projekt.page&.subtitle,
+        @content_block.projekt&.page&.title,
+        @content_block.projekt&.page&.subtitle,
         projekt: @content_block.projekt,
         use_full_projekt_context: use_full_projekt_context,
         allow_text_modification: allow_text_modification

@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode = {
+App.ContentBlockEditor.SimpleEditMode = {
   initialized: false,
   listControlClass: "js-content-block--list-control",
   contentBlocksState: {},
@@ -19,7 +19,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   },
 
   switchToSimpleEditMode(contentBlockWrapper) {
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
 
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-simple-edit-mode", "-in-edit-mode")
@@ -32,18 +32,18 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     this.toggleSimpleEditModeFor(contentBlock, true)
 
     setTimeout(() => {
-      ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
+      App.ContentBlockEditor.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
     }, 50);
   },
 
   exitSimpleEditMode(contentBlockWrapper, restoreContent = false) {
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
 
     contentBlockWrapper.classList.remove("-simple-edit-mode", "-in-edit-mode")
     contentBlockWrapper.dataset.editMode = '';
 
     if (restoreContent) {
-      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+      App.ContentBlockEditor.DraftStore.restorePreviousVersion(contentBlock);
     }
 
     this.toggleSimpleEditModeFor(contentBlock, false);
@@ -56,7 +56,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   },
 
   saveContentBlockFromSimpleMode(e) {
-    const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock} = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
 
     if (contentBlockWrapper.classList.contains("-simple-edit-mode")) {
       contentBlockWrapper.classList.remove("-simple-edit-mode", "-in-edit-mode")
@@ -69,7 +69,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
           .trim()
           .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>');
 
-        ProjektStudio.ContentBlock.Crud.updateContentBlock(
+        App.ContentBlockEditor.Crud.updateContentBlock(
           contentBlock,
           content,
           { resetFoundationState: true }
@@ -79,16 +79,16 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   },
 
   cancelSimpleEditMode(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     this.exitSimpleEditMode(contentBlockWrapper, true);
   },
 
   switchToAiEditModeFromSimple(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
 
     this.exitSimpleEditMode(contentBlockWrapper, false);
 
-    ProjektStudio.ContentBlock.AiEditMode.switchToAiEditMode(contentBlockWrapper);
+    App.ContentBlockEditor.AiEditMode.switchToAiEditMode(contentBlockWrapper);
   },
 
   toggleSimpleEditModeFor(contentBlock, enabled, endCallback) {
@@ -99,13 +99,13 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
         this.toggleLinksInteration(contentBlock, enabled)
         this.toggleGlighboxGallery(contentBlock, enabled)
 
-        ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.toggleListControls(
+        App.ContentBlockEditor.SimpleEditMode.ListEdit.toggleListControls(
           contentBlock, enabled
         )
-        ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.toggleImageControls(
+        App.ContentBlockEditor.SimpleEditMode.ImageEdit.toggleImageControls(
           contentBlock, enabled
         )
-        ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
+        App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(
           contentBlock, enabled
         )
 
@@ -117,17 +117,17 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
       this.toggleLinksInteration(contentBlock, enabled)
       this.toggleGlighboxGallery(contentBlock, enabled)
 
-      ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.toggleListControls(
+      App.ContentBlockEditor.SimpleEditMode.ListEdit.toggleListControls(
         contentBlock, enabled
       )
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.toggleImageControls(
+      App.ContentBlockEditor.SimpleEditMode.ImageEdit.toggleImageControls(
         contentBlock, enabled
       )
-      ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.toggleLinkControls(
+      App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(
         contentBlock, enabled
       )
 
-      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+      App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
       if (endCallback) {
         endCallback()
@@ -196,14 +196,14 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
 
   handleMarginBottomInput(e) {
     const input = e.currentTarget;
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(input);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(input);
     const marginValue = parseInt(input.value) || 0;
 
     contentBlockWrapper.style.marginBottom = `${marginValue}px`;
 
-    const updateUrl = ProjektStudio.ContentBlock.Crud.getUpdateUrl(contentBlockWrapper);
+    const updateUrl = App.ContentBlockEditor.Crud.getUpdateUrl(contentBlockWrapper);
 
-    $.ajax({
+    App.Ajax.request({
       url: updateUrl,
       method: "PATCH",
       data: {
@@ -221,7 +221,7 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
   },
 
   stepMarginBottomInput(button, direction) {
-    const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(button);
+    const contentBlockWrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(button);
     const input = contentBlockWrapper.querySelector(".js-content-block-margin-bottom-input");
     const step = parseInt(input.step) || 1;
     const min = parseInt(input.min);
@@ -257,12 +257,12 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     const container = range.commonAncestorContainer;
     const element = container.nodeType === 1 ? container : container.parentNode;
 
-    const contentBlockWrapper = element.closest(".js-projekt-content-block-wrapper");
+    const contentBlockWrapper = element.closest(".js-content-block-wrapper");
     if (!contentBlockWrapper || !contentBlockWrapper.classList.contains("-simple-edit-mode")) {
       return;
     }
 
-    ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
+    App.ContentBlockEditor.SimpleEditMode.HeaderEdit.updateDropdownFromSelection(contentBlockWrapper);
   },
 
 }

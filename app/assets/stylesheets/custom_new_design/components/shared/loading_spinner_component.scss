@@ -4,6 +4,11 @@
   gap: 12px;
 }
 
+.shared-loading-spinner-container.-vertical {
+  flex-direction: column;
+  justify-content: center;
+}
+
 .shared-loading-spinner {
   border-radius: 50%;
   animation: shared-loading-spinner-spin 1s linear infinite;

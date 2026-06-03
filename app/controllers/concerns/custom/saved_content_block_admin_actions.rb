@@ -60,6 +60,6 @@ module SavedContentBlockAdminActions
   end
 
   def saved_content_block_params
-    params.require(:saved_content_block).permit(:name, :content)
+    params.require(:saved_content_block).permit(:name, :content, :context)
   end
 end

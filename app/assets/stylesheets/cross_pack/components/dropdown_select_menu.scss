@@ -1,10 +1,15 @@
+$dropdown-select-menu-container-hover-color: #e2e2e2;
+$dropdown-select-menu-hover-color: #ededed;
+$dropdown-select-menu-active-color: darken($dropdown-select-menu-hover-color, 4%);
+$dropdown-select-menu-focus-outline: 2px solid #005fcc;
+
 .dropdown-select-container {
   margin: 0 auto;
   color: #292929;
   border-radius: 8px;
 
   &:hover {
-    background-color: $gray-1;
+    background-color: $dropdown-select-menu-container-hover-color;
   }
 }
 
@@ -41,7 +46,7 @@
     padding-right: 28px;
 
     &:focus {
-      outline: $input-focus-outline;
+      outline: $dropdown-select-menu-focus-outline;
       outline-offset: 1px;
     }
 
@@ -50,7 +55,7 @@
     }
 
     &:focus-visible {
-      outline: $input-focus-outline;
+      outline: $dropdown-select-menu-focus-outline;
       outline-offset: 1px;
     }
   }
@@ -78,11 +83,11 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $dropdown-hover-color;
+        background-color: $dropdown-select-menu-hover-color;
       }
 
       &:active, &:focus {
-        background-color: $dropdown-active-color;
+        background-color: $dropdown-select-menu-active-color;
       }
 
       & > * {
@@ -91,7 +96,7 @@
     }
 
     .dropdown-select-menu-item--focused {
-      background-color: $dropdown-hover-color;
+      background-color: $dropdown-select-menu-hover-color;
       outline: none;
     }
 

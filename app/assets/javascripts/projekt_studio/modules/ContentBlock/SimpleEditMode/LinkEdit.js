@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
+App.ContentBlockEditor.SimpleEditMode.LinkEdit = {
   savedSelection: null,
   currentContentBlockWrapper: null,
   savedLinkIdToEdit: null,
@@ -127,14 +127,14 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       ? range.commonAncestorContainer
       : range.commonAncestorContainer.parentNode;
 
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container)
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(container)
     if (!contentBlockWrapper) return
 
     const button = contentBlockWrapper.querySelector(".js-content-block-add-link")
     const insertFileLinkButton = contentBlockWrapper.querySelector(".js-content-block-insert-file-link")
     const hasText = selection.toString().trim().length > 0;
 
-    const surroundingContentBlock = container.closest(".js-projekt-content-block")
+    const surroundingContentBlock = container.closest(".js-content-block")
 
     if (!surroundingContentBlock) {
       if (button) {
@@ -178,7 +178,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
 
     this.savedLinkIdToEdit = linkId
 
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(link);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(link);
     this.currentContentBlockWrapper = contentBlockWrapper;
 
     const linkWrapper = link.closest(".js-content-block-link-wrapper")
@@ -199,10 +199,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       ? range.commonAncestorContainer
       : range.commonAncestorContainer.parentNode;
 
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(container);
     if (!contentBlockWrapper) return;
 
-    const surroundingContentBlock = container.closest(".js-projekt-content-block");
+    const surroundingContentBlock = container.closest(".js-content-block");
     if (!surroundingContentBlock) return;
 
     this.saveSelection();
@@ -233,10 +233,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
       ? range.commonAncestorContainer
       : range.commonAncestorContainer.parentNode;
 
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(container);
     if (!contentBlockWrapper) return;
 
-    const surroundingContentBlock = container.closest(".js-projekt-content-block");
+    const surroundingContentBlock = container.closest(".js-content-block");
     if (!surroundingContentBlock) return;
 
     this.saveSelection();
@@ -253,7 +253,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
 
     this.currentLinkWrapper = linkWrapper;
 
-    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForDocuments(
+    App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
         this.createNewLinkWithWrapper(
           this.currentLinkWrapper,
@@ -270,7 +270,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
   },
 
   openFileManagerFromPopup() {
-    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForDocuments(
+    App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
         $(".js-content-block-link-popup .js-content-block-url-input").val(selectedFile.url);
         $(".js-content-block-url-black-checkbox").prop("checked", true);
@@ -404,7 +404,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit = {
   },
 
   prependFileTypeIcon(linkEl, contentType) {
-    const iconClass = ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.getFileTypeIcon(contentType);
+    const iconClass = App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.getFileTypeIcon(contentType);
 
     const icon = document.createElement("i");
     icon.className = `fa ${iconClass} content-block-link-file-icon`;

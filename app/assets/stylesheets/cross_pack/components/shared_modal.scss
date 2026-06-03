@@ -1,3 +1,9 @@
+// Shared native-<dialog> modal primitive (rendered by Shared::ModalComponent).
+// Lives in cross_pack so it renders identically in both stylesheet packs: the
+// main user-facing app (Foundation/Sprockets) and the /adm content-block
+// editor (kern/esbuild). Self-contained — no Foundation/pack tokens.
+// JS behavior: App.SharedModal (custom/components/shared/modal.js).
+
 html.is-shared-modal-open.shared-modal-has-scroll {
   overflow-y: scroll;
 }

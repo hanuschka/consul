@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
+App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   contentBlockImageLoadingState: {},
   activeImg: null,
   overlayEl: null,
@@ -161,10 +161,10 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     if (!this.activeImg) return
 
     const img = this.activeImg
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img)
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(img)
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId
 
-    ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog.openForImages(
+    App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.openForImages(
       (selectedPicture) => {
         this.replaceImage(img, selectedPicture)
       },
@@ -321,11 +321,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
   },
 
   async replaceImage(img, selectedPicture) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(img)
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(img)
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId
 
     this.incrementImageLoadingCount(contentBlockId)
-    ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(contentBlockWrapper, true)
+    App.ContentBlockEditor.SimpleEditMode.toggleLockSaveCancel(contentBlockWrapper, true)
 
     this.showLoadingOverlay(img, selectedPicture.gallery_thumb_url)
 
@@ -385,7 +385,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit = {
     img.style.height = `${newHeight}px`
 
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
-      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(
+      App.ContentBlockEditor.SimpleEditMode.toggleLockSaveCancel(
         contentBlockWrapper,
         false
       )

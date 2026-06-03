@@ -113,7 +113,6 @@
 
   &:hover {
     background-color: $dt-base-light !important;
-    transform: var(--plus-base-translate) scale(1.08);
     opacity: 1;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   }
@@ -121,7 +120,6 @@
   &:active {
     color: #7a7a7a;
     outline: none !important;
-    transform: var(--plus-base-translate) scale(0.97);
   }
 
   &:focused {
@@ -134,7 +132,6 @@
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.95) !important;
-      transform: var(--plus-base-translate);
     }
   }
 }

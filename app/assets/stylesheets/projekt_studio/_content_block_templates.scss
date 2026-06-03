@@ -1,11 +1,9 @@
 .projekt-content-block-templates-selector--tabs {
   background-color: transparent;
   margin-bottom: 1.1rem;
-  display: flex;
   justify-content: flex-start;
-  flex-wrap: wrap;
 
-  .tabs-title > a {
+  .shared-tabs--link {
     font-size: 15px;
   }
 }
@@ -43,15 +41,22 @@
   }
 }
 
-.projekt-content-block-templates-selector-wrapper {
+dialog.projekt-content-block-templates-selector-wrapper {
   max-width: 1030px;
-  top: 3vh !important;
+  max-height: 90vh;
+  margin-top: 3vh;
+  overflow: hidden;
 }
 
-.modern-modal {
-  width: 100%;
-  padding: 0;
-  border-radius: 12px;
+// Gate flex layout behind [open] — an unconditional `display` on a <dialog>
+// overrides the UA `dialog:not([open]) { display: none }`, which leaves the
+// dialog in normal flow and breaks showModal()'s top-layer + backdrop.
+dialog.projekt-content-block-templates-selector-wrapper[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+dialog.modern-modal {
   width: 100%;
   padding: 0;
   border-radius: 12px;
@@ -59,7 +64,35 @@
 
   h3 {
     font-size: 25px;
+    margin-top: 0;
   }
+}
+
+// Shared title + close row for the studio modals (templates selector, AI
+// create). The close button is pushed to the far edge; any leading actions
+// (e.g. the AI-create button) sit next to the title.
+.modern-modal--header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modern-modal--header .close-button {
+  margin-left: auto;
+}
+
+// Shared info/fallback note used inside the studio modals. Per-modal spacing
+// (margins) stays on the consumer.
+.modern-modal--note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #555;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .modern-modal-content {
@@ -70,6 +103,11 @@
 }
 
 .projekt-content-block-templates-selector {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   padding: 10px 15px;
   padding-bottom: 1px;
   width: 100%;
@@ -80,9 +118,11 @@
 }
 
 .projekt-content-block-templates-selector--inner {
-  .tabs-content {
-    background-color: transparent !important;
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 
   h3 {
     /* margin-top: 0 !important; */
@@ -94,10 +134,22 @@
     margin-bottom: 0.8rem;
   }
 
-  .tabs-panel {
+  .shared-tabs-panels {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .shared-tabs-panel {
     padding: 2px;
     padding-right: 20px;
-    max-height: calc(100vh - (140px + 3vh));
+  }
+
+  .shared-tabs-panel.is-active {
+    flex: 1;
+    min-height: 0;
     overflow: auto;
   }
 }
@@ -218,8 +270,8 @@
 }
 
 .projekt-content-block-templates-selector {
-  .tabs .tabs-title > a[aria-selected="true"], .tabs .tabs-title > a.is-active,
-  .tabs .tabs-title > a:hover {
+  .shared-tabs--link[aria-selected="true"],
+  .shared-tabs--link:hover {
     color: $dt-base;
   }
 }
@@ -228,32 +280,13 @@
   display: flex;
   justify-content: center;
   padding: 60px 0;
-
-  .shared-loading-spinner-container {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
 }
 
 .content-block-templates-selector--fallback-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
   margin-bottom: 16px;
-  font-size: 0.875rem;
-  color: #555;
-  background: #f1f1f1;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   margin-right: 20px;
 }
 
 .content-block-templates-selector--ai-create {
-  margin-left: 16px;
-}
-
-.content-block-templates-selector--close {
-  margin-left: auto;
+  margin-left: 4px;
 }

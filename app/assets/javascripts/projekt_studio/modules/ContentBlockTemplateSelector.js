@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlockTemplateSelector = {
+App.ContentBlockEditor.TemplateSelector = {
   currentContentBlockId: null,
   selectionMode: "add",
   replaceTargetWrapper: null,
@@ -13,21 +13,21 @@ ProjektStudio.ContentBlockTemplateSelector = {
   handleOpenTemplateSelector(e) {
     const button = e.currentTarget;
     const isAtTop = button.closest(".js-add-content-block-at-top") !== null;
-    const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(button);
+    const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(button);
 
     this.selectionMode = "add";
     this.replaceTargetWrapper = null;
 
-    ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
-    ProjektStudio.ContentBlock.Crud.addContentBlockAtTop = isAtTop;
-    ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+    App.ContentBlockEditor.Crud.addContentBlockAfter = wrapper;
+    App.ContentBlockEditor.Crud.addContentBlockAtTop = isAtTop;
+    App.ContentBlockEditor.TemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
 
     const section = this.detectSection(wrapper);
     this.openDialog(section)
   },
 
   handleOpenTemplateSelectorForReplace(e) {
-    const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+    const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
 
     this.selectionMode = "replace";
     this.replaceTargetWrapper = wrapper;
@@ -37,6 +37,12 @@ ProjektStudio.ContentBlockTemplateSelector = {
   },
 
   detectSection(wrapper) {
+    const contentBlocksList = document.querySelector(".js-content-blocks-list");
+
+    if (contentBlocksList && contentBlocksList.dataset.templateSection) {
+      return contentBlocksList.dataset.templateSection
+    }
+
     if (!wrapper) return "projekt_page"
     if (wrapper.closest("aside, .sidebar, footer")) return "sidebar_and_footer"
 
@@ -52,11 +58,15 @@ ProjektStudio.ContentBlockTemplateSelector = {
 
   openDialog(section) {
     App.ContentBlockTemplatesSelector.loadTemplatesContent(section);
-    $('#contentBlockTemplatesModal').foundation('open');
+    App.SharedModal.open("contentBlockTemplatesModal");
   },
 
   closeDialog() {
-    $('#contentBlockTemplatesModal').foundation('close');
+    const modal = document.getElementById("contentBlockTemplatesModal");
+
+    if (modal.open) {
+      App.SharedModal.closeById("contentBlockTemplatesModal");
+    }
   },
 
   setContentBlockTemplates(params) {

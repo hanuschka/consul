@@ -1,9 +1,17 @@
-<ul id="contentBlockSelectorTabs" class="tabs projekt-content-block-templates-selector--tabs" data-tabs>
+<ul id="contentBlockSelectorTabs" class="shared-tabs projekt-content-block-templates-selector--tabs js-tabs">
+  <% if newsletter_context? %>
+    <li class="projekt-content-block-templates-selector--tab shared-tabs--item is-active">
+      <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--emailDefaults" aria-selected="true">
+        <%= t('custom.newsletters.content_block_templates_selector.tabs.email_defaults') %>
+      </a>
+    </li>
+  <% end %>
   <% dt_templates_by_category.each_with_index do |category_data, index| %>
     <% category = category_data["category"] %>
-    <% is_first = index == 0 %>
-    <li class="tabs projekt-content-block-templates-selector--tab tabs-title <%= 'is-active' if is_first %>">
+    <% is_first = index == 0 && !newsletter_context? %>
+    <li class="projekt-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
       <a
+        class="shared-tabs--link js-tab"
         href="#contentBlockSelectorTab--<%= category_id(category) %>"
         aria-selected="<%= is_first %>"
       >
@@ -11,32 +19,42 @@
       </a>
     </li>
   <% end %>
-  <li class="tabs-title projekt-content-block-templates-selector--tab">
-    <a href="#contentBlockSelectorTab--globalContentBlocks">
+  <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+    <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--globalContentBlocks">
       <%= t('custom.projekt.content_block_templates_selector.tabs.internal_content_blocks') %>
     </a>
   </li>
-  <li class="tabs-title projekt-content-block-templates-selector--tab">
-    <a href="#contentBlockSelectorTab--userContentBlocks">
+  <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+    <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--userContentBlocks">
       <%= t('custom.projekt.content_block_templates_selector.tabs.own_content_blocks') %>
     </a>
   </li>
 </ul>
-<div class="tabs-content" data-tabs-content="contentBlockSelectorTabs">
+<div class="shared-tabs-panels">
+  <% if newsletter_context? %>
+    <div id="contentBlockSelectorTab--emailDefaults" class="shared-tabs-panel is-active">
+      <% newsletter_email_template_names.each do |template_name| %>
+        <%= render Projekts::ContentBlockTemplateItemComponent.new(
+          template_name: template_name,
+          template_dir: newsletter_email_template_dir
+        ) %>
+      <% end %>
+    </div>
+  <% end %>
   <% dt_templates_by_category.each_with_index do |category_data, index| %>
     <% category = category_data["category"] %>
     <% templates = category_data["templates"] || [] %>
-    <% is_first = index == 0 %>
+    <% is_first = index == 0 && !newsletter_context? %>
     <div
       id="contentBlockSelectorTab--<%= category_id(category) %>"
-      class="tabs-panel <%= 'is-active' if is_first %>"
+      class="shared-tabs-panel <%= 'is-active' if is_first %>"
     >
       <% templates.each do |template| %>
         <%= render Projekts::DtContentBlockTemplateItemComponent.new(template: template) %>
       <% end %>
     </div>
   <% end %>
-  <div id="contentBlockSelectorTab--globalContentBlocks" class="tabs-panel">
+  <div id="contentBlockSelectorTab--globalContentBlocks" class="shared-tabs-panel">
     <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.global_explanation') %></p>
     <div
       class="add-new-saved-content-block-section js-show-content-block-templates-section"
@@ -81,7 +99,7 @@
     </div>
   </div>
 
-  <div id="contentBlockSelectorTab--userContentBlocks" class="tabs-panel">
+  <div id="contentBlockSelectorTab--userContentBlocks" class="shared-tabs-panel">
     <p class="saved-content-blocks-explanation"><%= t('custom.projekt.content_block_templates_selector.saved_content_blocks.user_explanation') %></p>
     <div
       class="add-new-saved-content-block-section js-show-content-block-templates-section"

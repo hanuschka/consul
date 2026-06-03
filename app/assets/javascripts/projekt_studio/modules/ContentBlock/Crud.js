@@ -1,15 +1,15 @@
-ProjektStudio.ContentBlock.Crud = {
+App.ContentBlockEditor.Crud = {
   addContentBlockAfter: null,
   addContentBlockAtTop: false,
 
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-add-new-content-block", this.handleCreateContentBlock.bind(this));
-    $document.on("click", ".js-delete-projekt-content-block", this.handleDeleteContentBlock.bind(this));
+    $document.on("click", ".js-delete-content-block", this.handleDeleteContentBlock.bind(this));
   },
 
   handleCreateContentBlock(e) {
-    const templateSelector = ProjektStudio.ContentBlockTemplateSelector;
+    const templateSelector = App.ContentBlockEditor.TemplateSelector;
     const contentBlockTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
 
     if (templateSelector.selectionMode === "replace") {
@@ -21,25 +21,25 @@ ProjektStudio.ContentBlock.Crud = {
   },
 
   replaceContentBlockWithTemplate(wrapper, contentBlockTemplate) {
-    const contentBlock = wrapper.querySelector(".js-projekt-content-block");
+    const contentBlock = wrapper.querySelector(".js-content-block");
     const templateHTML = contentBlockTemplate.innerHTML;
 
-    ProjektStudio.ContentBlockTemplateSelector.closeDialog();
-    ProjektStudio.ContentBlockTemplateSelector.selectionMode = "add";
-    ProjektStudio.ContentBlockTemplateSelector.replaceTargetWrapper = null;
+    App.ContentBlockEditor.TemplateSelector.closeDialog();
+    App.ContentBlockEditor.TemplateSelector.selectionMode = "add";
+    App.ContentBlockEditor.TemplateSelector.replaceTargetWrapper = null;
 
-    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock);
+    App.ContentBlockEditor.DraftStore.storePreviousVersion(contentBlock);
 
     const updatedContent = ProjektStudio.utils.htmlToDomElement(templateHTML);
     ProjektStudio.utils.removeFoundationIds(updatedContent);
     contentBlock.innerHTML = updatedContent.innerHTML;
-    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+    App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
 
-    ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(wrapper);
+    App.ContentBlockEditor.SimpleEditMode.switchToSimpleEditMode(wrapper);
   },
 
   handleDeleteContentBlock(e) {
-    const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.target);
+    const contentBlockWrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(e.target);
     this.deleteContentBlock(contentBlockWrapper)
   },
 
@@ -79,7 +79,7 @@ ProjektStudio.ContentBlock.Crud = {
       : null;
     const draftContentBlockIndex = this.generateDraftIndex();
 
-    ProjektStudio.ContentBlockTemplateSelector.closeDialog()
+    App.ContentBlockEditor.TemplateSelector.closeDialog()
 
     const newContentBlockHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
       contentBlockTemplate.innerHTML,
@@ -89,7 +89,7 @@ ProjektStudio.ContentBlock.Crud = {
     const newContentBlockContainer = ProjektStudio.utils.htmlToDomElement(newContentBlockHTML).firstChild;
     ProjektStudio.utils.removeFoundationIds(newContentBlockContainer);
 
-    ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newContentBlockContainer);
+    App.ContentBlockEditor.DomHelpers.moveMarginToWrapper(newContentBlockContainer);
 
     if (isAtTop) {
       const topSection = document.querySelector(".js-content-blocks-list .js-add-content-block-at-top");
@@ -102,7 +102,7 @@ ProjektStudio.ContentBlock.Crud = {
       }
     }
     else if (previousContentBlockWrapper) {
-      const isFirstBlock = $(previousContentBlockWrapper).prev(".js-projekt-content-block-wrapper").length === 0;
+      const isFirstBlock = $(previousContentBlockWrapper).prev(".js-content-block-wrapper").length === 0;
       previousContentBlockWrapper.after(newContentBlockContainer)
 
       if (!isFirstBlock) {
@@ -125,14 +125,18 @@ ProjektStudio.ContentBlock.Crud = {
     )
   },
 
+  getContentBlocksList() {
+    return document.querySelector(".js-content-blocks-list");
+  },
+
   rerenderContentBlockListControls() {
-    const hasNoContentBlocks = $('.js-content-blocks-list .js-content-block').length === 0
+    const hasNoContentBlocks = $('.js-content-blocks-list .js-content-block-wrapper').length === 0
 
     if (hasNoContentBlocks) {
       this.addContentBlockAfter = null
     }
 
-    $(".js-projekt-content-start-section").toggle(hasNoContentBlocks)
+    $(".js-content-start-section").toggle(hasNoContentBlocks)
     $(".js-add-content-block-at-top").toggle(!hasNoContentBlocks)
     $(".js-delete-all-content-blocks").toggle(!hasNoContentBlocks)
   },
@@ -140,15 +144,12 @@ ProjektStudio.ContentBlock.Crud = {
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
-      $(newContentBlockContainer).find('.projekt-content-block').foundation()
-      $(newContentBlockContainer).find('[data-tooltip]').foundation()
+      App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.projekt-content-block'))
       App.ImageGallery.initialize()
     }, 0)
 
-    const projektId = ProjektStudio.getCurrentProjektId()
-
-    $.ajax({
-      url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`,
+    App.Ajax.request({
+      url: this.getCreateUrl(),
       type: "POST",
       dataType: "json",
       data: {
@@ -160,7 +161,8 @@ ProjektStudio.ContentBlock.Crud = {
       this.setDataForFreshContentBlock({
         previous_content_block_id: previousContentBlockId,
         draft_content_block_index: draftContentBlockIndex,
-        content_block_id: response.content_block.id
+        content_block_id: response.content_block.id,
+        urls: response.content_block.urls
       })
     })
       .catch((response) => {
@@ -175,7 +177,7 @@ ProjektStudio.ContentBlock.Crud = {
 
   setDataForFreshContentBlock(params) {
     const newContentBlockContainer = document.querySelector(
-      `.js-projekt-content-block-wrapper[data-draft-index='${params.draft_content_block_index}']`
+      `.js-content-block-wrapper[data-draft-index='${params.draft_content_block_index}']`
     )
 
     newContentBlockContainer.classList.add('-highlight-changed')
@@ -187,7 +189,28 @@ ProjektStudio.ContentBlock.Crud = {
     newContentBlockContainer.dataset.contentBlockId = params.content_block_id
     newContentBlockContainer.dataset.draft = false
     newContentBlockContainer.classList.remove('-draft')
+    this.applyUrlsToWrapper(newContentBlockContainer, params.urls)
     $(newContentBlockContainer).find(".js-show-content-block-templates").prop("disabled", false)
+  },
+
+  applyUrlsToWrapper(contentBlockWrapper, urls) {
+    if (!urls) return
+
+    if (urls.update_url) contentBlockWrapper.dataset.updateUrl = urls.update_url
+    if (urls.destroy_url) contentBlockWrapper.dataset.destroyUrl = urls.destroy_url
+    if (urls.update_position_url) contentBlockWrapper.dataset.updatePositionUrl = urls.update_position_url
+    if (urls.ai_url) contentBlockWrapper.dataset.aiUrl = urls.ai_url
+  },
+
+  getCreateUrl() {
+    const contentBlocksList = this.getContentBlocksList();
+
+    if (contentBlocksList && contentBlocksList.dataset.createUrl) {
+      return contentBlocksList.dataset.createUrl;
+    }
+
+    const projektId = ProjektStudio.getCurrentProjektId();
+    return `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks`;
   },
 
   getUpdateUrl(contentBlockWrapper) {
@@ -198,8 +221,16 @@ ProjektStudio.ContentBlock.Crud = {
     return `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`;
   },
 
+  getDestroyUrl(contentBlockWrapper) {
+    const customUrl = contentBlockWrapper.dataset.destroyUrl;
+    if (customUrl) return customUrl;
+
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+    return `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`;
+  },
+
   updateContentBlock(contentBlock, newContent, { resetFoundationState = false, saveVersion = true } = {}) {
-    const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
+    const contentBlockWrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
     const sanitized = ProjektStudio.utils.sanitizeAdminHtml(newContent);
@@ -219,10 +250,10 @@ ProjektStudio.ContentBlock.Crud = {
     const willShowDefault = defaultContent && this.isContentEmpty(newContentTrimmed);
 
     if (saveVersion && !willShowDefault && oldContent !== newContentTrimmed) {
-      ProjektStudio.ContentBlock.ChangeHistory.saveVersion(contentBlock, contentBlockWrapper, oldContent);
+      App.ContentBlockEditor.ChangeHistory.saveVersion(contentBlock, contentBlockWrapper, oldContent);
     }
 
-    $.ajax({
+    App.Ajax.request({
       url: this.getUpdateUrl(contentBlockWrapper),
       type: "PATCH",
       dataType: "json",
@@ -258,7 +289,7 @@ ProjektStudio.ContentBlock.Crud = {
       this.showDefaultContentNotification(contentBlockWrapper);
     }
 
-    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+    App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
   },
 
@@ -269,7 +300,7 @@ ProjektStudio.ContentBlock.Crud = {
     if (currentContent === response.body.trim()) return
 
     contentBlock.innerHTML = response.body;
-    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+    App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
   },
 
   showSanitizationNotice() {
@@ -315,16 +346,10 @@ ProjektStudio.ContentBlock.Crud = {
 
     if (!deleteConfirmed) return
 
-    const contentBlockId = contentBlockWrapper.dataset.contentBlockId
+    const destroyUrl = this.getDestroyUrl(contentBlockWrapper)
     const nextContentBlockSection = contentBlockWrapper.nextElementSibling
     const prevContentBlockSection = contentBlockWrapper.previousElementSibling
     const scrollTo = nextContentBlockSection || prevContentBlockSection
-
-    // Clean up tooltips on content block destroy
-    contentBlockWrapper.querySelectorAll("[data-tooltip]").forEach((element) => {
-      const instance = $(element).data("zf.tooltip");
-      if (instance) instance.destroy();
-    })
 
     contentBlockWrapper.remove()
 
@@ -334,8 +359,8 @@ ProjektStudio.ContentBlock.Crud = {
       scrollTo.scrollIntoView({block: "center"})
     }
 
-    $.ajax({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}`,
+    App.Ajax.request({
+      url: destroyUrl,
       type: "DELETE",
       headers: {
         'X-Embedded-Frame': ProjektStudio.isEmbedded

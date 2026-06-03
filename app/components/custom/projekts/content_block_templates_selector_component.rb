@@ -97,10 +97,10 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
   end
 
   def global_content_blocks
-    SavedContentBlock.global.order(:created_at)
+    SavedContentBlock.global.for_context("projekt").order(:created_at)
   end
 
   def user_content_blocks
-    SavedContentBlock.for_user(helpers.current_user).order(:created_at)
+    SavedContentBlock.for_user(helpers.current_user).for_context("projekt").order(:created_at)
   end
 end

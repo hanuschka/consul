@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.Copy = {
+App.ContentBlockEditor.Copy = {
   initialize() {
     this.initEventListeners();
   },
@@ -9,7 +9,7 @@ ProjektStudio.ContentBlock.Copy = {
   },
 
   handleCopyContentBlock(e) {
-    const { contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlock } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
 
     if (contentBlock) {
       this.copyContentBlockToClipboard(contentBlock, e.currentTarget);

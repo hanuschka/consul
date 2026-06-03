@@ -44,6 +44,7 @@ de:
         send_alert: "Sind Sie sicher, dass Sie diesen Newsletter an %{n} Empfänger senden möchten?"
         send_test: Test-Email an mich senden
         deliver_success: Newsletter wird versendet.
+        deliver_no_content: Der Newsletter hat noch keinen Inhalt. Fügen Sie mindestens einen Inhaltsblock hinzu.
         send_test_success: Test-Email wurde erfolgreich gesendet.
         recipient_emails: "Empfänger Emails"
       new:
@@ -56,6 +57,27 @@ de:
           subject: "z. B. Neue Beteiligungsprojekte im März 2026"
       edit:
         title: Newsletter bearbeiten
+        content_section_title: Newsletter-Inhalt
+      content_blocks:
+        create:
+          success: Inhaltsblock wurde gespeichert.
+          error: Inhaltsblock konnte nicht gespeichert werden.
+        update:
+          success: Inhaltsblock wurde aktualisiert.
+          error: Inhaltsblock konnte nicht aktualisiert werden.
+        destroy:
+          success: Inhaltsblock wurde gelöscht.
+          error: Inhaltsblock konnte nicht gelöscht werden.
+        update_position:
+          success: Position wurde aktualisiert.
+          error: Position konnte nicht aktualisiert werden.
+        change_with_ai:
+          success: Inhaltsblock wurde mit KI aktualisiert.
+        generate_with_ai:
+          no_prompt: Bitte geben Sie einen Prompt ein.
+          error: Inhaltsblock konnte nicht erstellt werden.
+        cancel_ai_generation:
+          success: KI-Generierung wurde abgebrochen.
       create:
         success: Newsletter wurde erfolgreich erstellt.
       update:

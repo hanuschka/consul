@@ -1,0 +1,72 @@
+// Styles for the legacy content-block editor embedded on the /adm
+// newsletter edit page. Loads only the Foundation close-button helper plus
+// the studio editor styles — NOT foundation-global-styles, so the Kern-UX
+// shell is unaffected. Modals are native <dialog> (shared modal component),
+// tooltips are the CSS-only cross_pack primitive, and tabs are the
+// self-contained cross_pack shared-tabs primitive — so foundation-reveal,
+// -tooltip, and -tabs are not included.
+
+@import "util/util";
+@import "consul_custom_overrides";
+@import "consul_settings";
+@import "settings";
+@import "custom_settings";
+@import "foundation";
+
+@include foundation-close-button;
+
+@import "custom/1_colors";
+@import "custom/1_variables";
+@import "custom/1_utils";
+
+@import "cross_pack/components/round_icon_button";
+@import "cross_pack/components/dropdown_select_menu";
+@import "cross_pack/components/css_tooltip";
+@import "cross_pack/components/shared_tabs";
+
+@import "cross_pack/components/shared_modal";
+@import "custom_new_design/components/shared/loading_spinner_component";
+
+@import "projekt_studio/1_colors";
+@import "projekt_studio/2_animations";
+@import "projekt_studio/general";
+@import "projekt_studio/content_block_toolbar";
+@import "projekt_studio/content_block_buttons";
+@import "projekt_studio/content_block_wrapper";
+@import "projekt_studio/content_block_templates";
+@import "projekt_studio/content_block_ai_create";
+@import "projekt_studio/add_content_block";
+@import "projekt_studio/saved_content_blocks";
+@import "projekt_studio/image_controls";
+@import "projekt_studio/link_editing";
+@import "projekt_studio/ai_editing";
+@import "projekt_studio/code_editing";
+
+.newsletter-content-block-editor {
+  max-width: 660px;
+  margin: 0 auto;
+  background-color: #ffffff;
+
+  .content-blocks-container {
+    min-height: 40px;
+  }
+}
+
+.newsletter-content-start-section {
+  padding: 32px 24px;
+  border: 1px dashed $medium-gray-2;
+  border-radius: 8px;
+  text-align: center;
+
+  .newsletter-content-start-section--title {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+  }
+
+  .newsletter-content-start-section--buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}

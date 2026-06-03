@@ -41,10 +41,10 @@
     handleLoadSuccess(html, cacheKey) {
       this.hideSpinner();
 
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      const $container = $(".js-content-block-templates-selector--inner");
       $container.html(html).show();
 
-      this.reinitFoundationComponents($container);
+      this.reinitContentComponents($container);
 
       this.cachedSections[cacheKey] = $container.html();
       this.activeSection = cacheKey;
@@ -55,19 +55,19 @@
 
       this.hideSpinner();
 
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      const $container = $(".js-content-block-templates-selector--inner");
       $container.html(this.cachedSections[cacheKey]).show();
 
-      this.reinitFoundationComponents($container);
+      this.reinitContentComponents($container);
       this.activeSection = cacheKey;
     },
 
-    reinitFoundationComponents($container) {
+    reinitContentComponents($container) {
       this.storeOrbitHeights($container);
-      $(document).foundation();
+      App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(document);
       this.restoreOrbitHeights($container);
 
-      $container.find('[data-tabs]').on('change.zf.tabs', () => this.restoreOrbitHeights($container));
+      $container.find('.js-tabs').on('tabs:changed', () => this.restoreOrbitHeights($container));
     },
 
     storeOrbitHeights($container) {
@@ -87,7 +87,7 @@
 
     showSpinner() {
       $(".js-content-block-templates-spinner").show();
-      $(".js-projekt-content-block-templates-selector--inner").hide();
+      $(".js-content-block-templates-selector--inner").hide();
     },
 
     hideSpinner() {
@@ -97,7 +97,7 @@
     handleLoadError() {
       this.hideSpinner();
 
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      const $container = $(".js-content-block-templates-selector--inner");
       const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
 
       if (!fallbackTemplate) return
@@ -107,7 +107,7 @@
 
       $(".js-content-block-templates-fallback-note").show();
 
-      this.reinitFoundationComponents($container);
+      this.reinitContentComponents($container);
     }
   };
 }).call(this);

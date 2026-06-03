@@ -11,7 +11,8 @@ class ProjektContentBlockTemplatesController < ApplicationController
 
     render(
       Projekts::ContentBlockTemplatesSelectorContentComponent.new(
-        dt_templates_by_category:
+        dt_templates_by_category:,
+        context: template_context
       ),
       layout: false
     )
@@ -47,7 +48,21 @@ class ProjektContentBlockTemplatesController < ApplicationController
 
   private
 
+    def template_context
+      params[:section] == "newsletter_email" ? "newsletter" : "projekt"
+    end
+
     def local_categories_fallback
+      if template_context == "newsletter"
+        return [
+          {
+            id: "email_defaults",
+            name: I18n.t("custom.newsletters.content_block_templates_selector.tabs.email_defaults"),
+            templates: name_only(Newsletters::ContentBlockTemplatesSelectorComponent::EMAIL_TEMPLATE_NAMES)
+          }
+        ]
+      end
+
       selector = Projekts::ContentBlockTemplatesSelectorComponent.new
 
       [

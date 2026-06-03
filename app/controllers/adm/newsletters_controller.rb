@@ -65,6 +65,12 @@ module Adm
         @newsletter_image.save!(validate: false)
       end
 
+      if @newsletter.draft?
+        ::Newsletters::MigrateBodyToContentBlocks.call(@newsletter)
+      end
+
+      @content_blocks = @newsletter.content_blocks
+
       @breadcrumbs = [
         { name: t("adm.menu.items.notifications"), icon: "send" },
         { name: t("adm.menu.items.notifications_subitems.newsletters"), url: adm_newsletters_path },
@@ -99,6 +105,14 @@ module Adm
     def deliver
       @newsletter = Newsletter.find(params[:id])
       authorize [:adm, @newsletter]
+
+      if @newsletter.draft? && @newsletter.content_blocks.none? && @newsletter.body.blank?
+        redirect_to adm_newsletter_path(@newsletter), alert: t("adm.newsletters.show.deliver_no_content")
+
+        return
+      end
+
+      @newsletter.snapshot_content_blocks_to_body!
 
       if @newsletter.valid?
         @newsletter.delay.deliver

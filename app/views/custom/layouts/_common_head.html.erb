@@ -50,7 +50,7 @@
 <% end %>
 
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
-  <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
+  <%= javascript_include_tag "packs/studio", "data-turbolinks-track" => "reload" %>
 <% end %>
 
 <%= javascript_include_tag "klaro/config.js", defer: true %>

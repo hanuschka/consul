@@ -179,7 +179,7 @@ ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
     "data-tabs", "aria-selected", "data-tabs-target", "data-tabs-content",
     "data-orbit", "data-slide", "data-slide-active-label",
     "aria-valuenow", "aria-valuemin", "aria-valuemax", "aria-valuetext",
-    "data-tooltip", "data-use-m-u-i",
+    "data-tooltip", "data-hint", "data-hint-position", "data-use-m-u-i",
     "data-anim-in-from-left", "data-anim-in-from-right",
     "data-anim-out-to-left", "data-anim-out-to-right",
     "data-options",

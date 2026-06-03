@@ -28,6 +28,12 @@ en:
         search_placeholder: "Search %{column_label}..."
         apply: "Apply filter"
         close: "Close"
+        remove_filter: "Remove %{filter}"
+        date_range:
+          from_label: "From"
+          to_label: "To"
+          from_only: "from %{date}"
+          to_only: "until %{date}"
       sort:
         action_label: "Sort by %{column_label}, %{direction}"
         status_text_sorted: "Sorted by %{column_label} in %{direction} order"

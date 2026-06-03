@@ -15,12 +15,22 @@ class DocumentTextExtractor < ApplicationService
       extract_from_docx
     when 'odt'
       extract_from_odt
+    when 'txt', 'md', 'markdown'
+      extract_from_plain_text
     else
       ServiceResult.failure(error: "Nicht unterstütztes Dateiformat: #{extension}")
     end
   end
 
   private
+
+  def extract_from_plain_text
+    text = File.read(file_path, encoding: 'UTF-8', invalid: :replace, undef: :replace)
+
+    return ServiceResult.failure(error: "Datei enthält keinen Text") if text.strip.empty?
+
+    ServiceResult.success(text: text)
+  end
 
   def extract_from_pdf
     require 'pdf-reader'

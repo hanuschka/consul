@@ -1,0 +1,6 @@
+de:
+  components:
+    adm:
+      system_user_info_component:
+        label: "Veröffentlicht als"
+        edit: "Bearbeiten"

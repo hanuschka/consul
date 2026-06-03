@@ -134,6 +134,7 @@
 //= require siriwave/dist/siriwave.umd.min
 //= require custom
 //= require_tree ./custom
+//= require lib/files/filter_serializer
 //= require_tree ./maps
 
 var initialize_modules = function() {

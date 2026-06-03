@@ -166,4 +166,18 @@
       background-color: #e1e1e1;
     }
   }
+
+  // .users-profile-banner--background-image .users-profile-banner--edit-button {
+  //   position: absolute;
+  //   top: 25px;
+  //   right: 30px;
+  //   z-index: 100;
+  // }
+
+  .users-profile-banner--avatar-wrapper .users-profile-banner--edit-button {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    z-index: 100;
+  }
 }

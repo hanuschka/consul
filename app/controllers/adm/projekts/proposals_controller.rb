@@ -8,7 +8,6 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
     respond_to do |format|
       format.html do
         @breadcrumbs = [
-          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
           { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
           { name: @proposal.title }
@@ -50,7 +49,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
   end
 
   def toggle_admin_accepted
-    authorize [:adm, @proposal], :update?
+    authorize [:adm, @proposal], :toggle_admin_accepted?
 
     @proposal.update!(proposal_params)
   end

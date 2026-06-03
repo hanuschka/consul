@@ -11,6 +11,7 @@ class Proposal < ApplicationRecord
 
   delegate :projekt, to: :projekt_phase, allow_nil: true
   belongs_to :projekt_phase
+  belongs_to :masterportal_pin, optional: true
   has_many :geozone_restrictions, through: :projekt_phase
   has_many :geozone_affiliations, through: :projekt_phase
   has_many :registered_address_district_affiliations, through: :projekt_phase
@@ -26,6 +27,8 @@ class Proposal < ApplicationRecord
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
+  scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
+  scope :user_created, -> { where(masterportal_pin_id: nil) }
   scope :with_min_supports, ->(min_supports) {
     if min_supports.to_i > 0
       where("proposals.cached_votes_up >= ?", min_supports.to_i)

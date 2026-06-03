@@ -1,0 +1,154 @@
+<% body_html = capture do %>
+  <% if pins.any? %>
+    <div class="masterportal-pins-list--cards">
+      <% pins.each do |pin| %>
+        <article id="<%= dom_id(pin) %>" class="masterportal-pin-card">
+          <div class="masterportal-pin-card--icon">
+            <% if pin.feature_icon_url.present? %>
+              <%= image_tag pin.feature_icon_url, class: "masterportal-pin-card--icon-image", alt: "" %>
+            <% else %>
+              <span class="material-symbols-outlined" aria-hidden="true">place</span>
+            <% end %>
+          </div>
+
+          <div>
+
+            <div class="masterportal-pin-card--main">
+              <div class="masterportal-pin-card--info">
+                <div class="masterportal-pin-card--title-row">
+                  <h4 class="masterportal-pin-card--title"><%= display_title(pin) %></h4>
+                </div>
+
+                <div class="masterportal-pin-card--meta">
+                  <% if linked_resource(pin).present? %>
+                    <% if linked_resource_url(pin).present? %>
+                      <%= link_to linked_resource_url(pin),
+                        class: "masterportal-pin-card--linked",
+                        title: t(".open_linked_tooltip"),
+                        target: "_blank",
+                        rel: "noopener" do %>
+                        <span class="material-symbols-outlined" aria-hidden="true">link</span>
+                        <%= linked_resource_label(pin) %>
+                        <span class="material-symbols-outlined masterportal-pin-card--linked-external" aria-hidden="true">open_in_new</span>
+                      <% end %>
+                    <% else %>
+                      <span class="masterportal-pin-card--linked masterportal-pin-card--linked--static">
+                        <span class="material-symbols-outlined" aria-hidden="true">link</span>
+                        <%= linked_resource_label(pin) %>
+                      </span>
+                    <% end %>
+                  <% end %>
+                  <span class="masterportal-pin-card--collection" title="<%= pin.collection_id %>">
+                    <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+                    <%= pin.collection_id %>
+                  </span>
+
+                  <span class="masterportal-pin-card--coords">
+                    <span class="material-symbols-outlined" aria-hidden="true">my_location</span>
+                    <%= coordinates(pin) %>
+                  </span>
+                </div>
+
+                <span class="masterportal-pin-card--external-id" title="<%= pin.external_id %>">
+                  <%= pin.external_id %>
+                </span>
+
+                <% if pin.description.present? %>
+                  <p class="masterportal-pin-card--description"><%= pin.description %></p>
+                <% end %>
+              </div>
+            </div>
+
+            <% rows = pin.popup_data %>
+            <% if rows.any? %>
+              <dl class="masterportal-pin-card--props">
+                <% rows.each do |row| %>
+                  <div class="masterportal-pin-card--prop">
+                    <dt class="masterportal-pin-card--prop-label"><%= row["label"] %></dt>
+                    <dd class="masterportal-pin-card--prop-value">
+                      <%== format_value_for_type(row) %>
+                    </dd>
+                  </div>
+                <% end %>
+              </dl>
+            <% end %>
+          </div>
+
+          <div class="masterportal-pin-card--actions">
+            <div class="masterportal-pin-card--imported">
+              <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+              <%= l(pin.last_imported_at || pin.created_at, format: :short) %>
+            </div>
+
+              <%= link_to(
+                delete_pin_path(pin),
+                class: "masterportal-pin-card--delete",
+                title: t(".delete"),
+                aria: { label: t(".delete") },
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: t(".delete_confirm", title: display_title(pin))
+                }
+              ) do %>
+              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+              <span class="masterportal-pin-card--delete-label"><%= t(".delete") %></span>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+
+    <% if pagy.pages > 1 %>
+      <div class="masterportal-pins-list--pagination">
+        <%== helpers.pagy_nav(pagy) %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+
+<section class="masterportal-pins-list <%= '-static' if @expanded %>">
+  <% if @expanded %>
+    <div class="masterportal-pins-list--header">
+      <div class="masterportal-pins-list--header-content">
+        <div class="masterportal-pins-list--title-wrap">
+          <span class="masterportal-pins-list--title-icon" aria-hidden="true">
+            <span class="material-symbols-outlined">location_on</span>
+          </span>
+          <h3 class="masterportal-pins-list--title"><%= t(".title") %></h3>
+        </div>
+
+        <div class="masterportal-pins-list--header-right">
+          <span class="masterportal-pins-list--count-pill">
+            <%= t(".total", count: total_count) %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <%= body_html %>
+  <% else %>
+    <details class="masterportal-pins-list--collapse">
+      <summary class="masterportal-pins-list--header">
+        <div class="masterportal-pins-list--header-content">
+          <div class="masterportal-pins-list--title-wrap">
+            <span class="masterportal-pins-list--title-icon" aria-hidden="true">
+              <span class="material-symbols-outlined">location_on</span>
+            </span>
+            <h3 class="masterportal-pins-list--title"><%= t(".title") %></h3>
+          </div>
+
+          <div class="masterportal-pins-list--header-right">
+            <span class="masterportal-pins-list--count-pill">
+              <%= t(".total", count: total_count) %>
+            </span>
+            <span class="material-symbols-outlined masterportal-pins-list--collapse-chevron" aria-hidden="true">
+              expand_more
+            </span>
+          </div>
+        </div>
+      </summary>
+
+      <%= body_html %>
+    </details>
+  <% end %>
+</section>

@@ -1,0 +1,42 @@
+.loader-spinner-overlay {
+  display: none;
+  // position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+  z-index: 100;
+  background-color: rgb(237, 237, 237);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.show-loader {
+  position: relative;
+}
+
+.show-loader .loader-spinner-overlay {
+  display: flex;
+  flex: 1;
+  pointer-events: auto;
+}
+
+#footer-content {
+  // height: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.loader-spinner-wrapper {
+  // position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+}
+
+.show-loader .loader-spinner-wrapper--content {
+  display: none;
+}

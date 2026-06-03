@@ -2,7 +2,8 @@ en:
   adm:
     moderators:
       index:
-        title: Team
+        title: Case workers
+        breadcrumb: Team
         empty_title: "No moderators available"
         empty_description: "Use the button above to add a new moderator."
         new_link: Add new moderator

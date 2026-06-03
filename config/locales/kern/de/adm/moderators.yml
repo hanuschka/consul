@@ -2,7 +2,8 @@ de:
   adm:
     moderators:
       index:
-        title: Team
+        title: Sachbearbeiter
+        breadcrumb: Team
         empty_title: "Keine Moderatoren vorhanden"
         empty_description: "Fügen Sie über den Button oben einen neuen Moderator hinzu."
         new_link: Neuen Moderator hinzufügen

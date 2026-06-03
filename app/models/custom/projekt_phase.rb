@@ -42,6 +42,27 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::NewsfeedPhase"
   ].freeze
 
+  PHASE_MATERIAL_ICONS = {
+    "ProjektPhase::CommentPhase" => "chat_bubble",
+    "ProjektPhase::ProposalPhase" => "lightbulb",
+    "ProjektPhase::PointOfInterestPhase" => "location_on",
+    "ProjektPhase::QuestionPhase" => "quiz",
+    "ProjektPhase::VotingPhase" => "how_to_vote",
+    "ProjektPhase::IframePhase" => "web",
+    "ProjektPhase::BudgetPhase" => "euro_symbol",
+    "ProjektPhase::LegislationPhase" => "gavel",
+    "ProjektPhase::FormularPhase" => "description",
+    "ProjektPhase::EventPhase" => "event",
+    "ProjektPhase::MilestonePhase" => "flag",
+    "ProjektPhase::ProjektNotificationPhase" => "notifications",
+    "ProjektPhase::LivestreamPhase" => "live_tv",
+    "ProjektPhase::ArgumentPhase" => "forum",
+    "ProjektPhase::NewsfeedPhase" => "feed",
+    "ProjektPhase::DebatePhase" => "forum"
+  }.freeze
+
+  DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
+
   delegate :icon, :author, :author_id, to: :projekt
 
   translates :phase_tab_name, touch: true
@@ -65,6 +86,8 @@ class ProjektPhase < ApplicationRecord
     dependent: :destroy, inverse_of: :projekt_phase
   has_many :projekt_labels, dependent: :destroy
   has_many :sentiments, dependent: :destroy
+  has_one :projekt_phase_evaluation_visibility, dependent: :destroy
+  has_one :projekt_phase_evaluation, dependent: :destroy
 
   has_many :age_range_projekt_phases_for_stats, -> {
  where("used_for" => "stats") }, class_name: "AgeRangeProjektPhase", dependent: :destroy
@@ -102,6 +125,8 @@ class ProjektPhase < ApplicationRecord
   has_many :officing_managers, through: :officing_manager_assignments
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
   has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
+  has_many :masterportal_pins, dependent: :destroy
+  has_many :masterportal_collections, dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -118,6 +143,20 @@ class ProjektPhase < ApplicationRecord
     failed: "failed"
   }, _prefix: :ai_stats_refresh
 
+  enum masterportal_import_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_import
+
+  enum masterportal_destroy_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_destroy
+
   validates :projekt, presence: true
   validate :type_must_be_valid
 
@@ -129,6 +168,14 @@ class ProjektPhase < ApplicationRecord
     end
   rescue NameError
     self
+  end
+
+  def self.material_icon_for(type)
+    PHASE_MATERIAL_ICONS[type.to_s] || DEFAULT_PHASE_MATERIAL_ICON
+  end
+
+  def material_icon
+    self.class.material_icon_for(type)
   end
 
   default_scope { order(:given_order, :id) }
@@ -220,8 +267,11 @@ class ProjektPhase < ApplicationRecord
       return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
 
       return :phase_not_active if not_active?
-      return :phase_expired if expired?
-      return :phase_not_current if not_current?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
 
       return :guest_not_logged_in if user_status == "guest" && !user
       return if user_status == "guest"
@@ -345,6 +395,17 @@ class ProjektPhase < ApplicationRecord
     raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
   end
 
+  def customizable_email_template_groups
+    [
+      {
+        key: nil,
+        templates: customizable_email_templates.map do |mailer_class, mailer_action|
+          { mailer_class: mailer_class, mailer_action: mailer_action, recipient_type: nil }
+        end
+      }
+    ]
+  end
+
   def admin_nav_bar_items
     []
   end
@@ -433,6 +494,21 @@ class ProjektPhase < ApplicationRecord
     else
       super
     end
+  end
+
+  # Which call-to-action the projekt page sidebar renders for this phase.
+  # Returns nil (no CTA) by default; subclasses opt in by returning a symbol
+  # (:new_button, :link or :poll) and may decide it from their own state.
+  # See Pages::Projekts::SidebarCtaComponent.
+  def sidebar_cta_kind
+    nil
+  end
+
+  # Label for the sidebar CTA. Defaults to the per-phase i18n string (with the
+  # admin's cta_button_name override). Subclasses whose label varies by state
+  # (e.g. BudgetPhase) override this.
+  def sidebar_cta_label
+    cta_button_name.presence || I18n.t("custom.projekt_phases.cta.#{name}")
   end
 
   def regular

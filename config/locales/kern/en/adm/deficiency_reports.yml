@@ -20,7 +20,7 @@ en:
           deficiency_reports: Reports
           categories: Categories
           statuses: Statuses
-          settings: Features
+          settings: Configuration
           official_answer_templates: Response templates
           districts: Areas
           officer_groups: Officer groups
@@ -30,20 +30,34 @@ en:
         index:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
-          no_deficiency_reports: No deficiency reports available
+          download_csv: Download CSV
+          download_geojson: Download GeoJSON
           no_items_title: No reports available
           no_items_description: Reports will be shown here as soon as they are submitted.
+          no_results_filtered_title: No reports match the current filters
+          no_results_filtered_description: Adjust or remove filters to see more reports.
           table:
             id: ID
             admin_accepted: Visibility
             created_at: Created on
+            updated_at: Updated on
+            status_changed_at: Status changed on
             title: Title
             author: Author
             status: Status
             location: Location
+            address: Address
             district: District
             category: Category
             responsible: Officer
+            archived_state: Archive
+            hidden_state: Hidden by moderation
+          archived_state:
+            active: Active
+            archived: Archived
+          hidden_state:
+            visible: Visible
+            hidden: Hidden
         tabs:
           show: Manage
           administer: Administer
@@ -125,8 +139,6 @@ en:
           title: Feedback form
           created_at: Created on
           for_report: For
-        settings:
-          title: Features
       categories:
         index:
           title: Categories
@@ -209,7 +221,7 @@ en:
           submit: Save
       officers:
         index:
-          title: Team
+          title: Officers
           page_hint: "Here you manage the officers for the deficiency reporter. Officers can edit submitted reports, update the status, and write official responses. Use the search field to find registered users and assign them the officer role. Only already-registered users can be added as officers."
           search_label: Search users
           search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as officers for the deficiency reporter. Officers process submitted reports, communicate with citizens, and update the processing status.
@@ -307,6 +319,40 @@ en:
           officers_hint: Select the officers who should be members of this group. All selected people can process reports assigned to this group. Group membership influences which reports appear in the officer's personal overview and which notifications they receive.
           no_officers_title: No officers available
           no_officers_description: First create officers under "Officers" before you can assign them to a group.
+          submit: Save
+      settings:
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+          naming: Naming
+          confirmation_popup: Confirmation popup
+        dashboard:
+          intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
+      confirmation_popups:
+        edit:
+          title: Confirmation popup
+        update:
+          success: Confirmation popup updated.
+        form:
+          enabled_label: Enable confirmation popup
+          enabled_hint: When enabled, the yellow "new report" button opens a popup with the question and answers configured below.
+          question_label: Question
+          question_hint: Shown to the user when they click the create-report button.
+          answers_label: Answers
+          answers_hint: Add one button per answer. "Proceed" answers let the user continue to the report form. "Block" answers stop the user and show the flash notice on the index.
+          add_answer: Add answer
+          answer_title: Answer
+          remove_answer: Remove
+          label_label: Button label
+          label_placeholder: e.g. "Yes, file a new report"
+          behavior_label: Behavior
+          behaviors:
+            allow: Proceed to new-report form
+            block: Block and show flash notice on the index
+          flash_notice_label: Flash notice
+          flash_notice_placeholder: e.g. "Please check existing reports first."
           submit: Save
       stats:
         show:

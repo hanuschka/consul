@@ -59,16 +59,15 @@ Rails.application.routes.draw do
   # Deficiency reports
   resources :deficiency_reports, only: [:index, :show, :new, :create, :destroy] do
     resource :feedback_form, only: [:new, :create], controller: "deficiency_reports/feedback_form"
+    collection do
+      get :blocked
+    end
     member do
       get     :json_data
       post    :vote
       patch   :notify_officer_about_new_comments
       put     :flag
       put     :unflag
-    end
-
-    collection do
-      get :suggest
     end
   end
 

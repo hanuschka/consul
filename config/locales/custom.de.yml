@@ -1,23 +1,25 @@
-proposals:
-  navigation:
-    back: "zurück"
-    next: "nächster Beitrag"
-  show:
-    previous: "Vorheriger Beitrag"
-    next: "Nächster Beitrag"
-    exit_quiz_mode: "Zurück zur Vorschlagsliste"
-
-projekt:
-  file_import:
-    button_text: "Dokument importieren (PDF, DOCX, ODT)"
-    processing: "Dokument wird verarbeitet..."
-    success: "Dokument erfolgreich importiert"
-    errors:
-      no_file: "Keine Datei hochgeladen"
-      too_large: "Datei ist zu groß (max. 10MB)"
-      invalid_format: "Ungültiges Dateiformat"
-      extraction_failed: "Text konnte nicht extrahiert werden"
-      processing_failed: "Verarbeitung fehlgeschlagen"
-      network_error: "Netzwerkfehler beim Upload"
-    fallback:
-      confirm: "Möchten Sie den Rohtext als einzelnen Inhaltsblock erstellen?"
+de:
+  proposals:
+    navigation:
+      back: "zurück"
+      next: "nächster Beitrag"
+    show:
+      previous: "Vorheriger Beitrag"
+      next: "Nächster Beitrag"
+      exit_quiz_mode: "Zurück zur Vorschlagsliste"
+    notice:
+      pending_acceptance: "Vielen Dank! Ihr Vorschlag wurde eingereicht und wird vor der Veröffentlichung vom Admin geprüft."
+  projekt:
+    file_import:
+      button_text: "Dokument importieren (PDF, DOCX, ODT)"
+      processing: "Dokument wird verarbeitet..."
+      success: "Dokument erfolgreich importiert"
+      errors:
+        no_file: "Keine Datei hochgeladen"
+        too_large: "Datei ist zu groß (max. 10MB)"
+        invalid_format: "Ungültiges Dateiformat"
+        extraction_failed: "Text konnte nicht extrahiert werden"
+        processing_failed: "Verarbeitung fehlgeschlagen"
+        network_error: "Netzwerkfehler beim Upload"
+      fallback:
+        confirm: "Möchten Sie den Rohtext als einzelnen Inhaltsblock erstellen?"

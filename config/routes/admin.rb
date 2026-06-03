@@ -103,8 +103,6 @@ as: :destroy_user_resource_criterion
       patch :update_standard_phase
       get :frame_new_phase_selector
       patch :quick_update
-      patch :update_page
-      patch :update_title_image
       patch :update_map
       post :notify_reviewers
       patch :toggle_hide_content_background
@@ -124,6 +122,7 @@ as: :destroy_user_resource_criterion
       collection do
         post :import_document
         post :generate_from_prompt
+        post :generate_with_ai
         get :import_status
         delete :destroy_all
       end
@@ -557,6 +556,8 @@ as: "update_heading_content_block"
     member do
       patch :update_position
       patch :change_with_ai
+      get :ai_generation_status
+      delete :cancel_ai_generation
     end
   end
 

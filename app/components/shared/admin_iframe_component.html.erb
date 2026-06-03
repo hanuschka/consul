@@ -1,0 +1,9 @@
+<div class="shared-admin-iframe--wrapper" data-controller="shared--admin-iframe">
+  <iframe
+    src="<%= src %>"
+    class="<%= iframe_classes %>"
+    <% if allow.present? %>allow="<%= allow %>"<% end %>
+    data-shared--admin-iframe-target="iframe"
+    data-action="load->shared--admin-iframe#loaded"
+  ></iframe>
+</div>

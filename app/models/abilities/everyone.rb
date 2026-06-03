@@ -81,6 +81,13 @@ module Abilities
           investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
         end
 
+        can [:create, :destroy], ActsAsVotable::Vote,
+            votable_type: "Budget::Investment",
+            voter_id: user.id
+
+        can [:show, :create], Budget::Ballot, budget: { id: Budget.balloting.pluck(:id) }
+        can [:create, :destroy], Budget::Ballot::Line, budget: { id: Budget.balloting.pluck(:id) }
+
         can [:create, :update], FormularAnswer do |formular_answer|
           formular_answer.formular.projekt_phase.permission_problem(user).blank?
         end

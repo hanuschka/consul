@@ -66,7 +66,7 @@ namespace :deploy do
   after "deploy:migrate", "add_new_settings"
 
   after :publishing, "setup_puma"
-  before "puma:smart_restart", "stop_puma_daemon"
+  before "puma:restart", "stop_puma_daemon"
   after :finished, "restart_delayed_jobs"
   after :finished, "refresh_sitemap"
 
@@ -76,7 +76,7 @@ namespace :deploy do
     invoke "deploy"
   end
 
-  before "deploy:restart", "puma:smart_restart"
+  before "deploy:restart", "puma:restart"
 end
 
 task :install_ruby do

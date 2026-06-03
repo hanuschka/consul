@@ -240,10 +240,10 @@ ProjektStudio.Banner = {
         method: "PATCH",
         processData: false,
         contentType: false,
-        data: formData,
-        xhr: () => this.buildUploadXhr(container)
+        data: formData
       })
       .then(() => {
+        this.setUploadProgressMessage(container, "processing")
         this.handleUploadSuccess(container, imagePreview, previewUrl)
       })
       .always(() => {
@@ -251,29 +251,12 @@ ProjektStudio.Banner = {
       })
   },
 
-  buildUploadXhr(container) {
-    const xhr = new XMLHttpRequest();
-
-    xhr.upload.addEventListener("progress", (event) => {
-      this.handleUploadProgressEvent(container, event)
-    });
-
-    return xhr;
-  },
-
-  handleUploadProgressEvent(container, event) {
-    if (!event.lengthComputable) return
-
-    const percent = Math.min(100, Math.round((event.loaded / event.total) * 100))
-    this.setUploadProgress(container, percent)
-  },
-
   showUploadProgress(container) {
     const overlay = container.querySelector(".js-projekt-banner-upload-progress")
 
     if (!overlay) return
 
-    this.setUploadProgress(container, 0)
+    this.setUploadProgressMessage(container, "uploading")
     overlay.hidden = false
   },
 
@@ -283,17 +266,6 @@ ProjektStudio.Banner = {
     if (!overlay) return
 
     overlay.hidden = true
-    this.setUploadProgress(container, 0)
-  },
-
-  setUploadProgress(container, percent) {
-    const ring = container.querySelector(".js-projekt-banner-upload-progress-ring")
-    const label = container.querySelector(".js-projekt-banner-upload-progress-percent")
-
-    if (ring) ring.style.setProperty("--upload-progress", percent)
-    if (label) label.textContent = `${percent}%`
-
-    this.setUploadProgressMessage(container, percent >= 100 ? "processing" : "uploading")
   },
 
   setUploadProgressMessage(container, state) {

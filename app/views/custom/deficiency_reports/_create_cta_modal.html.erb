@@ -1,0 +1,26 @@
+<% popup = active_deficiency_report_confirmation_popup %>
+<% return unless popup %>
+
+<div class="reveal small" id="deficiency-report-create-cta-modal" data-reveal>
+  <div class="deficiency-report-create-cta-modal">
+    <p class="lead"><%= simple_format(popup.question) %></p>
+
+    <div class="deficiency-report-create-cta-modal__answers margin-top" style="max-width: 360px;">
+      <% popup.answers.each do |answer| %>
+        <% if answer.allow? %>
+          <%= link_to answer.label, new_deficiency_report_path,
+                class: "button -orange expanded margin-bottom",
+                data: { turbolinks: false } %>
+        <% else %>
+          <%= link_to answer.label, blocked_deficiency_reports_path(answer_id: answer.id),
+                class: "button -orange expanded margin-bottom",
+                data: { turbolinks: false } %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>

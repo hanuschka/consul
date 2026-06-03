@@ -18,12 +18,20 @@ en:
             image: Image
     navbar_items:
       deleted_projekt: "[Deleted project]"
+      deleted_landing_page: "[Deleted landing page]"
       edit:
         title: Edit navbar item
       form:
         custom_title_label: Display name (optional)
         custom_title_placeholder: Leave blank to use the default title
         update: Save changes
+        kinds:
+          landing_pages: Landing pages
+        landing_page_label: Landing page
+        landing_page_filter_placeholder: Search landing pages...
+        no_landing_pages_title: No published landing pages available
+        no_landing_pages_description: There are currently no published landing pages that can be added to the navigation. Create a new landing page or activate an existing one in the landing pages section so you can then add it as a standalone navigation entry and give citizens a direct entry point into audience-specific content and curated themes.
+        no_landing_pages_link: Go to landing pages
     projekts:
       projekt_point_of_interest_categories:
         form:
@@ -71,13 +79,27 @@ en:
           empty_title: Voice assistant not available
           empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative at demokratie.today to activate the voice assistant.
           questions: What questions should be asked to citizens?
+          questions_hint: Define the questions the AI voice assistant asks citizens when they enter their contributions. These questions guide users through creating their proposal. Leave the field empty to use the default questions shown in the placeholder. Multiple questions can be listed line by line.
           criteria: What criteria must the proposals meet?
+          criteria_hint: Specify the criteria the AI voice assistant uses to evaluate and categorize submitted contributions. Leave the field empty to use the default criteria shown in the placeholder. Clear and precise criteria improve analysis quality.
           parting_words: What parting words should the AI assistant give?
+          parting_words_hint: The parting words are spoken by the AI voice assistant at the end of the dialogue. Leave the field empty to use the default formulations shown in the placeholder.
           update_button: Update
           not_connected: The AI app is not connected
         projekt_phase:
           ai_user_flow: AI flow assistant
           ai_settings: Voice assistant
+          evaluation_visibility: Evaluation visibility
+        evaluation_visibility:
+          title: Evaluation visibility
+          heading: Configure visibility for regular users
+          description: >
+            Choose which evaluation sections regular users can see for this phase
+            in the projekt footer. Admins and projekt managers always see everything.
+          save: Save
+          cancel: Cancel
+        update_evaluation_visibility:
+          success: Visibility settings saved.
         masterportal_pins:
           delete_all_button: Delete all pins and associated resources
           delete_all_confirm: This will permanently delete all imported Masterportal pins on this phase together with their associated proposals, budget investments or points of interest. Continue?

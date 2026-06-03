@@ -10,6 +10,10 @@ class ProjektPhase::VotingPhase < ProjektPhase
     "voting_phase"
   end
 
+  def sidebar_cta_kind
+    :poll if poll.present?
+  end
+
   def resources_name
     "polls"
   end

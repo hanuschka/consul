@@ -1,5 +1,7 @@
 get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
 
+get "/map_data", to: "map_data#show", as: :map_data
+
 post   "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
 post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
 delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource
@@ -34,6 +36,22 @@ namespace :ckeditor do
     get :custom_thumb_url, on: :member
   end
   resources :documents, only: [:create, :update, :destroy]
+end
+
+namespace :adm do
+  namespace :files do
+    resources :images, only: [:index, :update] do
+      get :imageable_type_filter, on: :collection
+    end
+    resources :documents, only: [:index, :update, :destroy] do
+      get :documentable_type_filter, on: :collection
+    end
+  end
+end
+
+namespace :file_manager do
+  resources :images, only: [:index, :create, :update, :destroy]
+  resources :documents, only: [:index, :create, :update, :destroy]
 end
 
 resources :user_resources, only: [:index]
@@ -98,7 +116,11 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
-resources :projekt_content_block_templates, only: [:index]
+resources :projekt_content_block_templates, only: [:index] do
+  collection do
+    get :metadata
+  end
+end
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 

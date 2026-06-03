@@ -7,7 +7,7 @@
     "@kern-ux/native": "^2.3.1",
     "@rails/activestorage": "^8.1.100",
     "@simonwep/pickr": "^1.9.1",
-    "ace-builds": "^1.43.3",
+    "ace-builds": "^1.44.0",
     "chart.js": "^4.5.1",
     "chartjs-plugin-datalabels": "^2.2.0",
     "esbuild": "^0.25.10",
@@ -38,6 +38,8 @@
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css": "npm run build:css:adm --",
-    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --style=compressed"
+    "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=app/assets/stylesheets/cross_pack --style=compressed --no-source-map"
   }
 }
+
+

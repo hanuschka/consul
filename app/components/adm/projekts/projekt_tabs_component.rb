@@ -1,6 +1,6 @@
 class Adm::Projekts::ProjektTabsComponent < ApplicationComponent
   MANAGE_ONLY_ACTIONS = %w[details visibility projekt_managers map].freeze
-  ALL_ACTIONS = %w[details visibility projekt_managers map phases evaluation].freeze
+  ALL_ACTIONS = %w[details visibility projekt_managers map phases evaluation images documents].freeze
 
   def initialize(projekt:, current_action: nil)
     @projekt = projekt

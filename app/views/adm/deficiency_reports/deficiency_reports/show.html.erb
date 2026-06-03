@@ -53,10 +53,11 @@
                 <span class="material-symbols-outlined" aria-hidden="true">image</span>
                 <%= t(".image_label") %>
               </div>
-              <%= render Adm::ImageWithLightboxComponent.new(
-                display_url: @image_url,
+              <%= render Shared::ImageWithLightboxComponent.new(
+                image_url: @image_url,
                 original_url: original_image_url,
-                title: @deficiency_report.title
+                alt: @deficiency_report.title,
+                gallery: "deficiency-report-#{@deficiency_report.id}"
               ) %>
             </div>
           <% end %>

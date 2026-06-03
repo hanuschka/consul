@@ -14,7 +14,6 @@ de:
         modules: Module
         application_subitems:
           homepage: Startseite
-          documents: Dokumente
           pages: Systemseiten
           navbar: Navigation
           overview_pages: Übersichtsseiten
@@ -23,6 +22,7 @@ de:
           registration_settings: Registrierung & Verifizierung
           registered_addresses: Adressen
           default_map_location: Standardkarte
+          system_user: Systembenutzer
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen

@@ -10,6 +10,9 @@ class Adm::DeficiencyReports::SettingsController < Adm::DeficiencyReports::BaseC
   def contact_persons
   end
 
+  def naming
+  end
+
   private
 
     def authorize_settings

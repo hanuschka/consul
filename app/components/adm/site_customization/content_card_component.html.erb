@@ -1,4 +1,7 @@
-<tr class="kern-table__row" id="<%= dom_id @content_card %>" data-id="<%= @content_card.id %>">
+<tr class="kern-table__row" id="<%= dom_id @content_card %>" data-sortable-id="<%= @content_card.id %>">
+  <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+    <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+  </td>
   <th scope="row" class="kern-table__header"><%= @content_card.title %></th>
   <td class="kern-table__cell"><%= count %></td>
   <td class="kern-table__cell">

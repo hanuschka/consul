@@ -40,16 +40,15 @@
               <span class="material-symbols-outlined" aria-hidden="true">image</span>
               <%= t("adm.projekts.budget_investments.show.image") %>
               <% if @investment.image&.attachment&.attached? %>
-                <%= button_to toggle_image_concealed_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
-                      method: :patch,
+                <%= link_to toggle_image_concealed_adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
                       class: "adm-detail-media-card__action",
-                      data: { turbo_frame: "investment_content" } do %>
+                      data: { turbo_method: :patch, turbo_frame: "investment_content" } do %>
                   <%= @investment.image.concealed? ? t("adm.projekts.budget_investments.edit.show_image") : t("adm.projekts.budget_investments.edit.hide_image") %>
                 <% end %>
               <% end %>
             </div>
             <div class="adm-detail-media-card__image <%= 'adm-detail-media-card__image--concealed' if @investment.image&.concealed? %>">
-              <%= render Kern::Form::ImageableImageComponent.new(form: form, show_actions: false) %>
+              <%= render Adm::Form::ImageComponent.new(form: form) %>
             </div>
           </div>
         <% end %>

@@ -1,5 +1,7 @@
-if Rails.env.test? || Rails.env.development?
+if Rails.env.test?
   Delayed::Worker.delay_jobs = false
+elsif Rails.env.development?
+  Delayed::Worker.delay_jobs = true
 elsif Rails.application.secrets.delay_jobs.nil?
   Delayed::Worker.delay_jobs = true
 else

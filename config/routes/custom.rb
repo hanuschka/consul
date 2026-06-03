@@ -116,7 +116,11 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
-resources :projekt_content_block_templates, only: [:index]
+resources :projekt_content_block_templates, only: [:index] do
+  collection do
+    get :metadata
+  end
+end
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 

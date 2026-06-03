@@ -16,6 +16,13 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       >
         <button
           type="button"
+          class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          title="Inhaltsblock mit KI erstellen"
+        >
+          <i class="fas fa-magic"></i>
+        </button>
+        <button
+          type="button"
           class="js-show-content-block-templates add-new-content-block-button"
           title="Neuen Inhaltsblock am Anfang hinzufügen"
         >
@@ -341,6 +348,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 function showContentBlockTemplatesButton(isDraft = false) {
   return `
     <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
+      <button
+        type="button"
+        class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+        title="Inhaltsblock mit KI erstellen"
+        ${isDraft ? "disabled" : ''}
+      >
+        <i class="fas fa-magic"></i>
+      </button>
       <button
         type="button"
         class="js-show-content-block-templates add-new-content-block-button"

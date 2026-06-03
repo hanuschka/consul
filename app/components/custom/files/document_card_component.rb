@@ -10,6 +10,10 @@ class Files::DocumentCardComponent < ApplicationComponent
 
     attr_reader :document, :type
 
+    def uploaded_by
+      document.user
+    end
+
     def filename
       attachment_filename.presence || document.title.presence || "Untitled"
     end

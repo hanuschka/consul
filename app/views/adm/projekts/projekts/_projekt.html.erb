@@ -6,6 +6,11 @@
       <%= link_to projekt_thumbnail(projekt), projekt_path(projekt), target: "_blank", data: { turbo: false }, title: t(".frontend_page") %>
       <div>
         <%= link_to projekt.title, landing_path, class: "link strong", data: { turbo_frame: "_top" } %>
+        <% if projekt.imported_by_ai %>
+          <span class="kern-badge kern-badge--info ms-2" title="<%= t("adm.projekts.imports.badge.imported_by_ai_title") %>">
+            <%= t("adm.projekts.imports.badge.imported_by_ai") %>
+          </span>
+        <% end %>
         <br>
         <span class="small">
           <% if projekt.parent.present? %>

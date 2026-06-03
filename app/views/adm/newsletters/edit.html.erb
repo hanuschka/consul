@@ -3,6 +3,7 @@
 <% if @newsletter.draft? %>
   <% content_for :head do %>
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
+    <%= stylesheet_link_tag "studio" %>
     <%= stylesheet_link_tag "adm_content_block_editor" %>
     <%= javascript_include_tag "packs/studio_vendor" %>
     <%= javascript_include_tag "packs/studio" %>
@@ -28,7 +29,7 @@
 
   <% if @newsletter.draft? %>
     <div class="my-5">
-      <h2 class="kern-title kern-title--small mb-3"><%= t(".content_section_title") %></h2>
+      <h2 class="kern-title kern-title--large mb-3"><%= t(".content_section_title") %></h2>
       <%= render Adm::Newsletters::ContentBlockEditorComponent.new(
         newsletter: @newsletter,
         content_blocks: @content_blocks
@@ -45,4 +46,8 @@
   <%= render Newsletters::ContentBlockTemplatesSelectorComponent.new %>
   <%= render Projekts::ContentBlockAiCreateModalComponent.new(show_projekt_context_toggle: false) %>
   <%= render Projekts::ContentBlockEditPopupsComponent.new(show_projekt_context_toggle: false) %>
+  <div class="custom-new-design">
+    <%= render ProjektStudio::FileUploadDialogComponent.new(type: "picture") %>
+    <%= render ProjektStudio::FileUploadDialogComponent.new(type: "document") %>
+  </div>
 <% end %>

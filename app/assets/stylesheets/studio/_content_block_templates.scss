@@ -65,6 +65,7 @@ dialog.modern-modal {
   h3 {
     font-size: 25px;
     margin-top: 0;
+    font-weight: 500;
   }
 }
 
@@ -272,7 +273,7 @@ dialog.modern-modal {
 .projekt-content-block-templates-selector {
   .shared-tabs--link[aria-selected="true"],
   .shared-tabs--link:hover {
-    color: $dt-base;
+    color: var(--brand-color);
   }
 }
 

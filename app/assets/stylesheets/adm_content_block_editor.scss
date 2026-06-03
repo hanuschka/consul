@@ -1,10 +1,10 @@
-// Styles for the legacy content-block editor embedded on the /adm
-// newsletter edit page. Loads only the Foundation close-button helper plus
-// the studio editor styles — NOT foundation-global-styles, so the Kern-UX
-// shell is unaffected. Modals are native <dialog> (shared modal component),
-// tooltips are the CSS-only cross_pack primitive, and tabs are the
-// self-contained cross_pack shared-tabs primitive — so foundation-reveal,
-// -tooltip, and -tabs are not included.
+// Gap-filler styles for the legacy content-block editor embedded on the
+// /adm newsletter edit page. The studio editor styles themselves come from
+// the shared "studio" pack (loaded alongside this file); this file only
+// provides the main-app pieces the Kern-UX shell doesn't ship: Foundation
+// helpers (close button, SR-only, dialog-scoped form fields), icon glyphs,
+// cross_pack primitives, and the newsletter-editor page chrome. No
+// foundation-global-styles, so the Kern-UX shell is unaffected.
 
 @import "util/util";
 @import "consul_custom_overrides";
@@ -15,32 +15,34 @@
 
 @include foundation-close-button;
 
+.show-for-sr {
+  @include element-invisible;
+}
+
 @import "custom/1_colors";
 @import "custom/1_variables";
 @import "custom/1_utils";
+@import "icons";
+
+.icon-cross::before {
+  content: "\f00d";
+}
 
 @import "cross_pack/components/round_icon_button";
 @import "cross_pack/components/dropdown_select_menu";
 @import "cross_pack/components/css_tooltip";
 @import "cross_pack/components/shared_tabs";
-
 @import "cross_pack/components/shared_modal";
-@import "custom_new_design/components/shared/loading_spinner_component";
 
-@import "projekt_studio/1_colors";
-@import "projekt_studio/2_animations";
-@import "projekt_studio/general";
-@import "projekt_studio/content_block_toolbar";
-@import "projekt_studio/content_block_buttons";
-@import "projekt_studio/content_block_wrapper";
-@import "projekt_studio/content_block_templates";
-@import "projekt_studio/content_block_ai_create";
-@import "projekt_studio/add_content_block";
-@import "projekt_studio/saved_content_blocks";
-@import "projekt_studio/image_controls";
-@import "projekt_studio/link_editing";
-@import "projekt_studio/ai_editing";
-@import "projekt_studio/code_editing";
+@import "custom_new_design/components/shared/loading_spinner_component";
+@import "custom_new_design/components/shared/text_search_form";
+
+// Foundation form-field styles scoped to the file-manager dialog only, so
+// the search and edit inputs match the main-app dialog without leaking
+// global [type='text'] rules into the Kern-UX shell.
+.file-upload-manager-dialog {
+  @include foundation-forms;
+}
 
 .newsletter-content-block-editor {
   max-width: 660px;

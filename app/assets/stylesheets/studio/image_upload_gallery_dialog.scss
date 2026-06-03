@@ -47,11 +47,10 @@
   font-size: 25px;
 }
 
-.custom-new-design {
-  .image-upload-gallery--select-image-btn {
-    font-size: 18px !important;
-    padding: 8px 48px !important;
-  }
+.file-upload-manager-dialog--footer .image-upload-gallery--select-image-btn {
+  height: 40px;
+  padding: 8px 32px;
+  font-size: 16px;
 }
 
 .file-upload-manager-dialog--toolbar {
@@ -329,60 +328,6 @@
   padding: 7px 25px;
   border-top: 1px solid #e7e7e7;
   flex-shrink: 0;
-}
-
-/* Buttons */
-.file-upload-manager-dialog--btn-primary {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 7px;
-  background: $dt-base;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-
-  i {
-    margin-right: 5px;
-  }
-
-  &:hover {
-    background: $dt-base-hover;
-  }
-
-  &:active {
-    background: #0958d9;
-  }
-}
-
-.file-upload-manager-dialog--btn-action {
-  padding: 8px 24px;
-  border: none;
-  border-radius: 4px;
-  background: #1677ff;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-
-  &:hover {
-    background: #4096ff;
-  }
-}
-
-.file-upload-manager-dialog--btn-danger {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background: #f14b59;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-
-  &:hover {
-    background: #e86f78;
-  }
 }
 
 /* Edit Modal */

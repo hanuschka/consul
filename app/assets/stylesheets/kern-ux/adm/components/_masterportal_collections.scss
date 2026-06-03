@@ -252,21 +252,17 @@
   }
 }
 
-.adm-masterportal-collection-card--button.-clean {
-  color: #b45309;
-  background: #fff;
-  border-color: #fde68a;
+.adm-masterportal-collection-card--button.-resync {
+  color: #15803d;
+  background: #f0fdf4;
+  border-color: #bbf7d0;
 
   &:not(:disabled):hover {
-    color: #fff;
-    background: #d97706;
-    border-color: #d97706;
+    background: #dcfce7;
   }
 
   &:not(:disabled):active {
-    color: #fff;
-    background: #b45309;
-    border-color: #b45309;
+    background: #bbf7d0;
   }
 }
 

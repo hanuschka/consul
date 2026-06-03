@@ -1,30 +1,6 @@
 de:
   adm:
     section_contact_people:
-      index:
-        title: Ansprechpartner
-        new_link: Neuen Ansprechpartner erstellen
-        empty_title: Keine Ansprechpartner vorhanden
-        empty_description: Erstellen Sie einen neuen Ansprechpartner, um Kontaktpersonen den einzelnen Administrationsbereichen zuzuordnen.
-        filters:
-          all: Alle
-        sections:
-          ideas: Ideen
-          deficiency_reports: Mängelmelder
-          projekts: Projekte
-          moderation: Moderation
-          valuation: Bewertung
-          landing_pages: Themenseiten
-        table:
-          name: Name
-          section: Sektion
-          role: Rolle
-          email: E-Mail
-          phone: Telefon
-          actions: Aktionen
-          edit: Bearbeiten
-          delete: Löschen
-          delete_confirm: Sind Sie sicher, dass Sie diesen Ansprechpartner löschen möchten?
       new:
         title: Neuen Ansprechpartner erstellen
       edit:

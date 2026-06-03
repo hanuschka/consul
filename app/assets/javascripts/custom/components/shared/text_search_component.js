@@ -20,12 +20,12 @@
       }
     },
 
-    searchInput: function() {
-      return document.querySelector('.js-text-search-form-search-input');
+    searchInput: function(rootElement) {
+      return rootElement.querySelector('.js-text-search-form-search-input');
     },
 
-    resetButton: function() {
-      return document.querySelector('.js-text-search-form-reset-button');
+    resetButton: function(rootElement) {
+      return rootElement.querySelector('.js-text-search-form-reset-button');
     },
 
     setupEventListeners: function() {
@@ -48,6 +48,23 @@
           this.handleReset(rootElement)
         }.bind(this)
       )
+
+      $(document).on(
+        'click',
+        ".js-search-button",
+        function(e) {
+          var rootElement = e.target.closest('.js-text-search-form')
+
+          if (!rootElement) return
+          if (rootElement.tagName !== "FORM") {
+            e.preventDefault()
+            var input = this.searchInput(rootElement)
+            if (input) {
+              input.dispatchEvent(new Event('input', { bubbles: true }))
+            }
+          }
+        }.bind(this)
+      )
     },
 
     updateButtonVisibility: function(rootElement) {
@@ -67,6 +84,7 @@
       searchInput.value = '';
       this.updateButtonVisibility(rootElement);
       searchInput.focus();
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
 
       if (rootElement.dataset.disableResetButtonSubmit !== "true") {
         rootElement.requestSubmit()

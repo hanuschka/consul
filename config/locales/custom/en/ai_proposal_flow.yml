@@ -19,14 +19,26 @@ en:
     step1:
       criteria_heading: "Criteria for submitting your idea"
       idea_heading: "Your Idea"
-      textarea_label: "DESCRIBE YOUR IDEA BRIEFLY"
-      placeholder: "e.g. »I would like a drinking fountain in the city park …«"
-      submit_button: "Generate AI Draft"
+      textarea_label: "What would you like to improve? Briefly describe the problem, location and your idea."
+      placeholder: "e.g. »I would like a drinking fountain in the city park near the playground.«\nor: »The road on Maple Avenue is very rough and needs repair.«\nor: »We need a safe pedestrian crossing near the school entrance on Oak Street.«"
+      submit_button: "Submit proposal"
       chars_label: "characters"
+    criteria:
+      hard_title: "Required Criteria"
+      hard_hint: "Your proposal must meet every one of these before it can be submitted."
+      hard_badge: "Required"
+      soft_title: "Quality Criteria"
+      soft_hint: "These criteria contribute to the overall quality score of your proposal."
+      soft_badge: "Scored"
     evaluation:
       total_score: "Total Score"
       passed: "Your proposal meets the criteria!"
       failed: "Your proposal needs improvement."
+      hard_failed_eyebrow: "Revision needed"
+      hard_failed_title: "Your proposal needs a change before it can be submitted."
+      feedback_label: "AI feedback"
+      error_title: "Evaluation could not be completed."
+      error_description: "Something went wrong during evaluation. Please try submitting again in a moment."
     step4:
       heading: "Thank you for your proposal!"
       subheading: "Your contribution has been successfully submitted and will be reviewed."
@@ -40,6 +52,7 @@ en:
       back_edit: "Edit proposal"
       next_evaluation: "Continue to Evaluation"
       submit: "Submit proposal"
+      back_to_projekt_phase: "Back to Projekt"
   admin:
     projekt_phases:
       user_resource_criteria:

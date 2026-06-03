@@ -3,7 +3,7 @@
   <% if @form.object.is_a?(Image) %>
     <%= @form.hidden_field :_destroy, value: false, data: { kern__form__image_target: "destroy" } %>
   <% else %>
-    <%= hidden_field_tag :remove_image, "false", data: { kern__form__image_target: "destroy" } %>
+    <%= hidden_field_tag :remove_attachment, "false", data: { kern__form__image_target: "destroy" } %>
   <% end %>
 
   <div class="kern-form-input <%= 'kern-form-input--error' if image_errors.any? %> <%= 'd-none' if show_preview? %>"

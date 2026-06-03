@@ -5,3 +5,4 @@
 
 Mime::Type.register "application/vnd.openxmlformats-officedocument.wordprocessingml.document", :docx
 Mime::Type.register "application/vnd.oasis.opendocument.text", :odt
+Mime::Type.register "application/geo+json", :geojson

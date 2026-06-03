@@ -28,6 +28,21 @@
   column-gap: 1rem;
   row-gap: 1rem;
   margin: 2.25rem 0 2.5rem;
+
+  &.-compact {
+    margin: 1rem 0;
+    margin-top: 1.5rem;
+    font-size: 1.385rem;
+  }
+}
+
+.adm-page-title-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-page-title-after {
+  margin-top: 10px;
 }
 
 .adm-page-title {

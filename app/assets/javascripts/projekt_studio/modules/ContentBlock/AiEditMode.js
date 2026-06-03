@@ -45,8 +45,8 @@ ProjektStudio.ContentBlock.AiEditMode = {
   },
 
   getPopup(contentBlockWrapper) {
-    const relativeContainer = contentBlockWrapper.querySelector('.relative');
-    const searchContainer = relativeContainer || contentBlockWrapper;
+    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const searchContainer = innerContainer || contentBlockWrapper;
     return searchContainer.querySelector('.js-content-block-ai-edit-popup');
   },
 
@@ -235,7 +235,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
   handleSuccessResponse(response, contentBlock) {
     if (response.content_block_html) {
       if (contentBlock) {
-        contentBlock.innerHTML = response.content_block_html;
+        contentBlock.innerHTML = ProjektStudio.utils.sanitizeAdminHtml(response.content_block_html);
 
         ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
 

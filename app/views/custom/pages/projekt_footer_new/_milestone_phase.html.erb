@@ -1,3 +1,4 @@
+<div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
 <% unless embedded? %>
@@ -5,3 +6,4 @@
     <%= render Shared::MilestonesComponent.new(milestones: @projekt_phase.milestones, milestoneable: @projekt_phase) %>
   </div>
 <% end %>
+</div>

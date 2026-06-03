@@ -62,7 +62,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
 
   def order_categories
     authorize DeficiencyReport::Category, :update?, policy_class: Adm::DeficiencyReports::CategoryPolicy
-    DeficiencyReport::Category.order_categories(params[:ordered_list])
+    DeficiencyReport::Category.order_categories(params[:tree].map { |item| item[:id] })
     head :ok
   end
 

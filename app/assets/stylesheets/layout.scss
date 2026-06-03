@@ -1039,6 +1039,11 @@ footer {
         display: inline-block;
         text-align: left;
       }
+
+      img {
+        max-height: 60px;
+        max-width: 100%;
+      }
     }
   }
 }
@@ -1162,41 +1167,6 @@ form {
 
 // 07. Callout
 // -----------
-
-.callout-slide {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  animation-name: slide;
-}
-
-@keyframes slide {
-  from {
-    transform: translate3d(100%, 0, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.notice-container {
-  min-width: $line-height * 12;
-  right: 24px;
-  top: 24px;
-
-  @include breakpoint(medium) {
-    position: absolute;
-  }
-
-  .notice {
-    height: $line-height * 4;
-
-    .notice-text {
-      width: 95%;
-    }
-  }
-}
 
 .callout {
   font-size: $small-font-size;

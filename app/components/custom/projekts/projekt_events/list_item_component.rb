@@ -13,7 +13,7 @@ class Projekts::ProjektEvents::ListItemComponent < ApplicationComponent
       projekt: projekt_event.projekt,
       title: projekt_event.title,
       description: projekt_event.description,
-      image_url: projekt_event.image&.variant(:card_thumb),
+      image: projekt_event.image,
       image_placeholder_icon_class: "fa-comments",
       no_footer_bottom_padding: true
     }

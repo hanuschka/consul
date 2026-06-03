@@ -358,6 +358,42 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           expect(response.status).to eq(201)
         end
       end
+
+      response '201', 'proposal created as draft (published: false)' do
+        let!(:context) { create_phase_with_context }
+        let(:projekt_phase_id) { context[2].id }
+        let(:geozone_id) { context[1].id }
+        let(:proposal) do
+          {
+            proposal: {
+              responsible_name: 'Jane Smith',
+              geozone_id: geozone_id,
+              resource_terms: true,
+              title: 'Draft Proposal',
+              description: 'A proposal that should remain unpublished',
+              published: false
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(Proposal.unscoped.find(data['data']['proposal']['id']).published?).to eq(false)
+        end
+      end
     end
   end
 
@@ -869,6 +905,98 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
             resource_terms: true,
             title: 'Test Proposal',
             description: 'Test Description'
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+    end
+  end
+
+  path '/api/proposals/{id}/publish' do
+    parameter name: :id, in: :path, type: :integer, description: 'Proposal ID'
+
+    patch 'Publish a proposal' do
+      tags 'Proposals'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Publish a previously created proposal, setting its published_at timestamp and making it visible in the frontend. Idempotent: publishing an already-published proposal returns it unchanged without re-sending notifications. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      response '200', 'proposal published' do
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            title: 'Draft Proposal',
+            description: 'Draft Description'
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(record.reload.published?).to eq(true)
+        end
+      end
+
+      response '404', 'proposal not found' do
+        let(:id) { 999_999 }
+        run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            title: 'Draft Proposal',
+            description: 'Draft Description'
           )
           proposal.save!
           proposal

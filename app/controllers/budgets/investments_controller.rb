@@ -56,6 +56,7 @@ module Budgets
 
       @investment_ids = @investments.ids
       @investments_map_coordinates = MapLocation.where(mappable: investments).map(&:features_json_data)
+      @investments_map_coordinates += MasterportalPin.standalone_features_for_phase(@budget.projekt_phase)
 
       @tag_cloud = tag_cloud
       @remote_translations = detect_remote_translations(@investments)
@@ -65,6 +66,8 @@ module Budgets
     end
 
     def show
+      auto_sign_in_guest_for(@investment.projekt_phase)
+
       @commentable = @investment
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)

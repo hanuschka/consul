@@ -1,5 +1,5 @@
 <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.max_attendees_label"), hint: t("adm.projekts.projekt_events.form.max_attendees_hint")) do %>
-  <%= f.number_field :max_attendees, label: false, min: 1 %>
+  <%= f.number_field :max_attendees, label: false, min: 0 %>
 <% end %>
 
 <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.admin_emails_label"), hint: t("adm.projekts.projekt_events.form.admin_emails_hint")) do %>

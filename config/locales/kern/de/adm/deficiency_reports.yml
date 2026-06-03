@@ -20,7 +20,7 @@ de:
           deficiency_reports: Meldungen
           categories: Kategorien
           statuses: Status
-          settings: Funktionen
+          settings: Konfiguration
           official_answer_templates: Antwortvorlagen
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
@@ -30,9 +30,8 @@ de:
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
-          columns: Spalten
-          export: Exportieren
-          no_deficiency_reports: Keine Mängelmelder vorhanden
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
           no_results_filtered_title: Keine Meldungen für die aktuellen Filter
@@ -140,8 +139,6 @@ de:
           title: Feedback-Formular
           created_at: Erstellt am
           for_report: Für
-        settings:
-          title: Funktionen
       categories:
         index:
           title: Kategorien
@@ -224,7 +221,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Team
+          title: Sachbearbeiter
           page_hint: "Hier verwalten Sie die Sachbearbeiter für den Mängelmelder. Sachbearbeiter können eingereichte Meldungen bearbeiten, den Status aktualisieren und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Nur bereits registrierte Nutzer können als Sachbearbeiter hinzugefügt werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Mängelmelder hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Meldungen, kommunizieren mit den Bürgern und aktualisieren den Bearbeitungsstatus.
@@ -322,6 +319,40 @@ de:
           officers_hint: Wählen Sie die Sachbearbeiter aus, die Mitglieder dieser Gruppe sein sollen. Alle ausgewählten Personen können Meldungen bearbeiten, die dieser Gruppe zugewiesen sind. Die Mitgliedschaft in einer Gruppe beeinflusst, welche Meldungen in der persönlichen Übersicht des Sachbearbeiters angezeigt werden und welche Benachrichtigungen erfolgen.
           no_officers_title: Keine Sachbearbeiter vorhanden
           no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", bevor Sie sie einer Gruppe zuweisen können.
+          submit: Speichern
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+          naming: Bezeichnungen
+          confirmation_popup: Bestätigungs-Popup
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
+      confirmation_popups:
+        edit:
+          title: Bestätigungs-Popup
+        update:
+          success: Bestätigungs-Popup gespeichert.
+        form:
+          enabled_label: Bestätigungs-Popup aktivieren
+          enabled_hint: Wenn aktiv, öffnet der gelbe "Neue Anliegen"-Button ein Popup mit der unten konfigurierten Frage und den Antworten.
+          question_label: Frage
+          question_hint: Wird dem Nutzer angezeigt, wenn er auf den "Neue Anliegen"-Button klickt.
+          answers_label: Antworten
+          answers_hint: Pro Antwort einen Button hinzufügen. "Weiterleiten"-Antworten führen zum Meldeformular. "Blockieren"-Antworten brechen den Vorgang ab und zeigen die Hinweismeldung auf der Übersichtsseite.
+          add_answer: Antwort hinzufügen
+          answer_title: Antwort
+          remove_answer: Entfernen
+          label_label: Button-Beschriftung
+          label_placeholder: z.B. "Ja, neue Meldung erstellen"
+          behavior_label: Verhalten
+          behaviors:
+            allow: Zum Meldeformular weiterleiten
+            block: Blockieren und Hinweismeldung anzeigen
+          flash_notice_label: Hinweismeldung
+          flash_notice_placeholder: z.B. "Bitte prüfen Sie zuerst bestehende Meldungen."
           submit: Speichern
       stats:
         show:

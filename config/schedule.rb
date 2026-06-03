@@ -88,3 +88,8 @@ end
 every 1.day, at: "4:30 am", roles: [:cron] do
   rake "api_request_logs:cleanup"
 end
+
+every 1.day, at: "3:00 am", roles: [:cron] do
+  runner "ProjektImports::PurgeOldImportsJob.perform_later"
+end
+

@@ -257,7 +257,123 @@
             visibility: layerData.show_by_default ? 'visible' : 'none'
           }
         });
+      } else if (layerData.protocol === 'geojson') {
+        if (!layerData.data_url) return;
+
+        const cfg = layerData.config || {};
+        const layerId = 'ext-layer-' + layerData.id;
+        const lineLayerId = layerId + '-line';
+        const visibility = layerData.show_by_default ? 'visible' : 'none';
+
+        this.map.addSource(sourceId, {
+          type: 'geojson',
+          data: layerData.data_url
+        });
+
+        // Fill layer carries the control's layerId so the checkbox toggles it.
+        this.map.addLayer({
+          id: layerId,
+          type: 'fill',
+          source: sourceId,
+          paint: {
+            'fill-color': this.geoJsonFillColor(cfg),
+            'fill-opacity': this.geoJsonFillOpacity(cfg)
+          },
+          layout: { visibility: visibility }
+        });
+
+        this.map.addLayer({
+          id: lineLayerId,
+          type: 'line',
+          source: sourceId,
+          paint: {
+            'line-color': (cfg.style && cfg.style.color) || '#1A3C8C',
+            'line-width': this.geoJsonLineWidth(cfg)
+          },
+          layout: { visibility: visibility }
+        });
+
+        if (cfg.choropleth && cfg.choropleth.enabled) {
+          this.addChoroplethLegend(cfg);
+        }
       }
+    }
+
+    geoJsonFillOpacity(cfg) {
+      const style = cfg.style || {};
+      return App.Map.numberOrDefault(style.fillOpacity, 0.3);
+    }
+
+    geoJsonLineWidth(cfg) {
+      return App.Map.numberOrDefault(cfg.style && cfg.style.weight, 1);
+    }
+
+    // Returns a Mapbox GL paint value for fill-color: a flat color, or a
+    // data-driven "step" expression when choropleth is enabled.
+    geoJsonFillColor(cfg) {
+      const style = cfg.style || {};
+      const ch = cfg.choropleth || {};
+      const flat = style.fillColor || '#3366CC';
+
+      if (!ch.enabled) return flat;
+
+      const breaks = (ch.breaks || []).map(function(b) { return parseFloat(b); });
+      const colors = ch.colors || [];
+      if (!breaks.length || colors.length !== breaks.length + 1) return flat;
+
+      const step = ['step', ['to-number', ['get', ch.property]], colors[0]];
+      for (let i = 0; i < breaks.length; i++) {
+        step.push(breaks[i], colors[i + 1]);
+      }
+
+      // null / non-numeric values fall back to the no-data color.
+      return [
+        'case',
+        ['==', ['typeof', ['get', ch.property]], 'number'],
+        step,
+        ch.no_data_color || '#cccccc'
+      ];
+    }
+
+    addChoroplethLegend(cfg) {
+      const ch = cfg.choropleth || {};
+      const breaks = ch.breaks || [];
+      const colors = ch.colors || [];
+
+      const container = document.createElement('div');
+      container.className = 'map-choropleth-legend mapbox-choropleth-legend';
+      // Inline styles so the legend renders without depending on map component SCSS.
+      container.style.cssText = [
+        'position:absolute', 'bottom:24px', 'right:8px', 'z-index:1',
+        'max-width:220px', 'padding:8px 10px', 'background:#fff',
+        'border-radius:4px', 'box-shadow:0 1px 4px rgba(0,0,0,0.3)',
+        'font-size:12px', 'line-height:1.5'
+      ].join(';');
+
+      const rows = [];
+      if (ch.legend_title) {
+        rows.push('<div class="map-choropleth-legend__title"><strong>' + App.MapPopup.escapeHtml(ch.legend_title) + '</strong></div>');
+      }
+
+      for (let i = 0; i < colors.length; i++) {
+        let label;
+        if (i === 0) {
+          label = '< ' + App.MapPopup.escapeHtml(breaks[0]);
+        } else if (i === colors.length - 1) {
+          label = '≥ ' + App.MapPopup.escapeHtml(breaks[breaks.length - 1]);
+        } else {
+          label = App.MapPopup.escapeHtml(breaks[i - 1]) + ' – ' + App.MapPopup.escapeHtml(breaks[i]);
+        }
+
+        const swatch = '<span class="map-choropleth-legend__swatch" style="display:inline-block;width:14px;height:14px;margin-right:6px;background:' + App.MapPopup.escapeHtml(colors[i]) + '"></span>';
+        rows.push('<div class="map-choropleth-legend__row">' + swatch + label + '</div>');
+      }
+
+      container.innerHTML = rows.join('');
+      this.element.appendChild(container);
+
+      this._geojsonLegends = this._geojsonLegends || [];
+      this._geojsonLegends.push(container);
     }
 
     addLayerToControl(layerData) {
@@ -277,7 +393,8 @@
       const visibility = visible ? 'visible' : 'none';
 
       layers.forEach((layer) => {
-        if (layer.id === layerId) {
+        // geojson overlays add a companion outline layer that toggles in lockstep.
+        if (layer.id === layerId || layer.id === layerId + '-line') {
             map.setLayoutProperty(layer.id, 'visibility', visibility);
         }
       });

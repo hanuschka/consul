@@ -40,4 +40,5 @@
 //= require ../projekt_studio/modules/FileImport
 //= require ../projekt_studio/modules/ProjektStart
 //= require ../projekt_studio/modules/BuildWithPrompt
+//= require ../projekt_studio/modules/CreateContentBlockWithAi
 //= require ../projekt_studio/modules/ToggleBackground

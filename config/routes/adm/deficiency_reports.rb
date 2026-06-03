@@ -9,11 +9,11 @@ namespace :adm do
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_categories, on: :collection
+      patch :order_categories, on: :collection
     end
 
     resources :statuses, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_statuses, on: :collection
+      patch :order_statuses, on: :collection
     end
 
     resources :official_answer_templates, except: :show

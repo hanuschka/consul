@@ -71,7 +71,7 @@
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
               mappable: proposal,
-              features: proposal.map_location&.features_json_data
+              masterportal_focus_view: true
             ) %>
           </div>
         <% end %>

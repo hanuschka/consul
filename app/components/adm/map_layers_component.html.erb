@@ -14,6 +14,7 @@
         <tr class="kern-table__row">
           <th scope="col" class="kern-table__header"><%= t("#{i18n_scope}.table.name") %></th>
           <th scope="col" class="kern-table__header"><%= t("#{i18n_scope}.table.type") %></th>
+          <th scope="col" class="kern-table__header"><%= t("#{i18n_scope}.table.protocol") %></th>
           <th scope="col" class="kern-table__header"><%= t("#{i18n_scope}.table.layer_names") %></th>
           <th scope="col" class="kern-table__header"></th>
         </tr>
@@ -23,6 +24,7 @@
           <tr class="kern-table__row" id="<%= dom_id(layer) %>">
             <th scope="row" class="kern-table__header"><%= layer.name %></th>
             <td class="kern-table__cell"><%= layer.base? ? t("#{i18n_scope}.table.base") : t("#{i18n_scope}.table.layer") %></td>
+            <td class="kern-table__cell"><%= t("activerecord.attributes.map_layer.protocols.#{layer.protocol}") %></td>
             <td class="kern-table__cell"><%= layer.layer_names %></td>
             <td class="kern-table__cell">
               <%= render Kern::Table::ActionsComponent.new do |actions| %>

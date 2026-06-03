@@ -2,11 +2,12 @@ de:
   components:
     adm:
       map_layers_component:
-        title: WMS-Kartenlayer hinzufügen
-        description: Hier können zusätzliche Kartenlayer über einen WMS-Dienst eingebunden werden. Die Layer müssen als öffentliche WMS-URLs verfügbar sein.
+        title: Kartenebenen
+        description: Hier können zusätzliche Kartenebenen eingebunden werden – über einen WMS-Dienst, eine Kachelkarte (XYZ) oder als hochgeladene GeoJSON-Datei.
         table:
           name: Name der Kartenebene
           type: Typ
+          protocol: Protokoll
           layer_names: Layername
           base: Base
           layer: Layer

@@ -2,11 +2,12 @@ en:
   components:
     adm:
       map_layers_component:
-        title: Add WMS map layer
-        description: Additional map layers can be included here via a WMS service. The layers must be available as public WMS URLs.
+        title: Map layers
+        description: Additional map layers can be included here – via a WMS service, a tile map (XYZ), or an uploaded GeoJSON file.
         table:
           name: Layer name
           type: Type
+          protocol: Protocol
           layer_names: Layer name
           base: Base
           layer: Layer

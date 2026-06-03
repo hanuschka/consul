@@ -1,5 +1,7 @@
 get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
 
+get "/map_data", to: "map_data#show", as: :map_data
+
 post   "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
 post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
 delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource
@@ -114,7 +116,11 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
-resources :projekt_content_block_templates, only: [:index]
+resources :projekt_content_block_templates, only: [:index] do
+  collection do
+    get :metadata
+  end
+end
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 

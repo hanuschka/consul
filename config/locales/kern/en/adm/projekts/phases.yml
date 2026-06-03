@@ -160,6 +160,7 @@ en:
           title: Comments
           no_comments_title: No comments available
           no_comments_description: As soon as users post comments in this participation phase, they are listed here and can be moderated. You can hide individual comments, restore them, or review flagged contributions. The table shows author, content, and moderation status of each comment.
+          download_csv: Download CSV
           table:
             body: Comment
             author: Author
@@ -188,6 +189,7 @@ en:
             actions: Actions
         map:
           title: Map
+          masterportal_import_success: Import completed successfully.
         masterportal_pins:
           title: Imported Masterportal pins
         officing_managers:

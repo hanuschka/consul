@@ -3,9 +3,11 @@ class Admin::SystemStatsService < ApplicationService
 
   def call
     {
-      memory: memory_stats,
-      disk:   disk_stats,
-      cpu:    cpu_stats
+      memory:     memory_stats,
+      disk:       disk_stats,
+      cpu:        cpu_stats,
+      db_pool:    db_pool_stats,
+      web_server: web_server_stats
     }
   end
 
@@ -69,6 +71,38 @@ class Admin::SystemStatsService < ApplicationService
       load_15m:  load_15m,
       pct:       pct
     }
+  end
+
+  def db_pool_stats
+    size = ActiveRecord::Base.connection_db_config.pool.to_i
+    stat = ActiveRecord::Base.connection_pool.stat
+    active = stat[:busy].to_i
+
+    {
+      available: true,
+      size:      size,
+      active:    active,
+      idle:      stat[:idle].to_i,
+      waiting:   stat[:waiting].to_i,
+      pct:       size.positive? ? (active * 100.0 / size).round : 0
+    }
+  rescue StandardError
+    { available: false }
+  end
+
+  def web_server_stats
+    max_threads =
+      (Puma.stats_hash[:max_threads] if defined?(Puma) && Puma.respond_to?(:stats_hash)) ||
+      Integer(ENV.fetch("RAILS_MAX_THREADS", 16))
+
+    {
+      available:   true,
+      server:      "puma",
+      workers:     Integer(ENV.fetch("WEB_CONCURRENCY", 2)),
+      max_threads: max_threads.to_i
+    }
+  rescue StandardError
+    { available: false }
   end
 
   def read_meminfo

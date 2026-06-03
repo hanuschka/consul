@@ -8,6 +8,10 @@ class ProjektPhase::LivestreamPhase < ProjektPhase
     "livestream_phase"
   end
 
+  def sidebar_cta_kind
+    :link
+  end
+
   def resources_name
     "projekt_livestreams"
   end

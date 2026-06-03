@@ -7,6 +7,7 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
         .new(query_params)
         .call
         .merge(policy_scope([:adm, Image]))
+        .includes(user: :image)
         .page(params[:page])
         .per(24)
 

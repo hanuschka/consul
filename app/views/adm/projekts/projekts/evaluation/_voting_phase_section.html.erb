@@ -27,6 +27,10 @@
         <div class="phase-title"><%= phase["phase_title"] %></div>
         <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.voting_phase") %></div>
       </div>
+      <% if local_assigns[:regenerate_url].present? %>
+        <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
+          regenerate_url: regenerate_url %>
+      <% end %>
     </div>
     <div class="phase-meta">
       <div class="meta-item">

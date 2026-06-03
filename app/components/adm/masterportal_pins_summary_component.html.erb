@@ -19,7 +19,10 @@
       <% end %>
     </div>
 
-    <%= link_to index_path, class: "masterportal-pins-summary--cta", target: "_top" do %>
+    <%= link_to index_path,
+      class: "masterportal-pins-summary--cta",
+      title: t(".view_all_tooltip"),
+      target: "_top" do %>
       <span class="masterportal-pins-summary--cta-text"><%= t(".view_all") %></span>
       <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
     <% end %>

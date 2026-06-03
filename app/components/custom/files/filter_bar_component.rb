@@ -8,19 +8,24 @@ class Files::FilterBarComponent < ApplicationComponent
 
   DOCUMENT_EXTENSIONS = %w[pdf doc docx xls xlsx ppt pptx odt ods txt csv rtf].freeze
 
-  def initialize(type: nil, imageable_type_frame_src: nil, documentable_type_frame_src: nil, minimal: false)
+  def initialize(type: nil, imageable_type_frame_src: nil, documentable_type_frame_src: nil, minimal: false, show_view_modes: false)
     @type = type
     @imageable_type_frame_src = imageable_type_frame_src
     @documentable_type_frame_src = documentable_type_frame_src
     @minimal = minimal
+    @show_view_modes = show_view_modes
   end
 
   private
 
-    attr_reader :type, :imageable_type_frame_src, :documentable_type_frame_src, :minimal
+    attr_reader :type, :imageable_type_frame_src, :documentable_type_frame_src, :minimal, :show_view_modes
 
     def minimal?
       minimal
+    end
+
+    def show_view_modes?
+      show_view_modes
     end
 
     def extension_options

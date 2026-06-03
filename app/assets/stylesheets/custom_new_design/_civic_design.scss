@@ -19,8 +19,8 @@ $civic-border: #E2E8F0;
 $civic-success: #16A34A;
 $civic-destructive: #DC2626;
 
-$civic-heading-font: 'Lexend', 'Asap', sans-serif;
-$civic-body-font: 'Source Sans 3', 'Asap', sans-serif;
+$civic-heading-font: 'Asap', sans-serif;
+$civic-body-font: 'Asap', sans-serif;
 
 $civic-radius: 8px;
 $civic-radius-lg: 12px;
@@ -141,7 +141,6 @@ $civic-transition: 200ms ease;
     padding-bottom: 14px;
 
     i, .sidebar--icon {
-      color: $civic-accent !important;
       font-size: 16px;
     }
   }
@@ -217,23 +216,18 @@ $civic-transition: 200ms ease;
   // PHASE TABS (Footer Navigation)
   // ==========================================================================
   .projekt-footer-phase-tab {
-    border-color: $civic-border !important;
-    border-radius: $civic-radius $civic-radius 0 0 !important;
-    background: $civic-card !important;
-    box-shadow: $civic-shadow-sm;
-    transition: all $civic-transition;
+    // border-color: $civic-border !important;
+    // border-radius: $civic-radius $civic-radius 0 0 !important;
+    // background: $civic-card !important;
+    // box-shadow: $civic-shadow-sm;
+    // transition: all $civic-transition;
     min-height: 110px !important;
-
-    &:hover {
-      background: $civic-accent-lighter !important;
-      border-color: $civic-accent !important;
-    }
 
     h2 {
       font-family: $civic-heading-font !important;
       font-weight: 600 !important;
       font-size: 20px !important;
-      color: $civic-accent !important;
+      color: var(--brand-color) !important;
       margin-bottom: 6px !important;
     }
 
@@ -242,50 +236,10 @@ $civic-transition: 200ms ease;
       font-family: $civic-body-font;
       font-size: 13px;
       color: $civic-muted-text;
-
-      span {
-        color: $civic-muted-text;
-
-        &:before {
-          color: $civic-muted-text !important;
-        }
-      }
-    }
-
-    // Phase subscription icon
-    .phase-subscription a {
-      color: $civic-accent !important;
-
-      &:hover {
-        background-color: $civic-accent-light !important;
-      }
     }
 
     // Active state
     &.is-active {
-      background: $civic-accent !important;
-      border-color: $civic-accent !important;
-      box-shadow: $civic-shadow-md;
-
-      h2 {
-        color: #FFFFFF !important;
-      }
-
-      .tab-info-summary span {
-        color: rgba(255, 255, 255, 0.8);
-
-        &:before {
-          color: rgba(255, 255, 255, 0.8) !important;
-        }
-      }
-
-      .phase-subscription a {
-        color: rgba(255, 255, 255, 0.9) !important;
-
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.15) !important;
-        }
-      }
     }
   }
 
@@ -414,16 +368,7 @@ $civic-transition: 200ms ease;
   // FOOTER PHASES CONTAINER
   // ==========================================================================
   .projekt-footer {
-    margin-top: 16px;
-
-    #footer-content {
-      background: $civic-card;
-      border: 1px solid $civic-border;
-      border-top: none;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: $civic-shadow-sm;
-    }
+    margin-top: 5px;
   }
 
   // ==========================================================================

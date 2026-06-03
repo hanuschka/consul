@@ -530,4 +530,7 @@ span.icon-account {
   color: var(--brand-color);
   font-size: 1.1em;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  min-width: 1.29em;
 }

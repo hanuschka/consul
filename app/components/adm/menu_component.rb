@@ -25,6 +25,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.registered_addresses"),  path: adm_registered_addresses_path },
         { label: t("adm.menu.items.application_subitems.registration_settings"), path: registration_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.default_map_location"),  path: adm_default_map_location_path },
+        { label: t("adm.menu.items.application_subitems.system_user"),           path: edit_adm_system_user_path, active_prefix: "/adm/system_user" },
         { label: t("adm.menu.items.application_subitems.tags"),                  path: adm_tags_path },
         { label: t("adm.menu.items.application_subitems.age_ranges"),            path: adm_age_ranges_path },
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },

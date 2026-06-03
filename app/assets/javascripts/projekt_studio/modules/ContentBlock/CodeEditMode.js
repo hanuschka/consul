@@ -205,11 +205,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
 
-  exitCodeEditMode(contentBlockWrapper, restoreContent = false) {
+  exitCodeEditMode(contentBlockWrapper, restoreContent = false, { applyEditorContent = true } = {}) {
     if (restoreContent) {
       const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
       ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
-    } else {
+    } else if (applyEditorContent) {
       this.updateContentBlockFromEditor(contentBlockWrapper);
     }
 
@@ -247,11 +247,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       return
     }
 
-    contentBlock.innerHTML = content;
-
     ProjektStudio.ContentBlock.Crud.updateContentBlock(contentBlock, content);
 
-    this.exitCodeEditMode(contentBlockWrapper);
+    this.exitCodeEditMode(contentBlockWrapper, false, { applyEditorContent: false });
   },
 
   handleModalCancel() {
@@ -280,7 +278,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       return;
     }
 
-    contentBlock.innerHTML = content;
     // ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
@@ -288,7 +285,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       content
     );
 
-    this.exitCodeEditMode(contentBlockWrapper);
+    this.exitCodeEditMode(contentBlockWrapper, false, { applyEditorContent: false });
 
   },
 

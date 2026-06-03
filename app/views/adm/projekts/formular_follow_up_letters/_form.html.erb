@@ -5,8 +5,8 @@
     <%= f.text_field :subject, label: false, placeholder: t(".subject_label") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint")) do %>
-    <%= f.text_area :body, label: false, rows: 12 %>
+  <%= render Kern::FormFieldComponent.new(label: t(".body_label"), hint: t(".body_hint"), stacked: true) do %>
+    <%= f.text_area :body, label: false, rows: 12, placeholder: t(".body_placeholder") %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".show_follow_up_button_label"), hint: t(".show_follow_up_button_hint")) do %>

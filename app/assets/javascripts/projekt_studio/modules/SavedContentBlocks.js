@@ -107,7 +107,12 @@ ProjektStudio.SavedContentBlocks = {
       },
       data: { saved_content_block: { content }}
     })
-     .then(() => { })
+     .then((response) => {
+       this.syncTemplateContentFromServer(templateContentElement, response);
+       if (response && response.stripped) {
+         ProjektStudio.ContentBlock.Crud.showSanitizationNotice();
+       }
+     })
     .catch((response) => {
       if (response.error && response.error.message) {
         alert(`Fehler beim Speichern der Inhaltsblockvorlage: ${response.error.message}`)
@@ -151,13 +156,17 @@ ProjektStudio.SavedContentBlocks = {
       },
       data: { saved_content_block: { content, user_specific: userSpecific }}
     })
-    .then(({ saved_content_block_item_html }) => {
+    .then((response) => {
       container.classList.remove("-form-opened")
 
       this.addNewSavedContentBlockOnUI({
-        saved_content_block_item_html,
+        saved_content_block_item_html: response.saved_content_block_item_html,
         container
       })
+
+      if (response && response.stripped) {
+        ProjektStudio.ContentBlock.Crud.showSanitizationNotice();
+      }
     })
     .catch((response) => {
       if (response.error && response.error.message) {
@@ -265,5 +274,14 @@ ProjektStudio.SavedContentBlocks = {
 
   getItemContainer(element) {
     return element.closest(".js-saved-content-block-item")
+  },
+
+  syncTemplateContentFromServer(templateContentElement, response) {
+    if (!response || typeof response.content !== "string") return
+
+    const current = templateContentElement.innerHTML.trim();
+    if (current === response.content.trim()) return
+
+    templateContentElement.innerHTML = response.content;
   }
 };

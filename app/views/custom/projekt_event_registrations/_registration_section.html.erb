@@ -48,10 +48,12 @@
       <% end %>
 
       <% form_id = "registration-form-#{projekt_event.id}" %>
-      <button class="button small"
-              onclick="document.getElementById('<%= form_id %>').style.display='block'; this.style.display='none';">
-        <%= t(projekt_event.fully_booked? ? "custom.projekt_events.registration.join_waitlist" : "custom.projekt_events.registration.add_person") %>
-      </button>
+      <% unless projekt_event.started? %>
+        <button class="button small"
+                onclick="document.getElementById('<%= form_id %>').style.display='block'; this.style.display='none';">
+          <%= t(projekt_event.fully_booked? ? "custom.projekt_events.registration.join_waitlist" : "custom.projekt_events.registration.add_person") %>
+        </button>
+      <% end %>
       <div id="<%= form_id %>" style="display: none;">
         <div class="row">
           <div class="columns medium-6">

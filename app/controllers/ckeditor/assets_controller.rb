@@ -5,16 +5,7 @@ class Ckeditor::AssetsController < ApplicationController
 
   def index
     authorize! :index, Ckeditor::Asset
-    @assets = Ckeditor::Asset.joins(:storage_data_attachment)
-    filter_by_type
-
-    @assets = if @search_terms.present?
-                @assets.search(@search_terms)
-              else
-                @assets.order(id: :desc)
-              end
-
-    @assets = @assets.page(params[:page]).per(15)
+    @assets = CkeditorAssetsQuery.new(params).call.page(params[:page]).per(15)
 
     respond_to do |format|
       format.html { render layout: false }

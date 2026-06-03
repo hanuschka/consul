@@ -2,18 +2,15 @@
 
 <% content_for :styles do %>
   <style>
-    .custom-new-design .header--navigation ul.main-menu .content-items .projekt-name,
-    .custom-new-design .header--navigation ul.main-menu .content-items li.nav-element a {
-      color: <%= @custom_page.landing_navigation_link_color.presence %> !important;
-    }
-
-    .custom-new-design .translate-widget .translate-widget-toggler,
-    .custom-new-design .top-bar[data-white-text="true"] .translate-widget .translate-widget-toggler {
+    .custom-new-design .top-bar .main-menu a,
+    .custom-new-design .top-bar .main-menu .projekt-name,
+    .custom-new-design .top-bar .main-menu .translate-widget-toggler,
+    .custom-new-design .top-bar .main-menu .translate-widget-toggler i {
       color: <%= @custom_page.landing_navigation_link_color.presence %> !important;
     }
 
     .custom-new-design .sticky-header .top-bar .translate-widget .translate-widget-toggler,
-    .custom-new-design .sticky-header .top-bar[data-white-text="true"] .translate-widget .translate-widget-toggler {
+    .custom-new-design .sticky-header .top-bar .translate-widget .translate-widget-toggler i {
       color: unset !important;
     }
   </style>
@@ -34,7 +31,9 @@
 
 <%= render "welcome/header",
     header_image_attachment: @custom_page&.landing_desktop_header_image,
-    mobile_header_image_attachment: @custom_page&.landing_mobile_header_image
+    mobile_header_image_attachment: @custom_page&.landing_mobile_header_image,
+    header_video_attachment: @custom_page&.landing_desktop_header_video,
+    mobile_header_video_attachment: @custom_page&.landing_mobile_header_video
 %>
 
 <main class="welcome-page">

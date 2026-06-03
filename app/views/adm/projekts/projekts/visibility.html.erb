@@ -1,22 +1,25 @@
-<%= content_for :title, [@projekt.page.title, t("adm.projekts.projekts.index.title")].join(" | ") %>
+<%= content_for :title, [(@projekt.page&.title || @projekt.name), t("adm.projekts.projekts.index.title")].join(" | ") %>
 
-<%= render Adm::HeaderComponent.new(title: @projekt.page.title, breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) do |header| %>
+<%= render Adm::HeaderComponent.new(title: (@projekt.page&.title || @projekt.name), breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t("adm.projekts.projekts.visibility.hint_text") %></p>
   <% end %>
 <% end %>
 
-<%= render Adm::TabsComponent.new(tabs: projekt_tabs(@projekt)) %>
+<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
 
 <div class="kern-container mb-5">
-  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_overview_page"), :value, :boolean) %>
-  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_homepage"), :value, :boolean) %>
-  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_individual_list"), :value, :boolean) %>
-  <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.allow_indexing"), :value, :boolean) %>
+  <fieldset <%= "disabled" unless policy([:adm, :projekts, @projekt]).update? %> style="border:0; padding:0; margin:0;">
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_overview_page"), :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_homepage"), :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_individual_list"), :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.allow_indexing"), :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.consider_underway"), :value, :boolean) %>
 
-  <% if @individual_groups.any? %>
-    <%= render Kern::FormFieldComponent.new(label: t('.individual_groups_label'), hint: t('.individual_groups_description')) do %>
-      <%= render 'adm/projekts/projekts/visibility/individual_groups', projekt: @projekt %>
+    <% if @individual_groups.any? %>
+      <%= render Kern::FormFieldComponent.new(label: t('.individual_groups_label'), hint: t('.individual_groups_description')) do %>
+        <%= render 'adm/projekts/projekts/visibility/individual_groups', projekt: @projekt %>
+      <% end %>
     <% end %>
-  <% end %>
+  </fieldset>
 </div>

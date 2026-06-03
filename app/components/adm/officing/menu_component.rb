@@ -5,34 +5,43 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
 
   def menu_items
     items = [
-      { label: t("adm.officing.menu.items.dashboard"), icon: "dashboard", path: adm_officing_root_path }
+      { label: t("adm.officing.menu.items.home"), icon: "home", path: adm_officing_root_path }
     ]
 
+    if current_user&.administrator?
+      items << { label: t("adm.officing.menu.items.officing_managers"), icon: "badge", path: adm_officing_managers_path, active_prefix: "/adm/officing_managers" }
+    end
+
+    if Adm::Officing::SettingPolicy.new(current_user, nil).show?
+      items << { label: t("adm.officing.menu.items.settings"), icon: "settings", path: adm_officing_settings_path }
+    end
+
     officing_manager = helpers.current_user.officing_manager
-    return items unless officing_manager
 
-    (officing_manager.balloting_budgets + officing_manager.selecting_budgets).uniq.each do |budget|
-      items << {
-        label: budget.projekt.name,
-        icon: "account_balance_wallet",
-        path: verify_user_adm_officing_budget_path(budget)
-      }
-    end
+    if officing_manager
+      (officing_manager.balloting_budgets + officing_manager.selecting_budgets).uniq.each do |budget|
+        items << {
+          label: budget.projekt.name,
+          icon: "account_balance_wallet",
+          path: verify_user_adm_officing_budget_path(budget)
+        }
+      end
 
-    officing_manager.officing_proposal_phases.each do |proposal_phase|
-      items << {
-        label: proposal_phase.projekt.name,
-        icon: "how_to_vote",
-        path: verify_user_adm_officing_proposal_phase_path(proposal_phase)
-      }
-    end
+      officing_manager.officing_proposal_phases.each do |proposal_phase|
+        items << {
+          label: proposal_phase.projekt.name,
+          icon: "how_to_vote",
+          path: verify_user_adm_officing_proposal_phase_path(proposal_phase)
+        }
+      end
 
-    officing_manager.officing_voting_phases.each do |voting_phase|
-      items << {
-        label: voting_phase.projekt.name,
-        icon: "ballot",
-        path: verify_user_adm_officing_voting_phase_path(voting_phase)
-      }
+      officing_manager.officing_voting_phases.each do |voting_phase|
+        items << {
+          label: voting_phase.projekt.name,
+          icon: "ballot",
+          path: verify_user_adm_officing_voting_phase_path(voting_phase)
+        }
+      end
     end
 
     items

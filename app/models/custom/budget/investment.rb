@@ -20,11 +20,14 @@ to: :budget
     delegate :approximated_address, to: :map_location, allow_nil: true
 
     has_many :budget_ballot_lines, class_name: "Budget::Ballot::Line"
+    belongs_to :masterportal_pin, optional: true
 
     scope :seen, -> { where.not(ignored_flag_at: nil) }
     scope :unseen, -> { where(ignored_flag_at: nil) }
     scope :preselected, -> { where(preselected: true) }
     scope :not_preselected, -> { where(preselected: false) }
+    scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
+    scope :user_created, -> { where(masterportal_pin_id: nil) }
 
     enum implementation_performer: { city: 0, user: 1 }
 

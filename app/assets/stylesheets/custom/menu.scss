@@ -267,7 +267,8 @@ span.icon-account {
 // Desktop submenu indicator (arrow/chevron) for items with submenus
 
 @media screen and (min-width: 40em) {
-  .main-menu li.nav-element.top-level-item[aria-expanded] > .flyout-item-name a::after {
+  .main-menu li.nav-element.top-level-item[aria-expanded] > .flyout-item-name a::after,
+  .main-menu .content-items li.nav-element.top-level-item[aria-expanded] > a::after {
     content: "\f078";
     font-family: "Font Awesome 5 Free";
     font-weight: bold;
@@ -278,7 +279,8 @@ span.icon-account {
     transition: transform 0.25s;
   }
 
-  .main-menu li.nav-element.top-level-item[aria-expanded="true"] > .flyout-item-name a::after {
+  .main-menu li.nav-element.top-level-item[aria-expanded="true"] > .flyout-item-name a::after,
+  .main-menu .content-items li.nav-element.top-level-item[aria-expanded="true"] > a::after {
     transform: rotate(180deg);
   }
 
@@ -292,6 +294,20 @@ span.icon-account {
     display: inline-block;
     float: right;
     margin-top: 0.5em;
+  }
+
+  .main-menu li.nav-element.flyout-item[aria-expanded] > a::after {
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
+    font-weight: bold;
+    font-size: 0.55em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  .main-menu .nav-toggle-arrow {
+    display: none;
   }
 }
 
@@ -526,4 +542,16 @@ span.icon-account {
     font-weight: bold;
     margin-right: 4px;
   }
+}
+
+// Account/admin flyout dropdown icons: brand color, aligned with the label.
+// Vertical centering comes from the link's `align-items-center`; line-height
+// keeps the glyph's box from offsetting it.
+.flyout-item--icon {
+  color: var(--brand-color);
+  font-size: 1.1em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  min-width: 1.29em;
 }

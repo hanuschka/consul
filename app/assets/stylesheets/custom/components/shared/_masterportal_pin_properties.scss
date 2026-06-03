@@ -1,0 +1,112 @@
+.masterportal-pin-properties {
+  margin: 0 0 30px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.masterportal-pin-properties--table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-radius: 10px;
+}
+
+.masterportal-pin-properties--row {
+  border-top: 1px solid #f1f5f9;
+
+  &:first-child {
+    border-top: 0;
+  }
+}
+
+.masterportal-pin-properties--key {
+  width: 38%;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: #475569;
+  text-align: left;
+  text-transform: uppercase;
+  vertical-align: top;
+  word-break: break-word;
+  background: #fafbfc;
+  border-right: 1px solid #f1f5f9;
+}
+
+.masterportal-pin-properties--value {
+  padding: 14px 24px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #0f172a;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.masterportal-pin-properties--image {
+  display: block;
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
+}
+
+.masterportal-pin-properties--link {
+  color: var(--brand-color, #1b5fd6);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    text-decoration: underline;
+    opacity: 0.85;
+  }
+}
+
+.masterportal-pin-properties--boolean {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.masterportal-pin-properties--boolean--true {
+  color: #166534;
+}
+
+.masterportal-pin-properties--boolean--true .masterportal-pin-properties--boolean-icon {
+  font-size: 16px;
+  color: #16a34a;
+}
+
+.masterportal-pin-properties--boolean--false {
+  color: #991b1b;
+}
+
+.masterportal-pin-properties--boolean--false .masterportal-pin-properties--boolean-icon {
+  font-size: 16px;
+  color: #dc2626;
+}
+
+@media (max-width: $small-tablet-viewport-start) {
+  .masterportal-pin-properties--table,
+  .masterportal-pin-properties--row,
+  .masterportal-pin-properties--key,
+  .masterportal-pin-properties--value {
+    display: block;
+    width: 100%;
+  }
+
+  .masterportal-pin-properties--key {
+    padding: 12px 18px 4px;
+    background: white;
+    border-right: 0;
+  }
+
+  .masterportal-pin-properties--value {
+    padding: 0 18px 12px;
+  }
+}

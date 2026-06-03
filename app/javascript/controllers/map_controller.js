@@ -15,7 +15,7 @@ import VirtualCityAdapter from "../lib/map_adapters/virtualcity_adapter"
  * Set editable=false for read-only maps, editable=true for user editing.
  */
 export default class extends Controller {
-  static targets = ["container", "latitude", "longitude", "altitude", "zoom", "features"]
+  static targets = ["container", "latitude", "longitude", "altitude", "zoom", "features", "mapboxStyleField"]
 
   static values = {
     renderingLibrary: { type: String, default: "leaflet" },
@@ -101,6 +101,7 @@ export default class extends Controller {
       editable: this.editableValue,
       adminEditor: this.adminEditorValue,
       enableSetCenter: this.enableSetCenterValue,
+      masterportalEnabled: this.renderingLibraryValue === "leaflet_plus_masterportal",
       mapboxPublicToken: this.mapboxPublicTokenValue,
       mapboxStyleId: this.mapboxStyleIdValue,
       vcMapModuleUrl: this.vcMapModuleUrlValue
@@ -271,6 +272,11 @@ export default class extends Controller {
 
     // Update rendering library value
     this.renderingLibraryValue = newLibrary
+
+    // Toggle mapbox style field visibility
+    if (this.hasMapboxStyleFieldTarget) {
+      this.mapboxStyleFieldTarget.classList.toggle("d-none", newLibrary !== "mapbox")
+    }
 
     // Create and initialize new adapter with saved state
     this.adapter = this.createAdapter()

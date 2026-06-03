@@ -23,7 +23,7 @@
 }
 
 .adm-empty-state__icon {
-  font-size: 2.75rem;
+  font-size: 2.75rem !important;
   color: var(--kern-grey-350);
 }
 
@@ -39,4 +39,11 @@
   color: var(--kern-grey-350);
   max-width: 360px;
   line-height: 1.5;
+}
+
+.adm-empty-state__link {
+  @media (max-width: 575px) {
+    width: 100%;
+    justify-content: center;
+  }
 }

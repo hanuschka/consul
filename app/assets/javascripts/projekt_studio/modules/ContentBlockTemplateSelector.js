@@ -11,12 +11,15 @@ ProjektStudio.ContentBlockTemplateSelector = {
   },
 
   handleOpenTemplateSelector(e) {
-    const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+    const button = e.currentTarget;
+    const isAtTop = button.closest(".js-add-content-block-at-top") !== null;
+    const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(button);
 
     this.selectionMode = "add";
     this.replaceTargetWrapper = null;
 
     ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
+    ProjektStudio.ContentBlock.Crud.addContentBlockAtTop = isAtTop;
     ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
 
     const section = this.detectSection(wrapper);
@@ -74,7 +77,7 @@ ProjektStudio.ContentBlockTemplateSelector = {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
 
-    const attributesToEmpty = ['data-orbit'];
+    const attributesToEmpty = ['data-orbit', 'data-accordion'];
     const attributesToRemove = ['data-resize', 'id'];
     const allElements = tempDiv.querySelectorAll('*');
 

@@ -1,9 +1,23 @@
 class Adm::EmailTemplateComponent < ApplicationComponent
   delegate :ck_editor_class, to: :helpers
 
-  def initialize(email_template, open: false)
+  def initialize(email_template, open: false, recipient_type: nil)
     @email_template = email_template
     @open = open
+    @recipient_type = recipient_type
+  end
+
+  def recipient_type_label
+    return nil if @recipient_type.blank?
+
+    I18n.t("components.adm.email_template_component.recipient_types.#{@recipient_type}", default: nil)
+  end
+
+  def recipient_type_icon
+    case @recipient_type.to_s
+    when "subscribers" then "group"
+    else "person"
+    end
   end
 
   def label
@@ -12,6 +26,10 @@ class Adm::EmailTemplateComponent < ApplicationComponent
 
   def description
     I18n.t("#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.description")
+  end
+
+  def recipient
+    I18n.t("#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.recipient", default: nil)
   end
 
   def variables

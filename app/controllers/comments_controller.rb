@@ -120,7 +120,7 @@ class CommentsController < ApplicationController
     end
 
     def verify_comments_open!
-      return if current_user.administrator? || current_user.moderator?
+      return if current_user&.administrator? || current_user&.moderator?
 
       if @commentable.respond_to?(:comments_closed?) && @commentable.comments_closed?
         redirect_to polymorphic_path(@commentable), alert: t("comments.comments_closed")

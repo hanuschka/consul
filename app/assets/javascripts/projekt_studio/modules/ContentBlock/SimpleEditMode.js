@@ -13,6 +13,8 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
     $document.on("click", ".js-content-block-enter-ai-edit-mode-from-simple", this.switchToAiEditModeFromSimple.bind(this));
     $document.on("click", ".js-content-block-disable-link-click", this.disableLinkClick.bind(this));
     $document.on("input", ".js-content-block-margin-bottom-input", this.handleMarginBottomInput.bind(this));
+    $document.on("click", ".js-content-block-margin-bottom-decrease", this.handleMarginBottomDecrease.bind(this));
+    $document.on("click", ".js-content-block-margin-bottom-increase", this.handleMarginBottomIncrease.bind(this));
     $document.on("selectionchange", this.handleSelectionChange.bind(this));
   },
 
@@ -208,6 +210,31 @@ ProjektStudio.ContentBlock.SimpleEditMode = {
         margin_bottom: marginValue
       }
     })
+  },
+
+  handleMarginBottomDecrease(e) {
+    this.stepMarginBottomInput(e.currentTarget, -1);
+  },
+
+  handleMarginBottomIncrease(e) {
+    this.stepMarginBottomInput(e.currentTarget, 1);
+  },
+
+  stepMarginBottomInput(button, direction) {
+    const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(button);
+    const input = contentBlockWrapper.querySelector(".js-content-block-margin-bottom-input");
+    const step = parseInt(input.step) || 1;
+    const min = parseInt(input.min);
+    const max = parseInt(input.max);
+    const current = parseInt(input.value) || 0;
+    let next = current + (direction * step);
+
+    if (!isNaN(min)) next = Math.max(next, min);
+    if (!isNaN(max)) next = Math.min(next, max);
+    if (next === current) return
+
+    input.value = next;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
   },
 
   updateMarginBottomInputState(contentBlockWrapper) {

@@ -1,0 +1,54 @@
+<%= javascript_include_tag "lib/files/filter_serializer" %>
+
+<span hidden data-files-upload-success-template="<%= t("files.upload_success_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-upload-failed-template="<%= t("files.upload_failed_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-delete-failed-message="<%= t("files.delete_failed") %>"></span>
+<span hidden data-files-delete-success-template="<%= t("files.delete_success_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-delete-failed-template="<%= t("files.delete_failed_with_name", filename: "__FILENAME__") %>"></span>
+
+<%= content_for :title, t("files.images.index.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("files.images.index.title"),
+  breadcrumbs: @breadcrumbs
+) do |header| %>
+  <% header.with_after_title do %>
+    <%= render "adm/files/allowed_types_note",
+          admin_types: Setting.humanized_content_types_for("images"),
+          user_types: Setting.humanized_content_types_for("images") %>
+  <% end %>
+
+  <% header.with_actions do %>
+    <div class="ml-auto">
+      <%= render Adm::ButtonWithProgressComponent.new(
+        label: t("files.card.upload"),
+        loading_label: t("files.upload_loading"),
+        success_label: t("files.upload_success"),
+        icon: "upload",
+        button_data: { action: "click->files--upload#triggerPicker" },
+        extra_controllers: ["files--upload"],
+        extra_root_data: { "files--upload-endpoint-value": "/file_manager/images" }
+      ) do %>
+        <input
+          type="file"
+          accept="image/*"
+          class="js-files-upload-input"
+          data-files--upload-target="input"
+          data-action="change->files--upload#fileChanged"
+          hidden
+        >
+        <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3">
+  <%= render Files::IndexComponent.new(
+    type: "picture",
+    assets: @assets,
+    endpoint: adm_files_images_path,
+    card_component: Files::ImageCardComponent,
+    imageable_type_frame_src: imageable_type_filter_adm_files_images_path(imageable_type: params[:imageable_type])
+  ) %>
+</div>

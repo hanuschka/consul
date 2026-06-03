@@ -1,0 +1,11 @@
+// Dual-icon visibility toggles.
+// Components that render both icon variants (Font Awesome + Material Symbols)
+// emit both with paired class names. By default — for any pack that loads
+// cross_pack/* — the Material variant is hidden so the main app shows FA.
+// Pack-specific overrides (e.g. /adm) flip these rules to show Material
+// and hide FA instead.
+
+.projekt-label__icon-material,
+.ai-clustering--item-icon-material {
+  display: none;
+}

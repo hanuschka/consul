@@ -1,0 +1,241 @@
+.files-index {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.files-index--filter-bar {
+  margin-bottom: 24px;
+}
+
+.files-index--view-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.files-index--view-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: #535252;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
+
+  &:hover {
+    color: #005fcc;
+    border-color: #005fcc;
+  }
+
+  &.-active {
+    color: #ffffff;
+    background: #005fcc;
+    border-color: #005fcc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.files-index.-view-list .files-index--grid {
+  display: none;
+}
+
+.files-index:not(.-view-list) .files-index--list {
+  display: none;
+}
+
+.files-asset-row--icon-cell {
+  width: 56px;
+  text-align: center;
+}
+
+.files-asset-row--icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.files-asset-row--icon {
+  font-size: 22px;
+}
+
+.files-asset-row--admin-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  line-height: 1;
+  color: #ffffff;
+  background: #1c1917;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.files-asset-row--title-cell {
+  word-break: break-word;
+}
+
+.files-asset-row--actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.files-asset-row--action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0 0 0 4px;
+  font-size: 13px;
+  line-height: 1;
+  color: #535252;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 150ms ease-out, border-color 150ms ease-out, background 150ms ease-out;
+
+  &:hover {
+    color: #005fcc;
+    border-color: #005fcc;
+  }
+
+  &.-danger {
+    color: #c43e1c;
+    border-color: #e5b5aa;
+
+    &:hover {
+      color: #ffffff;
+      background: #c43e1c;
+      border-color: #c43e1c;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.files-index--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  align-content: start;
+}
+
+.files-index--empty {
+  grid-column: 1 / -1;
+}
+
+.files-index--empty-cell {
+  padding: 0;
+}
+
+.files-index--pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.files-index--pagination .pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.files-index--pagination .pagination a,
+.files-index--pagination .pagination .current,
+.files-index--pagination .pagination .gap,
+.files-index--pagination .pagination .current-page,
+.files-index--pagination .pagination .first,
+.files-index--pagination .pagination .prev,
+.files-index--pagination .pagination .next,
+.files-index--pagination .pagination .last,
+.files-index--pagination .pagination .page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 1;
+  color: #222;
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.files-index--pagination .pagination a {
+  &:hover {
+    background: #ededed;
+    border-color: #828282;
+  }
+}
+
+.files-index--pagination .pagination .current,
+.files-index--pagination .pagination .current-page,
+.files-index--pagination .pagination .page.current {
+  color: #ffffff;
+  background: #005fcc;
+  border-color: #005fcc;
+  cursor: default;
+}
+
+.files-index--pagination .pagination .gap {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+}
+
+.files-index--pagination .show-for-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 750px) {
+  .files-index {
+    padding: 16px;
+  }
+
+  .files-index--grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+}

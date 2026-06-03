@@ -2,6 +2,8 @@ class Adm::Ideas::OfficersController < Adm::Ideas::BaseController
   include Pagy::Backend
 
   def index
+    authorize Idea::Officer, policy_class: Adm::Ideas::OfficerPolicy
+
     @pagy, @officers = pagy(
       policy_scope(Idea::Officer, policy_scope_class: Adm::Ideas::OfficerPolicy::Scope)
         .joins(:user)
@@ -39,5 +41,12 @@ class Adm::Ideas::OfficersController < Adm::Ideas::BaseController
 
     @officer.destroy!
     redirect_to adm_ideas_officers_path
+  end
+
+  def toggle_manage_all
+    @officer = Idea::Officer.find(params[:id])
+    authorize @officer, :update?, policy_class: Adm::Ideas::OfficerPolicy
+
+    @officer.update!(manage_all: !@officer.manage_all)
   end
 end

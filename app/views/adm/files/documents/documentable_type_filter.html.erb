@@ -1,0 +1,16 @@
+<%= turbo_frame_tag "files-documentable-type-filter" do %>
+  <div class="files-filter-bar--field">
+    <select
+      class="files-filter-bar--input js-fm-filter-documentable-type"
+      aria-label="<%= t("files.filter_bar.aria.filter_documentable_type") %>"
+      data-action="change->files--filter-bar#filterChanged"
+    >
+      <option value=""><%= t("files.filter_bar.documentable_type_any") %></option>
+      <% @documentable_types.each do |documentable_type| %>
+        <option value="<%= documentable_type %>" <%= "selected" if documentable_type == @selected %>>
+          <%= documentable_type.safe_constantize&.model_name&.human || documentable_type %>
+        </option>
+      <% end %>
+    </select>
+  </div>
+<% end %>

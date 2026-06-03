@@ -50,6 +50,26 @@ de:
       generate_from_prompt:
         success: Inhalte wurden erfolgreich generiert
         no_prompt: Bitte geben Sie einen Prompt ein
+      ai_create:
+        modal_title: Inhaltsblock mit KI erstellen
+        description: "Beschreiben Sie kurz, welchen Inhaltsblock Sie benötigen. Die KI nutzt vorhandene Vorlagen als Inspiration und kann optional den vollständigen Projektkontext einbeziehen, um einen neuen Block zu erstellen."
+        prompt_label: "Beschreiben Sie den Inhaltsblock, den Sie erstellen möchten:"
+        prompt_placeholder: "Z.B. Ein Hinweisbanner zu den Bürgerbeteiligungsterminen mit Datum und Ort..."
+        category_label: Kategorie (optional)
+        category_any: Alle Kategorien
+        category_hint: "Wählen Sie eine Kategorie, um einzuschränken, welche vorhandenen Inhaltsblock-Vorlagen die KI als Inspiration verwendet (z.B. Header, Banner, Handlungsaufforderungen). Belassen Sie die Auswahl bei „Alle Kategorien“, damit die KI den passendsten Vorlagentyp für Ihren Prompt frei wählen kann."
+        use_context_label: Vollständigen Projektkontext einbeziehen
+        use_context_hint: "Wenn aktiviert, erhält die KI Titel, Beschreibung, Phasen und weitere wichtige Felder Ihres Projekts, sodass der generierte Block auf echte Projektinhalte Bezug nehmen kann. Deaktiviert lassen für einen generischen, projektunabhängigen Block."
+        submit: Mit KI erstellen
+        submit_shortcut_hint_html: "Tipp: %{shortcut} zum Absenden drücken"
+        cancel: Generierung abbrechen
+        processing_message: Inhaltsblock wird erstellt...
+        fallback_note: "Vorlagen von demokratie.today sind nicht verfügbar. KI nutzt nur lokale Vorlagennamen als Inspiration."
+        cancel_acknowledged: Generierung wird abgebrochen
+        errors:
+          no_prompt: Bitte geben Sie einen Prompt ein
+          generation_failed: Fehler beim Generieren des Inhaltsblocks
+          cancelled: Generierung wurde abgebrochen
       destroy_all:
         success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:
@@ -62,6 +82,9 @@ de:
         title: Aktive Beteiligungsprozesse
       archived_projekt_cards:
         title: Abgeschlossene Beteiligungsprozesse
+      header:
+        pause_video: Hintergrundvideo anhalten
+        play_video: Hintergrundvideo abspielen
     devise_views:
       users:
         registrations:
@@ -96,6 +119,12 @@ de:
       not_verified: "Sie müssen sich %{verify_account}, um teilnehmen zu können"
       geo_restricted: Sie sind aufgrund von Gebiets- beschränkungen nicht berechtigt teilzunehmen.
       phase_expired: Die Phase ist bereits abgeschlossen.
+
+    shared:
+      map_component:
+        loading_pins: "Karten-Pins werden geladen…"
+        error_loading_pins: "Karten-Pins konnten nicht geladen werden."
+        retry: "Erneut versuchen"
 
     layouts:
       footer:

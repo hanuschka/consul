@@ -2,6 +2,10 @@ module Ai::Settings
   DEFAULT_GPT_MODEL = "gpt-5.4"
   # DEFAULT_GPT_MODEL = "gpt-5.2"
 
+  def self.voice_assistant_allowed?
+    Rails.application.secrets.dig(:ai, :enabled) == true
+  end
+
   def self.ai_available?
     return false unless Rails.application.secrets.dig(:ai, :enabled) == true
 
@@ -24,7 +28,7 @@ module Ai::Settings
       gpustack_api_key.present?
     when "bedrock"
       bedrock_access_key_id.present? && bedrock_secret_access_key.present?
-    when "vertex_ai"
+    when "vertexai"
       vertex_ai_project.present?
     when "ollama"
       true

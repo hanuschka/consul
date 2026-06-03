@@ -1,0 +1,61 @@
+.phase-key-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.phase-key-metrics-card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
+  background: var(--er-surface, #ffffff);
+  border: 1px solid var(--er-border, #e2e8f0);
+  border-radius: var(--er-radius, 8px);
+}
+
+.phase-key-metrics-card__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  .material-symbols-outlined {
+    font-size: 1.25rem;
+  }
+}
+
+.phase-key-metrics-card__icon-material.material-symbols-outlined {
+  display: none;
+}
+
+.phase-key-metrics-card__icon-fa {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.phase-key-metrics-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.phase-key-metrics-card__value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--er-text, #0f172a);
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-key-metrics-card__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--er-text-secondary, #475569);
+}

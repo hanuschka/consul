@@ -14,6 +14,7 @@
       <table class="kern-table">
         <thead class="kern-table__head">
           <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"></th>
             <th scope="col" class="kern-table__header"><%= t(".table.title") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.color") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.icon") %></th>
@@ -26,6 +27,9 @@
         <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= order_statuses_adm_deficiency_reports_statuses_path %>">
           <% @statuses.each do |status| %>
             <tr id="<%= dom_id(status) %>" class="kern-table__row" data-sortable-id="<%= status.id %>">
+              <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+                <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+              </td>
               <th scope="row" class="kern-table__header"><%= status.title %></th>
               <td class="kern-table__cell">
                 <% if status.color.present? %>

@@ -117,17 +117,19 @@
         <%= render "shared/participation/flag", resource: investment %>
       <% end %>
 
-      <%= render "shared/social_share",
-        share_title: t("budgets.investments.show.share"),
-        title: investment.title,
-        image_url: image_absolute_url(investment.image, :thumb),
-        url: budget_investment_url(investment.budget, investment),
-        description: t("budgets.investments.share.message",
-                        title: investment.title,
-                        handle: setting["org_name"]),
-        mobile: t("budgets.investments.share.message",
-                   title: investment.title,
-                   handle: setting["twitter_handle"]) %>
+      <% if projekt_phase_feature?(investment&.projekt_phase, "resource.show_social_share_buttons") %>
+        <%= render "shared/social_share",
+          share_title: t("budgets.investments.show.share"),
+          title: investment.title,
+          image_url: image_absolute_url(investment.image, :thumb),
+          url: budget_investment_url(investment.budget, investment),
+          description: t("budgets.investments.share.message",
+                          title: investment.title,
+                          handle: setting["org_name"]),
+          mobile: t("budgets.investments.share.message",
+                     title: investment.title,
+                     handle: setting["twitter_handle"]) %>
+      <% end %>
 
       <% if current_user && projekt_phase_feature?(investment&.projekt_phase, "resource.show_follow_button_in_sidebar") %>
         <div class="sidebar-divider"></div>

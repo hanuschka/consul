@@ -1,5 +1,29 @@
+<% public_linkable = !deficiency_report.hidden? %>
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
-  <td class="kern-table__cell" data-field="id"><%= deficiency_report.id %></td>
+  <td class="kern-table__cell" data-field="id"><%= link_to_if public_linkable, deficiency_report.id, deficiency_report_path(deficiency_report), class: "kern-link", target: "_blank", data: { turbo: false } %></td>
+  <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
+    <% if public_linkable %>
+      <%= link_to deficiency_report_path(deficiency_report),
+            class: "adm-table-thumb-link",
+            target: "_blank",
+            data: { turbo: false },
+            title: deficiency_report.title do %>
+        <%= render Adm::TableThumbComponent.new(
+              image: deficiency_report.image,
+              title: deficiency_report.title,
+              fallback_icon: deficiency_report.category&.icon,
+              fallback_color: deficiency_report.category&.color
+            ) %>
+      <% end %>
+    <% else %>
+      <%= render Adm::TableThumbComponent.new(
+            image: deficiency_report.image,
+            title: deficiency_report.title,
+            fallback_icon: deficiency_report.category&.icon,
+            fallback_color: deficiency_report.category&.color
+          ) %>
+    <% end %>
+  </td>
   <th scope="row" class="kern-table__header" data-field="title" style="min-width: 250px; width: 250px; max-width: 250px;">
     <%= link_to truncate(deficiency_report.title, length: 25), adm_deficiency_reports_deficiency_report_path(deficiency_report), class: "kern-link", title: deficiency_report.title, data: { turbo_frame: "_top" } %>
   </th>

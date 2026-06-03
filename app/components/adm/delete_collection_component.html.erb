@@ -1,0 +1,51 @@
+<div
+  class="<%= wrapper_classes %>"
+  data-controller="adm--delete-collection"
+  data-adm--delete-collection-delete-url-value="<%= url %>"
+  data-adm--delete-collection-status-url-value="<%= status_url %>"
+  data-adm--delete-collection-confirm-value="<%= confirm %>"
+  data-adm--delete-collection-initial-status-value="<%= initial_status %>"
+>
+  <div
+    class="adm-delete-collection"
+    data-adm--delete-collection-target="progress"
+    hidden
+    role="status"
+    aria-live="polite"
+  >
+    <span class="adm-delete-collection--spinner material-symbols-outlined" aria-hidden="true">
+      progress_activity
+    </span>
+    <div class="adm-delete-collection--text">
+      <span class="adm-delete-collection--headline"><%= headline %></span>
+      <span class="adm-delete-collection--hint"><%= hint %></span>
+    </div>
+  </div>
+
+  <div
+    class="adm-delete-collection -error"
+    data-adm--delete-collection-target="error"
+    hidden
+    role="alert"
+  >
+    <span class="adm-delete-collection--error-icon material-symbols-outlined" aria-hidden="true">
+      error
+    </span>
+    <div class="adm-delete-collection--text">
+      <span class="adm-delete-collection--headline"><%= t(".error_headline") %></span>
+      <span
+        class="adm-delete-collection--hint"
+        data-adm--delete-collection-target="errorText"
+      ></span>
+    </div>
+  </div>
+
+  <%= helpers.kern_link_button url,
+        text: text,
+        icon: icon,
+        style: style,
+        data: {
+          "adm--delete-collection-target": "trigger",
+          action: "adm--delete-collection#start"
+        } %>
+</div>

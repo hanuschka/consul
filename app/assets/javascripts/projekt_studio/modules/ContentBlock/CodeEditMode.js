@@ -28,9 +28,10 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   switchToCodeEditMode(contentBlockWrapper) {
+    const targetHeight = contentBlockWrapper.offsetHeight;
     contentBlockWrapper.dataset.editMode = 'code';
     this.showCodeEditModeControls(contentBlockWrapper);
-    this.createAndShowEditor(contentBlockWrapper);
+    this.createAndShowEditor(contentBlockWrapper, targetHeight);
   },
 
   showCodeEditModeControls(contentBlockWrapper) {
@@ -42,8 +43,8 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   getEditorContainer(contentBlockWrapper) {
-    const relativeContainer = contentBlockWrapper.querySelector('.relative');
-    const searchContainer = relativeContainer || contentBlockWrapper;
+    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const searchContainer = innerContainer || contentBlockWrapper;
     return searchContainer.querySelector('.js-code-editor-container');
   },
 
@@ -53,7 +54,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     return `code-editor-${contentBlockId || draftIndex || 'new'}`;
   },
 
-  createAndShowEditor(contentBlockWrapper) {
+  createAndShowEditor(contentBlockWrapper, targetHeight) {
     this.removeEditor(contentBlockWrapper);
 
     const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
@@ -71,17 +72,17 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     textarea.className = 'code-editor-textarea';
     editorContainer.appendChild(textarea);
 
-    const relativeContainer = contentBlockWrapper.querySelector('.relative');
-    if (!relativeContainer) return;
+    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const insertionContainer = innerContainer || contentBlockWrapper;
 
-    const toolsetsBorder = relativeContainer.querySelector('.js-projekt-content-block--toolbar');
-    if (toolsetsBorder) {
-      toolsetsBorder.insertAdjacentElement('afterend', editorContainer);
+    const toolbarAnchor = insertionContainer.querySelector('.js-projekt-content-block--toolbar-anchor');
+    if (toolbarAnchor) {
+      toolbarAnchor.insertAdjacentElement('afterend', editorContainer);
     } else {
-      relativeContainer.appendChild(editorContainer);
+      insertionContainer.appendChild(editorContainer);
     }
 
-    const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML);
+    const editor = this.setupAceEditor(contentBlockWrapper, textarea, currentHTML, targetHeight);
 
     setTimeout(() => { editor.focus(); }, 100);
   },
@@ -118,7 +119,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     }, 100);
   },
 
-  setupAceEditor(contentBlockWrapper, textarea, currentHTML = '') {
+  setupAceEditor(contentBlockWrapper, textarea, currentHTML = '', targetHeight = null) {
     const editorName = this.getEditorName(contentBlockWrapper);
     let editor = this.aceInstances[editorName];
 
@@ -131,16 +132,28 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       editor.setTheme("ace/theme/textmate");
       editor.session.setUseWrapMode(true);
 
-      editor.session.on('change', () => {
-        this.resizeEditorOnContentChange(editor);
-      });
+      if (!targetHeight) {
+        editor.session.on('change', () => {
+          this.resizeEditorOnContentChange(editor);
+        });
+      }
     }
 
     const formattedHTML = ProjektStudio.utils.formatHTML(currentHTML);
     editor.setValue(formattedHTML, -1); // -1 moves cursor to start
-    this.resizeEditorOnContentChange(editor);
+
+    if (targetHeight) {
+      this.setEditorHeight(editor, targetHeight);
+    } else {
+      this.resizeEditorOnContentChange(editor);
+    }
 
     return editor;
+  },
+
+  setEditorHeight(editor, height) {
+    editor.container.style.height = height + "px";
+    editor.resize();
   },
 
   resizeEditorOnContentChange(editor) {
@@ -186,16 +199,17 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       const htmlValidation = ProjektStudio.utils.validateHTML(content);
 
       if (htmlValidation.isValid) {
-        contentBlock.innerHTML = content;
+        contentBlock.innerHTML = ProjektStudio.utils.sanitizeAdminHtml(content);
       }
     }
   },
 
-  exitCodeEditMode(contentBlockWrapper, restoreContent = false) {
+
+  exitCodeEditMode(contentBlockWrapper, restoreContent = false, { applyEditorContent = true } = {}) {
     if (restoreContent) {
       const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
       ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
-    } else {
+    } else if (applyEditorContent) {
       this.updateContentBlockFromEditor(contentBlockWrapper);
     }
 
@@ -233,11 +247,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       return
     }
 
-    contentBlock.innerHTML = content;
-
     ProjektStudio.ContentBlock.Crud.updateContentBlock(contentBlock, content);
 
-    this.exitCodeEditMode(contentBlockWrapper);
+    this.exitCodeEditMode(contentBlockWrapper, false, { applyEditorContent: false });
   },
 
   handleModalCancel() {
@@ -266,7 +278,6 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       return;
     }
 
-    contentBlock.innerHTML = content;
     // ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
     ProjektStudio.ContentBlock.Crud.updateContentBlock(
@@ -274,7 +285,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       content
     );
 
-    this.exitCodeEditMode(contentBlockWrapper);
+    this.exitCodeEditMode(contentBlockWrapper, false, { applyEditorContent: false });
 
   },
 

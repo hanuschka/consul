@@ -1,4 +1,7 @@
-<tr class="kern-table__row" id="<%= dom_id(landing_page) %>" data-id="<%= landing_page.id %>">
+<tr class="kern-table__row" id="<%= dom_id(landing_page) %>" data-sortable-id="<%= landing_page.id %>">
+  <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+    <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+  </td>
   <th scope="row" class="kern-table__header"><%= landing_page.title %></th>
   <td class="kern-table__cell"><%= link_to landing_page.slug, page_path(landing_page.slug), target: "_blank" %></td>
   <td class="kern-table__cell">

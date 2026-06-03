@@ -9,6 +9,8 @@ module NavbarItemsHelper
       end
     when "projekts"
       item.projekt&.url
+    when "landing_pages"
+      item.linked_page&.url
     when "external"
       item.external_url
     end
@@ -34,7 +36,19 @@ module NavbarItemsHelper
     navbar_item_url(item) == request.path
   end
 
+  def navbar_item_visible?(item, user = current_user)
+    return false if item.resource_missing?
+    return true unless item.kind == "projekts"
+    return true if user&.administrator?
+
+    visible_projekt_ids_for_navbar(user).include?(item.projekt_id)
+  end
+
   private
+
+  def visible_projekt_ids_for_navbar(user)
+    @visible_projekt_ids_for_navbar ||= Projekt.visible_for(user).pluck(:id).to_set
+  end
 
   def global_preset_url(item)
     case item.preset

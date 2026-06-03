@@ -8,6 +8,10 @@ class ProjektPhase::FormularPhase < ProjektPhase
     "formular_phase"
   end
 
+  def sidebar_cta_kind
+    :link
+  end
+
   def resources_name
     "formular"
   end

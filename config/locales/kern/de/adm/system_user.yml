@@ -1,0 +1,12 @@
+de:
+  adm:
+    system_user:
+      edit:
+        title: Systembenutzer
+        intro: Unter diesem Benutzer werden alle aus dem Masterportal importierten Vorschläge und Einreichungen veröffentlicht. Anzeigename und Profilbild werden anfänglich aus dem Organisationsnamen und dem Seitenlogo übernommen, können hier aber angepasst werden.
+        name_label: Anzeigename
+        name_hint: Wird als Autor der importierten Vorschläge und Einreichungen angezeigt (z. B. „Stadt Regensburg“).
+        avatar_label: Profilbild
+        avatar_hint: PNG oder JPEG. Ersetzt das aktuelle Profilbild.
+      update:
+        success: Systembenutzer erfolgreich aktualisiert.

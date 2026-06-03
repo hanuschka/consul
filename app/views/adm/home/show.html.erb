@@ -29,58 +29,33 @@
     </div>
   </div>
 
-  <%# ── Deficiency reports (module-gated) ──────────────── %>
-  <% if feature?(:deficiency_reports) %>
-    <div class="adm-dashboard__section">
-      <div class="adm-dashboard__section-header">
-        <span class="material-symbols-outlined" aria-hidden="true">report</span>
-        <h3><%= t("adm.home.show.deficiency_reports.title") %></h3>
-      </div>
-      <div class="adm-dashboard__stats">
-        <div class="adm-stat-card">
-          <div class="adm-stat-card__value"><%= @reports_total %></div>
-          <div class="adm-stat-card__label"><%= t("adm.home.show.deficiency_reports.total") %></div>
-        </div>
-        <div class="adm-stat-card adm-stat-card--accent">
-          <div class="adm-stat-card__value"><%= @reports_open %></div>
-          <div class="adm-stat-card__label"><%= t("adm.home.show.deficiency_reports.open") %></div>
-        </div>
-        <div class="adm-stat-card adm-stat-card--warning">
-          <div class="adm-stat-card__value"><%= @reports_unassigned %></div>
-          <div class="adm-stat-card__label"><%= t("adm.home.show.deficiency_reports.unassigned") %></div>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <%# ── Projects ────────────────────────────────────────── %>
+  <%# ── Verwaltungsbereiche ─────────────────────────────── %>
   <div class="adm-dashboard__section">
     <div class="adm-dashboard__section-header">
-      <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-      <h3><%= t("adm.home.show.projects.title") %></h3>
+      <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+      <h3><%= t("adm.home.show.adm_sections.title") %></h3>
     </div>
-    <div class="adm-dashboard__stats">
-      <div class="adm-stat-card">
-        <div class="adm-stat-card__value"><%= @projects_total %></div>
-        <div class="adm-stat-card__label"><%= t("adm.home.show.projects.total") %></div>
-      </div>
-      <div class="adm-stat-card adm-stat-card--accent">
-        <div class="adm-stat-card__value"><%= @projects_current %></div>
-        <div class="adm-stat-card__label"><%= t("adm.home.show.projects.active") %></div>
-      </div>
-      <div class="adm-stat-card">
-        <div class="adm-stat-card__value"><%= @projects_expired %></div>
-        <div class="adm-stat-card__label"><%= t("adm.home.show.projects.expired") %></div>
-      </div>
+    <p class="adm-dashboard__hint"><%= t("adm.home.show.adm_sections.hint") %></p>
+    <div class="adm-module-bento">
+      <% @adm_sections.each do |section| %>
+        <%
+          section_label = t("components.adm.icon_rail_component.#{section[:key]}")
+          metric        = section[:metric]
+          card_title    = t("adm.home.show.adm_sections.card_title", section: section_label)
+          metric_text   = metric.present? ?
+            t("adm.home.show.adm_sections.metrics.#{metric[:key]}", count: metric[:count]) :
+            nil
+        %>
+        <%= render Adm::ModuleBentoCardComponent.new(
+              path: section[:path],
+              icon: section[:icon],
+              title: section_label,
+              metric_text: metric_text,
+              cta_text: t("adm.home.show.adm_sections.go_to_dashboard"),
+              card_title: card_title
+            ) %>
+      <% end %>
     </div>
-  </div>
-
-  <%# ── Stats link ────────────────────────────────────── %>
-  <div class="adm-dashboard__stats-link">
-    <%= link_to adm_statistics_path, class: "kern-link d-flex align-items-center gap-1" do %>
-      <span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>
-      <%= t("adm.home.show.detailed_statistics") %>
-    <% end %>
   </div>
 
   <%# ── demokratie.today ────────────────────────────────── %>

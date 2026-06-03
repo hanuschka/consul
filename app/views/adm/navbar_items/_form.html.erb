@@ -22,6 +22,14 @@
       </div>
     <% end %>
 
+    <%
+      custom_fields_visible = f.object.persisted? ||
+                              f.object.preset.present? ||
+                              f.object.projekt_id.present? ||
+                              f.object.linked_page_id.present? ||
+                              f.object.external_url.present?
+    %>
+
     <div
       class="mb-4"
       style="display: <%= (@available_kinds.one? || f.object.kind == "presets") ? "block" : "none;" %>"
@@ -34,7 +42,7 @@
         <div class="kern-fieldset__body">
           <%= f.collection_radio_buttons :preset, @available_presets, :first, :first do |cb| %>
             <div class="kern-form-check">
-              <%= cb.radio_button(class: "kern-form-check__radio") %>
+              <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
               <%= cb.label(class: "kern-label") { t("navbar.presets.#{cb.text }") } %>
             </div>
           <% end %>
@@ -52,7 +60,7 @@
             <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.projekt_filter_placeholder') %>">
               <%= f.collection_radio_buttons :projekt_id, @available_projekts, :id, :title do |cb| %>
                 <div class="kern-form-check">
-                  <%= cb.radio_button(class: "kern-form-check__radio") %>
+                  <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
                   <%= cb.label(class: "kern-label") %>
                 </div>
               <% end %>
@@ -68,18 +76,51 @@
       </div>
     <% end %>
 
-    <% if @available_kinds.include?("external") %>
-      <div class="mb-4" style="display: <%= f.object.kind == "external" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="external">
-        <%= f.text_field :external_url, label: t(".external_label"), placeholder: t(".external.url_placeholder") %>
+    <% if @available_kinds.include?("landing_pages") %>
+      <div class="mb-4" style="display: <%= f.object.kind == "landing_pages" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="landingPages">
+        <% if @available_landing_pages.any? %>
+          <fieldset class="kern-fieldset">
+            <legend class="kern-label mb-3">
+              <%= t(".landing_page_label") %>
+            </legend>
+            <div class="kern-fieldset__body" data-controller="kern-form-check-filter" data-kern-form-check-filter-placeholder-value="<%= t('.landing_page_filter_placeholder') %>">
+              <%= f.collection_radio_buttons :linked_page_id, @available_landing_pages, :id, :title do |cb| %>
+                <div class="kern-form-check">
+                  <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
+                  <%= cb.label(class: "kern-label") %>
+                </div>
+              <% end %>
+            <div>
+          </fieldset>
+        <% else %>
+          <%= empty_state(
+            title: t(".no_landing_pages_title"),
+            description: t(".no_landing_pages_description"),
+            icon: "web_asset_off",
+            link_url: adm_landing_pages_root_path,
+            link_text: t(".no_landing_pages_link")
+          ) %>
+        <% end %>
       </div>
     <% end %>
 
-    <div class="mb-4">
-      <%= f.text_field :custom_title, label: t(".custom_title_label"), placeholder: t(".custom_title_placeholder") %>
-    </div>
+    <% if @available_kinds.include?("external") %>
+      <div class="mb-4" style="display: <%= f.object.kind == "external" ? "block" : "none;"%>" data-components-adm-new-navbar-item-target="external">
+        <%= f.text_field :external_url, label: t(".external_label"), placeholder: t(".external.url_placeholder"), data: { action: "input->components-adm-new-navbar-item#selectionChanged" } %>
+      </div>
+    <% end %>
 
-    <div class="mb-4">
-      <%= f.check_box :open_in_new_tab, label: t(".open_in_new_tab_label") %>
+    <div
+      style="display: <%= custom_fields_visible ? "block" : "none" %>"
+      data-components-adm-new-navbar-item-target="customFields"
+    >
+      <div class="mb-4">
+        <%= f.text_field :custom_title, label: t(".custom_title_label"), placeholder: t(".custom_title_placeholder") %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.check_box :open_in_new_tab, label: t(".open_in_new_tab_label") %>
+      </div>
     </div>
 
     <div>

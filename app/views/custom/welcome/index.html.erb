@@ -4,8 +4,9 @@
   <% content_for :admin_topbar_actions do %>
     <%= link_to adm_homepage_path,
           class: "button hollow projekt-page--admin-topbar-button",
+          title: t("custom.projekts.page.topbar.edit_homepage"),
           target: "_blank" do %>
-      <i class="fas fa-edit"></i>
+      <i class="fas fa-edit" aria-hidden="true"></i>
       <span><%= t("custom.projekts.page.topbar.edit_homepage") %></span>
     <% end %>
   <% end %>

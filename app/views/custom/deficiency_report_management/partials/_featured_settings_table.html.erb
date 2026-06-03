@@ -7,12 +7,6 @@
   </thead>
   <tbody>
     <% features.each do |feature| %>
-      <% pro_setting = Setting::PRO_SETTINGS.find { |s| s == feature.key } %>
-
-      <% if pro_setting.present? %>
-        <% app = App.app_for_setting(feature.key) %>
-      <% end %>
-
       <tr>
         <td>
           <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.settings.#{feature.key}") %></strong>
@@ -20,27 +14,10 @@
           <span class="small">
             <%= t("custom.settings.#{feature.key}_description", default: t("admin.settings.no_description")) %>
           </span>
-
-          <% if app.present? %>
-            <div>
-              <%= link_to "App in Store anzeigen", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
-            </div>
-          <% end %>
         </td>
 
         <td>
-          <% if app.present? && app.inactive? %>
-            <div class="admin-setting-app-activate-link">
-              <%= link_to "Aktivieren", Dt.navigate_to_app_url(app.codename), target: "_blank" %>
-            </div>
-          <% elsif app.present? && app.waiting_for_activation? %>
-            <div class="admin-setting-app-waiting-for-activation">
-              Aktivierung in Arbeit
-              <i class="fas fa-hourglass-half"></i>
-            </div>
-          <% else %>
-            <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature, tab: '#tab-projekts-settings') %>
-          <% end %>
+          <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature, tab: '#tab-projekts-settings') %>
         </td>
       </tr>
     <% end %>

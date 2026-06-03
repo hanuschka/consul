@@ -1,0 +1,37 @@
+<%= content_for :title, t("adm.deficiency_reports.settings.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.deficiency_reports.settings.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.deficiency_reports.settings.tabs.features"),
+    url: adm_deficiency_reports_settings_path
+  },
+  {
+    label: t("adm.deficiency_reports.settings.tabs.dashboard"),
+    url: dashboard_adm_deficiency_reports_settings_path
+  },
+  {
+    label: t("adm.deficiency_reports.settings.tabs.contact_persons"),
+    url: contact_persons_adm_deficiency_reports_settings_path
+  },
+  {
+    label: t("adm.deficiency_reports.settings.tabs.naming"),
+    url: naming_adm_deficiency_reports_settings_path,
+    current: true
+  },
+  {
+    label: t("adm.deficiency_reports.settings.tabs.confirmation_popup"),
+    url: edit_adm_deficiency_reports_confirmation_popup_path
+  }
+]) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.feature_name"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.create_cta"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.new_form_title"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.new_form_title_placeholder"), :value, :string) %>
+</div>

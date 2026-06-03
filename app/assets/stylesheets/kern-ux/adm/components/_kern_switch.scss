@@ -8,6 +8,7 @@
 
 .kern-switch.-row {
   display: flex;
+  align-items: flex-start;
   width: 100%;
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
@@ -80,7 +81,7 @@
 }
 
 .kern-switch__description {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   line-height: 1.4;
   color: #64748b;
 }

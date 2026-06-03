@@ -47,6 +47,8 @@ en:
       newsletter:
         recipient_group_id_label: Recipient group
         recipient_group_id_description: 'Defines which recipient group this newsletter is sent to. Recipient groups are managed under <a href="/adm/recipient_groups" target="_blank">Notifications > Recipient groups</a> and can be composed by area, interest, or registration status. Only users assigned to the selected group receive the email. If you want to reach all registered users, choose the corresponding default group.'
+        respect_newsletter_optout_label: Respect newsletter opt-out
+        respect_newsletter_optout_description: "When enabled, users who disabled \"Newsletter and system emails\" in their account are skipped at send time — even if they would otherwise belong to the selected recipient group. This option should normally stay enabled to respect users' preferences. Disable it only in exceptional cases, e.g. for mandatory information that all recipients of the group should receive regardless of their newsletter setting. Note: This option only takes effect when a recipient group is assigned to the newsletter. For older newsletters using the legacy segment selection, the opt-out is already applied by the segment itself."
         from_label: From
         from_description: "The email address shown as the sender in recipients' inboxes. Important: the domain (everything after the @) must not be changed, or email sending will fail. Only the part before the @ can be adjusted. Replies from recipients are sent to this address — make sure the inbox is actively monitored."
         subject_label: Subject
@@ -106,9 +108,11 @@ This logo should be readable on both light and dark backgrounds, since it appear
           landing_mobile_header_video_label: Background video for mobile
           landing_mobile_header_video_description: "Optional video shown at the top of the topic page on mobile devices instead of the background image. The video plays automatically, muted, and loops. Use a short video with a centered main subject. Recommended format: 470 × 246 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."
           title_label: Topic page title
-          title_description: "The topic page title is prominently shown over the background image on the homepage. It should be short and punchy to catch visitors' attention."
+          title_description: "The title names the topic page and is used in navigation, the browser tab, and project and overview cards. It is not shown over the background image — that's the header title."
+          header_title_label: Header title
+          header_title_description: "Shown as the large headline over the topic page's background image, with the subtitle directly beneath it. If the field is empty, no headline is shown."
           subtitle_label: Topic page subtitle
-          subtitle_description: "The subtitle is shown directly below the title in the background image. If the field is empty, no subtitle is shown."
+          subtitle_description: "The subtitle is shown directly below the header title over the background image. If the field is empty, no subtitle is shown."
           landing_hide_title_and_subtitle_label: Hide title and subtitle on topic page
           landing_hide_title_and_subtitle_description: "Hides the topic page's title and subtitle on the frontend. These values are then used only for internal configuration and not shown over the background image."
 

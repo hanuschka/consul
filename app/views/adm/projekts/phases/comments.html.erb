@@ -6,6 +6,13 @@
 
 <div class="kern-container mb-5">
   <% if @comments.any? %>
+    <div class="d-flex justify-content-end mb-3">
+      <a href="<%= comments_adm_projekts_phase_path(@projekt_phase, format: :csv, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <%= t(".download_csv") %>
+      </a>
+    </div>
+
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
         <thead class="kern-table__head">

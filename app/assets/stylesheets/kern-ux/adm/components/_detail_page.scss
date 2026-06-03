@@ -392,6 +392,34 @@
       display: none !important;
     }
   }
+
+  // New adm image component: fill the card row like the map beside it
+  [data-controller="adm--form--image"] {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    // Visible preview/empty container fills the remaining row
+    [data-adm--form--image-target="preview"]:not(.d-none),
+    [data-adm--form--image-target="empty"]:not(.d-none) {
+      flex: 1;
+      min-height: 0;
+    }
+
+    // Preview wrapper anchors the overlay action buttons
+    [data-adm--form--image-target="preview"] {
+      position: relative;
+
+      img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        max-width: none !important;
+        display: block;
+      }
+    }
+  }
 }
 
 .adm-detail-media-card__label {
@@ -703,6 +731,11 @@ form:has(> .adm-detail-media-card__action) {
   &--danger {
     background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 12%, transparent);
     color: var(--kern-color-feedback-danger, #bd0f09);
+  }
+
+  &--info {
+    background: color-mix(in srgb, var(--kern-color-feedback-info, #1976d2) 12%, transparent);
+    color: var(--kern-color-feedback-info, #1976d2);
   }
 }
 

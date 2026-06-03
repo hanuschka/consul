@@ -12,7 +12,6 @@
   display: flex;
   justify-content: flex-end;
   gap: 6px;
-  margin-bottom: 12px;
 }
 
 .files-index--view-button {
@@ -144,6 +143,14 @@
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
   align-content: start;
+}
+
+.files-index--empty {
+  grid-column: 1 / -1;
+}
+
+.files-index--empty-cell {
+  padding: 0;
 }
 
 .files-index--pagination {

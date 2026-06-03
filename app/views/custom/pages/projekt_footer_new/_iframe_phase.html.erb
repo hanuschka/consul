@@ -1,3 +1,4 @@
+<div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
 <% permission_problem = @projekt_phase.permission_problem(current_user) %>
@@ -25,3 +26,4 @@
     <%= content %>
   <% end %>
 <% end %>
+</div>

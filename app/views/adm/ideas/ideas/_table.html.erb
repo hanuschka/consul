@@ -1,0 +1,71 @@
+<%
+  headers = {
+    id:         Kern::Table::HeaderComponent.new(:id, t("adm.ideas.ideas.index.table.id"), **@id_header_options.merge(data_field: "id")),
+    title:      Kern::Table::HeaderComponent.new(:title, t("adm.ideas.ideas.index.table.title"), **@title_header_options.merge(data_field: "title")),
+    created_at: Kern::Table::HeaderComponent.new(:created_at, t("adm.ideas.ideas.index.table.created_at"), **@created_at_header_options.merge(data_field: "created_at")),
+    category:   Kern::Table::HeaderComponent.new(:idea_category_id, t("adm.ideas.ideas.index.table.category"), **@category_header_options.merge(data_field: "category")),
+    officer:    Kern::Table::HeaderComponent.new(:idea_officer_id, t("adm.ideas.ideas.index.table.officer"), **@officer_header_options.merge(data_field: "officer"))
+  }
+%>
+
+<%= render Adm::IndexTableComponent.new(
+      turbo_frame_id: "ideas_table",
+      records: @ideas,
+      pagy: @pagy,
+      headers: headers,
+      column_count: 10,
+      column_selector: {
+        storage_key: "adm-ideas-columns-v2",
+        defaults: "id,image,title,admin_accepted,created_at,status,category,officer,actions"
+      },
+      empty_state: {
+        title: t("adm.ideas.ideas.index.no_items_title"),
+        description: t("adm.ideas.ideas.index.no_items_description"),
+        icon: "lightbulb"
+      },
+      empty_state_filtered: {
+        title: t("adm.ideas.ideas.index.no_results_filtered_title"),
+        description: t("adm.ideas.ideas.index.no_results_filtered_description"),
+        icon: "filter_alt_off"
+      }
+    ) do |c| %>
+  <% c.with_toolbar_meta do %>
+    <span class="adm-table-count" title="<%= t("adm.ideas.ideas.index.total_hint") %>">
+      <span class="adm-table-count__value"><%= number_with_delimiter(@pagy.count) %></span>
+      <span class="adm-table-count__label"><%= t("adm.ideas.ideas.index.total_label", count: @pagy.count) %></span>
+    </span>
+  <% end %>
+
+  <% c.with_toolbar_action do %>
+    <a href="<%= url_for(request.query_parameters.merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
+      <span class="material-symbols-outlined" aria-hidden="true">download</span>
+      <%= t("adm.ideas.ideas.index.download_csv") %>
+    </a>
+  <% end %>
+
+  <% c.with_toolbar_action do %>
+    <a href="<%= url_for(request.query_parameters.merge(format: :geojson)) %>" class="adm-text-link" data-turbo="false">
+      <span class="material-symbols-outlined" aria-hidden="true">map</span>
+      <%= t("adm.ideas.ideas.index.download_geojson") %>
+    </a>
+  <% end %>
+
+  <% c.with_header_row do %>
+    <%= render headers[:id] %>
+    <th scope="col" class="kern-table__header" data-field="image"><%= t("adm.ideas.ideas.index.table.image") %></th>
+    <%= render headers[:title] %>
+    <th scope="col" class="kern-table__header" data-field="admin_accepted"><%= t("adm.ideas.ideas.index.table.admin_accepted") %></th>
+    <%= render headers[:created_at] %>
+    <th scope="col" class="kern-table__header" data-field="author"><%= t("adm.ideas.ideas.index.table.author") %></th>
+    <th scope="col" class="kern-table__header" data-field="status"><%= t("adm.ideas.ideas.index.table.status") %></th>
+    <%= render headers[:category] %>
+    <%= render headers[:officer] %>
+    <th scope="col" class="kern-table__header" data-field="actions"><%= t("shared.table.actions") %></th>
+  <% end %>
+
+  <% c.with_body do %>
+    <% @ideas.each do |idea| %>
+      <%= render "adm/ideas/ideas/idea_row", idea: idea %>
+    <% end %>
+  <% end %>
+<% end %>

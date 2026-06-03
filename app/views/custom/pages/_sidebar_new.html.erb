@@ -7,19 +7,23 @@
 
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_admin_controls_for_projekt?(@projekt) %>
-    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: "js-sidebar-projekt-info", opened_on_mobile: true) do |c| %>
-      <% return_path = page_path(@projekt.page.slug) %>
+    <% return_path = page_path(@projekt.page.slug) %>
+    <% rendered_custom_block = capture { render_custom_block(content_block_sidebar_name, projekt: @projekt, return_path: return_path) } %>
+    <% sidebar_block_body = Nokogiri::HTML::DocumentFragment.parse(rendered_custom_block).at_css(".custom-content-block-body")&.inner_html %>
+    <% admin_view = show_admin_controls_for_projekt?(@projekt) %>
+    <% initial_empty = admin_view && content_block_body_blank?(sidebar_block_body) %>
+    <% sidebar_card_class = ["js-sidebar-projekt-info"] %>
+    <% sidebar_card_class << "js-toggle-empty-hint-on-content" if admin_view %>
+    <% sidebar_card_class << "is-content-empty" if initial_empty %>
+    <% sidebar_card_class = sidebar_card_class.join(" ") %>
+    <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.projekt_information.title"), icon_name: "info-circle", class_name: sidebar_card_class, opened_on_mobile: true) do |c| %>
       <% if show_admin_controls_for_projekt?(@projekt) %>
-        <% sidebar_locale = current_user&.locale || I18n.default_locale %>
-        <% sidebar_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: sidebar_locale, key: content_block_sidebar_name) %>
-        <% if content_block_body_blank?(sidebar_block&.body) %>
-          <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
-            <i class="fas fa-eye-slash sidebar-card--admin-empty-hint-icon" aria-hidden="true"></i>
-            <span><%= t("custom.projekts.page.sidebar.projekt_information.admin_empty_hint") %></span>
-          </div>
-        <% end %>
+        <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
+          <i class="fas fa-eye-slash sidebar-card--admin-empty-hint-icon" aria-hidden="true"></i>
+          <span><%= t("custom.projekts.page.sidebar.projekt_information.admin_empty_hint") %></span>
+        </div>
       <% end %>
-      <%= render_custom_block(content_block_sidebar_name, projekt: @projekt, return_path: return_path) %>
+      <%= rendered_custom_block %>
     <% end %>
   <% end %>
 
@@ -37,23 +41,17 @@
     </div>
   <% end %>
 
-    <% other_conditions_for_phases_section_are_met = (
-      projekt.total_duration_start.present? || projekt.total_duration_end.present?) &&
-      projekt.projekt_phases.active.any?
-    %>
-    <% if ((projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar") &&
-        other_conditions_for_phases_section_are_met)) || (other_conditions_for_phases_section_are_met && show_admin_controls_for_projekt?(@projekt))
-      %>
+  <% phases_component = Pages::Projekts::SidebarPhasesComponent.new(projekt) %>
+  <% if (projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar") && phases_component.render?) || show_admin_controls_for_projekt?(@projekt) %>
     <div class="hide-on-small-tablet u-width-100">
       <%= render Projekts::ToggleSectionWithSettingComponent.new(
         enable: show_admin_controls_for_projekt?(@projekt),
         projekt: @projekt,
         setting_key: "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar",
-        setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar"),
-        other_conditions_are_met: other_conditions_for_phases_section_are_met
+        setting_active: projekt_feature?(projekt, "sidebar.show_phases_in_projekt_page_sidebar")
       ) do %>
         <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.phases.title"), icon_name: "pager") do |c| %>
-          <%= render Pages::Projekts::SidebarPhasesComponent.new(projekt) %>
+          <%= render phases_component %>
         <% end %>
       <% end %>
     </div>

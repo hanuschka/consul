@@ -202,11 +202,13 @@ ProjektStudio.ContentBlock.Crud = {
     const contentBlockWrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
+    const sanitized = ProjektStudio.utils.sanitizeAdminHtml(newContent);
+
     const oldContent = contentBlock.dataset.previousContentBlockHtml
       ? contentBlock.dataset.previousContentBlockHtml
       : contentBlock.innerHTML.trim();
 
-    const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(newContent);
+    const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(sanitized);
     const newContentTrimmed = updatedContentBlock.innerHTML.trim();
 
     if (resetFoundationState) {
@@ -231,6 +233,12 @@ ProjektStudio.ContentBlock.Crud = {
         html: updatedContentBlock.innerHTML
       }
     })
+      .then((response) => {
+        this.syncDomFromServer(contentBlock, response);
+        if (response && response.stripped) {
+          this.showSanitizationNotice();
+        }
+      })
       .catch((response) => {
         if (response.error && response.error.message) {
           alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
@@ -252,6 +260,20 @@ ProjektStudio.ContentBlock.Crud = {
 
     ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
+  },
+
+  syncDomFromServer(contentBlock, response) {
+    if (!response || typeof response.body !== "string") return
+
+    const currentContent = contentBlock.innerHTML.trim();
+    if (currentContent === response.body.trim()) return
+
+    contentBlock.innerHTML = response.body;
+    ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+  },
+
+  showSanitizationNotice() {
+    alert("Hinweis: Einige unzulässige HTML-Inhalte (Skripte, Event-Handler oder unsichere Links) wurden beim Speichern entfernt.");
   },
 
   showDefaultContentNotification(wrapper) {

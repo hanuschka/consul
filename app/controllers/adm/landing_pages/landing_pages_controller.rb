@@ -2,18 +2,6 @@ module Adm
   module LandingPages
     class LandingPagesController < Adm::LandingPages::BaseController
 
-      def index
-        authorize [:adm, :landing_pages, :landing_page]
-        @breadcrumbs = [
-          { name: t("adm.landing_pages.menu.items.landing_pages"), icon: "web" }
-        ]
-
-        @landing_pages = policy_scope(
-          ::SiteCustomization::Page,
-          policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope
-        ).order(:landing_nav_position)
-      end
-
       def new
         @landing_page = ::SiteCustomization::Page.new(landing: true, status: "draft")
         authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
@@ -79,7 +67,7 @@ module Adm
       def reorder
         authorize [:adm, :landing_pages, :landing_page], :index?
 
-        ::SiteCustomization::Page.order_landing_pages(params[:ordered_list])
+        ::SiteCustomization::Page.order_landing_pages(params[:tree].map { |item| item[:id] })
         head :ok
       end
 
@@ -93,7 +81,7 @@ module Adm
 
         def landing_page_params
           params.require(:site_customization_page).permit(
-            :title, :subtitle, :status, :slug,
+            :title, :header_title, :subtitle, :status, :slug,
             :landing_hide_title_and_subtitle,
             :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,

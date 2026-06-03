@@ -26,6 +26,7 @@
       ProjektStudio.ContentBlock.AiEditMode.initialize();
       ProjektStudio.ContentBlock.CodeEditMode.initialize();
       ProjektStudio.ContentBlock.Copy.initialize();
+      ProjektStudio.ContentBlock.EmptyHintToggle.initialize();
 
       this.modulesInitialized = true;
     },
@@ -88,6 +89,10 @@
 
           if (defaultContent) {
             wrappedElement.dataset.defaultContent = defaultContent;
+          }
+
+          if (block.style.marginBottom) {
+            wrappedElement.style.marginBottom = block.style.marginBottom;
           }
 
           block.parentNode.replaceChild(wrappedElement, block);

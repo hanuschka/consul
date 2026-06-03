@@ -6,6 +6,7 @@
   <%= render Adm::AttributeEditorComponent.new(@newsletter, :subject, :string) %>
   <%= render Adm::AttributeEditorComponent.new(@newsletter, :recipient_group_id, :select,
     select_options: RecipientGroup.all.map { |rg| [rg.name, rg.id] }) %>
+  <%= render Adm::AttributeEditorComponent.new(@newsletter, :respect_newsletter_optout, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(@newsletter, :from, :string) %>
   <% if Setting["advanced_newsletter"].present? %>
     <%= render Adm::AttributeEditorComponent.new(@newsletter, :title, :string) %>

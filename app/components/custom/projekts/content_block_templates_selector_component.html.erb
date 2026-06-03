@@ -3,7 +3,15 @@
     <div class="content-block-templates-selector--header">
       <div class="d-flex">
         <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
-        <button class="close-button round-icon-button" data-close aria-label="Close Accessible Modal" type="button">
+        <button
+          type="button"
+          class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          title="<%= t('custom.projekt.content_block_templates_selector.ai_create_button.title') %>"
+        >
+          <i class="fas fa-magic"></i>
+          <%= t('custom.projekt.content_block_templates_selector.ai_create_button.label') %>
+        </button>
+        <button class="close-button round-icon-button content-block-templates-selector--close" data-close aria-label="Close Accessible Modal" type="button">
           <i class="fa fa-xmark">
           </i>
         </button>

@@ -1,13 +1,3 @@
-<% if current_user&.email.in?(@partner_emails) %>
-  <%= link_to "#",
-        class: "button hollow projekt-page--admin-topbar-button js-copy-source-button",
-        data: { target: "page-content" },
-        title: t("custom.projekts.page.topbar.copy_code") do %>
-    <i class="fas fa-code" aria-hidden="true"></i>
-    <span><%= t("custom.projekts.page.topbar.copy_code") %></span>
-  <% end %>
-<% end %>
-
 <% if current_user&.administrator? %>
   <%= link_to new_adm_newsletter_path(projekt_id: @projekt),
         class: "button hollow projekt-page--admin-topbar-button",

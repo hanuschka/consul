@@ -7,14 +7,15 @@ class DeficiencyReportsController < ApplicationController
   include DeficiencyReportsHelper
   include Search
 
-  before_action :authenticate_user!, except: [:index, :show, :json_data]
+  before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
   before_action :load_categories
   before_action :set_view, only: :index
   before_action :destroy_map_location_association, only: :update
 
   feature_flag :deficiency_reports
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: :blocked
+  skip_authorization_check only: :blocked
 
   has_orders ->(c) { DeficiencyReport.deficiency_report_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
@@ -78,6 +79,13 @@ class DeficiencyReportsController < ApplicationController
 
   def new
     @deficiency_report = DeficiencyReport.new
+  end
+
+  def blocked
+    answer = DeficiencyReport::ConfirmationPopupAnswer.find_by(id: params[:answer_id])
+    notice = answer&.flash_notice.presence
+    flash[:notice] = notice if notice
+    redirect_to deficiency_reports_path
   end
 
   def create

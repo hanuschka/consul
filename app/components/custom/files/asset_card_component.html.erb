@@ -1,0 +1,99 @@
+<article
+  class="files-asset-card"
+  data-id="<%= asset.id %>"
+  data-type="<%= type %>"
+  data-title="<%= asset.title %>"
+  data-description="<%= asset.description %>"
+  data-alt-text="<%= asset.alt_text %>"
+  data-filename="<%= filename %>"
+>
+  <div class="files-asset-card--thumb">
+    <% if image? %>
+      <%= render Shared::ImageWithLightboxComponent.new(
+        image_url: asset.custom_thumb_url(width: 600, height: 450),
+        original_url: asset.url_content,
+        alt: asset.alt_text.presence || filename,
+        gallery: "files-#{type}"
+      ) %>
+    <% elsif has_preview? %>
+      <img
+        src="<%= asset.custom_thumb_url(width: 600, height: 450) %>"
+        alt="<%= asset.alt_text.presence || filename %>"
+        class="files-asset-card--thumb-image"
+        loading="lazy"
+      >
+    <% else %>
+      <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
+    <% end %>
+
+    <div class="files-asset-card--actions">
+      <button
+        type="button"
+        class="files-asset-card--icon-button js-files-edit-asset"
+        data-action="click->files--filter-bar#editClicked"
+        title="<%= t("files.card.edit") %>"
+        aria-label="<%= t("files.card.edit") %>"
+      >
+        <i class="fa fa-pen"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="files-asset-card--meta">
+    <p
+      class="files-asset-card--filename"
+      title="<%= filename %>"
+    >
+      <%= filename %>
+    </p>
+
+    <dl class="files-asset-card--details">
+      <% if humanized_size.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.file_size") %></dt>
+          <dd><%= humanized_size %></dd>
+        </div>
+      <% end %>
+
+      <% if dimensions.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.dimensions") %></dt>
+          <dd><%= dimensions %></dd>
+        </div>
+      <% end %>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.uploaded") %></dt>
+        <dd><%= created_at_formatted %></dd>
+      </div>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.last_edited") %></dt>
+        <dd><%= updated_at_formatted %></dd>
+      </div>
+    </dl>
+
+    <% if type == "document" %>
+      <div class="files-asset-card--footer">
+        <a
+          href="<%= asset.url_content %>"
+          target="_blank"
+          rel="noopener"
+          class="files-asset-card--footer-button"
+        >
+          <i class="fa fa-arrow-up-right-from-square"></i>
+          <%= t("files.card.open_in_new_tab") %>
+        </a>
+
+        <a
+          href="<%= asset.url_content %>"
+          download="<%= filename %>"
+          class="files-asset-card--footer-button"
+        >
+          <i class="fa fa-download"></i>
+          <%= t("files.card.download") %>
+        </a>
+      </div>
+    <% end %>
+  </div>
+</article>

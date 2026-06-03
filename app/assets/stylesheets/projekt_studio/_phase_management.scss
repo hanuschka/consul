@@ -7,7 +7,7 @@
   }
 }
 
-.projekt-footer-phase-tab--add-new {
+.custom-new-design .projekt-footer-phase-tab--add-new {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,6 +17,7 @@
   min-height: 44px !important;
   font-size: 16px !important;
   color: #b4b4b4;
+  min-height: 0 !important;
   background: transparent !important;
   border: 1.5px dashed #cfcece !important;
   border-radius: 50% !important;
@@ -39,7 +40,7 @@
 
   &:hover {
     text-decoration: none;
-    background-color: color-mix(in srgb, var(--brand-color) 6%, transparent) !important;
+    background-color: color-mix(in srgb, var(--brand-color) 20%, white) !important;
     border-color: var(--brand-color) !important;
     color: var(--brand-color);
 

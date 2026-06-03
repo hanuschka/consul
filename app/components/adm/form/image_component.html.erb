@@ -1,0 +1,52 @@
+<% @form.fields_for :image, image do |image_form| %>
+  <div data-controller="adm--form--image">
+    <%= image_form.hidden_field :_destroy, value: false, data: { adm__form__image_target: "destroy" } %>
+    <%= image_form.hidden_field :cached_attachment %>
+    <%= image_form.hidden_field :user_id, value: helpers.current_user&.id %>
+
+    <%= image_form.file_field :attachment,
+          label: false,
+          accept: Image.accepted_content_types.join(","),
+          class: "d-none",
+          data: { adm__form__image_target: "input", action: "change->adm--form--image#change" } %>
+
+    <div class="<%= "d-none" unless attached? %>" data-adm--form--image-target="preview">
+      <% if attached? %>
+        <%= image_tag(image.attachment, data: { adm__form__image_target: "previewImage" }) %>
+      <% else %>
+        <%= tag.img data: { adm__form__image_target: "previewImage" } %>
+      <% end %>
+
+      <div class="adm-form-image__overlay">
+        <button type="button"
+                class="adm-form-image__action"
+                aria-label="<%= t(".replace") %>"
+                title="<%= t(".replace") %>"
+                data-action="adm--form--image#triggerInput">
+          <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+        </button>
+        <button type="button"
+                class="adm-form-image__action adm-form-image__action--danger"
+                aria-label="<%= t(".remove") %>"
+                title="<%= t(".remove") %>"
+                data-action="adm--form--image#remove">
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="<%= "d-none" if attached? %>" data-adm--form--image-target="empty">
+      <button type="button" class="adm-form-image__dropzone" data-action="adm--form--image#triggerInput">
+        <span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span>
+        <span class="kern-label"><%= t(".add") %></span>
+      </button>
+    </div>
+
+    <% if image_errors.any? %>
+      <p class="kern-error" role="alert">
+        <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+        <span class="kern-body"><%= image_errors.join(". ") %></span>
+      </p>
+    <% end %>
+  </div>
+<% end %>

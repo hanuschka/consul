@@ -2,23 +2,22 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.landing_pages.home.title"), breadcrumbs: @breadcrumbs) %>
 
-<%= render Adm::DashboardHomeComponent.new(
-  team_members: @team_members,
-  team_url: new_adm_landing_pages_manager_path,
-  recent_items: @recent_items,
-  recent_items_url: adm_landing_pages_landing_pages_list_path,
-  recent_item_partial: "adm/landing_pages/landing_pages/landing_page",
-  recent_item_headers: [
-    t("adm.landing_pages.landing_pages.index.table.header.name"),
-    t("adm.landing_pages.landing_pages.index.table.header.url"),
-    t("adm.landing_pages.landing_pages.index.table.header.status"),
-    ""
-  ],
-  intro_text: @section_setting&.intro_text_with_fallback,
-  quick_links: @quick_links,
-  stats: @stats,
-  contact_persons: @contact_persons,
-  notice: @section_setting,
-  activities: @activities,
-  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "landing_pages") : nil
-) %>
+<%= render Adm::DashboardHomeComponent.new do |d| %>
+  <% d.with_notice(message: @notice) if @notice.present? %>
+  <% d.with_header_row(intro: @intro_text, stats: @stats, quick_links: @quick_links) %>
+  <% d.with_team(members: @team_members, add_url: new_adm_landing_pages_manager_path) %>
+  <% d.with_contacts(contacts: @contact_persons) if @contact_persons.any? %>
+<% end %>
+
+<div class="kern-container">
+  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
+    <div class="adm-dashboard__section-header">
+      <span class="material-symbols-outlined" aria-hidden="true">web</span>
+      <h3><%= t("adm.landing_pages.menu.items.landing_pages") %></h3>
+    </div>
+
+    <%= render "adm/landing_pages/landing_pages/table" %>
+  </div>
+
+  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+</div>

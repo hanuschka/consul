@@ -205,7 +205,7 @@
         type: "response.create",
         response: {
           modalities: ["text", "audio"],
-          instructions: "I'm done. Generate title and description."
+          instructions: "Der Nutzer ist fertig. Erstelle jetzt Titel und Beschreibung und antworte ausschließlich auf Deutsch."
         }
       };
 

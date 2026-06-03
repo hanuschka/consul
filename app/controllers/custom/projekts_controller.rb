@@ -206,6 +206,12 @@ class ProjektsController < ApplicationController
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
     @commentable = Projekt.unscoped.find_by(special: true, special_name: "projekt_overview_page")
+
+    if @commentable.blank?
+      @show_comments = false
+      return
+    end
+
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
   end

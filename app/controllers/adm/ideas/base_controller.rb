@@ -9,14 +9,6 @@ class Adm::Ideas::BaseController < Adm::BaseController
 
   private
 
-    def adm_header_title
-      I18n.t("adm.ideas.title")
-    end
-
-    def adm_menu_component
-      Adm::Ideas::MenuComponent.new
-    end
-
     def verify_idea_manager
       raise Pundit::NotAuthorizedError unless current_user&.idea_manager? ||
                                               current_user&.idea_officer? ||

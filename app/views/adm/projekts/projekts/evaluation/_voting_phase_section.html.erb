@@ -12,15 +12,25 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
+  <section
+    class="phase-evaluation-section"
+    data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
+    data-phase-id="<%= phase["phase_id"] %>"
+    data-section="kpis"
+  >
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
       </div>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
         <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.voting_phase") %></div>
       </div>
+      <% if local_assigns[:regenerate_url].present? %>
+        <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
+          regenerate_url: regenerate_url %>
+      <% end %>
     </div>
     <div class="phase-meta">
       <div class="meta-item">
@@ -46,9 +56,16 @@
       <% end %>
     </div>
   </div>
+  </section>
   <% end %>
 
   <% if show_section.call("questions") %>
+  <section
+    class="phase-evaluation-section"
+    data-pdf-chunk="phase:<%= phase["phase_id"] %>:questions"
+    data-phase-id="<%= phase["phase_id"] %>"
+    data-section="questions"
+  >
   <% polls.each do |poll| %>
     <% questions = poll["questions"] || [] %>
     <% next if questions.empty? && (poll["open_text_entries"] || []).empty? %>
@@ -93,6 +110,12 @@
           pdf_mode_local = local_assigns.fetch(:pdf_mode, false)
           open_by_default = pdf_mode_local || entries.size <= 6
         %>
+        <section
+          class="phase-evaluation-section"
+          data-pdf-chunk="phase:<%= phase["phase_id"] %>:open_responses"
+          data-phase-id="<%= phase["phase_id"] %>"
+          data-section="open_responses"
+        >
         <details
           class="open-responses"
           style="--or-accent:<%= accent %>;--or-accent-light:<%= accent_light %>"
@@ -124,9 +147,11 @@
             <% end %>
           </div>
         </details>
+        </section>
       <% end %>
     </div>
   <% end %>
+  </section>
   <% end %>
 
   <% eval_summary = phase["evaluation_summary"] || {} %>
@@ -139,6 +164,12 @@
   <% end %>
 
   <% if show_section.call("key_findings") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="key_findings"
+    >
     <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
       locals: {
         phase: phase,
@@ -146,10 +177,17 @@
         accent_light: accent_light,
         pdf_mode: local_assigns.fetch(:pdf_mode, false)
       } %>
+    </section>
   <% end %>
 
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="ai_questions"
+    >
     <%= render partial: "adm/projekts/projekts/evaluation/phase_ai_questions",
       locals: {
         phase: phase,
@@ -157,5 +195,6 @@
         accent_light: accent_light,
         pdf_mode: pdf_mode_local
       } %>
+    </section>
   <% end %>
 </div>

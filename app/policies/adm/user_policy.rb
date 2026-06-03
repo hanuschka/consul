@@ -19,9 +19,13 @@ class Adm::UserPolicy < ApplicationPolicy
     edit?
   end
 
+  def audits?
+    edit?
+  end
+
   class Scope < Scope
     def resolve
-      scope.active.not_guests
+      scope.actual
     end
   end
 end

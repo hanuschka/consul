@@ -46,7 +46,7 @@
     <%= render Adm::MasterportalImportPanelComponent.new(projekt_phase: projekt_phase, embedded: true) %>
 
     <% if has_pins? %>
-      <div class="masterportal-integration--subsection">
+      <div class="masterportal-integration--subsection" id="masterportal-pins-summary">
         <%= turbo_frame_tag(summary_frame_id, src: summary_frame_src) do %>
           <%= render Adm::TurboFramePlaceholderComponent.new(
             text: summary_loading_label,
@@ -57,5 +57,7 @@
         <% end %>
       </div>
     <% end %>
+
+    <%= render Adm::MasterportalCollectionsListComponent.new(projekt_phase: projekt_phase) %>
   </div>
 </section>

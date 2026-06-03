@@ -4785,6 +4785,40 @@ paths:
                     properties:
                       messages:
                         type: object
+  "/api/masterportal/category_icons":
+    post:
+      summary: Sync a category icon from Masterportal
+      tags:
+      - Masterportal
+      security:
+      - bearer_auth: []
+      description: Upload and attach an icon image to a ProjektPointOfInterestCategory
+        identified by projekt_phase_id + category_name. Used by external Masterportal
+        systems to sync POI category icons.
+      parameters: []
+      responses:
+        '204':
+          description: icon attached
+        '401':
+          description: invalid or missing sync token
+        '404':
+          description: no matching category
+        '422':
+          description: oversize upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: integer
+        required: true
+        description: Projekt Phase ID (PointOfInterestPhase)
   "/api/milestone_statuses":
     get:
       summary: List all milestone statuses
@@ -9072,7 +9106,7 @@ paths:
       parameters: []
       responses:
         '201':
-          description: proposal created with base64 image
+          description: 'proposal created as draft (published: false)'
           content:
             application/json:
               schema:
@@ -9179,6 +9213,13 @@ paths:
                       nullable: true
                       description: Array of projekt label IDs to associate with this
                         proposal
+                    published:
+                      type: boolean
+                      nullable: true
+                      description: Whether to publish the proposal immediately on
+                        creation, making it visible in the frontend. Defaults to true.
+                        Set to false to create the proposal as a draft and publish
+                        it later via PATCH /api/proposals/{id}/publish.
                     map_location_attributes:
                       type: object
                       nullable: true
@@ -9711,6 +9752,60 @@ paths:
                     properties:
                       messages:
                         type: object
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/proposals/{id}/publish":
+    parameters:
+    - name: id
+      in: path
+      description: Proposal ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Publish a proposal
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      description: "Publish a previously created proposal, setting its published_at
+        timestamp and making it visible in the frontend. Idempotent: publishing an
+        already-published proposal returns it unchanged without re-sending notifications.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: proposal published
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposal:
+                        "$ref": "#/components/schemas/Proposal"
+                    required:
+                    - proposal
+                required:
+                - data
+        '404':
+          description: proposal not found
         '403':
           description: forbidden - admin access required
           content:

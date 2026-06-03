@@ -36,6 +36,15 @@
   }
 }
 
+.adm-page-title-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-page-title-after {
+  margin-top: 10px;
+}
+
 .adm-page-title {
   font-size: 1.625rem;
   font-weight: 700;

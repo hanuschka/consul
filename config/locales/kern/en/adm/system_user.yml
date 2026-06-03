@@ -1,0 +1,12 @@
+en:
+  adm:
+    system_user:
+      edit:
+        title: System user
+        intro: All proposals and investments imported from Masterportal are published under this user. The display name and avatar are initially taken from the organisation name and the site logo, but can be adjusted here.
+        name_label: Display name
+        name_hint: Shown as the author of imported proposals and investments (e.g. "City of Regensburg").
+        avatar_label: Avatar
+        avatar_hint: PNG or JPEG. Replaces the current avatar.
+      update:
+        success: System user updated successfully.

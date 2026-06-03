@@ -22,6 +22,7 @@ en:
           registration_settings: Account & access
           registered_addresses: Addresses
           default_map_location: Default map
+          system_user: System user
           tags: Tags
           individual_groups: User groups
           age_ranges: Age groups

@@ -67,7 +67,7 @@ module Adm
       def reorder
         authorize [:adm, :landing_pages, :landing_page], :index?
 
-        ::SiteCustomization::Page.order_landing_pages(params[:ordered_list])
+        ::SiteCustomization::Page.order_landing_pages(params[:tree].map { |item| item[:id] })
         head :ok
       end
 

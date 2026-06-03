@@ -7,12 +7,23 @@ de:
           images: Bilder
           documents: Dokumente
   files:
+    allowed_types_note_html: "Erlaubte Dateitypen: %{types}"
+    allowed_types_admins_html: "Admins &amp; Projektmanager können folgende Dateitypen hochladen: %{types}"
+    allowed_types_users_html: "Normale Nutzer können folgende Dateitypen hochladen: %{types}"
+    allowed_types_settings_link: "hier bearbeiten"
     images:
       index:
-        title: Bilder
+        title: Übersicht aller Bilder
     documents:
       index:
-        title: Dokumente
+        title: Übersicht aller Dokumente
+    empty:
+      images:
+        title: Noch keine Bilder
+        description: Hier sind noch keine Bilder vorhanden. Laden Sie eine Datei hoch, um zu beginnen.
+      documents:
+        title: Noch keine Dokumente
+        description: Hier sind noch keine Dokumente vorhanden. Laden Sie eine Datei hoch, um zu beginnen.
     search_form:
       placeholder: Suchen…
       button_title: Suchen
@@ -27,14 +38,14 @@ de:
       updated_from: Geändert ab
       updated_to: Geändert bis
       imageable_type: Zugewiesen an
-      imageable_type_any: Alle
+      imageable_type_any: "Zugewiesen: Alle"
       documentable_type: Zugewiesen an
-      documentable_type_any: Alle
+      documentable_type_any: "Zugewiesen: Alle"
       admin_flag: Quelle
       admin_flag_any: Alle Quellen
       admin_flag_true: Admin-Uploads
       admin_flag_false: Reguläre Uploads
-      sort_default: Sortierung
+      sort_label: Sortierung
       reset: Zurücksetzen
       sort:
         created_desc: Neueste zuerst
@@ -45,6 +56,14 @@ de:
         name_desc: Name Z–A
         size_asc: Kleinste zuerst
         size_desc: Größte zuerst
+      aria:
+        search: Dateien durchsuchen
+        filter_extension: Nach Dateityp filtern
+        filter_imageable_type: Nach Zuweisung filtern
+        filter_documentable_type: Nach Zuweisung filtern
+        filter_admin_flag: Nach Quelle filtern
+        sort: Sortieren nach
+        reset: Filter zurücksetzen
     upload_failed: Hochladen fehlgeschlagen
     upload_loading: Datei wird hochgeladen…
     upload_success: Hochgeladen
@@ -62,19 +81,23 @@ de:
       assigned_to: Zugewiesen an
       size: Größe
       modified: Geändert
+      uploaded_by: Hochgeladen von
     card:
       edit: Bearbeiten
       delete: Löschen
       delete_confirm: Möchten Sie dieses Element wirklich löschen?
       upload: Hochladen
       open_in_new_tab: In neuem Tab öffnen
+      copy_url: Link kopieren
+      copy_url_success: Link in die Zwischenablage kopiert
+      copy_url_failed: Link konnte nicht kopiert werden
       download: Herunterladen
-      size: Größe
+      file_size: Dateigröße
       dimensions: Abmessungen
-      created: Erstellt
-      modified: Geändert
-      imageable_type: Zugewiesen an
-      documentable_type: Zugewiesen an
+      uploaded: Hochgeladen
+      uploaded_by: Hochgeladen von
+      last_edited: Zuletzt bearbeitet
+      projekt: Projekt
       resource_type: Ressourcentyp
       admin_badge: Admin-Upload
     edit_modal:

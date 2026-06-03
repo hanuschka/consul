@@ -86,6 +86,11 @@ module ContentBlocksHelper
       res << " data-toolbar-position=\"#{ERB::Util.html_escape(toolbar_position.to_s)}\""
     end
 
+    persisted_margin = block.attributes_before_type_cast["margin_bottom"]
+    if persisted_margin.present?
+      res << " style=\"margin-bottom: #{persisted_margin.to_i}px\""
+    end
+
     res << ">#{block_body}</div>"
 
     res
@@ -187,5 +192,11 @@ module ContentBlocksHelper
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")
     result
+  end
+
+  def safe_content_block_body(body)
+    return "" if body.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(body)
   end
 end

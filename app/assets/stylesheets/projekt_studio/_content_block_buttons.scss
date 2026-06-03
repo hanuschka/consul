@@ -23,7 +23,7 @@
   margin-right: auto;
   display: none;
   align-items: center;
-  gap: 2px;
+  gap: 10px;
 }
 
 // =============================================================================
@@ -139,10 +139,11 @@
   width: 32px;
   height: 32px;
   font-size: 14px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.7);
   background: transparent;
   border: none;
-  border-radius: 6px;
+  // border-radius: 6px;
   padding: 0;
   transition: background-color 120ms ease, color 120ms ease;
 

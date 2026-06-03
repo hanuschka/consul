@@ -19,6 +19,16 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       }
     ]
 
+    if show_evaluation_tab?
+      items << {
+        text: t("custom.projekt_phases.subnav.evaluation"),
+        url:  url_to_footer_tab(section: "evaluation", remote: true),
+        active: params[:section] == "evaluation",
+        section: "evaluation",
+        hide_on_preview: !public_evaluation_visible?
+      }
+    end
+
     if show_kpi_stats_tab?
       items << {
         text: t("custom.projekt_phases.subnav.key_metrics"),
@@ -49,19 +59,43 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       current_user&.administrator? || current_user&.projekt_manager?
     end
 
+    def show_evaluation_tab?
+      return false if phase_evaluation.blank?
+      return false if !phase_evaluation.completed?
+
+      admin_or_projekt_manager? || public_evaluation_visible?
+    end
+
     def show_kpi_stats_tab?
       return false if @projekt_phase.is_a?(ProjektPhase::CommentPhase)
+      return false if phase_evaluation_completed?
 
       admin_or_projekt_manager? || @projekt_phase.feature?("general.public_kpi_stats")
     end
 
     def show_ai_analysis_tab?
+      return false if phase_evaluation_completed?
+
       admin_or_projekt_manager? || @projekt_phase.feature?("general.public_ai_stats")
+    end
+
+    def phase_evaluation
+      @projekt_phase.projekt_phase_evaluation
+    end
+
+    def phase_evaluation_completed?
+      phase_evaluation.present? && phase_evaluation.completed?
+    end
+
+    def public_evaluation_visible?
+      visibility = @projekt_phase.projekt_phase_evaluation_visibility
+      visibility.present? && visibility.any_visible?
     end
 
     def any_public_stats_enabled?
       @projekt_phase.feature?("general.public_kpi_stats") ||
-        @projekt_phase.feature?("general.public_ai_stats")
+        @projekt_phase.feature?("general.public_ai_stats") ||
+        public_evaluation_visible?
     end
 
     def hide_subnav_on_preview?

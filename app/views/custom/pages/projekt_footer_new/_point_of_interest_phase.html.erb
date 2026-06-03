@@ -1,3 +1,4 @@
+<div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
 <div class="flex wrap gap-10 margin-bottom items-center">
@@ -21,11 +22,17 @@
   <%= render Shared::MapComponent.new(
     mappable: @projekt_phase,
     features: @pin_coordinates,
-    process: 'point_of_interest_pins'
+    process: 'point_of_interest_pins',
+    map_data_url: map_data_path(
+      source: "point_of_interest_phase",
+      projekt_phase_id: @projekt_phase.id,
+      category_ids: params[:category_ids]
+    )
   ) %>
 </div>
 <div class="flex-layout">
   <div class="main-column">
 
   </div>
+</div>
 </div>

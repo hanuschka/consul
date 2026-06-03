@@ -58,7 +58,7 @@ export default class extends Controller {
       console.error("Screenshot failed:", error)
     } finally {
       window.location.href = href
-      this.element.dispatchEvent(new CustomEvent("pdf-download:complete", { bubbles: true }))
+      this.element.dispatchEvent(new CustomEvent("adm-button-with-progress:complete", { bubbles: true }))
     }
   }
 

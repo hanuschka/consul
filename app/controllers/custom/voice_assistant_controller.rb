@@ -23,7 +23,7 @@ class VoiceAssistantController < ApplicationController
   end
 
   def geocode_location_coordinates
-    geo_result = Geocoder.search(params[:location_name]).first
+    geo_result = Geocoding::LocalSearchService.call(query: params[:location_name]).first
 
     if geo_result.present?
       render json: {

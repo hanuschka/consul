@@ -137,8 +137,15 @@ en:
           download_geojson: Download GeoJSON
           no_proposals_title: No proposals available
           no_proposals_description: As soon as users submit proposals in this participation phase, they are listed here and can be moderated. You can approve proposals, hide them, or review flagged contributions. The table shows title, author, and moderation status of each individual proposal.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
+          total_label:
+            one: proposal
+            other: proposals
+          total_hint: Proposals in the current view (including active filters).
           table:
             id: ID
+            image: Image
             admin_accepted: Approved
             title: Title
             moderation: Moderation
@@ -153,6 +160,7 @@ en:
           title: Comments
           no_comments_title: No comments available
           no_comments_description: As soon as users post comments in this participation phase, they are listed here and can be moderated. You can hide individual comments, restore them, or review flagged contributions. The table shows author, content, and moderation status of each comment.
+          download_csv: Download CSV
           table:
             body: Comment
             author: Author
@@ -181,6 +189,7 @@ en:
             actions: Actions
         map:
           title: Map
+          masterportal_import_success: Import completed successfully.
         masterportal_pins:
           title: Imported Masterportal pins
         officing_managers:
@@ -378,6 +387,11 @@ en:
           empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative to activate AI-supported evaluation criteria. After activation, you can define criteria here, by which submitted contributions are automatically evaluated and categorized.
         email_templates:
           title: System emails
+          groups:
+            submission: Submission (Phase 2)
+            feasibility: Feasibility review (Phase 2 + 3)
+            preselection: Preselection (Phase 4 → 5 transition)
+            selection: Final selection for voting (Phase 5)
         ai_settings:
           title: AI voice assistant
           empty_title: AI voice assistant not available
@@ -482,8 +496,15 @@ en:
           columns: Columns
           no_investments_title: No proposals available
           no_investments_description: As soon as users submit investment proposals in this participation phase, they are listed here and can be evaluated by valuators, checked for feasibility, and moderated as needed. Via the table you have access to all relevant details like cost, status, and valuation results of each individual proposal.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
+          total_label:
+            one: proposal
+            other: proposals
+          total_hint: Proposals in the current view (including active filters).
           table:
             id: ID
+            image: Image
             created_at: Submitted
             title: Title
             feasibility: Criteria

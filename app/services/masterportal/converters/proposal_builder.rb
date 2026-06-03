@@ -10,7 +10,7 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
     title = raw_title.length >= 4 ? raw_title.truncate(Proposal.title_max_length) : fallback_title
 
     proposal = Proposal.new(
-      author: User.masterportal,
+      author: User.system,
       projekt_phase: @pin.projekt_phase,
       title: title,
       description: I18n.t("masterportal.imported_resource_description"),

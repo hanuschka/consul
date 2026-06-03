@@ -14,7 +14,6 @@ en:
         modules: Modules
         application_subitems:
           homepage: Homepage
-          documents: Documents
           pages: System pages
           navbar: Navigation
           overview_pages: Overview pages
@@ -23,10 +22,12 @@ en:
           registration_settings: Account & access
           registered_addresses: Addresses
           default_map_location: Default map
+          system_user: System user
           tags: Tags
           individual_groups: User groups
           age_ranges: Age groups
           email_templates: System emails
+          features: Features
         pages: Pages
         pages_subitems:
           privacy: Privacy policy

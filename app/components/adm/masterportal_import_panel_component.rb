@@ -24,6 +24,14 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
     SUPPORTED_PHASE_TYPES.include?(@projekt_phase.type)
   end
 
+  def system_user
+    @system_user ||= User.system
+  end
+
+  def creates_categories?
+    Masterportal::ImportService::CATEGORY_PHASE_TYPES.include?(@projekt_phase.type)
+  end
+
   def resource_name
     key = RESOURCE_NAME_KEYS[@projekt_phase.type]
     return nil if key.blank?

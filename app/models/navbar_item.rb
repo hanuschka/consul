@@ -38,8 +38,10 @@ class NavbarItem < ApplicationRecord
   belongs_to :projekt, optional: true
   belongs_to :landing_page, class_name: "SiteCustomization::Page",
                             optional: true
+  belongs_to :linked_page, class_name: "SiteCustomization::Page",
+                           optional: true
 
-  enum kind: { presets: 0, projekts: 1, external: 2 }
+  enum kind: { presets: 0, projekts: 1, external: 2, landing_pages: 3 }
 
   validates :kind, presence: true
 
@@ -55,6 +57,12 @@ class NavbarItem < ApplicationRecord
     Projekt.all
   end
 
+  def self.landing_pages_for_select(scope_landing_page = nil)
+    scope = ::SiteCustomization::Page.landing.published
+    scope = scope.where.not(id: scope_landing_page.id) if scope_landing_page.present?
+    scope
+  end
+
   def title
     return custom_title if custom_title.present?
 
@@ -63,10 +71,15 @@ class NavbarItem < ApplicationRecord
       I18n.t("navbar.presets.#{preset}")
     when "projekts"
       projekt&.title || I18n.t("adm.navbar_items.deleted_projekt")
+    when "landing_pages"
+      linked_page&.title || I18n.t("adm.navbar_items.deleted_landing_page")
     end
   end
 
   def resource_missing?
-    kind == "projekts" && projekt.blank?
+    return true if kind == "projekts" && projekt.blank?
+    return true if kind == "landing_pages" && linked_page.blank?
+
+    false
   end
 end

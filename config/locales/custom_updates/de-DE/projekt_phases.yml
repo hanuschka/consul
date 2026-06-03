@@ -4,6 +4,7 @@ de:
       subnav:
         key_metrics: Kennzahlen
         analysis: Analyse
+        evaluation: Auswertung
         full_stats: Auswertung auf separater Seite anzeigen
         overview:
           proposal_phase: Vorschläge

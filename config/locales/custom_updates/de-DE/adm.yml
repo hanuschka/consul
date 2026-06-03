@@ -17,12 +17,20 @@ de:
             image: Bild
     navbar_items:
       deleted_projekt: "[Gelöschtes Projekt]"
+      deleted_landing_page: "[Gelöschte Themenseite]"
       edit:
         title: Navigationseintrag bearbeiten
       form:
         custom_title_label: Anzeigename (optional)
         custom_title_placeholder: Leer lassen, um den Standardtitel zu verwenden
         update: Änderungen speichern
+        kinds:
+          landing_pages: Themenseiten
+        landing_page_label: Themenseite
+        landing_page_filter_placeholder: Themenseite suchen...
+        no_landing_pages_title: Keine veröffentlichten Themenseiten vorhanden
+        no_landing_pages_description: Es sind aktuell keine veröffentlichten Themenseiten verfügbar, die in die Navigation aufgenommen werden können. Erstellen Sie eine neue Themenseite oder aktivieren Sie eine bestehende im Bereich Themenseiten, um sie anschließend als eigenständigen Navigationseintrag hinzuzufügen und Bürgern den direkten Einstieg in zielgruppenspezifische Inhalte zu ermöglichen.
+        no_landing_pages_link: Zu den Themenseiten
     projekts:
       projekt_point_of_interest_categories:
         form:
@@ -70,14 +78,29 @@ de:
           empty_title: KI Sprachassistent nicht verfügbar
           empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today, um den KI Sprachassistenten zu aktivieren.
           questions: Welche Fragen sollen den Bürgern gestellt werden?
+          questions_hint: Definieren Sie die Fragen, die der KI-Sprachassistent den Bürgern bei der Eingabe ihrer Beiträge stellt. Diese Fragen leiten Nutzer durch die Erstellung ihres Vorschlags. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardfragen zu verwenden. Mehrere Fragen können zeilenweise aufgelistet werden.
           criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          criteria_hint: Legen Sie die Kriterien fest, anhand derer der KI-Sprachassistent eingereichte Beiträge prüft und einordnet. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardkriterien zu verwenden. Klare und präzise Kriterien verbessern die Analysequalität.
           parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
+          parting_words_hint: Die Abschiedsworte werden vom KI-Sprachassistenten am Ende des Dialogs ausgegeben. Lassen Sie das Feld leer, um die im Platzhalter angezeigten Standardformulierungen zu verwenden.
           update_button: Aktualisieren
           not_connected: KI-App ist nicht verbunden
           not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
         projekt_phase:
           ai_user_flow: KI Textassistent
           ai_settings: KI Sprachassistent
+          evaluation_visibility: Auswertungs-Sichtbarkeit
+        evaluation_visibility:
+          title: Auswertungs-Sichtbarkeit
+          heading: Sichtbarkeit für reguläre Nutzer:innen konfigurieren
+          description: >
+            Wählen Sie aus, welche Auswertungsabschnitte reguläre Nutzer:innen
+            im Projekt-Footer für diese Phase sehen können. Admins und
+            Projektmanager:innen sehen immer alle Abschnitte.
+          save: Speichern
+          cancel: Abbrechen
+        update_evaluation_visibility:
+          success: Sichtbarkeitseinstellungen gespeichert.
         masterportal_pins:
           delete_all_button: Alle Pins und verknüpfte Ressourcen löschen
           delete_all_confirm: Dadurch werden alle aus dem Masterportal importierten Pins dieser Phase zusammen mit ihren verknüpften Vorschlägen, Investitionen oder Point-of-Interest-Pins endgültig gelöscht. Fortfahren?

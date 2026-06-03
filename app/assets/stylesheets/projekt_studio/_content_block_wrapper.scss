@@ -72,10 +72,6 @@
   }
 }
 
-.content-block-dnd-move {
-  background-color: red;
-}
-
 .content-block-dnd-placeholder {
   opacity: 0.45;
 }
@@ -275,6 +271,17 @@
   transition: 100ms ease background-color;
 }
 
+.projekt-content-block-wrapper:not(.-in-edit-mode):not(.-ai-edit-mode):not(.-loading):has(.projekt-content-block-edit-main-controlls:hover) .projekt-content-block--overlay {
+  display: block;
+  top: -10px;
+  right: -10px;
+  bottom: -10px;
+  left: -10px;
+  background-color: rgba(131, 205, 234, 0.11);
+  border-radius: 12px;
+  z-index: 2;
+}
+
 .projekt-content-block {
   min-height: 24px;
 
@@ -291,4 +298,13 @@
       outline: none;
     }
   }
+}
+
+// Give content blocks a visible minimum height while editing in studio mode, so
+// short or empty blocks stay easy to see and click. Scoped to studio view only:
+// the .projekt-content-block-wrapper exists only when studio controls are
+// rendered (never for regular users), and body.-preview-mode is excluded so the
+// min-height drops in user preview mode.
+body:not(.-preview-mode) .projekt-content-block-wrapper .projekt-content-block {
+  min-height: 55px;
 }

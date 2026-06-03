@@ -10,8 +10,10 @@ class WelcomeController < ApplicationController
   end
 
   def index
-    @header = Widget::Card.header.where(title: "header_large").first
-    @mobile_header = Widget::Card.header.where(title: "header_mobile").first
+    @header_image = header_image_attachment("header_image", "header_large")
+    @mobile_header_image = header_image_attachment("mobile_header_image", "header_mobile")
+    @header_video = SiteCustomization::Video.find_by(name: "header_video")&.persisted_video
+    @mobile_header_video = SiteCustomization::Video.find_by(name: "mobile_header_video")&.persisted_video
     @content_cards = SiteCustomization::ContentCard.homepage.active.to_a
 
     respond_to do |format|
@@ -26,4 +28,15 @@ class WelcomeController < ApplicationController
   end
 
   def latest_activity; end
+
+  private
+
+    def header_image_attachment(image_name, card_title)
+      site_image = SiteCustomization::Image.find_by(name: image_name)
+      if site_image&.persisted_attachment?
+        site_image.image
+      else
+        Widget::Card.header.find_by(title: card_title)&.image&.attachment
+      end
+    end
 end

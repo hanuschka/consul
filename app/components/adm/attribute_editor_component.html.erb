@@ -57,6 +57,14 @@
         </div>
       <% end %>
     <% end %>
+
+    <% if note.present? %>
+      <div class="kern-row">
+        <div class="kern-col-12 kern-col-md-10">
+          <p class="attribute-editor-component--note kern-body mt-2"><%= sanitize(note) %></p>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <% if divider? %>

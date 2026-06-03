@@ -1,0 +1,65 @@
+en:
+  adm:
+    projekts:
+      formular_fields:
+        new:
+          title: Create new form field
+        create:
+          success: Form field created successfully.
+        edit:
+          title: Edit form field
+        update:
+          success: Form field updated successfully.
+        destroy:
+          success: Form field deleted successfully.
+        form:
+          name_label: Field label
+          name_hint: >
+            Enter the name of the form field, shown on the frontend as a caption next to or above
+            the input field. Choose a short, understandable label that immediately conveys to users
+            what input is expected — e.g. "First name", "Concern", or "Street and house number".
+          description_placeholder: "e.g. Please provide your full address"
+          description_label: Help text
+          description_hint: >
+            Optional help text shown on the frontend below the field caption, giving users
+            additional orientation when filling in. Use this field for hints about the desired
+            format, examples, or explanations — e.g. "Please provide your full address" or
+            "Maximum 500 characters".
+          kind_label: Field type
+          kind_hint: >
+            Defines the type of input field on the frontend — e.g. text field, dropdown, checkbox, or file upload. The field type determines how users provide their input and what data is captured. The "Description" type does not produce an input field but serves as a visual separator to structure the form into thematic sections. Caution: the field type cannot be changed after creation.
+          drop_down_options_label: Selection options
+          drop_down_options_hint: >
+            Enter the selection options as a comma-separated list — e.g. "Option A, Option B,
+            Option C". Each entry is shown on the frontend as a selectable option in the dropdown menu.
+            Use unambiguous, short labels. The order of input matches the display order on the frontend.
+          email_for_confirmation_label: Send confirmation email
+          email_for_confirmation_hint: >
+            Enables sending an automatic confirmation email to the email address entered in the form.
+            Users receive a confirmation after submission with the subject and text you define.
+            Suitable for forms where a receipt or submission confirmation is desired.
+          email_for_confirmation_subject_label: Confirmation email subject
+          email_for_confirmation_subject_hint: >
+            Enter the subject of the automatic confirmation email sent to the user after form submission.
+            Choose a clear, informative subject — e.g. "Your submission was received successfully"
+            or "Confirmation of your contribution". The subject appears in the subject line of the email.
+          email_for_confirmation_subject_placeholder: e.g. Thank you for your submission
+          email_for_confirmation_text_label: Confirmation email text
+          email_for_confirmation_text_hint: >
+            Write the content of the confirmation email users receive after submitting the form.
+            Thank them for participating and, where appropriate, give hints about what happens next —
+            e.g. when to expect a response. The text is displayed as body copy in the email.
+          email_for_confirmation_text_placeholder: Your message to the submitter...
+          required_label: Required field
+          required_hint: >
+            Defines whether this form field must be filled in before submission. Required fields are
+            marked with an asterisk (*) on the frontend. If a user leaves a required field empty, an
+            error message is shown and the form cannot be submitted. Enable this option
+            only for fields that are strictly necessary.
+          follow_up_label: Follow-up field
+          follow_up_hint: >
+            Marks this field as a follow-up field, which is only shown in a second step after the
+            main form has been submitted. Follow-up fields are suitable for supplementary information
+            that doesn't apply to all users — e.g. contact details for follow-up questions or detailed
+            descriptions of a previously submitted concern.
+          submit: Save

@@ -12,7 +12,8 @@ class Image < ApplicationRecord
       popup: { coalesce: true, gravity: "center", resize: "140x140^", crop: "140x140+0+0", loader: { page: nil }},
       thumb2: { coalesce: true, gravity: "center", resize: "100x100^", crop: "100x100+0+0", loader: { page: nil }},
       projekt_event_thumb: { coalesce: true, gravity: "center", saver: { quality: 100 }, resize: "350x250^", crop: "350x250+0+0", loader: { page: nil }},
-      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }}
+      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }},
+      pdf: { coalesce: true, resize: "700x700>", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }}
     }
   end
 
@@ -22,8 +23,16 @@ class Image < ApplicationRecord
   # validates :title, presence: true
   validate :validate_title_length
   validates :user_id, presence: true
-  validates :imageable_id, presence: true,         if: -> { persisted? }
-  validates :imageable_type, presence: true,       if: -> { persisted? }
+  validates :imageable_id, presence: true,         if: -> { persisted? && !admin? }
+  validates :imageable_type, presence: true,       if: -> { persisted? && !admin? }
+
+  scope :for_studio_file_manager, ->(projekt) {
+    if projekt
+      where(imageable_type: "Projekt", imageable_id: projekt.id)
+    else
+      where(admin: true, imageable_id: nil)
+    end
+  }
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }
 
   default_scope { with_attached_attachment }
@@ -82,7 +91,7 @@ class Image < ApplicationRecord
   end
 
   def attached?
-    attachment.attached?
+    attachment.attached? && attachment.blob.present?
   end
 
   def title

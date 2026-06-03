@@ -1,0 +1,16 @@
+<% if image_attached? %>
+  <%= image_tag image.attachment.variant(resize_to_limit: [80, 80], format: "jpeg"),
+        class: "adm-table-thumb",
+        alt: title,
+        loading: "lazy" %>
+<% elsif fallback_icon? %>
+  <span class="adm-table-thumb adm-table-thumb--category"
+        style="<%= category_style %>"
+        aria-hidden="true">
+    <i class="fas fa-<%= fallback_icon %>"></i>
+  </span>
+<% else %>
+  <span class="adm-table-thumb adm-table-thumb--placeholder" aria-hidden="true">
+    <span class="material-symbols-outlined">image_not_supported</span>
+  </span>
+<% end %>

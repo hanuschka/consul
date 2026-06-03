@@ -1,0 +1,17 @@
+<details
+  class="shared-accordion <%= @root_class %>"
+  <%= "open" if @opened_by_default %>
+>
+  <summary class="shared-accordion--head">
+    <div class="shared-accordion--head-content">
+      <%= head %>
+    </div>
+    <span class="shared-accordion--chevron" aria-hidden="true">
+      <i class="fa fa-chevron-down"></i>
+    </span>
+  </summary>
+
+  <div class="shared-accordion--body">
+    <%= body %>
+  </div>
+</details>

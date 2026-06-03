@@ -1,0 +1,11 @@
+<%= link_to profile_url, class: "files-uploader-link", title: user.name do %>
+  <% if avatar_image.present? %>
+    <%= image_tag(avatar_image, class: "files-uploader-link--avatar", alt: user.name) %>
+  <% else %>
+    <span class="files-uploader-link--avatar files-uploader-link--avatar-placeholder" aria-hidden="true">
+      <%= placeholder_letter %>
+    </span>
+  <% end %>
+
+  <span class="files-uploader-link--name"><%= user.name %></span>
+<% end %>

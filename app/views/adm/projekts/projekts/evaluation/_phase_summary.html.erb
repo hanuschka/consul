@@ -1,0 +1,21 @@
+<% summary_text = (phase["ai_stats"] || {})["summary"] %>
+
+<% if summary_text.present? %>
+  <div class="phase-summary-card">
+    <div
+      class="phase-summary-card__icon"
+      style="color:<%= accent %>;background:<%= accent_light %>"
+      aria-hidden="true"
+    >
+      <span class="material-symbols-outlined">summarize</span>
+    </div>
+    <div class="phase-summary-card__content">
+      <div class="phase-summary-card__label">
+        <%= t("custom.participation_stats.ai_summary_title") %>
+      </div>
+      <div class="phase-summary-card__body">
+        <%= summary_text %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,5 +1,5 @@
 <%= turbo_stream.update "search_results" do %>
-  <% if @user %>
+  <% if @users.any? %>
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
         <thead class="kern-table__head">
@@ -10,20 +10,22 @@
           </tr>
         </thead>
         <tbody class="kern-table__body">
-          <tr class="kern-table__row">
-            <td scope="row" class="kern-table__header"><%= @user.name %></td>
-            <td class="kern-table__cell"><%= @user.email %></td>
-            <td class="kern-table__cell">
-              <% if @individual_group_value.users.include?(@user) %>
-                <span class="kern-badge"><%= t("adm.individual_group_values.search_user.already_assigned") %></span>
-              <% else %>
-                <%= link_to t("adm.individual_group_values.search_user.add_user"),
-                  add_user_adm_individual_group_value_path(@individual_group, @individual_group_value, user_id: @user.id),
-                  data: { turbo_method: :post },
-                  class: "kern-link" %>
-              <% end %>
-            </td>
-          </tr>
+          <% @users.each do |user| %>
+            <tr class="kern-table__row">
+              <td scope="row" class="kern-table__header"><%= user.name %></td>
+              <td class="kern-table__cell"><%= user.email %></td>
+              <td class="kern-table__cell">
+                <% if @individual_group_value.users.include?(user) %>
+                  <span class="kern-badge"><%= t("adm.individual_group_values.search_user.already_assigned") %></span>
+                <% else %>
+                  <%= link_to t("adm.individual_group_values.search_user.add_user"),
+                    add_user_adm_individual_group_value_path(@individual_group, @individual_group_value, user_id: user.id),
+                    data: { turbo_method: :post, turbo_frame: "_top" },
+                    class: "kern-link" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>

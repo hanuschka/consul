@@ -14,9 +14,12 @@
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_transparent_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_white_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_image, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_video, :video, path: adm_landing_pages_landing_page_path(@landing_page)) %>
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_image, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_video, :video, path: adm_landing_pages_landing_page_path(@landing_page)) %>
 
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :title, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :header_title, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :subtitle, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
 
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_hide_title_and_subtitle, :boolean, path: adm_landing_pages_landing_page_path(@landing_page)) %>

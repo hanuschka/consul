@@ -19,7 +19,7 @@ class Proposals::ListItemComponent < ApplicationComponent
       header_style: header_style,
       tags: proposal.tags.first(3),
       url: proposal_path,
-      image_url: proposal.image&.variant(:card_thumb),
+      image: proposal.image,
       image_placeholder_icon_class: "fa-lightbulb",
       no_footer_bottom_padding: true
     }

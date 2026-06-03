@@ -1,0 +1,99 @@
+en:
+  adm:
+    officing:
+      title: Polling officials
+      menu:
+        aria_label: Officing navigation
+        items:
+          home: Home
+          officing_managers: Team
+          settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+      home:
+        title: Welcome to the polling officials area
+        budgets: Budgets to vote on
+        proposals: Proposals to vote on
+        polls: Polls to vote on
+        table:
+          name: Name
+          phase: Phase
+          open: Open
+          vote: Vote
+          bulk_votes: Bulk voting
+        no_assignments_title: No assigned votes yet
+        no_assignments_description: As soon as budgets, proposal phases, or polls are assigned to you, they will appear here. Contact your administrator if you expect an assignment.
+        stats:
+          budgets: Assigned budgets
+          proposals: Assigned proposal phases
+          polls: Assigned polls
+      verification:
+        title: Add offline vote
+        skip_verification: Continue without verification
+        first_name: First name
+        last_name: Last name
+        gender: Gender
+        date_of_birth: Date of birth
+        address: Address
+        mark_as_verified: Mark as verified
+        submit: Add offline vote
+        errors:
+          missing_fields: Please make sure all fields are filled in.
+      budgets:
+        officing_desk:
+          title: Vote
+          voting_for: "Voting for offline user #%{user}"
+          votes_cast: Votes cast
+          no_investments: No proposals available for voting.
+          next_ballot: Next ballot
+        investment_ballot:
+          vote: Vote
+          revoke: Revoke
+          weight: "Weight: %{count}"
+        investment_vote:
+          support: Support
+          revoke: Revoke
+          weight: "Weight: %{count}"
+      proposal_phases:
+        officing_desk:
+          title: Vote
+          voting_for: "Voting for offline user #%{user}"
+          no_proposals: No proposals available for voting.
+          next_voter: Next vote
+        proposal_vote:
+          support: Support
+          revoke: Revoke
+          agree: Agree
+          agreed: Agreed
+          disagree: Reject
+          disagreed: Rejected
+        bulk_votes:
+          title: Bulk voting
+          proposal: Proposal
+          vote_count: Votes
+          update: Update
+          saved: Saved
+      voting_phases:
+        officing_desk:
+          title: Vote
+          voting_for: "Voting for offline user #%{user}"
+          progress: "Question %{current} of %{total}"
+          no_questions: No questions available for voting.
+          prev_question: Previous question
+          next_question: Next question
+          next_voter: Next person
+        poll_question:
+          vote: Vote
+          revoke: Revoke
+          weight: "%{count} vote(s)"
+          weight_label: "Vote weight for %{answer}"
+          no_votes_left: No votes left
+          context: "Applies to answer: %{answer}"
+          save_open_answer: Save text input
+      shared:
+        permission_problem:
+          title: Missing permission
+          message: "This person cannot vote: %{problem}"
+          back: Back to overview

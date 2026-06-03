@@ -1,5 +1,7 @@
 <% header_image_attachment = local_assigns[:header_image_attachment] %>
 <% mobile_header_image_attachment = local_assigns[:mobile_header_image_attachment] %>
+<% header_video_attachment = local_assigns[:header_video_attachment] %>
+<% mobile_header_video_attachment = local_assigns[:mobile_header_video_attachment] %>
 
 <% if header_image_attachment&.attached? %>
   <style>
@@ -11,7 +13,7 @@
         background-position: top;
       }
 
-      .top-bar-background-wrapper {
+      .top-bar-wrapper {
         background: transparent;
       }
   </style>
@@ -41,7 +43,67 @@
   </style>
 <% end %>
 
+<% any_header_video = header_video_attachment&.attached? || mobile_header_video_attachment&.attached? %>
 <div class="homepage-image-header not-print">
+  <% if header_video_attachment&.attached? %>
+    <video class="homepage-image-header--video homepage-image-header--video--desktop js-homepage-header-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+      <source src="<%= polymorphic_path(header_video_attachment) %>" type="<%= header_video_attachment.content_type %>">
+    </video>
+  <% end %>
+
+  <% if mobile_header_video_attachment&.attached? %>
+    <video class="homepage-image-header--video homepage-image-header--video--mobile js-homepage-header-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+      <source src="<%= polymorphic_path(mobile_header_video_attachment) %>" type="<%= mobile_header_video_attachment.content_type %>">
+    </video>
+  <% end %>
+
+  <% if any_header_video %>
+    <button type="button"
+            id="js-homepage-header-video-toggle"
+            class="homepage-image-header--video-toggle"
+            data-pause-label="<%= t('custom.welcome.header.pause_video') %>"
+            data-play-label="<%= t('custom.welcome.header.play_video') %>"
+            aria-label="<%= t('custom.welcome.header.pause_video') %>"
+            title="<%= t('custom.welcome.header.pause_video') %>">
+      <i class="fas fa-pause" aria-hidden="true"></i>
+    </button>
+
+    <script>
+      (function () {
+        var btn = document.getElementById("js-homepage-header-video-toggle");
+        if (!btn) return;
+        var icon = btn.querySelector("i");
+        var videos = document.querySelectorAll(".js-homepage-header-video");
+
+        function setState(playing) {
+          icon.classList.toggle("fa-pause", playing);
+          icon.classList.toggle("fa-play", !playing);
+          var label = playing ? btn.dataset.pauseLabel : btn.dataset.playLabel;
+          btn.setAttribute("aria-label", label);
+          btn.setAttribute("title", label);
+        }
+
+        btn.addEventListener("click", function () {
+          var anyPaused = Array.prototype.some.call(videos, function (v) { return v.paused; });
+          if (anyPaused) {
+            Array.prototype.forEach.call(videos, function (v) {
+              var p = v.play();
+              if (p && typeof p.catch === "function") p.catch(function () {});
+            });
+            setState(true);
+          } else {
+            Array.prototype.forEach.call(videos, function (v) { v.pause(); });
+            setState(false);
+          }
+        });
+
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          Array.prototype.forEach.call(videos, function (v) { v.pause(); });
+          setState(false);
+        }
+      })();
+    </script>
+  <% end %>
   <div class="homepage-image-header--title-wrapper">
     <% show_title_and_subtitle =
       if @custom_page&.landing?
@@ -67,10 +129,6 @@
       </h1>
     <% end %>
 
-    <% unless @custom_page&.landing? %>
-      <%= header_button_html %>
-    <% end %>
-
     <% if Setting["welcomepage.projekt_search"].present? && !@custom_page&.landing? %>
       <div class="homepage-search-form">
         <%= render(
@@ -81,6 +139,10 @@
           )
         ) %>
       </div>
+    <% end %>
+
+    <% unless @custom_page&.landing? %>
+      <%= header_button_html %>
     <% end %>
   </div>
 </div>

@@ -1,0 +1,6 @@
+<div class="map map-legend-wrapper">
+  <%= render_map(@map_location, "budgets", false, nil, @investments_map_coordinates) %>
+  <%= render Kern::MapLegendComponent.new(
+    show_imported: @budget&.projekt_phase&.masterportal_pins&.exists?
+  ) %>
+</div>

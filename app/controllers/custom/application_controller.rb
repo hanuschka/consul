@@ -21,9 +21,10 @@ class ApplicationController < ActionController::Base
   private
     def sanitize_pagination_params
       %i[page per_page resource_browse_mode_page].each do |key|
-        if params[key].present? && !params[key].is_a?(String) && !params[key].is_a?(Numeric)
-          params[key] = nil
-        end
+        value = params[key]
+        next if value.nil? || value.is_a?(String) || value.is_a?(Numeric)
+
+        params[key] = nil
       end
     end
 
@@ -129,10 +130,26 @@ class ApplicationController < ActionController::Base
       session[:back_path] = SessionUrlTruncator.truncate(back_path)
     end
 
+    BOT_USER_AGENT_REGEX = /
+      bot|crawl|spider|slurp|fetch|preview|monitor|
+      google|bing|yandex|baidu|duckduckbot|
+      facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|telegram|discordbot|
+      curl|wget|python|java\/|go-http-client|httpclient|ruby|okhttp|
+      pingdom|uptimerobot|statuscake|newrelic|datadog
+    /ix.freeze
+
+    def bot_request?
+      return true if request.head?
+
+      ua = request.user_agent.to_s
+      ua.blank? || ua.match?(BOT_USER_AGENT_REGEX)
+    end
+
     def auto_sign_in_guest_for(projekt_phase)
       return if current_user.present?
       return if projekt_phase.blank?
       return unless projekt_phase.user_status == "guest"
+      return if bot_request?
       # return unless projekt_phase.current?
 
       guest_key = "guest_#{SecureRandom.uuid}"
@@ -145,7 +162,7 @@ class ApplicationController < ActionController::Base
       @guest_user.save!
       session[:guest_user_id] = guest_key
 
-      @current_ability = Ability.new(current_user)
+      @current_ability = Ability.new(@guest_user)
     rescue StandardError => e
       Sentry.capture_exception(e)
     end
@@ -157,6 +174,7 @@ class ApplicationController < ActionController::Base
         terms_general: params[:user][:terms_general],
         email: "#{guest_key}@example.com",
         guest: true,
+        guest_user_agent: request.user_agent.to_s.first(500),
         confirmed_at: Time.now.utc,
         skip_password_validation: true
       )

@@ -18,7 +18,7 @@ class Projekts::ListItemComponent < ApplicationComponent
       narrow_header: true,
       url: projekt_url,
       url_target: url_target,
-      image_url: image_url
+      image: projekt.image
     }
   end
 

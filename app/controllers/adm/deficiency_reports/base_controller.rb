@@ -4,15 +4,12 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
   before_action :authenticate_user!
   before_action :verify_deficiency_report_manager
 
+  rescue_from Pundit::NotAuthorizedError do |exception|
+    Sentry.capture_exception(exception, level: :warning)
+    redirect_to adm_deficiency_reports_root_path, alert: t("adm.not_authorized")
+  end
+
   private
-
-    def adm_header_title
-      I18n.t("adm.deficiency_reports.title")
-    end
-
-    def adm_menu_component
-      Adm::DeficiencyReports::MenuComponent.new
-    end
 
     def verify_deficiency_report_manager
       raise Pundit::NotAuthorizedError unless current_user&.deficiency_report_manager? ||

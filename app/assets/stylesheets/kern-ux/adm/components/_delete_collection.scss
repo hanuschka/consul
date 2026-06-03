@@ -1,0 +1,49 @@
+.adm-delete-collection {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.adm-delete-collection--spinner {
+  flex-shrink: 0;
+  font-size: 22px;
+  color: var(--kern-color-feedback-danger, #BD0F09);
+  animation: adm-delete-collection--spin 1.4s linear infinite;
+}
+
+.adm-delete-collection--error-icon {
+  flex-shrink: 0;
+  font-size: 22px;
+  color: var(--kern-color-feedback-danger, #BD0F09);
+}
+
+.adm-delete-collection--text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.adm-delete-collection--headline {
+  font-weight: 600;
+  color: #7f1d1d;
+}
+
+.adm-delete-collection--hint {
+  font-size: 14px;
+  color: #b91c1c;
+}
+
+@keyframes adm-delete-collection--spin {
+  to { transform: rotate(360deg); }
+}

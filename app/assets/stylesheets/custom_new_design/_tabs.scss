@@ -48,12 +48,6 @@
       display: flex;
       width: 100vw;
       margin-left: (-$mobile-side-padding);
-
-      @media (max-width: 480px) {
-        position: static;
-        width: 100%;
-        margin-left: 0;
-      }
     }
   }
 

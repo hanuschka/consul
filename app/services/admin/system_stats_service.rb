@@ -93,7 +93,7 @@ class Admin::SystemStatsService < ApplicationService
   def web_server_stats
     max_threads =
       (Puma.stats_hash[:max_threads] if defined?(Puma) && Puma.respond_to?(:stats_hash)) ||
-      Integer(ENV.fetch("RAILS_MAX_THREADS", 16))
+      Integer(ENV.fetch("RAILS_MAX_THREADS", 8))
 
     {
       available:   true,

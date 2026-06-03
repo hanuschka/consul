@@ -235,7 +235,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
   handleSuccessResponse(response, contentBlock) {
     if (response.content_block_html) {
       if (contentBlock) {
-        contentBlock.innerHTML = response.content_block_html;
+        contentBlock.innerHTML = ProjektStudio.utils.sanitizeAdminHtml(response.content_block_html);
 
         ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
 

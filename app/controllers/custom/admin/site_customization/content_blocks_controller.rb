@@ -16,7 +16,11 @@ class Admin::SiteCustomization::ContentBlocksController
     update_params[:margin_bottom] = params[:margin_bottom] if params.key?(:margin_bottom)
 
     if @content_block.update(update_params)
-      render json: { status: { message: I18n.t("admin.site_customization.content_blocks.update.notice") } }
+      render json: {
+        body: @content_block.body,
+        stripped: @content_block.body_stripped?,
+        status: { message: I18n.t("admin.site_customization.content_blocks.update.notice") }
+      }
     else
       render json: { message: I18n.t("admin.site_customization.content_blocks.update.error") }, status: :unprocessable_entity
     end
@@ -31,7 +35,7 @@ class Admin::SiteCustomization::ContentBlocksController
     allow_text_modification = ActiveModel::Type::Boolean.new.cast(params[:allow_text_modification])
 
     new_content_block_body =
-      Ai::GenerateContentBlock.call(
+      Ai::EditContentBlock.call(
         params[:instructions],
         params[:content_block_html],
         nil,

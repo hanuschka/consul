@@ -1,0 +1,19 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.commentable_type") %>
+  <%= select_tag "recipient_group_filter[params][commentable_type]",
+        options_for_select(
+          %w[Proposal Debate Budget::Investment].map { |type|
+            [t("adm.recipient_groups.filters.params_labels.commentable_types.#{type}"), type]
+          },
+          filter_params["commentable_type"]
+        ),
+        include_blank: true,
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+</label>
+
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.commentable_id") %>
+  <%= text_field_tag "recipient_group_filter[params][commentable_id]",
+        filter_params["commentable_id"],
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+</label>

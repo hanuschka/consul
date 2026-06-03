@@ -50,7 +50,7 @@
     <dl class="files-asset-card--details">
       <% if humanized_size.present? %>
         <div class="files-asset-card--detail-row">
-          <dt><%= t("files.card.size") %></dt>
+          <dt><%= t("files.card.file_size") %></dt>
           <dd><%= humanized_size %></dd>
         </div>
       <% end %>
@@ -63,12 +63,12 @@
       <% end %>
 
       <div class="files-asset-card--detail-row">
-        <dt><%= t("files.card.created") %></dt>
+        <dt><%= t("files.card.uploaded") %></dt>
         <dd><%= created_at_formatted %></dd>
       </div>
 
       <div class="files-asset-card--detail-row">
-        <dt><%= t("files.card.modified") %></dt>
+        <dt><%= t("files.card.last_edited") %></dt>
         <dd><%= updated_at_formatted %></dd>
       </div>
     </dl>

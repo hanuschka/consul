@@ -1,5 +1,15 @@
 en:
   activerecord:
+    errors:
+      models:
+        map_layer:
+          attributes:
+            geojson_file:
+              blank: must be uploaded
+              invalid_content_type: must be a GeoJSON or JSON file
+              too_large: is too large (maximum %{max} MB allowed)
+          choropleth_colors_count: The number of colors must be exactly one more than the number of breaks.
+          choropleth_breaks_order: The breaks must be given in ascending order.
     models:
       projekt: Project
     attributes:
@@ -23,6 +33,11 @@ en:
         show_by_default: Show by default when the map loads
         transparent: Layer is transparent
         opacity: Opacity
+        geojson_file: GeoJSON file
+        protocols:
+          regular: Tile map (XYZ)
+          wms: WMS service
+          geojson: GeoJSON file
       projekt:
         show_start_date_in_frontend: Show start date in project sidebar
         show_end_date_in_frontend: Show end date in project sidebar
@@ -64,3 +79,5 @@ en:
         rating_scale: Rating scale
       individual_group:
         visible: Visible
+      newsletter:
+        respect_newsletter_optout: Respect newsletter opt-out

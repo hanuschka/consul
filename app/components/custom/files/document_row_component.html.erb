@@ -40,6 +40,10 @@
 
   <td class="kern-table__cell"><%= updated_at_formatted %></td>
 
+  <td class="kern-table__cell">
+    <%= render Files::UploaderLinkComponent.new(user: uploaded_by) %>
+  </td>
+
   <td class="kern-table__cell files-asset-row--actions-cell">
     <% if document.attachment.attached? %>
       <a

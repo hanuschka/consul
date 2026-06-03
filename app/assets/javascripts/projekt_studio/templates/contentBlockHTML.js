@@ -16,6 +16,13 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       >
         <button
           type="button"
+          class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          title="Inhaltsblock mit KI erstellen"
+        >
+          <i class="fas fa-magic"></i>
+        </button>
+        <button
+          type="button"
           class="js-show-content-block-templates add-new-content-block-button"
           title="Neuen Inhaltsblock am Anfang hinzufügen"
         >
@@ -66,13 +73,21 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             <div
               class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
               <div class="content-block-edit-toolbar">
-                <label
+                <div
                   class="content-block-margin-input d-flex align-items-end u-gap-5"
                   data-tooltip
                   data-hover-delay="800"
                   title="Abstand nach unten"
                 >
                   <i class="fas fa-arrows-alt-v"></i>
+                  <button
+                    type="button"
+                    class="content-block-margin-input--step js-content-block-margin-bottom-decrease"
+                    aria-label="Abstand verringern"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-minus"></i>
+                  </button>
                   <input
                     type="number"
                     class="js-content-block-margin-bottom-input"
@@ -81,7 +96,15 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     min="0"
                     max="85"
                   >
-                </label>
+                  <button
+                    type="button"
+                    class="content-block-margin-input--step js-content-block-margin-bottom-increase"
+                    aria-label="Abstand vergrößern"
+                    tabindex="-1"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
                 <div
                   class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
                   data-name="header-type"
@@ -325,6 +348,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 function showContentBlockTemplatesButton(isDraft = false) {
   return `
     <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
+      <button
+        type="button"
+        class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+        title="Inhaltsblock mit KI erstellen"
+        ${isDraft ? "disabled" : ''}
+      >
+        <i class="fas fa-magic"></i>
+      </button>
       <button
         type="button"
         class="js-show-content-block-templates add-new-content-block-button"

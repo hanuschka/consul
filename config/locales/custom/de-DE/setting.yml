@@ -295,9 +295,6 @@ de:
           external_participation_link: Alternativen Link in den Projektressourcen verwenden
           external_participation_link_description: Anstatt zum Projekt zu verlinken wird auf eine (externe) Seite verlinkt
       deficiency_reports:
-        show_in_main_menu: Mängelmelder in Navigation anzeigen
-        show_in_main_menu_description: >
-          Wenn aktiviert, wird der Mängelmelder als eigenständiger Menüpunkt in der Hauptnavigation der Plattform angezeigt. Nutzer können so direkt über das Hauptmenü auf die Mängelübersicht zugreifen, ohne erst ein Projekt aufrufen zu müssen. Deaktivieren Sie diese Option, wenn der Mängelmelder nur innerhalb bestimmter Projekte sichtbar sein soll.
         admins_must_assign_officer: Admins müssen Sachbearbeiter zuweisen
         admins_must_assign_officer_description: >
           Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.

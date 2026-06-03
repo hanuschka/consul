@@ -4,7 +4,8 @@ export default class extends Controller {
   static targets = ["content", "loading"]
   static values = {
     statusUrl: String,
-    interval: { type: Number, default: 4000 }
+    interval: { type: Number, default: 4000 },
+    confirm: String
   }
 
   connect() {
@@ -24,6 +25,10 @@ export default class extends Controller {
   start(event) {
     event.preventDefault()
     if (this.regenerating) return
+
+    if (this.hasConfirmValue && this.confirmValue.length > 0) {
+      if (!window.confirm(this.confirmValue)) return
+    }
 
     this.regenerating = true
 

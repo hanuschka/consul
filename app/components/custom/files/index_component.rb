@@ -25,4 +25,20 @@ class Files::IndexComponent < ApplicationComponent
     def supports_view_modes?
       row_component.present?
     end
+
+    def images?
+      type == "picture"
+    end
+
+    def empty_title
+      images? ? t("files.empty.images.title") : t("files.empty.documents.title")
+    end
+
+    def empty_description
+      images? ? t("files.empty.images.description") : t("files.empty.documents.description")
+    end
+
+    def empty_icon
+      images? ? "image" : "description"
+    end
 end

@@ -24,6 +24,10 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
     SUPPORTED_PHASE_TYPES.include?(@projekt_phase.type)
   end
 
+  def system_user
+    @system_user ||= User.system
+  end
+
   def creates_categories?
     Masterportal::ImportService::CATEGORY_PHASE_TYPES.include?(@projekt_phase.type)
   end

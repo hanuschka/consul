@@ -53,7 +53,16 @@
         <%= render Shared::MapComponent.new(
           mappable: @projekt_phase,
           features: @proposals_coordinates,
-          process: 'proposals'
+          features_count: @proposals_map_pin_count,
+          process: 'proposals',
+          map_data_url: map_data_path(
+            source: "proposal_phase",
+            projekt_phase_id: @projekt_phase.id,
+            search: params[:search],
+            projekt_label_ids: params[:projekt_label_ids],
+            sentiment_id: params[:sentiment_id],
+            my_posts_filter: params[:my_posts_filter]
+          )
         ) %>
       <% end %>
       <div class="flex-layout flex-layout-reverse-on-mobile">

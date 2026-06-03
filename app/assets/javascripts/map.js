@@ -2,6 +2,14 @@
   "use strict";
   App.Map = {
     maps: [],
+
+    // Parse a style value to a finite number, falling back to a default for blank
+    // ("") / null / non-numeric input (form fields submit "" when left empty).
+    numberOrDefault: function(value, fallback) {
+      var parsed = parseFloat(value);
+      return isNaN(parsed) ? fallback : parsed;
+    },
+
     initialize: function() {
       $("*[data-map]:visible").each(function() {
         App.Map.destroyMapForElementId(this.id);

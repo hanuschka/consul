@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_01_075138) do
+ActiveRecord::Schema.define(version: 2026_06_02_080415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -219,20 +219,11 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.jsonb "body_params", default: {}, null: false
     t.integer "response_status"
     t.integer "api_client_id"
-    t.boolean "pushed_to_dt", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["api_client_id"], name: "index_api_request_logs_on_api_client_id"
     t.index ["created_at"], name: "index_api_request_logs_on_created_at"
-    t.index ["pushed_to_dt"], name: "index_api_request_logs_on_pushed_to_dt"
     t.index ["request_path"], name: "index_api_request_logs_on_request_path"
-  end
-
-  create_table "apps", force: :cascade do |t|
-    t.integer "status"
-    t.string "codename"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -480,26 +471,19 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.jsonb "ai_evaluation_result"
     t.text "ai_image_prompt"
     t.datetime "published_at"
-    t.string "source"
-    t.string "source_collection"
-    t.string "external_id"
-    t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
-    t.index ["budget_id", "source", "source_collection"], name: "index_budget_investments_on_budget_source_collection"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
     t.index ["community_id"], name: "index_budget_investments_on_community_id"
     t.index ["draft"], name: "index_budget_investments_on_draft"
-    t.index ["external_id"], name: "index_budget_investments_on_external_id"
     t.index ["group_id"], name: "index_budget_investments_on_group_id"
     t.index ["heading_id"], name: "index_budget_investments_on_heading_id"
     t.index ["incompatible"], name: "index_budget_investments_on_incompatible"
     t.index ["masterportal_pin_id"], name: "index_budget_investments_on_masterportal_pin_id"
     t.index ["selected"], name: "index_budget_investments_on_selected"
     t.index ["sentiment_id"], name: "index_budget_investments_on_sentiment_id"
-    t.index ["source", "external_id", "budget_id"], name: "index_budget_investments_on_source_external_id_budget_id", unique: true
     t.index ["tsv"], name: "index_budget_investments_on_tsv", using: :gin
   end
 
@@ -590,8 +574,8 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.text "description_informing"
     t.string "voting_style", default: "knapsack"
     t.boolean "published"
-    t.bigint "projekt_id"
     t.boolean "hide_money", default: false
+    t.bigint "projekt_id"
     t.integer "max_number_of_winners", default: 0
     t.bigint "projekt_phase_id"
     t.boolean "show_percentage_values_only", default: false
@@ -1323,6 +1307,15 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.index ["user_id"], name: "index_landing_page_managers_on_user_id"
   end
 
+  create_table "landing_pages_projekts", force: :cascade do |t|
+    t.bigint "site_customization_page_id", null: false
+    t.bigint "projekt_id", null: false
+    t.index ["projekt_id", "site_customization_page_id"], name: "index_projekts_scp"
+    t.index ["projekt_id"], name: "index_landing_pages_projekts_on_projekt_id"
+    t.index ["site_customization_page_id", "projekt_id"], name: "index_scp_projekts", unique: true
+    t.index ["site_customization_page_id"], name: "index_landing_pages_projekts_on_site_customization_page_id"
+  end
+
   create_table "legislation_annotations", id: :serial, force: :cascade do |t|
     t.string "quote"
     t.text "ranges"
@@ -1594,6 +1587,7 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.string "mappable_type"
     t.bigint "mappable_id"
     t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
+    t.jsonb "config", default: {}, null: false
     t.index ["mappable_type", "mappable_id"], name: "index_map_layers_on_mappable_type_and_mappable_id"
     t.index ["projekt_id"], name: "index_map_layers_on_projekt_id"
   end
@@ -1614,11 +1608,28 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.jsonb "features_bu", default: {}, null: false
     t.boolean "default", default: false, null: false
     t.bigint "registered_address_district_id"
-    t.string "polygon_color", default: "#008000"
     t.string "mapbox_style_id"
     t.index ["features"], name: "index_map_locations_on_features", using: :gin
     t.index ["mappable_type", "mappable_id"], name: "index_map_locations_on_mappable"
     t.index ["registered_address_district_id"], name: "index_map_locations_on_registered_address_district_id"
+  end
+
+  create_table "masterportal_collections", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.string "collection_id", null: false
+    t.string "name"
+    t.string "endpoint_url"
+    t.boolean "create_domain_records", default: false, null: false
+    t.string "import_status", default: "pending", null: false
+    t.text "import_error"
+    t.datetime "last_imported_at"
+    t.integer "last_imported_count", default: 0, null: false
+    t.string "destroy_status"
+    t.text "destroy_error"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
+    t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
 
   create_table "masterportal_pins", force: :cascade do |t|
@@ -1636,10 +1647,12 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "collection_title"
+    t.bigint "masterportal_collection_id"
     t.index "((properties)::text) gin_trgm_ops", name: "index_masterportal_pins_on_properties_text_trgm", using: :gin
     t.index ["collection_id"], name: "index_masterportal_pins_on_collection_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["description"], name: "index_masterportal_pins_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["external_id"], name: "index_masterportal_pins_on_external_id_trgm", opclass: :gin_trgm_ops, using: :gin
+    t.index ["masterportal_collection_id"], name: "index_masterportal_pins_on_masterportal_collection_id"
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_pins_on_phase_and_collection_id"
     t.index ["projekt_phase_id", "external_id"], name: "index_masterportal_pins_on_phase_and_external_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_pins_on_projekt_phase_id"
@@ -1788,22 +1801,6 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_officing_managers_on_user_id"
-  end
-
-  create_table "ogc_import_runs", force: :cascade do |t|
-    t.string "endpoint", null: false
-    t.string "collection", null: false
-    t.string "target_kind", null: false
-    t.bigint "projekt_phase_id", null: false
-    t.string "status", default: "pending", null: false
-    t.integer "total_features"
-    t.integer "count_created", default: 0, null: false
-    t.integer "count_updated", default: 0, null: false
-    t.text "error_message"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["projekt_phase_id", "created_at"], name: "index_ogc_import_runs_on_projekt_phase_and_created_at"
-    t.index ["projekt_phase_id"], name: "index_ogc_import_runs_on_projekt_phase_id"
   end
 
   create_table "organizations", id: :serial, force: :cascade do |t|
@@ -2454,18 +2451,11 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.bigint "author_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "source"
-    t.string "source_collection"
-    t.string "external_id"
-    t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.index ["author_id"], name: "index_projekt_point_of_interest_pins_on_author_id"
-    t.index ["external_id"], name: "index_poi_pins_on_external_id"
     t.index ["masterportal_pin_id"], name: "index_projekt_point_of_interest_pins_on_masterportal_pin_id"
-    t.index ["projekt_phase_id", "source", "source_collection"], name: "index_poi_pins_on_phase_source_collection"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_pins_on_projekt_phase_id"
     t.index ["projekt_point_of_interest_category_id"], name: "projekt_point_of_interest_category"
-    t.index ["source", "external_id", "projekt_phase_id"], name: "index_poi_pins_on_source_external_id_projekt_phase_id", unique: true
   end
 
   create_table "projekt_question_answers", force: :cascade do |t|
@@ -2667,10 +2657,6 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.text "ai_idea_text"
     t.jsonb "ai_evaluation_result"
     t.text "ai_image_prompt"
-    t.string "source"
-    t.string "source_collection"
-    t.string "external_id"
-    t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
@@ -2680,17 +2666,14 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.index ["community_id"], name: "index_proposals_on_community_id"
     t.index ["confidence_score"], name: "index_proposals_on_confidence_score"
     t.index ["draft"], name: "index_proposals_on_draft"
-    t.index ["external_id"], name: "index_proposals_on_external_id"
     t.index ["geozone_id"], name: "index_proposals_on_geozone_id"
     t.index ["hidden_at"], name: "index_proposals_on_hidden_at"
     t.index ["hot_score"], name: "index_proposals_on_hot_score"
     t.index ["masterportal_pin_id"], name: "index_proposals_on_masterportal_pin_id"
     t.index ["projekt_id"], name: "index_proposals_on_projekt_id"
-    t.index ["projekt_phase_id", "source", "source_collection"], name: "index_proposals_on_phase_source_collection"
     t.index ["projekt_phase_id"], name: "index_proposals_on_projekt_phase_id"
     t.index ["selected"], name: "index_proposals_on_selected"
     t.index ["sentiment_id"], name: "index_proposals_on_sentiment_id"
-    t.index ["source", "external_id", "projekt_phase_id"], name: "index_proposals_on_source_external_id_projekt_phase_id", unique: true
     t.index ["tsv"], name: "index_proposals_on_tsv", using: :gin
   end
 
@@ -3301,6 +3284,8 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.boolean "adm_email_on_new_budget_investment", default: false
     t.integer "api_client_id"
     t.string "guest_user_agent"
+    t.boolean "system_user", default: false, null: false
+    t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -3311,6 +3296,7 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
     t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
     t.index ["registered_address_id"], name: "index_users_on_registered_address_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["system_user"], name: "index_users_on_single_system_user", unique: true, where: "(\"system_user\" = true)"
     t.index ["username"], name: "index_users_on_username"
   end
 
@@ -3520,6 +3506,8 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
   add_foreign_key "managers", "users"
   add_foreign_key "map_layers", "projekts"
   add_foreign_key "map_locations", "registered_address_districts"
+  add_foreign_key "masterportal_collections", "projekt_phases"
+  add_foreign_key "masterportal_pins", "masterportal_collections"
   add_foreign_key "memos", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
@@ -3529,7 +3517,6 @@ ActiveRecord::Schema.define(version: 2026_06_01_075138) do
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"
   add_foreign_key "officing_managers", "users"
-  add_foreign_key "ogc_import_runs", "projekt_phases"
   add_foreign_key "organizations", "users"
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
   add_foreign_key "poll_answers", "officing_managers"

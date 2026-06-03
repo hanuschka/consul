@@ -47,6 +47,13 @@
   word-break: break-word;
 }
 
+.masterportal-pin-properties--image {
+  display: block;
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
+}
+
 .masterportal-pin-properties--link {
   color: var(--brand-color, #1b5fd6);
   text-decoration: underline;

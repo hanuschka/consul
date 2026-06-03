@@ -201,8 +201,14 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_coordinates = all_proposal_map_locations(@resources)
-        @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+
+        if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+          @proposals_coordinates = all_proposal_map_locations(@resources)
+          @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        else
+          @proposals_coordinates = []
+        end
 
         @proposals =
           @resources

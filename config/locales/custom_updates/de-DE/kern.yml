@@ -27,17 +27,6 @@ de:
         layers:
           masterportal_pins: "Masterportal-Pins"
           masterportal_wms_layer_name: "Masterportal (Regensburg)"
-      masterportal_pin_info_component:
-        title: "Daten aus dem Masterportal"
-        category: "Kategorie"
-        address: "Adresse"
-        contact: "Kontakt"
-        phone: "Telefon"
-        fax: "Fax"
-        email: "E-Mail"
-        website: "Webseite"
-        location_note: "Lage"
-        accessibility: "Barrierefreiheit"
       masterportal_pin_properties_component:
         title: "Eigenschaften aus dem Masterportal"
         flag_true: "Ja"
@@ -45,7 +34,7 @@ de:
   masterportal:
     imported_proposal_default_title: "Importierter Punkt %{external_id}"
     imported_investment_default_title: "Importierter Punkt %{external_id}"
-    imported_resource_description: "Dieser Eintrag wurde aus dem Masterportal importiert. Die Detailinformationen werden direkt aus den Masterportal-Daten geladen."
+    imported_resource_description: "Dieser Eintrag gehört zu der von der Stadt Regensburg erstellten Karte der Kühlen Orten."
     description:
       properties_heading: "Eigenschaften aus dem Masterportal"
     feature:
@@ -62,6 +51,12 @@ de:
       INFO_GEBAERDENSPRACHE: "Info in Gebärdensprache"
       INFO_LEICHTE_SPRACHE: "Info in leichter Sprache"
       WELTERBERELEVANT: "Welterbe-relevant"
+      VALUE_BARRIEREFREI: "Barrierefrei"
+      VALUE_SITZMOEGLICHKEITEN: "Sitzmöglichkeiten"
+      BAR_VOLL_ZUGAENGLICH: "Barrierefrei zugänglich"
+      BAR_EING_ZUGAENGLICH: "Eingeschränkt zugänglich"
+      BAR_NICHT_ZUGAENGLICH: "Nicht barrierefrei"
+      BAR_BEGLEITPERS_ZUGAENGLICH: "Mit Begleitperson zugänglich"
     popup:
       value_yes: "Ja"
       property_labels:
@@ -81,10 +76,19 @@ de:
         internet: "Webseite"
         homepage: "Webseite"
         website: "Webseite"
-        denkmal_id: "Denkmal-ID"
         denkmal_name: "Denkmalname"
         ort: "Ort"
         plz: "PLZ"
         strasse: "Straße"
         haus_nr: "Hausnummer"
         haus_nr_zusatz: "Hausnummer-Zusatz"
+        adresse: "Adresse"
+        oeffnungszeiten: "Öffnungszeiten"
+        traeger: "Betreiber"
+        preis: "Preis"
+        image: "Bild"
+        alg_lagebeschreibung: "Lagebeschreibung"
+        aufent_bem: "Aufenthalt"
+        barr_bem: "Barrierefreiheit"
+        fam_bem: "Für Familien"
+        sitz_bem: "Sitzmöglichkeiten"

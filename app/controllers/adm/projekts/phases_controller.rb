@@ -371,6 +371,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def milestones
     authorize_phase(:update?)
     @milestones = @projekt_phase.milestones.order_by_publication_date
@@ -392,6 +393,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def legislation_process_draft_versions
     authorize_phase(:update?)
     @process = @projekt_phase.legislation_process
@@ -402,11 +404,16 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
   end
+
   def map
     authorize_phase(:update?)
     @projekt_phase.copy_map_settings_from_projekt unless @projekt_phase.map_location.present?
 
     @masterportal_pins_count = @projekt_phase.masterportal_pins.count
+
+    if params[:masterportal_import] == "success"
+      flash.now[:notice] = t(".masterportal_import_success")
+    end
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -488,6 +495,88 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       params.permit(:q, :view, :page, :collection_id).to_h.compact_blank
     )
   end
+
+  def update_masterportal_collection
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+    collection.update!(import_status: "running", import_error: nil)
+
+    MasterportalImportJob.perform_later(
+      projekt_phase_id: @projekt_phase.id,
+      endpoint_url: collection.endpoint_url,
+      collection_ids: [collection.collection_id],
+      create_domain_records: collection.create_domain_records,
+      triggered_by_user_id: current_user.id
+    )
+
+    render json: masterportal_collection_status_payload(collection), status: :accepted
+  end
+
+  def destroy_masterportal_collection
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+    collection.update!(destroy_status: "running", destroy_error: nil)
+
+    MasterportalDestroyCollectionJob.perform_later(masterportal_collection_id: collection.id)
+
+    render json: masterportal_collection_status_payload(collection), status: :accepted
+  end
+
+  def masterportal_collection_status
+    authorize_phase(:update?)
+    collection =
+      @projekt_phase.masterportal_collections.find_by(id: params[:masterportal_collection_id])
+
+    if collection.nil?
+      render json: { deleted: true }
+
+      return
+    end
+
+    render json: masterportal_collection_status_payload(collection)
+  end
+
+  def masterportal_collection_diff
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+
+    result = Masterportal::CollectionDiffService.call(masterportal_collection: collection)
+
+    render json: result
+  rescue OgcApiFeatures::Error => e
+    render json: { error: e.message }, status: :bad_gateway
+  end
+
+  def masterportal_collection_card
+    authorize_phase(:update?)
+    collection =
+      @projekt_phase.masterportal_collections.find_by(id: params[:masterportal_collection_id])
+
+    if collection.nil?
+      render turbo_stream: turbo_stream.remove(
+        helpers.dom_id(MasterportalCollection.new(id: params[:masterportal_collection_id]))
+      )
+
+      return
+    end
+
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(collection: collection, projekt_phase: @projekt_phase)
+    )
+  end
+
+  def clean_masterportal_collection_stale_pins
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+
+    Masterportal::CleanStaleService.call(masterportal_collection: collection)
+
+    head :no_content
+  rescue OgcApiFeatures::Error => e
+    render json: { error: e.message }, status: :bad_gateway
+  end
+
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
     @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
@@ -759,6 +848,15 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       {
         status: @projekt_phase.masterportal_destroy_status,
         error: @projekt_phase.masterportal_destroy_error
+      }
+    end
+
+    def masterportal_collection_status_payload(collection)
+      {
+        import_status: collection.import_status,
+        import_error: collection.import_error,
+        destroy_status: collection.destroy_status,
+        destroy_error: collection.destroy_error
       }
     end
 

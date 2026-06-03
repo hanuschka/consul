@@ -23,9 +23,9 @@
 
 .map-data-overlay--loading {
   display: none;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   padding: 16px 20px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -35,6 +35,22 @@
 
 .map-data-overlay.-loading .map-data-overlay--loading {
   display: flex;
+}
+
+.map-data-overlay--spinner {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid $light-gray-1;
+  border-top-color: var(--brand-color, #004a83);
+  border-radius: 50%;
+  animation: map-data-overlay-spin 0.7s linear infinite;
+}
+
+@keyframes map-data-overlay-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .map-data-overlay--error {

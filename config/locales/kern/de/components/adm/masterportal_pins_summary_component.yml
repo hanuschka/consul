@@ -7,6 +7,7 @@ de:
           other: importierte Masterportal-Pins
         linked_to: "Verknüpft mit %{resource_name}"
         view_all: Alle ansehen
+        view_all_tooltip: Öffnet die vollständige Liste aller importierten Masterportal-Pins
         resource_names:
           proposals: Vorschlägen
           budget_investments: Bürgerbudget-Einreichungen

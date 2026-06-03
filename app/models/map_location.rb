@@ -121,7 +121,7 @@ class MapLocation < ApplicationRecord
     }
   end
 
-  def features_json_data
+  def features_json_data(mark_masterportal_pin: true)
     extra_properties = {
       "resource_type" => RESOURCE_TYPE_MAPPING[mappable_type.to_sym],
       "id" => mappable_id,
@@ -130,7 +130,7 @@ class MapLocation < ApplicationRecord
       "feature_icon_unicode" => get_feature_icon_unicode
     }.reject { |_k, v| v.in?([nil, ""]) }
 
-    extra_properties.merge!(masterportal_feature_properties)
+    extra_properties.merge!(masterportal_feature_properties) if mark_masterportal_pin
 
     enriched_geojson = to_geo_json
 

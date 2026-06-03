@@ -48,6 +48,9 @@ application.register("icon-filter", IconFilterController)
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
 
+import AdmMapLayerFormController from "./adm/map_layer_form_controller"
+application.register("map-layer-form", AdmMapLayerFormController)
+
 import AdmCriteriaListController from "./adm/criteria_list_controller"
 application.register("adm-criteria-list", AdmCriteriaListController)
 
@@ -117,6 +120,9 @@ application.register("kern--form--image", KernFormImageController)
 import KernFormVideoController from "./kern/form/video_controller"
 application.register("kern--form--video", KernFormVideoController)
 
+import AdmFormImageController from "./adm/form/image_controller"
+application.register("adm--form--image", AdmFormImageController)
+
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
@@ -152,6 +158,12 @@ application.register("adm--masterportal-import-panel", AdmMasterportalImportPane
 
 import AdmDeleteCollectionController from "./adm/delete_collection_controller"
 application.register("adm--delete-collection", AdmDeleteCollectionController)
+
+import AdmMasterportalCollectionController from "./adm/masterportal_collection_controller"
+application.register("adm--masterportal-collection", AdmMasterportalCollectionController)
+
+import AdmMasterportalCollectionsResyncController from "./adm/masterportal_collections_resync_controller"
+application.register("adm--masterportal-collections-resync", AdmMasterportalCollectionsResyncController)
 
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)

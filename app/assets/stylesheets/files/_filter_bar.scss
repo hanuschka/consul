@@ -21,7 +21,13 @@
   position: relative;
 }
 
-.files-filter-bar--search-icon {
+.files-filter-bar--field-sort {
+  position: relative;
+  margin-left: auto;
+}
+
+.files-filter-bar--search-icon,
+.files-filter-bar--sort-icon {
   position: absolute;
   left: 10px;
   top: 50%;
@@ -64,6 +70,10 @@
   padding-left: 32px;
 }
 
+.files-filter-bar--input-sort {
+  padding-left: 32px;
+}
+
 .files-filter-bar .files-filter-bar--field:has(.js-fm-filter-search) {
   flex: 1 1 220px;
   max-width: 360px;
@@ -79,7 +89,7 @@
 }
 
 .files-filter-bar .files-filter-bar--field:has(.js-fm-filter-sort) {
-  flex: 0 1 200px;
+  flex: 0 1 220px;
 }
 
 select.files-filter-bar--input {
@@ -132,6 +142,10 @@ select.files-filter-bar--input {
     width: 100%;
     max-width: none;
     flex: 1 1 auto;
+  }
+
+  .files-filter-bar--field-sort {
+    margin-left: 0;
   }
 
   .files-filter-bar--reset-button {

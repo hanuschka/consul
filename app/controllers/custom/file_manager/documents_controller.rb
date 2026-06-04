@@ -6,6 +6,7 @@ class FileManager::DocumentsController < FileManager::BaseController
       Document
         .for_studio_file_manager(current_projekt)
         .merge(policy_scope([:adm, Document]))
+        .preload(documentable: :page)
         .order(created_at: :desc)
         .page(params[:page])
         .per(15)

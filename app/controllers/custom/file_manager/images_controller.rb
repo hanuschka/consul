@@ -8,6 +8,7 @@ class FileManager::ImagesController < FileManager::BaseController
         .call
         .with_attached_storage_data
         .merge(policy_scope([:adm, AdminImage]))
+        .preload(projekt: :page)
         .page(params[:page])
         .per(15)
 
@@ -15,7 +16,7 @@ class FileManager::ImagesController < FileManager::BaseController
   end
 
   def create
-    picture = AdminImage.new(projekt: current_projekt)
+    picture = AdminImage.new(projekt: current_projekt, user: current_user)
     authorize [:adm, picture], :create?
 
     unless params[:upload].is_a?(ActionDispatch::Http::UploadedFile)

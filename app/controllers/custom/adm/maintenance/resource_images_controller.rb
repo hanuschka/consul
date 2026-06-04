@@ -17,8 +17,8 @@ class Adm::Maintenance::ResourceImagesController < Adm::Maintenance::BaseControl
     preload_resource_associations(@assets.map(&:imageable))
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.maintenance"), icon: "build" },
-      { name: t("adm.menu.items.maintenance_subitems.resource_images") }
+      { name: t("adm.menu.items.files"), icon: "folder" },
+      { name: t("adm.menu.items.files_subitems.resource_images") }
     ]
 
     render layout: !request.xhr?

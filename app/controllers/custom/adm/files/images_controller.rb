@@ -8,6 +8,7 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
         .call
         .with_attached_storage_data
         .merge(policy_scope([:adm, AdminImage]))
+        .preload({ projekt: :page }, user: :image)
         .page(params[:page])
         .per(24)
 

@@ -15,8 +15,8 @@ class Adm::Maintenance::ResourceDocumentsController < Adm::Maintenance::BaseCont
     preload_resource_associations(@assets.map(&:documentable))
 
     @breadcrumbs = [
-      { name: t("adm.menu.items.maintenance"), icon: "build" },
-      { name: t("adm.menu.items.maintenance_subitems.resource_documents") }
+      { name: t("adm.menu.items.files"), icon: "folder" },
+      { name: t("adm.menu.items.files_subitems.resource_documents") }
     ]
 
     render layout: !request.xhr?

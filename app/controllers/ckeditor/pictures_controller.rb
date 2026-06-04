@@ -2,7 +2,7 @@
 
 class Ckeditor::PicturesController < ApplicationController
   def create
-    picture = AdminImage.new
+    picture = AdminImage.new(user: current_user)
     authorize! :create, picture
 
     image = params[:upload]

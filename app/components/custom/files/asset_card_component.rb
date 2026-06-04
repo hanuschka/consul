@@ -1,4 +1,4 @@
-class Files::AssetCardComponent < ApplicationComponent
+class Files::AssetCardComponent < Files::ResourceAssetComponent
   with_collection_parameter :asset
 
   def initialize(asset:, type:)
@@ -9,6 +9,18 @@ class Files::AssetCardComponent < ApplicationComponent
   private
 
     attr_reader :asset, :type
+
+    def projekt_name
+      resource_name(asset.projekt)
+    end
+
+    def projekt_url
+      resource_url(asset.projekt)
+    end
+
+    def uploaded_by
+      asset.user
+    end
 
     def filename
       asset.data_file_name.presence || asset.title.presence || "Untitled"

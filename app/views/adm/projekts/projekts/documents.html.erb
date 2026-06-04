@@ -1,4 +1,4 @@
-<%= content_for :title, [(@projekt.page&.title || @projekt.name), t("adm.menu.items.files_subitems.documents")].join(" | ") %>
+<%= content_for :title, [(@projekt.page&.title || @projekt.name), t("adm.projekts.projekts.tabs.documents")].join(" | ") %>
 
 <%= render Adm::FileManager::PageComponent.new(
   type: "document",

@@ -4,15 +4,28 @@
   App.ContentBlockTemplatesSelector = {
     cachedSections: {},
     activeSection: null,
+    lastRequestedSection: null,
 
-    initialize() {},
+    initialize() {
+      $(document).on("click", ".js-content-block-templates-retry", this.handleRetry.bind(this));
+    },
 
     getContainer() {
       return $(".js-content-block-templates-selector--inner");
     },
 
+    getErrorElement() {
+      return $(".js-content-block-templates-error");
+    },
+
+    handleRetry() {
+      this.loadTemplatesContent(this.lastRequestedSection);
+    },
+
     loadTemplatesContent(section) {
       const cacheKey = section || "default";
+
+      this.lastRequestedSection = section;
 
       if (this.cachedSections[cacheKey]) {
         this.restoreFromCache(cacheKey);
@@ -32,7 +45,7 @@
         method: "GET",
         dataType: "html",
         data: ajaxData,
-        timeout: 7000
+        timeout: 20000
       })
         .then((html) => {
           this.handleLoadSuccess(html, cacheKey);
@@ -105,6 +118,7 @@
     },
 
     showSpinner() {
+      this.getErrorElement().hide();
       $(".js-content-block-templates-spinner").show();
       this.getContainer().hide();
     },
@@ -119,7 +133,10 @@
       const $container = this.getContainer();
       const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
 
-      if (!fallbackTemplate) return
+      if (!fallbackTemplate) {
+        this.getErrorElement().show();
+        return
+      }
 
       const fallbackContent = document.importNode(fallbackTemplate.content, true);
       $container.empty().append(fallbackContent).show();

@@ -4,7 +4,7 @@
 // Universelles 32x32 Icon-Button-System mit konsistenten Größen, Spacings und
 // Hover/Active-States. Drei Varianten:
 //   - Default Icon-Button (.studio-icon-button)
-//   - Label-Button (.projekt-content-block-edit--button)         32px hoch
+//   - Label-Button (.studio-edit-button)         32px hoch
 //   - Save (-green) / Cancel / Delete (-delete) / Disabled
 // =============================================================================
 
@@ -29,29 +29,29 @@
 // =============================================================================
 // Label-Buttons (Save / Cancel) — 32px Höhe, Padding 6px 12px
 // =============================================================================
-.projekt-content-block-edit--button {
+.studio-edit-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   height: 32px;
   padding: 6px 12px;
   font-size: 15px;
   line-height: 1;
   color: rgba(0, 0, 0, 0.65);
-  background: transparent;
+  background: #efefef;
   border: none;
   border-radius: 6px;
   transition: background-color 120ms ease, color 120ms ease;
 
-  // Default: Cancel-Style (transparent, hover-tint)
+  // Default: Cancel-Style (grauer Grund, hover-tint)
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: #e4e4e4;
     color: rgba(0, 0, 0, 0.85);
   }
 
   &:active {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: #dadada;
   }
 
   // Speichern — primary-Variante
@@ -246,7 +246,7 @@
     margin-left: 0;
   }
 
-  .projekt-content-block-edit--button {
+  .studio-edit-button {
     height: 28px;
     padding: 5px 10px;
     font-size: 12px;

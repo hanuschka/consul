@@ -22,10 +22,15 @@ de:
           statuses: Status
           settings: Konfiguration
           official_answer_templates: Antwortvorlagen
+          email_templates: E-Mail-Vorlagen
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
           ai_settings: KI-Einstellungen
+      email_templates:
+        index:
+          title: E-Mail-Vorlagen
+          page_hint: Passen Sie Betreff und Inhalt der E-Mails an, die für Mangelmeldungen versendet werden. Lassen Sie eine Vorlage leer, um den Standardtext beizubehalten.
       deficiency_reports:
         index:
           title: Meldungen

@@ -1,0 +1,6 @@
+// Standalone pack exposing the cross_pack primitives to host pages outside
+// the main app packs (e.g. the /adm Kern-UX shell). The main app gets the
+// same files via the cross_pack/**/* glob imports in application.scss and
+// custom_new_design.scss.
+
+@import "cross_pack/**/*";

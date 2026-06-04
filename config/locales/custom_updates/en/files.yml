@@ -17,7 +17,7 @@ en:
     allowed_types_settings_link: "edit here"
     images:
       index:
-        title: Overview of all images
+        title: Admin images
         description: Lists all images uploaded by administrators and project managers — e.g. via the file manager or content editors. Images attached to platform content by users are managed under Maintenance → Resource images. Use this page to upload, review, rename or delete image files.
     documents:
       index:
@@ -56,7 +56,7 @@ en:
       documentable_type: Assigned to
       documentable_type_any: "Assigned: all"
       sort_label: Sort
-      reset: Reset
+      reset: Clear filters
       sort:
         created_desc: Newest first
         created_asc: Oldest first
@@ -72,7 +72,6 @@ en:
         filter_imageable_type: Filter by assignment
         filter_documentable_type: Filter by assignment
         sort: Sort by
-        reset: Reset filters
     upload_failed: Upload failed
     upload_loading: Uploading file…
     upload_success: Uploaded

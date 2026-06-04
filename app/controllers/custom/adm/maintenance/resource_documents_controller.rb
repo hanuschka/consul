@@ -12,6 +12,8 @@ class Adm::Maintenance::ResourceDocumentsController < Adm::Maintenance::BaseCont
         .page(params[:page])
         .per(24)
 
+    preload_resource_associations(@assets.map(&:documentable))
+
     @breadcrumbs = [
       { name: t("adm.menu.items.maintenance"), icon: "build" },
       { name: t("adm.menu.items.maintenance_subitems.resource_documents") }

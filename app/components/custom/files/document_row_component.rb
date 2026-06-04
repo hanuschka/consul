@@ -1,4 +1,4 @@
-class Files::DocumentRowComponent < ApplicationComponent
+class Files::DocumentRowComponent < Files::ResourceAssetComponent
   with_collection_parameter :document
 
   def initialize(document:)
@@ -59,29 +59,12 @@ class Files::DocumentRowComponent < ApplicationComponent
       type_string.safe_constantize&.model_name&.human || type_string
     end
 
-    def documentable_record
-      document.documentable
-    end
-
     def documentable_name
-      record = documentable_record
-      return nil if record.blank?
-
-      candidate =
-        record.try(:title).presence ||
-        record.try(:name).presence ||
-        record.try(:page).try(:title).presence
-
-      candidate.to_s
+      resource_name(document.documentable)
     end
 
     def documentable_url
-      record = documentable_record
-      return nil if record.blank?
-
-      helpers.polymorphic_path(record)
-    rescue NoMethodError, ActionController::UrlGenerationError
-      nil
+      resource_url(document.documentable)
     end
 
     def admin_upload?

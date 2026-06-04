@@ -151,7 +151,7 @@ class Newsletter < ApplicationRecord
 
       begin
         node[attr] = URI.join(Setting["url"].to_s, url).to_s
-      rescue URI::InvalidURIError
+      rescue URI::Error
         next
       end
     end

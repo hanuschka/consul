@@ -475,3 +475,35 @@
 .file-upload-manager-dialog--item-icon.fa-file-lines {
   color: #5a6068;
 }
+
+// Foundation-free replica of the main-app text-input styles (compiled
+// foundation-forms values), scoped to the dialog so the search and edit
+// inputs render identically on host pages without the main app packs
+// (e.g. /adm). On the main app the declarations match Foundation's 1:1.
+.file-upload-manager-dialog input[type="text"],
+.file-upload-manager-dialog input[type="search"] {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.4375rem;
+  margin: 0 0 1rem;
+  padding: 0.5rem;
+  border: 1px solid #cacaca;
+  border-radius: 0.1875rem;
+  background-color: #fdfdfd;
+  box-shadow: inset 0 1px 2px rgba(34, 34, 34, 0.1);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  color: #222;
+  appearance: none;
+  transition: border-color 0.25s ease-in-out, box-shadow 0.5s;
+
+  &:focus {
+    outline: none;
+    border: 1px solid #8a8a8a;
+    background-color: #fdfdfd;
+    box-shadow: 0 0 5px #cacaca;
+  }
+}

@@ -76,6 +76,11 @@ dialog.modern-modal {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin-bottom: 0;
+  }
 }
 
 .modern-modal--header .close-button {
@@ -144,7 +149,6 @@ dialog.modern-modal {
   }
 
   .shared-tabs-panel {
-    padding: 2px;
     padding-right: 20px;
   }
 

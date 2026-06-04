@@ -19,4 +19,4 @@
 //= link packs/studio.js
 //= link packs/studio_vendor.js
 
-//= link adm_content_block_editor.css
+//= link cross_pack.css

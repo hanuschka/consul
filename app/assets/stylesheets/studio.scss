@@ -1,6 +1,7 @@
 @import "custom/1_colors";
 @import "custom/1_variables";
 
+@import "studio/standalone_base";
 @import "studio/1_colors";
 @import "studio/2_animations";
 @import "studio/general";
@@ -23,3 +24,4 @@
 @import "studio/banner_editing";
 @import "studio/toggle_projekt_background";
 @import "studio/convert_to_blocks_button";
+@import "studio/newsletter_content_block_editor";

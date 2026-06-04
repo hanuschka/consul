@@ -1,4 +1,4 @@
-class Files::ImageCardComponent < ApplicationComponent
+class Files::ImageCardComponent < Files::ResourceAssetComponent
   with_collection_parameter :image
 
   def initialize(image:, type:)
@@ -98,29 +98,12 @@ class Files::ImageCardComponent < ApplicationComponent
       type_string.safe_constantize&.model_name&.human || type_string
     end
 
-    def imageable_record
-      image.imageable
-    end
-
     def imageable_name
-      record = imageable_record
-      return nil if record.blank?
-
-      candidate =
-        record.try(:title).presence ||
-        record.try(:name).presence ||
-        record.try(:page).try(:title).presence
-
-      candidate.to_s
+      resource_name(image.imageable)
     end
 
     def imageable_url
-      record = imageable_record
-      return nil if record.blank?
-
-      helpers.polymorphic_path(record)
-    rescue NoMethodError, ActionController::UrlGenerationError
-      nil
+      resource_url(image.imageable)
     end
 
     def admin_upload?

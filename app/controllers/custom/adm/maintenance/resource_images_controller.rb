@@ -14,6 +14,8 @@ class Adm::Maintenance::ResourceImagesController < Adm::Maintenance::BaseControl
         .page(params[:page])
         .per(24)
 
+    preload_resource_associations(@assets.map(&:imageable))
+
     @breadcrumbs = [
       { name: t("adm.menu.items.maintenance"), icon: "build" },
       { name: t("adm.menu.items.maintenance_subitems.resource_images") }

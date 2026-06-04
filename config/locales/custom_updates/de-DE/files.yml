@@ -17,7 +17,7 @@ de:
     allowed_types_settings_link: "hier bearbeiten"
     images:
       index:
-        title: Übersicht aller Bilder
+        title: Admin-Bilder
         description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager oder Inhalts-Editoren. Von Nutzern zu Inhalten der Plattform hochgeladene Bilder werden unter Wartung → Ressourcen-Bilder verwaltet. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     documents:
       index:
@@ -56,7 +56,7 @@ de:
       documentable_type: Zugewiesen an
       documentable_type_any: "Zugewiesen: Alle"
       sort_label: Sortierung
-      reset: Zurücksetzen
+      reset: Filter zurücksetzen
       sort:
         created_desc: Neueste zuerst
         created_asc: Älteste zuerst
@@ -72,7 +72,6 @@ de:
         filter_imageable_type: Nach Zuweisung filtern
         filter_documentable_type: Nach Zuweisung filtern
         sort: Sortieren nach
-        reset: Filter zurücksetzen
     upload_failed: Hochladen fehlgeschlagen
     upload_loading: Datei wird hochgeladen…
     upload_success: Hochgeladen

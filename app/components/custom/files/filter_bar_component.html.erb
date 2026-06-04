@@ -68,11 +68,9 @@
   <button
     type="button"
     class="files-filter-bar--reset-button js-fm-filter-reset"
-    title="<%= t("files.filter_bar.aria.reset") %>"
-    aria-label="<%= t("files.filter_bar.aria.reset") %>"
     data-action="click->files--filter-bar#resetClicked"
   >
-    <i class="fas fa-xmark" aria-hidden="true"></i>
+    <%= t("files.filter_bar.reset") %>
   </button>
 
   <% if show_view_modes? %>

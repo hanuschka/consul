@@ -1,3 +1,10 @@
+// Text search form (rendered by Shared::TextSearchFormComponent). Lives in
+// cross_pack so it renders identically in both stylesheet packs: the main
+// user-facing app and the /adm content-block editor. Self-contained — no
+// Foundation/pack tokens.
+
+$text-search-form-icon-color: #8a8a8a;
+
 .custom-new-design {
   .text-search-form {
     flex-grow: 1;
@@ -20,7 +27,7 @@
     align-items: center;
     transition: 100ms all ease;
     background-color: transparent;
-    color: $dark-gray;
+    color: $text-search-form-icon-color;
     font-size: inherit !important;
     cursor: pointer;
 
@@ -29,7 +36,7 @@
     }
 
     &:hover {
-      color: $dark-gray;
+      color: $text-search-form-icon-color;
       background-color: #e6e6e6;
     }
   }

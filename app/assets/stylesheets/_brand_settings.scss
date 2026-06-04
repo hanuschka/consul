@@ -1,0 +1,7 @@
+// Compile-time brand color default. Standalone (no Foundation) so it can be
+// imported by both the main settings chain (_custom_settings.scss) and the
+// foundation-free studio pack (studio/_standalone_base.scss). The runtime
+// tenant value from Setting["brand_color"] overrides --brand-color via an
+// inline style in the main app layout.
+
+$brand: #008000;

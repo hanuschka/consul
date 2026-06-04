@@ -33,6 +33,13 @@ class FileManager::DocumentsController < FileManager::BaseController
     end
   end
 
+  def show
+    document = Document.find(params[:id])
+    authorize [:adm, document], :index?
+
+    render json: document_show_response(document)
+  end
+
   def update
     document = Document.find(params[:id])
     authorize [:adm, document]
@@ -64,6 +71,31 @@ class FileManager::DocumentsController < FileManager::BaseController
           document.attachment, only_path: true
         ),
         file_size: document.attachment_file_size
+      }
+    end
+
+    def document_show_response(document)
+      projekt =
+        if document.documentable_type == "Projekt"
+          document.documentable
+        end
+      projekt_page = projekt&.page
+
+      {
+        id: document.id,
+        title: document.title,
+        filename: document.attachment_file_name,
+        content_type: document.attachment_content_type,
+        file_size: document.attachment_file_size,
+        url: Rails.application.routes.url_helpers.rails_blob_path(
+          document.attachment, only_path: true
+        ),
+        created_at: I18n.l(document.created_at, format: :short),
+        updated_at: I18n.l(document.updated_at, format: :short),
+        user_name: document.user&.name,
+        user_email: document.user&.email,
+        projekt_name: projekt_page&.title.presence || projekt&.name,
+        projekt_url: projekt_page.present? ? page_path(projekt_page.slug) : nil
       }
     end
 end

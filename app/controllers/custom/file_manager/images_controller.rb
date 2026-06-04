@@ -34,6 +34,13 @@ class FileManager::ImagesController < FileManager::BaseController
     end
   end
 
+  def show
+    picture = AdminImage.find(params[:id])
+    authorize [:adm, picture], :index?
+
+    render json: image_show_response(picture)
+  end
+
   def update
     picture = AdminImage.find(params[:id])
     authorize [:adm, picture]
@@ -79,6 +86,34 @@ class FileManager::ImagesController < FileManager::BaseController
         custom_thumb_url: picture.custom_thumb_url(width: 925),
         file_size: picture.data_file_size,
         dimensions: dimensions
+      }
+    end
+
+    def image_show_response(picture)
+      metadata = picture.storage_data.blob&.metadata || {}
+      dimensions =
+        if metadata[:width] && metadata[:height]
+          "#{metadata[:width]} × #{metadata[:height]}"
+        end
+
+      projekt = picture.projekt
+      projekt_page = projekt&.page
+
+      {
+        id: picture.id,
+        title: picture.title,
+        filename: picture.data_file_name,
+        content_type: picture.data_content_type,
+        file_size: picture.data_file_size,
+        dimensions: dimensions,
+        url: picture.url_content,
+        preview_url: picture.custom_thumb_url(width: 600, height: 450),
+        created_at: I18n.l(picture.created_at, format: :short),
+        updated_at: I18n.l(picture.updated_at, format: :short),
+        user_name: picture.user&.name,
+        user_email: picture.user&.email,
+        projekt_name: projekt_page&.title.presence || projekt&.name,
+        projekt_url: projekt_page.present? ? page_path(projekt_page.slug) : nil
       }
     end
 end

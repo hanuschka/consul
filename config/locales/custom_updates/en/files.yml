@@ -115,3 +115,19 @@ en:
       save: Save
       close: Close
       update_failed: Update failed
+    info_modal:
+      button: Info
+      close: Close
+      filename: Filename
+      type: Type
+      size: Size
+      dimensions: Dimensions
+      uploaded: Uploaded
+      last_edited: Last edited
+      uploaded_by: Uploaded by
+      projekt: Project
+      open_file: Open file
+      download_file: Download
+    fullsize_preview:
+      button: Full size
+      close: Close

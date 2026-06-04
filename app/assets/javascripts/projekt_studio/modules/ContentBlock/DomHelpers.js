@@ -3,10 +3,6 @@ App.ContentBlockEditor.DomHelpers = {
     return element.closest('.js-content-block-wrapper');
   },
 
-  getContentBlockSectionForId(contentBlockId) {
-    return document.querySelector(`.js-content-block-wrapper[data-content-block-id="${contentBlockId}"]`);
-  },
-
   getContentBlockAndWrapper(element) {
     const contentBlockWrapper = this.getParentContentBlockWrapper(element)
 

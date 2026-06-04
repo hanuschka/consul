@@ -27,6 +27,10 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
     picture: '/file_manager/images',
     document: '/file_manager/documents'
   },
+  infoEndpoints: {
+    picture: '/file_manager/images',
+    document: '/file_manager/documents'
+  },
   fileTypeIcons: {
     'application/pdf': 'fa-file-pdf',
     'application/msword': 'fa-file-word',
@@ -91,6 +95,12 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
 
     $document.on("click", ".js-file-upload-manager-upload", this.handleUploadButtonClick.bind(this));
     $document.on("change", ".js-file-upload-manager-file-input", this.handleFileInputChange.bind(this));
+
+    $document.on("click", ".js-file-upload-manager-info", this.openInfoModal.bind(this));
+    $document.on("click", ".js-file-upload-manager-info-close", this.closeInfoModal.bind(this));
+
+    $document.on("click", ".js-file-upload-manager-fullsize", this.openFullsizePreview.bind(this));
+    $document.on("click", ".js-file-upload-manager-fullsize-close", this.closeFullsizePreview.bind(this));
 
     $document.on("click", ".js-file-upload-manager-edit", this.openEditModal.bind(this));
     $document.on("click", ".js-file-upload-manager-edit-close", this.closeEditModal.bind(this));
@@ -640,9 +650,19 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
   },
 
   updateEditButtonVisibility() {
+    const hasSelection = !!this.state.selectedImage;
+    const displayValue = hasSelection ? 'block' : 'none';
+
     const editBtn = this.q(".js-file-upload-manager-edit");
-    if (editBtn) {
-      editBtn.style.display = this.state.selectedImage ? 'block' : 'none';
+    if (editBtn) editBtn.style.display = displayValue;
+
+    const infoBtn = this.q(".js-file-upload-manager-info");
+    if (infoBtn) infoBtn.style.display = displayValue;
+
+    const fullsizeBtn = this.q(".js-file-upload-manager-fullsize");
+    if (fullsizeBtn) {
+      const hasFullsizeUrl = hasSelection && !!this.state.selectedImage.dataset.url;
+      fullsizeBtn.style.display = hasFullsizeUrl ? 'block' : 'none';
     }
   },
 
@@ -654,6 +674,193 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
 
       selectBtn.disabled = !hasSelection || isChosenUploading;
     }
+  },
+
+  openFullsizePreview() {
+    if (!this.state.selectedImage) return;
+
+    const imageUrl = this.state.selectedImage.dataset.url;
+    if (!imageUrl) return;
+
+    const preview = this.q(".js-file-upload-manager-fullsize-preview");
+    const previewImage = preview.querySelector(".js-file-upload-manager-fullsize-image");
+    const itemTitle = this.state.selectedImage.querySelector('.file-upload-manager-dialog--item-title');
+
+    previewImage.src = imageUrl;
+    previewImage.alt = itemTitle ? itemTitle.textContent.trim() : '';
+
+    preview.classList.add("-opened");
+  },
+
+  closeFullsizePreview() {
+    const preview = this.q(".js-file-upload-manager-fullsize-preview");
+    if (!preview) return;
+
+    preview.classList.remove("-opened");
+
+    const previewImage = preview.querySelector(".js-file-upload-manager-fullsize-image");
+    previewImage.removeAttribute('src');
+    previewImage.alt = '';
+  },
+
+  async openInfoModal() {
+    if (!this.state.selectedImage) return;
+
+    const imageId = this.state.selectedImage.dataset.id;
+    const infoModal = this.q(".js-file-upload-manager-info-modal");
+
+    this.resetInfoModal(infoModal);
+    infoModal.classList.add("-opened");
+    this.showInstantInfoPreview(infoModal);
+
+    const endpoint = this.infoEndpoints[this.state.type] || this.infoEndpoints.picture;
+
+    try {
+      const response = await fetch(`${endpoint}/${imageId}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+          'X-Embedded-Frame': ProjektStudio.isEmbedded
+        }
+      });
+
+      const data = await response.json();
+      this.populateInfoModal(data);
+    } catch (error) {
+      console.error('Error fetching file info:', error);
+    }
+  },
+
+  closeInfoModal() {
+    const infoModal = this.q(".js-file-upload-manager-info-modal");
+    if (!infoModal) return;
+
+    infoModal.classList.remove("-opened");
+    this.resetInfoModal(infoModal);
+  },
+
+  resetInfoModal(infoModal) {
+    const textSelectors = [
+      ".js-file-manager-info-modal-title",
+      ".js-file-manager-info-filename",
+      ".js-file-manager-info-content-type",
+      ".js-file-manager-info-size",
+      ".js-file-manager-info-dimensions",
+      ".js-file-manager-info-created-at",
+      ".js-file-manager-info-updated-at",
+      ".js-file-manager-info-user",
+      ".js-file-manager-info-projekt"
+    ];
+    textSelectors.forEach((selector) => {
+      infoModal.querySelector(selector).textContent = '';
+    });
+
+    const optionalRowSelectors = [
+      ".js-file-manager-info-row-dimensions",
+      ".js-file-manager-info-row-user",
+      ".js-file-manager-info-row-projekt"
+    ];
+    optionalRowSelectors.forEach((selector) => {
+      infoModal.querySelector(selector).style.display = 'none';
+    });
+
+    const previewImage = infoModal.querySelector(".js-file-manager-info-preview-image");
+    previewImage.removeAttribute('src');
+    previewImage.alt = '';
+    infoModal.querySelector(".js-file-manager-info-preview").style.display = 'none';
+
+    infoModal.querySelector(".js-file-manager-info-open-link").removeAttribute('href');
+
+    const downloadLink = infoModal.querySelector(".js-file-manager-info-download-link");
+    downloadLink.removeAttribute('href');
+    downloadLink.removeAttribute('download');
+  },
+
+  showInstantInfoPreview(infoModal) {
+    const selectedThumb = this.state.selectedImage.querySelector('.js-file-upload-manager-dialog_item-image');
+    if (!selectedThumb) return;
+    if (!selectedThumb.getAttribute('src')) return;
+    if (selectedThumb.style.display === 'none') return;
+
+    const previewImage = infoModal.querySelector(".js-file-manager-info-preview-image");
+    previewImage.src = selectedThumb.src;
+
+    infoModal.querySelector(".js-file-manager-info-preview").style.display = '';
+  },
+
+  populateInfoModal(data) {
+    const infoModal = this.q(".js-file-upload-manager-info-modal");
+
+    infoModal.querySelector(".js-file-manager-info-modal-title").textContent = data.title || data.filename || '';
+    infoModal.querySelector(".js-file-manager-info-filename").textContent = data.filename || '';
+    infoModal.querySelector(".js-file-manager-info-content-type").textContent = data.content_type || '';
+    infoModal.querySelector(".js-file-manager-info-size").textContent = data.file_size ? this.formatFileSize(data.file_size) : '';
+    infoModal.querySelector(".js-file-manager-info-created-at").textContent = data.created_at || '';
+    infoModal.querySelector(".js-file-manager-info-updated-at").textContent = data.updated_at || '';
+
+    const userRow = infoModal.querySelector(".js-file-manager-info-row-user");
+    const userText = [data.user_name, data.user_email].filter(Boolean).join(' · ');
+    if (userText) {
+      infoModal.querySelector(".js-file-manager-info-user").textContent = userText;
+      userRow.style.display = '';
+    } else {
+      userRow.style.display = 'none';
+    }
+
+    const dimRow = infoModal.querySelector(".js-file-manager-info-row-dimensions");
+    if (data.dimensions) {
+      infoModal.querySelector(".js-file-manager-info-dimensions").textContent = data.dimensions;
+      dimRow.style.display = '';
+    } else {
+      dimRow.style.display = 'none';
+    }
+
+    const projektRow = infoModal.querySelector(".js-file-manager-info-row-projekt");
+    const projektEl = infoModal.querySelector(".js-file-manager-info-projekt");
+    if (data.projekt_name) {
+      projektRow.style.display = '';
+      projektEl.textContent = '';
+      if (data.projekt_url) {
+        const link = document.createElement('a');
+        link.href = data.projekt_url;
+        link.textContent = data.projekt_name;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        projektEl.appendChild(link);
+      } else {
+        projektEl.textContent = data.projekt_name;
+      }
+    } else {
+      projektRow.style.display = 'none';
+    }
+
+    this.populateInfoPreview(infoModal, data);
+
+    const fileUrl = data.url || '';
+    const filename = data.filename || '';
+
+    const openLink = infoModal.querySelector(".js-file-manager-info-open-link");
+    openLink.href = fileUrl;
+
+    const downloadLink = infoModal.querySelector(".js-file-manager-info-download-link");
+    downloadLink.href = fileUrl;
+    downloadLink.download = filename;
+  },
+
+  populateInfoPreview(infoModal, data) {
+    if (!data.preview_url) return;
+
+    const previewWrapper = infoModal.querySelector(".js-file-manager-info-preview");
+    const previewImage = infoModal.querySelector(".js-file-manager-info-preview-image");
+    previewImage.alt = data.title || data.filename || '';
+
+    const highResImage = new Image();
+    highResImage.onload = () => {
+      previewImage.src = data.preview_url;
+      previewWrapper.style.display = '';
+    };
+    highResImage.src = data.preview_url;
   },
 
   openEditModal(e) {

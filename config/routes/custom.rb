@@ -57,8 +57,8 @@ namespace :adm do
 end
 
 namespace :file_manager do
-  resources :images, only: [:index, :create, :update, :destroy]
-  resources :documents, only: [:index, :create, :update, :destroy]
+  resources :images, only: [:index, :create, :show, :update, :destroy]
+  resources :documents, only: [:index, :create, :show, :update, :destroy]
 end
 
 resources :user_resources, only: [:index]

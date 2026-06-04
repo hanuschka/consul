@@ -10,17 +10,11 @@ App.ContentBlockEditor.Render = {
       const params = data.params
 
       switch(data.event_type) {
-        case "Consul.ProjektStudio.updateContentBlockOnUi":
-          App.ContentBlockEditor.DtAiEditMode.updateContentBlockOnUi(params);
-          break;
         case "setDataForFreshContentBlockOnUI":
           App.ContentBlockEditor.Crud.setDataForFreshContentBlock(params);
           break;
         case "updateHTML":
           App.ContentBlockEditor.DomHelpers.morphElementHTML(params.selector, params.html)
-          break;
-        case "toggleLockContentBlockEdit":
-          App.ContentBlockEditor.DtAiEditMode.toggleLockContentBlockEdit(params.contentBlockId, params.locked)
           break;
       }
     }

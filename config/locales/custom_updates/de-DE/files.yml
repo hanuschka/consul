@@ -115,3 +115,19 @@ de:
       save: Speichern
       close: Schließen
       update_failed: Aktualisierung fehlgeschlagen
+    info_modal:
+      button: Info
+      close: Schließen
+      filename: Dateiname
+      type: Typ
+      size: Größe
+      dimensions: Abmessungen
+      uploaded: Hochgeladen
+      last_edited: Zuletzt bearbeitet
+      uploaded_by: Hochgeladen von
+      projekt: Projekt
+      open_file: Datei öffnen
+      download_file: Herunterladen
+    fullsize_preview:
+      button: Vollbild
+      close: Schließen

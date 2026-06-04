@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_04_165707) do
+ActiveRecord::Schema.define(version: 2026_06_04_194934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3303,8 +3303,6 @@ ActiveRecord::Schema.define(version: 2026_06_04_165707) do
     t.datetime "temporary_auth_token_valid_until"
     t.string "auth_image_link"
     t.string "last_stork_level"
-    t.string "frame_sign_in_token"
-    t.datetime "frame_sign_in_token_valid_until"
     t.boolean "reverify", default: true
     t.boolean "on_dt", default: false
     t.boolean "adm_email_on_new_budget_investment", default: false

@@ -171,8 +171,8 @@ application.register("adm--masterportal-collections-resync", AdmMasterportalColl
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 
-import AdmFeasibilityToggleController from "./adm/feasibility_toggle_controller"
-application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
+import SharedVisibilityToggleController from "./shared/visibility_toggle_controller"
+application.register("shared--visibility-toggle", SharedVisibilityToggleController)
 
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)

@@ -55,8 +55,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.developer_subitems.ai_settings"),        path: adm_ai_settings_path,        active_prefix: "/adm/ai_settings" },
         { label: t("adm.menu.items.developer_subitems.external_api_keys"),  path: adm_external_api_keys_path,  active_prefix: "/adm/external_api_keys" },
         { label: t("adm.menu.items.developer_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
-        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" },
-        { label: t("adm.menu.items.developer_subitems.connection"),         path: adm_connection_path,         active_prefix: "/adm/connection" }
+        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" }
       ]
     end
 

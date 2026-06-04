@@ -20,7 +20,7 @@
             <th scope="col" class="kern-table__header"><%= t(".id") %></th>
             <th scope="col" class="kern-table__header"><%= ApiClient.human_attribute_name(:name) %></th>
             <th scope="col" class="kern-table__header"><%= ApiClient.human_attribute_name(:access_level) %></th>
-            <th scope="col" class="kern-table__header"><%= ApiClient.human_attribute_name(:service_user_email) %></th>
+            <th scope="col" class="kern-table__header"><%= t("adm.api_clients.index.posts_as") %></th>
             <th scope="col" class="kern-table__header"><%= t("adm.shared.created_at") %></th>
             <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
           </tr>
@@ -36,7 +36,18 @@
                   <%= t("adm.api_clients.access_level.#{api_client.access_level}") %>
                 </span>
               </td>
-              <td class="kern-table__cell"><%= api_client.service_user_email %></td>
+              <td class="kern-table__cell">
+                <% if api_client.dedicated_user_mode? && api_client.user.present? %>
+                  <span class="kern-badge kern-badge--success">
+                    <%= t("adm.api_clients.index.dedicated_user_badge") %>
+                  </span>
+                  <span class="d-block fs-2 text-muted mt-1"><%= api_client.user.username %></span>
+                <% else %>
+                  <span class="kern-badge kern-badge--info">
+                    <%= t("adm.api_clients.index.system_user_badge") %>
+                  </span>
+                <% end %>
+              </td>
               <td class="kern-table__cell"><%= l(api_client.created_at, format: :short) %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>

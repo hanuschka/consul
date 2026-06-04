@@ -31,14 +31,6 @@ class Adm::ApiClientPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
-  def update_service_user?
-    @user&.administrator?
-  end
-
-  def create_service_user?
-    @user&.administrator?
-  end
-
   class Scope < Scope
     def resolve
       scope

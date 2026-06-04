@@ -1,15 +1,21 @@
-class Ckeditor::Asset < ApplicationRecord
-  include Searchable
-  include Rails.application.routes.url_helpers
+module AdminUploadable
+  extend ActiveSupport::Concern
 
   EDITORS_WITH_FULL_URL = %w[newsletter_body].freeze
 
-  self.table_name = "ckeditor_assets"
+  included do
+    include Searchable
+    include Rails.application.routes.url_helpers
 
-  has_one_attached :storage_data
+    belongs_to :projekt, optional: true
 
-  def self.search(terms)
-    pg_search(terms)
+    has_one_attached :storage_data
+  end
+
+  class_methods do
+    def search(terms)
+      pg_search(terms)
+    end
   end
 
   def attach_uploaded_file(data, custom_image = nil)
@@ -21,7 +27,6 @@ class Ckeditor::Asset < ApplicationRecord
     self.data_file_name = data.original_filename
     self.data_content_type = data.content_type
     self.data_file_size = image_to_store.size
-    self.type = type
     self.title = data.original_filename
   end
 

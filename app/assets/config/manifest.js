@@ -18,6 +18,5 @@
 
 //= link packs/studio.js
 //= link packs/studio_vendor.js
-//= link lib/files/filter_serializer.js
 
 //= link adm_content_block_editor.css

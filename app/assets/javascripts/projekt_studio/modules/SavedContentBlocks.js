@@ -231,7 +231,7 @@ App.ContentBlockEditor.SavedContentBlocks = {
   },
 
   addNewSavedContentBlockOnUI({saved_content_block_item_html, container}) {
-    const tabPanel = container.closest(".tabs-panel")
+    const tabPanel = container.closest(".shared-tabs-panel")
     const templatesList = tabPanel.querySelector(".js-saved-content-blocks-list")
 
     templatesList.insertAdjacentHTML("beforeend", saved_content_block_item_html)

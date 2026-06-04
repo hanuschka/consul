@@ -128,7 +128,7 @@ class Files::ImageCardComponent < ApplicationComponent
     end
 
     def update_url
-      helpers.adm_files_image_path(image)
+      helpers.adm_maintenance_resource_image_path(image)
     end
 
     def attached?

@@ -1,4 +1,4 @@
-class CkeditorAssetsQuery
+class AdminAssetsQuery
   ALLOWED_SORTS = {
     "created_desc" => { created_at: :desc },
     "created_asc"  => { created_at: :asc },
@@ -12,18 +12,12 @@ class CkeditorAssetsQuery
 
   DEFAULT_SORT = "created_desc".freeze
 
-  TYPE_MAP = {
-    "picture"  => "Ckeditor::Picture",
-    "document" => "Ckeditor::Document"
-  }.freeze
-
   def initialize(params)
     @params = params || {}
   end
 
   def call
-    scope = Ckeditor::Asset.joins(:storage_data_attachment)
-    scope = filter_type(scope)
+    scope = base_model.joins(:storage_data_attachment)
     scope = filter_search(scope)
     scope = filter_extension(scope)
     scope = filter_size(scope)
@@ -36,21 +30,15 @@ class CkeditorAssetsQuery
 
     attr_reader :params
 
-    def filter_type(scope)
-      type_param = read_param(:type)
-      return scope if type_param.blank?
-
-      mapped = TYPE_MAP[type_param.to_s]
-      return scope if mapped.blank?
-
-      scope.where(type: mapped)
+    def base_model
+      read_param(:type).to_s == "document" ? AdminDocument : AdminImage
     end
 
     def filter_search(scope)
       term = read_param(:search)
       return scope if term.blank?
 
-      scope.merge(Ckeditor::Asset.search(term))
+      scope.merge(base_model.search(term))
     end
 
     def filter_extension(scope)

@@ -6,6 +6,10 @@ de:
         files_subitems:
           images: Bilder
           documents: Dokumente
+        maintenance: Wartung
+        maintenance_subitems:
+          resource_images: Ressourcen-Bilder
+          resource_documents: Ressourcen-Dokumente
   files:
     allowed_types_note_html: "Erlaubte Dateitypen: %{types}"
     allowed_types_admins_html: "Admins &amp; Projektmanager können folgende Dateitypen hochladen: %{types}"
@@ -14,9 +18,19 @@ de:
     images:
       index:
         title: Übersicht aller Bilder
+        description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager oder Inhalts-Editoren. Von Nutzern zu Inhalten der Plattform hochgeladene Bilder werden unter Wartung → Ressourcen-Bilder verwaltet. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     documents:
       index:
         title: Übersicht aller Dokumente
+        description: Zeigt alle Dokumente, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager oder Inhalts-Editoren. Von Nutzern zu Inhalten der Plattform hochgeladene Dokumente werden unter Wartung → Ressourcen-Dokumente verwaltet. Nutzen Sie diese Seite, um Dokumente hochzuladen, zu prüfen, umzubenennen oder zu löschen.
+    resource_images:
+      index:
+        title: Übersicht aller Ressourcen-Bilder
+        description: Zeigt alle Bilder, die mit Inhalten der Plattform verknüpft sind — z. B. Projekte, Vorschläge, Seiten und Umfragen. Benutzer-Avatare werden nicht angezeigt. Nutzen Sie diese Seite, um Bilddateien systemweit zu prüfen, umzubenennen oder zu löschen.
+    resource_documents:
+      index:
+        title: Übersicht aller Ressourcen-Dokumente
+        description: Zeigt alle Dokumente, die von Nutzern zu Inhalten der Plattform hochgeladen wurden — z. B. Vorschläge und Ideen. Von Administratoren hochgeladene Dokumente werden unter Dateien → Dokumente verwaltet. Nutzen Sie diese Seite, um Dokumente systemweit zu prüfen, umzubenennen oder zu löschen.
     empty:
       images:
         title: Noch keine Bilder
@@ -41,10 +55,6 @@ de:
       imageable_type_any: "Zugewiesen: Alle"
       documentable_type: Zugewiesen an
       documentable_type_any: "Zugewiesen: Alle"
-      admin_flag: Quelle
-      admin_flag_any: Alle Quellen
-      admin_flag_true: Admin-Uploads
-      admin_flag_false: Reguläre Uploads
       sort_label: Sortierung
       reset: Zurücksetzen
       sort:
@@ -61,7 +71,6 @@ de:
         filter_extension: Nach Dateityp filtern
         filter_imageable_type: Nach Zuweisung filtern
         filter_documentable_type: Nach Zuweisung filtern
-        filter_admin_flag: Nach Quelle filtern
         sort: Sortieren nach
         reset: Filter zurücksetzen
     upload_failed: Hochladen fehlgeschlagen

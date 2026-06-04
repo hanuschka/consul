@@ -1,4 +1,4 @@
-class Ckeditor::Document < Ckeditor::Asset
+class AdminDocument < AdminAsset
   ALLOWED_CONTENT_TYPES = %w[
     application/pdf
     application/msword
@@ -48,9 +48,5 @@ class Ckeditor::Document < Ckeditor::Asset
       blob.preview(resize_to_limit: [464, 380]),
       only_path: true
     )
-  end
-
-  def type
-    "Ckeditor::Document"
   end
 end

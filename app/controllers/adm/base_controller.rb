@@ -98,8 +98,10 @@ class Adm::BaseController < ActionController::Base
         Adm::ImagePolicy
       when "Document"
         Adm::DocumentPolicy
-      when "Ckeditor::Asset"
-        Adm::CkeditorAssetPolicy
+      when "AdminAsset"
+        Adm::AdminAssetPolicy
+      when "AdminImage"
+        Adm::AdminImagePolicy
       when "Poll"
         Adm::Projekts::PollPolicy
       else

@@ -10,21 +10,18 @@
     >
   </div>
 
-  <% if !minimal? %>
-    <div class="files-filter-bar--field">
-      <select
-        class="files-filter-bar--input js-fm-filter-extension"
-        aria-label="<%= t("files.filter_bar.aria.filter_extension") %>"
-        data-action="change->files--filter-bar#filterChanged"
-      >
-        <option value=""><%= t("files.filter_bar.extension_any") %></option>
-        <% extension_options.each do |ext| %>
-          <option value="<%= ext %>">.<%= ext %></option>
-        <% end %>
-      </select>
-    </div>
-
-  <% end %>
+  <div class="files-filter-bar--field">
+    <select
+      class="files-filter-bar--input js-fm-filter-extension"
+      aria-label="<%= t("files.filter_bar.aria.filter_extension") %>"
+      data-action="change->files--filter-bar#filterChanged"
+    >
+      <option value=""><%= t("files.filter_bar.extension_any") %></option>
+      <% extension_options.each do |ext| %>
+        <option value="<%= ext %>">.<%= ext %></option>
+      <% end %>
+    </select>
+  </div>
 
   <% if imageable_type_frame_src.present? %>
     <%= turbo_frame_tag "files-imageable-type-filter",
@@ -54,20 +51,6 @@
         </select>
       </div>
     <% end %>
-  <% end %>
-
-  <% if !minimal? %>
-    <div class="files-filter-bar--field">
-      <select
-        class="files-filter-bar--input js-fm-filter-admin-flag"
-        aria-label="<%= t("files.filter_bar.aria.filter_admin_flag") %>"
-        data-action="change->files--filter-bar#filterChanged"
-      >
-        <option value=""><%= t("files.filter_bar.admin_flag_any") %></option>
-        <option value="true"><%= t("files.filter_bar.admin_flag_true") %></option>
-        <option value="false"><%= t("files.filter_bar.admin_flag_false") %></option>
-      </select>
-    </div>
   <% end %>
 
   <div class="files-filter-bar--field">

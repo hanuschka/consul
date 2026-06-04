@@ -25,10 +25,6 @@ module CustomNewHelper
       css_class += ' -ai-enabled'
     end
 
-    if embedded?
-      css_class += " -embedded"
-    end
-
     css_class
   end
 

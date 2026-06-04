@@ -58,6 +58,10 @@ set :delayed_job_roles, :background
 set :whenever_roles, -> { :app }
 
 namespace :deploy do
+  before :starting, :record_deploy_start_time do
+    set :deploy_started_at, Time.now
+  end
+
   after "rvm1:hook", "map_node_bins"
 
   after :updating, "install_node"
@@ -216,3 +220,21 @@ task :stop_puma_daemon do
     end
   end
 end
+
+# Print total wall-clock deploy time as the final line. Registered after the
+# other deploy:finished hooks (restart_delayed_jobs, refresh_sitemap) so it
+# runs last.
+task :report_deploy_duration do
+  started_at = fetch(:deploy_started_at)
+  next unless started_at
+
+  elapsed = (Time.now - started_at).round
+  minutes, seconds = elapsed.divmod(60)
+  formatted = minutes.positive? ? "#{minutes}m #{seconds}s" : "#{seconds}s"
+
+  run_locally do
+    info "Deploy to #{fetch(:stage)} finished in #{formatted} (#{elapsed}s total)"
+  end
+end
+
+after "deploy:finished", "report_deploy_duration"

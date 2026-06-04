@@ -54,7 +54,7 @@
                 <%= t(".image_label") %>
               </div>
               <%= render Shared::ImageWithLightboxComponent.new(
-                image_url: @image_url,
+                image_url: url_for(@image_url),
                 original_url: original_image_url,
                 alt: @deficiency_report.title,
                 gallery: "deficiency-report-#{@deficiency_report.id}"

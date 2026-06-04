@@ -6,6 +6,7 @@ en:
         updated: API client updated successfully
         deleted: API client deleted successfully
         token_regenerated: API token regenerated successfully
+        service_user_updated: Service user updated successfully
       access_level:
         public_data: Public data
         admin: Admin

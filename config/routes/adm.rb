@@ -132,6 +132,7 @@ namespace :adm do
   resources :external_api_keys, only: [:index, :show, :edit, :update]
   resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     post :regenerate_token, on: :member
+    patch :update_service_user, on: :member
   end
   resources :api_request_logs, only: [:index, :show] do
     delete :destroy_all, on: :collection

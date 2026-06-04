@@ -87,9 +87,32 @@ class Adm::ApiClientsController < Adm::BaseController
     redirect_to adm_api_client_path(@api_client), notice: t("adm.api_clients.flash.token_regenerated")
   end
 
+  def update_service_user
+    @api_client = ApiClient.find(params[:id])
+    authorize [:adm, @api_client], policy_class: Adm::ApiClientPolicy
+
+    if @api_client.user.update(service_user_params)
+      redirect_to edit_adm_api_client_path(@api_client), notice: t("adm.api_clients.flash.service_user_updated")
+    else
+      @breadcrumbs = [
+        { name: t("adm.api_clients.index.title"), icon: "api", url: adm_api_clients_path },
+        { name: t("adm.api_clients.edit.title") }
+      ]
+
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
     def api_client_params
       params.require(:api_client).permit(:name, :domain, :access_level, :service_user_email)
+    end
+
+    def service_user_params
+      params.require(:user).permit(
+        :username, :first_name, :last_name, :background_image,
+        image_attributes: [:id, :attachment, :cached_attachment, :user_id, :_destroy]
+      )
     end
 end

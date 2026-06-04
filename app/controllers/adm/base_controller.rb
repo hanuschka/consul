@@ -1,12 +1,14 @@
 class Adm::BaseController < ActionController::Base
   include Pundit::Authorization
   include Pagy::Backend
+  include LocaleSwitching
 
   default_form_builder KernFormBuilder
 
   layout "adm"
 
   before_action :authenticate_user!
+  around_action :switch_locale
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 

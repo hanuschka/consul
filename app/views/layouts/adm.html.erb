@@ -43,7 +43,8 @@
             <div class="fs-5 mx-4 position-relative"><%= adm_header_title %></div>
           </div>
 
-          <div class="d-flex align-items-center mr-4 position-relative">
+          <div class="d-flex align-items-center gap-4 mr-4 position-relative">
+            <%= render Adm::LanguageSelectorComponent.new %>
             <%= render Kern::SubnavigationKontoComponent.new(current_user: current_user) %>
           </div>
         </header>

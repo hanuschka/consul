@@ -64,8 +64,6 @@ class ApplicationController < ActionController::Base
     end
 
     def set_projekts_for_overview_page_navigation
-      return if embedded?
-
       @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
                                                       .includes([page: :translations])
       @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user).includes([page: :translations])

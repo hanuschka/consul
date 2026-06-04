@@ -87,6 +87,18 @@ class Adm::ApiClientsController < Adm::BaseController
     redirect_to adm_api_client_path(@api_client), notice: t("adm.api_clients.flash.token_regenerated")
   end
 
+  def create_service_user
+    @api_client = ApiClient.find(params[:id])
+    authorize [:adm, @api_client], policy_class: Adm::ApiClientPolicy
+    @api_client.create_service_user
+
+    if @api_client.reload.user.present?
+      redirect_to edit_adm_api_client_path(@api_client), notice: t("adm.api_clients.flash.service_user_created")
+    else
+      redirect_to edit_adm_api_client_path(@api_client), alert: t("adm.api_clients.flash.service_user_create_failed")
+    end
+  end
+
   def update_service_user
     @api_client = ApiClient.find(params[:id])
     authorize [:adm, @api_client], policy_class: Adm::ApiClientPolicy

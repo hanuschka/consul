@@ -61,5 +61,22 @@
 
       <%= form_submit_button(text: t("adm.api_clients.form.update_service_user")) %>
     <% end %>
+  <% else %>
+    <hr class="kern-divider my-5" aria-hidden="true">
+
+    <h3 class="mb-3"><%= t("adm.api_clients.form.service_user_form_title") %></h3>
+
+    <div class="kern-alert kern-alert--warning mb-4" role="alert">
+      <div class="kern-alert__body">
+        <p><%= t("adm.api_clients.form.service_user_missing") %></p>
+      </div>
+    </div>
+
+    <%= button_to create_service_user_adm_api_client_path(@api_client),
+      method: :post,
+      class: "kern-btn kern-btn--primary" do %>
+      <span class="kern-label material-symbols-outlined" aria-hidden="true">person_add</span>
+      <span class="kern-label"><%= t("adm.api_clients.form.create_service_user") %></span>
+    <% end %>
   <% end %>
 </div>

@@ -7,6 +7,8 @@ de:
         deleted: API-Client erfolgreich gelöscht
         token_regenerated: API-Token erfolgreich erneuert
         service_user_updated: Service-Benutzer erfolgreich aktualisiert
+        service_user_created: Service-Benutzer erfolgreich erstellt
+        service_user_create_failed: Service-Benutzer konnte nicht erstellt werden
       access_level:
         public_data: Öffentliche Daten
         admin: Admin
@@ -54,6 +56,10 @@ de:
         service_user_errors_message: "%{count} Fehler"
         service_user_errors_title: "hinderte diesen Service-Benutzer daran, gespeichert zu werden:"
         update_service_user: Service-Benutzer aktualisieren
+        create_service_user: Service-Benutzer erstellen
+        service_user_missing: >
+          Für diesen API-Client existiert noch kein Service-Benutzer.
+          Erstellen Sie einen, um Name, Avatar und Hintergrundbild zu bearbeiten.
         regenerate_token: Token erneuern
         regenerate_token_explanation: >
           Erstellt einen neuen Token und macht den aktuellen ungültig.

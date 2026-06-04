@@ -7,6 +7,8 @@ en:
         deleted: API client deleted successfully
         token_regenerated: API token regenerated successfully
         service_user_updated: Service user updated successfully
+        service_user_created: Service user created successfully
+        service_user_create_failed: Service user could not be created
       access_level:
         public_data: Public data
         admin: Admin
@@ -53,6 +55,10 @@ en:
         service_user_errors_message: "%{count} error(s)"
         service_user_errors_title: "prevented this service user from being saved:"
         update_service_user: Update service user
+        create_service_user: Create service user
+        service_user_missing: >
+          No service user exists for this API client yet.
+          Create one to edit its name, avatar and background image.
         regenerate_token: Regenerate token
         regenerate_token_explanation: >
           Creates a new token and invalidates the current one.

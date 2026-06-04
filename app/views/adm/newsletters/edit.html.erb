@@ -28,7 +28,7 @@
   <% end %>
 
   <% if @newsletter.draft? %>
-    <div class="my-5">
+    <div class="">
       <h2 class="kern-title kern-title--large mb-3"><%= t(".content_section_title") %></h2>
       <%= render Adm::Newsletters::ContentBlockEditorComponent.new(
         newsletter: @newsletter,

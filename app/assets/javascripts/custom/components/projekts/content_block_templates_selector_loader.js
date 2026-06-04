@@ -7,6 +7,10 @@
 
     initialize() {},
 
+    getContainer() {
+      return $(".js-content-block-templates-selector--inner");
+    },
+
     loadTemplatesContent(section) {
       const cacheKey = section || "default";
 
@@ -41,12 +45,18 @@
     handleLoadSuccess(html, cacheKey) {
       this.hideSpinner();
 
-      const $container = $(".js-content-block-templates-selector--inner");
+      const $container = this.getContainer();
       $container.html(html).show();
 
       this.reinitContentComponents($container);
 
-      this.cachedSections[cacheKey] = $container.html();
+      const isFallback = this.isFallbackContent($container);
+      this.toggleFallbackNote(isFallback);
+
+      if (!isFallback) {
+        this.cachedSections[cacheKey] = $container.html();
+      }
+
       this.activeSection = cacheKey;
     },
 
@@ -55,11 +65,20 @@
 
       this.hideSpinner();
 
-      const $container = $(".js-content-block-templates-selector--inner");
+      const $container = this.getContainer();
       $container.html(this.cachedSections[cacheKey]).show();
 
       this.reinitContentComponents($container);
+      this.toggleFallbackNote(this.isFallbackContent($container));
       this.activeSection = cacheKey;
+    },
+
+    isFallbackContent($container) {
+      return $container.find(".js-content-block-templates-fallback-marker").length > 0
+    },
+
+    toggleFallbackNote(visible) {
+      $(".js-content-block-templates-fallback-note").toggle(visible);
     },
 
     reinitContentComponents($container) {
@@ -87,7 +106,7 @@
 
     showSpinner() {
       $(".js-content-block-templates-spinner").show();
-      $(".js-content-block-templates-selector--inner").hide();
+      this.getContainer().hide();
     },
 
     hideSpinner() {
@@ -97,7 +116,7 @@
     handleLoadError() {
       this.hideSpinner();
 
-      const $container = $(".js-content-block-templates-selector--inner");
+      const $container = this.getContainer();
       const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
 
       if (!fallbackTemplate) return
@@ -105,7 +124,7 @@
       const fallbackContent = document.importNode(fallbackTemplate.content, true);
       $container.empty().append(fallbackContent).show();
 
-      $(".js-content-block-templates-fallback-note").show();
+      this.toggleFallbackNote(true);
 
       this.reinitContentComponents($container);
     }

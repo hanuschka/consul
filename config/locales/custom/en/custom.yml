@@ -69,6 +69,11 @@ en:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"
         tabs:
+          basic_content: Basic content
+          status_and_notes: Status & notes
+          teasers_and_promotions: Teasers and promotions
+          media_and_resources: Media & resources
+          messages: Messages
           internal_content_blocks: Internal content blocks
           own_content_blocks: Own content blocks
         saved_content_blocks:

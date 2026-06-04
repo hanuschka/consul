@@ -4,15 +4,11 @@ class ProjektContentBlockTemplatesController < ApplicationController
 
     dt_templates_by_category = fetch_dt_templates
 
-    if dt_templates_by_category.nil?
-      head :service_unavailable
-      return
-    end
-
     render(
       Projekts::ContentBlockTemplatesSelectorContentComponent.new(
-        dt_templates_by_category:,
-        context: template_context
+        dt_templates_by_category: dt_templates_by_category.presence || [],
+        context: template_context,
+        fallback: dt_templates_by_category.blank?
       ),
       layout: false
     )
@@ -64,13 +60,16 @@ class ProjektContentBlockTemplatesController < ApplicationController
       end
 
       selector = Projekts::ContentBlockTemplatesSelectorComponent.new
+      local_categories = selector.local_template_categories.map do |category|
+        { id: category[:id], name: category[:name], templates: name_only(category[:template_names]) }
+      end
 
-      [
-        { id: "basic_content", name: "Basisinhalte", templates: name_only(selector.basic_content_templates) },
-        { id: "status_and_notes", name: "Status & Hinweise", templates: name_only(selector.status_and_notes_templates) },
-        { id: "teasers_and_promotions", name: "Teaser und Werbeaktionen", templates: name_only(selector.teasers_and_promotions) },
-        { id: "media_and_resources", name: "Medien & Ressourcen", templates: name_only(selector.media_and_resources_templates) },
-        { id: "messages", name: "Nachrichten", templates: name_only(selector.messages_content_block_templates) }
+      local_categories + [
+        {
+          id: "messages",
+          name: I18n.t("custom.projekt.content_block_templates_selector.tabs.messages"),
+          templates: name_only(selector.messages_content_block_templates)
+        }
       ]
     end
 

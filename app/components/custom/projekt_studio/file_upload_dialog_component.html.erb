@@ -46,7 +46,7 @@
           <i class="fa fa-pen"></i>
           Datei editieren
         </button>
-        <button type="button" class="studio-edit-button js-file-upload-manager-upload">
+        <button type="button" class="studio-edit-button -green file-upload-manager-dialog--upload-button js-file-upload-manager-upload">
           <i class="fa fa-upload"></i>
           <%= mode_config[:upload_text] %>
         </button>
@@ -134,88 +134,11 @@
   <!-- Info Modal -->
   <div class="file-upload-manager-info-modal js-file-upload-manager-info-modal">
     <div class="file-upload-manager-info-modal--overlay js-file-upload-manager-info-close"></div>
-    <div class="file-manager-modal-panel -wide js-file-upload-manager-info-panel">
-      <div class="file-upload-manager-edit-modal__header">
-        <span class="js-file-manager-info-modal-title"></span>
-        <button
-          class="close-button round-icon-button js-file-upload-manager-info-close"
-          data-close=""
-          aria-label="<%= t("files.info_modal.close") %>"
-          type="button"
-        >
-          <i class="fa fa-xmark"></i>
-        </button>
+    <div class="file-manager-modal-panel -wide">
+      <div class="file-upload-manager-info-modal--loading">
+        <div class="loading-spinner-inline"></div>
       </div>
-      <div class="file-upload-manager-info-modal--body">
-        <div
-          class="file-upload-manager-info-modal--preview js-file-manager-info-preview"
-          style="display: none;"
-        >
-          <img class="js-file-manager-info-preview-image" src="" alt="">
-        </div>
-        <dl class="file-upload-manager-info-modal--details">
-          <div class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-filename">
-            <dt><%= t("files.info_modal.filename") %></dt>
-            <dd class="js-file-manager-info-filename"></dd>
-          </div>
-          <div class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-type">
-            <dt><%= t("files.info_modal.type") %></dt>
-            <dd class="js-file-manager-info-content-type"></dd>
-          </div>
-          <div class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-size">
-            <dt><%= t("files.info_modal.size") %></dt>
-            <dd class="js-file-manager-info-size"></dd>
-          </div>
-          <div
-            class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-dimensions"
-            style="display: none;"
-          >
-            <dt><%= t("files.info_modal.dimensions") %></dt>
-            <dd class="js-file-manager-info-dimensions"></dd>
-          </div>
-          <div class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-uploaded">
-            <dt><%= t("files.info_modal.uploaded") %></dt>
-            <dd class="js-file-manager-info-created-at"></dd>
-          </div>
-          <div class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-modified">
-            <dt><%= t("files.info_modal.last_edited") %></dt>
-            <dd class="js-file-manager-info-updated-at"></dd>
-          </div>
-          <div
-            class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-user"
-            style="display: none;"
-          >
-            <dt><%= t("files.info_modal.uploaded_by") %></dt>
-            <dd class="js-file-manager-info-user"></dd>
-          </div>
-          <div
-            class="file-upload-manager-info-modal--detail-row js-file-manager-info-row-projekt"
-            style="display: none;"
-          >
-            <dt><%= t("files.info_modal.projekt") %></dt>
-            <dd class="js-file-manager-info-projekt"></dd>
-          </div>
-        </dl>
-      </div>
-      <div class="file-upload-manager-info-modal--footer">
-        <a
-          class="studio-edit-button js-file-manager-info-download-link"
-          href=""
-          download
-        >
-          <i class="fa fa-download"></i>
-          <%= t("files.info_modal.download_file") %>
-        </a>
-        <a
-          class="studio-edit-button -green js-file-manager-info-open-link"
-          href=""
-          target="_blank"
-          rel="noopener"
-        >
-          <i class="fa fa-external-link-alt"></i>
-          <%= t("files.info_modal.open_file") %>
-        </a>
-      </div>
+      <div class="file-upload-manager-info-modal--content js-file-upload-manager-info-content"></div>
     </div>
   </div>
 

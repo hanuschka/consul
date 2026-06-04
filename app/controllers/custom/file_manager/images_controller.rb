@@ -38,7 +38,7 @@ class FileManager::ImagesController < FileManager::BaseController
     picture = AdminImage.find(params[:id])
     authorize [:adm, picture], :index?
 
-    render json: image_show_response(picture)
+    render image_info_component(picture), layout: false
   end
 
   def update
@@ -89,31 +89,26 @@ class FileManager::ImagesController < FileManager::BaseController
       }
     end
 
-    def image_show_response(picture)
+    def image_info_component(picture)
       metadata = picture.storage_data.blob&.metadata || {}
       dimensions =
         if metadata[:width] && metadata[:height]
           "#{metadata[:width]} × #{metadata[:height]}"
         end
 
-      projekt = picture.projekt
-      projekt_page = projekt&.page
-
-      {
-        id: picture.id,
+      ProjektStudio::FileInfoComponent.new(
         title: picture.title,
         filename: picture.data_file_name,
         content_type: picture.data_content_type,
         file_size: picture.data_file_size,
-        dimensions: dimensions,
-        url: picture.url_content,
-        preview_url: picture.custom_thumb_url(width: 600, height: 450),
-        created_at: I18n.l(picture.created_at, format: :short),
-        updated_at: I18n.l(picture.updated_at, format: :short),
+        file_url: picture.url_content,
+        created_at: picture.created_at,
+        updated_at: picture.updated_at,
         user_name: picture.user&.name,
         user_email: picture.user&.email,
-        projekt_name: projekt_page&.title.presence || projekt&.name,
-        projekt_url: projekt_page.present? ? page_path(projekt_page.slug) : nil
-      }
+        projekt: picture.projekt,
+        dimensions: dimensions,
+        preview_url: picture.custom_thumb_url(width: 600, height: 450)
+      )
     end
 end

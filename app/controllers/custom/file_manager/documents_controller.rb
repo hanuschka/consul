@@ -4,9 +4,9 @@ class FileManager::DocumentsController < FileManager::BaseController
 
     @documents =
       Document
-        .for_studio_file_manager(current_projekt)
+        .admin
         .merge(policy_scope([:adm, Document]))
-        .preload(documentable: :page)
+        .preload(:documentable)
         .order(created_at: :desc)
         .page(params[:page])
         .per(15)
@@ -37,7 +37,7 @@ class FileManager::DocumentsController < FileManager::BaseController
     document = Document.find(params[:id])
     authorize [:adm, document], :index?
 
-    render json: document_show_response(document)
+    render document_info_component(document), layout: false
   end
 
   def update
@@ -74,28 +74,25 @@ class FileManager::DocumentsController < FileManager::BaseController
       }
     end
 
-    def document_show_response(document)
+    def document_info_component(document)
       projekt =
         if document.documentable_type == "Projekt"
           document.documentable
         end
-      projekt_page = projekt&.page
 
-      {
-        id: document.id,
+      ProjektStudio::FileInfoComponent.new(
         title: document.title,
         filename: document.attachment_file_name,
         content_type: document.attachment_content_type,
         file_size: document.attachment_file_size,
-        url: Rails.application.routes.url_helpers.rails_blob_path(
+        file_url: Rails.application.routes.url_helpers.rails_blob_path(
           document.attachment, only_path: true
         ),
-        created_at: I18n.l(document.created_at, format: :short),
-        updated_at: I18n.l(document.updated_at, format: :short),
+        created_at: document.created_at,
+        updated_at: document.updated_at,
         user_name: document.user&.name,
         user_email: document.user&.email,
-        projekt_name: projekt_page&.title.presence || projekt&.name,
-        projekt_url: projekt_page.present? ? page_path(projekt_page.slug) : nil
-      }
+        projekt: projekt
+      )
     end
 end

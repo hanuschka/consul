@@ -81,6 +81,11 @@
   flex-shrink: 0;
 }
 
+.file-upload-manager-dialog--upload-button {
+  margin-left: 15px;
+  padding: 6px 22px;
+}
+
 .file-upload-manager-dialog--body {
   display: flex;
   flex-direction: column;
@@ -399,6 +404,17 @@
   inset: 0;
   background-color: rgba(0, 0, 0, 0.3);
   cursor: pointer;
+}
+
+.file-upload-manager-info-modal--loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 45px 0;
+}
+
+.file-upload-manager-info-modal.-loading .file-upload-manager-info-modal--loading {
+  display: flex;
 }
 
 .file-upload-manager-info-modal--body {

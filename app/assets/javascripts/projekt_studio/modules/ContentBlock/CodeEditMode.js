@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.CodeEditMode = {
+App.ContentBlockEditor.CodeEditMode = {
   initialized: false,
   aceInstances: {},
   modalContentBlockWrapper: null,
@@ -20,9 +20,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   enterCodeEditMode(e) {
-    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
+    App.ContentBlockEditor.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     this.switchToCodeEditMode(contentBlockWrapper);
   },
@@ -57,7 +57,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   createAndShowEditor(contentBlockWrapper, targetHeight) {
     this.removeEditor(contentBlockWrapper);
 
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
     const currentHTML = contentBlock.innerHTML.trim();
 
     if (this.isCompactContext(contentBlockWrapper)) {
@@ -75,7 +75,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
     const insertionContainer = innerContainer || contentBlockWrapper;
 
-    const toolbarAnchor = insertionContainer.querySelector('.js-projekt-content-block--toolbar-anchor');
+    const toolbarAnchor = insertionContainer.querySelector('.js-content-block--toolbar-anchor');
     if (toolbarAnchor) {
       toolbarAnchor.insertAdjacentElement('afterend', editorContainer);
     } else {
@@ -191,7 +191,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   updateContentBlockFromEditor(contentBlockWrapper) {
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
     const editor = this.getEditor(contentBlockWrapper);
 
     if (editor) {
@@ -207,8 +207,8 @@ ProjektStudio.ContentBlock.CodeEditMode = {
 
   exitCodeEditMode(contentBlockWrapper, restoreContent = false, { applyEditorContent = true } = {}) {
     if (restoreContent) {
-      const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+      const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
+      App.ContentBlockEditor.DraftStore.restorePreviousVersion(contentBlock);
     } else if (applyEditorContent) {
       this.updateContentBlockFromEditor(contentBlockWrapper);
     }
@@ -222,11 +222,11 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       this.modalContentBlockWrapper = null;
     }
 
-    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
+    App.ContentBlockEditor.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelCodeEditMode(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     this.exitCodeEditMode(contentBlockWrapper, true);
   },
 
@@ -234,7 +234,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
     const contentBlockWrapper = this.modalContentBlockWrapper;
     if (!contentBlockWrapper) return
 
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
     const editor = this.getEditor(contentBlockWrapper);
     if (!editor) return
 
@@ -247,7 +247,7 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       return
     }
 
-    ProjektStudio.ContentBlock.Crud.updateContentBlock(contentBlock, content);
+    App.ContentBlockEditor.Crud.updateContentBlock(contentBlock, content);
 
     this.exitCodeEditMode(contentBlockWrapper, false, { applyEditorContent: false });
   },
@@ -260,8 +260,8 @@ ProjektStudio.ContentBlock.CodeEditMode = {
   },
 
   saveContentBlockAndExit(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
 
     const editor = this.getEditor(contentBlockWrapper);
     if (!editor) {
@@ -278,9 +278,9 @@ ProjektStudio.ContentBlock.CodeEditMode = {
       return;
     }
 
-    // ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+    // App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
-    ProjektStudio.ContentBlock.Crud.updateContentBlock(
+    App.ContentBlockEditor.Crud.updateContentBlock(
       contentBlock,
       content
     );

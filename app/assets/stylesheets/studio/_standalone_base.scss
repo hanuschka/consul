@@ -1,0 +1,40 @@
+// Main-app base pieces the editor markup relies on when the studio pack is
+// loaded outside the main app packs (e.g. the /adm Kern-UX shell): u-*
+// helpers, the SR-only class and the icon-font glyphs used by the editor
+// dialogs. On the main app these duplicate application.css rules 1:1 at
+// equal or lower specificity, so the cascade there is unchanged.
+
+$line-height: 1.5rem; // rem-calc(24) from _consul_settings.scss
+
+@import "brand_settings";
+@import "custom/1_utils";
+
+:root {
+  --brand-color: #{$brand};
+}
+
+.show-for-sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.icon-search::before,
+.icon-cross::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: bold;
+}
+
+.icon-search::before {
+  content: "\f002";
+}
+
+.icon-cross::before {
+  content: "\f00d";
+}

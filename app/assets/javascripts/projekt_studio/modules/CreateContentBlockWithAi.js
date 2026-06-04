@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  ProjektStudio.CreateContentBlockWithAi = {
+  App.ContentBlockEditor.CreateWithAi = {
     state: {
       mode: "add",
       replaceTargetWrapper: null,
@@ -69,18 +69,18 @@
 
       const directSection = e.currentTarget.closest(".js-show-content-block-templates-section");
       if (directSection) {
-        const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+        const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
         const isAtTop = directSection.classList.contains("js-add-content-block-at-top");
 
-        ProjektStudio.ContentBlockTemplateSelector.selectionMode = "add";
-        ProjektStudio.ContentBlockTemplateSelector.replaceTargetWrapper = null;
-        ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
-        ProjektStudio.ContentBlock.Crud.addContentBlockAfter = wrapper;
-        ProjektStudio.ContentBlock.Crud.addContentBlockAtTop = isAtTop;
+        App.ContentBlockEditor.TemplateSelector.selectionMode = "add";
+        App.ContentBlockEditor.TemplateSelector.replaceTargetWrapper = null;
+        App.ContentBlockEditor.TemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+        App.ContentBlockEditor.Crud.addContentBlockAfter = wrapper;
+        App.ContentBlockEditor.Crud.addContentBlockAtTop = isAtTop;
       }
 
-      const templateSelector = ProjektStudio.ContentBlockTemplateSelector;
-      const crud = ProjektStudio.ContentBlock.Crud;
+      const templateSelector = App.ContentBlockEditor.TemplateSelector;
+      const crud = App.ContentBlockEditor.Crud;
 
       this.state.mode = templateSelector.selectionMode === "replace" ? "replace" : "add";
       this.state.replaceTargetWrapper = templateSelector.replaceTargetWrapper;
@@ -101,14 +101,18 @@
     },
 
     openModal() {
-      $("#contentBlockAiModal").foundation("open");
+      App.SharedModal.open("contentBlockAiModal");
       setTimeout(() => {
         $(".js-content-block-ai-prompt").trigger("focus");
       }, 200);
     },
 
     closeModal() {
-      $("#contentBlockAiModal").foundation("close");
+      const modal = document.getElementById("contentBlockAiModal");
+
+      if (modal.open) {
+        App.SharedModal.closeById("contentBlockAiModal");
+      }
     },
 
     resetUI() {
@@ -120,18 +124,50 @@
       $(".js-content-block-ai-loader").hide();
       $(".js-content-block-ai-error").hide().text("");
       $(".js-content-block-ai-fallback-note").hide();
-      $(".js-content-block-ai-cancel").hide();
       $(".js-content-block-ai-modal-close").show();
       $(".js-content-block-ai-submit").prop("disabled", false);
       $(".js-content-block-ai-category").val("");
     },
 
+    getContentBlocksList() {
+      return document.querySelector(".js-content-blocks-list");
+    },
+
+    getTemplateSection() {
+      const contentBlocksList = this.getContentBlocksList();
+
+      if (contentBlocksList && contentBlocksList.dataset.templateSection) {
+        return contentBlocksList.dataset.templateSection;
+      }
+
+      return null;
+    },
+
+    getGenerateUrl() {
+      const contentBlocksList = this.getContentBlocksList();
+
+      if (contentBlocksList && contentBlocksList.dataset.generateUrl) {
+        return contentBlocksList.dataset.generateUrl;
+      }
+
+      const projektId = ProjektStudio.getCurrentProjektId();
+      return `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/generate_with_ai`;
+    },
+
     loadMetadata() {
+      const metadataData = {};
+      const templateSection = this.getTemplateSection();
+
+      if (templateSection) {
+        metadataData.section = templateSection;
+      }
+
       App.Ajax
         .request({
           url: "/projekt_content_block_templates/metadata",
           method: "GET",
-          dataType: "json"
+          dataType: "json",
+          data: metadataData
         })
         .then((data) => this.populateCategories(data))
         .catch(() => this.populateCategories({ available: false, categories: [] }));
@@ -169,7 +205,6 @@
     },
 
     startGeneration(prompt) {
-      const projektId = ProjektStudio.getCurrentProjektId();
       const payload = {
         prompt: prompt,
         mode: this.state.mode,
@@ -184,7 +219,7 @@
 
       App.Ajax
         .request({
-          url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/generate_with_ai`,
+          url: this.getGenerateUrl(),
           method: "POST",
           dataType: "json",
           data: payload
@@ -223,7 +258,6 @@
       $(".js-content-block-ai-submit").prop("disabled", true);
       $(".js-content-block-ai-loader").show();
       $(".js-content-block-ai-error").hide().text("");
-      $(".js-content-block-ai-cancel").show();
       $(".js-content-block-ai-modal-close").hide();
     },
 
@@ -233,7 +267,6 @@
 
       $(".js-content-block-ai-submit").prop("disabled", false);
       $(".js-content-block-ai-loader").hide();
-      $(".js-content-block-ai-cancel").hide();
       $(".js-content-block-ai-modal-close").show();
 
       this.state.pollActive = false;
@@ -323,7 +356,8 @@
 
       const newWrapper = ProjektStudio.utils.htmlToDomElement(wrapperHTML).firstChild;
       ProjektStudio.utils.removeFoundationIds(newWrapper);
-      ProjektStudio.ContentBlock.DomHelpers.moveMarginToWrapper(newWrapper);
+      App.ContentBlockEditor.Crud.applyUrlsToWrapper(newWrapper, response.urls);
+      App.ContentBlockEditor.DomHelpers.moveMarginToWrapper(newWrapper);
 
       const previousWrapper = this.state.previousContentBlockWrapper;
 
@@ -343,7 +377,7 @@
         $(".js-content-blocks-list").append(newWrapper);
       }
 
-      ProjektStudio.ContentBlock.Crud.rerenderContentBlockListControls();
+      App.ContentBlockEditor.Crud.rerenderContentBlockListControls();
 
       newWrapper.classList.add("-highlight-changed");
       setTimeout(() => {
@@ -352,8 +386,7 @@
 
       setTimeout(() => {
         newWrapper.scrollIntoView({ block: "center" });
-        $(newWrapper).find(".projekt-content-block").foundation();
-        $(newWrapper).find("[data-tooltip]").foundation();
+        App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newWrapper).find(".projekt-content-block"));
         App.ImageGallery.initialize();
       }, 0);
     },
@@ -362,16 +395,16 @@
       const wrapper = this.state.replaceTargetWrapper;
       if (!wrapper) return
 
-      const contentBlock = wrapper.querySelector(".js-projekt-content-block");
+      const contentBlock = wrapper.querySelector(".js-content-block");
       if (!contentBlock) return
 
       const updatedContent = ProjektStudio.utils.htmlToDomElement(response.body_html);
       ProjektStudio.utils.removeFoundationIds(updatedContent);
 
-      ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock);
+      App.ContentBlockEditor.DraftStore.storePreviousVersion(contentBlock);
       contentBlock.innerHTML = updatedContent.innerHTML;
-      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
-      ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(wrapper);
+      App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+      App.ContentBlockEditor.SimpleEditMode.switchToSimpleEditMode(wrapper);
     },
 
     handleCancel(e) {
@@ -392,7 +425,10 @@
       if (this.state.pollActive) {
         e.preventDefault();
         e.stopPropagation();
+        return
       }
+
+      this.closeModal();
     },
 
     showError(message) {

@@ -1,0 +1,265 @@
+// =============================================================================
+// Linear-Style Content-Block-Toolbar Buttons
+// -----------------------------------------------------------------------------
+// Universelles 32x32 Icon-Button-System mit konsistenten Größen, Spacings und
+// Hover/Active-States. Drei Varianten:
+//   - Default Icon-Button (.studio-icon-button)
+//   - Label-Button (.projekt-content-block-edit--button)         32px hoch
+//   - Save (-green) / Cancel / Delete (-delete) / Disabled
+// =============================================================================
+
+// Edit-Toolbar-Container (Format-Tools-Gruppe)
+.projekt-content-block-edit {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  max-height: 32px;
+  position: relative;
+  gap: 2px;
+}
+
+// Save / Cancel-Wrapper (linke Seite, nur in Edit-Mode sichtbar)
+.projekt-content-block-edit--buttons-wrapper {
+  margin-right: auto;
+  display: none;
+  align-items: center;
+  gap: 10px;
+}
+
+// =============================================================================
+// Label-Buttons (Save / Cancel) — 32px Höhe, Padding 6px 12px
+// =============================================================================
+.projekt-content-block-edit--button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 6px 12px;
+  font-size: 15px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.65);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 120ms ease, color 120ms ease;
+
+  // Default: Cancel-Style (transparent, hover-tint)
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  // Speichern — primary-Variante
+  &.-green {
+    color: #fff;
+    background: var(--brand-color);
+
+    &:hover {
+      background: color-mix(in srgb, var(--brand-color) 90%, black);
+      color: #fff;
+    }
+
+    &:active {
+      background: color-mix(in srgb, var(--brand-color) 80%, black);
+    }
+  }
+
+  // Destruktiv (Label-Variante, falls genutzt)
+  &.-red {
+    color: rgba(0, 0, 0, 0.5);
+
+    &:hover {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+  }
+
+  // Cancel/Default — explizite Klasse, sekundär
+  &.-cancel-state {
+    color: rgba(0, 0, 0, 0.65);
+    background: transparent;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+
+  // Disabled
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: transparent;
+    color: rgba(0, 0, 0, 0.65);
+
+    &:hover {
+      background-color: transparent;
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  // Transparent-Modifier (bewahrt Aussehen, nur Hintergrund weg)
+  &.-transparent {
+    background-color: transparent;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &.-green {
+      background: var(--brand-color);
+
+      &:hover {
+        background: color-mix(in srgb, var(--brand-color) 90%, black);
+      }
+    }
+
+    &:disabled:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+// =============================================================================
+// Icon-Only-Buttons (Mode-Switch, Format-Tools, Block-Actions) — 32x32
+// =============================================================================
+.studio-icon-button-wrapper {
+  border-radius: 6px;
+}
+
+.studio-icon-button {
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  border-radius: 50%;
+  color: rgba(0, 0, 0, 0.7);
+  background: transparent;
+  border: none;
+  // border-radius: 6px;
+  padding: 0;
+  transition: background-color 120ms ease, color 120ms ease;
+
+  i {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.9);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  // Active-State (z.B. aktiver Edit-Mode-Stift) — Brand-Tint statt Filled-Circle
+  &.-active,
+  &.is-active {
+    color: var(--brand-color);
+    background: color-mix(in srgb, var(--brand-color) 12%, transparent);
+
+    &:hover {
+      background: color-mix(in srgb, var(--brand-color) 18%, transparent);
+      color: var(--brand-color);
+    }
+  }
+
+  // Destruktiv — neutral im Default, rot erst auf Hover
+  &.-delete {
+    color: rgba(0, 0, 0, 0.5);
+
+    &:hover {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent !important;
+      color: rgba(0, 0, 0, 0.7);
+      cursor: not-allowed !important;
+    }
+  }
+}
+
+// Aktiver Edit-Mode (während Block bearbeitet wird) — Stift bekommt Brand-Tint
+// .projekt-content-block-wrapper.-in-edit-mode {
+//   .js-edit-text-content-block {
+//     color: var(--brand-color);
+//     background: color-mix(in srgb, var(--brand-color) 12%, transparent);
+
+//     &:hover {
+//       background: color-mix(in srgb, var(--brand-color) 18%, transparent);
+//       color: var(--brand-color);
+//     }
+//   }
+// }
+
+// =============================================================================
+// AI-Submit (separates Spezial-Element, behalten)
+// =============================================================================
+.projekt-content-block-edit--ai-submit {
+  min-width: 170px;
+}
+
+// =============================================================================
+// Compact-Mode-Overrides (kleinere Toolbar in schmalen Containern)
+// =============================================================================
+.projekt-content-block-wrapper.-compact-mode {
+  .projekt-content-block--toolbar {
+    padding: 3px 5px;
+  }
+
+  .studio-icon-button {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+
+    i {
+      font-size: 13px;
+    }
+  }
+
+  .content-block-margin-input {
+    display: none !important;
+  }
+
+  .js-content-block-header-dropdown {
+    display: none !important;
+  }
+
+  .content-block-edit-toolbar {
+    gap: 2px;
+    margin-left: 0;
+  }
+
+  .projekt-content-block-edit--button {
+    height: 28px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .projekt-content-block-edit--buttons-wrapper {
+    margin-right: 5px;
+    gap: 2px;
+  }
+
+  &.-in-edit-mode {
+    .projekt-content-block-edit-main-controlls {
+      display: none !important;
+    }
+  }
+}

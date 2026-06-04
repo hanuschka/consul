@@ -1,5 +1,13 @@
-ProjektStudio.ContentBlock.DragDrop = {
+App.ContentBlockEditor.DragDrop = {
   initialize() {
+  },
+
+  getUpdatePositionUrl(contentBlockWrapper) {
+    const customUrl = contentBlockWrapper.dataset.updatePositionUrl;
+    if (customUrl) return customUrl;
+
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+    return `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`;
   },
 
   initSortable() {
@@ -14,18 +22,17 @@ ProjektStudio.ContentBlock.DragDrop = {
           dragClass: "content-block-dnd-move",
           scrollSensitivity: 2,
           scrollSpeed: 3,
-          draggable: ".js-projekt-content-block-wrapper",
+          draggable: ".js-content-block-wrapper",
           onUpdate: (e) => { this.moveContentBlock(e) },
         });
     }, 200)
   },
 
   moveContentBlock(e) {
-    const contentBlockId = e.item.dataset.contentBlockId
     const newPosition = e.newIndex
 
-    $.ajax({
-      url: `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/update_position`,
+    App.Ajax.request({
+      url: this.getUpdatePositionUrl(e.item),
       type: "PATCH",
       dataType: "json",
       headers: {

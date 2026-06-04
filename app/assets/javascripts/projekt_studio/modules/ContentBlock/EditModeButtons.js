@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.EditModeButtons = {
+App.ContentBlockEditor.EditModeButtons = {
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-save-content-block", this.handleSave.bind(this));
@@ -12,16 +12,16 @@ ProjektStudio.ContentBlock.EditModeButtons = {
 
     switch(editMode) {
       case "ai":
-        ProjektStudio.ContentBlock.AiEditMode.saveContentBlockAndExit(e);
+        App.ContentBlockEditor.AiEditMode.saveContentBlockAndExit(e);
         break;
       case "simple":
-        ProjektStudio.ContentBlock.SimpleEditMode.saveContentBlockFromSimpleMode(e);
+        App.ContentBlockEditor.SimpleEditMode.saveContentBlockFromSimpleMode(e);
         break;
       case "html":
-        ProjektStudio.ContentBlock.CKEditorMode.handleSaveFromCkeditor(e);
+        App.ContentBlockEditor.CKEditorMode.handleSaveFromCkeditor(e);
         break;
       case "code":
-        ProjektStudio.ContentBlock.CodeEditMode.saveContentBlockAndExit(e);
+        App.ContentBlockEditor.CodeEditMode.saveContentBlockAndExit(e);
         break;
     }
   },
@@ -33,16 +33,16 @@ ProjektStudio.ContentBlock.EditModeButtons = {
 
     switch(editMode) {
       case "ai":
-        ProjektStudio.ContentBlock.AiEditMode.cancelAiEditMode(e);
+        App.ContentBlockEditor.AiEditMode.cancelAiEditMode(e);
         break;
       case "simple":
-        ProjektStudio.ContentBlock.SimpleEditMode.cancelSimpleEditMode(e);
+        App.ContentBlockEditor.SimpleEditMode.cancelSimpleEditMode(e);
         break;
       case "html":
-        ProjektStudio.ContentBlock.CKEditorMode.handleCancelHtmlEditMode(e);
+        App.ContentBlockEditor.CKEditorMode.handleCancelHtmlEditMode(e);
         break;
       case "code":
-        ProjektStudio.ContentBlock.CodeEditMode.cancelCodeEditMode(e);
+        App.ContentBlockEditor.CodeEditMode.cancelCodeEditMode(e);
         break;
     }
   }

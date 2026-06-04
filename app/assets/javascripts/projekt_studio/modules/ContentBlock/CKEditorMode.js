@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.CKEditorMode = {
+App.ContentBlockEditor.CKEditorMode = {
   aceInstances: {},
 
   initialize() {
@@ -7,22 +7,22 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   },
 
   switchToHtmlEditMode(contentBlockWrapper) {
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
     this.enterHtmlEditMode(contentBlockWrapper, contentBlock);
   },
 
   handleEnterCodeEditMode(e) {
-    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target)
+    const { contentBlockWrapper, contentBlock } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target)
     this.enterCodeEditMode(contentBlockWrapper, contentBlock)
   },
 
   handleSaveFromCkeditor(e) {
-    const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock} = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     this.saveFromCkeditor(contentBlockWrapper, contentBlock)
   },
 
   handleCancelHtmlEditMode(e) {
-    const { contentBlockWrapper, contentBlock} = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock} = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     this.cancelHtmlEditMode(contentBlockWrapper, contentBlock)
   },
 
@@ -32,7 +32,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
     contentBlockWrapper.dataset.editMode = 'html';
 
     const originalContent = contentBlock.innerHTML;
-    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
+    App.ContentBlockEditor.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     contentBlock.innerHTML = `
       <div class="js-html-edit-mode-original-content" style="display: none;">
@@ -56,7 +56,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
     contentBlockWrapper.classList.remove("-highlight-changed")
     contentBlockWrapper.classList.add("-code-edit-mode", "-in-edit-mode")
 
-    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
+    App.ContentBlockEditor.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper)
 
     const currentHTML = contentBlock.innerHTML;
 
@@ -103,7 +103,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
 
       let newContent = App.HTMLEditor.instances[editorId].getData().trim()
 
-      ProjektStudio.ContentBlock.Crud.updateContentBlock(
+      App.ContentBlockEditor.Crud.updateContentBlock(
         contentBlock,
         newContent
       )
@@ -119,10 +119,10 @@ ProjektStudio.ContentBlock.CKEditorMode = {
   },
 
   exitHtmlEditMode(contentBlockWrapper, restoreContent = false) {
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
 
     if (restoreContent) {
-      ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+      App.ContentBlockEditor.DraftStore.restorePreviousVersion(contentBlock);
     } else {
       this.updateContentBlockFromCKEditor(contentBlockWrapper, contentBlock);
     }
@@ -130,7 +130,7 @@ ProjektStudio.ContentBlock.CKEditorMode = {
     contentBlockWrapper.classList.remove("-html-edit-mode", "-in-edit-mode")
     contentBlockWrapper.dataset.editMode = '';
 
-    ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
+    App.ContentBlockEditor.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
   },
 
   cancelHtmlEditMode(contentBlockWrapper, contentBlock) {

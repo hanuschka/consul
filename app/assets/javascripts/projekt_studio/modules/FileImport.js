@@ -23,7 +23,7 @@ ProjektStudio.FileImport = {
 
   showFileImportForm() {
     $(".js-projekt-content-start-buttons").hide();
-    $(".js-projekt-content-start-section--title").hide();
+    $(".js-content-start-section--title").hide();
     $(".projekt-file-import-preview-info").hide();
     $(".js-projekt-file-import-submit").prop("disabled", true);
     $(".js-projekt-file-import-preview").show();
@@ -54,7 +54,7 @@ ProjektStudio.FileImport = {
     $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt").addClass(`-${extension}`).show();
     $(".js-projekt-file-import-submit").prop("disabled", false);
     $(".js-projekt-content-start-buttons").hide();
-    $(".js-projekt-content-start-section--title").hide();
+    $(".js-content-start-section--title").hide();
     $(".js-projekt-file-import-preview").show();
     $(".js-projekt-file-import-user-prompt").focus();
   },
@@ -110,7 +110,7 @@ ProjektStudio.FileImport = {
     $(".projekt-file-import-preview-info").removeClass("-pdf -docx -odt");
     $(".js-projekt-file-import-preview").hide();
     $(".js-projekt-content-start-buttons").show();
-    $(".js-projekt-content-start-section--title").show();
+    $(".js-content-start-section--title").show();
   },
 
   validateFile(file) {
@@ -246,7 +246,7 @@ ProjektStudio.FileImport = {
     $(".js-projekt-file-import-preview").hide();
     $(".js-projekt-start-with-prompt-form").hide();
     $(".js-projekt-content-start-buttons").hide();
-    $(".js-projekt-content-start-section--title").hide();
+    $(".js-content-start-section--title").hide();
     $(".js-projekt-loader-message").text(message);
     $(".js-projekt-file-import-loader").show();
   },

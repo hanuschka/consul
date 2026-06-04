@@ -1,4 +1,4 @@
-ProjektStudio.SavedContentBlocks = {
+App.ContentBlockEditor.SavedContentBlocks = {
   initialize() {
     this.initEventListeners()
 
@@ -99,7 +99,7 @@ ProjektStudio.SavedContentBlocks = {
 
     this.turnOffEditModeForItem(container)
 
-    $.ajax({
+    App.Ajax.request({
       url: `/admin/saved_content_blocks/${savedContentBlockId}`,
       type: "PATCH",
       headers: {
@@ -110,7 +110,7 @@ ProjektStudio.SavedContentBlocks = {
      .then((response) => {
        this.syncTemplateContentFromServer(templateContentElement, response);
        if (response && response.stripped) {
-         ProjektStudio.ContentBlock.Crud.showSanitizationNotice();
+         App.ContentBlockEditor.Crud.showSanitizationNotice();
        }
      })
     .catch((response) => {
@@ -139,6 +139,16 @@ ProjektStudio.SavedContentBlocks = {
     }, 10)
   },
 
+  getContext() {
+    const modal = document.querySelector("#contentBlockTemplatesModal")
+
+    if (modal && modal.dataset.savedContentBlockContext) {
+      return modal.dataset.savedContentBlockContext
+    }
+
+    return "projekt"
+  },
+
   createSavedContentBlock(e) {
     const container = this.getFormContainer(e.currentTarget)
     const editor = this.getEditorForContainer(container)
@@ -148,13 +158,13 @@ ProjektStudio.SavedContentBlocks = {
 
     editor.setValue("")
 
-    $.ajax({
+    App.Ajax.request({
       url: `/admin/saved_content_blocks`,
       type: "POST",
       headers: {
         'X-Embedded-Frame': ProjektStudio.isEmbedded
       },
-      data: { saved_content_block: { content, user_specific: userSpecific }}
+      data: { saved_content_block: { content, user_specific: userSpecific, context: this.getContext() }}
     })
     .then((response) => {
       container.classList.remove("-form-opened")
@@ -165,7 +175,7 @@ ProjektStudio.SavedContentBlocks = {
       })
 
       if (response && response.stripped) {
-        ProjektStudio.ContentBlock.Crud.showSanitizationNotice();
+        App.ContentBlockEditor.Crud.showSanitizationNotice();
       }
     })
     .catch((response) => {
@@ -195,7 +205,7 @@ ProjektStudio.SavedContentBlocks = {
     if (deleteConfirmed) {
       const savedContentBlockId = container.dataset.savedContentBlockId
 
-      $.ajax({
+      App.Ajax.request({
         url: `/admin/saved_content_blocks/${savedContentBlockId}`,
         type: "DELETE",
         headers: {
@@ -221,7 +231,7 @@ ProjektStudio.SavedContentBlocks = {
   },
 
   addNewSavedContentBlockOnUI({saved_content_block_item_html, container}) {
-    const tabPanel = container.closest(".tabs-panel")
+    const tabPanel = container.closest(".shared-tabs-panel")
     const templatesList = tabPanel.querySelector(".js-saved-content-blocks-list")
 
     templatesList.insertAdjacentHTML("beforeend", saved_content_block_item_html)
@@ -263,7 +273,7 @@ ProjektStudio.SavedContentBlocks = {
 
   getEditorName(container) {
     const editorName = container.dataset.editorName
-    const surroundingContentBlockId = ProjektStudio.ContentBlockTemplateSelector.currentContentBlockId
+    const surroundingContentBlockId = App.ContentBlockEditor.TemplateSelector.currentContentBlockId
 
     return `${editorName}-content-block-${surroundingContentBlockId}`
   },

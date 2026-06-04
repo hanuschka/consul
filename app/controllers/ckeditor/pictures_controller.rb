@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Ckeditor::PicturesController < ApplicationController
-  include Search
-
   def create
-    picture = Ckeditor::Picture.new
+    picture = AdminImage.new
     authorize! :create, picture
 
     image = params[:upload]
@@ -14,24 +12,10 @@ class Ckeditor::PicturesController < ApplicationController
     image_max_width = 3000 if width.zero?
     image_max_height = 2000 if height.zero?
 
-    image_processing_pipeline = ImageProcessing::MiniMagick.source(image)
-
-    image_processing_pipeline =
-      if image.content_type != "image/gif"
-        image_processing_pipeline
-          .convert('jpg')
-          .resize_to_fit(
-            image_max_width,
-            image_max_height
-          )
-          .saver(quality: 87, interlace: 'Line')
-      else
-        image_processing_pipeline
-      end
-
-    picture.attach_uploaded_file(
+    picture.attach_processed_upload(
       image,
-      image_processing_pipeline.call
+      max_width: image_max_width,
+      max_height: image_max_height
     )
 
     if picture.save
@@ -49,7 +33,7 @@ class Ckeditor::PicturesController < ApplicationController
   end
 
   def update
-    picture = Ckeditor::Picture.find(params[:id])
+    picture = AdminImage.find(params[:id])
     authorize! :update, picture
     picture.update!(picture_params)
     render json: picture.attributes.symbolize_keys.slice(*allowed_attributes).merge(
@@ -60,14 +44,14 @@ class Ckeditor::PicturesController < ApplicationController
   end
 
   def destroy
-    picture = Ckeditor::Picture.find(params[:id])
+    picture = AdminImage.find(params[:id])
     authorize! :destroy, picture
     picture.destroy!
     render json: { status: :no_content }
   end
 
   def custom_thumb_url
-    picture = Ckeditor::Picture.find(params[:id])
+    picture = AdminImage.find(params[:id])
     authorize! :update, picture
 
     width = params[:width].to_i

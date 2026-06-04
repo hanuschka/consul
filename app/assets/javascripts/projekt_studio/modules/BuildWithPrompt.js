@@ -13,7 +13,7 @@
     handlePromptTrigger(e) {
       e.preventDefault();
       $(".js-projekt-content-start-buttons").hide();
-      $(".js-projekt-content-start-section--title").hide();
+      $(".js-content-start-section--title").hide();
       $(".js-projekt-start-with-prompt-form").show();
       $(".js-projekt-prompt-input").focus();
     },
@@ -133,7 +133,7 @@
       $(".js-projekt-prompt-input").val('');
       $(".js-projekt-start-with-prompt-form").hide();
       $(".js-projekt-content-start-buttons").show();
-      $(".js-projekt-content-start-section--title").show();
+      $(".js-content-start-section--title").show();
     },
 
     hideLoader() {

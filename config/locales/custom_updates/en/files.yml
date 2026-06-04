@@ -6,6 +6,10 @@ en:
         files_subitems:
           images: Images
           documents: Documents
+        maintenance: Maintenance
+        maintenance_subitems:
+          resource_images: Resource images
+          resource_documents: Resource documents
   files:
     allowed_types_note_html: "Allowed file types: %{types}"
     allowed_types_admins_html: "Admins &amp; project managers can upload the following file types: %{types}"
@@ -13,10 +17,20 @@ en:
     allowed_types_settings_link: "edit here"
     images:
       index:
-        title: Overview of all images
+        title: Admin images
+        description: Lists all images uploaded by administrators and project managers — e.g. via the file manager or content editors. Images attached to platform content by users are managed under Maintenance → Resource images. Use this page to upload, review, rename or delete image files.
     documents:
       index:
         title: Overview of all documents
+        description: Lists all documents uploaded by administrators and project managers — e.g. via the file manager or content editors. Documents uploaded by users to platform content are managed under Maintenance → Resource documents. Use this page to upload, review, rename or delete document files.
+    resource_images:
+      index:
+        title: Overview of all resource images
+        description: Lists every image attached to platform content — e.g. projekts, proposals, pages and polls. User avatars are not shown. Use this page to review, rename or delete image files across the whole system.
+    resource_documents:
+      index:
+        title: Overview of all resource documents
+        description: Lists every document uploaded by users to platform content — e.g. proposals and ideas. Documents uploaded by administrators are managed under Files → Documents. Use this page to review, rename or delete document files across the whole system.
     empty:
       images:
         title: No images yet
@@ -41,12 +55,8 @@ en:
       imageable_type_any: "Assigned: all"
       documentable_type: Assigned to
       documentable_type_any: "Assigned: all"
-      admin_flag: Source
-      admin_flag_any: All sources
-      admin_flag_true: Admin uploads
-      admin_flag_false: Regular uploads
       sort_label: Sort
-      reset: Reset
+      reset: Clear filters
       sort:
         created_desc: Newest first
         created_asc: Oldest first
@@ -61,9 +71,7 @@ en:
         filter_extension: Filter by file type
         filter_imageable_type: Filter by assignment
         filter_documentable_type: Filter by assignment
-        filter_admin_flag: Filter by source
         sort: Sort by
-        reset: Reset filters
     upload_failed: Upload failed
     upload_loading: Uploading file…
     upload_success: Uploaded

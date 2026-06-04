@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
+App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
   state: {
     type: 'picture',
     page: 1,
@@ -427,7 +427,6 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     $itemTitle
       .text(imageData.title)
       .attr("title", imageData.title)
-      .foundation()
 
     $imageItem
       .find('.file-upload-manager-dialog--item-alt')
@@ -585,8 +584,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
     this.incrementUploadingCount();
 
     if (this.contentBlockId && this.contentBlockWrapper) {
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.incrementImageLoadingCount(this.contentBlockId);
-      ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, true);
+      App.ContentBlockEditor.SimpleEditMode.ImageEdit.incrementImageLoadingCount(this.contentBlockId);
+      App.ContentBlockEditor.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, true);
     }
 
     fetch(this.uploadEndpoints[this.state.type], {
@@ -614,11 +613,11 @@ ProjektStudio.ContentBlock.SimpleEditMode.FileManagerDialog = {
         this.decrementUploadingCount();
 
         if (this.contentBlockId && this.contentBlockWrapper) {
-          ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.decrementImageLoadingCount(this.contentBlockId);
+          App.ContentBlockEditor.SimpleEditMode.ImageEdit.decrementImageLoadingCount(this.contentBlockId);
 
-          const loadingState = ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.contentBlockImageLoadingState;
+          const loadingState = App.ContentBlockEditor.SimpleEditMode.ImageEdit.contentBlockImageLoadingState;
           if (loadingState[this.contentBlockId] <= 0) {
-            ProjektStudio.ContentBlock.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, false);
+            App.ContentBlockEditor.SimpleEditMode.toggleLockSaveCancel(this.contentBlockWrapper, false);
           }
         }
       });

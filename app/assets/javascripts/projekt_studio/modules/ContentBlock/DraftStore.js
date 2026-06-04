@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.DraftStore = {
+App.ContentBlockEditor.DraftStore = {
   storePreviousVersion(contentBlock) {
     contentBlock.dataset.previousContentBlockHtml = contentBlock.innerHTML.trim();
   },
@@ -8,7 +8,7 @@ ProjektStudio.ContentBlock.DraftStore = {
       contentBlock.innerHTML = contentBlock.dataset.previousContentBlockHtml;
       contentBlock.dataset.previousContentBlockHtml = null;
 
-      ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+      App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
     }
   }
 };

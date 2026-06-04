@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.AiEditMode = {
+App.ContentBlockEditor.AiEditMode = {
   initialized: false,
   activeAjaxRequests: {},
 
@@ -23,9 +23,9 @@ ProjektStudio.ContentBlock.AiEditMode = {
   },
 
   enterAiEditMode(e) {
-    const { contentBlockWrapper, contentBlock } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper, contentBlock } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
 
-    ProjektStudio.ContentBlock.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
+    App.ContentBlockEditor.DraftStore.storePreviousVersion(contentBlock, contentBlockWrapper);
 
     this.switchToAiEditMode(contentBlockWrapper);
   },
@@ -37,11 +37,11 @@ ProjektStudio.ContentBlock.AiEditMode = {
   },
 
   switchToSimpleEditModeFromAi(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
 
     this.exitAiEditMode(contentBlockWrapper, false);
 
-    ProjektStudio.ContentBlock.SimpleEditMode.switchToSimpleEditMode(contentBlockWrapper);
+    App.ContentBlockEditor.SimpleEditMode.switchToSimpleEditMode(contentBlockWrapper);
   },
 
   getPopup(contentBlockWrapper) {
@@ -67,7 +67,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
     this.removePopup(contentBlockWrapper);
 
     const popup = this.clonePopupFromTemplate();
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
     const isSidebar = !!contentBlockWrapper.closest("aside, .sidebar");
     const isFooter = !!contentBlockWrapper.closest("footer");
 
@@ -78,7 +78,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
       popup.classList.add("-compact-position");
       contentBlock.after(popup);
     } else {
-      const toolbarBorder = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
+      const toolbarBorder = contentBlockWrapper.querySelector('.js-content-block--toolbar-anchor');
       toolbarBorder.after(popup);
     }
 
@@ -92,8 +92,6 @@ ProjektStudio.ContentBlock.AiEditMode = {
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
 
     this.setupTextareaListeners(popup, instructionsTextarea);
-
-    $(popup).foundation();
 
     setTimeout(() => { instructionsTextarea.focus()}, 100);
   },
@@ -133,26 +131,26 @@ ProjektStudio.ContentBlock.AiEditMode = {
       contentBlockWrapper.dataset.editMode = '';
 
       if (restoreContent) {
-        const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
-        ProjektStudio.ContentBlock.DraftStore.restorePreviousVersion(contentBlock);
+        const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
+        App.ContentBlockEditor.DraftStore.restorePreviousVersion(contentBlock);
       }
 
-      ProjektStudio.ContentBlock.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
+      App.ContentBlockEditor.DomHelpers.scrollToContentBlockTop(contentBlockWrapper);
     }
   },
 
   cancelAiEditMode(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     this.exitAiEditMode(contentBlockWrapper, true);
   },
 
   saveContentBlockAndExit(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
     const content = contentBlock.innerHTML.trim();
 
-    ProjektStudio.ContentBlock.Crud.updateContentBlock(
+    App.ContentBlockEditor.Crud.updateContentBlock(
       contentBlock,
       content
     );
@@ -161,7 +159,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
   },
 
   submitPrompt(e) {
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     const popup = this.getPopup(contentBlockWrapper);
     const submitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
     const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
@@ -185,7 +183,7 @@ ProjektStudio.ContentBlock.AiEditMode = {
 
     if (!instructionsTextarea.reportValidity()) return
 
-    const contentBlock = ProjektStudio.ContentBlock.DomHelpers.getContentBlock(contentBlockWrapper);
+    const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
 
     this.setLoadingState(contentBlockWrapper, popup, true);
 
@@ -237,9 +235,9 @@ ProjektStudio.ContentBlock.AiEditMode = {
       if (contentBlock) {
         contentBlock.innerHTML = ProjektStudio.utils.sanitizeAdminHtml(response.content_block_html);
 
-        ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+        App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
 
-        const contentBlockWrapper = contentBlock.closest('.js-projekt-content-block-wrapper');
+        const contentBlockWrapper = contentBlock.closest('.js-content-block-wrapper');
         this.showAiEditSuccessIndicator(contentBlockWrapper);
       }
     } else {

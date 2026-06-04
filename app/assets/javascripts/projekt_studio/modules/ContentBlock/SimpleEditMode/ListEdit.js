@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
+App.ContentBlockEditor.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
   sortableInstances: new Map(),
 
@@ -8,8 +8,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
   initEventListeners() {
     const $document = $(document);
-    $document.on("click", ".js-projekt-content-block--add-item", this.addItem.bind(this))
-    $document.on("click", ".js-projekt-content-block--delete-item", this.deleteItem.bind(this))
+    $document.on("click", ".js-content-block--add-item", this.addItem.bind(this))
+    $document.on("click", ".js-content-block--delete-item", this.deleteItem.bind(this))
   },
 
   toggleListControls(contentBlock, enabled) {
@@ -70,8 +70,8 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       baseClass += " -small"
     }
 
-    // console.log("ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)", ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li))
-    if (!ProjektStudio.ContentBlock.DomHelpers.isSliderItem(li)) {
+    // console.log("App.ContentBlockEditor.DomHelpers.isSliderItem(li)", App.ContentBlockEditor.DomHelpers.isSliderItem(li))
+    if (!App.ContentBlockEditor.DomHelpers.isSliderItem(li)) {
       const dragHandleHTML = `
         <button
           class="content-block--item-drag-handle ${baseClass} ${this.listControlClass} js-list-item-dnd-handle js-content-block-element-not-editable js-studio-hide-on-preview -drag"
@@ -87,7 +87,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     const deleteButtonHtml = `
         <button
-          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-projekt-content-block--delete-item js-content-block-element-not-editable js-studio-hide-on-preview -delete"
+          class="content-block--item-delete-button ${baseClass} ${this.listControlClass} js-content-block--delete-item js-content-block-element-not-editable js-studio-hide-on-preview -delete"
           contenteditable="false"
         >
         <i class="fa fas fa-trash"></i>
@@ -154,7 +154,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
       newUl.insertBefore(clonedLi, newUl.lastElementChild);
     }
 
-    $(newElementToReinitialize).foundation()
+    App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(newElementToReinitialize)
 
     if (isAccordion) {
       const $accordionLinks = $(newElementToReinitialize).find('.accordion-title');
@@ -269,7 +269,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
 
     buttonWrapper.innerHTML = `
       <div class="content-block--item-action-wrapper--inner js-studio-hide-on-preview">
-          <button class="content-block--item-action js-projekt-content-block--add-item js-content-block-element-not-editable">
+          <button class="content-block--item-action js-content-block--add-item js-content-block-element-not-editable">
           <i class="fa fas fa-plus"></i>
           Weiteres Element hinzufügen
         </button>
@@ -344,7 +344,7 @@ ProjektStudio.ContentBlock.SimpleEditMode.ListEdit = {
     const selector = primaryUl.getAttribute("data-paired-list");
     if (!selector) return null;
 
-    const contentBlock = primaryUl.closest(".js-projekt-content-block");
+    const contentBlock = primaryUl.closest(".js-content-block");
     if (!contentBlock) return null;
 
     return contentBlock.querySelector(selector);

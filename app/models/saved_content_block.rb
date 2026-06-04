@@ -1,8 +1,13 @@
 class SavedContentBlock < ApplicationRecord
+  CONTEXTS = %w[projekt newsletter].freeze
+
   belongs_to :user, optional: true
+
+  validates :context, inclusion: { in: CONTEXTS }
 
   scope :global, -> { where(user_id: nil) }
   scope :for_user, ->(user) { where(user_id: user.id) }
+  scope :for_context, ->(context) { where(context: context) }
 
   before_validation :repair_html_content, :sanitize_content
 

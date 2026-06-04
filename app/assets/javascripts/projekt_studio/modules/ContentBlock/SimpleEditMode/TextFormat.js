@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
+App.ContentBlockEditor.SimpleEditMode.TextFormat = {
   initialize() {
     this.initEventListeners()
   },
@@ -21,12 +21,12 @@ ProjektStudio.ContentBlock.SimpleEditMode.TextFormat = {
       ? range.commonAncestorContainer
       : range.commonAncestorContainer.parentNode;
 
-    const { contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(container);
+    const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(container);
     if (!contentBlockWrapper || !contentBlockWrapper.classList.contains("-simple-edit-mode")) {
       return;
     }
 
-    const surroundingContentBlock = container.closest(".js-projekt-content-block");
+    const surroundingContentBlock = container.closest(".js-content-block");
     if (!surroundingContentBlock) {
       return;
     }

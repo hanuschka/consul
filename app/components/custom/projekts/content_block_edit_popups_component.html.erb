@@ -50,7 +50,7 @@
 <%= render Shared::ModalComponent.new(id: "siteCodeEditorModal", blur_backdrop: false) do %>
   <div class="site-code-editor-modal--content">
     <div class="site-code-editor-modal--header">
-      <h3 class="site-code-editor-modal--title js-site-code-editor-modal-title"><%= t("content_blocks.code_editor_modal.title") %></h3>
+      <h3 class="site-code-editor-modal--title js-site-code-editor-modal-title"><%= t("custom.content_blocks.code_editor_modal.title") %></h3>
     </div>
     <div class="site-code-editor-modal--inner">
       <div class="js-site-code-editor-container site-code-editor-modal--editor-container"></div>
@@ -60,14 +60,14 @@
           class="projekt-content-block-edit--button -green js-site-code-editor-save"
         >
           <i class="fas fa-save"></i>
-          <%= t("content_blocks.code_editor_modal.save") %>
+          <%= t("custom.content_blocks.code_editor_modal.save") %>
         </button>
         <button
           type="button"
           class="projekt-content-block-edit--button js-site-code-editor-cancel"
         >
           <i class="fas fa-xmark"></i>
-          <%= t("content_blocks.code_editor_modal.cancel") %>
+          <%= t("custom.content_blocks.code_editor_modal.cancel") %>
         </button>
       </div>
     </div>
@@ -93,10 +93,9 @@
             <div class="u-margin-bottom-5">
               <label
                 class="content-block-ai-edit-popup-checkbox-label"
-                data-tooltip
-                data-position="left"
+                data-hint="<%= t('ai.allow_text_modification_hint') %>"
+                data-hint-position="left"
                 tabindex="0"
-                title="<%= t('ai.allow_text_modification_hint') %>"
               >
                 <input type="checkbox" class="js-ai-allow-text-modification">
                 <span><%= t('ai.allow_text_modification') %></span>
@@ -106,21 +105,22 @@
               </div>
             </div>
 
-            <div class="">
-              <label
-                class="content-block-ai-edit-popup-checkbox-label"
-                data-tooltip
-                data-position="left"
-                tabindex="0"
-                title="<%= t('ai.use_full_projekt_context_hint') %>"
-              >
-                <input type="checkbox" class="js-ai-use-full-projekt-context">
-                <span><%= t('ai.use_full_projekt_context') %></span>
-              </label>
-              <div class="ai-context-checkbox-hint">
-                <%= t('ai.use_full_projekt_context_hint_short') %>
+            <% if show_projekt_context_toggle? %>
+              <div class="">
+                <label
+                  class="content-block-ai-edit-popup-checkbox-label"
+                  data-hint="<%= t('ai.use_full_projekt_context_hint') %>"
+                  data-hint-position="left"
+                  tabindex="0"
+                >
+                  <input type="checkbox" class="js-ai-use-full-projekt-context">
+                  <span><%= t('ai.use_full_projekt_context') %></span>
+                </label>
+                <div class="ai-context-checkbox-hint">
+                  <%= t('ai.use_full_projekt_context_hint_short') %>
+                </div>
               </div>
-            </div>
+            <% end %>
           </div>
         </div>
         <div class="ai-edit-actions d-flex u-flex-align-center justify-between">

@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.Render = {
+App.ContentBlockEditor.Render = {
   initialize() {
     this.renderContentBlocks()
     window.addEventListener('message', this.handleGlobalMessage.bind(this));
@@ -11,16 +11,16 @@ ProjektStudio.ContentBlock.Render = {
 
       switch(data.event_type) {
         case "Consul.ProjektStudio.updateContentBlockOnUi":
-          ProjektStudio.ContentBlock.DtAiEditMode.updateContentBlockOnUi(params);
+          App.ContentBlockEditor.DtAiEditMode.updateContentBlockOnUi(params);
           break;
         case "setDataForFreshContentBlockOnUI":
-          ProjektStudio.ContentBlock.Crud.setDataForFreshContentBlock(params);
+          App.ContentBlockEditor.Crud.setDataForFreshContentBlock(params);
           break;
         case "updateHTML":
-          ProjektStudio.ContentBlock.DomHelpers.morphElementHTML(params.selector, params.html)
+          App.ContentBlockEditor.DomHelpers.morphElementHTML(params.selector, params.html)
           break;
         case "toggleLockContentBlockEdit":
-          ProjektStudio.ContentBlock.DtAiEditMode.toggleLockContentBlockEdit(params.contentBlockId, params.locked)
+          App.ContentBlockEditor.DtAiEditMode.toggleLockContentBlockEdit(params.contentBlockId, params.locked)
           break;
       }
     }
@@ -40,7 +40,7 @@ ProjektStudio.ContentBlock.Render = {
     const projektPageContent =  document.querySelector(".js-custom-page-content--inner");
 
     if (!projektPageContent) return
-    if (projektPageContent.querySelector('.js-projekt-content-block-wrapper')) return
+    if (projektPageContent.querySelector('.js-content-block-wrapper')) return
 
     const html = projektPageContent.outerHTML;
     let parser = new DOMParser();
@@ -75,8 +75,8 @@ ProjektStudio.ContentBlock.Render = {
         wrappedContentBlocksHtml, projektId
       )
 
-    ProjektStudio.ContentBlock.DomHelpers.morphElementHTML(".js-custom-page-content--inner", newHtml);
+    App.ContentBlockEditor.DomHelpers.morphElementHTML(".js-custom-page-content--inner", newHtml);
 
-    ProjektStudio.ContentBlock.Crud.rerenderContentBlockListControls()
+    App.ContentBlockEditor.Crud.rerenderContentBlockListControls()
   }
 };

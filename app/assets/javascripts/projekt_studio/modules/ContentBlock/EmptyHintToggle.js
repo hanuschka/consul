@@ -4,17 +4,17 @@
 //
 // The server-side ERB sets the initial class via `content_block_body_blank?`.
 // This module keeps the class in sync after inline edits, where
-// `ProjektStudio.ContentBlock.Crud.updateContentBlock` mutates the DOM directly
+// `App.ContentBlockEditor.Crud.updateContentBlock` mutates the DOM directly
 // (`contentBlock.innerHTML = ...`) without a page reload.
 //
 // We use a MutationObserver per container so that any mutation inside — text
 // edits, full innerHTML replacement after save (Crud.syncDomFromServer), or
 // rewrap by `App.Studio.SiteContentBlockEditor.wrapContentBlocks` — re-runs
 // the emptiness check. The check delegates to
-// `ProjektStudio.ContentBlock.Crud.isContentEmpty(html)` so the JS state stays
+// `App.ContentBlockEditor.Crud.isContentEmpty(html)` so the JS state stays
 // consistent with the Ruby `content_block_body_blank?` rule (strip <br>, <p>,
 // <div>, <span>, whitespace, then check for any remaining characters).
-ProjektStudio.ContentBlock.EmptyHintToggle = {
+App.ContentBlockEditor.EmptyHintToggle = {
   markerClass: "is-content-empty",
   containerSelector: ".js-toggle-empty-hint-on-content",
   observers: new WeakMap(),
@@ -70,18 +70,18 @@ ProjektStudio.ContentBlock.EmptyHintToggle = {
 
   // Locate the actual content body inside the container. Prefer the
   // `.custom-content-block-body` element when present; fall back to the
-  // `.js-projekt-content-block` wrapper that ProjektStudio places around the
+  // `.js-content-block` wrapper that ProjektStudio places around the
   // editable content (after save the inner `.custom-content-block-body` may
   // be replaced by raw body HTML).
   findBody(container) {
     return (
       container.querySelector(".custom-content-block-body") ||
-      container.querySelector(".js-projekt-content-block")
+      container.querySelector(".js-content-block")
     );
   },
 
   isBodyEmpty(body) {
-    const crud = ProjektStudio.ContentBlock.Crud;
+    const crud = App.ContentBlockEditor.Crud;
 
     if (crud && typeof crud.isContentEmpty === "function") {
       return crud.isContentEmpty(body.innerHTML);

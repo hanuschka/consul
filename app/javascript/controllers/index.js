@@ -98,6 +98,9 @@ application.register("map-screenshot", MapScreenshotController)
 import AdmButtonWithProgressController from "./adm/button_with_progress_controller"
 application.register("adm--button-with-progress", AdmButtonWithProgressController)
 
+import AdmLanguageSelectorController from "./adm/language_selector_controller"
+application.register("adm--language-selector", AdmLanguageSelectorController)
+
 import GlightboxController from "./glightbox_controller"
 application.register("glightbox", GlightboxController)
 

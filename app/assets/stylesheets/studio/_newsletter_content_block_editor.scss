@@ -1,0 +1,28 @@
+.newsletter-content-block-editor {
+  max-width: 660px;
+  margin: 0 auto;
+  background-color: #ffffff;
+
+  .content-blocks-container {
+    min-height: 40px;
+  }
+}
+
+.newsletter-content-start-section {
+  padding: 32px 24px;
+  border: 1px dashed $medium-gray-2;
+  border-radius: 8px;
+  text-align: center;
+
+  .newsletter-content-start-section--title {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+  }
+
+  .newsletter-content-start-section--buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}

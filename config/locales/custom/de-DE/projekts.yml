@@ -51,6 +51,11 @@ de:
           hidden: Versteckt
           hidden_until: "Versteckt bis %{date}"
         tabs:
+          basic_content: Basisinhalte
+          status_and_notes: Status & Hinweise
+          teasers_and_promotions: Teaser und Werbeaktionen
+          media_and_resources: Medien & Ressourcen
+          messages: Nachrichten
           internal_content_blocks: Interne Inhaltsblöcke
           own_content_blocks: Eigene Inhaltsblöcke
         saved_content_blocks:

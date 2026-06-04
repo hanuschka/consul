@@ -1,10 +1,10 @@
-ProjektStudio.ContentBlock.DomHelpers = {
+App.ContentBlockEditor.DomHelpers = {
   getParentContentBlockWrapper(element) {
-    return element.closest('.js-projekt-content-block-wrapper');
+    return element.closest('.js-content-block-wrapper');
   },
 
   getContentBlockSectionForId(contentBlockId) {
-    return document.querySelector(`.js-projekt-content-block-wrapper[data-content-block-id="${contentBlockId}"]`);
+    return document.querySelector(`.js-content-block-wrapper[data-content-block-id="${contentBlockId}"]`);
   },
 
   getContentBlockAndWrapper(element) {
@@ -18,11 +18,17 @@ ProjektStudio.ContentBlock.DomHelpers = {
   },
 
   getClosestContentBlock(element) {
-    return element.closest(".js-projekt-content-block");
+    return element.closest(".js-content-block");
   },
 
   getContentBlock(element) {
-    return element.querySelector(".js-projekt-content-block");
+    return element.querySelector(".js-content-block");
+  },
+
+  reinitFoundationWidgets(element) {
+    if (!$.fn.foundation) return
+
+    $(element).foundation();
   },
 
   morphElementHTML(selector, html) {
@@ -31,8 +37,8 @@ ProjektStudio.ContentBlock.DomHelpers = {
     element.innerHTML = html;
 
     setTimeout(() => {
-      $(element).foundation();
-      ProjektStudio.ContentBlock.DragDrop.initSortable();
+      this.reinitFoundationWidgets(element);
+      App.ContentBlockEditor.DragDrop.initSortable();
       App.ImageGallery.initialize();
     }, 10)
   },
@@ -41,7 +47,7 @@ ProjektStudio.ContentBlock.DomHelpers = {
   // DO NOT DELETE
   reinitPluginElementsAndWidgets(contentBlock) {
     ProjektStudio.utils.removeFoundationIds(contentBlock);
-    $(contentBlock).foundation();
+    this.reinitFoundationWidgets(contentBlock);
     App.ImageGallery.initialize();
   },
 
@@ -50,7 +56,7 @@ ProjektStudio.ContentBlock.DomHelpers = {
   },
 
   scrollToContentBlockTop(contentBlockWrapper) {
-    const toolbar = contentBlockWrapper.querySelector('.js-projekt-content-block--toolbar-anchor');
+    const toolbar = contentBlockWrapper.querySelector('.js-content-block--toolbar-anchor');
     const anchor = toolbar || contentBlockWrapper;
     setTimeout(() => {
       anchor.scrollIntoView({ block: "center" });

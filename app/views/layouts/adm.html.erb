@@ -12,6 +12,8 @@
     <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
     <%= yield :vc_maps %>
 
+    <%= yield :head %>
+
     <%= stylesheet_link_tag "application.adm" %>
     <!-- Font Awesome for icon selection (temporary until frontend migrates to Material) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -41,7 +43,8 @@
             <div class="fs-5 mx-4 position-relative"><%= adm_header_title %></div>
           </div>
 
-          <div class="d-flex align-items-center mr-4 position-relative">
+          <div class="d-flex align-items-center gap-4 mr-4 position-relative">
+            <%= render Adm::LanguageSelectorComponent.new %>
             <%= render Kern::SubnavigationKontoComponent.new(current_user: current_user) %>
           </div>
         </header>

@@ -12,13 +12,13 @@
     createEmptyContentBlock(e) {
       e.preventDefault();
 
-      ProjektStudio.ContentBlock.Crud.addInitialEmptyContentBlock()
+      App.ContentBlockEditor.Crud.addInitialEmptyContentBlock()
     },
 
     openTemplateSelector(e) {
       e.preventDefault();
 
-      ProjektStudio.ContentBlockTemplateSelector.openDialog()
+      App.ContentBlockEditor.TemplateSelector.openDialog()
     }
   };
 }).call(this);

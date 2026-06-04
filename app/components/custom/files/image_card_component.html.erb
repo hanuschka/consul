@@ -20,9 +20,12 @@
     <% end %>
 
     <% if admin_upload? %>
-      <span class="files-asset-card--admin-badge">
+      <span
+        class="files-asset-card--admin-badge"
+        title="<%= t("files.card.admin_badge") %>"
+        aria-label="<%= t("files.card.admin_badge") %>"
+      >
         <i class="fa fa-shield-alt"></i>
-        <%= t("files.card.admin_badge") %>
       </span>
     <% end %>
 

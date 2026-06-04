@@ -1,4 +1,4 @@
-ProjektStudio.ContentBlock.ChangeHistory = {
+App.ContentBlockEditor.ChangeHistory = {
   versionHistory: {},
 
   MAX_VERSIONS: 10,
@@ -46,7 +46,7 @@ ProjektStudio.ContentBlock.ChangeHistory = {
   },
 
   goBackToPreviousVersion(e) {
-    const { contentBlock, contentBlockWrapper } = ProjektStudio.ContentBlock.DomHelpers.getContentBlockAndWrapper(e.target);
+    const { contentBlock, contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(e.target);
     const resetConfirmed = confirm("Möchten Sie die letzte Änderung wirklich zurücksetzen?");
 
     if (resetConfirmed) {
@@ -59,13 +59,13 @@ ProjektStudio.ContentBlock.ChangeHistory = {
         if (previousVersion) {
           contentBlock.innerHTML = previousVersion;
 
-          ProjektStudio.ContentBlock.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+          App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
         }
       }
 
       this.updateButtonState(contentBlockWrapper);
 
-      ProjektStudio.ContentBlock.Crud.updateContentBlock(
+      App.ContentBlockEditor.Crud.updateContentBlock(
         contentBlock,
         contentBlock.innerHTML,
         { saveVersion: false }

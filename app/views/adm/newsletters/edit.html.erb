@@ -1,5 +1,15 @@
 <%= content_for :title, @newsletter.subject %>
 
+<% if @newsletter.draft? %>
+  <% content_for :head do %>
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
+    <%= stylesheet_link_tag "studio" %>
+    <%= stylesheet_link_tag "cross_pack" %>
+    <%= javascript_include_tag "packs/studio_vendor" %>
+    <%= javascript_include_tag "packs/studio" %>
+  <% end %>
+<% end %>
+
 <%= render Adm::HeaderComponent.new(title: @newsletter.subject, breadcrumbs: @breadcrumbs, back_button_url: adm_newsletters_path, narrow: true) %>
 
 <div class="kern-container my-5">
@@ -17,9 +27,27 @@
     <%= render Adm::AttributeEditorComponent.new(@newsletter, :greeting, :string) %>
   <% end %>
 
-  <div class="mb-4">
-    <%= render "template_block_2" %>
-  </div>
-
-  <%= render Adm::AttributeEditorComponent.new(@newsletter, :body, :rich_text, wide: true, toolbar: "email") %>
+  <% if @newsletter.draft? %>
+    <div class="my-5">
+      <h2 class="kern-title kern-title--large mb-3"><%= t(".content_section_title") %></h2>
+      <%= render Adm::Newsletters::ContentBlockEditorComponent.new(
+        newsletter: @newsletter,
+        content_blocks: @content_blocks
+      ) %>
+    </div>
+  <% else %>
+    <div class="my-5">
+      <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 660)) %>
+    </div>
+  <% end %>
 </div>
+
+<% if @newsletter.draft? %>
+  <%= render Newsletters::ContentBlockTemplatesSelectorComponent.new %>
+  <%= render Projekts::ContentBlockAiCreateModalComponent.new(show_projekt_context_toggle: false) %>
+  <%= render Projekts::ContentBlockEditPopupsComponent.new(show_projekt_context_toggle: false) %>
+  <div class="custom-new-design">
+    <%= render ProjektStudio::FileUploadDialogComponent.new(type: "picture") %>
+    <%= render ProjektStudio::FileUploadDialogComponent.new(type: "document") %>
+  </div>
+<% end %>

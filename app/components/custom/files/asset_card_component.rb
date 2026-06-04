@@ -46,4 +46,12 @@ class Files::AssetCardComponent < ApplicationComponent
 
       "#{asset.width} × #{asset.height}"
     end
+
+    def delete_url
+      if type == "picture"
+        helpers.file_manager_image_path(asset)
+      else
+        helpers.file_manager_document_path(asset)
+      end
+    end
 end

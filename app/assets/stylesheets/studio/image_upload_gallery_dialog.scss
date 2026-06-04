@@ -81,6 +81,11 @@
   flex-shrink: 0;
 }
 
+.file-upload-manager-dialog--upload-button {
+  margin-left: 15px;
+  padding: 6px 22px;
+}
+
 .file-upload-manager-dialog--body {
   display: flex;
   flex-direction: column;
@@ -342,6 +347,24 @@
   flex-shrink: 0;
 }
 
+/* Shared modal panel — used by both edit and info modals */
+.file-manager-modal-panel {
+  position: fixed;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 480px;
+  background: white;
+  border-radius: 10px;
+  padding: 25px 25px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+
+  &.-wide {
+    max-width: 550px;
+  }
+}
+
 /* Edit Modal */
 .file-upload-manager-edit-modal {
   display: none;
@@ -362,16 +385,99 @@
 }
 
 .file-upload-manager-edit-modal__content {
+}
+
+/* Info Modal */
+.file-upload-manager-info-modal {
+  display: none;
   position: fixed;
-  top: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 480px;
-  background: white;
-  border-radius: 10px;
-  padding: 20px 15px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  inset: 0;
+  z-index: 10001;
+
+  &.-opened {
+    display: block;
+  }
+}
+
+.file-upload-manager-info-modal--overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.file-upload-manager-info-modal--loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 45px 0;
+}
+
+.file-upload-manager-info-modal.-loading .file-upload-manager-info-modal--loading {
+  display: flex;
+}
+
+.file-upload-manager-info-modal--body {
+  padding: 4px 0 8px;
+}
+
+.file-upload-manager-info-modal--preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+
+  img {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+  }
+}
+
+.file-upload-manager-info-modal--details {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+}
+
+.file-upload-manager-info-modal--detail-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 8px;
+  align-items: baseline;
+
+  dt {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 15px;
+    color: #222;
+    word-break: break-word;
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+}
+
+.file-upload-manager-info-modal--footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  gap: 10px;
 }
 
 .file-upload-manager-edit-modal__header {
@@ -381,6 +487,8 @@
   margin-bottom: 15px;
   font-weight: bold;
   font-size: 18px;
+
+  max-width: calc(100% - 50px);
 }
 
 .file-upload-manager-edit-modal__body {
@@ -497,8 +605,8 @@
   display: block;
   box-sizing: border-box;
   width: 100%;
-  height: 2.4375rem;
-  margin: 0 0 1rem;
+  height: 2.5rem;
+  border-radius: 8px !important;
   padding: 0.5rem;
   border: 1px solid #cacaca;
   border-radius: 0.1875rem;
@@ -518,4 +626,40 @@
     background-color: #fdfdfd;
     box-shadow: 0 0 5px #cacaca;
   }
+}
+
+/* Fullsize Image Preview */
+.file-upload-manager-fullsize-preview {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+
+  &.-opened {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.file-upload-manager-fullsize-preview--overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+}
+
+.file-upload-manager-fullsize-preview--image {
+  position: relative;
+  max-width: 92vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.file-upload-manager-fullsize-preview--close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
 }

@@ -24,7 +24,6 @@ window.ProjektStudio = {
     // Initialize ContentBlock submodules
     App.ContentBlockEditor.Render.initialize()
     App.ContentBlockEditor.DragDrop.initialize()
-    App.ContentBlockEditor.DtAiEditMode.initialize()
 
     App.Studio.initContentBlockModules()
 

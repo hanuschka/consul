@@ -27,47 +27,6 @@
   font-size: 12px;
 }
 
-.ai-button--lock-overlay {
-  display: none;
-}
-
-.ai-button-wrapper {
-  position: relative;
-
-  &.-inline-block {
-    display: inline-block;
-  }
-}
-
-.projekt-studio {
-  .ai-button-wrapper {
-    display: none;
-  }
-}
-
-.-embedded {
-  .ai-button-wrapper {
-    display: block;
-  }
-}
-
-body.-ai-functions-locked {
-  .ai-button-wrapper--inner {
-    filter: grayscale(0.1);
-    cursor: initial;
-    opacity: 0.3;
-  }
-  .ai-button--lock-overlay {
-    display: block;
-    z-index: 5;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-}
-
 body:not(.-ai-enabled) {
   .js-content-block-enter-ai-edit-mode,
   .js-content-block-enter-ai-edit-mode-from-simple {

@@ -183,21 +183,6 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </div>
             </div>
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-content-block-edit-main-controlls">
-              <div class="ai-button-wrapper">
-                <div class="ai-button-wrapper--inner">
-                  <button
-                    type="button"
-                    tabindex="0"
-                    data-hint="AI-Generierung&#10;Ermöglicht KI-gestützte Erstellung, Bearbeitung und Verbesserung dieses Inhaltsblocks mit erweiterten Funktionen"
-                    data-hint-position="left"
-                    class="studio-icon-button js-content-block--ai-edit"
-                  >
-                    <i class="dt-logo-small-icon">
-                    </i>
-                  </button>
-                </div>
-                <div class="ai-button--lock-overlay" title="Anderer KI-Prozess läuft"></div>
-              </div>
               <button
                 type="button"
                 tabindex="0"

@@ -1,6 +1,5 @@
 # TODO: check if this controller still nededed
 class IframeSessionsController < ActionController::Base
-  include EmbeddedAuth
   skip_authorization_check
   skip_forgery_protection
 

@@ -34,6 +34,13 @@ class FileManager::ImagesController < FileManager::BaseController
     end
   end
 
+  def show
+    picture = AdminImage.find(params[:id])
+    authorize [:adm, picture], :index?
+
+    render image_info_component(picture), layout: false
+  end
+
   def update
     picture = AdminImage.find(params[:id])
     authorize [:adm, picture]
@@ -80,5 +87,28 @@ class FileManager::ImagesController < FileManager::BaseController
         file_size: picture.data_file_size,
         dimensions: dimensions
       }
+    end
+
+    def image_info_component(picture)
+      metadata = picture.storage_data.blob&.metadata || {}
+      dimensions =
+        if metadata[:width] && metadata[:height]
+          "#{metadata[:width]} × #{metadata[:height]}"
+        end
+
+      ProjektStudio::FileInfoComponent.new(
+        title: picture.title,
+        filename: picture.data_file_name,
+        content_type: picture.data_content_type,
+        file_size: picture.data_file_size,
+        file_url: picture.url_content,
+        created_at: picture.created_at,
+        updated_at: picture.updated_at,
+        user_name: picture.user&.name,
+        user_email: picture.user&.email,
+        projekt: picture.projekt,
+        dimensions: dimensions,
+        preview_url: picture.custom_thumb_url(width: 600, height: 450)
+      )
     end
 end

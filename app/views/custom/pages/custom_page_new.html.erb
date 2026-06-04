@@ -1,5 +1,5 @@
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
-  <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) && native_projekt_studio?(@projekt) %>
+ <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
     <% content_for :admin_topbar_display_settings do %>
       <button
         type="button"

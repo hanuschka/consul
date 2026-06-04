@@ -54,27 +54,11 @@
       data-adm--masterportal-import-panel-target="actions"
     >
       <% if supports_domain_records? %>
-        <label class="kern-switch">
-          <input
-            type="checkbox"
-            class="kern-switch__input"
-            data-adm--masterportal-import-panel-target="createResourceCheckbox"
-          >
-          <span class="kern-switch__track">
-            <span class="kern-switch__thumb"></span>
-          </span>
-          <span class="kern-switch__text">
-            <span class="kern-switch__label">
-              <%= t(".create_resource_label", resource_name: resource_name) %>
-            </span>
-            <span class="kern-switch__description">
-              <%= t(".create_resource_description") %>
-              <% if creates_categories? %>
-                <%= t(".create_resource_categories_note") %>
-              <% end %>
-            </span>
-          </span>
-        </label>
+        <%= render Kern::SwitchComponent.new(
+          label: t(".create_resource_label", resource_name: resource_name),
+          description: create_resource_switch_description,
+          input_data: { "adm--masterportal-import-panel-target" => "createResourceCheckbox" }
+        ) %>
 
         <div class="masterportal-import-panel--system-user">
           <p class="masterportal-import-panel--system-user-note">

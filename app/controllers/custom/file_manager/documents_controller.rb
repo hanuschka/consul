@@ -4,9 +4,9 @@ class FileManager::DocumentsController < FileManager::BaseController
 
     @documents =
       Document
-        .for_studio_file_manager(current_projekt)
+        .admin
         .merge(policy_scope([:adm, Document]))
-        .preload(documentable: :page)
+        .preload(:documentable)
         .order(created_at: :desc)
         .page(params[:page])
         .per(15)
@@ -31,6 +31,13 @@ class FileManager::DocumentsController < FileManager::BaseController
       render json: { error: { message: document.errors.full_messages.join(", ") } },
              status: :unprocessable_entity
     end
+  end
+
+  def show
+    document = Document.find(params[:id])
+    authorize [:adm, document], :index?
+
+    render document_info_component(document), layout: false
   end
 
   def update
@@ -65,5 +72,27 @@ class FileManager::DocumentsController < FileManager::BaseController
         ),
         file_size: document.attachment_file_size
       }
+    end
+
+    def document_info_component(document)
+      projekt =
+        if document.documentable_type == "Projekt"
+          document.documentable
+        end
+
+      ProjektStudio::FileInfoComponent.new(
+        title: document.title,
+        filename: document.attachment_file_name,
+        content_type: document.attachment_content_type,
+        file_size: document.attachment_file_size,
+        file_url: Rails.application.routes.url_helpers.rails_blob_path(
+          document.attachment, only_path: true
+        ),
+        created_at: document.created_at,
+        updated_at: document.updated_at,
+        user_name: document.user&.name,
+        user_email: document.user&.email,
+        projekt: projekt
+      )
     end
 end

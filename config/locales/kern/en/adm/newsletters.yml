@@ -58,6 +58,9 @@ en:
       edit:
         title: Edit newsletter
         content_section_title: Newsletter content
+        email_preview:
+          header_label: Email header (not editable here — configure in Settings)
+          footer_label: Email footer (not editable here — configure in Settings)
       content_blocks:
         create:
           success: Content block saved.

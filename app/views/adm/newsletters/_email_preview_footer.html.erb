@@ -1,0 +1,18 @@
+<%
+  brand_color = Setting["newsletter_brand_color"].presence || "#004a83"
+  footer_block = SiteCustomization::ContentBlock.custom_block_for("newsletter_email_footer_block_1", I18n.locale)
+  footer_body = footer_block&.body.presence
+%>
+<div class="newsletter-email-preview-section -footer">
+  <div class="newsletter-email-preview-footer" style="background-color: <%= brand_color %>;">
+    <% if footer_body.present? %>
+      <div class="newsletter-email-preview-footer--content">
+        <%= wysiwyg(footer_body) %>
+      </div>
+    <% end %>
+  </div>
+
+  <span class="newsletter-email-preview-section--label -below">
+    <%= t("adm.newsletters.edit.email_preview.footer_label") %>
+  </span>
+</div>

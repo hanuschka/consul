@@ -4,10 +4,8 @@ de:
       items:
         files: Dateien
         files_subitems:
-          images: Bilder
-          documents: Dokumente
-        maintenance: Wartung
-        maintenance_subitems:
+          images: Admin-Bilder
+          documents: Admin-Dokumente
           resource_images: Ressourcen-Bilder
           resource_documents: Ressourcen-Dokumente
   files:
@@ -18,11 +16,11 @@ de:
     images:
       index:
         title: Admin-Bilder
-        description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager oder Inhalts-Editoren. Von Nutzern zu Inhalten der Plattform hochgeladene Bilder werden unter Wartung → Ressourcen-Bilder verwaltet. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
+        description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     documents:
       index:
         title: Übersicht aller Dokumente
-        description: Zeigt alle Dokumente, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager oder Inhalts-Editoren. Von Nutzern zu Inhalten der Plattform hochgeladene Dokumente werden unter Wartung → Ressourcen-Dokumente verwaltet. Nutzen Sie diese Seite, um Dokumente hochzuladen, zu prüfen, umzubenennen oder zu löschen.
+        description: Zeigt alle Dokumente, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Dokumente hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     resource_images:
       index:
         title: Übersicht aller Ressourcen-Bilder
@@ -30,7 +28,7 @@ de:
     resource_documents:
       index:
         title: Übersicht aller Ressourcen-Dokumente
-        description: Zeigt alle Dokumente, die von Nutzern zu Inhalten der Plattform hochgeladen wurden — z. B. Vorschläge und Ideen. Von Administratoren hochgeladene Dokumente werden unter Dateien → Dokumente verwaltet. Nutzen Sie diese Seite, um Dokumente systemweit zu prüfen, umzubenennen oder zu löschen.
+        description: Zeigt alle Dokumente, die mit Inhalten der Plattform verknüpft sind — z. B. Dateien, die Autoren zu Vorschlägen oder zu Projekt-Meilensteinen hinzugefügt haben. Diese Dokumente werden über die Formulare der Inhalte hochgeladen, nicht über den Dateimanager. Nutzen Sie diese Seite, um Dokumente systemweit zu prüfen, umzubenennen oder zu löschen.
     empty:
       images:
         title: Noch keine Bilder

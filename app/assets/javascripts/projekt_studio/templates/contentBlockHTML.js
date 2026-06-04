@@ -16,7 +16,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
       >
         <button
           type="button"
-          class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
           title="Inhaltsblock mit KI erstellen"
         >
           <i class="fas fa-magic"></i>
@@ -59,14 +59,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             <div class="projekt-content-block-edit--buttons-wrapper">
               <button
                 type="button"
-                class="projekt-content-block-edit--button -green js-save-content-block"
+                class="studio-edit-button -green js-save-content-block"
               >
                 <i class="fas fa-save"></i>
                 Speichern
               </button>
               <button
                 type="button"
-                class="projekt-content-block-edit--button js-cancel-content-block"
+                class="studio-edit-button js-cancel-content-block"
               >
                 <i class="fas fa-xmark"></i>
                 Abbrechen
@@ -326,7 +326,7 @@ function showContentBlockTemplatesButton(isDraft = false) {
     <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
       <button
         type="button"
-        class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+        class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
         title="Inhaltsblock mit KI erstellen"
         ${isDraft ? "disabled" : ''}
       >

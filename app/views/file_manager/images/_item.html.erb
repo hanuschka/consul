@@ -22,6 +22,14 @@
     <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size">
       <%= number_to_human_size(image.data_file_size, precision: 1) %>
     </span>
+    <% if image.projekt.present? %>
+      <span
+        class="file-upload-manager-dialog--item-badge -projekt"
+        title="<%= image.projekt.title %>"
+      >
+        <%= image.projekt.title %>
+      </span>
+    <% end %>
   </div>
   <div class="file-upload-manager-dialog--item-meta">
     <p

@@ -1,6 +1,8 @@
 class AdminImage < ApplicationRecord
   include AdminUploadable
 
+  belongs_to :user, optional: true
+
   ALLOWED_CONTENT_TYPES = %w[image/jpg image/jpeg image/png image/gif image/webp image/avif].freeze
   UNPROCESSED_CONTENT_TYPES = %w[image/gif].freeze
   MAX_FILE_SIZE = 10.megabytes

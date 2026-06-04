@@ -10,8 +10,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: "#", subitems: stats_subitems },
       { label: t("adm.menu.items.files"),         icon: "folder",           path: "#", subitems: files_subitems },
       { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
-      { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems },
-      { label: t("adm.menu.items.maintenance"),   icon: "build",            path: "#", subitems: maintenance_subitems }
+      { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }
     ]
   end
 
@@ -38,15 +37,9 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
     def files_subitems
       [
-        { label: t("adm.menu.items.files_subitems.images"),    path: adm_files_images_path },
-        { label: t("adm.menu.items.files_subitems.documents"), path: adm_files_documents_path }
-      ]
-    end
-
-    def maintenance_subitems
-      [
-        { label: t("adm.menu.items.maintenance_subitems.resource_images"),    path: adm_maintenance_resource_images_path },
-        { label: t("adm.menu.items.maintenance_subitems.resource_documents"), path: adm_maintenance_resource_documents_path }
+        { label: t("adm.menu.items.files_subitems.images"),             path: adm_files_images_path },
+        { label: t("adm.menu.items.files_subitems.documents"),          path: adm_files_documents_path },
+        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path }
       ]
     end
 

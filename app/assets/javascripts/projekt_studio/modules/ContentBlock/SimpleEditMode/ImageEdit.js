@@ -92,8 +92,29 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   toggleImageControls(_contentBlock, enabled) {
     this.isActive = enabled
 
-    if (!enabled) {
+    if (enabled) {
+      this.ensureOverlaysAttached()
+    } else {
       this.deactivate()
+    }
+  },
+
+  ensureOverlaysAttached() {
+    const staleOverlays = document.querySelectorAll(
+      ".js-image-edit-overlay, .js-image-edit-loading-overlay"
+    );
+    staleOverlays.forEach((el) => {
+      if (el !== this.overlayEl && el !== this.loadingOverlayEl) {
+        el.remove()
+      }
+    })
+
+    if (!document.body.contains(this.overlayEl)) {
+      document.body.appendChild(this.overlayEl)
+    }
+
+    if (!document.body.contains(this.loadingOverlayEl)) {
+      document.body.appendChild(this.loadingOverlayEl)
     }
   },
 

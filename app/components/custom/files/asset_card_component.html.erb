@@ -26,6 +26,14 @@
       <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
     <% end %>
 
+    <span
+      class="files-asset-card--admin-badge"
+      title="<%= t("files.card.admin_badge") %>"
+      aria-label="<%= t("files.card.admin_badge") %>"
+    >
+      <i class="fa fa-shield-alt"></i>
+    </span>
+
     <div class="files-asset-card--actions">
       <button
         type="button"
@@ -72,6 +80,19 @@
     </p>
 
     <dl class="files-asset-card--details">
+      <% if projekt_name.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.projekt") %></dt>
+          <dd>
+            <% if projekt_url.present? %>
+              <%= link_to projekt_name, projekt_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
+            <% else %>
+              <%= projekt_name %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
       <% if humanized_size.present? %>
         <div class="files-asset-card--detail-row">
           <dt><%= t("files.card.file_size") %></dt>
@@ -95,6 +116,13 @@
         <dt><%= t("files.card.last_edited") %></dt>
         <dd><%= updated_at_formatted %></dd>
       </div>
+
+      <% if uploaded_by.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.uploaded_by") %></dt>
+          <dd><%= render Files::UploaderLinkComponent.new(user: uploaded_by) %></dd>
+        </div>
+      <% end %>
     </dl>
 
     <% if type == "document" %>

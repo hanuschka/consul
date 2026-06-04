@@ -36,6 +36,7 @@
   a {
     /* margin-right: 10px !important; */
     background-color: transparent !important;
+    color: var(--brand-color);
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -290,6 +291,14 @@ dialog.modern-modal {
 .content-block-templates-selector--fallback-note {
   margin-bottom: 16px;
   margin-right: 20px;
+}
+
+.content-block-templates-selector--error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 0;
 }
 
 .content-block-templates-selector--ai-create {

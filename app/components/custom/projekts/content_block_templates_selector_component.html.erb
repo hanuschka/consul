@@ -11,7 +11,7 @@
         <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
         <button
           type="button"
-          class="projekt-content-block-edit--button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
           title="<%= t('custom.projekt.content_block_templates_selector.ai_create_button.title') %>"
         >
           <i class="fas fa-magic"></i>
@@ -39,6 +39,16 @@
         size: "large",
         vertical: true
       ) %>
+    </div>
+    <div
+      class="js-content-block-templates-error content-block-templates-selector--error"
+      style="display: none;"
+    >
+      <p><%= t('custom.projekt.content_block_templates_selector.load_error') %></p>
+      <button type="button" class="studio-edit-button js-content-block-templates-retry">
+        <i class="fas fa-rotate-right"></i>
+        <%= t('custom.projekt.content_block_templates_selector.retry') %>
+      </button>
     </div>
     <div
       class="js-content-block-templates-selector--inner projekt-content-block-templates-selector--inner"

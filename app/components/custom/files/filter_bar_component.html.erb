@@ -53,9 +53,10 @@
     <% end %>
   <% end %>
 
-  <div class="files-filter-bar--field">
+  <div class="files-filter-bar--field files-filter-bar--field-sort">
+    <i class="fa fa-sort files-filter-bar--sort-icon" aria-hidden="true"></i>
     <select
-      class="files-filter-bar--input js-fm-filter-sort"
+      class="files-filter-bar--input files-filter-bar--input-sort js-fm-filter-sort"
       aria-label="<%= t("files.filter_bar.aria.sort") %>"
       data-action="change->files--filter-bar#sortChanged"
     >

@@ -4,10 +4,8 @@ en:
       items:
         files: Files
         files_subitems:
-          images: Images
-          documents: Documents
-        maintenance: Maintenance
-        maintenance_subitems:
+          images: Admin images
+          documents: Admin documents
           resource_images: Resource images
           resource_documents: Resource documents
   files:
@@ -18,11 +16,11 @@ en:
     images:
       index:
         title: Admin images
-        description: Lists all images uploaded by administrators and project managers — e.g. via the file manager or content editors. Images attached to platform content by users are managed under Maintenance → Resource images. Use this page to upload, review, rename or delete image files.
+        description: Lists all images uploaded by administrators and project managers — e.g. via the file manager in the content block editor or on the projekt edit page. Use this page to upload, review, rename or delete image files.
     documents:
       index:
         title: Overview of all documents
-        description: Lists all documents uploaded by administrators and project managers — e.g. via the file manager or content editors. Documents uploaded by users to platform content are managed under Maintenance → Resource documents. Use this page to upload, review, rename or delete document files.
+        description: Lists all documents uploaded by administrators and project managers — e.g. via the file manager in the content block editor or on the projekt edit page. Use this page to upload, review, rename or delete document files.
     resource_images:
       index:
         title: Overview of all resource images
@@ -30,7 +28,7 @@ en:
     resource_documents:
       index:
         title: Overview of all resource documents
-        description: Lists every document uploaded by users to platform content — e.g. proposals and ideas. Documents uploaded by administrators are managed under Files → Documents. Use this page to review, rename or delete document files across the whole system.
+        description: Lists every document attached to platform content — e.g. files added to proposals by their authors or to projekt milestones. These documents are uploaded via the content's own forms, not via the file manager. Use this page to review, rename or delete document files across the whole system.
     empty:
       images:
         title: No images yet

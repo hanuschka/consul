@@ -9,6 +9,7 @@
     padding-left: var(--kern-metric-space-small, 12px) !important;
     padding-right: var(--kern-metric-space-small, 12px) !important;
     white-space: nowrap;
+    // vertical-align: middle;
   }
 
   // Add left padding to first column and right padding to last for breathing room
@@ -33,4 +34,10 @@
   .kern-table__body .kern-table__row:hover .kern-table__header {
     background-color: color-mix(in srgb, var(--kern-color-action-default) 4%, transparent);
   }
+}
+
+.kern-table__cell:has(.kern-table__actions-menu)
+{
+ padding-top: 5px;
+ padding-bottom: 0;
 }

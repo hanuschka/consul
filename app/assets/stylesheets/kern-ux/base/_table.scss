@@ -63,7 +63,7 @@
 }
 
 [data-controller="table-actions"] > [data-table-actions-target="button"],
-.round-icon-button {
+.adm-round-icon-button {
   display: block;
   height: 38px;
   width: 38px;
@@ -72,9 +72,10 @@
   align-items: center;
   border-radius: 50%;
   text-decoration: none;
+  transition: 30ms background-color ease;
 
   &:hover {
-    background-color: color-mix(in srgb, var(--kern-color-action-default), white 80%);
+    background-color: color-mix(in srgb, var(--kern-color-action-default), white 85%);
   }
 
   .material-symbols-outlined {

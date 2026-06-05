@@ -13,6 +13,6 @@ module Adm::SectionsHelper
       "officing" => adm_officing_root_path
     }
 
-    paths.to_h { |key, path| [key, { icon: Adm::Section::ICONS[key], path: path }] }
+    paths.to_h { |key, path| [key, { icon: Adm::Section::ICONS[key][:material], path: path }] }
   end
 end

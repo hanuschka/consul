@@ -3,14 +3,14 @@ module Adm
     NAMES = %w[ideas deficiency_reports projekts moderation valuation landing_pages officing].freeze
 
     ICONS = {
-      "administration" => "admin_panel_settings",
-      "projekts" => "folder",
-      "landing_pages" => "web",
-      "moderation" => "shield",
-      "deficiency_reports" => "report_problem",
-      "ideas" => "lightbulb",
-      "valuation" => "account_balance_wallet",
-      "officing" => "how_to_vote"
+      "administration" => { material: "admin_panel_settings", font_awesome: "fa-user-shield" },
+      "projekts" => { material: "folder", font_awesome: "fa-folder" },
+      "landing_pages" => { material: "web", font_awesome: "fa-globe" },
+      "moderation" => { material: "shield", font_awesome: "fa-shield-alt" },
+      "deficiency_reports" => { material: "report_problem", font_awesome: "fa-exclamation-triangle" },
+      "ideas" => { material: "lightbulb", font_awesome: "fa-lightbulb" },
+      "valuation" => { material: "account_balance_wallet", font_awesome: "fa-wallet" },
+      "officing" => { material: "how_to_vote", font_awesome: "fa-vote-yea" }
     }.freeze
 
     MANAGER_PREDICATES = {

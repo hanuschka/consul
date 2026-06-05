@@ -21,6 +21,7 @@
             <%= render "adm/files/allowed_types_note",
                   admin_types: allowed_types,
                   user_types: allowed_user_types.presence || allowed_types,
+                  note_key: allowed_types_note_key,
                   show_settings_link: types_settings_link %>
           <% end %>
 

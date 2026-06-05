@@ -1,4 +1,6 @@
 class Files::DocumentRowComponent < Files::ResourceAssetComponent
+  TITLE_TRUNCATE_LENGTH = 50
+
   with_collection_parameter :document
 
   def initialize(document:)
@@ -8,6 +10,18 @@ class Files::DocumentRowComponent < Files::ResourceAssetComponent
   private
 
     attr_reader :document
+
+    def title_truncated?
+      display_title.length > TITLE_TRUNCATE_LENGTH
+    end
+
+    def truncated_title
+      display_title.truncate(TITLE_TRUNCATE_LENGTH)
+    end
+
+    def title_popover_id
+      "files-document-title-popover-#{document.id}"
+    end
 
     def uploaded_by
       document.user

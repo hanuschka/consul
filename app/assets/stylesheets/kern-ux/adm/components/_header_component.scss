@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  min-height: 55px;
 
   > nav {
     min-width: 0;
@@ -14,6 +15,10 @@
   border-radius: var(--kern-metric-border-radius-default);
   white-space: nowrap;
   transition: color 0.15s ease, background-color 0.15s ease;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
 
   &:hover {
     color: var(--kern-color-action-default);

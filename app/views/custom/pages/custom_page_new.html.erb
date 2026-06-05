@@ -1,3 +1,13 @@
+<% if @custom_page.landing? && (current_user&.administrator? || current_user&.landing_page_manager?(@custom_page)) %>
+  <% content_for :admin_topbar_actions do %>
+    <%= render "welcome/topbar/admin_topbar_navigation_link_color_picker",
+          current_color: @custom_page.landing_navigation_link_color.presence || "#000000",
+          update_url: update_navigation_link_color_adm_landing_pages_landing_page_path(@custom_page),
+          css_variable: "--landing-nav-link-color",
+          input_id: "admin-topbar-landing-nav-link-color-picker" %>
+  <% end %>
+<% end %>
+
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
   <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) && native_projekt_studio?(@projekt) %>
     <% content_for :admin_topbar_display_settings do %>

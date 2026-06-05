@@ -1,12 +1,26 @@
-<div class="js-content-block-link-popup content-block-link-popup">
+<%= render Projekts::StudioEditPopupComponent.new(
+  popup_classes: "js-content-block-link-popup content-block-link-popup",
+  accept_button_class: "js-content-block-accept-link-edit",
+  cancel_button_class: "js-content-block-cancel-link-edit"
+) do |popup| %>
+  <% popup.with_extra_actions do %>
+    <button
+      class="studio-edit-button -red -with-background js-content-block-delete-link"
+      style="display: none;"
+    >
+      <i class="fas fa-trash"></i>
+      <%= t('custom.projekts.page.content_block_link_popup.remove_link') %>
+    </button>
+  <% end %>
+
   <div>
-    <label class="content-block-link-popup-label" style="display: none">
+    <label class="studio-edit-popup--label" style="display: none">
       <%= t('custom.projekts.page.content_block_link_popup.link_text') %>:
       <textarea type="text" class="js-content-block-text-input"></textarea>
     </label>
   </div>
   <div>
-    <label class="content-block-link-popup-label">
+    <label class="studio-edit-popup--label">
       <%= t('custom.projekts.page.content_block_link_popup.link_url') %>:
       <textarea type="text" class="js-content-block-url-input"></textarea>
     </label>
@@ -24,49 +38,20 @@
       <%= t('custom.projekts.page.content_block_link_popup.attach_file') %>
     </button>
   </div>
+<% end %>
 
-  <div class="d-flex justify-between">
-    <div class="d-flex u-gap-10">
-      <button class="studio-edit-button -green -with-background js-content-block-accept-link-edit">
-        <i class="fas fa-save"></i>
-        <%= t('custom.projekts.page.content_block_link_popup.save') %>
-      </button>
-
-      <button class="studio-edit-button -with-background js-content-block-cancel-link-edit">
-        <i class="fas fa-xmark"></i>
-        <%= t('custom.projekts.page.content_block_link_popup.cancel') %>
-      </button>
-    </div>
-    <button
-      class="studio-edit-button -red -with-background js-content-block-delete-link"
-      style="display: none;"
-    >
-      <i class="fas fa-trash"></i>
-      <%= t('custom.projekts.page.content_block_link_popup.remove_link') %>
-    </button>
-  </div>
-</div>
-
-<div class="js-content-block-image-alt-popup content-block-image-alt-popup">
+<%= render Projekts::StudioEditPopupComponent.new(
+  popup_classes: "js-content-block-image-alt-popup content-block-image-alt-popup -above-anchor",
+  accept_button_class: "js-content-block-accept-image-alt-edit",
+  cancel_button_class: "js-content-block-cancel-image-alt-edit"
+) do %>
   <div>
-    <label class="content-block-image-alt-popup-label">
+    <label class="studio-edit-popup--label">
       <%= t('custom.projekts.page.content_block_image_alt_popup.alt_text') %>:
       <textarea class="js-content-block-image-alt-input" rows="2"></textarea>
     </label>
   </div>
-
-  <div class="d-flex u-gap-10">
-    <button class="studio-edit-button -green -with-background js-content-block-accept-image-alt-edit">
-      <i class="fas fa-save"></i>
-      <%= t('custom.projekts.page.content_block_image_alt_popup.save') %>
-    </button>
-
-    <button class="studio-edit-button -with-background js-content-block-cancel-image-alt-edit">
-      <i class="fas fa-xmark"></i>
-      <%= t('custom.projekts.page.content_block_image_alt_popup.cancel') %>
-    </button>
-  </div>
-</div>
+<% end %>
 
 <%= render Shared::ModalComponent.new(id: "siteCodeEditorModal", blur_backdrop: false) do %>
   <div class="site-code-editor-modal--content">

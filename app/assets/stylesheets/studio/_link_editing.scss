@@ -1,18 +1,5 @@
 .content-block-link-popup {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  padding: 15px;
-  box-shadow: 3px 3px 12px 4px rgba(0,0,0,0.2);
-  display: none;
-  z-index: 300;
-  border-radius: 10px;
   width: 500px;
-
-  .content-block-link-popup-label {
-    font-size: 16px;
-    font-weight: bold;
-  }
 
   .content-block-link-popup-checkbox-label {
     display: flex;
@@ -102,10 +89,6 @@
     cursor: pointer;
     margin: 0;
   }
-}
-
-.content-block-link-popup textarea {
-  width: 100%;
 }
 
 .content-block-link-popup-checkbox-row {

@@ -10,20 +10,7 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
-    if landing_page_slug.present?
-      @landing_page =
-        SiteCustomization::Page
-          .published
-          .landing
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.nil?
-        raise ActionController::RoutingError.new('Not Found')
-      end
-
-      set_landing_page_topbar_ui_variables(@landing_page)
-    end
+    resolve_landing_page_from_slug
 
     base_projekts =
       if @landing_page.present?

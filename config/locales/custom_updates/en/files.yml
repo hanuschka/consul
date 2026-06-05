@@ -108,6 +108,8 @@ en:
       projekt: Project
       resource_type: Resource type
       admin_badge: Admin upload
+      alt_text: Alt text
+      alt_text_missing_hint: Alt text is missing. Add it so screen readers can describe this image.
     edit_modal:
       title: Edit file
       title_label: Title

@@ -41,13 +41,9 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
   },
 
   showPopupForImage(img) {
-    const buttonRect = this.getAltButton().getBoundingClientRect()
-
-    this.getPopup().css({
-      top: window.scrollY + buttonRect.top + "px",
-      left: window.scrollX + buttonRect.left + "px",
-      display: "block"
-    })
+    App.ContentBlockEditor.SimpleEditMode.EditPopup.show(
+      this.getPopup(), this.getAltButton(), "above"
+    )
 
     const altInput = this.getAltInput()
     altInput.value = (img.getAttribute("alt") || "").trim()
@@ -93,7 +89,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
   },
 
   hidePopup() {
-    this.getPopup().hide()
+    App.ContentBlockEditor.SimpleEditMode.EditPopup.hide(this.getPopup())
     this.getAltInput().value = ""
     this.currentImg = null
   },

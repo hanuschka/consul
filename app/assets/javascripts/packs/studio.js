@@ -47,6 +47,7 @@
 //= require ../studio/modules/ContentBlock/Copy
 //= require ../studio/modules/ContentBlock/EmptyHintToggle
 //= require ../studio/modules/ContentBlock/SimpleEditMode
+//= require ../studio/modules/ContentBlock/SimpleEditMode/EditPopup
 //= require ../studio/modules/ContentBlock/SimpleEditMode/TextFormat
 //= require ../studio/modules/ContentBlock/SimpleEditMode/HeaderEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ListEdit

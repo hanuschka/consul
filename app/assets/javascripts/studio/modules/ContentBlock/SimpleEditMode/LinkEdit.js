@@ -287,15 +287,11 @@ App.ContentBlockEditor.SimpleEditMode.LinkEdit = {
 
   showEditLinkPopup(linkWrapper) {
     // window.getSelection().removeAllRanges();
-    const rect = linkWrapper.getBoundingClientRect();
-
     linkWrapper.classList.add("-highlight-active")
 
-    $(".js-content-block-link-popup").css({
-      top: window.scrollY + rect.bottom + "px",
-      left: window.scrollX + rect.left + "px",
-      display: "block"
-    });
+    App.ContentBlockEditor.SimpleEditMode.EditPopup.show(
+      $(".js-content-block-link-popup"), linkWrapper
+    );
 
     const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
@@ -438,7 +434,7 @@ App.ContentBlockEditor.SimpleEditMode.LinkEdit = {
   },
 
   hidePopup() {
-    $(".js-content-block-link-popup").hide();
+    App.ContentBlockEditor.SimpleEditMode.EditPopup.hide($(".js-content-block-link-popup"));
   },
 
   resetLinkEditState() {

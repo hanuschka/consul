@@ -46,18 +46,17 @@ en:
       homepage_search_form:
         placeholder: Search projects...
       page:
+        studio_edit_popup:
+          save: Save
+          cancel: Cancel
         content_block_link_popup:
           link_text: Link text
           link_url: Link URL
           open_in_new_tab: Open in new tab
-          save: Save
-          cancel: Cancel
           remove_link: Remove link
           attach_file: Attach file
         content_block_image_alt_popup:
           alt_text: Alt text
-          save: Save
-          cancel: Cancel
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:

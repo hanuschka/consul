@@ -43,6 +43,11 @@
 
 .adm-page-title-after {
   margin-top: 10px;
+
+  p {
+    line-height: 1.75;
+    max-width: 100ch
+  }
 }
 
 .adm-page-title {

@@ -165,7 +165,7 @@ module Adm
       end
 
       def newsletter_body
-        brand = Setting["newsletter_brand_color"].presence || "#004a83"
+        brand = Setting.newsletter_brand_color
         text_color = "#333333"
         muted_color = "#666666"
         font = "Arial, Helvetica, sans-serif"

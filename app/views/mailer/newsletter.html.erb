@@ -1,4 +1,4 @@
-<% email_brand_color = Setting["newsletter_brand_color"] %>
+<% email_brand_color = Setting.newsletter_brand_color %>
 
 <style>
     .newsletter-template-content table {
@@ -172,11 +172,7 @@
                   <tbody>
                     <tr>
                       <td style="padding-top:40px;padding-bottom:40px;color:white;">
-                        <% if defined?(render_custom_block) %>
-                          <%= render_custom_block 'newsletter_email_footer_block_1' %>
-                        <% else %>
-                          <%= render_custom_content_block_content 'newsletter_email_footer_block_1' %>
-                        <% end %>
+                        <%= render_custom_content_block_content 'newsletter_email_footer_block_1' %>
                       </td>
                     </tr>
                   </tbody>

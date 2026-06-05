@@ -639,7 +639,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.75rem;
-  background: var(--kern-grey-100, #f1f5f9);
+  background: oklch(0.97 0.01 var(--kern-darkblue-700-hue, 265.1));
   border: 1px solid var(--kern-color-layout-border, #e4e7ec);
   border-radius: var(--kern-metric-border-radius-large, 8px);
   font-size: 0.8125rem;

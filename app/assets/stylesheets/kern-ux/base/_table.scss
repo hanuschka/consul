@@ -62,7 +62,8 @@
   line-height: 1;
 }
 
-[data-controller="table-actions"] > [data-table-actions-target="button"] {
+[data-controller="table-actions"] > [data-table-actions-target="button"],
+.round-icon-button {
   display: block;
   height: 38px;
   width: 38px;
@@ -70,6 +71,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
+  text-decoration: none;
 
   &:hover {
     background-color: color-mix(in srgb, var(--kern-color-action-default), white 80%);

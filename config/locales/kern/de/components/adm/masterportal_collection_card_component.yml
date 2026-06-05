@@ -8,10 +8,8 @@ de:
         last_imported_at: "Letzte Aktualisierung"
         never: "Nie"
         working: "Wird verarbeitet…"
-        update: "Neue importieren"
         delete: "Löschen"
         clean: "Neue importieren, alte bereinigen"
-        update_tooltip: "Importiert neue und geänderte Pins aus der Quelle (vorhandene Einträge bleiben erhalten)"
         clean_tooltip: "Importiert neue und geänderte Pins aus der Quelle und entfernt anschließend Pins (samt erstellter Vorschläge/Einreichungen), die es dort nicht mehr gibt"
         delete_tooltip: "Löscht diesen Datensatz vollständig inkl. aller Pins und erstellter Einträge"
         delete_confirm: 'Datensatz "%{name}" inkl. Pins und erstellter Einträge (Vorschläge/Einreichungen) endgültig löschen?'

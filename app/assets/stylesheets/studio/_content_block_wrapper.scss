@@ -162,6 +162,10 @@
         outline: none;
       }
     }
+
+    .projekt-content-block [contenteditable="false"] {
+      user-select: none;
+    }
   }
  /**/
  /* &.-highlight-changed { */

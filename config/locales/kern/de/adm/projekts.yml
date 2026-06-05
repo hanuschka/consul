@@ -85,6 +85,8 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           projekt_phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
         tabs:

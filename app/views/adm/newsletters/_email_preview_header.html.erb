@@ -1,5 +1,5 @@
 <%
-  brand_color = Setting["newsletter_brand_color"].presence || "#004a83"
+  brand_color = Setting.newsletter_brand_color
   logo_image = SiteCustomization::Image.find_by(name: "logo_newsletter_email")
   has_logo = logo_image&.image&.attached?
   has_newsletter_image = newsletter.image&.attachment&.attached?

@@ -108,6 +108,8 @@ de:
       projekt: Projekt
       resource_type: Ressourcentyp
       admin_badge: Admin-Upload
+      alt_text: Alternativer Text
+      alt_text_missing_hint: Alternativer Text fehlt. Fügen Sie ihn hinzu, damit Screenreader dieses Bild beschreiben können.
     edit_modal:
       title: Datei bearbeiten
       title_label: Titel

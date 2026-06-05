@@ -167,7 +167,7 @@ App.ContentBlockEditor.SimpleEditMode = {
       contentBlock.contentEditable = true;
       // We need some delay to disable contentEditable for elements
       setTimeout(() => {
-        const nonEditableElements = contentBlock.querySelectorAll(".js-content-block-element-not-editable");
+        const nonEditableElements = this.getNonEditableElements(contentBlock);
         nonEditableElements.forEach((element) => {
           element.contentEditable = false;
           Array.from(element.querySelectorAll("*")).forEach((el) => {
@@ -179,7 +179,27 @@ App.ContentBlockEditor.SimpleEditMode = {
       }, 30)
     } else {
       contentBlock.contentEditable = false;
+
+      contentBlock.querySelectorAll("[contenteditable]").forEach((el) => {
+        el.removeAttribute("contenteditable");
+      });
     }
+  },
+
+  getNonEditableElements(contentBlock) {
+    const elements = Array.from(
+      contentBlock.querySelectorAll(".js-content-block-element-not-editable, i")
+    );
+    const singleIconSpans = Array.from(contentBlock.querySelectorAll("span"))
+      .filter((span) => this.isSingleIconSpan(span));
+
+    return elements.concat(singleIconSpans);
+  },
+
+  isSingleIconSpan(span) {
+    return span.children.length === 1 &&
+      span.children[0].tagName === "I" &&
+      span.textContent.trim() === "";
   },
 
   toggleLockSaveCancel(contentBlockWrapper, locked) {

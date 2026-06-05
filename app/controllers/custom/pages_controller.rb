@@ -16,7 +16,11 @@ class PagesController < ApplicationController
   before_action :set_random_seed
 
   def show
-    @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
+    @custom_page = SiteCustomization::Page.find_by(slug: params[:id])
+
+    if @custom_page.present? && !@custom_page.published? && !draft_page_previewable?(@custom_page)
+      @custom_page = nil
+    end
 
     if @custom_page&.landing?
       @content_cards =

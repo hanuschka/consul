@@ -290,6 +290,22 @@ export default class extends Controller {
     if (data.title !== undefined) card.dataset.title = data.title || ""
     if (data.description !== undefined) card.dataset.description = data.description || ""
     if (data.alt_text !== undefined) card.dataset.altText = data.alt_text || ""
+
+    this.syncAltTextDisplay(card)
+  }
+
+  syncAltTextDisplay(card) {
+    const badge = card.querySelector(".js-files-alt-warning-badge")
+
+    if (!badge) return
+
+    const altText = (card.dataset.altText || "").trim()
+    const row = card.querySelector(".js-files-alt-text-row")
+    const value = card.querySelector(".js-files-alt-text-value")
+
+    badge.hidden = altText !== ""
+    row.hidden = altText === ""
+    value.textContent = altText
   }
 
   csrfToken() {

@@ -25,6 +25,7 @@
       App.ContentBlockEditor.SimpleEditMode.ListEdit.initialize();
       App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.initialize();
       App.ContentBlockEditor.SimpleEditMode.ImageEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.initialize();
       App.ContentBlockEditor.AiEditMode.initialize();
       App.ContentBlockEditor.CodeEditMode.initialize();
       App.ContentBlockEditor.Copy.initialize();

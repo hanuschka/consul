@@ -3,7 +3,7 @@ en:
     adm:
       masterportal_collections_list_component:
         title: "Imported datasets"
-        description: "Manage the datasets that have already been imported from Masterportal into this phase — unlike the import above, which brings in brand-new datasets. \"Resync data\" only checks whether the source has changed since the last import (new or removed pins); it makes no changes itself. Each dataset offers three actions: \"Import new\" imports new and changed pins from the source (existing entries are kept). \"Import new and clean old\" imports new and changed pins and then removes pins — along with the proposals/investments created from them — that no longer exist in the source, so the dataset matches the source exactly. \"Delete\" removes the entire dataset with all its pins and created entries from this phase."
+        description: "Manage the datasets that have already been imported from Masterportal into this phase — unlike the import above, which brings in brand-new datasets. \"Resync data\" only checks whether the source has changed since the last import (new or removed pins); it makes no changes itself. Each dataset offers two actions: \"Import new and clean old\" imports new and changed pins and then removes pins — along with the proposals/investments created from them — that no longer exist in the source, so the dataset matches the source exactly. \"Delete\" removes the entire dataset with all its pins and created entries from this phase."
         resync: "Resync data"
         resync_tooltip: "Checks the Masterportal source of every dataset for new and removed pins"
         update_all: "Update all"

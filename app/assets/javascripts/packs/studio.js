@@ -47,11 +47,13 @@
 //= require ../studio/modules/ContentBlock/Copy
 //= require ../studio/modules/ContentBlock/EmptyHintToggle
 //= require ../studio/modules/ContentBlock/SimpleEditMode
+//= require ../studio/modules/ContentBlock/SimpleEditMode/EditPopup
 //= require ../studio/modules/ContentBlock/SimpleEditMode/TextFormat
 //= require ../studio/modules/ContentBlock/SimpleEditMode/HeaderEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ListEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/LinkEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ImageEdit
+//= require ../studio/modules/ContentBlock/SimpleEditMode/ImageAltEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog
 //= require ../studio/modules/ContentBlock/CKEditorMode
 //= require ../studio/modules/SavedContentBlocks

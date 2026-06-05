@@ -77,13 +77,30 @@
   }
 }
 
-.js-img-overlay-crop.-active {
+.image-edit-overlay--action-button.-active {
   background-color: #45ac50;
   color: white;
 
   &:hover {
     background-color: #4aba56;
   }
+}
+
+.image-edit-overlay--action-button.-warning {
+  background-color: #e8930c;
+  color: white;
+
+  &:hover {
+    background-color: #f3a623;
+  }
+}
+
+.content-block-image-alt-popup {
+  width: 420px;
+}
+
+.content-block-image-alt-popup textarea {
+  margin-bottom: 20px;
 }
 
 .image-edit-overlay--height-control {

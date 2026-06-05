@@ -85,6 +85,8 @@ en:
           projekt_managers: Project managers
           map: Map
           projekt_phases: Participation phases
+          images: Images
+          documents: Documents
           delete: Delete
           delete_confirm: Are you sure you want to delete this project? All associated phases will also be deleted.
         tabs:

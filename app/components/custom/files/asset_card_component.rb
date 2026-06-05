@@ -44,6 +44,14 @@ class Files::AssetCardComponent < Files::ResourceAssetComponent
       asset.data_content_type&.start_with?("image/")
     end
 
+    def picture?
+      type == "picture"
+    end
+
+    def alt_text
+      asset.alt_text
+    end
+
     def has_preview?
       asset.gallery_thumb_url.present?
     end

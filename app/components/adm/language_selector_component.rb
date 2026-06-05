@@ -2,7 +2,7 @@ class Adm::LanguageSelectorComponent < ApplicationComponent
   LOCALES = { de: "Deutsch", en: "English" }.freeze
 
   def render?
-    (Rails.env.development? || Rails.env.staging?) && locales.size > 1
+    locales.size > 1
   end
 
   private

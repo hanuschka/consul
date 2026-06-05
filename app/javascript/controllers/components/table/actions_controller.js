@@ -53,9 +53,7 @@ export default class extends Controller {
     document.addEventListener("click", this.handleClickOutside);
     window.addEventListener("scroll", this.handleWindowScroll);
 
-    requestAnimationFrame(() => {
-      this.positionMenu()
-    })
+    this.positionMenu();
   }
 
   close() {

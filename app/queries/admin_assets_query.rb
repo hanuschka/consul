@@ -23,6 +23,7 @@ class AdminAssetsQuery
     scope = filter_size(scope)
     scope = filter_created(scope)
     scope = filter_updated(scope)
+    scope = filter_projekt(scope)
     apply_sort(scope)
   end
 
@@ -39,6 +40,13 @@ class AdminAssetsQuery
       return scope if term.blank?
 
       scope.merge(base_model.search(term))
+    end
+
+    def filter_projekt(scope)
+      value = read_param(:projekt_id)
+      return scope if value.blank?
+
+      scope.where(projekt_id: value)
     end
 
     def filter_extension(scope)

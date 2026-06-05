@@ -7,7 +7,7 @@ class Adm::ApiClientsController < Adm::BaseController
   def index
     @pagy, @api_clients = pagy(
       policy_scope(ApiClient, policy_scope_class: Adm::ApiClientPolicy::Scope)
-        .includes(:user)
+        .includes(user: :image)
         .order(created_at: :desc)
     )
 

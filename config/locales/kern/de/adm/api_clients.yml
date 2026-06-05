@@ -17,8 +17,6 @@ de:
         api_docs_link: API-Dokumentation
         id: API-Client ID
         posts_as: Veröffentlicht als
-        system_user_badge: Systembenutzer
-        dedicated_user_badge: Eigener Service-Benutzer
         no_api_clients: Keine API-Clients vorhanden.
         delete_confirm: >
           Sind Sie sicher, dass Sie diesen API-Client löschen möchten?

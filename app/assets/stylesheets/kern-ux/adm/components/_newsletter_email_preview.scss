@@ -1,3 +1,13 @@
+.newsletter-email-preview-frame {
+  display: block;
+}
+
+.newsletter-email-preview-frame .newsletter-email-preview-header,
+.newsletter-email-preview-frame .newsletter-email-preview-footer {
+  border: 0;
+  border-radius: 0;
+}
+
 .newsletter-email-preview-section {
   position: relative;
   margin-bottom: 0;
@@ -69,10 +79,14 @@
   }
 
   &--greeting {
-    background: #ffffff;
-    padding: 16px 32px;
-    font-size: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 670px;
+    margin: 0 auto;
+    padding: 25px 40px 0;
+    font-size: 22px;
     color: #000000;
+    background: #ffffff;
   }
 }
 

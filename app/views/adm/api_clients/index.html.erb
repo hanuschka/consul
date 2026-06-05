@@ -38,14 +38,13 @@
               </td>
               <td class="kern-table__cell">
                 <% if api_client.dedicated_user_mode? && api_client.user.present? %>
-                  <span class="kern-badge kern-badge--success">
-                    <%= t("adm.api_clients.index.dedicated_user_badge") %>
-                  </span>
-                  <span class="d-block fs-2 text-muted mt-1"><%= api_client.user.username %></span>
+                  <%= render Adm::SystemUserInfoComponent.new(
+                    user: api_client.user,
+                    kind: :api_client,
+                    size: :small
+                  ) %>
                 <% else %>
-                  <span class="kern-badge kern-badge--info">
-                    <%= t("adm.api_clients.index.system_user_badge") %>
-                  </span>
+                  <%= render Adm::SystemUserInfoComponent.new(user: api_client.content_author, size: :small) %>
                 <% end %>
               </td>
               <td class="kern-table__cell"><%= l(api_client.created_at, format: :short) %></td>

@@ -77,7 +77,7 @@
   }
 }
 
-.js-img-overlay-crop.-active {
+.image-edit-overlay--action-button.-active {
   background-color: #45ac50;
   color: white;
 
@@ -97,6 +97,7 @@
 
 .content-block-image-alt-popup {
   position: absolute;
+  transform: translateY(calc(-100% - 8px));
   background: white;
   border: 1px solid #ccc;
   padding: 15px;

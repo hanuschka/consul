@@ -41,11 +41,11 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
   },
 
   showPopupForImage(img) {
-    const rect = img.getBoundingClientRect()
+    const buttonRect = this.getAltButton().getBoundingClientRect()
 
     this.getPopup().css({
-      top: window.scrollY + rect.bottom + "px",
-      left: window.scrollX + rect.left + "px",
+      top: window.scrollY + buttonRect.top + "px",
+      left: window.scrollX + buttonRect.left + "px",
       display: "block"
     })
 
@@ -104,8 +104,10 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
 
     if (altText) {
       altButton.classList.remove("-warning")
+      altButton.classList.add("-active")
       altButton.setAttribute("data-hint", altText)
     } else {
+      altButton.classList.remove("-active")
       altButton.classList.add("-warning")
       altButton.setAttribute("data-hint", this.missingAltHint)
     }

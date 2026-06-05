@@ -28,7 +28,7 @@
   <% end %>
 
   <% if @newsletter.draft? %>
-    <div class="">
+    <div class="kern-card p-4 newsletter-email-preview-frame">
       <%= render "adm/newsletters/email_preview_header", newsletter: @newsletter %>
       <%= render Adm::Newsletters::ContentBlockEditorComponent.new(
         newsletter: @newsletter,
@@ -41,6 +41,10 @@
       <%= auto_link_already_sanitized_html wysiwyg(@newsletter.email_safe_body(container_width: 660)) %>
     </div>
   <% end %>
+
+  <div class="d-flex justify-content-start mt-4">
+    <%= kern_link_button(adm_newsletters_path, text: t("adm.newsletters.edit.save"), style: :primary) %>
+  </div>
 </div>
 
 <% if @newsletter.draft? %>

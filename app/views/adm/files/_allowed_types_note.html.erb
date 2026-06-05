@@ -13,7 +13,8 @@
 
     <% if admin_types == user_types %>
       <span>
-        <%= t("files.allowed_types_note_html", types: tag.span(admin_types, class: "adm-files-allowed-types--type")) %>
+        <%= t(local_assigns.fetch(:note_key, "files.allowed_types_note_html"),
+              types: tag.span(admin_types, class: "adm-files-allowed-types--type")) %>
         <% if settings_link %>(<%= settings_link %>)<% end %>
       </span>
     <% else %>

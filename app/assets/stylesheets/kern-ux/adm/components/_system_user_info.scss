@@ -23,6 +23,27 @@
   border-color: #99f6e4;
 }
 
+.adm-system-user-info.-small {
+  display: inline-flex;
+  gap: 10px;
+  padding: 5px 12px 5px 7px;
+  border-radius: 8px;
+}
+
+.adm-system-user-info.-small .adm-system-user-info--text {
+  gap: 1px;
+}
+
+.adm-system-user-info.-small .adm-system-user-info--avatar .adm-table-thumb {
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+}
+
+.adm-system-user-info.-small .adm-system-user-info--name {
+  font-size: 14px;
+}
+
 .adm-system-user-info--avatar {
   flex-shrink: 0;
 

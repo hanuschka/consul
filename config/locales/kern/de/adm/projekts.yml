@@ -180,6 +180,10 @@ de:
             active: Aktiv
             visible: Sichtbar
             actions: Aktionen
+        images:
+          title: Bilder
+        documents:
+          title: Dokumente
         update:
           success: Projekt erfolgreich aktualisiert.
         notify_reviewers:

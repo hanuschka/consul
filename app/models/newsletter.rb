@@ -35,11 +35,16 @@ class Newsletter < ApplicationRecord
       end
 
     return emails if emails.blank?
+
+    normalize = ->(list) { list.filter_map { |e| e.to_s.strip.downcase.presence }.uniq }
+    emails = normalize.call(emails)
+
     return emails unless respect_newsletter_optout?
 
-    optin_emails = User.actual.where(newsletter: true).pluck(:email).compact +
-                   UnregisteredNewsletterSubscriber.confirmed.pluck(:email).compact
-    optin_set = optin_emails.to_set
+    optin_set = normalize.call(
+      User.actual.where(newsletter: true).pluck(:email) +
+        UnregisteredNewsletterSubscriber.confirmed.pluck(:email)
+    ).to_set
     emails.select { |e| optin_set.include?(e) }
   end
 

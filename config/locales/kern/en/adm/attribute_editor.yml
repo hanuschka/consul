@@ -69,6 +69,12 @@ en:
         newsletter_email_footer_block_1:
           body_label: Newsletter footer
           body_description: "The footer is shown at the end of every newsletter email. Here you can add, for example, contact details, legal-notice links, or unsubscribe hints. The content is automatically included in all sent newsletters and should meet your municipality's legal requirements. Changes take effect immediately for new newsletters."
+        email_footer:
+          body_label: Email footer (all emails)
+          body_description: "Shown in the footer of every system email, above the organization name and the unsubscribe lines. Use it for contact details, legal-notice links, or general information. Leave empty to show only the standard footer."
+        email_footer_deficiency_report:
+          body_label: Email footer (issue reports)
+          body_description: "Shown in issue-report emails instead of the general email footer. When left empty, the general system footer is used. Use it for contact details or notes specific to issue reports."
       site_customization/image:
         header_image_label: Background image for desktop
         header_image_description: "This image is shown at the top of the homepage on desktop devices. Please use a high-resolution landscape image with a clear subject. It should fit thematically with the participation platform and work well across different screen sizes. Recommended format: 1920 × 760 pixels. Ignored when a desktop background video is uploaded below."

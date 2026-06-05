@@ -70,6 +70,24 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
     return ProjektStudio.getCurrentProjektId();
   },
 
+  emailOrigin() {
+    const editor = document.querySelector(".js-newsletter-content-block-editor");
+
+    if (!editor) return null;
+
+    return editor.dataset.emailOrigin || window.location.origin;
+  },
+
+  resolveFileUrl(url) {
+    if (!url) return "";
+
+    const emailOrigin = this.emailOrigin();
+
+    if (!emailOrigin) return url;
+
+    return new URL(url, emailOrigin).href;
+  },
+
   initialize() {
     this.initEventListeners()
     this.initDebouncedSearch()
@@ -495,10 +513,10 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
         title: selectedImage.querySelector('.file-upload-manager-dialog--item-title').textContent || '',
         alt_text: selectedImage.querySelector('.file-upload-manager-dialog--item-alt').textContent || '',
         description: selectedImage.dataset.description || '',
-        url: selectedImage.dataset.url || '',
+        url: this.resolveFileUrl(selectedImage.dataset.url),
         content_type: selectedImage.dataset.contentType || '',
         gallery_thumb_url: imgEl ? imgEl.src : '',
-        custom_thumb_url: selectedImage.dataset.customThumbUrl
+        custom_thumb_url: this.resolveFileUrl(selectedImage.dataset.customThumbUrl)
       };
       this.onSelectCallback(imageData);
     }

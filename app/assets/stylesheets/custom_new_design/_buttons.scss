@@ -226,11 +226,7 @@ button {
   }
 }
 
-.button.close-button {
-  width: 35px;
-  height: 35px;
-  font-size: 20px;
-}
+// .close-button styles live in cross_pack/components/close_button.scss.
 
 .transparent-round-icon-button {
   padding: 0 !important;

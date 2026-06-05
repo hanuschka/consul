@@ -57,10 +57,12 @@ en:
           subject: "e.g. New participation projects in March 2026"
       edit:
         title: Edit newsletter
+        save: Save
         content_section_title: Newsletter content
         email_preview:
-          header_label: Email header (not editable here — configure in Settings)
-          footer_label: Email footer (not editable here — configure in Settings)
+          header_label: Email header (not editable here)
+          footer_label: Email footer (not editable here)
+          settings_link: Configure in settings
       content_blocks:
         create:
           success: Content block saved.

@@ -17,8 +17,6 @@ en:
         api_docs_link: API documentation
         id: API client ID
         posts_as: Posts as
-        system_user_badge: System user
-        dedicated_user_badge: Dedicated service user
         no_api_clients: No API clients available.
         delete_confirm: >
           Are you sure you want to delete this API client?

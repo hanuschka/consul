@@ -22,10 +22,15 @@ en:
           statuses: Statuses
           settings: Configuration
           official_answer_templates: Response templates
+          email_templates: System emails
           districts: Areas
           officer_groups: Officer groups
           stats: Statistics
           ai_settings: AI settings
+      email_templates:
+        index:
+          title: System emails
+          page_hint: Customize the subject and body of the emails sent for deficiency reports. Leave a template empty to keep the default text.
       deficiency_reports:
         index:
           title: Reports

@@ -6,12 +6,7 @@
 
 $line-height: 1.5rem; // rem-calc(24) from _consul_settings.scss
 
-@import "brand_settings";
 @import "custom/1_utils";
-
-:root {
-  --brand-color: #{$brand};
-}
 
 .show-for-sr {
   position: absolute !important;

@@ -200,7 +200,7 @@ export default class extends Controller {
     event.preventDefault()
     event.stopPropagation()
 
-    const card = event.target.closest(".files-asset-card")
+    const card = event.target.closest(".files-asset-card") || event.target.closest(".files-asset-row")
 
     if (!card) return
 
@@ -365,11 +365,11 @@ export default class extends Controller {
   replaceContent(html) {
     const doc = new DOMParser().parseFromString(html, "text/html")
     const newGrid = doc.querySelector(".files-index--grid")
-    const newListBody = doc.querySelector(".files-index--list tbody")
+    const newListItems = doc.querySelector(".files-index--list-items")
     const newPagination = doc.querySelector(".files-index--pagination")
 
     if (newGrid) this.gridTarget.innerHTML = newGrid.innerHTML
-    if (newListBody && this.hasListTarget) this.listTarget.innerHTML = newListBody.innerHTML
+    if (newListItems && this.hasListTarget) this.listTarget.innerHTML = newListItems.innerHTML
     if (newPagination) this.paginationTarget.innerHTML = newPagination.innerHTML
   }
 

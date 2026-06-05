@@ -1,22 +1,18 @@
 <% body_html = capture do %>
   <div class="masterportal-import-panel--body">
+    <input
+      type="hidden"
+      data-adm--masterportal-import-panel-target="endpointUrl"
+      value="<%= default_endpoint_url %>"
+    >
+
     <div class="masterportal-import-panel--field">
-      <label class="masterportal-import-panel--label" for="masterportal-endpoint-url-<%= @projekt_phase.id %>">
-        <span class="material-symbols-outlined" aria-hidden="true">link</span>
-        <%= t(".endpoint_url_label") %>
-      </label>
+      <div class="masterportal-import-panel--tree-header">
+        <div class="masterportal-import-panel--tree-label">
+          <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+          <%= t(".collections_label") %>
+        </div>
 
-      <p class="masterportal-import-panel--hint"><%= t(".endpoint_url_hint") %></p>
-
-      <div class="masterportal-import-panel--endpoint-row">
-        <input
-          id="masterportal-endpoint-url-<%= @projekt_phase.id %>"
-          type="url"
-          class="masterportal-import-panel--url-input"
-          data-adm--masterportal-import-panel-target="endpointUrl"
-          value="<%= default_endpoint_url %>"
-          placeholder="https://..."
-        >
         <button
           type="button"
           class="masterportal-import-panel--load-button"
@@ -27,13 +23,6 @@
           <span class="material-symbols-outlined" aria-hidden="true">sync</span>
           <span><%= t(".load_collections") %></span>
         </button>
-      </div>
-    </div>
-
-    <div class="masterportal-import-panel--field">
-      <div class="masterportal-import-panel--tree-label">
-        <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
-        <%= t(".collections_label") %>
       </div>
 
       <p class="masterportal-import-panel--hint"><%= t(".collections_hint") %></p>

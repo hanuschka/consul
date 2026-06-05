@@ -10,6 +10,8 @@ de:
           resource_documents: Ressourcen-Dokumente
   files:
     allowed_types_note_html: "Erlaubte Dateitypen: %{types}"
+    allowed_types_note_admin_html: "Erlaubte Admin-Dateitypen: %{types}"
+    allowed_types_note_users_html: "Erlaubte Ressourcen-Dateitypen für Nutzer: %{types}"
     allowed_types_admins_html: "Admins &amp; Projektmanager können folgende Dateitypen hochladen: %{types}"
     allowed_types_users_html: "Normale Nutzer können folgende Dateitypen hochladen: %{types}"
     allowed_types_settings_link: "hier bearbeiten"

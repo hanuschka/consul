@@ -39,4 +39,8 @@ class Adm::Newsletters::ContentBlockEditorComponent < ApplicationComponent
     def default_margin_bottom
       SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
     end
+
+    def email_origin
+      Setting["url"].to_s
+    end
 end

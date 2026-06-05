@@ -57,10 +57,12 @@ de:
           subject: "z. B. Neue Beteiligungsprojekte im März 2026"
       edit:
         title: Newsletter bearbeiten
+        save: Speichern
         content_section_title: Newsletter-Inhalt
         email_preview:
-          header_label: E-Mail-Kopfbereich (hier nicht bearbeitbar – in den Einstellungen konfigurieren)
-          footer_label: E-Mail-Fußbereich (hier nicht bearbeitbar – in den Einstellungen konfigurieren)
+          header_label: E-Mail-Kopfbereich (hier nicht bearbeitbar)
+          footer_label: E-Mail-Fußbereich (hier nicht bearbeitbar)
+          settings_link: In den Einstellungen konfigurieren
       content_blocks:
         create:
           success: Inhaltsblock wurde gespeichert.

@@ -92,6 +92,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     "budget_phase"
   end
 
+  def sidebar_cta_kind
+    return :new_button if budget&.accepting?
+    return :budget_vote if budget&.selecting?
+    return :budget_ballot if budget&.balloting?
+  end
+
   def resources_name
     "budget"
   end

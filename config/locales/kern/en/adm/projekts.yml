@@ -179,6 +179,10 @@ en:
             active: Active
             visible: Visible
             actions: Actions
+        images:
+          title: Images
+        documents:
+          title: Documents
         update:
           success: Project updated successfully.
         notify_reviewers:

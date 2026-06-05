@@ -7,6 +7,9 @@
 <div class="newsletter-email-preview-section -header">
   <span class="newsletter-email-preview-section--label">
     <%= t("adm.newsletters.edit.email_preview.header_label") %>
+    <%= link_to t("adm.newsletters.edit.email_preview.settings_link"),
+      settings_adm_newsletters_path,
+      class: "kern-link" %>
   </span>
 
   <div class="newsletter-email-preview-header">
@@ -24,11 +27,9 @@
         <%= image_tag url_for(newsletter.image.variant(:large)),
           alt: "",
           class: "newsletter-email-preview-header--banner-img" %>
-        <% if newsletter.greeting.present? %>
-          <div class="newsletter-email-preview-header--greeting">
-            <%= newsletter.greeting %>
-          </div>
-        <% end %>
+        <div class="newsletter-email-preview-header--greeting">
+          <%= newsletter.greeting %>
+        </div>
       </div>
     <% else %>
       <div
@@ -47,11 +48,9 @@
             </p>
           <% end %>
         </div>
-        <% if newsletter.greeting.present? %>
-          <div class="newsletter-email-preview-header--greeting">
-            <%= newsletter.greeting %>
-          </div>
-        <% end %>
+        <div class="newsletter-email-preview-header--greeting">
+          <%= newsletter.greeting %>
+        </div>
       </div>
     <% end %>
   </div>

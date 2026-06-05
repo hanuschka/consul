@@ -31,6 +31,25 @@
     }
   }
 
+  // Variant: header with stat pills aligned to the right (projekts home dashboard).
+  // Groups the icon + heading on the left and pushes the pills to the right edge.
+  // Wraps on narrow viewports so the pills drop below the heading.
+  &__section-header--with-stats {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+
+    .adm-dashboard__section-header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .adm-dashboard__stat-pills {
+      margin-left: auto;
+      margin-bottom: 0;
+    }
+  }
+
   // Action row that sits between section header and section content (e.g. table)
   &__section-actions {
     display: flex;
@@ -568,6 +587,82 @@
   margin-top: 1rem;
 }
 
+// ── Intro row (welcome text + contact persons side by side) ──────────────
+// Used by the projekts home dashboard: intro on the left, contacts on the right.
+
+.adm-dashboard__intro-row {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.adm-dashboard__intro-col {
+  flex: 1 1 0;
+  min-width: 280px;
+
+  // The intro text is now followed by the quick-link buttons inside this column,
+  // so it keeps a moderate bottom margin to separate text from the actions.
+  .adm-dashboard__intro {
+    margin-bottom: 1.25rem;
+  }
+
+  // The actions block is the last element of the column; the surrounding
+  // ".adm-dashboard__intro-row" already provides the spacing below.
+  .adm-dashboard__section-actions {
+    margin-bottom: 0;
+  }
+}
+
+.adm-dashboard__intro-aside {
+  flex: 1 1 0;
+  min-width: 280px;
+
+  // The contacts component brings its own ".adm-dashboard__section" spacing;
+  // reset it so it aligns with the intro column inside this row.
+  .adm-dashboard__section {
+    margin-bottom: 0;
+  }
+}
+
+// ── Stat pills (compact inline stats, projekts home dashboard) ────────────
+
+.adm-dashboard__stat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
+}
+
+.adm-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--kern-grey-100, #f1f5f9);
+  border: 1px solid var(--kern-color-layout-border, #e4e7ec);
+  border-radius: var(--kern-metric-border-radius-large, 8px);
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  color: var(--kern-typography-color-default, #222);
+
+  &__icon {
+    font-size: 1.05rem;
+    color: var(--adm-color-primary, #1b5fd6);
+    line-height: 1;
+  }
+
+  &__value {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--kern-typography-color-default, #111);
+  }
+
+  &__label {
+    color: var(--kern-typography-color-muted, #555);
+  }
+}
+
 // ── People row (team + contact persons side by side) ─────────────────────
 
 .adm-dashboard__people-row {
@@ -579,6 +674,28 @@
   > * {
     flex: 1;
     min-width: 280px;
+  }
+}
+
+// ── Feed row (activity feed + team side by side, 50/50) ──────────────────
+
+.adm-dashboard__feed-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+
+  > * {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  // Both children render their own ".adm-dashboard__section" spacing;
+  // reset it so the columns align at the top and the outer spacing is
+  // owned by this row container.
+  .adm-dashboard__section {
+    margin-bottom: 0;
   }
 }
 
@@ -860,6 +977,15 @@
     flex-direction: column;
   }
 
+  .adm-dashboard__feed-row {
+    flex-direction: column;
+  }
+
+  .adm-dashboard__intro-row {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
   .adm-module-bento {
     grid-template-columns: 1fr;
   }
@@ -907,6 +1033,24 @@
     &--warning &__value,
     &--warning &__icon {
       color: #ffaa5c;
+    }
+  }
+
+  .adm-stat-pill {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.87);
+
+    &__icon {
+      color: #7eb3ff;
+    }
+
+    &__value {
+      color: #fff;
+    }
+
+    &__label {
+      color: rgba(255, 255, 255, 0.65);
     }
   }
 

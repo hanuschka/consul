@@ -70,6 +70,10 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     "proposal_phase"
   end
 
+  def sidebar_cta_kind
+    :new_button
+  end
+
   def resources_name
     "proposals"
   end

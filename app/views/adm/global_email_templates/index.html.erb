@@ -6,4 +6,11 @@
   <% @email_templates.each do |template| %>
     <%= render Adm::EmailTemplateComponent.new(template) %>
   <% end %>
+
+  <div class="my-5">
+    <%= render Adm::AttributeEditorComponent.new(
+      SiteCustomization::ContentBlock.custom_block_for(MailerFooterHelper::SYSTEM_EMAIL_FOOTER_BLOCK, I18n.default_locale),
+      :body, :rich_text, wide: true, toolbar: "email"
+    ) %>
+  </div>
 </div>

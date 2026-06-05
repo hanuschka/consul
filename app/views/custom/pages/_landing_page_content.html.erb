@@ -2,11 +2,15 @@
 
 <% content_for :styles do %>
   <style>
+    :root {
+      --landing-nav-link-color: <%= @custom_page.landing_navigation_link_color.presence || "#000000" %>;
+    }
+
     .custom-new-design .top-bar .main-menu a,
     .custom-new-design .top-bar .main-menu .projekt-name,
     .custom-new-design .top-bar .main-menu .translate-widget-toggler,
     .custom-new-design .top-bar .main-menu .translate-widget-toggler i {
-      color: <%= @custom_page.landing_navigation_link_color.presence %> !important;
+      color: var(--landing-nav-link-color) !important;
     }
 
     .custom-new-design .sticky-header .top-bar .translate-widget .translate-widget-toggler,
@@ -41,9 +45,23 @@
     <div class="main-column">
 
       <% if render_custom_content_block?("landing_page_#{@custom_page.id}_sidebar") %>
+        <% rendered_landing_page_sidebar_block_mobile = capture { render_custom_block "landing_page_#{@custom_page.id}_sidebar" } %>
+        <% landing_page_sidebar_block_body_mobile = Nokogiri::HTML::DocumentFragment.parse(rendered_landing_page_sidebar_block_mobile).at_css(".custom-content-block-body")&.inner_html %>
+        <% admin_view_mobile = current_user&.administrator? %>
+        <% initial_empty_mobile = admin_view_mobile && content_block_body_blank?(landing_page_sidebar_block_body_mobile) %>
+        <% sidebar_card_class_mobile = [] %>
+        <% sidebar_card_class_mobile << "js-toggle-empty-hint-on-content" if admin_view_mobile %>
+        <% sidebar_card_class_mobile << "is-content-empty" if initial_empty_mobile %>
+        <% sidebar_card_class_mobile = sidebar_card_class_mobile.join(" ").presence %>
         <div class="show-on-small-tablet standalone-sidebar-section margin-bottom">
-          <%= render Shared::SidebarCardComponent.new(title: 'Information', icon_name: "info-circle") do |c| %>
-            <%= render_custom_block "landing_page_#{@custom_page.id}_sidebar" %>
+          <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle", class_name: sidebar_card_class_mobile) do |c| %>
+            <% if admin_view_mobile %>
+              <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
+                <i class="fas fa-eye-slash sidebar-card--admin-empty-hint-icon" aria-hidden="true"></i>
+                <span><%= t("custom.welcome.sidebar.information.admin_empty_hint") %></span>
+              </div>
+            <% end %>
+            <%= rendered_landing_page_sidebar_block_mobile %>
           <% end %>
         </div>
       <% end %>
@@ -57,8 +75,22 @@
 
     <aside class="sidebar">
       <% if render_custom_content_block?("landing_page_sidebar_#{@custom_page.id}") %>
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle") do |c| %>
-          <%= render_custom_block "landing_page_sidebar_#{@custom_page.id}" %>
+        <% rendered_landing_page_sidebar_block = capture { render_custom_block "landing_page_sidebar_#{@custom_page.id}" } %>
+        <% landing_page_sidebar_block_body = Nokogiri::HTML::DocumentFragment.parse(rendered_landing_page_sidebar_block).at_css(".custom-content-block-body")&.inner_html %>
+        <% admin_view = current_user&.administrator? %>
+        <% initial_empty = admin_view && content_block_body_blank?(landing_page_sidebar_block_body) %>
+        <% sidebar_card_class = [] %>
+        <% sidebar_card_class << "js-toggle-empty-hint-on-content" if admin_view %>
+        <% sidebar_card_class << "is-content-empty" if initial_empty %>
+        <% sidebar_card_class = sidebar_card_class.join(" ").presence %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle", class_name: sidebar_card_class) do |c| %>
+          <% if admin_view %>
+            <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
+              <i class="fas fa-eye-slash sidebar-card--admin-empty-hint-icon" aria-hidden="true"></i>
+              <span><%= t("custom.welcome.sidebar.information.admin_empty_hint") %></span>
+            </div>
+          <% end %>
+          <%= rendered_landing_page_sidebar_block %>
         <% end %>
       <% end %>
     </aside>

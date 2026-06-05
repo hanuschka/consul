@@ -47,6 +47,27 @@
   </div>
 </div>
 
+<div class="js-content-block-image-alt-popup content-block-image-alt-popup">
+  <div>
+    <label class="content-block-image-alt-popup-label">
+      <%= t('custom.projekts.page.content_block_image_alt_popup.alt_text') %>:
+      <textarea class="js-content-block-image-alt-input" rows="2"></textarea>
+    </label>
+  </div>
+
+  <div class="d-flex u-gap-10">
+    <button class="studio-edit-button -green -with-background js-content-block-accept-image-alt-edit">
+      <i class="fas fa-save"></i>
+      <%= t('custom.projekts.page.content_block_image_alt_popup.save') %>
+    </button>
+
+    <button class="studio-edit-button -with-background js-content-block-cancel-image-alt-edit">
+      <i class="fas fa-xmark"></i>
+      <%= t('custom.projekts.page.content_block_image_alt_popup.cancel') %>
+    </button>
+  </div>
+</div>
+
 <%= render Shared::ModalComponent.new(id: "siteCodeEditorModal", blur_backdrop: false) do %>
   <div class="site-code-editor-modal--content">
     <div class="site-code-editor-modal--header">

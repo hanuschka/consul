@@ -86,6 +86,37 @@
   }
 }
 
+.image-edit-overlay--action-button.-warning {
+  background-color: #e8930c;
+  color: white;
+
+  &:hover {
+    background-color: #f3a623;
+  }
+}
+
+.content-block-image-alt-popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 15px;
+  box-shadow: 3px 3px 12px 4px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 300;
+  border-radius: 10px;
+  width: 420px;
+}
+
+.content-block-image-alt-popup-label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.content-block-image-alt-popup textarea {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .image-edit-overlay--height-control {
   display: flex;
   position: absolute;

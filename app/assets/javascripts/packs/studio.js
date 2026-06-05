@@ -52,6 +52,7 @@
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ListEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/LinkEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ImageEdit
+//= require ../studio/modules/ContentBlock/SimpleEditMode/ImageAltEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog
 //= require ../studio/modules/ContentBlock/CKEditorMode
 //= require ../studio/modules/SavedContentBlocks

@@ -54,6 +54,10 @@ en:
           cancel: Cancel
           remove_link: Remove link
           attach_file: Attach file
+        content_block_image_alt_popup:
+          alt_text: Alt text
+          save: Save
+          cancel: Cancel
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:

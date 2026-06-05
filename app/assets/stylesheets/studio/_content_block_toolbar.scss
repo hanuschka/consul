@@ -51,7 +51,7 @@
     justify-content: flex-end;
     align-items: center;
     gap: 2px;
-    padding: 4px 6px;
+    padding: 5px 7px;
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -240,13 +240,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 28px;
+  width: 27px;
+  height: 100%;
   padding: 0;
   font-size: 11px;
   line-height: 1;
   color: rgba(0, 0, 0, 0.6);
-  background: transparent;
+  background: #ffffff9e;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   cursor: pointer;

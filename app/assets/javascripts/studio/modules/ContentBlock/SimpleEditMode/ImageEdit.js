@@ -62,11 +62,14 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       <div class="image-edit-overlay--handle -bottom-right js-img-resize-handle" data-corner="bottom-right"></div>
 
       <div class="image-edit-overlay--actions">
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-change">
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-change" data-hint="Bild ändern">
           <i class="fa fas fa-pencil-alt"></i>
         </button>
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop">
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop" data-hint="Bildzuschnitt umschalten">
           <i class="fa fas fa-crop-alt"></i>
+        </button>
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-alt">
+          <i class="fa fas fa-low-vision"></i>
         </button>
       </div>
     `
@@ -147,6 +150,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     heightInput.max = img.naturalHeight || Math.round(rect.height)
 
     this.updateCropButtonState(img)
+    App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
   },
 
   hideOverlay() {
@@ -157,6 +161,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   deactivate() {
     this.hideOverlay()
     this.hideLoadingOverlay()
+    App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.hidePopup()
     this.isDragging = false
     this.dragState = null
   },
@@ -417,6 +422,14 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     img.src = imageUrl
     img.dataset.fullImageUrl = response.url
     img.dataset.pictureId = response.id
+
+    if (response.alt_text) {
+      img.alt = response.alt_text
+    } else {
+      img.removeAttribute("alt")
+    }
+
+    App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
 
     const glightboxItem = img.closest(".glightbox-disabled")
 

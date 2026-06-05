@@ -303,40 +303,8 @@
   text-overflow: ellipsis;
 }
 
-.file-upload-manager-dialog--pagination {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  flex-wrap: wrap;
-  transition: filter 0.2s ease, opacity 0.2s ease;
-
-  &.-disabled {
-    filter: grayscale(1);
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .pagination {
-    margin-top: 10px;
-    margin-bottom: 10px;
-
-    li.current {
-      background-color: $dt-base;
-    }
-    li a, li.current {
-      border: 1px solid #d9d9d9;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 17px;
-      min-width: 40px;
-      min-height: 38px;
-      text-decoration: none !important;
-    }
-  }
-}
+// Pagination styles live in cross_pack/components/shared_pagination.scss
+// (regular .pagination look shared across both stylesheet packs).
 
 .file-upload-manager-dialog--footer {
   display: flex;

@@ -296,81 +296,8 @@
   grid-column: 1 / -1;
 }
 
-.files-index--pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
-}
-
-.files-index--pagination .pagination {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.files-index--pagination .pagination a,
-.files-index--pagination .pagination .current,
-.files-index--pagination .pagination .gap,
-.files-index--pagination .pagination .current-page,
-.files-index--pagination .pagination .first,
-.files-index--pagination .pagination .prev,
-.files-index--pagination .pagination .next,
-.files-index--pagination .pagination .last,
-.files-index--pagination .pagination .page {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  font-size: 14px;
-  line-height: 1;
-  color: #222;
-  text-decoration: none;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.files-index--pagination .pagination a {
-  &:hover {
-    background: #ededed;
-    border-color: #828282;
-  }
-}
-
-.files-index--pagination .pagination .current,
-.files-index--pagination .pagination .current-page,
-.files-index--pagination .pagination .page.current {
-  color: #ffffff;
-  background: #005fcc;
-  border-color: #005fcc;
-  cursor: default;
-}
-
-.files-index--pagination .pagination .gap {
-  background: transparent;
-  border-color: transparent;
-  cursor: default;
-}
-
-.files-index--pagination .show-for-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+// Pagination styles live in cross_pack/components/shared_pagination.scss
+// (regular .pagination look shared across both stylesheet packs).
 
 @media (max-width: 750px) {
   .files-index {

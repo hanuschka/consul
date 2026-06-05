@@ -1,7 +1,7 @@
 <% if user_signed_in? %>
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-    <%= link_to account_path, rel: "nofollow", class: "d-flex align-items-center gap-1" do %>
-      <i class="fas fa-user fa-fw flyout-item--icon" aria-hidden="true"></i>
+    <%= link_to account_path, rel: "nofollow", class: "d-flex align-items-center gap-2" do %>
+      <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true">person</span>
       <%= t("layouts.header.my_account_link") %>
     <% end %>
   </li>
@@ -10,8 +10,8 @@
 
   <% if current_user.administrator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-user-shield fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["administration"] %></span>
         <%= t("layouts.header.administration") %>
       <% end %>
     </li>
@@ -19,8 +19,8 @@
 
   <% if current_user.administrator? || current_user.projekt_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_projekts_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-folder fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_projekts_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["projekts"] %></span>
         <%= t("custom.layouts.header.projekt_management") %>
       <% end %>
     </li>
@@ -28,8 +28,8 @@
 
   <% if current_user.administrator? || current_user.landing_page_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-globe fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["landing_pages"] %></span>
         <%= t("adm.landing_pages.title") %>
       <% end %>
     </li>
@@ -37,8 +37,8 @@
 
   <% if current_user.administrator? || current_user.moderator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_moderation_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-shield-alt fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_moderation_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["moderation"] %></span>
         <%= t("layouts.header.moderation") %>
       <% end %>
     </li>
@@ -46,8 +46,8 @@
 
   <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_deficiency_reports_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-exclamation-triangle fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_deficiency_reports_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["deficiency_reports"] %></span>
         <%= t("custom.layouts.header.deficiency_report_management") %>
       <% end %>
     </li>
@@ -55,8 +55,8 @@
 
   <% if Adm::Ideas::IdeaPolicy.new(current_user, nil).index? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_ideas_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-lightbulb fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_ideas_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["ideas"] %></span>
         <%= t("custom.layouts.header.idea_management") %>
       <% end %>
     </li>
@@ -64,8 +64,8 @@
 
   <% if feature?(:budgets) && (current_user.administrator? || current_user.valuator?) %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_valuation_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-wallet fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_valuation_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["valuation"] %></span>
         <%= t("layouts.header.valuation") %>
       <% end %>
     </li>
@@ -73,8 +73,8 @@
 
   <% if current_user.administrator? || current_user.poll_officer? || current_user.officing_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-1" do %>
-        <i class="fas fa-vote-yea fa-fw flyout-item--icon" aria-hidden="true"></i>
+      <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-2" do %>
+        <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true"><%= Adm::Section::ICONS["officing"] %></span>
         <%= t("layouts.header.officing") %>
       <% end %>
     </li>
@@ -83,8 +83,8 @@
   <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
 
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, class: "d-flex align-items-center gap-1" do %>
-      <i class="fas fa-sign-out-alt fa-fw flyout-item--icon" aria-hidden="true"></i>
+    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, class: "d-flex align-items-center gap-2" do %>
+      <span class="material-symbols-outlined flyout-item--icon" aria-hidden="true">logout</span>
       <%= t("devise_views.menu.login_items.logout") %>
     <% end %>
   </li>

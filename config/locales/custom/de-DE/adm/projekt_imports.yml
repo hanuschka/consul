@@ -38,6 +38,25 @@ de:
             confirm_import: "Projekt jetzt importieren? Damit wird ein neues Projekt mit allen Phasen und Inhaltsblöcken erstellt."
             confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
             generate_image_toggle: "Titelbild"
+            tooltips:
+              start_over:
+                title: "Neu starten"
+                text: "Verwirft diesen Import vollständig und kehrt zum Hochladen eines neuen Dokuments zurück."
+              regenerate:
+                title: "Neu generieren"
+                text: "Analysiert das ursprüngliche Dokument noch einmal und erstellt die gesamte Projektstruktur von Grund auf neu."
+              summarize:
+                title: "Zusammenfassen"
+                text: "Erstellt eine kurze, verständliche Zusammenfassung des hochgeladenen Dokuments im Chat."
+              generate_image:
+                title: "Titelbild generieren"
+                text: "Wenn aktiviert, erzeugt die KI beim Import automatisch ein passendes Titelbild für das Projekt."
+              import:
+                title: "Projekt importieren"
+                text: "Erstellt das Projekt mit allen Phasen, Inhaltsblöcken und Einstellungen. Es bleibt zunächst deaktiviert und für Besucher unsichtbar, bis Sie es aktivieren."
+              attach:
+                title: "Dokument anhängen"
+                text: "Fügt ein weiteres Dokument zum Gespräch hinzu, damit die KI zusätzliche Informationen berücksichtigen kann."
             commands:
               regenerate: "Neu generieren"
               summarize: "Dokument zusammenfassen"

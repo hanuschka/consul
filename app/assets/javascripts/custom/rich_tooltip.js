@@ -33,6 +33,7 @@
       this.showDelay = this.parseDelay("delay", DEFAULT_SHOW_DELAY)
       this.hideDelay = this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
       this.placement = this.getAttribute("placement") || "top"
+      this.size = this.getAttribute("size") || "default"
 
       this.buildTooltipBody(template)
       this.bindEvents()
@@ -62,6 +63,10 @@
       body.id = `rich-tooltip-${tooltipIdCounter}`
       body.className = "rich-tooltip--body"
       body.setAttribute("role", "tooltip")
+
+      if (this.size === "big") {
+        body.classList.add("-big")
+      }
 
       if (SUPPORTS_POPOVER) {
         body.setAttribute("popover", "hint")

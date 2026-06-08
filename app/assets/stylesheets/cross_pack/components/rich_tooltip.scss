@@ -28,6 +28,10 @@ rich-tooltip[hidden] {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+.rich-tooltip--body.-big {
+  padding: 16px 22px;
+}
+
 .rich-tooltip--body:not([popover]) {
   display: none;
 }

@@ -1,6 +1,10 @@
 <div class="newsletter-email-preview-section -footer">
   <div class="newsletter-email-preview-footer">
-    <%= render "mailer/newsletter_email_footer" %>
+    <% if Setting["advanced_newsletter"].present? %>
+      <%= render "mailer/newsletter_email_footer" %>
+    <% else %>
+      <%= render "layouts/mailer_footer" %>
+    <% end %>
   </div>
 
   <span class="newsletter-email-preview-section--label -below">

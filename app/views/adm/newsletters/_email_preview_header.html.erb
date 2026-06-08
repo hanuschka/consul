@@ -7,6 +7,10 @@
   </span>
 
   <div class="newsletter-email-preview-header">
-    <%= render "mailer/newsletter_email_header", newsletter: newsletter %>
+    <% if Setting["advanced_newsletter"].present? %>
+      <%= render "mailer/newsletter_email_header", newsletter: newsletter %>
+    <% else %>
+      <%= render "layouts/mailer_header" %>
+    <% end %>
   </div>
 </div>

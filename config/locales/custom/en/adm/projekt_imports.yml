@@ -37,7 +37,7 @@ en:
             user_label: "You"
             confirm_import: "Import the projekt now? This creates a new projekt with all phases and content blocks."
             confirm_start_over: "Discard this import and start over?"
-            generate_image_toggle: "Title image"
+            generate_image_toggle: "Generate title image"
             tooltips:
               start_over:
                 title: "Start over"

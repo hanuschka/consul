@@ -31,7 +31,7 @@
   <% if current_user.administrator? || current_user.landing_page_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-2" do %>
-        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["landing_pages"]) %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["landing_pages"], font_awesome: "fa-newspaper") %>
         <%= t("adm.landing_pages.title") %>
       <% end %>
     </li>

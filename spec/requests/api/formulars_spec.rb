@@ -97,6 +97,8 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -135,6 +137,8 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

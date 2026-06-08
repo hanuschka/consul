@@ -64,8 +64,8 @@
       body.className = "rich-tooltip--body"
       body.setAttribute("role", "tooltip")
 
-      if (this.size === "big") {
-        body.classList.add("-big")
+      if (this.size !== "default") {
+        body.classList.add(`-${this.size}`)
       }
 
       if (SUPPORTS_POPOVER) {

@@ -45,6 +45,8 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt notification' do
@@ -122,6 +124,9 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -163,6 +168,8 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -200,6 +207,8 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
         let(:id) { 999999 }
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt notification' do
@@ -277,6 +286,9 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt notification' do
@@ -323,6 +335,9 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

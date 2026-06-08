@@ -22,11 +22,12 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
   def messages
     after_id = params[:after].to_i
+    pending_ids = pending_message_ids
     scope = @ai_chat.ai_chat_messages.order(created_at: :asc)
+
     new_messages = after_id.positive? ? scope.where("id > ?", after_id) : scope
-    latest_assistant = scope.where(role: "assistant").last
-    combined = new_messages.to_a
-    combined << latest_assistant if latest_assistant && combined.exclude?(latest_assistant)
+    refreshed_messages = pending_ids.present? ? scope.where(id: pending_ids) : AiChatMessage.none
+    combined = (new_messages.to_a + refreshed_messages.to_a).uniq(&:id)
 
     render json: {
       ai_chat: {
@@ -137,6 +138,10 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
   def authorize_create
     authorize [:adm, :projekts, Projekt], :create?
+  end
+
+  def pending_message_ids
+    Array(params[:pending]).map(&:to_i).select(&:positive?)
   end
 
   def find_projekt_import

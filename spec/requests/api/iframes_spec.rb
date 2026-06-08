@@ -51,31 +51,7 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt) }
-        let(:projekt_phase_id) { test_iframe_phase.id }
-
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     patch 'Update an iframe' do
@@ -220,6 +196,8 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 end

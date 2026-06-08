@@ -9,8 +9,10 @@ const MAX_POLL_ERRORS = 5
 // auto-scroll when the user is already near the bottom.
 const SCROLL_BOTTOM_THRESHOLD = 80
 
-// Chat screen: polls /messages?after=:last_id every 2s, supports mid-chat
-// document attach, four command buttons, and the final import overlay.
+// Chat screen: polls /messages for new messages (after=:last_id) plus refreshed
+// state for messages still in progress (pending[]=:ids), so finished messages
+// are never re-rendered. Supports mid-chat document attach, four command
+// buttons, and the final import overlay.
 export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
@@ -83,8 +85,7 @@ export default class extends Controller {
   }
 
   pollMessages() {
-    const url = `${this.messagesUrlValue}?after=${this.lastMessageId}`
-    fetch(url, {
+    fetch(this.buildMessagesUrl(), {
       credentials: "same-origin",
       headers: { "Accept": "application/json" }
     })
@@ -100,6 +101,22 @@ export default class extends Controller {
       .catch(() => this.handlePollError())
   }
 
+  buildMessagesUrl() {
+    const params = new URLSearchParams()
+    params.set("after", this.lastMessageId)
+    this.pendingMessageIds().forEach((id) => params.append("pending[]", id))
+
+    return `${this.messagesUrlValue}?${params.toString()}`
+  }
+
+  pendingMessageIds() {
+    const selector =
+      "[data-message-id][data-status='scheduled'], [data-message-id][data-status='running']"
+    const nodes = this.messagesTarget.querySelectorAll(selector)
+
+    return Array.from(nodes).map((node) => Number(node.dataset.messageId))
+  }
+
   handlePollError() {
     this.pollErrorCount += 1
     if (this.pollErrorCount >= MAX_POLL_ERRORS) return
@@ -112,7 +129,7 @@ export default class extends Controller {
       data.messages.forEach((m) => this.appendOrUpdateMessage(m))
     }
 
-    this.typingIndicatorTarget.classList.toggle("-hidden", !(data.ai_chat && data.ai_chat.running))
+    this.toggleTypingIndicator(Boolean(data.ai_chat && data.ai_chat.running))
 
     if (data.import) {
       this.handleImportState(data.import)
@@ -142,6 +159,14 @@ export default class extends Controller {
     if (m.id > this.lastMessageId) this.lastMessageId = m.id
 
     if (!existing || wasNearBottom) this.scrollToBottom()
+  }
+
+  // A pending assistant placeholder bubble already shows its own loader, so the
+  // standalone typing indicator would be a duplicate — only show it when the
+  // chat is running and no in-progress bubble is present.
+  toggleTypingIndicator(running) {
+    const redundant = this.pendingMessageIds().length > 0
+    this.typingIndicatorTarget.classList.toggle("-hidden", !running || redundant)
   }
 
   isNearBottom() {

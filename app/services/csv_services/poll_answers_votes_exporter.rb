@@ -43,13 +43,17 @@ module CsvServices
         if question.question_answers.any?
           headers.push("Stimmenanzahl")
           headers.push("%")
-          headers.push("Stimmabgaben") if weighted?(question)
+          if weighted?(question)
+            headers.push("Stimmabgaben")
+            (1..max_answer_weight(question)).each { |weight| headers.push("Gewicht #{weight}") }
+          end
         end
 
         headers
       end
 
       def row(question_answer)
+        question = question_answer.question
         row = []
         row.push question_answer.title
         row.push question_answer.total_votes
@@ -60,13 +64,28 @@ module CsvServices
                    separator: ",",
                    format: "%n%"
                  )
-        row.push question_answer.total_voters if weighted?(question_answer.question)
+
+        if weighted?(question)
+          row.push question_answer.total_voters
+          distribution = question_answer.weight_distribution
+          (1..max_answer_weight(question)).each { |weight| row.push(distribution[weight] || 0) }
+        end
 
         row
       end
 
       def weighted?(question)
         question.votation_type&.multiple_with_weight?
+      end
+
+      def max_answer_weight(question)
+        @max_answer_weight ||= {}
+        @max_answer_weight[question.id] ||= begin
+          votation_type = question.votation_type
+          configured = votation_type&.max_votes_per_answer || votation_type&.max_votes
+          observed = Poll::Answer.where(question_id: question.id).maximum(:answer_weight)
+          [configured, observed, 1].compact.max
+        end
       end
 
       def process_open_answers(question, csv)

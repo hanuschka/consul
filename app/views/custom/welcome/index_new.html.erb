@@ -1,11 +1,34 @@
 <% content_for :body_class, "home-page" %>
 
+<% content_for :styles do %>
+  <style>
+    :root {
+      --homepage-nav-link-color: <%= Setting["extended_option.general.homepage_navigation_link_color"].presence || "#000000" %>;
+    }
+
+    .custom-new-design.home-page .top-bar .main-menu a,
+    .custom-new-design.home-page .top-bar .main-menu .projekt-name,
+    .custom-new-design.home-page .top-bar .main-menu .translate-widget-toggler,
+    .custom-new-design.home-page .top-bar .main-menu .translate-widget-toggler i {
+      color: var(--homepage-nav-link-color) !important;
+    }
+
+    .custom-new-design.home-page .sticky-header .top-bar .translate-widget .translate-widget-toggler,
+    .custom-new-design.home-page .sticky-header .top-bar .translate-widget .translate-widget-toggler i {
+      color: unset !important;
+    }
+  </style>
+<% end %>
+
 <% if current_user&.administrator? %>
   <% content_for :admin_topbar_actions do %>
+    <%= render "welcome/topbar/admin_topbar_navigation_link_color_picker" %>
+
     <%= link_to adm_homepage_path,
           class: "button hollow projekt-page--admin-topbar-button",
+          title: t("custom.projekts.page.topbar.edit_homepage"),
           target: "_blank" do %>
-      <i class="fas fa-edit"></i>
+      <i class="fas fa-edit" aria-hidden="true"></i>
       <span><%= t("custom.projekts.page.topbar.edit_homepage") %></span>
     <% end %>
   <% end %>
@@ -24,7 +47,9 @@
 
 <%= render "header",
   header_image_attachment: @header_image,
-  mobile_header_image_attachment: @mobile_header_image
+  mobile_header_image_attachment: @mobile_header_image,
+  header_video_attachment: @header_video,
+  mobile_header_video_attachment: @mobile_header_video
 %>
 
 <main class="welcome-page">
@@ -32,9 +57,23 @@
     <div class="main-column">
 
       <% if render_custom_content_block?('home_page_sidebar') %>
+        <% rendered_home_page_sidebar_block_mobile = capture { render_custom_block 'home_page_sidebar' } %>
+        <% home_page_sidebar_block_body_mobile = Nokogiri::HTML::DocumentFragment.parse(rendered_home_page_sidebar_block_mobile).at_css(".custom-content-block-body")&.inner_html %>
+        <% admin_view_mobile = current_user&.administrator? %>
+        <% initial_empty_mobile = admin_view_mobile && content_block_body_blank?(home_page_sidebar_block_body_mobile) %>
+        <% sidebar_card_class_mobile = [] %>
+        <% sidebar_card_class_mobile << "js-toggle-empty-hint-on-content" if admin_view_mobile %>
+        <% sidebar_card_class_mobile << "is-content-empty" if initial_empty_mobile %>
+        <% sidebar_card_class_mobile = sidebar_card_class_mobile.join(" ").presence %>
         <div class="show-on-small-tablet standalone-sidebar-section margin-bottom">
-          <%= render Shared::SidebarCardComponent.new(title: 'Information', icon_name: "info-circle") do |c| %>
-            <%= render_custom_block 'home_page_sidebar' %>
+          <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle", class_name: sidebar_card_class_mobile) do |c| %>
+            <% if admin_view_mobile %>
+              <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
+                <i class="fas fa-eye-slash sidebar-card--admin-empty-hint-icon" aria-hidden="true"></i>
+                <span><%= t("custom.welcome.sidebar.information.admin_empty_hint") %></span>
+              </div>
+            <% end %>
+            <%= rendered_home_page_sidebar_block_mobile %>
           <% end %>
         </div>
       <% end %>

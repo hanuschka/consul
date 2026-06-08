@@ -27,7 +27,7 @@
       <% elsif phase.is_a?(ProjektPhase::LivestreamPhase) && phase.projekt_livestreams.any? %>
         <span><i class="far fa-calendar" style="margin-right: 7px;"></i><%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::BudgetPhase) && phase.budget.present? %>
-        <span class="time-icon"><%= format_date_range(phase.budget.current_phase.starts_at.to_date, (phase.budget.current_phase.ends_at.to_date - 1.day)) %></span>
+        <span class="time-icon"><%= format_budget_phase_duration(phase.budget.current_phase) %></span>
       <% elsif phase.start_date.present? && phase.regular? %>
         <span class="time-icon"><%= format_date_range(phase.start_date, phase.end_date) %></span>
       <% else phase.regular? %>
@@ -59,7 +59,7 @@
         %>
         <button
            type="button"
-           class="js-toggle-projekt-phase-visibility-button projekt-frame-icon-button"
+           class="js-toggle-projekt-phase-visibility-button studio-icon-button"
            title="<%= phase.active? ? hide_phase_title : show_phase_title %>"
            data-hide-title="<%= hide_phase_title %>"
            data-show-title="<%= show_phase_title %>"
@@ -73,7 +73,7 @@
         %>
         <button
           type="button"
-          class="js-toggle-projekt-phase-default projekt-frame-icon-button"
+          class="js-toggle-projekt-phase-default studio-icon-button"
           title="<%= phase == @default_projekt_phase ? unset_default_title : make_default %>"
           data-unset-default-title="<%= unset_default_title %>"
           data-make-default-title="<%= make_default %>"
@@ -85,7 +85,7 @@
           <button
             type="button"
             title="Benachrichtigung senden"
-            class="js-send-notifications-for-projekt-phase projekt-frame-icon-button"
+            class="js-send-notifications-for-projekt-phase studio-icon-button"
             data-resource-type="<%= resource_type %>"
             data-resource-id="<%= resource_id %>"
           >
@@ -93,14 +93,14 @@
             </i>
           </button>
         <% end %>
-        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "projekt-frame-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "studio-icon-button", target: "_blank" do %>
           <i class="fas fa-edit">
           </i>
         <% end %>
 
         <button
           type="button"
-          class="js-delete-projekt-phase projekt-frame-icon-button"
+          class="js-delete-projekt-phase studio-icon-button"
           <%= !phase.safe_to_destroy? ? "disabled" : "" %>
           title="<%= !phase.safe_to_destroy? ? t('custom.admin.projekt_phases.notice.not_destroyed') : "" %>"
         >
@@ -108,7 +108,7 @@
           </i>
         </button>
       </div>
-      <div class="projekt-phase-move js-projekt-phase-move js-sortable-handle projekt-frame-icon-button">
+      <div class="projekt-phase-move js-projekt-phase-move js-sortable-handle studio-icon-button">
         <i class="fas fa-up-down-left-right">
         </i>
       </div>

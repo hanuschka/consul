@@ -1,0 +1,15 @@
+<%= content_for :title, [(@projekt.page&.title || @projekt.name), t("adm.projekts.projekts.tabs.images")].join(" | ") %>
+
+<%= render Adm::FileManager::PageComponent.new(
+  type: "picture",
+  title: (@projekt.page&.title || @projekt.name),
+  breadcrumbs: @breadcrumbs,
+  frontend_url: projekt_path(@projekt),
+  assets: @assets,
+  endpoint: images_adm_projekts_projekt_path(@projekt),
+  card_component: Files::AssetCardComponent
+) do |page| %>
+  <% page.with_sub_header do %>
+    <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
+  <% end %>
+<% end %>

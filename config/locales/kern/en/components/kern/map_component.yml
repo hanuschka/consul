@@ -1,0 +1,13 @@
+en:
+  components:
+    kern:
+      map_component:
+        rendering_library_label: Choose map type
+        rendering_library_description: >
+          Choose the map type to use as the default in Consul.
+          Options are Leaflet (with WMS layers), Mapbox (with 3D building outlines), and the 3D maps from Virtual City Systems, which must be activated in the App Store.
+        show_admin_shape_hint: When enabled, the blue map pin (center point) is shown on the projects overview page. On the project page itself the pin is not displayed and is used only to center the map; only the red map elements are visible.
+        mapbox_style_id_label: Mapbox style ID
+        mapbox_style_id_description: >
+          Optional style ID for this map (e.g. mapbox://styles/username/style-id).
+          If empty, the system-wide default style is used.

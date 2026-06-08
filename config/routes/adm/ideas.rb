@@ -1,7 +1,6 @@
 namespace :adm do
   scope :ideas, module: :ideas, as: :ideas do
     root to: "home#show"
-    get "list", to: "ideas#index", as: :ideas_list
 
     # Define specific resources first (matched before /:id)
     resources :officers, only: [:index, :create, :destroy] do
@@ -10,11 +9,21 @@ namespace :adm do
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_categories, on: :collection
+      patch :order_categories, on: :collection
     end
 
     resources :districts, only: [:index, :edit, :update]
-    get :settings, to: "ideas#settings", as: :settings
+    resource :settings, only: [:show], controller: "settings" do
+      get :dashboard, on: :member
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "ideas" } do
+      post :search, on: :collection
+    end
 
     resources :memos, only: [:create, :destroy] do
       member do

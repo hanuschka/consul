@@ -1,0 +1,58 @@
+<section class="masterportal-pin-properties">
+  <table class="masterportal-pin-properties--table">
+    <tbody>
+      <% if address_value.present? %>
+        <tr class="masterportal-pin-properties--row">
+          <th class="masterportal-pin-properties--key" scope="row">
+            <%= address_label %>
+          </th>
+          <td class="masterportal-pin-properties--value"><%= address_value %></td>
+        </tr>
+      <% end %>
+
+      <% rows.each do |key, value| %>
+        <% kind = value_kind(key, value) %>
+        <% text = value.to_s.strip %>
+        <tr class="masterportal-pin-properties--row">
+          <th class="masterportal-pin-properties--key" scope="row">
+            <%= label_for(key) %>
+          </th>
+          <td class="masterportal-pin-properties--value">
+            <% case kind %>
+            <% when :accessibility, :boolean %>
+              <% if truthy?(value) %>
+                <span class="masterportal-pin-properties--boolean masterportal-pin-properties--boolean--true">
+                  <i class="fas fa-check-circle masterportal-pin-properties--boolean-icon" aria-hidden="true"></i>
+                  <%= t(".flag_true") %>
+                </span>
+              <% else %>
+                <span class="masterportal-pin-properties--boolean masterportal-pin-properties--boolean--false">
+                  <i class="fas fa-times-circle masterportal-pin-properties--boolean-icon" aria-hidden="true"></i>
+                  <%= t(".flag_false") %>
+                </span>
+              <% end %>
+            <% when :image %>
+              <%= image_tag text,
+                    class: "masterportal-pin-properties--image",
+                    alt: label_for(key),
+                    loading: "lazy",
+                    referrerpolicy: "no-referrer" %>
+            <% when :phone %>
+              <%= link_to text, "tel:#{text}", class: "masterportal-pin-properties--link" %>
+            <% when :email %>
+              <%= link_to text, "mailto:#{text}", class: "masterportal-pin-properties--link" %>
+            <% when :url %>
+              <%= link_to text,
+                    url_with_protocol(text),
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    class: "masterportal-pin-properties--link" %>
+            <% else %>
+              <%= text %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

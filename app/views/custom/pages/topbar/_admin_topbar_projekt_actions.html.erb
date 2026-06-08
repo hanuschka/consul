@@ -1,35 +1,31 @@
-<% if current_user&.email.in?(@partner_emails) %>
-  <%= link_to "#",
-        class: "button hollow projekt-page--admin-topbar-button js-copy-source-button",
-        data: { target: "page-content" } do %>
-    <i class="fas fa-code"></i>
-    <span><%= t("custom.projekts.page.topbar.copy_code") %></span>
-  <% end %>
-<% end %>
-
 <% if current_user&.administrator? %>
   <%= link_to new_adm_newsletter_path(projekt_id: @projekt),
-        class: "button hollow projekt-page--admin-topbar-button hide-on-small-tablet",
-        target: "_blank" do %>
-    <i class="fas fa-envelope"></i>
+        class: "button hollow projekt-page--admin-topbar-button",
+        target: "_blank",
+        title: t("custom.projekts.page.topbar.create_newsletter_draft") do %>
+    <i class="fas fa-envelope" aria-hidden="true"></i>
     <span><%= t("custom.projekts.page.topbar.create_newsletter_draft") %></span>
   <% end %>
 <% end %>
 
 <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
   <%= link_to notify_reviewers_adm_projekts_projekt_path(@projekt),
-        method: "post",
         role: "button",
-        class: "button hollow projekt-page--admin-topbar-button hide-on-mobile" do %>
-    <i class="fas fa-bell"></i>
-    <span><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
+        class: "button hollow projekt-page--admin-topbar-button js-notify-reviewers",
+        title: t("custom.projekts.page.topbar.notify_reviewers") do %>
+    <i class="fas fa-bell js-notify-reviewers-icon" aria-hidden="true"></i>
+    <span class="js-notify-reviewers-label"><%= t("custom.projekts.page.topbar.notify_reviewers") %></span>
   <% end %>
 <% end %>
 
 <% if current_user&.has_pm_permission_to?(:manage, @projekt) %>
+  <span class="projekt-page--admin-topbar-divider" aria-hidden="true"></span>
+
   <%= link_to details_adm_projekts_projekt_path(@projekt),
-        class: "button hollow projekt-page--admin-topbar-button", target: "_blank" do %>
-    <i class="fas fa-cog"></i>
+        class: "button projekt-page--admin-topbar-button projekt-page--admin-topbar-button--primary",
+        target: "_blank",
+        title: t("custom.projekts.page.topbar.edit_projekt") do %>
+    <i class="fas fa-cog" aria-hidden="true"></i>
     <span><%= t("custom.projekts.page.topbar.edit_projekt") %></span>
   <% end %>
 <% end %>

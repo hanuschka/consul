@@ -17,6 +17,11 @@ de:
           home: Home
           landing_pages: Themenseiten
           managers: Team
+          settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       landing_pages:
         index:
           title: Themenseiten
@@ -56,7 +61,7 @@ de:
           success: Der Wert wurde erfolgreich aktualisiert.
       managers:
         index:
-          title: Team
+          title: Themenseiten Manager
           page_hint: Hier verwalten Sie die Themenseiten-Manager. Manager können die ihnen zugewiesenen Themenseiten bearbeiten und deren Inhalte pflegen. Nutzer mit der Option Alle verwalten haben Zugriff auf sämtliche Themenseiten. Fügen Sie neue Manager hinzu, indem Sie registrierte Nutzer über die Schaltfläche Erstellen suchen und zuweisen.
           new_link: Neuen Themenseiten Manager hinzufügen
           manage_all_landing_pages: Alle verwalten

@@ -4,13 +4,13 @@
 
 <div class='sidebar-projekt-phases'>
 
-  <% if show_cta? %>
-    <span class='sidebar-projekt-phases-title'><%= t('custom.projekts.page.sidebar.phases.participate') %></span>
-  <% end %>
-
   <% if projekt.show_start_date_in_frontend? && projekt.total_duration_start.present? %>
-    <div class="sidebar-projekt-phase active" >
+    <% start_status = phase_status_for_date(projekt.total_duration_start) %>
+    <div class="sidebar-projekt-phase <%= start_status %>">
       <div class='sidebar-projekt-phase-status' aria-hidden="true">
+        <% if start_status == "-completed" %>
+          <i class="fas fa-check sidebar-projekt-phase-status-icon"></i>
+        <% end %>
       </div>
       <div class='sidebar-projekt-phase-details'>
         <span class='sidebar-projekt-phase-name'>
@@ -21,53 +21,58 @@
     </div>
   <% end %>
 
-  <% index = 0 %>
+  <% phases.each_with_index do |phase, index| %>
+    <% next if phase.name == 'budget_phase' && phase.budget.blank? %>
+    <% next unless phase.active? %>
 
-  <% phases.each do |phase | %>
-    <% next if phase.name == 'budget_phase' && phase.budget.blank?  %>
-
-    <% if phase.active? %>
-      <div class="sidebar-projekt-phase <%= 'active' if phase.current? %>" <%= 'aria-expanded="true"' if phase.name == 'budget_phase' %>>
-        <div class='sidebar-projekt-phase-status' aria-hidden="true">
-        </div>
-        <div class='sidebar-projekt-phase-details'>
-          <span class='sidebar-projekt-phase-name'>
-            <%= phase.title %>
-            <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
-              onclick: "$('#footer-content').addClass('show-loader');",
-              class: "js-remote-link-push-state js-sidebar-phase-link",
-              data: {
-                index: index - 1,
-                remote: true,
-                "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
-              } do %>
-              <i class="fas fa-long-arrow-alt-right"></i>
-            <% end %>
-
-          </span>
-          <span class='sidebar-projekt-phase-duration'><%= format_date_range(phase.start_date, phase.end_date) %></span>
-
-          <% if phase.name == 'budget_phase' && phase.budget.present? %>
-
-            <button class='js-icon-toggle-budget-phases toggle-arrow js-prevent-key-scroll'
-                  aria-expanded="false"
-                  aria-label="<%= t('custom.links.projekts_filter.arrow_label') %>" >
-            </button>
-
-            <div class='sidebar-projekt-budget-phases'>
-              <%= render Pages::Projekts::SidebarBudgetPhasesComponent.new(phase.budget) %>
-            </div>
-          <% end %>
-        </div>
-
+    <% status_class = phase_status_class(phase) %>
+    <% is_budget_phase = phase.name == 'budget_phase' && phase.budget.present? %>
+    <div class="sidebar-projekt-phase <%= status_class %>" <%= 'aria-expanded="true"'.html_safe if is_budget_phase %>>
+      <div class='sidebar-projekt-phase-status' aria-hidden="true">
+        <% if status_class == "-completed" %>
+          <i class="fas fa-check sidebar-projekt-phase-status-icon"></i>
+        <% elsif status_class == "-current" %>
+          <span class="sidebar-projekt-phase-status-pulse"></span>
+        <% end %>
       </div>
-    <% end %>
-    <% index += 1 %>
+      <div class='sidebar-projekt-phase-details'>
+        <span class='sidebar-projekt-phase-name'>
+          <%= phase.title %>
+          <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
+            onclick: "$('#footer-content').addClass('show-loader');",
+            class: "js-remote-link-push-state js-sidebar-phase-link",
+            data: {
+              index: index - 1,
+              remote: true,
+              "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
+            } do %>
+            <i class="fas fa-long-arrow-alt-right"></i>
+          <% end %>
+        </span>
+        <span class='sidebar-projekt-phase-duration'><%= phase_duration_text(phase) %></span>
+
+        <% if is_budget_phase %>
+          <button type="button"
+                class='js-icon-toggle-budget-phases toggle-arrow js-prevent-key-scroll'
+                aria-expanded="true"
+                aria-label="<%= t('custom.links.projekts_filter.arrow_label') %>" >
+          </button>
+
+          <div class='sidebar-projekt-budget-phases'>
+            <%= render Pages::Projekts::SidebarBudgetPhasesComponent.new(phase.budget) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 
   <% if projekt.show_end_date_in_frontend? && projekt.total_duration_end.present? %>
-    <div class="sidebar-projekt-phase active">
+    <% end_status = phase_status_for_date(projekt.total_duration_end) %>
+    <div class="sidebar-projekt-phase <%= end_status %>">
       <div class='sidebar-projekt-phase-status' aria-hidden="true">
+        <% if end_status == "-completed" %>
+          <i class="fas fa-check sidebar-projekt-phase-status-icon"></i>
+        <% end %>
       </div>
       <div class='sidebar-projekt-phase-details'>
         <span class='sidebar-projekt-phase-name'>

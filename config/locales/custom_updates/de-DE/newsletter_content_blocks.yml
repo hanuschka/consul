@@ -1,0 +1,16 @@
+de:
+  custom:
+    newsletters:
+      content_block_templates_selector:
+        title: Wählen Sie eine E-Mail-Inhaltsblockvorlage aus
+        tabs:
+          email_defaults: Standard
+        saved_content_blocks:
+          global_explanation: Interne Inhaltsblockvorlagen für Newsletter, die für alle Administratoren sichtbar sind.
+          user_explanation: Eigene Inhaltsblockvorlagen für Newsletter, die nur für Sie sichtbar sind.
+      content_block_editor:
+        add_with_ai_title: Inhaltsblock mit KI erstellen
+        add_at_top_title: Neuen Inhaltsblock am Anfang hinzufügen
+        start_section_title: Womit möchten Sie Ihren Newsletter beginnen?
+        start_section_add_template: Vorlage auswählen
+        start_section_add_with_ai: Mit KI erstellen

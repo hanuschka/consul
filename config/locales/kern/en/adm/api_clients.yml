@@ -1,0 +1,78 @@
+en:
+  adm:
+    api_clients:
+      flash:
+        created: API client created successfully
+        updated: API client updated successfully
+        deleted: API client deleted successfully
+        token_regenerated: API token regenerated successfully
+      access_level:
+        public_data: Public data
+        admin: Admin
+      index:
+        title: API clients
+        intro: >
+          API clients let external applications access your platform through a REST interface. Each client receives a unique token for authentication and a service user that acts as the author for created content. You can define whether a client has read-only access or full write access to the platform.
+        create_new: Create new API client
+        api_docs_link: API documentation
+        id: API client ID
+        posts_as: Posts as
+        no_api_clients: No API clients available.
+        delete_confirm: >
+          Are you sure you want to delete this API client?
+      new:
+        title: Create new API client
+      edit:
+        title: Edit API client
+      show:
+        auth_token_explanation_text: >
+          Include this token in the Authorization header of your
+          API requests. Use it as a Bearer token
+          in the format: Authorization: Bearer YOUR_AUTH_TOKEN_HERE
+        auth_token_example_title: "HTTP example:"
+        auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
+        service_user_title: Service user
+        service_user_name: Name
+        system_user_title: System user
+        system_user_note: >
+          This API client does not use a dedicated service user.
+          All content created via this client is published under
+          the system user.
+        service_user_login_warning: >
+          Note: you should not log in directly with this
+          service user. Use the API authentication methods instead.
+        service_user_warning_title: Note
+      form:
+        name_description: >
+          Give this API client a unique name. The name is used for identification in the overview and is also used to automatically create a service username. Choose a meaningful name that describes the client's purpose — e.g. "Website frontend" or "Mobile app".
+        access_level_description: >
+          Defines which permissions the API client receives. "Public data" allows only read-only access to publicly available content (GET requests only). "Admin" grants full access to retrieve, create, update, and delete all resources. Only use the Admin level if the client actually needs write access.
+        service_user_explanation: >
+          This service user is linked to this API client
+          and is used for API authentication.
+        service_user_email_description: >
+          Enter a valid email address for the automatically created service user account. The service user is used as the author for all content created via this API client — e.g. proposals, comments, or votes. The address must be unique and must not already be used by another account.
+        service_user_section_title: Service user
+        service_user_section_description: >
+          The service user is the public author identity of this API client:
+          all content created via the API — e.g. proposals or comments — is
+          published under this user. It cannot be used to log in directly.
+        service_user_avatar_title: Avatar
+        service_user_background_image_title: Background image
+        use_system_user_label: Use system user
+        use_system_user_description: >
+          When enabled, content created via this API client is published
+          under the system user. Disable this option to create a dedicated
+          service user for this client.
+        system_user_note: >
+          All content created via this API client is published under
+          this system user.
+        regenerate_token: Regenerate token
+        regenerate_token_explanation: >
+          Creates a new token and invalidates the current one.
+          Use this if the token has been compromised or
+          to rotate credentials regularly.
+        regenerate_token_confirmation: >
+          Are you sure you want to regenerate this token?
+          All existing integrations using the old token
+          will stop working.

@@ -46,30 +46,51 @@ ul.no-ul-style {
     }
   }
 
-  .notice-container {
-    z-index: 100;
+  .toast-stack {
     top: 110px;
+    // Align the stack's right edge with the centered content container
+    // (main, .top-bar: max-width 1245px in _layout.scss). Below 1285px
+    // (= 1245 + 2 * 20) keep a 20px viewport gutter; above it, track the
+    // container edge. (Bare calc + media query is LibSass/sassc-safe;
+    // `max()` is not, as sassc evaluates it as a Sass function.)
     right: 20px;
-    position: absolute;
+
+    @media(min-width: 1285px) {
+      right: calc((100% - 1245px) / 2);
+    }
 
     @media(max-width: $mobile-viewport-start) {
-      right: 10px;
-      left: 10px;
+      right: 12px;
+      left: 12px;
     }
   }
 
   &:has(.projekt-page--admin-topbar)  {
-    .notice-container {
+    .toast-stack {
       top: 110px + $admin-topbar-height;
     }
 
     .custom-fixed-tabs--content {
       top: 60px + $admin-topbar-height;
     }
+
+    // Mirror the touch-viewport bump of --admin-topbar-height (48px -> 56px)
+    // for these Sass-var consumers, which are evaluated at compile time and
+    // therefore can't follow the runtime CSS custom property. Breakpoint kept
+    // in sync with _admin_topbar.scss ($small-tablet-viewport-start = 750px).
+    @media (max-width: $small-tablet-viewport-start) {
+      .toast-stack {
+        top: 110px + $admin-topbar-height + 8px;
+      }
+
+      .custom-fixed-tabs--content {
+        top: 60px + $admin-topbar-height + 8px;
+      }
+    }
   }
 
 
-  .wrapper.has-custom-fixed-tabs .notice-container {
+  .wrapper.has-custom-fixed-tabs .toast-stack {
     @media screen and (max-width: $small-tablet-viewport-start) {
       top: 170px;
     }

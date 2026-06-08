@@ -1,0 +1,193 @@
+en:
+  adm:
+    projekts:
+      title: Projects
+      home:
+        title: Welcome to the projects area
+        stats:
+          total: Total
+          current: Active
+          expired: Expired
+          draft: Draft
+        quick_links:
+          new: New project
+          all: All projects
+          current: Active projects
+          import_projekt: Import project from file
+      menu:
+        aria_label: Projects navigation
+        items:
+          home: Home
+          projekts: Projects
+          managers: Team
+          landing_pages: Topic pages
+          settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+      landing_pages:
+        index:
+          title: Topic pages
+          hint_title: About topic pages
+          hint_text: >
+            Topic pages let you target specific audiences or places within your platform. For example, dedicated pages can be created for youth participation, urban planning procedures, or individual neighborhoods — each with its own background image, logo, and individual texts. The design options are similar to the general homepage and create room for visual and verbal differentiation.
+          table:
+            header:
+              name: Topic pages
+              url: URL
+              status: Status
+            no_landing_pages: No topic pages have been created yet.
+        edit:
+          title: Edit topic page
+          slug_label: Topic page URL
+          slug_hint: Defines the last part of the web address (slug) of this topic page, e.g. "youthparticipation". The full URL is then e.g. "your-domain.com/youthparticipation". The URL must not contain spaces or special characters.
+        update:
+          success: The value was updated successfully.
+      projekts:
+        index:
+          title: Projects overview
+          hint_text: >
+            Here you manage all participation projects on the platform. Each project can be
+            configured with duration, participation phases, visibility, and project managers.
+            Use the status toggle to activate or deactivate projects — deactivated projects
+            are not visible on the frontend. Clicking the project title opens the settings;
+            clicking the preview image opens the public project page.
+          new_projekt: Create new project
+          import_projekt: Import project from file
+          no_projekts_title: No projects available
+          no_projekts_description: Create a new project to start configuring participation phases and settings.
+          no_results_filtered_title: No projects match the current search
+          no_results_filtered_description: Adjust or remove the search to see more projects.
+          table:
+            status: Status
+            actions: Actions
+        import_projekt:
+          title: Import project from file
+          dt_not_connected: "The DemokratieToday service is not connected. Please set up the connection first."
+          error_title: "Import failed"
+          try_again: "Try again"
+        new:
+          title: Create new project
+          intro_title: Create a new participation project
+          intro_text: Projects are the central building block of your participation platform. Each project can contain multiple participation phases — e.g. polls, proposals, votes, or events. After creation you configure the duration, visibility, restrictions, and individual phases. Projects can be assigned to a topic page or shown standalone on the homepage.
+          name_label: Project name
+          name_hint: The project name is shown as the title on the project page, in the projects overview, and in the navigation. It should clearly and understandably name the topic of the participation so citizens can see at a glance what it's about. The name can be changed at any time in the project settings after creation.
+          name_placeholder: e.g. Citizen participation urban development 2026
+          create_projekt: Create project
+        create:
+          success: The project was created successfully.
+        projekt:
+          top_level_projekt: Top-level project
+          frontend_page: Project page
+          details: Project details
+          visibility: Visibility & display
+          projekt_managers: Project managers
+          map: Map
+          projekt_phases: Participation phases
+          images: Images
+          documents: Documents
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this project? All associated phases will also be deleted.
+        tabs:
+          frontend_page: Go to project page
+          details: Project details
+          visibility: Visibility
+          projekt_managers: Project managers
+          map: Map
+          phases: Participation phases
+          images: Images
+          documents: Documents
+        details:
+          title: Project details
+          hint_title: About project details
+          hint_text: >
+            On this page you configure the basic settings of the project:
+            the homepage title, project duration, assignment to topic pages, and
+            geographic categorization. These details determine how the project is
+            displayed and found on the platform.
+          duration_label: Project duration
+          duration_description: Defines the period during which the project is visible and accessible on the platform — regardless of whether an active participation phase is running. The start and end date determine when the project appears in the public projects overview and can be accessed by users.
+          landing_pages_label: Assignment to topic pages
+          landing_pages_description: Optionally assigns the project to one or more topic pages. Topic pages bundle thematically related projects on their own entry page — e.g. for youth participation or urban development. A project can be assigned to multiple topic pages at once.
+          geo_restriction_label: Area assignment
+          geo_restriction_description: Assigns the project to a geographic area. This assignment is shown on the projects overview page as a filter option, letting users search specifically for projects in particular neighborhoods or the whole city. The assignment does not affect the project's visibility.
+          geo_restriction:
+            geozone_affiliated_no_affiliation: No area assignment
+            geozone_affiliated_entire_city: Citywide
+            geozone_affiliated_only_geozones: Assignment to neighborhood
+            geozones_label: Areas
+            geozones_empty: No areas have been created yet. These can be managed in the general settings.
+            districts_label: Neighborhoods
+            districts_empty: No neighborhoods have been created yet. These can be managed in the general settings.
+        visibility:
+          title: Visibility & display
+          hint_title: About visibility
+          hint_text: >
+            Here you define where and to whom the project is visible. You can control
+            whether it appears on the projects overview page, the homepage, or in
+            individual lists. You can also restrict visibility to specific user groups
+            and enable or disable search-engine indexing.
+          individual_groups_label: Restrict visibility to strong groups
+          individual_groups_description: Restricts project visibility to selected user groups previously created under "Strong groups". Only members of the assigned groups can see and participate in the project. Without a selection, the project remains visible to all registered users.
+        projekt_managers:
+          title: Project managers
+          hint_title: About project managers
+          hint_text: >
+            Project managers receive specific permissions for this project, e.g.
+            administration, moderation, or creating contributions on behalf of others.
+            Assign individual rights to registered project managers here. New
+            project managers can be created via the "Project managers" menu item in the sidebar.
+          no_managers_title: No project managers available
+          no_managers_description: Create a new project manager under "Project managers" in the sidebar, then assign them to the project.
+          no_managers_link: Create project manager
+          assignment:
+            hint: Define here which rights should be assigned to the selected project manager for this project. The selection determines which actions are available — for example administering the project, moderating content, creating contributions on behalf of others, receiving notifications, or accessing GraphQL. Multiple rights can be combined.
+            permissions:
+              manage: Administer project
+              moderate: Moderate content
+              create_on_behalf_of: Create contributions on behalf of others
+              get_notifications: Receive notifications
+              access_graphql: Get GraphQL access
+              review: Add offline votes
+        map:
+          title: Map
+          hint_title: About the map view
+          hint_text: >
+            Configure the map view for this project here. When creating a new project, the base settings of the
+            default map at the application level are copied automatically. As soon as you adjust the map here in the
+            project, later changes to the default map are no longer applied to this project. You can also add map
+            layers to, for example, visually highlight geographic data or project locations.
+        phases:
+          title: Participation phases
+          intro_title: About participation phases
+          intro_text_p1: "In the table below you manage the individual participation phases of a project. Each phase is assigned to its own tab in the project footer and can be individually shown or hidden. Three central toggles help control the behavior and visibility of phases:"
+          intro_text_standard_title: Default
+          intro_text_standard_description: Only one phase can be marked as the default at a time. This phase is automatically opened for incoming users and shown in the foreground when the project page is opened.
+          intro_text_active_title: Active
+          intro_text_active_description: When this toggle is enabled, the respective participation phase is technically active and directly accessible to users on the frontend.
+          intro_text_visible_title: Visibility in the project
+          intro_text_visible_description: Controls whether the phase is shown in the project footer (tab bar). When disabled, the phase remains technically active and can be accessed directly via a URL but is not advertised via a visible tab. This is useful for special formats like contests after a vote.
+          intro_text_p2: The combination of these three settings enables flexible control of flow, visibility, and user guidance within a participation project.
+          new_phase: Create new phase
+          no_phases_title: No participation phases available
+          no_phases_description: Create a new participation phase to let citizens participate in this project.
+          table:
+            phase_tab_name: Participation phases
+            start_date: Start
+            end_date: End
+            restriction: Restriction
+            default: Default
+            active: Active
+            visible: Visible
+            actions: Actions
+        images:
+          title: Images
+        documents:
+          title: Documents
+        update:
+          success: Project updated successfully.
+        notify_reviewers:
+          success: Notification sent successfully.
+        destroy:
+          success: Project deleted successfully.

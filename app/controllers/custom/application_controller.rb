@@ -1,7 +1,6 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-  include EmbeddedAuth
   before_action :sanitize_pagination_params
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
@@ -65,8 +64,6 @@ class ApplicationController < ActionController::Base
     end
 
     def set_projekts_for_overview_page_navigation
-      return if embedded?
-
       @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
                                                       .includes([page: :translations])
       @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user).includes([page: :translations])
@@ -130,10 +127,26 @@ class ApplicationController < ActionController::Base
       session[:back_path] = SessionUrlTruncator.truncate(back_path)
     end
 
+    BOT_USER_AGENT_REGEX = /
+      bot|crawl|spider|slurp|fetch|preview|monitor|
+      google|bing|yandex|baidu|duckduckbot|
+      facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|telegram|discordbot|
+      curl|wget|python|java\/|go-http-client|httpclient|ruby|okhttp|
+      pingdom|uptimerobot|statuscake|newrelic|datadog
+    /ix.freeze
+
+    def bot_request?
+      return true if request.head?
+
+      ua = request.user_agent.to_s
+      ua.blank? || ua.match?(BOT_USER_AGENT_REGEX)
+    end
+
     def auto_sign_in_guest_for(projekt_phase)
       return if current_user.present?
       return if projekt_phase.blank?
       return unless projekt_phase.user_status == "guest"
+      return if bot_request?
       # return unless projekt_phase.current?
 
       guest_key = "guest_#{SecureRandom.uuid}"
@@ -146,7 +159,7 @@ class ApplicationController < ActionController::Base
       @guest_user.save!
       session[:guest_user_id] = guest_key
 
-      @current_ability = Ability.new(current_user)
+      @current_ability = Ability.new(@guest_user)
     rescue StandardError => e
       Sentry.capture_exception(e)
     end
@@ -158,6 +171,7 @@ class ApplicationController < ActionController::Base
         terms_general: params[:user][:terms_general],
         email: "#{guest_key}@example.com",
         guest: true,
+        guest_user_agent: request.user_agent.to_s.first(500),
         confirmed_at: Time.now.utc,
         skip_password_validation: true
       )

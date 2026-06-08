@@ -25,6 +25,22 @@ class InternalApiClient < ApplicationRecord
     dt_connected?
   end
 
+  def public_data?
+    false
+  end
+
+  def admin?
+    true
+  end
+
+  def can_read_public_data?
+    true
+  end
+
+  def content_author
+    User.system
+  end
+
   def mark_as_registered!(service_api_token)
     update!(
       registration_status: :registered,

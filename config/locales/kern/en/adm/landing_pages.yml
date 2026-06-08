@@ -1,0 +1,74 @@
+en:
+  adm:
+    landing_pages:
+      title: Topic pages
+      home:
+        title: Welcome to topic pages
+        stats:
+          total: Total
+          published: Published
+          draft: Draft
+        quick_links:
+          new: New topic page
+          all: All topic pages
+      menu:
+        aria_label: Topic pages navigation
+        items:
+          home: Home
+          landing_pages: Topic pages
+          managers: Team
+          settings: Configuration
+      settings:
+        tabs:
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+      landing_pages:
+        index:
+          title: Topic pages
+          new_landing_page: Create new topic page
+          page_hint: "Topic pages are standalone sections within your platform — for target groups (e.g. youth participation), topics (e.g. urban planning), or areas (e.g. individual municipalities at county level). Each topic page can have its own background image, logo, navigation, and individual texts. Use drag & drop to adjust the order."
+          no_items_title: No topic pages available
+          no_items_description: Topic pages will be shown here as soon as they are created.
+          table:
+            header:
+              name: Topic pages
+              url: URL
+              status: Status
+            no_landing_pages: No topic pages have been created yet.
+        new:
+          title: Create new topic page
+          submit: Create topic page
+          hints:
+            title: The title serves as the internal label for the topic page and can optionally be shown as the main heading above the background image. Visibility on the frontend can be controlled in the page settings. Choose a meaningful title that clearly names the topic or target group, e.g. Youth participation or Participation in Exampletown.
+            slug: The URL path determines the web address of the topic page, e.g. youthparticipation results in the URL your-domain.com/youthparticipation. Use a short, unique, and readable path without spaces or special characters. Only lowercase letters, numbers, and hyphens are allowed. The path can be changed after creation.
+        create:
+          success: The topic page was created successfully.
+        edit:
+          title: Edit topic page
+          page_hint: "Here you configure the selected topic page. You can adjust logos, background images, title, and subtitle, as well as manage navigation items and content cards. Use the navigation settings to determine which links are shown on the topic page. Content cards control how projects are displayed on the page."
+          managers_title: Topic-page managers
+          managers_description: Define which topic-page managers get access to this page. Selected managers can edit content, navigation, images, and texts of this topic page. Managers must have been created beforehand under Topic pages > Managers. Changes to the assignment take effect immediately.
+          managers_empty_title: No topic-page managers available
+          managers_empty_description: No topic-page managers have been created yet. First create a manager, then assign them to this topic page.
+          managers_empty_link: Create manager
+        navbar_items:
+          title: Navigation
+          description: >
+            Define which navigation entries are shown on this topic page, e.g. links to projects, external pages, or anchor points.
+            Use drag & drop to adjust the order of entries. Use the "Edit" button to configure title, URL, and other options.
+          new_item: Create new entry
+        update:
+          success: The value was updated successfully.
+      managers:
+        index:
+          title: Topic-page managers
+          page_hint: Here you manage topic-page managers. Managers can edit their assigned topic pages and maintain their content. Users with the Manage all option have access to all topic pages. Add new managers by searching for registered users via the Create button and assigning them.
+          new_link: Add new topic-page manager
+          manage_all_landing_pages: Manage all
+          no_landing_page_managers: No topic-page managers available.
+          no_items_title: No topic-page managers available
+          no_items_description: Topic-page managers will be shown here as soon as they are added.
+        new:
+          title: Add new team member
+          search_label: Search users
+          search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as topic-page managers. Managers can edit and maintain content on their assigned topic pages.

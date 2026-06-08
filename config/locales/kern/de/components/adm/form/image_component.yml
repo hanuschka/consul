@@ -1,0 +1,8 @@
+de:
+  components:
+    adm:
+      form:
+        image_component:
+          replace: Bild ersetzen
+          remove: Bild entfernen
+          add: Bild hinzufügen

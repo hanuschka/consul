@@ -6,6 +6,13 @@
 
 <div class="kern-container mb-5">
   <% if @pins.any? %>
+    <div class="d-flex align-items-center justify-content-end mb-3">
+      <a href="<%= projekt_point_of_interest_pins_adm_projekts_phase_path(@projekt_phase, format: :geojson, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">map</span>
+        <%= t(".download_geojson") %>
+      </a>
+    </div>
+
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
         <thead class="kern-table__head">

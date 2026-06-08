@@ -1,0 +1,14 @@
+en:
+  adm:
+    officing_managers:
+      index:
+        title: Team
+        empty_title: "No polling officers available"
+        empty_description: "Use the button above to add a new polling officer."
+        new_link: Add new polling officer
+      new:
+        title: Add new team member
+        search_label: Search users
+        search_description: Search by email or username for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only already-registered users can be added as polling officers. Polling officers can run on-site votes and record votes on behalf of citizens.
+      search:
+        no_results: No users found matching these criteria.

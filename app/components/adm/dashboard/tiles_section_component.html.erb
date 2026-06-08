@@ -1,0 +1,20 @@
+<div class="adm-dashboard__section">
+  <div class="adm-dashboard__section-header<%= " adm-dashboard__section-header--with-stats" if stats.any? %>">
+    <div class="adm-dashboard__section-header-title">
+      <span class="material-symbols-outlined" aria-hidden="true"><%= icon %></span>
+      <h3><%= title %></h3>
+    </div>
+
+    <% if stats.any? %>
+      <%= render Adm::Dashboard::StatPillsComponent.new(stats: stats) %>
+    <% end %>
+  </div>
+  <% if hint.present? %>
+    <p class="adm-dashboard__hint"><%= hint %></p>
+  <% end %>
+  <div class="adm-module-bento">
+    <% tiles.each do |tile| %>
+      <%= render Adm::ModuleBentoCardComponent.new(**tile) %>
+    <% end %>
+  </div>
+</div>

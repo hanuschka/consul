@@ -45,10 +45,21 @@
   accept_button_class: "js-content-block-accept-image-alt-edit",
   cancel_button_class: "js-content-block-cancel-image-alt-edit"
 ) do %>
+  <div class="content-block-image-alt-popup--intro">
+    <i class="fas fa-universal-access content-block-image-alt-popup--intro-icon"></i>
+    <p class="content-block-image-alt-popup--intro-text">
+      <%= t('custom.projekts.page.content_block_image_alt_popup.description') %>
+    </p>
+  </div>
+
   <div>
     <label class="studio-edit-popup--label">
       <%= t('custom.projekts.page.content_block_image_alt_popup.alt_text') %>:
-      <textarea class="js-content-block-image-alt-input" rows="2"></textarea>
+      <textarea
+        class="js-content-block-image-alt-input"
+        rows="2"
+        placeholder="<%= t('custom.projekts.page.content_block_image_alt_popup.placeholder') %>"
+      ></textarea>
     </label>
   </div>
 <% end %>

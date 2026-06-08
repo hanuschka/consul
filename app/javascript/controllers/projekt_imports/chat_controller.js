@@ -41,7 +41,6 @@ export default class extends Controller {
     this.lastImportStatus = null
     this.pollErrorCount = 0
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
-    this.scrollToBottom()
     this.scheduleMessagesPoll()
   }
 

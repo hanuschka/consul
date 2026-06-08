@@ -73,7 +73,7 @@
         <% big_projekt_image_url =
           polymorphic_path(@custom_page.image.attachment.variant(
             resize_to_limit: [1750, 900],
-            saver: { quality: 80 },
+            saver: { quality: 90 },
             strip: true,
             format: "jpeg"
           ))
@@ -98,7 +98,7 @@
             Shared::ResourceImageComponent.new(
               image_url: @custom_page.image&.attachment&.variant(
                 resize_to_fill: [590, 355],
-                saver: { quality: 85 },
+                saver: { quality: 95 },
                 strip: true,
                 format: "jpeg"
               ),

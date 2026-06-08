@@ -36,8 +36,10 @@
   }
 }
 
-.kern-table__cell:has(.kern-table__actions-menu)
+.kern-table__cell:has(.kern-table__actions-menu),
+.kern-table__cell:has(.adm-round-icon-button)
 {
- padding-top: 5px;
- padding-bottom: 0;
+  padding-top: 8px;
+  padding-bottom: 0;
+  // vertical-align: middle;
 }

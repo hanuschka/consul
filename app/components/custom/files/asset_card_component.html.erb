@@ -27,23 +27,29 @@
     <% end %>
 
     <div class="files-asset-card--badges">
-      <span
-        class="files-asset-card--admin-badge"
-        title="<%= t("files.card.admin_badge") %>"
-        aria-label="<%= t("files.card.admin_badge") %>"
-      >
-        <i class="fa fa-shield-alt"></i>
-      </span>
+      <rich-tooltip>
+        <span
+          class="files-asset-card--admin-badge"
+          aria-label="<%= t("files.card.admin_badge") %>"
+        >
+          <i class="fa fa-shield-alt"></i>
+        </span>
+        <template><%= t("files.card.admin_badge") %></template>
+      </rich-tooltip>
 
       <% if picture? %>
-        <span
-          class="files-asset-card--alt-warning-badge js-files-alt-warning-badge"
-          title="<%= t("files.card.alt_text_missing_hint") %>"
-          aria-label="<%= t("files.card.alt_text_missing_hint") %>"
+        <rich-tooltip
+          class="js-files-alt-warning-badge"
           <%= "hidden" if alt_text.present? %>
         >
-          <i class="fa fa-exclamation-triangle"></i>
-        </span>
+          <span
+            class="files-asset-card--alt-warning-badge"
+            aria-label="<%= t("files.card.alt_text_missing_hint") %>"
+          >
+            <i class="fa fa-exclamation-triangle"></i>
+          </span>
+          <template><%= t("files.card.alt_text_missing_hint") %></template>
+        </rich-tooltip>
       <% end %>
     </div>
 

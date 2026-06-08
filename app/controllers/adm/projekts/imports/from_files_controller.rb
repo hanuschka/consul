@@ -60,7 +60,7 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
 
     if @projekt_import.completed? && @projekt_import.projekt_id.present?
       payload[:projekt_id] = @projekt_import.projekt_id
-      payload[:redirect_path] = details_adm_projekts_projekt_path(@projekt_import.projekt_id)
+      payload[:redirect_path] = projekt_path(@projekt_import.projekt_id)
     end
 
     payload[:error] = @projekt_import.error_message if @projekt_import.failed?

@@ -112,3 +112,22 @@
     }
   }
 }
+
+.adm-icon-rail__item-tooltip {
+  display: flex;
+}
+
+.adm-icon-rail__item-tooltip .rich-tooltip--body {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.adm-icon-rail__tooltip-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-icon-rail__tooltip-label .material-symbols-outlined {
+  font-size: 22px;
+}

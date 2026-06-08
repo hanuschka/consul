@@ -2,6 +2,8 @@
 
 import "../assets/javascripts/lib/files/filter_serializer"
 
+import "../assets/javascripts/custom/rich_tooltip"
+
 import "./controllers"
 
 import "@hotwired/turbo-rails"

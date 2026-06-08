@@ -2,6 +2,10 @@ rich-tooltip {
   display: inline-block;
 }
 
+rich-tooltip[hidden] {
+  display: none;
+}
+
 .rich-tooltip--body {
   position: fixed;
   inset: auto;
@@ -12,7 +16,7 @@ rich-tooltip {
   max-width: 320px;
   margin: 0;
   margin-block-end: 8px;
-  padding: 15px 20px;
+  padding: 10px 15px;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.45;

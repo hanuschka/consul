@@ -5,7 +5,7 @@
 
   const SUPPORTS_POPOVER = HTMLElement.prototype.hasOwnProperty("showPopover");
   const SUPPORTS_ANCHOR = window.CSS && CSS.supports("anchor-name: --rich-tooltip-probe");
-  const HIDE_DELAY = 150;
+  const DEFAULT_HIDE_DELAY = 150;
   const DEFAULT_SHOW_DELAY = 600;
 
   class RichTooltip extends HTMLElement {
@@ -30,10 +30,18 @@
 
       if (!this.trigger || !template) return
 
-      this.showDelay = parseInt(this.getAttribute("delay")) || DEFAULT_SHOW_DELAY
+      this.showDelay = this.parseDelay("delay", DEFAULT_SHOW_DELAY)
+      this.hideDelay = this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
+      this.placement = this.getAttribute("placement") || "top"
 
       this.buildTooltipBody(template)
       this.bindEvents()
+    }
+
+    parseDelay(name, fallback) {
+      const value = parseInt(this.getAttribute(name), 10)
+
+      return Number.isNaN(value) ? fallback : value
     }
 
     findTrigger() {
@@ -73,7 +81,17 @@
         const anchorName = `--rich-tooltip-anchor-${tooltipIdCounter}`
         this.trigger.style.setProperty("anchor-name", anchorName)
         body.style.setProperty("position-anchor", anchorName)
+        this.applyAnchorPlacement(body)
       }
+    }
+
+    applyAnchorPlacement(body) {
+      if (this.placement !== "right") return
+
+      body.style.setProperty("position-area", "inline-end")
+      body.style.setProperty("position-try-fallbacks", "flip-inline")
+      body.style.marginBlockEnd = "0"
+      body.style.marginInlineStart = "8px"
     }
 
     bindEvents() {
@@ -92,7 +110,7 @@
 
     scheduleHide() {
       clearTimeout(this.showTimeout)
-      this.hideTimeout = setTimeout(this.hide.bind(this), HIDE_DELAY)
+      this.hideTimeout = setTimeout(this.hide.bind(this), this.hideDelay)
     }
 
     cancelHide() {
@@ -130,6 +148,17 @@
 
     positionWithRect() {
       const rect = this.trigger.getBoundingClientRect()
+
+      if (this.placement === "right") {
+        Object.assign(this.tooltipBody.style, {
+          position: "fixed",
+          left: `${rect.right + 8}px`,
+          top: `${rect.top + rect.height / 2}px`,
+          transform: "translateY(-50%)"
+        })
+
+        return
+      }
 
       Object.assign(this.tooltipBody.style, {
         position: "fixed",

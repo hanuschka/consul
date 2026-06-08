@@ -37,6 +37,7 @@ de:
             user_label: "Sie"
             confirm_import: "Projekt jetzt importieren? Damit wird ein neues Projekt mit allen Phasen und Inhaltsblöcken erstellt."
             confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
+            generate_image_toggle: "Titelbild"
             commands:
               regenerate: "Neu generieren"
               summarize: "Dokument zusammenfassen"

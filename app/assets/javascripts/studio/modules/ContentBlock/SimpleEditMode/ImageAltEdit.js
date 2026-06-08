@@ -1,6 +1,8 @@
 App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
   currentImg: null,
-  missingAltHint: "Alt-Text fehlt – bitte Bildbeschreibung hinzufügen",
+  altTitle: "Alt-Text",
+  missingAltTitle: "Alt-Text fehlt",
+  missingAltText: "Bitte fügen Sie eine kurze Bildbeschreibung hinzu.",
 
   initialize() {
     this.initEventListeners()
@@ -27,6 +29,22 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
     return document.querySelector(".js-img-overlay-alt");
   },
 
+  getTooltipElement() {
+    return document.querySelector(".js-image-edit-overlay rich-tooltip");
+  },
+
+  getTooltipContainerElement() {
+    return document.querySelector(".js-image-alt-tooltip");
+  },
+
+  getTooltipTitleElement() {
+    return document.querySelector(".js-image-alt-tooltip-title");
+  },
+
+  getTooltipTextElement() {
+    return document.querySelector(".js-image-alt-tooltip-text");
+  },
+
   handleAltButtonClick(e) {
     e.stopImmediatePropagation()
     e.stopPropagation()
@@ -37,6 +55,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
 
     this.currentImg = img
 
+    this.hideTooltip()
     this.showPopupForImage(img)
   },
 
@@ -96,16 +115,31 @@ App.ContentBlockEditor.SimpleEditMode.ImageAltEdit = {
 
   updateAltButtonState(img) {
     const altButton = this.getAltButton()
+    const tooltipContainer = this.getTooltipContainerElement()
     const altText = (img.getAttribute("alt") || "").trim()
+
+    if (!tooltipContainer) return
 
     if (altText) {
       altButton.classList.remove("-warning")
       altButton.classList.add("-active")
-      altButton.setAttribute("data-hint", altText)
+      tooltipContainer.classList.remove("-warning")
+      this.getTooltipTitleElement().textContent = this.altTitle
+      this.getTooltipTextElement().textContent = altText
     } else {
       altButton.classList.remove("-active")
       altButton.classList.add("-warning")
-      altButton.setAttribute("data-hint", this.missingAltHint)
+      tooltipContainer.classList.add("-warning")
+      this.getTooltipTitleElement().textContent = this.missingAltTitle
+      this.getTooltipTextElement().textContent = this.missingAltText
+    }
+  },
+
+  hideTooltip() {
+    const tooltipElement = this.getTooltipElement()
+
+    if (tooltipElement && tooltipElement.tooltipBody) {
+      tooltipElement.hide()
     }
   },
 }

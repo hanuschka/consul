@@ -4,6 +4,11 @@ import { Controller } from "@hotwired/stimulus"
 // persistently-down endpoint isn't hammered every 2s forever.
 const MAX_POLL_ERRORS = 5
 
+// Treat the user as "following" the conversation when the messages container
+// is scrolled within this many px of the bottom. Re-rendered messages only
+// auto-scroll when the user is already near the bottom.
+const SCROLL_BOTTOM_THRESHOLD = 80
+
 // Chat screen: polls /messages?after=:last_id every 2s, supports mid-chat
 // document attach, four command buttons, and the final import overlay.
 export default class extends Controller {
@@ -116,6 +121,7 @@ export default class extends Controller {
     if (m.role === "user") this.removeOptimisticBubbles()
 
     const existing = this.messagesTarget.querySelector(`[data-message-id="${m.id}"]`)
+    const wasNearBottom = this.isNearBottom()
     const template = document.createElement("template")
     template.innerHTML = m.html.trim()
     const fresh = template.content.firstElementChild
@@ -128,7 +134,13 @@ export default class extends Controller {
     }
 
     if (m.id > this.lastMessageId) this.lastMessageId = m.id
-    this.scrollToBottom()
+
+    if (!existing || wasNearBottom) this.scrollToBottom()
+  }
+
+  isNearBottom() {
+    const el = this.messagesTarget
+    return el.scrollHeight - el.scrollTop - el.clientHeight < SCROLL_BOTTOM_THRESHOLD
   }
 
   scrollToBottom() {

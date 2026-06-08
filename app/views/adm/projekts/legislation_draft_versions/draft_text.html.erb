@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: @draft_version.title, breadcrumbs: @breadcrumbs, narrow: true) do |header| %>
+<%= render Adm::HeaderComponent.new(title: @draft_version.title, breadcrumbs: @breadcrumbs, back_button_url: legislation_process_draft_versions_adm_projekts_phase_path(@projekt_phase), narrow: true) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".hint.intro") %></p>
     <table class="kern-table kern-table--compact">

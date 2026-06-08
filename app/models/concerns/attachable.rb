@@ -26,7 +26,8 @@ module Attachable
         end
       }
 
-    before_validation :set_attachment_from_cached_attachment, if: -> { cached_attachment.present? }
+    before_validation :set_attachment_from_cached_attachment,
+      if: -> { cached_attachment.present? && !attachment.attached? }
     after_validation :verify_presence # custom
   end
 

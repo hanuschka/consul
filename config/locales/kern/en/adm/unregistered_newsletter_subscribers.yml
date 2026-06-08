@@ -1,0 +1,29 @@
+en:
+  adm:
+    unregistered_newsletter_subscribers:
+      index:
+        title: Unregistered subscribers
+        intro_text_p1: >
+          Here you see people who have subscribed to the newsletter without having a user account on
+          the platform. These subscribers entered their email address via the public newsletter form
+          on the homepage.
+        intro_text_p2: >
+          The confirmation status shows whether the email address has been verified via double opt-in.
+          Only confirmed subscribers actually receive newsletters. Use the CSV export to download the
+          list for external systems.
+        table:
+          id: ID
+          email: Email
+          confirmed: Confirmed
+          created_at: Created on
+          actions: Actions
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this subscriber?
+          confirmed_yes: Yes
+          confirmed_no: No
+        empty: No unregistered subscribers available.
+        empty_title: No unregistered subscribers available
+        empty_description: "As soon as people without a user account sign up via the newsletter form on the homepage, they'll appear here."
+        download_csv: Download CSV
+      destroy:
+        success: Subscriber deleted successfully.

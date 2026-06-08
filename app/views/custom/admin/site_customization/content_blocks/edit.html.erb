@@ -2,21 +2,16 @@
   <%= t("admin.header.title") %> - <%= t("admin.menu.site_customization.content_blocks") %> - <%= @content_block.try(:name) || @content_block.heading.try(:name) %> (<%= @content_block.locale %>)
 <% end %>
 
-<% unless embedded? %>
-  <% back_url = params[:return_to] %>
-  <%= back_link_to (back_url.presence || admin_site_customization_content_blocks_path)  %>
+<% back_url = params[:return_to] %>
+<%= back_link_to (back_url.presence || admin_site_customization_content_blocks_path)  %>
 
-  <%= link_to t("admin.site_customization.content_blocks.index.delete"),
-              (@is_heading_content_block ? admin_site_customization_delete_heading_content_block_path(@content_block.id) : admin_site_customization_content_block_path(@content_block, return_to: (params[:return_to]))),
-              method: :delete,
-              class: "delete float-right margin-bottom" %>
-<% end %>
+<%= link_to t("admin.site_customization.content_blocks.index.delete"),
+            (@is_heading_content_block ? admin_site_customization_delete_heading_content_block_path(@content_block.id) : admin_site_customization_content_block_path(@content_block, return_to: (params[:return_to]))),
+            method: :delete,
+            class: "delete float-right margin-bottom" %>
 
-
-<% unless embedded? %>
-  <div class="small-12 column">
-    <h2><%= t("admin.site_customization.content_blocks.edit.title") %></h2>
-  </div>
-<% end %>
+<div class="small-12 column">
+  <h2><%= t("admin.site_customization.content_blocks.edit.title") %></h2>
+</div>
 
 <%= render "custom/admin/site_customization/content_blocks/form_content_block" %>

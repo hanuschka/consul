@@ -18,6 +18,20 @@ App.Utils = {
     });
   },
 
+  getMasterportalSquareMarker() {
+    const size = 42;
+    const half = size / 2;
+    const title = "Masterportal-Pin";
+
+    return L.divIcon({
+      className: "masterportal-square-marker",
+      iconSize: [size, size],
+      iconAnchor: [half, half],
+      popupAnchor: [0, 0],
+      html: '<div role="img" aria-label="' + title + '" title="' + title + '"></div>'
+    });
+  },
+
   getVirtualcityMarkerHTML(color, iconClass) {
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 -10 384 522">' +
                  '<path fill="' + this.hexToRgba(color, 0.8) + '" stroke="#fff" stroke-width="20" d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0z" />' +

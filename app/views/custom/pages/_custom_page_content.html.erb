@@ -10,7 +10,7 @@
         <% if content_blocks.any? %>
           <% content_blocks.each do |content_block| %>
             <div
-              class="projekt-content-block js-projekt-content-block"
+              class="projekt-content-block js-content-block"
               data-id="<%= content_block.id %>"
               data-turbolinks="false"
               <% effective_margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>
@@ -18,7 +18,7 @@
                 style="margin-bottom: <%= effective_margin %>px;"
               <% end %>
             >
-              <%= process_custom_content_if_needed(content_block&.body)&.html_safe %>
+              <%= process_custom_content_if_needed(safe_content_block_body(content_block&.body))&.html_safe %>
             </div>
           <% end %>
         <% end %>

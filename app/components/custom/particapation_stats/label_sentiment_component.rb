@@ -4,19 +4,19 @@ class ParticapationStats::LabelSentimentComponent < ApplicationComponent
   end
 
   def labels_data
-    @labels_data ||= calculate_labels_data
+    query.labels_data
   end
 
   def sentiments_data
-    @sentiments_data ||= calculate_sentiments_data
+    query.sentiments_data
   end
 
   def labels_title
-    @projekt_phase.projekt_labels_label_text
+    query.labels_title
   end
 
   def sentiments_title
-    @projekt_phase.sentiment_label_text
+    query.sentiments_title
   end
 
   def render?
@@ -25,77 +25,7 @@ class ParticapationStats::LabelSentimentComponent < ApplicationComponent
 
   private
 
-  def calculate_labels_data
-    labels = @projekt_phase.projekt_labels.includes(:translations)
-    resource_ids = resources.select(:id)
-
-    label_names = []
-    label_counts = []
-
-    labels.each do |label|
-      count = ProjektLabeling.where(
-        projekt_label_id: label.id,
-        labelable_type: labelable_type,
-        labelable_id: resource_ids
-      ).count
-
-      label_names << label.name
-      label_counts << count
+    def query
+      @query ||= ProjektPhaseStats::LabelSentimentQuery.new(@projekt_phase)
     end
-
-    { labels: label_names, values: label_counts }
-  end
-
-  def calculate_sentiments_data
-    sentiments = @projekt_phase.sentiments.includes(:translations)
-    resource_ids = resources.select(:id)
-
-    sentiment_names = []
-    sentiment_counts = []
-    sentiment_colors = []
-
-    sentiments.each do |sentiment|
-      count = resource_class.where(id: resource_ids, sentiment_id: sentiment.id).count
-
-      sentiment_names << sentiment.name
-      sentiment_counts << count
-      sentiment_colors << sentiment.color
-    end
-
-    { labels: sentiment_names, values: sentiment_counts, colors: sentiment_colors }
-  end
-
-  def resources
-    @resources ||=
-      case @projekt_phase
-      when ProjektPhase::ProposalPhase
-        @projekt_phase.proposals
-      when ProjektPhase::BudgetPhase
-        @projekt_phase.budget&.investments || Budget::Investment.none
-      else
-        Proposal.none
-      end
-  end
-
-  def resource_class
-    case @projekt_phase
-    when ProjektPhase::ProposalPhase
-      Proposal
-    when ProjektPhase::BudgetPhase
-      Budget::Investment
-    else
-      Proposal
-    end
-  end
-
-  def labelable_type
-    case @projekt_phase
-    when ProjektPhase::ProposalPhase
-      "Proposal"
-    when ProjektPhase::BudgetPhase
-      "Budget::Investment"
-    else
-      "Proposal"
-    end
-  end
 end

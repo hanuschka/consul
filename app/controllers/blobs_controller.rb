@@ -52,6 +52,6 @@ class BlobsController < ApplicationController
     end
 
     def allowed_record_types
-      %w[Ckeditor::Asset Document Image]
+      %w[AdminAsset AdminImage Document Image]
     end
 end

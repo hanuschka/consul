@@ -25,6 +25,7 @@ class ProposalsController
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -183,7 +184,7 @@ class ProposalsController
     end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
-      head :not_found, content_type: "text/html" and return
+      redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
     # @notifications = @proposal.notifications
@@ -215,10 +216,8 @@ class ProposalsController
   end
 
   def vote
-    if params[:value] == "no"
-      @follow = Follow.find_by(user: voting_user, followable: @proposal)
-      @follow&.destroy!
-      @voted = !@proposal.register_vote(voting_user, "no")
+    if up_and_down_voting_enabled?
+      @voted = @proposal.register_vote(voting_user, params[:value])
     else
       @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
       @voted = @proposal.register_vote(voting_user, "yes")
@@ -272,5 +271,9 @@ class ProposalsController
       return current_user unless params[:offline_user_id].present?
 
       current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
+    end
+
+    def up_and_down_voting_enabled?
+      @proposal.projekt_phase.feature?("resource.enable_up_and_down_voting")
     end
 end

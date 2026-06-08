@@ -1,0 +1,47 @@
+<%
+  ai_phase_stats = phase["ai_stats"] || {}
+  tone_participation = ai_phase_stats["tone_of_participation"]
+  tone_comments = ai_phase_stats["tone_of_comments"]
+%>
+
+<div class="phase-tone-grid">
+  <% if tone_participation.present? %>
+    <div class="phase-tone-pill">
+      <div
+        class="phase-tone-pill__icon"
+        style="color:<%= accent %>;background:<%= accent_light %>"
+        aria-hidden="true"
+      >
+        <span class="material-symbols-outlined">groups</span>
+      </div>
+      <div class="phase-tone-pill__content">
+        <div class="phase-tone-pill__label">
+          <%= t("custom.participation_stats.tone_of_participation") %>
+        </div>
+        <div class="phase-tone-pill__value">
+          <%= tone_participation %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if tone_comments.present? %>
+    <div class="phase-tone-pill">
+      <div
+        class="phase-tone-pill__icon"
+        style="color:<%= accent %>;background:<%= accent_light %>"
+        aria-hidden="true"
+      >
+        <span class="material-symbols-outlined">forum</span>
+      </div>
+      <div class="phase-tone-pill__content">
+        <div class="phase-tone-pill__label">
+          <%= t("custom.participation_stats.tone_of_comments") %>
+        </div>
+        <div class="phase-tone-pill__value">
+          <%= tone_comments %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

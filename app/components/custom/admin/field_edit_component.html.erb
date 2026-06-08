@@ -1,6 +1,11 @@
 <div
-  data-field-name="<%= @field_name %>"
+  data-field-name="<%= field_name %>"
+  data-update-url="<%= update_url %>"
+  data-attribute="<%= @attribute %>"
+  data-kind="<%= @kind %>"
   data-allow-br-tags="<%= @allow_br_tags %>"
+  <% if max_visible_length %>data-max-visible-length="<%= max_visible_length %>"<% end %>
+  <% if max_line_breaks %>data-max-line-breaks="<%= max_line_breaks %>"<% end %>
   class="js-projekt-banner--edit-field-container js-projekt-banner-edit-field-container projekt-banner-edit-field-container"
   >
   <div class="projekt-banner-edit-field--overlay">
@@ -10,14 +15,26 @@
     <%= content %>
   </div>
 
+  <% if @allow_br_tags %>
+    <div
+      class="projekt-banner-edit-field--char-counter js-projekt-banner-edit-field--char-counter"
+      role="status"
+      aria-live="polite"
+    >
+      <span class="js-projekt-banner-edit-field--char-counter-current">0</span>
+      <span class="projekt-banner-edit-field--char-counter-separator">/</span>
+      <span class="js-projekt-banner-edit-field--char-counter-max"><%= max_visible_length %></span>
+    </div>
+  <% end %>
+
   <div class="projekt-banner-edit-field--controlls">
     <button class="projekt-banner-edit-field-button transparent-round-icon-button-black js-projekt-banner-text-edit-button js-projekt-banner-edit-field-text-edit-button js-studio-hide-on-preview"> <i class="fas fa-pencil-alt"></i>
     </button>
     <div class="projekt-banner-edit-field--text-edit-controlls">
-      <button class="projekt-banner-edit-field-controlls-button transparent-round-icon-button-black js-projekt-banner--text-edit-cancel js-projekt-banner-edit-field--text-edit-cancel">
+      <button class="projekt-banner-edit-field-controlls-button -cancel transparent-round-icon-button-black js-projekt-banner--text-edit-cancel js-projekt-banner-edit-field--text-edit-cancel">
         <i class="fas fa-xmark"></i>
       </button>
-      <button class="projekt-banner-edit-field-controlls-button transparent-round-icon-button-black js-projekt-banner--text-edit-save js-projekt-banner-edit-field-text-edit-save">
+      <button class="projekt-banner-edit-field-controlls-button -save transparent-round-icon-button-black js-projekt-banner--text-edit-save js-projekt-banner-edit-field-text-edit-save">
         <i class="fas fa-check"></i>
       </button>
     </div>

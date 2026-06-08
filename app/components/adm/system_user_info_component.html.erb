@@ -1,0 +1,27 @@
+<div class="<%= css_classes %>">
+  <div class="adm-system-user-info--avatar">
+    <%= render Adm::TableThumbComponent.new(
+      image: user.image,
+      title: name,
+      fallback_icon: "user"
+    ) %>
+  </div>
+
+  <div class="adm-system-user-info--text">
+    <span class="adm-system-user-info--label"><%= label %></span>
+    <span class="adm-system-user-info--name">
+      <%= name %>
+
+      <% if show_system_user_tag? %>
+        <span class="adm-system-user-info--tag"><%= t(".system_user_tag") %></span>
+      <% end %>
+    </span>
+  </div>
+
+  <% if show_edit_link? %>
+    <%= link_to edit_url, class: "adm-system-user-info--edit", target: "_blank", rel: "noopener" do %>
+      <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+      <%= t(".edit") %>
+    <% end %>
+  <% end %>
+</div>

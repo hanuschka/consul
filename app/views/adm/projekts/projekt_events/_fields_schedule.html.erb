@@ -1,0 +1,19 @@
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.location_label"), hint: t("adm.projekts.projekt_events.form.location_hint")) do %>
+  <%= f.text_field :location, label: false, placeholder: t("adm.projekts.projekt_events.form.location_placeholder") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.datetime_label"), hint: t("adm.projekts.projekt_events.form.datetime_hint")) do %>
+  <%= f.datetime_local_field :datetime, label: false, required: true %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.end_datetime_label"), hint: t("adm.projekts.projekt_events.form.end_datetime_hint")) do %>
+  <%= f.datetime_local_field :end_datetime, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.open_ended_label"), hint: t("adm.projekts.projekt_events.form.open_ended_hint")) do %>
+  <%= f.check_box :open_ended %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t("adm.projekts.projekt_events.form.weblink_label"), hint: t("adm.projekts.projekt_events.form.weblink_hint")) do %>
+  <%= f.text_field :weblink, label: false, placeholder: t("adm.projekts.projekt_events.form.weblink_placeholder") %>
+<% end %>

@@ -1,0 +1,9 @@
+de:
+  components:
+    adm:
+      dashboard:
+        team_component:
+          title: "Team"
+          add: "Teammitglied hinzufügen"
+          manage: "Team verwalten"
+          empty: "Noch keine Teammitglieder vorhanden."

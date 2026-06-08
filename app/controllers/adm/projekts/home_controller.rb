@@ -3,13 +3,18 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
 
     @team_members = scoped_team_members
-    @recent_items = policy_scope([:adm, :projekts, Projekt])
-                      .includes(:parent, :landing_page, images_attachments: :blob, page: :translations)
-                      .order(updated_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("projekts")
+    @intro_text = Setting["adm.projekts.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.projekts", default: nil)
+    @notice = Setting["adm.projekts.notice_active"].present? ? Setting["adm.projekts.notice_message"] : nil
     @contact_persons = SectionContactPerson.for_section("projekts")
-    @activities = SectionActivity.for_section("projekts").limit(10)
+    visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
+    @pagy_activities, @activities = pagy(
+      SectionActivity.for_section("projekts")
+        .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids),
+      limit: 10,
+      page_param: :activity_page
+    )
 
     @stats = [
       { value: Projekt.regular.count, label: t("adm.projekts.home.stats.total"), icon: "folder" },
@@ -22,11 +27,13 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
       (if policy([:adm, :projekts, Projekt]).create?
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
        end),
-      { label: t("adm.projekts.home.quick_links.all"), path: adm_projekts_projekts_list_path }
+      (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
+         { label: t("adm.projekts.home.quick_links.import_projekt"), path: new_adm_projekts_import_path }
+       end)
     ].compact
 
     @breadcrumbs = [
-      { name: t("adm.projekts.home.title"), icon: "home" }
+      { name: t("adm.projekts.menu.items.home"), icon: "home" }
     ]
   end
 

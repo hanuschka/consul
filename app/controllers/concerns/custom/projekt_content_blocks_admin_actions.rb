@@ -4,9 +4,15 @@ module ProjektContentBlocksAdminActions
 
   included do
     before_action :set_namespace
-    before_action :find_projekt, only: [:create, :import_document, :generate_from_prompt, :import_status, :destroy_all]
+    before_action :find_projekt, only: [
+      :create, :import_document, :generate_from_prompt, :import_status, :destroy_all,
+      :generate_with_ai
+    ]
     before_action :find_content_block, only: [
       :destroy, :update, :update_position, :change_with_ai
+    ]
+    before_action :find_ai_in_progress_content_block, only: [
+      :ai_generation_status, :cancel_ai_generation
     ]
   end
 
@@ -77,11 +83,11 @@ module ProjektContentBlocksAdminActions
     allow_text_modification = ActiveModel::Type::Boolean.new.cast(params[:allow_text_modification])
 
     new_content_block_body =
-      Ai::GenerateContentBlock.call(
+      Ai::EditContentBlock.call(
         params[:instructions],
         params[:content_block_html],
-        @content_block.projekt.page&.title,
-        @content_block.projekt.page&.subtitle,
+        @content_block.projekt&.page&.title,
+        @content_block.projekt&.page&.subtitle,
         projekt: @content_block.projekt,
         use_full_projekt_context: use_full_projekt_context,
         allow_text_modification: allow_text_modification
@@ -165,6 +171,77 @@ module ProjektContentBlocksAdminActions
     render json: response_data
   end
 
+  def generate_with_ai
+    authorize!(:update, @projekt)
+
+    return unless check_ai_model_configured
+
+    if params[:prompt].blank?
+      return render(
+        json: { error: { message: I18n.t("custom.projekt_content_blocks.ai_create.errors.no_prompt") }},
+        status: :unprocessable_entity
+      )
+    end
+
+    result =
+      ProjektContentBlocks::DispatchCreateWithAi.call(
+        projekt: @projekt,
+        prompt: params[:prompt],
+        mode: params[:mode].presence || "add",
+        category_hint: params[:category_hint],
+        anchor_template_id: params[:anchor_template_id],
+        use_projekt_context: params[:use_projekt_context],
+        previous_content_block_id: params[:previous_content_block_id],
+        add_at_top: params[:add_at_top],
+        target_content_block_id: params[:target_content_block_id]
+      )
+
+    if !result.success?
+      return render(
+        json: { error: { message: result.error.to_s } },
+        status: :unprocessable_entity
+      )
+    end
+
+    render json: {
+      content_block_id: result.content_block_id,
+      status_url: ai_generation_status_url(result.content_block_id),
+      cancel_url: cancel_ai_generation_url(result.content_block_id)
+    }
+  end
+
+  def ai_generation_status
+    authorize!(:update, @content_block.projekt)
+
+    data = @content_block.ai_generation_data || {}
+    status = data["status"] || "completed"
+
+    payload = {
+      status: status,
+      content_block_id: @content_block.id,
+      position: @content_block.position,
+      mode: data["mode"]
+    }
+
+    if status == "completed"
+      payload[:body_html] = @content_block.body.to_s
+    end
+
+    if status == "failed"
+      payload[:error] = data["error"]
+    end
+
+    render json: payload
+  end
+
+  def cancel_ai_generation
+    authorize!(:update, @content_block.projekt)
+
+    @content_block.mark_ai_generation_status!("cancelled")
+
+    render json: { status: { message: I18n.t("custom.projekt_content_blocks.ai_create.cancel_acknowledged") } }
+  end
+
   def destroy_all
     authorize!(:update, @projekt)
 
@@ -197,6 +274,32 @@ module ProjektContentBlocksAdminActions
 
   def find_content_block
     @content_block = ::SiteCustomization::ContentBlock.find(params[:id])
+  end
+
+  def find_ai_in_progress_content_block
+    @content_block = ::SiteCustomization::ContentBlock.unscoped.find(params[:id])
+  end
+
+  def ai_generation_status_url(content_block_id)
+    case @namespace
+    when :admin
+      ai_generation_status_admin_projekt_content_block_path(content_block_id)
+    when :projekt_management
+      ai_generation_status_projekt_management_projekt_content_block_path(content_block_id)
+    else
+      ai_generation_status_projekt_management_projekt_content_block_path(content_block_id)
+    end
+  end
+
+  def cancel_ai_generation_url(content_block_id)
+    case @namespace
+    when :admin
+      cancel_ai_generation_admin_projekt_content_block_path(content_block_id)
+    when :projekt_management
+      cancel_ai_generation_projekt_management_projekt_content_block_path(content_block_id)
+    else
+      cancel_ai_generation_projekt_management_projekt_content_block_path(content_block_id)
+    end
   end
 
   def set_namespace

@@ -200,6 +200,123 @@
       grid-template-columns: 1fr 1fr;
       grid-auto-rows: 1fr;
     }
+
+    &--no-stretch {
+      grid-auto-rows: auto;
+      align-items: start;
+    }
+  }
+}
+
+.adm-table-thumb-cell {
+  width: 40px;
+  min-width: 55px;
+  max-width: 55px;
+  padding: 4px;
+}
+
+.adm-table-thumb-link {
+  display: inline-block;
+  line-height: 0;
+}
+
+.adm-table-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--kern-color-layout-border, #e0e0e0);
+}
+
+.adm-table-thumb--placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kern-color-layout-background-subtle, #f3f4f6);
+  color: var(--kern-color-layout-text-subtle, #888);
+
+  .material-symbols-outlined {
+    font-size: 22px;
+  }
+}
+
+.adm-table-thumb--category {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kern-color-layout-background-subtle, #f3f4f6);
+  border-color: transparent;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.adm-detail-media-card--bounded-image {
+  grid-template-rows: auto auto;
+}
+
+.adm-detail-media-card__image-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kern-color-layout-background-subtle, #f5f5f5);
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.adm-detail-media-card__lightbox {
+  display: block;
+  line-height: 0;
+  cursor: zoom-in;
+}
+
+.adm-detail-media-card__bounded-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 600px;
+  object-fit: contain;
+}
+
+.adm-detail-media-card__download-original {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--kern-color-layout-text-default, #1a1a2e);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  text-decoration: none;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 10px 24px rgba(0, 0, 0, 0.22);
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: var(--kern-color-layout-background-subtle, #f3f4f6);
+    color: var(--kern-color-action-default, #2c3e6b);
+    text-decoration: none;
+  }
+
+  &:active {
+    background: var(--kern-color-layout-background-muted, #e5e7eb);
+    color: var(--kern-color-action-pressed, #243456);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default, #2c3e6b);
+    outline-offset: 2px;
   }
 }
 
@@ -273,6 +390,34 @@
     // Hide remove button (action is in card header as toggle)
     [data-kern--form--image-target="actions"] {
       display: none !important;
+    }
+  }
+
+  // New adm image component: fill the card row like the map beside it
+  [data-controller="adm--form--image"] {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    // Visible preview/empty container fills the remaining row
+    [data-adm--form--image-target="preview"]:not(.d-none),
+    [data-adm--form--image-target="empty"]:not(.d-none) {
+      flex: 1;
+      min-height: 0;
+    }
+
+    // Preview wrapper anchors the overlay action buttons
+    [data-adm--form--image-target="preview"] {
+      position: relative;
+
+      img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        max-width: none !important;
+        display: block;
+      }
     }
   }
 }
@@ -586,6 +731,11 @@ form:has(> .adm-detail-media-card__action) {
   &--danger {
     background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 12%, transparent);
     color: var(--kern-color-feedback-danger, #bd0f09);
+  }
+
+  &--info {
+    background: color-mix(in srgb, var(--kern-color-feedback-info, #1976d2) 12%, transparent);
+    color: var(--kern-color-feedback-info, #1976d2);
   }
 }
 

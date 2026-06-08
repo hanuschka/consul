@@ -1,0 +1,78 @@
+en:
+  adm:
+    projekts:
+      poll_question_answers:
+        new:
+          title: Create new answer option
+        edit:
+          title: Edit answer option
+        create:
+          success: Answer created successfully.
+        destroy:
+          success: Answer deleted successfully.
+          error: Answers cannot be deleted because votes have already been cast.
+        form:
+          image_label: Images
+          documents_label: Documents
+          video_label: Videos
+          video_title_label: Video title
+          video_url_label: Video URL
+          hints:
+            open_answer: >
+              Marks this answer as an open text field in which users can enter their own answer.
+              Instead of a selectable option, a free-text field appears on the frontend. Use this option
+              when you want to allow individual responses alongside the predefined answers.
+            title: >
+              The title is shown on the frontend as a selectable answer option. Keep the text
+              short and unambiguous so users understand the option immediately. In votes with
+              multiple options, titles should be clearly distinguishable from one another to avoid confusion.
+            title_placeholder: "e.g. Option A – New construction at the market square"
+            more_info_link_placeholder: "https://www.example.com/more-info"
+            more_info_iframe_placeholder: "https://www.example.com/map-embed"
+            video_title_placeholder: "e.g. Draft option A – visualization"
+            video_url_placeholder: "https://www.youtube.com/watch?v=..."
+            description: >
+              Supplements the answer with a more detailed explanation, shown on the frontend below
+              the title. Use this field to provide background information, details, or arguments for
+              the answer option. The text supports rich-text formatting and can contain links or
+              highlights.
+            more_info_link: >
+              Links to an external page with additional information about the answer option. A clickable
+              link appears on the frontend below the answer. Enter the full URL including https://.
+              Leave the field empty if no external reference is desired.
+            more_info_iframe: >
+              Embeds an external page as an iframe below the answer. Enter the full URL
+              including https://. The content is displayed directly within the answer on the frontend.
+              Use this option e.g. for interactive maps, visualizations, or external documents.
+            image: >
+              Upload images shown on the frontend next to or above the answer option.
+              Images help users grasp the options visually — e.g. for design drafts,
+              location photos, or plan illustrations. Multiple images per answer are possible and are
+              displayed as a gallery.
+            documents: >
+              Attach documents like PDFs or presentations to the answer option. On the frontend,
+              the files appear as download links, letting users inform themselves in more detail before
+              voting. Suitable for expert reports, plans, or background documents on an answer option.
+            video: >
+              Embed an external video from YouTube or Vimeo that visually supplements the answer option.
+              The video is displayed as an embedded player on the frontend. Provide a meaningful
+              title and the full video URL. Especially suitable for illustrating complex matters.
+            video_title: >
+              Enter a meaningful title for the video, shown on the frontend as a heading above the
+              video player. The title should briefly summarize the content of the video and give users
+              orientation, e.g. "Draft option A" or "Explanation of the measure".
+            video_url: >
+              Enter the full URL of the video, e.g. from YouTube or Vimeo. The video is displayed
+              as an embedded player on the frontend. Make sure to enter the complete URL including
+              https://. Only publicly accessible videos can be embedded — privately set videos
+              will not display correctly.
+            next_question: >
+              Defines the question the user is redirected to after selecting this answer. This
+              option is only available in sequential voting mode (wizard) and enables branching
+              question logic. Leave the field empty if the user should be redirected to the next
+              question in the default order.
+            terminates_poll: >
+              Ends the vote immediately when the user selects this answer — the user is redirected
+              directly to the closing page without having to answer further questions. Use this option
+              e.g. for filter questions like "Does this topic affect you?" with the answer "No", to
+              politely exclude irrelevant participants.

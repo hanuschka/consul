@@ -1,7 +1,14 @@
 require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
 
 module ContentBlocksHelper
-  def render_custom_block(key, projekt: nil, custom_prefix: nil, default_content: nil, return_path: nil)
+  def render_custom_block(
+    key,
+    projekt: nil,
+    custom_prefix: nil,
+    default_content: nil,
+    return_path: nil,
+    toolbar_position: nil
+  )
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
     block_body =
@@ -28,7 +35,14 @@ module ContentBlocksHelper
 
       sanitized_default_content = prepare_default_content(default_content)
 
-      res = build_inline_editable_block(key, block, sanitized_body, inline_urls, default_content: sanitized_default_content).html_safe
+      res = build_inline_editable_block(
+        key,
+        block,
+        sanitized_body,
+        inline_urls,
+        default_content: sanitized_default_content,
+        toolbar_position: toolbar_position
+      ).html_safe
     else
       res = build_standard_block(key, block, block_body, projekt, return_path)
 
@@ -58,7 +72,7 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil)
+  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil)
     res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
@@ -66,6 +80,15 @@ module ContentBlocksHelper
 
     if default_content.present?
       res << " data-default-content=\"#{ERB::Util.html_escape(default_content)}\""
+    end
+
+    if toolbar_position.present?
+      res << " data-toolbar-position=\"#{ERB::Util.html_escape(toolbar_position.to_s)}\""
+    end
+
+    persisted_margin = block.attributes_before_type_cast["margin_bottom"]
+    if persisted_margin.present?
+      res << " style=\"margin-bottom: #{persisted_margin.to_i}px\""
     end
 
     res << ">#{block_body}</div>"
@@ -169,5 +192,11 @@ module ContentBlocksHelper
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")
     result
+  end
+
+  def safe_content_block_body(body)
+    return "" if body.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(body)
   end
 end

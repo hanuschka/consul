@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @deficiency_report.title, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_root_path) %>
 
 <%= render Adm::TabsComponent.new(tabs: deficiency_report_tabs(@deficiency_report)) %>
 

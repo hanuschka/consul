@@ -35,7 +35,8 @@ export default class extends Controller {
     progressGeneratingImage: String,
     errorExtractFailed: String,
     userInitials: { type: String, default: "" },
-    userImageUrl: { type: String, default: "" }
+    userImageUrl: { type: String, default: "" },
+    importStatus: { type: String, default: "" }
   }
 
   connect() {
@@ -47,6 +48,11 @@ export default class extends Controller {
     this.pollErrorCount = 0
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
     this.scheduleMessagesPoll()
+
+    if (this.importStatusValue === "submitting") {
+      this.showOverlay(this.progressCreatingValue)
+      this.scheduleStatusPoll()
+    }
   }
 
   disconnect() {
@@ -396,8 +402,11 @@ export default class extends Controller {
     this.sendCommand("summarize").then((data) => this.renderImmediateMessages(data))
   }
 
-  startImport() {
+  startImport(event) {
     if (!window.confirm(this.confirmImportValue)) return
+
+    const tooltip = event.currentTarget.closest("rich-tooltip")
+    if (tooltip) tooltip.hide()
 
     this.dismissImportError()
     this.lastImportStatus = null

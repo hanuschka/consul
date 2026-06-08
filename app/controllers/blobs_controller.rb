@@ -18,7 +18,10 @@ class BlobsController < ApplicationController
     )
   end
 
-  ALLOWED_VARIANT_SIZES = [[1500, 2000]].freeze
+  ALLOWED_VARIANT_SIZES = [
+    [1500, 2000],
+    [AdminImage::CONTENT_BLOCK_THUMB_WIDTH, AdminImage::CONTENT_BLOCK_THUMB_HEIGHT]
+  ].freeze
 
   def variant
     blob = ActiveStorage::Blob.find_by!(key: params[:key])

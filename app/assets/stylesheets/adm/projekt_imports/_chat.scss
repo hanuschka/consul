@@ -293,7 +293,6 @@ $_chat-error-text: #7f1d1d;
   }
 
   ul > li {
-    border-left: 3px solid var(--kern-color-action-default);
   }
 
   ol > li {
@@ -693,6 +692,7 @@ $_chat-error-text: #7f1d1d;
   align-items: center;
   gap: 16px;
   text-align: center;
+  margin-top: -20vh;
 
   p {
     margin: 0;

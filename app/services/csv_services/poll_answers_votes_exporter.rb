@@ -43,6 +43,7 @@ module CsvServices
         if question.question_answers.any?
           headers.push("Stimmenanzahl")
           headers.push("%")
+          headers.push("Stimmabgaben") if weighted?(question)
         end
 
         headers
@@ -59,8 +60,13 @@ module CsvServices
                    separator: ",",
                    format: "%n%"
                  )
+        row.push question_answer.total_voters if weighted?(question_answer.question)
 
         row
+      end
+
+      def weighted?(question)
+        question.votation_type&.multiple_with_weight?
       end
 
       def process_open_answers(question, csv)

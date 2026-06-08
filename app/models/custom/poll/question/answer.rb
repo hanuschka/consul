@@ -42,6 +42,13 @@ class Poll::Question::Answer < ApplicationRecord
     question.answers_total_votes.zero? ? 0 : (total_votes * 100.0) / question.answers_total_votes
   end
 
+  # Distinct voters who picked this answer. Counts web + booth + letter votes
+  # alike, since officing votes are stored as regular Poll::Answer rows. Legacy
+  # Poll::PartialResult rows lack per-voter granularity and are not included.
+  def total_voters
+    Poll::Answer.where(question_id: question, answer: title).distinct.count(:author_id)
+  end
+
   def total_connected_votes_to(base_question_answer)
     answered_base_question_answer_user_ids = Poll::Answer
       .where(question_id: base_question_answer.question, answer: base_question_answer.title)

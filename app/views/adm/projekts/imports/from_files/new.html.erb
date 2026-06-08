@@ -70,16 +70,11 @@
         </div>
 
         <div class="projekt-import-from-file--options">
-          <label class="projekt-import-from-file--generate-image-toggle">
-            <input type="checkbox"
-                   data-projekt-imports--from-file-target="generateImage">
-            <span class="projekt-import-from-file--generate-image-icon" aria-hidden="true">
-              <span class="material-symbols-outlined">image</span>
-            </span>
-            <span class="projekt-import-from-file--generate-image-text">
-              <%= t(".generate_image_label") %>
-            </span>
-          </label>
+          <%= render Kern::SwitchComponent.new(
+                label: t(".generate_image_label"),
+                row: true,
+                input_data: { "projekt-imports--from-file-target" => "generateImage" }
+              ) %>
         </div>
 
         <div class="projekt-import-from-file--inline-error"

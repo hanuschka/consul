@@ -36,6 +36,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       import: {
         status: @projekt_import.status,
         projekt_id: @projekt_import.projekt_id,
+        redirect_path: import_redirect_path,
         error: @projekt_import.error_message,
         warnings: @projekt_import.warnings
       }
@@ -81,7 +82,12 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       @projekt_import.mark_abandoned!
       render json: { status: "abandoned", redirect_path: new_adm_projekts_import_path }
     when "import"
+      if params.key?(:generate_image)
+        @projekt_import.update!(generate_image: ActiveModel::Type::Boolean.new.cast(params[:generate_image]))
+      end
+
       ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
+
       render json: { status: "importing" }
     else
       user_message = @ai_chat.ai_chat_messages.create!(
@@ -135,6 +141,13 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
   def find_projekt_import
     @projekt_import = current_user.projekt_imports.find(params[:import_id])
+  end
+
+  def import_redirect_path
+    return if @projekt_import.projekt_id.blank?
+    return if !@projekt_import.completed?
+
+    projekt_path(@projekt_import.projekt_id)
   end
 
   def find_ai_chat

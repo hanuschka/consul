@@ -37,6 +37,26 @@ en:
             user_label: "You"
             confirm_import: "Import the projekt now? This creates a new projekt with all phases and content blocks."
             confirm_start_over: "Discard this import and start over?"
+            generate_image_toggle: "Title image"
+            tooltips:
+              start_over:
+                title: "Start over"
+                text: "Discards this import entirely and returns to uploading a new document."
+              regenerate:
+                title: "Regenerate"
+                text: "Re-analyzes the original document and rebuilds the entire projekt structure from scratch."
+              summarize:
+                title: "Summarize"
+                text: "Creates a short, readable summary of the uploaded document in the chat."
+              generate_image:
+                title: "Generate cover image"
+                text: "When enabled, the AI automatically creates a matching cover image for the projekt during import."
+              import:
+                title: "Import projekt"
+                text: "Creates the projekt with all phases, content blocks, and settings. It stays deactivated and hidden from visitors until you activate it."
+              attach:
+                title: "Attach document"
+                text: "Adds another document to the conversation so the AI can take extra information into account."
             commands:
               regenerate: "Regenerate"
               summarize: "Summarize document"

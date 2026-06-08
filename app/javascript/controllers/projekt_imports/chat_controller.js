@@ -15,7 +15,7 @@ export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel",
-    "importError", "importErrorMessage"
+    "importError", "importErrorMessage", "generateImage"
   ]
 
   static values = {
@@ -157,7 +157,7 @@ export default class extends Controller {
     if (state.status === "completed") {
       this.clearPollTimer()
       this.showOverlay(this.progressCreatingValue)
-      window.location.href = `/adm/projekts/${state.projekt_id}/details`
+      if (state.redirect_path) window.location.href = state.redirect_path
       return
     }
 
@@ -402,7 +402,10 @@ export default class extends Controller {
     this.dismissImportError()
     this.lastImportStatus = null
     this.showOverlay(this.progressFinalizingValue)
-    this.sendCommand("import").then((data) => {
+
+    const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
+
+    this.sendCommand("import", params).then((data) => {
       if (data && data.status === "importing") {
         this.scheduleStatusPoll()
       }
@@ -418,9 +421,10 @@ export default class extends Controller {
     })
   }
 
-  sendCommand(name) {
+  sendCommand(name, params = {}) {
     const formData = new FormData()
     formData.append("name", name)
+    Object.keys(params).forEach((key) => formData.append(key, params[key]))
 
     return fetch(this.commandUrlValue, {
       method: "POST",

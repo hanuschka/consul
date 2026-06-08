@@ -2,6 +2,10 @@ rich-tooltip {
   display: inline-block;
 }
 
+rich-tooltip[hidden] {
+  display: none;
+}
+
 .rich-tooltip--body {
   position: fixed;
   inset: auto;
@@ -12,7 +16,7 @@ rich-tooltip {
   max-width: 320px;
   margin: 0;
   margin-block-end: 8px;
-  padding: 15px 20px;
+  padding: 10px 15px;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.45;
@@ -22,6 +26,10 @@ rich-tooltip {
   border: 1px solid #dddddd;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.rich-tooltip--body.-big {
+  padding: 16px 22px;
 }
 
 .rich-tooltip--body:not([popover]) {

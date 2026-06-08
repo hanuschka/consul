@@ -2,7 +2,6 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: new_adm_projekts_import_path) %>
 
-<div class="kern-container">
   <div class="projekt-import-chat"
        data-controller="projekt-imports--chat"
        data-projekt-imports--chat-messages-url-value="<%= messages_adm_projekts_import_chat_path(@projekt_import) %>"
@@ -66,51 +65,67 @@
          role="toolbar"
          aria-label="<%= t('.commands_label', default: 'Actions') %>">
       <div class="projekt-import-chat--topbar-group">
-        <button type="button"
-                class="projekt-import-chat--topbar-button"
-                data-action="click->projekt-imports--chat#startOver">
-                <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-                <%= t(".commands.start_over") %>
-        </button>
-        <button
-           type="button"
-           class="projekt-import-chat--topbar-button"
-           data-action="click->projekt-imports--chat#regenerate"
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
-          <%= t(".commands.regenerate") %>
-        </button>
-        <button type="button"
-                class="projekt-import-chat--topbar-button"
-                data-action="click->projekt-imports--chat#summarize">
-          <span class="material-symbols-outlined" aria-hidden="true">format_list_bulleted</span>
-          <%= t(".commands.summarize") %>
-        </button>
+        <rich-tooltip delay="700">
+          <button type="button"
+                  class="projekt-import-chat--topbar-button"
+                  data-action="click->projekt-imports--chat#startOver">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            <%= t(".commands.start_over") %>
+          </button>
+          <%= render "adm/projekts/imports/chats/action_tooltip", key: "start_over" %>
+        </rich-tooltip>
+        <rich-tooltip delay="700">
+          <button
+             type="button"
+             class="projekt-import-chat--topbar-button"
+             data-action="click->projekt-imports--chat#regenerate"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+            <%= t(".commands.regenerate") %>
+          </button>
+          <%= render "adm/projekts/imports/chats/action_tooltip", key: "regenerate" %>
+        </rich-tooltip>
+        <rich-tooltip delay="700">
+          <button type="button"
+                  class="projekt-import-chat--topbar-button"
+                  data-action="click->projekt-imports--chat#summarize">
+            <span class="material-symbols-outlined" aria-hidden="true">format_list_bulleted</span>
+            <%= t(".commands.summarize") %>
+          </button>
+          <%= render "adm/projekts/imports/chats/action_tooltip", key: "summarize" %>
+        </rich-tooltip>
       </div>
 
-      <button type="button"
-              class="projekt-import-chat--topbar-button -primary"
-              data-action="click->projekt-imports--chat#startImport">
-        <span class="material-symbols-outlined" aria-hidden="true">upload</span>
-        <%= t(".commands.import") %>
-      </button>
+      <div class="projekt-import-chat--topbar-import-group">
+        <rich-tooltip delay="700">
+          <%= render Kern::SwitchComponent.new(
+                label: t(".generate_image_toggle"),
+                checked: @projekt_import.generate_image,
+                input_data: { "projekt-imports--chat-target" => "generateImage" }
+              ) %>
+          <%= render "adm/projekts/imports/chats/action_tooltip", key: "generate_image" %>
+        </rich-tooltip>
+      </div>
     </div>
 
     <%# Input area %>
     <form class="projekt-import-chat--input-area"
           data-projekt-imports--chat-target="form"
           data-action="submit->projekt-imports--chat#submit">
-      <label class="projekt-import-chat--attach-button"
-             for="projekt-import-chat-attach"
-             aria-label="<%= t('.attach') %>">
-        <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
-        <input id="projekt-import-chat-attach"
-               type="file"
-               multiple
-               accept=".pdf,.docx,.odt,.txt,.md"
-               hidden
-               data-action="change->projekt-imports--chat#filesPicked">
-      </label>
+      <rich-tooltip delay="700">
+        <label class="projekt-import-chat--attach-button"
+               for="projekt-import-chat-attach"
+               aria-label="<%= t('.attach') %>">
+          <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+          <input id="projekt-import-chat-attach"
+                 type="file"
+                 multiple
+                 accept=".pdf,.docx,.odt,.txt,.md"
+                 hidden
+                 data-action="change->projekt-imports--chat#filesPicked">
+        </label>
+        <%= render "adm/projekts/imports/chats/action_tooltip", key: "attach" %>
+      </rich-tooltip>
 
       <div class="projekt-import-chat--input-wrapper">
         <ul class="projekt-import-chat--file-previews"
@@ -132,6 +147,19 @@
       </button>
     </form>
 
+    <%# Import action %>
+    <div class="projekt-import-chat--import-action">
+      <rich-tooltip delay="3000">
+        <button type="button"
+                class="projekt-import-chat--topbar-button -primary"
+                data-action="click->projekt-imports--chat#startImport">
+          <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+          <%= t(".commands.import") %>
+        </button>
+        <%= render "adm/projekts/imports/chats/action_tooltip", key: "import" %>
+      </rich-tooltip>
+    </div>
+
     <%# Overlay during final import %>
     <div class="projekt-import-chat--overlay -hidden"
          data-projekt-imports--chat-target="overlay">
@@ -141,4 +169,3 @@
       </div>
     </div>
   </div>
-</div>

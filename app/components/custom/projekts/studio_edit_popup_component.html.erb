@@ -1,0 +1,19 @@
+<div class="studio-edit-popup <%= popup_classes %>">
+  <%= content %>
+
+  <div class="d-flex justify-between">
+    <div class="d-flex u-gap-10">
+      <button class="studio-edit-button -green -with-background <%= accept_button_class %>">
+        <i class="fas fa-save"></i>
+        <%= t('custom.projekts.page.studio_edit_popup.save') %>
+      </button>
+
+      <button class="studio-edit-button -with-background <%= cancel_button_class %>">
+        <i class="fas fa-xmark"></i>
+        <%= t('custom.projekts.page.studio_edit_popup.cancel') %>
+      </button>
+    </div>
+
+    <%= extra_actions %>
+  </div>
+</div>

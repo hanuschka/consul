@@ -71,3 +71,6 @@ en:
         supports:
           one: "%{count} supporter"
           other: "%{count} supporters"
+        votes_cast:
+          one: "%{count} vote cast"
+          other: "%{count} votes cast"

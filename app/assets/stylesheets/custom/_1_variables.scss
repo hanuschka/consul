@@ -26,7 +26,7 @@ $top-bar-banner-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 
 
 // Touch-viewport bump: 44x44 tap-targets need ~6px breathing room above and
 // below (44 + 2x6 = 56). Defined here in the variables file so every bundle
-// (application.scss, custom_new_design.scss, projekt_studio.scss) that
+// (application.scss, custom_new_design.scss, studio.scss) that
 // re-imports _1_variables picks it up — otherwise the last bundle's top-level
 // `:root` declaration overrides any media-query override placed elsewhere.
 @media (max-width: $small-tablet-viewport-start) {

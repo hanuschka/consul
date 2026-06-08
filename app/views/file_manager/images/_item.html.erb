@@ -1,33 +1,43 @@
 <div
   class="file-upload-manager-dialog--item"
   data-id="<%= image.id %>"
-  data-content-type="<%= image.attachment_content_type %>"
-  data-description=""
-  data-url="<%= url_for(image.attachment.variant(resize_to_limit: [1500, 2000])) %>"
-  data-custom-thumb-url="<%= url_for(image.attachment.variant(resize_to_limit: [925, 925])) %>"
+  data-content-type="<%= image.data_content_type %>"
+  data-description="<%= image.description %>"
+  data-url="<%= image.url_content %>"
+  data-custom-thumb-url="<%= image.custom_thumb_url(width: 925) %>"
 >
   <div class="file-upload-manager-dialog--item-thumb">
     <img
-      src="<%= url_for(image.attachment.variant(resize_to_limit: [600, 600])) %>"
-      alt="<%= image.title.presence || image.attachment_file_name %>"
+      src="<%= image.custom_thumb_url(width: 600, height: 600) %>"
+      alt="<%= image.title.presence || image.data_file_name %>"
     >
-    <% width = image.attachment.metadata[:width]; height = image.attachment.metadata[:height] %>
+    <% metadata = image.storage_data.blob&.metadata || {} %>
+    <% width = image.width.presence || metadata[:width] %>
+    <% height = image.height.presence || metadata[:height] %>
     <% if width.present? && height.present? %>
       <span class="file-upload-manager-dialog--item-badge -dimensions js-file-manager-badge-dimensions">
         <%= width %> × <%= height %>
       </span>
     <% end %>
     <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size">
-      <%= number_to_human_size(image.attachment_file_size, precision: 1) %>
+      <%= number_to_human_size(image.data_file_size, precision: 1) %>
     </span>
+    <% if image.projekt.present? %>
+      <span
+        class="file-upload-manager-dialog--item-badge -projekt"
+        title="<%= image.projekt.title %>"
+      >
+        <%= image.projekt.title %>
+      </span>
+    <% end %>
   </div>
   <div class="file-upload-manager-dialog--item-meta">
     <p
       class="file-upload-manager-dialog--item-title"
-      title="<%= image.title.presence || image.attachment_file_name %>"
+      title="<%= image.title.presence || image.data_file_name %>"
     >
-      <%= image.title.presence || image.attachment_file_name %>
+      <%= image.title.presence || image.data_file_name %>
     </p>
-    <div class="file-upload-manager-dialog--item-alt"></div>
+    <div class="file-upload-manager-dialog--item-alt"><%= image.alt_text %></div>
   </div>
 </div>

@@ -1,0 +1,14 @@
+<%= content_for :title, t("files.resource_images.index.title") %>
+
+<%= render Adm::FileManager::PageComponent.new(
+  type: "picture",
+  title: t("files.resource_images.index.title"),
+  description: t("files.resource_images.index.description"),
+  breadcrumbs: @breadcrumbs,
+  assets: @assets,
+  endpoint: adm_maintenance_resource_images_path,
+  card_component: Files::ImageCardComponent,
+  allowed_types: Setting.humanized_content_types_for("images"),
+  types_settings_link: true,
+  imageable_type_frame_src: imageable_type_filter_adm_maintenance_resource_images_path(imageable_type: params[:imageable_type])
+) %>

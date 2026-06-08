@@ -40,8 +40,6 @@ User.class_eval do
   after_create :assign_individual_group_values_based_on_auto_join_emails
   after_create :fulfill_pending_role_assignments
 
-  has_secure_token :frame_sign_in_token
-
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :projekt_imports, dependent: :destroy
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
@@ -353,16 +351,6 @@ User.class_eval do
 
   def idea_manager?
     idea_manager.present?
-  end
-
-  def generate_frame_sign_in_token!
-    regenerate_frame_sign_in_token
-
-    update!(frame_sign_in_token_valid_until: 1.minute.from_now)
-  end
-
-  def frame_sign_in_token_valid?
-    frame_sign_in_token_valid_until > Time.current
   end
 
   private

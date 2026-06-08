@@ -1,0 +1,99 @@
+// Universal tabs primitive, ported from Foundation 6.6.2's `foundation-tabs`
+// mixin (foundation-sites/scss/components/_tabs.scss) using this app's
+// resolved tab settings (_consul_settings.scss / _settings.scss):
+//
+//   $tab-background:        #fdfdfd   ($white)
+//   $tab-background-active: #fdfdfd   ($white)
+//   $tab-color:             null      ($primary-color → inherit)
+//   $tab-item-font-size:    1.0625rem ($base-font-size, 17px)
+//   $tab-item-padding:      0.75rem 0 ($line-height / 2  0)
+//   $tab-content-border:    #dee0e3   ($border)
+//   $tab-content-color:     #222      ($body-font-color / $black)
+//   $tab-content-padding:   1rem
+//
+// Self-contained (no Foundation vars), so it renders identically whether or
+// not Foundation is loaded — compiles in both stylesheet packs. JS behavior
+// lives in App.Tabs (custom/components/shared/tabs.js); state class .is-active
+// goes on both the active item and its panel.
+
+.shared-tabs {
+  margin: auto 0;
+  list-style-type: none;
+  border-bottom: 1px solid #dee0e3;
+
+  // &::before,
+  // &::after {
+  //   display: table;
+  //   content: " ";
+  // }
+
+  // &::after {
+  //   clear: both;
+  // }
+}
+
+.shared-tabs--item {
+  float: left;
+}
+
+.shared-tabs--link {
+  position: relative;
+  display: block;
+  font-size: 1.0625rem;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.75rem 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #515151;
+
+  &:hover {
+    color: var(--brand-color);
+    text-decoration: none;
+  }
+
+  &:hover:not([aria-selected="true"]):after {
+    border-bottom: 3px solid;
+    border-color: var(--brand-color);
+    bottom: 0;
+    content: "";
+    left: 0;
+    opacity: 0.4;
+    position: absolute;
+    width: 100%;
+  }
+
+  &:focus, &:active {
+    outline: 0 !important;
+  }
+
+  &:focus,
+  &[aria-selected="true"] {
+    &:after {
+      border-bottom: 3px solid;
+      border-color: var(--brand-color);
+      bottom: 0;
+      content: "";
+      left: 0;
+      position: absolute;
+      width: 100%;
+    }
+  }
+}
+
+.shared-tabs-panels {
+  border: 0;
+  border-top: 0;
+  color: #222;
+  // transition: all 0.5s ease;
+}
+
+.shared-tabs-panel {
+  display: none;
+  padding: 1.5rem 1rem 1rem;
+
+  &.is-active {
+    display: block;
+  }
+}

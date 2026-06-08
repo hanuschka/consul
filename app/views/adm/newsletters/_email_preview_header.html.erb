@@ -1,0 +1,57 @@
+<%
+  brand_color = Setting.newsletter_brand_color
+  logo_image = SiteCustomization::Image.find_by(name: "logo_newsletter_email")
+  has_logo = logo_image&.image&.attached?
+  has_newsletter_image = newsletter.image&.attachment&.attached?
+%>
+<div class="newsletter-email-preview-section -header">
+  <span class="newsletter-email-preview-section--label">
+    <%= t("adm.newsletters.edit.email_preview.header_label") %>
+    <%= link_to t("adm.newsletters.edit.email_preview.settings_link"),
+      settings_adm_newsletters_path,
+      class: "kern-link" %>
+  </span>
+
+  <div class="newsletter-email-preview-header">
+    <% if has_logo %>
+      <div class="newsletter-email-preview-header--logo" style="background-color: <%= brand_color %>;">
+        <%= image_tag url_for(logo_image.image),
+          height: 45,
+          alt: Setting["org_name"].to_s,
+          class: "newsletter-email-preview-header--logo-img" %>
+      </div>
+    <% end %>
+
+    <% if has_newsletter_image && newsletter.title.blank? && newsletter.subtitle.blank? %>
+      <div class="newsletter-email-preview-header--banner">
+        <%= image_tag url_for(newsletter.image.variant(:large)),
+          alt: "",
+          class: "newsletter-email-preview-header--banner-img" %>
+        <div class="newsletter-email-preview-header--greeting">
+          <%= newsletter.greeting %>
+        </div>
+      </div>
+    <% else %>
+      <div
+        class="newsletter-email-preview-header--hero"
+        style="<%= has_newsletter_image ? "background-image: url(#{url_for(newsletter.image.variant(:large))});background-size:cover;background-position:top center;" : "background-color: #{brand_color};" %>"
+      >
+        <div class="newsletter-email-preview-header--hero-content">
+          <% if newsletter.title.present? %>
+            <h2 class="newsletter-email-preview-header--title" style="color: <%= newsletter.title_color.presence || "#ffffff" %>;">
+              <%= newsletter.title %>
+            </h2>
+          <% end %>
+          <% if newsletter.subtitle.present? %>
+            <p class="newsletter-email-preview-header--subtitle" style="color: <%= newsletter.subtitle_color.presence || "#ffffff" %>;">
+              <%= newsletter.subtitle %>
+            </p>
+          <% end %>
+        </div>
+        <div class="newsletter-email-preview-header--greeting">
+          <%= newsletter.greeting %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

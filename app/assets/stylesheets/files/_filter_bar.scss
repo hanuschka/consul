@@ -21,7 +21,13 @@
   position: relative;
 }
 
-.files-filter-bar--search-icon {
+.files-filter-bar--field-sort {
+  position: relative;
+  margin-left: auto;
+}
+
+.files-filter-bar--search-icon,
+.files-filter-bar--sort-icon {
   position: absolute;
   left: 10px;
   top: 50%;
@@ -64,6 +70,10 @@
   padding-left: 32px;
 }
 
+.files-filter-bar--input-sort {
+  padding-left: 32px;
+}
+
 .files-filter-bar .files-filter-bar--field:has(.js-fm-filter-search) {
   flex: 1 1 220px;
   max-width: 360px;
@@ -79,7 +89,7 @@
 }
 
 .files-filter-bar .files-filter-bar--field:has(.js-fm-filter-sort) {
-  flex: 0 1 200px;
+  flex: 0 1 220px;
 }
 
 select.files-filter-bar--input {
@@ -99,21 +109,20 @@ select.files-filter-bar--input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
   height: 38px;
-  padding: 0;
+  padding: 0 10px;
   font-size: 14px;
   line-height: 1;
   color: #222;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
+  background: #ededed;
+  border: 0;
   border-radius: 6px;
   cursor: pointer;
   margin: 0;
+  white-space: nowrap;
 
   &:hover {
-    background: #ededed;
-    border-color: #828282;
+    background: #e0e0e0;
   }
 
   &:focus-visible {
@@ -135,8 +144,11 @@ select.files-filter-bar--input {
     flex: 1 1 auto;
   }
 
+  .files-filter-bar--field-sort {
+    margin-left: 0;
+  }
+
   .files-filter-bar--reset-button {
-    width: 38px;
     align-self: flex-end;
   }
 }

@@ -8,7 +8,9 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
   belongs_to :projekt, optional: true
-  acts_as_list scope: :projekt
+  belongs_to :newsletter, optional: true
+  validate :single_parent
+  acts_as_list scope: [:projekt_id, :newsletter_id]
 
   default_scope { where("ai_generation_data IS NULL OR ai_generation_data->>'status' = 'completed'") }
 
@@ -53,6 +55,12 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   end
 
   private
+
+  def single_parent
+    if projekt_id.present? && newsletter_id.present?
+      errors.add(:base, :invalid)
+    end
+  end
 
   def repair_html_body
     return if body.blank?

@@ -3,7 +3,7 @@
     <div class="adm-page-header__nav">
       <% if @breadcrumbs.present? %>
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb-list my-3">
+          <ol class="breadcrumb-list">
             <% if @back_button_url %>
               <li class="breadcrumb-item breadcrumb-item--back">
                 <%= link_to @back_button_url, class: "breadcrumb-back-button", data: { turbo_action: "advance" } do %>

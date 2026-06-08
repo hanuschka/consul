@@ -2,22 +2,39 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.deficiency_reports.home.title"), breadcrumbs: @breadcrumbs) %>
 
-<%= render Adm::DashboardHomeComponent.new do |d| %>
-  <% d.with_notice(message: @notice) if @notice.present? %>
-  <% d.with_header_row(intro: @intro_text, stats: @stats) %>
-  <% d.with_team(members: @team_members, add_url: adm_deficiency_reports_officers_path) %>
-  <% d.with_contacts(contacts: @contact_persons) if @contact_persons.any? %>
-<% end %>
-
 <div class="kern-container">
-  <div class="adm-dashboard__section adm-dashboard__section--pull-up">
-    <div class="adm-dashboard__section-header">
-      <span class="material-symbols-outlined" aria-hidden="true">report_problem</span>
-      <h3><%= t("adm.deficiency_reports.menu.items.deficiency_reports") %></h3>
+  <%= render Adm::Dashboard::NoticeComponent.new(message: @notice) if @notice.present? %>
+
+  <div class="adm-dashboard__intro-row">
+    <div class="adm-dashboard__intro-col">
+      <% if @intro_text.present? %>
+        <p class="adm-dashboard__intro"><%= @intro_text %></p>
+      <% end %>
+    </div>
+
+    <% if @contact_persons.any? %>
+      <div class="adm-dashboard__intro-aside">
+        <%= render Adm::Dashboard::ContactsComponent.new(contacts: @contact_persons) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header adm-dashboard__section-header--with-stats">
+      <div class="adm-dashboard__section-header-title">
+        <span class="material-symbols-outlined" aria-hidden="true">report_problem</span>
+        <h3><%= t("adm.deficiency_reports.menu.items.deficiency_reports") %></h3>
+      </div>
+
+      <%= render Adm::Dashboard::StatPillsComponent.new(stats: @stats) %>
     </div>
 
     <%= turbo_frame_tag "deficiency_reports_table", src: adm_deficiency_reports_deficiency_reports_list_path, loading: :eager %>
   </div>
 
-  <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+  <div class="adm-dashboard__feed-row">
+    <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+
+    <%= render Adm::Dashboard::TeamComponent.new(members: @team_members, add_url: adm_deficiency_reports_officers_path) %>
+  </div>
 </div>

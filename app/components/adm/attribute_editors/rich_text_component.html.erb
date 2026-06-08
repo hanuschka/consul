@@ -3,6 +3,7 @@
   <%= hidden_field_tag :attribute, @attribute %>
   <%= hidden_field_tag :wide, @options[:wide] if @options[:wide] %>
   <%= hidden_field_tag :hide_label, @options[:hide_label] if @options[:hide_label] %>
+  <%= hidden_field_tag :toolbar, @options[:toolbar] if @options[:toolbar] %>
 
   <div class="mb-3 <%= 'disabled' if disabled? %>">
     <%= form.text_area @attribute,

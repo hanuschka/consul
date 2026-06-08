@@ -200,7 +200,7 @@ export default class extends Controller {
     event.preventDefault()
     event.stopPropagation()
 
-    const card = event.target.closest(".files-asset-card")
+    const card = event.target.closest(".files-asset-card") || event.target.closest(".files-asset-row")
 
     if (!card) return
 
@@ -290,6 +290,22 @@ export default class extends Controller {
     if (data.title !== undefined) card.dataset.title = data.title || ""
     if (data.description !== undefined) card.dataset.description = data.description || ""
     if (data.alt_text !== undefined) card.dataset.altText = data.alt_text || ""
+
+    this.syncAltTextDisplay(card)
+  }
+
+  syncAltTextDisplay(card) {
+    const badge = card.querySelector(".js-files-alt-warning-badge")
+
+    if (!badge) return
+
+    const altText = (card.dataset.altText || "").trim()
+    const row = card.querySelector(".js-files-alt-text-row")
+    const value = card.querySelector(".js-files-alt-text-value")
+
+    badge.hidden = altText !== ""
+    row.hidden = altText === ""
+    value.textContent = altText
   }
 
   csrfToken() {
@@ -365,11 +381,11 @@ export default class extends Controller {
   replaceContent(html) {
     const doc = new DOMParser().parseFromString(html, "text/html")
     const newGrid = doc.querySelector(".files-index--grid")
-    const newListBody = doc.querySelector(".files-index--list tbody")
+    const newListItems = doc.querySelector(".files-index--list-items")
     const newPagination = doc.querySelector(".files-index--pagination")
 
     if (newGrid) this.gridTarget.innerHTML = newGrid.innerHTML
-    if (newListBody && this.hasListTarget) this.listTarget.innerHTML = newListBody.innerHTML
+    if (newListItems && this.hasListTarget) this.listTarget.innerHTML = newListItems.innerHTML
     if (newPagination) this.paginationTarget.innerHTML = newPagination.innerHTML
   }
 
@@ -385,7 +401,6 @@ export default class extends Controller {
       ".js-fm-filter-updated-to",
       ".js-fm-filter-imageable-type",
       ".js-fm-filter-documentable-type",
-      ".js-fm-filter-admin-flag",
       ".js-fm-filter-sort"
     ]
 

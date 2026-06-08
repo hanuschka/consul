@@ -1,12 +1,14 @@
 class FileManager::ImagesController < FileManager::BaseController
   def index
-    authorize [:adm, :image], :index?
+    authorize [:adm, :admin_image], :index?
 
     @images =
-      Image
-        .for_studio_file_manager(current_projekt)
-        .merge(policy_scope([:adm, Image]))
-        .order(created_at: :desc)
+      AdminAssetsQuery
+        .new(query_params.merge(type: "picture"))
+        .call
+        .with_attached_storage_data
+        .merge(policy_scope([:adm, AdminImage]))
+        .preload(projekt: :page)
         .page(params[:page])
         .per(15)
 
@@ -14,64 +16,99 @@ class FileManager::ImagesController < FileManager::BaseController
   end
 
   def create
-    image = Image.new(
-      user: current_user,
-      admin: true,
-      imageable: current_projekt,
-      title: params[:upload]&.original_filename.to_s.first(80)
-    )
-    image.attachment = params[:upload]
+    picture = AdminImage.new(projekt: current_projekt, user: current_user)
+    authorize [:adm, picture], :create?
 
-    authorize [:adm, image], :create?
+    unless params[:upload].is_a?(ActionDispatch::Http::UploadedFile)
+      return render json: { error: { message: t("files.upload_failed") } },
+                    status: :unprocessable_entity
+    end
 
-    if image.save
-      render json: image_response(image)
+    picture.attach_processed_upload(params[:upload])
+
+    if picture.save
+      render json: image_response(picture)
     else
-      render json: { error: { message: image.errors.full_messages.join(", ") } },
+      render json: { error: { message: picture.errors.full_messages.join(", ") } },
              status: :unprocessable_entity
     end
   end
 
-  def update
-    image = Image.find(params[:id])
-    authorize [:adm, image]
-    image.update!(image_params)
+  def show
+    picture = AdminImage.find(params[:id])
+    authorize [:adm, picture], :index?
 
-    render json: image.attributes.slice("id", "title")
+    render image_info_component(picture), layout: false
+  end
+
+  def update
+    picture = AdminImage.find(params[:id])
+    authorize [:adm, picture]
+    picture.update!(image_params)
+
+    render json: picture.attributes.slice("id", "title")
   end
 
   def destroy
-    image = Image.find(params[:id])
-    authorize [:adm, image]
-    image.destroy!
+    picture = AdminImage.find(params[:id])
+    authorize [:adm, picture]
+    picture.destroy!
 
     render json: { status: "no_content" }
   end
 
   private
 
+    def query_params
+      params.permit(
+        :search, :extension, :size_min_mb, :size_max_mb,
+        :created_from, :created_to, :updated_from, :updated_to, :sort
+      )
+    end
+
     def image_params
       params.require(:image).permit(:title)
     end
 
-    def image_response(image)
-      meta = image.attachment.metadata
+    def image_response(picture)
+      metadata = picture.storage_data.blob&.metadata || {}
+      dimensions =
+        if metadata[:width] && metadata[:height]
+          { width: metadata[:width], height: metadata[:height] }
+        end
+
       {
-        id: image.id,
-        title: image.title,
-        content_type: image.attachment_content_type,
-        url: image_variant_url(image, resize_to_limit: [1500, 2000]),
-        gallery_thumb_url: image_variant_url(image, resize_to_limit: [600, 600]),
-        custom_thumb_url: image_variant_url(image, resize_to_limit: [925, 925]),
-        file_size: image.attachment_file_size,
-        dimensions: meta[:width] && meta[:height] ? { width: meta[:width], height: meta[:height] } : nil
+        id: picture.id,
+        title: picture.title,
+        content_type: picture.data_content_type,
+        url: picture.url_content,
+        gallery_thumb_url: picture.gallery_thumb_url,
+        custom_thumb_url: picture.custom_thumb_url(width: 925),
+        file_size: picture.data_file_size,
+        dimensions: dimensions
       }
     end
 
-    def image_variant_url(image, transformations)
-      Rails.application.routes.url_helpers.rails_representation_path(
-        image.attachment.variant(transformations),
-        only_path: true
+    def image_info_component(picture)
+      metadata = picture.storage_data.blob&.metadata || {}
+      dimensions =
+        if metadata[:width] && metadata[:height]
+          "#{metadata[:width]} × #{metadata[:height]}"
+        end
+
+      ProjektStudio::FileInfoComponent.new(
+        title: picture.title,
+        filename: picture.data_file_name,
+        content_type: picture.data_content_type,
+        file_size: picture.data_file_size,
+        file_url: picture.url_content,
+        created_at: picture.created_at,
+        updated_at: picture.updated_at,
+        user_name: picture.user&.name,
+        user_email: picture.user&.email,
+        projekt: picture.projekt,
+        dimensions: dimensions,
+        preview_url: picture.custom_thumb_url(width: 600, height: 450)
       )
     end
 end

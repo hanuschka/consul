@@ -16,15 +16,8 @@
 
       <div class='footer-phases-filter-subnav'>
         <% if helpers.show_admin_controls_for_projekt?(@projekt) %>
-          <% if helpers.embedded? %>
-            <% path = polymorphic_path([:frame_new_phase_selector, @namespace, @projekt]) %>
-            <a href="<%= path %>" class="page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new" title="Neue Phase hinzufügen">
-              <i class="fas fa-plus"></i>
-            </a>
-          <% else %>
-            <%= link_to(phases_adm_projekts_projekt_path(@projekt), class: "page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-projekt-footer-phase-tab--add-new", target: "_blank") do %>
-              <i class="fas fa-plus"></i>
-            <% end %>
+          <%= link_to(phases_adm_projekts_projekt_path(@projekt), class: "page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-projekt-footer-phase-tab--add-new", target: "_blank") do %>
+            <i class="fas fa-plus"></i>
           <% end %>
         <% end %>
         <ul id='filter-subnav' class='key-dates js-phases-list' role='tablist'>

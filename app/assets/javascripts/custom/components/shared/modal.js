@@ -28,8 +28,29 @@
 
     open: function(modalId) {
       const modal = document.getElementById(modalId);
+      this.bindEscHandling(modal);
       modal.showModal();
       this.lockScroll();
+    },
+
+    // Native Esc closes the dialog without going through close()/closeById(),
+    // so the scroll lock has to be released here. Dialogs marked with
+    // data-no-esc-close keep their Foundation-era "Esc does nothing" behavior.
+    bindEscHandling: function(modal) {
+      if (modal.dataset.escHandlingBound) return
+
+      modal.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return
+
+        if (modal.hasAttribute("data-no-esc-close")) {
+          event.preventDefault();
+          return
+        }
+
+        this.unlockScroll();
+      });
+
+      modal.dataset.escHandlingBound = "true";
     },
 
     close: function(closeButton) {
@@ -70,7 +91,10 @@
       htmlEl.style.top = "";
 
       if (scrollTop) {
-        window.scrollTo(0, -scrollTop);
+        // behavior: "instant" overrides any CSS `scroll-behavior: smooth`,
+        // which would otherwise animate the restore — making the page snap to
+        // the top and then visibly scroll back down after the modal closes.
+        window.scrollTo({ top: -scrollTop, left: 0, behavior: "instant" });
       }
     }
   };

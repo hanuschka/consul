@@ -25,7 +25,11 @@ rich-tooltip[hidden] {
   background-color: #ffffff;
   border: 1px solid #dddddd;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.rich-tooltip--body.-shadow-heavy {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.26), 0 4px 10px rgba(0, 0, 0, 0.16);
 }
 
 .rich-tooltip--body.-big {

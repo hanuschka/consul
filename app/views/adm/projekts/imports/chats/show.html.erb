@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: new_adm_projekts_import_path) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_imports_path, ultracompact: true) %>
 
   <div class="projekt-import-chat"
        data-controller="projekt-imports--chat"
@@ -12,7 +12,6 @@
        data-projekt-imports--chat-import-id-value="<%= @projekt_import.id %>"
        data-projekt-imports--chat-csrf-value="<%= form_authenticity_token %>"
        data-projekt-imports--chat-poll-interval-value="3500"
-       data-projekt-imports--chat-confirm-import-value="<%= t('.confirm_import') %>"
        data-projekt-imports--chat-confirm-start-over-value="<%= t('.confirm_start_over') %>"
        data-projekt-imports--chat-progress-finalizing-value="<%= t('.progress.finalizing_data') %>"
        data-projekt-imports--chat-progress-resolving-value="<%= t('.progress.resolving_content_blocks') %>"
@@ -46,6 +45,22 @@
          data-projekt-imports--chat-target="messages">
       <% @messages.each do |message| %>
         <%= render "adm/projekts/imports/chats/message", message: message, user: @chat_user %>
+      <% end %>
+
+      <% if @created_projekts.any? %>
+        <div class="projekt-import-chat--created-banner">
+          <span class="material-symbols-outlined projekt-import-chat--created-banner-icon" aria-hidden="true">celebration</span>
+          <div class="projekt-import-chat--created-banner-body">
+            <p class="projekt-import-chat--created-banner-title">
+              <%= t("adm.projekts.imports.chats.show.created_banner_title") %>
+            </p>
+            <% @created_projekts.each do |projekt| %>
+              <%= link_to projekt.name, projekt_path(projekt),
+                    class: "projekt-import-chat--created-banner-link",
+                    data: { turbo: false } %>
+            <% end %>
+          </div>
+        </div>
       <% end %>
 
       <div class="projekt-import-chat-bubble -ai projekt-import-chat--typing-indicator -hidden"
@@ -150,15 +165,55 @@
 
     <%# Import action %>
     <div class="projekt-import-chat--import-action">
-      <rich-tooltip delay="3000">
-        <button type="button"
-                class="projekt-import-chat--topbar-button -primary"
-                data-action="click->projekt-imports--chat#startImport">
-          <span class="material-symbols-outlined" aria-hidden="true">upload</span>
-          <%= t(".commands.import") %>
-        </button>
-        <%= render "adm/projekts/imports/chats/action_tooltip", key: "import" %>
-      </rich-tooltip>
+      <% if @created_projekts.any? %>
+        <%= link_to projekt_path(@created_projekts.last),
+              class: "projekt-import-chat--created-link",
+              data: { turbo: false } do %>
+          <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+          <%= t("adm.projekts.imports.list.projekt_created", title: @created_projekts.last.name) %>
+        <% end %>
+      <% end %>
+
+      <div class="projekt-import-chat--import-confirm"
+           data-controller="shared--confirm-dialog"
+           data-action="shared--confirm-dialog:confirmed->projekt-imports--chat#startImport">
+        <rich-tooltip delay="3000">
+          <button type="button"
+                  class="projekt-import-chat--topbar-button -primary"
+                  data-action="click->shared--confirm-dialog#open">
+            <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+            <%= @created_projekts.any? ? t(".commands.import_again") : t(".commands.import") %>
+          </button>
+          <%= render "adm/projekts/imports/chats/action_tooltip", key: "import" %>
+        </rich-tooltip>
+
+        <%= render Shared::ModalComponent.new(
+              id: "projekt-import-confirm-modal",
+              closeable: false,
+              data: {
+                "shared--confirm-dialog-target": "dialog",
+                action: "click->shared--confirm-dialog#backdrop"
+              }) do %>
+          <div class="projekt-import-confirm">
+            <button type="button"
+                    class="close-button round-icon-button"
+                    data-action="click->shared--confirm-dialog#close"
+                    aria-label="<%= t(".import_dialog.cancel") %>">
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+            <h2 class="kern-title kern-title--large projekt-import-confirm--title"><%= t(".import_dialog.title") %></h2>
+            <p class="kern-body projekt-import-confirm--message"><%= t(".confirm_import") %></p>
+            <div class="projekt-import-confirm--actions">
+              <button type="button" class="projekt-import-confirm--button -cancel" data-action="click->shared--confirm-dialog#close">
+                <span class="kern-label"><%= t(".import_dialog.cancel") %></span>
+              </button>
+              <button type="button" class="projekt-import-confirm--button -confirm" data-action="click->shared--confirm-dialog#confirm">
+                <span class="kern-label"><%= t(".import_dialog.confirm") %></span>
+              </button>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
 
     <%# Overlay during final import %>

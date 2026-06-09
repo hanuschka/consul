@@ -23,6 +23,16 @@ $_chat-error-text: #7f1d1d;
   min-height: 420px;
   background: #fff;
   overflow: hidden;
+  max-width: 800px;
+  margin: auto;
+}
+
+// Pull the chat left across the sidebar + icon-rail width (only where that nav
+// is shown, i.e. lg and up).
+@media (min-width: 992px) {
+  .projekt-import-chat {
+    margin-left: calc((var(--adm-nav-total-width) / 2));
+  }
 }
 
 .projekt-import-chat--error-banner {
@@ -714,5 +724,164 @@ $_chat-error-text: #7f1d1d;
 @keyframes projekt-import-chat-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.projekt-import-chat--created-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px 0 4px;
+  padding: 14px 16px;
+  color: #1a2332;
+  background: color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 8%, white);
+  border: 1px solid color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 30%, white);
+  border-radius: 12px;
+}
+
+.projekt-import-chat--created-banner-icon {
+  color: var(--kern-color-feedback-success, #1c7d3f);
+  font-size: 22px;
+}
+
+.projekt-import-chat--created-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.projekt-import-chat--created-banner-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.projekt-import-chat--created-banner-link {
+  font-size: 14px;
+  color: var(--kern-color-action-default);
+  text-decoration: none;
+  word-break: break-word;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-chat--created-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--kern-color-feedback-success, #1c7d3f);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-chat--created-link .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.projekt-import-chat--import-confirm {
+  display: contents;
+}
+
+.projekt-import-confirm {
+  max-width: 440px;
+}
+
+.projekt-import-confirm--title {
+  margin: 0 0 12px;
+  padding-right: 8px;
+}
+
+.projekt-import-confirm--message {
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
+.projekt-import-confirm--note {
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #5b6472;
+}
+
+.projekt-import-confirm--actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.projekt-import-confirm--button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+
+.projekt-import-confirm--button.-cancel {
+  color: #1a2332;
+  background: #f0f1f3;
+
+  &:hover {
+    background: color-mix(in srgb, #f0f1f3 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, #f0f1f3 80%, black);
+  }
+}
+
+.projekt-import-confirm--button.-confirm {
+  color: #fff;
+  background: #16a34a;
+
+  &:hover {
+    background: #15923f;
+  }
+
+  &:active {
+    background: #11833a;
+  }
+}
+
+.projekt-import-confirm--button.-danger {
+  color: #fff;
+  background: var(--kern-color-feedback-danger, #bd0f09);
+
+  &:hover {
+    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 78%, black);
   }
 }

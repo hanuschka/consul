@@ -14,9 +14,11 @@
   //   delay         show delay in ms (default 600, 0 allowed)
   //   hide-delay    hide delay in ms (default 150, 0 allowed)
   //   size          "default" | "big" | "no-paddings" (body padding preset)
+  //   shadow        "default" | "heavy" (body drop-shadow strength)
   //   trigger-only  show only while the trigger is hovered (body ignores
   //                 pointer events)
   //   template-id   use an external <template> by id instead of an inline one
+  //   body-class    extra css class(es) added to the tooltip body element
   class RichTooltip extends HTMLElement {
     connectedCallback() {
       if (this.tooltipBody) return
@@ -43,6 +45,8 @@
       this.hideDelay = this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
       this.placement = this.getAttribute("placement") || "top"
       this.size = this.getAttribute("size") || "default"
+      this.shadow = this.getAttribute("shadow") || "default"
+      this.bodyClass = this.getAttribute("body-class") || ""
       this.triggerOnly = this.hasAttribute("trigger-only")
 
       this.buildTooltipBody(template)
@@ -76,6 +80,15 @@
 
       if (this.size !== "default") {
         body.classList.add(`-${this.size}`)
+      }
+
+      if (this.shadow !== "default") {
+        body.classList.add(`-shadow-${this.shadow}`)
+      }
+
+      const extraClasses = this.bodyClass.split(/\s+/).filter(Boolean)
+      if (extraClasses.length) {
+        body.classList.add(...extraClasses)
       }
 
       if (this.triggerOnly) {

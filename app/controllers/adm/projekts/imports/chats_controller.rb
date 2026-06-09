@@ -12,6 +12,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     @chat_user = @projekt_import.user
     @chat_user_initials = chat_user_initials(@chat_user)
     @chat_user_image_url = chat_user_image_url(@chat_user)
+    @created_projekts = ordered_created_projekts
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -142,6 +143,14 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
   def pending_message_ids
     Array(params[:pending]).map(&:to_i).select(&:positive?)
+  end
+
+  def ordered_created_projekts
+    ids = @projekt_import.created_projekt_ids
+    return [] if ids.blank?
+
+    by_id = Projekt.where(id: ids).index_by(&:id)
+    ids.filter_map { |id| by_id[id] }
   end
 
   def find_projekt_import

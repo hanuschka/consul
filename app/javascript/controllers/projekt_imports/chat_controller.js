@@ -29,7 +29,6 @@ export default class extends Controller {
     importId: Number,
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
-    confirmImport: String,
     confirmStartOver: String,
     progressFinalizing: String,
     progressResolving: String,
@@ -47,6 +46,7 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
+    this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
     this.scheduleMessagesPoll()
@@ -186,9 +186,7 @@ export default class extends Controller {
     }
 
     if (state.status === "completed") {
-      this.clearPollTimer()
-      this.showOverlay(this.progressCreatingValue)
-      if (state.redirect_path) window.location.href = state.redirect_path
+      this.handleCompletion()
       return
     }
 
@@ -198,6 +196,22 @@ export default class extends Controller {
     }
 
     this.lastImportStatus = state.status
+    this.scheduleMessagesPoll()
+  }
+
+  // On the completion that happens live in this session, reload the chat so the
+  // server re-renders the success state (created-projekt banner + link + the
+  // "import again" button) without navigating away. A guard prevents an
+  // already-completed import (revisit) from reloading on every poll.
+  handleCompletion() {
+    this.hideOverlay()
+
+    if (!this.completionShown) {
+      this.completionShown = true
+      window.location.reload()
+      return
+    }
+
     this.scheduleMessagesPoll()
   }
 
@@ -230,8 +244,8 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === "completed" && data.redirect_path) {
-          window.location.href = data.redirect_path
+        if (data.status === "completed") {
+          this.handleCompletion()
           return
         }
         if (data.status === "failed") {
@@ -427,12 +441,9 @@ export default class extends Controller {
     this.sendCommand("summarize").then((data) => this.renderImmediateMessages(data))
   }
 
-  startImport(event) {
-    if (!window.confirm(this.confirmImportValue)) return
-
-    const tooltip = event.currentTarget.closest("rich-tooltip")
-    if (tooltip) tooltip.hide()
-
+  // Invoked by the shared confirm dialog's "confirmed" event (not directly by
+  // the import button), so the modal replaces the old window.confirm.
+  startImport() {
     this.dismissImportError()
     this.lastImportStatus = null
     this.showOverlay(this.progressFinalizingValue)

@@ -1,0 +1,524 @@
+// Past / unfinished imports list shown below the uploader on imports/new and as
+// section rows. Tokens mirror _from_file.scss (kept local to this file).
+
+$_list-radius: 12px;
+$_list-radius-sm: 10px;
+$_list-max-width: 800px;
+$_list-text: #1a2332;
+$_list-text-muted: #5b6472;
+$_list-border: #dbdfe4;
+$_list-surface: #fff;
+$_list-neutral-bg: #f0f1f3;
+
+.projekt-import-list {
+  width: 100%;
+  max-width: $_list-max-width;
+  margin: 16px auto 0;
+}
+
+.projekt-import-list--header-actions {
+  margin-left: auto;
+}
+
+.projekt-import-list--filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: $_list-max-width;
+  margin: 0 auto 4px;
+}
+
+.projekt-import-list--filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  color: $_list-text-muted;
+  text-decoration: none;
+  background: $_list-surface;
+  border: 1px solid $_list-border;
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+
+  &:hover {
+    color: $_list-text;
+    background: $_list-neutral-bg;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-list--filter-chip.-active {
+  color: #fff;
+  background: var(--kern-color-action-default);
+  border-color: var(--kern-color-action-default);
+}
+
+.projekt-import-list--filter-count {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.projekt-import-list--section {
+  margin-bottom: 28px;
+}
+
+.projekt-import-list--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 64px 24px;
+  text-align: center;
+  color: $_list-text-muted;
+}
+
+.projekt-import-list--empty-icon {
+  font-size: 40px;
+  color: color-mix(in srgb, $_list-text-muted 60%, white);
+}
+
+.projekt-import-list--empty-text {
+  margin: 0;
+  font-size: 16px;
+}
+
+.projekt-import-list--section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: $_list-text;
+}
+
+.projekt-import-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  color: $_list-text;
+  background: $_list-surface;
+  border: 1px solid $_list-border;
+  border-radius: $_list-radius;
+}
+
+.projekt-import-list-item--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  color: $_list-text-muted;
+  background: $_list-neutral-bg;
+  border-radius: 50%;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-list-item--icon .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.projekt-import-list-item--icon.-analyzing,
+.projekt-import-list-item--icon.-chatting,
+.projekt-import-list-item--icon.-submitting {
+  color: var(--kern-color-action-default);
+  background: color-mix(in srgb, var(--kern-color-action-default) 8%, white);
+}
+
+.projekt-import-list-item--icon.-completed {
+  color: var(--kern-color-feedback-success, #1c7d3f);
+  background: color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 10%, white);
+}
+
+.projekt-import-list-item--icon.-failed,
+.projekt-import-list-item--icon.-stalled {
+  color: var(--kern-color-feedback-danger, #bd0f09);
+  background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 10%, white);
+}
+
+.projekt-import-list-item--body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.projekt-import-list-item--headline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.projekt-import-list-item--files {
+  font-size: 16px;
+  font-weight: 600;
+  color: $_list-text;
+  text-decoration: none;
+  word-break: break-word;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-list-item--badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: $_list-text-muted;
+  background: $_list-neutral-bg;
+  border-radius: 999px;
+}
+
+.projekt-import-list-item--badge.-analyzing,
+.projekt-import-list-item--badge.-chatting,
+.projekt-import-list-item--badge.-submitting {
+  color: var(--kern-color-action-default);
+  background: color-mix(in srgb, var(--kern-color-action-default) 10%, white);
+}
+
+.projekt-import-list-item--badge.-completed {
+  color: var(--kern-color-feedback-success, #1c7d3f);
+  background: color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 12%, white);
+}
+
+.projekt-import-list-item--badge.-failed,
+.projekt-import-list-item--badge.-stalled {
+  color: var(--kern-color-feedback-danger, #bd0f09);
+  background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 12%, white);
+}
+
+.projekt-import-list-item--meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+  color: $_list-text-muted;
+}
+
+.projekt-import-list-item--spinner {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border: 2px solid color-mix(in srgb, var(--kern-color-action-default) 28%, white);
+  border-top-color: var(--kern-color-action-default);
+  border-radius: 50%;
+  animation: projekt-import-list-spin 0.8s linear infinite;
+}
+
+@keyframes projekt-import-list-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.projekt-import-list-item--error {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--kern-color-feedback-danger, #bd0f09);
+}
+
+.projekt-import-list-item--projekts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.projekt-import-projekt-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  color: $_list-text;
+  text-decoration: none;
+  background: $_list-neutral-bg;
+  border: 1px solid $_list-border;
+  border-radius: $_list-radius-sm;
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-projekt-badge--image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 40px;
+  overflow: hidden;
+  color: $_list-text-muted;
+  background: color-mix(in srgb, $_list-text-muted 14%, white);
+  border-radius: 6px;
+}
+
+.projekt-import-projekt-badge--img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.projekt-import-projekt-badge--text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.projekt-import-projekt-badge--title {
+  font-size: 14px;
+  font-weight: 600;
+  color: $_list-text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projekt-import-projekt-badge--subtitle {
+  font-size: 14px;
+  color: $_list-text-muted;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projekt-import-projekt-badge--open {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-size: 18px;
+  color: var(--kern-color-action-default);
+}
+
+.projekt-import-list-item--actions {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.projekt-import-list-item--primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+  background: var(--kern-color-action-default);
+  border: 0;
+  border-radius: $_list-radius-sm;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--kern-color-action-default) 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--kern-color-action-default) 78%, black);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-list-item--delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  color: $_list-text-muted;
+  background: transparent;
+  border: 0;
+  border-radius: $_list-radius-sm;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+
+  &:hover {
+    color: var(--kern-color-feedback-danger, #bd0f09);
+    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 10%, white);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 16%, white);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-list-item--delete-button .material-symbols-outlined {
+  font-size: 20px;
+}
+
+@media (max-width: 640px) {
+  .projekt-import-list-item {
+    flex-wrap: wrap;
+  }
+
+  .projekt-import-list-item--actions {
+    flex-direction: row;
+    width: 100%;
+  }
+}
+
+.projekt-import-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 560px;
+  padding: 48px 36px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.projekt-import-detail--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+  color: var(--kern-color-feedback-danger, #bd0f09);
+  background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 10%, white);
+  border-radius: 50%;
+}
+
+.projekt-import-detail--icon .material-symbols-outlined {
+  font-size: 30px;
+}
+
+.projekt-import-detail--title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: $_list-text;
+}
+
+.projekt-import-detail--message {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $_list-text-muted;
+}
+
+.projekt-import-detail--files {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.projekt-import-detail--file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $_list-text-muted;
+}
+
+.projekt-import-detail--actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.projekt-import-detail--dismiss-form {
+  margin: 0;
+}
+
+.projekt-import-detail--primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--kern-color-action-default);
+  border: 0;
+  border-radius: $_list-radius-sm;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background: color-mix(in srgb, var(--kern-color-action-default) 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--kern-color-action-default) 78%, black);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-detail--dismiss-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: $_list-text-muted;
+  background: $_list-neutral-bg;
+  border: 0;
+  border-radius: $_list-radius-sm;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    color: $_list-text;
+    background: color-mix(in srgb, $_list-neutral-bg 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, $_list-neutral-bg 80%, black);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}

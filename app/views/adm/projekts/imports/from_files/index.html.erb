@@ -1,0 +1,87 @@
+<%= content_for :title, t("adm.projekts.imports.index.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.imports.index.title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_root_path) do |header| %>
+  <% header.with_actions do %>
+    <div class="projekt-import-list--header-actions">
+      <%= kern_link_button new_adm_projekts_import_path,
+            text: t("adm.projekts.imports.index.new_import"),
+            icon: "upload_file",
+            style: :primary %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3" data-controller="projekt-imports--delete-confirm">
+  <nav class="projekt-import-list--filters" aria-label="<%= t('adm.projekts.imports.list.filters.aria') %>">
+    <% [
+         [nil, t("adm.projekts.imports.list.filters.all"), @import_counts.values.sum],
+         ["in_progress", t("adm.projekts.imports.list.filters.in_progress"), @import_counts["in_progress"]],
+         ["failed", t("adm.projekts.imports.list.filters.failed"), @import_counts["failed"]],
+         ["completed", t("adm.projekts.imports.list.filters.completed"), @import_counts["completed"]]
+       ].each do |key, label, count| %>
+      <% active = (key == @status_filter) %>
+      <%= link_to adm_projekts_imports_path(status: key),
+            class: "projekt-import-list--filter-chip #{'-active' if active}",
+            aria: { current: (active ? 'page' : nil) } do %>
+        <span class="projekt-import-list--filter-label"><%= label %></span>
+        <span class="projekt-import-list--filter-count"><%= count %></span>
+      <% end %>
+    <% end %>
+  </nav>
+
+  <% if @in_progress_imports.any? || @failed_imports.any? || @completed_imports.any? %>
+    <div class="projekt-import-list">
+      <%= render "import_section",
+            title: t("adm.projekts.imports.list.sections.in_progress"),
+            imports: @in_progress_imports,
+            created_projekts_by_id: @created_projekts_by_id %>
+      <%= render "import_section",
+            title: t("adm.projekts.imports.list.sections.failed"),
+            imports: @failed_imports,
+            created_projekts_by_id: @created_projekts_by_id %>
+      <%= render "import_section",
+            title: t("adm.projekts.imports.list.sections.completed"),
+            imports: @completed_imports,
+            created_projekts_by_id: @created_projekts_by_id %>
+    </div>
+  <% else %>
+    <div class="projekt-import-list--empty">
+      <span class="material-symbols-outlined projekt-import-list--empty-icon" aria-hidden="true">folder_open</span>
+      <p class="projekt-import-list--empty-text"><%= t("adm.projekts.imports.index.empty") %></p>
+    </div>
+  <% end %>
+
+  <%= render Shared::ModalComponent.new(
+        id: "projekt-import-delete-modal",
+        closeable: false,
+        data: {
+          "projekt-imports--delete-confirm-target": "dialog",
+          action: "click->projekt-imports--delete-confirm#backdrop"
+        }) do %>
+    <%= form_with url: "#", method: :delete,
+          data: { "projekt-imports--delete-confirm-target": "form" } do %>
+      <div class="projekt-import-confirm">
+        <button type="button"
+                class="close-button round-icon-button"
+                data-action="click->projekt-imports--delete-confirm#close"
+                aria-label="<%= t('adm.projekts.imports.list.delete_dialog.cancel') %>">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+        <h2 class="kern-title kern-title--large projekt-import-confirm--title"><%= t("adm.projekts.imports.list.delete_dialog.title") %></h2>
+        <p class="kern-body projekt-import-confirm--message">
+          <%= t("adm.projekts.imports.list.delete_dialog.message") %>
+          <strong class="projekt-import-confirm--target" data-projekt-imports--delete-confirm-target="label"></strong>
+        </p>
+        <p class="kern-body projekt-import-confirm--note"><%= t("adm.projekts.imports.list.delete_dialog.note") %></p>
+        <div class="projekt-import-confirm--actions">
+          <button type="button" class="projekt-import-confirm--button -cancel" data-action="click->projekt-imports--delete-confirm#close">
+            <span class="kern-label"><%= t("adm.projekts.imports.list.delete_dialog.cancel") %></span>
+          </button>
+          <button type="submit" class="projekt-import-confirm--button -danger">
+            <span class="kern-label"><%= t("adm.projekts.imports.list.delete_dialog.confirm") %></span>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

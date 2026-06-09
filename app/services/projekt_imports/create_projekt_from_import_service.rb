@@ -40,7 +40,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       phases.each { |entry| build_long_tail(projekt, entry) }
 
       projekt.update!(imported_by_ai: true)
-      projekt_import.update!(projekt_id: projekt.id)
+      projekt_import.record_created_projekt!(projekt)
     end
 
     ServiceResult.success(projekt: projekt)

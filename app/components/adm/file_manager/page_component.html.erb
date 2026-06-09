@@ -7,7 +7,8 @@
 <%= render Adm::HeaderComponent.new(
   title: title,
   breadcrumbs: breadcrumbs,
-  frontend_url: frontend_url
+  frontend_url: frontend_url,
+  compact: true
 ) do |header| %>
   <% if after_title? %>
     <% header.with_after_title do %>

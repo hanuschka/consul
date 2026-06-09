@@ -35,9 +35,12 @@
   margin: 2.25rem 0 2.5rem;
 
   &.-compact {
-    margin: 1rem 0;
+    margin: 18px 0;
     margin-top: 1.5rem;
-    font-size: 1.385rem;
+
+    h1 {
+      font-size: 1.385rem;
+    }
   }
 
   &.-ultracompact {
@@ -55,7 +58,8 @@
 
   p {
     line-height: 1.75;
-    max-width: 100ch
+    max-width: 100ch;
+    margin-bottom: 5px;
   }
 }
 

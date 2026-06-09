@@ -1,18 +1,18 @@
-<div class="files-filter-bar js-fm-filter-bar">
-  <div class="files-filter-bar--field files-filter-bar--field-search">
-    <i class="fa fa-search files-filter-bar--search-icon" aria-hidden="true"></i>
+<div class="adm-filter-bar js-adm-filter-bar">
+  <div class="adm-filter-bar--field adm-filter-bar--field-search">
+    <i class="fa fa-search adm-filter-bar--search-icon" aria-hidden="true"></i>
     <input
       type="search"
-      class="files-filter-bar--input files-filter-bar--input-search js-fm-filter-search"
+      class="adm-filter-bar--input adm-filter-bar--input-search js-fm-filter-search"
       placeholder="<%= t("files.filter_bar.search_placeholder") %>"
       aria-label="<%= t("files.filter_bar.aria.search") %>"
       data-action="input->files--filter-bar#inputChanged"
     >
   </div>
 
-  <div class="files-filter-bar--field">
+  <div class="adm-filter-bar--field">
     <select
-      class="files-filter-bar--input js-fm-filter-extension"
+      class="adm-filter-bar--input js-fm-filter-extension"
       aria-label="<%= t("files.filter_bar.aria.filter_extension") %>"
       data-action="change->files--filter-bar#filterChanged"
     >
@@ -27,9 +27,9 @@
     <%= turbo_frame_tag "files-imageable-type-filter",
         src: imageable_type_frame_src,
         loading: "lazy",
-        class: "files-filter-bar--frame" do %>
-      <div class="files-filter-bar--field">
-        <select class="files-filter-bar--input"
+        class: "adm-filter-bar--frame" do %>
+      <div class="adm-filter-bar--field">
+        <select class="adm-filter-bar--input"
                 aria-label="<%= t("files.filter_bar.aria.filter_imageable_type") %>"
                 disabled>
           <option value=""></option>
@@ -42,9 +42,9 @@
     <%= turbo_frame_tag "files-documentable-type-filter",
         src: documentable_type_frame_src,
         loading: "lazy",
-        class: "files-filter-bar--frame" do %>
-      <div class="files-filter-bar--field">
-        <select class="files-filter-bar--input"
+        class: "adm-filter-bar--frame" do %>
+      <div class="adm-filter-bar--field">
+        <select class="adm-filter-bar--input"
                 aria-label="<%= t("files.filter_bar.aria.filter_documentable_type") %>"
                 disabled>
           <option value=""></option>
@@ -53,14 +53,14 @@
     <% end %>
   <% end %>
 
-  <div class="files-filter-bar--field files-filter-bar--field-sort">
-    <i class="fa fa-sort files-filter-bar--sort-icon" aria-hidden="true"></i>
+  <div class="adm-filter-bar--field adm-filter-bar--field-sort">
+    <i class="fa fa-sort adm-filter-bar--sort-icon" aria-hidden="true"></i>
     <select
-      class="files-filter-bar--input files-filter-bar--input-sort js-fm-filter-sort"
+      class="adm-filter-bar--input adm-filter-bar--input-sort js-fm-filter-sort"
       aria-label="<%= t("files.filter_bar.aria.sort") %>"
       data-action="change->files--filter-bar#sortChanged"
     >
-      <% Files::FilterBarComponent::SORT_OPTIONS.each do |key| %>
+      <% Adm::FilterBarComponent::SORT_OPTIONS.each do |key| %>
         <option value="<%= key %>"><%= t("files.filter_bar.sort.#{key}") %></option>
       <% end %>
     </select>
@@ -68,7 +68,7 @@
 
   <button
     type="button"
-    class="files-filter-bar--reset-button js-fm-filter-reset"
+    class="adm-filter-bar--reset-button js-fm-filter-reset"
     data-action="click->files--filter-bar#resetClicked"
   >
     <%= t("files.filter_bar.reset") %>

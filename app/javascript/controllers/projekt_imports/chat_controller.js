@@ -446,7 +446,7 @@ export default class extends Controller {
   startImport() {
     this.dismissImportError()
     this.lastImportStatus = null
-    this.showOverlay(this.progressFinalizingValue)
+    this.showOverlay(this.progressCreatingValue)
 
     const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
 

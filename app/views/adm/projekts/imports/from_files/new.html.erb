@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_imports_path) %>
 
 <div class="kern-container my-5">
   <div class="projekt-import-from-file"
@@ -10,8 +10,6 @@
        data-projekt-imports--from-file-allowed-value="<%= Adm::Projekts::Imports::FromFilesController::ALLOWED_EXTENSIONS.join(',') %>"
        data-projekt-imports--from-file-csrf-value="<%= form_authenticity_token %>"
        data-projekt-imports--from-file-progress-extracting-value="<%= t('.progress.extracting') %>"
-       data-projekt-imports--from-file-progress-processing-value="<%= t('.progress.processing') %>"
-       data-projekt-imports--from-file-progress-chatting-value="<%= t('.progress.chatting') %>"
        data-projekt-imports--from-file-error-too-large-value="<%= t('.errors.too_large') %>"
        data-projekt-imports--from-file-error-unsupported-value="<%= t('.errors.unsupported_type') %>"
        data-projekt-imports--from-file-error-no-files-value="<%= t('.errors.no_files') %>">
@@ -67,14 +65,6 @@
                     data-projekt-imports--from-file-target="instructions"
                     rows="4"
                     placeholder="<%= t('.instructions_placeholder') %>"></textarea>
-        </div>
-
-        <div class="projekt-import-from-file--options">
-          <%= render Kern::SwitchComponent.new(
-                label: t(".generate_image_label"),
-                row: true,
-                input_data: { "projekt-imports--from-file-target" => "generateImage" }
-              ) %>
         </div>
 
         <div class="projekt-import-from-file--inline-error"

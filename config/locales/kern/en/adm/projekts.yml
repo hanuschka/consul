@@ -13,7 +13,7 @@ en:
           new: New project
           all: All projects
           current: Active projects
-          import_projekt: Import project from file
+          imports: Projekt import
       menu:
         aria_label: Projects navigation
         items:

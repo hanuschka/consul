@@ -208,7 +208,7 @@ namespace :adm do
       end
     end
 
-    resources :imports, only: [:new, :create, :show], controller: "imports/from_files" do
+    resources :imports, only: [:index, :new, :create, :show, :destroy], controller: "imports/from_files" do
       member do
         get :status
         post :reset

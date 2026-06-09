@@ -23,6 +23,17 @@ $_chat-error-text: #7f1d1d;
   min-height: 420px;
   background: #fff;
   overflow: hidden;
+  max-width: 800px;
+  margin: auto;
+}
+
+// The chat is centered within the content area, which is offset right by the
+// sidebar + icon-rail. Shift it left by half that nav width so it lands on the
+// true page center (only where the nav is shown, i.e. lg and up).
+@media (min-width: 1420px) {
+  .projekt-import-chat {
+    transform: translateX(calc(var(--adm-nav-total-width) / -2));
+  }
 }
 
 .projekt-import-chat--error-banner {
@@ -714,5 +725,191 @@ $_chat-error-text: #7f1d1d;
 @keyframes projekt-import-chat-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.projekt-import-chat--created-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px 0 4px;
+  padding: 14px 16px;
+  color: #1a2332;
+  background: color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 8%, white);
+  border: 1px solid color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 30%, white);
+  border-radius: 12px;
+}
+
+.projekt-import-chat--created-banner-icon {
+  color: var(--kern-color-feedback-success, #1c7d3f);
+  font-size: 22px;
+}
+
+.projekt-import-chat--created-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.projekt-import-chat--created-banner-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.projekt-import-chat--created-banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--kern-color-action-default);
+  text-decoration: none;
+  word-break: break-word;
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-chat--created-banner-link-thumb {
+  flex-shrink: 0;
+  display: inline-flex;
+
+  .thumbnail {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+}
+
+.projekt-import-chat--created-banner-link-name {
+  .projekt-import-chat--created-banner-link:hover & {
+    text-decoration: underline;
+  }
+}
+
+.projekt-import-chat--created-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--kern-color-feedback-success, #1c7d3f);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-chat--created-link .material-symbols-outlined {
+  flex-shrink: 0;
+  font-size: 22px;
+}
+
+.projekt-import-chat--created-link-label {
+  max-width: 340px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.projekt-import-chat--import-confirm {
+  display: contents;
+}
+
+.projekt-import-confirm {
+  max-width: 440px;
+}
+
+.projekt-import-confirm--title {
+  margin: 0 0 12px;
+  padding-right: 8px;
+}
+
+.projekt-import-confirm--message {
+  margin: 0 0 30px;
+  line-height: 1.5;
+}
+
+.projekt-import-confirm--note {
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #5b6472;
+}
+
+.projekt-import-confirm--actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.projekt-import-confirm--button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-confirm--button .kern-label {
+  color: inherit;
+}
+
+.projekt-import-confirm--button.-cancel {
+  color: #1a2332;
+  background: #f0f1f3;
+
+  &:hover {
+    background: color-mix(in srgb, #f0f1f3 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, #f0f1f3 80%, black);
+  }
+}
+
+.projekt-import-confirm--button.-confirm {
+  color: #fff;
+  background: #2e7d32;
+
+  &:hover {
+    background: color-mix(in srgb, #2e7d32 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, #2e7d32 78%, black);
+  }
+}
+
+.projekt-import-confirm--button.-danger {
+  color: #fff;
+  background: var(--kern-color-feedback-danger, #bd0f09);
+
+  &:hover {
+    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 78%, black);
   }
 }

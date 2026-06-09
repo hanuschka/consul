@@ -8,6 +8,17 @@
   const DEFAULT_HIDE_DELAY = 150;
   const DEFAULT_SHOW_DELAY = 600;
 
+  // <rich-tooltip> wraps a trigger (first non-template child) + a <template>
+  // body. Attributes:
+  //   placement     "top" (default) | "right"
+  //   delay         show delay in ms (default 600, 0 allowed)
+  //   hide-delay    hide delay in ms (default 150, 0 allowed)
+  //   size          "default" | "big" | "no-paddings" (body padding preset)
+  //   shadow        "default" | "heavy" (body drop-shadow strength)
+  //   trigger-only  show only while the trigger is hovered (body ignores
+  //                 pointer events)
+  //   template-id   use an external <template> by id instead of an inline one
+  //   body-class    extra css class(es) added to the tooltip body element
   class RichTooltip extends HTMLElement {
     connectedCallback() {
       if (this.tooltipBody) return
@@ -34,6 +45,9 @@
       this.hideDelay = this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
       this.placement = this.getAttribute("placement") || "top"
       this.size = this.getAttribute("size") || "default"
+      this.shadow = this.getAttribute("shadow") || "default"
+      this.bodyClass = this.getAttribute("body-class") || ""
+      this.triggerOnly = this.hasAttribute("trigger-only")
 
       this.buildTooltipBody(template)
       this.bindEvents()
@@ -66,6 +80,19 @@
 
       if (this.size !== "default") {
         body.classList.add(`-${this.size}`)
+      }
+
+      if (this.shadow !== "default") {
+        body.classList.add(`-shadow-${this.shadow}`)
+      }
+
+      const extraClasses = this.bodyClass.split(/\s+/).filter(Boolean)
+      if (extraClasses.length) {
+        body.classList.add(...extraClasses)
+      }
+
+      if (this.triggerOnly) {
+        body.style.pointerEvents = "none"
       }
 
       if (SUPPORTS_POPOVER) {
@@ -103,13 +130,19 @@
       this.trigger.addEventListener("mouseenter", this.scheduleShow.bind(this))
       this.trigger.addEventListener("focusin", this.scheduleShow.bind(this))
       this.trigger.addEventListener("focusout", this.scheduleHide.bind(this))
-      this.tooltipBody.addEventListener("mouseenter", this.cancelHide.bind(this))
-      this.addEventListener("mouseleave", this.scheduleHide.bind(this))
       this.addEventListener("keydown", this.handleKeydown.bind(this))
+
+      if (this.triggerOnly) {
+        this.trigger.addEventListener("mouseleave", this.scheduleHide.bind(this))
+      } else {
+        this.tooltipBody.addEventListener("mouseenter", this.cancelHide.bind(this))
+        this.addEventListener("mouseleave", this.scheduleHide.bind(this))
+      }
     }
 
     scheduleShow() {
       clearTimeout(this.hideTimeout)
+      clearTimeout(this.showTimeout)
       this.showTimeout = setTimeout(this.show.bind(this), this.showDelay)
     }
 

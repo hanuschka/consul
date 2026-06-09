@@ -2,14 +2,26 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
   MAX_AGGREGATE_BYTES = 45.megabytes
   ALLOWED_EXTENSIONS = %w[pdf docx odt txt md].freeze
 
+  STATUS_FILTERS = %w[in_progress failed completed].freeze
+
   before_action :authorize_create
-  before_action :find_projekt_import, only: [:show, :status, :reset]
+  before_action :find_projekt_import, only: [:show, :status, :reset, :destroy]
+
+  def index
+    load_import_lists
+
+    @breadcrumbs = [
+      { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
+      { name: t("adm.projekts.imports.index.title") }
+    ]
+  end
 
   def new
     @projekt_import = current_user.projekt_imports.build
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
+      { name: t("adm.projekts.imports.index.title"), url: adm_projekts_imports_path },
       { name: t(".title") }
     ]
   end
@@ -35,7 +47,6 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
 
     @projekt_import = current_user.projekt_imports.create!(
       status: "pending",
-      generate_image: ActiveModel::Type::Boolean.new.cast(params[:generate_image]),
       additional_user_instructions: params[:additional_user_instructions].presence
     )
     files.each { |file| @projekt_import.source_files.attach(file) }
@@ -45,12 +56,30 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
     render json: {
       id: @projekt_import.id,
       status: @projekt_import.status,
-      status_url: status_adm_projekts_import_path(@projekt_import)
+      import_url: adm_projekts_import_path(@projekt_import)
     }
   end
 
   def show
-    redirect_to adm_projekts_import_chat_path(@projekt_import) if @projekt_import.chatting?
+    if @projekt_import.chatting? || @projekt_import.submitting? || @projekt_import.completed?
+      redirect_to adm_projekts_import_chat_path(@projekt_import)
+      return
+    end
+
+    if @projekt_import.abandoned?
+      redirect_to new_adm_projekts_import_path
+      return
+    end
+
+    @stalled = @projekt_import.stalled?
+    @status_url = status_adm_projekts_import_path(@projekt_import)
+    @chat_url = adm_projekts_import_chat_path(@projekt_import)
+
+    @breadcrumbs = [
+      { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
+      { name: t("adm.projekts.imports.from_files.new.title"), url: new_adm_projekts_import_path },
+      { name: t("adm.projekts.imports.from_files.show.title") }
+    ]
   end
 
   def status
@@ -71,7 +100,17 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
   def reset
     @projekt_import.mark_abandoned!
 
-    render json: { status: @projekt_import.status, new_url: new_adm_projekts_import_path }
+    respond_to do |format|
+      format.json { render json: { status: @projekt_import.status, new_url: new_adm_projekts_import_path } }
+      format.html { redirect_to new_adm_projekts_import_path }
+    end
+  end
+
+  def destroy
+    authorize [:adm, :projekts, @projekt_import], :destroy?
+    @projekt_import.destroy
+
+    redirect_to adm_projekts_imports_path(status: params[:status].presence)
   end
 
   private
@@ -82,6 +121,38 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
 
   def find_projekt_import
     @projekt_import = current_user.projekt_imports.find(params[:id])
+  end
+
+  def load_import_lists
+    imports = policy_scope(
+      ProjektImport, policy_scope_class: Adm::Projekts::ProjektImportPolicy::Scope
+    ).with_attached_source_files
+
+    @status_filter = params[:status].presence_in(STATUS_FILTERS)
+    @import_counts = {
+      "in_progress" => imports.in_progress.count,
+      "failed" => imports.failed.count,
+      "completed" => imports.completed.count
+    }
+
+    @imports = filtered_imports(imports).for_listing.page(params[:page]).per(20)
+    @created_projekts_by_id = created_projekts_map(@imports)
+  end
+
+  def filtered_imports(imports)
+    case @status_filter
+    when "in_progress" then imports.in_progress
+    when "failed" then imports.failed
+    when "completed" then imports.completed
+    else imports.where.not(status: "abandoned")
+    end
+  end
+
+  def created_projekts_map(imports)
+    ids = imports.flat_map { |import| import.created_projekt_ids + [import.projekt_id] }.compact.uniq
+    return {} if ids.empty?
+
+    Projekt.where(id: ids).includes(:page).index_by(&:id)
   end
 
   def allowed_extension?(file)

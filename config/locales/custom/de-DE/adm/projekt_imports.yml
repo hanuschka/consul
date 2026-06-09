@@ -27,6 +27,47 @@ de:
               no_files: "Bitte wählen Sie mindestens eine Datei aus."
               too_large: "Die ausgewählten Dateien überschreiten das Limit von 45 MB."
               unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
+          show:
+            title: "Importfortschritt"
+            failed_title: "Import fehlgeschlagen"
+            stalled_title: "Analyse hängt fest"
+            stalled_message: "Die Analyse dauert ungewöhnlich lange und ist möglicherweise fehlgeschlagen. Sie können diesen Import verwerfen und es erneut versuchen."
+            dismiss: "Verwerfen"
+            upload_new: "Neues Dokument hochladen"
+        list:
+          sections:
+            in_progress: "Laufende Importe"
+            failed: "Fehlgeschlagene Importe"
+            completed: "Abgeschlossene Importe"
+          states:
+            analyzing: "Analyse läuft"
+            stalled: "Hängt fest"
+            chatting: "Im Chat"
+            submitting: "Wird erstellt"
+            failed: "Fehlgeschlagen"
+            completed: "Abgeschlossen"
+          actions:
+            continue: "Fortsetzen"
+            open_chat: "Chat öffnen"
+            open_details: "Details ansehen"
+            delete: "Löschen"
+          no_files: "Keine Dateien"
+          files_summary: "%{first} +%{count}"
+          created_at: "Erstellt: %{time}"
+          finished_at: "Beendet: %{time}"
+          projekt_created: "Projekt erstellt: %{title}"
+          filters:
+            aria: "Nach Status filtern"
+            all: "Alle"
+            in_progress: "Laufend"
+            failed: "Fehlgeschlagen"
+            completed: "Abgeschlossen"
+          delete_dialog:
+            title: "Import löschen?"
+            message: "Dieser Import wird dauerhaft gelöscht:"
+            note: "Das daraus erstellte Projekt bleibt erhalten."
+            confirm: "Löschen"
+            cancel: "Abbrechen"
         chats:
           show:
             title: "Projektimport verfeinern"
@@ -36,8 +77,13 @@ de:
             assistant_label: "KI"
             user_label: "Sie"
             confirm_import: "Projekt jetzt importieren? Damit wird ein neues Projekt mit allen Phasen und Inhaltsblöcken erstellt."
+            import_dialog:
+              title: "Projekt importieren?"
+              confirm: "Jetzt importieren"
+              cancel: "Abbrechen"
             confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
             generate_image_toggle: "Titelbild generieren"
+            created_banner_title: "Dieser Import hat folgende Projekte erstellt:"
             tooltips:
               start_over:
                 title: "Neu starten"
@@ -61,6 +107,7 @@ de:
               regenerate: "Neu generieren"
               summarize: "Dokument zusammenfassen"
               import: "Projekt importieren"
+              import_again: "Als neues Projekt importieren"
               start_over: "Neu starten"
             progress:
               finalizing_data: "Änderungen werden finalisiert…"
@@ -121,3 +168,6 @@ de:
           imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."
         index:
           new_button: "Aus Dokument importieren"
+          title: "Projektimporte"
+          new_import: "Neuer Projektimport"
+          empty: "Noch keine Projektimporte vorhanden."

@@ -212,3 +212,12 @@ application.register("projekt-imports--from-file", ProjektImportsFromFileControl
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)
+
+import ProjektImportsStatusController from "./projekt_imports/status_controller"
+application.register("projekt-imports--status", ProjektImportsStatusController)
+
+import SharedConfirmDialogController from "./shared/confirm_dialog_controller"
+application.register("shared--confirm-dialog", SharedConfirmDialogController)
+
+import ProjektImportsDeleteConfirmController from "./projekt_imports/delete_confirm_controller"
+application.register("projekt-imports--delete-confirm", ProjektImportsDeleteConfirmController)

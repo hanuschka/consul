@@ -10,7 +10,7 @@ info:
 
     ## Authentication
 
-    This API uses **Bearer Token (Auth Token)** authentication. All requests require an API client with a valid authentication token.
+    This API uses **Bearer Token** authentication. Every request — including read-only `GET` requests — requires an API client with a valid token; a missing or invalid token returns `401 Unauthorized` (see *HTTP Method Requirements* below).
 
     ### Creating an API Client
 
@@ -34,11 +34,13 @@ info:
     Authorization: Bearer YOUR_AUTH_TOKEN
     ```
 
-    The auth token is automatically generated for each API client and can be obtained via:
+    The access token is automatically generated for each API client and can be obtained via:
 
     ```ruby
-    api_client.auth_token
+    api_client.access_token
     ```
+
+    The token can be rotated with `api_client.regenerate_access_token`.
 
     ### Access Levels
 
@@ -47,12 +49,27 @@ info:
 
     #### HTTP Method Requirements
 
+    Every request — including `GET` — must carry a valid `Authorization: Bearer <token>` header. A missing or unrecognized token returns `401 Unauthorized` **before** any access-level check is evaluated (enforced by `authenticate_api_client!`, which runs as a `before_action` on every endpoint). There is no anonymous/public GET access.
+
+    Once a valid token is presented, the client's access level controls what it may do:
+
     - **GET**: Available to both `admin` and `public_data` access levels
     - **POST (Create)**: Requires `admin` access level
     - **PATCH (Update)**: Requires `admin` access level
     - **DELETE**: Requires `admin` access level
 
     Requests with `public_data` access level attempting to use POST, PATCH, or DELETE will receive a `403 Forbidden` error.
+
+    #### Authentication vs. authorization errors
+
+    - **`401 Unauthorized`** — *authentication* failure. A missing or invalid Bearer token rejects the request (all methods, including GET) before any read/admin check. Body:
+      ```json
+      { "error": { "type": "unauthorized", "messages": ["Invalid or missing API token."] } }
+      ```
+    - **`403 Forbidden`** — *authorization* failure. A **valid** token whose access level is insufficient (e.g. a `public_data` client attempting POST/PATCH/DELETE). Body:
+      ```json
+      { "error": { "type": "forbidden", "messages": ["You do not have permission to perform this action. Admin access required."] } }
+      ```
 
     ## Key Features
 
@@ -79,8 +96,7 @@ info:
     ```
 
     This generates:
-    - `swagger/v1/swagger.yaml` - OpenAPI specification in YAML format
-    - `public/openapi.yaml` - Public OpenAPI specification
+    - `public/api_docs/v1/swagger.yaml` - OpenAPI specification in YAML format
 
     **Note:** Whenever you modify specs in `spec/requests/api` or `spec/schemas`, you must regenerate the API documentation.
 
@@ -112,14 +128,23 @@ info:
     ```
 
     **Error Response:**
+
+    All errors share the envelope `{ "error": { "type": ..., "messages": [...] } }`. The API produces these types:
+
     ```json
     {
       "error": {
         "type": "forbidden",
-        "messages": ["Access denied"]
+        "messages": ["You do not have permission to read this resource."]
       }
     }
     ```
+
+    | HTTP status | `type`         | Example message                                     |
+    |-------------|----------------|-----------------------------------------------------|
+    | 401         | `unauthorized` | `Invalid or missing API token.`                     |
+    | 403         | `forbidden`    | `You do not have permission to read this resource.` |
+    | 404         | `not_found`    | `Not found`                                          |
 
     ## Pagination
 
@@ -207,6 +232,22 @@ paths:
                 - pagination
         '404':
           description: projekt phase not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt argument
       tags:
@@ -246,6 +287,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -350,6 +423,22 @@ paths:
                 - data
         '404':
           description: projekt argument not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt argument
       tags:
@@ -392,6 +481,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -495,6 +616,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/auth/rotate_token":
     post:
       summary: Rotate API access token
@@ -624,8 +777,8 @@ paths:
                     type: object
                 required:
                 - data
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -687,6 +840,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -943,6 +1112,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/investments/{id}":
     parameters:
     - name: id
@@ -980,8 +1165,8 @@ paths:
                 - data
         '404':
           description: budget investment not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -1042,6 +1227,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -1274,6 +1475,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/budgets/{budget_id}/budget_phases":
     parameters:
     - name: budget_id
@@ -1328,6 +1545,22 @@ paths:
                 - data
         '404':
           description: budget not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/budget_phases/{id}":
     parameters:
     - name: id
@@ -1376,6 +1609,22 @@ paths:
                     - budget_phase
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a budget phase
       tags:
@@ -1405,6 +1654,22 @@ paths:
                 - data
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -1497,6 +1762,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/budgets":
     parameters:
     - name: projekt_phase_id
@@ -1558,6 +1839,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a budget
       tags:
@@ -1602,6 +1899,22 @@ paths:
                         type: array
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -1770,8 +2083,8 @@ paths:
                 - data
         '404':
           description: budget not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -1831,6 +2144,22 @@ paths:
                         type: array
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -2007,6 +2336,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/comments":
     parameters:
     - name: projekt_phase_id
@@ -2084,6 +2429,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a comment
       tags:
@@ -2134,6 +2495,22 @@ paths:
           description: invalid reply - parent comment not found
         '403':
           description: forbidden - admin access required for replies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -2220,6 +2597,22 @@ paths:
                     type: object
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/comments/{id}":
     parameters:
     - name: id
@@ -2279,8 +2672,8 @@ paths:
                 - data
         '404':
           description: comment not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -2347,6 +2740,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/deficiency_report_categories":
     get:
       summary: List deficiency report categories
@@ -2392,6 +2801,22 @@ paths:
                     type: object
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/deficiency_reports":
     get:
       summary: List deficiency reports
@@ -2438,6 +2863,22 @@ paths:
                     type: object
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a deficiency report
       tags:
@@ -2478,6 +2919,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -2662,6 +3135,22 @@ paths:
                 - data
         '404':
           description: deficiency report not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a deficiency report
       tags:
@@ -2700,6 +3189,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -2895,6 +3416,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt event
       tags:
@@ -2933,6 +3470,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -3074,6 +3643,22 @@ paths:
                 - data
         '404':
           description: projekt event not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt event
       tags:
@@ -3112,6 +3697,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -3246,6 +3863,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/formulars":
     parameters:
     - name: projekt_phase_id
@@ -3369,6 +4018,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/formulars/{id}":
     parameters:
     - name: id
@@ -3467,6 +4132,22 @@ paths:
                 - data
         '404':
           description: formular not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/idea_categories":
     get:
       summary: List idea categories
@@ -3519,8 +4200,8 @@ paths:
                         type: integer
                 required:
                 - data
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -3660,8 +4341,8 @@ paths:
                 - data
         '404':
           description: idea category not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -3733,6 +4414,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -3790,6 +4487,22 @@ paths:
                           type: string
         '404':
           description: idea category not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/idea_officers":
     get:
       summary: List idea officers
@@ -3844,8 +4557,8 @@ paths:
                         type: integer
                 required:
                 - data
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -3905,8 +4618,8 @@ paths:
                     type: object
                 required:
                 - data
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -3961,6 +4674,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -4138,8 +4883,8 @@ paths:
                 - data
         '404':
           description: idea not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -4208,6 +4953,22 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -4357,8 +5118,8 @@ paths:
                 - data
         '404':
           description: iframe not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -4415,6 +5176,22 @@ paths:
           description: iframe not found
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -4506,6 +5283,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt livestream
       tags:
@@ -4545,6 +5338,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -4636,6 +5461,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/livestreams/{id}":
     parameters:
     - name: id
@@ -4673,6 +5514,22 @@ paths:
                 - data
         '404':
           description: projekt livestream not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt livestream
       tags:
@@ -4713,6 +5570,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -4785,6 +5674,73 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/masterportal/category_icons":
+    post:
+      summary: Sync a category icon from Masterportal
+      tags:
+      - Masterportal
+      security:
+      - masterportal_sync_auth: []
+      description: |-
+        Upload and attach an icon image to a ProjektPointOfInterestCategory identified by projekt_phase_id + category_name. Used by external Masterportal systems to sync POI category icons.
+
+        *Authentication: This endpoint uses the static Masterportal sync secret sent as `Authorization: Bearer <token>`, NOT an ApiClient access token. The `admin` / `public_data` access-level model does not apply.*
+      parameters: []
+      responses:
+        '204':
+          description: icon attached
+        '401':
+          description: invalid or missing sync token
+        '404':
+          description: no matching category
+        '422':
+          description: oversize upload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: integer
+        required: true
+        description: Projekt Phase ID (PointOfInterestPhase)
   "/api/milestone_statuses":
     get:
       summary: List all milestone statuses
@@ -4837,6 +5793,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a milestone status
       tags:
@@ -4874,6 +5846,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -4929,6 +5933,22 @@ paths:
                 - data
         '404':
           description: milestone status not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a milestone status
       tags:
@@ -4968,6 +5988,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -5021,6 +6073,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/milestones":
     parameters:
     - name: projekt_phase_id
@@ -5083,8 +6167,10 @@ paths:
                 required:
                 - data
                 - pagination
-        '403':
-          description: forbidden - insufficient access
+        '404':
+          description: projekt phase not found
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -5099,8 +6185,6 @@ paths:
                         type: array
                         items:
                           type: string
-        '404':
-          description: projekt phase not found
     post:
       summary: Create a milestone
       tags:
@@ -5145,6 +6229,38 @@ paths:
                           type: string
         '404':
           description: projekt phase not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -5403,6 +6519,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt notification
       tags:
@@ -5442,6 +6574,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -5529,6 +6693,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/notifications/{id}":
     parameters:
     - name: id
@@ -5566,6 +6746,22 @@ paths:
                 - data
         '404':
           description: projekt notification not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt notification
       tags:
@@ -5603,6 +6799,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -5664,6 +6892,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/point_of_interest_categories":
     parameters:
     - name: projekt_phase_id
@@ -5724,6 +6984,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt point of interest category
       tags:
@@ -5761,6 +7037,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -5839,6 +7147,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/point_of_interest_categories/{id}":
     parameters:
     - name: id
@@ -5874,6 +7198,22 @@ paths:
                 - data
         '404':
           description: projekt point of interest category not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt point of interest category
       tags:
@@ -5913,6 +7253,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -5973,6 +7345,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/point_of_interest_pins":
     parameters:
     - name: projekt_phase_id
@@ -6032,6 +7436,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt point of interest pin
       tags:
@@ -6069,6 +7489,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -6161,6 +7613,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/point_of_interest_pins/{id}":
     parameters:
     - name: id
@@ -6196,6 +7664,22 @@ paths:
                 - data
         '404':
           description: projekt point of interest pin not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt point of interest pin
       tags:
@@ -6235,6 +7719,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -6309,6 +7825,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/poll_questions/{poll_question_id}/answers":
     parameters:
     - name: poll_question_id
@@ -6346,6 +7894,22 @@ paths:
                 - data
         '404':
           description: question not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a poll question answer
       tags:
@@ -6390,6 +7954,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -6514,6 +8094,38 @@ paths:
                     type: string
                 required:
                 - message
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -6563,6 +8175,22 @@ paths:
                 - data
         '404':
           description: answer not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a poll question answer
       tags:
@@ -6592,6 +8220,22 @@ paths:
                 - data
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -6732,6 +8376,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/polls/{poll_id}/questions":
     parameters:
     - name: poll_id
@@ -6770,6 +8430,22 @@ paths:
                 - data
         '404':
           description: poll not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a poll question
       tags:
@@ -6813,6 +8489,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -6950,6 +8642,22 @@ paths:
                 - data
         '404':
           description: question not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a poll question
       tags:
@@ -6979,6 +8687,22 @@ paths:
                 - data
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -7128,6 +8852,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/polls":
     parameters:
     - name: projekt_phase_id
@@ -7189,6 +8929,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a poll
       tags:
@@ -7234,6 +8990,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -7349,6 +9121,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/polls/{id}":
     parameters:
     - name: id
@@ -7385,8 +9173,8 @@ paths:
                 - data
         '404':
           description: poll not found
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -7446,6 +9234,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -7556,6 +9360,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/progress_bars":
     parameters:
     - name: projekt_phase_id
@@ -7595,6 +9415,22 @@ paths:
                 - data
         '404':
           description: projekt phase not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a progress bar
       tags:
@@ -7639,6 +9475,38 @@ paths:
                           type: string
         '404':
           description: projekt phase not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -7701,6 +9569,22 @@ paths:
                 - data
         '404':
           description: progress bar not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a progress bar
       tags:
@@ -7719,6 +9603,38 @@ paths:
           description: invalid update
         '404':
           description: progress bar not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -7768,6 +9684,38 @@ paths:
                 - message
         '404':
           description: progress bar not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekts/{projekt_id}/projekt_phases":
     parameters:
     - name: projekt_id
@@ -7806,6 +9754,22 @@ paths:
                     - projekt_phases
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt phase
       tags:
@@ -7845,6 +9809,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -8037,6 +10033,38 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -8093,6 +10121,22 @@ paths:
                 - data
         '404':
           description: projekt phase not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt phase
       tags:
@@ -8132,6 +10176,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -8308,6 +10384,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekts":
     get:
       summary: List all projekts
@@ -8384,8 +10492,8 @@ paths:
                     - projekts
                 required:
                 - data
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -8443,6 +10551,22 @@ paths:
                         type: object
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -8535,6 +10659,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt
       tags:
@@ -8579,6 +10719,22 @@ paths:
                         type: object
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -8652,6 +10808,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekts/{id}/update_page":
     parameters:
     - name: id
@@ -8704,6 +10876,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -8819,6 +11007,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -8950,6 +11154,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
       requestBody:
         content:
           application/json:
@@ -9058,6 +11278,22 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a proposal
       tags:
@@ -9072,7 +11308,7 @@ paths:
       parameters: []
       responses:
         '201':
-          description: proposal created with base64 image
+          description: 'proposal created as draft (published: false)'
           content:
             application/json:
               schema:
@@ -9103,6 +11339,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -9179,6 +11431,13 @@ paths:
                       nullable: true
                       description: Array of projekt label IDs to associate with this
                         proposal
+                    published:
+                      type: boolean
+                      nullable: true
+                      description: Whether to publish the proposal immediately on
+                        creation, making it visible in the frontend. Defaults to true.
+                        Set to false to create the proposal as a draft and publish
+                        it later via PATCH /api/proposals/{id}/publish.
                     map_location_attributes:
                       type: object
                       nullable: true
@@ -9377,6 +11636,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/proposals/{id}":
     parameters:
     - name: id
@@ -9416,6 +11691,22 @@ paths:
           description: proposal not found
         '403':
           description: forbidden - public_data cannot access draft proposal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -9472,6 +11763,22 @@ paths:
                           type: string
         '403':
           description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -9727,6 +12034,92 @@ paths:
                         type: array
                         items:
                           type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/proposals/{id}/publish":
+    parameters:
+    - name: id
+      in: path
+      description: Proposal ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Publish a proposal
+      tags:
+      - Proposals
+      security:
+      - bearer_auth: []
+      description: "Publish a previously created proposal, setting its published_at
+        timestamp and making it visible in the frontend. Idempotent: publishing an
+        already-published proposal returns it unchanged without re-sending notifications.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: proposal published
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      proposal:
+                        "$ref": "#/components/schemas/Proposal"
+                    required:
+                    - proposal
+                required:
+                - data
+        '404':
+          description: proposal not found
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/questions/{question_id}/question_options":
     parameters:
     - name: question_id
@@ -9775,6 +12168,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -9828,6 +12253,22 @@ paths:
                 - data
         '404':
           description: question option not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a question option
       tags:
@@ -9867,6 +12308,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -9920,6 +12393,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/questions":
     parameters:
     - name: projekt_phase_id
@@ -9981,6 +12486,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     post:
       summary: Create a projekt question
       tags:
@@ -10021,6 +12542,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -10101,6 +12654,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/questions/{id}":
     parameters:
     - name: id
@@ -10137,6 +12706,22 @@ paths:
                 - data
         '404':
           description: projekt question not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
     patch:
       summary: Update a projekt question
       tags:
@@ -10176,6 +12761,38 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -10233,6 +12850,38 @@ paths:
                     properties:
                       messages:
                         type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/texts":
     parameters:
     - name: projekt_phase_id
@@ -10295,8 +12944,8 @@ paths:
                 required:
                 - data
                 - pagination
-        '403':
-          description: forbidden - insufficient access
+        '401':
+          description: unauthorized - missing or invalid token
           content:
             application/json:
               schema:
@@ -10396,6 +13045,10 @@ components:
       type: http
       scheme: bearer
       bearerFormat: Auth Token
+    masterportal_sync_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: Masterportal Sync Token
   schemas:
     Projekt:
       type: object

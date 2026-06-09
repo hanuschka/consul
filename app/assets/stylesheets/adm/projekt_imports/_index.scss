@@ -1,0 +1,11 @@
+@use "from_file";
+@use "chat";
+@use "list";
+
+.adm-page-title-row--import {
+  margin: 0.8rem 0 0.5rem;
+
+  h1 {
+    font-size: 22px;
+  }
+}

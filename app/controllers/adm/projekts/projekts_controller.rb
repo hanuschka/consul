@@ -1,5 +1,5 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
 
   def list
@@ -26,7 +26,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt = Projekt.new(create_params.merge(author: current_user))
 
     if @projekt.save
-      redirect_to details_adm_projekts_projekt_path(@projekt), notice: t(".success")
+      redirect_to page_path(@projekt.page.slug), notice: t(".success")
     else
       redirect_to new_adm_projekts_projekt_path, alert: @projekt.errors.full_messages.join(", ")
     end
@@ -35,7 +35,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def details
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: @projekt.page.title, id: "breadcrumb-projekt-name" },
+      { name: @projekt.page&.title || @projekt.name, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
     ]
   end
@@ -44,7 +44,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
     @individual_groups = IndividualGroup.hard.visible
     @breadcrumbs = [
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -59,7 +59,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt_manager_assignments = @projekt.projekt_manager_assignments.includes(projekt_manager: :user)
 
     @breadcrumbs = [
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -67,7 +67,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def map
     authorize [:adm, :projekts, @projekt], :show?
     @breadcrumbs = [
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -81,7 +81,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @name_header_options = { search: true }
 
     @breadcrumbs = [
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -90,15 +90,18 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
 
     @assets =
-      ImagesQuery
+      AdminAssetsQuery
         .new(images_query_params)
         .call
+        .with_attached_storage_data
+        .merge(policy_scope([:adm, AdminImage]))
+        .preload({ projekt: :page }, user: :image)
         .page(params[:page])
         .per(24)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
 
@@ -117,7 +120,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
 
@@ -129,9 +132,40 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @evaluation = @projekt.projekt_evaluation
 
     @breadcrumbs = [
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
+  end
+
+  def evaluation_visibility
+    authorize [:adm, :projekts, @projekt], :update?
+
+    @evaluation = @projekt.projekt_evaluation
+    @report_visibility = @projekt.projekt_evaluation_visibility ||
+      @projekt.build_projekt_evaluation_visibility
+    @phase_visibilities = build_phase_visibility_map(@projekt)
+
+    @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
+
+    @breadcrumbs = [
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t("adm.projekts.projekts.evaluation.title"), url: evaluation_adm_projekts_projekt_path(@projekt) },
+      { name: t(".title") }
+    ]
+  end
+
+  def update_evaluation_visibility
+    authorize [:adm, :projekts, @projekt], :update?
+
+    ProjektEvaluations::UpdateVisibilityService.call(
+      projekt: @projekt,
+      report_params: report_visibility_params,
+      phase_params: phase_visibility_params
+    )
+
+    flash[:notice] = t(".success")
+
+    redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt)
   end
 
   def generate_evaluation
@@ -205,7 +239,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       end
 
     @breadcrumbs = [
-      { name: @projekt.page.title, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
       { name: t(".title") }
     ]
   end
@@ -376,7 +410,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :search, :extension, :size_min_mb, :size_max_mb,
         :created_from, :created_to, :updated_from, :updated_to,
         :sort
-      ).merge(imageable_type: "Projekt", imageable_id: @projekt.id)
+      ).merge(type: "picture", projekt_id: @projekt.id)
     end
 
     def documents_query_params
@@ -397,6 +431,30 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       candidate = raw_phase_id.to_i
       match = evaluation.phases_data.find { |p| p["phase_id"].to_i == candidate }
       match ? candidate : nil
+    end
+
+    def build_phase_visibility_map(projekt)
+      defaults = ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
+        .each_with_object({}) { |col, memo| memo[col] = false }
+
+      projekt.projekt_phases.each_with_object({}) do |phase, memo|
+        memo[phase.id] = phase.projekt_phase_evaluation_visibility ||
+          phase.build_projekt_phase_evaluation_visibility(defaults)
+      end
+    end
+
+    def report_visibility_params
+      return {} if params[:projekt_evaluation_visibility].blank?
+
+      params.require(:projekt_evaluation_visibility).permit(
+        *ProjektEvaluationVisibility::REPORT_SECTION_COLUMNS
+      )
+    end
+
+    def phase_visibility_params
+      return {} if params[:projekt_phase_evaluation_visibilities].blank?
+
+      params.require(:projekt_phase_evaluation_visibilities).permit!.to_h
     end
 
     def projekt_params

@@ -2,11 +2,6 @@
   <h3 class="inline-block">
     <%= t("admin.polls.show.questions_title") %>
 
-    <% if embedded? %>
-      <%= render Shared::ExplainButtonComponent.new(
-        explain: "poll questions"
-      ) %>
-    <% end %>
   </h3>
 
   <div>

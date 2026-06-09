@@ -1,0 +1,12 @@
+en:
+  adm:
+    system_user:
+      edit:
+        title: System user
+        intro: All proposals and investments imported from Masterportal are published under this user. The display name and avatar are initially taken from the organisation name and the site logo, but can be adjusted here.
+        name_label: Display name
+        name_hint: This name appears publicly as the author of all imported proposals and investments (e.g. "City name"). Choose a label that is clearly recognisable to citizens and that plainly represents your municipality or organisation.
+        avatar_label: Avatar
+        avatar_hint: This image is displayed publicly next to all imported proposals and investments and replaces the current avatar. Use a PNG or JPEG file, ideally square and in sufficient resolution so that it remains clearly recognisable even at small sizes.
+      update:
+        success: System user updated successfully.

@@ -1,0 +1,42 @@
+// Reusable filter chip bar for /adm: a row of pill links, one active, each with
+// an optional count. Rendered by Kern::FilterChipsComponent.
+.kern-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kern-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 16px;
+  color: #5b6472;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #dbdfe4;
+  border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+
+  &:hover {
+    color: #1a2332;
+    background: #f0f1f3;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.kern-filter-chip.-active {
+  color: #fff;
+  background: var(--kern-color-action-default);
+  border-color: var(--kern-color-action-default);
+}
+
+.kern-filter-chip__count {
+  font-weight: 600;
+  opacity: 0.75;
+}

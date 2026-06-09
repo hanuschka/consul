@@ -1,0 +1,16 @@
+<div class="newsletter-email-preview-section -footer">
+  <div class="newsletter-email-preview-footer">
+    <% if Setting["advanced_newsletter"].present? %>
+      <%= render "mailer/newsletter_email_footer" %>
+    <% else %>
+      <%= render "layouts/mailer_footer" %>
+    <% end %>
+  </div>
+
+  <span class="newsletter-email-preview-section--label -below">
+    <%= t("adm.newsletters.edit.email_preview.footer_label") %>
+    <%= link_to t("adm.newsletters.edit.email_preview.settings_link"),
+      settings_adm_newsletters_path,
+      class: "kern-link" %>
+  </span>
+</div>

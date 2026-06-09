@@ -41,3 +41,5 @@
     "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=app/assets/stylesheets/cross_pack --style=compressed --no-source-map"
   }
 }
+
+

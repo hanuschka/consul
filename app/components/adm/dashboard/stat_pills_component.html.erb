@@ -1,0 +1,11 @@
+<div class="adm-dashboard__stat-pills">
+  <% stats.each do |stat| %>
+    <div class="adm-stat-pill">
+      <% if stat[:icon] %>
+        <span class="adm-stat-pill__icon material-symbols-outlined" aria-hidden="true"><%= stat[:icon] %></span>
+      <% end %>
+      <span class="adm-stat-pill__value"><%= formatted_stat_value(stat) %></span>
+      <span class="adm-stat-pill__label"><%= stat[:label] %></span>
+    </div>
+  <% end %>
+</div>

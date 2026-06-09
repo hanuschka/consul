@@ -16,7 +16,11 @@ class PagesController < ApplicationController
   before_action :set_random_seed
 
   def show
-    @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
+    @custom_page = SiteCustomization::Page.find_by(slug: params[:id])
+
+    if @custom_page.present? && !@custom_page.published? && !draft_page_previewable?(@custom_page)
+      @custom_page = nil
+    end
 
     if @custom_page&.landing?
       @content_cards =
@@ -201,8 +205,14 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_coordinates = all_proposal_map_locations(@resources)
-        @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+
+        if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+          @proposals_coordinates = all_proposal_map_locations(@resources)
+          @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        else
+          @proposals_coordinates = []
+        end
 
         @proposals =
           @resources
@@ -370,16 +380,9 @@ class PagesController < ApplicationController
     def set_point_of_interest_phase_footer_tab_variables
       auto_sign_in_guest_for(@projekt_phase)
 
-      map_locations = MapLocation.where(
-        mappable_type: "ProjektPointOfInterestPin",
-        mappable_id: @projekt_phase.projekt_point_of_interest_pins.select(:id)
-      )
-      selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
-
-      @pin_coordinates = MapLocation.enriched_feature_collection(
-        map_locations,
-        category_icons: selected_categories&.pluck(:icon),
-        extra_features: MasterportalPin.standalone_features_for_phase(@projekt_phase)
+      @pin_coordinates = MapData::PointOfInterestPhase.call(
+        projekt_phase: @projekt_phase,
+        category_ids: params[:category_ids]
       )
     end
 

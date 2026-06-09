@@ -9,11 +9,11 @@ namespace :adm do
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_categories, on: :collection
+      patch :order_categories, on: :collection
     end
 
     resources :statuses, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_statuses, on: :collection
+      patch :order_statuses, on: :collection
     end
 
     resources :official_answer_templates, except: :show
@@ -23,6 +23,8 @@ namespace :adm do
     resources :areas, except: :show do
       post :order_areas, on: :collection
     end
+
+    resources :email_templates, only: [:index]
 
     resource :stats, only: :show
     resource :ai_settings, only: [:show, :update]

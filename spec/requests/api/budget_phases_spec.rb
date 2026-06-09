@@ -59,6 +59,8 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
 
         run_test!
       end
+
+      unauthorized_response { let(:budget_id) { 1 } }
     end
   end
 
@@ -104,6 +106,8 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
           expect(data['data']['budget_phase']['kind']).to eq('accepting')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a budget phase' do
@@ -228,6 +232,8 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

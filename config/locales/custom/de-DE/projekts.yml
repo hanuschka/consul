@@ -44,10 +44,20 @@ de:
       content_block_templates_selector:
         loading: "Inhaltsblockvorlagen werden geladen..."
         fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
+        load_error: "Inhaltsblockvorlagen konnten nicht geladen werden."
+        retry: "Erneut versuchen"
+        ai_create_button:
+          label: Mit KI erstellen
+          title: Inhaltsblock von KI erstellen lassen
         visibility:
           hidden: Versteckt
           hidden_until: "Versteckt bis %{date}"
         tabs:
+          basic_content: Basisinhalte
+          status_and_notes: Status & Hinweise
+          teasers_and_promotions: Teaser und Werbeaktionen
+          media_and_resources: Medien & Ressourcen
+          messages: Nachrichten
           internal_content_blocks: Interne Inhaltsblöcke
           own_content_blocks: Eigene Inhaltsblöcke
         saved_content_blocks:

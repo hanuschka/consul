@@ -73,6 +73,7 @@
   border-radius: 50%;
   text-decoration: none;
   transition: 30ms background-color ease;
+  border: none;
 
   &:hover {
     background-color: color-mix(in srgb, var(--kern-color-action-default), white 85%);

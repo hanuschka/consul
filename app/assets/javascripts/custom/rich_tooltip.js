@@ -142,6 +142,7 @@
 
     scheduleShow() {
       clearTimeout(this.hideTimeout)
+      clearTimeout(this.showTimeout)
       this.showTimeout = setTimeout(this.show.bind(this), this.showDelay)
     }
 

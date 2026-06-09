@@ -27,11 +27,12 @@ $_chat-error-text: #7f1d1d;
   margin: auto;
 }
 
-// Pull the chat left across the sidebar + icon-rail width (only where that nav
-// is shown, i.e. lg and up).
-@media (min-width: 992px) {
+// The chat is centered within the content area, which is offset right by the
+// sidebar + icon-rail. Shift it left by half that nav width so it lands on the
+// true page center (only where the nav is shown, i.e. lg and up).
+@media (min-width: 1420px) {
   .projekt-import-chat {
-    margin-left: calc((var(--adm-nav-total-width) / 2));
+    transform: translateX(calc(var(--adm-nav-total-width) / -2));
   }
 }
 
@@ -811,7 +812,7 @@ $_chat-error-text: #7f1d1d;
 }
 
 .projekt-import-confirm--message {
-  margin: 0 0 8px;
+  margin: 0 0 30px;
   line-height: 1.5;
 }
 
@@ -846,6 +847,9 @@ $_chat-error-text: #7f1d1d;
   }
 }
 
+.projekt-import-confirm--button .kern-label {
+  color: inherit;
+}
 
 .projekt-import-confirm--button.-cancel {
   color: #1a2332;
@@ -862,14 +866,14 @@ $_chat-error-text: #7f1d1d;
 
 .projekt-import-confirm--button.-confirm {
   color: #fff;
-  background: #16a34a;
+  background: #2e7d32;
 
   &:hover {
-    background: #15923f;
+    background: color-mix(in srgb, #2e7d32 88%, black);
   }
 
   &:active {
-    background: #11833a;
+    background: color-mix(in srgb, #2e7d32 78%, black);
   }
 }
 

@@ -186,7 +186,7 @@ export default class extends Controller {
     }
 
     if (state.status === "completed") {
-      this.handleCompletion()
+      this.handleCompletion(state.redirect_path)
       return
     }
 
@@ -199,20 +199,25 @@ export default class extends Controller {
     this.scheduleMessagesPoll()
   }
 
-  // On the completion that happens live in this session, reload the chat so the
-  // server re-renders the success state (created-projekt banner + link + the
-  // "import again" button) without navigating away. A guard prevents an
-  // already-completed import (revisit) from reloading on every poll.
-  handleCompletion() {
-    this.hideOverlay()
-
-    if (!this.completionShown) {
-      this.completionShown = true
-      window.location.reload()
+  // When the import finishes live in this session (overlay showing), send the
+  // user to the created projekt's frontend page. Revisiting an already-completed
+  // import (guard) keeps the chat with its success state instead of redirecting.
+  handleCompletion(redirectPath) {
+    if (this.completionShown) {
+      this.hideOverlay()
+      this.scheduleMessagesPoll()
       return
     }
 
-    this.scheduleMessagesPoll()
+    this.completionShown = true
+
+    if (redirectPath) {
+      window.location.href = redirectPath
+      return
+    }
+
+    this.hideOverlay()
+    window.location.reload()
   }
 
   showImportError(message) {
@@ -245,7 +250,7 @@ export default class extends Controller {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "completed") {
-          this.handleCompletion()
+          this.handleCompletion(data.redirect_path)
           return
         }
         if (data.status === "failed") {
@@ -446,7 +451,10 @@ export default class extends Controller {
   startImport() {
     this.dismissImportError()
     this.lastImportStatus = null
-    this.showOverlay(this.progressFinalizingValue)
+    // A fresh import procedure starts now (incl. re-import of a completed one),
+    // so its completion should redirect to the projekt even on a revisit.
+    this.completionShown = false
+    this.showOverlay(this.progressCreatingValue)
 
     const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
 

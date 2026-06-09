@@ -3,27 +3,30 @@
   data-files-edit-failed-message="<%= t("files.edit_modal.update_failed") %>"
 ></span>
 
-<dialog
-  class="files-edit-modal js-files-edit-modal"
-  data-files--filter-bar-target="editModal"
->
+<%= render Shared::ModalComponent.new(
+      id: "files-edit-modal",
+      closeable: false,
+      modal_class: "files-edit-modal",
+      data: {
+        "files--filter-bar-target": "editModal",
+        action: "click->files--filter-bar#editModalBackdrop"
+      }
+    ) do %>
+  <button
+    type="button"
+    class="close-button round-icon-button"
+    data-action="click->files--filter-bar#editModalClose"
+    aria-label="<%= t("files.edit_modal.close") %>"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+  </button>
+
   <form
-    class="files-edit-modal--content"
+    class="files-edit-modal--form"
     data-files--filter-bar-target="editForm"
     data-action="submit->files--filter-bar#editModalSubmit"
   >
-    <div class="files-edit-modal--header">
-      <h2 class="files-edit-modal--title"><%= t("files.edit_modal.title") %></h2>
-
-      <button
-        type="button"
-        class="files-edit-modal--close"
-        data-action="click->files--filter-bar#editModalClose"
-        aria-label="<%= t("files.edit_modal.close") %>"
-      >
-        <i class="fa fa-xmark"></i>
-      </button>
-    </div>
+    <h2 class="files-edit-modal--title"><%= t("files.edit_modal.title") %></h2>
 
     <div class="files-edit-modal--body">
       <div class="files-edit-modal--field">
@@ -77,4 +80,4 @@
       </button>
     </div>
   </form>
-</dialog>
+<% end %>

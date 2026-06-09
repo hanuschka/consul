@@ -1,6 +1,6 @@
 <%= content_for :title, t("adm.projekts.imports.index.title") %>
 
-<%= render Adm::HeaderComponent.new(title: t("adm.projekts.imports.index.title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_root_path) do |header| %>
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.imports.index.title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_root_path, compact: true) do |header| %>
   <% header.with_actions do %>
     <div class="projekt-import-list--header-actions">
       <%= kern_link_button new_adm_projekts_import_path,
@@ -12,37 +12,25 @@
 <% end %>
 
 <div class="kern-container my-3" data-controller="projekt-imports--delete-confirm">
-  <nav class="projekt-import-list--filters" aria-label="<%= t('adm.projekts.imports.list.filters.aria') %>">
-    <% [
-         [nil, t("adm.projekts.imports.list.filters.all"), @import_counts.values.sum],
-         ["in_progress", t("adm.projekts.imports.list.filters.in_progress"), @import_counts["in_progress"]],
-         ["failed", t("adm.projekts.imports.list.filters.failed"), @import_counts["failed"]],
-         ["completed", t("adm.projekts.imports.list.filters.completed"), @import_counts["completed"]]
-       ].each do |key, label, count| %>
-      <% active = (key == @status_filter) %>
-      <%= link_to adm_projekts_imports_path(status: key),
-            class: "projekt-import-list--filter-chip #{'-active' if active}",
-            aria: { current: (active ? 'page' : nil) } do %>
-        <span class="projekt-import-list--filter-label"><%= label %></span>
-        <span class="projekt-import-list--filter-count"><%= count %></span>
-      <% end %>
-    <% end %>
-  </nav>
+  <div class="projekt-import-list--filters">
+    <%= render Kern::FilterChipsComponent.new(
+          aria_label: t("adm.projekts.imports.list.filters.aria"),
+          filters: [nil, "in_progress", "failed", "completed"].map do |key|
+            {
+              label: t("adm.projekts.imports.list.filters.#{key || 'all'}"),
+              url: adm_projekts_imports_path(status: key),
+              count: key ? @import_counts[key] : @import_counts.values.sum,
+              active: key == @status_filter
+            }
+          end
+        ) %>
+  </div>
 
-  <% if @in_progress_imports.any? || @failed_imports.any? || @completed_imports.any? %>
+  <% if @imports.any? %>
     <div class="projekt-import-list">
-      <%= render "import_section",
-            title: t("adm.projekts.imports.list.sections.in_progress"),
-            imports: @in_progress_imports,
-            created_projekts_by_id: @created_projekts_by_id %>
-      <%= render "import_section",
-            title: t("adm.projekts.imports.list.sections.failed"),
-            imports: @failed_imports,
-            created_projekts_by_id: @created_projekts_by_id %>
-      <%= render "import_section",
-            title: t("adm.projekts.imports.list.sections.completed"),
-            imports: @completed_imports,
-            created_projekts_by_id: @created_projekts_by_id %>
+      <%= render(Adm::Projekts::Imports::ListItemComponent.with_collection(
+            @imports, created_projekts_by_id: @created_projekts_by_id)) %>
+      <%= paginate @imports if @imports.total_pages > 1 %>
     </div>
   <% else %>
     <div class="projekt-import-list--empty">

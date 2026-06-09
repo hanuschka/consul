@@ -1,7 +1,0 @@
-<% if imports.any? %>
-  <section class="projekt-import-list--section">
-    <h2 class="projekt-import-list--section-title"><%= title %></h2>
-    <%= render(Adm::Projekts::Imports::ListItemComponent.with_collection(
-          imports, created_projekts_by_id: created_projekts_by_id)) %>
-  </section>
-<% end %>

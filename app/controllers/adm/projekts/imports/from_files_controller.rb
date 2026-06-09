@@ -1,7 +1,6 @@
 class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseController
   MAX_AGGREGATE_BYTES = 45.megabytes
   ALLOWED_EXTENSIONS = %w[pdf docx odt txt md].freeze
-  COMPLETED_LIST_LIMIT = 10
 
   STATUS_FILTERS = %w[in_progress failed completed].freeze
 
@@ -136,19 +135,21 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
       "completed" => imports.completed.count
     }
 
-    @in_progress_imports = show_status?("in_progress") ? imports.in_progress.for_listing.to_a : []
-    @failed_imports = show_status?("failed") ? imports.failed.for_listing.to_a : []
-    @completed_imports = show_status?("completed") ? imports.completed.for_listing.limit(COMPLETED_LIST_LIMIT).to_a : []
-    @created_projekts_by_id =
-      created_projekts_map(@in_progress_imports + @failed_imports + @completed_imports)
+    @imports = filtered_imports(imports).for_listing.page(params[:page]).per(20)
+    @created_projekts_by_id = created_projekts_map(@imports)
   end
 
-  def show_status?(status)
-    @status_filter.nil? || @status_filter == status
+  def filtered_imports(imports)
+    case @status_filter
+    when "in_progress" then imports.in_progress
+    when "failed" then imports.failed
+    when "completed" then imports.completed
+    else imports.where.not(status: "abandoned")
+    end
   end
 
   def created_projekts_map(imports)
-    ids = imports.flat_map(&:created_projekt_ids).uniq
+    ids = imports.flat_map { |import| import.created_projekt_ids + [import.projekt_id] }.compact.uniq
     return {} if ids.empty?
 
     Projekt.where(id: ids).includes(:page).index_by(&:id)

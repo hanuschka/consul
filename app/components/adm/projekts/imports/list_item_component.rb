@@ -38,13 +38,26 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
     "-#{display_state}"
   end
 
+  TITLE_TRUNCATE = 40
+
+  def file_names
+    @file_names ||= projekt_import.source_files.map { |file| file.filename.to_s }
+  end
+
   def files_summary
-    names = projekt_import.source_files.map { |file| file.filename.to_s }
+    return I18n.t("adm.projekts.imports.list.no_files") if file_names.empty?
+    return file_names.first.truncate(TITLE_TRUNCATE) if file_names.size == 1
 
-    return I18n.t("adm.projekts.imports.list.no_files") if names.empty?
-    return names.first if names.size == 1
+    I18n.t("adm.projekts.imports.list.files_summary",
+      first: file_names.first.truncate(36), count: file_names.size - 1)
+  end
 
-    I18n.t("adm.projekts.imports.list.files_summary", first: names.first, count: names.size - 1)
+  def files_full
+    file_names.join(", ")
+  end
+
+  def show_files_tooltip?
+    file_names.present? && files_full != files_summary
   end
 
   def created_label
@@ -68,7 +81,8 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
   end
 
   def created_projekts
-    projekt_import.created_projekt_ids.filter_map { |id| created_projekts_by_id[id] }
+    ids = (projekt_import.created_projekt_ids + [projekt_import.projekt_id]).compact.uniq
+    ids.filter_map { |id| created_projekts_by_id[id] }
   end
 
   def show_created_projekts?

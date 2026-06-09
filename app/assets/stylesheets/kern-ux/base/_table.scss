@@ -74,16 +74,24 @@
   text-decoration: none;
   transition: 30ms background-color ease;
   border: none;
+  font-size: 24px !important;
 
   &:hover {
     background-color: color-mix(in srgb, var(--kern-color-action-default), white 85%);
   }
 
   .material-symbols-outlined {
-    font-size: 28px !important;
+    font-size: 24px !important;
     color: var(--kern-color-action-default);
   }
 }
+
+[data-controller="table-actions"] > [data-table-actions-target="button"] {
+  .material-symbols-outlined {
+    font-size: 28px !important;
+  }
+}
+
 
 .kern-table__actions-menu {
   background-color: var(--kern-custom-white);

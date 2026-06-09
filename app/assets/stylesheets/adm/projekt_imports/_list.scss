@@ -20,52 +20,10 @@ $_list-neutral-bg: #f0f1f3;
   margin-left: auto;
 }
 
+// Positioning only — the chips themselves are the shared Kern::FilterChips.
 .projekt-import-list--filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
   max-width: $_list-max-width;
   margin: 0 auto 4px;
-}
-
-.projekt-import-list--filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  font-size: 14px;
-  color: $_list-text-muted;
-  text-decoration: none;
-  background: $_list-surface;
-  border: 1px solid $_list-border;
-  border-radius: 999px;
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
-
-  &:hover {
-    color: $_list-text;
-    background: $_list-neutral-bg;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--kern-color-action-default);
-    outline-offset: 2px;
-  }
-}
-
-.projekt-import-list--filter-chip.-active {
-  color: #fff;
-  background: var(--kern-color-action-default);
-  border-color: var(--kern-color-action-default);
-}
-
-.projekt-import-list--filter-count {
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0.75;
-}
-
-.projekt-import-list--section {
-  margin-bottom: 28px;
 }
 
 .projekt-import-list--empty {
@@ -86,13 +44,6 @@ $_list-neutral-bg: #f0f1f3;
 .projekt-import-list--empty-text {
   margin: 0;
   font-size: 16px;
-}
-
-.projekt-import-list--section-title {
-  margin: 0 0 12px;
-  font-size: 16px;
-  font-weight: 600;
-  color: $_list-text;
 }
 
 .projekt-import-list-item {
@@ -351,39 +302,6 @@ $_list-neutral-bg: #f0f1f3;
     outline: 2px solid var(--kern-color-action-default);
     outline-offset: 2px;
   }
-}
-
-.projekt-import-list-item--delete-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  color: $_list-text-muted;
-  background: transparent;
-  border: 0;
-  border-radius: $_list-radius-sm;
-  cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease;
-
-  &:hover {
-    color: var(--kern-color-feedback-danger, #bd0f09);
-    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 10%, white);
-  }
-
-  &:active {
-    background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 16%, white);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--kern-color-action-default);
-    outline-offset: 2px;
-  }
-}
-
-.projekt-import-list-item--delete-button .material-symbols-outlined {
-  font-size: 20px;
 }
 
 @media (max-width: 640px) {

@@ -9,9 +9,17 @@
 
   <div class="projekt-import-list-item--body">
     <div class="projekt-import-list-item--headline">
-      <%= link_to files_summary, primary_action_url,
+      <% files_link = link_to(files_summary, primary_action_url,
             class: "projekt-import-list-item--files",
-            data: { turbo: false } %>
+            data: { turbo: false }) %>
+      <% if show_files_tooltip? %>
+        <rich-tooltip delay="500" class="projekt-import-list-item--files-tooltip">
+          <%= files_link %>
+          <template><%= files_full %></template>
+        </rich-tooltip>
+      <% else %>
+        <%= files_link %>
+      <% end %>
       <span class="projekt-import-list-item--badge <%= state_modifier %>"><%= state_label %></span>
     </div>
 
@@ -62,7 +70,7 @@
           data: { turbo: false } %>
 
     <button type="button"
-            class="projekt-import-list-item--delete-button"
+            class="round-icon-button"
             data-action="click->projekt-imports--delete-confirm#request"
             data-delete-url="<%= delete_url %>"
             data-import-label="<%= files_summary %>"

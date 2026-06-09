@@ -11,7 +11,7 @@ inline-popup[hidden] {
   inset: auto;
   z-index: 1300;
   width: max-content;
-  max-width: min(360px, calc(100vw - 24px));
+  max-width: #{"min(360px, calc(100vw - 24px))"};
   margin: 0;
   margin-block: 8px;
   padding: 16px;

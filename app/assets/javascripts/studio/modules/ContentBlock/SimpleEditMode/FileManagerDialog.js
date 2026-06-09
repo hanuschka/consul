@@ -184,7 +184,7 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
   resetFilterForm() {
     if (!this.activeDialog) return;
 
-    const filterBar = this.activeDialog.querySelector(".js-adm-filter-bar");
+    const filterBar = this.activeDialog.querySelector(".js-fm-filter-bar");
     if (!filterBar) return;
 
     const inputs = filterBar.querySelectorAll("input, select");
@@ -202,7 +202,7 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
   readFilterParams() {
     if (!this.activeDialog) return {};
 
-    const filterBar = this.activeDialog.querySelector(".js-adm-filter-bar");
+    const filterBar = this.activeDialog.querySelector(".js-fm-filter-bar");
     if (!filterBar) return {};
 
     return window.FilesFilterSerializer.serializeForm(filterBar);

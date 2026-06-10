@@ -4,39 +4,79 @@
 
 <div class="kern-container my-5">
 
-  <div class="kern-card p-4 mb-4">
-    <div class="row">
-      <div class="col-md-3">
-        <strong><%= t('.sent_at') %></strong><br>
-        <% if @newsletter.draft? %>
-          <%= t('adm.newsletters.index.table.draft') %>
-        <% else %>
-          <%= l @newsletter.sent_at.to_date %>
-        <% end %>
+  <div class="kern-card adm-newsletter-summary mb-5">
+    <div class="adm-newsletter-summary--main">
+      <div class="adm-newsletter-summary--heading">
+        <p class="adm-newsletter-summary--eyebrow"><%= t("adm.newsletters.show.subject") %></p>
+        <h2 class="adm-newsletter-summary--title"><%= @newsletter.subject %></h2>
       </div>
-      <div class="col-md-4">
-        <strong><%= t('.from') %></strong><br>
-        <%= @newsletter.from %>
-      </div>
-      <div class="col-md-5">
-        <strong><%= t('.subject') %></strong><br>
-        <%= @newsletter.subject %>
-      </div>
+
+      <dl class="adm-newsletter-summary--meta">
+        <div class="adm-newsletter-summary--item">
+          <span class="adm-newsletter-summary--icon">
+            <span class="kern-icon kern-icon--small kern-icon--mail" aria-hidden="true"></span>
+          </span>
+          <div class="adm-newsletter-summary--pair">
+            <dt class="adm-newsletter-summary--label"><%= t("adm.newsletters.show.from") %></dt>
+            <dd class="adm-newsletter-summary--value"><%= @newsletter.from %></dd>
+          </div>
+        </div>
+
+        <div class="adm-newsletter-summary--item">
+          <span class="adm-newsletter-summary--icon">
+            <span class="kern-icon kern-icon--small kern-icon--checklist" aria-hidden="true"></span>
+          </span>
+          <div class="adm-newsletter-summary--pair">
+            <dt class="adm-newsletter-summary--label"><%= t("adm.newsletters.show.recipient_group") %></dt>
+            <dd class="adm-newsletter-summary--value">
+              <%= @newsletter.recipient_group.present? ? @newsletter.recipient_group.name : "—" %>
+            </dd>
+          </div>
+        </div>
+
+        <div class="adm-newsletter-summary--item">
+          <span class="adm-newsletter-summary--icon">
+            <span class="kern-icon kern-icon--small kern-icon--calendar-today" aria-hidden="true"></span>
+          </span>
+          <div class="adm-newsletter-summary--pair">
+            <dt class="adm-newsletter-summary--label"><%= t("adm.newsletters.show.sent_at") %></dt>
+            <dd class="adm-newsletter-summary--value">
+              <%= @newsletter.draft? ? "—" : l(@newsletter.sent_at.to_date) %>
+            </dd>
+          </div>
+        </div>
+      </dl>
     </div>
-    <div class="row mt-3">
-      <div class="col-md-6">
-        <strong><%= t('.recipient_group') %></strong><br>
-        <%= @newsletter.recipient_group&.name %>
-        <%= t('.affected_users', n: @recipients_count) %>
+
+    <aside class="adm-newsletter-summary--side">
+      <% if @newsletter.draft? %>
+        <span class="kern-badge kern-badge--info adm-newsletter-summary--status">
+          <span class="kern-icon kern-icon--draft" aria-hidden="true"></span>
+          <span class="kern-label"><%= t("adm.newsletters.index.table.draft") %></span>
+        </span>
+      <% else %>
+        <span class="kern-badge kern-badge--success adm-newsletter-summary--status">
+          <span class="kern-icon kern-icon--check" aria-hidden="true"></span>
+          <span class="kern-label"><%= t("adm.newsletters.index.table.sent") %></span>
+        </span>
+      <% end %>
+
+      <div class="adm-newsletter-summary--stats">
+        <div class="adm-newsletter-summary--stat">
+          <span class="adm-newsletter-summary--stat-value"><%= @recipients_count %></span>
+          <span class="adm-newsletter-summary--stat-label"><%= t("adm.newsletters.show.recipients") %></span>
+        </div>
+
+        <div class="adm-newsletter-summary--stat">
+          <span class="adm-newsletter-summary--stat-value"><%= @newsletter.activities.count %></span>
+          <span class="adm-newsletter-summary--stat-label"><%= t("adm.newsletters.show.sent_emails") %></span>
+        </div>
       </div>
-      <div class="col-md-6">
-        <strong><%= t('.sent_emails', count: @newsletter.activities.count) %></strong>
-      </div>
-    </div>
+    </aside>
   </div>
 
-  <h3><%= t('.body') %></h3>
-  <p class="text-muted"><%= t('.body_help_text') %></p>
+  <h3 class="kern-heading-small mb-1"><%= t("adm.newsletters.show.body") %></h3>
+  <p class="kern-body kern-body--muted mb-3"><%= t("adm.newsletters.show.body_help_text") %></p>
 
   <div class="kern-card p-4 mb-4">
     <% if Setting["advanced_newsletter"].present? %>
@@ -52,7 +92,7 @@
     <% end %>
   </div>
 
-  <div class="d-flex gap-3 mb-4">
+  <div class="d-flex gap-3 mb-5">
     <% if @newsletter.valid_segment_recipient? || @newsletter.recipient_group.present? %>
       <%= kern_link_button(
         deliver_adm_newsletter_path(@newsletter),
@@ -73,8 +113,8 @@
     ) %>
   </div>
 
-  <h4><%= t('.recipient_emails') %></h4>
-  <div class="kern-card p-4 mb-4" style="max-height: 300px; overflow-y: auto;">
-    <%= @newsletter.list_of_recipient_emails&.join(", ") %>
+  <h3 class="kern-heading-small mb-3"><%= t("adm.newsletters.show.recipient_emails") %></h3>
+  <div class="kern-card adm-newsletter-recipients p-4 mb-4">
+    <p class="kern-body kern-body--muted mb-0"><%= @newsletter.list_of_recipient_emails&.join(", ") %></p>
   </div>
 </div>

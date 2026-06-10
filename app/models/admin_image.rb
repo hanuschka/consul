@@ -7,6 +7,9 @@ class AdminImage < ApplicationRecord
   UNPROCESSED_CONTENT_TYPES = %w[image/gif].freeze
   MAX_FILE_SIZE = 10.megabytes
 
+  CONTENT_BLOCK_THUMB_WIDTH = 925
+  CONTENT_BLOCK_THUMB_HEIGHT = 2000
+
   validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },
                            file_size: { less_than: MAX_FILE_SIZE }
 
@@ -70,6 +73,18 @@ class AdminImage < ApplicationRecord
           saver: { quality: 88 }
         ),
         only_path: true
+      )
+    end
+  end
+
+  def content_block_thumb_url
+    if unprocessed_content_type?
+      blob_asset_path(storage_data.blob.key)
+    else
+      blob_variant_path(
+        storage_data.blob.key,
+        w: CONTENT_BLOCK_THUMB_WIDTH,
+        h: CONTENT_BLOCK_THUMB_HEIGHT
       )
     end
   end

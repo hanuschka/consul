@@ -57,6 +57,8 @@ de:
           attach_file: Datei anhängen
         content_block_image_alt_popup:
           alt_text: Alternativtext
+          description: Der Alternativtext beschreibt das Bild für Menschen, die Screenreader nutzen, und wird angezeigt, wenn das Bild nicht geladen werden kann. Er verbessert Barrierefreiheit und Suchmaschinen-Sichtbarkeit.
+          placeholder: z. B. Menschen diskutieren an einem runden Tisch
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
         color_picker:

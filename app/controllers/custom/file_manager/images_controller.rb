@@ -83,7 +83,7 @@ class FileManager::ImagesController < FileManager::BaseController
         content_type: picture.data_content_type,
         url: picture.url_content,
         gallery_thumb_url: picture.gallery_thumb_url,
-        custom_thumb_url: picture.custom_thumb_url(width: 925),
+        custom_thumb_url: picture.content_block_thumb_url,
         file_size: picture.data_file_size,
         dimensions: dimensions
       }

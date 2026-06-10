@@ -45,6 +45,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -87,6 +89,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a budget' do
@@ -313,6 +317,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(response.status).to eq(201)
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -352,32 +358,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { Budget.create!(name_en: 'Test Budget', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'test-budget') }
-        let(:id) { test_budget.id }
-
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a budget' do
@@ -611,6 +592,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(response.status).to eq(200)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a budget' do
@@ -693,6 +676,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

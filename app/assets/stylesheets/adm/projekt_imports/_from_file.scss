@@ -288,69 +288,6 @@ $_import-icon-bg-neutral: #f0f1f3;
   max-width: 640px;
 }
 
-.projekt-import-from-file--generate-image-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 14px;
-  color: $_import-text-muted;
-  background: #fff;
-  border: 1px solid $_import-border;
-  border-radius: $_import-radius-sm;
-  cursor: pointer;
-  transition: border-color 150ms ease, background-color 150ms ease;
-
-  &:hover {
-    background: $_import-input-bg;
-    border-color:
-      color-mix(in srgb, var(--kern-color-action-default) 30%, white);
-  }
-
-  &:has(input:checked) {
-    border-color: var(--kern-color-action-default);
-    background:
-      color-mix(in srgb, var(--kern-color-action-default) 8%, white);
-
-    .projekt-import-from-file--generate-image-icon {
-      color: #fff;
-      background: var(--kern-color-action-default);
-    }
-
-    .projekt-import-from-file--generate-image-text {
-      color: $_import-text;
-    }
-  }
-
-  input[type="checkbox"] {
-    display: none;
-  }
-}
-
-.projekt-import-from-file--generate-image-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: $_import-icon-bg-neutral;
-  color: $_import-text-faint;
-  font-size: 16px;
-  flex-shrink: 0;
-  transition: color 150ms ease, background-color 150ms ease;
-
-  .material-symbols-outlined {
-    font-size: 20px;
-  }
-}
-
-.projekt-import-from-file--generate-image-text {
-  font-weight: 500;
-  transition: color 150ms ease;
-}
-
 .projekt-import-from-file--inline-error {
   width: 100%;
   max-width: 640px;

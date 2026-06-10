@@ -4,6 +4,8 @@
   type: "picture",
   title: t("files.images.index.title"),
   breadcrumbs: @breadcrumbs,
+  upload_endpoint: ckeditor_pictures_path,
+  upload_accept: "image/*",
   grid: {
     assets: @assets,
     endpoint: adm_files_images_path,
@@ -15,6 +17,4 @@
   <% end %>
 
   <% page.with_types_note(types: AdminImage.humanized_allowed_content_types) %>
-
-  <% page.with_upload(endpoint: ckeditor_pictures_path, accept: "image/*") %>
 <% end %>

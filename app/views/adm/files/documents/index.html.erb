@@ -4,6 +4,7 @@
   type: "document",
   title: t("files.documents.index.title"),
   breadcrumbs: @breadcrumbs,
+  upload_endpoint: file_manager_documents_path,
   grid: {
     assets: @assets,
     endpoint: adm_files_documents_path,
@@ -20,6 +21,4 @@
        types: Document.humanized_admin_accepted_content_types,
        note_key: "files.allowed_types_note_admin_html"
      ) %>
-
-  <% page.with_upload(endpoint: file_manager_documents_path) %>
 <% end %>

@@ -23,7 +23,29 @@
           <% end %>
 
           <% if upload? %>
-            <div class="ml-auto"><%= upload %></div>
+            <div class="ml-auto">
+              <%= render Adm::ButtonWithProgressComponent.new(
+                label: t("files.card.upload"),
+                loading_label: t("files.upload_loading"),
+                success_label: t("files.upload_success"),
+                icon: "upload",
+                button_data: { action: "click->files--upload#triggerPicker" },
+                extra_controllers: ["files--upload"],
+                extra_root_data: { "files--upload-endpoint-value": upload_endpoint }
+              ) do %>
+                <%= tag.input(
+                  type: "file",
+                  accept: upload_accept,
+                  class: "js-files-upload-input",
+                  hidden: true,
+                  data: {
+                    "files--upload-target" => "input",
+                    "action" => "change->files--upload#fileChanged"
+                  }
+                ) %>
+                <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>

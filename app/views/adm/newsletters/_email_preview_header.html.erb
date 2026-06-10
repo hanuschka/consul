@@ -10,7 +10,7 @@
     <% if Setting["advanced_newsletter"].present? %>
       <%= render "mailer/newsletter_email_header", newsletter: newsletter %>
     <% else %>
-      <%= render "layouts/mailer_header" %>
+      <%= render "mailer/newsletter_simple_header" %>
     <% end %>
   </div>
 </div>

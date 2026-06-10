@@ -5,6 +5,7 @@
   title: (@projekt.page&.title || @projekt.name),
   breadcrumbs: @breadcrumbs,
   frontend_url: projekt_path(@projekt),
+  upload_endpoint: file_manager_documents_path(projekt_id: @projekt.id),
   grid: {
     assets: @assets,
     endpoint: documents_adm_projekts_projekt_path(@projekt),
@@ -15,6 +16,4 @@
   <% page.with_sub_header do %>
     <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
   <% end %>
-
-  <% page.with_upload(endpoint: file_manager_documents_path(projekt_id: @projekt.id)) %>
 <% end %>

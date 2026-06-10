@@ -13,53 +13,34 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     )
   end
 
-  renders_one :upload, ->(endpoint:, accept: nil) do
-    render(
-      Adm::ButtonWithProgressComponent.new(
-        label: t("files.card.upload"),
-        loading_label: t("files.upload_loading"),
-        success_label: t("files.upload_success"),
-        icon: "upload",
-        button_data: { action: "click->files--upload#triggerPicker" },
-        extra_controllers: ["files--upload"],
-        extra_root_data: { "files--upload-endpoint-value": endpoint }
-      )
-    ) do
-      safe_join(
-        [
-          tag.input(
-            type: "file",
-            accept: accept,
-            class: "js-files-upload-input",
-            hidden: true,
-            data: {
-              "files--upload-target" => "input",
-              "action" => "change->files--upload#fileChanged"
-            }
-          ),
-          tag.span(
-            "",
-            hidden: true,
-            data: { "files-upload-failed-message": t("files.upload_failed") }
-          )
-        ]
-      )
-    end
-  end
-
-  def initialize(type:, title:, breadcrumbs:, grid:, frontend_url: nil)
+  def initialize(
+    type:,
+    title:,
+    breadcrumbs:,
+    grid:,
+    frontend_url: nil,
+    upload_endpoint: nil,
+    upload_accept: nil
+  )
     @type = type
     @title = title
     @breadcrumbs = breadcrumbs
     @grid = grid
     @frontend_url = frontend_url
+    @upload_endpoint = upload_endpoint
+    @upload_accept = upload_accept
   end
 
   private
 
-    attr_reader :type, :title, :breadcrumbs, :grid, :frontend_url
+    attr_reader :type, :title, :breadcrumbs, :grid, :frontend_url,
+                :upload_endpoint, :upload_accept
 
     def after_title?
       description? || types_note? || upload?
+    end
+
+    def upload?
+      upload_endpoint.present?
     end
 end

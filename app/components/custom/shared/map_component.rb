@@ -10,6 +10,7 @@ class Shared::MapComponent < ApplicationComponent
     placement: nil,
     collapsible: false,
     map_data_url: nil,
+    lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false
   )
     @mappable = mappable
@@ -20,6 +21,7 @@ class Shared::MapComponent < ApplicationComponent
     @placement = placement
     @collapsible = collapsible
     @map_data_url = map_data_url
+    @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
   end
 
@@ -27,7 +29,7 @@ class Shared::MapComponent < ApplicationComponent
     return false if @editable
     return false if @map_data_url.blank?
 
-    (@explicit_features_count || features_count) > LAZY_LOAD_THRESHOLD
+    (@explicit_features_count || features_count) > @lazy_load_threshold
   end
 
   def collapsible?

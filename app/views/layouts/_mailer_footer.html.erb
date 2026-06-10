@@ -1,7 +1,8 @@
 <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; max-width: 700px; width:100%; margin-bottom: 40px; padding: 0 20px;">
   <tbody>
     <tr>
-      <td style="text-align: center; border-top: 1px solid #dadfe1; padding-top: 20px;">
+      <% border_top_style = local_assigns[:hide_sender_info] ? "" : "border-top: 1px solid #dadfe1;" %>
+      <td style="text-align: center; <%= border_top_style %> padding-top: 20px;">
         <% if !local_assigns[:hide_sender_info] %>
           <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif; margin: 0;padding: 0;line-height: 1.5em;color: #797f7f; font-size: 12px;">
           <%= setting["org_name"] %></p>

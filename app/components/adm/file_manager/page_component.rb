@@ -1,61 +1,65 @@
 class Adm::FileManager::PageComponent < ApplicationComponent
   renders_one :sub_header
+  renders_one :description
 
-  def initialize(
-    type:,
-    title:,
-    breadcrumbs:,
-    assets:,
-    endpoint:,
-    card_component:,
-    row_component: nil,
-    description: nil,
-    frontend_url: nil,
-    upload_endpoint: nil,
-    upload_accept: nil,
-    allowed_types: nil,
-    allowed_user_types: nil,
-    allowed_types_note_key: "files.allowed_types_note_html",
-    types_settings_link: false,
-    imageable_type_frame_src: nil,
-    documentable_type_frame_src: nil
-  )
+  renders_one :types_note,
+              ->(types:, note_key: "files.allowed_types_note_html", settings_link: false) do
+    render(
+      "adm/files/allowed_types_note",
+      admin_types: types,
+      user_types: types,
+      note_key: note_key,
+      show_settings_link: settings_link
+    )
+  end
+
+  renders_one :upload, ->(endpoint:, accept: nil) do
+    render(
+      Adm::ButtonWithProgressComponent.new(
+        label: t("files.card.upload"),
+        loading_label: t("files.upload_loading"),
+        success_label: t("files.upload_success"),
+        icon: "upload",
+        button_data: { action: "click->files--upload#triggerPicker" },
+        extra_controllers: ["files--upload"],
+        extra_root_data: { "files--upload-endpoint-value": endpoint }
+      )
+    ) do
+      safe_join(
+        [
+          tag.input(
+            type: "file",
+            accept: accept,
+            class: "js-files-upload-input",
+            hidden: true,
+            data: {
+              "files--upload-target" => "input",
+              "action" => "change->files--upload#fileChanged"
+            }
+          ),
+          tag.span(
+            "",
+            hidden: true,
+            data: { "files-upload-failed-message": t("files.upload_failed") }
+          )
+        ]
+      )
+    end
+  end
+
+  def initialize(type:, title:, breadcrumbs:, grid:, frontend_url: nil)
     @type = type
     @title = title
     @breadcrumbs = breadcrumbs
-    @assets = assets
-    @endpoint = endpoint
-    @card_component = card_component
-    @row_component = row_component
-    @description = description
+    @grid = grid
     @frontend_url = frontend_url
-    @upload_endpoint = upload_endpoint
-    @upload_accept = upload_accept
-    @allowed_types = allowed_types
-    @allowed_user_types = allowed_user_types
-    @allowed_types_note_key = allowed_types_note_key
-    @types_settings_link = types_settings_link
-    @imageable_type_frame_src = imageable_type_frame_src
-    @documentable_type_frame_src = documentable_type_frame_src
   end
 
   private
 
-    attr_reader :type, :title, :breadcrumbs, :assets, :endpoint,
-                :card_component, :row_component, :description, :frontend_url,
-                :upload_endpoint, :upload_accept, :allowed_types,
-                :allowed_user_types, :allowed_types_note_key, :types_settings_link,
-                :imageable_type_frame_src, :documentable_type_frame_src
+    attr_reader :type, :title, :breadcrumbs, :grid, :frontend_url
 
     def after_title?
-      description.present? || allowed_types_note? || upload?
-    end
-
-    def allowed_types_note?
-      allowed_types.present?
-    end
-
-    def upload?
-      upload_endpoint.present?
+      description? || types_note? || upload?
     end
 end

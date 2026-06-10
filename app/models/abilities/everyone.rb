@@ -15,9 +15,17 @@ module Abilities
       can [:read], Budget
       can [:read], Budget::Group
       can [:read, :print, :json_data], Budget::Investment
-      can :read_results, Budget, id: Budget.where(id: Budget.finished.pluck(:id)).results_enabled.ids
-      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).stats_enabled.ids
-      can :read_executions, Budget, id: Budget.finished.pluck(:id)
+      can :read_results, Budget do |budget|
+        budget.finished? && budget.results_enabled?
+      end
+
+      can :read_stats, Budget do |budget|
+        budget.accepting_or_later? && budget.stats_enabled?
+      end
+
+      can :read_executions, Budget do |budget|
+        budget.finished?
+      end
       can :new, DirectMessage
       can [:read, :debate, :draft_publication, :allegations, :result_publication,
            :proposals, :milestones], Legislation::Process, published: true
@@ -75,15 +83,22 @@ module Abilities
         can [:new, :create], Budget::Investment do |investment|
           projekt_phase = investment.budget.projekt_phase
 
-          investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?
+          projekt_phase.present? &&
+            investment.budget.current_phase&.kind == "accepting" &&
+            projekt_phase.selectable_by_users?
         end
 
         can [:create, :destroy], ActsAsVotable::Vote,
             votable_type: "Budget::Investment",
             voter_id: user.id
 
-        can [:show, :create], Budget::Ballot, budget: { id: Budget.balloting.pluck(:id) }
-        can [:create, :destroy], Budget::Ballot::Line, budget: { id: Budget.balloting.pluck(:id) }
+        can [:show, :create], Budget::Ballot do |ballot|
+          ballot.budget.balloting?
+        end
+
+        can [:create, :destroy], Budget::Ballot::Line do |line|
+          line.budget.balloting?
+        end
 
         can [:create, :update], FormularAnswer do |formular_answer|
           formular_answer.formular.projekt_phase.permission_problem(user).blank?

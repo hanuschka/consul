@@ -81,7 +81,9 @@ module Abilities
       can [:hide, :admin_update, :toggle_selection], Budget::Investment
       can [:valuate, :comment_valuation], Budget::Investment
       cannot [:admin_update, :toggle_selection, :valuate, :comment_valuation],
-        Budget::Investment, budget: { id: Budget.finished.pluck(:id) }
+             Budget::Investment do |investment|
+        investment.budget.finished?
+      end
 
       can :create, Budget::ValuatorAssignment
 
@@ -188,7 +190,9 @@ Poll::Question
       can :manage, FormularFollowUpLetter
       can :manage, ProjektArgument
 
-      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
+      can :read_stats, Budget do |budget|
+        budget.accepting_or_later?
+      end
 
       can :destroy, RelatedContent
 

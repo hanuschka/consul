@@ -61,6 +61,7 @@ de:
           comments: Kommentare
           commenters: Kommentierende
           questions: Fragen
+          other_questions_group: Weitere Fragen
           polls: Abstimmungen
           poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
           scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"

@@ -3,14 +3,23 @@
 <%= render Adm::FileManager::PageComponent.new(
   type: "document",
   title: t("files.documents.index.title"),
-  description: t("files.documents.index.description"),
   breadcrumbs: @breadcrumbs,
-  assets: @assets,
-  endpoint: adm_files_documents_path,
-  card_component: Files::DocumentCardComponent,
-  row_component: Files::DocumentRowComponent,
-  documentable_type_frame_src: documentable_type_filter_adm_files_documents_path(documentable_type: params[:documentable_type]),
-  upload_endpoint: file_manager_documents_path,
-  allowed_types: Document.humanized_admin_accepted_content_types,
-  allowed_types_note_key: "files.allowed_types_note_admin_html"
-) %>
+  grid: {
+    assets: @assets,
+    endpoint: adm_files_documents_path,
+    card_component: Files::DocumentCardComponent,
+    row_component: Files::DocumentRowComponent,
+    documentable_type_frame_src: documentable_type_filter_adm_files_documents_path(documentable_type: params[:documentable_type])
+  }
+) do |page| %>
+  <% page.with_description do %>
+    <%= t("files.documents.index.description") %>
+  <% end %>
+
+  <% page.with_types_note(
+       types: Document.humanized_admin_accepted_content_types,
+       note_key: "files.allowed_types_note_admin_html"
+     ) %>
+
+  <% page.with_upload(endpoint: file_manager_documents_path) %>
+<% end %>

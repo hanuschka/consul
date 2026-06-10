@@ -11,7 +11,7 @@ de:
           draft: Entwurf
         quick_links:
           new: Neues Projekt
-          import_projekt: Projekt aus Datei importieren
+          imports: Projektimport
           all: Alle Projekte
           current: Aktive Projekte
       menu:

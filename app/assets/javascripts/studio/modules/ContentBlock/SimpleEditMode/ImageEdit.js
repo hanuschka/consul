@@ -68,9 +68,32 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
         <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop" data-hint="Bildzuschnitt umschalten">
           <i class="fa fas fa-crop-alt"></i>
         </button>
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-alt">
-          <i class="fa fas fa-low-vision"></i>
-        </button>
+        <rich-tooltip>
+          <button type="button" class="image-edit-overlay--action-button js-img-overlay-alt">
+            <i class="fa fas fa-comment-dots"></i>
+          </button>
+
+          <template>
+            <div class="image-alt-tooltip js-image-alt-tooltip">
+              <strong class="image-alt-tooltip--title">
+                <i class="fa fas fa-check-circle image-alt-tooltip--icon-ok"></i>
+                <i class="fa fas fa-exclamation-triangle image-alt-tooltip--icon-warning"></i>
+                <span class="js-image-alt-tooltip-title"></span>
+              </strong>
+              <p class="image-alt-tooltip--text js-image-alt-tooltip-text"></p>
+              <div class="image-alt-tooltip--why">
+                <span class="image-alt-tooltip--why-label">
+                  <i class="fa fas fa-circle-info"></i>
+                  Warum Alt-Text?
+                </span>
+                <p class="image-alt-tooltip--explanation">
+                  Wird von Screenreadern vorgelesen und angezeigt, wenn das Bild
+                  nicht geladen werden kann. Wichtig für Barrierefreiheit und SEO.
+                </p>
+              </div>
+            </div>
+          </template>
+        </rich-tooltip>
       </div>
     `
 
@@ -162,6 +185,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.hideOverlay()
     this.hideLoadingOverlay()
     App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.hidePopup()
+    App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.hideTooltip()
     this.isDragging = false
     this.dragState = null
   },

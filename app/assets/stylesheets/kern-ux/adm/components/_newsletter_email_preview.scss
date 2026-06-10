@@ -2,114 +2,37 @@
   display: block;
 }
 
-.newsletter-email-preview-frame .newsletter-email-preview-header,
-.newsletter-email-preview-frame .newsletter-email-preview-footer {
-  border: 0;
-  border-radius: 0;
-}
-
 .newsletter-email-preview-section {
   position: relative;
   margin-bottom: 0;
-
-  &.-header {
-    margin-bottom: 0;
-  }
-
-  &.-footer {
-    margin-top: 0;
-  }
-
-  &--label {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--color-text-subtle, #6b7280);
-    padding: 6px 0;
-    text-align: right;
-
-    &.-below {
-      text-align: right;
-    }
-  }
 }
 
-.newsletter-email-preview-header {
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 4px;
-  overflow: hidden;
-
-  &--logo {
-    padding: 16px 24px;
-
-    &-img {
-      display: block;
-      height: 45px;
-      width: auto;
-    }
-  }
-
-  &--hero {
-    min-height: 220px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    &-content {
-      padding: 48px 32px 16px;
-    }
-  }
-
-  &--title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin: 0 0 8px;
-  }
-
-  &--subtitle {
-    font-size: 1rem;
-    margin: 0;
-    line-height: 1.4;
-  }
-
-  &--banner-img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  &--greeting {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 670px;
-    margin: 0 auto;
-    padding: 25px 40px 0;
-    font-size: 22px;
-    color: #000000;
-    background: #ffffff;
-  }
+.newsletter-email-preview-section.-header {
+  margin-bottom: 0;
 }
 
+.newsletter-email-preview-section.-footer {
+  margin-top: 0;
+}
+
+.newsletter-email-preview-section--label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-subtle, #6b7280);
+  padding: 6px 0;
+  text-align: right;
+}
+
+.newsletter-email-preview-section--label.-below {
+  text-align: right;
+}
+
+.newsletter-email-preview-header,
 .newsletter-email-preview-footer {
-  border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: 4px;
   overflow: hidden;
+}
 
-  &--content {
-    padding: 32px;
-    color: #ffffff;
-    font-size: 0.9375rem;
-
-    a {
-      color: #ffffff;
-    }
-
-    p {
-      margin: 0 0 8px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-  }
+.newsletter-email-preview-header a,
+.newsletter-email-preview-footer a {
+  color: inherit;
 }

@@ -110,6 +110,12 @@ de:
       admin_badge: Admin-Upload
       alt_text: Alternativer Text
       alt_text_missing_hint: Alternativer Text fehlt. Fügen Sie ihn hinzu, damit Screenreader dieses Bild beschreiben können.
+      edit_alt_text: Alt-Text bearbeiten
+      alt_edit:
+        description: Der Alternativtext beschreibt das Bild für Menschen, die Screenreader nutzen, und wird angezeigt, wenn das Bild nicht geladen werden kann. Er verbessert Barrierefreiheit und Suchmaschinen-Sichtbarkeit.
+        placeholder: z. B. Menschen diskutieren an einem runden Tisch
+        save: Speichern
+        cancel: Abbrechen
     edit_modal:
       title: Datei bearbeiten
       title_label: Titel

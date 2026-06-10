@@ -401,6 +401,7 @@ User.class_eval do
     def attempt_verification
       return false if organization?
       return false if erased?
+      return false unless data_complete?
       return false unless residency_valid?
 
       verify!

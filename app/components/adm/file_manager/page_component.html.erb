@@ -12,44 +12,18 @@
 ) do |header| %>
   <% if after_title? %>
     <% header.with_after_title do %>
-      <% if description.present? %>
+      <% if description? %>
         <p class="text-muted"><%= description %></p>
       <% end %>
 
-      <% if allowed_types_note? || upload? %>
+      <% if types_note? || upload? %>
         <div class="adm-files-meta-row">
-          <% if allowed_types_note? %>
-            <%= render "adm/files/allowed_types_note",
-                  admin_types: allowed_types,
-                  user_types: allowed_user_types.presence || allowed_types,
-                  note_key: allowed_types_note_key,
-                  show_settings_link: types_settings_link %>
+          <% if types_note? %>
+            <%= types_note %>
           <% end %>
 
           <% if upload? %>
-            <div class="ml-auto">
-              <%= render Adm::ButtonWithProgressComponent.new(
-                label: t("files.card.upload"),
-                loading_label: t("files.upload_loading"),
-                success_label: t("files.upload_success"),
-                icon: "upload",
-                button_data: { action: "click->files--upload#triggerPicker" },
-                extra_controllers: ["files--upload"],
-                extra_root_data: { "files--upload-endpoint-value": upload_endpoint }
-              ) do %>
-                <%= tag.input(
-                  type: "file",
-                  accept: upload_accept,
-                  class: "js-files-upload-input",
-                  hidden: true,
-                  data: {
-                    "files--upload-target" => "input",
-                    "action" => "change->files--upload#fileChanged"
-                  }
-                ) %>
-                <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
-              <% end %>
-            </div>
+            <div class="ml-auto"><%= upload %></div>
           <% end %>
         </div>
       <% end %>
@@ -60,13 +34,5 @@
 <%= sub_header %>
 
 <div class="kern-container my-3">
-  <%= render Files::IndexComponent.new(
-    type: type,
-    assets: assets,
-    endpoint: endpoint,
-    card_component: card_component,
-    row_component: row_component,
-    imageable_type_frame_src: imageable_type_frame_src,
-    documentable_type_frame_src: documentable_type_frame_src
-  ) %>
+  <%= render Files::IndexComponent.new(type: type, grid: grid) %>
 </div>

@@ -131,7 +131,7 @@
       return trigger.querySelector("img")
     },
 
-    resolveSlideAltText(trigger, sourceImg) {
+    resolveSlideCaptionText(trigger, sourceImg) {
       var explicitAlt = trigger ? trigger.getAttribute("data-alt") : null;
       if (explicitAlt) return explicitAlt
 
@@ -142,7 +142,7 @@
         if (sourceAriaLabel) return sourceAriaLabel
       }
 
-      return this.SLIDE_ALT_FALLBACK
+      return this.SLIDE_CAPTION_FALLBACK
     },
 
     setMissingHrefs: function() {

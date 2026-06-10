@@ -36,8 +36,9 @@ de:
         from: Von
         subject: Betreff
         recipient_group: Empfängergruppe
+        recipients: Empfänger
         affected_users: "(%{n} Empfänger)"
-        sent_emails: "Gesendete Emails: %{count}"
+        sent_emails: Gesendete E-Mails
         body: Inhalt
         body_help_text: So wird der Newsletter als Email dargestellt.
         send: Senden

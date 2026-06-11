@@ -260,6 +260,8 @@ ul.no-ul-style {
 }
 
 a.resources--info-count {
+  text-decoration: underline;
+
   &:hover {
     text-decoration: underline !important;
     color: black !important;

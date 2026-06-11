@@ -443,6 +443,15 @@
     .label {
       border-radius: 5px;
     }
+
+    .resource-item--author-full-name {
+      font-weight: 600;
+    }
+  }
+
+  a.resource-item--author:hover {
+    background-color: $light-gray-3;
+    transition: 50ms ease background-color;
   }
 
   .resource-item--author-name {

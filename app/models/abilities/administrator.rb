@@ -161,7 +161,7 @@ Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
-        investment.budget.current_phase.kind == "selecting"
+        investment.budget.selecting?
       end
 
       can :manage, ModalNotification

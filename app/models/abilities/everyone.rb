@@ -44,16 +44,17 @@ module Abilities
       can [:json_data], DeficiencyReport
       can [:index, :show], DeficiencyReport, id: DeficiencyReport.admin_accepted.ids
 
-      can :toggle_subscription, ProjektSubscription
+      can :toggle_subscription, ProjektSubscription do |subscription|
+        subscription.user == user
+      end
       can :toggle_subscription, ProjektPhase
 
       can :show, Community do |community|
-        return false unless community.communitable.present?
-        return false unless community.communitable.projekt_phase.present?
+        projekt_phase = community.communitable&.projekt_phase
 
-        projekt_phase = community.communitable.projekt_phase
-
-        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") && community.topics.any?
+        projekt_phase.present? &&
+          projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          community.topics.any?
       end
 
       if user&.guest?

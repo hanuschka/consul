@@ -32,6 +32,12 @@
 
         <% if show_meta_chips? %>
           <div class="custom-page--banner-chips">
+            <% if start_date_chip_text.present? %>
+              <span class="custom-page--banner-chip">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                <%= start_date_chip_text %>
+              </span>
+            <% end %>
             <% if end_date_chip_text.present? %>
               <span class="custom-page--banner-chip">
                 <i class="far fa-clock" aria-hidden="true"></i>

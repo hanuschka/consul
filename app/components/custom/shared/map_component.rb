@@ -1,9 +1,10 @@
 class Shared::MapComponent < ApplicationComponent
-  LAZY_LOAD_THRESHOLD = 30
+  LAZY_LOAD_THRESHOLD = 100
 
   def initialize(
     mappable: nil,
     features: {},
+    features_count: nil,
     editable: false,
     process: nil,
     placement: nil,
@@ -13,6 +14,7 @@ class Shared::MapComponent < ApplicationComponent
   )
     @mappable = mappable
     @features = features
+    @explicit_features_count = features_count
     @editable = editable
     @process = process
     @placement = placement
@@ -25,7 +27,7 @@ class Shared::MapComponent < ApplicationComponent
     return false if @editable
     return false if @map_data_url.blank?
 
-    features_count > LAZY_LOAD_THRESHOLD
+    (@explicit_features_count || features_count) > LAZY_LOAD_THRESHOLD
   end
 
   def collapsible?

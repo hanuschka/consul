@@ -70,6 +70,10 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     "proposal_phase"
   end
 
+  def sidebar_cta_kind
+    :new_button
+  end
+
   def resources_name
     "proposals"
   end
@@ -106,9 +110,6 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     ]
   end
 
-  def embedded_admin_nav_bar_items
-    admin_nav_bar_items.excluding(%w[officing_managers])
-  end
 
   def safe_to_destroy?
     proposals.empty?

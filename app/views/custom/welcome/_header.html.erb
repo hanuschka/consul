@@ -122,7 +122,7 @@
           <% end %>
           <br>
           <% if @custom_page&.landing? %>
-           <%= @custom_page.subtitle %>
+           <b><%= @custom_page.subtitle %></b>
           <% else %>
             <b><%= Setting["extended_option.general.subtitle"] %></b>
           <% end %>

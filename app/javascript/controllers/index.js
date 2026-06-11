@@ -98,6 +98,9 @@ application.register("map-screenshot", MapScreenshotController)
 import AdmButtonWithProgressController from "./adm/button_with_progress_controller"
 application.register("adm--button-with-progress", AdmButtonWithProgressController)
 
+import AdmLanguageSelectorController from "./adm/language_selector_controller"
+application.register("adm--language-selector", AdmLanguageSelectorController)
+
 import GlightboxController from "./glightbox_controller"
 application.register("glightbox", GlightboxController)
 
@@ -168,8 +171,8 @@ application.register("adm--masterportal-collections-resync", AdmMasterportalColl
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 
-import AdmFeasibilityToggleController from "./adm/feasibility_toggle_controller"
-application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
+import SharedVisibilityToggleController from "./shared/visibility_toggle_controller"
+application.register("shared--visibility-toggle", SharedVisibilityToggleController)
 
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
@@ -209,3 +212,12 @@ application.register("projekt-imports--from-file", ProjektImportsFromFileControl
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)
+
+import ProjektImportsStatusController from "./projekt_imports/status_controller"
+application.register("projekt-imports--status", ProjektImportsStatusController)
+
+import SharedConfirmDialogController from "./shared/confirm_dialog_controller"
+application.register("shared--confirm-dialog", SharedConfirmDialogController)
+
+import ProjektImportsDeleteConfirmController from "./projekt_imports/delete_confirm_controller"
+application.register("projekt-imports--delete-confirm", ProjektImportsDeleteConfirmController)

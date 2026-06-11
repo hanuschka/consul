@@ -122,7 +122,7 @@ Poll
       can :manage, Widget::Card
 
       can :access, :ckeditor
-      can :manage, Ckeditor::Picture
+      can :manage, AdminImage
 
       can [:manage], ::Legislation::Process
       can [:manage], ::Legislation::DraftVersion
@@ -202,9 +202,8 @@ Poll
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
 
-      can :index, Ckeditor::Asset
-      can [:create, :update, :destroy], Ckeditor::Picture
-      can [:create, :update, :destroy], Ckeditor::Document
+      can :index, AdminAsset
+      can [:create, :update, :destroy], AdminDocument
 
       can :manage, RecipientGroup
       can :manage, ProjektPointOfInterestPin

@@ -1,14 +1,29 @@
+<%#
+  Generic admin-topbar navigation-link color picker.
+
+  Locals (all optional — defaults preserve the original homepage behavior):
+  - current_color:  current hex value (default: homepage Setting)
+  - update_url:     PATCH endpoint (default: homepage route)
+  - css_variable:   CSS custom property the live preview drives
+                    (default: "--homepage-nav-link-color")
+  - input_id:       id for the <input>/<label for> pair
+                    (default: "admin-topbar-nav-link-color-picker")
+  - fallback_color: hex used when the color is reset (default: "#000000")
+%>
 <%
-  setting_key = "extended_option.general.homepage_navigation_link_color"
-  current_color = Setting[setting_key].to_s
-  fallback_color = "#000000"
-  default_color = current_color.presence || fallback_color
+  fallback_color ||= "#000000"
+  current_color  = (defined?(current_color) && current_color) ||
+                   Setting["extended_option.general.homepage_navigation_link_color"].to_s
+  update_url     ||= update_navigation_link_color_adm_homepage_path
+  css_variable   ||= "--homepage-nav-link-color"
+  input_id       ||= "admin-topbar-nav-link-color-picker"
+  default_color  = current_color.presence || fallback_color
 %>
 <div
   class="projekt-page--admin-topbar-color-picker js-admin-topbar-color-picker"
-  data-css-variable="--homepage-nav-link-color"
+  data-css-variable="<%= css_variable %>"
   data-style-element-id=""
-  data-url="<%= update_navigation_link_color_adm_homepage_path %>"
+  data-url="<%= update_url %>"
   data-current-color="<%= current_color %>"
   data-fallback-color="<%= fallback_color %>"
   data-i18n-saving="<%= t('custom.welcome.topbar.nav_link_color_picker.status.saving') %>"
@@ -17,7 +32,7 @@
 >
   <label
     class="projekt-page--admin-topbar-color-picker--label"
-    for="admin-topbar-nav-link-color-picker"
+    for="<%= input_id %>"
     title="<%= t('custom.welcome.topbar.nav_link_color_picker.tooltip') %>"
     data-tooltip
     data-hover-delay="500"
@@ -30,7 +45,7 @@
 
   <input
     type="color"
-    id="admin-topbar-nav-link-color-picker"
+    id="<%= input_id %>"
     class="projekt-page--admin-topbar-color-picker--input js-admin-topbar-color-picker-input"
     value="<%= default_color %>"
     aria-label="<%= t('custom.welcome.topbar.nav_link_color_picker.label') %>"

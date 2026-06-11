@@ -1,5 +1,7 @@
 #!/usr/bin/env puma
 
+require "etc"
+
 rails_root = File.expand_path("../../..", __FILE__)
 
 directory rails_root
@@ -12,6 +14,12 @@ state_path "#{rails_root}/tmp/pids/puma.state"
 stdout_redirect "#{rails_root}/log/puma_access.log", "#{rails_root}/log/puma_error.log", true
 
 bind "unix://#{rails_root}/tmp/sockets/puma.sock"
+
+max_threads  = Integer(ENV.fetch("RAILS_MAX_THREADS", 3))
+worker_count = Integer(ENV.fetch("WEB_CONCURRENCY", Etc.nprocessors))
+
+threads 0, max_threads
+workers worker_count
 
 preload_app!
 

@@ -69,6 +69,12 @@ de:
         newsletter_email_footer_block_1:
           body_label: Newsletter-Fußbereich
           body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."
+        email_footer:
+          body_label: E-Mail-Fußzeile (alle E-Mails)
+          body_description: "Wird in der Fußzeile jeder System-E-Mail angezeigt, oberhalb des Organisationsnamens und der Abmeldehinweise. Geeignet z. B. für Kontaktdaten, Impressum-Links oder allgemeine Informationen. Bleibt das Feld leer, wird nur die Standard-Fußzeile angezeigt."
+        email_footer_deficiency_report:
+          body_label: E-Mail-Fußzeile (Mängelmelder)
+          body_description: "Wird in Mängelmelder-E-Mails anstelle der allgemeinen E-Mail-Fußzeile angezeigt. Bleibt das Feld leer, wird die allgemeine System-Fußzeile verwendet. Geeignet z. B. für Kontaktdaten oder Hinweise speziell zu Mängelmeldungen."
         auth_page_legend:
           registrations:
             body_label: "Registrierungsseite – linke Spalte"

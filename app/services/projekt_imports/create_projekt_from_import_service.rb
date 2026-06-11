@@ -28,6 +28,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
     ActiveRecord::Base.transaction do
       projekt = create_projekt(data)
+      apply_subtitle(projekt, data["subtitle"])
       apply_tags_and_sdgs(projekt, data)
 
       phases = create_phases(projekt, data["phases"])
@@ -39,7 +40,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       phases.each { |entry| build_long_tail(projekt, entry) }
 
       projekt.update!(imported_by_ai: true)
-      projekt_import.update!(projekt_id: projekt.id)
+      projekt_import.record_created_projekt!(projekt)
     end
 
     ServiceResult.success(projekt: projekt)
@@ -57,6 +58,17 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       total_duration_start: data["projekt_start_date"].presence,
       total_duration_end: data["projekt_end_date"].presence
     )
+  end
+
+  def apply_subtitle(projekt, subtitle)
+    return if subtitle.blank?
+
+    page = projekt.page
+    return if page.blank?
+
+    page.update!(subtitle: subtitle.to_s)
+  rescue StandardError => e
+    projekt_import.add_warning!("subtitle: #{e.message}")
   end
 
   def apply_tags_and_sdgs(projekt, data)

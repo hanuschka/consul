@@ -45,13 +45,24 @@
 @use "adm/components/turbo_frame_placeholder";
 @use "adm/components/ai_action_button";
 @use "adm/components/kern_switch";
+@use "adm/components/kern_filter_chips";
 @use "adm/components/phase_key_metrics_card_overrides";
+@use "adm/components/language_selector";
+@use "adm/components/newsletter_summary";
 @use "cross_pack/components/phase_key_metrics_card";
 @use "cross_pack/components/ai_clustering_component";
 @use "cross_pack/components/phase_evaluation_sections";
 @use "cross_pack/components/shared_accordion";
+@use "cross_pack/components/shared_tabs";
 @use "cross_pack/components/ai_question_section";
 @use "cross_pack/components/masterportal_square_marker";
+@use "cross_pack/components/shared_pagination";
+@use "cross_pack/components/shared_modal";
+@use "cross_pack/components/close_button";
+@use "cross_pack/components/rich_tooltip";
+@use "cross_pack/components/inline_popup";
+
+@use "adm/components/newsletter_email_preview";
 
 @use "adm/partials/navbar_items";
 

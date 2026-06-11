@@ -29,7 +29,6 @@ class ImagesQuery
     scope = filter_updated(scope)
     scope = filter_imageable_type(scope)
     scope = filter_imageable_id(scope)
-    scope = filter_admin(scope)
     apply_sort(scope)
   end
 
@@ -97,14 +96,6 @@ class ImagesQuery
       return scope if value.blank?
 
       scope.where(imageable_id: value)
-    end
-
-    def filter_admin(scope)
-      value = read_param(:admin_flag).to_s
-      return scope.where(admin: true) if value == "true"
-      return scope.where(admin: false) if value == "false"
-
-      scope
     end
 
     def apply_date_lower_bound(scope, param_key, column)

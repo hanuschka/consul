@@ -16,12 +16,12 @@
       border-radius: 0;
     }
 
-    @media(max-width: $medium-tablet-viewport-start) {
-      min-width: 0;
-      max-width: 250px;
-    }
+    // @media(max-width: $medium-tablet-viewport-start) {
+    //   min-width: 0;
+    //   max-width: 250px;
+    // }
 
-    @media(max-width: $small-tablet-viewport-start) {
+    @media(max-width: $medium-tablet-viewport-start) {
       display: flex;
       justify-content: center;
       align-items: center;

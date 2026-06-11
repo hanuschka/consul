@@ -91,9 +91,9 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <input
                     type="number"
                     class="js-content-block-margin-bottom-input"
-                    value="35"
+                    value="30"
                     step="5"
-                    min="0"
+                    min="20"
                     max="85"
                   >
                   <button

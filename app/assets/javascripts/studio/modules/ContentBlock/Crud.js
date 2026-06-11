@@ -142,6 +142,8 @@ App.ContentBlockEditor.Crud = {
   },
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
+    App.ContentBlockEditor.DomHelpers.applyDefaultMarginIfMissing(newContentBlockContainer)
+
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.projekt-content-block'))

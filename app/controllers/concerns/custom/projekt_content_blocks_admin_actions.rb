@@ -45,7 +45,11 @@ module ProjektContentBlocksAdminActions
 
     update_params = {}
     update_params[:body] = params[:html] if params.key?(:html)
-    update_params[:margin_bottom] = params[:margin_bottom] if params.key?(:margin_bottom)
+
+    if params.key?(:margin_bottom)
+      min = SiteCustomization::ContentBlock::MIN_MARGIN_BOTTOM
+      update_params[:margin_bottom] = [params[:margin_bottom].to_i, min].max
+    end
 
     if @content_block.update(update_params)
       render json: { status: { message: I18n.t("custom.projekt_content_blocks.update.success") }}

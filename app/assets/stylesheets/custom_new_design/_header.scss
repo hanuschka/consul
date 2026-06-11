@@ -281,6 +281,9 @@ $homepage-image-header-max-width: 1920px;
       display: none;
     }
 
+    @media (max-width: $small-tablet-viewport-start) {
+    }
+
     // "Premium Glass Tablet" — heavy frosted glass mit eigenständigem
     // Charakter. Substantielle Präsenz, polierte Glasplatte, brand-color
     // Identity über die linke 3px Border. Nicht content-first wie Spotify,
@@ -1174,7 +1177,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header {
       height: 450px;
       margin-bottom: 5px;
-      border-radius: 12px;
     }
 
     .top-bar-wrapper {
@@ -1260,8 +1262,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .sticky-header {
       .header--mobile-hamburger-menu {
         .menu-icon::after {
-          background: black;
-          box-shadow: 0 7px 0 black, 0 14px 0 black;
+          background: black !important;
+          box-shadow: 0 7px 0 black, 0 14px 0 black !important;
         }
       }
     }

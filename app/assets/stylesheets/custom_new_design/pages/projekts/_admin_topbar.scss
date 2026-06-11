@@ -387,7 +387,11 @@ $topbar-transition: 150ms ease;
 // 640–750px range where icons are already enlarged.
 // ---------------------------------------------------------------
 @media (max-width: $small-tablet-viewport-start) {
+  // Hidden below the small-tablet breakpoint — admin/PM controls are not
+  // offered on touch viewports. The reserved layout space is reclaimed by
+  // collapsing --admin-topbar-height to 0 in _1_variables.scss.
   .projekt-page--admin-topbar {
+    display: none;
     padding: 0 10px;
     // Allow overflowing button row to scroll horizontally INSIDE the dark
     // surface — without this, `flex-shrink: 0` clusters render outside the

@@ -85,7 +85,7 @@
   <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
 
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, class: "d-flex align-items-center gap-2" do %>
+    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, data: { turbo_method: :delete }, class: "d-flex align-items-center gap-2" do %>
       <%= flyout_item_icon(icon_set: icon_set, material: "logout", font_awesome: "fa-sign-out-alt") %>
       <%= t("devise_views.menu.login_items.logout") %>
     <% end %>

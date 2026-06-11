@@ -104,13 +104,12 @@
   body:has(.projekt-page--admin-topbar) & .proposal-navigation {
     top: $topbar-height + $admin-topbar-height;
 
-    // Mirror the touch-viewport bump of --admin-topbar-height (48px -> 56px).
-    // The Sass var is compile-time, so we add the 8px delta below the
-    // $small-tablet-viewport-start breakpoint to stay in sync with
-    // _admin_topbar.scss (where :root --admin-topbar-height flips to 56px
-    // at the same breakpoint — touch-first approach).
+    // Below the small-tablet breakpoint the admin topbar is hidden
+    // (_admin_topbar.scss), so drop its height from this fixed offset — the
+    // Sass var is compile-time and can't follow the runtime
+    // --admin-topbar-height: 0 override.
     @media(max-width: $small-tablet-viewport-start) {
-      top: $topbar-height-mobile + $mobile-custom-fixed-tabs-height + $admin-topbar-height + 8px;
+      top: $topbar-height-mobile + $mobile-custom-fixed-tabs-height;
     }
   }
 

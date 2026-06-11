@@ -520,8 +520,16 @@
           accessToken: mapboxgl.accessToken,
           mapboxgl: mapboxgl,
           countries: 'DE',
-          marker: false
+          marker: false,
+          placeholder: 'Nach Adresse suchen'
       }), 'top-left');
+
+      const searchInput = this.element.querySelector('.mapboxgl-ctrl-geocoder--input');
+      if (searchInput) {
+        searchInput.setAttribute('title', 'Nach Adresse suchen');
+        searchInput.setAttribute('aria-label', 'Nach Adresse suchen');
+      }
+
       this.map.addControl(new mapboxgl.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
         trackUserLocation: true

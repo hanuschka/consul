@@ -11,6 +11,14 @@
     <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size">
       <%= number_to_human_size(document.attachment_file_size, precision: 1) %>
     </span>
+    <% if document.documentable.is_a?(Projekt) %>
+      <span
+        class="file-upload-manager-dialog--item-badge -projekt"
+        title="<%= document.documentable.title %>"
+      >
+        <%= document.documentable.title %>
+      </span>
+    <% end %>
   </div>
   <div class="file-upload-manager-dialog--item-meta">
     <p

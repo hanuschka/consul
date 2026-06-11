@@ -1,0 +1,75 @@
+<%= content_for :title, t("adm.projekts.imports.index.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.imports.index.title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_root_path, compact: true) do |header| %>
+  <% header.with_actions do %>
+    <div class="projekt-import-list--header-actions">
+      <%= kern_link_button new_adm_projekts_import_path,
+            text: t("adm.projekts.imports.index.new_import"),
+            icon: "upload_file",
+            style: :primary %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3" data-controller="projekt-imports--delete-confirm">
+  <div class="projekt-import-list--filters">
+    <%= render Kern::FilterChipsComponent.new(
+          aria_label: t("adm.projekts.imports.list.filters.aria"),
+          filters: [nil, "in_progress", "failed", "completed"].map do |key|
+            {
+              label: t("adm.projekts.imports.list.filters.#{key || 'all'}"),
+              url: adm_projekts_imports_path(status: key),
+              count: key ? @import_counts[key] : @import_counts.values.sum,
+              active: key == @status_filter
+            }
+          end
+        ) %>
+  </div>
+
+  <% if @imports.any? %>
+    <div class="projekt-import-list">
+      <%= render(Adm::Projekts::Imports::ListItemComponent.with_collection(
+            @imports, created_projekts_by_id: @created_projekts_by_id)) %>
+      <%= paginate @imports if @imports.total_pages > 1 %>
+    </div>
+  <% else %>
+    <div class="projekt-import-list--empty">
+      <span class="material-symbols-outlined projekt-import-list--empty-icon" aria-hidden="true">folder_open</span>
+      <p class="projekt-import-list--empty-text"><%= t("adm.projekts.imports.index.empty") %></p>
+    </div>
+  <% end %>
+
+  <%= render Shared::ModalComponent.new(
+        id: "projekt-import-delete-modal",
+        closeable: false,
+        data: {
+          "projekt-imports--delete-confirm-target": "dialog",
+          action: "click->projekt-imports--delete-confirm#backdrop"
+        }) do %>
+    <%= form_with url: "#", method: :delete,
+          data: { "projekt-imports--delete-confirm-target": "form" } do %>
+      <div class="projekt-import-confirm">
+        <button type="button"
+                class="close-button round-icon-button"
+                data-action="click->projekt-imports--delete-confirm#close"
+                aria-label="<%= t('adm.projekts.imports.list.delete_dialog.cancel') %>">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+        <h2 class="kern-title kern-title--large projekt-import-confirm--title"><%= t("adm.projekts.imports.list.delete_dialog.title") %></h2>
+        <p class="kern-body projekt-import-confirm--message">
+          <%= t("adm.projekts.imports.list.delete_dialog.message") %>
+          <strong class="projekt-import-confirm--target" data-projekt-imports--delete-confirm-target="label"></strong>
+        </p>
+        <p class="kern-body projekt-import-confirm--note"><%= t("adm.projekts.imports.list.delete_dialog.note") %></p>
+        <div class="projekt-import-confirm--actions">
+          <button type="button" class="projekt-import-confirm--button -cancel" data-action="click->projekt-imports--delete-confirm#close">
+            <span class="kern-label"><%= t("adm.projekts.imports.list.delete_dialog.cancel") %></span>
+          </button>
+          <button type="submit" class="projekt-import-confirm--button -danger">
+            <span class="kern-label"><%= t("adm.projekts.imports.list.delete_dialog.confirm") %></span>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

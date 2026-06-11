@@ -1,10 +1,5 @@
 <h3>
   <%= t("admin.recounts.index.title") %>
-  <% if embedded? %>
-    <%= render Shared::ExplainButtonComponent.new(
-      explain: "poll recounts"
-    ) %>
-  <% end %>
 </h3>
 
 <% if @booth_assignments.empty? %>

@@ -5,46 +5,45 @@
   id="<%= dom_id(stat_question) %>"
   class="ai-question-item ai-question-item--completed<%= ' ai-question-item--failed' if failed %>"
 >
-  <details class="kern-accordion ai-question-item--accordion" <%= "open" if open_by_default %>>
-    <summary class="kern-accordion__header">
-      <span class="kern-title ai-question-item--question">
+  <%= render Shared::AccordionComponent.new(opened_by_default: open_by_default) do |c| %>
+    <% c.with_head do %>
+      <h3 class="ai-question-item--question">
         <%= stat_question.question %>
         <% if failed %>
           <span class="ai-question-item--failed-badge">
-            <span class="material-symbols-outlined" aria-hidden="true">error</span>
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
             <%= t("custom.participation_stats.ai_question.status_failed") %>
           </span>
         <% end %>
-      </span>
-    </summary>
-    <div class="kern-accordion__body ai-question-item--answer">
-      <% if failed %>
-        <div class="ai-question-item--failed-message">
-          <%= stat_question.answer.presence || t("custom.participation_stats.ai_question.error") %>
-        </div>
-      <% else %>
-        <%= sanitize(stat_question.answer, tags: %w[h4 p ul li]) %>
-      <% end %>
-    </div>
-  </details>
+      </h3>
+    <% end %>
+
+    <% c.with_body do %>
+      <div class="ai-question-item--answer">
+        <% if failed %>
+          <div class="ai-question-item--failed-message">
+            <%= stat_question.answer.presence || t("custom.participation_stats.ai_question.error") %>
+          </div>
+        <% else %>
+          <%= sanitize(stat_question.answer, tags: %w[h4 p ul li]) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
 
   <div class="ai-question-item--actions">
     <div class="ai-question-item--downloads">
       <% unless failed %>
-        <%= kern_link_button(
-          download_stat_answer_projekt_phase_path(projekt_phase, question_id: stat_question.id, format: "txt"),
-          text: t("custom.participation_stats.ai_question.download_txt"),
-          icon: "description",
-          style: :secondary,
-          class: "kern-btn--compact kern-btn--xs"
-        ) %>
-        <%= kern_link_button(
-          download_stat_answer_projekt_phase_path(projekt_phase, question_id: stat_question.id, format: "pdf"),
-          text: t("custom.participation_stats.ai_question.download_pdf"),
-          icon: "picture_as_pdf",
-          style: :secondary,
-          class: "kern-btn--compact kern-btn--xs"
-        ) %>
+        <%= link_to download_stat_answer_projekt_phase_path(projekt_phase, question_id: stat_question.id, format: "txt"),
+          class: "ai-question-download-btn" do %>
+          <i class="fa fa-file-alt" aria-hidden="true"></i>
+          <%= t("custom.participation_stats.ai_question.download_txt") %>
+        <% end %>
+        <%= link_to download_stat_answer_projekt_phase_path(projekt_phase, question_id: stat_question.id, format: "pdf"),
+          class: "ai-question-download-btn" do %>
+          <i class="fa fa-file-pdf" aria-hidden="true"></i>
+          <%= t("custom.participation_stats.ai_question.download_pdf") %>
+        <% end %>
       <% end %>
     </div>
 
@@ -54,12 +53,12 @@
       </span>
       <%= button_to delete_stat_question_projekt_phase_path(projekt_phase, question_id: stat_question.id),
         method: :delete,
-        class: "kern-btn kern-btn--danger kern-btn--compact kern-btn--xs",
+        class: "ai-question-item--delete-btn",
         form: {
           class: "adm-ai-question-delete-form",
           data: { turbo_confirm: t("custom.shared.destroy_confirmation") }
         } do %>
-        <span class="kern-label material-symbols-outlined" aria-hidden="true">delete</span>
+        <i class="fa fa-trash" aria-hidden="true"></i>
       <% end %>
     </div>
   </div>

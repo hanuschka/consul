@@ -25,6 +25,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.registered_addresses"),  path: adm_registered_addresses_path },
         { label: t("adm.menu.items.application_subitems.registration_settings"), path: registration_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.default_map_location"),  path: adm_default_map_location_path },
+        { label: t("adm.menu.items.application_subitems.system_user"),           path: edit_adm_system_user_path, active_prefix: "/adm/system_user" },
         { label: t("adm.menu.items.application_subitems.tags"),                  path: adm_tags_path },
         { label: t("adm.menu.items.application_subitems.age_ranges"),            path: adm_age_ranges_path },
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
@@ -36,8 +37,9 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
     def files_subitems
       [
-        { label: t("adm.menu.items.files_subitems.images"),    path: adm_files_images_path },
-        { label: t("adm.menu.items.files_subitems.documents"), path: adm_files_documents_path }
+        { label: t("adm.menu.items.files_subitems.images"),             path: adm_files_images_path },
+        { label: t("adm.menu.items.files_subitems.documents"),          path: adm_files_documents_path },
+        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path }
       ]
     end
 
@@ -53,8 +55,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.developer_subitems.ai_settings"),        path: adm_ai_settings_path,        active_prefix: "/adm/ai_settings" },
         { label: t("adm.menu.items.developer_subitems.external_api_keys"),  path: adm_external_api_keys_path,  active_prefix: "/adm/external_api_keys" },
         { label: t("adm.menu.items.developer_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
-        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" },
-        { label: t("adm.menu.items.developer_subitems.connection"),         path: adm_connection_path,         active_prefix: "/adm/connection" }
+        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" }
       ]
     end
 

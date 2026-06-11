@@ -83,6 +83,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   def audits
     @idea = Idea.find(params[:id])
     authorize @idea, :show?, policy_class: Adm::Ideas::IdeaPolicy
+
+    @breadcrumbs = [
+      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path, icon: "lightbulb" },
+      { name: @idea.title }
+    ]
   end
 
   def toggle_accepted

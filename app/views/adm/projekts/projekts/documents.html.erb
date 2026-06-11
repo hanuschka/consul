@@ -1,46 +1,19 @@
-<%= javascript_include_tag "lib/files/filter_serializer" %>
+<%= content_for :title, [(@projekt.page&.title || @projekt.name), t("adm.projekts.projekts.tabs.documents")].join(" | ") %>
 
-<span hidden data-files-delete-failed-message="<%= t("files.delete_failed") %>"></span>
-<span hidden data-files-delete-success-template="<%= t("files.delete_success_with_name", filename: "__FILENAME__") %>"></span>
-<span hidden data-files-delete-failed-template="<%= t("files.delete_failed_with_name", filename: "__FILENAME__") %>"></span>
-<span hidden data-files-upload-success-template="<%= t("files.upload_success_with_name", filename: "__FILENAME__") %>"></span>
-<span hidden data-files-upload-failed-template="<%= t("files.upload_failed_with_name", filename: "__FILENAME__") %>"></span>
-
-<%= content_for :title, [@projekt.page.title, t("adm.menu.items.files_subitems.documents")].join(" | ") %>
-
-<%= render Adm::HeaderComponent.new(title: @projekt.page.title, breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) %>
-
-<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
-
-<div class="kern-container my-5">
-  <div class="d-flex justify-content-end mb-3">
-    <%= render Adm::ButtonWithProgressComponent.new(
-      label: t("files.card.upload"),
-      loading_label: t("files.upload_loading"),
-      success_label: t("files.upload_success"),
-      icon: "upload",
-      button_data: { action: "click->files--upload#triggerPicker" },
-      extra_controllers: ["files--upload"],
-      extra_root_data: {
-        "files--upload-endpoint-value": "/file_manager/documents?projekt_id=#{@projekt.id}"
-      }
-    ) do %>
-      <input
-        type="file"
-        class="js-files-upload-input"
-        data-files--upload-target="input"
-        data-action="change->files--upload#fileChanged"
-        hidden
-      >
-      <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
-    <% end %>
-  </div>
-
-  <%= render Files::IndexComponent.new(
-    type: "document",
+<%= render Adm::FileManager::PageComponent.new(
+  type: "document",
+  title: (@projekt.page&.title || @projekt.name),
+  breadcrumbs: @breadcrumbs,
+  frontend_url: projekt_path(@projekt),
+  upload_endpoint: file_manager_documents_path(projekt_id: @projekt.id),
+  grid: {
     assets: @assets,
     endpoint: documents_adm_projekts_projekt_path(@projekt),
     card_component: Files::DocumentCardComponent,
     row_component: Files::DocumentRowComponent
-  ) %>
-</div>
+  }
+) do |page| %>
+  <% page.with_sub_header do %>
+    <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,15 @@
+<% footer_block_content = render_custom_content_block_content("newsletter_email_footer_block_1") %>
+
+<% if footer_block_content.present? %>
+  <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; max-width: 700px; width:100%; padding: 0 20px;">
+    <tbody>
+      <tr>
+        <td style="border-top: 1px solid #dadfe1; padding-top:20px;padding-bottom:20px;">
+          <%= footer_block_content %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
+
+<%= render "layouts/mailer_footer", hide_sender_info: footer_block_content.present? %>

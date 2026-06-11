@@ -11,16 +11,12 @@ class Document < ApplicationRecord
 
   scope :admin, -> { where(admin: true) }
 
-  scope :for_studio_file_manager, ->(projekt) {
-    if projekt
-      where(admin: true, documentable_type: "Projekt", documentable_id: projekt.id)
-    else
-      where(admin: true, documentable_id: nil)
-    end
-  }
-
   def self.accepted_content_types
     Setting["uploads.documents.content_types"]&.split(" ") || %w[application/pdf]
+  end
+
+  def self.admin_accepted_content_types
+    Setting.mime_types["documents"].values
   end
 
   def self.max_file_size
@@ -29,6 +25,10 @@ class Document < ApplicationRecord
 
   def self.humanized_accepted_content_types
     Setting.accepted_content_types_for("documents").join(", ")
+  end
+
+  def self.humanized_admin_accepted_content_types
+    Setting.humanized_content_types_for("documents", admin_accepted_content_types)
   end
 
   def humanized_content_type
@@ -44,6 +44,8 @@ class Document < ApplicationRecord
   end
 
   def accepted_content_types
+    return self.class.admin_accepted_content_types if admin?
+
     if documentable_class.respond_to?(:accepted_content_types)
       documentable_class.accepted_content_types
     else

@@ -43,7 +43,7 @@ class Api::ProjektsController < Api::BaseController
     include_content_blocks = params[:include_content_blocks] == 'true'
 
     includes_hash = {}
-    includes_hash[:content_blocks] = {} if include_content_blocks
+    includes_hash[:content_blocks] = {}
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
 
     if include_phases
@@ -274,6 +274,7 @@ class Api::ProjektsController < Api::BaseController
   def find_projekt
     @projekt = Projekt
       .includes(
+        :content_blocks,
         projekt_phases: [
           :settings,
           :individual_group_values,

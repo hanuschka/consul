@@ -1,3 +1,8 @@
+# IMPORTANT: When updating the allowed tags or attributes here,
+# also update the JS mirror in
+# app/assets/javascripts/studio/utils/htmlUtils.js
+# (ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST). Drift between the two
+# causes studio content to look different after save than during edit.
 class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
   def allowed_tags
     super + %w[

@@ -24,6 +24,8 @@ module SavedContentBlockAdminActions
 
       render json: {
         status: "created",
+        content: @saved_content_block.content,
+        stripped: @saved_content_block.content_stripped?,
         saved_content_block_item_html: content_block_html
       }, status: 201
     else
@@ -33,7 +35,11 @@ module SavedContentBlockAdminActions
 
   def update
     if @saved_content_block.update(saved_content_block_params)
-      render json: { status: "updated" }, status: 200
+      render json: {
+        status: "updated",
+        content: @saved_content_block.content,
+        stripped: @saved_content_block.content_stripped?
+      }, status: 200
     else
       render json: { errors: @saved_content_block.errors.messages }, status: :unprocessable_entity
     end
@@ -54,6 +60,6 @@ module SavedContentBlockAdminActions
   end
 
   def saved_content_block_params
-    params.require(:saved_content_block).permit(:name, :content)
+    params.require(:saved_content_block).permit(:name, :content, :context)
   end
 end

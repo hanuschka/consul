@@ -126,6 +126,7 @@ class ProjektPhase < ApplicationRecord
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
   has_many :email_templates, class_name: "SiteCustomization::EmailTemplate", dependent: :destroy
   has_many :masterportal_pins, dependent: :destroy
+  has_many :masterportal_collections, dependent: :destroy
 
   accepts_nested_attributes_for :settings
 
@@ -148,6 +149,13 @@ class ProjektPhase < ApplicationRecord
     success: "success",
     failed: "failed"
   }, _prefix: :masterportal_import
+
+  enum masterportal_destroy_status: {
+    pending: "pending",
+    running: "running",
+    success: "success",
+    failed: "failed"
+  }, _prefix: :masterportal_destroy
 
   validates :projekt, presence: true
   validate :type_must_be_valid
@@ -387,13 +395,21 @@ class ProjektPhase < ApplicationRecord
     raise NotImplementedError, "#{self.class.name} must implement #customizable_email_templates"
   end
 
+  def customizable_email_template_groups
+    [
+      {
+        key: nil,
+        templates: customizable_email_templates.map do |mailer_class, mailer_action|
+          { mailer_class: mailer_class, mailer_action: mailer_action, recipient_type: nil }
+        end
+      }
+    ]
+  end
+
   def admin_nav_bar_items
     []
   end
 
-  def embedded_admin_nav_bar_items
-    admin_nav_bar_items
-  end
 
   def settings_in_tabs
     {}
@@ -475,6 +491,21 @@ class ProjektPhase < ApplicationRecord
     else
       super
     end
+  end
+
+  # Which call-to-action the projekt page sidebar renders for this phase.
+  # Returns nil (no CTA) by default; subclasses opt in by returning a symbol
+  # (:new_button, :link or :poll) and may decide it from their own state.
+  # See Pages::Projekts::SidebarCtaComponent.
+  def sidebar_cta_kind
+    nil
+  end
+
+  # Label for the sidebar CTA. Defaults to the per-phase i18n string (with the
+  # admin's cta_button_name override). Subclasses whose label varies by state
+  # (e.g. BudgetPhase) override this.
+  def sidebar_cta_label
+    cta_button_name.presence || I18n.t("custom.projekt_phases.cta.#{name}")
   end
 
   def regular

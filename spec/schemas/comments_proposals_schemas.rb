@@ -178,6 +178,7 @@ module Schemas
         proposal: {
           type: :object,
           properties: PROPOSAL_PARAMS_BASE.merge(
+            published: { type: :boolean, nullable: true, description: 'Whether to publish the proposal immediately on creation, making it visible in the frontend. Defaults to true. Set to false to create the proposal as a draft and publish it later via PATCH /api/proposals/{id}/publish.' },
             map_location_attributes: MAP_LOCATION_ATTRIBUTES_CREATE,
             image_attributes: IMAGE_ATTRIBUTES_CREATE,
             documents_attributes: DOCUMENTS_ATTRIBUTES,

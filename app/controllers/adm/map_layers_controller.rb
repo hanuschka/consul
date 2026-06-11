@@ -16,6 +16,7 @@ module Adm
       authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       if @map_layer.save
+        purge_geojson_file_if_requested
         redirect_to redirect_path_for(@map_layer), notice: t(".success")
       else
         @form_url = collection_path_for_mappable(@mappable)
@@ -37,6 +38,7 @@ module Adm
       authorize @map_layer, policy_class: policy_class_for(@map_layer)
 
       if @map_layer.update(map_layer_params)
+        purge_geojson_file_if_requested
         redirect_to redirect_path_for(@map_layer), notice: t(".success")
       else
         @form_url = member_path_for(@map_layer)
@@ -68,8 +70,23 @@ module Adm
       def map_layer_params
         params.require(:map_layer).permit(
           :name, :layer_names, :base, :show_by_default,
-          :provider, :attribution, :protocol, :transparent, :opacity
+          :provider, :attribution, :protocol, :transparent, :opacity,
+          :geojson_file,
+          config: [
+            :label_property,
+            :popup_properties,
+            { style: [:fillColor, :fillOpacity, :color, :weight] },
+            { choropleth: [
+              :enabled, :property, :legend_title, :no_data_color, :breaks, :colors
+            ] }
+          ]
         )
+      end
+
+      def purge_geojson_file_if_requested
+        return if params.dig(:map_layer, :remove_geojson_file) != "1"
+
+        @map_layer.geojson_file.purge
       end
 
       def policy_class_for(map_layer)

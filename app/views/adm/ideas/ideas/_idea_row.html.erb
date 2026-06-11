@@ -1,10 +1,21 @@
+<% public_linkable = !idea.hidden? %>
 <tr id="<%= dom_id(idea) %>" class="kern-table__row">
-  <td class="kern-table__cell" data-field="id"><%= idea.id %></td>
+  <td class="kern-table__cell" data-field="id"><%= link_to_if public_linkable, idea.id, idea_path(idea), class: "kern-link", target: "_blank", data: { turbo: false } %></td>
   <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
-    <%= link_to adm_ideas_idea_path(idea),
-          class: "adm-table-thumb-link",
-          data: { turbo_frame: "_top" },
-          title: idea.title do %>
+    <% if public_linkable %>
+      <%= link_to idea_path(idea),
+            class: "adm-table-thumb-link",
+            target: "_blank",
+            data: { turbo: false },
+            title: idea.title do %>
+        <%= render Adm::TableThumbComponent.new(
+              image: idea.image,
+              title: idea.title,
+              fallback_icon: idea.category&.icon,
+              fallback_color: idea.category&.color
+            ) %>
+      <% end %>
+    <% else %>
       <%= render Adm::TableThumbComponent.new(
             image: idea.image,
             title: idea.title,
@@ -14,7 +25,7 @@
     <% end %>
   </td>
   <th scope="row" class="kern-table__header" data-field="title">
-    <%= link_to truncate(idea.title, length: 60), idea_path(idea), target: "_blank", class: "kern-link", title: idea.title %>
+    <%= link_to truncate(idea.title, length: 60), adm_ideas_idea_path(idea), class: "kern-link", title: idea.title, data: { turbo_frame: "_top" } %>
   </th>
   <td class="kern-table__cell" data-field="admin_accepted">
     <%= render Adm::AttributeEditors::BooleanComponent.new(

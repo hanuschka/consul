@@ -1,0 +1,158 @@
+<% body_html = capture do %>
+  <div class="masterportal-import-panel--body">
+    <input
+      type="hidden"
+      data-adm--masterportal-import-panel-target="endpointUrl"
+      value="<%= default_endpoint_url %>"
+    >
+
+    <div class="masterportal-import-panel--field">
+      <div class="masterportal-import-panel--tree-header">
+        <div class="masterportal-import-panel--tree-label">
+          <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+          <%= t(".collections_label") %>
+        </div>
+
+        <button
+          type="button"
+          class="masterportal-import-panel--load-button"
+          title="<%= t(".load_collections_tooltip") %>"
+          data-adm--masterportal-import-panel-target="loadCollectionsButton"
+          data-action="click->adm--masterportal-import-panel#loadCollections"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+          <span><%= t(".load_collections") %></span>
+        </button>
+      </div>
+
+      <p class="masterportal-import-panel--hint"><%= t(".collections_hint") %></p>
+
+      <div
+        class="masterportal-import-panel--tree"
+        data-adm--masterportal-import-panel-target="tree"
+      >
+        <div class="masterportal-import-panel--tree-empty">
+          <span class="material-symbols-outlined" aria-hidden="true">cloud_download</span>
+          <p class="masterportal-import-panel--hint"><%= t(".tree_hint") %></p>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="masterportal-import-panel--actions"
+      data-adm--masterportal-import-panel-target="actions"
+    >
+      <% if supports_domain_records? %>
+        <%= render Kern::SwitchComponent.new(
+          label: t(".create_resource_label", resource_name: resource_name),
+          description: create_resource_switch_description,
+          input_data: { "adm--masterportal-import-panel-target" => "createResourceCheckbox" }
+        ) %>
+
+        <div class="masterportal-import-panel--system-user">
+          <p class="masterportal-import-panel--system-user-note">
+            <%= t(".system_user_note", resource_name: resource_name, name: system_user.name) %>
+          </p>
+
+          <%= render Adm::SystemUserInfoComponent.new(user: system_user) %>
+        </div>
+      <% end %>
+
+      <button
+        type="button"
+        class="masterportal-import-panel--import-button"
+        title="<%= t(".import_button_tooltip") %>"
+        data-adm--masterportal-import-panel-target="importButton"
+        data-action="click->adm--masterportal-import-panel#startImport"
+        disabled
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <span><%= t(".import_button") %></span>
+      </button>
+    </div>
+
+    <div
+      class="masterportal-import-panel--progress"
+      data-adm--masterportal-import-panel-target="progress"
+      hidden
+      role="status"
+      aria-live="polite"
+    >
+      <span class="masterportal-import-panel--progress-spinner material-symbols-outlined" aria-hidden="true">
+        progress_activity
+      </span>
+      <div class="masterportal-import-panel--progress-text">
+        <span class="masterportal-import-panel--progress-headline"><%= t(".progress.running") %></span>
+        <span
+          class="masterportal-import-panel--progress-count"
+          data-adm--masterportal-import-panel-target="progressCount"
+        >
+          <%= progress_count_initial %>
+        </span>
+        <% if supports_domain_records? %>
+          <span
+            class="masterportal-import-panel--progress-resource"
+            data-adm--masterportal-import-panel-target="progressResource"
+            data-create-on-text="<%= t('.progress.create_resource_on', resource_name: resource_name) %>"
+            data-create-off-text="<%= t('.progress.create_resource_off') %>"
+            hidden
+          >
+            <span
+              class="material-symbols-outlined masterportal-import-panel--progress-resource-icon"
+              data-adm--masterportal-import-panel-target="progressResourceIcon"
+              aria-hidden="true"
+            ></span>
+            <span data-adm--masterportal-import-panel-target="progressResourceText"></span>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if embedded? %>
+  <%= body_html %>
+<% else %>
+  <section
+    class="masterportal-import-panel"
+    data-controller="adm--masterportal-import-panel"
+    data-adm--masterportal-import-panel-endpoints-value="<%= endpoints_data.to_json %>"
+    data-adm--masterportal-import-panel-initial-status-value="<%= initial_status.to_json %>"
+    data-adm--masterportal-import-panel-progress-count-template-value="<%= progress_count_template %>"
+    data-adm--masterportal-import-panel-progress-count-token-value="<%= Adm::MasterportalImportPanelComponent::PROGRESS_COUNT_TOKEN %>"
+  >
+    <div class="masterportal-import-panel--header">
+      <div class="masterportal-import-panel--header-left">
+        <div class="masterportal-import-panel--logo" aria-hidden="true">
+          <%= image_tag "services/masterportal_logo.svg", alt: "" %>
+        </div>
+
+        <div class="masterportal-import-panel--header-text">
+          <h3 class="masterportal-import-panel--title"><%= t(".title") %></h3>
+
+          <% if resource_name.present? %>
+            <p class="masterportal-import-panel--subtitle">
+              <span class="material-symbols-outlined" aria-hidden="true">tag</span>
+              <%= @projekt_phase.title %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <div
+        class="masterportal-import-panel--status"
+        data-adm--masterportal-import-panel-target="statusBadge"
+        data-status="<%= initial_status[:status] %>"
+      >
+        <span class="material-symbols-outlined masterportal-import-panel--status-icon" aria-hidden="true">
+          <%= status_icon %>
+        </span>
+        <span class="masterportal-import-panel--status-text">
+          <%= status_summary %>
+        </span>
+      </div>
+    </div>
+
+    <%= body_html %>
+  </section>
+<% end %>

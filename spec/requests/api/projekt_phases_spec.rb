@@ -76,6 +76,8 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
           expect(data['data']['projekt_phases'][0]['phase_tab_name']).to eq('Comments')
         end
       end
+
+      unauthorized_response { let(:projekt_id) { 1 } }
     end
 
     post 'Create a projekt phase' do
@@ -283,6 +285,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_id) { 1 } }
+      forbidden_response { let(:projekt_id) { 1 } }
     end
   end
 
@@ -354,6 +359,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
   path '/api/projekt_phases/{id}' do
@@ -390,6 +398,8 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt phase' do
@@ -581,6 +591,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt phase' do
@@ -633,6 +646,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

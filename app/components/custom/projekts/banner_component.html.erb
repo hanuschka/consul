@@ -73,7 +73,7 @@
         <% big_projekt_image_url =
           polymorphic_path(@custom_page.image.attachment.variant(
             resize_to_limit: [1750, 900],
-            saver: { quality: 80 },
+            saver: { quality: 90 },
             strip: true,
             format: "jpeg"
           ))
@@ -98,7 +98,7 @@
             Shared::ResourceImageComponent.new(
               image_url: @custom_page.image&.attachment&.variant(
                 resize_to_fill: [590, 355],
-                saver: { quality: 85 },
+                saver: { quality: 95 },
                 strip: true,
                 format: "jpeg"
               ),
@@ -129,11 +129,7 @@
               hidden
             >
               <div class="projekt-banner-upload-progress--backdrop"></div>
-              <div class="projekt-banner-upload-progress--ring js-projekt-banner-upload-progress-ring">
-                <div class="projekt-banner-upload-progress--ring-inner">
-                  <span class="projekt-banner-upload-progress--percent js-projekt-banner-upload-progress-percent">0%</span>
-                </div>
-              </div>
+              <div class="loading-spinner-inline projekt-banner-upload-progress--spinner"></div>
               <div
                 class="projekt-banner-upload-progress--message js-projekt-banner-upload-progress-message"
                 data-uploading-text="<%= t('custom.projekts.banner_upload.uploading') %>"
@@ -148,6 +144,7 @@
             <input
               id="projektImageUploadInput"
               type="file"
+              accept="image/*"
               class="d-none js-projekt-banner--image-upload-input"
             >
             </input>

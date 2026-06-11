@@ -3,8 +3,6 @@ post "/connect_dt_service", to: "internal_api_clients#connect", as: :connect_api
 namespace :internal_api do
   patch "/internal_api_clients_registration/mark_as_registered"
 
-  post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
-
   resources :projekts, only: [:index, :create, :update] do
     collection do
       get :overview
@@ -39,12 +37,15 @@ namespace :internal_api do
     member do
       post :send_notifications
       patch :set_as_default
+      patch :update_setting
     end
 
     collection do
       patch :update
     end
   end
+
+  get "projekt_import_references", to: "projekt_import_references#show"
 
   resources :images, only: [:create, :destroy]
 

@@ -1,0 +1,137 @@
+// Toast / flash notifications
+// ---------------------------
+// Loaded globally via application.scss (public, admin, management, devise).
+// Public header offset lives in custom_new_design/_base.scss.
+
+.toast-stack {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 380px;
+  max-width: calc(100% - 2rem);
+  pointer-events: none; // clicks pass through gaps; toasts re-enable below
+
+  @media (max-width: 39.9375em) { // < 640px
+    top: calc(0.75rem + env(safe-area-inset-top, 0px));
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-radius: 8px;
+  border-left: 4px solid #64748b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  color: #0f172a;
+  font-family: "Asap", sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  animation: toast-in 220ms ease-out both;
+
+  &.toast--leaving {
+    animation: toast-out 150ms ease-in both;
+  }
+}
+
+.toast__icon {
+  flex: 0 0 auto;
+  font-size: 20px;
+  line-height: 1.45;
+  color: #64748b;
+
+  .fa { display: block; }
+}
+
+.toast__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+
+.toast__close {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -10px -8px -10px 0; // 44px hit area without inflating the row height
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover { color: #0f172a; }
+
+  &:focus-visible {
+    outline: 2px solid #0369a1;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+.toast--success {
+  border-left-color: #16a34a;
+  .toast__icon { color: #16a34a; }
+}
+
+.toast--info {
+  border-left-color: #0369a1;
+  .toast__icon { color: #0369a1; }
+}
+
+.toast--warning {
+  border-left-color: #b45309;
+  .toast__icon { color: #b45309; }
+}
+
+.toast--alert {
+  border-left-color: #dc2626;
+  .toast__icon { color: #dc2626; }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes toast-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes toast-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast            { animation: toast-fade-in 120ms ease both; }
+  .toast.toast--leaving { animation: toast-fade-out 120ms ease both; }
+}

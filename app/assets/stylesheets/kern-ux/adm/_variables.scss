@@ -1,4 +1,9 @@
+@use "cross_pack/1_colors" as dt-colors;
+
 :root {
-  --kern-adm-header-height: 76px;
+  --kern-adm-header-height: 65px;
   --kern-typography-font-size-static-medium: var(--kern-font-size-16);
+  --brand-color: #008000;
+  --dt-base: #{dt-colors.$dt-base};
+  --effective-brand-color: var(--dt-base);
 }

@@ -31,6 +31,45 @@
     }
   }
 
+  // Variant: header with stat pills aligned to the right (projekts home dashboard).
+  // Groups the icon + heading on the left and pushes the pills to the right edge.
+  // Wraps on narrow viewports so the pills drop below the heading.
+  &__section-header--with-stats {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+
+    .adm-dashboard__section-header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .adm-dashboard__stat-pills {
+      margin-left: auto;
+      margin-bottom: 0;
+    }
+  }
+
+  // Action row that sits between section header and section content (e.g. table)
+  &__section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 767px) {
+      .kern-btn {
+        flex: 1 1 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Variant: section that should sit closer to the preceding ".adm-dashboard__people-row"
+  &__section--pull-up {
+    margin-top: -2rem;
+  }
+
   &__stats {
     display: flex;
     flex-wrap: wrap;
@@ -548,6 +587,81 @@
   margin-top: 1rem;
 }
 
+// ── Intro row (welcome text + contact persons side by side) ──────────────
+// Used by the projekts home dashboard: intro on the left, contacts on the right.
+
+.adm-dashboard__intro-row {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.adm-dashboard__intro-col {
+  flex: 1 1 0;
+  min-width: 280px;
+
+  // The intro text is now followed by the quick-link buttons inside this column,
+  // so it keeps a moderate bottom margin to separate text from the actions.
+  .adm-dashboard__intro {
+    margin-bottom: 1.25rem;
+  }
+
+  // The actions block is the last element of the column; the surrounding
+  // ".adm-dashboard__intro-row" already provides the spacing below.
+  .adm-dashboard__section-actions {
+    margin-bottom: 0;
+  }
+}
+
+.adm-dashboard__intro-aside {
+  flex: 1 1 0;
+  min-width: 280px;
+
+  // The contacts component brings its own ".adm-dashboard__section" spacing;
+  // reset it so it aligns with the intro column inside this row.
+  .adm-dashboard__section {
+    margin-bottom: 0;
+  }
+}
+
+// ── Stat pills (compact inline stats, projekts home dashboard) ────────────
+
+.adm-dashboard__stat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.adm-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: oklch(0.97 0.01 var(--kern-darkblue-700-hue, 265.1));
+  border: 1px solid var(--kern-color-layout-border, #e4e7ec);
+  border-radius: var(--kern-metric-border-radius-large, 8px);
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--kern-typography-color-default, #222);
+
+  &__icon {
+    font-size: 1.25rem;
+    color: var(--adm-color-primary, #1b5fd6);
+    line-height: 1;
+  }
+
+  &__value {
+    font-weight: 700;
+    color: var(--kern-typography-color-default, #111);
+  }
+
+  &__label {
+    color: var(--kern-typography-color-muted, #555);
+  }
+}
+
 // ── People row (team + contact persons side by side) ─────────────────────
 
 .adm-dashboard__people-row {
@@ -559,6 +673,28 @@
   > * {
     flex: 1;
     min-width: 280px;
+  }
+}
+
+// ── Feed row (activity feed + team side by side, 50/50) ──────────────────
+
+.adm-dashboard__feed-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+
+  > * {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  // Both children render their own ".adm-dashboard__section" spacing;
+  // reset it so the columns align at the top and the outer spacing is
+  // owned by this row container.
+  .adm-dashboard__section {
+    margin-bottom: 0;
   }
 }
 
@@ -683,6 +819,18 @@
   color: var(--kern-typography-color-muted, #94a3b8);
 }
 
+.adm-dashboard__activity-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+
+  // Inherits .pagy.nav styling from kern-ux/adm/_pagination.scss.
+  // Allow wrapping on narrow viewports so the controls stay reachable.
+  .pagy.nav {
+    flex-wrap: wrap;
+  }
+}
+
 // ── Settings link ───────────────────────────────────────────────────────
 
 .adm-dashboard__settings-link {
@@ -690,6 +838,130 @@
     font-size: 1.1rem;
     vertical-align: middle;
     margin-right: 0.25rem;
+  }
+}
+
+// ── Module status list (active modules on home) ──────────────────────────
+
+.adm-dashboard__hint {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--kern-typography-color-muted, #555);
+  max-width: 680px;
+}
+
+.adm-module-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 168px;
+    padding: 1.125rem 1.25rem 1.125rem 1.5rem;
+    background: #fff;
+    border: 1px solid var(--kern-color-layout-border, #e4e7ec);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+    color: var(--kern-typography-color-default, #222);
+    text-decoration: none;
+    transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.75rem;
+      bottom: 0.75rem;
+      left: 0;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--adm-color-primary, #1b5fd6);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+      text-decoration: none;
+      color: var(--kern-typography-color-default, #222);
+      border-color: var(--adm-color-primary, #1b5fd6);
+
+      &::before {
+        opacity: 1;
+      }
+
+      .adm-module-bento__cta {
+        gap: 0.5rem;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--adm-color-primary, #1b5fd6);
+      outline-offset: 2px;
+    }
+  }
+
+  &__card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  &__icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(27, 95, 214, 0.1);
+    color: var(--adm-color-primary, #1b5fd6);
+    flex-shrink: 0;
+
+    .material-symbols-outlined {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__title {
+    margin: 0.25rem 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--kern-typography-color-default, #1f2937);
+  }
+
+  &__metric {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--kern-typography-color-muted, #6b7280);
+    line-height: 1.4;
+  }
+
+  &__cta {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--adm-color-primary, #1b5fd6);
+    min-height: 1.5rem;
+    transition: gap 0.18s ease;
+
+    .material-symbols-outlined {
+      font-size: 1rem;
+      transition: transform 0.18s ease;
+    }
   }
 }
 
@@ -702,6 +974,24 @@
 
   .adm-dashboard__people-row {
     flex-direction: column;
+  }
+
+  .adm-dashboard__feed-row {
+    flex-direction: column;
+  }
+
+  .adm-dashboard__intro-row {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .adm-module-bento {
+    grid-template-columns: 1fr;
+  }
+
+  .adm-module-bento__card {
+    min-height: 0;
+    padding: 1rem 1rem 1rem 1.25rem;
   }
 }
 
@@ -742,6 +1032,24 @@
     &--warning &__value,
     &--warning &__icon {
       color: #ffaa5c;
+    }
+  }
+
+  .adm-stat-pill {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.87);
+
+    &__icon {
+      color: #7eb3ff;
+    }
+
+    &__value {
+      color: #fff;
+    }
+
+    &__label {
+      color: rgba(255, 255, 255, 0.65);
     }
   }
 
@@ -815,5 +1123,39 @@
       background: rgba(255, 255, 255, 0.08);
       color: rgba(255, 255, 255, 0.6);
     }
+  }
+
+  .adm-module-bento__card {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    color: rgba(255, 255, 255, 0.87);
+
+    &:hover,
+    &:focus-visible {
+      color: rgba(255, 255, 255, 0.95);
+      border-color: rgba(126, 179, 255, 0.5);
+    }
+
+    &::before {
+      background: #7eb3ff;
+    }
+  }
+
+  .adm-module-bento__icon-tile {
+    background: rgba(126, 179, 255, 0.15);
+    color: #7eb3ff;
+  }
+
+  .adm-module-bento__title {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .adm-module-bento__metric {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .adm-module-bento__cta {
+    color: #7eb3ff;
   }
 }

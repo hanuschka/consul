@@ -2,36 +2,40 @@
   "use strict";
 
   App.Studio = {
-    modulesInitialized: false,
-
     initContentBlockModules() {
-      if (this.modulesInitialized) return
+      // Window-level flag: survives re-evaluation of this pack (e.g. Turbo
+      // re-running body scripts), preventing duplicate document-level
+      // event bindings.
+      if (window.studioContentBlockModulesInitialized) return
       if (typeof ProjektStudio === "undefined") return
 
       $(document).on("click", ".js-clear-site-content-block", this.handleClearContentBlock.bind(this));
 
-      ProjektStudio.ContentBlockTemplateSelector.initialize();
-      ProjektStudio.ContentBlock.Crud.initialize();
-      ProjektStudio.ContentBlock.ChangeHistory.initialize();
-      ProjektStudio.ContentBlock.CKEditorMode.initialize();
-      ProjektStudio.ContentBlock.EditModeSwitcher.initialize();
-      ProjektStudio.ContentBlock.EditModeButtons.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.TextFormat.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.HeaderEdit.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.LinkEdit.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.ListEdit.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageGalleryDialog.initialize();
-      ProjektStudio.ContentBlock.SimpleEditMode.ImageEdit.initialize();
-      ProjektStudio.ContentBlock.AiEditMode.initialize();
-      ProjektStudio.ContentBlock.CodeEditMode.initialize();
-      ProjektStudio.ContentBlock.Copy.initialize();
+      App.Tabs.initialize();
+      App.ContentBlockEditor.TemplateSelector.initialize();
+      App.ContentBlockEditor.Crud.initialize();
+      App.ContentBlockEditor.ChangeHistory.initialize();
+      App.ContentBlockEditor.CKEditorMode.initialize();
+      App.ContentBlockEditor.EditModeSwitcher.initialize();
+      App.ContentBlockEditor.EditModeButtons.initialize();
+      App.ContentBlockEditor.SimpleEditMode.initialize();
+      App.ContentBlockEditor.SimpleEditMode.TextFormat.initialize();
+      App.ContentBlockEditor.SimpleEditMode.HeaderEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.LinkEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.ListEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.initialize();
+      App.ContentBlockEditor.SimpleEditMode.ImageEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.initialize();
+      App.ContentBlockEditor.AiEditMode.initialize();
+      App.ContentBlockEditor.CodeEditMode.initialize();
+      App.ContentBlockEditor.Copy.initialize();
+      App.ContentBlockEditor.EmptyHintToggle.initialize();
 
-      this.modulesInitialized = true;
+      window.studioContentBlockModulesInitialized = true;
     },
 
     handleClearContentBlock(e) {
-      const wrapper = ProjektStudio.ContentBlock.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+      const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
       const confirmed = confirm("Soll der Inhalt dieses Blocks wirklich gelöscht werden?");
 
       if (!confirmed) return
@@ -39,13 +43,13 @@
       const currentMode = wrapper.dataset.editMode;
 
       if (currentMode) {
-        ProjektStudio.ContentBlock.EditModeSwitcher.exitCurrentMode(wrapper, currentMode);
+        App.ContentBlockEditor.EditModeSwitcher.exitCurrentMode(wrapper, currentMode);
       }
 
-      const contentBlock = wrapper.querySelector(".js-projekt-content-block");
+      const contentBlock = wrapper.querySelector(".js-content-block");
       const emptyHtml = "<div><p></p></div>";
 
-      ProjektStudio.ContentBlock.Crud.updateContentBlock(contentBlock, emptyHtml);
+      App.ContentBlockEditor.Crud.updateContentBlock(contentBlock, emptyHtml);
     },
 
     SiteContentBlockEditor: {
@@ -90,13 +94,17 @@
             wrappedElement.dataset.defaultContent = defaultContent;
           }
 
+          if (block.style.marginBottom) {
+            wrappedElement.style.marginBottom = block.style.marginBottom;
+          }
+
           block.parentNode.replaceChild(wrappedElement, block);
 
           if (wrappedElement.closest("aside, .sidebar, footer")) {
             wrappedElement.classList.add("-compact-mode");
           }
 
-          $(wrappedElement).foundation();
+          App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(wrappedElement);
 
           App.ImageGallery.initialize();
         });

@@ -14,29 +14,26 @@ de:
         modules: Module
         application_subitems:
           homepage: Startseite
-          documents: Dokumente
           pages: Systemseiten
           navbar: Navigation
+          overview_pages: Übersichtsseiten
           metadata_settings: Metadaten
           gdpr_settings: DSGVO
-          registration_settings: Konto & Zugang
+          registration_settings: Registrierung & Verifizierung
           registered_addresses: Adressen
           default_map_location: Standardkarte
+          system_user: Systemnutzer
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
           email_templates: System-E-Mails
+          features: Funktionen
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
           conditions: Nutzungsbedingungen
           impressum: Impressum
-        profiles: Profile
-        profiles_subitems:
-          deficiency_report_managers: Mängel-Administratoren
-          idea_managers: Ideen-Administratoren
-          section_contact_people: Ansprechpartner
-          users: Nutzer
+        users: Nutzer
         notifications: Benachrichtigungen
         notifications_subitems:
           modal_notifications: Popup-Benachrichtigungen

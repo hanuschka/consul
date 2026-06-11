@@ -59,7 +59,7 @@ class Adm::DeficiencyReports::StatusesController < Adm::DeficiencyReports::BaseC
 
   def order_statuses
     authorize DeficiencyReport::Status, :update?, policy_class: Adm::DeficiencyReports::StatusPolicy
-    DeficiencyReport::Status.order_statuses(params[:ordered_list])
+    DeficiencyReport::Status.order_statuses(params[:tree].map { |item| item[:id] })
     head :ok
   end
 

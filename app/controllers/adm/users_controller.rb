@@ -25,8 +25,7 @@ module Adm
           @document_type_header_options = { filter_options: document_type_options }
 
           @breadcrumbs = [
-            { name: t("adm.menu.items.profiles"), icon: "3p" },
-            { name: t("adm.menu.items.profiles_subitems.users") }
+            { name: t("adm.menu.items.users"), icon: "3p" }
           ]
         end
 
@@ -66,8 +65,15 @@ module Adm
       @user = User.find(params[:id])
       authorize [:adm, @user]
 
+      # Email changes made by an admin here are confirmed immediately: write the
+      # new address straight to :email (skipping Devise's reconfirmation flow)
+      # so it takes effect at once and is captured by the audit log.
+      @user.skip_reconfirmation!
+
       if @user.update(user_params)
-        if params[:reverify].present?
+        # Only reverify when Melderegister is enabled — otherwise reverify!
+        # unverifies the user and hits the remote census API for nothing.
+        if params[:reverify].present? && Setting["feature.melderegister"].present?
           @user.reverify!
           @user.update!(reverify: true)
         end
@@ -78,6 +84,13 @@ module Adm
 
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def audits
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @breadcrumbs = audits_breadcrumbs
     end
 
     def verify
@@ -117,9 +130,16 @@ module Adm
 
       def edit_breadcrumbs
         [
-          { name: t("adm.menu.items.profiles"), icon: "3p" },
-          { name: t("adm.menu.items.profiles_subitems.users"), url: adm_users_path },
+          { name: t("adm.menu.items.users"), icon: "3p", url: adm_users_path },
           { name: @user.name.presence || @user.email }
+        ]
+      end
+
+      def audits_breadcrumbs
+        [
+          { name: t("adm.menu.items.users"), icon: "3p", url: adm_users_path },
+          { name: @user.name.presence || @user.email, url: edit_adm_user_path(@user) },
+          { name: t("adm.shared.audits.title") }
         ]
       end
   end

@@ -1,18 +1,11 @@
 <%= render "custom/admin/projekt_phases/heading" %>
 
-<% unless embedded? %>
-  <%= render "custom/admin/projekt_phases/nav_bar" %>
-<% end %>
+<%= render "custom/admin/projekt_phases/nav_bar" %>
 
 <div class="row">
   <div class="column">
     <h3>
       <%= t("custom.admin.projekt_phases.formular_answers.emails_title") %>
-      <% if embedded? %>
-        <%= render Shared::ExplainButtonComponent.new(
-          explain: "projekt formular answers"
-        ) %>
-      <% end %>
     </h3>
 
     <div id="formular-follow-up-letters" class="formular-follow-up-letters">

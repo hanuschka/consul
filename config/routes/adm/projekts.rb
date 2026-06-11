@@ -1,15 +1,22 @@
 namespace :adm do
   scope :projekts, module: :projekts, as: :projekts do
     root to: "home#show"
+    get "list", to: "projekts#list", as: :projekts_list
 
     resources :managers, only: [:index, :new, :create, :destroy] do
       post :search, on: :collection
       patch :toggle_manage_all_projekts, on: :member
     end
 
-    resource :overview_page, only: [], controller: "overview_page" do
-      get :navigation
-      get :footer
+    resource :settings, only: [:show], controller: "settings" do
+      get :contact_persons, on: :member
+    end
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "projekts" } do
+      post :search, on: :collection
     end
 
     resources :milestone_statuses, except: %i[show]
@@ -46,8 +53,29 @@ namespace :adm do
 
         # Map & location
         get :map
+        get :masterportal_pins
+        get :masterportal_pins_summary
+        delete :destroy_all_masterportal_pins
+        get :destroy_all_masterportal_pins_status
+        delete "masterportal_pins/:masterportal_pin_id" => "phases#destroy_masterportal_pin",
+               as: :destroy_masterportal_pin
+        patch "masterportal_collections/:masterportal_collection_id" =>
+              "phases#update_masterportal_collection", as: :update_masterportal_collection
+        delete "masterportal_collections/:masterportal_collection_id" =>
+               "phases#destroy_masterportal_collection", as: :destroy_masterportal_collection
+        get "masterportal_collections/:masterportal_collection_id/status" =>
+            "phases#masterportal_collection_status", as: :masterportal_collection_status
+        get "masterportal_collections/:masterportal_collection_id/diff" =>
+            "phases#masterportal_collection_diff", as: :masterportal_collection_diff
+        get "masterportal_collections/:masterportal_collection_id/card" =>
+            "phases#masterportal_collection_card", as: :masterportal_collection_card
+        delete "masterportal_collections/:masterportal_collection_id/stale_pins" =>
+               "phases#clean_masterportal_collection_stale_pins",
+               as: :clean_masterportal_collection_stale_pins
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
+        delete "projekt_point_of_interest_pins/:pin_id" => "phases#destroy_projekt_point_of_interest_pin",
+               as: :destroy_projekt_point_of_interest_pin
         get :map_resources_overview
 
         # Labels & sentiments
@@ -116,6 +144,11 @@ namespace :adm do
           post :send_notifications
         end
       end
+      resources :stat_questions, only: [] do
+        member do
+          get :poll
+        end
+      end
       resources :formular_follow_up_letters, only: [:create, :edit, :update, :destroy] do
         member do
           post :send_emails
@@ -177,12 +210,43 @@ namespace :adm do
       end
     end
 
+    resources :imports, only: [:index, :new, :create, :show, :destroy],
+              controller: "imports/from_files",
+              defaults: { adm_section: "projekts" } do
+      member do
+        get :status
+        post :reset
+      end
+
+      resource :chat, only: [:show], controller: "imports/chats" do
+        get :messages
+        post :message
+        post :command
+        post :extract
+        post :execute
+      end
+    end
+
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
+      collection do
+        get :import_projekt
+      end
       get :details, on: :member
       get :visibility, on: :member
       get :projekt_managers, on: :member
       get :map, on: :member
       get :phases, on: :member
+      get :images, on: :member
+      get :documents, on: :member
+      get :evaluation, on: :member
+      get :evaluation_visibility, on: :member
+      patch :update_evaluation_visibility, on: :member
+      post :generate_evaluation, on: :member
+      get :evaluation_status, on: :member
+      post :regenerate_phase_evaluation, on: :member
+      get :phase_evaluation_status, on: :member
+      get :evaluation_pdf_options, on: :member
+      get :evaluation_pdf, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
@@ -197,7 +261,6 @@ namespace :adm do
         patch :reorder, on: :collection
       end
       resources :manager_assignments, only: [:update]
-      patch :update_default_phase, on: :member
     end
   end
 end

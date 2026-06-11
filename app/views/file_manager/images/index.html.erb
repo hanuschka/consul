@@ -1,0 +1,29 @@
+<% pagination_html = capture do %>
+  <div class="file-upload-manager-dialog--pagination js-file-upload-manager-pagination">
+    <% if @images.respond_to?(:current_page) && @images.total_pages > 1 %>
+      <%= paginate @images, params: { type: params[:type], search: params[:search] }, remote: false, class: 'js-cb-img-pagination' %>
+    <% end %>
+  </div>
+<% end %>
+
+<% if params[:pagination_only] == "true" %>
+  <%= pagination_html %>
+<% else %>
+  <div class="file-upload-manager-dialog--body js-file-upload-manager-dialog--body">
+    <div class="file-upload-manager-dialog--grid-wrapper">
+      <div class="file-upload-manager-dialog--grid js-file-upload-manager-grid">
+        <% if @images.any? %>
+          <% @images.each do |image| %>
+            <%= render "item", image: image %>
+          <% end %>
+        <% else %>
+          <div class="file-upload-manager-dialog--loading">Keine Bilder gefunden.</div>
+        <% end %>
+      </div>
+      <div class="file-upload-manager-dialog--loading-overlay js-file-upload-manager-loading-overlay" style="display: none;">
+        <div class="loading-spinner-inline"></div>
+      </div>
+    </div>
+    <%= pagination_html %>
+  </div>
+<% end %>

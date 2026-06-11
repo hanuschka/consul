@@ -1,0 +1,48 @@
+<div
+  class="files-index"
+  data-controller="files--filter-bar"
+  data-files--filter-bar-type-value="<%= type %>"
+  data-files--filter-bar-endpoint-value="<%= endpoint %>"
+>
+  <div class="files-index--filter-bar" data-files--filter-bar-target="form">
+    <%= render Adm::FilterBarComponent.new(
+      type: type,
+      imageable_type_frame_src: imageable_type_frame_src,
+      documentable_type_frame_src: documentable_type_frame_src,
+      show_view_modes: supports_view_modes?
+    ) %>
+  </div>
+
+  <div class="files-index--grid" data-files--filter-bar-target="grid">
+    <% if assets.any? %>
+      <%= render(card_component.with_collection(assets, type: type)) %>
+    <% else %>
+      <div class="files-index--empty">
+        <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if supports_view_modes? %>
+    <div class="files-index--list">
+      <ul class="files-index--list-items" data-files--filter-bar-target="list">
+        <% if assets.any? %>
+          <%= render(row_component.with_collection(assets)) %>
+        <% else %>
+          <li class="files-index--list-empty">
+            <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div
+    class="files-index--pagination"
+    data-files--filter-bar-target="pagination"
+  >
+    <%= render partial: "ckeditor/assets/pagination", locals: { assets: assets } %>
+  </div>
+
+  <%= render Files::EditModalComponent.new %>
+</div>

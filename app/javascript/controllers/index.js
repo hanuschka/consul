@@ -13,6 +13,24 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
+application.register("adm--ai-question-form", AdmAiQuestionFormController)
+
+import AdmAiQuestionPendingController from "./adm/ai_question_pending_controller"
+application.register("adm--ai-question-pending", AdmAiQuestionPendingController)
+
+import AdmAiQuestionRowController from "./adm/ai_question_row_controller"
+application.register("adm--ai-question-row", AdmAiQuestionRowController)
+
+import AdmMenuPopoverController from "./adm/menu_popover_controller"
+application.register("adm--menu-popover", AdmMenuPopoverController)
+
+import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
+application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
+
+import AdmVisibilityGroupController from "./adm/visibility_group_controller"
+application.register("adm--visibility-group", AdmVisibilityGroupController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 
@@ -29,6 +47,9 @@ application.register("icon-filter", IconFilterController)
 
 import AdmColorPickerController from "./adm/color_picker_controller"
 application.register("adm-color-picker", AdmColorPickerController)
+
+import AdmMapLayerFormController from "./adm/map_layer_form_controller"
+application.register("map-layer-form", AdmMapLayerFormController)
 
 import AdmCriteriaListController from "./adm/criteria_list_controller"
 application.register("adm-criteria-list", AdmCriteriaListController)
@@ -74,8 +95,11 @@ application.register("components-adm-hint", ComponentsAdmHintController)
 import MapScreenshotController from "./map_screenshot_controller"
 application.register("map-screenshot", MapScreenshotController)
 
-import PdfDownloadController from "./pdf_download_controller"
-application.register("pdf-download", PdfDownloadController)
+import AdmButtonWithProgressController from "./adm/button_with_progress_controller"
+application.register("adm--button-with-progress", AdmButtonWithProgressController)
+
+import AdmLanguageSelectorController from "./adm/language_selector_controller"
+application.register("adm--language-selector", AdmLanguageSelectorController)
 
 import GlightboxController from "./glightbox_controller"
 application.register("glightbox", GlightboxController)
@@ -99,6 +123,9 @@ application.register("kern--form--image", KernFormImageController)
 import KernFormVideoController from "./kern/form/video_controller"
 application.register("kern--form--video", KernFormVideoController)
 
+import AdmFormImageController from "./adm/form/image_controller"
+application.register("adm--form--image", AdmFormImageController)
+
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
@@ -108,20 +135,50 @@ application.register("adm--poll-question-answers--open-answer", AdmPollQuestionA
 import AdmNewslettersRecipientGroupBuilderController from "./adm/newsletters/recipient_group_builder_controller"
 application.register("adm-newsletters--recipient-group-builder", AdmNewslettersRecipientGroupBuilderController)
 
+import AdmNewslettersFilterStackController from "./adm/newsletters/filter_stack_controller"
+application.register("adm-newsletters--filter-stack", AdmNewslettersFilterStackController)
+
+import AdmRecipientGroupsNameAutosaveController from "./adm/recipient_groups/name_autosave_controller"
+application.register("adm-recipient-groups--name-autosave", AdmRecipientGroupsNameAutosaveController)
+
 import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
 application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
 
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
 
+import SharedAdminIframeController from "./shared/admin_iframe_controller"
+application.register("shared--admin-iframe", SharedAdminIframeController)
+
+import SharedCollapseController from "./shared/collapse_controller"
+application.register("shared--collapse", SharedCollapseController)
+
+import AdmProjektImportController from "./adm/projekt_import_controller"
+application.register("adm-projekt-import", AdmProjektImportController)
+
+import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
+application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
+
+import AdmDeleteCollectionController from "./adm/delete_collection_controller"
+application.register("adm--delete-collection", AdmDeleteCollectionController)
+
+import AdmMasterportalCollectionController from "./adm/masterportal_collection_controller"
+application.register("adm--masterportal-collection", AdmMasterportalCollectionController)
+
+import AdmMasterportalCollectionsResyncController from "./adm/masterportal_collections_resync_controller"
+application.register("adm--masterportal-collections-resync", AdmMasterportalCollectionsResyncController)
+
 import AdmMarkdownEditorController from "./adm/markdown_editor_controller"
 application.register("adm-markdown-editor", AdmMarkdownEditorController)
 
-import AdmFeasibilityToggleController from "./adm/feasibility_toggle_controller"
-application.register("adm-feasibility-toggle", AdmFeasibilityToggleController)
+import SharedVisibilityToggleController from "./shared/visibility_toggle_controller"
+application.register("shared--visibility-toggle", SharedVisibilityToggleController)
 
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
+
+import AdmDashboardNoticeController from "./adm/dashboard_notice_controller"
+application.register("adm-dashboard-notice", AdmDashboardNoticeController)
 
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
@@ -132,3 +189,35 @@ application.register("adm-user-select", AdmUserSelectController)
 import HiddenTokenController from "./hidden_token_controller"
 application.register("hidden-token", HiddenTokenController)
 
+import FilesFilterBarController from "./files/filter_bar_controller"
+application.register("files--filter-bar", FilesFilterBarController)
+
+import FilesUploadController from "./files/upload_controller"
+application.register("files--upload", FilesUploadController)
+
+import AdmAiActionButtonController from "./adm/ai_action_button_controller"
+application.register("adm--ai-action-button", AdmAiActionButtonController)
+
+import SharedPollingController from "./shared/polling_controller"
+application.register("shared--polling", SharedPollingController)
+
+import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
+application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
+
+import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
+application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)
+
+import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
+application.register("projekt-imports--from-file", ProjektImportsFromFileController)
+
+import ProjektImportsChatController from "./projekt_imports/chat_controller"
+application.register("projekt-imports--chat", ProjektImportsChatController)
+
+import ProjektImportsStatusController from "./projekt_imports/status_controller"
+application.register("projekt-imports--status", ProjektImportsStatusController)
+
+import SharedConfirmDialogController from "./shared/confirm_dialog_controller"
+application.register("shared--confirm-dialog", SharedConfirmDialogController)
+
+import ProjektImportsDeleteConfirmController from "./projekt_imports/delete_confirm_controller"
+application.register("projekt-imports--delete-confirm", ProjektImportsDeleteConfirmController)

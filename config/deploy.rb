@@ -28,7 +28,7 @@ set :pty, true
 set :use_sudo, false
 
 set :linked_files, %w[config/database.yml config/secrets.yml config/secret_emails.yml]
-set :linked_dirs, %w[.bundle log tmp public/system public/assets public/ckeditor_assets public/machine_learning/data storage]
+set :linked_dirs, %w[.bundle log node_modules tmp public/system public/assets public/ckeditor_assets public/machine_learning/data storage]
 
 set :keep_releases, 5
 
@@ -58,6 +58,10 @@ set :delayed_job_roles, :background
 set :whenever_roles, -> { :app }
 
 namespace :deploy do
+  before :starting, :record_deploy_start_time do
+    set :deploy_started_at, Time.now
+  end
+
   after "rvm1:hook", "map_node_bins"
 
   after :updating, "install_node"
@@ -66,7 +70,7 @@ namespace :deploy do
   after "deploy:migrate", "add_new_settings"
 
   after :publishing, "setup_puma"
-  before "puma:smart_restart", "stop_puma_daemon"
+  before "puma:restart", "stop_puma_daemon"
   after :finished, "restart_delayed_jobs"
   after :finished, "refresh_sitemap"
 
@@ -76,7 +80,7 @@ namespace :deploy do
     invoke "deploy"
   end
 
-  before "deploy:restart", "puma:smart_restart"
+  before "deploy:restart", "puma:restart"
 end
 
 task :install_ruby do
@@ -216,3 +220,21 @@ task :stop_puma_daemon do
     end
   end
 end
+
+# Print total wall-clock deploy time as the final line. Registered after the
+# other deploy:finished hooks (restart_delayed_jobs, refresh_sitemap) so it
+# runs last.
+task :report_deploy_duration do
+  started_at = fetch(:deploy_started_at)
+  next unless started_at
+
+  elapsed = (Time.now - started_at).round
+  minutes, seconds = elapsed.divmod(60)
+  formatted = minutes.positive? ? "#{minutes}m #{seconds}s" : "#{seconds}s"
+
+  run_locally do
+    info "Deploy to #{fetch(:stage)} finished in #{formatted} (#{elapsed}s total)"
+  end
+end
+
+after "deploy:finished", "report_deploy_duration"

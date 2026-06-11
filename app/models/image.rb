@@ -23,8 +23,9 @@ class Image < ApplicationRecord
   # validates :title, presence: true
   validate :validate_title_length
   validates :user_id, presence: true
-  validates :imageable_id, presence: true,         if: -> { persisted? }
-  validates :imageable_type, presence: true,       if: -> { persisted? }
+  validates :imageable_id, presence: true,         if: -> { persisted? && !admin? }
+  validates :imageable_type, presence: true,       if: -> { persisted? && !admin? }
+
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }
 
   default_scope { with_attached_attachment }

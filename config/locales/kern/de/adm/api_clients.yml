@@ -16,6 +16,7 @@ de:
         create_new: Neuen API-Client erstellen
         api_docs_link: API-Dokumentation
         id: API-Client ID
+        posts_as: Veröffentlicht als
         no_api_clients: Keine API-Clients vorhanden.
         delete_confirm: >
           Sind Sie sicher, dass Sie diesen API-Client löschen möchten?
@@ -32,6 +33,11 @@ de:
         auth_token_example: "Authorization: Bearer IHR_AUTH_TOKEN_HIER"
         service_user_title: Service-Benutzer
         service_user_name: Name
+        system_user_title: Systembenutzer
+        system_user_note: >
+          Dieser API-Client verwendet keinen eigenen Service-Benutzer.
+          Alle über diesen Client erstellten Inhalte werden unter dem
+          Systembenutzer veröffentlicht.
         service_user_login_warning: >
           Hinweis: Sie sollten sich nicht direkt mit diesem
           Service-Benutzer anmelden. Verwenden Sie stattdessen
@@ -47,12 +53,23 @@ de:
           und wird für die API-Authentifizierung verwendet.
         service_user_email_description: >
           Geben Sie eine gültige E-Mail-Adresse für das automatisch erstellte Service-Benutzerkonto an. Der Service-Benutzer wird als Autor für alle Inhalte verwendet, die über diesen API-Client erstellt werden — z.B. Vorschläge, Kommentare oder Abstimmungen. Die Adresse muss eindeutig sein und darf nicht bereits von einem anderen Konto verwendet werden.
-        service_user_form_title: Service-Benutzerinformationen aktualisieren
+        service_user_section_title: Service-Benutzer
+        service_user_section_description: >
+          Der Service-Benutzer ist die öffentliche Autorenidentität dieses
+          API-Clients: Alle über die API erstellten Inhalte — z.B. Vorschläge
+          oder Kommentare — werden unter diesem Benutzer veröffentlicht. Eine
+          direkte Anmeldung mit diesem Benutzer ist nicht möglich.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Hintergrundbild
-        service_user_errors_message: "%{count} Fehler"
-        service_user_errors_title: "hinderte diesen Service-Benutzer daran, gespeichert zu werden:"
-        update_service_user: Service-Benutzer aktualisieren
+        use_system_user_label: Systembenutzer verwenden
+        use_system_user_description: >
+          Wenn aktiviert, werden über diesen API-Client erstellte Inhalte
+          unter dem Systembenutzer veröffentlicht. Deaktivieren Sie die
+          Option, um einen eigenen Service-Benutzer für diesen Client
+          anzulegen.
+        system_user_note: >
+          Alle über diesen API-Client erstellten Inhalte werden unter
+          diesem Systembenutzer veröffentlicht.
         regenerate_token: Token erneuern
         regenerate_token_explanation: >
           Erstellt einen neuen Token und macht den aktuellen ungültig.

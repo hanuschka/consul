@@ -6,6 +6,8 @@
 .fw-semibold { font-weight: 600 !important; }
 .fw-bold { font-weight: 700 !important; }
 
+.text-muted { color: var(--kern-color-layout-text-muted, var(--kern-grey-700)) !important; }
+
 @each $size, $value in mappings.$font-sizes {
   .fs-#{$size} { font-size: $value !important; }
 

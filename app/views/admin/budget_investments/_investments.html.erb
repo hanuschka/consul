@@ -2,6 +2,25 @@
             polymorphic_path([@namespace, @budget.projekt_phase], action: :budget_investments, **request.query_parameters, format: :csv),
             class: "float-right small clear" %>
 
+<%= link_to t("admin.budget_investments.index.download_geojson"),
+            admin_budget_budget_investments_path(@budget, **request.query_parameters, format: :geojson),
+            class: "float-right small clear",
+            target: "_blank" %>
+
+<%= form_tag admin_budget_budget_investments_path(@budget), method: :get, class: "geojson-export-filter float-right" do %>
+  <%= label_tag :source_filter, t("admin.budget_investments.index.source_filter_label") %>
+  <%= select_tag :source_filter,
+                 options_for_select(
+                   [
+                     [t("admin.budget_investments.index.source_all"), "all"],
+                     [t("admin.budget_investments.index.source_masterportal"), "masterportal"],
+                     [t("admin.budget_investments.index.source_user"), "user"]
+                   ],
+                   params[:source_filter]
+                 ) %>
+  <%= submit_tag t("admin.budget_investments.index.apply_filter"), class: "button small hollow" %>
+<% end %>
+
 <% if @investments.any? %>
   <h3 class="inline-block"><%= page_entries_info @investments %></h3>
   <%= render "admin/shared/columns_selector",

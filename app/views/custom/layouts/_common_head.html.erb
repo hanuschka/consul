@@ -40,7 +40,7 @@
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
 
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
-  <%= stylesheet_link_tag "projekt_studio", "data-turbolinks-track" => "reload" %>
+  <%= stylesheet_link_tag "studio", "data-turbolinks-track" => "reload" %>
 <% end %>
 
 <% unless Rails.env.development? %>
@@ -50,7 +50,7 @@
 <% end %>
 
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
-  <%= javascript_include_tag "packs/projekt_studio", "data-turbolinks-track" => "reload" %>
+  <%= javascript_include_tag "packs/studio", "data-turbolinks-track" => "reload" %>
 <% end %>
 
 <%= javascript_include_tag "klaro/config.js", defer: true %>

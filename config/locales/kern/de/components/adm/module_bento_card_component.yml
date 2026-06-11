@@ -1,0 +1,5 @@
+de:
+  components:
+    adm:
+      module_bento_card_component:
+        cta: "Zum Dashboard"

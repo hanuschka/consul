@@ -1,0 +1,58 @@
+<%= content_for :title, t("adm.projekts.home.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.home.title")) %>
+
+<div class="kern-container my-5">
+  <% if policy([:adm, :projekts, Projekt]).create? %>
+    <div class="d-flex justify-content-end mb-3">
+      <%= link_to t("adm.projekts.imports.index.new_button"),
+            new_adm_projekts_import_path,
+            class: "kern-button kern-button--primary",
+            data: { turbo_frame: "_top" } %>
+    </div>
+  <% end %>
+
+  <%
+    headers = {
+      name:       Kern::Table::HeaderComponent.new(:name, Projekt.model_name.human, **@name_header_options.merge(data_field: "name")),
+      start_date: Kern::Table::HeaderComponent.new(:total_duration_start, Projekt.human_attribute_name("total_duration_start"), **@start_date_header_options.merge(data_field: "start_date")),
+      end_date:   Kern::Table::HeaderComponent.new(:total_duration_end, Projekt.human_attribute_name("total_duration_end"), **@end_date_header_options.merge(data_field: "end_date"))
+    }
+  %>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "projekts_table",
+        records: @projekts,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 5,
+        column_selector: {
+          storage_key: "adm-projekts-columns-v2",
+          defaults: "name,start_date,end_date,status,actions"
+        },
+        empty_state: {
+          title: t("adm.projekts.projekts.index.no_projekts_title"),
+          description: t("adm.projekts.projekts.index.no_projekts_description"),
+          icon: "folder_open"
+        },
+        empty_state_filtered: {
+          title: t("adm.projekts.projekts.index.no_results_filtered_title"),
+          description: t("adm.projekts.projekts.index.no_results_filtered_description"),
+          icon: "filter_alt_off"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <%= render headers[:name] %>
+      <%= render headers[:start_date] %>
+      <%= render headers[:end_date] %>
+      <th scope="col" class="kern-table__header" data-field="status"><%= t("adm.projekts.projekts.index.table.status") %></th>
+      <th scope="col" class="kern-table__header" data-field="actions"><%= t("adm.projekts.projekts.index.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @projekts.each do |projekt| %>
+        <%= render "adm/projekts/projekts/projekt", projekt: projekt %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

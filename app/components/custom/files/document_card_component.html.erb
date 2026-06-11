@@ -1,0 +1,153 @@
+<article
+  class="files-asset-card"
+  data-id="<%= document.id %>"
+  data-type="document"
+  data-only-title="true"
+  data-update-url="<%= update_url %>"
+  data-title="<%= document.title %>"
+  data-filename="<%= filename %>"
+>
+  <div class="files-asset-card--thumb">
+    <% if previewable? %>
+      <img
+        src="<%= preview_url %>"
+        alt="<%= display_title %>"
+        class="files-asset-card--thumb-image"
+        loading="lazy"
+      >
+    <% else %>
+      <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
+    <% end %>
+
+    <% if admin_upload? %>
+      <div class="files-asset-card--badges">
+        <rich-tooltip>
+          <span
+            class="files-asset-card--admin-badge"
+            aria-label="<%= t("files.card.admin_badge") %>"
+          >
+            <i class="fa fa-shield-alt"></i>
+          </span>
+          <template><%= t("files.card.admin_badge") %></template>
+        </rich-tooltip>
+      </div>
+    <% end %>
+
+    <div class="files-asset-card--actions">
+      <button
+        type="button"
+        class="files-asset-card--icon-button js-files-edit-asset"
+        data-action="click->files--filter-bar#editClicked"
+        title="<%= t("files.card.edit") %>"
+        aria-label="<%= t("files.card.edit") %>"
+      >
+        <i class="fa fa-pen"></i>
+      </button>
+
+      <button
+        type="button"
+        class="files-asset-card--icon-button -danger js-files-delete-asset"
+        data-action="click->files--filter-bar#deleteClicked"
+        data-confirm-message="<%= t("files.card.delete_confirm") %>"
+        data-delete-url="<%= helpers.adm_files_document_path(document) %>"
+        title="<%= t("files.card.delete") %>"
+        aria-label="<%= t("files.card.delete") %>"
+      >
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
+
+    <% if document.attachment.attached? %>
+      <div class="files-asset-card--actions-left">
+        <button
+          type="button"
+          class="files-asset-card--icon-button js-files-copy-url"
+          data-action="click->files--filter-bar#copyUrlClicked"
+          data-copy-url="<%= attachment_url %>"
+          data-success-message="<%= t("files.card.copy_url_success") %>"
+          data-failed-message="<%= t("files.card.copy_url_failed") %>"
+          title="<%= t("files.card.copy_url") %>"
+          aria-label="<%= t("files.card.copy_url") %>"
+        >
+          <i class="fa fa-link"></i>
+        </button>
+
+        <a
+          href="<%= attachment_url %>"
+          target="_blank"
+          rel="noopener"
+          class="files-asset-card--icon-button"
+          title="<%= t("files.card.open_in_new_tab") %>"
+          aria-label="<%= t("files.card.open_in_new_tab") %>"
+        >
+          <i class="fa fa-external-link-alt"></i>
+        </a>
+      </div>
+
+      <a
+        href="<%= attachment_url %>"
+        download="<%= filename %>"
+        class="files-asset-card--icon-button -bottom-right"
+        title="<%= t("files.card.download") %>"
+        aria-label="<%= t("files.card.download") %>"
+      >
+        <i class="fa fa-download"></i>
+      </a>
+    <% end %>
+  </div>
+
+  <div class="files-asset-card--meta">
+    <p
+      class="files-asset-card--filename"
+      title="<%= display_title %>"
+    >
+      <%= display_title %>
+    </p>
+
+    <dl class="files-asset-card--details">
+      <% if documentable_type_label.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.resource_type") %></dt>
+          <dd><%= documentable_type_label %></dd>
+        </div>
+      <% end %>
+
+      <% if documentable_name.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.projekt") %></dt>
+          <dd>
+            <% if documentable_url.present? %>
+              <%= link_to documentable_name, documentable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
+            <% else %>
+              <%= documentable_name %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
+      <% if humanized_size.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.file_size") %></dt>
+          <dd><%= humanized_size %></dd>
+        </div>
+      <% end %>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.uploaded") %></dt>
+        <dd><%= created_at_formatted %></dd>
+      </div>
+
+      <div class="files-asset-card--detail-row">
+        <dt><%= t("files.card.last_edited") %></dt>
+        <dd><%= updated_at_formatted %></dd>
+      </div>
+
+      <% if uploaded_by.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.uploaded_by") %></dt>
+          <dd><%= render Files::UploaderLinkComponent.new(user: uploaded_by) %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</article>

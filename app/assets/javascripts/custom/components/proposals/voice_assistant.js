@@ -26,6 +26,7 @@
       const element = document.querySelector(".js-voice-assistant");
 
       if (!element) { return; }
+      if (element.dataset.version && element.dataset.version !== "v1") { return; }
 
       this.element = element;
       this.status = "not_initialized";
@@ -204,7 +205,7 @@
         type: "response.create",
         response: {
           modalities: ["text", "audio"],
-          instructions: "I'm done. Generate title and description."
+          instructions: "Der Nutzer ist fertig. Erstelle jetzt Titel und Beschreibung und antworte ausschließlich auf Deutsch."
         }
       };
 

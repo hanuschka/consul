@@ -10,20 +10,7 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
-    if landing_page_slug.present?
-      @landing_page =
-        SiteCustomization::Page
-          .published
-          .landing
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.nil?
-        raise ActionController::RoutingError.new('Not Found')
-      end
-
-      set_landing_page_topbar_ui_variables(@landing_page)
-    end
+    resolve_landing_page_from_slug
 
     base_projekts =
       if @landing_page.present?
@@ -206,6 +193,12 @@ class ProjektsController < ApplicationController
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
     @commentable = Projekt.unscoped.find_by(special: true, special_name: "projekt_overview_page")
+
+    if @commentable.blank?
+      @show_comments = false
+      return
+    end
+
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
   end

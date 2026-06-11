@@ -99,3 +99,12 @@
     display: block;
   }
 }
+
+.subnavigation-konto__flyout .flyout-item--icon {
+  display: flex;
+  align-items: center;
+  min-width: 1.29em;
+  font-size: 1.32em;
+  line-height: 1;
+  color: var(--adm-color-primary);
+}

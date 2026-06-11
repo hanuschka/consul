@@ -31,7 +31,7 @@ module Ai::RubyLlmFactory
       gpustack_context
     when "bedrock"
       bedrock_context
-    when "vertex_ai"
+    when "vertexai"
       vertex_ai_context
     when "ollama"
       ollama_context

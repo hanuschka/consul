@@ -1,0 +1,32 @@
+<div
+  class="file-upload-manager-dialog--item"
+  data-id="<%= document.id %>"
+  data-content-type="<%= document.attachment_content_type %>"
+  data-description=""
+  data-url="<%= url_for(document.attachment) %>"
+  data-custom-thumb-url=""
+>
+  <div class="file-upload-manager-dialog--item-thumb">
+    <i class="fa <%= FileTypeIcons.for(document.attachment_content_type) %> files-asset-card--thumb-icon"></i>
+    <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size">
+      <%= number_to_human_size(document.attachment_file_size, precision: 1) %>
+    </span>
+    <% if document.documentable.is_a?(Projekt) %>
+      <span
+        class="file-upload-manager-dialog--item-badge -projekt"
+        title="<%= document.documentable.title %>"
+      >
+        <%= document.documentable.title %>
+      </span>
+    <% end %>
+  </div>
+  <div class="file-upload-manager-dialog--item-meta">
+    <p
+      class="file-upload-manager-dialog--item-title"
+      title="<%= document.title.presence || document.attachment_file_name %>"
+    >
+      <%= document.title.presence || document.attachment_file_name %>
+    </p>
+    <div class="file-upload-manager-dialog--item-alt"></div>
+  </div>
+</div>

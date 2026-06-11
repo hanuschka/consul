@@ -1,6 +1,6 @@
-<%= content_for :title, t("adm.statistics.show.title") %>
+<%= content_for :title, t("adm.menu.items.stats_subitems.overview") %>
 
-<%= render Adm::HeaderComponent.new(title: t("adm.statistics.show.title"), breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: t("adm.menu.items.stats_subitems.overview"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container" data-controller="adm-charts">
 
@@ -142,6 +142,22 @@
       </div>
 
     </div>
+
+    <% if @chart_users[:values].any?(&:positive?) %>
+      <div class="adm-stats-charts adm-stats-charts--single">
+        <div class="adm-chart-card">
+          <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
+          <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:values].sum) %></div>
+          <div class="adm-chart-card__canvas-wrapper"
+               data-area-chart
+               data-chart-labels="<%= @chart_users[:labels].to_json %>"
+               data-chart-values="<%= @chart_users[:values].to_json %>"
+               data-chart-color="#6BA3D6">
+            <canvas></canvas>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <%# ── Projects ────────────────────────────────────────── %>
@@ -367,7 +383,7 @@
   <% end %>
 
   <%# ── Time-series charts ─────────────────────────────── %>
-  <% charts_with_data = [@chart_users, @chart_comments, @chart_proposals].select { |c| c[:values].any?(&:positive?) } %>
+  <% charts_with_data = [@chart_comments, @chart_proposals].select { |c| c[:values].any?(&:positive?) } %>
   <% if charts_with_data.any? %>
     <div class="adm-dashboard__section">
       <div class="adm-dashboard__section-header">
@@ -375,19 +391,6 @@
         <h3><%= t("adm.statistics.show.sections.activity") %></h3>
       </div>
       <div class="adm-stats-charts">
-        <% if @chart_users[:values].any?(&:positive?) %>
-          <div class="adm-chart-card">
-            <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
-            <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:values].sum) %></div>
-            <div class="adm-chart-card__canvas-wrapper"
-                 data-area-chart
-                 data-chart-labels="<%= @chart_users[:labels].to_json %>"
-                 data-chart-values="<%= @chart_users[:values].to_json %>"
-                 data-chart-color="#6BA3D6">
-              <canvas></canvas>
-            </div>
-          </div>
-        <% end %>
         <% if @chart_comments[:values].any?(&:positive?) %>
           <div class="adm-chart-card">
             <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.comments") %></div>

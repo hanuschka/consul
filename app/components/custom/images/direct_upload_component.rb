@@ -1,15 +1,17 @@
 class Images::DirectUploadComponent < ApplicationComponent
   renders_one :placeholder
+  renders_one :confirmation_step
   renders_one :custom_edit_button
 
-  attr_reader :f, :resource_type, :resource_id, :relation_name, :preview_variant
+  attr_reader :f, :resource_type, :resource_id, :relation_name, :preview_variant, :image_alt
   delegate :current_user, :render_image, to: :helpers
 
-  def initialize(f, imageable:, submit_form: false, variant: :large)
+  def initialize(f, imageable:, submit_form: false, variant: :large, image_alt: nil)
     @f = f
     @imageable = imageable
     @submit_form = submit_form
     @preview_variant = variant
+    @image_alt = image_alt
 
     @resource_type = @imageable.class.name
     @resource_id = @imageable.id

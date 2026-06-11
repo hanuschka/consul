@@ -160,7 +160,11 @@ module Abilities
 
       # extending to regular users
       can :access, :ckeditor
-      can :manage, Ckeditor::Picture
+      can :create, AdminImage
+      can [:update, :destroy], AdminImage do |admin_image|
+        admin_image.projekt.present? &&
+          user.has_pm_permission_to?("manage", admin_image.projekt)
+      end
 
       can :toggle_subscription, ProjektSubscription do |subscription|
         subscription.user == user

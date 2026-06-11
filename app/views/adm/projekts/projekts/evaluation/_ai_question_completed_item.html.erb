@@ -1,0 +1,65 @@
+<% failed = stat_question.failed? %>
+<% open_by_default = local_assigns.fetch(:open_by_default, false) %>
+
+<div
+  id="<%= dom_id(stat_question) %>"
+  class="ai-question-item ai-question-item--completed<%= ' ai-question-item--failed' if failed %>"
+>
+  <%= render Shared::AccordionComponent.new(opened_by_default: open_by_default) do |c| %>
+    <% c.with_head do %>
+      <h3 class="ai-question-item--question">
+        <%= stat_question.question %>
+        <% if failed %>
+          <span class="ai-question-item--failed-badge">
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+            <%= t("custom.participation_stats.ai_question.status_failed") %>
+          </span>
+        <% end %>
+      </h3>
+    <% end %>
+
+    <% c.with_body do %>
+      <div class="ai-question-item--answer">
+        <% if failed %>
+          <div class="ai-question-item--failed-message">
+            <%= stat_question.answer.presence || t("custom.participation_stats.ai_question.error") %>
+          </div>
+        <% else %>
+          <%= sanitize(stat_question.answer, tags: %w[h4 p ul li]) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="ai-question-item--actions">
+    <div class="ai-question-item--downloads">
+      <% unless failed %>
+        <%= link_to download_stat_answer_projekt_phase_path(projekt_phase, question_id: stat_question.id, format: "txt"),
+          class: "ai-question-download-btn" do %>
+          <i class="fa fa-file-alt" aria-hidden="true"></i>
+          <%= t("custom.participation_stats.ai_question.download_txt") %>
+        <% end %>
+        <%= link_to download_stat_answer_projekt_phase_path(projekt_phase, question_id: stat_question.id, format: "pdf"),
+          class: "ai-question-download-btn" do %>
+          <i class="fa fa-file-pdf" aria-hidden="true"></i>
+          <%= t("custom.participation_stats.ai_question.download_pdf") %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="ai-question-item--meta">
+      <span class="ai-question-item--date">
+        <%= l(stat_question.created_at, format: :short) %>
+      </span>
+      <%= button_to delete_stat_question_projekt_phase_path(projekt_phase, question_id: stat_question.id),
+        method: :delete,
+        class: "ai-question-item--delete-btn",
+        form: {
+          class: "adm-ai-question-delete-form",
+          data: { turbo_confirm: t("custom.shared.destroy_confirmation") }
+        } do %>
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      <% end %>
+    </div>
+  </div>
+</div>

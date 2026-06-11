@@ -5,7 +5,7 @@
 
           ## Authentication
 
-          This API uses **Bearer Token (Auth Token)** authentication. All requests require an API client with a valid authentication token.
+          This API uses **Bearer Token** authentication. Every request — including read-only `GET` requests — requires an API client with a valid token; a missing or invalid token returns `401 Unauthorized` (see *HTTP Method Requirements* below).
 
           ### Creating an API Client
 
@@ -29,11 +29,13 @@
           Authorization: Bearer YOUR_AUTH_TOKEN
           ```
 
-          The auth token is automatically generated for each API client and can be obtained via:
+          The access token is automatically generated for each API client and can be obtained via:
 
           ```ruby
-          api_client.auth_token
+          api_client.access_token
           ```
+
+          The token can be rotated with `api_client.regenerate_access_token`.
 
           ### Access Levels
 
@@ -42,12 +44,27 @@
 
           #### HTTP Method Requirements
 
+          Every request — including `GET` — must carry a valid `Authorization: Bearer <token>` header. A missing or unrecognized token returns `401 Unauthorized` **before** any access-level check is evaluated (enforced by `authenticate_api_client!`, which runs as a `before_action` on every endpoint). There is no anonymous/public GET access.
+
+          Once a valid token is presented, the client's access level controls what it may do:
+
           - **GET**: Available to both `admin` and `public_data` access levels
           - **POST (Create)**: Requires `admin` access level
           - **PATCH (Update)**: Requires `admin` access level
           - **DELETE**: Requires `admin` access level
 
           Requests with `public_data` access level attempting to use POST, PATCH, or DELETE will receive a `403 Forbidden` error.
+
+          #### Authentication vs. authorization errors
+
+          - **`401 Unauthorized`** — *authentication* failure. A missing or invalid Bearer token rejects the request (all methods, including GET) before any read/admin check. Body:
+            ```json
+            { "error": { "type": "unauthorized", "messages": ["Invalid or missing API token."] } }
+            ```
+          - **`403 Forbidden`** — *authorization* failure. A **valid** token whose access level is insufficient (e.g. a `public_data` client attempting POST/PATCH/DELETE). Body:
+            ```json
+            { "error": { "type": "forbidden", "messages": ["You do not have permission to perform this action. Admin access required."] } }
+            ```
 
           ## Key Features
 
@@ -74,8 +91,7 @@
           ```
 
           This generates:
-          - `swagger/v1/swagger.yaml` - OpenAPI specification in YAML format
-          - `public/openapi.yaml` - Public OpenAPI specification
+          - `public/api_docs/v1/swagger.yaml` - OpenAPI specification in YAML format
 
           **Note:** Whenever you modify specs in `spec/requests/api` or `spec/schemas`, you must regenerate the API documentation.
 
@@ -107,14 +123,23 @@
           ```
 
           **Error Response:**
+
+          All errors share the envelope `{ "error": { "type": ..., "messages": [...] } }`. The API produces these types:
+
           ```json
           {
             "error": {
               "type": "forbidden",
-              "messages": ["Access denied"]
+              "messages": ["You do not have permission to read this resource."]
             }
           }
           ```
+
+          | HTTP status | `type`         | Example message                                     |
+          |-------------|----------------|-----------------------------------------------------|
+          | 401         | `unauthorized` | `Invalid or missing API token.`                     |
+          | 403         | `forbidden`    | `You do not have permission to read this resource.` |
+          | 404         | `not_found`    | `Not found`                                          |
 
           ## Pagination
 

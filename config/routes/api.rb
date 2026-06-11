@@ -9,13 +9,16 @@
     resources :projekts, shallow: true do
       member do
         patch :update_setting
+        patch :update_settings
         patch :update_page
+        patch :update_page_image
         patch :update_body
       end
 
       resources :projekt_phases do
         member do
           patch :update_setting
+          patch :update_settings
         end
       end
     end
@@ -24,6 +27,7 @@
       resources :proposals, controller: "proposals", only: [:index, :create, :show, :update, :destroy] do
         member do
           patch :update_image
+          patch :publish
         end
       end
       resources :debates, only: [:create, :show, :update, :destroy]
@@ -43,7 +47,8 @@
       resources :comments, only: [:index, :create, :show, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
       resources :formulars, only: [:index, :create, :show, :update, :destroy]
-      resources :milestones, only: [:index]
+      resources :milestones, only: [:index, :create]
+      resources :progress_bars, only: [:index, :create, :show, :update, :destroy]
 
       resource :iframe, only: [:show, :update]
     end
@@ -73,6 +78,11 @@
     resources :milestone_statuses, only: [:index, :create, :show, :update, :destroy]
     resources :budgets, only: [:index, :show], shallow: true do
       resources :investments, controller: "budgets/investments", only: [:index, :show, :create, :update, :destroy]
+      resources :budget_phases, controller: "budgets/phases", only: [:index, :show, :update] do
+        collection do
+          patch :bulk_update
+        end
+      end
     end
     resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
 

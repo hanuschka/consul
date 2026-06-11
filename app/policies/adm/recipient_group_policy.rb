@@ -15,9 +15,13 @@ class Adm::RecipientGroupPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
-  def select_options?
+  def create_filter?
     @user&.administrator?
   end
+  alias_method :update_filter?, :create_filter?
+  alias_method :destroy_filter?, :create_filter?
+  alias_method :reorder_filters?, :create_filter?
+  alias_method :recount_filters?, :create_filter?
 
   class Scope < Scope
     def resolve

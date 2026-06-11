@@ -9,11 +9,11 @@ namespace :adm do
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_categories, on: :collection
+      patch :order_categories, on: :collection
     end
 
     resources :statuses, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_statuses, on: :collection
+      patch :order_statuses, on: :collection
     end
 
     resources :official_answer_templates, except: :show
@@ -24,9 +24,24 @@ namespace :adm do
       post :order_areas, on: :collection
     end
 
+    resources :email_templates, only: [:index]
+
     resource :stats, only: :show
     resource :ai_settings, only: [:show, :update]
-    get :settings, to: "deficiency_reports#settings", as: :settings
+    resource :settings, only: [:show], controller: "settings" do
+      get :dashboard, on: :member
+      get :contact_persons, on: :member
+      get :naming, on: :member
+    end
+
+    resource :confirmation_popup, only: [:edit, :update]
+
+    resources :contact_persons, controller: "/adm/section_contact_people",
+              only: [:new, :create, :edit, :update, :destroy],
+              path: "settings/contact_persons",
+              defaults: { adm_section: "deficiency_reports" } do
+      post :search, on: :collection
+    end
 
     resources :deficiency_reports, only: [:show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "deficiency_report_audits"

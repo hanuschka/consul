@@ -12,9 +12,8 @@ Regenerate API docs with this rake command:
   bin/rails api:generate_docs
 ``` 
 
-It will generate two files "swagger/v1/swagger.yml" 
-and "public.openapi.yaml" files.
-Those files are OpenAPI yaml files, which contain machine redable API information.
+It will generate a single file: "public/api_docs/v1/swagger.yaml".
+This is an OpenAPI yaml file, which contains machine readable API information.
 
 
 Every time any specs inside "spec/requests/api"  or "spec/schemas" are changed, API docs have to be manually regenerated with rake command.
@@ -46,5 +45,5 @@ In order to authentificate with api client provide Authorization header with val
 ```
 Authorization: Bearer auth_token
 ```
-Auto token generated automatically for each ApiClient.
-It can be obtained with ApiClient#auth_token. 
+A token is generated automatically for each ApiClient.
+It can be obtained with ApiClient#access_token. 

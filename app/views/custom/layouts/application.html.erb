@@ -13,9 +13,7 @@
     <%= raw setting["html.per_page_code_head"] %>
   </head>
   <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
-    <% if Setting["brand_color"].present? && Setting["brand_color"].match?(/\A#[0-9a-fA-F]{3,8}\z/) %>
-      <style>:root { --brand-color: <%= Setting["brand_color"] %>; }</style>
-    <% end %>
+    <%= render "layouts/brand_color_root_style" %>
     <%= yield :styles %>
 
     <% wrapper_content = capture do %>
@@ -45,7 +43,7 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
-    <% if Setting.new_design_enabled? && !embedded? %>
+    <% if Setting.new_design_enabled? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
     <div id="main-content" class="wrapper <%= yield(:wrapper_class) %>">
@@ -54,11 +52,9 @@
       <% end %>
       <%= wrapper_content %>
     </div>
-    <% unless embedded? %>
-      <div class="footer">
-        <%= render "layouts/footer" %>
-      </div>
-    <% end %>
+    <div class="footer">
+      <%= render "layouts/footer" %>
+    </div>
 
     <% if @namespace.present? %>
       <script>

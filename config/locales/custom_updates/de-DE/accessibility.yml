@@ -23,6 +23,7 @@ de:
         edit_avatar:
           avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
           aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+          your_avatar: "Dein Avatar"
         edit_username:
           edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
           cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
@@ -36,6 +37,8 @@ de:
         delete-aria-label: "Bild löschen"
         delete-confirm: "Möchten Sie dieses Bild wirklich löschen?"
         upload-progress-label: "Bannerbild wird hochgeladen"
+      image-lightbox:
+        aria-label: "Klicken Sie, um das Bild zu vergrößern."
       share-links:
         whatsapp: "Auf WhatsApp teilen"
         facebook: "Auf Facebook teilen"

@@ -71,7 +71,9 @@ module Adm
       @user.skip_reconfirmation!
 
       if @user.update(user_params)
-        if params[:reverify].present?
+        # Only reverify when Melderegister is enabled — otherwise reverify!
+        # unverifies the user and hits the remote census API for nothing.
+        if params[:reverify].present? && Setting["feature.melderegister"].present?
           @user.reverify!
           @user.update!(reverify: true)
         end

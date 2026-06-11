@@ -220,20 +220,6 @@
   }
 }
 
-.adm-masterportal-collection-card--button.-update {
-  color: var(--adm-color-primary, #1b5fd6);
-  background: #eff6ff;
-  border-color: #bfdbfe;
-
-  &:hover {
-    background: #dbeafe;
-  }
-
-  &:active {
-    background: #bfdbfe;
-  }
-}
-
 .adm-masterportal-collection-card--button.-delete {
   color: #b91c1c;
   background: #fff;

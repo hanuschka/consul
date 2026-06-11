@@ -52,28 +52,6 @@ RSpec.describe 'Idea Officers API', type: :request, openapi_spec: 'v1/swagger.ya
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'idea officers found with public_data access' do
         before do
           api_client.update!(access_level: :public_data)
@@ -130,6 +108,8 @@ RSpec.describe 'Idea Officers API', type: :request, openapi_spec: 'v1/swagger.ya
           expect(data['pagination']['total_count']).to eq(5)
         end
       end
+
+      unauthorized_response
     end
 
   end

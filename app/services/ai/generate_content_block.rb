@@ -9,7 +9,9 @@ class Ai::GenerateContentBlock < ApplicationService
     prompt:,
     category_hint: nil,
     anchor_template_id: nil,
-    use_projekt_context: false
+    use_projekt_context: false,
+    newsletter: nil,
+    dt_template_section: nil
   )
     @content_block = content_block
     @projekt = projekt
@@ -17,6 +19,8 @@ class Ai::GenerateContentBlock < ApplicationService
     @category_hint = category_hint.presence
     @anchor_template_id = anchor_template_id.presence
     @use_projekt_context = use_projekt_context
+    @newsletter = newsletter
+    @dt_template_section = dt_template_section.presence
   end
 
   def call
@@ -88,7 +92,12 @@ class Ai::GenerateContentBlock < ApplicationService
       previous_id = ctx["previous_content_block_id"]
       add_at_top = ctx["add_at_top"]
 
-      new_key = "projekt_content_block_#{@projekt.id}_#{Time.current.to_i}_#{@content_block.id}"
+      new_key =
+        if @newsletter.present?
+          "newsletter_content_block_#{@newsletter.id}_#{Time.current.to_i}_#{@content_block.id}"
+        else
+          "projekt_content_block_#{@projekt.id}_#{Time.current.to_i}_#{@content_block.id}"
+        end
 
       @content_block.update_columns(
         body: body_html,
@@ -117,7 +126,7 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_dt_templates
-    response = DtApi::Client.new(use_cache: true).content_block_templates.all
+    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: @dt_template_section)
 
     return [] if !response.success?
 
@@ -160,6 +169,7 @@ class Ai::GenerateContentBlock < ApplicationService
     templates_reference = @category_hint.present? ? build_templates_reference(filtered_templates) : ""
     anchor_section = build_anchor_section(anchor_template)
     projekt_context_section = build_projekt_context_section
+    newsletter_context_section = build_newsletter_context_section
 
     <<~INSTRUCTIONS
       #{base_prompt}
@@ -178,7 +188,37 @@ class Ai::GenerateContentBlock < ApplicationService
       #{anchor_section}
 
       #{projekt_context_section}
+
+      #{newsletter_context_section}
     INSTRUCTIONS
+  end
+
+  def build_newsletter_context_section
+    return "" if @newsletter.blank?
+
+    existing_blocks_text =
+      @newsletter
+        .content_blocks
+        .order(:position)
+        .map do |content_block|
+          body_text = ActionController::Base.helpers.strip_tags(content_block.body.to_s).squish
+
+          "Content block ##{content_block.position}: #{body_text}".squish
+        end
+        .join("\n")
+
+    <<~TEXT
+      This content block is part of an EMAIL NEWSLETTER with the subject: "#{@newsletter.subject}".
+
+      IMPORTANT email-safety requirements for the generated HTML:
+      - Use table-based layout (nested <table> elements) instead of flexbox/grid.
+      - Use only inline styles; do NOT rely on external CSS classes or frameworks.
+      - Do not use <script>, <form>, <iframe> or interactive widgets.
+      - Keep images responsive via width attributes and max-width:100% inline styles.
+
+      Existing newsletter content blocks:
+      #{existing_blocks_text}
+    TEXT
   end
 
   def build_anchor_section(anchor_template)
@@ -243,6 +283,12 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_local_templates_metadata
+    if @newsletter.present?
+      return {
+        "Email Defaults" => Newsletters::ContentBlockTemplatesSelectorComponent::EMAIL_TEMPLATE_NAMES
+      }
+    end
+
     selector = Projekts::ContentBlockTemplatesSelectorComponent.new
     {
       "Basic Content" => selector.basic_content_templates,

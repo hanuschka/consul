@@ -211,7 +211,7 @@ class Budget
 
     def searchable_values
       { author&.username   => "B",
-        heading.name       => "B",
+        heading&.name      => "B",
         tag_list.join(" ") => "B"
       }.merge(searchable_globalized_values)
     end

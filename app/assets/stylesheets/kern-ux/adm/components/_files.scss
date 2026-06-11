@@ -1,3 +1,15 @@
+.adm-files-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.adm-page-title-col:has(.adm-files-meta-row) {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .adm-files-allowed-types {
   margin: 0;
 

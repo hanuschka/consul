@@ -4,12 +4,16 @@ class Newsletter < ApplicationRecord
   after_initialize :set_default_body, if: :new_record?
 
   has_many :activities, as: :actionable, inverse_of: :actionable
+  has_many :content_blocks,
+           -> { order(:position) },
+           class_name: "SiteCustomization::ContentBlock",
+           dependent: :destroy
   belongs_to :recipient_group
 
   validates :subject, presence: true
   # validates :segment_recipient, presence: true
   validates :from, presence: true, format: { with: /\A.+@.+\Z/ }
-  validates :body, presence: true, unless: -> { new_record? }
+  validates :body, presence: true, unless: -> { new_record? || content_blocks.exists? }
   # validate :validate_segment_recipient
   validates :recipient_group_id, presence: true
 
@@ -81,10 +85,29 @@ class Newsletter < ApplicationRecord
     list_of_recipient_emails.in_groups_of(batch_size, false)
   end
 
-  def email_safe_body(container_width: 620)
-    return "" if body.blank?
+  def renders_from_content_blocks?
+    draft? && content_blocks.exists?
+  end
 
-    doc = Nokogiri::HTML.fragment(body)
+  def composed_content_blocks_html
+    content_blocks.map do |content_block|
+      margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
+
+      %(<div style="margin-bottom:#{margin}px;">#{content_block.body}</div>)
+    end.join("\n")
+  end
+
+  def snapshot_content_blocks_to_body!
+    return if !renders_from_content_blocks?
+
+    update_column(:body, composed_content_blocks_html)
+  end
+
+  def email_safe_body(container_width: 620)
+    source_html = renders_from_content_blocks? ? composed_content_blocks_html : body
+    return "" if source_html.blank?
+
+    doc = Nokogiri::HTML.fragment(source_html)
 
     doc.css("figure.image_resized, figure.image").each do |figure|
       img = figure.at_css("img")
@@ -133,7 +156,7 @@ class Newsletter < ApplicationRecord
 
       begin
         node[attr] = URI.join(Setting["url"].to_s, url).to_s
-      rescue URI::InvalidURIError
+      rescue URI::Error
         next
       end
     end

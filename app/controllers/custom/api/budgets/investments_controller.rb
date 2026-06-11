@@ -61,7 +61,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     check_admin_access!
     find_budget unless @budget.present?
     budget_investment = @budget.investments.new(budget_investment_params)
-    budget_investment.author = @current_client.user
+    budget_investment.author = @current_client.content_author
     budget_investment.resource_terms = true
 
     if budget_investment.save

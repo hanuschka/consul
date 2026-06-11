@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   # mount Rswag::Ui::Engine => '/api-docs'
   # mount Rswag::Api::Engine => '/api-docs'
 
+  get "up", to: "healthcheck#show"
+
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   draw :adm
   draw "adm/ideas"

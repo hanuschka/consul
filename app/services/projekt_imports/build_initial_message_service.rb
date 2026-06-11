@@ -63,8 +63,9 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
       lines << t(:questions_intro)
       lines << ""
 
-      data["clarification_questions"].each do |question|
-        lines << "- #{question}"
+      data["clarification_questions"].each_with_index do |question, index|
+        clean_question = question.to_s.strip.sub(/\A\d+[.)]\s*/, "")
+        lines << "- #{index + 1}\\. #{clean_question}"
       end
 
       lines << ""

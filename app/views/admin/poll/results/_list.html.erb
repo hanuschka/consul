@@ -1,10 +1,5 @@
 <h3>
   <%= t("admin.results.index.title") %>
-  <% if embedded? %>
-    <%= render Shared::ExplainButtonComponent.new(
-      explain: "poll results"
-    ) %>
-  <% end %>
 </h3>
 
 <% if @partial_results.empty? && @poll.voters.empty? %>

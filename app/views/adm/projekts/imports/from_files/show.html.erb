@@ -1,0 +1,79 @@
+<%= content_for :title, t("adm.projekts.imports.from_files.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.projekts.imports.from_files.show.title"), breadcrumbs: @breadcrumbs, back_button_url: new_adm_projekts_import_path) %>
+
+<div class="kern-container my-3">
+  <div class="projekt-import-from-file">
+    <% if @projekt_import.failed? || @stalled %>
+      <div class="projekt-import-detail">
+        <div class="projekt-import-detail--icon" aria-hidden="true">
+          <span class="material-symbols-outlined"><%= @stalled ? "warning" : "error" %></span>
+        </div>
+
+        <h2 class="projekt-import-detail--title">
+          <%= @stalled ? t("adm.projekts.imports.from_files.show.stalled_title") : t("adm.projekts.imports.from_files.show.failed_title") %>
+        </h2>
+
+        <p class="projekt-import-detail--message">
+          <%= @stalled ? t("adm.projekts.imports.from_files.show.stalled_message") : @projekt_import.error_message.presence || t("adm.projekts.imports.errors.message_failed") %>
+        </p>
+
+        <% if @projekt_import.source_files.any? %>
+          <div class="projekt-import-detail--files">
+            <% @projekt_import.source_files.each do |file| %>
+              <div class="projekt-import-detail--file">
+                <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                <span><%= file.filename %></span>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="projekt-import-detail--actions">
+          <%= link_to t("adm.projekts.imports.from_files.show.upload_new"), new_adm_projekts_import_path,
+                class: "projekt-import-detail--primary-button" %>
+          <%= button_to t("adm.projekts.imports.from_files.show.dismiss"), reset_adm_projekts_import_path(@projekt_import),
+                method: :post,
+                class: "projekt-import-detail--dismiss-button",
+                form_class: "projekt-import-detail--dismiss-form" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="projekt-import-from-file--loader"
+           data-controller="projekt-imports--status"
+           data-projekt-imports--status-status-url-value="<%= @status_url %>"
+           data-projekt-imports--status-chat-url-value="<%= @chat_url %>"
+           data-projekt-imports--status-progress-extracting-value="<%= t('adm.projekts.imports.from_files.new.progress.extracting') %>"
+           data-projekt-imports--status-progress-processing-value="<%= t('adm.projekts.imports.from_files.new.progress.processing') %>"
+           data-projekt-imports--status-progress-chatting-value="<%= t('adm.projekts.imports.from_files.new.progress.chatting') %>">
+        <h3 class="projekt-import-from-file--loader-title">
+          <%= t("adm.projekts.imports.from_files.new.processing_title") %>
+        </h3>
+
+        <div class="projekt-import-from-file--progress-wrapper">
+          <div class="projekt-import-from-file--progress-bar">
+            <div class="projekt-import-from-file--progress-bar-fill"
+                 data-projekt-imports--status-target="progressFill"></div>
+          </div>
+          <span class="projekt-import-from-file--progress-label"
+                data-projekt-imports--status-target="progressLabel">
+            <%= @projekt_import.processing? ? t("adm.projekts.imports.from_files.new.progress.processing") : t("adm.projekts.imports.from_files.new.progress.extracting") %>
+          </span>
+        </div>
+
+        <p class="projekt-import-from-file--loader-message">
+          <%= t("adm.projekts.imports.from_files.new.processing_message") %>
+        </p>
+
+        <div class="projekt-import-from-file--loader-files">
+          <% @projekt_import.source_files.each do |file| %>
+            <div class="projekt-import-from-file--loader-file-item">
+              <span class="material-symbols-outlined" aria-hidden="true">description</span>
+              <span class="projekt-import-from-file--loader-file-name"><%= file.filename %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

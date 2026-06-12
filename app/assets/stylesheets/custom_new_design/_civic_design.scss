@@ -1,9 +1,3 @@
-// ==========================================================================
-// Civic Participation Design System
-// Foundation 6 compatible, public-facing projekt pages
-// ==========================================================================
-
-// --- Design Tokens ---
 $civic-primary: #0F172A;
 $civic-secondary: #334155;
 $civic-accent: #0369A1;
@@ -40,9 +34,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // HERO / BANNER
-  // ==========================================================================
   .custom-page--banner {
     // background: linear-gradient(135deg, $civic-primary 0%, #024E7C 100%) !important;
     color: #FFFFFF;
@@ -105,9 +96,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // MAIN CONTENT CARD
-  // ==========================================================================
   .main-content-card {
     border-color: $civic-border;
     border-radius: $civic-radius-lg;
@@ -118,9 +106,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // SIDEBAR CARDS
-  // ==========================================================================
   .sidebar-card {
     border-color: $civic-border;
     border-radius: $civic-radius-lg;
@@ -203,7 +188,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // Notification toggle
   .sidebar-card .switch-paddle {
     background: $civic-muted;
   }
@@ -212,15 +196,7 @@ $civic-transition: 200ms ease;
     background: $civic-accent;
   }
 
-  // ==========================================================================
-  // PHASE TABS (Footer Navigation)
-  // ==========================================================================
   .projekt-footer-phase-tab {
-    // border-color: $civic-border !important;
-    // border-radius: $civic-radius $civic-radius 0 0 !important;
-    // background: $civic-card !important;
-    // box-shadow: $civic-shadow-sm;
-    // transition: all $civic-transition;
     min-height: 110px !important;
 
     h2 {
@@ -228,7 +204,7 @@ $civic-transition: 200ms ease;
       font-weight: 600 !important;
       font-size: 20px !important;
       color: var(--brand-color) !important;
-      margin-bottom: 6px !important;
+      margin-bottom: 0 !important;
     }
 
     // Meta info (Fortlaufend, Registrierte Nutzer)
@@ -257,9 +233,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // COMMENT SECTION (inside phases)
-  // ==========================================================================
   .projekt-footer .comments {
     .comment-form {
       border-color: $civic-border;
@@ -321,9 +294,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // FIXED TAB NAVIGATION (Inhalt / Info / Beteiligung)
-  // ==========================================================================
   .custom-fixed-tabs--content {
     background-color: $civic-card !important;
     border-color: $civic-border !important;
@@ -349,9 +319,6 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // GENERAL BUTTONS ON PROJEKT PAGE
-  // ==========================================================================
   .projekt-page {
     .button {
       font-family: $civic-heading-font;
@@ -364,16 +331,10 @@ $civic-transition: 200ms ease;
     }
   }
 
-  // ==========================================================================
-  // FOOTER PHASES CONTAINER
-  // ==========================================================================
   .projekt-footer {
     margin-top: 5px;
   }
 
-  // ==========================================================================
-  // PAGE BACKGROUND
-  // ==========================================================================
   &.custom-page {
     background-color: $civic-bg;
   }

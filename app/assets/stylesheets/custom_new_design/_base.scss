@@ -217,7 +217,7 @@ ul.no-ul-style {
   background: #c7c7c7;
   align-self: flex-end;
 
-  @media(max-width: $small-tablet-viewport-start) {
+  @media(max-width: $big-tablet-viewport-start) {
     display: none;
   }
 }

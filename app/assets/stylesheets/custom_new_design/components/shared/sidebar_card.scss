@@ -39,7 +39,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 
   &.-collapsed-on-mobile {
-    @media(max-width: $small-tablet-viewport-start) {
+    @media(max-width: $medium-tablet-viewport-start) {
       .sidebar-card--content {
         display: none;
       }

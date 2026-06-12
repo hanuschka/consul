@@ -458,6 +458,11 @@
     position: relative;
     z-index: 1;
 
+    &:focus-visible {
+      outline: $outline-focus;
+      outline-offset: -2px;
+    }
+
     .label {
       border-radius: 5px;
     }
@@ -510,6 +515,12 @@
 
       &:hover {
         color: #28313b;
+      }
+
+      &:focus-visible {
+        outline: $outline-focus;
+        outline-offset: 1px;
+        border-radius: 3px;
       }
 
       &:before{

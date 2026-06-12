@@ -920,10 +920,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
           text-decoration: none;
         }
 
-        // Keep d-flex links (icon + label) horizontally aligned —
+        // Keep flyout links (icon + label) horizontally aligned —
         // overrides the inline-block default above so the Material
         // Symbols icons sit next to the label, not above it.
-        &.d-flex {
+        &.flyout-item--link {
           display: flex;
         }
 
@@ -987,14 +987,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     li.flyout-item {
       border-top: 0;
       border-bottom: 0;
-    }
-
-    // gap-1 utility from Bootstrap-style spacing isn't available in this
-    // bundle, so the Material Symbols icon collapses against the label.
-    // Explicit gap on the d-flex links inside the dropdown restores the
-    // icon ↔ label spacing seen in the /adm subnavigation-konto flyout.
-    .nav-element a.d-flex {
-      gap: 0.5rem;
     }
 
     // Hairline divider rows rendered via .flyout-item--divider in
@@ -1392,9 +1384,18 @@ body.custom-new-design:has(.projekt-page--admin-topbar) {
   }
 
   @media (max-width: $small-tablet-viewport-start) {
+    // Pin the open menu to the visible viewport via the fixed-position
+    // #responsive-menu: top sits below the mobile topbar, bottom on the
+    // screen edge. The panel is then always exactly screen-minus-topbar
+    // and scrolls only inside itself. Avoids `100vh`, which on mobile is
+    // the URL-bar-hidden height and overshoots the real visible area.
     #responsive-menu .subnavigation {
-      top: calc(60px + var(--admin-topbar-height));
-      height: calc(100vh - 70px - var(--admin-topbar-height));
+      position: fixed;
+      top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height));
+      bottom: 0;
+      height: auto;
+      max-height: none;
+      overflow-y: auto;
     }
   }
 }

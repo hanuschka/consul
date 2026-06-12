@@ -9,16 +9,30 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 .sidebar-card {
   position: relative;
   background: white;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  border-radius: $civic-radius-lg;
+  border: 1px solid $civic-border;
+  box-shadow: $civic-shadow-sm;
   margin-bottom: 18px;
   color: $main-text-color;
   font-size: 15px;
   width: 100%;
+  overflow: hidden;
+  transition: box-shadow $civic-transition;
+
+  &:hover {
+    box-shadow: $civic-shadow-md;
+  }
 
   .sidebar-collapse-icon {
     display: none;
+  }
+
+  .switch-paddle {
+    background: $civic-muted;
+  }
+
+  input:checked ~ .switch-paddle {
+    background: $civic-accent;
   }
 
   .button {
@@ -119,6 +133,9 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
 .sidebar-card--section {
   padding: 20px $sidebar-card-horizontal-padding;
+  font-family: $civic-body-font;
+  font-size: 15px;
+  color: $civic-secondary;
 
   .sdg-target-tag-list {
     margin-top: 10px;
@@ -146,13 +163,15 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  font-size: 17px !important;
+  font-family: $civic-heading-font;
+  font-size: 15px !important;
   line-height: 1.25;
   margin-bottom: 0 !important;
-  color: #111;
+  color: $civic-primary;
   font-weight: 600;
   letter-spacing: -0.005em;
   padding: 15px $sidebar-card-horizontal-padding 16px;
+  padding-bottom: 14px;
   user-select: none;
 
   @media(max-width: $mobile-viewport-start) {
@@ -168,13 +187,14 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
     margin-right: 12px;
     background: $brand-tint-14;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--brand-color);
     flex-shrink: 0;
   }
 
   i {
     color: var(--brand-color);
+    font-size: 16px;
   }
 
   .sidebar-card--title-text {

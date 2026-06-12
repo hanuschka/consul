@@ -35,9 +35,16 @@
     // TODO change if needed
     overflow: visible;
     min-height: 114px;
+    border-color: $civic-border;
+    border-radius: $civic-radius-lg;
+    box-shadow: $civic-shadow-sm;
 
     h1 {
       margin-top: 0;
+    }
+
+    h1, h2, h3 {
+      font-family: $civic-heading-font;
     }
 
     &.-hide-background {

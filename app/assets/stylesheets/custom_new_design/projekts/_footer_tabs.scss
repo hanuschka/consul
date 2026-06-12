@@ -2,7 +2,7 @@
   .projekt-footer-phase-tab {
     margin-top: 0 !important;
     min-width: 322px;
-    min-height: 110px !important;
+    min-height: 85px !important;
     background: white;
     border: 1px solid #CFCECE;
     border-radius: 10px 10px 0px 0px;
@@ -104,6 +104,10 @@
           cursor: pointer;
           background-color: var(--brand-color-lighter);
         }
+      }
+
+      @media(max-width: 1000px) {
+        display: none;
       }
     }
 

@@ -52,9 +52,13 @@ en:
       map:
         marker-label: "Map marker"
         toggle_label: "Show map"
+        region_label: "Interactive map. Use the arrow keys to pan and plus or minus to zoom."
       phases:
         scroll_left: "Scroll phases left"
         scroll_right: "Scroll phases right"
+      phase_subscription:
+        subscribe: "Subscribe to notifications for this phase"
+        unsubscribe: "Unsubscribe from notifications for this phase"
       navigation:
         main: "Main navigation"
         mobile: "Mobile navigation"

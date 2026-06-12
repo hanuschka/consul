@@ -40,7 +40,8 @@ class Shared::MapComponent < ApplicationComponent
     content_tag :div, "",
                 id: map_id,
                 class: "map_location map #{rendering_library}",
-                aria: { hidden: true },
+                role: "application",
+                aria: { label: I18n.t("custom.accessibility.map.region_label") },
                 data: prepare_map_settings
   end
 

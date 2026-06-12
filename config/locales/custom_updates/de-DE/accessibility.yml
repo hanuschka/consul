@@ -52,9 +52,13 @@ de:
       map:
         marker-label: "Kartenmarkierung"
         toggle_label: "Karte anzeigen"
+        region_label: "Interaktive Karte. Mit den Pfeiltasten verschieben, mit Plus oder Minus zoomen."
       phases:
         scroll_left: "Phasen nach links scrollen"
         scroll_right: "Phasen nach rechts scrollen"
+      phase_subscription:
+        subscribe: "Benachrichtigungen für diese Phase abonnieren"
+        unsubscribe: "Benachrichtigungen für diese Phase abbestellen"
       navigation:
         main: "Hauptnavigation"
         mobile: "Mobilnavigation"

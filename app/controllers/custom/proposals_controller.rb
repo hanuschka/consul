@@ -94,10 +94,10 @@ class ProposalsController
       end
 
       format.json do
-        render json: {
+        render json: JSON.generate(
           type: "FeatureCollection",
           features: all_proposal_map_locations(@resources)
-        }
+        )
       end
 
       format.csv do

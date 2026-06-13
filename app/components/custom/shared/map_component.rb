@@ -8,7 +8,7 @@ class Shared::MapComponent < ApplicationComponent
     editable: false,
     process: nil,
     placement: nil,
-    collapsible: false,
+    collapsible: true,
     map_data_url: nil,
     lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false
@@ -33,7 +33,21 @@ class Shared::MapComponent < ApplicationComponent
   end
 
   def collapsible?
-    @collapsible && !@editable
+    return false if @editable
+    return false if extended_sidebar_map?
+
+    @collapsible
+  end
+
+  def map_accessibility_note
+    key =
+      if @process.present?
+        "custom.map.not_accessible_note_listing"
+      else
+        "custom.map.not_accessible_note_single"
+      end
+
+    I18n.t(key)
   end
 
   def map_div
@@ -46,6 +60,10 @@ class Shared::MapComponent < ApplicationComponent
   end
 
   private
+
+    def extended_sidebar_map?
+      @placement == "extended_sidebar_map"
+    end
 
     def features_count
       data = resolved_features

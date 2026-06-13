@@ -71,7 +71,8 @@ en:
         extend: "Extend session"
         logout: "Log out now"
     map:
-      aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
+      not_accessible_note_listing: "This map is not yet fully accessible. It displays all the projects and posts listed on this page."
+      not_accessible_note_single: "This map is not yet fully accessible. The location shown here is also described in the content on this page."
     links:
       menu:
         home_icon: Homepage link

@@ -329,9 +329,11 @@ input[role="switch"]:focus-visible {
 }
 
 .map-collapsible-wrapper--note {
-  padding: 0.5rem 1rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
   font-size: 0.875rem;
   color: #666;
-  margin-bottom: 0.5rem;
-  font-style: italic;
+  border-bottom: 1px solid $border-color;
 }

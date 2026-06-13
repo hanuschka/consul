@@ -22,7 +22,6 @@
     features: @proposals_coordinates,
     features_count: @proposals_map_pin_count,
     process: 'proposals',
-    collapsible: true,
     map_data_url: proposals_path(**request.query_parameters, format: :json),
     lazy_load_threshold: ProposalsController::MAP_PINS_LAZY_LOAD_THRESHOLD
   ) %>

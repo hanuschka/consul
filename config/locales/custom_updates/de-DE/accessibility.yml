@@ -71,7 +71,8 @@ de:
         extend: "Sitzung verlängern"
         logout: "Jetzt abmelden"
     map:
-      aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
+      not_accessible_note_listing: "Diese Karte ist aktuell noch nicht barrierefrei. Sie zeigt alle auf dieser Seite aufgeführten Projekte und Beiträge an."
+      not_accessible_note_single: "Diese Karte ist aktuell noch nicht barrierefrei. Der hier gezeigte Standort wird auch im Inhalt dieser Seite beschrieben."
     links:
       menu:
         home_icon: Startseiten Link

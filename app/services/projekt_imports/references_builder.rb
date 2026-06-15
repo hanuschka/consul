@@ -42,10 +42,11 @@ module ProjektImports::ReferencesBuilder
   end
 
   def self.fetch_content_block_templates
-    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: "projekt_page")
-
+    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: "general")
     body = response.parsed_response
-    Array(body.is_a?(Hash) ? body["content_block_templates"] : body)
+    categories = body.is_a?(Hash) ? Array(body["content_block_templates_by_category"]) : []
+
+    categories.flat_map { |category| Array(category["templates"]) }
   rescue StandardError => e
     Rails.logger.warn("[ProjektImports::ReferencesBuilder] content block templates fetch failed: #{e.message}")
     []

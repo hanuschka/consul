@@ -48,12 +48,13 @@
           <div class="image-preview">
             <img
               src=""
+              alt="<%= image_alt %>"
               class="js-direct-image-upload-image-preview direct-image-upload--image-preview cached-image"
             >
           </div>
 
           <% if attachable.attachment.attached? && attachable.attachment.image? %>
-            <%= render_image(attachable, preview_variant, false) %>
+            <%= render_image(attachable, preview_variant, false, alt: image_alt) %>
           <% end %>
 
           <div class="js-direct-image-upload--attachment-actions">

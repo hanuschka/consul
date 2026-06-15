@@ -11,6 +11,7 @@
       App.TextSearchFormComponent.initialize();
       App.CollapseComponent.initialize();
       App.CustomTabs.initialize();
+      App.Tabs.initialize();
       App.SidebarCardComponent.initialize();
       App.CkeEditorPlaceholder.initialize();
       App.QuestionWizard.initialize();

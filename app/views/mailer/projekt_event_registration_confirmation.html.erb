@@ -15,9 +15,11 @@
     </a>
   </p>
 
-  <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.budget_investment_created.sincerely") %>
-    <br>
-    <%= t("mailers.shared.signature") %>
-  </p>
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.budget_investment_created.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

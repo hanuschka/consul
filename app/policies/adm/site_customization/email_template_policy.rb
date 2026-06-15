@@ -16,7 +16,17 @@ class Adm::SiteCustomization::EmailTemplatePolicy < ApplicationPolicy
   private
 
     def allowed?
-      global_template? ? @user&.administrator? : manage_permitted?
+      if deficiency_report_template?
+        @user&.administrator? || @user&.deficiency_report_manager?
+      elsif global_template?
+        @user&.administrator?
+      else
+        manage_permitted?
+      end
+    end
+
+    def deficiency_report_template?
+      @record.respond_to?(:deficiency_report_template?) && @record.deficiency_report_template?
     end
 
     def projekt_from_record

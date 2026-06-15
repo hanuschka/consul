@@ -61,29 +61,6 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        before do
-          # Create a client without proper access level by bypassing validation
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'ideas found with public_data access' do
         before do
           api_client.update!(access_level: :public_data)
@@ -115,6 +92,8 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response
     end
 
     post 'Create an idea' do
@@ -280,6 +259,9 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
       end
 
+      forbidden_response
+
+      unauthorized_response
     end
   end
 
@@ -326,40 +308,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:idea) do
-          idea = Idea.new(
-            author: api_client.user,
-            resource_terms: true,
-            admin_accepted_at: Time.current,
-            title: 'Test Idea',
-            description: 'Test Description'
-          )
-          idea.save!
-          idea
-        end
-        let(:id) { idea.id }
-        before do
-          idea
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update an idea' do
@@ -578,6 +527,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
       end
 
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

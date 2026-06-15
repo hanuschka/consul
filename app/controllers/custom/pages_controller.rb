@@ -16,7 +16,11 @@ class PagesController < ApplicationController
   before_action :set_random_seed
 
   def show
-    @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
+    @custom_page = SiteCustomization::Page.find_by(slug: params[:id])
+
+    if @custom_page.present? && !@custom_page.published? && !draft_page_previewable?(@custom_page)
+      @custom_page = nil
+    end
 
     if @custom_page&.landing?
       @content_cards =
@@ -201,8 +205,14 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_coordinates = all_proposal_map_locations(@resources)
-        @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+
+        if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+          @proposals_coordinates = all_proposal_map_locations(@resources)
+          @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        else
+          @proposals_coordinates = []
+        end
 
         @proposals =
           @resources

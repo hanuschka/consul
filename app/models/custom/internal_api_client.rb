@@ -37,6 +37,10 @@ class InternalApiClient < ApplicationRecord
     true
   end
 
+  def content_author
+    User.system
+  end
+
   def mark_as_registered!(service_api_token)
     update!(
       registration_status: :registered,

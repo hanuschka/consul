@@ -527,6 +527,11 @@ $phase-marker-border: #cbd5e1;
 
     a {
       height: 100%;
+
+      &:focus-visible {
+        outline: $outline-focus;
+        outline-offset: -3px;
+      }
     }
 
     .image-maximize-button {
@@ -535,7 +540,8 @@ $phase-marker-border: #cbd5e1;
       transition: all 100ms ease;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       .image-maximize-button {
         visibility: visible;
         opacity: 1;

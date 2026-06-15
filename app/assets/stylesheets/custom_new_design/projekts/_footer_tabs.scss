@@ -80,6 +80,11 @@
       padding-top: 15px;
       padding-left: 22px;
       padding-bottom: 17px;
+
+      &:focus-visible {
+        outline: $outline-focus;
+        outline-offset: -3px;
+      }
     }
 
     .projekt-phase--actions {

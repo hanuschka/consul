@@ -51,7 +51,6 @@ en:
         user_avatar_title: "Open profile of %{name}"
       map:
         marker-label: "Map marker"
-        toggle_label: "Show map"
         region_label: "Interactive map. Use the arrow keys to pan and plus or minus to zoom."
       phases:
         scroll_left: "Scroll phases left"

@@ -35,7 +35,6 @@
       App.AreaChartComponent.initialize();
       App.PieChartComponent.initialize();
       App.HeatmapComponent.initialize();
-      App.MapCollapsible.initialize();
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();

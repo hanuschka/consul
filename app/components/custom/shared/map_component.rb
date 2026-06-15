@@ -1,5 +1,5 @@
 class Shared::MapComponent < ApplicationComponent
-  LAZY_LOAD_THRESHOLD = 100
+  LAZY_LOAD_THRESHOLD = 200
 
   def initialize(
     mappable: nil,
@@ -8,7 +8,6 @@ class Shared::MapComponent < ApplicationComponent
     editable: false,
     process: nil,
     placement: nil,
-    collapsible: true,
     map_data_url: nil,
     lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false
@@ -19,7 +18,6 @@ class Shared::MapComponent < ApplicationComponent
     @editable = editable
     @process = process
     @placement = placement
-    @collapsible = collapsible
     @map_data_url = map_data_url
     @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
@@ -32,11 +30,11 @@ class Shared::MapComponent < ApplicationComponent
     (@explicit_features_count || features_count) > @lazy_load_threshold
   end
 
-  def collapsible?
+  def hide_from_screen_readers?
     return false if @editable
     return false if extended_sidebar_map?
 
-    @collapsible
+    true
   end
 
   def map_accessibility_note

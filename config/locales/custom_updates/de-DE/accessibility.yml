@@ -51,7 +51,6 @@ de:
         user_avatar_title: "Profil von %{name} öffnen"
       map:
         marker-label: "Kartenmarkierung"
-        toggle_label: "Karte anzeigen"
         region_label: "Interaktive Karte. Mit den Pfeiltasten verschieben, mit Plus oder Minus zoomen."
       phases:
         scroll_left: "Phasen nach links scrollen"

@@ -9,19 +9,10 @@
   <% end %>
 <% end %>
 
-<% if collapsible? %>
-  <div class="map-collapsible-wrapper">
-    <p class="map-collapsible-wrapper--note">
-      <i class="fas fa-info-circle" aria-hidden="true"></i>
-      <%= map_accessibility_note %>
-    </p>
-    <details class="map-collapsible-wrapper--details js-map-collapsible">
-      <summary class="map-collapsible-wrapper--toggle">
-        <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
-        <%= t("custom.accessibility.map.toggle_label") %>
-      </summary>
-      <%= map_body %>
-    </details>
+<% if hide_from_screen_readers? %>
+  <p class="show-for-sr"><%= map_accessibility_note %></p>
+  <div aria-hidden="true">
+    <%= map_body %>
   </div>
 <% else %>
   <%= map_body %>

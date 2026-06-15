@@ -36,19 +36,19 @@
         <% end %>
       </div>
       <div class='sidebar-projekt-phase-details'>
-        <span class='sidebar-projekt-phase-name'>
-          <%= phase.title %>
-          <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
-            onclick: "$('#footer-content').addClass('show-loader');",
-            class: "js-remote-link-push-state js-sidebar-phase-link",
-            data: {
-              index: index - 1,
-              remote: true,
-              "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
-            } do %>
+        <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, phase),
+          onclick: "$('#footer-content').addClass('show-loader');",
+          class: "sidebar-projekt-phase-link js-remote-link-push-state js-sidebar-phase-link",
+          data: {
+            index: index - 1,
+            remote: true,
+            "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: phase.id, anchor: "projekt-footer"),
+          } do %>
+          <span class='sidebar-projekt-phase-name'>
+            <%= phase.title %>
             <i class="fas fa-long-arrow-alt-right"></i>
-          <% end %>
-        </span>
+          </span>
+        <% end %>
         <span class='sidebar-projekt-phase-duration'><%= phase_duration_text(phase) %></span>
 
         <% if is_budget_phase %>

@@ -142,14 +142,10 @@ $phase-marker-border: #cbd5e1;
       line-height: 1.35;
       color: inherit;
 
-      a {
-        color: inherit;
-
-        i {
-          opacity: 0;
-          margin-left: 4px;
-          transition: opacity 150ms ease;
-        }
+      i {
+        opacity: 0;
+        margin-left: 4px;
+        transition: opacity 150ms ease;
       }
     }
 
@@ -162,7 +158,13 @@ $phase-marker-border: #cbd5e1;
     }
   }
 
-  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name a i {
+  .sidebar-projekt-phase-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name i {
     opacity: 0.6;
   }
 
@@ -814,6 +816,12 @@ $phase-marker-border: #cbd5e1;
       @media(max-width: $big-tablet-viewport-start) {
         margin-top: 1rem;
       }
+    }
+
+    .glightbox:focus-visible,
+    .accordion-title:focus-visible {
+      outline: $outline-focus;
+      outline-offset: -3px;
     }
   }
 

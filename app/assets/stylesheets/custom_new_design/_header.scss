@@ -1264,6 +1264,17 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       padding-bottom: 0;
     }
 
+    #responsive-menu .nav-element a.d-flex {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+
+      .flyout-item--icon {
+        flex: 0 0 auto;
+      }
+    }
+
     .sticky-header {
       .header--mobile-hamburger-menu {
         .menu-icon::after {

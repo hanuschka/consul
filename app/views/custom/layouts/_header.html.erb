@@ -32,8 +32,10 @@
 
         <div class="header--navigation expanded not-print hide-for-small-only">
           <nav
+            id="main-navigation"
             class="hader--subnavigation-wrapper hide-for-small-only"
             aria-label="<%= t('custom.accessibility.navigation.main') %>"
+            tabindex="-1"
           >
             <%= render partial: "shared/subnavigation_new", locals: { placement: 'desktop', launch_page: launch_page } %>
           </nav>

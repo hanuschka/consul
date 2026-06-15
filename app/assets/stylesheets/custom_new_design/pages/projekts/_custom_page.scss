@@ -824,8 +824,7 @@ $phase-marker-border: #cbd5e1;
       }
     }
 
-    .glightbox:focus-visible,
-    .accordion-title:focus-visible {
+    .glightbox:focus-visible {
       outline: $outline-focus;
       outline-offset: -3px;
     }

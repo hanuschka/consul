@@ -58,6 +58,9 @@ de:
       phase_subscription:
         subscribe: "Benachrichtigungen für diese Phase abonnieren"
         unsubscribe: "Benachrichtigungen für diese Phase abbestellen"
+      skip_links:
+        skip_to_content: "Direkt zum Inhalt"
+        skip_to_navigation: "Direkt zur Navigation"
       navigation:
         main: "Hauptnavigation"
         mobile: "Mobilnavigation"

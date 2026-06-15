@@ -56,6 +56,38 @@ form.button_to {
 }
 
 
+// Skip links (WCAG 9.2.4.1 Bypass Blocks): visually hidden until focused
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 10000;
+  display: block;
+  padding: 12px 24px;
+  background: var(--brand-color, #004a83);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:focus {
+    top: 0;
+    outline: $outline-focus;
+    outline-offset: 0;
+    color: #fff;
+  }
+}
+
+// Programmatic skip target: full-width content wrapper should not draw a
+// page-wide focus box when reached via the skip link.
+
+#main-content:focus {
+  outline: none;
+}
+
+
 // Menu styling fixes
 
 #responsive-menu .subnavigation a {
@@ -169,6 +201,16 @@ input[type="date"]:focus-visible {
 
 .locale .locale-form select:focus-visible {
   outline: $outline-focus;
+}
+
+
+// Foundation accordion focus indicator: inset outline so the 3px ring is
+// drawn inside the title and not clipped by the accordion item borders.
+
+.accordion-title:focus,
+.accordion-title:focus-visible {
+  outline: $outline-focus;
+  outline-offset: -3px;
 }
 
 

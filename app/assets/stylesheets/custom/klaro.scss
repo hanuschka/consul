@@ -6,7 +6,19 @@
   .cookie-modal {
     z-index: 4999 !important;
 
+     .cookie-modal-notice {
+      padding: 1.5rem;
+      padding-top: 0.8em;
+      max-width: 520px;
+    }
+
+    button {
+      font-size: 16px !important;
+    }
+
     .cn-ok {
+      margin-top: 1.2rem !important;
+
       .cm-btn.cm-btn-info {
         padding: 10px;
         background-color: #0c70bd;
@@ -15,7 +27,7 @@
       }
 
       .cm-btn.cm-btn-success {
-        padding: 10px;
+        padding: 10px 15px;
         background-color: #005a9f;
         min-height: 3rem;
       }

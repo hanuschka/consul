@@ -1376,7 +1376,7 @@ body.custom-new-design {
   }
 }
 
-body.custom-new-design:has(.projekt-page--admin-topbar) {
+body.custom-new-design:has(.studio-admin-topbar) {
   padding-top: calc(#{$topbar-height} + var(--admin-topbar-height));
 
   @media(max-width: $small-tablet-viewport-start) {

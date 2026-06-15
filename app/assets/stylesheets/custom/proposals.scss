@@ -101,7 +101,7 @@
     }
   }
 
-  body:has(.projekt-page--admin-topbar) & .proposal-navigation {
+  body:has(.studio-admin-topbar) & .proposal-navigation {
     top: $topbar-height + $admin-topbar-height;
 
     // Below the small-tablet breakpoint the admin topbar is hidden

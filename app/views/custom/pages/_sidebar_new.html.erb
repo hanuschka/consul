@@ -90,7 +90,7 @@
 
         <% if show_admin_controls_for_projekt?(@projekt) %>
           <% c.with_edit_link do %>
-            <%= link_to(map_adm_projekts_projekt_path(@projekt), target: "_blank", class: "sidebar-card--edit-icon-button js-studio-hide-on-preview", title: t("custom.projekts.page.sidebar.admin_controls.edit_map"), aria: { label: t("custom.projekts.page.sidebar.admin_controls.edit_map") }) do %>
+            <%= link_to(map_adm_projekts_projekt_path(@projekt), target: "_blank", tabindex: "-1", class: "sidebar-card--edit-icon-button js-studio-hide-on-preview", title: t("custom.projekts.page.sidebar.admin_controls.edit_map"), aria: { label: t("custom.projekts.page.sidebar.admin_controls.edit_map") }) do %>
               <i class="fas fa-pen"></i>
             <% end %>
           <% end %>

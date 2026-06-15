@@ -20,6 +20,10 @@
       this.setupEventListenersForUpdatingMapCenter();
 
       this.placeCenterMarker = this.placeCenterMarker.bind(this)
+
+      if (!this.editable) {
+        App.MapKeyboardFocus.neutralize(this.element);
+      }
     }
 
     initializeProperties() {
@@ -71,7 +75,8 @@
       this.map = L.map(this.element.id, {
         gestureHandling: true,
         maxZoom: 18,
-        zoomControl: false
+        zoomControl: false,
+        keyboard: !!this.editable
       }).setView(this.mapCenterLatLng, this.zoom);
 
       const zoomControl = L.control.zoom({

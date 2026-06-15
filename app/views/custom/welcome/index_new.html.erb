@@ -36,9 +36,10 @@
     <%= render "welcome/topbar/admin_topbar_navigation_link_color_picker" %>
 
     <%= link_to adm_homepage_path,
-          class: "button hollow projekt-page--admin-topbar-button",
+          class: "button hollow studio-admin-topbar-button",
           title: t("custom.projekts.page.topbar.edit_homepage"),
-          target: "_blank" do %>
+          target: "_blank",
+          tabindex: "-1" do %>
       <i class="fas fa-edit" aria-hidden="true"></i>
       <span><%= t("custom.projekts.page.topbar.edit_homepage") %></span>
     <% end %>

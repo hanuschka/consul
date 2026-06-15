@@ -65,7 +65,7 @@ ul.no-ul-style {
     }
   }
 
-  &:has(.projekt-page--admin-topbar)  {
+  &:has(.studio-admin-topbar)  {
     .toast-stack {
       top: 110px + $admin-topbar-height;
     }

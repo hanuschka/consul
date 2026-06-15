@@ -61,13 +61,16 @@
 
       <div class="resource-item--body-and-author">
         <div class="resource-item--body">
+          <% if show_body_heading? %>
           <div class="resource-item--body-heading">
             <% if @subline.present? %>
               <%= @subline %>
             <% elsif @projekt.present? %>
-              <div class="resource-item--head-title-projekt-breadcrumbs">
-                <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
-              </div>
+              <% if show_projekt_breadcrumb? %>
+                <div class="resource-item--head-title-projekt-breadcrumbs">
+                  <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
+                </div>
+              <% end %>
             <% elsif @tags.present? %>
               <div class="resource-item--tags">
                 <% @tags.first(2).each do |tag| %>
@@ -89,6 +92,7 @@
               <div class="resource-item--date"><%= date %></div>
             <% end %>
           </div>
+          <% end %>
 
           <% if @url.present? %>
             <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>

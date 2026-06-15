@@ -85,7 +85,11 @@ class Shared::ResourcesListComponent < ApplicationComponent
     match = resource_types.find { |klass, _| resource.is_a?(klass) }
     return if match.blank?
 
-    context = { resources: resources, additional_data: @additional_data }
+    context = {
+      resources: resources,
+      additional_data: @additional_data,
+      hide_projekt_breadcrumb: @projekt_phase.present?
+    }
 
     match.last[:component].call(resource, context)
   end
@@ -100,15 +104,30 @@ class Shared::ResourcesListComponent < ApplicationComponent
       },
       Proposal => {
         i18n_namespace: "custom.proposals.index",
-        component: ->(resource, _) { Proposals::ListItemComponent.new(proposal: resource) }
+        component: ->(resource, context) {
+          Proposals::ListItemComponent.new(
+            proposal: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
       },
       Debate => {
         i18n_namespace: "custom.debates.index",
-        component: ->(resource, _) { Debates::ListItemComponent.new(debate: resource) }
+        component: ->(resource, context) {
+          Debates::ListItemComponent.new(
+            debate: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
       },
       Poll => {
         i18n_namespace: "custom.polls.index",
-        component: ->(resource, _) { Polls::ListItemComponent.new(poll: resource) }
+        component: ->(resource, context) {
+          Polls::ListItemComponent.new(
+            poll: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
       },
       DeficiencyReport => {
         i18n_namespace: "custom.deficiency_reports.index",
@@ -120,7 +139,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
           Budgets::Investments::ListItemComponent.new(
             budget_investment: resource,
             budget_investment_ids: context[:resources].pluck(:id),
-            ballot: context[:additional_data][:ballot]
+            ballot: context[:additional_data][:ballot],
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
           )
         }
       },
@@ -134,7 +154,12 @@ class Shared::ResourcesListComponent < ApplicationComponent
       },
       ProjektEvent => {
         i18n_namespace: nil,
-        component: ->(resource, _) { Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource) }
+        component: ->(resource, context) {
+          Projekts::ProjektEvents::ListItemComponent.new(
+            projekt_event: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
       }
     }
   end

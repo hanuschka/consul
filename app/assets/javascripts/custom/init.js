@@ -28,6 +28,7 @@
       App.Shared.initialize();
       App.SharedModal.initialize();
       App.KlaroAccessibility.initialize();
+      App.RevealAccessibility.initialize();
       App.VoiceAssistant.initialize();
       App.VoiceAssistantV2.initialize();
       App.HiddenTokenWidgetComponent.initialize();

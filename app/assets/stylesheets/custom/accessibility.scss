@@ -56,11 +56,14 @@ form.button_to {
 }
 
 
-// Skip links (WCAG 9.2.4.1 Bypass Blocks): visually hidden until focused
+// Skip links (WCAG 9.2.4.1 Bypass Blocks): off-screen until keyboard focus.
+// Reveal on :focus-visible only, so mouse clicks and programmatic focus
+// (e.g. focus restoration) never flash the bar over the header for users
+// who switch between mouse and keyboard.
 
 .skip-link {
   position: absolute;
-  top: -100%;
+  top: 0;
   left: 0;
   z-index: 10000;
   display: block;
@@ -71,9 +74,10 @@ form.button_to {
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
+  transform: translateY(-100%);
 
-  &:focus {
-    top: 0;
+  &:focus-visible {
+    transform: translateY(0);
     outline: $outline-focus;
     outline-offset: 0;
     color: #fff;

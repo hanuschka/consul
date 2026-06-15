@@ -11,6 +11,7 @@ en:
           proposal_phase: Proposals
           budget_phase: Investments
           comment_phase: Comments
+          debate_phase: Debates
           voting_phase: Polls
       footer_evaluation:
         section_visibility_toggle_title: Show or hide in the public evaluation

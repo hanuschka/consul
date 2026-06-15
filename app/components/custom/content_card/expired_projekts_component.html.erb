@@ -1,5 +1,14 @@
-<%= render Shared::ResourcesListComponent.new(
-  resources: @expired_projekts,
-  resource_type: Projekt,
-  title: @content_card.title || t("custom.content_cards.expired_projekts.title")
-  ) %>
+<%= render Resources::List::BaseComponent.new(
+  title: @content_card.title || t("custom.content_cards.expired_projekts.title"),
+  empty_text: t("custom.projekts.empty_list_text")
+) do |c| %>
+  <% c.with_toolbar %>
+
+  <% if @expired_projekts.present? %>
+    <% c.with_items do %>
+      <% @expired_projekts.each do |projekt| %>
+        <%= render Projekts::ListItemComponent.new(projekt: projekt) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

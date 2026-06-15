@@ -11,7 +11,7 @@
 
 <% if hide_from_screen_readers? %>
   <p class="show-for-sr"><%= map_accessibility_note %></p>
-  <div aria-hidden="true">
+  <div class="map-accessibility-hidden" aria-hidden="true">
     <%= map_body %>
   </div>
 <% else %>

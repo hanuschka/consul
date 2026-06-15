@@ -11,6 +11,7 @@ de:
           proposal_phase: Vorschläge
           budget_phase: Investitionsvorschläge
           comment_phase: Kommentare
+          debate_phase: Diskussionen
           voting_phase: Abstimmungen
       footer_evaluation:
         section_visibility_toggle_title: In der öffentlichen Auswertung anzeigen oder ausblenden

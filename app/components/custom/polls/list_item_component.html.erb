@@ -1,4 +1,6 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_image(image: poll.image, image_placeholder_icon_class: "fa-vote-yea", resource: poll) %>
+
   <% c.with_header do %>
     <%= helpers.format_date_range(@poll.projekt_phase.start_date, @poll.projekt_phase.end_date, separator: t("custom.polls.poll.date.to")) %>
   <% end %>

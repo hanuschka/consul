@@ -1,10 +1,22 @@
-<%= render Shared::ResourcesListComponent.new(
-  resources: active_projekts,
-  resource_type: Projekt,
-  title: @content_card.title || t("custom.content_cards.active_projekts.title")) do |c| %>
+<%= render Resources::List::BaseComponent.new(
+  title: @content_card.title || t("custom.content_cards.active_projekts.title"),
+  empty_text: t("custom.projekts.empty_list_text")
+) do |c| %>
+  <% c.with_toolbar %>
+
+  <% if active_projekts.present? %>
+    <% c.with_items do %>
+      <% active_projekts.each do |projekt| %>
+        <%= render Projekts::ListItemComponent.new(projekt: projekt) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% if !@custom_page&.landing? || helpers.navbar_item_preset_for_landing_page?(@custom_page, "projekts") %>
-    <% c.with_bottom_content do %>
-      <%= link_to(t("custom.content_cards.active_projekts.all_projekts_link"), projekts_path(order: "index_order_all"), class: "resources-list--more-link") %>
+    <% c.with_footer do %>
+      <div class="resources-list--bottom-content">
+        <%= link_to(t("custom.content_cards.active_projekts.all_projekts_link"), projekts_path(order: "index_order_all"), class: "resources-list--more-link") %>
+      </div>
     <% end %>
   <% end %>
 <% end %>

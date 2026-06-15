@@ -1,0 +1,44 @@
+<div class="resources-list--actions">
+  <% if @text_search_enabled && @i18n_namespace.present? %>
+    <div role="search" aria-label="<%= t('custom.accessibility.search.region_label') %>">
+      <%= render(
+        Shared::TextSearchFormComponent.new(
+          url: @remote_url,
+          remote: @remote_url.present?,
+          i18n_namespace: "#{@i18n_namespace}.search_form",
+        )
+      ) %>
+    </div>
+  <% end %>
+
+  <div class="items-list-line-divider">
+  </div>
+
+  <% if @filters.present? %>
+    <%= render(
+      Shared::FilterDropdownComponent.new(
+        title: filter_title,
+        options: @filters,
+        selected_option: selected_filter_option,
+        i18n_namespace: "#{@i18n_namespace}.#{@param&.pluralize || "filters"}",
+        url_param_name: @param,
+        remote_url: @remote_url,
+        in_projekt_footer_tab: @in_projekt_footer_tab
+      )
+    ) %>
+  <% end %>
+
+  <% if show_view_mode_button? %>
+    <div class="resources-list--switch-view-button js-resource-list-switch-view-button"
+         role="button"
+         tabindex="0"
+         aria-label="<%= switch_view_mode_label %>"
+         title="<%= switch_view_mode_label %>"
+         data-label-to-list="<%= t('custom.accessibility.shared.switch-view-button.to-list') %>"
+         data-label-to-tile="<%= t('custom.accessibility.shared.switch-view-button.to-tile') %>"
+         onkeydown="if (event.key === 'Enter') { this.click(); }"
+         >
+      <i class="fa <%= switch_view_mode_icon %>"></i>
+    </div>
+  <% end %>
+</div>

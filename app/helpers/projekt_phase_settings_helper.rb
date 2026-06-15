@@ -9,6 +9,12 @@ module ProjektPhaseSettingsHelper
     projekt_phase.option(option_key)
   end
 
+  def form_attached_image_visible?(resource)
+    return resource.respond_to?(:image) if resource.projekt_phase.blank?
+
+    resource.projekt_phase.feature?("form.allow_attached_image")
+  end
+
   def show_phase_evaluation_in_footer?(projekt_phase)
     footer_evaluation_tab_visible?(projekt_phase, "stats") ||
       footer_evaluation_tab_visible?(projekt_phase, "ai")

@@ -15,11 +15,8 @@ class Projekts::ListItemComponent < ApplicationComponent
       resource: projekt,
       title: projekt.page.title,
       description: strip_tags(projekt.page.subtitle),
-      tags: projekt.tags,
-      narrow_header: true,
       url: projekt_url,
       url_target: url_target,
-      image: projekt.image,
       title_heading_level: @title_heading_level
     }
   end
@@ -50,9 +47,5 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   def url_target
     "_blank" if projekt_option(projekt, "general.external_participation_link").present?
-  end
-
-  def image_url
-    projekt.image&.attachment&.variant(resize_to_limit: [298, 180], saver: { quality: 85 }, format: 'jpeg')
   end
 end

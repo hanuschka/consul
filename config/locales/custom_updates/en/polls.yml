@@ -87,6 +87,7 @@ en:
   polls:
     index:
       filters:
+        status: Status
         title: Status
         all: All polls
         currrent: Active polls

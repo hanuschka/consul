@@ -116,12 +116,17 @@
                                   create_topic_link(proposal.community),
                                   class: "button" %>
                     <% end %>
-                    <%= render(
-                      Shared::ResourcesListComponent.new(
-                        resources: proposal.community.topics,
-                        resource_type: Topic,
-                        hide_view_mode_button: true
-                        )) %>
+                    <%= render Resources::List::BaseComponent.new(
+                      empty_text: t("custom.topics.list.empty_list_text")
+                    ) do |c| %>
+                      <% if proposal.community.topics.present? %>
+                        <% c.with_items do %>
+                          <% proposal.community.topics.each do |topic| %>
+                            <%= render Topics::ListItemComponent.new(topic: topic) %>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                    <% end %>
                   <% end %>
                 <% end %>
               </div>

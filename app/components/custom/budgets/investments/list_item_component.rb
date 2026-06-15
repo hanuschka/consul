@@ -18,9 +18,7 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
       hide_projekt_breadcrumb: @hide_projekt_breadcrumb,
       title: budget_investment.title,
       description: budget_investment.description,
-      url: budget_investment_path,
-      image: budget_investment.image,
-      image_placeholder_icon_class: "fa-euro-sign"
+      url: budget_investment_path
     }
   end
 

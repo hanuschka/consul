@@ -76,20 +76,32 @@
         <div class="flex-layout">
           <% budget_investments_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
           <div class="main-column">
-            <%= render(
-              Shared::ResourcesListComponent.new(
-                resources: @investments,
-                resource_type: Budget::Investment,
-                remote_url: budget_investments_footer_url,
-                current_filter: @current_order,
-                filter_param: "order",
+            <% investment_ids = @investments.pluck(:id) %>
+            <%= render Resources::List::BaseComponent.new(
+              empty_text: t("custom.budgets.investments.index.empty_list_text")
+            ) do |c| %>
+              <% c.with_toolbar(
+                i18n_namespace: "custom.budgets.investments.index",
                 filters: @valid_orders,
+                current_filter: @current_order,
+                param: "order",
                 text_search_enabled: true,
-                additional_data: {
-                  ballot: @ballot
-                },
-                projekt_phase: @projekt_phase
-              )) %>
+                remote_url: budget_investments_footer_url,
+                in_projekt_footer_tab: true
+              ) %>
+
+              <% if @investments.present? %>
+                <% c.with_items do %>
+                  <% @investments.each do |investment| %>
+                    <%= render Budgets::Investments::ListItemComponent.new(
+                      budget_investment: investment,
+                      budget_investment_ids: investment_ids,
+                      ballot: @ballot
+                    ) %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
             <%= paginate @investments, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
           </div>
 

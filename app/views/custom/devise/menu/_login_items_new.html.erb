@@ -10,6 +10,7 @@
 
   <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
 
+  <% unless local_assigns[:compact] %>
   <% if current_user.administrator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_root_path, class: "d-flex align-items-center gap-2" do %>
@@ -83,6 +84,7 @@
   <% end %>
 
   <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
+  <% end %>
 
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
     <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, class: "d-flex align-items-center gap-2" do %>

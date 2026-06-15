@@ -22,10 +22,15 @@ en:
           statuses: Statuses
           settings: Configuration
           official_answer_templates: Response templates
+          email_templates: System emails
           districts: Areas
           officer_groups: Officer groups
           stats: Statistics
           ai_settings: AI settings
+      email_templates:
+        index:
+          title: System emails
+          page_hint: Customize the subject and body of the emails sent for deficiency reports. Leave a template empty to keep the default text.
       deficiency_reports:
         index:
           title: Reports
@@ -326,8 +331,34 @@ en:
           features: Features
           dashboard: Dashboard settings
           contact_persons: Contact persons
+          naming: Naming
+          confirmation_popup: Confirmation popup
         dashboard:
           intro: "Configure the welcome text, notice messages and contact persons that appear on the public deficiency reports dashboard."
+      confirmation_popups:
+        edit:
+          title: Confirmation popup
+        update:
+          success: Confirmation popup updated.
+        form:
+          enabled_label: Enable confirmation popup
+          enabled_hint: When enabled, the yellow "new report" button opens a popup with the question and answers configured below.
+          question_label: Question
+          question_hint: Shown to the user when they click the create-report button.
+          answers_label: Answers
+          answers_hint: Add one button per answer. "Proceed" answers let the user continue to the report form. "Block" answers stop the user and show the flash notice on the index.
+          add_answer: Add answer
+          answer_title: Answer
+          remove_answer: Remove
+          label_label: Button label
+          label_placeholder: e.g. "Yes, file a new report"
+          behavior_label: Behavior
+          behaviors:
+            allow: Proceed to new-report form
+            block: Block and show flash notice on the index
+          flash_notice_label: Flash notice
+          flash_notice_placeholder: e.g. "Please check existing reports first."
+          submit: Save
       stats:
         show:
           title: Statistics

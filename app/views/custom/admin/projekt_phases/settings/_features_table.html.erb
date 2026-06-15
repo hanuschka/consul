@@ -12,11 +12,6 @@
           <tr data-setting-key="<%= feature.key %>">
             <td class='small-9'>
               <strong id="<%= dom_id(feature, :title) %>"><%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}") %></strong>
-              <% if embedded? %>
-                <%= render Shared::ExplainButtonComponent.new(
-                  explain: "projekt setting " + t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}")
-                ) %>
-              <% end %>
               <br>
               <div class="small admin-setting-description">
                 <%= t("custom.projekt_phase_settings.#{@projekt_phase.resources_name}.#{feature.key}_description", default: t("admin.settings.no_description")) %>
@@ -25,9 +20,6 @@
 
             <td>
               <div class="admin-projekt-phase-switch">
-                <% if embedded? %>
-                  <%= link_to "konfigurieren", '#' %>
-                <% end %>
                 <%= render Admin::Settings::FeaturedSettingsFormComponent.new(feature) %>
               </div>
             </td>

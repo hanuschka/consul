@@ -11,6 +11,7 @@
       App.TextSearchFormComponent.initialize();
       App.CollapseComponent.initialize();
       App.CustomTabs.initialize();
+      App.Tabs.initialize();
       App.SidebarCardComponent.initialize();
       App.CkeEditorPlaceholder.initialize();
       App.QuestionWizard.initialize();
@@ -38,7 +39,7 @@
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
-      App.AdminTopbarViewMode.initialize();
+      App.StudioPreviewMode.initialize();
       App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
       App.ProjektFooterPhaseRegenerate.initialize();

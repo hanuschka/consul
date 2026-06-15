@@ -23,7 +23,7 @@ class Adm::AiSettingsController < Adm::BaseController
   def update_api_key
     authorize [:adm, Setting], :update_api_key?, policy_class: Adm::AiSettingPolicy
 
-    api_key = ExternalApiKey.find_by(
+    api_key = ExternalApiKey.find_or_initialize_by(
       name: api_key_params[:name],
       service: api_key_params[:service]
     )

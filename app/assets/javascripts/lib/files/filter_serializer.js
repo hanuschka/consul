@@ -12,7 +12,6 @@
     "updated_to",
     "imageable_type",
     "documentable_type",
-    "admin_flag",
     "sort",
     "type",
     "page",
@@ -30,7 +29,6 @@
     { key: "updated_to", selector: ".js-fm-filter-updated-to" },
     { key: "imageable_type", selector: ".js-fm-filter-imageable-type" },
     { key: "documentable_type", selector: ".js-fm-filter-documentable-type" },
-    { key: "admin_flag", selector: ".js-fm-filter-admin-flag" },
     { key: "sort", selector: ".js-fm-filter-sort" }
   ];
 
@@ -70,7 +68,18 @@
 
     if (!input) return;
 
-    input.value = value === null || value === undefined ? "" : value;
+    const normalized = value === null || value === undefined ? "" : value;
+
+    if (input.tagName === "SELECT" && normalized === "") {
+      input.selectedIndex = 0;
+      return;
+    }
+
+    input.value = normalized;
+
+    if (input.tagName === "SELECT" && input.selectedIndex === -1) {
+      input.selectedIndex = 0;
+    }
   };
 
   const entryForKey = (key) => FORM_INPUTS.find((entry) => entry.key === key);

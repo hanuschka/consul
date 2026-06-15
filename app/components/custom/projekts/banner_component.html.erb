@@ -32,6 +32,12 @@
 
         <% if show_meta_chips? %>
           <div class="custom-page--banner-chips">
+            <% if start_date_chip_text.present? %>
+              <span class="custom-page--banner-chip">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                <%= start_date_chip_text %>
+              </span>
+            <% end %>
             <% if end_date_chip_text.present? %>
               <span class="custom-page--banner-chip">
                 <i class="far fa-clock" aria-hidden="true"></i>
@@ -73,7 +79,7 @@
         <% big_projekt_image_url =
           polymorphic_path(@custom_page.image.attachment.variant(
             resize_to_limit: [1750, 900],
-            saver: { quality: 80 },
+            saver: { quality: 90 },
             strip: true,
             format: "jpeg"
           ))
@@ -98,7 +104,7 @@
             Shared::ResourceImageComponent.new(
               image_url: @custom_page.image&.attachment&.variant(
                 resize_to_fill: [590, 355],
-                saver: { quality: 85 },
+                saver: { quality: 95 },
                 strip: true,
                 format: "jpeg"
               ),

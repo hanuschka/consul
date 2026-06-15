@@ -4,7 +4,9 @@ namespace :adm do
   patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute
 
   # application
-  resource :homepage, controller: "homepage", only: [:show]
+  resource :homepage, controller: "homepage", only: [:show] do
+    patch :update_navigation_link_color, on: :collection
+  end
   resource :navbar, controller: "navbar", only: [:show]
   resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
@@ -25,6 +27,7 @@ namespace :adm do
     get :search, on: :collection
   end
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
+  resource :system_user, controller: "system_user", only: [:edit, :update]
   resources :map_locations, only: [] do
     post :update_screenshot, on: :member
   end
@@ -67,6 +70,7 @@ namespace :adm do
   resources :users, only: [:index, :edit, :update] do
     patch :verify, on: :member
     patch :unverify, on: :member
+    get :audits, on: :member
     get :csv_download, on: :collection
   end
   # profiles
@@ -75,9 +79,14 @@ namespace :adm do
   resources :modal_notifications, except: :show
 
   scope :newsletters do
-    resources :recipient_groups, except: :show do
-      collection do
-        post :select_options
+    resources :recipient_groups, except: [:show, :new] do
+      resources :filters,
+                controller: "recipient_group_filters",
+                only: [:create, :update, :destroy] do
+        collection do
+          post :reorder
+          get :recount
+        end
       end
     end
     resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
@@ -89,6 +98,19 @@ namespace :adm do
     end
     collection do
       get :settings
+    end
+    resources :content_blocks,
+              controller: "newsletters/content_blocks",
+              only: [:create, :update, :destroy] do
+      member do
+        patch :update_position
+        patch :change_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
+      end
+      collection do
+        post :generate_with_ai
+      end
     end
   end
   # notifications

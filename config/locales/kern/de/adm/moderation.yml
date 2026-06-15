@@ -86,9 +86,11 @@ de:
             hidden: Herausmoderiert
             all: Alle
           statuses:
-            hide: Herausmoderiert
+            pending: Prüfung ausstehend
             ignored: Als gelesen markiert
+            hide: Herausmoderiert
           actions:
+            view: Vorschlag ansehen
             hide: Herausmoderieren
             ignore_flag: Als gelesen markieren
           confirm_hide: "Sind Sie sicher? Damit wird der Vorschlag \"%{name}\" herausmoderiert."
@@ -110,9 +112,11 @@ de:
             hidden: Herausmoderiert
             all: Alle
           statuses:
-            hide: Herausmoderiert
+            pending: Prüfung ausstehend
             ignored: Als gelesen markiert
+            hide: Herausmoderiert
           actions:
+            view: Vorschlag ansehen
             hide: Herausmoderieren
             unhide: Wiederherstellen
             ignore_flag: Als gelesen markieren
@@ -134,7 +138,12 @@ de:
             with_ignored_flag: Ignorierte Meldungen
             hidden: Herausmoderiert
             all: Alle
+          statuses:
+            pending: Prüfung ausstehend
+            ignored: Als gelesen markiert
+            hide: Herausmoderiert
           actions:
+            view: Kommentar ansehen
             hide: Herausmoderieren
             unhide: Wiederherstellen
             ignore_flag: Als gelesen markieren

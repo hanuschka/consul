@@ -20,10 +20,17 @@
     <% end %>
 
     <% if admin_upload? %>
-      <span class="files-asset-card--admin-badge">
-        <i class="fa fa-shield-alt"></i>
-        <%= t("files.card.admin_badge") %>
-      </span>
+      <div class="files-asset-card--badges">
+        <rich-tooltip>
+          <span
+            class="files-asset-card--admin-badge"
+            aria-label="<%= t("files.card.admin_badge") %>"
+          >
+            <i class="fa fa-shield-alt"></i>
+          </span>
+          <template><%= t("files.card.admin_badge") %></template>
+        </rich-tooltip>
+      </div>
     <% end %>
 
     <div class="files-asset-card--actions">
@@ -54,7 +61,7 @@
       <a
         href="<%= original_url %>"
         download="<%= filename %>"
-        class="files-asset-card--glass-button"
+        class="files-asset-card--icon-button -bottom-right"
         title="<%= t("files.card.download") %>"
         aria-label="<%= t("files.card.download") %>"
       >
@@ -81,7 +88,7 @@
 
       <% if imageable_name.present? %>
         <div class="files-asset-card--detail-row">
-          <dt><%= t("files.card.imageable_type") %></dt>
+          <dt><%= t("files.card.projekt") %></dt>
           <dd>
             <% if imageable_url.present? %>
               <%= link_to imageable_name, imageable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
@@ -94,7 +101,7 @@
 
       <% if humanized_size.present? %>
         <div class="files-asset-card--detail-row">
-          <dt><%= t("files.card.size") %></dt>
+          <dt><%= t("files.card.file_size") %></dt>
           <dd><%= humanized_size %></dd>
         </div>
       <% end %>
@@ -107,14 +114,21 @@
       <% end %>
 
       <div class="files-asset-card--detail-row">
-        <dt><%= t("files.card.created") %></dt>
+        <dt><%= t("files.card.uploaded") %></dt>
         <dd><%= created_at_formatted %></dd>
       </div>
 
       <div class="files-asset-card--detail-row">
-        <dt><%= t("files.card.modified") %></dt>
+        <dt><%= t("files.card.last_edited") %></dt>
         <dd><%= updated_at_formatted %></dd>
       </div>
+
+      <% if uploaded_by.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= t("files.card.uploaded_by") %></dt>
+          <dd><%= render Files::UploaderLinkComponent.new(user: uploaded_by) %></dd>
+        </div>
+      <% end %>
     </dl>
   </div>
 </article>

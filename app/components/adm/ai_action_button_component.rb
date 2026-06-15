@@ -13,7 +13,8 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     progress_mode: :swap,
     confirm: nil,
     poll_interval: 4000,
-    extra_classes: nil
+    extra_classes: nil,
+    loading: false
   )
     @url = url
     @text = text
@@ -26,12 +27,14 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     @confirm = confirm
     @poll_interval = poll_interval.to_i
     @extra_classes = extra_classes
+    @loading = loading
   end
 
   private
 
     attr_reader :url, :text, :method, :icon, :style, :processing_text,
-                :status_url, :progress_mode, :confirm, :poll_interval, :extra_classes
+                :status_url, :progress_mode, :confirm, :poll_interval,
+                :extra_classes, :loading
 
     def wrapper_classes
       ["adm-ai-action-button", "-#{progress_mode}", extra_classes].compact_blank.join(" ")

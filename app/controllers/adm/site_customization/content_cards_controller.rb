@@ -31,7 +31,8 @@ module Adm
       def reorder
         authorize [:adm, Setting], :update?
 
-        ::SiteCustomization::ContentCard.order_content_cards(params[:ordered_list])
+        ordered_ids = params[:tree].map { |item| item[:id] }
+        ::SiteCustomization::ContentCard.order_content_cards(ordered_ids)
         head :ok
       end
 

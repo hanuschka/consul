@@ -9,6 +9,13 @@ export function getBrandColor() {
   return style.getPropertyValue("--brand-color").trim() || "#004a83"
 }
 
+// Parse a style value to a finite number, falling back to a default for blank
+// ("") / null / non-numeric input (form fields submit "" when left empty).
+export function numberOrDefault(value, fallback) {
+  const parsed = parseFloat(value)
+  return isNaN(parsed) ? fallback : parsed
+}
+
 export function hexToRgba(hex, alpha) {
   hex = hex.replace("#", "")
 

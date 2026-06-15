@@ -47,6 +47,8 @@ de:
       newsletter:
         recipient_group_id_label: Empfängergruppe
         recipient_group_id_description: 'Legt fest, an welche Empfängergruppe dieser Newsletter versendet wird. Empfängergruppen werden unter <a href="/adm/recipient_groups" target="_blank">Benachrichtigungen > Empfängergruppen</a> verwaltet und können z. B. nach Gebiet, Interessengebiet oder Registrierungsstatus zusammengestellt sein. Nur Nutzer, die der gewählten Gruppe zugeordnet sind, erhalten die E-Mail. Wenn Sie alle registrierten Nutzer erreichen möchten, wählen Sie die entsprechende Standardgruppe.'
+        respect_newsletter_optout_label: Newsletter-Opt-out berücksichtigen
+        respect_newsletter_optout_description: 'Wenn aktiviert, werden Nutzer, die in ihrem Konto „Newsletter und Systemmails" deaktiviert haben, beim Versand übersprungen — auch wenn sie sonst zur gewählten Empfängergruppe gehören würden. Diese Option sollte in der Regel aktiv bleiben, um den Wünschen der Nutzer zu entsprechen. Deaktivieren Sie sie nur in Ausnahmefällen, z. B. bei verpflichtenden Informationen, die alle Empfänger der Gruppe unabhängig von ihrer Newsletter-Einstellung erhalten sollen. Hinweis: Diese Option wirkt nur, wenn dem Newsletter eine Empfängergruppe zugeordnet ist. Bei älteren Newslettern mit Segment-Auswahl wird das Opt-out bereits durch das Segment selbst berücksichtigt.'
         from_label: Absender
         from_description: "Die E-Mail-Adresse, die als Absender im Posteingang der Empfänger angezeigt wird. Wichtig: Die Domain (alles nach dem @) darf nicht geändert werden, da der E-Mail-Versand sonst fehlschlägt. Nur der Teil vor dem @ kann angepasst werden. Antworten der Empfänger werden an diese Adresse gesendet – stellen Sie sicher, dass das Postfach aktiv überwacht wird."
         subject_label: Betreff
@@ -67,6 +69,12 @@ de:
         newsletter_email_footer_block_1:
           body_label: Newsletter-Fußbereich
           body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."
+        email_footer:
+          body_label: E-Mail-Fußzeile (alle E-Mails)
+          body_description: "Wird in der Fußzeile jeder System-E-Mail angezeigt, oberhalb des Organisationsnamens und der Abmeldehinweise. Geeignet z. B. für Kontaktdaten, Impressum-Links oder allgemeine Informationen. Bleibt das Feld leer, wird nur die Standard-Fußzeile angezeigt."
+        email_footer_deficiency_report:
+          body_label: E-Mail-Fußzeile (Mängelmelder)
+          body_description: "Wird in Mängelmelder-E-Mails anstelle der allgemeinen E-Mail-Fußzeile angezeigt. Bleibt das Feld leer, wird die allgemeine System-Fußzeile verwendet. Geeignet z. B. für Kontaktdaten oder Hinweise speziell zu Mängelmeldungen."
         auth_page_legend:
           registrations:
             body_label: "Registrierungsseite – linke Spalte"
@@ -119,9 +127,11 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           landing_mobile_header_video_label: Hintergrundvideo für Mobile
           landing_mobile_header_video_description: "Optionales Video, das im oberen Bereich der Themenseite auf Mobilgeräten anstelle des Hintergrundbilds abgespielt wird. Das Video startet automatisch, ist stumm geschaltet und läuft in Endlosschleife. Verwenden Sie ein kurzes Video mit zentriertem Hauptmotiv. Empfohlenes Format: 470 × 246 Pixel. Wenn Sie sowohl ein Bild als auch ein Video hinzugefügt haben, dann hat das Video immer Vorrang. Erlaubte Formate: MP4, WebM. Maximale Größe: 50 MB."
           title_label: Titel der Themenseite
-          title_description: "Der Titel der Themenseite wird prominent über dem Hintergrundbild auf der Startseite angezeigt. Er sollte kurz und prägnant sein, um die Aufmerksamkeit der Besucher zu gewinnen."
+          title_description: "Der Titel benennt die Themenseite und wird in der Navigation, im Browser-Tab sowie in Projekt- und Übersichtskarten verwendet. Er erscheint nicht über dem Hintergrundbild – dafür ist der Kopfzeilentitel zuständig."
+          header_title_label: Kopfzeilentitel
+          header_title_description: "Der Kopfzeilentitel wird als große Überschrift über dem Hintergrundbild der Themenseite angezeigt. Der Untertitel erscheint direkt darunter. Bleibt das Feld leer, wird keine Überschrift dargestellt."
           subtitle_label: Untertitel der Themenseite
-          subtitle_description: "Der Untertitel wird direkt unterhalb des Titels im Hintergrundbild angezeigt. Wenn das Feld leer bleibt, wird kein Untertitel dargestellt."
+          subtitle_description: "Der Untertitel wird direkt unterhalb des Kopfzeilentitels über dem Hintergrundbild angezeigt. Bleibt das Feld leer, wird kein Untertitel dargestellt."
           landing_hide_title_and_subtitle_label: Titel und Untertitel auf der Themenseite ausblenden
           landing_hide_title_and_subtitle_description: "Blendet den Titel und Untertitel der Themenseite im Frontend aus. Diese Angaben dienen dann ausschließlich der internen Konfiguration und werden nicht über dem Hintergrundbild angezeigt."
 
@@ -163,8 +173,8 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           "$": "$ (Dollar)"
           "£": "£ (Pfund)"
           "¥": "¥ (Yen)"
-        max_preselected_label: Bestenliste (optional)
-        max_preselected_description: "Begrenzt die Anzahl der bestbewerteten Vorschläge, die nach der Unterstützungsphase in die Prüfungsphase weitergeleitet werden. Nur die Vorschläge mit den meisten Unterstützungen werden übernommen. Lassen Sie das Feld leer, wenn alle Vorschläge ohne Vorauswahl in die Prüfung gehen sollen."
+        max_preselected_label: Bestenliste
+        max_preselected_description: "Begrenzt die Anzahl der bestbewerteten Vorschläge, die nach der Unterstützungsphase in die Prüfungsphase übernommen werden. Übernommen werden die Vorschläge mit den meisten Unterstützungen. Lassen Sie das Feld leer, wenn alle Vorschläge ohne Vorauswahl in die Prüfung gehen sollen.<br><br><strong>Wichtig:</strong> Sobald Sie hier eine Zahl größer als 0 eintragen, wird beim Abschluss der Unterstützungsphase automatisch eine System-E-Mail an alle Einreichenden versendet – eine Zusage an diejenigen, deren Vorschlag übernommen wurde, und eine Absage an alle übrigen."
         hide_money_label: Geld ausblenden
         hide_money_description: "Blendet sämtliche Geldbeträge im gesamten Bürgerhaushalt aus – sowohl bei einzelnen Vorschlägen als auch in Übersichten und Ergebnissen. Diese Option eignet sich, wenn das Budget nicht in Geldwerten gemessen wird oder wenn die Kosten der Vorschläge für die Teilnehmer nicht relevant sein sollen."
         max_number_of_winners_label: Maximale Anzahl an Gewinnern

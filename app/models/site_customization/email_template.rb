@@ -109,6 +109,33 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "Mailer#user_verification_failed" => {
       variables: %w[username verification_url]
+    },
+    "DeficiencyReportMailer#notify_author_about_status_change" => {
+      variables: %w[username deficiency_report_title deficiency_report_url status_name status_notice_text]
+    },
+    "DeficiencyReportMailer#notify_officer" => {
+      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
+    },
+    "DeficiencyReportMailer#notify_default_officer_group_email" => {
+      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
+    },
+    "DeficiencyReportMailer#notify_author_about_submission" => {
+      variables: %w[username deficiency_report_title deficiency_report_url account_url]
+    },
+    "DeficiencyReportMailer#send_feedback_form_link" => {
+      variables: %w[username deficiency_report_title deficiency_report_url status_name feedback_form_url]
+    },
+    "NotificationServiceMailer#new_deficiency_report" => {
+      variables: %w[username deficiency_report_id deficiency_report_title deficiency_report_url]
+    },
+    "NotificationServiceMailer#new_comments_for_deficiency_report" => {
+      variables: %w[deficiency_report_title deficiency_report_url comment_count]
+    },
+    "NotificationServiceMailer#overdue_deficiency_reports" => {
+      variables: %w[officer_name overdue_count]
+    },
+    "NotificationServiceMailer#not_assigned_deficiency_reports" => {
+      variables: %w[admin_name not_assigned_count]
     }
   }.freeze
 
@@ -132,6 +159,21 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     ["Mailer", "user_verification_failed"]
   ].freeze
 
+  # Deficiency-report emails are not tied to a projekt phase (so they are stored
+  # with projekt_phase: nil), but they are edited inside the /adm/deficiency_reports
+  # section rather than on the generic global email-templates page.
+  DEFICIENCY_REPORT_EMAIL_TEMPLATES = [
+    ["DeficiencyReportMailer", "notify_author_about_status_change"],
+    ["DeficiencyReportMailer", "notify_officer"],
+    ["DeficiencyReportMailer", "notify_default_officer_group_email"],
+    ["DeficiencyReportMailer", "notify_author_about_submission"],
+    ["DeficiencyReportMailer", "send_feedback_form_link"],
+    ["NotificationServiceMailer", "new_deficiency_report"],
+    ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
+    ["NotificationServiceMailer", "overdue_deficiency_reports"],
+    ["NotificationServiceMailer", "not_assigned_deficiency_reports"]
+  ].freeze
+
   audited only: %i[subject body]
 
   belongs_to :projekt_phase, optional: true
@@ -144,6 +186,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
 
   def template_key
     "#{mailer_class}##{mailer_action}"
+  end
+
+  def deficiency_report_template?
+    DEFICIENCY_REPORT_EMAIL_TEMPLATES.include?([mailer_class, mailer_action])
   end
 
   def registered_variables

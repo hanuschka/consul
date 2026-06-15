@@ -9,7 +9,7 @@ namespace :adm do
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_categories, on: :collection
+      patch :order_categories, on: :collection
     end
 
     resources :districts, only: [:index, :edit, :update]

@@ -56,10 +56,26 @@ namespace :adm do
         get :masterportal_pins
         get :masterportal_pins_summary
         delete :destroy_all_masterportal_pins
+        get :destroy_all_masterportal_pins_status
         delete "masterportal_pins/:masterportal_pin_id" => "phases#destroy_masterportal_pin",
                as: :destroy_masterportal_pin
+        patch "masterportal_collections/:masterportal_collection_id" =>
+              "phases#update_masterportal_collection", as: :update_masterportal_collection
+        delete "masterportal_collections/:masterportal_collection_id" =>
+               "phases#destroy_masterportal_collection", as: :destroy_masterportal_collection
+        get "masterportal_collections/:masterportal_collection_id/status" =>
+            "phases#masterportal_collection_status", as: :masterportal_collection_status
+        get "masterportal_collections/:masterportal_collection_id/diff" =>
+            "phases#masterportal_collection_diff", as: :masterportal_collection_diff
+        get "masterportal_collections/:masterportal_collection_id/card" =>
+            "phases#masterportal_collection_card", as: :masterportal_collection_card
+        delete "masterportal_collections/:masterportal_collection_id/stale_pins" =>
+               "phases#clean_masterportal_collection_stale_pins",
+               as: :clean_masterportal_collection_stale_pins
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
+        delete "projekt_point_of_interest_pins/:pin_id" => "phases#destroy_projekt_point_of_interest_pin",
+               as: :destroy_projekt_point_of_interest_pin
         get :map_resources_overview
 
         # Labels & sentiments
@@ -79,10 +95,6 @@ namespace :adm do
         # AI
         get :ai_settings
         patch :update_ai_settings
-
-        # Evaluation visibility
-        get :evaluation_visibility
-        patch :update_evaluation_visibility
 
         # Dynamic resources (from resources_name)
         get :projekt_notifications
@@ -198,6 +210,23 @@ namespace :adm do
       end
     end
 
+    resources :imports, only: [:index, :new, :create, :show, :destroy],
+              controller: "imports/from_files",
+              defaults: { adm_section: "projekts" } do
+      member do
+        get :status
+        post :reset
+      end
+
+      resource :chat, only: [:show], controller: "imports/chats" do
+        get :messages
+        post :message
+        post :command
+        post :extract
+        post :execute
+      end
+    end
+
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
       collection do
         get :import_projekt
@@ -210,6 +239,8 @@ namespace :adm do
       get :images, on: :member
       get :documents, on: :member
       get :evaluation, on: :member
+      get :evaluation_visibility, on: :member
+      patch :update_evaluation_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member

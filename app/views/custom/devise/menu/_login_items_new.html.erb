@@ -1,17 +1,20 @@
+<% icon_set = local_assigns.fetch(:icon_set, :font_awesome) %>
+
 <% if user_signed_in? %>
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-    <%= link_to account_path, rel: "nofollow", class: "d-flex align-items-center gap-1" do %>
-      <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">person</span>
+    <%= link_to account_path, rel: "nofollow", class: "d-flex align-items-center gap-2" do %>
+      <%= flyout_item_icon(icon_set: icon_set, material: "person", font_awesome: "fa-user") %>
       <%= t("layouts.header.my_account_link") %>
     <% end %>
   </li>
 
-  <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>
+  <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
 
+  <% unless local_assigns[:compact] %>
   <% if current_user.administrator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">admin_panel_settings</span>
+      <%= link_to adm_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["administration"]) %>
         <%= t("layouts.header.administration") %>
       <% end %>
     </li>
@@ -19,8 +22,8 @@
 
   <% if current_user.administrator? || current_user.projekt_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_projekts_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">folder</span>
+      <%= link_to adm_projekts_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["projekts"]) %>
         <%= t("custom.layouts.header.projekt_management") %>
       <% end %>
     </li>
@@ -28,8 +31,8 @@
 
   <% if current_user.administrator? || current_user.landing_page_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">web</span>
+      <%= link_to adm_landing_pages_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["landing_pages"], font_awesome: "fa-newspaper") %>
         <%= t("adm.landing_pages.title") %>
       <% end %>
     </li>
@@ -37,8 +40,8 @@
 
   <% if current_user.administrator? || current_user.moderator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_moderation_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">shield</span>
+      <%= link_to adm_moderation_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["moderation"]) %>
         <%= t("layouts.header.moderation") %>
       <% end %>
     </li>
@@ -46,8 +49,8 @@
 
   <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_deficiency_reports_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">report_problem</span>
+      <%= link_to adm_deficiency_reports_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["deficiency_reports"]) %>
         <%= t("custom.layouts.header.deficiency_report_management") %>
       <% end %>
     </li>
@@ -55,8 +58,8 @@
 
   <% if Adm::Ideas::IdeaPolicy.new(current_user, nil).index? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_ideas_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">lightbulb</span>
+      <%= link_to adm_ideas_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["ideas"]) %>
         <%= t("custom.layouts.header.idea_management") %>
       <% end %>
     </li>
@@ -64,27 +67,28 @@
 
   <% if feature?(:budgets) && (current_user.administrator? || current_user.valuator?) %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_valuation_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">account_balance_wallet</span>
+      <%= link_to adm_valuation_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["valuation"]) %>
         <%= t("layouts.header.valuation") %>
       <% end %>
     </li>
   <% end %>
 
-  <% if current_user.officing_manager? %>
+  <% if current_user.administrator? || current_user.poll_officer? || current_user.officing_manager? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-      <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-1" do %>
-        <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">how_to_vote</span>
+      <%= link_to adm_officing_root_path, class: "d-flex align-items-center gap-2" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["officing"]) %>
         <%= t("layouts.header.officing") %>
       <% end %>
     </li>
   <% end %>
 
-  <li class="flyout-item" style="border-top: 1px solid #e0e0e0; margin: 0.25rem 0;" aria-hidden="true"></li>
+  <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
+  <% end %>
 
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
-    <%= link_to destroy_user_session_path, rel: "nofollow", data: { turbo_method: :delete }, class: "d-flex align-items-center gap-1" do %>
-      <span class="material-symbols-outlined" style="font-size: 1.2rem" aria-hidden="true">logout</span>
+    <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, class: "d-flex align-items-center gap-2" do %>
+      <%= flyout_item_icon(icon_set: icon_set, material: "logout", font_awesome: "fa-sign-out-alt") %>
       <%= t("devise_views.menu.login_items.logout") %>
     <% end %>
   </li>

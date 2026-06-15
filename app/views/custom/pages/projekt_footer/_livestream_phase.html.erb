@@ -1,17 +1,17 @@
+<div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<% unless embedded? %>
-  <div class="projekt-livestream-section">
-    <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
-      <div class="column">
-        <% if @current_projekt_livestream.present? %>
-          <%= render(ProjektLivestreams::ShowSection.new(current_projekt_livestream: @current_projekt_livestream, other_livestreams: @other_livestreams)) %>
-        <% else %>
-          <h2>
-            <%= t('custom.projekts.projekt_livestreams.no_livestreams') %>
-          </h2>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-<% end %>
+<div class="projekt-livestream-section">
+  <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
+    <div class="column">
+      <% if @current_projekt_livestream.present? %>
+        <%= render(ProjektLivestreams::ShowSection.new(current_projekt_livestream: @current_projekt_livestream, other_livestreams: @other_livestreams)) %>
+      <% else %>
+        <h2>
+          <%= t('custom.projekts.projekt_livestreams.no_livestreams') %>
+        </h2>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+</div>

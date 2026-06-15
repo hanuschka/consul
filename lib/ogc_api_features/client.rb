@@ -29,12 +29,16 @@ module OgcApiFeatures
       JSON.parse(response.body)
     end
 
+    def items_url(endpoint_url, collection_id)
+      File.join(endpoint_url, "collections", collection_id, "items")
+    end
+
     def fetch_features(endpoint_url, collection_id, limit: 1000, &block)
       if !block_given?
         return enum_for(:fetch_features, endpoint_url, collection_id, limit: limit)
       end
 
-      url = File.join(endpoint_url, "collections", collection_id, "items")
+      url = items_url(endpoint_url, collection_id)
       params = { f: "json", limit: limit }
 
       loop do

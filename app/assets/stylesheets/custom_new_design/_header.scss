@@ -920,6 +920,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
           text-decoration: none;
         }
 
+        &:focus-visible {
+          outline-offset: -3px;
+        }
+
         // Keep flyout links (icon + label) horizontally aligned —
         // overrides the inline-block default above so the Material
         // Symbols icons sit next to the label, not above it.
@@ -936,10 +940,20 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       &:first-child {
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
+
+        a {
+          border-top-right-radius: 10px;
+          border-top-left-radius: 10px;
+        }
       }
       &:last-child {
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
+
+        a {
+          border-bottom-right-radius: 10px;
+          border-bottom-left-radius: 10px;
+        }
       }
 
       @media screen and (min-width: $small-tablet-viewport-start) {

@@ -13,11 +13,7 @@ class Debates::ListItemComponent < ApplicationComponent
       projekt: debate.projekt,
       title: debate.title,
       description: debate.description,
-      tags: debate.tags.first(3),
-      url: helpers.debate_path(debate),
-      image: debate.image,
-      image_placeholder_icon_class: "fa-comments",
-      no_footer_bottom_padding: true
+      url: helpers.debate_path(debate)
     }
   end
 

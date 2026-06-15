@@ -8,7 +8,6 @@ class Shared::MapComponent < ApplicationComponent
     editable: false,
     process: nil,
     placement: nil,
-    collapsible: true,
     map_data_url: nil,
     lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false
@@ -19,7 +18,6 @@ class Shared::MapComponent < ApplicationComponent
     @editable = editable
     @process = process
     @placement = placement
-    @collapsible = collapsible
     @map_data_url = map_data_url
     @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
@@ -32,11 +30,8 @@ class Shared::MapComponent < ApplicationComponent
     (@explicit_features_count || features_count) > @lazy_load_threshold
   end
 
-  def collapsible?
-    return false if @editable
-    return false if extended_sidebar_map?
-
-    @collapsible
+  def accessibility_hidden?
+    !@editable
   end
 
   def map_accessibility_note
@@ -60,10 +55,6 @@ class Shared::MapComponent < ApplicationComponent
   end
 
   private
-
-    def extended_sidebar_map?
-      @placement == "extended_sidebar_map"
-    end
 
     def features_count
       data = resolved_features

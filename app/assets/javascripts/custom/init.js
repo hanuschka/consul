@@ -4,6 +4,7 @@
   App.CustomJS = {
     initialize: function() {
       App.DropdownSelectMenuComponent.initialize();
+      App.FilterDropdownComponent.initialize();
       App.ResourcesListComponent.initialize();
       App.StikyHeader.initialize();
       App.DirectUploadComponent.initialize();
@@ -35,7 +36,6 @@
       App.AreaChartComponent.initialize();
       App.PieChartComponent.initialize();
       App.HeatmapComponent.initialize();
-      App.MapCollapsible.initialize();
       App.StatsRefresh.initialize();
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();

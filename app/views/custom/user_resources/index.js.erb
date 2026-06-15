@@ -1,3 +1,14 @@
-$(".js-resources-list--body").html("<%= j render(Shared::ResourcesListComponent.new(resources: @resources, only_content: true)) %>");
+<% body_html = capture do %>
+  <% if @resources.present? %>
+    <ul class="no-ul-style resources-list--inner">
+      <% @resources.each do |resource| %>
+        <%= render resources_list_item_component(resource) %>
+      <% end %>
+    </ul>
+  <% else %>
+    <%= render Resources::List::EmptyComponent.new(text: t("empty_list_text")) %>
+  <% end %>
+<% end %>
+$(".js-resources-list--body").html("<%= j body_html %>");
 
 App.Map.initialize();

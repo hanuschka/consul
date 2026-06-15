@@ -12,11 +12,7 @@ class DeficiencyReports::ListItemComponent < ApplicationComponent
       resource: deficiency_report,
       title: deficiency_report.title,
       description: deficiency_report.description,
-      tags: deficiency_report.tags.first(3),
-      url: helpers.deficiency_report_path(deficiency_report),
-      image: deficiency_report.image,
-      image_placeholder_icon_class: "fa-lightbulb",
-      subline: subline
+      url: helpers.deficiency_report_path(deficiency_report)
     }
   end
 

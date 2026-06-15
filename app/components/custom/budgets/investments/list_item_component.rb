@@ -16,9 +16,7 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
       projekt: @budget_investment.budget.projekt,
       title: budget_investment.title,
       description: budget_investment.description,
-      url: budget_investment_path,
-      image: budget_investment.image,
-      image_placeholder_icon_class: "fa-euro-sign"
+      url: budget_investment_path
     }
   end
 

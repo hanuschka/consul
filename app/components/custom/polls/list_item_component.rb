@@ -15,9 +15,7 @@ class Polls::ListItemComponent < ApplicationComponent
       projekt: poll.projekt,
       title: poll.title,
       description: projekt_phase.description,
-      url: poll_path,
-      image: poll.image,
-      image_placeholder_icon_class: "fa-vote-yea"
+      url: poll_path
     }
   end
 

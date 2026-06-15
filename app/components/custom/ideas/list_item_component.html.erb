@@ -1,4 +1,12 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_author(resource: idea) %>
+
+  <% c.with_subheading do %>
+    <%= idea.category&.name %>
+  <% end %>
+
+  <% c.with_image(image: idea.image, image_placeholder_icon_class: "fa-lightbulb", resource: idea) %>
+
   <% c.with_header do %>
     <div>
       <%= t("ideas.status.#{idea.status}") %>

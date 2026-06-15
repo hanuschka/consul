@@ -12,10 +12,7 @@ class Projekts::ProjektEvents::ListItemComponent < ApplicationComponent
       resource: projekt_event,
       projekt: projekt_event.projekt,
       title: projekt_event.title,
-      description: projekt_event.description,
-      image: projekt_event.image,
-      image_placeholder_icon_class: "fa-comments",
-      no_footer_bottom_padding: true
+      description: projekt_event.description
     }
   end
 end

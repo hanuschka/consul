@@ -31,6 +31,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       return
 
     elsif user = User.find_by(keycloak_link: keycloak_link) #keycloak user logged in in the past
+      backfill_registered_address(user, extra)
+
       if user.email == email #keycloak user didn't change his email in keycloak
         sign_in user
 
@@ -72,7 +74,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           keycloak_id_token: keycloak_id_token,
           confirmed_at: Time.zone.now,
           registering_with_oauth: true
-        })
+        }.merge(registered_address_attributes_from(extra)))
 
         if User.find_by(username: username, registering_with_oauth: false)
           sign_in user
@@ -108,5 +110,54 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       return "female" if extra.raw_info[:gender] == "2"
 
       nil
+    end
+
+    def registered_address_attributes_from(extra)
+      address             = extra.raw_info&.address
+      full_street_address = address&.street_address
+      locality_name       = address&.locality
+      postal_code         = address&.postal_code
+      return {} if full_street_address.blank? || locality_name.blank? || postal_code.blank?
+
+      regex = /(?<street_name>[\p{L}\d\s,.-]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
+      match = full_street_address.match(regex)
+      return {} unless match
+
+      registered_address_city = RegisteredAddress::City.where(
+        "LOWER(name) = ?", locality_name.downcase
+      ).first
+
+      registered_address_street = RegisteredAddress::Street.where(
+        "LOWER(name) = ? AND plz = ?",
+        match[:street_name].downcase.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
+        postal_code
+      ).first
+
+      registered_address = nil
+      if registered_address_city && registered_address_street
+        registered_address = RegisteredAddress.find_by(
+          registered_address_city: registered_address_city.id,
+          registered_address_street: registered_address_street.id,
+          street_number: match[:street_number].strip,
+          street_number_extension: match[:street_number_extension].strip.presence
+        )
+      end
+
+      {
+        registered_address_id:    registered_address&.id,
+        city_name:                locality_name.capitalize,
+        street_name:              match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
+        street_number:            match[:street_number].strip,
+        street_number_extension:  match[:street_number_extension].strip.presence
+      }.reject { |_, v| v.blank? }
+    end
+
+    def backfill_registered_address(user, extra)
+      return if user.registered_address_id.present?
+
+      attributes = registered_address_attributes_from(extra)
+      return if attributes[:registered_address_id].blank?
+
+      user.update_columns(attributes)
     end
 end

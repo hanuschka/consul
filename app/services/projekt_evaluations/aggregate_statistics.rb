@@ -141,8 +141,8 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
 
     comment_entries = visible_comments
       .order(created_at: :asc)
-      .pluck(:id, :body)
-      .map { |id, body| { id: id, body: body.to_s } }
+      .pluck(:id, :body, :created_at)
+      .map { |id, body, _created_at| { id: id, body: body.to_s } }
 
     {
       id: poll.id,

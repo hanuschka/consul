@@ -1,0 +1,29 @@
+$round-icon-button-color: #919dab;
+$round-icon-button-background: #ededed;
+
+.round-icon-button {
+  padding: 0 !important;
+  appearance: none;
+  border: 0;
+  border-radius: 50%;
+  color: $round-icon-button-color;
+  transition: 50ms ease background-color;
+  background-color: $round-icon-button-background;
+  margin-bottom: 0;
+  margin-top: 0;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+
+  i {
+    width: 1.3em;
+  }
+
+  &:hover {
+    background-color: darken($round-icon-button-background, 2);
+  }
+
+  &:active {
+    background-color: #edebeb;
+  }
+}

@@ -9,9 +9,13 @@
 
 <div class="kern-container my-5">
   <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "header_image"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Video.find_or_create_by!(name: "header_video"), :video, :video) %>
   <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "mobile_header_image"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Video.find_or_create_by!(name: "mobile_header_video"), :video, :video) %>
   <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "logo_header"), :image, :image) %>
   <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "logo_header_for_transparent"), :image, :image) %>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_option.general.homepage_navigation_link_color"), :value, :color) %>
 
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "brand_color"), :value, :color) %>
 

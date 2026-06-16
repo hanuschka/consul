@@ -25,7 +25,7 @@ class Shared::TagListComponent < ApplicationComponent
       currently_selected_tags.join(',')
 
       params.merge({tags: currently_selected_tags.join(',')})
-        .permit(:tags, :geozone_affiliation, :affiliated_districts, :geozone_restriction, :restricted_geozones, :sdg_goals, :sdg_targets, filter_projekt_ids: [])
+        .permit(:tags, :geozone_affiliation, :affiliated_districts, :affiliated_geozones, :geozone_restriction, :restricted_geozones, :sdg_goals, :sdg_targets, filter_projekt_ids: [])
     end
 
     def tag_links

@@ -1,0 +1,169 @@
+en:
+  mailer:
+    budget_investment_created:
+      title: Submission confirmation
+      description: 'Sent to the author during the "Accepting projects" budget phase (phase 2), as soon as their project idea has been successfully submitted.'
+      recipient: The user who submitted the project idea.
+    budget_investment_feasible:
+      title: Project idea evaluated as feasible
+      description: 'Sent during the "Feasibility review" budget phases (phase 2 + 3) to the author once a valuator has marked the project idea as feasible and set the valuation as finished. Sent only once — later changes to the verdict do not trigger another email.'
+      recipient: The user who submitted the project idea.
+    budget_investment_unfeasible:
+      title: Project idea evaluated as unfeasible
+      description: 'Sent during the "Feasibility review" budget phases (phase 2 + 3) to the author once a valuator has marked the project idea as unfeasible and set the valuation as finished. Sent only once — later changes to the verdict do not trigger another email.'
+      recipient: The user who submitted the project idea.
+    budget_investment_selected:
+      title: Project idea selected
+      description: 'Sent to the author during the "Valuating projects" budget phase (phase 5), once their project idea has been marked as selected by a valuator — and thereby qualifies for the voting phase (phase 7).'
+      recipient: The user who submitted the project idea.
+    budget_investment_unselected:
+      title: Project idea not selected
+      description: 'Sent to the author during the "Valuating projects" budget phase (phase 5), once their project idea has been marked as not selected by a valuator — and thereby will not move on to the voting phase (phase 7).'
+      recipient: The user who submitted the project idea.
+    budget_investment_preselected:
+      title: Project idea pre-selected
+      description: 'Sent to the author of a feasible project idea on transition into the "Valuating projects" budget phase (phase 5), when their idea was automatically pre-selected based on the votes cast during the prior "Selecting projects" phase (phase 4).'
+      recipient: 'The user whose project idea (1) has been marked as feasible and (2) was pre-selected based on the votes cast during the "Selecting projects" phase (phase 4).'
+    budget_investment_not_preselected:
+      title: Project idea not pre-selected
+      description: 'Sent to the author of a feasible project idea on transition into the "Valuating projects" budget phase (phase 5), when their idea was not pre-selected based on the votes cast during the prior "Selecting projects" phase (phase 4).'
+      recipient: 'The user whose project idea (1) has been marked as feasible but (2) was not pre-selected based on the votes cast during the "Selecting projects" phase (phase 4).'
+    proposal_created:
+      title: Submission confirmation
+      description: Sent to the author when a proposal has been successfully submitted.
+      recipient: The user who submitted the proposal.
+    formular_answer_created:
+      title: Form submission confirmation
+      description: Sent to logged-in users after they have successfully completed and submitted a form.
+      recipient: The logged-in user who submitted the form (to the email address on their account).
+    comment:
+      title: New comment
+      description: Sent to the author when someone comments on their contribution.
+    reply:
+      title: New reply to comment
+      description: Sent to the comment author when someone replies to their comment.
+    direct_message_for_receiver:
+      title: New direct message
+      description: Sent to the recipient when a personal message has been received.
+    resource_hidden:
+      title: Contribution hidden by moderator
+      description: Sent to the author when their contribution has been hidden by a moderator.
+    already_confirmed:
+      title: Email already confirmed
+      description: Sent to the user when an already-confirmed email address is being confirmed again.
+    manual_verification_confirmation:
+      title: Manual verification confirmed
+      description: Sent to the user when their manual verification has been successfully completed.
+    newsletter_subscription_for_existing_user:
+      title: Newsletter subscription
+      description: Sent to registered users when they subscribe to the newsletter.
+    user_invite:
+      title: Invitation to the platform
+      description: Sent to invited people to invite them to register on the platform.
+    pending_role_invite:
+      title: Role invitation
+      description: Sent to invited people when a role has been assigned to them on the platform.
+    csv_download_ready:
+      title: CSV download ready
+      description: Sent to the user when the requested CSV download is ready.
+    file_ready:
+      title: File ready
+      description: Sent to the user when a requested file is ready for download.
+    individual_group_value_users_added:
+      title: Group assignment
+      description: Sent to the user when they have been assigned to a group.
+    existing_stamp_notify_existing_user:
+      title: Duplicate registration notice
+      description: Sent to the already-registered user when someone tries to register with the same identity data.
+    existing_stamp_notify_new_user:
+      title: Registration not possible
+      description: Sent to the person whose registration was rejected because identity data already exists.
+    user_verification_failed:
+      title: Verification failed
+      description: Sent to the user when identity verification has failed.
+  notification_service_mailer:
+    new_proposal:
+      title: Notification of new proposal
+      description: Sent to subscribers when a new proposal has been submitted.
+      recipient: All users subscribed to the project.
+    new_poll:
+      title: Notification of new vote
+      description: Sent to subscribers when a new vote has been created.
+      recipient: All users subscribed to the project.
+    new_comment:
+      title: Notification of new comment
+      description: Sent to subscribers when a new comment has been posted.
+      recipient: All users subscribed to the project.
+    projekt_questions:
+      title: Notification of new quick poll
+      description: Sent to subscribers when a new quick poll has been created.
+      recipient: All users subscribed to the project.
+    projekt_arguments:
+      title: Notification of new voice
+      description: Sent to subscribers when a new voice has been created.
+      recipient: All users subscribed to the project.
+    new_projekt_notification:
+      title: Notification of new project announcement
+      description: Sent to subscribers when a new project announcement has been published.
+      recipient: All users subscribed to the project.
+    new_projekt_event:
+      title: Notification of new event
+      description: Sent to subscribers when a new event has been created.
+      recipient: All users subscribed to the project.
+    new_projekt_milestone:
+      title: Notification of new milestone
+      description: Sent to subscribers when a new milestone has been published.
+      recipient: All users subscribed to the project.
+    new_projekt_livestream:
+      title: Notification of new livestream
+      description: Sent to subscribers when a new livestream has been created.
+      recipient: All users subscribed to the project.
+    new_budget_investment:
+      title: Notification of new project idea
+      description: 'Sent to project subscribers during the "Accepting projects" budget phase (phase 2), as soon as a new project idea has been submitted.'
+      recipient: All users subscribed to the project.
+    user_reverification_failed:
+      title: Re-verification failed
+      description: Sent to the user when re-verification of identity has failed.
+      recipient: The affected user.
+    user_reverification_succeeded:
+      title: Re-verification successful
+      description: Sent to the user when re-verification of identity was successful.
+      recipient: The affected user.
+    new_deficiency_report:
+      title: New deficiency report (staff)
+      description: Sent when a new deficiency report has been submitted.
+      recipient: Administrators and deficiency report managers.
+    new_comments_for_deficiency_report:
+      title: New comments on a deficiency report
+      description: Sent when new comments have been posted on a deficiency report that has not yet been processed.
+      recipient: The officer assigned to the deficiency report.
+    overdue_deficiency_reports:
+      title: Overdue deficiency reports
+      description: Reminder sent when assigned deficiency reports have not been processed in time.
+      recipient: The officer assigned to the deficiency reports.
+    not_assigned_deficiency_reports:
+      title: Unassigned deficiency reports
+      description: Reminder sent when deficiency reports have not been assigned to an officer.
+      recipient: Administrators.
+  deficiency_report_mailer:
+    notify_author_about_status_change:
+      title: Deficiency report status change
+      description: Sent to the author when the status of their deficiency report changes.
+      recipient: The user who submitted the deficiency report.
+    notify_officer:
+      title: Deficiency report assigned to officer
+      description: Sent when a deficiency report is assigned to an individual officer.
+      recipient: The assigned officer.
+    notify_default_officer_group_email:
+      title: Deficiency report assigned to officer group
+      description: Sent to an officer group's default address when a deficiency report is routed to the group instead of an individual officer.
+      recipient: The officer group's default email address.
+    notify_author_about_submission:
+      title: Deficiency report submission confirmation
+      description: Sent to the author when their deficiency report has been successfully submitted.
+      recipient: The user who submitted the deficiency report.
+    send_feedback_form_link:
+      title: Deficiency report feedback request
+      description: Sent to the author after their deficiency report has been closed, asking for feedback.
+      recipient: The user who submitted the deficiency report.

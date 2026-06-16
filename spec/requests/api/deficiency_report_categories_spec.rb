@@ -40,6 +40,8 @@ RSpec.describe 'Deficiency Report Categories API', type: :request, openapi_spec:
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 end

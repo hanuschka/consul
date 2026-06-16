@@ -16,7 +16,11 @@ class PagesController < ApplicationController
   before_action :set_random_seed
 
   def show
-    @custom_page = SiteCustomization::Page.published.find_by(slug: params[:id])
+    @custom_page = SiteCustomization::Page.find_by(slug: params[:id])
+
+    if @custom_page.present? && !@custom_page.published? && !draft_page_previewable?(@custom_page)
+      @custom_page = nil
+    end
 
     if @custom_page&.landing?
       @content_cards =
@@ -175,8 +179,8 @@ class PagesController < ApplicationController
 
       @current_order = if @valid_orders.include?(params[:order])
                          params[:order]
-                       elsif sort_option.present?
-                         @current_order = sort_option.value
+                       elsif sort_option.present? && @valid_orders.include?(sort_option.value)
+                         sort_option.value
                        else
                          Setting["selectable_setting.proposals.default_order"]
                        end
@@ -201,7 +205,14 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_coordinates = all_proposal_map_locations(@resources)
+        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+
+        if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+          @proposals_coordinates = all_proposal_map_locations(@resources)
+          @proposals_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
+        else
+          @proposals_coordinates = []
+        end
 
         @proposals =
           @resources
@@ -266,6 +277,7 @@ class PagesController < ApplicationController
     end
 
     def set_budget_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
       @budget = @projekt_phase.budget
       return if @budget.blank?
 
@@ -291,8 +303,8 @@ class PagesController < ApplicationController
       @current_order =
         if @valid_orders.include?(params[:order])
           params[:order]
-        elsif sort_option.present? || @valid_orders.include?(sort_option.value)
-          @current_order = sort_option.value
+        elsif sort_option.present? && @valid_orders.include?(sort_option.value)
+          sort_option.value
         else
           @valid_orders.first
         end
@@ -335,6 +347,7 @@ class PagesController < ApplicationController
         @investment_ids = @investments.ids
         @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment",
   mappable_id: @investment_ids).map(&:features_json_data)
+        @investment_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
         @investments = @investments.perform_sort_by(@current_order,
   session[:random_seed]).page(params[:page]).per(24)
       end
@@ -367,30 +380,10 @@ class PagesController < ApplicationController
     def set_point_of_interest_phase_footer_tab_variables
       auto_sign_in_guest_for(@projekt_phase)
 
-      map_locations = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins)
-      selected_categories = ProjektPointOfInterestCategory.where(id: params[:category_ids]) if params[:category_ids].present?
-
-      features = if selected_categories.present?
-                   map_locations.map do |ml|
-                     ml.features["features"].map do |f|
-   f["properties"].merge!({ "resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id,
-feature_icon_unicode: AwesomeIcon.find_by(name: (f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]))&.unicode }) end
-                     ml.features["features"].select do |f|
-   f["properties"]["feature_icon_name"].in?(selected_categories.pluck(:icon)) || f["properties"]["fa_icon_class"].in?(selected_categories.pluck(:icon)) end
-                   end.flatten.compact
-                 else
-                   map_locations.map do |ml|
-                     ml.features["features"].map do |f|
-   f["properties"].merge!({ "resource_type" => "projekt_point_of_interest_pin", "id" => ml.mappable_id,
-feature_icon_unicode: AwesomeIcon.find_by(name: f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"])&.unicode }) end
-                     ml.features["features"]
-                   end.flatten
-                 end
-
-      @pin_coordinates = {
-        type: "FeatureCollection",
-        features:
-      }
+      @pin_coordinates = MapData::PointOfInterestPhase.call(
+        projekt_phase: @projekt_phase,
+        category_ids: params[:category_ids]
+      )
     end
 
     def set_newsfeed_phase_footer_tab_variables

@@ -1,0 +1,24 @@
+<%
+  answers = (question["answers"] || []).sort_by { |a| -a["count"].to_i }
+  max_pct = answers.map { |a| a["percentage"].to_f }.max.to_f
+  max_pct = 1.0 if max_pct.zero?
+%>
+
+<div class="card poll-question-card--full">
+  <div class="card-title"><%= question["title"] %></div>
+  <div class="card-subtitle">n = <%= question["total_responses"].to_i %></div>
+
+  <% answers.each_with_index do |answer, idx| %>
+    <% bar_color = idx.zero? ? accent : (idx == 1 ? accent : "#CBD5E1") %>
+    <% width = (answer["percentage"].to_f / max_pct * 100).round(1) %>
+    <div class="pref-row">
+      <span class="pref-label"><%= answer["title"] %></span>
+      <div class="pref-bar-track">
+        <div class="pref-bar-fill" style="width:<%= width %>%;background:<%= bar_color %>">
+          <%= answer["percentage"] %>%
+        </div>
+      </div>
+      <span class="pref-count"><%= answer["count"].to_i %></span>
+    </div>
+  <% end %>
+</div>

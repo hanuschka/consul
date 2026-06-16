@@ -8,6 +8,11 @@ module Schemas
       properties: {
         id: { type: :integer, description: 'Unique identifier for the projekt', example: 1 },
         name: { type: :string, description: 'The name or title of the projekt', example: 'Sample Projekt' },
+        title: { type: :string, nullable: true, description: 'The projekt page title (same value as page.title), exposed at the top level for convenience.', example: 'Sample Projekt Page' },
+        subtitle: { type: :string, nullable: true, description: 'The projekt page subtitle (same value as page.subtitle).', example: 'A short tagline for the projekt' },
+        image: { '$ref' => '#/components/schemas/Image' },
+        text: { type: :string, description: 'The full projekt page text as plain text: the combined content blocks (ordered by position) with all HTML tags stripped and whitespace normalized. Empty string when the projekt has no content blocks.', example: 'Welcome About this projekt.' },
+        text_html: { type: :string, description: 'The full projekt page content as HTML: the body of all content blocks (ordered by position) combined into a single string. Empty string when the projekt has no content blocks.', example: '<h2>Welcome</h2><p>About this projekt.</p>' },
         parent_id: { type: :integer, nullable: true, description: 'ID of the parent projekt if this is a sub-projekt. Null if this is a top-level projekt.', example: nil },
         created_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was last modified', example: '2024-01-01T00:00:00Z' },
@@ -29,16 +34,7 @@ module Schemas
           properties: {
             title: { type: :string, nullable: true, description: 'The page title displayed in the frontend', example: 'Sample Projekt Page' },
             slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the page', example: 'sample-projekt' },
-            image: {
-              type: :object,
-              nullable: true,
-              description: 'The page header/cover image',
-              properties: {
-                url: { type: :string, nullable: true, description: 'URL to the full-size image', example: 'https://example.com/images/page-image.jpg' },
-                title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
-                credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' }
-              }
-            }
+            image: { '$ref' => '#/components/schemas/Image' }
           }
         },
         projekt_settings: {
@@ -68,6 +64,33 @@ module Schemas
         }
       },
       required: %w[id name created_at updated_at]
+    }.freeze
+
+    # Image response schema (matches ImageSerializer with include_variants: true)
+    IMAGE_SCHEMA = {
+      type: :object,
+      nullable: true,
+      description: 'An attached image (e.g. the projekt banner/cover) with its responsive variants.',
+      properties: {
+        id: { type: :integer, description: 'Unique identifier for the image', example: 1 },
+        title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
+        credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' },
+        url: { type: :string, description: 'URL to the original full-size image', example: 'https://example.com/images/page-image.jpg' },
+        variants: {
+          type: :object,
+          description: 'URLs of resized variants keyed by maximum width in pixels, plus the original.',
+          properties: {
+            "150": { type: :string, nullable: true, description: 'Variant limited to 150px width', example: 'https://example.com/images/page-image-150.jpg' },
+            "300": { type: :string, nullable: true, description: 'Variant limited to 300px width', example: 'https://example.com/images/page-image-300.jpg' },
+            "450": { type: :string, nullable: true, description: 'Variant limited to 450px width', example: 'https://example.com/images/page-image-450.jpg' },
+            "600": { type: :string, nullable: true, description: 'Variant limited to 600px width', example: 'https://example.com/images/page-image-600.jpg' },
+            "900": { type: :string, nullable: true, description: 'Variant limited to 900px width', example: 'https://example.com/images/page-image-900.jpg' },
+            "1200": { type: :string, nullable: true, description: 'Variant limited to 1200px width', example: 'https://example.com/images/page-image-1200.jpg' },
+            "1920": { type: :string, nullable: true, description: 'Variant limited to 1920px width', example: 'https://example.com/images/page-image-1920.jpg' },
+            original: { type: :string, description: 'URL to the original full-size image', example: 'https://example.com/images/page-image.jpg' }
+          }
+        }
+      }
     }.freeze
 
     # Shared image attributes schema for API (matches image_attributes_api)
@@ -463,6 +486,7 @@ module Schemas
     def self.all
       {
         Projekt: PROJEKT_SCHEMA,
+        Image: IMAGE_SCHEMA,
         ImageAttributesApi: IMAGE_ATTRIBUTES_API_SCHEMA,
         ProjektImageUpdateParams: PROJEKT_IMAGE_UPDATE_PARAMS,
         ProjektCreateParams: PROJEKT_CREATE_PARAMS,

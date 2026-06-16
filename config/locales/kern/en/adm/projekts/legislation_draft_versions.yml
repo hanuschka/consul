@@ -1,0 +1,80 @@
+en:
+  adm:
+    projekts:
+      legislation_draft_versions:
+        new:
+          title: Create new draft
+        create:
+          success: Draft created successfully.
+        tabs:
+          edit: Edit
+          draft_text: Draft text
+        edit:
+          title: Edit draft
+        update:
+          success: Draft updated successfully.
+        destroy:
+          success: Draft deleted successfully.
+        form:
+          title_label: Version title
+          title_placeholder: "e.g. Statute draft v2 – revised version"
+          title_hint: >
+            Enter a meaningful title for this draft, e.g. "Statute draft v2"
+            or "Revised climate-protection concept". The title is shown on the frontend
+            in the version selector and helps users distinguish between versions. Keep
+            the title short and unambiguous.
+          changelog_label: Changelog
+          changelog_placeholder: "e.g. Section 3 revised, new paragraph on noise protection added"
+          changelog_hint: >
+            Describe the essential changes from the previous version. The changelog
+            is shown on the frontend and helps users understand what changed — e.g.
+            "Section 3 revised, new paragraph on noise protection added". Leave the
+            field empty for the first version.
+          body_label: Draft text
+          body_placeholder: "Enter the full text of the draft here..."
+          body_hint: >
+            Enter the full text of the draft. The text is made available on the frontend
+            for commenting — users can mark and comment on individual paragraphs. Structure
+            the text with paragraphs and headings so users can give targeted feedback on
+            specific passages. Markdown formatting is supported.
+          status_label: Publication status
+          status_hint: >
+            Defines whether this draft is publicly visible. In "Draft" status, the version
+            is only visible to administrators and can be prepared in peace. In "Published"
+            status, the text is shown on the frontend to all users and can be commented on.
+            The status can be changed at any time.
+          final_version_label: Lock commenting
+          final_version_hint: >
+            Marks this draft as the final version. Once enabled, commenting is locked
+            for this version — users can still read the text but can no longer post new
+            comments. Use this option when the participation process is complete and the
+            result should be documented.
+          submit: Save
+        draft_text:
+          title: Draft text
+          save: Save
+          fullscreen: Fullscreen
+          preview_placeholder: Preview appears here...
+          hint:
+            intro: "The text is written in Markdown format. Changes appear in the preview on the right."
+            markdown: Markdown
+            result: Result
+            examples:
+              - markdown: "# Heading 1"
+                result: Large heading
+              - markdown: "## Heading 2"
+                result: Medium heading
+              - markdown: "### Heading 3"
+                result: Small heading
+              - markdown: "**Bold**"
+                result: Bold
+              - markdown: "*Italic*"
+                result: Italic
+              - markdown: "- List item"
+                result: Bulleted list
+              - markdown: "1. Numbered"
+                result: Numbered list
+              - markdown: "> Quote"
+                result: Block quote
+              - markdown: "Empty line between paragraphs"
+                result: New paragraph

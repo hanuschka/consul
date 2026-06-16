@@ -169,10 +169,17 @@ button {
   }
 
   .new-resource-cta {
-    width: 420px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    width: auto;
 
     .button {
+      // width: auto;
+      max-width: 330px;
       font-size: 20px;
+      flex: 0 0 auto;
     }
   }
 
@@ -219,36 +226,7 @@ button {
   }
 }
 
-.button.close-button {
-  width: 35px;
-  height: 35px;
-  font-size: 20px;
-}
-
-.round-icon-button {
-  padding: 0 !important;
-  border-radius: 50%;
-  color: $blue-gray-1;
-  transition: 50ms ease background-color;
-  background-color: $light-gray-2;
-  margin-bottom: 0;
-  margin-top: 0;
-  width: 35px;
-  height: 35px;
-  font-size: 20px;
-
-  i {
-    width: 1.3em;
-  }
-
-  &:hover {
-    background-color: darken($light-gray-2, 2);
-  }
-
-  &:active {
-    background-color: #edebeb;
-  }
-}
+// .close-button styles live in cross_pack/components/close_button.scss.
 
 .transparent-round-icon-button {
   padding: 0 !important;

@@ -1,0 +1,42 @@
+en:
+  adm:
+    tags:
+      index:
+        title: Tags
+        intro_title: About tags
+        intro_text_p1: >
+          Tags are used to thematically connect individual projects at the global platform level.
+          They are offered as filter options on the projects overview page and let users search for
+          specific topic areas. A tag can be assigned to any number of projects and appears there as
+          a clickable filter element.
+        intro_text_p2: >
+          In contrast, categories exist inside the "Proposals" and "Budget" participation phases.
+          These categories are valid only within the respective phase and have no global link to
+          other projects. Tags, on the other hand, apply across projects and are therefore especially
+          suitable for recurring thematic focuses.
+        new_tag: Create new tag
+        empty_title: No tags available
+        empty_description: Create a new tag to thematically connect projects.
+        table:
+          name: Tag name
+          actions: Actions
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this tag?
+      new:
+        title: Create new tag
+      edit:
+        title: Edit tag
+      create:
+        success: Tag successfully created.
+      update:
+        success: Tag successfully updated.
+      destroy:
+        success: Tag successfully deleted.
+      form:
+        submit: Save
+        hints:
+          name: >
+            Enter a short, meaningful name for the tag. This will be shown as a filter option on the
+            projects overview page and should clearly state the thematic focus. Avoid generic terms so
+            users can find the projects they're looking for.

@@ -11,6 +11,24 @@ de:
         investment_proposals: Investitionsvorschläge
     tags:
       destroy: Löschen
+    proposals:
+      index:
+        download_geojson: GeoJSON herunterladen
+        source_filter_label: Quelle
+        source_all: Alle
+        source_masterportal: Aus Masterportal
+        source_user: Benutzer-erstellt
+        apply_filter: Filter anwenden
+        export_queued: "Export wurde in die Warteschlange gestellt. Sie erhalten per E-Mail einen Link."
+    budget_investments:
+      index:
+        download_geojson: GeoJSON herunterladen
+        source_filter_label: Quelle
+        source_all: Alle
+        source_masterportal: Aus Masterportal
+        source_user: Benutzer-erstellt
+        apply_filter: Filter anwenden
+        export_queued: "Export wurde in die Warteschlange gestellt. Sie erhalten per E-Mail einen Link."
   custom:
     admin:
       legislation:
@@ -718,6 +736,18 @@ de:
           projekt_point_of_interest_categories: Kategorien
           projekt_point_of_interest_pins: Pins
           map_resources_overview: Kartenübersicht
+          comments: Kommentare
+          ai_settings: KI Anweisung
+          user_resource_criteria: Nutzer Ressourcen Kriterien
+        comments:
+          page_title: Kommentare
+          id: ID
+          body: Kommentar
+          author: Autor
+          created_at: Erstellt am
+          no_comments: Es gibt keine Kommentare.
+          ai_settings: Sprachassistent
+          ai_user_flow: AI Flow Assistent
           ai_settings: KI Sprachassistent
           ai_user_flow: KI Textassistent
         notice:
@@ -842,8 +872,11 @@ de:
         ai_settings:
           page_title: Sprachassistent
           questions: Welche Fragen sollen den Bürgern gestellt werden?
+          questions_description: Diese Fragen stellt der KI-Sprachassistent dem Bürger nacheinander im Dialog, um schrittweise genügend Informationen für einen fundierten Vorschlag zu sammeln. Formulieren Sie offene, leicht verständliche Fragen, die den Bürger dazu anregen, sein Anliegen ausführlich, konkret und mit ausreichend Kontext zu beschreiben.
           criteria: Welche Kriterien müssen die Vorschläge erfüllen?
+          criteria_description: Anhand dieser Kriterien entscheidet der KI-Assistent, ob die Antworten des Bürgers ausreichen, um den Dialog zu beenden und einen Entwurf zu erstellen. Beschreiben Sie möglichst klar, welche Inhalte, Angaben und Mindestinformationen ein Vorschlag enthalten muss, damit er sinnvoll weiterverarbeitet werden kann.
           parting_words: Welche Abschiedsworte soll der KI-Assistent mitgeben?
+          parting_words_description: Mit dieser Abschlussnachricht beendet der KI-Assistent das Gespräch, sobald alle Kriterien erfüllt sind und unmittelbar bevor der Vorschlagsentwurf erzeugt wird. Nutzen Sie diesen Text, um sich beim Bürger zu bedanken, den nächsten Schritt anzukündigen und Vertrauen in den weiteren Prozess zu schaffen.
         projekt_notifications:
           page_title: Möchten Sie eine Benachrichtigung senden?
           button: Nachricht senden

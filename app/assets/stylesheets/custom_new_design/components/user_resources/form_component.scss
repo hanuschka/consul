@@ -15,6 +15,15 @@ $banner-mobile-layout-change-widthpoint: 720px;
 .user-resources-form {
   margin-bottom: 100px;
 
+  // On phones the header is position:fixed, so the back link sits too close
+  // underneath it. Add breathing room only on mobile and only in this form
+  // context (.back is a shared/generic class used elsewhere).
+  .back {
+    @media(max-width: $mobile-viewport-start) {
+      margin-top: 15px;
+    }
+  }
+
   &.-no-image {
     .user-resources-form--banner-editor {
       height: 280px;
@@ -88,7 +97,7 @@ $banner-mobile-layout-change-widthpoint: 720px;
   }
 
   .direct-image-upload--inner {
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
   }
 
   .image-preview {

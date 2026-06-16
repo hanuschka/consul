@@ -211,7 +211,7 @@ class Budget
 
     def searchable_values
       { author&.username   => "B",
-        heading.name       => "B",
+        heading&.name      => "B",
         tag_list.join(" ") => "B"
       }.merge(searchable_globalized_values)
     end
@@ -343,7 +343,7 @@ class Budget
     end
 
     def should_show_vote_count?
-      budget.valuating?
+      budget.valuating? && budget.phases.find_by(kind: "selecting")&.enabled?
     end
 
     def should_show_ballots_count?

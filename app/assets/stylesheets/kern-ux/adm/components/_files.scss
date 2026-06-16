@@ -1,0 +1,38 @@
+.adm-files-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.adm-page-title-col:has(.adm-files-meta-row) {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.adm-files-allowed-types {
+  margin: 0;
+
+  .icon {
+    font-size: 22px;
+  }
+}
+
+.adm-files-allowed-types--lines {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-files-allowed-types--type {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.adm-files-allowed-types--settings-link {
+  color: var(--kern-color-action-default);
+  text-decoration: underline;
+
+  &:hover {
+    color: var(--kern-color-action-hover);
+  }
+}

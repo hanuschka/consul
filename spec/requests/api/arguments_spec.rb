@@ -102,6 +102,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt argument' do
@@ -211,6 +213,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           expect(response.status).to eq(422)
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -256,6 +261,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt argument' do
@@ -397,6 +404,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           expect(response.status).to eq(422)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt argument' do
@@ -465,6 +475,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

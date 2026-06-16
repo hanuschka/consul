@@ -4,11 +4,16 @@ namespace :adm do
   patch "attribute/:record_type/:id", to: "attribute#update", as: :attribute
 
   # application
-  resource :homepage, controller: "homepage", only: [:show]
-  resources :documents, only: [:index, :new, :create, :destroy]
+  resource :homepage, controller: "homepage", only: [:show] do
+    patch :update_navigation_link_color, on: :collection
+  end
   resource :navbar, controller: "navbar", only: [:show]
-  resources :navbar_items, only: [:new, :create, :destroy] do
+  resources :navbar_items, only: [:new, :create, :edit, :update, :destroy] do
     patch :reorder, on: :collection
+  end
+  resource :overview_pages, only: [], controller: "overview_pages" do
+    get :projekt
+    get :others
   end
 
   resources :settings, only: [] do
@@ -16,11 +21,16 @@ namespace :adm do
     get :gdpr, on: :collection
     get :registration, on: :collection
   end
+  resource :features, controller: "features", only: [:show]
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection
   end
   resource :default_map_location, controller: "default_map_location", only: [:show, :update]
+  resource :system_user, controller: "system_user", only: [:edit, :update]
+  resources :map_locations, only: [] do
+    post :update_screenshot, on: :member
+  end
   resources :map_layers, only: [:new, :create, :edit, :update, :destroy]
   resources :tags, only: [:index, :new, :create, :edit, :update, :destroy]
   resources :individual_groups, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
@@ -36,9 +46,6 @@ namespace :adm do
     patch :reorder, on: :collection
   end
   # application
-
-  # modules
-  resource :modules, controller: "modules", only: [:show, :update]
 
   # profiles
   resource :role_assignment, only: [] do
@@ -63,10 +70,8 @@ namespace :adm do
   resources :users, only: [:index, :edit, :update] do
     patch :verify, on: :member
     patch :unverify, on: :member
+    get :audits, on: :member
     get :csv_download, on: :collection
-  end
-  resources :section_contact_people do
-    post :search, on: :collection
   end
   # profiles
 
@@ -74,9 +79,14 @@ namespace :adm do
   resources :modal_notifications, except: :show
 
   scope :newsletters do
-    resources :recipient_groups, except: :show do
-      collection do
-        post :select_options
+    resources :recipient_groups, except: [:show, :new] do
+      resources :filters,
+                controller: "recipient_group_filters",
+                only: [:create, :update, :destroy] do
+        collection do
+          post :reorder
+          get :recount
+        end
       end
     end
     resources :unregistered_newsletter_subscribers, only: [:index, :destroy]
@@ -89,6 +99,19 @@ namespace :adm do
     collection do
       get :settings
     end
+    resources :content_blocks,
+              controller: "newsletters/content_blocks",
+              only: [:create, :update, :destroy] do
+      member do
+        patch :update_position
+        patch :change_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
+      end
+      collection do
+        post :generate_with_ai
+      end
+    end
   end
   # notifications
 
@@ -98,6 +121,7 @@ namespace :adm do
   resources :global_email_templates, only: [:index]
 
   resource :statistics, controller: "statistics", only: [:show]
+  resource :matomo, controller: "matomo", only: [:show]
   resource :apps, controller: "apps", only: [:show]
   resource :connection, controller: "connection", only: [:show]
   get "connect", to: "connection#show"
@@ -115,10 +139,23 @@ namespace :adm do
 
   namespace :site_customization do
     get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug
+    patch "pages/:slug", to: "pages#update", as: :update_page_by_slug
 
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member
       patch :reorder, on: :collection
     end
   end
+
+  resources :masterportal_imports, only: [:create] do
+    collection do
+      get :collections
+      get :status
+    end
+  end
+
+  # Redirects from the former projekts/overview_page and projekts/overviews routes
+  get "projekts/overview_page/navigation", to: redirect("/adm/overview_pages/projekt")
+  get "projekts/overview_page/footer",     to: redirect("/adm/overview_pages/projekt")
+  get "projekts/overviews",                to: redirect("/adm/overview_pages/others")
 end

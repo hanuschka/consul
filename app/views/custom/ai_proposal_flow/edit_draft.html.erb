@@ -24,7 +24,8 @@
       <% else %>
         <%= render Budgets::Investments::FormComponent.new(
           @draft_resource,
-          url: @update_draft_url
+          url: @update_draft_url,
+          embbeded_in_ai_flow: true
         ) %>
       <% end %>
 

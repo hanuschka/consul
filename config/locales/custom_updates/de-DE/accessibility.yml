@@ -24,6 +24,8 @@ de:
           avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
           aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
           your_avatar: "Dein Avatar"
+        remove_avatar:
+          aria-label: "Aktuelles Avatarbild entfernen."
         edit_username:
           edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
           cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."

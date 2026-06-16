@@ -16,8 +16,8 @@
     <%= render "layouts/brand_color_root_style" %>
     <%= yield :styles %>
 
-    <a href="#main-content" class="skip-link"><%= t("custom.accessibility.skip_links.skip_to_content") %></a>
-    <a href="#main-navigation" class="skip-link"><%= t("custom.accessibility.skip_links.skip_to_navigation") %></a>
+    <a href="#main-content" class="show-for-sr"><%= t("custom.accessibility.skip_links.skip_to_content") %></a>
+    <a href="#main-navigation" class="show-for-sr"><%= t("custom.accessibility.skip_links.skip_to_navigation") %></a>
 
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>

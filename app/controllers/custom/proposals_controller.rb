@@ -10,6 +10,8 @@ class ProposalsController
   include CustomHelper
   include LandingPageResolvable
 
+  MAP_PINS_LAZY_LOAD_THRESHOLD = 50
+
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
 
@@ -59,7 +61,8 @@ class ProposalsController
         .where(admin_accepted: true)
         .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
-        .includes(:translations, :image, :projekt_labels, :votes_for)
+        .includes(:translations, :image, :projekt_labels, :votes_for,
+                  :community, projekt_phase: :settings)
 
     @all_resources = @resources
 
@@ -70,7 +73,15 @@ class ProposalsController
       take_by_projekts(@scoped_projekt_ids)
     end
 
-    @proposals_coordinates = all_proposal_map_locations(@resources)
+    @proposals_map_pin_count = proposal_map_locations_count(@resources)
+
+    @proposals_coordinates =
+      if @proposals_map_pin_count <= MAP_PINS_LAZY_LOAD_THRESHOLD
+        all_proposal_map_locations(@resources)
+      else
+        []
+      end
+
     @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
 
     respond_to do |format|
@@ -80,6 +91,13 @@ class ProposalsController
         else
           render :index
         end
+      end
+
+      format.json do
+        render json: JSON.generate(
+          type: "FeatureCollection",
+          features: all_proposal_map_locations(@resources)
+        )
       end
 
       format.csv do

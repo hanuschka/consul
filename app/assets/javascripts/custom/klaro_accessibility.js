@@ -42,8 +42,13 @@
     getModalContainer: function() {
       if (!this.klaroElement) return null;
 
-      return this.klaroElement.querySelector('.cookie-modal') ||
-        this.klaroElement.querySelector('.cookie-notice');
+      var candidates = this.klaroElement.querySelectorAll('.cookie-modal, .cookie-modal-notice');
+
+      for (var i = 0; i < candidates.length; i++) {
+        if (candidates[i].offsetParent !== null) return candidates[i];
+      }
+
+      return null;
     },
 
     checkModalState: function() {

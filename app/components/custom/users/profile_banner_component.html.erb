@@ -47,6 +47,22 @@
             <% end %>
         <% end %>
       <% end %>
+
+      <% if @user.image&.attached? %>
+        <%= form_for @user, as: :account, url: account_path, html: { class: "users-profile-banner--avatar-remove-form" } do |remove_form| %>
+          <%= remove_form.fields_for :image, @user.image do |image_fields| %>
+            <%= image_fields.hidden_field :id %>
+            <%= image_fields.hidden_field :_destroy, value: "1" %>
+          <% end %>
+          <button
+            type="submit"
+            class="users-profile-banner--avatar-remove-button"
+            aria-label="<%= t("custom.accessibility.account.remove_avatar.aria-label") %>"
+          >
+            <i class="fa fa-trash-alt" aria-hidden="true"></i>
+          </button>
+        <% end %>
+      <% end %>
     <% elsif @user.image.present? %>
       <div class="users-profile-banner--avatar">
         <%= image_tag(@user.image&.variant(:medium), alt: @user.name) %>

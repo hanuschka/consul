@@ -40,6 +40,10 @@
     left: 0;
     z-index: 200;
     pointer-events: none;
+
+    @media(max-width: 1000px) {
+      display: none;
+    }
   }
 
   .projekt-content-block--toolbar {
@@ -331,6 +335,51 @@
       margin-left: 2px;
     }
   }
+}
+
+// =============================================================================
+// Block status pill (Save / Save-error feedback)
+// -----------------------------------------------------------------------------
+// Transient status message shown after save / save-error. Lives in the
+// absolute toolbar zone and sticks to the exact same band as the floating
+// toolbar, but is always anchored to the right side (margin-left:auto),
+// regardless of the toolbar's left/right position. Informational only, so it
+// ignores pointer events. JS auto-removes it after a short delay.
+// =============================================================================
+.projekt-content-block--status {
+  position: sticky;
+  top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
+  z-index: 201;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 9px;
+  margin-left: auto;
+  width: fit-content;
+  padding: 11px 18px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: content-block-status-appear 180ms ease-out;
+  transition: opacity 180ms ease-out;
+}
+
+.projekt-content-block--status.-leaving {
+  opacity: 0;
+}
+
+.projekt-content-block--status.-saved {
+  background: rgba($green-success-color, 0.8);
+}
+
+.projekt-content-block--status.-error {
+  background: rgba($red-button-color, 0.8);
 }
 
 // =============================================================================

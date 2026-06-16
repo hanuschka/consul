@@ -8,8 +8,23 @@
     <% end %>
   </li>
 
-  <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
+  <% admin_links = !local_assigns[:compact] && (
+       current_user.administrator? ||
+       current_user.projekt_manager? ||
+       current_user.landing_page_manager? ||
+       current_user.moderator? ||
+       (feature?(:budgets) && current_user.valuator?) ||
+       current_user.poll_officer? ||
+       current_user.officing_manager? ||
+       Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? ||
+       Adm::Ideas::IdeaPolicy.new(current_user, nil).index?
+     ) %>
 
+  <% if admin_links %>
+  <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
+  <% end %>
+
+  <% unless local_assigns[:compact] %>
   <% if current_user.administrator? %>
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_root_path, class: "flyout-item--link" do %>
@@ -82,7 +97,11 @@
     </li>
   <% end %>
 
+  <% end %>
+
+  <% if admin_links %>
   <li class="flyout-item flyout-item--divider" aria-hidden="true"></li>
+  <% end %>
 
   <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
     <%= link_to destroy_user_session_path, rel: "nofollow", method: :delete, data: { turbo_method: :delete }, class: "flyout-item--link" do %>

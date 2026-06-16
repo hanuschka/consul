@@ -217,8 +217,12 @@ App.ContentBlockEditor.SimpleEditMode = {
   handleMarginBottomInput(e) {
     const input = e.currentTarget;
     const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(input);
-    const marginValue = parseInt(input.value) || 0;
+    const min = parseInt(input.min);
+    let marginValue = parseInt(input.value) || 0;
 
+    if (!isNaN(min)) marginValue = Math.max(marginValue, min);
+
+    input.value = marginValue;
     contentBlockWrapper.style.marginBottom = `${marginValue}px`;
 
     const updateUrl = App.ContentBlockEditor.Crud.getUpdateUrl(contentBlockWrapper);

@@ -1,5 +1,9 @@
 de:
   setting:
+    projekt_option:
+      general:
+        external_participation_link: Alternativen Link in den Projektressourcen verwenden
+        external_participation_link_description: "Hinterlegen Sie eine vollständige (externe) URL, wenn die Projektkacheln und -listen nicht auf die Projektseite, sondern auf eine andere Seite verweisen sollen. Leer lassen, um die normale Verlinkung zum Projekt beizubehalten."
     org_name: "Name der Anwendung"
     org_name_description: "Dieser Name wird an vielen Stellen der Plattform angezeigt, z. B. im Browser-Tab, in E-Mails und in der Fußzeile. Er dient als offizieller Anzeigename Ihrer Beteiligungsplattform und sollte eindeutig und wiedererkennbar sein. Ein guter Name erleichtert es Bürgern, die Plattform auf Anhieb zuzuordnen."
     url: "Haupt-URL der Applikation"

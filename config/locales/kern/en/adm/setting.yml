@@ -1,5 +1,9 @@
 en:
   setting:
+    projekt_option:
+      general:
+        external_participation_link: "Use an alternative link in the project resources"
+        external_participation_link_description: "Enter a full (external) URL if the project tiles and lists should link to another page instead of the project's own page. Leave empty to keep the normal link to the project."
     org_name: "Application name"
     org_name_description: "This name is shown in many places across the platform, e.g. in the browser tab, in emails, and in the footer. It serves as the official display name of your participation platform and should be unique and recognizable. A good name helps citizens identify the platform at a glance."
     url: "Main URL of the application"

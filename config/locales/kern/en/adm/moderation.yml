@@ -86,9 +86,11 @@ en:
             hidden: Hidden
             all: All
           statuses:
-            hide: Hidden
+            pending: Pending review
             ignored: Marked as read
+            hide: Hidden
           actions:
+            view: View proposal
             hide: Hide
             ignore_flag: Mark as read
           confirm_hide: "Are you sure? This hides the proposal \"%{name}\"."
@@ -110,9 +112,11 @@ en:
             hidden: Hidden
             all: All
           statuses:
-            hide: Hidden
+            pending: Pending review
             ignored: Marked as read
+            hide: Hidden
           actions:
+            view: View proposal
             hide: Hide
             unhide: Restore
             ignore_flag: Mark as read
@@ -134,7 +138,12 @@ en:
             with_ignored_flag: Ignored flags
             hidden: Hidden
             all: All
+          statuses:
+            pending: Pending review
+            ignored: Marked as read
+            hide: Hidden
           actions:
+            view: View comment
             hide: Hide
             unhide: Restore
             ignore_flag: Mark as read

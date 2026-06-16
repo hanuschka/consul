@@ -16,6 +16,12 @@ module DeficiencyReportsHelper
       .map(&:features_json_data)
   end
 
+  def deficiency_report_map_locations_count(deficiency_reports_for_map)
+    ids = deficiency_reports_for_map.except(:limit, :offset, :order).ids.uniq
+
+    MapLocation.where(mappable_type: "DeficiencyReport", mappable_id: ids).count
+  end
+
   def deficiency_reports_default_view?
     @view == "default"
   end

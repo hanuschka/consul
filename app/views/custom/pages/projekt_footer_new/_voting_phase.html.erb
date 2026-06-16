@@ -8,10 +8,6 @@
 <% else %>
   <div class="flex-layout flex-layout-reverse-on-mobile">
     <div class="main-column">
-      <% if extended_feature?("polls.intro_text_for_polls") %>
-        <%= render_custom_block "polls_welcome" %>
-      <% end %>
-
       <%= render(
         Shared::ResourcesListComponent.new(
           resources: @polls,

@@ -31,8 +31,10 @@ $banner-mobile-layout-change-widthpoint: 720px;
 }
 
 .user-resources-form--banner-editor {
+  --banner-color: #ddeeff;
+  --generating-overlay-color: #bbd9f7;
   width: 100%;
-  background-color: #ddeeff;
+  background-color: var(--banner-color);
   padding-top: 30px;
   padding-bottom: 30px;
   padding-left: 30px;
@@ -52,15 +54,15 @@ $banner-mobile-layout-change-widthpoint: 720px;
   }
 
   &.-proposal {
-    // background-color: #FFE9CC;
+    // --banner-color: #FFE9CC;
   }
 
   &.-deficiency-report {
-    // background-color: #fff;
+    // --banner-color: #fff;
   }
 
   &.-budget-investment {
-    // background-color: #FFE9CC;
+    // --banner-color: #FFE9CC;
   }
 
   .translatable-fields {

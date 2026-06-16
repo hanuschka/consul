@@ -1,0 +1,16 @@
+<div class="newsletter-email-preview-section -header">
+  <span class="newsletter-email-preview-section--label">
+    <%= t("adm.newsletters.edit.email_preview.header_label") %>
+    <%= link_to t("adm.newsletters.edit.email_preview.settings_link"),
+      settings_adm_newsletters_path,
+      class: "kern-link" %>
+  </span>
+
+  <div class="newsletter-email-preview-header">
+    <% if Setting["advanced_newsletter"].present? %>
+      <%= render "mailer/newsletter_email_header", newsletter: newsletter %>
+    <% else %>
+      <%= render "mailer/newsletter_simple_header" %>
+    <% end %>
+  </div>
+</div>

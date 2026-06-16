@@ -76,29 +76,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'budget investments found with public_data access' do
         let(:budget_id) do
           api_client.update!(access_level: :public_data)
@@ -132,6 +109,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:budget_id) { 1 } }
     end
 
     post 'Create a budget investment' do
@@ -356,6 +335,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           expect(response.status).to eq(201)
         end
       end
+
+      unauthorized_response { let(:budget_id) { 1 } }
     end
   end
 
@@ -410,6 +391,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -460,44 +443,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:group) { budget.create_group!(name: 'Test Group') }
-        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
-        let(:budget_investment) do
-          investment = Budget::Investment.new(
-            author: api_client.user,
-            heading: heading,
-            budget: budget,
-            resource_terms: true,
-            title: 'Test Investment',
-            description: 'Test Description'
-          )
-          investment.save!
-          investment
-        end
-        let(:id) { budget_investment.id }
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'budget investment found with public_data access' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
         let(:group) { budget.create_group!(name: 'Test Group') }
@@ -533,6 +478,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a budget investment' do
@@ -790,6 +737,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           expect(response.status).to eq(200)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a budget investment' do
@@ -906,6 +855,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

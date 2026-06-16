@@ -3,6 +3,15 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.projekts.home.title")) %>
 
 <div class="kern-container my-5">
+  <% if policy([:adm, :projekts, Projekt]).create? %>
+    <div class="d-flex justify-content-end mb-3">
+      <%= link_to t("adm.projekts.imports.index.new_button"),
+            new_adm_projekts_import_path,
+            class: "kern-button kern-button--primary",
+            data: { turbo_frame: "_top" } %>
+    </div>
+  <% end %>
+
   <%
     headers = {
       name:       Kern::Table::HeaderComponent.new(:name, Projekt.model_name.human, **@name_header_options.merge(data_field: "name")),

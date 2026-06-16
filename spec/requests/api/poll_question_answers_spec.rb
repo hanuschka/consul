@@ -57,6 +57,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response { let(:poll_question_id) { 1 } }
     end
 
     post 'Create a poll question answer' do
@@ -180,6 +182,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:poll_question_id) { 1 } }
     end
   end
 
@@ -232,6 +236,10 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      forbidden_response { let(:poll_question_id) { 1 } }
+
+      unauthorized_response { let(:poll_question_id) { 1 } }
     end
   end
 
@@ -279,6 +287,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a poll question answer' do
@@ -365,6 +375,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a poll question answer' do
@@ -438,6 +450,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

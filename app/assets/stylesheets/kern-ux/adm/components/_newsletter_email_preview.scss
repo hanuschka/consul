@@ -1,0 +1,38 @@
+.newsletter-email-preview-frame {
+  display: block;
+}
+
+.newsletter-email-preview-section {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.newsletter-email-preview-section.-header {
+  margin-bottom: 0;
+}
+
+.newsletter-email-preview-section.-footer {
+  margin-top: 0;
+}
+
+.newsletter-email-preview-section--label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-subtle, #6b7280);
+  padding: 6px 0;
+  text-align: right;
+}
+
+.newsletter-email-preview-section--label.-below {
+  text-align: right;
+}
+
+.newsletter-email-preview-header,
+.newsletter-email-preview-footer {
+  overflow: hidden;
+}
+
+.newsletter-email-preview-header a,
+.newsletter-email-preview-footer a {
+  color: inherit;
+}

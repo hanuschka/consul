@@ -21,6 +21,12 @@
   animation: adm-delete-collection--spin 1.4s linear infinite;
 }
 
+.adm-delete-collection--error-icon {
+  flex-shrink: 0;
+  font-size: 22px;
+  color: var(--kern-color-feedback-danger, #BD0F09);
+}
+
 .adm-delete-collection--text {
   display: flex;
   flex-direction: column;

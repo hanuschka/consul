@@ -1,0 +1,173 @@
+de:
+  adm:
+    projekts:
+      imports:
+        title: "Projektimport"
+        from_files:
+          new:
+            title: "Projekt aus Dokument importieren"
+            intro: "Laden Sie ein oder mehrere Dokumente hoch. Die KI extrahiert eine Projektstruktur, die Sie vor dem Import im Chat überprüfen und anpassen können."
+            dropzone_label: "Dateien hierher ziehen oder klicken zum Auswählen"
+            dropzone_hint: "Erlaubt: %{types}. Maximal %{size} insgesamt."
+            select_file: "Dateien auswählen"
+            drop_hint: "Sie können auch Dateien per Drag & Drop hierher ziehen"
+            choose_other_file: "Andere Datei wählen"
+            processing_title: "Analyse läuft…"
+            processing_message: "Ihre Dateien werden analysiert. Dies kann einen Moment dauern."
+            progress_preparing: "Vorbereitung…"
+            instructions_label: "Zusätzlicher Kontext (optional)"
+            instructions_placeholder: "Alles, was das Dokument nicht klärt — Zielgruppe, Umfang, Ziele…"
+            generate_image_label: "Titelbild mit KI generieren"
+            submit_label: "Analyse starten"
+            progress:
+              extracting: "Text wird aus Ihren Dokumenten extrahiert…"
+              processing: "Dokument wird mit KI analysiert…"
+              chatting: "Fast fertig — Chat wird geöffnet…"
+            errors:
+              no_files: "Bitte wählen Sie mindestens eine Datei aus."
+              too_large: "Die ausgewählten Dateien überschreiten das Limit von 45 MB."
+              unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
+          show:
+            title: "Importfortschritt"
+            failed_title: "Import fehlgeschlagen"
+            stalled_title: "Analyse hängt fest"
+            stalled_message: "Die Analyse dauert ungewöhnlich lange und ist möglicherweise fehlgeschlagen. Sie können diesen Import verwerfen und es erneut versuchen."
+            dismiss: "Verwerfen"
+            upload_new: "Neues Dokument hochladen"
+        list:
+          sections:
+            in_progress: "Laufende Importe"
+            failed: "Fehlgeschlagene Importe"
+            completed: "Abgeschlossene Importe"
+          states:
+            analyzing: "Analyse läuft"
+            stalled: "Hängt fest"
+            chatting: "Im Chat"
+            submitting: "Wird erstellt"
+            failed: "Fehlgeschlagen"
+            completed: "Abgeschlossen"
+          actions:
+            continue: "Fortsetzen"
+            open_chat: "Chat öffnen"
+            open_details: "Details ansehen"
+            delete: "Löschen"
+          no_files: "Keine Dateien"
+          files_summary: "%{first} +%{count}"
+          created_at: "Erstellt: %{time}"
+          finished_at: "Beendet: %{time}"
+          projekt_created: "Projekt erstellt: %{title}"
+          filters:
+            aria: "Nach Status filtern"
+            all: "Alle"
+            in_progress: "Laufend"
+            failed: "Fehlgeschlagen"
+            completed: "Abgeschlossen"
+          delete_dialog:
+            title: "Import löschen?"
+            message: "Dieser Import wird dauerhaft gelöscht:"
+            note: "Das daraus erstellte Projekt bleibt erhalten."
+            confirm: "Löschen"
+            cancel: "Abbrechen"
+        chats:
+          show:
+            title: "Projektimport verfeinern"
+            input_placeholder: "Antworten Sie der KI — bitten Sie um Feldänderungen, neue Phasen, korrigierte Daten…"
+            send: "Senden"
+            attach: "Dokument anhängen"
+            assistant_label: "KI"
+            user_label: "Sie"
+            confirm_import: "Projekt jetzt importieren? Damit wird ein neues Projekt mit allen Phasen und Inhaltsblöcken erstellt."
+            import_dialog:
+              title: "Projekt importieren?"
+              confirm: "Jetzt importieren"
+              cancel: "Abbrechen"
+            confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
+            generate_image_toggle: "Titelbild generieren"
+            created_banner_title: "Dieser Import hat folgende Projekte erstellt:"
+            tooltips:
+              start_over:
+                title: "Neu starten"
+                text: "Verwirft diesen Import vollständig und kehrt zum Hochladen eines neuen Dokuments zurück."
+              regenerate:
+                title: "Neu generieren"
+                text: "Analysiert das ursprüngliche Dokument noch einmal und erstellt die gesamte Projektstruktur von Grund auf neu."
+              summarize:
+                title: "Zusammenfassen"
+                text: "Erstellt eine kurze, verständliche Zusammenfassung des hochgeladenen Dokuments im Chat."
+              generate_image:
+                title: "Titelbild generieren"
+                text: "Wenn aktiviert, erzeugt die KI beim Import automatisch ein passendes Titelbild für das Projekt."
+              import:
+                title: "Projekt importieren"
+                text: "Erstellt das Projekt mit allen Phasen, Inhaltsblöcken und Einstellungen. Es bleibt zunächst deaktiviert und für Besucher unsichtbar, bis Sie es aktivieren."
+              attach:
+                title: "Dokument anhängen"
+                text: "Fügt ein weiteres Dokument zum Gespräch hinzu, damit die KI zusätzliche Informationen berücksichtigen kann."
+            commands:
+              regenerate: "Neu generieren"
+              summarize: "Dokument zusammenfassen"
+              import: "Projekt importieren"
+              import_again: "Als neues Projekt importieren"
+              start_over: "Neu starten"
+            progress:
+              finalizing_data: "Änderungen werden finalisiert…"
+              resolving_content_blocks: "Inhaltsblöcke werden erstellt…"
+              creating_projekt: "Projekt, Phasen und Ressourcen werden angelegt…"
+              generating_image: "Titelbild wird generiert…"
+            errors:
+              extract_failed: "Eine oder mehrere angehängte Dateien konnten nicht gelesen werden."
+              import_failed: "Der Import konnte nicht abgeschlossen werden."
+              dismiss: "Schließen"
+        initial_message:
+          analysis_complete: "Dokumentanalyse abgeschlossen"
+          analysis_intro: "Folgendes habe ich aus Ihrem Dokument extrahiert. Bitte prüfen Sie die Felder — falls etwas nicht passt, sagen Sie es mir einfach."
+          title: "Titel"
+          subtitle: "Untertitel"
+          period: "Zeitraum"
+          categories: "Kategorien"
+          sdg_goals: "SDG-Ziele"
+          phases: "Phasen"
+          content_blocks: "Inhaltsblöcke"
+          created: "erstellt"
+          questions_intro: "Einige Rückfragen zur Bestätigung:"
+          questions_outro: "Wenn alles passt, klicken Sie oben auf „Projekt importieren\"."
+          review_outro: "Klicken Sie oben auf „Projekt importieren\", wenn Sie bereit sind."
+        default_questions:
+          title_correct: 'Ist der Projekttitel „%{title}" korrekt?'
+          phases_missing: "Welche Beteiligungsphasen soll dieses Projekt enthalten?"
+          phases_correct: "Sind die erkannten Phasen und deren Zeiträume korrekt?"
+          dates_missing: "Wann soll das Projekt beginnen und enden?"
+        command_prompts:
+          regenerate: "Bitte analysieren Sie das ursprüngliche Dokument erneut und generieren Sie die Projektstruktur von Grund auf neu."
+          summarize: "Bitte erstellen Sie eine prägnante Zusammenfassung des hochgeladenen Dokuments."
+        changelog:
+          none: "Während des Chats wurden keine Änderungen vorgenommen."
+          with_count:
+            one: "1 Anpassung wurde während des Chats angewendet."
+            other: "%{count} Anpassungen wurden während des Chats angewendet."
+        errors:
+          empty_message: "Schreiben Sie eine Nachricht oder hängen Sie ein Dokument an."
+          unknown_command: "Unbekannter Befehl."
+          no_chat: "Für diesen Import wurde keine Chat-Sitzung gefunden."
+          no_files: "Keine Dateien übermittelt."
+          too_large: "Die ausgewählten Dateien überschreiten das Limit von 45 MB."
+          unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
+          message_failed: "Diese Antwort konnte nicht generiert werden. Bitte senden Sie die Nachricht erneut."
+          ai_processing_failed: "KI-Verarbeitung fehlgeschlagen: %{message}"
+          ai_chat_failed: "KI-Chat fehlgeschlagen: %{message}"
+          ai_empty_response: "Die KI hat eine leere Antwort zurückgegeben."
+          ai_malformed: "Die KI hat eine ungültige Antwort zurückgegeben. Bitte erneut versuchen."
+          dt_prompt_missing: "Konfigurationsfehler: Der KI-Prompt konnte nicht von DT geladen werden."
+          no_ai_result: "Es liegt noch kein KI-Ergebnis vor."
+          finalize_failed: "Finalisierung fehlgeschlagen: %{message}"
+          resolve_content_blocks_failed: "Inhaltsblöcke konnten nicht erstellt werden: %{message}"
+          create_projekt_failed: "Projekt konnte nicht erstellt werden: %{message}"
+          missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
+        badge:
+          imported_by_ai: "KI"
+          imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."
+        index:
+          new_button: "Aus Dokument importieren"
+          title: "Projektimporte"
+          new_import: "Neuer Projektimport"
+          empty: "Noch keine Projektimporte vorhanden."

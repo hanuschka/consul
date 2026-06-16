@@ -8,9 +8,11 @@
     <%= t("mailers.formular_answer_created.text1", phase_title: @projekt_phase.title, projekt_title: @projekt_phase.projekt.page.title) %>
   </p>
 
-  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("mailers.shared.sincerely") %>
-    <br>
-    <%= t("mailers.shared.signature") %>
-  </p>
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

@@ -230,7 +230,7 @@
     // ---- Admin-only empty hint for footer content blocks -------------------
     // Dezent: inline italic note (no box, no background) so the hint doesn't
     // outshine the actual brand content. Marker class is toggled live by
-    // `ProjektStudio.ContentBlock.EmptyHintToggle` based on
+    // `App.ContentBlockEditor.EmptyHintToggle` based on
     // `.custom-content-block-body` content (see EmptyHintToggle.js).
     .footer-content-block--admin-empty-hint {
       display: none;

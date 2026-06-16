@@ -1,0 +1,276 @@
+import { Controller } from "@hotwired/stimulus"
+import { Turbo } from "@hotwired/turbo-rails"
+
+export default class extends Controller {
+  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText"]
+
+  static values = {
+    updateUrl: String,
+    deleteUrl: String,
+    statusUrl: String,
+    diffUrl: String,
+    cleanUrl: String,
+    cardUrl: String,
+    confirm: String,
+    cleanConfirm: String,
+    newLabel: String,
+    staleLabel: String,
+    currentLabel: String,
+    checkingLabel: String,
+    initialImportStatus: String,
+    initialDestroyStatus: String,
+    pollInterval: { type: Number, default: 3000 }
+  }
+
+  connect() {
+    this.pollTimerId = null
+
+    if (this.initialDestroyStatusValue === "running") {
+      this.mode = "destroy"
+      this.showProgress()
+      this.startPolling()
+    } else if (this.initialImportStatusValue === "running") {
+      this.mode = "import"
+      this.showProgress()
+      this.startPolling()
+    }
+  }
+
+  disconnect() {
+    this.stopPolling()
+  }
+
+  importAndClean(event) {
+    event.preventDefault()
+
+    this.pendingClean = true
+    this.startImport()
+  }
+
+  startImport() {
+    this.mode = "import"
+    this.showProgress()
+    this.sendRequest("PATCH", this.updateUrlValue)
+  }
+
+  remove(event) {
+    event.preventDefault()
+
+    if (this.confirmValue && !window.confirm(this.confirmValue)) return
+
+    this.mode = "destroy"
+    this.showProgress()
+    this.sendRequest("DELETE", this.deleteUrlValue)
+  }
+
+  async runCleanThenRefresh() {
+    try {
+      const response = await this.request("DELETE", this.cleanUrlValue)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      this.refreshCard()
+    } catch (error) {
+      this.showError(error.message)
+    }
+  }
+
+  async kickoffUpdate() {
+    this.mode = "import"
+    this.showProgress()
+
+    try {
+      const response = await this.request("PATCH", this.updateUrlValue)
+
+      return response.ok
+    } catch (error) {
+      this.showError(error.message)
+
+      return false
+    }
+  }
+
+  async cleanInPlace() {
+    this.mode = "destroy"
+    this.showProgress()
+
+    try {
+      const response = await this.request("DELETE", this.cleanUrlValue)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      return true
+    } catch (error) {
+      this.showError(error.message)
+
+      return false
+    }
+  }
+
+  async resync() {
+    this.showChecking()
+
+    try {
+      const response = await this.request("GET", this.diffUrlValue)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      const body = await response.json()
+      this.applyDiff(body)
+    } catch (error) {
+      this.showDiffError(error.message)
+    }
+  }
+
+  async sendRequest(method, url) {
+    try {
+      const response = await this.request(method, url)
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      this.startPolling()
+    } catch (error) {
+      this.showError(error.message)
+    }
+  }
+
+  request(method, url) {
+    return fetch(url, {
+      method: method,
+      headers: { Accept: "text/vnd.turbo-stream.html, application/json", "X-CSRF-Token": this.csrfToken() },
+      credentials: "same-origin"
+    })
+  }
+
+  csrfToken() {
+    const el = document.querySelector("meta[name='csrf-token']")
+
+    return el ? el.getAttribute("content") : ""
+  }
+
+  startPolling() {
+    this.stopPolling()
+    this.fetchStatus()
+    this.pollTimerId = window.setInterval(() => this.fetchStatus(), this.pollIntervalValue)
+  }
+
+  stopPolling() {
+    if (this.pollTimerId !== null) {
+      window.clearInterval(this.pollTimerId)
+      this.pollTimerId = null
+    }
+  }
+
+  async fetchStatus() {
+    try {
+      const response = await this.request("GET", this.statusUrlValue)
+      if (!response.ok) return
+
+      const body = await response.json()
+      this.applyStatus(body)
+    } catch (error) {
+    }
+  }
+
+  applyStatus(body) {
+    if (this.mode === "destroy") {
+      this.applyDestroyStatus(body)
+      return
+    }
+
+    this.applyImportStatus(body)
+  }
+
+  applyDestroyStatus(body) {
+    if (body.deleted || body.destroy_status === "success") {
+      this.stopPolling()
+      this.refreshCard()
+    } else if (body.destroy_status === "failed") {
+      this.stopPolling()
+      this.showError(body.destroy_error)
+    }
+  }
+
+  applyImportStatus(body) {
+    if (body.import_status === "success") {
+      this.stopPolling()
+
+      if (this.pendingClean) {
+        this.pendingClean = false
+        this.runCleanThenRefresh()
+      } else {
+        this.refreshCard()
+      }
+    } else if (body.import_status === "failed") {
+      this.stopPolling()
+      this.pendingClean = false
+      this.showError(body.import_error)
+    }
+  }
+
+  async refreshCard() {
+    try {
+      const response = await this.request("GET", this.cardUrlValue)
+      if (!response.ok) return
+
+      Turbo.renderStreamMessage(await response.text())
+    } catch (error) {
+    }
+  }
+
+  applyDiff(body) {
+    const newCount = Number(body.new_count) || 0
+    const staleCount = Number(body.stale_count) || 0
+
+    this.renderDiff(newCount, staleCount)
+  }
+
+  renderDiff(newCount, staleCount) {
+    if (!this.hasDiffTarget) return
+
+    const parts = []
+    if (newCount > 0) parts.push(`+${newCount} ${this.newLabelValue}`)
+    if (staleCount > 0) parts.push(`−${staleCount} ${this.staleLabelValue}`)
+
+    const hasChanges = parts.length > 0
+    this.diffTextTarget.textContent = hasChanges ? parts.join(" · ") : this.currentLabelValue
+    this.setDiffIcon(hasChanges ? "difference" : "check_circle")
+    this.diffTarget.dataset.state = hasChanges ? "changes" : "current"
+    this.diffTarget.hidden = false
+  }
+
+  showChecking() {
+    if (!this.hasDiffTarget) return
+
+    this.setDiffIcon("progress_activity")
+    this.diffTextTarget.textContent = this.checkingLabelValue
+    this.diffTarget.dataset.state = "checking"
+    this.diffTarget.hidden = false
+  }
+
+  showDiffError(message) {
+    if (!this.hasDiffTarget) return
+
+    this.setDiffIcon("error")
+    this.diffTextTarget.textContent = message || ""
+    this.diffTarget.dataset.state = "error"
+    this.diffTarget.hidden = false
+  }
+
+  setDiffIcon(name) {
+    if (this.hasDiffIconTarget) this.diffIconTarget.textContent = name
+  }
+
+  showProgress() {
+    this.progressTarget.hidden = false
+
+    if (this.hasActionsTarget) this.actionsTarget.hidden = true
+    if (this.hasErrorTarget) this.errorTarget.hidden = true
+  }
+
+  showError(message) {
+    this.progressTarget.hidden = true
+
+    if (this.hasActionsTarget) this.actionsTarget.hidden = false
+    if (this.hasErrorTarget) {
+      this.errorTextTarget.textContent = message || ""
+      this.errorTarget.hidden = false
+    }
+  }
+}

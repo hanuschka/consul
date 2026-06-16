@@ -160,6 +160,7 @@ de:
           title: Kommentare
           no_comments_title: Keine Kommentare vorhanden
           no_comments_description: Sobald Nutzer in dieser Beteiligungsphase Kommentare verfassen, werden diese hier aufgelistet und können moderiert werden. Sie haben die Möglichkeit, einzelne Kommentare herauszumoderieren, wiederherzustellen oder gemeldete Beiträge zu überprüfen. Die Tabelle zeigt Autor, Inhalt und Moderationsstatus jedes Kommentars an.
+          download_csv: CSV herunterladen
           table:
             body: Kommentar
             author: Autor
@@ -188,6 +189,7 @@ de:
             actions: Aktionen
         map:
           title: Karte
+          masterportal_import_success: Import erfolgreich abgeschlossen.
         masterportal_pins:
           title: Importierte Masterportal-Pins
         officing_managers:
@@ -282,6 +284,7 @@ de:
             author: Autor
             category: Kategorie
             created_at: Erstellt am
+            actions: Aktionen
         map_resources_overview:
           title: Kartenübersicht
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.

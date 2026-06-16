@@ -7,7 +7,7 @@ class Api::ProposalsController < Api::BaseController
   include MapLocationAttributes
 
   before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
-  before_action :find_proposal, only: [:show, :update, :destroy]
+  before_action :find_proposal, only: [:show, :update, :destroy, :publish]
 
   def index
     check_read_access!
@@ -75,11 +75,16 @@ class Api::ProposalsController < Api::BaseController
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
     proposal = @projekt_phase.resources.new(proposal_params.except("image_attributes"))
-    proposal.author = @current_client.user
+    proposal.author = @current_client.content_author
     proposal.resource_terms = true
 
     if proposal.save
       process_image_with_base64(proposal, params[:proposal][:image_attributes])
+
+      if publish_on_create?
+        proposal.publish
+      end
+
       serialized_proposal = ProposalSerializer.new(proposal).serialize
 
       render json: { data: { proposal: serialized_proposal } }, status: 201
@@ -119,6 +124,22 @@ class Api::ProposalsController < Api::BaseController
     end
   end
 
+  def publish
+    check_admin_access!
+
+    if @proposal.draft?
+      @proposal.publish
+    end
+
+    serialized_proposal = ProposalSerializer.new(@proposal).serialize
+
+    render json: { data: { proposal: serialized_proposal } }
+  rescue ForbiddenError, UnauthorizedError
+    raise
+  rescue StandardError => e
+    render json: { error: { messages: [e.message] } }, status: 422
+  end
+
   private
 
   def proposal_params
@@ -140,6 +161,13 @@ class Api::ProposalsController < Api::BaseController
       map_location_attributes: map_location_attributes,
       documents_attributes: document_attributes
     )
+  end
+
+  def publish_on_create?
+    published = params.dig(:proposal, :published)
+    return true if published.nil?
+
+    ActiveModel::Type::Boolean.new.cast(published)
   end
 
   def find_projekt_phase

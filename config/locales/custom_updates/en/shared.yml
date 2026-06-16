@@ -39,6 +39,7 @@ en:
       ai_question:
         title: "Individual Analysis by Question"
         subtitle: "Ask your own questions about the submitted proposals and receive a comprehensive evaluation."
+        question_label: "Question"
         placeholder: "Enter your question about the proposals..."
         submit: "Ask AI"
         submitting: "Sending..."
@@ -57,6 +58,9 @@ en:
         no_resources: "No proposals found to analyze."
         error: "An error occurred while generating the answer. Please try again."
         status_failed: "Failed"
+        actions: "Actions"
+        delete: "Delete question"
+        choose_format: "Choose another format"
         pdf_title: "AI Question Analysis"
         pdf_all_questions_title: "AI Question Analysis - All Questions"
         pdf_projekt: "Project"

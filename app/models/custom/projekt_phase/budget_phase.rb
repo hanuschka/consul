@@ -92,6 +92,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     "budget_phase"
   end
 
+  def sidebar_cta_kind
+    return :new_button if budget&.accepting?
+    return :budget_vote if budget&.selecting?
+    return :budget_ballot if budget&.balloting?
+  end
+
   def resources_name
     "budget"
   end
@@ -165,9 +171,6 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     ]
   end
 
-  def embedded_admin_nav_bar_items
-    admin_nav_bar_items.excluding(%w[officing_managers])
-  end
 
   def safe_to_destroy?
     budget.nil?

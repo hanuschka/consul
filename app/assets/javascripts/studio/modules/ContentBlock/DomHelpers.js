@@ -70,6 +70,45 @@ App.ContentBlockEditor.DomHelpers = {
     }
   },
 
+  blockStatusConfig() {
+    return {
+      saved: { modifier: "-saved", icon: "fa-check", text: "Gespeichert", duration: 1100 },
+      error: { modifier: "-error", icon: "fa-triangle-exclamation", text: "Fehler beim Speichern", duration: 2500 }
+    };
+  },
+
+  showBlockStatus(contentBlockWrapper, type) {
+    if (!contentBlockWrapper) return
+
+    const config = this.blockStatusConfig()[type];
+    const zone = contentBlockWrapper.querySelector(".projekt-content-block--toolbar-zone");
+
+    if (!config || !zone) return
+
+    const existing = zone.querySelector(".js-content-block-status");
+
+    if (existing) existing.remove();
+
+    const status = document.createElement("div");
+    status.className = `projekt-content-block--status js-content-block-status ${config.modifier}`;
+
+    const icon = document.createElement("i");
+    icon.className = `fas ${config.icon}`;
+
+    status.appendChild(icon);
+    status.appendChild(document.createTextNode(config.text));
+    zone.appendChild(status);
+
+    this.scheduleBlockStatusRemoval(status, config.duration);
+  },
+
+  scheduleBlockStatusRemoval(status, duration) {
+    setTimeout(() => {
+      status.classList.add("-leaving");
+      setTimeout(() => status.remove(), 200);
+    }, duration);
+  },
+
   applyDefaultMarginIfMissing(contentBlockWrapper) {
     if (!contentBlockWrapper || contentBlockWrapper.style.marginBottom) return;
 

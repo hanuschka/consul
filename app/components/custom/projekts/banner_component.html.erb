@@ -97,7 +97,7 @@
           },
           role: "button",
           aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
-          <span class="image-maximize-button">
+          <span class="image-maximize-button" aria-hidden="true">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
@@ -156,7 +156,8 @@
             </input>
             <button type="button"
                     class="image-change-button projekt-image-upload-button projekt-image-delete-button js-projekt-banner--image-delete-button js-studio-hide-on-preview <%= 'd-none' unless @custom_page.image.present? %>"
-                    aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>">
+                    aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>"
+                    tabindex="-1">
               <i class="fas fa-trash"></i>
             </button>
           </div>

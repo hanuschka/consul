@@ -163,7 +163,9 @@ module Abilities
         budget.balloting_or_later?
         # budget.balloting_finished? && budget.has_winning_investments?
       end
-      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
+      can :read_stats, Budget do |budget|
+        budget.accepting_or_later?
+      end
 
       can [:admin_update, :toggle_selection, :add_memo, :people, :milestones, :progress_bars, :audits],
 Budget::Investment do |investment|
@@ -172,7 +174,7 @@ Budget::Investment do |investment|
 
       can :edit_physical_votes, Budget::Investment do |investment|
         can?(:create, investment.budget) &&
-          investment.budget.current_phase.kind == "selecting"
+          investment.budget.selecting?
       end
 
       can :manage, Poll do |poll|
@@ -208,11 +210,10 @@ Budget::Investment do |investment|
       end
 
       can :destroy, RelatedContent do |related_content|
-        return false unless related_content.parent_relationable.respond_to?(:projekt_phase) && related_content.child_relationable.respond_to?(:projekt_phase)
-
-        user.projekt_manager.allowed_to?("manage",
-related_content.parent_relationable.projekt_phase.projekt) ||
-          user.projekt_manager.allowed_to?("manage", related_content.child_relationable.projekt_phase.projekt)
+        related_content.parent_relationable.respond_to?(:projekt_phase) &&
+          related_content.child_relationable.respond_to?(:projekt_phase) &&
+          (user.projekt_manager.allowed_to?("manage", related_content.parent_relationable.projekt_phase&.projekt) ||
+            user.projekt_manager.allowed_to?("manage", related_content.child_relationable.projekt_phase&.projekt))
       end
 
       can :read_stats, Budget::Investment do |investment|

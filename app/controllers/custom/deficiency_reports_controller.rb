@@ -43,7 +43,14 @@ class DeficiencyReportsController < ApplicationController
 
     @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
-    @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
+    @deficiency_reports_map_pin_count = deficiency_report_map_locations_count(@deficiency_reports)
+
+    @deficiency_reports_coordinates =
+      if @deficiency_reports_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+        all_deficiency_report_map_locations(@deficiency_reports)
+      else
+        []
+      end
 
     set_deficiency_report_votes(@deficiency_reports)
 
@@ -54,6 +61,13 @@ class DeficiencyReportsController < ApplicationController
         else
           render :index
         end
+      end
+
+      format.json do
+        render json: JSON.generate(
+          type: "FeatureCollection",
+          features: all_deficiency_report_map_locations(@deficiency_reports)
+        )
       end
 
       format.csv do

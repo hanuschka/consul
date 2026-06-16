@@ -114,7 +114,7 @@
           contentType: false,
           dataType: "script"
         })
-        .fail(function() {
+        .always(function() {
           input.disabled = false;
         });
     },

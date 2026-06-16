@@ -1,3 +1,5 @@
+require "etc"
+
 class Admin::SystemStatsService < ApplicationService
   LOW_DISK_THRESHOLD_GB = 5.0
 
@@ -101,7 +103,7 @@ class Admin::SystemStatsService < ApplicationService
     base = {
       available:   true,
       server:      "puma",
-      workers:     Integer(ENV.fetch("WEB_CONCURRENCY", 0)),
+      workers:     Integer(ENV.fetch("WEB_CONCURRENCY", Etc.nprocessors)),
       max_threads: max_threads
     }
 

@@ -1,0 +1,8 @@
+// Icon + label row for devise/menu/_login_items_new links, rendered by both
+// the main-app flyout/responsive menus and the /adm konto flyout. Specificity
+// must beat the per-pack anchor rules (e.g. .subnavigation-konto__flyout a).
+li.flyout-item a.flyout-item--link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

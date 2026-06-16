@@ -130,39 +130,39 @@ class Budget < ApplicationRecord
   end
 
   def informing?
-    current_phase.kind == "informing"
+    current_phase&.kind == "informing"
   end
 
   def accepting?
-    current_phase.kind == "accepting"
+    current_phase&.kind == "accepting"
   end
 
   def reviewing?
-    current_phase.kind == "reviewing"
+    current_phase&.kind == "reviewing"
   end
 
   def selecting?
-    current_phase.kind == "selecting"
+    current_phase&.kind == "selecting"
   end
 
   def valuating?
-    current_phase.kind == "valuating"
+    current_phase&.kind == "valuating"
   end
 
   def publishing_prices?
-    current_phase.kind == "publishing_prices"
+    current_phase&.kind == "publishing_prices"
   end
 
   def balloting?
-    current_phase.kind == "balloting"
+    current_phase&.kind == "balloting"
   end
 
   def reviewing_ballots?
-    current_phase.kind == "reviewing_ballots"
+    current_phase&.kind == "reviewing_ballots"
   end
 
   def finished?
-    current_phase.kind == "finished"
+    current_phase&.kind == "finished"
   end
 
   def published_prices?

@@ -29,8 +29,20 @@
     open: function(modalId) {
       const modal = document.getElementById(modalId);
       this.bindEscHandling(modal);
+      this.bindInertCleanup(modal);
       modal.showModal();
+      App.FocusTrap.setBackgroundInert([modal]);
       this.lockScroll();
+    },
+
+    bindInertCleanup: function(modal) {
+      if (modal.dataset.inertCleanupBound) return;
+
+      modal.addEventListener("close", () => {
+        App.FocusTrap.removeBackgroundInert();
+      });
+
+      modal.dataset.inertCleanupBound = "true";
     },
 
     // Native Esc closes the dialog without going through close()/closeById(),

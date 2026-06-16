@@ -74,6 +74,7 @@
           const aiUrl = block.dataset.aiUrl;
           const defaultContent = block.dataset.defaultContent;
           const toolbarPosition = block.dataset.toolbarPosition;
+          const emptyHint = this.detachEmptyHint(block);
 
           const wrappedHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
             block.innerHTML,
@@ -100,6 +101,10 @@
 
           block.parentNode.replaceChild(wrappedElement, block);
 
+          if (emptyHint) {
+            this.moveEmptyHintIntoWrapper(wrappedElement, emptyHint);
+          }
+
           if (wrappedElement.closest("aside, .sidebar, footer")) {
             wrappedElement.classList.add("-compact-mode");
           }
@@ -108,6 +113,28 @@
 
           App.ImageGallery.initialize();
         });
+      },
+
+      detachEmptyHint(block) {
+        const wrap = block.parentElement;
+
+        if (!wrap) return null
+
+        const hint = wrap.querySelector(".js-content-block-empty-hint");
+
+        if (!hint || hint.parentElement !== wrap) return null
+
+        hint.remove();
+
+        return hint;
+      },
+
+      moveEmptyHintIntoWrapper(wrappedElement, hint) {
+        const contentBlock = wrappedElement.querySelector(".js-content-block");
+
+        if (!contentBlock) return
+
+        contentBlock.insertAdjacentElement("beforebegin", hint);
       }
     }
   };

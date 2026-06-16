@@ -43,7 +43,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     overlay.style.display = "none"
     overlay.innerHTML = `
       <div class="image-edit-overlay--height-control">
-        <button type="button" class="js-img-overlay-height-decrease">
+        <button type="button" class="js-img-overlay-height-decrease" tabindex="-1">
           <i class="fa fas fa-minus"></i>
         </button>
         <input
@@ -51,7 +51,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
           class="js-img-overlay-height-input"
           min="30"
         >
-        <button type="button" class="js-img-overlay-height-increase">
+        <button type="button" class="js-img-overlay-height-increase" tabindex="-1">
           <i class="fa fas fa-plus"></i>
         </button>
       </div>
@@ -62,14 +62,14 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       <div class="image-edit-overlay--handle -bottom-right js-img-resize-handle" data-corner="bottom-right"></div>
 
       <div class="image-edit-overlay--actions">
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-change" data-hint="Bild ändern">
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-change" data-hint="Bild ändern" tabindex="-1">
           <i class="fa fas fa-pencil-alt"></i>
         </button>
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop" data-hint="Bildzuschnitt umschalten">
+        <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop" data-hint="Bildzuschnitt umschalten" tabindex="-1">
           <i class="fa fas fa-crop-alt"></i>
         </button>
         <rich-tooltip>
-          <button type="button" class="image-edit-overlay--action-button js-img-overlay-alt">
+          <button type="button" class="image-edit-overlay--action-button js-img-overlay-alt" tabindex="-1">
             <i class="fa fas fa-comment-dots"></i>
           </button>
 

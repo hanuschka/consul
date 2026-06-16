@@ -13,7 +13,7 @@
       </div>
 
       <% unless local_assigns[:hide_stats_link] %>
-        <%= link_to stats_projekt_phase_path(@projekt_phase), data: { turbolinks: false }, class: "button with-icon" do %>
+        <%= link_to stats_projekt_phase_path(@projekt_phase), data: { turbolinks: false }, class: "button with-icon", tabindex: "-1" do %>
           <i class="fas fa-chart-bar"></i>
           <%= t("custom.projekt_phases.subnav.full_stats") %>
         <% end %>

@@ -148,6 +148,10 @@
       border-top: 1px solid rgba(0, 0, 0, 0.06);
       font-size: 13px;
 
+      @media(max-width: $small-tablet-viewport-start) {
+        flex-direction: column;
+      }
+
       &.row {
         display: flex;
         flex-wrap: wrap;
@@ -188,6 +192,10 @@
         margin: 0;
         padding: 0;
         list-style: none;
+
+        @media(max-width: $small-tablet-viewport-start) {
+          flex-direction: column;
+        }
 
         li {
           margin: 0;

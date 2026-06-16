@@ -53,6 +53,7 @@
       App.MobileFixedBottomActionComponentCustom.initialize();
       App.NotifyReviewers.initialize();
       App.LoaderSpinner.initialize();
+      App.AccountUsernameEditComponent.initialize();
     }
   };
 }).call(this);

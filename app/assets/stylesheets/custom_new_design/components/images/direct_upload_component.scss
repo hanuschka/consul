@@ -226,7 +226,7 @@
   &.-preview-set {
     display: block;
 
-    .direct-image-upload--image-preview {
+    .direct-image-upload--image-preview:not([src=""]) {
       display: block;
       z-index: 2;
     }
@@ -235,6 +235,10 @@
       background-color: white;
     }
   }
+}
+
+.direct-image-upload--image-preview {
+  display: none;
 }
 
 .direct-image-upload--file-title {

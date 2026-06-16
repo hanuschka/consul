@@ -9,18 +9,18 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 .sidebar-card {
   position: relative;
   background: white;
-  border-radius: $civic-radius-lg;
-  border: 1px solid $civic-border;
-  box-shadow: $civic-shadow-sm;
+  border-radius: $radius-large;
+  border: 1px solid $soft-border;
+  box-shadow: $shadow-small;
   margin-bottom: 18px;
   color: $main-text-color;
   font-size: 15px;
   width: 100%;
   overflow: hidden;
-  transition: box-shadow $civic-transition;
+  transition: box-shadow $transition-base;
 
   &:hover {
-    box-shadow: $civic-shadow-md;
+    box-shadow: $shadow-medium;
   }
 
   .sidebar-collapse-icon {
@@ -28,11 +28,11 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 
   .switch-paddle {
-    background: $civic-muted;
+    background: $muted-bg;
   }
 
   input:checked ~ .switch-paddle {
-    background: $civic-accent;
+    background: $accent-blue;
   }
 
   .button {
@@ -133,9 +133,9 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
 .sidebar-card--section {
   padding: 20px $sidebar-card-horizontal-padding;
-  font-family: $civic-body-font;
+  font-family: $body-font;
   font-size: 15px;
-  color: $civic-secondary;
+  color: $slate-gray;
 
   .sdg-target-tag-list {
     margin-top: 10px;
@@ -163,11 +163,11 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  font-family: $civic-heading-font;
+  font-family: $heading-font;
   font-size: 15px !important;
   line-height: 1.25;
   margin-bottom: 0 !important;
-  color: $civic-primary;
+  color: $dark-navy;
   font-weight: 600;
   letter-spacing: -0.005em;
   padding: 15px $sidebar-card-horizontal-padding 16px;

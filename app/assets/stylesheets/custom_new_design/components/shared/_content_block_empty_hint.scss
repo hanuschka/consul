@@ -1,0 +1,57 @@
+// Admin-only hint for inline-editable site content blocks rendered via
+// `render_custom_block` (default on). Shown when the block is empty so
+// admins/projekt-managers know the block stays hidden for end users and can
+// click to add content. Self-contained so it works for any consumer without a
+// surrounding card.
+//
+// Visibility is class-driven: the hint is hidden by default and revealed only
+// when the `.content-block-empty-hint-wrap` carries the `is-content-empty`
+// marker. The marker is set initially by ERB (`content_block_body_blank?`) and
+// kept in sync live by `App.ContentBlockEditor.EmptyHintToggle`.
+.content-block-empty-hint {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 14px 18px;
+  background: $dt-base-transparent-background-hover;
+  border: 2px dashed $dt-base;
+  border-radius: 10px;
+  color: $main-text-color;
+  font-size: 15px;
+  line-height: 1.45;
+
+  @media (max-width: $mobile-viewport-start) {
+    gap: 10px;
+    padding: 12px 14px;
+  }
+}
+
+.content-block-empty-hint-wrap.is-content-empty .content-block-empty-hint {
+  display: flex;
+}
+
+.content-block-empty-hint--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  color: $dt-base;
+  font-size: 16px;
+}
+
+.content-block-empty-hint--title {
+  display: block;
+  margin-bottom: 2px;
+  color: $dt-base;
+  font-weight: 700;
+}
+
+.content-block-empty-hint--description {
+  display: block;
+  color: $medium-gray-1;
+}

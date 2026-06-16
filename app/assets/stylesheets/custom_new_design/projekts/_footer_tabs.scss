@@ -12,9 +12,9 @@
 
     // Meta info (Fortlaufend, Registrierte Nutzer)
     .tab-info-summary {
-      font-family: $civic-body-font;
+      font-family: $body-font;
       font-size: 13px;
-      color: $civic-muted-text;
+      color: $muted-text;
     }
 
     &:hover {
@@ -34,7 +34,7 @@
     }
 
     h2 {
-      font-family: $civic-heading-font !important;
+      font-family: $heading-font !important;
       color: var(--brand-color) !important;
       font-size: 20px !important;
       font-weight: 600 !important;
@@ -129,8 +129,8 @@
 
   // Phase navigation arrows
   .arrow-controls button, .arrow-controls a {
-    color: $civic-accent !important;
-    transition: color $civic-transition;
+    color: $accent-blue !important;
+    transition: color $transition-base;
 
     &:hover {
       color: #025D8C !important;

@@ -105,8 +105,8 @@ module ContentBlocksHelper
   def wrap_with_admin_empty_hint(block_html)
     wrapper_classes = "content-block-empty-hint-wrap js-toggle-empty-hint-on-content is-content-empty"
 
-    hint = "<div class=\"content-block-empty-hint js-studio-hide-on-preview\" role=\"note\">"
-    hint << "<span class=\"content-block-empty-hint--icon\" aria-hidden=\"true\"><i class=\"fas fa-eye-slash\"></i></span>"
+    hint = "<div class=\"content-block-empty-hint js-content-block-empty-hint js-studio-hide-on-preview\" role=\"note\">"
+    hint << "<span class=\"content-block-empty-hint--icon\" aria-hidden=\"true\"><i class=\"fas fa-circle-info\"></i></span>"
     hint << "<span class=\"content-block-empty-hint--text\">"
     hint << "<strong class=\"content-block-empty-hint--title\">#{ERB::Util.html_escape(I18n.t("custom.content_blocks.admin_empty_hint_title"))}</strong>"
     hint << "<span class=\"content-block-empty-hint--description\">#{ERB::Util.html_escape(I18n.t("custom.content_blocks.admin_empty_hint"))}</span>"

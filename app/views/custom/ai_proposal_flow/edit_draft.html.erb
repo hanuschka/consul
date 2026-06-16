@@ -2,7 +2,7 @@
   <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 2) %>
 
   <div
-    class="new-card ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-step2-body"
+    class="new-card ai-proposal-flow--body ai-proposal-flow--edit-draft-body js-ai-flow-body js-ai-flow-step2-body"
     data-generate-image-url="<%= @generate_image_url %>"
     data-remove-image-url="<%= ai_remove_image_from_resource_path %>"
     data-aspect-ratio="16:9"

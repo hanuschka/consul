@@ -14,6 +14,7 @@ class ProposalsController
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
+  prepend_before_action :load_draft_proposal_for_admin, only: :show
 
   def index_customization
     resolve_landing_page_from_slug
@@ -270,6 +271,17 @@ class ProposalsController
   end
 
   private
+
+    def load_draft_proposal_for_admin
+      return if current_user.blank?
+      return if !current_user.administrator?
+
+      proposal = Proposal.unscoped.find_by(id: params[:id])
+
+      if proposal&.draft
+        @proposal = proposal
+      end
+    end
 
     def proposal_params
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,

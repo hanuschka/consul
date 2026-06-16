@@ -1,7 +1,7 @@
 <main class="ai-proposal-flow--page">
   <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @projekt_phase, current_step: 1) %>
 
-  <div class="new-card ai-proposal-flow--body">
+  <div class="new-card ai-proposal-flow--body js-ai-flow-body">
     <div class="ai-proposal-flow--body-content js-ai-flow-body-content">
       <%= render AiProposalFlow::ProjectSummaryBannerComponent.new(projekt_phase: @projekt_phase) %>
 

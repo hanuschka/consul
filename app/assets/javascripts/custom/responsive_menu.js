@@ -74,6 +74,13 @@
       return document.querySelector('.js-toggle-mobile-menu');
     },
 
+    handleToggleKey: function(event) {
+      if (event.which !== 13 && event.which !== 32) return;
+
+      event.preventDefault();
+      $(this).find('[data-toggle]').trigger('click');
+    },
+
     handleTabKey: function(event) {
       if (!App.ResponsiveMenu.isMobileMenuOpen()) return;
 
@@ -212,6 +219,8 @@
           $("[data-navbar] button[aria-expanded='true']").attr("aria-expanded", "false");
         }
       });
+
+      $("body").on("keydown", ".js-toggle-mobile-menu", App.ResponsiveMenu.handleToggleKey);
 
       $("body").on("click", ".js-toggle-mobile-menu", function() {
         var $button = $(this);

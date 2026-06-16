@@ -39,7 +39,11 @@
 
     selectCategory: function(categoryId, shouldScroll) {
       var categorySelectElement = document.querySelector(".js-user-resource-select-category");
+
+      if (!categorySelectElement) return;
+
       categorySelectElement.value = categoryId;
+      categorySelectElement.dispatchEvent(new Event("change", { bubbles: true }));
       this.highlightAndScrollToContentCard(categorySelectElement, shouldScroll);
     },
 

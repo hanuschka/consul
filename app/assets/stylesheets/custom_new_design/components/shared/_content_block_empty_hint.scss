@@ -10,20 +10,19 @@
 // kept in sync live by `App.ContentBlockEditor.EmptyHintToggle`.
 .content-block-empty-hint {
   display: none;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 10px;
   margin-bottom: 12px;
-  padding: 14px 18px;
-  background: $dt-base-transparent-background-hover;
-  border: 2px dashed $dt-base;
-  border-radius: 10px;
-  color: $main-text-color;
-  font-size: 15px;
-  line-height: 1.45;
+  padding: 10px 14px;
+  border: 1px dashed $medium-gray-3;
+  border-radius: 8px;
+  color: $medium-gray-3;
+  font-size: 14px;
+  line-height: 1.4;
 
   @media (max-width: $mobile-viewport-start) {
-    gap: 10px;
-    padding: 12px 14px;
+    gap: 8px;
+    padding: 10px 12px;
   }
 }
 
@@ -31,27 +30,37 @@
   display: flex;
 }
 
+// Once moved inside the studio block frame by `wrapContentBlocks`, the hint
+// drops its outer spacing (the wrapper owns block-to-block margin) and sits
+// directly under the toolbar in place of the empty content body.
+.projekt-content-block-wrapper .content-block-empty-hint {
+  margin-bottom: 0;
+}
+
+.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper:not(.-in-edit-mode) .projekt-content-block {
+  min-height: 0;
+}
+
+// Hide the hint while any edit mode is active so the editable body is free.
+.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper.-in-edit-mode .content-block-empty-hint {
+  display: none;
+}
+
 .content-block-empty-hint--icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #fff;
-  color: $dt-base;
-  font-size: 16px;
+  margin-top: 1px;
+  color: $medium-gray-2;
+  font-size: 15px;
 }
 
 .content-block-empty-hint--title {
   display: block;
-  margin-bottom: 2px;
-  color: $dt-base;
-  font-weight: 700;
+  margin-bottom: 1px;
+  color: $medium-gray-3;
+  font-weight: 600;
 }
 
 .content-block-empty-hint--description {
   display: block;
-  color: $medium-gray-1;
+  color: $medium-gray-3;
 }

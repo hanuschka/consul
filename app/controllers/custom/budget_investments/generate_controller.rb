@@ -101,6 +101,7 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
         description: draft_data["description"]
       )
       investment.tag_list = draft_data["tag_list"]
+      assign_generated_taxonomy(investment, draft_data, @projekt_phase)
       investment.save!(validate: false)
       investment
     end
@@ -118,6 +119,8 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
     def draft_resource_params
       params.require(:budget_investment).permit(
         :title, :description, :tag_list, :video_url, :on_behalf_of,
+        :sentiment_id,
+        projekt_label_ids: [],
         image_attributes: [:attachment, :title, :credits, :cached_attachment, :_destroy, :user_id]
       )
     end

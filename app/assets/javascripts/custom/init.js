@@ -27,6 +27,7 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.SharedModal.initialize();
+      App.ImageCropper.initialize();
       App.KlaroAccessibility.initialize();
       App.RevealAccessibility.initialize();
       App.VoiceAssistant.initialize();

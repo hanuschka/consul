@@ -6,7 +6,7 @@
   <% end %>
 <% end %>
 
-<%= render Adm::HeaderComponent.new(title: (@projekt.page&.title || @projekt.name), breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt)) do |header| %>
+<%= render Adm::HeaderComponent.new(title: (@projekt.page&.title || @projekt.name), breadcrumbs: @breadcrumbs, frontend_url: projekt_path(@projekt), compact: true) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t("adm.projekts.projekts.map.hint_text") %></p>
   <% end %>

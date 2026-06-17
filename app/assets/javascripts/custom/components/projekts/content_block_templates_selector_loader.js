@@ -4,11 +4,28 @@
   App.ContentBlockTemplatesSelector = {
     cachedSections: {},
     activeSection: null,
+    lastRequestedSection: null,
 
-    initialize() {},
+    initialize() {
+      $(document).on("click", ".js-content-block-templates-retry", this.handleRetry.bind(this));
+    },
+
+    getContainer() {
+      return $(".js-content-block-templates-selector--inner");
+    },
+
+    getErrorElement() {
+      return $(".js-content-block-templates-error");
+    },
+
+    handleRetry() {
+      this.loadTemplatesContent(this.lastRequestedSection);
+    },
 
     loadTemplatesContent(section) {
       const cacheKey = section || "default";
+
+      this.lastRequestedSection = section;
 
       if (this.cachedSections[cacheKey]) {
         this.restoreFromCache(cacheKey);
@@ -28,7 +45,7 @@
         method: "GET",
         dataType: "html",
         data: ajaxData,
-        timeout: 7000
+        timeout: 20000
       })
         .then((html) => {
           this.handleLoadSuccess(html, cacheKey);
@@ -41,12 +58,18 @@
     handleLoadSuccess(html, cacheKey) {
       this.hideSpinner();
 
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      const $container = this.getContainer();
       $container.html(html).show();
 
-      this.reinitFoundationComponents($container);
+      this.reinitContentComponents($container);
 
-      this.cachedSections[cacheKey] = $container.html();
+      const isFallback = this.isFallbackContent($container);
+      this.toggleFallbackNote(isFallback);
+
+      if (!isFallback) {
+        this.cachedSections[cacheKey] = $container.html();
+      }
+
       this.activeSection = cacheKey;
     },
 
@@ -55,19 +78,28 @@
 
       this.hideSpinner();
 
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      const $container = this.getContainer();
       $container.html(this.cachedSections[cacheKey]).show();
 
-      this.reinitFoundationComponents($container);
+      this.reinitContentComponents($container);
+      this.toggleFallbackNote(this.isFallbackContent($container));
       this.activeSection = cacheKey;
     },
 
-    reinitFoundationComponents($container) {
+    isFallbackContent($container) {
+      return $container.find(".js-content-block-templates-fallback-marker").length > 0
+    },
+
+    toggleFallbackNote(visible) {
+      $(".js-content-block-templates-fallback-note").toggle(visible);
+    },
+
+    reinitContentComponents($container) {
       this.storeOrbitHeights($container);
-      $(document).foundation();
+      App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(document);
       this.restoreOrbitHeights($container);
 
-      $container.find('[data-tabs]').on('change.zf.tabs', () => this.restoreOrbitHeights($container));
+      $container.find('.js-tabs').on('tabs:changed', () => this.restoreOrbitHeights($container));
     },
 
     storeOrbitHeights($container) {
@@ -86,8 +118,9 @@
     },
 
     showSpinner() {
+      this.getErrorElement().hide();
       $(".js-content-block-templates-spinner").show();
-      $(".js-projekt-content-block-templates-selector--inner").hide();
+      this.getContainer().hide();
     },
 
     hideSpinner() {
@@ -97,17 +130,20 @@
     handleLoadError() {
       this.hideSpinner();
 
-      const $container = $(".js-projekt-content-block-templates-selector--inner");
+      const $container = this.getContainer();
       const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
 
-      if (!fallbackTemplate) return
+      if (!fallbackTemplate) {
+        this.getErrorElement().show();
+        return
+      }
 
       const fallbackContent = document.importNode(fallbackTemplate.content, true);
       $container.empty().append(fallbackContent).show();
 
-      $(".js-content-block-templates-fallback-note").show();
+      this.toggleFallbackNote(true);
 
-      this.reinitFoundationComponents($container);
+      this.reinitContentComponents($container);
     }
   };
 }).call(this);

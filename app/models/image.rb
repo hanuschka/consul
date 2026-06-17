@@ -26,13 +26,6 @@ class Image < ApplicationRecord
   validates :imageable_id, presence: true,         if: -> { persisted? && !admin? }
   validates :imageable_type, presence: true,       if: -> { persisted? && !admin? }
 
-  scope :for_studio_file_manager, ->(projekt) {
-    if projekt
-      where(imageable_type: "Projekt", imageable_id: projekt.id)
-    else
-      where(admin: true, imageable_id: nil)
-    end
-  }
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }
 
   default_scope { with_attached_attachment }
@@ -112,7 +105,7 @@ class Image < ApplicationRecord
       if accepted_content_types.include?(attachment_content_type)
         return true if imageable_class == Widget::Card
         return true if imageable_class == SiteCustomization::Page
-        return true if imageable_class == User && title == "avatar" && imageable.new_record?
+        return true if imageable_class == User
 
         unless attachment.analyzed?
           attachment_changes["attachment"].upload
@@ -121,6 +114,9 @@ class Image < ApplicationRecord
 
         width = attachment.metadata[:width]
         height = attachment.metadata[:height]
+
+        return true if width.blank? || height.blank?
+
         min_width = Setting["uploads.images.min_width"].to_i
         min_height = Setting["uploads.images.min_height"].to_i
         errors.add(:attachment, :min_image_width, required_min_width: min_width) if width < min_width

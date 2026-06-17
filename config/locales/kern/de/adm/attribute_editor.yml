@@ -69,6 +69,12 @@ de:
         newsletter_email_footer_block_1:
           body_label: Newsletter-Fußbereich
           body_description: "Der Footer wird am Ende jeder Newsletter-E-Mail angezeigt. Hier können Sie z. B. Kontaktdaten, Impressum-Links oder Abmeldehinweise hinterlegen. Der Inhalt wird automatisch in alle versendeten Newsletter übernommen und sollte den rechtlichen Anforderungen Ihrer Kommune entsprechen. Änderungen werden sofort für neue Newsletter wirksam."
+        email_footer:
+          body_label: E-Mail-Fußzeile (alle E-Mails)
+          body_description: "Wird in der Fußzeile jeder System-E-Mail angezeigt, oberhalb des Organisationsnamens und der Abmeldehinweise. Geeignet z. B. für Kontaktdaten, Impressum-Links oder allgemeine Informationen. Bleibt das Feld leer, wird nur die Standard-Fußzeile angezeigt."
+        email_footer_deficiency_report:
+          body_label: E-Mail-Fußzeile (Mängelmelder)
+          body_description: "Wird in Mängelmelder-E-Mails anstelle der allgemeinen E-Mail-Fußzeile angezeigt. Bleibt das Feld leer, wird die allgemeine System-Fußzeile verwendet. Geeignet z. B. für Kontaktdaten oder Hinweise speziell zu Mängelmeldungen."
         auth_page_legend:
           registrations:
             body_label: "Registrierungsseite – linke Spalte"
@@ -167,8 +173,8 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           "$": "$ (Dollar)"
           "£": "£ (Pfund)"
           "¥": "¥ (Yen)"
-        max_preselected_label: Bestenliste (optional)
-        max_preselected_description: "Begrenzt die Anzahl der bestbewerteten Vorschläge, die nach der Unterstützungsphase in die Prüfungsphase weitergeleitet werden. Nur die Vorschläge mit den meisten Unterstützungen werden übernommen. Lassen Sie das Feld leer, wenn alle Vorschläge ohne Vorauswahl in die Prüfung gehen sollen."
+        max_preselected_label: Bestenliste
+        max_preselected_description: "Begrenzt die Anzahl der bestbewerteten Vorschläge, die nach der Unterstützungsphase in die Prüfungsphase übernommen werden. Übernommen werden die Vorschläge mit den meisten Unterstützungen. Lassen Sie das Feld leer, wenn alle Vorschläge ohne Vorauswahl in die Prüfung gehen sollen.<br><br><strong>Wichtig:</strong> Sobald Sie hier eine Zahl größer als 0 eintragen, wird beim Abschluss der Unterstützungsphase automatisch eine System-E-Mail an alle Einreichenden versendet – eine Zusage an diejenigen, deren Vorschlag übernommen wurde, und eine Absage an alle übrigen."
         hide_money_label: Geld ausblenden
         hide_money_description: "Blendet sämtliche Geldbeträge im gesamten Bürgerhaushalt aus – sowohl bei einzelnen Vorschlägen als auch in Übersichten und Ergebnissen. Diese Option eignet sich, wenn das Budget nicht in Geldwerten gemessen wird oder wenn die Kosten der Vorschläge für die Teilnehmer nicht relevant sein sollen."
         max_number_of_winners_label: Maximale Anzahl an Gewinnern

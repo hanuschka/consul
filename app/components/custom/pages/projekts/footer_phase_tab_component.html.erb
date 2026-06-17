@@ -2,10 +2,11 @@
   id="filter-subnav-<%= phase.id %>"
   class="page-subnav-tab js-projekt-phase-tab projekt-footer-phase-tab  <%= additional_classes %>"
   data-projekt-phase-id="<%= phase.id %>"
-  role="tab"
-  aria-selected="<%= phase.id == params[:projekt_phase_id] %>"
+  role="presentation"
 >
   <%= link_to tab_url,
+    role: "tab",
+    aria: { selected: phase.id == params[:projekt_phase_id] },
     onclick: "$('#footer-content').addClass('show-loader');",
     class: "projekt-footer-phase-link js-remote-link-push-state",
     data: {
@@ -59,6 +60,7 @@
         %>
         <button
            type="button"
+           tabindex="-1"
            class="js-toggle-projekt-phase-visibility-button studio-icon-button"
            title="<%= phase.active? ? hide_phase_title : show_phase_title %>"
            data-hide-title="<%= hide_phase_title %>"
@@ -73,6 +75,7 @@
         %>
         <button
           type="button"
+          tabindex="-1"
           class="js-toggle-projekt-phase-default studio-icon-button"
           title="<%= phase == @default_projekt_phase ? unset_default_title : make_default %>"
           data-unset-default-title="<%= unset_default_title %>"
@@ -84,6 +87,7 @@
         <% if show_send_notification_button? %>
           <button
             type="button"
+            tabindex="-1"
             title="Benachrichtigung senden"
             class="js-send-notifications-for-projekt-phase studio-icon-button"
             data-resource-type="<%= resource_type %>"
@@ -93,13 +97,14 @@
             </i>
           </button>
         <% end %>
-        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "studio-icon-button", target: "#{helpers.embedded? ? '' : '_blank'}" do %>
+        <%= link_to adm_phase_action_path(phase), title: "Bearbeiten", class: "studio-icon-button", target: "_blank", tabindex: "-1" do %>
           <i class="fas fa-edit">
           </i>
         <% end %>
 
         <button
           type="button"
+          tabindex="-1"
           class="js-delete-projekt-phase studio-icon-button"
           <%= !phase.safe_to_destroy? ? "disabled" : "" %>
           title="<%= !phase.safe_to_destroy? ? t('custom.admin.projekt_phases.notice.not_destroyed') : "" %>"

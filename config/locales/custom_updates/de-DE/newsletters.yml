@@ -31,3 +31,4 @@ de:
         confirm_subscription_html: "Mit Klick auf diesen %{link} bestätigen Sie die Anmeldung zum Newsletter."
         successfully_subscribed: "Erfolgreich zum Newsletter angemeldet"
         successfully_unsubscribed: "Erfolgreich vom Newsletter abgemeldet"
+        invalid_token: "Der Bestätigungslink ist ungültig oder abgelaufen."

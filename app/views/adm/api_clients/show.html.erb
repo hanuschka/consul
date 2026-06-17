@@ -13,11 +13,6 @@
 
   <div class="kern-card p-4 mb-4">
     <p class="mb-3">
-      <strong><%= ApiClient.human_attribute_name(:service_user_email) %></strong><br>
-      <%= @api_client.service_user_email %>
-    </p>
-
-    <p class="mb-3">
       <strong><%= ApiClient.human_attribute_name(:access_level) %></strong><br>
       <span class="kern-badge kern-badge--<%= @api_client.access_level == 'admin' ? 'danger' : 'primary' %>">
         <%= t("adm.api_clients.access_level.#{@api_client.access_level}") %>
@@ -58,7 +53,7 @@
     </div>
   </div>
 
-  <% if @api_client.user.present? %>
+  <% if @api_client.dedicated_user_mode? && @api_client.user.present? %>
     <h3 class="mb-3"><%= t("adm.api_clients.show.service_user_title") %></h3>
 
     <%= kern_alert(title: t("adm.api_clients.show.service_user_warning_title"), style: :warning) do %>
@@ -66,23 +61,11 @@
       <p><%= t("adm.api_clients.show.service_user_login_warning") %></p>
     <% end %>
 
-    <div class="kern-card p-4 mt-3">
-      <div class="mb-3">
-        <% if @api_client.user.image&.attachment&.attached? %>
-          <%= image_tag(
-            @api_client.user.image.variant(:medium),
-            style: "border-radius: 50%; max-width: 100px; height: auto;",
-            alt: @api_client.user.name
-          ) %>
-        <% else %>
-          <div
-            style="width: 100px; height: 100px; border-radius: 50%; background-color: var(--kern-gray-200); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--kern-gray-600); font-size: 40px;"
-          >
-            <%= @api_client.user.first_letter_of_name %>
-          </div>
-        <% end %>
-      </div>
+    <div class="mt-3 mb-3">
+      <%= render Adm::SystemUserInfoComponent.new(user: @api_client.user, kind: :api_client) %>
+    </div>
 
+    <div class="kern-card p-4">
       <% if @api_client.user.first_name.present? || @api_client.user.last_name.present? %>
         <p class="mb-2">
           <strong><%= t("adm.api_clients.show.service_user_name") %></strong><br>
@@ -90,10 +73,23 @@
         </p>
       <% end %>
 
-      <p class="mb-0">
+      <p class="mb-2">
         <strong><%= User.human_attribute_name(:username) %></strong><br>
         <%= @api_client.user.username %>
       </p>
+
+      <p class="mb-0">
+        <strong><%= ApiClient.human_attribute_name(:service_user_email) %></strong><br>
+        <%= @api_client.service_user_email %>
+      </p>
     </div>
+  <% else %>
+    <h3 class="mb-3"><%= t("adm.api_clients.show.system_user_title") %></h3>
+
+    <div class="kern-hint mb-3">
+      <p class="mb-0 fs-2"><%= t("adm.api_clients.show.system_user_note") %></p>
+    </div>
+
+    <%= render Adm::SystemUserInfoComponent.new(user: @api_client.content_author) %>
   <% end %>
 </div>

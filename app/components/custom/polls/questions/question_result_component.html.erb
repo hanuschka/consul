@@ -37,6 +37,10 @@
               <span><%= answer.total_votes %></span>
               <br>
               <small>(<%= answer.total_votes_percentage.round(2) %>%)</small>
+              <% if question.votation_type&.multiple_with_weight? %>
+                <br>
+                <small class="poll-results-voters"><%= t("custom.polls.results.voters", count: answer.total_voters) %></small>
+              <% end %>
             </td>
             <td class='answers-column <%= answer.total_votes == most_voted_answer_votes ? "win" : "" %>' >
               <% if question.open_question_answer == answer %>

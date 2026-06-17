@@ -83,6 +83,7 @@ module Adm
         options[:wide] = true if params[:wide].present?
         options[:hide_label] = true if params[:hide_label].present?
         options[:inline] = true if params[:inline].present?
+        options[:toolbar] = params[:toolbar] if params[:toolbar].present?
         options[:divider] = ActiveModel::Type::Boolean.new.cast(params[:divider]) if params.key?(:divider)
         options[:ai_gated] = true if params[:ai_gated].present?
         options

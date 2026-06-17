@@ -1,14 +1,14 @@
-<dialog
-  id="<%= id %>"
-  class="<%= css_classes %>"
-  <% if !close_on_backdrop %>data-no-backdrop-close<% end %>
->
-  <div class="shared-modal--content">
-    <% if closeable %>
-      <button class="close-button round-icon-button js-shared-modal-close" type="button" aria-label="Close">
-        <i class="fas fa-times"></i>
-      </button>
-    <% end %>
+<%= tag.dialog id: id, class: css_classes, data: dialog_data do %>
+  <% if content_wrapper %>
+    <div class="shared-modal--content">
+      <% if closeable %>
+        <button class="close-button round-icon-button js-shared-modal-close" type="button" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      <% end %>
+      <%= content %>
+    </div>
+  <% else %>
     <%= content %>
-  </div>
-</dialog>
+  <% end %>
+<% end %>

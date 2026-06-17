@@ -200,7 +200,7 @@ export default class extends Controller {
     event.preventDefault()
     event.stopPropagation()
 
-    const card = event.target.closest(".files-asset-card")
+    const card = event.target.closest(".files-asset-card") || event.target.closest(".files-asset-row")
 
     if (!card) return
 
@@ -230,33 +230,20 @@ export default class extends Controller {
     this.editingAsset = null
   }
 
+  editModalBackdrop(event) {
+    if (event.target === this.editModalTarget) this.editModalClose()
+  }
+
   async editModalSubmit(event) {
     event.preventDefault()
 
     if (!this.editingAsset) return
 
     const card = this.editingAsset
-    const updateUrl = card.dataset.updateUrl
-    const id = card.dataset.id
-    const type = card.dataset.type
-    const fallbackEndpoint = type === "picture" ? "/ckeditor/pictures" : "/ckeditor/documents"
-    const url = updateUrl || `${fallbackEndpoint}/${id}`
-
     const formData = this.buildEditFormData(card)
 
     try {
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          "X-CSRF-TOKEN": this.csrfToken(),
-          "Accept": "application/json"
-        },
-        body: formData
-      })
-
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
-
-      const data = await response.json()
+      const data = await this.patchAsset(card, formData)
 
       this.applyUpdateToCard(card, data)
       this.editModalClose()
@@ -264,6 +251,58 @@ export default class extends Controller {
       console.error("Files edit submit failed", error)
       alert(this.editFailedMessage())
     }
+  }
+
+  async altPopupSave(event) {
+    event.preventDefault()
+
+    const button = event.currentTarget
+    const popup = button.closest("inline-popup")
+    const card = button.closest(".files-asset-card") || button.closest(".files-asset-row")
+
+    if (!card) return
+
+    const altText = popup.querySelector(".js-files-alt-input").value.trim()
+
+    const formData = new FormData()
+    formData.append("picture[alt_text]", altText)
+
+    button.disabled = true
+
+    try {
+      const data = await this.patchAsset(card, formData)
+
+      this.applyUpdateToCard(card, data)
+      popup.close()
+    } catch (error) {
+      console.error("Files alt save failed", error)
+      addFlashMessage(this.editFailedMessage(), "danger")
+    } finally {
+      button.disabled = false
+    }
+  }
+
+  assetUpdateUrl(card) {
+    if (card.dataset.updateUrl) return card.dataset.updateUrl
+
+    const fallbackEndpoint = card.dataset.type === "picture" ? "/ckeditor/pictures" : "/ckeditor/documents"
+
+    return `${fallbackEndpoint}/${card.dataset.id}`
+  }
+
+  async patchAsset(card, formData) {
+    const response = await fetch(this.assetUpdateUrl(card), {
+      method: "PATCH",
+      headers: {
+        "X-CSRF-TOKEN": this.csrfToken(),
+        "Accept": "application/json"
+      },
+      body: formData
+    })
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+    return response.json()
   }
 
   buildEditFormData(card) {
@@ -290,6 +329,23 @@ export default class extends Controller {
     if (data.title !== undefined) card.dataset.title = data.title || ""
     if (data.description !== undefined) card.dataset.description = data.description || ""
     if (data.alt_text !== undefined) card.dataset.altText = data.alt_text || ""
+
+    this.syncAltTextDisplay(card)
+  }
+
+  syncAltTextDisplay(card) {
+    const badge = card.querySelector(".js-files-alt-badge")
+
+    if (!badge) return
+
+    const altText = (card.dataset.altText || "").trim()
+    const input = card.querySelector(".js-files-alt-input")
+
+    badge.dataset.altState = altText ? "set" : "missing"
+    card.querySelector(".js-files-alt-text-row").hidden = altText === ""
+    card.querySelector(".js-files-alt-text-value").textContent = altText
+
+    if (input) input.value = altText
   }
 
   csrfToken() {
@@ -365,11 +421,11 @@ export default class extends Controller {
   replaceContent(html) {
     const doc = new DOMParser().parseFromString(html, "text/html")
     const newGrid = doc.querySelector(".files-index--grid")
-    const newListBody = doc.querySelector(".files-index--list tbody")
+    const newListItems = doc.querySelector(".files-index--list-items")
     const newPagination = doc.querySelector(".files-index--pagination")
 
     if (newGrid) this.gridTarget.innerHTML = newGrid.innerHTML
-    if (newListBody && this.hasListTarget) this.listTarget.innerHTML = newListBody.innerHTML
+    if (newListItems && this.hasListTarget) this.listTarget.innerHTML = newListItems.innerHTML
     if (newPagination) this.paginationTarget.innerHTML = newPagination.innerHTML
   }
 
@@ -385,7 +441,6 @@ export default class extends Controller {
       ".js-fm-filter-updated-to",
       ".js-fm-filter-imageable-type",
       ".js-fm-filter-documentable-type",
-      ".js-fm-filter-admin-flag",
       ".js-fm-filter-sort"
     ]
 

@@ -4,20 +4,27 @@
 <%= form_with model: investment,
       url: adm_projekts_phase_budget_investment_path(projekt_phase, investment),
       method: :patch,
-      data: { controller: "adm-feasibility-toggle" } do |f| %>
+      data: {
+        controller: "shared--visibility-toggle",
+        "shared--visibility-toggle-show-for-value": "feasible unfeasible"
+      } do |f| %>
   <%= hidden_field_tag :editor, "feasibility" %>
 
-  <div class="mb-3" data-action="change->adm-feasibility-toggle#toggle">
+  <div
+    class="mb-3"
+    data-action="change->shared--visibility-toggle#toggle"
+    data-shared--visibility-toggle-target="source"
+  >
     <%= f.collection_radio_buttons :feasibility,
       Budget::Investment::FEASIBILITIES.map { |v| [v, t("adm.attribute_editor.budget/investment.feasibility_label_options.#{v}")] },
       :first, :last, disabled: !phase_enabled %>
   </div>
 
-  <div class="mb-3" data-adm-feasibility-toggle-target="fields">
+  <div class="mb-3" data-shared--visibility-toggle-target="shown">
     <%= f.rich_text_area :valuator_explanation, disabled: !phase_enabled %>
   </div>
 
-  <div class="mb-3" data-adm-feasibility-toggle-target="fields">
+  <div class="mb-3" data-shared--visibility-toggle-target="shown">
     <%= f.check_box :valuation_finished, disabled: !phase_enabled %>
   </div>
 

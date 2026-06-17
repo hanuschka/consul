@@ -1,0 +1,82 @@
+<div class="projekt-import-list-item <%= state_modifier %>">
+  <%= link_to primary_action_url,
+        class: "projekt-import-list-item--icon #{state_modifier}",
+        tabindex: -1,
+        aria: { hidden: true },
+        data: { turbo: false } do %>
+    <span class="material-symbols-outlined"><%= state_icon %></span>
+  <% end %>
+
+  <div class="projekt-import-list-item--body">
+    <div class="projekt-import-list-item--headline">
+      <% files_link = link_to(files_summary, primary_action_url,
+            class: "projekt-import-list-item--files",
+            data: { turbo: false }) %>
+      <% if show_files_tooltip? %>
+        <rich-tooltip delay="500" class="projekt-import-list-item--files-tooltip">
+          <%= files_link %>
+          <template><%= files_full %></template>
+        </rich-tooltip>
+      <% else %>
+        <%= files_link %>
+      <% end %>
+      <span class="projekt-import-list-item--badge <%= state_modifier %>"><%= state_label %></span>
+    </div>
+
+    <div class="projekt-import-list-item--meta">
+      <% if display_state == :analyzing %>
+        <span class="projekt-import-list-item--spinner" aria-hidden="true"></span>
+      <% end %>
+      <span class="projekt-import-list-item--time"><%= created_label %></span>
+      <% if show_finished? %>
+        <span class="projekt-import-list-item--meta-sep" aria-hidden="true">·</span>
+        <span class="projekt-import-list-item--time"><%= finished_label %></span>
+      <% end %>
+    </div>
+
+    <% if show_error? %>
+      <p class="projekt-import-list-item--error"><%= error_preview %></p>
+    <% end %>
+
+    <% if show_created_projekts? %>
+      <div class="projekt-import-list-item--projekts">
+        <% created_projekts.each do |projekt| %>
+          <%= link_to helpers.projekt_path(projekt),
+                class: "projekt-import-projekt-badge",
+                data: { turbo: false } do %>
+            <span class="projekt-import-projekt-badge--image" aria-hidden="true">
+              <% if (variant = projekt_image_variant(projekt)) %>
+                <%= image_tag variant, class: "projekt-import-projekt-badge--img", alt: "" %>
+              <% else %>
+                <span class="material-symbols-outlined">image</span>
+              <% end %>
+            </span>
+            <span class="projekt-import-projekt-badge--text">
+              <span class="projekt-import-projekt-badge--title"><%= projekt.name %></span>
+              <% if projekt_subtitle(projekt).present? %>
+                <span class="projekt-import-projekt-badge--subtitle"><%= projekt_subtitle(projekt) %></span>
+              <% end %>
+            </span>
+            <span class="material-symbols-outlined projekt-import-projekt-badge--open" aria-hidden="true">open_in_new</span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="projekt-import-list-item--actions">
+    <%= link_to primary_action_label, primary_action_url,
+          class: "projekt-import-list-item--primary-button",
+          data: { turbo: false } %>
+
+    <button type="button"
+            class="round-icon-button"
+            data-action="click->projekt-imports--delete-confirm#request"
+            data-delete-url="<%= delete_url %>"
+            data-import-label="<%= files_summary %>"
+            aria-label="<%= t('adm.projekts.imports.list.actions.delete') %>"
+            title="<%= t('adm.projekts.imports.list.actions.delete') %>">
+      <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+    </button>
+  </div>
+</div>

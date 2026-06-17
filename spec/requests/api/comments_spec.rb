@@ -113,6 +113,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a comment' do
@@ -405,6 +407,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -452,6 +456,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -605,40 +611,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let!(:context) { create_phase_with_context }
-        let(:comment_record) do
-          comment = Comment.new(
-            user: api_client.user,
-            commentable: context[1],
-            body: 'Test comment'
-          )
-          comment.save!
-          comment
-        end
-        let(:id) { comment_record.id }
-
-        before do
-          comment_record
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a comment' do
@@ -742,6 +715,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

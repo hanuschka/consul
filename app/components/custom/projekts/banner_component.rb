@@ -21,11 +21,18 @@ class Projekts::BannerComponent < ApplicationComponent
     return false if @compact
     return false unless @projekt.present?
 
-    end_date_chip_text.present? || phase_status_chips.any?
+    start_date_chip_text.present? || end_date_chip_text.present? || phase_status_chips.any?
+  end
+
+  def start_date_chip_text
+    return nil unless @projekt&.show_start_date_in_frontend? && @projekt&.total_duration_start.present?
+
+    I18n.t("custom.projekts.page.sidebar.banner.start_date_chip",
+      date: I18n.l(@projekt.total_duration_start, format: :long))
   end
 
   def end_date_chip_text
-    return nil unless @projekt&.total_duration_end.present?
+    return nil unless @projekt&.show_end_date_in_frontend? && @projekt&.total_duration_end.present?
 
     I18n.t("custom.projekts.page.sidebar.banner.end_date_chip",
       date: I18n.l(@projekt.total_duration_end, format: :long))

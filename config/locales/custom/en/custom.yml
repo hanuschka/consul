@@ -62,6 +62,8 @@ en:
       content_block_templates_selector:
         loading: "Loading content block templates..."
         fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
+        load_error: "Content block templates could not be loaded."
+        retry: "Try again"
         ai_create_button:
           label: Create with AI
           title: Let AI create a content block
@@ -69,6 +71,11 @@ en:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"
         tabs:
+          basic_content: Basic content
+          status_and_notes: Status & notes
+          teasers_and_promotions: Teasers and promotions
+          media_and_resources: Media & resources
+          messages: Messages
           internal_content_blocks: Internal content blocks
           own_content_blocks: Own content blocks
         saved_content_blocks:

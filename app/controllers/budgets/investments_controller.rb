@@ -66,6 +66,8 @@ module Budgets
     end
 
     def show
+      redirect_to investments_path and return if @investment.projekt.nil?
+
       auto_sign_in_guest_for(@investment.projekt_phase)
 
       @commentable = @investment

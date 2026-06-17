@@ -5,9 +5,18 @@ module ProposalsHelper
   def all_proposal_map_locations(proposals_for_map)
     ids = proposals_for_map.except(:limit, :offset, :order).ids.uniq
 
-    map_locations = MapLocation.where(mappable_type: "Proposal", mappable_id: ids)
-                               .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment, :masterportal_pin])
-                               .map(&:features_json_data)
+    MapLocation.proposal_features(ids)
+  end
+
+  def proposal_map_locations_count(proposals_for_map, projekt_phase = nil)
+    ids = proposals_for_map.except(:limit, :offset, :order).ids.uniq
+    count = MapLocation.where(mappable_type: "Proposal", mappable_id: ids).count
+
+    if projekt_phase.present?
+      count += MasterportalPin.where(projekt_phase_id: projekt_phase.id).standalone.count
+    end
+
+    count
   end
 
   def label_error_class?(field)

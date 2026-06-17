@@ -55,7 +55,7 @@ class Api::QuestionsController < Api::BaseController
         @projekt_phase.questions.new(projekt_question_params)
       end
 
-    projekt_question.author = current_client.user
+    projekt_question.author = current_client.content_author
 
     if projekt_question.save
       serialized_projekt_question = QuestionSerializer.new(projekt_question).serialize

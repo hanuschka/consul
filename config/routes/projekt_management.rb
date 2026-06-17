@@ -4,7 +4,6 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
-      # get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
@@ -94,7 +93,6 @@ namespace :projekt_management do
   resources :projekts, only: %i[index edit update] do
     member do
       patch :update_standard_phase
-      get :frame_new_phase_selector
       patch :update_map
       post :notify_reviewers
     end

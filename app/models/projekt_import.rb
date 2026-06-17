@@ -24,6 +24,36 @@ class ProjektImport < ApplicationRecord
     image_skipped: "skipped"
   }, _prefix: :image
 
+  ANALYSIS_STALL_AFTER = 15.minutes
+
+  IN_PROGRESS_STATUSES = %w[pending extracting processing chatting submitting].freeze
+  ANALYZING_STATUSES = %w[pending extracting processing].freeze
+
+  scope :in_progress, -> { where(status: IN_PROGRESS_STATUSES) }
+  scope :for_listing, -> { order(updated_at: :desc) }
+
+  def analyzing?
+    status.in?(ANALYZING_STATUSES)
+  end
+
+  def stalled?
+    return false if !analyzing?
+
+    updated_at < ANALYSIS_STALL_AFTER.ago
+  end
+
+  def created_projekts
+    return Projekt.none if created_projekt_ids.blank?
+
+    Projekt.where(id: created_projekt_ids)
+  end
+
+  def record_created_projekt!(projekt)
+    ids = (created_projekt_ids + [projekt.id]).uniq
+
+    update!(created_projekt_ids: ids, projekt_id: projekt.id)
+  end
+
   def mark_failed!(message)
     update!(status: "failed", error_message: message.to_s)
   end

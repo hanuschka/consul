@@ -289,7 +289,7 @@ module DocxServices
       def resource_url(resource)
         Rails.application.routes.url_helpers.polymorphic_url(
           resource,
-          host: Rails.application.config.action_mailer.default_url_options[:host] || "localhost:3000"
+          **UrlOptions.default
         )
       rescue StandardError
         nil
@@ -300,7 +300,7 @@ module DocxServices
 
         Rails.application.routes.url_helpers.user_url(
           resource.author,
-          host: Rails.application.config.action_mailer.default_url_options[:host] || "localhost:3000"
+          **UrlOptions.default
         )
       rescue StandardError
         nil

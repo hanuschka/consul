@@ -1,45 +1,56 @@
-<div id="username">
-  <% if @show_form %>
-    <%= form_for @user, url: update_username_account_path, remote: true, authenticity_token: true do |f| %>
-      <div>
-        <%= f.text_field :username,
-                         label: t("custom.account.show.username_label"),
-                         label_options: { class: "show-for-sr" },
-                         style: "display:inline-block;",
-                         "aria-required": true %>
+<div id="username" class="account-username js-account-username">
+  <% if @edit_mode && @user == current_user %>
+    <div class="account-username--display js-account-username-display">
+      <span class="account-username--name js-account-username-name"><%= @user.name %></span>
+
+      <button
+        type="button"
+        class="users-profile-banner--edit-button account-username--edit-button js-account-username-edit-button"
+        aria-label="<%= t("custom.accessibility.account.edit_username.edit_button") %>"
+      >
+        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <form
+      class="account-username--form js-account-username-form"
+      data-update-url="<%= update_username_account_path %>"
+    >
+      <div class="account-username--row">
+        <label class="show-for-sr" for="user_username"><%= t("custom.account.show.username_label") %></label>
+        <input
+          type="text"
+          id="user_username"
+          class="account-username--input js-account-username-input"
+          value="<%= @user.username %>"
+          autocomplete="off"
+          aria-required="true"
+        >
+
+        <button
+          type="button"
+          class="round-icon-button account-username-form-control -cancel js-account-username-cancel"
+          aria-label="<%= t("custom.accessibility.account.edit_username.cancel_button") %>"
+        >
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+
+        <button
+          type="submit"
+          class="round-icon-button account-username-form-control -save js-account-username-save"
+          aria-label="<%= t("custom.accessibility.account.edit_username.save_button") %>"
+        >
+          <i class="fas fa-check" aria-hidden="true"></i>
+        </button>
       </div>
-      <%= f.hidden_field :cancel_changes, value: false %>
-      <%= f.submit "Save", class: "d-none" %>
 
-      <button
-        type="button"
-        class="account-username-form-control"
-        aria-label="<%= t("custom.accessibility.account.edit_username.cancel_button") %>"
-        onclick="$('#user_cancel_changes').val('true');$(this.closest('form')).trigger('submit.rails')"
-      >
-        <i class="fas fa-times" aria-hidden="true"></i>
-      </button>
-
-      <button
-        type="button"
-        class="account-username-form-control"
-        aria-label="<%= t("custom.accessibility.account.edit_username.save_button") %>"
-        onclick="$(this.closest('form')).trigger('submit.rails')"
-      >
-        <i class="fas fa-check" aria-hidden="true"></i>
-      </button>
-
-    <% end %>
+      <div
+        class="account-username--error js-account-username-error"
+        role="alert"
+        hidden
+      ></div>
+    </form>
   <% else %>
     <%= @user.name %>
-    <% if @edit_mode && @user == current_user %>
-      <div style="display:inline-block;">
-        <div class="users-profile-banner--edit-button">
-          <%= link_to edit_username_account_path, remote: true, role: "button", "aria-label": t("custom.accessibility.account.edit_username.edit_button") do %>
-            <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
   <% end %>
 </div>

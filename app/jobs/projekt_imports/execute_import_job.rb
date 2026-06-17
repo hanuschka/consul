@@ -1,6 +1,8 @@
 class ProjektImports::ExecuteImportJob < ApplicationJob
   queue_as :projekt_imports
 
+  BANNER_ASPECT_RATIO = "16:9".freeze
+
   def perform(projekt_import_id)
     projekt_import = ProjektImport.find(projekt_import_id)
     projekt_import.update!(status: "submitting")
@@ -24,9 +26,10 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     end
 
     projekt = create_result.data[:projekt]
-    projekt_import.update!(status: "completed", error_message: nil)
 
     generate_image_if_requested(projekt_import, projekt)
+
+    projekt_import.update!(status: "completed", error_message: nil)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ExecuteImportJob] failed: #{e.message}")
     pi = ProjektImport.find_by(id: projekt_import_id)
@@ -51,7 +54,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
     projekt_import.update!(image_status: "running")
 
-    response = DtApi::Client.new.ai.generate_image(prompt: image_prompt)
+    response = DtApi::Client.new.ai.generate_image(prompt: image_prompt, aspect_ratio: BANNER_ASPECT_RATIO)
 
     if !response.success?
       projekt_import.update!(image_status: "failed", image_error: "DT image generation failed")

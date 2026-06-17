@@ -7,12 +7,8 @@ class Dt::VoiceAssistant::PreviewListComponent < ApplicationComponent
     @codename = codename
   end
 
-  def self.enabled?
-    Rails.env.development? || Rails.env.staging?
-  end
-
   def render?
-    self.class.enabled?
+    helpers.params[:designs].to_s == "true"
   end
 
   def list_modifier
@@ -23,5 +19,17 @@ class Dt::VoiceAssistant::PreviewListComponent < ApplicationComponent
 
   def create_session_url
     helpers.voice_assistant_create_session_v2_path
+  end
+
+  def geocode_url
+    helpers.voice_assistant_geocode_location_coordinates_path
+  end
+
+  def generate_image_url
+    helpers.ai_generate_image_path
+  end
+
+  def aspect_ratio
+    "16:9"
   end
 end

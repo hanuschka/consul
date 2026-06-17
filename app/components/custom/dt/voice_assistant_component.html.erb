@@ -1,69 +1,11 @@
 <div
-  class="voice-assistant js-voice-assistant"
-  data-initial-data="<%= assistant_initial_data %>"
+  class="voice-assistant-standard js-va-demo-list"
+  data-create-session-url="<%= create_session_url %>"
   data-codename="<%= assistant_codename %>"
   data-projekt-phase-id="<%= projekt_phase&.id %>"
-  data-language="<%= language %>"
-  data-version="<%= version %>"
-  data-create-session-url="<%= create_session_url %>"
   data-geocode-url="<%= voice_assistant_geocode_location_coordinates_path %>"
   data-generate-image-url="<%= ai_generate_image_path %>"
   data-aspect-ratio="16:9"
 >
-  <button
-    type="button"
-    class="voice-assistant-round-button voice-assistant--collapse-button js-voice-assistant-collapse-button"
-  >
-    <i class="fas fa-xmark"></i>
-  </button>
-  <button
-    type="button"
-    class="voice-assistant-round-button voice-assistant--expand-button js-voice-assistant-expand-button"
-  >
-    <span class="voice-assistant--expand-icon"><i class="fas fa-microphone"></i></span>
-    Sprachassistent öffnen
-  </button>
-  <div class="voice-assistant--inner">
-    <div class="voice-assistant-topbar">
-      <h2>KI-Sprachassistent - Bringt Ideen in Form.</h2>
-    </div>
-
-    <div class="voice-assistant-panel">
-      <div class="voice-assistant-panel-buttons">
-        <button
-          type="button"
-          class="voice-assistant-round-button voice-assistant-speak-button js-voice-assistant-speak-button"
-          data-title-mute="Mute microphone"
-          data-title-unmute="Unmute microphone"
-          data-title-start="Start conversation"
-          data-title-loading="Initializing..."
-          >
-          <i class="fas"></i>
-        </button>
-        <button
-          type="button"
-          class="voice-assistant-round-button voice-assistant-stop-button js-voice-assistant-stop-button"
-          title="Turn off assistant"
-          >
-          <i class="fas"></i>
-        </button>
-      </div>
-
-      <div class="js-voice-assistant-visualization"></div>
-      <div class="js-voice-assistant-visualization-blur"></div>
-    </div>
-  </div>
-  <div class="voice-assistant-statusbar">
-    <div data-status-value="starting" class="voice-assistant-statusbar-value">
-      Starten...
-    </div>
-    <div data-status-value="ready" class="voice-assistant-statusbar-value">
-      Sag "Hallo".
-    </div>
-    <div data-status-value="paused" class="voice-assistant-statusbar-value">
-      <i class="fa fa-microphone-slash"></i>
-      Mikrofon stummgeschaltet
-    </div>
-    <div class="voice-assistant-messagebar js-voice-assistant-messagebar"></div>
-  </div>
+  <%= render Dt::VoiceAssistant::V41Component.new %>
 </div>

@@ -1,24 +1,17 @@
 <%= render "custom/admin/projekt_phases/heading" %>
 
-<% unless embedded? %>
-  <%= render "custom/admin/projekt_phases/nav_bar" %>
-<% end %>
+<%= render "custom/admin/projekt_phases/nav_bar" %>
 
 <div class="row">
   <div class="column">
     <h2>
       <%= t("custom.admin.projekt_phases.projekt_events.page_title") %>
-      <% if embedded? %>
-        <%= render Shared::ExplainButtonComponent.new(
-          explain: "projekt events"
-        ) %>
-      <% end %>
     </h2>
   </div>
 </div>
 
 <div class="row">
-  <% column_size_medium = embedded? ? "" : "medium-8" %>
+  <% column_size_medium = "medium-8" %>
   <div class="column small-12 <%= column_size_medium %>">
     <%= render partial: "custom/admin/projekt_events/form", locals: { event: @projekt_event } %>
   </div>
@@ -27,7 +20,7 @@
 <div class='margin-top'>
   <% @projekt_events.each do |event| %>
     <div class="row">
-      <% column_size_medium = embedded? ? "" : "medium-8" %>
+      <% column_size_medium = "medium-8" %>
       <div class='column small-12 <%= column_size_medium %> projekt-event' id="<%= dom_id(event) %>">
         <div class='projekt-event-content margin-bottom'>
           <div class="row">

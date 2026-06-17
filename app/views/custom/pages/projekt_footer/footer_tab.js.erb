@@ -7,6 +7,7 @@ $("#footer-content").removeClass("show-loader");
 $("#footer-content > .loader-spinner-wrapper > .loader-spinner-wrapper--content").html("<%= j render("pages/#{footer_version}/#{@projekt_phase.name}") %>");
 App.Projekts.toggleDefaultProjekts()
 App.Projekts.toggleProjektsInSidebarFilter();
+App.Studio.SiteContentBlockEditor.initialize();
 App.CollapseTextComponent.enableHoverButtons();
 App.LivesteamLivequestion.initialize();
 App.IframeFilter.initialize();

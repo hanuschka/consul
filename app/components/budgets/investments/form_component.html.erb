@@ -1,6 +1,6 @@
 <% if Setting.new_design_enabled? %>
 
-  <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %>">
+  <main class="user-resources-form <%= " -no-image" unless projekt_phase_feature?(budget.projekt_phase, "form.allow_attached_image") %><%= " -embbeded-in-ai-flow" if @embbeded_in_ai_flow %>">
     <% if projekt_phase_feature?(budget.projekt_phase, "form.voice_assistant") && Ai::Settings.voice_assistant_allowed? %>
       <%= render Dt::VoiceAssistantComponent.new(
         assistant_codename: "budget_proposal_voice_assistant",
@@ -8,7 +8,7 @@
       ) %>
     <% end %>
 
-    <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form" }) do |f| %>
+    <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form", id: dom_id(investment, :form) }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
       <div class="flex-layout">
@@ -88,6 +88,7 @@
           <% end %>
         </div>
 
+        <% if show_sidebar? %>
         <aside class="sidebar">
 
           <% if projekt_phase_feature?(investment.projekt_phase, "form.show_implementation_option_fields") %>
@@ -169,8 +170,10 @@
 
           <%= f.invisible_captcha :subtitle %>
         </aside>
+        <% end %>
       </div>
 
+      <% unless @embbeded_in_ai_flow %>
       <div class="user-resources-form--submit-section">
         <% if investment.new_record? %>
           <h3 class="user-resources-form--submit-section--privacy-policy">
@@ -198,6 +201,7 @@
 
         <%= f.submit t("custom.user_resources.form.submit_button"), class: "button" %>
       </div>
+      <% end %>
     <% end %>
   </main>
 

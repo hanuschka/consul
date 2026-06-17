@@ -1,22 +1,103 @@
-#username {
-  form {
-    display: flex;
+.account-username--display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
 
-    input#user_username {
-      margin-bottom: 10px;
-    }
+.account-username--form {
+  display: none;
+}
 
-    input#user_username.is-invalid-input {
-      border-color: red;
-    }
+.account-username.-editing .account-username--display {
+  display: none;
+}
+
+.account-username.-editing .account-username--form {
+  display: block;
+}
+
+.account-username {
+  justify-content: center;
+}
+
+.account-username--row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    margin-bottom: 0 !important;
   }
 }
 
+.account-username--input {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.account-username--input.is-invalid-input {
+  border-color: $destructive-red;
+}
+
+.account-username--error {
+  margin-top: 6px;
+  color: $destructive-red;
+  font-size: 14px;
+}
+
 .account-username-form-control {
-  display: inline-block;
-  cursor: pointer;
-  margin-left: 12px;
-  margin-top: 15px;
-  font-size: 20px;
-  color: #003A71;
+  flex-shrink: 0;
+}
+
+.account-username-form-control.-cancel,
+.account-username-form-control.-save {
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.account-username-form-control.-cancel {
+  color: $destructive-red;
+  background-color: color-mix(in srgb, $destructive-red 10%, transparent);
+
+  &:hover {
+    background-color: color-mix(in srgb, $destructive-red 16%, transparent);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, $destructive-red 24%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $destructive-red;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.account-username-form-control.-save {
+  color: $emerald-green;
+  background-color: color-mix(in srgb, $emerald-green 12%, transparent);
+
+  &:hover {
+    background-color: color-mix(in srgb, $emerald-green 18%, transparent);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, $emerald-green 26%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $emerald-green;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
 }

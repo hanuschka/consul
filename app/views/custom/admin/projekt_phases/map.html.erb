@@ -6,19 +6,12 @@
 
 <%= render "custom/admin/projekt_phases/heading" %>
 
-<% unless embedded? %>
-  <%= render "custom/admin/projekt_phases/nav_bar" %>
-<% end %>
+<%= render "custom/admin/projekt_phases/nav_bar" %>
 
 <div class="row">
   <div class="column">
     <h2>
       <%= t("admin.settings.index.map.title") %>
-      <% if embedded? %>
-        <%= render Shared::ExplainButtonComponent.new(
-          explain: "#{@projekt_phase.name} map"
-        ) %>
-      <% end %>
     </h2>
 
     <% @projekt_phase.map_layers.each do |layer| %>

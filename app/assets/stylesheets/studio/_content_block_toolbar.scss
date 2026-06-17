@@ -1,0 +1,454 @@
+// =============================================================================
+// Linear-style content-block toolbar — layout & container
+// -----------------------------------------------------------------------------
+// Floating toolbar above the block. Hover-reveal with invisible bridge.
+// Four groups with 8px gap and a vertical 1px divider between them:
+//   1. Save / Cancel                    (.projekt-content-block-edit--buttons-wrapper)
+//   2. Format tools                     (.js-simple-edit-mode-controlls)
+//   3. Mode switch (Edit/AI/Code)       (.projekt-content-block-edit-main-controlls — first 3 buttons)
+//   4. Block actions (Copy/Move/Delete) (same wrapper, separated by internal separator)
+// =============================================================================
+
+.projekt-content-block--toolbar-border {
+  display: none;
+}
+
+// Toolbar floats above the block (out-of-flow) — no layout shift.
+// "absolute + sticky" pattern: outer .projekt-content-block--toolbar-zone is
+// position:absolute (takes no flow space, so toggling `display` on the inner
+// toolbar causes no vertical layout shift). Inner .projekt-content-block--toolbar
+// is position:sticky (sticks below the topbar while the wrapper is in view).
+// The zone's top:-48px lifts the toolbar's at-rest position visually above
+// the wrapper's top edge, replacing the old margin-top:-48px hoist.
+.projekt-content-block-wrapper--inner {
+  position: relative;
+
+  &:hover .projekt-content-block--toolbar,
+  &:focus-within .projekt-content-block--toolbar {
+    display: flex;
+  }
+}
+
+.projekt-content-block-wrapper {
+  position: relative;
+
+  .projekt-content-block--toolbar-zone {
+    position: absolute;
+    top: -48px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 200;
+    pointer-events: none;
+
+    @media(max-width: 1000px) {
+      display: none;
+    }
+  }
+
+  .projekt-content-block--toolbar {
+    position: sticky;
+    top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
+    margin-left: auto;
+    width: fit-content;
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2px;
+    padding: 5px 7px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    pointer-events: auto;
+
+    // Invisible hover bridge between toolbar and block — prevents the toolbar
+    // from disappearing when the mouse moves through the 8px gap
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 10px;
+      pointer-events: auto;
+    }
+
+    // Vertical dividers between the toolbar groups
+    // ---------------------------------------------------------------------
+    // Applied to all "group wrappers" except the first group (Save/Cancel is
+    // excluded via :first-child — it sits on the left and needs no divider
+    // before it).
+    > .js-simple-edit-mode-controlls,
+    > .projekt-content-block-edit-main-controlls {
+      position: relative;
+      margin-left: 8px;
+      padding-left: 8px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 20px;
+        background: rgba(0, 0, 0, 0.08);
+        pointer-events: none;
+      }
+
+      // When this group is the first visible element (e.g. outside edit mode
+      // Save/Cancel is hidden), remove the divider.
+      &:first-child {
+        margin-left: 0;
+        padding-left: 0;
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+  }
+
+  // Outside edit mode only the mode-switch/block-actions group is visible
+  // (Save/Cancel and format-tools are display:none). The divider is computed
+  // via :first-child on DOM order, not on visibility — so explicitly hide it
+  // here when no edit-mode class is active.
+  &:not(.-in-edit-mode) {
+    .projekt-content-block--toolbar > .projekt-content-block-edit-main-controlls {
+      margin-left: 0;
+      padding-left: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  // In edit mode: toolbar stays at the exact same position as on hover.
+  // Edit buttons grow to the left — the pencil stays visually in place.
+  &.-in-edit-mode {
+    .relative {
+      overflow: visible;
+    }
+
+    .projekt-content-block--toolbar {
+      display: flex;
+      outline: 2px solid #c9dced;
+    }
+  }
+
+  // Variant: toolbar anchored to the LEFT side of the wrapper instead of
+  // the right (e.g. for content blocks living inside narrow columns where
+  // the right edge would clip the toolbar). Driven by the backend helper:
+  // `render_custom_block(..., toolbar_position: :left)` emits
+  // `data-toolbar-position="left"` on the .js-site-content-block, which
+  // App.Studio.SiteContentBlockEditor copies onto the wrapper at wrap time.
+  &[data-toolbar-position="left"] {
+    .projekt-content-block--toolbar {
+      margin-left: 0;
+      margin-right: auto;
+      justify-content: flex-start;
+    }
+  }
+}
+
+// Internal separator (mode-switch ↔ block-actions within the same group).
+// Rendered by the template as <div class="projekt-content-block-edit--separator">.
+.projekt-content-block-edit--separator {
+  width: 1px;
+  height: 20px;
+  margin: 0 6px;
+  background: rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+// =============================================================================
+// Sidebar override: toolbar flush below the card title
+// =============================================================================
+.sidebar-card .projekt-content-block-wrapper {
+  .projekt-content-block--toolbar {
+    margin-bottom: 0;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+// =============================================================================
+// Mobile: toolbar always visible (no hover)
+// =============================================================================
+@media (max-width: $small-tablet-viewport-start) {
+  .projekt-content-block-wrapper .projekt-content-block--toolbar {
+    display: flex;
+  }
+}
+
+// =============================================================================
+// Margin spinner (vertical-spacing input)
+// =============================================================================
+.content-block-margin-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 4px;
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.7);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  i {
+    font-size: 14px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.55);
+  }
+
+  input[type="number"] {
+    width: 36px;
+    height: 28px;
+    margin: 0;
+    padding: 0 4px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.85);
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    box-shadow: none;
+    appearance: textfield;
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+
+    &:focus {
+      outline: none;
+      border-color: var(--brand-color);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-color) 18%, transparent);
+    }
+
+    // Hide native browser spinner
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+.content-block-margin-input--step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 100%;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.6);
+  background: #ffffff9e;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+
+  i {
+    font-size: 10px;
+    line-height: 1;
+    color: inherit;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    color: rgba(0, 0, 0, 0.3);
+    background: transparent;
+    border-color: rgba(0, 0, 0, 0.08);
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+      border-color: rgba(0, 0, 0, 0.08);
+      color: rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+// =============================================================================
+// Text format dropdown (H2/H3/Text selection)
+// =============================================================================
+.js-content-block-header-dropdown {
+  width: 65px;
+  height: 32px;
+
+  .dropdown-select-menu-toggle {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    height: 32px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.75);
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    transition: background-color 120ms ease, border-color 120ms ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.18);
+    }
+
+    // Hide the shared CSS chevron (::before in dropdown_select_menu.scss)
+    // here — we only show the FA chevron via ::after.
+    &::before {
+      // display: none;
+    }
+
+    &::after {
+      content: "\f078"; // fa-chevron-down
+      font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", FontAwesome;
+      font-weight: 900;
+      font-size: 10px;
+      color: rgba(0, 0, 0, 0.5);
+      margin-left: 2px;
+    }
+  }
+}
+
+// =============================================================================
+// Block status pill (Save / Save-error feedback)
+// -----------------------------------------------------------------------------
+// Transient status message shown after save / save-error. Lives in the
+// absolute toolbar zone and sticks to the exact same band as the floating
+// toolbar, but is always anchored to the right side (margin-left:auto),
+// regardless of the toolbar's left/right position. Informational only, so it
+// ignores pointer events. JS auto-removes it after a short delay.
+// =============================================================================
+.projekt-content-block--status {
+  position: sticky;
+  top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
+  z-index: 201;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 9px;
+  margin-left: auto;
+  width: fit-content;
+  padding: 11px 18px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: content-block-status-appear 180ms ease-out;
+  transition: opacity 180ms ease-out;
+}
+
+.projekt-content-block--status.-leaving {
+  opacity: 0;
+}
+
+.projekt-content-block--status.-saved {
+  background: rgba($green-success-color, 0.8);
+}
+
+.projekt-content-block--status.-error {
+  background: rgba($red-button-color, 0.8);
+}
+
+// =============================================================================
+// Default notification (left of toolbar, e.g. "Standard content")
+// =============================================================================
+.projekt-content-block--default-notification {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  padding: 2px 0;
+  color: #2e7d32;
+}
+
+.projekt-content-block-wrapper.-in-edit-mode .projekt-content-block--default-notification {
+  display: none;
+}
+
+// =============================================================================
+// Item-action wrapper (legacy — separate element, not part of the toolbar)
+// =============================================================================
+.content-block--item-action-wrapper {
+  list-style: none;
+  margin-bottom: 10px;
+  max-height: 55px;
+
+  &.column {
+    height: 55px;
+
+    .content-block--item-action-wrapper--inner {
+      gap: 10px;
+    }
+  }
+}
+
+.content-block--item-action-wrapper--inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.content-block--item-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $dt-base;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 10px 15px;
+  background-color: #cce2f6 !important;
+
+  i {
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background-color: #b5d0e9 !important;
+  }
+
+  &.-delete {
+    color: #a41717;
+
+    &:hover {
+      background-color: #ffdede !important;
+    }
+  }
+}

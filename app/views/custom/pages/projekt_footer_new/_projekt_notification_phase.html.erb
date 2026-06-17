@@ -1,12 +1,10 @@
 <div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<% unless embedded? %>
-  <div class="flex-layout">
-    <div class="main-column">
-      <%= render Shared::NotificationsComponent.new(notifiable: @projekt_phase) %>
-    <div class="sidebar-placeholder">
-    </div>
+<div class="flex-layout">
+  <div class="main-column">
+    <%= render Shared::NotificationsComponent.new(notifiable: @projekt_phase) %>
+  <div class="sidebar-placeholder">
   </div>
-<% end %>
+</div>
 </div>

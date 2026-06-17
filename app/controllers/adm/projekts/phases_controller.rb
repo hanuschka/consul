@@ -588,6 +588,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  def destroy_projekt_point_of_interest_pin
+    authorize_phase(:update?)
+    pin = @projekt_phase.projekt_point_of_interest_pins.user_created.find(params[:pin_id])
+    pin.destroy!
+
+    flash[:success] = t(".success")
+
+    redirect_to projekt_point_of_interest_pins_adm_projekts_phase_path(
+      @projekt_phase,
+      params.permit(:page).to_h.compact_blank
+    )
+  end
+
   def projekt_point_of_interest_pins
     authorize_phase(:update?)
     base_scope = @projekt_phase.projekt_point_of_interest_pins.ordered

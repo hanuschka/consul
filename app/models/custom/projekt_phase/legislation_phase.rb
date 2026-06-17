@@ -8,6 +8,10 @@ class ProjektPhase::LegislationPhase < ProjektPhase
     "legislation_phase"
   end
 
+  def sidebar_cta_kind
+    :link
+  end
+
   def resources_name
     "legislation"
   end

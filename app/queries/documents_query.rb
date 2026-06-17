@@ -12,8 +12,8 @@ class DocumentsQuery
 
   DEFAULT_SORT = "created_desc".freeze
 
-  def self.available_documentable_types
-    Document.distinct.pluck(:documentable_type).compact.sort
+  def self.available_documentable_types(scope = Document)
+    scope.distinct.pluck(:documentable_type).compact.sort
   end
 
   def initialize(params)

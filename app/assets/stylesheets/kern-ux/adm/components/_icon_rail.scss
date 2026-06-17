@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 56px;
-  min-width: 56px;
+  width: var(--adm-icon-rail-width);
+  min-width: var(--adm-icon-rail-width);
   min-height: 100vh;
   position: sticky;
   top: 0;
@@ -111,4 +111,26 @@
       font-size: 20px !important;
     }
   }
+}
+
+.adm-icon-rail__item-tooltip {
+  display: flex;
+}
+
+.adm-icon-rail__item-tooltip .rich-tooltip--body {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: color-mix(in srgb, #0d2d9c 85%, #ffffff);
+  border-color: color-mix(in srgb, #0d2d9c 85%, #ffffff);
+}
+
+.adm-icon-rail__tooltip-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-icon-rail__tooltip-label .material-symbols-outlined {
+  font-size: 22px;
 }

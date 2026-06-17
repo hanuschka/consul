@@ -3,7 +3,8 @@
 <%= render Adm::HeaderComponent.new(
   title: (@projekt.page&.title || @projekt.name),
   breadcrumbs: @breadcrumbs,
-  frontend_url: projekt_path(@projekt)
+  frontend_url: projekt_path(@projekt),
+  compact: true
 ) %>
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
@@ -65,8 +66,8 @@
         ) %>
         <%= render Adm::ButtonWithProgressComponent.new(
           label: t(".download_pdf"),
-          loading_label: t("adm.projekts.projekts.evaluation.pdf_options.downloading"),
-          success_label: t("adm.projekts.projekts.evaluation.pdf_options.ready"),
+          loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+          success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
           icon: "picture_as_pdf",
           success_icon: "check_circle",
           style: :primary,

@@ -55,26 +55,57 @@
   display: none;
 }
 
-.files-asset-row--icon-cell {
-  width: 56px;
-  text-align: center;
+.files-index--list {
+  container-type: inline-size;
+}
+
+.files-index--list-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+}
+
+.files-index--list-empty {
+  padding: 24px 20px;
+}
+
+.files-asset-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1.7fr) 110px minmax(0, 1.3fr) 80px 120px 150px max-content;
+  grid-template-areas: "icon name type assigned size modified uploader actions";
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 12px;
+  padding: 16px 20px;
+}
+
+.files-asset-row + .files-asset-row {
+  border-top: 1px solid #d9d9d9;
 }
 
 .files-asset-row--icon-wrapper {
+  grid-area: icon;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #f7f7f9;
+  border-radius: 8px;
 }
 
 .files-asset-row--icon {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .files-asset-row--admin-badge {
   position: absolute;
   top: -6px;
-  right: -10px;
+  right: -6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -89,24 +120,140 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.files-asset-row--title-cell {
+.files-asset-row--name {
+  grid-area: name;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1c1917;
   word-break: break-word;
 }
 
-.files-asset-row--actions-cell {
-  text-align: right;
+.files-asset-row--meta {
+  display: contents;
+}
+
+.files-asset-row--field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.files-asset-row--field.-type {
+  grid-area: type;
+}
+
+.files-asset-row--field.-assigned {
+  grid-area: assigned;
+}
+
+.files-asset-row--field.-size {
+  grid-area: size;
+}
+
+.files-asset-row--field.-modified {
+  grid-area: modified;
+}
+
+.files-asset-row--field.-uploader {
+  grid-area: uploader;
+}
+
+.files-asset-row--field-label {
+  font-size: 14px;
+  line-height: 1.3;
+  color: #535252;
+}
+
+.files-asset-row--field-value {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #1c1917;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.files-asset-row--title-trigger {
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: left;
+  text-decoration: underline dotted #d9d9d9;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  &:hover {
+    color: #005fcc;
+    text-decoration-color: #005fcc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.files-asset-row--title-popover {
+  width: min(560px, calc(100vw - 48px));
+  padding: 20px 24px;
+  margin: auto;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1c1917;
+  white-space: normal;
+  word-break: break-word;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.files-asset-row--actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@container (max-width: 1120px) {
+  .files-asset-row {
+    grid-template-columns: 44px minmax(0, 1fr) max-content;
+    grid-template-areas:
+      "icon name actions"
+      "icon meta meta";
+  }
+
+  .files-asset-row--meta {
+    grid-area: meta;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+  }
+
+  .files-asset-row--icon-wrapper {
+    align-self: start;
+  }
 }
 
 .files-asset-row--action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   padding: 0;
-  margin: 0 0 0 4px;
-  font-size: 13px;
+  margin: 0 0 0 6px;
+  font-size: 16px;
   line-height: 1;
   color: #535252;
   background: #ffffff;
@@ -149,85 +296,8 @@
   grid-column: 1 / -1;
 }
 
-.files-index--empty-cell {
-  padding: 0;
-}
-
-.files-index--pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
-}
-
-.files-index--pagination .pagination {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.files-index--pagination .pagination a,
-.files-index--pagination .pagination .current,
-.files-index--pagination .pagination .gap,
-.files-index--pagination .pagination .current-page,
-.files-index--pagination .pagination .first,
-.files-index--pagination .pagination .prev,
-.files-index--pagination .pagination .next,
-.files-index--pagination .pagination .last,
-.files-index--pagination .pagination .page {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  font-size: 14px;
-  line-height: 1;
-  color: #222;
-  text-decoration: none;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.files-index--pagination .pagination a {
-  &:hover {
-    background: #ededed;
-    border-color: #828282;
-  }
-}
-
-.files-index--pagination .pagination .current,
-.files-index--pagination .pagination .current-page,
-.files-index--pagination .pagination .page.current {
-  color: #ffffff;
-  background: #005fcc;
-  border-color: #005fcc;
-  cursor: default;
-}
-
-.files-index--pagination .pagination .gap {
-  background: transparent;
-  border-color: transparent;
-  cursor: default;
-}
-
-.files-index--pagination .show-for-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+// Pagination styles live in cross_pack/components/shared_pagination.scss
+// (regular .pagination look shared across both stylesheet packs).
 
 @media (max-width: 750px) {
   .files-index {

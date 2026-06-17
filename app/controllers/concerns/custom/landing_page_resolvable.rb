@@ -4,12 +4,13 @@ module LandingPageResolvable
   private
 
   def resolve_landing_page_from_slug
-    slug = params[:landing_page_slug]
+    slug = params[:landing_page_slug] || params[:landing_page]
     return if slug.blank?
 
-    landing_page = SiteCustomization::Page.published.landing.find_by(slug: slug)
+    landing_page = SiteCustomization::Page.landing.find_by(slug: slug)
 
-    if landing_page.nil?
+    if landing_page.nil? ||
+        (!landing_page.published? && !draft_page_previewable?(landing_page))
       raise ActionController::RoutingError.new("Not Found")
     end
 
@@ -17,6 +18,12 @@ module LandingPageResolvable
     set_landing_page_topbar_ui_variables(landing_page)
 
     landing_page
+  end
+
+  def draft_page_previewable?(page)
+    return false if current_user.blank?
+
+    current_user.administrator? || current_user.landing_page_manager?(page)
   end
 
   def landing_page_scoped_projekt_ids

@@ -1,0 +1,104 @@
+<div class="file-upload-manager-edit-modal__header">
+  <span><%= title.presence || filename %></span>
+  <button
+    class="close-button round-icon-button js-file-upload-manager-info-close"
+    data-close=""
+    aria-label="<%= t("files.info_modal.close") %>"
+    type="button"
+  >
+    <i class="fa fa-xmark"></i>
+  </button>
+</div>
+
+<div class="file-upload-manager-info-modal--body">
+  <% if preview_url.present? %>
+    <div class="file-upload-manager-info-modal--preview">
+      <img
+        src="<%= preview_url %>"
+        alt="<%= title.presence || filename %>"
+      >
+    </div>
+  <% end %>
+
+  <dl class="file-upload-manager-info-modal--details">
+    <% if filename.present? %>
+      <div class="file-upload-manager-info-modal--detail-row">
+        <dt><%= t("files.info_modal.filename") %></dt>
+        <dd><%= filename %></dd>
+      </div>
+    <% end %>
+
+    <% if content_type.present? %>
+      <div class="file-upload-manager-info-modal--detail-row">
+        <dt><%= t("files.info_modal.type") %></dt>
+        <dd><%= content_type %></dd>
+      </div>
+    <% end %>
+
+    <% if humanized_size.present? %>
+      <div class="file-upload-manager-info-modal--detail-row">
+        <dt><%= t("files.info_modal.size") %></dt>
+        <dd><%= humanized_size %></dd>
+      </div>
+    <% end %>
+
+    <% if dimensions.present? %>
+      <div class="file-upload-manager-info-modal--detail-row">
+        <dt><%= t("files.info_modal.dimensions") %></dt>
+        <dd><%= dimensions %></dd>
+      </div>
+    <% end %>
+
+    <div class="file-upload-manager-info-modal--detail-row">
+      <dt><%= t("files.info_modal.uploaded") %></dt>
+      <dd><%= created_at_formatted %></dd>
+    </div>
+
+    <div class="file-upload-manager-info-modal--detail-row">
+      <dt><%= t("files.info_modal.last_edited") %></dt>
+      <dd><%= updated_at_formatted %></dd>
+    </div>
+
+    <% if uploader_text.present? %>
+      <div class="file-upload-manager-info-modal--detail-row">
+        <dt><%= t("files.info_modal.uploaded_by") %></dt>
+        <dd><%= uploader_text %></dd>
+      </div>
+    <% end %>
+
+    <% if projekt_name.present? %>
+      <div class="file-upload-manager-info-modal--detail-row">
+        <dt><%= t("files.info_modal.projekt") %></dt>
+        <dd>
+          <% if projekt_url.present? %>
+            <%= link_to projekt_name, projekt_url, target: "_blank", rel: "noopener" %>
+          <% else %>
+            <%= projekt_name %>
+          <% end %>
+        </dd>
+      </div>
+    <% end %>
+  </dl>
+</div>
+
+<% if file_url.present? %>
+  <div class="file-upload-manager-info-modal--footer">
+    <a
+      class="studio-edit-button"
+      href="<%= file_url %>"
+      download="<%= filename %>"
+    >
+      <i class="fa fa-download"></i>
+      <%= t("files.info_modal.download_file") %>
+    </a>
+    <a
+      class="studio-edit-button -green"
+      href="<%= file_url %>"
+      target="_blank"
+      rel="noopener"
+    >
+      <i class="fa fa-external-link-alt"></i>
+      <%= t("files.info_modal.open_file") %>
+    </a>
+  </div>
+<% end %>

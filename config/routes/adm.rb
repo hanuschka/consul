@@ -99,6 +99,19 @@ namespace :adm do
     collection do
       get :settings
     end
+    resources :content_blocks,
+              controller: "newsletters/content_blocks",
+              only: [:create, :update, :destroy] do
+      member do
+        patch :update_position
+        patch :change_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
+      end
+      collection do
+        post :generate_with_ai
+      end
+    end
   end
   # notifications
 

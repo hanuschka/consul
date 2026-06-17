@@ -2,13 +2,16 @@ require_dependency Rails.root.join("app", "models", "site_customization", "conte
 
 class SiteCustomization::ContentBlock < ApplicationRecord
   VALID_BLOCKS = %w[top_links footer subnavigation_left subnavigation_left_desktop subnavigation_left_mobile subnavigation_right_desktop subnavigation_right_mobile custom].freeze
-  DEFAULT_MARGIN_BOTTOM = 25
+  DEFAULT_MARGIN_BOTTOM = 30
+  MIN_MARGIN_BOTTOM = 20
 
   attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
   belongs_to :projekt, optional: true
-  acts_as_list scope: :projekt
+  belongs_to :newsletter, optional: true
+  validate :single_parent
+  acts_as_list scope: [:projekt_id, :newsletter_id]
 
   default_scope { where("ai_generation_data IS NULL OR ai_generation_data->>'status' = 'completed'") }
 
@@ -53,6 +56,12 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   end
 
   private
+
+  def single_parent
+    if projekt_id.present? && newsletter_id.present?
+      errors.add(:base, :invalid)
+    end
+  end
 
   def repair_html_body
     return if body.blank?

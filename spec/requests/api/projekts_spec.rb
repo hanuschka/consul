@@ -55,28 +55,6 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'projekts found with public_data access' do
         before do
           api_client.update!(access_level: :public_data)
@@ -120,6 +98,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
         run_test!
       end
+
+      unauthorized_response
     end
 
     post 'Create a projekt' do
@@ -214,6 +194,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response
     end
   end
 
@@ -332,6 +314,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt' do
@@ -437,6 +421,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt' do
@@ -515,6 +501,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 
@@ -627,6 +615,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 
@@ -799,6 +789,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 
@@ -980,6 +972,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

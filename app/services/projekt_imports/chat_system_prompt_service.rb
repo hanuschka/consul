@@ -38,6 +38,7 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       #{projekt_import.extracted_text.to_s.truncate(EXTRACT_LIMIT)}
 
       ## Guidelines
+      - Always format every question you ask as a numbered list (1., 2., 3., ...), even when there is only a single question
       - When the user provides corrections, acknowledge them and confirm the change
       - When asked to modify project data (title, dates, phases, categories), confirm what you changed
       - Keep responses concise and focused

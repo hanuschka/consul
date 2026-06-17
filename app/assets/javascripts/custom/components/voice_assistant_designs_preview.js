@@ -55,10 +55,8 @@
       const list = widget.closest(".js-va-demo-list");
       const config = list ? list.dataset : {};
 
-      const formConfigElement = document.querySelector(".js-voice-assistant");
-
-      if (App.AssistantUserResourceForm && formConfigElement) {
-        App.AssistantUserResourceForm.initialize(formConfigElement);
+      if (App.AssistantUserResourceForm && list) {
+        App.AssistantUserResourceForm.initialize(list);
       }
 
       const session = new App.VoiceAssistantSession({

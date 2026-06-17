@@ -1,4 +1,13 @@
 
+.voice-assistant-standard {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  z-index: 500;
+}
+
 .voice-assistant {
   width: 430px;
   height: 124px;

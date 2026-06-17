@@ -2,15 +2,15 @@
   "use strict";
 
   App.VoiceAssistantDesignsPreview = {
-    waveMap: null,
-    defaultWaveColor: "#3f78e0",
+    sessions: null,
+    defaultWaveColor: "#97d8ff",
 
     initialize() {
       const $document = $(document);
 
       if (!document.querySelector(".js-va-demo")) { return; }
 
-      this.waveMap = new WeakMap();
+      this.sessions = new WeakMap();
 
       $document.on("click", ".js-va-demo-toggle", this.handleToggle.bind(this));
       $document.on("click", ".js-va-demo-close", this.handleClose.bind(this));
@@ -25,7 +25,21 @@
       this.deactivateAll(widget);
       widget.classList.add("-active");
       widget.dataset.state = "active";
-      this.startWave(widget, false);
+      this.startSession(widget);
+    },
+
+    handleMic(event) {
+      const widget = event.currentTarget.closest(".js-va-demo");
+
+      if (!widget) { return; }
+
+      const session = this.sessions.get(widget);
+
+      if (session) {
+        session.pauseToggle();
+      } else {
+        this.startSession(widget);
+      }
     },
 
     handleClose(event) {
@@ -34,23 +48,63 @@
       this.deactivate(widget);
     },
 
-    handleMic(event) {
-      const widget = event.currentTarget.closest(".js-va-demo");
+    startSession(widget) {
+      if (this.sessions.get(widget)) { return; }
+      if (typeof App.VoiceAssistantSession === "undefined") { return; }
 
-      if (!widget) { return; }
+      const list = widget.closest(".js-va-demo-list");
+      const config = list ? list.dataset : {};
 
-      const isListening = widget.classList.toggle("-listening");
-      widget.dataset.state = isListening ? "listening" : "active";
-      this.setWaveListening(widget, isListening);
+      if (App.AssistantUserResourceForm) {
+        App.AssistantUserResourceForm.initialize(widget);
+      }
+
+      const session = new App.VoiceAssistantSession({
+        widget: widget,
+        vizContainer: widget.querySelector(".js-va-demo-viz"),
+        waveColor: this.getWaveColor(widget),
+        createSessionUrl: config.createSessionUrl,
+        codename: config.codename,
+        projektPhaseId: config.projektPhaseId,
+        onStatusChange: (status) => this.handleStatusChange(widget, status),
+        onError: (message) => this.handleError(widget, message)
+      });
+
+      this.sessions.set(widget, session);
+      session.start();
+    },
+
+    handleStatusChange(widget, status) {
+      widget.dataset.state = status;
+
+      if (status === "running") {
+        widget.classList.add("-listening");
+      } else if (status === "paused") {
+        widget.classList.remove("-listening");
+      } else if (status === "initialized") {
+        widget.classList.remove("-listening");
+        this.sessions.delete(widget);
+      }
+    },
+
+    handleError(widget, message) {
+      widget.classList.remove("-listening");
+      console.error("Voice assistant session error:", message);
     },
 
     deactivate(widget) {
       if (!widget) { return; }
 
+      const session = this.sessions.get(widget);
+
+      if (session) {
+        session.stop();
+        this.sessions.delete(widget);
+      }
+
       widget.classList.remove("-active");
       widget.classList.remove("-listening");
       widget.dataset.state = "idle";
-      this.stopWave(widget);
     },
 
     deactivateAll(except) {
@@ -61,55 +115,6 @@
           this.deactivate(widget);
         }
       });
-    },
-
-    startWave(widget, listening) {
-      const container = widget.querySelector(".js-va-demo-viz");
-
-      if (!container) { return; }
-      if (typeof SiriWave === "undefined") { return; }
-
-      this.stopWave(widget);
-
-      const wave = new SiriWave({
-        container: container,
-        width: container.clientWidth || 240,
-        height: container.clientHeight || 40,
-        style: "ios",
-        color: this.getWaveColor(widget),
-        speed: listening ? 0.2 : 0.1,
-        amplitude: listening ? 1.3 : 0.35,
-        autostart: true
-      });
-
-      this.waveMap.set(widget, wave);
-    },
-
-    setWaveListening(widget, listening) {
-      const wave = this.waveMap.get(widget);
-
-      if (!wave) {
-        this.startWave(widget, listening);
-        return;
-      }
-
-      wave.setAmplitude(listening ? 1.3 : 0.35);
-      wave.setSpeed(listening ? 0.2 : 0.1);
-    },
-
-    stopWave(widget) {
-      const wave = this.waveMap.get(widget);
-
-      if (wave) {
-        wave.stop();
-        this.waveMap.delete(widget);
-      }
-
-      const container = widget.querySelector(".js-va-demo-viz");
-
-      if (container) {
-        container.innerHTML = "";
-      }
     },
 
     getWaveColor(widget) {

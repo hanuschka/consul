@@ -1,18 +1,18 @@
 
 .voice-assistant {
-  width: 355px;
-  height: 105px;
+  width: 430px;
+  height: 124px;
   position: fixed;
   bottom: 8px;
   left: 0;
   right: 0;
-  border-radius: 20px;
-  border: 1px solid #959595;
-  background-color: #383838;
+  border-radius: 16px;
+  border: 1px solid #3a3a3c;
+  background-color: #2c2c2e;
   backdrop-filter: blur(7px);
   margin: auto;
   z-index: 500;
-  box-shadow: 2px 3px 5px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.48), 0 2px 8px rgba(0, 0, 0, 0.32);
   color: white;
   display: flex;
   flex-direction: column;
@@ -35,9 +35,9 @@
   &.-collapsed {
     right: 10px;
     left: unset;
-    height: 50px;
-    width: 230px;
-    border-radius: 15px;
+    height: 66px;
+    width: 312px;
+    border-radius: 20px;
     transition: none;
     overflow: hidden;
 
@@ -48,12 +48,12 @@
     }
 
     .voice-assistant--expand-button {
-      display: block;
+      display: flex;
     }
   }
 
   h2 {
-    font-size: 16px !important;
+    font-size: 18px !important;
     color: white !important;
     margin-bottom: 0;
     margin-top: 0;
@@ -63,11 +63,11 @@
   &[data-status="running"],
   &[data-status="paused"] {
     transition: width 500ms ease;
-    width: 400px;
+    width: 480px;
   }
 
   &[data-status="starting"] {
-    background-color: #383838;
+    background-color: #2c2c2e;
 
     .voice-assistant-round-button {
       border: transparent;
@@ -94,7 +94,7 @@
 
   &[data-status="running"] {
     // background-image: radial-gradient(18% 28% at 24% 50%, #0084FF99 7%, #383838CC 100%),radial-gradient(18% 28% at 18% 71%, #0099FF80 6%, #383838CC 100%),radial-gradient(70% 53% at 36% 76%, #00B4FF99 0%, #383838CC 100%),radial-gradient(42% 53% at 15% 94%, #007AFF99 7%, #383838CC 100%),radial-gradient(42% 53% at 34% 72%, #0084FF99 7%, #383838CC 100%),radial-gradient(18% 28% at 35% 87%, #0099FF99 7%, #383838CC 100%),radial-gradient(31% 43% at 7% 98%, #007AFF80 24%, #383838CC 100%),radial-gradient(21% 37% at 72% 23%, #00B4FF99 24%, #383838CC 100%),radial-gradient(35% 56% at 91% 74%, #1E90FF99 9%, #383838CC 100%),radial-gradient(74% 86% at 67% 38%, #0084FFAA 24%, #383838CC 100%),linear-gradient(125deg, #00A8FFAA 1%, #0084FFAA 100%);
-    background-color: #383838;
+    background-color: #2c2c2e;
     // background-image: radial-gradient(18% 28% at 24% 50%, #38383899 7%, #073AFF00 100%),radial-gradient(18% 28% at 18% 71%, #38383866 6%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #0084FF66 0%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #38383899 7%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #38383899 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #38383899 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #38383899 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #0099FF66 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #38383899 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #007AFF80 24%, #073AFF00 100%),linear-gradient(125deg, #38383899 1%, #0084FF80 100%);
     // animation: backgroundGradientPulse 3s ease-in-out infinite;
 
@@ -131,12 +131,12 @@
     }
 
     .voice-assistant-round-button {
-      width: 40px;
-      height: 40px;
-      font-size: 18px;
+      width: 46px;
+      height: 46px;
+      font-size: 20px;
 
       i {
-        font-size: 18px;
+        font-size: 20px;
       }
     }
 
@@ -157,19 +157,23 @@
   }
 }
 
+.voice-assistant.-collapsible:not(.-collapsed) {
+  animation: voice-assistant-rise 320ms ease-out;
+}
+
 .voice-assistant-round-button {
   display: flex;
   position: absolute;
   top: 0;
   bottom: 0;
   margin: auto;
-  width: 45px;
-  height: 45px;
+  width: 52px;
+  height: 52px;
   padding: 0;
   border-radius: 100%;
   color: white;
   background-color: #4a4a4a;
-  font-size: 28px;
+  font-size: 30px;
   justify-content: center;
   align-items: center;
   transition: 200ms ease all;
@@ -230,10 +234,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 45px;
+  height: 54px;
   position: relative;
   transition: 200ms background-color ease;
-  margin: 0 15px;
+  margin: 0 18px;
 
   .voice-assistant-speak-button {
     i::before {
@@ -300,8 +304,8 @@
 .voice-assistant-stop-button {
   display: none;
   left: 0px;
-  background: #c76868 !important;
-  color: #383838 !important;
+  background: #2c2c2e !important;
+  color: #2c2c2e !important;
   font-size: 25px !important;
 
   i::before {
@@ -355,12 +359,28 @@
 
 .voice-assistant--expand-button {
   display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   position: static;
   width: 100%;
   height: 100%;
   border-radius: 0;
-  padding: 5px 10px;
-  font-size: 16px;
+  padding: 8px 18px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.voice-assistant--expand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4a4a4a;
+  font-size: 18px;
 }
 
 .voice-assistant--collapse-button {

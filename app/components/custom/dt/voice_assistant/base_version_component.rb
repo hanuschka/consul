@@ -9,6 +9,14 @@ class Dt::VoiceAssistant::BaseVersionComponent < ApplicationComponent
     "voice-assistant-v#{version}"
   end
 
+  def create_session_url
+    helpers.voice_assistant_create_session_v2_path
+  end
+
+  def codename
+    "proposal_voice_assistant"
+  end
+
   def ui_name
     I18n.t("custom.voice_assistant_designs.ui_name", n: version)
   end

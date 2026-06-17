@@ -41,6 +41,15 @@
   z-index: 500;
 }
 
+.voice-assistant-designs-list.-vertical {
+  width: 320px;
+  bottom: 100px;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 @media (max-width: 720px) {
   .voice-assistant-designs-page {
     padding-right: clamp(16px, 6vw, 64px);

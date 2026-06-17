@@ -1,118 +1,38 @@
 (function() {
   "use strict";
 
-  App.VoiceAssistantV2 = {
-    element: null,
-    status: "not_initialized",
-    initialData: null,
-    urlParams: null,
-    rtcPeerConnection: null,
-    currentMicrophoneTrack: null,
-    mediaStream: null,
-    dataChannel: null,
-    audioEl: null,
-    wave: null,
+  const STATUSES = {
+    initialized: "initialized",
+    starting: "starting",
+    stoping: "stoping",
+    paused: "paused",
+    running: "running"
+  };
 
-    statuses: {
-      not_initialized: "not_initialized",
-      initialized: "initialized",
-      starting: "starting",
-      stoping: "stoping",
-      paused: "paused",
-      running: "running"
-    },
+  App.VoiceAssistantSession = function(options) {
+    this.options = options;
+    this.status = STATUSES.initialized;
+    this.rtcPeerConnection = null;
+    this.currentMicrophoneTrack = null;
+    this.mediaStream = null;
+    this.dataChannel = null;
+    this.audioEl = null;
+    this.wave = null;
+    this.greetingResponseId = null;
+    this.urlParams = new URLSearchParams(window.location.search);
+  };
 
-    initialize: function() {
-      const element = document.querySelector(".js-voice-assistant");
+  App.VoiceAssistantSession.statuses = STATUSES;
 
-      if (!element) { return; }
-      if (element.dataset.version !== "v2") { return; }
-
-      this.element = element;
-      this.status = "not_initialized";
-      this.initialData = null;
-      this.rtcPeerConnection = null;
-      this.currentMicrophoneTrack = null;
-      this.mediaStream = null;
-      this.dataChannel = null;
-      this.audioEl = null;
-      this.wave = null;
-      this.greetingResponseId = null;
-      this.urlParams = new URLSearchParams(window.location.search);
-
-      this.getCollapseButton().addEventListener("click", this.collapseAssistant.bind(this));
-      this.getExpandButton().addEventListener("click", this.expandAssistant.bind(this));
-      this.getSpeakButton().addEventListener("click", this.toggleAssistant.bind(this));
-      this.getStopButton().addEventListener("click", this.stopAssistant.bind(this));
-      this.getSpeakButton().addEventListener("animationend", this.toggleButtonAnimationEnd.bind(this));
-
-      window.addEventListener("beforeunload", this.handleTabClose.bind(this));
-
-      this.setInitialData(JSON.parse(element.dataset.initialData));
-    },
-
-    setInitialData: function(data) {
-      if (this.status === this.statuses.initialized) {
-        return;
-      }
-
-      this.initialData = data;
-      this.setStatus(this.statuses.initialized);
-      App.AssistantUserResourceForm.initialize(this.element);
-
-      if (this.initialData.collapsible) {
-        this.element.classList.add("-collapsible");
-        this.getCollapseButton().style.display = "flex";
-        this.isCollapsed = this.initialData.collapsed;
-        this.initCollapseState();
-      }
-
-      this.element.classList.add("-initialized");
-      this.setupSiriWave();
-    },
-
-    initCollapseState: function() {
-      this.element.classList.toggle("-collapsed", this.isCollapsed);
-    },
-
-    toggleAssistantCollapseState: function(collapsed) {
-      App.Cookies.saveCookie("voice_assistant_collapsed", collapsed, 365);
-    },
-
-    collapseAssistant: function() {
-      this.isCollapsed = true;
-      this.element.classList.add("-collapsed");
-      this.stopAssistant();
-      this.toggleAssistantCollapseState(true);
-    },
-
-    expandAssistant: function() {
-      this.isCollapsed = false;
-      this.element.classList.remove("-collapsed");
-      this.toggleAssistantCollapseState(false);
-
-      if (this.status === this.statuses.initialized) {
-        this.startAssistant();
-      }
-    },
-
-    toggleAssistant: function() {
-      if (this.status === this.statuses.initialized) {
-        this.startAssistant();
-      } else if (this.status === this.statuses.running) {
-        this.pauseAssistant();
-      } else if (this.status === this.statuses.paused) {
-        this.unpauseAssistant();
-      }
-    },
-
-    startAssistant: async function() {
+  App.VoiceAssistantSession.prototype = {
+    start: async function() {
       try {
-        this.setStatus(this.statuses.starting);
+        this.setStatus(STATUSES.starting);
 
         if (this.urlParams.get("dont_start_voice_session") === "true") {
-          setTimeout(function() {
-            App.VoiceAssistantV2.setStatus(App.VoiceAssistantV2.statuses.running);
+          setTimeout(() => {
+            this.setStatus(STATUSES.running);
+            this.setupWave();
           }, 1500);
           return;
         }
@@ -120,20 +40,19 @@
         await this.requestSession();
       } catch (error) {
         console.error("Failed to initialize connection:", error);
-        this.setStatus(this.statuses.initialized);
+        this.setStatus(STATUSES.initialized);
         this.showError("Mikrofon-Zugriff nicht möglich. Bitte Browser-Berechtigungen prüfen.");
       }
     },
 
     requestSession: async function() {
-      const dataset = this.element.dataset;
-      const payload = { codename: dataset.codename };
+      const payload = { codename: this.options.codename };
 
-      if (dataset.projektPhaseId) {
-        payload.consul_projekt_phase_id = dataset.projektPhaseId;
+      if (this.options.projektPhaseId) {
+        payload.consul_projekt_phase_id = this.options.projektPhaseId;
       }
 
-      const response = await App.Ajax.post(dataset.createSessionUrl, payload);
+      const response = await App.Ajax.post(this.options.createSessionUrl, payload);
 
       await this.handleSessionInitialized(response.ephemeral_key, response.model);
     },
@@ -170,7 +89,7 @@
         return Promise.resolve();
       }
 
-      return new Promise(function(resolve) {
+      return new Promise((resolve) => {
         const checkState = function() {
           if (pc.iceGatheringState === "complete") {
             pc.removeEventListener("icegatheringstatechange", checkState);
@@ -180,7 +99,7 @@
 
         pc.addEventListener("icegatheringstatechange", checkState);
 
-        setTimeout(function() {
+        setTimeout(() => {
           pc.removeEventListener("icegatheringstatechange", checkState);
           resolve();
         }, 5000);
@@ -218,23 +137,21 @@
       rtcPeerConnection.addTrack(this.currentMicrophoneTrack);
     },
 
-    pauseAssistant: function() {
-      if (this.currentMicrophoneTrack) {
-        this.currentMicrophoneTrack.enabled = false;
-      }
-      this.setStatus(this.statuses.paused);
-    },
-
-    unpauseAssistant: function() {
-      if (this.status === this.statuses.paused) {
+    pauseToggle: function() {
+      if (this.status === STATUSES.running) {
+        if (this.currentMicrophoneTrack) {
+          this.currentMicrophoneTrack.enabled = false;
+        }
+        this.setStatus(STATUSES.paused);
+      } else if (this.status === STATUSES.paused) {
         if (this.currentMicrophoneTrack) {
           this.currentMicrophoneTrack.enabled = true;
         }
-        this.setStatus(this.statuses.running);
+        this.setStatus(STATUSES.running);
       }
     },
 
-    stopAssistant: function() {
+    stop: function() {
       const doneMessage = {
         type: "response.create",
         response: {
@@ -249,37 +166,37 @@
 
       this.stopRtcConnection();
       this.stopMicrophone();
+      this.teardownWave();
     },
 
     stopMicrophone: function() {
       if (this.mediaStream) {
-        this.mediaStream.getTracks().forEach(function(track) { track.stop(); });
+        this.mediaStream.getTracks().forEach((track) => { track.stop(); });
       }
     },
 
     stopRtcConnection: function() {
-      this.setStatus(this.statuses.stoping);
+      this.setStatus(STATUSES.stoping);
 
-      setTimeout(function() {
-        if (App.VoiceAssistantV2.dataChannel) {
-          App.VoiceAssistantV2.dataChannel.close();
-          App.VoiceAssistantV2.rtcPeerConnection.close();
+      setTimeout(() => {
+        if (this.dataChannel) {
+          this.dataChannel.close();
+          this.rtcPeerConnection.close();
         }
-        App.VoiceAssistantV2.setStatus(App.VoiceAssistantV2.statuses.initialized);
+        this.setStatus(STATUSES.initialized);
       }, 100);
     },
 
     handleDataChannelOpen: function() {
-      this.setStatus(this.statuses.running);
+      this.setStatus(STATUSES.running);
+      this.setupWave();
       this.sendGreeting();
     },
 
     handleDataChannelClose: function() {
-      this.setStatus(this.statuses.initialized);
+      this.setStatus(STATUSES.initialized);
       this.dataChannel = null;
     },
-
-    handleTabClose: function() {},
 
     sendGreeting: function() {
       this.greetingResponseId = null;
@@ -328,7 +245,7 @@
 
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-      const animate = function() {
+      const animate = () => {
         analyser.getByteTimeDomainData(dataArray);
 
         let sum = 0;
@@ -336,8 +253,8 @@
           sum += Math.abs(dataArray[i] - 128);
         }
 
-        if (App.VoiceAssistantV2.wave) {
-          App.VoiceAssistantV2.wave.setAmplitude(sum / dataArray.length / 8);
+        if (this.wave) {
+          this.wave.setAmplitude(sum / dataArray.length / 8);
         }
 
         requestAnimationFrame(animate);
@@ -386,19 +303,17 @@
     },
 
     handleAssistantFunctionCall: function(message) {
-      const args = JSON.parse(message.arguments);
       const form = App.AssistantUserResourceForm;
+
+      if (!form) { return; }
+      if (!document.querySelector(".js-user-resources-form")) { return; }
+
+      const args = JSON.parse(message.arguments);
 
       switch (message.name) {
         case "createResource":
-          this.handleResourceCreate(args);
-          break;
         case "createProposal":
-          this.handleResourceCreate(args);
-          break;
         case "createBudgetInvestment":
-          this.handleResourceCreate(args);
-          break;
         case "createDeficiencyReport":
           this.handleResourceCreate(args);
           break;
@@ -454,77 +369,49 @@
       if (args.user_cost_estimate) { form.updateUserCostEstimate(args.user_cost_estimate); }
     },
 
-    setStatus: function(newStatus) {
-      this.status = newStatus;
-      this.element.dataset.status = newStatus;
+    setupWave: function() {
+      const container = this.options.vizContainer;
 
-      const speakButton = this.getSpeakButton();
+      if (!container) { return; }
+      if (typeof SiriWave === "undefined") { return; }
 
-      if (newStatus === this.statuses.starting) {
-        speakButton.disabled = true;
-      } else if (newStatus === this.statuses.initialized) {
-        speakButton.disabled = false;
-        this.getMessagebar().classList.remove("-visible");
-      }
+      this.teardownWave();
 
-      speakButton.title = this.getSpeakButtonTitle();
-    },
-
-    getSpeakButtonTitle: function() {
-      const dataset = this.getSpeakButton().dataset;
-
-      if (this.status === this.statuses.running) {
-        return dataset.titleMute;
-      } else if (this.status === this.statuses.paused) {
-        return dataset.titleUnmute;
-      } else if (this.status === this.statuses.initialized) {
-        return dataset.titleStart;
-      } else if (this.status === this.statuses.starting) {
-        return dataset.titleLoading;
-      }
-    },
-
-    toggleButtonAnimationEnd: function() {
-      this.getSpeakButton().disabled = false;
-    },
-
-    setupSiriWave: function() {
       this.wave = new SiriWave({
-        container: this.element.querySelector(".js-voice-assistant-visualization"),
+        container: container,
+        width: container.clientWidth || 240,
+        height: container.clientHeight || 40,
+        style: "ios",
+        color: this.options.waveColor || "#97d8ff",
         speed: 0.2,
-        color: "#97d8ff",
-        amplitude: 0.3
+        amplitude: 0.3,
+        autostart: true
       });
     },
 
-    getSpeakButton: function() {
-      return this.element.querySelector(".js-voice-assistant-speak-button");
+    teardownWave: function() {
+      if (this.wave) {
+        this.wave.stop();
+        this.wave = null;
+      }
+
+      if (this.options.vizContainer) {
+        this.options.vizContainer.innerHTML = "";
+      }
     },
 
-    getStopButton: function() {
-      return this.element.querySelector(".js-voice-assistant-stop-button");
-    },
+    setStatus: function(newStatus) {
+      this.status = newStatus;
 
-    getCollapseButton: function() {
-      return this.element.querySelector(".js-voice-assistant-collapse-button");
-    },
-
-    getExpandButton: function() {
-      return this.element.querySelector(".js-voice-assistant-expand-button");
+      if (this.options.onStatusChange) {
+        this.options.onStatusChange(newStatus);
+      }
     },
 
     showError: function(message) {
-      const messagebar = this.getMessagebar();
-      messagebar.innerHTML = message;
-      messagebar.title = message;
-      messagebar.classList.add("-error");
-      messagebar.classList.add("-visible");
-    },
-
-    getMessagebar: function() {
-      return this.element.querySelector(".js-voice-assistant-messagebar");
+      if (this.options.onError) {
+        this.options.onError(message);
+      }
     }
   };
-
-
 }).call(this);

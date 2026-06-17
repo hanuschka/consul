@@ -1,0 +1,40 @@
+inline-popup {
+  display: inline-flex;
+}
+
+inline-popup[hidden] {
+  display: none;
+}
+
+.inline-popup--body {
+  position: fixed;
+  inset: auto;
+  z-index: 1300;
+  width: max-content;
+  max-width: #{"min(360px, calc(100vw - 24px))"};
+  margin: 0;
+  margin-block: 8px;
+  padding: 16px;
+  color: #222222;
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18), 0 3px 8px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  transition: opacity 150ms ease-out, display 150ms ease-out allow-discrete,
+    overlay 150ms ease-out allow-discrete;
+}
+
+@starting-style {
+  .inline-popup--body:popover-open {
+    opacity: 0;
+  }
+}
+
+.inline-popup--body:not([popover]) {
+  display: none;
+}
+
+.inline-popup--body:not([popover]).-visible {
+  display: block;
+}

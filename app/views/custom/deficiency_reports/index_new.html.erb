@@ -18,7 +18,9 @@
   <div class="margin-bottom">
     <%= render Shared::MapComponent.new(
       features: @deficiency_reports_coordinates,
-      process: 'deficiency_reports'
+      features_count: @deficiency_reports_map_pin_count,
+      process: 'deficiency_reports',
+      map_data_url: deficiency_reports_path(**request.query_parameters, format: :json)
     ) %>
   </div>
 

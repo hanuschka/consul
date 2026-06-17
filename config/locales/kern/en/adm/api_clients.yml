@@ -16,6 +16,7 @@ en:
         create_new: Create new API client
         api_docs_link: API documentation
         id: API client ID
+        posts_as: Posts as
         no_api_clients: No API clients available.
         delete_confirm: >
           Are you sure you want to delete this API client?
@@ -32,6 +33,11 @@ en:
         auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
         service_user_title: Service user
         service_user_name: Name
+        system_user_title: System user
+        system_user_note: >
+          This API client does not use a dedicated service user.
+          All content created via this client is published under
+          the system user.
         service_user_login_warning: >
           Note: you should not log in directly with this
           service user. Use the API authentication methods instead.
@@ -46,12 +52,21 @@ en:
           and is used for API authentication.
         service_user_email_description: >
           Enter a valid email address for the automatically created service user account. The service user is used as the author for all content created via this API client — e.g. proposals, comments, or votes. The address must be unique and must not already be used by another account.
-        service_user_form_title: Update service user information
+        service_user_section_title: Service user
+        service_user_section_description: >
+          The service user is the public author identity of this API client:
+          all content created via the API — e.g. proposals or comments — is
+          published under this user. It cannot be used to log in directly.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Background image
-        service_user_errors_message: "%{count} error(s)"
-        service_user_errors_title: "prevented this service user from being saved:"
-        update_service_user: Update service user
+        use_system_user_label: Use system user
+        use_system_user_description: >
+          When enabled, content created via this API client is published
+          under the system user. Disable this option to create a dedicated
+          service user for this client.
+        system_user_note: >
+          All content created via this API client is published under
+          this system user.
         regenerate_token: Regenerate token
         regenerate_token_explanation: >
           Creates a new token and invalidates the current one.

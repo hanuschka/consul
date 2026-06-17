@@ -1,0 +1,19 @@
+<%= tag.label class: css_classes do %>
+  <% if name.present? %>
+    <%= hidden_field_tag name, "0", id: nil %>
+  <% end %>
+
+  <%= input_tag %>
+
+  <span class="kern-switch__track" aria-hidden="true">
+    <span class="kern-switch__thumb"></span>
+  </span>
+
+  <span class="kern-switch__text">
+    <span class="kern-switch__label"><%= label %></span>
+
+    <% if description.present? %>
+      <span class="kern-switch__description"><%= description %></span>
+    <% end %>
+  </span>
+<% end %>

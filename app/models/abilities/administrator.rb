@@ -81,7 +81,9 @@ module Abilities
       can [:hide, :admin_update, :toggle_selection], Budget::Investment
       can [:valuate, :comment_valuation], Budget::Investment
       cannot [:admin_update, :toggle_selection, :valuate, :comment_valuation],
-        Budget::Investment, budget: { id: Budget.finished.pluck(:id) }
+             Budget::Investment do |investment|
+        investment.budget.finished?
+      end
 
       can :create, Budget::ValuatorAssignment
 
@@ -122,7 +124,7 @@ Poll
       can :manage, Widget::Card
 
       can :access, :ckeditor
-      can :manage, Ckeditor::Picture
+      can :manage, AdminImage
 
       can [:manage], ::Legislation::Process
       can [:manage], ::Legislation::DraftVersion
@@ -159,7 +161,7 @@ Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User
 
       can :edit_physical_votes, Budget::Investment do |investment|
-        investment.budget.current_phase.kind == "selecting"
+        investment.budget.selecting?
       end
 
       can :manage, ModalNotification
@@ -188,7 +190,9 @@ Poll::Question
       can :manage, FormularFollowUpLetter
       can :manage, ProjektArgument
 
-      can :read_stats, Budget, id: Budget.where(id: Budget.accepting_or_later.pluck(:id)).ids
+      can :read_stats, Budget do |budget|
+        budget.accepting_or_later?
+      end
 
       can :destroy, RelatedContent
 
@@ -203,9 +207,8 @@ Poll::Question
       can :get_coordinates_map_location, MapLocation
       can :send_notification, Memo, user_id: user.id
 
-      can :index, Ckeditor::Asset
-      can [:create, :update, :destroy], Ckeditor::Picture
-      can [:create, :update, :destroy], Ckeditor::Document
+      can :index, AdminAsset
+      can [:create, :update, :destroy], AdminDocument
 
       can :manage, RecipientGroup
       can :manage, ProjektPointOfInterestPin

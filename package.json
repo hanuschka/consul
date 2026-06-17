@@ -10,6 +10,7 @@
     "ace-builds": "^1.44.0",
     "chart.js": "^4.5.1",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "cropperjs": "1.6.2",
     "esbuild": "^0.25.10",
     "eslint": "^9.28.0",
     "glightbox": "^3.3.0",

@@ -12,6 +12,9 @@ de:
         content: Inhalt
         comments: Kommentare
         author: Autor
+    content_blocks:
+      admin_empty_hint_title: "Leerer Inhaltsblock"
+      admin_empty_hint: "Nur Sie (Admins & Manager*innen) sehen diesen Hinweis. Bewegen Sie den Mauszeiger über den Block und klicken Sie auf die Symbolleiste, um Inhalte hinzuzufügen — der Block bleibt für Besucher*innen verborgen, bis er Inhalt enthält."
     account:
       settings:
         email_digest: E-Mail-Erinnerung bei ungelesenen Benachrichtigungen

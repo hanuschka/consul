@@ -10,6 +10,7 @@ en:
           proposal_phase: Proposals
           budget_phase: Investments
           comment_phase: Comments
+          voting_phase: Polls
       stats:
         title: Statistics
         banner_title: "Evaluation of %{phase_title}"

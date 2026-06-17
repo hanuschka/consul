@@ -125,6 +125,8 @@ en:
           success: All Masterportal pins and their associated resources have been deleted.
         destroy_masterportal_pin:
           success: Pin and any linked resource have been deleted.
+        destroy_projekt_point_of_interest_pin:
+          success: The pin has been deleted.
         masterportal_pins_summary:
           loading: Loading map…
   projekt_phase_setting:

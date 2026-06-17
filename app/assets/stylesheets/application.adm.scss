@@ -4,6 +4,7 @@
 @use "material-symbols/outlined.css";
 @use "@simonwep/pickr/dist/themes/nano.min.css";
 @use "glightbox/dist/css/glightbox.min.css";
+@use "cropperjs/dist/cropper.css";
 
 @use "kern-ux/base";
 @use "kern-ux/adm";
@@ -12,7 +13,7 @@
 
 @use "shared/image_with_lightbox";
 @use "files/index";
-@use "files/filter_bar";
+@use "cross_pack/components/adm_filter_bar";
 @use "files/asset_card";
 @use "files/uploader_link";
 @use "files/edit_modal";

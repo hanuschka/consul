@@ -130,3 +130,40 @@ de:
       title: Re-Verifizierung erfolgreich
       description: Wird an den Nutzer gesendet, wenn die erneute Identitätsprüfung erfolgreich war.
       recipient: Der betroffene Nutzer.
+    new_deficiency_report:
+      title: Neue Mangelmeldung (intern)
+      description: Wird gesendet, wenn eine neue Mangelmeldung eingereicht wurde.
+      recipient: Administratoren und Mängelmelder-Verantwortliche.
+    new_comments_for_deficiency_report:
+      title: Neue Kommentare zu einer Mangelmeldung
+      description: Wird gesendet, wenn neue Kommentare zu einer noch nicht bearbeiteten Mangelmeldung geschrieben wurden.
+      recipient: Der zuständige Sachbearbeiter der Mangelmeldung.
+    overdue_deficiency_reports:
+      title: Überfällige Mangelmeldungen
+      description: Erinnerung, wenn zugewiesene Mangelmeldungen nicht rechtzeitig bearbeitet wurden.
+      recipient: Der zuständige Sachbearbeiter der Mangelmeldungen.
+    not_assigned_deficiency_reports:
+      title: Nicht zugewiesene Mangelmeldungen
+      description: Erinnerung, wenn Mangelmeldungen keinem Sachbearbeiter zugewiesen wurden.
+      recipient: Administratoren.
+  deficiency_report_mailer:
+    notify_author_about_status_change:
+      title: Statusänderung einer Mangelmeldung
+      description: Wird an den Verfasser gesendet, wenn sich der Status seiner Mangelmeldung ändert.
+      recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
+    notify_officer:
+      title: Mangelmeldung einem Sachbearbeiter zugewiesen
+      description: Wird gesendet, wenn eine Mangelmeldung einem einzelnen Sachbearbeiter zugewiesen wird.
+      recipient: Der zuständige Sachbearbeiter.
+    notify_default_officer_group_email:
+      title: Mangelmeldung an Sachbearbeitergruppe zugewiesen
+      description: Wird an die Standardadresse einer Sachbearbeitergruppe gesendet, wenn eine Mangelmeldung der Gruppe statt einem einzelnen Sachbearbeiter zugewiesen wird.
+      recipient: Die Standard-E-Mail-Adresse der Sachbearbeitergruppe.
+    notify_author_about_submission:
+      title: Eingangsbestätigung einer Mangelmeldung
+      description: Wird an den Verfasser gesendet, wenn seine Mangelmeldung erfolgreich eingereicht wurde.
+      recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
+    send_feedback_form_link:
+      title: Feedback-Anfrage zur Mangelmeldung
+      description: Wird an den Verfasser gesendet, nachdem seine Mangelmeldung abgeschlossen wurde, mit der Bitte um Feedback.
+      recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.

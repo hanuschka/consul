@@ -6,7 +6,6 @@
     openAnswerStatusTimers: new WeakMap(),
 
     initialize: function() {
-      console.log("[RS] initialize");
       this.destroy();
 
       App.PollsCustom.showOpenAnswers();
@@ -15,19 +14,6 @@
       $("body").on("input.pollsCustom", ".js-poll-open-answer-autosave textarea", this.handleOpenAnswerInput.bind(this));
 
       this.formatVisibleRatingScales();
-
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(function() {
-          console.log("[RS] document.fonts.ready re-measure");
-          App.PollsCustom.formatVisibleRatingScales();
-        });
-      }
-
-      $("body").on(
-        "click.pollsCustom",
-        ".js-question-wizard-next, .js-question-wizard-prev, .js-question-wizard-go-to-start",
-        this.formatVisibleRatingScalesAfterRepaint.bind(this)
-      );
 
       if ($(".js-rating-scale").length > 0) {
         $(window).on("resize.pollsCustom", this.handleWindowResize);
@@ -123,18 +109,7 @@
       const $answersContainer = $element.find('.rating-scale-answer-container');
       const $parentContainer = $element.parent();
 
-      const containerWidth = $answersContainer.width();
-      const parentWidth = $parentContainer.width();
-      const vertical = containerWidth > parentWidth;
-      console.log("[RS] formatRatingScale", {
-        id: $element.closest("[id]").attr("id"),
-        visible: $element.is(":visible"),
-        containerWidth: containerWidth,
-        parentWidth: parentWidth,
-        decision: vertical ? "VERTICAL" : "horizontal"
-      });
-
-      if (vertical) {
+      if ($answersContainer.width() > $parentContainer.width()) {
         $element.addClass('vertical-rating-scale-answers');
       } else {
         $element.removeClass('vertical-rating-scale-answers');
@@ -142,15 +117,12 @@
     },
 
     formatVisibleRatingScales: function() {
-      const $scales = $(".js-rating-scale:visible");
-      console.log("[RS] formatVisibleRatingScales — matched", $scales.length, "of", $(".js-rating-scale").length, "total");
-      $scales.each(function() {
+      $(".js-rating-scale:visible").each(function() {
         App.PollsCustom.formatRatingScale(this);
       });
     },
 
     formatVisibleRatingScalesAfterRepaint: function() {
-      console.trace("[RS] formatVisibleRatingScalesAfterRepaint (rAF scheduled)");
       requestAnimationFrame(function() {
         App.PollsCustom.formatVisibleRatingScales();
       });

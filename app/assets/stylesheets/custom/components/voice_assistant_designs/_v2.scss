@@ -177,3 +177,42 @@
 
 .voice-assistant-v2.-listening .voice-assistant-v2--status-ready { display: none; }
 .voice-assistant-v2.-listening .voice-assistant-v2--status-live { display: inline; }
+
+// Compact bar layout when opened — matches Classic Dark.
+.voice-assistant-v2.-active {
+  width: 430px;
+}
+
+.voice-assistant-v2.-active .voice-assistant-v2--panel {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  height: 76px;
+}
+
+.voice-assistant-v2 .voice-assistant-design-wave {
+  flex: 1;
+  width: auto;
+}
+
+.voice-assistant-v2--title { display: none; }
+
+.voice-assistant-v2--desc { display: none; }
+
+.voice-assistant-v2--viz { display: none; }
+
+.voice-assistant-v2--head { flex: 0 0 auto; }
+
+.voice-assistant-v2--stage { flex: 0 0 auto; }
+
+.voice-assistant-v2--mic {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+.voice-assistant-v2--status {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}

@@ -306,7 +306,7 @@
       const form = App.AssistantUserResourceForm;
 
       if (!form) { return; }
-      if (!document.querySelector(".js-user-resources-form")) { return; }
+      if (!document.querySelector(".js-user-resource-form-title")) { return; }
 
       const args = JSON.parse(message.arguments);
 

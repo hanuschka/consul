@@ -1039,7 +1039,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 
   @media screen and (max-width: $big-tablet-viewport-start) {
     .homepage-image-header {
-      height: 500px;
+      min-height: 500px;
     }
 
     .homepage-image-header--title-wrapper {
@@ -1189,7 +1189,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     .homepage-image-header {
-      height: 450px;
+      min-height: 450px;
       margin-bottom: 5px;
     }
 

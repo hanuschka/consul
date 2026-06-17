@@ -18,6 +18,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
           type="button"
           class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
           title="Inhaltsblock mit KI erstellen"
+          tabindex="-1"
         >
           <i class="fas fa-magic"></i>
         </button>
@@ -25,6 +26,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
           type="button"
           class="js-show-content-block-templates add-new-content-block-button"
           title="Neuen Inhaltsblock am Anfang hinzufügen"
+          tabindex="-1"
         >
           <i class="fas fa-plus"></i>
         </button>
@@ -60,6 +62,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <button
                 type="button"
                 class="studio-edit-button -green js-save-content-block"
+                tabindex="-1"
               >
                 <i class="fas fa-save"></i>
                 Speichern
@@ -67,6 +70,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <button
                 type="button"
                 class="studio-edit-button js-cancel-content-block"
+                tabindex="-1"
               >
                 <i class="fas fa-xmark"></i>
                 Abbrechen
@@ -116,6 +120,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     aria-haspopup="listbox"
                     aria-expanded="false"
                     aria-label="Überschrift"
+                    tabindex="-1"
                   >
                     Text
                   </button>
@@ -156,7 +161,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </div>
                 <button
                   type="button"
-                  tabindex="0"
+                  tabindex="-1"
                   data-hint="Text fett formatieren"
                   class="studio-icon-button js-content-block-toggle-bold"
                 >
@@ -165,7 +170,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <button
                   type="button"
                   disabled
-                  tabindex="0"
+                  tabindex="-1"
                   data-hint="Link hinzufügen"
                   class="studio-icon-button js-content-block-add-link"
                 >
@@ -174,7 +179,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <button
                   type="button"
                   disabled
-                  tabindex="0"
+                  tabindex="-1"
                   data-hint="Datei-Link einfügen"
                   class="studio-icon-button js-content-block-insert-file-link"
                 >
@@ -185,7 +190,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-content-block-edit-main-controlls">
               <button
                 type="button"
-                tabindex="0"
+                tabindex="-1"
                 data-hint="Text-Editor&#10;Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung"
                 class="js-edit-text-content-block studio-icon-button"
               >
@@ -195,7 +200,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="studio-icon-button-wrapper">
                 <button
                   type="button"
-                  tabindex="0"
+                  tabindex="-1"
                   data-hint="KI-Editor&#10;Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen um diesen Block zu modifizieren, umzugestalten oder zu verbessern"
                   class="js-content-block-enter-ai-edit-mode studio-icon-button"
                 >
@@ -205,7 +210,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </div>
               <button
                 type="button"
-                tabindex="0"
+                tabindex="-1"
                 data-hint="Code-Editor&#10;Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting"
                 class="js-content-block-enter-code-edit-mode studio-icon-button"
               >
@@ -215,7 +220,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <!-- <button -->
               <!--   data-tooltip -->
               <!--   data-hover-delay="800" -->
-              <!--   tabindex="0" -->
+              <!--   tabindex="-1" -->
               <!--   title="Erweiterter Editor&#10;Öffnet den erweiterten HTML-Editor mit vollständiger Formatierungsunterstützung und erweiterten Bearbeitungsfunktionen" -->
               <!--   class="studio-icon-button js-html-edit-content-block" -->
               <!-- > -->
@@ -225,7 +230,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
-                tabindex="0"
+                tabindex="-1"
                 data-hint="Duplizieren&#10;Erstellt eine exakte Kopie dieses Inhaltsblocks mit allen Einstellungen direkt unterhalb des aktuellen Blocks"
                 class="js-copy-current-content-block studio-icon-button"
               >
@@ -233,7 +238,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               <button
-                tabindex="0"
+                tabindex="-1"
                 data-hint="Versionsverlauf&#10;Verwalten Sie Versionen dieses Blocks: Anzeigen vorheriger Versionen und Rückgängigmachen von Änderungen"
                 disabled
                 class="studio-icon-button js-content-block-version-managment"
@@ -245,7 +250,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
-                tabindex="0"
+                tabindex="-1"
                 data-hint="Vorlage anwenden&#10;Ersetzt den Inhalt dieses Blocks durch eine ausgewählte Vorlage"
                 class="studio-icon-button js-open-template-selector-for-replace"
               >
@@ -255,7 +260,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
-                tabindex="0"
+                tabindex="-1"
                 data-hint="Entfernt den gesamten Inhalt dieses Blocks"
                 class="studio-icon-button -delete js-clear-site-content-block"
               >
@@ -267,13 +272,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <button
                 class="studio-icon-button projekt-content-block--move-button js-dnd-handle"
                 title="Inhaltsbock verschieben"
+                tabindex="-1"
               >
                 <i class="fas fa-up-down-left-right"></i>
               </button>
               <div class="projekt-content-block-edit--separator"></div>
               <button
                 type="button"
-                tabindex="0"
+                tabindex="-1"
                 class="js-delete-content-block -delete studio-icon-button"
               >
                 <i class="fas fa-trash-alt">
@@ -313,6 +319,7 @@ function showContentBlockTemplatesButton(isDraft = false) {
         type="button"
         class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
         title="Inhaltsblock mit KI erstellen"
+        tabindex="-1"
         ${isDraft ? "disabled" : ''}
       >
         <i class="fas fa-magic"></i>
@@ -321,6 +328,7 @@ function showContentBlockTemplatesButton(isDraft = false) {
         type="button"
         class="js-show-content-block-templates add-new-content-block-button"
         title="Neuen Inhaltsblock hinzufügen"
+        tabindex="-1"
         ${isDraft ? "disabled" : ''}
       >
         <i class="fas fa-plus"></i>

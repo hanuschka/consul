@@ -287,13 +287,16 @@
       this.dataChannel.send(JSON.stringify({
         type: "session.update",
         session: {
+          type: "realtime",
           audio: {
             input: {
               turn_detection: {
                 type: "server_vad",
                 threshold: 0.5,
                 prefix_padding_ms: 300,
-                silence_duration_ms: 500
+                silence_duration_ms: 500,
+                create_response: true,
+                interrupt_response: true
               }
             }
           }
@@ -342,13 +345,15 @@
       try {
         const message = JSON.parse(e.data);
 
+        if (message.type === "error") {
+          console.error("Voice assistant realtime error:", message.error);
+        }
+
         if (message.type === "response.created" && !this.greetingResponseId) {
           this.greetingResponseId = message.response && message.response.id;
         }
 
-        if (message.type === "output_audio_buffer.done"
-            && this.greetingResponseId
-            && message.response_id === this.greetingResponseId) {
+        if (this.isGreetingAudioDone(message)) {
           this.greetingResponseId = null;
           this.enableServerVad();
         }
@@ -363,6 +368,16 @@
       } catch (error) {
         console.error("Error parsing WebRTC message:", error);
       }
+    },
+
+    isGreetingAudioDone: function(message) {
+      const isAudioDoneEvent =
+        message.type === "response.output_audio.done"
+        || message.type === "output_audio_buffer.stopped";
+
+      return isAudioDoneEvent
+        && this.greetingResponseId
+        && message.response_id === this.greetingResponseId;
     },
 
     handleAssistantFunctionCall: function(message) {

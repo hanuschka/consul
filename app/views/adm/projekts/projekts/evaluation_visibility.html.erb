@@ -2,7 +2,8 @@
 
 <%= render Adm::HeaderComponent.new(
   title: (@projekt.page&.title || @projekt.name),
-  breadcrumbs: @breadcrumbs
+  breadcrumbs: @breadcrumbs,
+  compact: true
 ) %>
 
 <div class="kern-container mb-5">

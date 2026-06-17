@@ -79,7 +79,7 @@ class Files::DocumentCardComponent < Files::ResourceAssetComponent
     def attachment_url
       return "" if !document.attachment.attached?
 
-      helpers.url_for(document.attachment)
+      helpers.rails_blob_url(document.attachment, **UrlOptions.default)
     end
 
     def previewable?

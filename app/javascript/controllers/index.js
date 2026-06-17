@@ -221,3 +221,6 @@ application.register("shared--confirm-dialog", SharedConfirmDialogController)
 
 import ProjektImportsDeleteConfirmController from "./projekt_imports/delete_confirm_controller"
 application.register("projekt-imports--delete-confirm", ProjektImportsDeleteConfirmController)
+
+import SharedImageCropperController from "./shared/image_cropper_controller"
+application.register("shared--image-cropper", SharedImageCropperController)

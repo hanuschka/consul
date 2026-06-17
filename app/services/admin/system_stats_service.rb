@@ -1,3 +1,5 @@
+require "etc"
+
 class Admin::SystemStatsService < ApplicationService
   LOW_DISK_THRESHOLD_GB = 5.0
 
@@ -91,16 +93,31 @@ class Admin::SystemStatsService < ApplicationService
   end
 
   def web_server_stats
-    max_threads =
-      (Puma.stats_hash[:max_threads] if defined?(Puma) && Puma.respond_to?(:stats_hash)) ||
-      Integer(ENV.fetch("RAILS_MAX_THREADS", 8))
+    server =
+      if defined?(Puma::Server)
+        Puma::Server.current
+      end
 
-    {
+    max_threads = server&.max_threads || Integer(ENV.fetch("RAILS_MAX_THREADS", 5))
+
+    base = {
       available:   true,
       server:      "puma",
-      workers:     Integer(ENV.fetch("WEB_CONCURRENCY", 2)),
-      max_threads: max_threads.to_i
+      workers:     Integer(ENV.fetch("WEB_CONCURRENCY", Etc.nprocessors)),
+      max_threads: max_threads
     }
+
+    return base if server.nil?
+
+    capacity = server.pool_capacity.to_i
+    busy     = max_threads - capacity
+
+    base.merge(
+      running: server.running.to_i,
+      busy:    busy,
+      backlog: server.backlog.to_i,
+      pct:     max_threads.positive? ? (busy * 100.0 / max_threads).round : 0
+    )
   rescue StandardError
     { available: false }
   end

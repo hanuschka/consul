@@ -4,6 +4,7 @@ class Kern::MapComponent < ApplicationComponent
     form: nil,
     editable: false,
     admin_editor: false,
+    gesture_handling: true,
     height: 400,
     width: nil,
     latitude: nil,
@@ -16,6 +17,7 @@ class Kern::MapComponent < ApplicationComponent
     @form = form
     @editable = editable
     @admin_editor = admin_editor
+    @gesture_handling = gesture_handling
     @height = height
     @width = width
     @latitude = latitude
@@ -58,6 +60,7 @@ class Kern::MapComponent < ApplicationComponent
       map_zoom_value: @zoom || map_location.zoom,
       map_altitude_value: map_location.altitude,
       map_editable_value: editable,
+      map_gesture_handling_value: @gesture_handling,
       map_admin_editor_value: admin_editor,
       map_enable_set_center_value: mappable.is_a?(Projekt),
       map_features_value: features_json,

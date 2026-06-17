@@ -45,6 +45,8 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt event' do
@@ -183,6 +185,9 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
           expect(response.status).to eq(201)
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -220,6 +225,8 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
         let(:id) { 999999 }
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt event' do
@@ -354,6 +361,9 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt event' do
@@ -400,6 +410,9 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

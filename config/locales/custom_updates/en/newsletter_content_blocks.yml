@@ -1,0 +1,16 @@
+en:
+  custom:
+    newsletters:
+      content_block_templates_selector:
+        title: Choose an email content block template
+        tabs:
+          email_defaults: Standard
+        saved_content_blocks:
+          global_explanation: Internal newsletter content block templates visible to all administrators.
+          user_explanation: Your own newsletter content block templates, visible only to you.
+      content_block_editor:
+        add_with_ai_title: Create content block with AI
+        add_at_top_title: Add new content block at the top
+        start_section_title: How would you like to start your newsletter?
+        start_section_add_template: Choose a template
+        start_section_add_with_ai: Create with AI

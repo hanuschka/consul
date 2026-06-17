@@ -7,7 +7,7 @@
       <div>
         <%= link_to projekt.title, landing_path, class: "link strong", data: { turbo_frame: "_top" } %>
         <% if projekt.imported_by_ai %>
-          <span class="kern-badge kern-badge--info ms-2" title="<%= t("adm.projekts.imports.badge.imported_by_ai_title") %>">
+          <span class="kern-badge kern-badge--info kern-badge--small ml-2" title="<%= t("adm.projekts.imports.badge.imported_by_ai_title") %>">
             <%= t("adm.projekts.imports.badge.imported_by_ai") %>
           </span>
         <% end %>
@@ -42,6 +42,8 @@
         <% actions.with_action(label: t(".map"), url: map_adm_projekts_projekt_path(projekt), icon: "map", data: { turbo_frame: "_top" }) %>
       <% end %>
       <% actions.with_action(label: t(".projekt_phases"), url: phases_adm_projekts_projekt_path(projekt), icon: "dashboard_customize", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.projekts.projekts.projekt.images"), url: images_adm_projekts_projekt_path(projekt), icon: "image", data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.projekts.projekts.projekt.documents"), url: documents_adm_projekts_projekt_path(projekt), icon: "description", data: { turbo_frame: "_top" }) %>
       <% if manage_allowed %>
         <% actions.with_action(label: t(".evaluation"), url: evaluation_adm_projekts_projekt_path(projekt), icon: "assessment", data: { turbo_frame: "_top" }) %>
 

@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: milestones_index_url, narrow: true) %>
 
 <div class="kern-container kern-container--form my-5">
   <%= render "adm/projekts/milestones/form", url: milestone_update_url(@milestone) %>

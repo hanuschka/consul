@@ -10,7 +10,7 @@
         <% if content_blocks.any? %>
           <% content_blocks.each do |content_block| %>
             <div
-              class="projekt-content-block js-projekt-content-block"
+              class="projekt-content-block js-content-block"
               data-id="<%= content_block.id %>"
               data-turbolinks="false"
               <% effective_margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>
@@ -33,6 +33,7 @@
           method: :delete,
           class: "button -red",
           title: "Alle Inhaltsblöcke löschen",
+          tabindex: "-1",
           form: { data: { turbolinks: false } },
           data: { confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden." }
         ) do %>

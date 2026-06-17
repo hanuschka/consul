@@ -90,9 +90,12 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :show?
 
     @assets =
-      ImagesQuery
+      AdminAssetsQuery
         .new(images_query_params)
         .call
+        .with_attached_storage_data
+        .merge(policy_scope([:adm, AdminImage]))
+        .preload({ projekt: :page }, user: :image)
         .page(params[:page])
         .per(24)
 
@@ -407,7 +410,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :search, :extension, :size_min_mb, :size_max_mb,
         :created_from, :created_to, :updated_from, :updated_to,
         :sort
-      ).merge(imageable_type: "Projekt", imageable_id: @projekt.id)
+      ).merge(type: "picture", projekt_id: @projekt.id)
     end
 
     def documents_query_params

@@ -32,7 +32,7 @@ class Api::PointOfInterestPinsController < Api::BaseController
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
     pin = @projekt_phase.projekt_point_of_interest_pins.new(pin_params)
-    pin.author = @current_client.user
+    pin.author = @current_client.content_author
 
     if pin.save
       serialized_pin = PointOfInterestPinSerializer.new(pin).serialize

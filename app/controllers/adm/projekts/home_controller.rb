@@ -28,7 +28,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
        end),
       (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
-         { label: t("adm.projekts.home.quick_links.import_projekt"), path: new_adm_projekts_import_path }
+         { label: t("adm.projekts.home.quick_links.imports"), path: adm_projekts_imports_path }
        end)
     ].compact
 

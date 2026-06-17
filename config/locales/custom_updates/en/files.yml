@@ -4,19 +4,33 @@ en:
       items:
         files: Files
         files_subitems:
-          images: Images
-          documents: Documents
+          images: Admin images
+          documents: Admin documents
+          resource_images: Resource images
+          resource_documents: Resource documents
   files:
     allowed_types_note_html: "Allowed file types: %{types}"
+    allowed_types_note_admin_html: "Allowed admin file types: %{types}"
+    allowed_types_note_users_html: "Allowed resources file types for users: %{types}"
     allowed_types_admins_html: "Admins &amp; project managers can upload the following file types: %{types}"
     allowed_types_users_html: "Regular users can upload the following file types: %{types}"
     allowed_types_settings_link: "edit here"
     images:
       index:
-        title: Overview of all images
+        title: Admin images
+        description: Lists all images uploaded by administrators and project managers — e.g. via the file manager in the content block editor or on the projekt edit page. Use this page to upload, review, rename or delete image files.
     documents:
       index:
         title: Overview of all documents
+        description: Lists all documents uploaded by administrators and project managers — e.g. via the file manager in the content block editor or on the projekt edit page. Use this page to upload, review, rename or delete document files.
+    resource_images:
+      index:
+        title: Overview of all resource images
+        description: Lists every image attached to platform content — e.g. projekts, proposals, pages and polls. User avatars are not shown. Use this page to review, rename or delete image files across the whole system.
+    resource_documents:
+      index:
+        title: Overview of all resource documents
+        description: Lists every document attached to platform content — e.g. files added to proposals by their authors or to projekt milestones. These documents are uploaded via the content's own forms, not via the file manager. Use this page to review, rename or delete document files across the whole system.
     empty:
       images:
         title: No images yet
@@ -41,12 +55,8 @@ en:
       imageable_type_any: "Assigned: all"
       documentable_type: Assigned to
       documentable_type_any: "Assigned: all"
-      admin_flag: Source
-      admin_flag_any: All sources
-      admin_flag_true: Admin uploads
-      admin_flag_false: Regular uploads
       sort_label: Sort
-      reset: Reset
+      reset: Clear filters
       sort:
         created_desc: Newest first
         created_asc: Oldest first
@@ -61,9 +71,7 @@ en:
         filter_extension: Filter by file type
         filter_imageable_type: Filter by assignment
         filter_documentable_type: Filter by assignment
-        filter_admin_flag: Filter by source
         sort: Sort by
-        reset: Reset filters
     upload_failed: Upload failed
     upload_loading: Uploading file…
     upload_success: Uploaded
@@ -100,6 +108,14 @@ en:
       projekt: Project
       resource_type: Resource type
       admin_badge: Admin upload
+      alt_text: Alt text
+      alt_text_missing_hint: Alt text is missing. Add it so screen readers can describe this image.
+      edit_alt_text: Edit alt text
+      alt_edit:
+        description: The alt text describes the image for people who use screen readers and is shown when the image cannot load. It improves accessibility and search engine visibility.
+        placeholder: e.g. People discussing at a round table
+        save: Save
+        cancel: Cancel
     edit_modal:
       title: Edit file
       title_label: Title
@@ -109,3 +125,19 @@ en:
       save: Save
       close: Close
       update_failed: Update failed
+    info_modal:
+      button: Info
+      close: Close
+      filename: Filename
+      type: Type
+      size: Size
+      dimensions: Dimensions
+      uploaded: Uploaded
+      last_edited: Last edited
+      uploaded_by: Uploaded by
+      projekt: Project
+      open_file: Open file
+      download_file: Download
+    fullsize_preview:
+      button: Preview
+      close: Close

@@ -1,0 +1,16 @@
+.kern-badge--small {
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+
+  .kern-label {
+    padding-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.2;
+  }
+
+  .kern-icon {
+    width: 16px;
+    height: 16px;
+  }
+}

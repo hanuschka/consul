@@ -39,8 +39,8 @@ de:
           wms: WMS-Dienst
           geojson: GeoJSON-Datei
       projekt:
-        show_start_date_in_frontend: Startdatum in der Seitenleiste des Projektes anzeigen
-        show_end_date_in_frontend: Enddatum in der Seitenleiste des Projektes anzeigen
+        show_start_date_in_frontend: Startdatum im Projekt anzeigen
+        show_end_date_in_frontend: Enddatum im Projekt anzeigen
       budget/investment:
         feasibility_undecided: Nicht bewertet
         feasibility_feasible: Entspricht den Kriterien

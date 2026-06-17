@@ -65,6 +65,10 @@ class Dt::VoiceAssistant::BaseVersionComponent < ApplicationComponent
     I18n.t("custom.voice_assistant_designs.mic_stop")
   end
 
+  def mic_unmute_label
+    I18n.t("custom.voice_assistant_designs.mic_unmute")
+  end
+
   def stop_label
     I18n.t("custom.voice_assistant_designs.stop")
   end

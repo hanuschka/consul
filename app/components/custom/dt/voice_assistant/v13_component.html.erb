@@ -27,15 +27,28 @@
     </div>
 
     <div class="<%= root_class %>--stage">
-      <rich-tooltip delay="300" body-class="-dark">
+      <rich-tooltip delay="300" body-class="-dark" class="voice-assistant-design-start-tip">
         <button
           type="button"
-          class="<%= root_class %>--mic voice-assistant-design-mic js-va-demo-mic"
+          class="<%= root_class %>--mic voice-assistant-design-mic js-va-demo-start"
           aria-label="<%= mic_start_label %>"
         >
           <i class="fas fa-microphone"></i>
         </button>
         <template><%= mic_start_label %></template>
+      </rich-tooltip>
+
+      <rich-tooltip delay="300" body-class="-dark" class="voice-assistant-design-mute-tip">
+        <button
+          type="button"
+          class="<%= root_class %>--mic voice-assistant-design-mic js-va-demo-mute"
+          aria-label="<%= mic_stop_label %>"
+          data-mute-text="<%= mic_stop_label %>"
+          data-unmute-text="<%= mic_unmute_label %>"
+        >
+          <i class="fas fa-microphone"></i>
+        </button>
+        <template><%= mic_stop_label %></template>
       </rich-tooltip>
     </div>
 

@@ -13,6 +13,7 @@ de:
       muted: "Mikrofon stummgeschaltet"
       mic_start: "Gespräch starten"
       mic_stop: "Mikrofon stummschalten"
+      mic_unmute: "Stummschaltung aufheben"
       stop: "Fertig"
       close: "Schließen"
       styles:

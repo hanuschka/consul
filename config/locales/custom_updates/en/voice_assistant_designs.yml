@@ -13,6 +13,7 @@ en:
       muted: "Microphone muted"
       mic_start: "Start conversation"
       mic_stop: "Mute microphone"
+      mic_unmute: "Unmute microphone"
       stop: "Finish"
       close: "Close"
       styles:

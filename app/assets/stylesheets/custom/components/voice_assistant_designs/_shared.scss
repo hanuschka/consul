@@ -100,6 +100,20 @@
   width: 100%;
 }
 
+// Start vs mute/unmute: identical-looking buttons toggled by session state.
+// Start shows until the session is live; the mute/unmute toggle replaces it.
+.voice-assistant-design-mute-tip {
+  display: none;
+}
+
+.-va-live .voice-assistant-design-start-tip {
+  display: none;
+}
+
+.-va-live .voice-assistant-design-mute-tip {
+  display: inline-block;
+}
+
 .voice-assistant-design-wave {
   position: relative;
   width: 100%;

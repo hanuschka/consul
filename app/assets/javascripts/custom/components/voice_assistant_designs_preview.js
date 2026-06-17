@@ -79,16 +79,20 @@
 
       if (status === "running") {
         widget.classList.add("-listening");
+        widget.classList.remove("-va-muted");
       } else if (status === "paused") {
         widget.classList.remove("-listening");
+        widget.classList.add("-va-muted");
       } else if (status === "initialized") {
         widget.classList.remove("-listening");
+        widget.classList.remove("-va-muted");
         this.sessions.delete(widget);
       }
     },
 
     handleError(widget, message) {
       widget.classList.remove("-listening");
+      widget.classList.remove("-va-muted");
       console.error("Voice assistant session error:", message);
     },
 
@@ -104,6 +108,7 @@
 
       widget.classList.remove("-active");
       widget.classList.remove("-listening");
+      widget.classList.remove("-va-muted");
       widget.dataset.state = "idle";
     },
 

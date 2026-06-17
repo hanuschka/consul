@@ -10,6 +10,7 @@ de:
       ready: 'Sag "Hallo".'
       starting: "Verbinden…"
       listening: "Hört zu…"
+      muted: "Mikrofon stummgeschaltet"
       mic_start: "Gespräch starten"
       mic_stop: "Mikrofon stummschalten"
       stop: "Fertig"

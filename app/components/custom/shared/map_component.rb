@@ -1,5 +1,5 @@
 class Shared::MapComponent < ApplicationComponent
-  LAZY_LOAD_THRESHOLD = 100
+  LAZY_LOAD_THRESHOLD = 200
 
   def initialize(
     mappable: nil,
@@ -8,8 +8,8 @@ class Shared::MapComponent < ApplicationComponent
     editable: false,
     process: nil,
     placement: nil,
-    collapsible: false,
     map_data_url: nil,
+    lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false
   )
     @mappable = mappable
@@ -18,8 +18,8 @@ class Shared::MapComponent < ApplicationComponent
     @editable = editable
     @process = process
     @placement = placement
-    @collapsible = collapsible
     @map_data_url = map_data_url
+    @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
   end
 
@@ -27,22 +27,41 @@ class Shared::MapComponent < ApplicationComponent
     return false if @editable
     return false if @map_data_url.blank?
 
-    (@explicit_features_count || features_count) > LAZY_LOAD_THRESHOLD
+    (@explicit_features_count || features_count) > @lazy_load_threshold
   end
 
-  def collapsible?
-    @collapsible && !@editable
+  def hide_from_screen_readers?
+    return false if @editable
+    return false if extended_sidebar_map?
+
+    true
+  end
+
+  def map_accessibility_note
+    key =
+      if @process.present?
+        "custom.map.not_accessible_note_listing"
+      else
+        "custom.map.not_accessible_note_single"
+      end
+
+    I18n.t(key)
   end
 
   def map_div
     content_tag :div, "",
                 id: map_id,
                 class: "map_location map #{rendering_library}",
-                aria: { hidden: true },
+                role: "application",
+                aria: { label: I18n.t("custom.accessibility.map.region_label") },
                 data: prepare_map_settings
   end
 
   private
+
+    def extended_sidebar_map?
+      @placement == "extended_sidebar_map"
+    end
 
     def features_count
       data = resolved_features

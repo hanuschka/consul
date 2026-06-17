@@ -39,6 +39,7 @@ de:
       ai_question:
         title: "Individuelle Auswertung per Frage"
         subtitle: "Stellen Sie eigene Fragen zu den eingereichten Vorschlägen und erhalten Sie eine zusammenfassende Auswertung."
+        question_label: "Frage"
         placeholder: "Geben Sie Ihre Frage zu den Vorschlägen ein..."
         submit: "Frage stellen"
         submitting: "Wird gesendet..."

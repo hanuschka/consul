@@ -142,6 +142,8 @@ App.ContentBlockEditor.Crud = {
   },
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
+    App.ContentBlockEditor.DomHelpers.applyDefaultMarginIfMissing(newContentBlockContainer)
+
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.projekt-content-block'))
@@ -266,17 +268,17 @@ App.ContentBlockEditor.Crud = {
     })
       .then((response) => {
         this.syncDomFromServer(contentBlock, response);
+
         if (response && response.stripped) {
           this.showSanitizationNotice();
         }
+
+        if (!willShowDefault) {
+          App.ContentBlockEditor.DomHelpers.showBlockStatus(contentBlockWrapper, "saved");
+        }
       })
-      .catch((response) => {
-        if (response.error && response.error.message) {
-          alert(`Fehler beim Speichern des Inhaltsblocks: ${response.error.message}`)
-        }
-        else {
-          alert("Fehler beim Speichern des Inhaltsblocks")
-        }
+      .catch(() => {
+        App.ContentBlockEditor.DomHelpers.showBlockStatus(contentBlockWrapper, "error");
       })
 
 

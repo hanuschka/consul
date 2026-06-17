@@ -160,6 +160,10 @@
       }
 
       App.QuestionWizard.mandatoryQuestionActions();
+
+      if (App.PollsCustom && App.PollsCustom.formatVisibleRatingScalesAfterRepaint) {
+        App.PollsCustom.formatVisibleRatingScalesAfterRepaint();
+      }
     },
 
     updateProgress: function(nextQuestion) {

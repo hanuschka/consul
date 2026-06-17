@@ -3,7 +3,18 @@ require_dependency Rails.root.join("app", "components", "budgets", "investments"
 class Budgets::Investments::FormComponent < ApplicationComponent
   delegate :projekt_feature?, :projekt_phase_feature?, :render_custom_block, :ck_editor_class, :current_user, to: :helpers
 
+  def initialize(investment, url:, embbeded_in_ai_flow: false)
+    @investment = investment
+    @url = url
+    @embbeded_in_ai_flow = embbeded_in_ai_flow
+  end
+
   private
+
+    def show_sidebar?
+      !@embbeded_in_ai_flow
+    end
+
 
     def options_for_implementation_select
       Budget::Investment.implementation_performers.map do |ip|

@@ -71,6 +71,7 @@
               <% pin = @deficiency_report.map_location.pin_coordinates %>
               <%= render Kern::MapComponent.new(
                 map_location: @deficiency_report.map_location,
+                gesture_handling: false,
                 height: 400,
                 latitude: pin&.dig(:latitude),
                 longitude: pin&.dig(:longitude),

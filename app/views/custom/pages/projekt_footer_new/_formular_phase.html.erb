@@ -42,7 +42,7 @@
     <aside class="margin-bottom">
       <% if current_user&.administrator? || ( current_user&.projekt_manager? && current_user.projekt_manager.allowed_to?(:manage, @projekt_phase.projekt) ) %>
         <div class="js-studio-hide-on-preview">
-          <%= link_to "Zu den Antworten", formular_answers_adm_projekts_phase_path(@projekt_phase), target: "_blank", class: "button" %>
+          <%= link_to "Zu den Antworten", formular_answers_adm_projekts_phase_path(@projekt_phase), target: "_blank", class: "button", tabindex: "-1" %>
         </div>
       <% end %>
     </aside>

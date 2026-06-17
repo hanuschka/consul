@@ -16,6 +16,9 @@
     <%= render "layouts/brand_color_root_style" %>
     <%= yield :styles %>
 
+    <a href="#main-content" class="show-for-sr"><%= t("custom.accessibility.skip_links.skip_to_content") %></a>
+    <a href="#main-navigation" class="show-for-sr"><%= t("custom.accessibility.skip_links.skip_to_navigation") %></a>
+
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
       <!--[if lt IE 9]>
@@ -46,7 +49,7 @@
     <% if Setting.new_design_enabled? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
-    <div id="main-content" class="wrapper <%= yield(:wrapper_class) %>">
+    <div id="main-content" class="wrapper <%= yield(:wrapper_class) %>" tabindex="-1">
       <% if Setting.old_design_enabled? %>
         <%= render "layouts/header", with_subnavigation: true %>
       <% end %>

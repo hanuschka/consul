@@ -14,6 +14,7 @@ class Resources::ListItemComponent < ApplicationComponent
     description:,
     resource: nil,
     projekt: nil,
+    hide_projekt_breadcrumb: false,
     image: nil,
     subline: nil,
     url: nil,
@@ -27,6 +28,7 @@ class Resources::ListItemComponent < ApplicationComponent
   )
     @title = title
     @projekt = projekt
+    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
     @description = description
     @resource = resource
     @image = image
@@ -61,6 +63,17 @@ class Resources::ListItemComponent < ApplicationComponent
     return if @date.blank?
 
     l(@date, format: :date_only)
+  end
+
+  def show_projekt_breadcrumb?
+    @projekt.present? && !@hide_projekt_breadcrumb
+  end
+
+  def show_body_heading?
+    @subline.present? ||
+      show_projekt_breadcrumb? ||
+      (@projekt.blank? && @tags.present?) ||
+      date.present?
   end
 
   def truncate_length

@@ -36,8 +36,9 @@ en:
         from: From
         subject: Subject
         recipient_group: Recipient group
+        recipients: Recipients
         affected_users: "(%{n} recipients)"
-        sent_emails: "Emails sent: %{count}"
+        sent_emails: Sent emails
         body: Content
         body_help_text: This is how the newsletter is displayed as an email.
         send: Send

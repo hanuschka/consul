@@ -9,9 +9,10 @@ module ImagesHelper
     image.persisted? ? "persisted-image" : "cached-image"
   end
 
-  def render_image(image, version, show_caption = true)
+  def render_image(image, version, show_caption = true, alt: nil)
     render "images/image", image: image,
                            version: (version if image.persisted?),
-                           show_caption: show_caption
+                           show_caption: show_caption,
+                           alt: alt
   end
 end

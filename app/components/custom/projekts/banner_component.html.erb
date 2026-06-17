@@ -32,6 +32,12 @@
 
         <% if show_meta_chips? %>
           <div class="custom-page--banner-chips">
+            <% if start_date_chip_text.present? %>
+              <span class="custom-page--banner-chip">
+                <i class="far fa-clock" aria-hidden="true"></i>
+                <%= start_date_chip_text %>
+              </span>
+            <% end %>
             <% if end_date_chip_text.present? %>
               <span class="custom-page--banner-chip">
                 <i class="far fa-clock" aria-hidden="true"></i>
@@ -73,7 +79,7 @@
         <% big_projekt_image_url =
           polymorphic_path(@custom_page.image.attachment.variant(
             resize_to_limit: [1750, 900],
-            saver: { quality: 80 },
+            saver: { quality: 90 },
             strip: true,
             format: "jpeg"
           ))
@@ -91,14 +97,14 @@
           },
           role: "button",
           aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
-          <span class="image-maximize-button">
+          <span class="image-maximize-button" aria-hidden="true">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
               image_url: @custom_page.image&.attachment&.variant(
                 resize_to_fill: [590, 355],
-                saver: { quality: 85 },
+                saver: { quality: 95 },
                 strip: true,
                 format: "jpeg"
               ),
@@ -150,7 +156,8 @@
             </input>
             <button type="button"
                     class="image-change-button projekt-image-upload-button projekt-image-delete-button js-projekt-banner--image-delete-button js-studio-hide-on-preview <%= 'd-none' unless @custom_page.image.present? %>"
-                    aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>">
+                    aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>"
+                    tabindex="-1">
               <i class="fas fa-trash"></i>
             </button>
           </div>

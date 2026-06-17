@@ -4,13 +4,20 @@ import { Controller } from "@hotwired/stimulus"
 // persistently-down endpoint isn't hammered every 2s forever.
 const MAX_POLL_ERRORS = 5
 
-// Chat screen: polls /messages?after=:last_id every 2s, supports mid-chat
-// document attach, four command buttons, and the final import overlay.
+// Treat the user as "following" the conversation when the messages container
+// is scrolled within this many px of the bottom. Re-rendered messages only
+// auto-scroll when the user is already near the bottom.
+const SCROLL_BOTTOM_THRESHOLD = 80
+
+// Chat screen: polls /messages for new messages (after=:last_id) plus refreshed
+// state for messages still in progress (pending[]=:ids), so finished messages
+// are never re-rendered. Supports mid-chat document attach, four command
+// buttons, and the final import overlay.
 export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel",
-    "importError", "importErrorMessage"
+    "importError", "importErrorMessage", "generateImage"
   ]
 
   static values = {
@@ -22,7 +29,6 @@ export default class extends Controller {
     importId: Number,
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
-    confirmImport: String,
     confirmStartOver: String,
     progressFinalizing: String,
     progressResolving: String,
@@ -30,7 +36,8 @@ export default class extends Controller {
     progressGeneratingImage: String,
     errorExtractFailed: String,
     userInitials: { type: String, default: "" },
-    userImageUrl: { type: String, default: "" }
+    userImageUrl: { type: String, default: "" },
+    importStatus: { type: String, default: "" }
   }
 
   connect() {
@@ -39,10 +46,15 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
+    this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
-    this.scrollToBottom()
     this.scheduleMessagesPoll()
+
+    if (this.importStatusValue === "submitting") {
+      this.showOverlay(this.progressCreatingValue)
+      this.scheduleStatusPoll()
+    }
   }
 
   disconnect() {
@@ -73,8 +85,7 @@ export default class extends Controller {
   }
 
   pollMessages() {
-    const url = `${this.messagesUrlValue}?after=${this.lastMessageId}`
-    fetch(url, {
+    fetch(this.buildMessagesUrl(), {
       credentials: "same-origin",
       headers: { "Accept": "application/json" }
     })
@@ -90,6 +101,22 @@ export default class extends Controller {
       .catch(() => this.handlePollError())
   }
 
+  buildMessagesUrl() {
+    const params = new URLSearchParams()
+    params.set("after", this.lastMessageId)
+    this.pendingMessageIds().forEach((id) => params.append("pending[]", id))
+
+    return `${this.messagesUrlValue}?${params.toString()}`
+  }
+
+  pendingMessageIds() {
+    const selector =
+      "[data-message-id][data-status='scheduled'], [data-message-id][data-status='running']"
+    const nodes = this.messagesTarget.querySelectorAll(selector)
+
+    return Array.from(nodes).map((node) => Number(node.dataset.messageId))
+  }
+
   handlePollError() {
     this.pollErrorCount += 1
     if (this.pollErrorCount >= MAX_POLL_ERRORS) return
@@ -102,7 +129,7 @@ export default class extends Controller {
       data.messages.forEach((m) => this.appendOrUpdateMessage(m))
     }
 
-    this.typingIndicatorTarget.classList.toggle("-hidden", !(data.ai_chat && data.ai_chat.running))
+    this.toggleTypingIndicator(Boolean(data.ai_chat && data.ai_chat.running))
 
     if (data.import) {
       this.handleImportState(data.import)
@@ -117,6 +144,7 @@ export default class extends Controller {
     if (m.role === "user") this.removeOptimisticBubbles()
 
     const existing = this.messagesTarget.querySelector(`[data-message-id="${m.id}"]`)
+    const wasNearBottom = this.isNearBottom()
     const template = document.createElement("template")
     template.innerHTML = m.html.trim()
     const fresh = template.content.firstElementChild
@@ -129,7 +157,21 @@ export default class extends Controller {
     }
 
     if (m.id > this.lastMessageId) this.lastMessageId = m.id
-    this.scrollToBottom()
+
+    if (!existing || wasNearBottom) this.scrollToBottom()
+  }
+
+  // A pending assistant placeholder bubble already shows its own loader, so the
+  // standalone typing indicator would be a duplicate — only show it when the
+  // chat is running and no in-progress bubble is present.
+  toggleTypingIndicator(running) {
+    const redundant = this.pendingMessageIds().length > 0
+    this.typingIndicatorTarget.classList.toggle("-hidden", !running || redundant)
+  }
+
+  isNearBottom() {
+    const el = this.messagesTarget
+    return el.scrollHeight - el.scrollTop - el.clientHeight < SCROLL_BOTTOM_THRESHOLD
   }
 
   scrollToBottom() {
@@ -144,9 +186,7 @@ export default class extends Controller {
     }
 
     if (state.status === "completed") {
-      this.clearPollTimer()
-      this.showOverlay(this.progressCreatingValue)
-      window.location.href = `/adm/projekts/${state.projekt_id}/details`
+      this.handleCompletion(state.redirect_path)
       return
     }
 
@@ -157,6 +197,27 @@ export default class extends Controller {
 
     this.lastImportStatus = state.status
     this.scheduleMessagesPoll()
+  }
+
+  // When the import finishes live in this session (overlay showing), send the
+  // user to the created projekt's frontend page. Revisiting an already-completed
+  // import (guard) keeps the chat with its success state instead of redirecting.
+  handleCompletion(redirectPath) {
+    if (this.completionShown) {
+      this.hideOverlay()
+      this.scheduleMessagesPoll()
+      return
+    }
+
+    this.completionShown = true
+
+    if (redirectPath) {
+      window.location.href = redirectPath
+      return
+    }
+
+    this.hideOverlay()
+    window.location.reload()
   }
 
   showImportError(message) {
@@ -188,8 +249,8 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === "completed" && data.redirect_path) {
-          window.location.href = data.redirect_path
+        if (data.status === "completed") {
+          this.handleCompletion(data.redirect_path)
           return
         }
         if (data.status === "failed") {
@@ -385,13 +446,19 @@ export default class extends Controller {
     this.sendCommand("summarize").then((data) => this.renderImmediateMessages(data))
   }
 
+  // Invoked by the shared confirm dialog's "confirmed" event (not directly by
+  // the import button), so the modal replaces the old window.confirm.
   startImport() {
-    if (!window.confirm(this.confirmImportValue)) return
-
     this.dismissImportError()
     this.lastImportStatus = null
-    this.showOverlay(this.progressFinalizingValue)
-    this.sendCommand("import").then((data) => {
+    // A fresh import procedure starts now (incl. re-import of a completed one),
+    // so its completion should redirect to the projekt even on a revisit.
+    this.completionShown = false
+    this.showOverlay(this.progressCreatingValue)
+
+    const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
+
+    this.sendCommand("import", params).then((data) => {
       if (data && data.status === "importing") {
         this.scheduleStatusPoll()
       }
@@ -407,9 +474,10 @@ export default class extends Controller {
     })
   }
 
-  sendCommand(name) {
+  sendCommand(name, params = {}) {
     const formData = new FormData()
     formData.append("name", name)
+    Object.keys(params).forEach((key) => formData.append(key, params[key]))
 
     return fetch(this.commandUrlValue, {
       method: "POST",

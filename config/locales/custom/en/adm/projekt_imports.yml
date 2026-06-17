@@ -27,6 +27,47 @@ en:
               no_files: "Please select at least one file."
               too_large: "The selected files exceed the 45 MB limit."
               unsupported_type: "The file %{filename} is not a supported format."
+          show:
+            title: "Import progress"
+            failed_title: "Import failed"
+            stalled_title: "Analysis stuck"
+            stalled_message: "The analysis is taking unusually long and may have failed. You can discard this import and try again."
+            dismiss: "Discard"
+            upload_new: "Upload a new document"
+        list:
+          sections:
+            in_progress: "In progress"
+            failed: "Failed imports"
+            completed: "Completed imports"
+          states:
+            analyzing: "Analyzing"
+            stalled: "Stuck"
+            chatting: "In chat"
+            submitting: "Creating"
+            failed: "Failed"
+            completed: "Completed"
+          actions:
+            continue: "Continue"
+            open_chat: "Open chat"
+            open_details: "View details"
+            delete: "Delete"
+          no_files: "No files"
+          files_summary: "%{first} +%{count}"
+          created_at: "Created: %{time}"
+          finished_at: "Finished: %{time}"
+          projekt_created: "Projekt created: %{title}"
+          filters:
+            aria: "Filter by status"
+            all: "All"
+            in_progress: "In progress"
+            failed: "Failed"
+            completed: "Completed"
+          delete_dialog:
+            title: "Delete import?"
+            message: "This import will be permanently deleted:"
+            note: "The projekt created from it will be kept."
+            confirm: "Delete"
+            cancel: "Cancel"
         chats:
           show:
             title: "Refine projekt import"
@@ -36,11 +77,37 @@ en:
             assistant_label: "AI"
             user_label: "You"
             confirm_import: "Import the projekt now? This creates a new projekt with all phases and content blocks."
+            import_dialog:
+              title: "Import projekt?"
+              confirm: "Import now"
+              cancel: "Cancel"
             confirm_start_over: "Discard this import and start over?"
+            generate_image_toggle: "Generate title image"
+            created_banner_title: "This import created the following projekts:"
+            tooltips:
+              start_over:
+                title: "Start over"
+                text: "Discards this import entirely and returns to uploading a new document."
+              regenerate:
+                title: "Regenerate"
+                text: "Re-analyzes the original document and rebuilds the entire projekt structure from scratch."
+              summarize:
+                title: "Summarize"
+                text: "Creates a short, readable summary of the uploaded document in the chat."
+              generate_image:
+                title: "Generate cover image"
+                text: "When enabled, the AI automatically creates a matching cover image for the projekt during import."
+              import:
+                title: "Import projekt"
+                text: "Creates the projekt with all phases, content blocks, and settings. It stays deactivated and hidden from visitors until you activate it."
+              attach:
+                title: "Attach document"
+                text: "Adds another document to the conversation so the AI can take extra information into account."
             commands:
               regenerate: "Regenerate"
               summarize: "Summarize document"
               import: "Import projekt"
+              import_again: "Import as new projekt"
               start_over: "Start over"
             progress:
               finalizing_data: "Finalizing your changes…"
@@ -101,3 +168,6 @@ en:
           imported_by_ai_title: "This projekt was imported from a document with AI."
         index:
           new_button: "Import from document"
+          title: "Projekt imports"
+          new_import: "New projekt import"
+          empty: "No projekt imports yet."

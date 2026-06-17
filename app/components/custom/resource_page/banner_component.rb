@@ -5,9 +5,14 @@ class ResourcePage::BannerComponent < ApplicationComponent
 
   delegate :current_user, :projekt_feature?, :projekt_phase_feature?, :format_date_range, to: :helpers
 
-  def initialize(resource:, compact: false)
+  def initialize(resource:, compact: false, heading_level: nil)
     @resource = resource
     @compact = compact
+    @heading_level = heading_level
+  end
+
+  def heading_level
+    @heading_level || (@compact ? :h2 : :h1)
   end
 
   def image_url

@@ -3,6 +3,7 @@
 require 'rails_helper'
 require_relative 'shared/api_client_helper'
 require_relative 'shared/api_access_requirements'
+require_relative 'shared/api_response_examples'
 require_relative 'schemas/projekts_schemas'
 require_relative 'schemas/ideas_schemas'
 require_relative 'schemas/comments_proposals_schemas'
@@ -135,6 +136,11 @@ RSpec.configure do |config|
             type: :http,
             scheme: :bearer,
             bearerFormat: 'Auth Token'
+          },
+          masterportal_sync_auth: {
+            type: :http,
+            scheme: :bearer,
+            bearerFormat: 'Masterportal Sync Token'
           }
         },
         schemas: Schemas::Projekts.all
@@ -158,4 +164,5 @@ RSpec.configure do |config|
   config.openapi_format = :yaml
 
   config.include ApiClientHelper, type: :request
+  config.extend ApiResponseExamples, type: :request
 end

@@ -55,7 +55,7 @@
 
     <div class="flex-layout padding-on-mobile">
       <div class="main-column">
-        <%= render ResourcePage::BannerComponent.new(resource: @debate) %>
+        <%= render ResourcePage::BannerComponent.new(resource: @debate, heading_level: :h2) %>
 
         <div class="resource-page--description new-card main-content-card">
           <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>

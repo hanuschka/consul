@@ -3,4 +3,6 @@ en:
     adm:
       system_user_info_component:
         label: "Published as"
+        api_client_label: "API client user"
+        system_user_tag: "System user"
         edit: "Edit"

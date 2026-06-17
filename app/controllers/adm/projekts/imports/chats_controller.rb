@@ -12,6 +12,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     @chat_user = @projekt_import.user
     @chat_user_initials = chat_user_initials(@chat_user)
     @chat_user_image_url = chat_user_image_url(@chat_user)
+    @created_projekts = ordered_created_projekts
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -22,11 +23,12 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
   def messages
     after_id = params[:after].to_i
+    pending_ids = pending_message_ids
     scope = @ai_chat.ai_chat_messages.order(created_at: :asc)
+
     new_messages = after_id.positive? ? scope.where("id > ?", after_id) : scope
-    latest_assistant = scope.where(role: "assistant").last
-    combined = new_messages.to_a
-    combined << latest_assistant if latest_assistant && combined.exclude?(latest_assistant)
+    refreshed_messages = pending_ids.present? ? scope.where(id: pending_ids) : AiChatMessage.none
+    combined = (new_messages.to_a + refreshed_messages.to_a).uniq(&:id)
 
     render json: {
       ai_chat: {
@@ -36,6 +38,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       import: {
         status: @projekt_import.status,
         projekt_id: @projekt_import.projekt_id,
+        redirect_path: import_redirect_path,
         error: @projekt_import.error_message,
         warnings: @projekt_import.warnings
       }
@@ -81,7 +84,12 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       @projekt_import.mark_abandoned!
       render json: { status: "abandoned", redirect_path: new_adm_projekts_import_path }
     when "import"
+      if params.key?(:generate_image)
+        @projekt_import.update!(generate_image: ActiveModel::Type::Boolean.new.cast(params[:generate_image]))
+      end
+
       ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
+
       render json: { status: "importing" }
     else
       user_message = @ai_chat.ai_chat_messages.create!(
@@ -133,8 +141,27 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, Projekt], :create?
   end
 
+  def pending_message_ids
+    Array(params[:pending]).map(&:to_i).select(&:positive?)
+  end
+
+  def ordered_created_projekts
+    ids = @projekt_import.created_projekt_ids
+    return [] if ids.blank?
+
+    by_id = Projekt.where(id: ids).index_by(&:id)
+    ids.filter_map { |id| by_id[id] }
+  end
+
   def find_projekt_import
     @projekt_import = current_user.projekt_imports.find(params[:import_id])
+  end
+
+  def import_redirect_path
+    return if @projekt_import.projekt_id.blank?
+    return if !@projekt_import.completed?
+
+    projekt_path(@projekt_import.projekt_id)
   end
 
   def find_ai_chat

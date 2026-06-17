@@ -20,6 +20,10 @@
       this.setupEventListenersForUpdatingMapCenter();
 
       this.placeCenterMarker = this.placeCenterMarker.bind(this)
+
+      if (!this.editable) {
+        App.MapKeyboardFocus.neutralize(this.element);
+      }
     }
 
     initializeProperties() {
@@ -71,7 +75,8 @@
       this.map = L.map(this.element.id, {
         gestureHandling: true,
         maxZoom: 18,
-        zoomControl: false
+        zoomControl: false,
+        keyboard: !!this.editable
       }).setView(this.mapCenterLatLng, this.zoom);
 
       const zoomControl = L.control.zoom({
@@ -472,8 +477,10 @@
 
     addAdminFeaturesAsLayer() {
       const adminFeaturesLayer = L.geoJSON(this.adminFeatures, {
+        pmIgnore: true,
         pointToLayer: function(feature, latlng) {
           return L.marker(latlng, {
+            pmIgnore: true,
             icon: App.Utils.getLeafletMarkerHTML('#008000', null, 'Verwaltungseintrag')
           });
         },
@@ -483,12 +490,11 @@
           fillOpacity: 0.2
         },
         onEachFeature: (feature, layer) => {
-          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
-          layer.pm.disable();
-          layer.pm.setOptions({
-            draggable: false,
-            editable: false
+          layer.bindTooltip('Vom System vorgegeben – nicht verschiebbar', {
+            direction: 'top',
+            sticky: true
           });
+          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
         }
       }).addTo(this.map);
       this.overlayLayers['Verwaltungseinträge'] = adminFeaturesLayer;

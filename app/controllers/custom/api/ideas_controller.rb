@@ -36,7 +36,7 @@ class Api::IdeasController < Api::BaseController
   def create
     check_admin_access!
     idea = Idea.new(idea_params)
-    idea.author = @current_client.user
+    idea.author = @current_client.content_author
     idea.resource_terms = true
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)

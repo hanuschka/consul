@@ -11,7 +11,7 @@
     <template><%= open_label %></template>
   </rich-tooltip>
 
-  <div class="<%= root_class %>--panel">
+  <div class="<%= root_class %>--panel voice-assistant-design-panel">
     <div class="<%= root_class %>--head">
       <span class="<%= root_class %>--title"><%= title %></span>
       <span class="<%= root_class %>--desc"><%= style_desc %></span>
@@ -58,12 +58,13 @@
 
     <div class="voice-assistant-design-wave">
       <span class="voice-assistant-design-wave-canvas js-va-demo-viz" aria-hidden="true"></span>
-      <span class="voice-assistant-design-starting"><%= starting_label %></span>
       <span class="voice-assistant-design-muted-overlay"><%= muted_label %></span>
     </div>
 
     <div class="<%= root_class %>--status">
       <span class="<%= root_class %>--status-live"><%= listening_label %></span>
     </div>
+
+    <span class="voice-assistant-design-starting"><%= starting_label %></span>
   </div>
 </div>

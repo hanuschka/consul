@@ -3,6 +3,10 @@
 
   App.RevealAccessibility = {
     initialize: function() {
+      if (this.bound) return;
+
+      this.bound = true;
+
       const $document = $(document);
 
       $document.on("open.zf.reveal", ".reveal", this.handleOpen.bind(this));

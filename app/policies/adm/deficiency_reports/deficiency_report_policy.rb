@@ -33,7 +33,7 @@ class Adm::DeficiencyReports::DeficiencyReportPolicy < ApplicationPolicy
   end
 
   def stats?
-    deficiency_report_manager_or_officer?
+    deficiency_report_manager?
   end
 
   def settings?

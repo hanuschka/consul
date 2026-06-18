@@ -30,7 +30,9 @@ class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
       (if Adm::SiteCustomization::EmailTemplatePolicy.new(current_user, sample_email_template).index?
          { label: t("adm.deficiency_reports.menu.items.email_templates"), icon: "mail", path: adm_deficiency_reports_email_templates_path }
        end),
-      { label: t("adm.deficiency_reports.menu.items.stats"), icon: "bar_chart", path: adm_deficiency_reports_stats_path },
+      (if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).stats?
+         { label: t("adm.deficiency_reports.menu.items.stats"), icon: "bar_chart", path: adm_deficiency_reports_stats_path }
+       end),
       (if Adm::DeficiencyReports::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.deficiency_reports.menu.items.ai_settings"), icon: "smart_toy", path: adm_deficiency_reports_ai_settings_path }
        end)

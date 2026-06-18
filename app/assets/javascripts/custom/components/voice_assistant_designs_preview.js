@@ -26,6 +26,8 @@
       this.deactivateAll(widget);
       widget.classList.add("-active");
       widget.dataset.state = "active";
+
+      this.startSession(widget);
     },
 
     handleStart(event) {

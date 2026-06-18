@@ -77,8 +77,7 @@ en:
           download_pdf: Download PDF
           view_on_site: View on the website
           admin_accepted_status: Approval
-          accepted: Approved
-          not_accepted: Not approved
+          admin_accepted_status_hint: Once approval is enabled, this report is published on the website and visible to all regular users. Without approval it stays hidden and is only visible internally.
           status: Status
           hidden_at: Hidden on
           created_at: Created on

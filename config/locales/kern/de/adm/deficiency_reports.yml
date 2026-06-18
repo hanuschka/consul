@@ -77,8 +77,7 @@ de:
           download_pdf: PDF herunterladen
           view_on_site: Auf der Website anzeigen
           admin_accepted_status: Freigabe
-          accepted: Freigegeben
-          not_accepted: Nicht freigegeben
+          admin_accepted_status_hint: Sobald die Freigabe aktiviert ist, wird diese Meldung öffentlich auf der Website veröffentlicht und ist für alle regulären Nutzerinnen und Nutzer sichtbar. Ohne Freigabe bleibt sie verborgen und nur intern einsehbar.
           status: Status
           hidden_at: Ausgeblendet am
           created_at: Erstellt am

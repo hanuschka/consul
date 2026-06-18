@@ -70,6 +70,10 @@ en:
       messages:
         too_many_lines: must contain at most %{count} lines
       models:
+        deficiency_report:
+          attributes:
+            map_location:
+              blank: Please select a location on the map
         proposal:
           attributes:
             description:

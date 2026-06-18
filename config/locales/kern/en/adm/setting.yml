@@ -256,6 +256,9 @@ en:
       enable_geoman_controls_in_maps: Enable drawing tools on maps
       enable_geoman_controls_in_maps_description: >
         Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when a deficiency affects not just a single point but an area — e.g. a damaged road or a contaminated area. The drawing is saved together with the report.
+      map_location_required: Require map location
+      map_location_required_description: >
+        When enabled, a location must be selected on the map before a report can be submitted. This guarantees every report is geographically located, which is essential for assigning it to the right area and officer. Disable it if reports may be created without a precise location.
       admin_acceptance_required: Administrator approval
       admin_acceptance_required_description: >
         When enabled, administrators must review and approve new deficiency reports before they become publicly visible. Unconfirmed reports are visible only to administrators. This prevents inappropriate or duplicate reports from being published directly.

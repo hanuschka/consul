@@ -4,6 +4,14 @@ class Adm::DeficiencyReports::DeficiencyReportPolicy < ApplicationPolicy
     deficiency_report_manager_or_officer?
   end
 
+  def new?
+    deficiency_report_manager?
+  end
+
+  def create?
+    deficiency_report_manager?
+  end
+
   def show?
     deficiency_report_manager? || assigned_officer?
   end

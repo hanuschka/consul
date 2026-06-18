@@ -1,0 +1,83 @@
+<%= render Kern::FormFieldComponent.new(divider: false,
+  label: t(".labels.title"), hint: t(".hints.title")) do %>
+  <%= form.text_field :title, label: false, placeholder: t(".placeholders.title") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(divider: false, stacked: true,
+  label: t(".labels.description"), hint: t(".hints.description")) do %>
+  <%= form.rich_text_area :description, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(divider: false,
+  label: t(".labels.image"), hint: t(".hints.image")) do %>
+  <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(divider: false,
+  label: t(".labels.documents"), hint: t(".hints.documents")) do %>
+  <%= render Kern::Form::DocumentsComponent.new(form: form) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(divider: false,
+  label: t(".labels.video_url"), hint: t(".hints.video_url")) do %>
+  <%= form.text_field :video_url, label: false, placeholder: t(".placeholders.video_url") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(divider: false,
+  label: t(".labels.on_behalf_of"), hint: t(".hints.on_behalf_of")) do %>
+  <%= form.text_field :on_behalf_of, label: false, placeholder: t(".placeholders.on_behalf_of") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(divider: false,
+  label: t(".labels.category"), hint: t(".hints.category")) do %>
+  <% if form.object.errors[:deficiency_report_category_id].present? %>
+    <p class="kern-error mb-2" role="alert">
+      <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+      <span class="kern-body"><%= form.object.errors[:deficiency_report_category_id].to_sentence %></span>
+    </p>
+  <% end %>
+  <div data-feature-style-mode="color">
+    <div data-feature-style-mode="icon">
+      <div class="map-feature-pills">
+        <% no_category_id = "deficiency_report_deficiency_report_category_id_none" %>
+        <input type="radio" name="deficiency_report[deficiency_report_category_id]" value="" id="<%= no_category_id %>"
+          style="display:none" <%= "checked" unless form.object.deficiency_report_category_id.present? %>>
+        <label for="<%= no_category_id %>" class="map-feature-pill map-feature-pill--sentiment">
+          <%= t(".no_category") %>
+        </label>
+
+        <% DeficiencyReport::Category.all.each do |category| %>
+          <% input_id = "deficiency_report_deficiency_report_category_id_#{category.id}" %>
+          <input type="radio" name="deficiency_report[deficiency_report_category_id]" value="<%= category.id %>" id="<%= input_id %>"
+            style="display:none" <%= "checked" if form.object.deficiency_report_category_id == category.id %>>
+          <label for="<%= input_id %>"
+            class="map-feature-pill map-feature-pill--sentiment"
+            data-color="<%= category.color %>"
+            data-icon-name="<%= category.icon %>"
+            data-icon-unicode="<%= AwesomeIcon.find_by(name: category.icon)&.unicode %>"
+            style="--pill-color:<%= category.color %>;--pill-text-color:<%= pick_text_color(category.color) %>">
+            <% if category.icon.present? %>
+              <i class="fas fa-<%= category.icon %>"></i>
+            <% end %>
+            <%= category.name %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="kern-row">
+  <div class="kern-col-10">
+    <%= form.fields_for :map_location do |ml_form| %>
+      <%= render Kern::MapComponent.new(
+        map_location: form.object.map_location,
+        form: ml_form,
+        editable: true,
+        admin_editor: false,
+        height: 500,
+        error: form.object.errors[:map_location].to_sentence.presence
+      ) %>
+    <% end %>
+  </div>
+</div>

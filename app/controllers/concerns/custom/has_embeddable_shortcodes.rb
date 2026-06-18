@@ -31,8 +31,10 @@ module HasEmbeddableShortcodes
       projekt = vars[:projekt]
       return text if projekt.blank?
 
-      replacement = view_context.content_tag(:div, style: "margin-top:1rem;margin-bottom:1rem;") do
-        projekt_map_component(projekt).render_in(view_context)
+      context = view_render_context
+
+      replacement = context.content_tag(:div, style: "margin-top:1rem;margin-bottom:1rem;") do
+        projekt_map_component(projekt).render_in(context)
       end
 
       text.gsub("{{projekt_map}}", replacement)
@@ -47,5 +49,9 @@ module HasEmbeddableShortcodes
         projekt: projekt,
         show_admin_shape: projekt.map_location.show_admin_shape?
       )
+    end
+
+    def view_render_context
+      respond_to?(:view_context) ? view_context : self
     end
 end

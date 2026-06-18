@@ -116,7 +116,7 @@ module CustomHelper
       url = oembed["url"]&.strip
       next unless url&.include?("youtube.com")
 
-      rendered_html = Shared::ExternalVideoPlayer.new(url: url).render_in(view_context)
+      rendered_html = Shared::ExternalVideoPlayer.new(url: url).render_in(view_render_context)
       fragment = Nokogiri::HTML::DocumentFragment.parse(rendered_html)
 
       p_node = Nokogiri::XML::Node.new('p', doc)

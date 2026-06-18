@@ -37,9 +37,12 @@
           return;
         }
 
-        await this.setupConnection();
+        // Run the WebRTC setup (mic capture + offer) and the ephemeral-session
+        // request concurrently — they don't depend on each other — to cut the
+        // time-to-connect roughly to the slower of the two instead of their sum.
+        const results = await Promise.all([this.setupConnection(), this.requestSession()]);
+        const session = results[1];
 
-        const session = await this.requestSession();
         await this.connectToOpenai(session.ephemeral_key, session.model);
       } catch (error) {
         console.error("Failed to initialize connection:", error);

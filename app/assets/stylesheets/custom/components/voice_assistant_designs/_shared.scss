@@ -127,6 +127,36 @@
   inset: 0;
 }
 
+// Positioning context so the connecting overlay can centre over the panel.
+.voice-assistant-design-panel {
+  position: relative;
+}
+
+// Connecting state: a blinking message centred over the whole assistant until
+// the session is live (overlays the panel; lets clicks pass through).
+.voice-assistant-design-starting {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--x-muted, currentColor);
+}
+
+.-va-starting .voice-assistant-design-starting {
+  display: flex;
+  animation: voice-assistant-blink 1300ms ease-in-out 2;
+}
+
+// Blink from dim to the regular (inherited) text colour, twice, slowly.
+@keyframes voice-assistant-blink {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
 // Muted (paused) state: slashed mic + a frosted "liquid glass" overlay that
 // blurs the visualization behind it and carries the muted message.
 .voice-assistant-design-muted-overlay {

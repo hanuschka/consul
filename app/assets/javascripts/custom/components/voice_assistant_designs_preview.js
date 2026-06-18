@@ -88,6 +88,7 @@
       const live = status === "starting" || status === "running" || status === "paused";
 
       widget.classList.toggle("-va-live", live);
+      widget.classList.toggle("-va-starting", status === "starting");
       widget.classList.toggle("-listening", status === "running");
       widget.classList.toggle("-va-muted", status === "paused");
 
@@ -102,6 +103,7 @@
       widget.classList.remove("-listening");
       widget.classList.remove("-va-muted");
       widget.classList.remove("-va-live");
+      widget.classList.remove("-va-starting");
       console.error("Voice assistant session error:", message);
     },
 
@@ -138,6 +140,7 @@
       widget.classList.remove("-listening");
       widget.classList.remove("-va-muted");
       widget.classList.remove("-va-live");
+      widget.classList.remove("-va-starting");
       widget.dataset.state = "idle";
     },
 

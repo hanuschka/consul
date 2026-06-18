@@ -182,3 +182,15 @@
 .adm-hide-fa-icons .fa {
   display: none;
 }
+
+.material-symbols-outlined {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.fonts-loaded .material-symbols-outlined {
+  visibility: visible;
+}

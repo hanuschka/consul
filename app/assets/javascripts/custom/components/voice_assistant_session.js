@@ -37,27 +37,19 @@
           return;
         }
 
-        await this.requestSession();
+        await this.setupConnection();
+
+        const session = await this.requestSession();
+        await this.connectToOpenai(session.ephemeral_key, session.model);
       } catch (error) {
         console.error("Failed to initialize connection:", error);
+        this.cleanupConnection();
         this.setStatus(STATUSES.initialized);
-        this.showError("Mikrofon-Zugriff nicht möglich. Bitte Browser-Berechtigungen prüfen.");
+        this.showError(this.errorMessageFor(error));
       }
     },
 
-    requestSession: async function() {
-      const payload = { codename: this.options.codename };
-
-      if (this.options.projektPhaseId) {
-        payload.consul_projekt_phase_id = this.options.projektPhaseId;
-      }
-
-      const response = await App.Ajax.post(this.options.createSessionUrl, payload);
-
-      await this.handleSessionInitialized(response.ephemeral_key, response.model);
-    },
-
-    handleSessionInitialized: async function(ephemeralKey, model) {
+    setupConnection: async function() {
       this.rtcPeerConnection = new RTCPeerConnection();
 
       this.audioEl = document.createElement("audio");
@@ -67,43 +59,29 @@
 
       await this.startAudioRecordingAndAttachToRtcConnection(this.rtcPeerConnection);
 
-      const dataChannel = this.rtcPeerConnection.createDataChannel("oai-events");
-      const offer = await this.rtcPeerConnection.createOffer();
-      await this.rtcPeerConnection.setLocalDescription(offer);
-
-      await this.waitForIceGatheringComplete();
-
-      const answer = await this.startOpenaiVoiceSession(ephemeralKey, model);
-      await this.rtcPeerConnection.setRemoteDescription(answer);
-
-      this.dataChannel = dataChannel;
+      this.dataChannel = this.rtcPeerConnection.createDataChannel("oai-events");
       this.dataChannel.addEventListener("message", this.handleRtcDataChannelMessage.bind(this));
       this.dataChannel.onopen = this.handleDataChannelOpen.bind(this);
       this.dataChannel.onclose = this.handleDataChannelClose.bind(this);
+
+      const offer = await this.rtcPeerConnection.createOffer();
+      await this.rtcPeerConnection.setLocalDescription(offer);
     },
 
-    waitForIceGatheringComplete: function() {
-      const pc = this.rtcPeerConnection;
+    requestSession: function() {
+      const payload = { codename: this.options.codename };
 
-      if (pc.iceGatheringState === "complete") {
-        return Promise.resolve();
+      if (this.options.projektPhaseId) {
+        payload.consul_projekt_phase_id = this.options.projektPhaseId;
       }
 
-      return new Promise((resolve) => {
-        const checkState = function() {
-          if (pc.iceGatheringState === "complete") {
-            pc.removeEventListener("icegatheringstatechange", checkState);
-            resolve();
-          }
-        };
+      return App.Ajax.post(this.options.createSessionUrl, payload);
+    },
 
-        pc.addEventListener("icegatheringstatechange", checkState);
+    connectToOpenai: async function(ephemeralKey, model) {
+      const answer = await this.startOpenaiVoiceSession(ephemeralKey, model);
 
-        setTimeout(() => {
-          pc.removeEventListener("icegatheringstatechange", checkState);
-          resolve();
-        }, 5000);
-      });
+      await this.rtcPeerConnection.setRemoteDescription(answer);
     },
 
     startOpenaiVoiceSession: async function(ephemeralKey, model) {
@@ -118,6 +96,11 @@
           Authorization: `Bearer ${ephemeralKey}`
         }
       });
+
+      if (!sdpResponse.ok) {
+        const errorBody = await sdpResponse.text();
+        throw new Error(`OpenAI realtime call failed (${sdpResponse.status}): ${errorBody}`);
+      }
 
       return {
         type: "answer",
@@ -406,6 +389,30 @@
       if (this.options.onStatusChange) {
         this.options.onStatusChange(newStatus);
       }
+    },
+
+    cleanupConnection: function() {
+      this.stopMicrophone();
+
+      if (this.dataChannel) {
+        this.dataChannel.close();
+        this.dataChannel = null;
+      }
+
+      if (this.rtcPeerConnection) {
+        this.rtcPeerConnection.close();
+        this.rtcPeerConnection = null;
+      }
+    },
+
+    errorMessageFor: function(error) {
+      const micErrorNames = ["NotAllowedError", "NotFoundError", "SecurityError"];
+
+      if (error && micErrorNames.indexOf(error.name) !== -1) {
+        return "Mikrofon-Zugriff nicht möglich. Bitte Browser-Berechtigungen prüfen.";
+      }
+
+      return "Verbindung zum Sprachassistenten fehlgeschlagen. Bitte erneut versuchen.";
     },
 
     showError: function(message) {

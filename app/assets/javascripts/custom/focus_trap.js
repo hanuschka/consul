@@ -5,11 +5,17 @@
     FOCUSABLE_SELECTORS: [
       'a[href]:not([disabled])',
       'button:not([disabled])',
-      'input:not([disabled])',
+      'input:not([disabled]):not([type="hidden"])',
       'select:not([disabled])',
       'textarea:not([disabled])',
+      'iframe',
+      'audio[controls]',
+      'video[controls]',
+      '[contenteditable]:not([contenteditable="false"])',
       '[tabindex]:not([tabindex="-1"]):not([disabled])'
     ].join(', '),
+
+    inertStack: [],
 
     getFocusableElements: function(container) {
       if (!container) return [];
@@ -54,6 +60,29 @@
     },
 
     setBackgroundInert: function(excludeElements) {
+      var exclude = (excludeElements || []).filter(Boolean);
+
+      this.inertStack.push(exclude);
+      this.applyInert(exclude);
+    },
+
+    removeBackgroundInert: function() {
+      this.inertStack.pop();
+      this.clearInert();
+
+      var previous = this.inertStack[this.inertStack.length - 1];
+
+      if (previous) {
+        this.applyInert(previous);
+      }
+    },
+
+    resetInert: function() {
+      this.inertStack = [];
+      this.clearInert();
+    },
+
+    applyInert: function(excludeElements) {
       var bodyChildren = document.body.children;
 
       for (var i = 0; i < bodyChildren.length; i++) {
@@ -70,14 +99,19 @@
           }
         }
 
-        if (!shouldExclude) {
+        if (shouldExclude) {
+          if (child.hasAttribute('data-focus-trap-inert')) {
+            child.removeAttribute('inert');
+            child.removeAttribute('data-focus-trap-inert');
+          }
+        } else {
           child.setAttribute('inert', '');
           child.setAttribute('data-focus-trap-inert', '');
         }
       }
     },
 
-    removeBackgroundInert: function() {
+    clearInert: function() {
       var inertElements = document.querySelectorAll('[data-focus-trap-inert]');
 
       for (var i = 0; i < inertElements.length; i++) {

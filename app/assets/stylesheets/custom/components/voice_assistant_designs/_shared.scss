@@ -93,11 +93,61 @@
 
 // Shared SiriWave host. Every version drops the JS into a node carrying this
 // class; the per-version accent is read from --va-wave-color by the JS.
+// Dock trigger is wrapped in <rich-tooltip> (inline-block by default) — keep
+// the dock full-width.
+.voice-assistant-design-dock-tip {
+  display: block;
+  width: 100%;
+}
+
+// Start vs mute/unmute: identical-looking buttons toggled by session state.
+// Start shows until the session is live; the mute/unmute toggle replaces it.
+.voice-assistant-design-mute-tip {
+  display: none;
+}
+
+.-va-live .voice-assistant-design-start-tip {
+  display: none;
+}
+
+.-va-live .voice-assistant-design-mute-tip {
+  display: inline-block;
+}
+
 .voice-assistant-design-wave {
   position: relative;
   width: 100%;
   height: 40px;
   overflow: hidden;
+  border-radius: 10px;
+}
+
+.voice-assistant-design-wave-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+// Muted (paused) state: slashed mic + a frosted "liquid glass" overlay that
+// blurs the visualization behind it and carries the muted message.
+.voice-assistant-design-muted-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+}
+
+.-va-muted .voice-assistant-design-muted-overlay {
+  display: flex;
+}
+
+.-va-muted .voice-assistant-design-mic i::before {
+  content: "\f131";
 }
 
 .voice-assistant-v1 { --va-wave-color: #6750a4; }

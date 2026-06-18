@@ -33,7 +33,7 @@ module HasEmbeddableShortcodes
 
       context = view_render_context
 
-      replacement = context.content_tag(:div, style: "margin-top:1rem;margin-bottom:1rem;") do
+      replacement = context.content_tag(:div, class: "projekt-map-shortcode") do
         projekt_map_component(projekt).render_in(context)
       end
 
@@ -41,14 +41,16 @@ module HasEmbeddableShortcodes
     end
 
     def projekt_map_component(projekt)
-      component_class = projekt.vc_map_enabled? ? Shared::VCMapComponent : Shared::MapComponent
-
-      component_class.new(
-        map_location: projekt.map_location,
-        parent_class: "shortcode",
-        projekt: projekt,
-        show_admin_shape: projekt.map_location.show_admin_shape?
-      )
+      if projekt.vc_map_enabled?
+        Shared::VCMapComponent.new(
+          map_location: projekt.map_location,
+          parent_class: "shortcode",
+          projekt: projekt,
+          show_admin_shape: projekt.map_location.show_admin_shape?
+        )
+      else
+        Shared::MapComponent.new(mappable: projekt)
+      end
     end
 
     def view_render_context

@@ -3,6 +3,7 @@ en:
     deficiency_reports:
       home:
         title: Welcome to the deficiency reporter
+        welcome: Welcome to %{feature}
         stats:
           total: Total
           new_this_week: New this week
@@ -14,6 +15,7 @@ en:
           closed: Closed reports
       menu:
         aria_label: Deficiency reporter navigation
+        aria_label_feature: "%{feature} navigation"
         items:
           home: Home
           officers: Team

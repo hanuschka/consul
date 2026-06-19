@@ -1,6 +1,7 @@
 class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
   def aria_label
-    t("adm.deficiency_reports.menu.aria_label")
+    feature = Setting["deficiency_reports.feature_name"].presence
+    feature ? t("adm.deficiency_reports.menu.aria_label_feature", feature: feature) : t("adm.deficiency_reports.menu.aria_label")
   end
 
   def menu_items

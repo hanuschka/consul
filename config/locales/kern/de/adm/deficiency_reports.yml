@@ -3,6 +3,7 @@ de:
     deficiency_reports:
       home:
         title: Willkommen im Mängelmelder
+        welcome: Willkommen im %{feature}
         stats:
           total: Gesamt
           new_this_week: Neu diese Woche
@@ -14,6 +15,7 @@ de:
           closed: Geschlossene Meldungen
       menu:
         aria_label: Mängelmelder Navigation
+        aria_label_feature: "%{feature} Navigation"
         items:
           home: Home
           officers: Team

@@ -262,6 +262,9 @@ de:
       enable_geoman_controls_in_maps: Zeichenwerkzeuge in Karten aktivieren
       enable_geoman_controls_in_maps_description: >
         Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn ein Mangel nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine beschädigte Straße oder ein verschmutztes Areal. Die Zeichnung wird zusammen mit der Meldung gespeichert.
+      map_location_required: Standort auf Karte erforderlich
+      map_location_required_description: >
+        Wenn aktiviert, muss vor dem Absenden einer Meldung ein Standort auf der Karte ausgewählt werden. So ist jede Meldung geografisch verortet, was für die Zuordnung zum richtigen Gebiet und Sachbearbeiter entscheidend ist. Deaktivieren Sie die Option, wenn Meldungen auch ohne genauen Standort erstellt werden dürfen.
       admin_acceptance_required: Administrator-Freigabe
       admin_acceptance_required_description: >
         Wenn aktiviert, müssen Administratoren neue Mangelmeldungen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Meldungen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene oder doppelte Meldungen direkt veröffentlicht werden.

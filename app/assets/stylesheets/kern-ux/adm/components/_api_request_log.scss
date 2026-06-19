@@ -1,0 +1,22 @@
+.adm-json-block {
+  max-width: 100%;
+  margin-top: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1f2937;
+  background: #f6f8fa;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.adm-json-block code {
+  font: inherit;
+  color: inherit;
+  background: none;
+  padding: 0;
+}

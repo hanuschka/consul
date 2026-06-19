@@ -43,7 +43,7 @@ namespace :adm do
       post :search, on: :collection
     end
 
-    resources :deficiency_reports, only: [:show, :edit, :update, :destroy], path: "" do
+    resources :deficiency_reports, only: [:new, :create, :show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "deficiency_report_audits"
       resources :milestones, controller: "deficiency_report_milestones"
       resources :progress_bars, except: :show, controller: "deficiency_report_progress_bars"

@@ -10,6 +10,15 @@
       <% if @intro_text.present? %>
         <p class="adm-dashboard__intro"><%= @intro_text %></p>
       <% end %>
+
+      <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).new? %>
+        <div class="adm-dashboard__section-actions">
+          <%= kern_link_button new_adm_deficiency_reports_deficiency_report_path,
+                text: t("adm.deficiency_reports.deficiency_reports.index.new_button"),
+                style: :primary,
+                data: { turbo_frame: "_top" } %>
+        </div>
+      <% end %>
     </div>
 
     <% if @contact_persons.any? %>

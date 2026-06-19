@@ -1,0 +1,34 @@
+<%= content_for :title, t("adm.api_clients.service_users.edit.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.api_clients.service_users.edit.title"),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: edit_adm_api_client_path(@api_client),
+  narrow: true
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.api_clients.service_users.edit.intro") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container kern-container--form my-5">
+  <%= render Adm::SystemUserInfoComponent.new(user: @user, kind: :api_client, show_edit_link: false) %>
+
+  <%= form_with model: @user, url: adm_api_client_service_user_path(@api_client), method: :patch, multipart: true, class: "mt-4" do |f| %>
+    <% if @user.errors.any? %>
+      <div class="kern-alert kern-alert--danger mb-4" role="alert">
+        <div class="kern-alert__body">
+          <ul class="mb-0">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
+    <%= render "adm/api_clients/service_user_fields", form: f %>
+
+    <%= form_submit_button(text: t("shared.submit")) %>
+  <% end %>
+</div>

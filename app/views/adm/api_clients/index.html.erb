@@ -35,14 +35,19 @@
               <td class="kern-table__cell"><%= api_client.id %></td>
               <td class="kern-table__cell"><%= api_client.name %></td>
               <td class="kern-table__cell">
+                <% access_level = api_client.access_level %>
                 <rich-tooltip delay="550" body-class="-wide">
-                  <span class="kern-badge kern-badge--<%= api_client.access_level == 'admin' ? 'danger' : 'success' %>">
-                    <%= t("adm.api_clients.access_level.#{api_client.access_level}") %>
+                  <span class="kern-badge kern-badge--<%= access_level == 'admin' ? 'danger' : 'success' %>">
+                    <%= t("adm.api_clients.access_level.#{access_level}") %>
                   </span>
                   <template>
                     <span class="rich-tooltip-content">
-                      <span class="rich-tooltip-content--title"><%= t("adm.api_clients.access_level.#{api_client.access_level}") %></span>
-                      <span class="rich-tooltip-content--text"><%= t("adm.api_clients.form.access_level_description") %></span>
+                      <span class="rich-tooltip-content--title"><%= t("adm.api_clients.access_level.#{access_level}") %></span>
+                      <span class="rich-tooltip-content--text"><%= t("adm.api_clients.access_level.tooltip.#{access_level}.description") %></span>
+                      <span class="rich-tooltip-content--note">
+                        <span class="rich-tooltip-content--note-label"><%= t("adm.api_clients.access_level.tooltip.#{access_level}.alternative_label") %></span>
+                        <%= t("adm.api_clients.access_level.tooltip.#{access_level}.alternative") %>
+                      </span>
                     </span>
                   </template>
                 </rich-tooltip>

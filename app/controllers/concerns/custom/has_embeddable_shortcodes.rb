@@ -60,21 +60,4 @@ module HasEmbeddableShortcodes
     def view_render_context
       respond_to?(:view_context) ? view_context : self
     end
-
-    def projekt_map_component(projekt)
-      if projekt.vc_map_enabled?
-        Shared::VCMapComponent.new(
-          map_location: projekt.map_location,
-          parent_class: "shortcode",
-          projekt: projekt,
-          show_admin_shape: projekt.map_location.show_admin_shape?
-        )
-      else
-        Shared::MapComponent.new(mappable: projekt)
-      end
-    end
-
-    def view_render_context
-      respond_to?(:view_context) ? view_context : self
-    end
 end

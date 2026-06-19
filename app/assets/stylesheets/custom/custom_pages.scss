@@ -159,6 +159,9 @@ span.sidebar-projekt-phases-title {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  // Opaque so the raw {{projekt_map}} token is never visible behind it before
+  // the map is expanded (server) or hydrated (editor / template-picker dialog).
+  background-color: #eef1f5;
   color: #6b7682;
   pointer-events: none;
 }

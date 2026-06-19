@@ -77,6 +77,31 @@ rich-tooltip[hidden] {
   color: #0f172a;
 }
 
+.rich-tooltip-content--note {
+  margin-block-start: 2px;
+  padding-block-start: 8px;
+  border-block-start: 1px solid #e2e8f0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.rich-tooltip-content--note-label {
+  display: block;
+  margin-block-end: 2px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.rich-tooltip--body.-dark .rich-tooltip-content--note {
+  border-block-start-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.rich-tooltip--body.-dark .rich-tooltip-content--note-label {
+  color: #ffffff;
+}
+
 .rich-tooltip--body.-no-paddings {
   padding: 0;
 }

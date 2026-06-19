@@ -16,6 +16,7 @@ App.ContentBlockEditor.MapEmbed = {
   TOKEN: "{{projekt_map}}",
   selector: ".js-projekt-map-embed",
   fetchCache: {},
+  instanceCounter: 0,
 
   initialize() {
     this.hydrateIn(document);
@@ -84,6 +85,7 @@ App.ContentBlockEditor.MapEmbed = {
       const mapElement = ProjektStudio.utils.htmlToDomElement(html).firstElementChild;
       if (!mapElement) return;
 
+      this.uniquifyMapId(mapElement);
       this.markNonEditable(mapElement);
       node.parentNode.replaceChild(mapElement, node);
       break;
@@ -102,5 +104,19 @@ App.ContentBlockEditor.MapEmbed = {
   markNonEditable(mapElement) {
     mapElement.classList.add("js-content-block-element-not-editable");
     mapElement.contentEditable = false;
+  },
+
+  // The cached /map_embed response carries one server-generated DOM id; reusing
+  // it for every embed of the same projekt would collide on getElementById and
+  // leave all but the first map uninitialized. Give each injected map a fresh
+  // unique id before App.Map binds to it.
+  uniquifyMapId(mapElement) {
+    const mapNode = mapElement.matches("[data-map]")
+      ? mapElement
+      : mapElement.querySelector("[data-map]");
+    if (!mapNode) return;
+
+    this.instanceCounter += 1;
+    mapNode.id = `${mapNode.id || "map"}_e${this.instanceCounter}`;
   }
 };

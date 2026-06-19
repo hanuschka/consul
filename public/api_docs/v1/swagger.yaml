@@ -14,17 +14,41 @@ info:
 
     ### Creating an API Client
 
-    First, create an API client in your Rails console:
+    API clients are created by a platform administrator in the admin area,
+    under **Developer area → API clients**. Creating a client there also
+    issues its token and sets up the user that will author API content
+    (see *Content author* below). This is the main way to create a client.
+
+    ### Creating an API Client via the Rails console
+
+    As an alternative to the admin area, clients can also be created from
+    the Rails console. Note that it does **not** build the service user
+    automatically — that is only done by the admin form or by calling
+    `ApiClients::CreateServiceUserService`:
 
     ```ruby
-    ApiClient.create(
-      name: "Name of api client",
-      service_user_email: "email@example.com",
+    # Publishes content as the shared system user (the default)
+    ApiClient.create!(
+      name: "Mobile app",
       access_level: "admin"  # Can be "admin" or "public_data"
     )
     ```
 
-    The `service_user_email` is used to create a service user for the API client.
+    ### Content author
+
+    Every resource created via the API is stored with a real author — the
+    API never writes content anonymously. Each client decides which user
+    that is through its **"Use system user"** setting:
+
+    - **On (default):** content is authored by the single shared **system
+      user** that represents the platform. No extra setup is required.
+    - **Off:** content is authored by a **dedicated service user** created
+      for that client (its `service_user_email` anchors the account). Use
+      this when API content should appear under its own distinct identity.
+
+    A service user exists only to be the visible author of API content; it
+    cannot be used to log in. The system user's public name and avatar are
+    configured in the admin area under **Application → System user**.
 
     ### Authentication Header
 

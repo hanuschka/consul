@@ -211,6 +211,34 @@ span.sidebar-projekt-phases-title {
   min-height: 0;
 }
 
+// Fullscreen ("Vollbild-Modus") puts the Leaflet container at position:fixed
+// with z-index:5000. Inside a content block the map is nested under two low
+// stacking contexts — .projekt-map-shortcode (z-index:1, all viewers) and
+// .projekt-content-block (z-index:2, only in the studio editor) — that trap the
+// fixed map below the page header and chrome. While a descendant map is
+// expanded, drop those stacking contexts so the fullscreen map rises above
+// everything. The embed's overflow is opened too, in case a browser treats it
+// as the fixed map's containing block.
+.projekt-map-embed:has(.map_location.map.expanded) {
+  overflow: visible;
+}
+
+.projekt-map-embed:has(.map_location.map.expanded) .projekt-map-shortcode {
+  z-index: auto;
+}
+
+.projekt-content-block:has(.map_location.map.expanded) {
+  z-index: auto;
+}
+
+// The page-content link rule (.custom-page-content a:not(.accordion-title))
+// underlines every <a>, which wrongly underlines the Leaflet controls and the
+// "Leaflet / OpenStreetMap" attribution inside a map embed. Reset those links;
+// the three-class scope outranks the page-content rule.
+.custom-page-content .projekt-map-embed .map_location a {
+  text-decoration: none;
+}
+
 // .projekt-phase {
 //   margin-bottom: 1em;
 //   line-height: 1.75;

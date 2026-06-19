@@ -210,6 +210,7 @@ ProjektStudio.utils.resetMapEmbeds = function(html) {
 
   container.querySelectorAll(".js-projekt-map-embed").forEach((embed) => {
     embed.querySelectorAll(".projekt-map-shortcode").forEach((map) => map.remove());
+    embed.querySelectorAll(".js-map-height-control").forEach((control) => control.remove());
 
     if (embed.innerHTML.indexOf("{{projekt_map}}") === -1) {
       embed.appendChild(document.createTextNode("{{projekt_map}}"));

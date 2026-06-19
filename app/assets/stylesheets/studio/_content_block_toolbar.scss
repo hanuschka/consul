@@ -1,3 +1,14 @@
+// While a content-block map is in fullscreen ("Vollbild") mode the map is
+// position:fixed over the whole viewport. The block's studio chrome (the
+// floating toolbar zone and the add-block buttons) lives in its own stacking
+// context that can sit above the fixed map depending on the page/admin-topbar
+// nesting, so it would float over the fullscreen map. Hide it while the map is
+// expanded; it returns when the map is collapsed (button or ESC).
+.projekt-content-block-wrapper:has(.map_location.expanded) .projekt-content-block--toolbar-zone,
+.projekt-content-block-wrapper:has(.map_location.expanded) .add-new-content-block-section {
+  display: none;
+}
+
 // =============================================================================
 // Linear-style content-block toolbar — layout & container
 // -----------------------------------------------------------------------------
@@ -381,9 +392,9 @@
 }
 
 .projekt-content-block--status.-saved {
-  background: rgba($green-success-color, 0.62);
+  background: rgba($green-success-soft-color, 0.82);
   box-shadow:
-    0 8px 24px rgba($green-success-color, 0.32),
+    0 8px 24px rgba($green-success-soft-color, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
@@ -402,7 +413,7 @@
   align-items: center;
   margin-right: auto;
   padding: 2px 0;
-  color: #2e7d32;
+  color: $green-success-soft-color;
 }
 
 .projekt-content-block-wrapper.-in-edit-mode .projekt-content-block--default-notification {

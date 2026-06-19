@@ -108,6 +108,11 @@ en:
           attributes:
             operator:
               must_be_include_for_first_filter: must be "Include" while no other filter exists yet
+        site_customization/image:
+          attributes:
+            image:
+              min_image_width: "Image width must be at least %{required_min_width}px"
+              min_image_height: "Image height must be at least %{required_min_height}px"
     attributes:
       map_location:
         latitude: Latitude

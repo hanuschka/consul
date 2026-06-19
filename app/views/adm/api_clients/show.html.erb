@@ -3,18 +3,21 @@
 <%= render Adm::HeaderComponent.new(
   title: @api_client.name,
   breadcrumbs: @breadcrumbs,
-  back_button_url: adm_api_clients_path
-) %>
+  back_button_url: adm_api_clients_path,
+  compact: true
+) do |header| %>
+  <% header.with_actions do %>
+    <div class="ml-auto">
+      <%= kern_link_button edit_adm_api_client_path(@api_client), text: t("adm.shared.edit"), icon: "edit" %>
+    </div>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
-  <div class="d-flex justify-content-end mb-4">
-    <%= kern_link_button edit_adm_api_client_path(@api_client), text: t("adm.shared.edit"), icon: "edit" %>
-  </div>
-
-  <div class="kern-card p-4 mb-4">
+  <div class="kern-card p-4 mb-5">
     <p class="mb-3">
       <strong><%= ApiClient.human_attribute_name(:access_level) %></strong><br>
-      <span class="kern-badge kern-badge--<%= @api_client.access_level == 'admin' ? 'danger' : 'primary' %>">
+      <span class="kern-badge kern-badge--<%= @api_client.access_level == 'admin' ? 'danger' : 'success' %>">
         <%= t("adm.api_clients.access_level.#{@api_client.access_level}") %>
       </span>
     </p>

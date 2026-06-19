@@ -42,6 +42,41 @@ rich-tooltip[hidden] {
   padding: 16px 22px;
 }
 
+.rich-tooltip--body.-wide {
+  max-width: 480px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.rich-tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rich-tooltip-content--title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.rich-tooltip-content--text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.rich-tooltip-content--row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rich-tooltip-content--term {
+  font-weight: 700;
+  color: #0f172a;
+}
+
 .rich-tooltip--body.-no-paddings {
   padding: 0;
 }

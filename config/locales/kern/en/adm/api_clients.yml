@@ -69,6 +69,23 @@ en:
           published under this user. It cannot be used to log in directly.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Background image
+        service_user_username_description: >
+          The internal login name of the service user. It is generated
+          automatically from the API client name, must be unique across the
+          platform, and is used only for internal identification.
+        service_user_first_name_description: >
+          First name of the service user. Together with the last name it forms
+          the publicly displayed author name for all content created via the
+          API.
+        service_user_last_name_description: >
+          Last name of the service user. Together with the first name it forms
+          the publicly displayed author name for all content created via the
+          API.
+        service_user_avatar_description: >
+          Profile picture of the service user. It is shown next to content
+          created via the API. Square images are displayed best.
+        service_user_background_image_description: >
+          Background image for the service user's public profile page.
         use_system_user_label: Use system user
         use_system_user_description: >
           When enabled, content created via this API client is published

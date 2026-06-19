@@ -635,6 +635,8 @@ de:
               image_height: "Die Höhe muss %{required_height}px betragen"
               max_image_height: "Die Höhe darf maximal %{max_height}px betragen"
               image_dimensions: "Benötigtes Format: %{required_width} × %{required_height} Pixel"
+              min_image_width: "Die Bildbreite muss mindestens %{required_min_width}px betragen"
+              min_image_height: "Die Bildhöhe muss mindestens %{required_min_height}px betragen"
         comment:
           attributes:
             valuation:

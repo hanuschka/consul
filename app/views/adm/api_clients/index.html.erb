@@ -1,16 +1,19 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, compact: true) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".intro") %></p>
+  <% end %>
+
+  <% header.with_actions do %>
+    <div class="ml-auto d-flex gap-3">
+      <%= kern_link_button new_adm_api_client_path, text: t(".create_new") %>
+      <%= kern_link_button api_docs_path, text: t(".api_docs_link"), icon: "open_in_new", style: :secondary, target: "_blank" %>
+    </div>
   <% end %>
 <% end %>
 
 <div class="kern-container my-5">
-  <div class="d-flex justify-content-start gap-3 mb-4">
-    <%= kern_link_button new_adm_api_client_path, text: t(".create_new") %>
-    <%= kern_link_button api_docs_path, text: t(".api_docs_link"), icon: "open_in_new", style: :secondary, target: "_blank" %>
-  </div>
 
   <% if @api_clients.any? %>
     <div class="kern-table-responsive" tabindex="0">
@@ -32,9 +35,17 @@
               <td class="kern-table__cell"><%= api_client.id %></td>
               <td class="kern-table__cell"><%= api_client.name %></td>
               <td class="kern-table__cell">
-                <span class="kern-badge kern-badge--<%= api_client.access_level == 'admin' ? 'danger' : 'primary' %>">
-                  <%= t("adm.api_clients.access_level.#{api_client.access_level}") %>
-                </span>
+                <rich-tooltip delay="550" body-class="-wide">
+                  <span class="kern-badge kern-badge--<%= api_client.access_level == 'admin' ? 'danger' : 'success' %>">
+                    <%= t("adm.api_clients.access_level.#{api_client.access_level}") %>
+                  </span>
+                  <template>
+                    <span class="rich-tooltip-content">
+                      <span class="rich-tooltip-content--title"><%= t("adm.api_clients.access_level.#{api_client.access_level}") %></span>
+                      <span class="rich-tooltip-content--text"><%= t("adm.api_clients.form.access_level_description") %></span>
+                    </span>
+                  </template>
+                </rich-tooltip>
               </td>
               <td class="kern-table__cell">
                 <% if api_client.dedicated_user_mode? && api_client.user.present? %>

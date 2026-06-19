@@ -35,9 +35,7 @@
     <p class="mb-3">
       <strong><%= t(".response_status") %></strong><br>
       <% if @api_request_log.response_status.present? %>
-        <span class="kern-badge kern-badge--<%= @api_request_log.response_status < 400 ? 'success' : 'danger' %>">
-          <%= @api_request_log.response_status %>
-        </span>
+        <%= render "adm/api_request_logs/status_badge", status: @api_request_log.response_status %>
       <% else %>
         —
       <% end %>

@@ -2,10 +2,16 @@
 <%
   form_data =
     if live
-      { controller: "shared--auto-submit-form", action: "change->shared--auto-submit-form#submit" }
+      {
+        controller: "shared--auto-submit-form",
+        action: "change->shared--auto-submit-form#submit input->shared--auto-submit-form#debouncedSubmit"
+      }
     else
       {}
     end
+
+  search_data = live ? { turbo_permanent: true } : {}
+  reset_data = live ? { turbo: false } : {}
 %>
 
 <%= form_tag adm_api_request_logs_path, method: :get, class: "adm-filter-bar -labeled", data: form_data do %>
@@ -15,7 +21,8 @@
       <i class="fa fa-search adm-filter-bar--search-icon" aria-hidden="true"></i>
       <%= search_field_tag :url, params[:url],
         class: "adm-filter-bar--input adm-filter-bar--input-search",
-        placeholder: t("adm.api_request_logs.filters.url_placeholder") %>
+        placeholder: t("adm.api_request_logs.filters.url_placeholder"),
+        data: search_data %>
     </div>
   </div>
 
@@ -57,6 +64,6 @@
     <% if !live %>
       <%= submit_tag t("adm.api_request_logs.filters.submit"), name: nil, class: "adm-filter-bar--submit-button" %>
     <% end %>
-    <%= link_to t("adm.api_request_logs.filters.reset"), adm_api_request_logs_path, class: "adm-filter-bar--reset-button" %>
+    <%= link_to t("adm.api_request_logs.filters.reset"), adm_api_request_logs_path, class: "adm-filter-bar--reset-button", data: reset_data %>
   </div>
 <% end %>

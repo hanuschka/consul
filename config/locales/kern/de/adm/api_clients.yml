@@ -71,6 +71,24 @@ de:
           direkte Anmeldung mit diesem Benutzer ist nicht möglich.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Hintergrundbild
+        service_user_username_description: >
+          Der interne Anmeldename des Service-Benutzers. Er wird automatisch aus
+          dem Namen des API-Clients erzeugt, muss plattformweit eindeutig sein
+          und dient ausschließlich der internen Zuordnung.
+        service_user_first_name_description: >
+          Vorname des Service-Benutzers. Bildet zusammen mit dem Nachnamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_last_name_description: >
+          Nachname des Service-Benutzers. Bildet zusammen mit dem Vornamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_avatar_description: >
+          Profilbild des Service-Benutzers. Es wird neben den über die API
+          erstellten Inhalten angezeigt. Quadratische Bilder werden am besten
+          dargestellt.
+        service_user_background_image_description: >
+          Hintergrundbild für die öffentliche Profilseite des Service-Benutzers.
         use_system_user_label: Systembenutzer verwenden
         use_system_user_description: >
           Wenn aktiviert, werden über diesen API-Client erstellte Inhalte

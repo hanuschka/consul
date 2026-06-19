@@ -39,13 +39,6 @@
   <div data-feature-style-mode="color">
     <div data-feature-style-mode="icon">
       <div class="map-feature-pills">
-        <% no_category_id = "deficiency_report_deficiency_report_category_id_none" %>
-        <input type="radio" name="deficiency_report[deficiency_report_category_id]" value="" id="<%= no_category_id %>"
-          style="display:none" <%= "checked" unless form.object.deficiency_report_category_id.present? %>>
-        <label for="<%= no_category_id %>" class="map-feature-pill map-feature-pill--sentiment">
-          <%= t(".no_category") %>
-        </label>
-
         <% DeficiencyReport::Category.all.each do |category| %>
           <% input_id = "deficiency_report_deficiency_report_category_id_#{category.id}" %>
           <input type="radio" name="deficiency_report[deficiency_report_category_id]" value="<%= category.id %>" id="<%= input_id %>"

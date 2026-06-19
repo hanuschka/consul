@@ -109,13 +109,12 @@ de:
         edit:
           title: Mängelmelder bearbeiten
         form_fields:
-          no_category: "-- Keine Kategorie --"
           placeholders:
-            title: z. B. Defekte Straßenlaterne in der Hauptstraße
+            title: Titel der Meldung
             video_url: https://www.youtube.com/watch?v=...
             on_behalf_of: z. B. Maria Musterfrau
           labels:
-            title: Titel
+            title: Titel der Meldung
             description: Beschreibung
             image: Bild
             documents: Dokumente
@@ -124,11 +123,11 @@ de:
             map_location: Kartenstandort
             on_behalf_of: Im Auftrag von
           hints:
-            title: Der Titel des Beitrags wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte den gemeldeten Mangel kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können. Änderungen am Titel werden sofort auf der öffentlichen Seite sichtbar.
-            description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Mangel, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird öffentlich auf der Detailseite des Beitrags angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
-            image: Das Bild dokumentiert den gemeldeten Mangel visuell und wird auf der öffentlichen Detailseite des Beitrags angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, den Mangel schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
+            title: Der Titel des Beitrags wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte das gemeldete Anliegen kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können.
+            description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Anliegen, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird - je nach gewählter Voreinstellung - öffentlich auf der Detailseite des Beitrags angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
+            image: Das Bild dokumentiert das gemeldete Anliegen visuell und wird auf der öffentlichen Detailseite des Beitrags angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, das Anliegen schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
             documents: Hier können ergänzende Dokumente wie Gutachten, Pläne oder Berichte zum Beitrag hinzugefügt werden. Die Dateien werden auf der Detailseite zum Download bereitgestellt und sind für alle Nutzer sichtbar. Mehrere Dokumente können gleichzeitig hochgeladen werden, um den Sachverhalt umfassend zu dokumentieren.
-            video_url: Geben Sie die URL eines Videos ein, das den gemeldeten Mangel dokumentiert. Das Video wird auf der öffentlichen Detailseite des Beitrags eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
+            video_url: Geben Sie die URL eines Videos ein, das das gemeldete Anliegen dokumentiert. Das Video wird auf der öffentlichen Detailseite des Beitrags eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
             on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag der Beitrag erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator einen Beitrag stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung des Beitrags.
             category: Die Kategorie ordnet den Beitrag einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
         administer:

@@ -109,7 +109,6 @@ en:
         edit:
           title: Edit deficiency report
         form_fields:
-          no_category: "-- No category --"
           placeholders:
             title: e.g. Broken street light on Main Street
             video_url: https://www.youtube.com/watch?v=...

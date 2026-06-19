@@ -270,6 +270,9 @@ de:
       show_create_report_button: Einreichen-Button für Mängelmeldungen
       show_create_report_button_description: >
         Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
+      show_homepage_cta: Melde-Schaltfläche auf der Startseite
+      show_homepage_cta_description: >
+        Zeigt im Kopfbereich der Startseite eine zusätzliche Schaltfläche unterhalb der Haupt-Schaltfläche an, die Nutzer direkt zum Formular für ein neues Anliegen führt. Die Beschriftung wird aus der Einstellung "Beschriftung der Melde-Schaltfläche" übernommen. Setzt voraus, dass das Anliegenmanagement aktiviert ist.
 
     process:
       proposals: Vorschlagsübersicht

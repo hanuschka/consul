@@ -239,6 +239,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
+        "deficiency_reports.show_homepage_cta": false,
         "deficiency_reports.feature_name": nil,
         "deficiency_reports.create_cta": nil,
         "deficiency_reports.new_form_title": nil,

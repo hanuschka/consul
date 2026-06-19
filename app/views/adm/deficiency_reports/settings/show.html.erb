@@ -43,4 +43,5 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.voice_assistant"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.send_feedback_form_link"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.show_create_report_button"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.show_homepage_cta"), :value, :boolean) %>
 </div>

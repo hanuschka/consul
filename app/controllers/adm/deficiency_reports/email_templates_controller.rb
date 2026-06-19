@@ -5,14 +5,17 @@ class Adm::DeficiencyReports::EmailTemplatesController < Adm::DeficiencyReports:
     authorize sample_template, :index?,
       policy_class: Adm::SiteCustomization::EmailTemplatePolicy
 
-    @email_templates = ::SiteCustomization::EmailTemplate::DEFICIENCY_REPORT_EMAIL_TEMPLATES.map do |mailer_class, mailer_action|
-      ::SiteCustomization::EmailTemplate.find_or_create_by!(
-        projekt_phase: nil,
-        mailer_class: mailer_class,
-        mailer_action: mailer_action,
-        locale: I18n.locale
-      )
-    end
+    @email_template_groups =
+      ::SiteCustomization::EmailTemplate::DEFICIENCY_REPORT_EMAIL_TEMPLATE_GROUPS.transform_values do |entries|
+        entries.map do |mailer_class, mailer_action|
+          ::SiteCustomization::EmailTemplate.find_or_create_by!(
+            projekt_phase: nil,
+            mailer_class: mailer_class,
+            mailer_action: mailer_action,
+            locale: I18n.locale
+          )
+        end
+      end
 
     @breadcrumbs = [
       { name: t("adm.deficiency_reports.menu.items.home"), path: adm_deficiency_reports_root_path },

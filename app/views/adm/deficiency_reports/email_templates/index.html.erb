@@ -7,8 +7,14 @@
 <% end %>
 
 <div class="kern-container my-5">
-  <% @email_templates.each do |template| %>
-    <%= render Adm::EmailTemplateComponent.new(template) %>
+  <% @email_template_groups.each do |group, templates| %>
+    <div class="mb-5">
+      <h2 class="kern-title kern-title--large mb-3"><%= t(".groups.#{group}") %></h2>
+
+      <% templates.each do |template| %>
+        <%= render Adm::EmailTemplateComponent.new(template) %>
+      <% end %>
+    </div>
   <% end %>
 
   <div class="my-5">

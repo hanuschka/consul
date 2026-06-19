@@ -31,6 +31,9 @@ en:
         index:
           title: System emails
           page_hint: Customize the subject and body of the emails sent for deficiency reports. Leave a template empty to keep the default text.
+          groups:
+            external: Emails to citizens
+            internal: Emails to staff
       deficiency_reports:
         index:
           title: Reports

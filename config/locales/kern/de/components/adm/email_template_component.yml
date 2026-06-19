@@ -4,6 +4,7 @@ de:
       email_template_component:
         trigger: Auslöser
         trigger_description: Beschreibt das Ereignis, das den automatischen Versand dieser E-Mail auslöst.
+        settings_link_text: Einstellungen
         recipient: Empfänger
         recipient_description: An wen wird diese E-Mail versendet?
         subject: Betreff

@@ -31,6 +31,9 @@ de:
         index:
           title: System-E-Mails
           page_hint: Passen Sie Betreff und Inhalt der E-Mails an, die für Mangelmeldungen versendet werden. Lassen Sie eine Vorlage leer, um den Standardtext beizubehalten.
+          groups:
+            external: E-Mails an Bürgerinnen und Bürger
+            internal: E-Mails an die Verwaltung
       deficiency_reports:
         index:
           title: Meldungen

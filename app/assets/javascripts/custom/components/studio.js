@@ -14,6 +14,7 @@
       App.Tabs.initialize();
       App.ContentBlockEditor.TemplateSelector.initialize();
       App.ContentBlockEditor.Crud.initialize();
+      App.ContentBlockEditor.MapEmbed.initialize();
       App.ContentBlockEditor.ChangeHistory.initialize();
       App.ContentBlockEditor.CKEditorMode.initialize();
       App.ContentBlockEditor.EditModeSwitcher.initialize();

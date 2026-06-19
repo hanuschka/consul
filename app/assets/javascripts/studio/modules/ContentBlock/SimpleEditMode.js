@@ -267,7 +267,7 @@ App.ContentBlockEditor.SimpleEditMode = {
     if (input) {
       const marginBottom = contentBlockWrapper.style.marginBottom || '0px';
       const parsedValue = parseInt(marginBottom);
-      input.value = isNaN(parsedValue) ? ProjektStudio.config.defaultMarginBottom : parsedValue;
+      input.value = isNaN(parsedValue) ? ProjektStudio.getDefaultMarginBottom() : parsedValue;
     }
   },
 

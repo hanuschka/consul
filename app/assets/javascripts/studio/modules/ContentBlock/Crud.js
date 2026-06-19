@@ -34,6 +34,7 @@ App.ContentBlockEditor.Crud = {
     ProjektStudio.utils.removeFoundationIds(updatedContent);
     contentBlock.innerHTML = updatedContent.innerHTML;
     App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+    App.ContentBlockEditor.MapEmbed.hydrateIn(contentBlock);
 
     App.ContentBlockEditor.SimpleEditMode.switchToSimpleEditMode(wrapper);
   },
@@ -148,6 +149,7 @@ App.ContentBlockEditor.Crud = {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.projekt-content-block'))
       App.ImageGallery.initialize()
+      App.ContentBlockEditor.MapEmbed.hydrateIn(newContentBlockContainer)
     }, 0)
 
     App.Ajax.request({
@@ -235,11 +237,16 @@ App.ContentBlockEditor.Crud = {
     const contentBlockWrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    const sanitized = ProjektStudio.utils.sanitizeAdminHtml(newContent);
+    // Strip any hydrated map back to the {{projekt_map}} placeholder so the
+    // persisted body stays canonical; the live map is re-hydrated below.
+    const normalized = ProjektStudio.utils.resetMapEmbeds(newContent);
+    const sanitized = ProjektStudio.utils.sanitizeAdminHtml(normalized);
 
-    const oldContent = contentBlock.dataset.previousContentBlockHtml
-      ? contentBlock.dataset.previousContentBlockHtml
-      : contentBlock.innerHTML.trim();
+    const oldContent = ProjektStudio.utils.resetMapEmbeds(
+      contentBlock.dataset.previousContentBlockHtml
+        ? contentBlock.dataset.previousContentBlockHtml
+        : contentBlock.innerHTML.trim()
+    );
 
     const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(sanitized);
     const newContentTrimmed = updatedContentBlock.innerHTML.trim();
@@ -293,6 +300,9 @@ App.ContentBlockEditor.Crud = {
 
     App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
+    // Display reset above replaced the live map with the placeholder token;
+    // re-hydrate so the editor keeps showing a map after saving.
+    App.ContentBlockEditor.MapEmbed.hydrateIn(contentBlock)
   },
 
   syncDomFromServer(contentBlock, response) {

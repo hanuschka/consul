@@ -234,6 +234,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.enable_geoman_controls_in_maps": true,
         "deficiency_reports.map_location_required": true,
         "deficiency_reports.admin_acceptance_required": false,
+        "deficiency_reports.image_upload": true,
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,

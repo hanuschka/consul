@@ -103,7 +103,7 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def create
-    if deficiency_report_params["image_attributes"]["cached_attachment"].blank?
+    if deficiency_report_params.dig("image_attributes", "cached_attachment").blank?
       filtered_deficiency_report_params = deficiency_report_params.except("image_attributes")
     else
       filtered_deficiency_report_params = deficiency_report_params

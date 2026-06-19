@@ -10,11 +10,28 @@
   border-radius: 8px;
 }
 
+.adm-filter-bar.-labeled {
+  align-items: flex-end;
+}
+
 .adm-filter-bar--field {
   display: flex;
   flex-direction: column;
   margin: 0;
   min-width: 0;
+}
+
+.adm-filter-bar--label {
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #4a4a4a;
+}
+
+.adm-filter-bar--control {
+  position: relative;
+  display: block;
 }
 
 .adm-filter-bar--field-search {
@@ -104,6 +121,18 @@ select.adm-filter-bar--input {
   background-size: 12px;
 }
 
+.adm-filter-bar--field-grow {
+  flex: 1 1 220px;
+  max-width: 360px;
+}
+
+.adm-filter-bar--actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
 .adm-filter-bar--reset-button {
   box-sizing: border-box;
   display: inline-flex;
@@ -114,6 +143,7 @@ select.adm-filter-bar--input {
   font-size: 14px;
   line-height: 1;
   color: #222;
+  text-decoration: none;
   background: #ededed;
   border: 0;
   border-radius: 6px;
@@ -127,6 +157,33 @@ select.adm-filter-bar--input {
 
   &:focus-visible {
     outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.adm-filter-bar--submit-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px;
+  line-height: 1;
+  color: #ffffff;
+  background: #005fcc;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0;
+  white-space: nowrap;
+
+  &:hover {
+    background: #004ea8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #003c80;
     outline-offset: 1px;
   }
 }
@@ -146,6 +203,12 @@ select.adm-filter-bar--input {
 
   .adm-filter-bar--field-sort {
     margin-left: 0;
+  }
+
+  .adm-filter-bar--actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .adm-filter-bar--reset-button {

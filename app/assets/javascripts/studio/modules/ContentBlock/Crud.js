@@ -10,7 +10,9 @@ App.ContentBlockEditor.Crud = {
 
   handleCreateContentBlock(e) {
     const templateSelector = App.ContentBlockEditor.TemplateSelector;
-    const contentBlockTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
+    const contentBlockTemplate = this.normalizedTemplateNode(
+      e.currentTarget.querySelector(".js-content-block-template-content")
+    );
 
     if (templateSelector.selectionMode === "replace") {
       this.replaceContentBlockWithTemplate(templateSelector.replaceTargetWrapper, contentBlockTemplate);
@@ -18,6 +20,18 @@ App.ContentBlockEditor.Crud = {
     }
 
     this.addContentBlock(this.addContentBlockAfter, contentBlockTemplate)
+  },
+
+  // The template preview hydrates its map region in place for display, so the
+  // live .js-content-block-template-content node may hold a real map. Return a
+  // detached node whose map is reset to the {{projekt_map}} token, so the
+  // inserted block persists the canonical placeholder (the editor re-hydrates
+  // it for display). Non-map templates pass through unchanged.
+  normalizedTemplateNode(templateContentEl) {
+    const node = document.createElement("div");
+    node.innerHTML = ProjektStudio.utils.resetMapEmbeds(templateContentEl.innerHTML);
+
+    return node;
   },
 
   replaceContentBlockWithTemplate(wrapper, contentBlockTemplate) {

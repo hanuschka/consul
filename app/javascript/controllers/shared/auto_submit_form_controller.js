@@ -5,7 +5,7 @@ import { Controller } from "@hotwired/stimulus"
 // (debounced) so typing filters without waiting for blur. Pair with
 // `data-turbo-permanent` on the text input to keep focus across the visit.
 export default class extends Controller {
-  static values = { delay: { type: Number, default: 350 } }
+  static values = { delay: { type: Number, default: 400 } }
 
   submit() {
     this.cancelPending()

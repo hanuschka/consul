@@ -415,6 +415,47 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       forbidden_response { let(:id) { 1 } }
     end
   end
+
+  path '/api/events' do
+    get 'List all projekt events' do
+      tags 'Events'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Retrieve all events across all projekts. Returns paginated results ordered by creation date. Clients with `public_data` access only see events belonging to phases that are active and frontend-visible.#{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (default: 100, max: 500)', required: false
+
+      response '200', 'projekt events found and returned' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
+
+        before do
+          event_phase.projekt_events.create!(title: 'Event 1', datetime: '2025-02-01T18:00:00Z')
+          event_phase.projekt_events.create!(title: 'Event 2', datetime: '2025-02-02T18:00:00Z')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     events: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/ProjektEvent' }
+                     }
+                   },
+                   required: ['events']
+                 },
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      unauthorized_response
+    end
+  end
 end
 
 

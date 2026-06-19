@@ -1,6 +1,7 @@
 App.ContentBlockEditor.DraftStore = {
   storePreviousVersion(contentBlock) {
-    contentBlock.dataset.previousContentBlockHtml = contentBlock.innerHTML.trim();
+    contentBlock.dataset.previousContentBlockHtml =
+      ProjektStudio.utils.resetMapEmbeds(contentBlock.innerHTML.trim());
   },
 
   restorePreviousVersion(contentBlock) {
@@ -9,6 +10,7 @@ App.ContentBlockEditor.DraftStore = {
       contentBlock.dataset.previousContentBlockHtml = null;
 
       App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
+      App.ContentBlockEditor.MapEmbed.hydrateIn(contentBlock)
     }
   }
 };

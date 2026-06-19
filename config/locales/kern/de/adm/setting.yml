@@ -243,9 +243,6 @@ de:
       officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Mängel
       officers_can_administer_assigned_reports_description: >
         Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Mangelmeldungen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Meldungen nur einsehen, aber nicht verwalten.
-      officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Mängel
-      officers_can_edit_assigned_reports_description: >
-        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Mangelmeldungen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Meldungen unvollständig oder fehlerhaft sind und vor der Bearbeitung angepasst werden müssen.
       allow_voting: Nutzer-Bewertung pro Mangel
       allow_voting_description: >
         Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.

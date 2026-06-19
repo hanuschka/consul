@@ -70,8 +70,7 @@
     // Frosted-glass surface — matches the map height control
     // (studio/_map_controls.scss .map-height-control).
     background: rgba(255, 255, 255, 0.62);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(3px) saturate(2);
     border: 1px solid rgba(255, 255, 255, 0.7);
     border-radius: 14px;
     box-shadow: 0 6px 22px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.55);

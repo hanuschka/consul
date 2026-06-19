@@ -56,14 +56,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   padding: 0;
-  font-size: 14px;
+  font-size: 16px;
   color: #2b3744;
   background: transparent;
   border: none;
-  border-radius: 50%;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 150ms ease-out, color 150ms ease-out;
 

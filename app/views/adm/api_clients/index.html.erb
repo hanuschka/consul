@@ -41,10 +41,12 @@
                   <%= render Adm::SystemUserInfoComponent.new(
                     user: api_client.user,
                     kind: :api_client,
-                    size: :small
+                    size: :small,
+                    linkable: true,
+                    edit_url: edit_adm_api_client_service_user_path(api_client)
                   ) %>
                 <% else %>
-                  <%= render Adm::SystemUserInfoComponent.new(user: api_client.content_author, size: :small) %>
+                  <%= render Adm::SystemUserInfoComponent.new(user: api_client.content_author, size: :small, linkable: true) %>
                 <% end %>
               </td>
               <td class="kern-table__cell"><%= l(api_client.created_at, format: :short) %></td>

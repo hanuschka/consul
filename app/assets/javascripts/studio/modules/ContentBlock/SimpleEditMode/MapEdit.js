@@ -58,38 +58,38 @@ App.ContentBlockEditor.SimpleEditMode.MapEdit = {
   buildControl(height) {
     const control = document.createElement("div")
     control.className =
-      `${this.controlClass} map-height-control ` +
+      `${this.controlClass} studio-content-block-map-height-control ` +
       "js-studio-hide-on-preview js-content-block-element-not-editable"
     control.contentEditable = false
     control.innerHTML = `
-      <span class="map-height-control--label">
-        <i class="fas fa-arrows-alt-v map-height-control--icon"></i>
+      <span class="studio-content-block-map-height-control--label">
+        <i class="fas fa-arrows-alt-v studio-content-block-map-height-control--icon"></i>
         Höhe
       </span>
-      <span class="map-height-control--stepper">
+      <span class="studio-content-block-map-height-control--stepper">
         <button
           type="button"
-          class="map-height-control--step js-map-height-decrease"
+          class="studio-content-block-map-height-control--step js-map-height-decrease"
           aria-label="Kartenhöhe verringern"
           tabindex="-1"
         >
           <i class="fas fa-minus"></i>
         </button>
-        <span class="map-height-control--value">
+        <span class="studio-content-block-map-height-control--value">
           <input
             type="number"
-            class="map-height-control--input js-map-height-input"
+            class="studio-content-block-map-height-control--input js-map-height-input"
             value="${height}"
             min="${this.minHeight}"
             max="${this.maxHeight}"
             step="${this.step}"
             aria-label="Kartenhöhe in Pixel"
           >
-          <span class="map-height-control--unit">px</span>
+          <span class="studio-content-block-map-height-control--unit">px</span>
         </span>
         <button
           type="button"
-          class="map-height-control--step js-map-height-increase"
+          class="studio-content-block-map-height-control--step js-map-height-increase"
           aria-label="Kartenhöhe vergrößern"
           tabindex="-1"
         >

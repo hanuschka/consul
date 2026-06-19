@@ -66,13 +66,15 @@
     justify-content: flex-end;
     align-items: center;
     gap: 2px;
-    padding: 5px 7px;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 5px 8px;
+    // Frosted-glass surface — matches the map height control
+    // (studio/_map_controls.scss .map-height-control).
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 14px;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.55);
     pointer-events: auto;
 
     // Invisible hover bridge between toolbar and block — prevents the toolbar
@@ -147,7 +149,7 @@
 
     .projekt-content-block--toolbar {
       display: flex;
-      outline: 2px solid #c9dced;
+      outline: 1px solid #c9dced;
     }
   }
 

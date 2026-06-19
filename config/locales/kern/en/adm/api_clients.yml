@@ -24,6 +24,15 @@ en:
         title: Create new API client
       edit:
         title: Edit API client
+      service_users:
+        edit:
+          title: Edit service user
+          intro: >
+            Edit the public profile of the service user that acts as the
+            author for all content created via this API client.
+        flash:
+          updated: Service user updated successfully
+          no_service_user: This API client does not use a dedicated service user.
       show:
         auth_token_explanation_text: >
           Include this token in the Authorization header of your
@@ -53,12 +62,30 @@ en:
         service_user_email_description: >
           Enter a valid email address for the automatically created service user account. The service user is used as the author for all content created via this API client — e.g. proposals, comments, or votes. The address must be unique and must not already be used by another account.
         service_user_section_title: Service user
+        edit_service_user: Edit service user
         service_user_section_description: >
           The service user is the public author identity of this API client:
           all content created via the API — e.g. proposals or comments — is
           published under this user. It cannot be used to log in directly.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Background image
+        service_user_username_description: >
+          The internal login name of the service user. It is generated
+          automatically from the API client name, must be unique across the
+          platform, and is used only for internal identification.
+        service_user_first_name_description: >
+          First name of the service user. Together with the last name it forms
+          the publicly displayed author name for all content created via the
+          API.
+        service_user_last_name_description: >
+          Last name of the service user. Together with the first name it forms
+          the publicly displayed author name for all content created via the
+          API.
+        service_user_avatar_description: >
+          Profile picture of the service user. It is shown next to content
+          created via the API. Square images are displayed best.
+        service_user_background_image_description: >
+          Background image for the service user's public profile page.
         use_system_user_label: Use system user
         use_system_user_description: >
           When enabled, content created via this API client is published

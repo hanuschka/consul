@@ -24,6 +24,15 @@ de:
         title: Neuen API-Client erstellen
       edit:
         title: API-Client bearbeiten
+      service_users:
+        edit:
+          title: Service-Benutzer bearbeiten
+          intro: >
+            Bearbeiten Sie das öffentliche Profil des Service-Benutzers, der
+            als Autor für alle über diesen API-Client erstellten Inhalte dient.
+        flash:
+          updated: Service-Benutzer erfolgreich aktualisiert
+          no_service_user: Dieser API-Client verwendet keinen eigenen Service-Benutzer.
       show:
         auth_token_explanation_text: >
           Fügen Sie diesen Token im Authorization-Header Ihrer
@@ -54,6 +63,7 @@ de:
         service_user_email_description: >
           Geben Sie eine gültige E-Mail-Adresse für das automatisch erstellte Service-Benutzerkonto an. Der Service-Benutzer wird als Autor für alle Inhalte verwendet, die über diesen API-Client erstellt werden — z.B. Vorschläge, Kommentare oder Abstimmungen. Die Adresse muss eindeutig sein und darf nicht bereits von einem anderen Konto verwendet werden.
         service_user_section_title: Service-Benutzer
+        edit_service_user: Service-Benutzer bearbeiten
         service_user_section_description: >
           Der Service-Benutzer ist die öffentliche Autorenidentität dieses
           API-Clients: Alle über die API erstellten Inhalte — z.B. Vorschläge
@@ -61,6 +71,24 @@ de:
           direkte Anmeldung mit diesem Benutzer ist nicht möglich.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Hintergrundbild
+        service_user_username_description: >
+          Der interne Anmeldename des Service-Benutzers. Er wird automatisch aus
+          dem Namen des API-Clients erzeugt, muss plattformweit eindeutig sein
+          und dient ausschließlich der internen Zuordnung.
+        service_user_first_name_description: >
+          Vorname des Service-Benutzers. Bildet zusammen mit dem Nachnamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_last_name_description: >
+          Nachname des Service-Benutzers. Bildet zusammen mit dem Vornamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_avatar_description: >
+          Profilbild des Service-Benutzers. Es wird neben den über die API
+          erstellten Inhalten angezeigt. Quadratische Bilder werden am besten
+          dargestellt.
+        service_user_background_image_description: >
+          Hintergrundbild für die öffentliche Profilseite des Service-Benutzers.
         use_system_user_label: Systembenutzer verwenden
         use_system_user_description: >
           Wenn aktiviert, werden über diesen API-Client erstellte Inhalte

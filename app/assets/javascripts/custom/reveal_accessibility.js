@@ -23,7 +23,7 @@
 
       modal.setAttribute("aria-modal", "true");
 
-      App.FocusTrap.setBackgroundInert([modal]);
+      App.FocusTrap.setBackgroundInert([modal], modal);
 
       setTimeout(() => {
         const focusable = App.FocusTrap.getFocusableElements(modal);

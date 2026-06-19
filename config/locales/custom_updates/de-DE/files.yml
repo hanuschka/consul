@@ -95,6 +95,7 @@ de:
       delete: Löschen
       delete_confirm: Möchten Sie dieses Element wirklich löschen?
       upload: Hochladen
+      upload_with_crop: Mit Zuschnitt hochladen
       open_in_new_tab: In neuem Tab öffnen
       copy_url: Link kopieren
       copy_url_success: Link in die Zwischenablage kopiert

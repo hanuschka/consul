@@ -46,6 +46,12 @@
           <i class="fa fa-pen"></i>
           Datei editieren
         </button>
+        <% if type == "picture" %>
+          <button type="button" class="studio-edit-button file-upload-manager-dialog--upload-button js-file-upload-manager-upload-crop">
+            <i class="fa fa-crop"></i>
+            <%= t("files.card.upload_with_crop") %>
+          </button>
+        <% end %>
         <button type="button" class="studio-edit-button -green file-upload-manager-dialog--upload-button js-file-upload-manager-upload">
           <i class="fa fa-upload"></i>
           <%= mode_config[:upload_text] %>
@@ -159,3 +165,7 @@
     </button>
   </div>
 </dialog>
+
+<% if type == "picture" %>
+  <%= render Shared::ImageCropperModalComponent.new %>
+<% end %>

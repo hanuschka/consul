@@ -200,9 +200,6 @@ en:
       officers_can_administer_assigned_reports: Officer administration for ideas
       officers_can_administer_assigned_reports_description: >
         Gives officers full administrative control over the ideas assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view ideas, not manage them or make structural adjustments.
-      officers_can_edit_assigned_reports: Officer editing for ideas
-      officers_can_edit_assigned_reports_description: >
-        Lets officers edit the content of assigned ideas directly — e.g. correct the title, description, or location. This is useful when submitted ideas are incomplete or contain errors and need to be adjusted editorially before further processing.
       enable_comments: Comments
       enable_comments_description: >
         When enabled, users can write comments below an idea. This enables public exchange between citizens and administration, e.g. for follow-up questions, additional suggestions, or supplementary notes on the submitted idea. Comments can be moderated by administrators.

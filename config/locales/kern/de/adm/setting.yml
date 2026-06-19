@@ -203,9 +203,6 @@ de:
       officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Ideen
       officers_can_administer_assigned_reports_description: >
         Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Ideen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Ideen nur einsehen, aber nicht verwalten oder strukturell anpassen.
-      officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Ideen
-      officers_can_edit_assigned_reports_description: >
-        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Ideen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Ideen unvollständig oder fehlerhaft sind und vor der weiteren Bearbeitung redaktionell angepasst werden müssen.
       enable_comments: Kommentarfunktion
       enable_comments_description: >
         Wenn aktiviert, können Nutzer unterhalb einer Idee Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, weiterführende Anregungen oder ergänzende Hinweise zur eingereichten Idee. Kommentare können von Administratoren moderiert werden.

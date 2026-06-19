@@ -341,8 +341,6 @@ de:
         admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
         officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
         officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
-        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
-        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
         allow_voting: Nutzer*innen Bewertung pro Idee
         allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
         enable_comments: Kommentarfunktion

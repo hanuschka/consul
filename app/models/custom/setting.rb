@@ -247,7 +247,6 @@ class Setting < ApplicationRecord
 
         "ideas.admins_must_assign_officer": false,
         "ideas.officers_can_administer_assigned_reports": true,
-        "ideas.officers_can_edit_assigned_reports": false,
         "ideas.enable_comments": true,
         "ideas.intro_text": false,
         "ideas.enable_geoman_controls_in_maps": true,

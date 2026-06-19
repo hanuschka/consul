@@ -162,17 +162,29 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
   # Deficiency-report emails are not tied to a projekt phase (so they are stored
   # with projekt_phase: nil), but they are edited inside the /adm/deficiency_reports
   # section rather than on the generic global email-templates page.
-  DEFICIENCY_REPORT_EMAIL_TEMPLATES = [
-    ["DeficiencyReportMailer", "notify_author_about_status_change"],
-    ["DeficiencyReportMailer", "notify_officer"],
-    ["DeficiencyReportMailer", "notify_default_officer_group_email"],
-    ["DeficiencyReportMailer", "notify_author_about_submission"],
-    ["DeficiencyReportMailer", "send_feedback_form_link"],
-    ["NotificationServiceMailer", "new_deficiency_report"],
-    ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
-    ["NotificationServiceMailer", "overdue_deficiency_reports"],
-    ["NotificationServiceMailer", "not_assigned_deficiency_reports"]
-  ].freeze
+  #
+  # Grouped by recipient for display: emails to external users (the citizen who
+  # filed the report) vs. emails to staff (admins, officers, managers). Within
+  # each group the entries follow the report lifecycle
+  # (submission -> assignment -> processing -> closing).
+  DEFICIENCY_REPORT_EMAIL_TEMPLATE_GROUPS = {
+    external: [
+      ["DeficiencyReportMailer", "notify_author_about_submission"],
+      ["DeficiencyReportMailer", "notify_author_about_status_change"],
+      ["DeficiencyReportMailer", "send_feedback_form_link"]
+    ],
+    internal: [
+      ["NotificationServiceMailer", "new_deficiency_report"],
+      ["DeficiencyReportMailer", "notify_officer"],
+      ["DeficiencyReportMailer", "notify_default_officer_group_email"],
+      ["NotificationServiceMailer", "not_assigned_deficiency_reports"],
+      ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
+      ["NotificationServiceMailer", "overdue_deficiency_reports"]
+    ]
+  }.freeze
+
+  DEFICIENCY_REPORT_EMAIL_TEMPLATES =
+    DEFICIENCY_REPORT_EMAIL_TEMPLATE_GROUPS.values.flatten(1).freeze
 
   audited only: %i[subject body]
 

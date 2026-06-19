@@ -1,3 +1,8 @@
+.kern-badge--primary {
+  background: color-mix(in srgb, var(--kern-color-action-default, #1b4da2) 10%, #ffffff);
+  border: var(--kern-metric-border-width-light, 1px) solid var(--kern-color-action-default, #1b4da2);
+}
+
 .kern-badge--small {
   min-height: 22px;
   padding: 2px 8px;

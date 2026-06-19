@@ -11,8 +11,19 @@ de:
         response_status: Status
         api_client: API-Client
         no_logs: Keine API-Anfragen-Logs vorhanden.
+        no_results: Keine Logs entsprechen den gewählten Filtern.
         destroy_all: Alle Logs löschen
         destroy_all_confirm: Alle API-Anfragen-Logs wirklich löschen?
+      filters:
+        url_label: Nach Pfad oder URL suchen
+        url_placeholder: Pfad oder URL …
+        http_method_any: Alle Methoden
+        response_status_any: Alle Status
+        api_client_any: Alle API-Clients
+        start_date_label: Von Datum
+        end_date_label: Bis Datum
+        submit: Filtern
+        reset: Zurücksetzen
       destroy_all:
         success: Alle API-Anfragen-Logs wurden gelöscht.
       show:
@@ -24,3 +35,17 @@ de:
         created_at: Erstellt am
         query_params: Query-Parameter
         body_params: Body-Parameter
+      status_explanations:
+        "200": Die Anfrage war erfolgreich.
+        "201": Die Ressource wurde erfolgreich erstellt.
+        "204": Erfolgreich – die Antwort enthält keinen Inhalt.
+        "304": Nicht geändert – die zwischengespeicherte Version ist weiterhin gültig.
+        "400": Ungültige Anfrage – die Anfrage war fehlerhaft oder unvollständig.
+        "401": Nicht authentifiziert – ein gültiger Token fehlt oder ist ungültig.
+        "403": Zugriff verweigert – der Client hat keine Berechtigung für diese Aktion.
+        "404": Nicht gefunden – die angeforderte Ressource existiert nicht.
+        "422": Nicht verarbeitbar – die übermittelten Daten haben die Validierung nicht bestanden.
+        "429": Zu viele Anfragen – das Ratenlimit wurde überschritten.
+        "500": Interner Serverfehler – auf dem Server ist ein unerwarteter Fehler aufgetreten.
+        "502": Bad Gateway – ein vorgelagerter Dienst hat ungültig geantwortet.
+        "503": Dienst nicht verfügbar – der Server ist vorübergehend überlastet oder in Wartung.

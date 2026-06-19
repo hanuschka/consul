@@ -18,7 +18,7 @@
                 style="margin-bottom: <%= effective_margin %>px;"
               <% end %>
             >
-              <%= process_custom_content_if_needed(safe_content_block_body(content_block&.body))&.html_safe %>
+              <%= process_custom_content_if_needed(safe_content_block_body(content_block&.body), projekt: @custom_page.projekt)&.html_safe %>
             </div>
           <% end %>
         <% end %>

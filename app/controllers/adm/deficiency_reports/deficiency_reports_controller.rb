@@ -49,6 +49,36 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     end
   end
 
+  def new
+    @deficiency_report = DeficiencyReport.new
+    authorize @deficiency_report, :new?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @deficiency_report.build_image(user: current_user)
+    @deficiency_report.build_map_location
+
+    @breadcrumbs = new_breadcrumbs
+  end
+
+  def create
+    @deficiency_report = DeficiencyReport.new(create_params.merge(
+      author: current_user,
+      status: DeficiencyReport::Status.default,
+      status_changed_at: Time.zone.now,
+      resource_terms: "1"
+    ))
+    authorize @deficiency_report, :create?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    if @deficiency_report.save
+      @deficiency_report.assign_default_responsible
+      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report), notice: t("adm.attribute.create.success")
+    else
+      @deficiency_report.build_image(user: current_user) unless @deficiency_report.image
+      @deficiency_report.build_map_location unless @deficiency_report.map_location
+      @breadcrumbs = new_breadcrumbs
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def show
     @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
     authorize @deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
@@ -218,6 +248,21 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
       params.require(:deficiency_report).permit(attributes)
+    end
+
+    def create_params
+      if params.dig(:deficiency_report, :image_attributes, :cached_attachment).blank?
+        deficiency_report_params.except(:image_attributes)
+      else
+        deficiency_report_params
+      end
+    end
+
+    def new_breadcrumbs
+      [
+        { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
+        { name: t("adm.deficiency_reports.deficiency_reports.new.title") }
+      ]
     end
 
     def filter_assigned_reports_only(scope)

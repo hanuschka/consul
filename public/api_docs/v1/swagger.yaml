@@ -1515,6 +1515,59 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/budget_investments/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Budget Investment ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieve a budget investment (alias)
+      tags:
+      - Budget Investments
+      security:
+      - bearer_auth: []
+      description: |-
+        Alias of `GET /api/investments/{id}`. Retrieve a single budget investment by ID with full details. Returns project information, feasibility assessment, admin valuation status, voting statistics, and selected status.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: budget investment found and returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budget_investment:
+                        type: object
+                    required:
+                    - budget_investment
+                required:
+                - data
+        '404':
+          description: budget investment not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/budgets/{budget_id}/budget_phases":
     parameters:
     - name: budget_id
@@ -1732,6 +1785,124 @@ paths:
               required:
               - budget_phase
         description: Budget phase attributes to update
+  "/api/budgets/{budget_id}/budget_phases/bulk_update":
+    parameters:
+    - name: budget_id
+      in: path
+      description: Budget ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Bulk update budget phases
+      tags:
+      - Budget Phases
+      security:
+      - bearer_auth: []
+      description: "Update several budget phases of a budget in one request. Each
+        entry is matched by its phase kind (e.g. accepting, balloting) and may set
+        starts_at, ends_at, and/or enabled. Returns all updated phases. If any kind
+        cannot be found, the request fails with 422 and no further phases are returned.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: budget phases updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      budget_phases:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - budget_phases
+                required:
+                - data
+        '422':
+          description: unknown phase kind
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                budget_phases:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                        description: Phase kind to update (e.g. informing, accepting,
+                          balloting, finished)
+                      starts_at:
+                        type: string
+                        nullable: true
+                        description: Phase start date (YYYY-MM-DD)
+                      ends_at:
+                        type: string
+                        nullable: true
+                        description: Phase end date (YYYY-MM-DD)
+                      enabled:
+                        type: boolean
+                        nullable: true
+                        description: Enable or disable this phase
+                    required:
+                    - kind
+              required:
+              - budget_phases
+        description: Array of phase updates keyed by phase kind
   "/api/budgets":
     get:
       summary: List all budgets
@@ -3919,6 +4090,76 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/events":
+    get:
+      summary: List all projekt events
+      tags:
+      - Events
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve all events across all projekts. Returns paginated results ordered by creation date. Clients with `public_data` access only see events belonging to phases that are active and frontend-visible.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        description: 'Pagination page number (default: 1)'
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Number of events per page (default: 100, max: 500)'
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: projekt events found and returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      events:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/ProjektEvent"
+                    required:
+                    - events
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/formulars":
     parameters:
     - name: projekt_phase_id
@@ -4058,6 +4299,140 @@ paths:
                         type: array
                         items:
                           type: string
+    post:
+      summary: Create a formular
+      tags:
+      - Formulars
+      security:
+      - bearer_auth: []
+      description: "Create the formular (form) for a FormularPhase. Each phase holds
+        a single formular; its fields are managed separately. No request body attributes
+        are required. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
+      responses:
+        '201':
+          description: formular created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      formular:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Unique identifier for the formular
+                            example: 1
+                          projekt_phase_id:
+                            type: integer
+                            description: ID of the projekt phase this formular belongs
+                              to
+                            example: 5
+                          formular_fields_count:
+                            type: integer
+                            description: Number of form fields defined in this formular
+                            example: 12
+                          formular_answers_count:
+                            type: integer
+                            description: Number of participant responses submitted
+                              to this formular
+                            example: 45
+                          projekt_phase:
+                            type: object
+                            description: The projekt phase this formular belongs to
+                            properties:
+                              id:
+                                type: integer
+                                example: 5
+                              title:
+                                type: string
+                                nullable: true
+                                example: Feedback Phase
+                              type:
+                                type: string
+                                example: ProjektPhase::FormularPhase
+                              projekt_id:
+                                type: integer
+                                example: 2
+                          projekt:
+                            type: object
+                            description: The projekt this formular belongs to
+                            properties:
+                              id:
+                                type: integer
+                                example: 2
+                              title:
+                                type: string
+                                example: Community Survey
+                          created_at:
+                            type: string
+                            format: date_time
+                            description: Timestamp when the formular was created
+                            example: '2024-01-10T10:00:00Z'
+                          updated_at:
+                            type: string
+                            format: date_time
+                            description: Timestamp when the formular was last modified
+                            example: '2024-01-15T14:30:00Z'
+                        required:
+                        - id
+                        - projekt_phase_id
+                        - created_at
+                        - updated_at
+                    required:
+                    - formular
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/formulars/{id}":
     parameters:
     - name: id
@@ -4158,6 +4533,194 @@ paths:
           description: formular not found
         '401':
           description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+    patch:
+      summary: Update a formular
+      tags:
+      - Formulars
+      security:
+      - bearer_auth: []
+      description: "Update a formular. The formular has no editable attributes besides
+        its projekt phase association; this endpoint persists the record and returns
+        it. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: formular updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      formular:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Unique identifier for the formular
+                            example: 1
+                          projekt_phase_id:
+                            type: integer
+                            description: ID of the projekt phase this formular belongs
+                              to
+                            example: 5
+                          formular_fields_count:
+                            type: integer
+                            description: Number of form fields defined in this formular
+                            example: 12
+                          formular_answers_count:
+                            type: integer
+                            description: Number of participant responses submitted
+                              to this formular
+                            example: 45
+                          projekt_phase:
+                            type: object
+                            description: The projekt phase this formular belongs to
+                            properties:
+                              id:
+                                type: integer
+                                example: 5
+                              title:
+                                type: string
+                                nullable: true
+                                example: Feedback Phase
+                              type:
+                                type: string
+                                example: ProjektPhase::FormularPhase
+                              projekt_id:
+                                type: integer
+                                example: 2
+                          projekt:
+                            type: object
+                            description: The projekt this formular belongs to
+                            properties:
+                              id:
+                                type: integer
+                                example: 2
+                              title:
+                                type: string
+                                example: Community Survey
+                          created_at:
+                            type: string
+                            format: date_time
+                            description: Timestamp when the formular was created
+                            example: '2024-01-10T10:00:00Z'
+                          updated_at:
+                            type: string
+                            format: date_time
+                            description: Timestamp when the formular was last modified
+                            example: '2024-01-15T14:30:00Z'
+                        required:
+                        - id
+                        - projekt_phase_id
+                        - created_at
+                        - updated_at
+                    required:
+                    - formular
+                required:
+                - data
+        '404':
+          description: formular not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+    delete:
+      summary: Delete a formular
+      tags:
+      - Formulars
+      security:
+      - bearer_auth: []
+      description: "Delete a formular and all associated form fields and submitted
+        answers. This action is permanent and cannot be undone. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      responses:
+        '200':
+          description: formular destroyed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
+        '422':
+          description: unable to delete formular
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
           content:
             application/json:
               schema:
@@ -10108,6 +10671,111 @@ paths:
               required:
               - projekt_phase_setting
         description: Setting with required key and optional value to update or create
+  "/api/projekt_phases/{id}/update_settings":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt Phase ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update multiple projekt phase settings
+      tags:
+      - Projekt Phases
+      security:
+      - bearer_auth: []
+      description: "Bulk-update several projekt phase settings in a single request.
+        Provide a settings object mapping each setting key to its new value; missing
+        keys are created. Returns the list of updated keys and a per-key errors map
+        for any that failed. \n\n*Authorization: Requires `admin` access level. Requests
+        with `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: settings processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      updated:
+                        type: array
+                        items:
+                          type: string
+                      errors:
+                        type: object
+                    required:
+                    - updated
+                    - errors
+                required:
+                - data
+        '422':
+          description: settings parameter missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settings:
+                  type: object
+                  description: Map of setting key => value (e.g. feature.general.newest_first).
+                  additionalProperties:
+                    type: string
+                  example:
+                    feature.general.newest_first: active
+              required:
+              - settings
+        description: Object whose keys are projekt phase setting keys and whose values
+          are the new setting values
   "/api/projekt_phases/{id}":
     parameters:
     - name: id
@@ -10947,6 +11615,129 @@ paths:
                       nullable: true
         description: Page attributes containing title (main heading) and subtitle
           (tagline) to update
+  "/api/projekts/{id}/update_page_image":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update projekt page image
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      description: "Replace the projekt page header/cover image. Provide the image
+        as base64-encoded data under image_attributes. Returns the updated projekt.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: projekt page image updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt:
+                        "$ref": "#/components/schemas/Projekt"
+                    required:
+                    - projekt
+                required:
+                - data
+        '422':
+          description: no image provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - admin access required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt:
+                  type: object
+                  properties:
+                    image_attributes:
+                      type: object
+                      description: Image to set as the projekt page image. Upload
+                        as base64-encoded data.
+                      properties:
+                        id:
+                          type: integer
+                          nullable: true
+                        attachment:
+                          type: string
+                          description: 'Base64-encoded image file. Required. Supported
+                            formats: JPEG, PNG, GIF, WebP (recommended max 5MB).'
+                        title:
+                          type: string
+                          nullable: true
+                          description: Image caption or alt text used for accessibility.
+                        credits:
+                          type: string
+                          nullable: true
+                          description: Image source attribution or copyright information.
+                        _destroy:
+                          type: boolean
+                          nullable: true
+                          description: Set to true to remove the current page image.
+                      required:
+                      - attachment
+                  required:
+                  - image_attributes
+              required:
+              - projekt
+        description: Projekt image attributes containing the base64-encoded attachment
+          to set as the page image
   "/api/projekts/{id}/update_setting":
     parameters:
     - name: id
@@ -11083,6 +11874,113 @@ paths:
               - setting
         description: 'Setting key/value pair: key identifies the setting (e.g., show_map,
           enable_comments), value is the new setting value'
+  "/api/projekts/{id}/update_settings":
+    parameters:
+    - name: id
+      in: path
+      description: Projekt ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Update multiple projekt settings
+      tags:
+      - Projekts
+      security:
+      - bearer_auth: []
+      description: "Bulk-update several projekt settings in a single request. Provide
+        a settings object mapping each existing setting key to its new value. Returns
+        the list of updated keys and a per-key errors map for keys that could not
+        be updated (e.g. unknown keys). \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: settings processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      updated:
+                        type: array
+                        items:
+                          type: string
+                      errors:
+                        type: object
+                    required:
+                    - updated
+                    - errors
+                required:
+                - data
+        '422':
+          description: settings parameter missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                settings:
+                  type: object
+                  description: Map of setting key => value. Each key must match an
+                    existing projekt setting.
+                  additionalProperties:
+                    type: string
+                  example:
+                    show_map: 'true'
+                    enable_comments: 'false'
+              required:
+              - settings
+        description: Object whose keys are setting keys and whose values are the new
+          setting values
   "/api/projekts/{id}/update_body":
     parameters:
     - name: id
@@ -12906,6 +13804,105 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/livestreams/{livestream_id}/questions":
+    parameters:
+    - name: livestream_id
+      in: path
+      description: Projekt Livestream ID
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a question for a livestream
+      tags:
+      - Questions
+      security:
+      - bearer_auth: []
+      description: "Create a question attached to a specific livestream. The question
+        is associated with the livestream and its projekt phase automatically. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: projekt question created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      projekt_question:
+                        type: object
+                    required:
+                    - projekt_question
+                required:
+                - data
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projekt_question:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: Title of the question
+                  required:
+                  - title
+              required:
+              - projekt_question
+        description: Projekt question creation payload
   "/api/projekt_phases/{projekt_phase_id}/texts":
     parameters:
     - name: projekt_phase_id
@@ -13031,6 +14028,24 @@ tags:
   description: Questions within polls
 - name: Poll Question Answers
   description: Answer options for poll questions
+- name: Question Options
+  description: Answer options for projekt phase questions
+- name: Budget Phases
+  description: Workflow phases and timeline for budgets
+- name: Milestone Statuses
+  description: Status definitions for milestones
+- name: Progress Bars
+  description: Progress indicators for projekt phases
+- name: Idea Categories
+  description: Categories for citizen ideas
+- name: Idea Officers
+  description: Officers responsible for citizen ideas
+- name: Deficiency Report Categories
+  description: Categories for deficiency reports
+- name: Masterportal
+  description: Masterportal GIS integration endpoints
+- name: Error Handling
+  description: Responses for unknown or unsupported API routes
 x-tagGroups:
 - name: Auth
   tags:
@@ -13042,15 +14057,19 @@ x-tagGroups:
   - Proposals
   - Polls
   - Milestones
+  - Milestone Statuses
   - Budgets
   - Budget Investments
+  - Budget Phases
   - Comments
   - Events
   - Arguments
   - Livestreams
   - Notifications
   - Questions
+  - Question Options
   - Formulars
+  - Progress Bars
   - Texts
   - Iframes
   - Point Of Interest Categories
@@ -13060,9 +14079,18 @@ x-tagGroups:
 - name: Ideas
   tags:
   - Ideas
+  - Idea Categories
+  - Idea Officers
 - name: Deficiency Reports
   tags:
   - Deficiency Reports
+  - Deficiency Report Categories
+- name: Integrations
+  tags:
+  - Masterportal
+- name: General
+  tags:
+  - Error Handling
 components:
   securitySchemes:
     bearer_auth:
@@ -14079,22 +15107,96 @@ components:
           nullable: true
           description: When the event ends. Null means no specific end time is set.
           example: '2025-02-01T20:00:00Z'
+        summary:
+          type: string
+          nullable: true
+          description: Short summary or teaser shown in listings
+          example: Quarterly city planning meeting
         location:
           type: string
           nullable: true
           description: Physical location or venue where the event takes place. Null
             for virtual-only events.
           example: City Hall
-        registration_url:
+        weblink:
           type: string
           nullable: true
-          description: URL for event registration or further information. Null if
-            no registration link is provided.
+          description: URL for event registration, livestream, or further information.
+            Null if no link is provided.
           example: https://example.com/register
+        open_ended:
+          type: boolean
+          nullable: true
+          description: Whether the event has no fixed end time
+          example: false
+        language:
+          type: string
+          nullable: true
+          description: Primary language of the event (e.g., "de", "en")
+          example: de
         projekt_phase_id:
           type: integer
           description: ID of the projekt phase this event is associated with
           example: 10
+        accessibility:
+          type: object
+          description: Accessibility features available at the event
+          properties:
+            wheelchair_accessible:
+              type: boolean
+              nullable: true
+            accessible_toilet:
+              type: boolean
+              nullable: true
+            disabled_parking_nearby:
+              type: boolean
+              nullable: true
+            tactile_guidance_systems:
+              type: boolean
+              nullable: true
+            induction_loop_available:
+              type: boolean
+              nullable: true
+            assistance_dogs_welcome:
+              type: boolean
+              nullable: true
+            sign_language_interpreter:
+              type: boolean
+              nullable: true
+        projekt_phase:
+          type: object
+          description: Summary of the projekt phase this event belongs to (present
+            when the phase is loaded)
+          properties:
+            id:
+              type: integer
+              example: 10
+            title:
+              type: string
+              nullable: true
+              example: Events Phase
+            type:
+              type: string
+              example: ProjektPhase::EventPhase
+            projekt_id:
+              type: integer
+              example: 2
+        projekt:
+          type: object
+          description: Summary of the projekt this event belongs to (present when
+            the projekt is loaded)
+          properties:
+            id:
+              type: integer
+              example: 2
+            title:
+              type: string
+              example: Community Survey
+        image:
+          type: object
+          nullable: true
+          description: Associated image, present only when the event has an attached
+            image
         created_at:
           type: string
           format: date_time

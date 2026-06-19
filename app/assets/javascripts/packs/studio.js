@@ -40,6 +40,7 @@
 //= require ../custom/components/shared/tabs
 //= require ../studio/modules/ContentBlockTemplateSelector
 //= require ../studio/modules/ContentBlock/Crud
+//= require ../studio/modules/ContentBlock/MapEmbed
 //= require ../studio/modules/ContentBlock/AiEditMode
 //= require ../studio/modules/ContentBlock/CodeEditMode
 //= require ../studio/modules/ContentBlock/EditModeSwitcher

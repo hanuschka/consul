@@ -199,6 +199,26 @@ ProjektStudio.utils.sanitizeAdminHtml = function(html) {
   return ProjektStudio.utils.sanitizeHtml(html, ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST);
 }
 
+// Map embeds are hydrated into live maps for display in the studio, but the
+// saved body must always keep the {{projekt_map}} token so the server
+// re-renders the map on each request. This strips any hydrated map markup and
+// restores the token before a content block is persisted.
+ProjektStudio.utils.resetMapEmbeds = function(html) {
+  if (!html || html.indexOf("js-projekt-map-embed") === -1) return html;
+
+  const container = ProjektStudio.utils.htmlToDomElement(html);
+
+  container.querySelectorAll(".js-projekt-map-embed").forEach((embed) => {
+    embed.querySelectorAll(".projekt-map-shortcode").forEach((map) => map.remove());
+
+    if (embed.innerHTML.indexOf("{{projekt_map}}") === -1) {
+      embed.appendChild(document.createTextNode("{{projekt_map}}"));
+    }
+  });
+
+  return container.innerHTML;
+}
+
 ProjektStudio.utils.formatHTML = function(html) {
   let formatted = '';
   let indent = 0;

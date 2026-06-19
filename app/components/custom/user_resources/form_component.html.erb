@@ -100,6 +100,11 @@
           <%= f.hidden_field :projekt_phase_id, value: projekt_phase.id %>
         <% end %>
 
+        <%# Frontend resources are authored in the default locale only. Forcing
+            I18n.locale here makes visible_locales resolve to [default], so the
+            single field-set is shown, saved, and the image renders once —
+            without touching the general translatable_fields/visible_locales. %>
+        <% I18n.with_locale(I18n.default_locale) do %>
         <%= f.translatable_fields do |translations_form| %>
           <div class="js-suggest" data-locale="<%= translations_form.locale %>"></div>
 
@@ -129,6 +134,7 @@
             label: false,
             placeholder: description_placeholder,
             class: "html-area #{helpers.ck_editor_class(current_user)} js-user-resource-form-description" %>
+        <% end %>
         <% end %>
 
         <% if show_labels_selector? || show_sentiments_selector? || show_idea_category_selector? || show_map_input? %>

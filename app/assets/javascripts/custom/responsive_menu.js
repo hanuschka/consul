@@ -32,7 +32,7 @@
         if (header) excludeElements.push(header);
         if (menuWrapper) excludeElements.push(menuWrapper);
 
-        App.FocusTrap.setBackgroundInert(excludeElements);
+        App.FocusTrap.setBackgroundInert(excludeElements, document.getElementById('responsive-menu'));
       } else {
         App.FocusTrap.removeBackgroundInert();
       }

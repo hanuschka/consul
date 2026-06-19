@@ -71,6 +71,8 @@
       }
 
       this.activeSection = cacheKey;
+
+      this.hydrateActivePanelMaps($container);
     },
 
     restoreFromCache(cacheKey) {
@@ -84,6 +86,8 @@
       this.reinitContentComponents($container);
       this.toggleFallbackNote(this.isFallbackContent($container));
       this.activeSection = cacheKey;
+
+      this.hydrateActivePanelMaps($container);
     },
 
     isFallbackContent($container) {
@@ -99,7 +103,24 @@
       App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(document);
       this.restoreOrbitHeights($container);
 
-      $container.find('.js-tabs').on('tabs:changed', () => this.restoreOrbitHeights($container));
+      $container.find('.js-tabs').on('tabs:changed', () => this.handleTabsChanged($container));
+    },
+
+    handleTabsChanged($container) {
+      this.restoreOrbitHeights($container);
+      this.hydrateActivePanelMaps($container);
+    },
+
+    // Map templates mark their map region with a {{projekt_map}} placeholder.
+    // Hydrate only the visible (active) tab panel so Leaflet initializes at the
+    // real container size — a map built inside a hidden panel renders at 0x0.
+    // Idempotent: embeds already hydrated (token gone) are skipped.
+    hydrateActivePanelMaps($container) {
+      const activePanel = $container.find(".shared-tabs-panel.is-active")[0];
+
+      if (!activePanel) return
+
+      App.ContentBlockEditor.MapEmbed.hydrateIn(activePanel);
     },
 
     storeOrbitHeights($container) {

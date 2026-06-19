@@ -55,7 +55,9 @@ class Adm::BaseController < ActionController::Base
       namespace = current_adm_section_namespace
       return I18n.t("adm.title") if namespace == "Adm"
 
-      I18n.t("#{namespace.gsub('::', '.').underscore}.title")
+      section_key = namespace.demodulize.underscore
+      Setting["#{section_key}.feature_name"].presence ||
+        I18n.t("#{namespace.gsub('::', '.').underscore}.title")
     end
 
     def policy_class_for(record)

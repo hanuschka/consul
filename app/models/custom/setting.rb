@@ -228,8 +228,6 @@ class Setting < ApplicationRecord
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.admins_must_assign_officer": false,
-        "deficiency_reports.officers_can_administer_assigned_reports": true,
-        "deficiency_reports.officers_can_edit_assigned_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
@@ -241,12 +239,11 @@ class Setting < ApplicationRecord
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
+        "deficiency_reports.show_homepage_cta": false,
         "deficiency_reports.feature_name": nil,
         "deficiency_reports.create_cta": nil,
 
         "ideas.admins_must_assign_officer": false,
-        "ideas.officers_can_administer_assigned_reports": true,
-        "ideas.officers_can_edit_assigned_reports": false,
         "ideas.enable_comments": true,
         "ideas.intro_text": false,
         "ideas.enable_geoman_controls_in_maps": true,

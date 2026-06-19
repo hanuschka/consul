@@ -14,13 +14,18 @@
     </div>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: ApiClient.human_attribute_name(:name), hint: t("adm.api_clients.form.name_description")) do %>
+  <%= render Kern::FormFieldComponent.new(
+    label: ApiClient.human_attribute_name(:name),
+    hint: t("adm.api_clients.form.name_description"),
+    stacked: true
+  ) do %>
     <%= f.text_field :name, label: false, placeholder: ApiClient.human_attribute_name(:name) %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(
     label: ApiClient.human_attribute_name(:access_level),
-    hint: t("adm.api_clients.form.access_level_description")
+    hint: t("adm.api_clients.form.access_level_description"),
+    stacked: true
   ) do %>
     <%= f.select :access_level,
       options_for_select(
@@ -57,7 +62,7 @@
     <% if @api_client.user.present? %>
       <%= render Adm::SystemUserInfoComponent.new(user: @api_client.user, kind: :api_client) %>
 
-      <div class="mt-3">
+      <div class="mt-3 mb-4">
         <%= kern_link_button edit_adm_api_client_service_user_path(@api_client),
           text: t("adm.api_clients.form.edit_service_user"),
           icon: "edit",
@@ -66,7 +71,8 @@
     <% else %>
       <%= render Kern::FormFieldComponent.new(
         label: ApiClient.human_attribute_name(:service_user_email),
-        hint: t("adm.api_clients.form.service_user_email_description")
+        hint: t("adm.api_clients.form.service_user_email_description"),
+        stacked: true
       ) do %>
         <%= f.email_field :service_user_email, label: false, placeholder: ApiClient.human_attribute_name(:service_user_email) %>
       <% end %>

@@ -24,59 +24,7 @@
     <%= render "filter_bar", live: true %>
 
     <% if @api_request_logs.any? %>
-      <div class="kern-table-responsive" tabindex="0">
-      <table class="kern-table">
-        <thead class="kern-table__head">
-          <tr class="kern-table__row">
-            <th scope="col" class="kern-table__header"><%= t(".id") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".http_method") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".request_path") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".response_status") %></th>
-            <th scope="col" class="kern-table__header"><%= t(".api_client") %></th>
-            <th scope="col" class="kern-table__header"><%= t("adm.shared.created_at") %></th>
-            <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
-          </tr>
-        </thead>
-
-        <tbody class="kern-table__body">
-          <% @api_request_logs.each do |log| %>
-            <tr id="<%= dom_id(log) %>" class="kern-table__row">
-              <td class="kern-table__cell"><%= log.id %></td>
-              <td class="kern-table__cell">
-                <span class="kern-badge kern-badge--<%= log.http_method_badge_variant %>"><%= log.http_method %></span>
-              </td>
-              <td class="kern-table__cell"><%= log.request_path %></td>
-              <td class="kern-table__cell">
-                <% if log.response_status.present? %>
-                  <span class="kern-badge kern-badge--<%= log.response_status < 400 ? 'success' : 'danger' %>">
-                    <%= log.response_status %>
-                  </span>
-                <% end %>
-              </td>
-              <td class="kern-table__cell">
-                <% if log.api_client.present? %>
-                  <%= link_to log.api_client.name, adm_api_client_path(log.api_client), class: "kern-link" %>
-                <% end %>
-              </td>
-              <td class="kern-table__cell"><%= l(log.created_at, format: :short) %></td>
-              <td class="kern-table__cell">
-                <%= render Kern::Table::ActionsComponent.new do |actions| %>
-                  <% actions.with_action(
-                    label: t("adm.shared.show"),
-                    url: adm_api_request_log_path(log),
-                    icon: "visibility"
-                  ) %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      </div>
-
-      <div class="my-5">
-        <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
-      </div>
+      <%= render "adm/api_request_logs/table", api_request_logs: @api_request_logs, pagy: @pagy %>
     <% else %>
       <%= empty_state(title: t(".no_results"), icon: "filter_alt_off") %>
     <% end %>

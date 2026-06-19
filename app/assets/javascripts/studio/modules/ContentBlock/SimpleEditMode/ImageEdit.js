@@ -146,6 +146,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
   handleImageMouseEnter(e) {
     if (!this.isActive || this.isDragging) return
+    if (e.currentTarget.closest(".js-content-block-element-not-editable")) return
 
     this.showOverlayForImage(e.currentTarget)
   },

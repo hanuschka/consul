@@ -9,6 +9,30 @@ de:
       access_level:
         public_data: Öffentliche Daten
         admin: Admin
+        tooltip:
+          public_data:
+            description: >
+              Nur lesender Zugriff auf öffentlich verfügbare Inhalte. Dieser
+              Client kann ausschließlich GET-Anfragen senden — er kann nichts
+              erstellen, ändern oder löschen. Ideal für Integrationen, die
+              Daten lediglich anzeigen, etwa ein Website-Widget oder ein
+              öffentliches Dashboard.
+            alternative_label: Admin-Modus
+            alternative: >
+              Gewährt vollständigen Zugriff zum Erstellen, Aktualisieren und
+              Löschen. Nur wählen, wenn der Client tatsächlich Daten schreiben
+              muss.
+          admin:
+            description: >
+              Vollständiger Zugriff auf alle Ressourcen. Dieser Client kann
+              Inhalte über die API abrufen, erstellen, aktualisieren und
+              löschen. Nur an vertrauenswürdige Integrationen vergeben, die
+              wirklich Schreibzugriff benötigen.
+            alternative_label: Modus „Öffentliche Daten"
+            alternative: >
+              Beschränkt den Client auf nur lesende GET-Anfragen auf
+              öffentliche Inhalte. Für Integrationen wählen, die Daten nur
+              anzeigen müssen.
       index:
         title: API-Clients
         intro: >
@@ -20,6 +44,11 @@ de:
         no_api_clients: Keine API-Clients vorhanden.
         delete_confirm: >
           Sind Sie sicher, dass Sie diesen API-Client löschen möchten?
+      logs:
+        title: API-Anfragen-Logs
+        intro: >
+          Alle API-Anfragen des Clients „%{name}". Nutzen Sie die Filter, um nach Pfad, Methode, Status oder Zeitraum einzugrenzen.
+        no_logs: Für diesen API-Client liegen keine Anfragen-Logs vor.
       new:
         title: Neuen API-Client erstellen
       edit:
@@ -71,6 +100,24 @@ de:
           direkte Anmeldung mit diesem Benutzer ist nicht möglich.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Hintergrundbild
+        service_user_username_description: >
+          Der interne Anmeldename des Service-Benutzers. Er wird automatisch aus
+          dem Namen des API-Clients erzeugt, muss plattformweit eindeutig sein
+          und dient ausschließlich der internen Zuordnung.
+        service_user_first_name_description: >
+          Vorname des Service-Benutzers. Bildet zusammen mit dem Nachnamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_last_name_description: >
+          Nachname des Service-Benutzers. Bildet zusammen mit dem Vornamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_avatar_description: >
+          Profilbild des Service-Benutzers. Es wird neben den über die API
+          erstellten Inhalten angezeigt. Quadratische Bilder werden am besten
+          dargestellt.
+        service_user_background_image_description: >
+          Hintergrundbild für die öffentliche Profilseite des Service-Benutzers.
         use_system_user_label: Systembenutzer verwenden
         use_system_user_description: >
           Wenn aktiviert, werden über diesen API-Client erstellte Inhalte

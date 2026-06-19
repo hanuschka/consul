@@ -99,7 +99,7 @@ class DeficiencyReportsController < ApplicationController
     answer = DeficiencyReport::ConfirmationPopupAnswer.find_by(id: params[:answer_id])
     notice = answer&.flash_notice.presence
     flash[:notice] = notice if notice
-    redirect_to deficiency_reports_path
+    redirect_back(fallback_location: deficiency_reports_path)
   end
 
   def create

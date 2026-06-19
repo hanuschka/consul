@@ -70,11 +70,7 @@ class PagesController < ApplicationController
 
       @cards = @custom_page.cards
 
-      @custom_page.content = process_shortcodes_for(
-        obj: @custom_page,
-        attr: :content,
-        projekt: @projekt,
-      )
+      @custom_page.content = process_shortcodes(@custom_page.content, projekt: @projekt)
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
           @custom_page.content&.include?("</iframe>")

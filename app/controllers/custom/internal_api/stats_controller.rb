@@ -1,4 +1,4 @@
-class InternalApi::MonitoringController < InternalApi::BaseController
+class InternalApi::StatsController < InternalApi::BaseController
   def show
     render json: {
       status:       "online",

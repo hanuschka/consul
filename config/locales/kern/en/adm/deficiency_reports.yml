@@ -3,6 +3,7 @@ en:
     deficiency_reports:
       home:
         title: Welcome to the deficiency reporter
+        welcome: Welcome to %{feature}
         stats:
           total: Total
           new_this_week: New this week
@@ -14,6 +15,7 @@ en:
           closed: Closed reports
       menu:
         aria_label: Deficiency reporter navigation
+        aria_label_feature: "%{feature} navigation"
         items:
           home: Home
           officers: Team
@@ -28,13 +30,22 @@ en:
           stats: Statistics
           ai_settings: AI settings
       email_templates:
+        tabs:
+          templates: Templates
+          settings: Settings
         index:
           title: System emails
           page_hint: Customize the subject and body of the emails sent for deficiency reports. Leave a template empty to keep the default text.
+          groups:
+            external: Emails to citizens
+            internal: Emails to staff
+        settings:
+          page_hint: Configure the sender address and the shared footer used in all deficiency-report emails.
       deficiency_reports:
         index:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
+          new_button: New report
           download_csv: Download CSV
           download_geojson: Download GeoJSON
           no_items_title: No reports available
@@ -77,8 +88,7 @@ en:
           download_pdf: Download PDF
           view_on_site: View on the website
           admin_accepted_status: Approval
-          accepted: Approved
-          not_accepted: Not approved
+          admin_accepted_status_hint: Once approval is enabled, this report is published on the website and visible to all regular users. Without approval it stays hidden and is only visible internally.
           status: Status
           hidden_at: Hidden on
           created_at: Created on
@@ -104,9 +114,15 @@ en:
           official_answer_hint: Please enter the official response for this deficiency report.
         update_official_answer:
           success: Official response updated successfully.
+        new:
+          title: Create new report
         edit:
           title: Edit deficiency report
-          no_category: "-- No category --"
+        form_fields:
+          placeholders:
+            title: e.g. Broken street light on Main Street
+            video_url: https://www.youtube.com/watch?v=...
+            on_behalf_of: e.g. Jane Doe
           labels:
             title: Title
             description: Description
@@ -117,13 +133,13 @@ en:
             map_location: Map location
             on_behalf_of: On behalf of
           hints:
-            title: The title of the report is shown in the list view and as the heading on the detail page. It should briefly and precisely describe the reported deficiency so officers and citizens can grasp the content at a glance. Changes to the title become visible on the public page immediately.
-            description: The description contains all relevant details about the reported deficiency, such as its exact state, possible causes, and impact. This text is displayed publicly on the detail page of the report. A precise description makes it easier for officers to assess the issue and significantly speeds up processing.
-            image: The image visually documents the reported deficiency and is shown on the public detail page of the report. A meaningful photo helps officers assess the deficiency faster and prioritize processing. Common image formats like JPG and PNG are supported.
-            documents: Here you can add supplementary documents like expert reports, plans, or reports to the report. The files are made available for download on the detail page and are visible to all users. Multiple documents can be uploaded at once to document the matter comprehensively.
-            video_url: Enter the URL of a video documenting the reported deficiency. The video is embedded on the public detail page of the report. Links from common video platforms like YouTube or Vimeo are supported. A video can illustrate the matter better than photos alone.
-            on_behalf_of: Enter the name of the person on whose behalf the report was created. This field is used when an officer or administrator records a report on behalf of a citizen. The name is shown on the detail page and helps with attribution of the report.
-            category: The category assigns the report to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
+            title: The title of the entry is shown in the list view and as the heading on the detail page. It should briefly and precisely describe the reported deficiency so officers and citizens can grasp the content at a glance. Changes to the title become visible on the public page immediately.
+            description: The description contains all relevant details about the reported deficiency, such as its exact state, possible causes, and impact. This text is displayed publicly on the detail page of the entry. A precise description makes it easier for officers to assess the issue and significantly speeds up processing.
+            image: The image visually documents the reported deficiency and is shown on the public detail page of the entry. A meaningful photo helps officers assess the deficiency faster and prioritize processing. Common image formats like JPG and PNG are supported.
+            documents: Here you can add supplementary documents like expert reports, plans, or reports to the entry. The files are made available for download on the detail page and are visible to all users. Multiple documents can be uploaded at once to document the matter comprehensively.
+            video_url: Enter the URL of a video documenting the reported deficiency. The video is embedded on the public detail page of the entry. Links from common video platforms like YouTube or Vimeo are supported. A video can illustrate the matter better than photos alone.
+            on_behalf_of: Enter the name of the person on whose behalf the entry was created. This field is used when an officer or administrator records an entry on behalf of a citizen. The name is shown on the detail page and helps with attribution of the entry.
+            category: The category assigns the entry to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
         administer:
           title: Administer
           status: Status

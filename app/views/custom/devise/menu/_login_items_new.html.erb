@@ -65,7 +65,7 @@
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_deficiency_reports_root_path, class: "flyout-item--link" do %>
         <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["deficiency_reports"]) %>
-        <%= t("custom.layouts.header.deficiency_report_management") %>
+        <%= Setting["deficiency_reports.feature_name"].presence || t("custom.layouts.header.deficiency_report_management") %>
       <% end %>
     </li>
   <% end %>
@@ -74,7 +74,7 @@
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_ideas_root_path, class: "flyout-item--link" do %>
         <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["ideas"]) %>
-        <%= t("custom.layouts.header.idea_management") %>
+        <%= Setting["ideas.feature_name"].presence || t("custom.layouts.header.idea_management") %>
       <% end %>
     </li>
   <% end %>

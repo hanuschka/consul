@@ -11,7 +11,8 @@ class Kern::MapComponent < ApplicationComponent
     longitude: nil,
     zoom: nil,
     resources: nil,
-    feature_collection: nil
+    feature_collection: nil,
+    error: nil
   )
     @map_location = map_location
     @form = form
@@ -25,9 +26,10 @@ class Kern::MapComponent < ApplicationComponent
     @zoom = zoom
     @resources = resources
     @feature_collection = feature_collection
+    @error = error
   end
 
-  attr_reader :map_location, :form, :editable, :admin_editor, :height, :width
+  attr_reader :map_location, :form, :editable, :admin_editor, :height, :width, :error
 
   def rendering_library_options
     MapLocation.rendering_libraries.keys.map do |key|

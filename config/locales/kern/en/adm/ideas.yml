@@ -3,6 +3,7 @@ en:
     ideas:
       home:
         title: Welcome to ideas management
+        welcome: Welcome to %{feature}
         stats:
           total: Total
           new_this_week: New this week
@@ -14,6 +15,7 @@ en:
           pending: Pending ideas
       menu:
         aria_label: Ideas navigation
+        aria_label_feature: "%{feature} navigation"
         items:
           home: Home
           officers: Team

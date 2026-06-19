@@ -3,6 +3,7 @@ de:
     ideas:
       home:
         title: Willkommen im Ideenmanagement
+        welcome: Willkommen im %{feature}
         stats:
           total: Gesamt
           new_this_week: Neu diese Woche
@@ -14,6 +15,7 @@ de:
           pending: Ausstehende Ideen
       menu:
         aria_label: Ideen Navigation
+        aria_label_feature: "%{feature} Navigation"
         items:
           home: Home
           officers: Team

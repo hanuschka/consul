@@ -197,9 +197,6 @@ en:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new idea to a responsible officer. Without assignment, the idea cannot be processed. This ensures that every idea has a responsible person and no submission remains without clear ownership.
-      officers_can_administer_assigned_reports: Officer administration for ideas
-      officers_can_administer_assigned_reports_description: >
-        Gives officers full administrative control over the ideas assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view ideas, not manage them or make structural adjustments.
       enable_comments: Comments
       enable_comments_description: >
         When enabled, users can write comments below an idea. This enables public exchange between citizens and administration, e.g. for follow-up questions, additional suggestions, or supplementary notes on the submitted idea. Comments can be moderated by administrators.
@@ -234,9 +231,6 @@ en:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new deficiency report to a responsible officer. Without assignment, the report cannot be processed. This ensures that every report has a responsible person and no report remains without ownership.
-      officers_can_administer_assigned_reports: Officer administration for deficiencies
-      officers_can_administer_assigned_reports_description: >
-        Gives officers full administrative control over the deficiency reports assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view reports, not manage them.
       allow_voting: User rating per deficiency
       allow_voting_description: >
         Enables a rating feature letting users support or prioritize individual deficiency reports. The number of ratings is shown publicly and helps administration identify frequently reported or especially urgent deficiencies sooner and prioritize accordingly.

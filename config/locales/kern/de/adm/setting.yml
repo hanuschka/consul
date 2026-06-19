@@ -200,9 +200,6 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Idee manuell einem zuständigen Sachbearbeiter zuweisen. Ohne Zuweisung kann die Idee nicht bearbeitet werden. Dies stellt sicher, dass jede Idee eine verantwortliche Person erhält und keine Einreichung ohne klare Zuständigkeit bleibt.
-      officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Ideen
-      officers_can_administer_assigned_reports_description: >
-        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Ideen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Ideen nur einsehen, aber nicht verwalten oder strukturell anpassen.
       enable_comments: Kommentarfunktion
       enable_comments_description: >
         Wenn aktiviert, können Nutzer unterhalb einer Idee Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, weiterführende Anregungen oder ergänzende Hinweise zur eingereichten Idee. Kommentare können von Administratoren moderiert werden.
@@ -237,9 +234,6 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
-      officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Mängel
-      officers_can_administer_assigned_reports_description: >
-        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Mangelmeldungen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Meldungen nur einsehen, aber nicht verwalten.
       allow_voting: Nutzer-Bewertung pro Mangel
       allow_voting_description: >
         Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.

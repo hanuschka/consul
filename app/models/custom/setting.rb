@@ -228,7 +228,6 @@ class Setting < ApplicationRecord
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.admins_must_assign_officer": false,
-        "deficiency_reports.officers_can_administer_assigned_reports": true,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
@@ -246,7 +245,6 @@ class Setting < ApplicationRecord
         "deficiency_reports.new_form_title_placeholder": nil,
 
         "ideas.admins_must_assign_officer": false,
-        "ideas.officers_can_administer_assigned_reports": true,
         "ideas.enable_comments": true,
         "ideas.intro_text": false,
         "ideas.enable_geoman_controls_in_maps": true,

@@ -7,7 +7,10 @@
   compact: true
 ) do |header| %>
   <% header.with_actions do %>
-    <div class="ml-auto">
+    <div class="ml-auto d-flex gap-2">
+      <%= kern_link_button logs_adm_api_client_path(@api_client),
+        text: t("adm.api_clients.logs.title"),
+        icon: "receipt_long" %>
       <%= kern_link_button edit_adm_api_client_path(@api_client), text: t("adm.shared.edit"), icon: "edit" %>
     </div>
   <% end %>

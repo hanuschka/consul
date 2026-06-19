@@ -40,6 +40,11 @@ en:
         no_api_clients: No API clients available.
         delete_confirm: >
           Are you sure you want to delete this API client?
+      logs:
+        title: API request logs
+        intro: >
+          All API requests made by the client “%{name}”. Use the filters to narrow by path, method, status or date range.
+        no_logs: No request logs available for this API client.
       new:
         title: Create new API client
       edit:

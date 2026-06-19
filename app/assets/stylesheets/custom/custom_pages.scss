@@ -188,6 +188,19 @@ span.sidebar-projekt-phases-title {
 // and, when lazy-loading, a .map-data-wrapper. Both must carry the embed
 // height so the Leaflet container's height: 100% resolves to the embed's
 // fixed height instead of collapsing to 0.
+//
+// border-radius: inherit propagates the embed's per-template radius (set inline
+// on .projekt-map-embed) down to the Leaflet container. Rounding the ancestor
+// alone does NOT clip Leaflet — its tile panes are transformed and escape an
+// ancestor's overflow/border-radius clip. The .map_location (.leaflet-container)
+// already sets overflow: hidden, so giving IT the radius clips the panes.
+.projekt-map-embed .projekt-map-shortcode,
+.projekt-map-embed .projekt-map-shortcode > div,
+.projekt-map-embed .projekt-map-shortcode .map-data-wrapper,
+.projekt-map-embed .projekt-map-shortcode .map_location {
+  border-radius: inherit;
+}
+
 .projekt-map-embed .projekt-map-shortcode > div,
 .projekt-map-embed .projekt-map-shortcode .map-data-wrapper {
   height: 100%;
@@ -196,7 +209,6 @@ span.sidebar-projekt-phases-title {
 .projekt-map-embed .projekt-map-shortcode .map_location {
   height: 100%;
   min-height: 0;
-  border-radius: 0;
 }
 
 // .projekt-phase {

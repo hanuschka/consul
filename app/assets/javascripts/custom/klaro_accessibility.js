@@ -11,6 +11,8 @@
     initialize: function() {
       this.disconnectObservers();
 
+      this.isModalActive = false;
+
       this.klaroElement = document.getElementById('klaro');
 
       if (this.klaroElement) {

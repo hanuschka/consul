@@ -140,6 +140,8 @@
 
 var initialize_modules = function() {
   "use strict";
+  App.FocusTrap.resetInert();
+  App.FocusTrap.initialize();
   App.RemoveOnMobileSections.initialize();
   App.Answers.initialize();
   App.Questions.initialize();

@@ -17,6 +17,36 @@
 
     inertStack: [],
 
+    bound: false,
+
+    initialize: function() {
+      if (this.bound) return;
+
+      this.bound = true;
+
+      var prune = this.pruneStaleTraps.bind(this);
+
+      document.addEventListener("focusin", prune, true);
+      document.addEventListener("keydown", prune, true);
+      document.addEventListener("click", prune, true);
+    },
+
+    pruneStaleTraps: function() {
+      while (this.inertStack.length > 0 && this.isTopTrapStale()) {
+        this.removeBackgroundInert();
+      }
+    },
+
+    isTopTrapStale: function() {
+      var exclude = this.inertStack[this.inertStack.length - 1];
+
+      if (!exclude || exclude.length === 0) return true;
+
+      return !exclude.some(function(el) {
+        return el && el.isConnected && el.getClientRects().length > 0;
+      });
+    },
+
     getFocusableElements: function(container) {
       if (!container) return [];
 
@@ -67,6 +97,11 @@
     },
 
     removeBackgroundInert: function() {
+      if (this.inertStack.length === 0) {
+        this.clearInert();
+        return;
+      }
+
       this.inertStack.pop();
       this.clearInert();
 

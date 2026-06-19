@@ -28,12 +28,17 @@ de:
           stats: Statistiken
           ai_settings: KI-Einstellungen
       email_templates:
+        tabs:
+          templates: Vorlagen
+          settings: Einstellungen
         index:
           title: System-E-Mails
           page_hint: Passen Sie Betreff und Inhalt der E-Mails an, die für Mangelmeldungen versendet werden. Lassen Sie eine Vorlage leer, um den Standardtext beizubehalten.
           groups:
             external: E-Mails an Bürgerinnen und Bürger
             internal: E-Mails an die Verwaltung
+        settings:
+          page_hint: Legen Sie die Absenderadresse und die gemeinsame Fußzeile fest, die in allen Mängelmelder-E-Mails verwendet werden.
       deficiency_reports:
         index:
           title: Meldungen

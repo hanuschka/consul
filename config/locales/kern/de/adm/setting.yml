@@ -12,6 +12,8 @@ de:
     mailer_from_address_description: "Diese E-Mail-Adresse erscheint als Absender bei allen automatisch versendeten E-Mails der Plattform (z. B. Benachrichtigungen, Bestätigungen). Die Adresse muss mit der im Mailserver hinterlegten identisch sein. Änderungen sind nicht selbstständig möglich – bitte wenden Sie sich an den Support von demokratie.today."
     mailer_from_name: "Anzeigename des E-Mail-Absenders"
     mailer_from_name_description: "Dieser Name wird Empfängern als Absender in E-Mails angezeigt. Wählen Sie einen aussagekräftigen Namen, der Ihre Kommune eindeutig identifiziert, z. B. 'Beteiligungsplattform Stadt Musterstadt'. Der Anzeigename kann unabhängig von der technischen Absenderadresse frei angepasst werden und hilft beim Wiedererkennen."
+    mailer_from_deficiency_report_address: "Absenderadresse für Mängelmelder-E-Mails"
+    mailer_from_deficiency_report_address_description: "Diese E-Mail-Adresse wird als Absender für alle automatisch versendeten Mängelmelder-E-Mails verwendet und Bürgerinnen und Bürgern als Kontaktadresse in diesen E-Mails angezeigt. Verwenden Sie eine gültige, für den Versand freigegebene Adresse Ihrer Kommune."
     meta_title: "Seitentitel (Suchmaschinenoptimierung)"
     meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet und erscheint auch im Browser-Tab. Ein klar formulierter Titel verbessert die Sichtbarkeit Ihrer Plattform bei Google. Idealerweise enthält er den Namen der Kommune und einen Hinweis auf Bürgerbeteiligung. Empfohlene Länge: 50-60 Zeichen."
     meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"

@@ -12,6 +12,8 @@ en:
     mailer_from_address_description: "This email address appears as the sender on all automatically sent emails from the platform (e.g. notifications, confirmations). The address must match the one configured on the mail server. Changes cannot be made independently — please contact demokratie.today support."
     mailer_from_name: "Sender display name"
     mailer_from_name_description: "This name is shown to recipients as the sender of emails. Choose a meaningful name that clearly identifies your municipality, e.g. 'Participation Platform City of Exampletown'. The display name can be set independently of the technical sender address and helps with recognition."
+    mailer_from_deficiency_report_address: "Sender address for deficiency report emails"
+    mailer_from_deficiency_report_address_description: "This email address is used as the sender for all automatically sent deficiency-report emails and is shown to citizens as the contact address in those emails. Use a valid, sending-enabled address of your municipality."
     meta_title: "Page title (SEO)"
     meta_title_description: "This title is used by search engines as the main heading in search results and also appears in the browser tab. A clearly formulated title improves your platform's visibility on Google. Ideally it contains the name of the municipality and a reference to citizen participation. Recommended length: 50–60 characters."
     meta_description: "Page description (SEO)"

@@ -28,12 +28,17 @@ en:
           stats: Statistics
           ai_settings: AI settings
       email_templates:
+        tabs:
+          templates: Templates
+          settings: Settings
         index:
           title: System emails
           page_hint: Customize the subject and body of the emails sent for deficiency reports. Leave a template empty to keep the default text.
           groups:
             external: Emails to citizens
             internal: Emails to staff
+        settings:
+          page_hint: Configure the sender address and the shared footer used in all deficiency-report emails.
       deficiency_reports:
         index:
           title: Reports

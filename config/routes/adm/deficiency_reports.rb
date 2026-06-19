@@ -24,7 +24,9 @@ namespace :adm do
       post :order_areas, on: :collection
     end
 
-    resources :email_templates, only: [:index]
+    resources :email_templates, only: [:index] do
+      get :settings, on: :collection
+    end
 
     resource :stats, only: :show
     resource :ai_settings, only: [:show, :update]

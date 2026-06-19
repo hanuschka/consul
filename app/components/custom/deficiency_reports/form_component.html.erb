@@ -29,7 +29,7 @@
       </div>
     <% end %>
 
-    <% if feature?(:allow_images) %>
+    <% if Setting["deficiency_reports.image_upload"].present? %>
       <div class="images">
         <%= render "images/nested_image", imageable: deficiency_report, f: f %>
       </div>

@@ -111,7 +111,7 @@ de:
             Wählen Sie eine vorgefertigte Antwortvorlage aus, um den Text automatisch in das Antwortfeld zu übernehmen. Die Vorlage kann anschließend individuell angepasst werden. Antwortvorlagen werden unter „Antwortvorlagen" in der Seitennavigation verwaltet.
           answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
-          official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Mängelmelder ein.
+          official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. Hinweis: Dieser Text ist öffentlich sichtbar."
         update_official_answer:
           success: Offizielle Antwort wurde erfolgreich aktualisiert.
         new:

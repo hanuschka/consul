@@ -1,6 +1,6 @@
 <% if Setting.new_design_enabled? %>
 
-  <main class="user-resources-form <%= " -no-image" unless feature?(:allow_images) %>">
+  <main class="user-resources-form <%= " -no-image" unless Setting["deficiency_reports.image_upload"].present? %>">
     <% if Setting["deficiency_reports.voice_assistant"].present? && Ai::Settings.ai_available? %>
       <%= render Dt::VoiceAssistantComponent.new(
         assistant_codename: "deficiency_report_voice_assistant",
@@ -41,7 +41,7 @@
                   autocomplete: "off" %>
               </div>
 
-              <% if feature?(:allow_images) %>
+              <% if Setting["deficiency_reports.image_upload"].present? %>
                 <div class="banner-editor-image-attachment">
                   <% if f.object.image.blank? %>
                     <% f.object.build_image %>

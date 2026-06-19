@@ -38,6 +38,7 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.enable_geoman_controls_in_maps"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.map_location_required"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.admin_acceptance_required"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.image_upload"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.document_upload"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.external_video"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.voice_assistant"), :value, :boolean) %>

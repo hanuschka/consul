@@ -150,6 +150,9 @@ application.register("clipboard", ClipboardController)
 import SharedAdminIframeController from "./shared/admin_iframe_controller"
 application.register("shared--admin-iframe", SharedAdminIframeController)
 
+import SharedAutoSubmitFormController from "./shared/auto_submit_form_controller"
+application.register("shared--auto-submit-form", SharedAutoSubmitFormController)
+
 import SharedCollapseController from "./shared/collapse_controller"
 application.register("shared--collapse", SharedCollapseController)
 

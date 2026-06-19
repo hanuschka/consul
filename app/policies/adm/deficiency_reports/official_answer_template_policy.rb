@@ -1,27 +1,27 @@
 class Adm::DeficiencyReports::OfficialAnswerTemplatePolicy < ApplicationPolicy
   include Adm::DeficiencyReports::Concerns::DeficiencyReportManageable
   def index?
-    deficiency_report_manager?
+    manager_or_officer?
   end
 
   def new?
-    deficiency_report_manager?
+    manager_or_officer?
   end
 
   def create?
-    deficiency_report_manager?
+    manager_or_officer?
   end
 
   def edit?
-    deficiency_report_manager?
+    manager_or_officer?
   end
 
   def update?
-    deficiency_report_manager?
+    manager_or_officer?
   end
 
   def destroy?
-    deficiency_report_manager?
+    manager_or_officer?
   end
 
   class Scope < Scope
@@ -29,4 +29,10 @@ class Adm::DeficiencyReports::OfficialAnswerTemplatePolicy < ApplicationPolicy
       scope.all
     end
   end
+
+  private
+
+    def manager_or_officer?
+      deficiency_report_manager? || @user&.deficiency_report_officer?
+    end
 end

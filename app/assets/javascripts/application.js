@@ -140,6 +140,10 @@
 
 var initialize_modules = function() {
   "use strict";
+  App.FocusTrap.resetInert();
+  App.FocusTrap.initialize();
+  App.SharedModal.reset();
+  App.Map.destroy();
   App.RemoveOnMobileSections.initialize();
   App.Answers.initialize();
   App.Questions.initialize();

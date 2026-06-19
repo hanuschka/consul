@@ -26,7 +26,8 @@ class Adm::BaseController < ActionController::Base
   SECTION_NAMESPACE_OVERRIDES = {
     "Adm::ModeratorsController" => "Adm::Moderation",
     "Adm::ValuatorsController" => "Adm::Valuation",
-    "Adm::OfficingManagersController" => "Adm::Officing"
+    "Adm::OfficingManagersController" => "Adm::Officing",
+    "Adm::ApiClients::ServiceUsersController" => "Adm"
   }.freeze
 
   private

@@ -11,6 +11,8 @@
     initialize: function() {
       this.disconnectObservers();
 
+      this.isModalActive = false;
+
       this.klaroElement = document.getElementById('klaro');
 
       if (this.klaroElement) {
@@ -86,7 +88,7 @@
       dialogEl.setAttribute('role', 'dialog');
       dialogEl.setAttribute('aria-modal', 'true');
 
-      App.FocusTrap.setBackgroundInert([this.klaroElement]);
+      App.FocusTrap.setBackgroundInert([this.klaroElement], modal);
 
       setTimeout(() => {
         var focusable = App.FocusTrap.getFocusableElements(modal);

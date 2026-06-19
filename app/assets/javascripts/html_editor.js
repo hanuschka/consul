@@ -12,6 +12,18 @@
       });
     },
 
+    destroy: function() {
+      Object.keys(this.instances).forEach(key => {
+        const editor = this.instances[key];
+
+        if (editor && editor.destroy) {
+          editor.destroy().catch(() => {});
+        }
+      });
+
+      this.instances = {};
+    },
+
     enableCKeditorFor: function(textarea) {
       var { ClassicEditor } = CKEDITOR;
 

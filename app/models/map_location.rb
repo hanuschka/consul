@@ -43,7 +43,7 @@ class MapLocation < ApplicationRecord
   }
 
   scope :with_proposal_associations, -> {
-    includes(mappable: [:projekt_labels, :masterportal_pin])
+    includes(mappable: [:projekt_labels, :sentiment, :masterportal_pin])
       .where(mappable_type: "Proposal")
   }
 

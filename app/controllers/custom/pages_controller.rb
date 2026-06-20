@@ -341,8 +341,8 @@ class PagesController < ApplicationController
 
         @investments = @resources.send(@current_filter)
         @investment_ids = @investments.ids
-        @investment_coordinates = MapLocation.where(mappable_type: "Budget::Investment",
-  mappable_id: @investment_ids).map(&:features_json_data)
+        @investment_coordinates = MapLocation.with_investment_associations
+  .where(mappable_id: @investment_ids).map(&:features_json_data)
         @investment_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
         @investments = @investments.perform_sort_by(@current_order,
   session[:random_seed]).page(params[:page]).per(24)

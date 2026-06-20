@@ -9,7 +9,10 @@ rich-tooltip[hidden] {
 .rich-tooltip--body {
   position: fixed;
   inset: auto;
-  z-index: 1200;
+  // Above the fixed projekt header (1005) and the studio gallery dialog (10002).
+  // The popover path already promotes the body to the top layer; this keeps the
+  // non-popover fallback above page chrome too.
+  z-index: 10010;
   position-area: block-start;
   position-try-fallbacks: flip-block;
   width: max-content;

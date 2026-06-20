@@ -254,3 +254,16 @@ ProjektStudio.utils.formatHTML = function(html) {
 
   return formatted.trim();
 }
+
+// Updates the title text of the <rich-tooltip> that wraps a given trigger
+// element. Used by stateful toggle buttons whose tooltip text changes with
+// their state (e.g. show/hide phase, set/unset default phase, sidebar section).
+ProjektStudio.utils.updateRichTooltipTitle = function(trigger, newTitle) {
+  const tooltip = trigger.closest("rich-tooltip");
+
+  if (!tooltip) return
+
+  const titleEl = tooltip.querySelector(".rich-tooltip-content--title");
+
+  if (titleEl) titleEl.textContent = newTitle;
+}

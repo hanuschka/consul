@@ -2,6 +2,18 @@ rich-tooltip {
   display: inline-block;
 }
 
+// Trigger-only tooltips bind their hover/focus events to the trigger element
+// (not to the host), so the host needs no box of its own. `display: contents`
+// makes the wrapper layout-neutral: the trigger participates in its parent's
+// flow (flex item, inline, absolute, …) exactly as if it were not wrapped.
+// Without this, the inline-block host still generates a line box and reserves
+// vertical space even when its trigger is out of flow (e.g. an absolutely
+// positioned button). Non-trigger-only tooltips keep the inline-block box,
+// which their trigger↔body hover-bridge relies on.
+rich-tooltip[trigger-only] {
+  display: contents;
+}
+
 rich-tooltip[hidden] {
   display: none;
 }
@@ -67,6 +79,24 @@ rich-tooltip[hidden] {
   font-size: 14px;
   line-height: 1.5;
   color: #475569;
+}
+
+// The tooltip body is a DOM descendant of its trigger's container, so loosely
+// scoped page rules (e.g. `.content-block-margin-input span { color: … }`) can
+// bleed into the content text and grey it out. These body-scoped overrides
+// (specificity 0,2,0) defend the tooltip's own colours against such single
+// class + element selectors.
+.rich-tooltip--body .rich-tooltip-content--title,
+.rich-tooltip--body .rich-tooltip-content--term {
+  color: #0f172a;
+}
+
+.rich-tooltip--body .rich-tooltip-content--text {
+  color: #475569;
+}
+
+.rich-tooltip--body .rich-tooltip-content--note {
+  color: #64748b;
 }
 
 .rich-tooltip-content--row {

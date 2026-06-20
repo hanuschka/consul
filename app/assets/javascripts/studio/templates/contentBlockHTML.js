@@ -306,24 +306,30 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <!--   </i> -->
               <!-- </button> -->
               <div class="projekt-content-block-edit--separator"></div>
-              <button
-                type="button"
-                tabindex="-1"
-                data-hint="Duplizieren&#10;Erstellt eine exakte Kopie dieses Inhaltsblocks mit allen Einstellungen direkt unterhalb des aktuellen Blocks"
-                class="js-copy-current-content-block studio-icon-button"
-              >
-                <i class="fas fa-copy">
-                </i>
-              </button>
-              <button
-                tabindex="-1"
-                data-hint="Versionsverlauf&#10;Verwalten Sie Versionen dieses Blocks: Anzeigen vorheriger Versionen und Rückgängigmachen von Änderungen"
-                disabled
-                class="studio-icon-button js-content-block-version-managment"
-              >
-                <i class="fa fa-arrow-rotate-left fa-undo">
-                </i>
-              </button>
+              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                <button
+                  type="button"
+                  tabindex="-1"
+                  class="js-copy-current-content-block studio-icon-button"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+              `, {
+                title: "Duplizieren",
+                text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
+              })}
+              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                <button
+                  tabindex="-1"
+                  disabled
+                  class="studio-icon-button js-content-block-version-managment"
+                >
+                  <i class="fa fa-arrow-rotate-left fa-undo"></i>
+                </button>
+              `, {
+                title: "Versionsverlauf",
+                text: "Zeigt frühere Versionen dieses Blocks an und macht Änderungen rückgängig."
+              })}
               ${isSiteContext ? `
               <div class="projekt-content-block-edit--separator"></div>
               <button

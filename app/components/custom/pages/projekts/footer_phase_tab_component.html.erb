@@ -55,12 +55,13 @@
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
         <%
-          hide_phase_title = "Versteckphase"
-          show_phase_title = "Showphase"
+          hide_phase_title = "Phase ausblenden"
+          show_phase_title = "Phase einblenden"
         %>
         <%= studio_rich_tooltip(
           title: phase.active? ? hide_phase_title : show_phase_title,
-          text: "Blendet diese Phase im öffentlichen Footer ein oder aus. Versteckte Phasen sind nur für Administratoren sichtbar.",
+          text: "Steuert die Sichtbarkeit dieser Phase im öffentlichen Footer.",
+          note: "Versteckte Phasen sehen nur Administratoren.",
           delay: 1200
         ) do %>
           <button
@@ -74,12 +75,13 @@
           </button>
         <% end %>
         <%
-          make_default = "Standardphase festlegen"
+          make_default = "Als Standardphase festlegen"
           unset_default_title = "Standardphase aufheben"
         %>
         <%= studio_rich_tooltip(
           title: phase == @default_projekt_phase ? unset_default_title : make_default,
-          text: "Legt fest, welche Phase beim Öffnen des Projekts standardmäßig angezeigt wird. Es kann nur eine Standardphase geben.",
+          text: "Diese Phase wird beim Öffnen des Projekts zuerst angezeigt.",
+          note: "Es kann nur eine Standardphase geben.",
           delay: 1200
         ) do %>
           <button
@@ -95,7 +97,7 @@
         <% if show_send_notification_button? %>
           <%= studio_rich_tooltip(
             title: "Benachrichtigung senden",
-            text: "Versendet eine Benachrichtigung an die Abonnenten dieser Phase.",
+            text: "Informiert die Abonnenten dieser Phase per Benachrichtigung.",
             delay: 1200
           ) do %>
             <button
@@ -111,7 +113,8 @@
         <% end %>
         <%= studio_rich_tooltip(
           title: "Phase bearbeiten",
-          text: "Öffnet die Einstellungen dieser Phase in einem neuen Tab.",
+          text: "Öffnet die Einstellungen dieser Phase.",
+          note: "Wird in einem neuen Tab geöffnet.",
           delay: 1200
         ) do %>
           <%= link_to adm_phase_action_path(phase), class: "studio-icon-button", target: "_blank", tabindex: "-1" do %>
@@ -121,7 +124,8 @@
 
         <%= studio_rich_tooltip(
           title: "Phase löschen",
-          text: !phase.safe_to_destroy? ? t('custom.admin.projekt_phases.notice.not_destroyed') : "Entfernt diese Phase dauerhaft. Diese Aktion kann nicht rückgängig gemacht werden.",
+          text: phase.safe_to_destroy? ? "Entfernt diese Phase dauerhaft." : t('custom.admin.projekt_phases.notice.not_destroyed'),
+          note: phase.safe_to_destroy? ? "Diese Aktion kann nicht rückgängig gemacht werden." : nil,
           delay: 1200
         ) do %>
           <button

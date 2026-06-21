@@ -1,3 +1,11 @@
+dropdown-select-menu {
+  display: none;
+}
+
+dropdown-select-menu.-rendered {
+  display: contents;
+}
+
 $dropdown-select-menu-container-hover-color: #e2e2e2;
 $dropdown-select-menu-hover-color: #ededed;
 $dropdown-select-menu-active-color: darken($dropdown-select-menu-hover-color, 4%);

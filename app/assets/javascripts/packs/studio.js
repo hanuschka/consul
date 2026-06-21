@@ -24,6 +24,7 @@
 //= require ../custom/lib/Ajax
 //= require ../custom/components/shared/modal
 //= require ../custom/components/shared/dropdown_select_menu_component
+//= require ../custom/components/shared/dropdown_select_menu_element
 //= require ../studio/image_gallery_fallback
 //= require ../studio/main
 //= require_tree ../studio/utils

@@ -162,55 +162,18 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   </button>
                 </div>
                 ${ProjektStudio.templateFunctions.studioControlTooltip(`
-                  <div
-                    class="dropdown-select-container js-dropdown-select-menu js-content-block-header-dropdown"
-                    data-name="header-type"
+                  <dropdown-select-menu
+                    name="header-type"
+                    title="Überschrift"
+                    selected="Text"
+                    toggle-tabindex="-1"
+                    container-css-class="js-content-block-header-dropdown"
+                    item-css-class="js-content-block-header-option"
                   >
-                    <button
-                      type="button"
-                      class="dropdown-select-menu-toggle js-dropdown-select-menu-toggle click-dropdown"
-                      aria-haspopup="listbox"
-                      aria-expanded="false"
-                      aria-label="Überschrift"
-                      tabindex="-1"
-                    >
-                      Text
-                    </button>
-                    <ul
-                      class="dropdown-select-menu--list"
-                      role="listbox"
-                      aria-label="Überschrift"
-                      tabindex="-1"
-                    >
-                      <li
-                        class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
-                        role="option"
-                        tabindex="-1"
-                        data-index="0"
-                        data-header-type="h2"
-                      >
-                        H2
-                      </li>
-                      <li
-                        class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
-                        role="option"
-                        tabindex="-1"
-                        data-index="1"
-                        data-header-type="h3"
-                      >
-                        H3
-                      </li>
-                      <li
-                        class="js-dropdown-select-menu-item js-content-block-header-option dropdown-select-menu-item"
-                        role="option"
-                        tabindex="-1"
-                        data-index="2"
-                        data-header-type="none"
-                      >
-                        Text
-                      </li>
-                    </ul>
-                  </div>
+                    <option data-header-type="h2">H2</option>
+                    <option data-header-type="h3">H3</option>
+                    <option data-header-type="none">Text</option>
+                  </dropdown-select-menu>
                 `, {
                   title: "Überschrift",
                   text: "Wandelt den markierten Text in eine Überschrift (H2 oder H3) um oder setzt ihn auf normalen Fließtext zurück.",

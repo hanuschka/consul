@@ -46,6 +46,15 @@
   display: none;
 }
 
+// With the hint hidden in edit mode, reserve its measured height on the
+// now-editable body so the block keeps the same height it had as the empty
+// placeholder — no shrink/jump when entering any edit mode. The
+// --empty-hint-height var is set live by App.ContentBlockEditor.EmptyHintToggle
+// while the hint is visible; falls back to the studio min-height.
+.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper.-in-edit-mode .projekt-content-block {
+  min-height: var(--empty-hint-height, 55px);
+}
+
 .content-block-empty-hint--icon {
   flex-shrink: 0;
   margin-top: 1px;

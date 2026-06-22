@@ -249,6 +249,9 @@ de:
       enable_my_posts_filter: Meine Beiträge
       enable_my_posts_filter_description: >
         Zeigt einen Filter auf der Mängelübersichtsseite, mit dem eingeloggte Nutzer gezielt nur ihre eigenen eingereichten Mangelmeldungen anzeigen lassen können. Dies erleichtert die Übersicht über den Status der eigenen Meldungen, ohne alle Einträge durchsuchen zu müssen.
+      show_map: Karte anzeigen
+      show_map_description: >
+        Zeigt die Karte im Meldeformular an, auf der Nutzer den Standort ihrer Meldung auswählen können. Deaktivieren Sie diese Option, wenn im Formular keine Karte angeboten werden soll.
       enable_geoman_controls_in_maps: Zeichenwerkzeuge in Karten aktivieren
       enable_geoman_controls_in_maps_description: >
         Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn ein Mangel nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine beschädigte Straße oder ein verschmutztes Areal. Die Zeichnung wird zusammen mit der Meldung gespeichert.
@@ -258,6 +261,9 @@ de:
       admin_acceptance_required: Administrator-Freigabe
       admin_acceptance_required_description: >
         Wenn aktiviert, müssen Administratoren neue Mangelmeldungen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Meldungen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene oder doppelte Meldungen direkt veröffentlicht werden.
+      image_upload: Bild-Upload
+      image_upload_description: >
+        Erlaubt es Nutzern, ihrem Anliegen ein Bild hinzuzufügen. Deaktivieren Sie diese Option, wenn im Meldeformular kein Bild-Upload angeboten werden soll.
       document_upload: Zusätzliche Dokumente
       document_upload_description: >
         Erlaubt es Nutzern, Dokumente wie PDFs, Textdateien oder andere Anhänge zu ihren Mangelmeldungen hochzuladen. Dies ist hilfreich, wenn ergänzende Unterlagen benötigt werden — z.B. Gutachten, Korrespondenz mit Behörden oder detaillierte Beschreibungen, die über ein einfaches Textfeld hinausgehen.

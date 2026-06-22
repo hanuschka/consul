@@ -219,7 +219,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
   def render_body(variables = {})
     return nil if body.blank?
 
-    Liquid::Template.parse(body).render(variables.stringify_keys)
+    rendered = Liquid::Template.parse(body).render(variables.stringify_keys)
+
+    Rinku.auto_link(rendered, :urls, 'target="_blank"')
   rescue Liquid::Error
     nil
   end

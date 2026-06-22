@@ -46,6 +46,40 @@
       }, 150);
     },
 
+    bindEscToCollapseExpanded: function() {
+      if (App.Map.escCollapseBound) return;
+
+      App.Map.escCollapseBound = true;
+
+      document.addEventListener("keydown", function(event) {
+        if (event.key !== "Escape" && event.keyCode !== 27) return;
+
+        var expanded = document.querySelector(".map_location.expanded");
+
+        if (!expanded) return;
+
+        var instance = App.Map.maps.find(function(mapInstance) {
+          return mapInstance.element === expanded;
+        });
+
+        if (instance && instance.collapseMap) {
+          instance.collapseMap();
+        }
+      });
+    },
+
+    invalidateSizeIn: function(container) {
+      var containerEl = $(container)[0];
+
+      if (!containerEl) return;
+
+      App.Map.maps.forEach(function(mapInstance) {
+        if (containerEl.contains(mapInstance.element) && mapInstance.map && mapInstance.map.invalidateSize) {
+          mapInstance.map.invalidateSize();
+        }
+      });
+    },
+
     destroyMapForElementId: function(elementId) {
       var mapInstance = null;
 

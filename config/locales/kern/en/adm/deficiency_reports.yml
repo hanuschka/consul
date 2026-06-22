@@ -111,7 +111,7 @@ en:
             Choose a pre-built response template to automatically insert the text into the response field. The template can then be customized individually. Response templates are managed under "Response templates" in the sidebar.
           answer_template_prompt: "— Select template —"
           official_answer: Official response
-          official_answer_hint: Please enter the official response for this deficiency report.
+          official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
         update_official_answer:
           success: Official response updated successfully.
         new:

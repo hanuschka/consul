@@ -62,12 +62,25 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       <div class="image-edit-overlay--handle -bottom-right js-img-resize-handle" data-corner="bottom-right"></div>
 
       <div class="image-edit-overlay--actions">
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-change" data-hint="Bild ändern" tabindex="-1">
-          <i class="fa fas fa-pencil-alt"></i>
-        </button>
-        <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop" data-hint="Bildzuschnitt umschalten" tabindex="-1">
-          <i class="fa fas fa-crop-alt"></i>
-        </button>
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button type="button" class="image-edit-overlay--action-button js-img-overlay-change" tabindex="-1">
+            <i class="fa fas fa-pencil-alt"></i>
+          </button>
+        `, {
+          title: "Bild ersetzen",
+          text: "Wählt ein anderes Bild aus der Mediengalerie und ersetzt das aktuelle.",
+          delay: 600
+        })}
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button type="button" class="image-edit-overlay--action-button js-img-overlay-crop" tabindex="-1">
+            <i class="fa fas fa-crop-alt"></i>
+          </button>
+        `, {
+          title: "Zuschnitt umschalten",
+          text: "Wechselt zwischen formatfüllendem Zuschnitt und vollständig sichtbarem Bild.",
+          note: "Betrifft nur die Darstellung, nicht die Originaldatei.",
+          delay: 600
+        })}
         <rich-tooltip>
           <button type="button" class="image-edit-overlay--action-button js-img-overlay-alt" tabindex="-1">
             <i class="fa fas fa-comment-dots"></i>

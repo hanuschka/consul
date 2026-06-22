@@ -246,6 +246,9 @@ en:
       enable_my_posts_filter: My posts
       enable_my_posts_filter_description: >
         Shows a filter on the deficiency overview page letting logged-in users view only their own submitted deficiency reports. This makes it easier to track the status of their own reports without searching through all entries.
+      show_map: Show map
+      show_map_description: >
+        Shows the map in the report form where users can select the location of their report. Disable this option if no map should be offered in the form.
       enable_geoman_controls_in_maps: Enable drawing tools on maps
       enable_geoman_controls_in_maps_description: >
         Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when a deficiency affects not just a single point but an area — e.g. a damaged road or a contaminated area. The drawing is saved together with the report.
@@ -255,6 +258,9 @@ en:
       admin_acceptance_required: Administrator approval
       admin_acceptance_required_description: >
         When enabled, administrators must review and approve new deficiency reports before they become publicly visible. Unconfirmed reports are visible only to administrators. This prevents inappropriate or duplicate reports from being published directly.
+      image_upload: Image upload
+      image_upload_description: >
+        Allows users to attach an image to their deficiency report. Disable this option if no image upload should be offered in the report form.
       document_upload: Additional documents
       document_upload_description: >
         Allows users to upload documents like PDFs, text files, or other attachments to their deficiency reports. This is helpful when supplementary materials are needed — e.g. expert reports, correspondence with authorities, or detailed descriptions beyond a simple text field.

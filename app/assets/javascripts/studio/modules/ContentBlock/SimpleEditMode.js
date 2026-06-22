@@ -105,6 +105,9 @@ App.ContentBlockEditor.SimpleEditMode = {
         App.ContentBlockEditor.SimpleEditMode.ImageEdit.toggleImageControls(
           contentBlock, enabled
         )
+        App.ContentBlockEditor.SimpleEditMode.MapEdit.toggleMapControls(
+          contentBlock, enabled
+        )
         App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(
           contentBlock, enabled
         )
@@ -121,6 +124,9 @@ App.ContentBlockEditor.SimpleEditMode = {
         contentBlock, enabled
       )
       App.ContentBlockEditor.SimpleEditMode.ImageEdit.toggleImageControls(
+        contentBlock, enabled
+      )
+      App.ContentBlockEditor.SimpleEditMode.MapEdit.toggleMapControls(
         contentBlock, enabled
       )
       App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(

@@ -8,19 +8,25 @@
   <%= form.rich_text_area :description, label: false %>
 <% end %>
 
-<%= render Kern::FormFieldComponent.new(divider: false,
-  label: t(".labels.image"), hint: t(".hints.image")) do %>
-  <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
+<% if Setting["deficiency_reports.image_upload"].present? %>
+  <%= render Kern::FormFieldComponent.new(divider: false,
+    label: t(".labels.image"), hint: t(".hints.image")) do %>
+    <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
+  <% end %>
 <% end %>
 
-<%= render Kern::FormFieldComponent.new(divider: false,
-  label: t(".labels.documents"), hint: t(".hints.documents")) do %>
-  <%= render Kern::Form::DocumentsComponent.new(form: form) %>
+<% if Setting["deficiency_reports.document_upload"].present? %>
+  <%= render Kern::FormFieldComponent.new(divider: false,
+    label: t(".labels.documents"), hint: t(".hints.documents")) do %>
+    <%= render Kern::Form::DocumentsComponent.new(form: form) %>
+  <% end %>
 <% end %>
 
-<%= render Kern::FormFieldComponent.new(divider: false,
-  label: t(".labels.video_url"), hint: t(".hints.video_url")) do %>
-  <%= form.text_field :video_url, label: false, placeholder: t(".placeholders.video_url") %>
+<% if Setting["deficiency_reports.external_video"].present? %>
+  <%= render Kern::FormFieldComponent.new(divider: false,
+    label: t(".labels.video_url"), hint: t(".hints.video_url")) do %>
+    <%= form.text_field :video_url, label: false, placeholder: t(".placeholders.video_url") %>
+  <% end %>
 <% end %>
 
 <%= render Kern::FormFieldComponent.new(divider: false,
@@ -60,17 +66,19 @@
   </div>
 <% end %>
 
-<div class="kern-row">
-  <div class="kern-col-10">
-    <%= form.fields_for :map_location do |ml_form| %>
-      <%= render Kern::MapComponent.new(
-        map_location: form.object.map_location,
-        form: ml_form,
-        editable: true,
-        admin_editor: false,
-        height: 500,
-        error: form.object.errors[:map_location].to_sentence.presence
-      ) %>
-    <% end %>
+<% if Setting["deficiency_reports.show_map"].present? %>
+  <div class="kern-row">
+    <div class="kern-col-10">
+      <%= form.fields_for :map_location do |ml_form| %>
+        <%= render Kern::MapComponent.new(
+          map_location: form.object.map_location,
+          form: ml_form,
+          editable: true,
+          admin_editor: false,
+          height: 500,
+          error: form.object.errors[:map_location].to_sentence.presence
+        ) %>
+      <% end %>
+    </div>
   </div>
-</div>
+<% end %>

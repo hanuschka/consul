@@ -72,7 +72,11 @@ class Setting < ApplicationRecord
           "xls"  => "application/x-ole-storage",
           "xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "csv"  => "text/plain",
-          "zip"  => "application/zip"
+          "zip"  => "application/zip",
+          "jpg"  => "image/jpeg",
+          "png"  => "image/png",
+          "webp" => "image/webp",
+          "avif" => "image/avif"
         }
       }
     end

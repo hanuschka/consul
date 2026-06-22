@@ -439,9 +439,48 @@ module Schemas
         description: { type: :string, nullable: true, description: 'Detailed description of the event, its purpose, and agenda', example: 'Discussion on city planning' },
         datetime: { type: :string, format: :date_time, nullable: true, description: 'When the event starts. Null means no specific start time is set.', example: '2025-02-01T18:00:00Z' },
         end_datetime: { type: :string, format: :date_time, nullable: true, description: 'When the event ends. Null means no specific end time is set.', example: '2025-02-01T20:00:00Z' },
+        summary: { type: :string, nullable: true, description: 'Short summary or teaser shown in listings', example: 'Quarterly city planning meeting' },
         location: { type: :string, nullable: true, description: 'Physical location or venue where the event takes place. Null for virtual-only events.', example: 'City Hall' },
-        registration_url: { type: :string, nullable: true, description: 'URL for event registration or further information. Null if no registration link is provided.', example: 'https://example.com/register' },
+        weblink: { type: :string, nullable: true, description: 'URL for event registration, livestream, or further information. Null if no link is provided.', example: 'https://example.com/register' },
+        open_ended: { type: :boolean, nullable: true, description: 'Whether the event has no fixed end time', example: false },
+        language: { type: :string, nullable: true, description: 'Primary language of the event (e.g., "de", "en")', example: 'de' },
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this event is associated with', example: 10 },
+        accessibility: {
+          type: :object,
+          description: 'Accessibility features available at the event',
+          properties: {
+            wheelchair_accessible: { type: :boolean, nullable: true },
+            accessible_toilet: { type: :boolean, nullable: true },
+            disabled_parking_nearby: { type: :boolean, nullable: true },
+            tactile_guidance_systems: { type: :boolean, nullable: true },
+            induction_loop_available: { type: :boolean, nullable: true },
+            assistance_dogs_welcome: { type: :boolean, nullable: true },
+            sign_language_interpreter: { type: :boolean, nullable: true }
+          }
+        },
+        projekt_phase: {
+          type: :object,
+          description: 'Summary of the projekt phase this event belongs to (present when the phase is loaded)',
+          properties: {
+            id: { type: :integer, example: 10 },
+            title: { type: :string, nullable: true, example: 'Events Phase' },
+            type: { type: :string, example: 'ProjektPhase::EventPhase' },
+            projekt_id: { type: :integer, example: 2 }
+          }
+        },
+        projekt: {
+          type: :object,
+          description: 'Summary of the projekt this event belongs to (present when the projekt is loaded)',
+          properties: {
+            id: { type: :integer, example: 2 },
+            title: { type: :string, example: 'Community Survey' }
+          }
+        },
+        image: {
+          type: :object,
+          nullable: true,
+          description: 'Associated image, present only when the event has an attached image'
+        },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the event was created', example: '2025-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the event was last modified', example: '2025-01-01T00:00:00Z' }
       },

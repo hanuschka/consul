@@ -1,4 +1,7 @@
 <% live = local_assigns.fetch(:live, false) %>
+<% url = local_assigns.fetch(:url, adm_api_request_logs_path) %>
+<% reset_url = local_assigns.fetch(:reset_url, url) %>
+<% show_api_client_filter = local_assigns.fetch(:show_api_client_filter, true) %>
 <%
   form_data =
     if live
@@ -14,7 +17,7 @@
   reset_data = live ? { turbo: false } : {}
 %>
 
-<%= form_tag adm_api_request_logs_path, method: :get, class: "adm-filter-bar -labeled", data: form_data do %>
+<%= form_tag url, method: :get, class: "adm-filter-bar -labeled", data: form_data do %>
   <div class="adm-filter-bar--field adm-filter-bar--field-search adm-filter-bar--field-grow">
     <%= label_tag :url, t("adm.api_request_logs.filters.url_label"), class: "adm-filter-bar--label" %>
     <div class="adm-filter-bar--control">
@@ -42,13 +45,15 @@
       class: "adm-filter-bar--input" %>
   </div>
 
-  <div class="adm-filter-bar--field">
-    <%= label_tag :api_client_id, t("adm.api_request_logs.index.api_client"), class: "adm-filter-bar--label" %>
-    <%= select_tag :api_client_id,
-      options_for_select(@api_client_options, params[:api_client_id]&.to_i),
-      include_blank: t("adm.api_request_logs.filters.api_client_any"),
-      class: "adm-filter-bar--input" %>
-  </div>
+  <% if show_api_client_filter %>
+    <div class="adm-filter-bar--field">
+      <%= label_tag :api_client_id, t("adm.api_request_logs.index.api_client"), class: "adm-filter-bar--label" %>
+      <%= select_tag :api_client_id,
+        options_for_select(@api_client_options, params[:api_client_id]&.to_i),
+        include_blank: t("adm.api_request_logs.filters.api_client_any"),
+        class: "adm-filter-bar--input" %>
+    </div>
+  <% end %>
 
   <div class="adm-filter-bar--field">
     <%= label_tag :start_date, t("adm.api_request_logs.filters.start_date_label"), class: "adm-filter-bar--label" %>
@@ -64,6 +69,6 @@
     <% if !live %>
       <%= submit_tag t("adm.api_request_logs.filters.submit"), name: nil, class: "adm-filter-bar--submit-button" %>
     <% end %>
-    <%= link_to t("adm.api_request_logs.filters.reset"), adm_api_request_logs_path, class: "adm-filter-bar--reset-button", data: reset_data %>
+    <%= link_to t("adm.api_request_logs.filters.reset"), reset_url, class: "adm-filter-bar--reset-button", data: reset_data %>
   </div>
 <% end %>

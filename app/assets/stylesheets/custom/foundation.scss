@@ -16,6 +16,10 @@
 .accordion-title {
   color: black;
   font-size: 18px;
+
+  &::before {
+    font-size: 22px;
+  }
 }
 
 .projekt-content-block {

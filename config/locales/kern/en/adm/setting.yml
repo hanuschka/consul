@@ -243,6 +243,9 @@ en:
       enable_my_posts_filter: My posts
       enable_my_posts_filter_description: >
         Shows a filter on the deficiency overview page letting logged-in users view only their own submitted deficiency reports. This makes it easier to track the status of their own reports without searching through all entries.
+      show_map: Show map
+      show_map_description: >
+        Shows the map in the report form where users can select the location of their report. Disable this option if no map should be offered in the form.
       enable_geoman_controls_in_maps: Enable drawing tools on maps
       enable_geoman_controls_in_maps_description: >
         Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when a deficiency affects not just a single point but an area — e.g. a damaged road or a contaminated area. The drawing is saved together with the report.

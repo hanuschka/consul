@@ -35,6 +35,7 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.allow_voting"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.enable_comments"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.intro_text"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.show_map"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.enable_geoman_controls_in_maps"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.map_location_required"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.admin_acceptance_required"), :value, :boolean) %>

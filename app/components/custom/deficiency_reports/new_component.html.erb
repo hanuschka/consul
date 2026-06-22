@@ -65,41 +65,43 @@
               <%= render partial: "custom/shared/user_resources_form/deficiency_report_category", locals: { f: f } %>
             </div>
 
-            <div class="" style="display:flex;align-items:baseline;">
-              <h2 class="rich-form-label" style="flex-grow:1;">
-                <i class="fas fa-map"></i>
-                <%= t("custom.user_resources.form.map_location_label") %>
-                <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
-                <span class="small"><%= t("custom.user_resources.form.map_location_instructions_mandatory") %></span>
-              </h2>
+            <% if Setting["deficiency_reports.show_map"].present? %>
+              <div class="" style="display:flex;align-items:baseline;">
+                <h2 class="rich-form-label" style="flex-grow:1;">
+                  <i class="fas fa-map"></i>
+                  <%= t("custom.user_resources.form.map_location_label") %>
+                  <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+                  <span class="small"><%= t("custom.user_resources.form.map_location_instructions_mandatory") %></span>
+                </h2>
 
-              <% if districts.any? %>
-                <%= select_tag :deficiency_report_district, options_for_select(districts.all.map { |district|
-                  [
-                    district.name, district.id,
-                    {
-                      data: {
-                        latitude: district.map_location.latitude,
-                        longitude: district.map_location.longitude
+                <% if districts.any? %>
+                  <%= select_tag :deficiency_report_district, options_for_select(districts.all.map { |district|
+                    [
+                      district.name, district.id,
+                      {
+                        data: {
+                          latitude: district.map_location.latitude,
+                          longitude: district.map_location.longitude
+                        }
                       }
+                    ]
+                  }),
+                  { prompt: t("custom.deficiency_reports.form.district.placeholder"), label: false,
+                    class: "js-update-map-center hide-on-big-tablet",
+                    style: "width:unset;",
+                    data: {
+                      default_latitude: MapLocation.default.latitude,
+                      default_longitude: MapLocation.default.longitude
                     }
-                  ]
-                }),
-                { prompt: t("custom.deficiency_reports.form.district.placeholder"), label: false,
-                  class: "js-update-map-center hide-on-big-tablet",
-                  style: "width:unset;",
-                  data: {
-                    default_latitude: MapLocation.default.latitude,
-                    default_longitude: MapLocation.default.longitude
-                  }
-                } %>
-              <% end %>
-            </div>
+                  } %>
+                <% end %>
+              </div>
 
-            <%= render "map_locations/form_fields",
-              form:            f,
-              mappable:        deficiency_report,
-              nesting_prefix: "deficiency_report" %>
+              <%= render "map_locations/form_fields",
+                form:            f,
+                mappable:        deficiency_report,
+                nesting_prefix: "deficiency_report" %>
+            <% end %>
           </div>
         </div>
 

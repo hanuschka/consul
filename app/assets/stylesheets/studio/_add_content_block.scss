@@ -85,7 +85,7 @@
 
   position: absolute;
   top: 50%;
-  left: -44px;
+  left: -40px;
   transform: var(--plus-base-translate);
   z-index: 2;
 
@@ -147,12 +147,12 @@
   opacity: 1;
 }
 
-.add-new-content-block-section > .content-block-templates-selector--ai-create {
+.add-new-content-block-section .content-block-templates-selector--ai-create {
   --ai-base-translate: translateY(-50%);
 
   position: absolute;
   top: 50%;
-  left: -84px;
+  left: -80px;
   transform: var(--ai-base-translate);
   z-index: 2;
 
@@ -191,11 +191,11 @@
   }
 }
 
-.add-new-content-block-section:hover > .content-block-templates-selector--ai-create,
-.add-new-content-block-section:focus-within > .content-block-templates-selector--ai-create,
-.add-new-content-block-section.-opened > .content-block-templates-selector--ai-create,
-.projekt-content-block-wrapper:hover + .add-new-content-block-section > .content-block-templates-selector--ai-create,
-.add-new-content-block-section:has(+ .projekt-content-block-wrapper:hover) > .content-block-templates-selector--ai-create {
+.add-new-content-block-section:hover .content-block-templates-selector--ai-create,
+.add-new-content-block-section:focus-within .content-block-templates-selector--ai-create,
+.add-new-content-block-section.-opened .content-block-templates-selector--ai-create,
+.projekt-content-block-wrapper:hover + .add-new-content-block-section .content-block-templates-selector--ai-create,
+.add-new-content-block-section:has(+ .projekt-content-block-wrapper:hover) .content-block-templates-selector--ai-create {
   opacity: 1;
 }
 
@@ -214,7 +214,7 @@
     }
   }
 
-  .add-new-content-block-section > .content-block-templates-selector--ai-create {
+  .add-new-content-block-section .content-block-templates-selector--ai-create {
     --ai-base-translate: none;
 
     position: static;

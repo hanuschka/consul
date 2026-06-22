@@ -1,3 +1,14 @@
+// While a content-block map is in fullscreen ("Vollbild") mode the map is
+// position:fixed over the whole viewport. The block's studio chrome (the
+// floating toolbar zone and the add-block buttons) lives in its own stacking
+// context that can sit above the fixed map depending on the page/admin-topbar
+// nesting, so it would float over the fullscreen map. Hide it while the map is
+// expanded; it returns when the map is collapsed (button or ESC).
+.projekt-content-block-wrapper:has(.map_location.expanded) .projekt-content-block--toolbar-zone,
+.projekt-content-block-wrapper:has(.map_location.expanded) .add-new-content-block-section {
+  display: none;
+}
+
 // =============================================================================
 // Linear-style content-block toolbar — layout & container
 // -----------------------------------------------------------------------------
@@ -55,13 +66,14 @@
     justify-content: flex-end;
     align-items: center;
     gap: 2px;
-    padding: 5px 7px;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 5px 8px;
+    // Frosted-glass surface — matches the map height control
+    // (studio/_map_controls.scss .studio-content-block-map-height-control).
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(3px) saturate(2);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 14px;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.55);
     pointer-events: auto;
 
     // Invisible hover bridge between toolbar and block — prevents the toolbar
@@ -136,7 +148,7 @@
 
     .projekt-content-block--toolbar {
       display: flex;
-      outline: 2px solid #c9dced;
+      outline: 1px solid #c9dced;
     }
   }
 
@@ -188,37 +200,41 @@
 // =============================================================================
 // Margin spinner (vertical-spacing input)
 // =============================================================================
+// Shares the visual language of the map height control
+// (studio/_map_controls.scss): ghost step buttons and a borderless value that
+// is framed only on focus, on slate-neutral tints.
 .content-block-margin-input {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   height: 32px;
   padding: 0 4px;
-  border-radius: 6px;
-  color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  color: #2b3744;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgba(31, 42, 55, 0.05);
   }
 
   i {
     font-size: 14px;
     line-height: 1;
-    color: rgba(0, 0, 0, 0.55);
+    color: #6b7682;
   }
 
   input[type="number"] {
-    width: 36px;
+    width: 34px;
     height: 28px;
     margin: 0;
-    padding: 0 4px;
+    padding: 0;
     text-align: center;
-    font-size: 13px;
+    font-size: 16px;
+    font-weight: 700;
     line-height: 1;
-    color: rgba(0, 0, 0, 0.85);
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 4px;
+    color: #1f2a37;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
     box-shadow: none;
     appearance: textfield;
     -moz-appearance: textfield;
@@ -226,8 +242,8 @@
 
     &:focus {
       outline: none;
-      border-color: var(--brand-color);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-color) 18%, transparent);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: inset 0 0 0 1px rgba(23, 121, 186, 0.5);
     }
 
     // Hide native browser spinner
@@ -244,49 +260,45 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 27px;
-  height: 100%;
+  width: 26px;
+  height: 26px;
   padding: 0;
-  font-size: 11px;
   line-height: 1;
-  color: rgba(0, 0, 0, 0.6);
-  background: #ffffff9e;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
+  color: #2b3744;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
   cursor: pointer;
-  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
 
   i {
-    font-size: 10px;
+    font-size: 14px;
     line-height: 1;
     color: inherit;
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.2);
-    color: rgba(0, 0, 0, 0.85);
+    color: #1f2a37;
+    background: rgba(31, 42, 55, 0.08);
   }
 
   &:active {
-    background-color: rgba(0, 0, 0, 0.08);
+    background: rgba(31, 42, 55, 0.14);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--brand-color);
+    outline: 2px solid #1779ba;
     outline-offset: 1px;
   }
 
   &:disabled {
-    color: rgba(0, 0, 0, 0.3);
+    color: #9aa4b0;
     background: transparent;
-    border-color: rgba(0, 0, 0, 0.08);
     cursor: not-allowed;
 
     &:hover {
-      background-color: transparent;
-      border-color: rgba(0, 0, 0, 0.08);
-      color: rgba(0, 0, 0, 0.3);
+      background: transparent;
+      color: #9aa4b0;
     }
   }
 }
@@ -361,13 +373,19 @@
   font-weight: 600;
   line-height: 1;
   color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px) saturate(1.7);
+  -webkit-backdrop-filter: blur(16px) saturate(1.7);
   pointer-events: none;
   animation: content-block-status-appear 180ms ease-out;
   transition: opacity 180ms ease-out;
+}
+
+.projekt-content-block--status .fas {
+  font-size: 15px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.28));
 }
 
 .projekt-content-block--status.-leaving {
@@ -375,11 +393,17 @@
 }
 
 .projekt-content-block--status.-saved {
-  background: rgba($green-success-color, 0.8);
+  background: rgba($green-success-soft-color, 0.82);
+  box-shadow:
+    0 8px 24px rgba($green-success-soft-color, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .projekt-content-block--status.-error {
-  background: rgba($red-button-color, 0.8);
+  background: rgba($red-button-color, 0.62);
+  box-shadow:
+    0 8px 24px rgba($red-button-color, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 // =============================================================================
@@ -390,7 +414,7 @@
   align-items: center;
   margin-right: auto;
   padding: 2px 0;
-  color: #2e7d32;
+  color: $green-success-soft-color;
 }
 
 .projekt-content-block-wrapper.-in-edit-mode .projekt-content-block--default-notification {

@@ -9,6 +9,30 @@ de:
       access_level:
         public_data: Öffentliche Daten
         admin: Admin
+        tooltip:
+          public_data:
+            description: >
+              Nur lesender Zugriff auf öffentlich verfügbare Inhalte. Dieser
+              Client kann ausschließlich GET-Anfragen senden — er kann nichts
+              erstellen, ändern oder löschen. Ideal für Integrationen, die
+              Daten lediglich anzeigen, etwa ein Website-Widget oder ein
+              öffentliches Dashboard.
+            alternative_label: Admin-Modus
+            alternative: >
+              Gewährt vollständigen Zugriff zum Erstellen, Aktualisieren und
+              Löschen. Nur wählen, wenn der Client tatsächlich Daten schreiben
+              muss.
+          admin:
+            description: >
+              Vollständiger Zugriff auf alle Ressourcen. Dieser Client kann
+              Inhalte über die API abrufen, erstellen, aktualisieren und
+              löschen. Nur an vertrauenswürdige Integrationen vergeben, die
+              wirklich Schreibzugriff benötigen.
+            alternative_label: Modus „Öffentliche Daten"
+            alternative: >
+              Beschränkt den Client auf nur lesende GET-Anfragen auf
+              öffentliche Inhalte. Für Integrationen wählen, die Daten nur
+              anzeigen müssen.
       index:
         title: API-Clients
         intro: >
@@ -20,6 +44,11 @@ de:
         no_api_clients: Keine API-Clients vorhanden.
         delete_confirm: >
           Sind Sie sicher, dass Sie diesen API-Client löschen möchten?
+      logs:
+        title: API-Anfragen-Logs
+        intro: >
+          Alle API-Anfragen des Clients „%{name}". Nutzen Sie die Filter, um nach Pfad, Methode, Status oder Zeitraum einzugrenzen.
+        no_logs: Für diesen API-Client liegen keine Anfragen-Logs vor.
       new:
         title: Neuen API-Client erstellen
       edit:

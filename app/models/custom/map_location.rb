@@ -57,6 +57,8 @@ class MapLocation < ApplicationRecord
   end
 
   def self.enriched_feature_collection(map_locations, category_icons: nil, extra_features: [])
+    map_locations = map_locations.to_a
+
     icon_names = map_locations.flat_map do |ml|
       ml.to_geo_json["features"].map do |f|
         f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]

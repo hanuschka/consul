@@ -1,0 +1,32 @@
+<%= content_for :title, t("adm.api_clients.logs.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.api_clients.logs.title"),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_api_client_path(@api_client),
+  compact: true
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.api_clients.logs.intro", name: @api_client.name) %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-2">
+  <% if @logs_present %>
+    <%= render "adm/api_request_logs/filter_bar",
+      live: true,
+      url: logs_adm_api_client_path(@api_client),
+      show_api_client_filter: false %>
+
+    <% if @api_request_logs.any? %>
+      <%= render "adm/api_request_logs/table",
+        api_request_logs: @api_request_logs,
+        pagy: @pagy,
+        show_api_client_column: false %>
+    <% else %>
+      <%= empty_state(title: t("adm.api_request_logs.index.no_results"), icon: "filter_alt_off") %>
+    <% end %>
+  <% else %>
+    <%= empty_state(title: t("adm.api_clients.logs.no_logs"), icon: "terminal") %>
+  <% end %>
+</div>

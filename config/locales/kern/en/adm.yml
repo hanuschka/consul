@@ -46,13 +46,15 @@ en:
           overview: Consul
           matomo: Matomo
         apps: Apps
+        api: API
+        api_subitems:
+          api_clients: API clients
+          api_request_logs: API request logs
         developer: Developer area
         developer_subitems:
           connection: DT connection
           ai_settings: AI settings
           external_api_keys: API keys
-          api_clients: API clients
-          api_request_logs: API request logs
     email_templates:
       send_test:
         success: "Test email sent to %{email}."

@@ -10,6 +10,7 @@ de:
         request_path: Pfad
         response_status: Status
         api_client: API-Client
+        client_logs: Logs dieses Clients
         no_logs: Keine API-Anfragen-Logs vorhanden.
         no_results: Keine Logs entsprechen den gewählten Filtern.
         destroy_all: Alle Logs löschen

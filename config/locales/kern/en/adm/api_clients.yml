@@ -9,6 +9,26 @@ en:
       access_level:
         public_data: Public data
         admin: Admin
+        tooltip:
+          public_data:
+            description: >
+              Read-only access to publicly available content. This client can
+              only send GET requests — it cannot create, change, or delete
+              anything. Ideal for integrations that just display data, such as
+              a website widget or a public dashboard.
+            alternative_label: Admin mode
+            alternative: >
+              Grants full create, update, and delete access. Choose it only
+              when the client genuinely needs to write data.
+          admin:
+            description: >
+              Full access to every resource. This client can retrieve, create,
+              update, and delete content through the API. Grant it only to
+              trusted integrations that genuinely need write access.
+            alternative_label: Public data mode
+            alternative: >
+              Restricts the client to read-only GET requests on public content.
+              Choose it for integrations that only need to display data.
       index:
         title: API clients
         intro: >
@@ -20,6 +40,11 @@ en:
         no_api_clients: No API clients available.
         delete_confirm: >
           Are you sure you want to delete this API client?
+      logs:
+        title: API request logs
+        intro: >
+          All API requests made by the client “%{name}”. Use the filters to narrow by path, method, status or date range.
+        no_logs: No request logs available for this API client.
       new:
         title: Create new API client
       edit:

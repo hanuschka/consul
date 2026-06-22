@@ -62,7 +62,7 @@
     <% if @api_client.user.present? %>
       <%= render Adm::SystemUserInfoComponent.new(user: @api_client.user, kind: :api_client) %>
 
-      <div class="mt-3">
+      <div class="mt-3 mb-4">
         <%= kern_link_button edit_adm_api_client_service_user_path(@api_client),
           text: t("adm.api_clients.form.edit_service_user"),
           icon: "edit",

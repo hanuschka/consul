@@ -20,7 +20,10 @@ App.ContentBlockEditor.ChangeHistory = {
 
   saveVersion(contentBlock, contentBlockWrapper, contentToSave = null) {
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
-    const currentContent = contentToSave !== null ? contentToSave : contentBlock.innerHTML.trim();
+    const currentContent =
+      contentToSave !== null
+        ? contentToSave
+        : ProjektStudio.utils.resetMapEmbeds(contentBlock.innerHTML.trim());
 
     if (!this.versionHistory[contentBlockId]) {
       this.versionHistory[contentBlockId] = [];

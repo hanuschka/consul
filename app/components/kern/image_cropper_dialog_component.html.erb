@@ -1,0 +1,28 @@
+<dialog class="image-cropper-modal" data-shared--image-cropper-target="dialog">
+  <div class="image-cropper">
+    <h2 class="image-cropper--title"><%= t(".title") %></h2>
+    <p class="image-cropper--instructions"><%= t(".instructions") %></p>
+
+    <div class="image-cropper--canvas-wrapper">
+      <img
+        class="image-cropper--image"
+        data-shared--image-cropper-target="image"
+        alt=""
+      >
+    </div>
+
+    <div class="image-cropper--actions">
+      <%= tag.button type: "button",
+            class: "kern-btn kern-btn--secondary",
+            data: { action: "shared--image-cropper#cancel" } do %>
+        <span class="kern-label"><%= t(".cancel") %></span>
+      <% end %>
+
+      <%= tag.button type: "button",
+            class: "kern-btn kern-btn--primary",
+            data: { action: "shared--image-cropper#confirm" } do %>
+        <span class="kern-label"><%= t(".confirm") %></span>
+      <% end %>
+    </div>
+  </div>
+</dialog>

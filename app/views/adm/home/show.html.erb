@@ -39,7 +39,7 @@
     <div class="adm-module-bento">
       <% @adm_sections.each do |section| %>
         <%
-          section_label = t("components.adm.icon_rail_component.#{section[:key]}")
+          section_label = Setting["#{section[:key]}.feature_name"].presence || t("components.adm.icon_rail_component.#{section[:key]}")
           metric        = section[:metric]
           card_title    = t("adm.home.show.adm_sections.card_title", section: section_label)
           metric_text   = metric.present? ?

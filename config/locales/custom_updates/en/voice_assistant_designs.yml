@@ -10,8 +10,10 @@ en:
       ready: 'Say "Hello".'
       starting: "Connecting…"
       listening: "Listening…"
+      muted: "Microphone muted"
       mic_start: "Start conversation"
       mic_stop: "Mute microphone"
+      mic_unmute: "Unmute microphone"
       stop: "Finish"
       close: "Close"
       styles:

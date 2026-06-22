@@ -1,10 +1,12 @@
 class Adm::ApiRequestLogsController < Adm::BaseController
   def index
-    @pagy, @api_request_logs = pagy(
-      policy_scope(ApiRequestLog, policy_scope_class: Adm::ApiRequestLogPolicy::Scope)
-        .order(created_at: :desc),
-      items: 50
-    )
+    scope = policy_scope(ApiRequestLog, policy_scope_class: Adm::ApiRequestLogPolicy::Scope)
+    filtered = Adm::ApiRequestLogsQuery.call(scope.includes(:api_client), params)
+
+    @pagy, @api_request_logs = pagy(filtered.order(created_at: :desc), items: 50)
+
+    @logs_present = ApiRequestLog.exists?
+    assign_filter_options
 
     @breadcrumbs = [
       { name: t("adm.api_request_logs.index.title"), icon: "terminal" }
@@ -27,4 +29,16 @@ class Adm::ApiRequestLogsController < Adm::BaseController
       { name: "##{@api_request_log.id}" }
     ]
   end
+
+  private
+
+    def assign_filter_options
+      @http_method_options = ApiRequestLog::HTTP_METHOD_BADGE_VARIANTS.keys
+      @response_status_options = ApiRequestLog
+        .where.not(response_status: nil)
+        .distinct
+        .order(:response_status)
+        .pluck(:response_status)
+      @api_client_options = ApiClient.order(:name).pluck(:name, :id)
+    end
 end

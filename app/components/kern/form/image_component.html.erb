@@ -1,5 +1,4 @@
-<div data-controller="kern--form--image"
-     data-kern--form--image-auto-submit-value="<%= @auto_submit %>">
+<%= tag.div data: root_data do %>
   <% if @form.object.is_a?(Image) %>
     <%= @form.hidden_field :_destroy, value: false, data: { kern__form__image_target: "destroy" } %>
   <% else %>
@@ -12,7 +11,7 @@
                          label: false,
                          accept: Image.accepted_content_types.join(","),
                          class: "kern-form-input__input #{'kern-form-input__input--error' if image_errors.any?}",
-                         data: { kern__form__image_target: "input", action: "change->kern--form--image#change" } %>
+                         data: input_data %>
     <% if image_errors.any? %>
       <p class="kern-error" role="alert">
         <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
@@ -39,4 +38,8 @@
       </span>
     <% end %>
   <% end %>
-</div>
+
+  <% if @crop %>
+    <%= render Kern::ImageCropperDialogComponent.new %>
+  <% end %>
+<% end %>

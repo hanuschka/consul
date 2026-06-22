@@ -3,6 +3,10 @@
 
   App.RevealAccessibility = {
     initialize: function() {
+      if (this.bound) return;
+
+      this.bound = true;
+
       const $document = $(document);
 
       $document.on("open.zf.reveal", ".reveal", this.handleOpen.bind(this));
@@ -19,7 +23,7 @@
 
       modal.setAttribute("aria-modal", "true");
 
-      App.FocusTrap.setBackgroundInert([modal]);
+      App.FocusTrap.setBackgroundInert([modal], modal);
 
       setTimeout(() => {
         const focusable = App.FocusTrap.getFocusableElements(modal);

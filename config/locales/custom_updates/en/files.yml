@@ -95,6 +95,7 @@ en:
       delete: Delete
       delete_confirm: Are you sure you want to delete this item?
       upload: Upload
+      upload_with_crop: Upload with crop
       open_in_new_tab: Open in new tab
       copy_url: Copy link
       copy_url_success: Link copied to clipboard

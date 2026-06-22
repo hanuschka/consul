@@ -12,6 +12,8 @@ de:
     mailer_from_address_description: "Diese E-Mail-Adresse erscheint als Absender bei allen automatisch versendeten E-Mails der Plattform (z. B. Benachrichtigungen, Bestätigungen). Die Adresse muss mit der im Mailserver hinterlegten identisch sein. Änderungen sind nicht selbstständig möglich – bitte wenden Sie sich an den Support von demokratie.today."
     mailer_from_name: "Anzeigename des E-Mail-Absenders"
     mailer_from_name_description: "Dieser Name wird Empfängern als Absender in E-Mails angezeigt. Wählen Sie einen aussagekräftigen Namen, der Ihre Kommune eindeutig identifiziert, z. B. 'Beteiligungsplattform Stadt Musterstadt'. Der Anzeigename kann unabhängig von der technischen Absenderadresse frei angepasst werden und hilft beim Wiedererkennen."
+    mailer_from_deficiency_report_address: "Absenderadresse für Mängelmelder-E-Mails"
+    mailer_from_deficiency_report_address_description: "Diese E-Mail-Adresse wird als Absender für alle automatisch versendeten Mängelmelder-E-Mails verwendet und Bürgerinnen und Bürgern als Kontaktadresse in diesen E-Mails angezeigt. Verwenden Sie eine gültige, für den Versand freigegebene Adresse Ihrer Kommune."
     meta_title: "Seitentitel (Suchmaschinenoptimierung)"
     meta_title_description: "Dieser Titel wird von Suchmaschinen als Hauptüberschrift in den Suchergebnissen verwendet und erscheint auch im Browser-Tab. Ein klar formulierter Titel verbessert die Sichtbarkeit Ihrer Plattform bei Google. Idealerweise enthält er den Namen der Kommune und einen Hinweis auf Bürgerbeteiligung. Empfohlene Länge: 50-60 Zeichen."
     meta_description: "Seitenbeschreibung (Suchmaschinenoptimierung)"
@@ -198,12 +200,6 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Idee manuell einem zuständigen Sachbearbeiter zuweisen. Ohne Zuweisung kann die Idee nicht bearbeitet werden. Dies stellt sicher, dass jede Idee eine verantwortliche Person erhält und keine Einreichung ohne klare Zuständigkeit bleibt.
-      officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Ideen
-      officers_can_administer_assigned_reports_description: >
-        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Ideen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Ideen nur einsehen, aber nicht verwalten oder strukturell anpassen.
-      officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Ideen
-      officers_can_edit_assigned_reports_description: >
-        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Ideen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Ideen unvollständig oder fehlerhaft sind und vor der weiteren Bearbeitung redaktionell angepasst werden müssen.
       enable_comments: Kommentarfunktion
       enable_comments_description: >
         Wenn aktiviert, können Nutzer unterhalb einer Idee Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, weiterführende Anregungen oder ergänzende Hinweise zur eingereichten Idee. Kommentare können von Administratoren moderiert werden.
@@ -238,12 +234,6 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
-      officers_can_administer_assigned_reports: Sachbearbeiter-Administration für Mängel
-      officers_can_administer_assigned_reports_description: >
-        Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Mangelmeldungen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Meldungen nur einsehen, aber nicht verwalten.
-      officers_can_edit_assigned_reports: Sachbearbeiter-Bearbeitung für Mängel
-      officers_can_edit_assigned_reports_description: >
-        Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Mangelmeldungen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Meldungen unvollständig oder fehlerhaft sind und vor der Bearbeitung angepasst werden müssen.
       allow_voting: Nutzer-Bewertung pro Mangel
       allow_voting_description: >
         Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.
@@ -256,12 +246,21 @@ de:
       enable_my_posts_filter: Meine Beiträge
       enable_my_posts_filter_description: >
         Zeigt einen Filter auf der Mängelübersichtsseite, mit dem eingeloggte Nutzer gezielt nur ihre eigenen eingereichten Mangelmeldungen anzeigen lassen können. Dies erleichtert die Übersicht über den Status der eigenen Meldungen, ohne alle Einträge durchsuchen zu müssen.
+      show_map: Karte anzeigen
+      show_map_description: >
+        Zeigt die Karte im Meldeformular an, auf der Nutzer den Standort ihrer Meldung auswählen können. Deaktivieren Sie diese Option, wenn im Formular keine Karte angeboten werden soll.
       enable_geoman_controls_in_maps: Zeichenwerkzeuge in Karten aktivieren
       enable_geoman_controls_in_maps_description: >
         Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn ein Mangel nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine beschädigte Straße oder ein verschmutztes Areal. Die Zeichnung wird zusammen mit der Meldung gespeichert.
+      map_location_required: Standort auf Karte erforderlich
+      map_location_required_description: >
+        Wenn aktiviert, muss vor dem Absenden einer Meldung ein Standort auf der Karte ausgewählt werden. So ist jede Meldung geografisch verortet, was für die Zuordnung zum richtigen Gebiet und Sachbearbeiter entscheidend ist. Deaktivieren Sie die Option, wenn Meldungen auch ohne genauen Standort erstellt werden dürfen.
       admin_acceptance_required: Administrator-Freigabe
       admin_acceptance_required_description: >
         Wenn aktiviert, müssen Administratoren neue Mangelmeldungen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Meldungen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene oder doppelte Meldungen direkt veröffentlicht werden.
+      image_upload: Titelbild-Upload
+      image_upload_description: >
+        Erlaubt es Nutzern, ihrem Anliegen ein Titelbild hinzuzufügen. Deaktivieren Sie diese Option, wenn im Meldeformular kein Titelbild-Upload angeboten werden soll.
       document_upload: Zusätzliche Dokumente
       document_upload_description: >
         Erlaubt es Nutzern, Dokumente wie PDFs, Textdateien oder andere Anhänge zu ihren Mangelmeldungen hochzuladen. Dies ist hilfreich, wenn ergänzende Unterlagen benötigt werden — z.B. Gutachten, Korrespondenz mit Behörden oder detaillierte Beschreibungen, die über ein einfaches Textfeld hinausgehen.
@@ -277,6 +276,9 @@ de:
       show_create_report_button: Einreichen-Button für Mängelmeldungen
       show_create_report_button_description: >
         Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
+      show_homepage_cta: Melde-Schaltfläche auf der Startseite
+      show_homepage_cta_description: >
+        Zeigt im Kopfbereich der Startseite eine zusätzliche Schaltfläche unterhalb der Haupt-Schaltfläche an, die Nutzer direkt zum Formular für ein neues Anliegen führt. Die Beschriftung wird aus der Einstellung "Beschriftung der Melde-Schaltfläche" übernommen. Setzt voraus, dass das Anliegenmanagement aktiviert ist.
 
     process:
       proposals: Vorschlagsübersicht

@@ -1,4 +1,6 @@
 class Projekts::ToggleSectionWithSettingComponent < ViewComponent::Base
+  include StudioTooltipHelper
+
   def initialize(setting_key:, projekt:, enable: false, setting_active:)
     @enable = enable
     @projekt = projekt

@@ -616,7 +616,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         ]
       end
       format.geojson do
-        send_data GeoServices::MappablesGeojsonExporter.call(base_scope),
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:masterportal_pin)),
                   filename: "projekt_point_of_interest_pins-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
                   type: "application/geo+json"
       end

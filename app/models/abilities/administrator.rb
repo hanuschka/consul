@@ -67,7 +67,7 @@ module Abilities
       can :manage, Dashboard::Action
 
       can [:index, :read, :create, :update, :destroy], Budget
-      can :publish, Budget, id: Budget.where(id: Budget.drafting.pluck(:id)).ids
+      can :publish, Budget, published: [false, nil]
       can :calculate_winners, Budget, &:balloting_or_later?
       can :recalculate_winners, Budget, &:balloting_or_later?
 

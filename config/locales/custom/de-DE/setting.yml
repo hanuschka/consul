@@ -298,12 +298,6 @@ de:
         admins_must_assign_officer: Admins müssen Sachbearbeiter zuweisen
         admins_must_assign_officer_description: >
           Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
-        officers_can_administer_assigned_reports: Sachbearbeiter können Mangelmeldungen administrieren
-        officers_can_administer_assigned_reports_description: >
-          Gibt Sachbearbeitern die volle Administrationskontrolle über die ihnen zugewiesenen Mangelmeldungen. Sie können den Status ändern, Kategorien anpassen, Prioritäten setzen und interne Vermerke hinzufügen. Ohne diese Berechtigung können Sachbearbeiter Meldungen nur einsehen, aber nicht verwalten.
-        officers_can_edit_assigned_reports: Sachbearbeiter können Mangelmeldungen editieren
-        officers_can_edit_assigned_reports_description: >
-          Erlaubt Sachbearbeitern, den Inhalt der ihnen zugewiesenen Mangelmeldungen direkt zu bearbeiten — z.B. Titel, Beschreibung oder Standort zu korrigieren. Dies ist nützlich, wenn eingereichte Meldungen unvollständig oder fehlerhaft sind und vor der Bearbeitung angepasst werden müssen.
         allow_voting: Nutzer-Bewertung pro Mangel
         allow_voting_description: >
           Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.
@@ -342,10 +336,6 @@ de:
         show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
         admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
         admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
-        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
-        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
-        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
-        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
         allow_voting: Nutzer*innen Bewertung pro Idee
         allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
         enable_comments: Kommentarfunktion

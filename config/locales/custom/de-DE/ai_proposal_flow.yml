@@ -16,6 +16,8 @@ de:
       generating_submessage: "Titel und Beschreibung werden erstellt."
       evaluating_message: "KI analysiert Ihren Vorschlag …"
       evaluating_submessage: "Bewertung anhand der Kriterien läuft."
+      creating_message: "Ihr Beitrag wird eingereicht …"
+      creating_submessage: "Einen Moment bitte."
     step1:
       criteria_heading: "Kriterien zum Einreichen Ihrer Idee"
       idea_heading: "Ihre Idee"
@@ -51,6 +53,7 @@ de:
       back: "Zurück"
       back_edit: "Vorschlag editieren"
       next_evaluation: "Weiter zur Bewertung"
+      create: "Erstellen"
       submit: "Vorschlag einreichen"
       back_to_projekt_phase: "Zurück zum Projekt"
   admin:

@@ -15,6 +15,10 @@
 
       const $document = $(document);
 
+      $document.on("click", ".js-shared-modal-open", (event) => {
+        this.openFromTrigger(event.currentTarget);
+      });
+
       $document.on("click", ".js-shared-modal-close", (event) => {
         this.close(event.currentTarget);
       });
@@ -28,6 +32,10 @@
         this.unlockScroll();
         document.body.style.overflow = "";
       });
+    },
+
+    openFromTrigger: function(trigger) {
+      this.open(trigger.dataset.sharedModalId);
     },
 
     open: function(modalId) {

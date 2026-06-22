@@ -58,7 +58,8 @@ Rails.application.configure do
   # In Sprockets 4 this enables source maps for JS and SCSS assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
-  config.assets.debug = true
+  # Disabled: source maps make rules read-only/uneditable in DevTools.
+  config.assets.debug = false
 
   # Adds additional error checking when serving assets at runtime.
   # Checks for improperly declared sprockets dependencies.

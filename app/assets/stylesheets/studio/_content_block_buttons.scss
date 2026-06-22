@@ -219,8 +219,23 @@
 // Compact-Mode-Overrides (kleinere Toolbar in schmalen Containern)
 // =============================================================================
 .projekt-content-block-wrapper.-compact-mode {
+  // The full studio toolbar is wider than a narrow sidebar/footer card, so let
+  // it wrap onto multiple rows and never exceed the container width instead of
+  // spilling past the card's right edge.
   .projekt-content-block--toolbar {
+    flex-wrap: wrap;
+    max-width: 100%;
     padding: 3px 5px;
+    row-gap: 4px;
+  }
+
+  .projekt-content-block-edit-main-controlls {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    row-gap: 4px;
+    // Lift the single-row cap from .projekt-content-block-edit so wrapped rows
+    // grow the group (and the toolbar pill) instead of overflowing below it.
+    max-height: none;
   }
 
   .studio-icon-button {

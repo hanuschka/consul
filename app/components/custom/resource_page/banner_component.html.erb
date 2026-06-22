@@ -1,10 +1,10 @@
 <div class="resource-page-banner <%= resource_class %>">
   <div class="resource-page-banner--text-section">
-    <h2 class="resource-page-banner--title">
+    <%= content_tag heading_level, class: "resource-page-banner--title" do %>
       <%= link_to resource do %>
         <%= resource.title %>
       <% end %>
-    </h2>
+    <% end %>
 
     <div class="resource-page-banner--details">
       <div class="resource-page-banner--detail">
@@ -75,7 +75,7 @@
     <%= links_section %>
   </div>
 
-  <% if resource.image.present? %>
+  <% if resource.image&.attached? && big_image_url.present? %>
     <%= link_to big_image_url,
       target: "_blank",
       class: "glightbox resource-page-banner--image",
@@ -83,9 +83,8 @@
       data: {
         alt: t("custom.accessibility.banner-image.glightbox-image-alt", resource_type: resource.class.model_name.human, title: resource.title)
       },
-      title: t("custom.accessibility.banner-image.glightbox-aria-label"),
       aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
-      <span class="image-maximize-button">
+      <span class="image-maximize-button" aria-hidden="true">
         <i class="fas fa-magnifying-glass-plus"></i>
       </span>
       <%= render(

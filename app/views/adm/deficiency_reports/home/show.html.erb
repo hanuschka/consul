@@ -1,30 +1,53 @@
-<%= content_for :title, t("adm.deficiency_reports.home.title") %>
+<%
+  feature = Setting["deficiency_reports.feature_name"].presence
+  page_title = feature ? t("adm.deficiency_reports.home.welcome", feature: feature) : t("adm.deficiency_reports.home.title")
+%>
+<%= content_for :title, page_title %>
 
-<%= render Adm::HeaderComponent.new(title: t("adm.deficiency_reports.home.title"), breadcrumbs: @breadcrumbs) %>
-
-<%= render Adm::DashboardHomeComponent.new(
-  team_members: @team_members,
-  team_url: adm_deficiency_reports_officers_path,
-  recent_items: nil,
-  recent_items_url: nil,
-  intro_text: @section_setting&.intro_text_with_fallback,
-  quick_links: @quick_links,
-  stats: @stats,
-  contact_persons: @contact_persons,
-  notice: @section_setting,
-  activities: [],
-  section_settings_path: policy([:adm, :modules]).show? ? adm_modules_path(tab: "deficiency_reports") : nil
-) %>
+<%= render Adm::HeaderComponent.new(title: page_title, breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container">
+  <%= render Adm::Dashboard::NoticeComponent.new(message: @notice) if @notice.present? %>
+
+  <div class="adm-dashboard__intro-row">
+    <div class="adm-dashboard__intro-col">
+      <% if @intro_text.present? %>
+        <p class="adm-dashboard__intro"><%= @intro_text %></p>
+      <% end %>
+
+      <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).new? %>
+        <div class="adm-dashboard__section-actions">
+          <%= kern_link_button new_adm_deficiency_reports_deficiency_report_path,
+                text: t("adm.deficiency_reports.deficiency_reports.index.new_button"),
+                style: :primary,
+                data: { turbo_frame: "_top" } %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @contact_persons.any? %>
+      <div class="adm-dashboard__intro-aside">
+        <%= render Adm::Dashboard::ContactsComponent.new(contacts: @contact_persons) %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="adm-dashboard__section">
-    <div class="adm-dashboard__section-header">
-      <span class="material-symbols-outlined" aria-hidden="true">report_problem</span>
-      <h3><%= t("adm.deficiency_reports.menu.items.deficiency_reports") %></h3>
+    <div class="adm-dashboard__section-header adm-dashboard__section-header--with-stats">
+      <div class="adm-dashboard__section-header-title">
+        <span class="material-symbols-outlined" aria-hidden="true">report_problem</span>
+        <h3><%= t("adm.deficiency_reports.menu.items.deficiency_reports") %></h3>
+      </div>
+
+      <%= render Adm::Dashboard::StatPillsComponent.new(stats: @stats) %>
     </div>
 
     <%= turbo_frame_tag "deficiency_reports_table", src: adm_deficiency_reports_deficiency_reports_list_path, loading: :eager %>
   </div>
 
-  <%= render Adm::ActivityFeedComponent.new(activities: @activities) %>
+  <div class="adm-dashboard__feed-row">
+    <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+
+    <%= render Adm::Dashboard::TeamComponent.new(members: @team_members, add_url: adm_deficiency_reports_officers_path) %>
+  </div>
 </div>

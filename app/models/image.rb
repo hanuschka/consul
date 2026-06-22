@@ -12,7 +12,8 @@ class Image < ApplicationRecord
       popup: { coalesce: true, gravity: "center", resize: "140x140^", crop: "140x140+0+0", loader: { page: nil }},
       thumb2: { coalesce: true, gravity: "center", resize: "100x100^", crop: "100x100+0+0", loader: { page: nil }},
       projekt_event_thumb: { coalesce: true, gravity: "center", saver: { quality: 100 }, resize: "350x250^", crop: "350x250+0+0", loader: { page: nil }},
-      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }}
+      card_thumb: { coalesce: true, gravity: "center", resize: "300x300^", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }},
+      pdf: { coalesce: true, resize: "700x700>", saver: { quality: 85 }, format: "jpeg", loader: { page: nil }}
     }
   end
 
@@ -22,8 +23,9 @@ class Image < ApplicationRecord
   # validates :title, presence: true
   validate :validate_title_length
   validates :user_id, presence: true
-  validates :imageable_id, presence: true,         if: -> { persisted? }
-  validates :imageable_type, presence: true,       if: -> { persisted? }
+  validates :imageable_id, presence: true,         if: -> { persisted? && !admin? }
+  validates :imageable_type, presence: true,       if: -> { persisted? && !admin? }
+
   validate :validate_image_dimensions, if: -> { attachment.attached? && attachment.new_record? }
 
   default_scope { with_attached_attachment }
@@ -82,7 +84,7 @@ class Image < ApplicationRecord
   end
 
   def attached?
-    attachment.attached?
+    attachment.attached? && attachment.blob.present?
   end
 
   def title
@@ -103,7 +105,7 @@ class Image < ApplicationRecord
       if accepted_content_types.include?(attachment_content_type)
         return true if imageable_class == Widget::Card
         return true if imageable_class == SiteCustomization::Page
-        return true if imageable_class == User && title == "avatar" && imageable.new_record?
+        return true if imageable_class == User
 
         unless attachment.analyzed?
           attachment_changes["attachment"].upload
@@ -112,6 +114,9 @@ class Image < ApplicationRecord
 
         width = attachment.metadata[:width]
         height = attachment.metadata[:height]
+
+        return true if width.blank? || height.blank?
+
         min_width = Setting["uploads.images.min_width"].to_i
         min_height = Setting["uploads.images.min_height"].to_i
         errors.add(:attachment, :min_image_width, required_min_width: min_width) if width < min_width

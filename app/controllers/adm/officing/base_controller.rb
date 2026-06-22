@@ -2,6 +2,7 @@ class Adm::Officing::BaseController < Adm::BaseController
   include HasRegisteredAddress
 
   before_action :set_officing_manager
+  before_action :authorize_officing_access
 
   def verify_user
     authorize :base, policy_class: Adm::Officing::BasePolicy
@@ -62,10 +63,6 @@ class Adm::Officing::BaseController < Adm::BaseController
 
   private
 
-    def adm_menu_component
-      Adm::Officing::MenuComponent.new
-    end
-
     def load_budget
       @budget = Budget.find(params[:budget_id])
     end
@@ -76,6 +73,10 @@ class Adm::Officing::BaseController < Adm::BaseController
 
     def set_officing_manager
       @officing_manager = current_user.officing_manager
+    end
+
+    def authorize_officing_access
+      authorize :base, :index?, policy_class: Adm::Officing::BasePolicy
     end
 
     def user_params

@@ -10,7 +10,7 @@
             aria-label="<%= t("custom.layouts.header.account_link") %>"
             >
             <% if current_user.image&.variant(:popup).present? %>
-              <%= image_tag(current_user.image&.variant(:popup)) %>
+              <%= image_tag(current_user.image&.variant(:popup), alt: "") %>
             <% else %>
               <div class="main-navigation-item--account--image-placeholder">
                 <%= current_user&.first_letter_of_name %>
@@ -25,7 +25,7 @@
       <% end %>
 
       <ul class="nav-flyout-block">
-        <%= render "devise/menu/login_items_user_facing" %>
+        <%= render "devise/menu/login_items_new" %>
       </ul>
   </li>
 <% end %>
@@ -33,5 +33,5 @@
 <% if placement == 'mobile' %>
   <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") %>
 
-  <%= render "devise/menu/login_items_user_facing" %>
+  <%= render "devise/menu/login_items_new", compact: true %>
 <% end %>

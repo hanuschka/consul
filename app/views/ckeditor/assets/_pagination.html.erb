@@ -1,6 +1,7 @@
-<% if @assets.respond_to?(:current_page) && @assets.total_pages > 1 %>
+<% assets = local_assigns[:assets] || @assets %>
+<% if assets.respond_to?(:current_page) && assets.total_pages > 1 %>
   <div class="file-upload-manager-dialog--pagination">
-    <%= paginate @assets,
+    <%= paginate assets,
         params: { type: params[:type], search: params[:search] },
         remote: false,
         class: 'js-cb-img-pagination' %>

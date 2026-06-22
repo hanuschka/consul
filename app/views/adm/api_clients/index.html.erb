@@ -1,16 +1,19 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, compact: true) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".intro") %></p>
+  <% end %>
+
+  <% header.with_actions do %>
+    <div class="ml-auto d-flex gap-3">
+      <%= kern_link_button new_adm_api_client_path, text: t(".create_new") %>
+      <%= kern_link_button api_docs_path, text: t(".api_docs_link"), icon: "open_in_new", style: :secondary, target: "_blank" %>
+    </div>
   <% end %>
 <% end %>
 
 <div class="kern-container my-5">
-  <div class="d-flex justify-content-start gap-3 mb-4">
-    <%= kern_link_button new_adm_api_client_path, text: t(".create_new") %>
-    <%= kern_link_button api_docs_path, text: t(".api_docs_link"), icon: "open_in_new", style: :secondary, target: "_blank" %>
-  </div>
 
   <% if @api_clients.any? %>
     <div class="kern-table-responsive" tabindex="0">
@@ -20,7 +23,7 @@
             <th scope="col" class="kern-table__header"><%= t(".id") %></th>
             <th scope="col" class="kern-table__header"><%= ApiClient.human_attribute_name(:name) %></th>
             <th scope="col" class="kern-table__header"><%= ApiClient.human_attribute_name(:access_level) %></th>
-            <th scope="col" class="kern-table__header"><%= ApiClient.human_attribute_name(:service_user_email) %></th>
+            <th scope="col" class="kern-table__header"><%= t("adm.api_clients.index.posts_as") %></th>
             <th scope="col" class="kern-table__header"><%= t("adm.shared.created_at") %></th>
             <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
           </tr>
@@ -32,11 +35,36 @@
               <td class="kern-table__cell"><%= api_client.id %></td>
               <td class="kern-table__cell"><%= api_client.name %></td>
               <td class="kern-table__cell">
-                <span class="kern-badge kern-badge--<%= api_client.access_level == 'admin' ? 'danger' : 'primary' %>">
-                  <%= t("adm.api_clients.access_level.#{api_client.access_level}") %>
-                </span>
+                <% access_level = api_client.access_level %>
+                <rich-tooltip delay="550" body-class="-wide">
+                  <span class="kern-badge kern-badge--<%= access_level == 'admin' ? 'danger' : 'success' %>">
+                    <%= t("adm.api_clients.access_level.#{access_level}") %>
+                  </span>
+                  <template>
+                    <span class="rich-tooltip-content">
+                      <span class="rich-tooltip-content--title"><%= t("adm.api_clients.access_level.#{access_level}") %></span>
+                      <span class="rich-tooltip-content--text"><%= t("adm.api_clients.access_level.tooltip.#{access_level}.description") %></span>
+                      <span class="rich-tooltip-content--note">
+                        <span class="rich-tooltip-content--note-label"><%= t("adm.api_clients.access_level.tooltip.#{access_level}.alternative_label") %></span>
+                        <%= t("adm.api_clients.access_level.tooltip.#{access_level}.alternative") %>
+                      </span>
+                    </span>
+                  </template>
+                </rich-tooltip>
               </td>
-              <td class="kern-table__cell"><%= api_client.service_user_email %></td>
+              <td class="kern-table__cell">
+                <% if api_client.dedicated_user_mode? && api_client.user.present? %>
+                  <%= render Adm::SystemUserInfoComponent.new(
+                    user: api_client.user,
+                    kind: :api_client,
+                    size: :small,
+                    linkable: true,
+                    edit_url: edit_adm_api_client_service_user_path(api_client)
+                  ) %>
+                <% else %>
+                  <%= render Adm::SystemUserInfoComponent.new(user: api_client.content_author, size: :small, linkable: true) %>
+                <% end %>
+              </td>
               <td class="kern-table__cell"><%= l(api_client.created_at, format: :short) %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>

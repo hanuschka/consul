@@ -6,7 +6,7 @@ module Abilities
       merge Abilities::Everyone.new(user)
 
       can [:read, :update, :refresh_activities,
-           :edit_username, :update_username, :edit_details, :update_details], User, id: user.id
+           :update_username, :edit_details, :update_details], User, id: user.id
 
       can :read, Debate
       can :update, Debate do |debate|
@@ -105,17 +105,37 @@ module Abilities
       end
 
       # can :create, Budget::Investment,               budget: { phase: "accepting" }
-      can :edit, Budget::Investment,                 budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
-      can :update, Budget::Investment,               budget: { id: Budget.accepting.pluck(:id) }, author_id: user.id, feasibility: "undecided"
-      can :suggest, Budget::Investment,              budget: { id: Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id) }
-      can :destroy, Budget::Investment,              budget: { id: (Budget.accepting.pluck(:id) + Budget.reviewing.pluck(:id)) }, author_id: user.id
-      can [:create, :destroy], ActsAsVotable::Vote,
-        voter_id: user.id,
-        votable_type: "Budget::Investment",
-        votable: { budget: { id: Budget.selecting.pluck(:id) }}
+      can [:edit, :update], Budget::Investment do |investment|
+        investment.author_id == user.id &&
+          investment.feasibility == "undecided" &&
+          investment.budget.accepting?
+      end
 
-      can [:show, :create], Budget::Ballot,          budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.officing_manager?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
-      can [:create, :destroy], Budget::Ballot::Line, budget: { id: (Budget.balloting.pluck(:id) + ((user.administrator? || user.officing_manager?) ?  Budget.reviewing_ballots.pluck(:id) : [] )) }
+      can :suggest, Budget::Investment do |investment|
+        investment.budget.accepting? || investment.budget.reviewing?
+      end
+
+      can :destroy, Budget::Investment do |investment|
+        investment.author_id == user.id &&
+          (investment.budget.accepting? || investment.budget.reviewing?)
+      end
+
+      can [:create, :destroy], ActsAsVotable::Vote do |vote|
+        vote.voter_id == user.id &&
+          vote.votable_type == "Budget::Investment" &&
+          vote.votable.present? &&
+          vote.votable.budget.selecting?
+      end
+
+      can [:show, :create], Budget::Ballot do |ballot|
+        ballot.budget.balloting? ||
+          ((user.administrator? || user.officing_manager?) && ballot.budget.reviewing_ballots?)
+      end
+
+      can [:create, :destroy], Budget::Ballot::Line do |line|
+        line.budget.balloting? ||
+          ((user.administrator? || user.officing_manager?) && line.budget.reviewing_ballots?)
+      end
 
       if user.level_two_or_three_verified?
         can :vote, Legislation::Proposal
@@ -138,8 +158,15 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:index, :show, :vote, :json_data, :suggest], DeficiencyReport,
-        id: DeficiencyReport.admin_accepted.or(DeficiencyReport.by_author(user)).ids
+      deficiency_report_read_actions = [:index, :show, :vote, :json_data, :suggest]
+
+      if Setting["deficiency_reports.admin_acceptance_required"].present?
+        can deficiency_report_read_actions, DeficiencyReport, admin_accepted: true
+      else
+        can deficiency_report_read_actions, DeficiencyReport
+      end
+
+      can deficiency_report_read_actions, DeficiencyReport, author_id: user.id
       can [:create], DeficiencyReport
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&
@@ -149,8 +176,10 @@ module Abilities
       can :create, Budget::Investment do |investment|
         projekt_phase = investment.budget.projekt_phase
 
-        (investment.budget.current_phase.kind == "accepting" && projekt_phase.selectable_by_users?) ||
-          (investment.budget.current_phase.kind.in?(%w[accepting reviewing]) && user.has_pm_permission_to?("manage", projekt_phase.projekt))
+        projekt_phase.present? &&
+          ((investment.budget.accepting? && projekt_phase.selectable_by_users?) ||
+            ((investment.budget.accepting? || investment.budget.reviewing?) &&
+              user.has_pm_permission_to?("manage", projekt_phase.projekt)))
       end
 
       can [:create, :vote], Comment do |comment|
@@ -160,7 +189,11 @@ module Abilities
 
       # extending to regular users
       can :access, :ckeditor
-      can :manage, Ckeditor::Picture
+      can :create, AdminImage
+      can [:update, :destroy], AdminImage do |admin_image|
+        admin_image.projekt.present? &&
+          user.has_pm_permission_to?("manage", admin_image.projekt)
+      end
 
       can :toggle_subscription, ProjektSubscription do |subscription|
         subscription.user == user
@@ -180,26 +213,25 @@ module Abilities
       end
 
       can :show, Community do |community|
-        return false unless community.communitable.present?
-        return false unless community.communitable.projekt_phase.present?
+        projekt_phase = community.communitable&.projekt_phase
 
-        projekt_phase = community.communitable.projekt_phase
-
-        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
-          (community.communitable.projekt_phase.permission_problem(user).blank? || community.topics.any?)
+        projekt_phase.present? &&
+          projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          (projekt_phase.permission_problem(user).blank? || community.topics.any?)
       end
 
       can :create_topic, Community do |community|
-        return false unless community.communitable.present?
-        return false unless community.communitable.projekt_phase.present?
+        projekt_phase = community.communitable&.projekt_phase
 
-        projekt_phase = community.communitable.projekt_phase
-
-        projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
-          community.communitable.projekt_phase.permission_problem(user).blank?
+        projekt_phase.present? &&
+          projekt_phase.feature?("resource.show_community_button_in_proposal_sidebar") &&
+          projekt_phase.permission_problem(user).blank?
       end
 
-      can [:index, :show, :vote, :unvote, :json_data, :suggest], Idea, id: Idea.accepted.or(Idea.by_author(user)).ids
+      idea_read_actions = [:index, :show, :vote, :unvote, :json_data, :suggest]
+
+      can idea_read_actions, Idea, admin_accepted_at: (Time.zone.at(0)..)
+      can idea_read_actions, Idea, author_id: user.id
       can [:create], Idea
       can [:create], ProjektPointOfInterestPin do |pin|
         pin.projekt_phase.permission_problem(user).blank?

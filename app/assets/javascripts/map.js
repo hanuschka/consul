@@ -2,6 +2,14 @@
   "use strict";
   App.Map = {
     maps: [],
+
+    // Parse a style value to a finite number, falling back to a default for blank
+    // ("") / null / non-numeric input (form fields submit "" when left empty).
+    numberOrDefault: function(value, fallback) {
+      var parsed = parseFloat(value);
+      return isNaN(parsed) ? fallback : parsed;
+    },
+
     initialize: function() {
       $("*[data-map]:visible").each(function() {
         App.Map.destroyMapForElementId(this.id);
@@ -36,6 +44,40 @@
           }
         });
       }, 150);
+    },
+
+    bindEscToCollapseExpanded: function() {
+      if (App.Map.escCollapseBound) return;
+
+      App.Map.escCollapseBound = true;
+
+      document.addEventListener("keydown", function(event) {
+        if (event.key !== "Escape" && event.keyCode !== 27) return;
+
+        var expanded = document.querySelector(".map_location.expanded");
+
+        if (!expanded) return;
+
+        var instance = App.Map.maps.find(function(mapInstance) {
+          return mapInstance.element === expanded;
+        });
+
+        if (instance && instance.collapseMap) {
+          instance.collapseMap();
+        }
+      });
+    },
+
+    invalidateSizeIn: function(container) {
+      var containerEl = $(container)[0];
+
+      if (!containerEl) return;
+
+      App.Map.maps.forEach(function(mapInstance) {
+        if (containerEl.contains(mapInstance.element) && mapInstance.map && mapInstance.map.invalidateSize) {
+          mapInstance.map.invalidateSize();
+        }
+      });
     },
 
     destroyMapForElementId: function(elementId) {
@@ -78,6 +120,7 @@
     initializeLeafletMap: function(element) {
       const mapInstance = new App.LeafletMapController(element);
       this.maps.push(mapInstance);
+      App.Map.loadMapDataFromUrl(mapInstance);
 
       return mapInstance;
     },
@@ -85,6 +128,7 @@
     initializeMapboxMap: function(element) {
       const mapInstance = new App.MapboxMapController(element);
       this.maps.push(mapInstance);
+      App.Map.loadMapDataFromUrl(mapInstance);
 
       return mapInstance;
     },
@@ -92,8 +136,60 @@
     initializeVirtualcityMap: function(element) {
       const mapInstance = new App.VirtualcityMapController(element);
       this.maps.push(mapInstance);
+      App.Map.loadMapDataFromUrl(mapInstance);
 
       return mapInstance;
+    },
+
+    loadMapDataFromUrl: function(mapInstance) {
+      const $element = $(mapInstance.element);
+      const url = $element.data("map-data-url");
+
+      if (!url) return;
+
+      const $wrapper = $element.closest(".js-map-data-wrapper");
+
+      App.Ajax
+        .get(url)
+        .then(function(data) {
+          mapInstance.features = data;
+          mapInstance.renderFeatures();
+          App.Map.hideMapDataOverlay($wrapper);
+        })
+        .catch(function() {
+          App.Map.showMapDataOverlayError($wrapper);
+        });
+    },
+
+    hideMapDataOverlay: function($wrapper) {
+      $wrapper.find(".js-map-data-overlay").addClass("-hidden");
+    },
+
+    showMapDataOverlayError: function($wrapper) {
+      $wrapper
+        .find(".js-map-data-overlay")
+        .removeClass("-loading -hidden")
+        .addClass("-error");
+    },
+
+    showMapDataOverlayLoading: function($wrapper) {
+      $wrapper
+        .find(".js-map-data-overlay")
+        .removeClass("-hidden -error")
+        .addClass("-loading");
+    },
+
+    retryMapDataLoad: function($retryButton) {
+      const $wrapper = $retryButton.closest(".js-map-data-wrapper");
+      const elementId = $wrapper.find("[data-map]").attr("id");
+      const mapInstance = App.Map.maps.find(function(m) {
+        return m.element.id === elementId;
+      });
+
+      if (!mapInstance) return;
+
+      App.Map.showMapDataOverlayLoading($wrapper);
+      App.Map.loadMapDataFromUrl(mapInstance);
     },
 
     anyMapInitialized() {
@@ -109,6 +205,31 @@
     },
 
     // shared functions
+
+    splitMasterportalFeatures(input) {
+      const collection = App.Map.formattedFeatures(input);
+
+      const masterportal = {
+        type: "FeatureCollection",
+        id: "masterportal-pin-features",
+        features: []
+      };
+      const regular = {
+        type: "FeatureCollection",
+        id: "regular-features",
+        features: []
+      };
+
+      collection.features.forEach(function(feature) {
+        if (feature && feature.properties && feature.properties.resource_type === "masterportal_pin") {
+          masterportal.features.push(feature);
+        } else {
+          regular.features.push(feature);
+        }
+      });
+
+      return { regular: regular, masterportal: masterportal };
+    },
 
     formattedFeatures(input) {
       if (Array.isArray(input)) {
@@ -251,4 +372,8 @@
       });
     }
   };
+
+  $(document).on("click", ".js-map-data-retry", function() {
+    App.Map.retryMapDataLoad($(this));
+  });
 }).call(this);

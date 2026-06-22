@@ -3,7 +3,7 @@ de:
     projekts:
       managers:
         index:
-          title: Team
+          title: Projektmanager
           new_link: Neuen Projektmanager hinzufügen
           no_projekt_managers_title: Keine Projektmanager vorhanden
           no_projekt_managers_description: >

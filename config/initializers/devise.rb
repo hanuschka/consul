@@ -125,7 +125,7 @@ Devise.setup do |config|
   # their account can't be confirmed with the token any more.
   # Default is nil, meaning there is no restriction on how long a user can take
   # before confirming their account.
-  config.confirm_within = Rails.application.secrets.security[:devise_confirm_within_days].to_i.days
+  config.confirm_within = 3.days
 
   # If true, requires any email changes to be confirmed (exactly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
@@ -161,9 +161,11 @@ Devise.setup do |config|
 
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
-  # time the user will be asked for credentials again. Default is 30 minutes.
-
-  config.timeout_in = Rails.application.secrets.security[:devise_timeout_in_minutes].to_i.minutes
+  # time the user will be asked for credentials again.
+  #
+  # Source of truth is the `extended_option.gdpr.devise_timeout_min` Setting
+  # (default: 30 min), read dynamically via `User.timeout_in` so admin changes
+  # take effect without a server restart. See `app/models/custom/user.rb`.
 
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false

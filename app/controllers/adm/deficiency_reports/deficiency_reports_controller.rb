@@ -39,12 +39,44 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           filename: "deficiency_reports-#{Time.zone.today}.csv",
           type: "text/csv"
       end
+
+      format.geojson do
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params).preload(:category)
+        send_data GeoServices::MappablesGeojsonExporter.call(scope),
+          filename: "deficiency_reports-#{Time.zone.today}.geojson",
+          type: "application/geo+json"
+      end
     end
   end
 
-  def settings
-    authorize :deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.settings"), icon: "settings" }]
+  def new
+    @deficiency_report = DeficiencyReport.new
+    authorize @deficiency_report, :new?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @deficiency_report.build_image(user: current_user)
+    @deficiency_report.build_map_location
+
+    @breadcrumbs = new_breadcrumbs
+  end
+
+  def create
+    @deficiency_report = DeficiencyReport.new(create_params.merge(
+      author: current_user,
+      status: DeficiencyReport::Status.default,
+      status_changed_at: Time.zone.now,
+      resource_terms: "1"
+    ))
+    authorize @deficiency_report, :create?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    if @deficiency_report.save
+      @deficiency_report.assign_default_responsible
+      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report), notice: t("adm.attribute.create.success")
+    else
+      @deficiency_report.build_image(user: current_user) unless @deficiency_report.image
+      @deficiency_report.build_map_location unless @deficiency_report.map_location
+      @breadcrumbs = new_breadcrumbs
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -61,7 +93,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         ]
 
         @image_url = @deficiency_report.image&.attachment&.variant(
-          resize_to_limit: [500, 500],
+          resize_to_limit: [580, nil],
           format: "jpeg"
         )
       end
@@ -218,12 +250,30 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       params.require(:deficiency_report).permit(attributes)
     end
 
+    def create_params
+      if params.dig(:deficiency_report, :image_attributes, :cached_attachment).blank?
+        deficiency_report_params.except(:image_attributes)
+      else
+        deficiency_report_params
+      end
+    end
+
+    def new_breadcrumbs
+      [
+        { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
+        { name: t("adm.deficiency_reports.deficiency_reports.new.title") }
+      ]
+    end
+
     def filter_assigned_reports_only(scope)
       return scope if current_user.administrator? || current_user.deficiency_report_manager?
       return scope unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       raise Pundit::NotAuthorizedError unless current_user.deficiency_report_officer?
 
       officer = current_user.deficiency_report_officer
+
+      return scope if officer.manage_all?
+
       officer_group_ids = DeficiencyReport::OfficerGroup.joins(:officers).where(deficiency_report_officers: { id: officer.id }).pluck(:id)
 
       scope.where(

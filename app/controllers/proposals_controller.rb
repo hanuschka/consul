@@ -14,7 +14,7 @@ class ProposalsController < ApplicationController
   before_action :set_view, only: :index
   before_action :proposals_recommendations, only: :index, if: :current_user
 
-  feature_flag :proposals
+  feature_flag :proposals, only: :index
 
   invisible_captcha only: [:create, :update], honeypot: :subtitle
 

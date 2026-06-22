@@ -1,5 +1,3 @@
-<%= render "shared/loader_spinner" %>
-
 <% if projekt_phase_feature?(@projekt_phase, "form.show_map") %>
   <div class='margin-bottom'>
     <% if @projekt_phase.projekt.vc_map_enabled? %>
@@ -20,35 +18,32 @@
   </div>
 
   <div id="proposals" class='proposals-list spinner-placeholder small-12 medium-9 column'>
-    <%= render "shared/loader_spinner" %>
+    <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
+      <% unless @projekt.overview_page? %>
+        <%= render "shared/order_links", i18n_namespace: "proposals.index" %>
+      <% end %>
 
-    <% unless @projekt.overview_page? %>
-      <%= render "shared/order_links", i18n_namespace: "proposals.index" %>
-    <% end %>
+      <div class='row'>
+        <div class='small-6 column small'>
+        </div>
 
-    <div class='row'>
-      <div class='small-6 column small'>
-        <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-          <%= link_to t("proposals.index.section_header.help"), "#section_help" %>
-        <% end %>
+        <div class='small-6 column small'>
+          <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
+            <div class='float-right'>
+              <%= @resources.count %>
+              <%= t("custom.shared.resource_count", count: @resources.count) %>
+            </div>
+          <% end %>
+        </div>
       </div>
 
-      <div class='small-6 column small'>
-        <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
-          <div class='float-right'>
-            <%= @resources.count %>
-            <%= t("custom.shared.resource_count", count: @resources.count) %>
-          </div>
-        <% end %>
-      </div>
-    </div>
+      <% if @proposals.any? || current_user.blank? %>
+        <%= render partial: "proposals/proposal", collection: @proposals %>
+      <% else %>
+        <%= empty_recommended_proposals_message_text(current_user) %>
+      <% end %>
 
-    <% if @proposals.any? || current_user.blank? %>
-      <%= render partial: "proposals/proposal", collection: @proposals %>
-    <% else %>
-      <%= empty_recommended_proposals_message_text(current_user) %>
+      <%= paginate @proposals, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
     <% end %>
-
-    <%= paginate @proposals, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
   </div>
 </div>

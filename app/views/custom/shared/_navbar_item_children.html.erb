@@ -1,7 +1,7 @@
 <% submenu_id = local_assigns.fetch(:submenu_id, nil) %>
 <ul<%= " id=\"#{submenu_id}\"".html_safe if submenu_id.present? %> class="nav-flyout-block <%= 'nested-dropdown' if depth > 1 %>">
   <% children.each do |child| %>
-    <% visible_grand_children = child.children.order(:position).reject(&:resource_missing?) %>
+    <% visible_grand_children = child.children.order(:position).select { |grand_child| navbar_item_visible?(grand_child) } %>
     <% has_children = depth < 3 && visible_grand_children.any? %>
     <% child_submenu_id = "navbar-submenu-#{child.id}" if has_children %>
     <li class="nav-element flyout-item"<%= ' aria-expanded="false"'.html_safe if has_children %>>

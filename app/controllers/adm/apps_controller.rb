@@ -107,10 +107,10 @@ module Adm
 
     private
 
-    def app_status(category_key, _app_key)
-      return "inactive" if category_key != "ai"
+      def app_status(category_key, _app_key)
+        return "inactive" if category_key != "ai"
 
-      Rails.application.secrets.dig(:ai, :enabled) == true ? "active" : "inactive"
-    end
+        Ai::Settings.ai_available? ? "active" : "inactive"
+      end
   end
 end

@@ -1,7 +1,21 @@
+<% public_linkable = !proposal.hidden? && !proposal.draft? %>
 <tr id="<%= dom_id(proposal) %>" class="kern-table__row">
-  <td class="kern-table__cell"><%= proposal.id %></td>
+  <td class="kern-table__cell" data-field="id"><%= link_to_if public_linkable, proposal.id, proposal_path(proposal), class: "kern-link", target: "_blank", data: { turbo: false } %></td>
+  <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
+    <% if public_linkable %>
+      <%= link_to proposal_path(proposal),
+            class: "adm-table-thumb-link",
+            target: "_blank",
+            data: { turbo: false },
+            title: proposal.title do %>
+        <%= render Adm::TableThumbComponent.new(image: proposal.image, title: proposal.title) %>
+      <% end %>
+    <% else %>
+      <%= render Adm::TableThumbComponent.new(image: proposal.image, title: proposal.title) %>
+    <% end %>
+  </td>
   <% if projekt_phase.feature?("general.require_admin_acceptance") %>
-    <td class="kern-table__cell">
+    <td class="kern-table__cell" data-field="admin_accepted">
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         proposal,
         :admin_accepted,
@@ -9,12 +23,12 @@
       ) %>
     </td>
   <% end %>
-  <th scope="row" class="kern-table__header"><%= proposal.title %></th>
-  <td class="kern-table__cell"><%= moderation_status(proposal) %></td>
-  <td class="kern-table__cell"><%= proposal.author.username %></td>
+  <th scope="row" class="kern-table__header" data-field="title"><%= link_to adm_projekts_phase_proposal_path(projekt_phase, proposal), class: "kern-link", data: { turbo_frame: "_top" } do %><%= proposal.title %><% end %></th>
+  <td class="kern-table__cell" data-field="moderation_status"><%= moderation_status(proposal) %></td>
+  <td class="kern-table__cell" data-field="author"><%= proposal.author.username %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal), icon: "visibility") %>
+      <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal), icon: "visibility", data: { turbo_frame: "_top" }) %>
       <% if policy([:adm, proposal]).unhide? %>
         <% actions.with_action(label: t("adm.projekts.phases.proposals.table.unhide"),
                                url: unhide_adm_projekts_phase_proposal_path(projekt_phase, proposal),

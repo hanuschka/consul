@@ -5,8 +5,6 @@ class Shared::ResourcesListComponent < ApplicationComponent
   renders_one :custom_body
   renders_one :items_remark
 
-  delegate :projekt_phase_feature?, to: :helpers
-
   attr_reader :filters, :remote_url, :resource_type, :resources
 
   def initialize(
@@ -17,8 +15,6 @@ class Shared::ResourcesListComponent < ApplicationComponent
     current_filter: nil,
     filter_param: "filter",
     remote_url: nil,
-    map_location: nil,
-    map_coordinates: nil,
     filter_i18n_namespace: nil,
     only_content: false,
     text_search_enabled: false,
@@ -33,8 +29,6 @@ class Shared::ResourcesListComponent < ApplicationComponent
     @current_filter = current_filter
     @remote_url = remote_url
     @only_content = only_content
-    @map_location = map_location
-    @map_coordinates = map_coordinates
     @text_search_enabled = text_search_enabled
     @filter_i18n_namespace = filter_i18n_namespace
     @filter_param = filter_param
@@ -52,20 +46,14 @@ class Shared::ResourcesListComponent < ApplicationComponent
   end
 
   def wide?
-    helpers.cookies["wide_resources"] == "true" || @wide
+    helpers.cookies["wide_resources"] == "true"
   end
 
   def class_names
-    base = @css_class.to_s
-
-    if wide?
-      base += " -wide"
-    end
-
-    base
+    wide? ? "-wide" : ""
   end
 
-  def selected_filter_otpion
+  def selected_filter_option
     return if filters.blank?
 
     filters.find { |filter| filter == @current_filter }
@@ -74,23 +62,7 @@ class Shared::ResourcesListComponent < ApplicationComponent
   def i18n_namespace
     return @filter_i18n_namespace if @filter_i18n_namespace.present?
 
-    if resource_type == Projekt
-      "custom.projekts"
-    elsif resource_type == Debate
-      "custom.debates.index"
-    elsif resource_type == Proposal
-      "custom.proposals.index"
-    elsif resource_type == Budget::Investment
-      "custom.budgets.investments.index"
-    elsif resource_type == Poll
-      "custom.polls.index"
-    elsif resource_type == DeficiencyReport
-      "custom.deficiency_reports.index"
-    elsif resource_type == Idea
-      "custom.ideas.index"
-    elsif resource_type == Topic
-      "custom.topics.list"
-    end
+    resource_types.dig(resource_type, :i18n_namespace)
   end
 
   def empty_list_text
@@ -109,45 +81,86 @@ class Shared::ResourcesListComponent < ApplicationComponent
     end
   end
 
-  def proposal_resources_ids
-    @resources.select { |r| r.is_a?(Proposal) }.map(&:id)
-  end
-
   def resource_component(resource)
-    case resource
-    when Projekt
-      Projekts::ListItemComponent.new(projekt: resource)
-    when Proposal
-      Proposals::ListItemComponent.new(proposal: resource)
-    when Debate
-      Debates::ListItemComponent.new(debate: resource)
-    when Poll
-      Polls::ListItemComponent.new(poll: resource)
-    when DeficiencyReport
-      DeficiencyReports::ListItemComponent.new(deficiency_report: resource)
-    when Budget::Investment
-      Budgets::Investments::ListItemComponent.new(
-        budget_investment: resource,
-        budget_investment_ids: resources.pluck(:id),
-        ballot: @additional_data[:ballot]
-      )
-    when ProjektEvent
-      Projekts::ProjektEvents::ListItemComponent.new(projekt_event: resource)
-    when Topic
-      Topics::ListItemComponent.new(topic: resource)
-    when Idea
-      Ideas::ListItemComponent.new(idea: resource)
-    end
+    match = resource_types.find { |klass, _| resource.is_a?(klass) }
+    return if match.blank?
+
+    context = {
+      resources: resources,
+      additional_data: @additional_data,
+      hide_projekt_breadcrumb: @projekt_phase.present?
+    }
+
+    match.last[:component].call(resource, context)
   end
 
-  def default_filter_options
-    [
-      "newest",
-      "oldest"
-    ]
-  end
+  private
 
-  def hide_list_line_divider?
-    resource_type == Topic
+  def resource_types
+    @resource_types ||= {
+      Projekt => {
+        i18n_namespace: "custom.projekts",
+        component: ->(resource, _) { Projekts::ListItemComponent.new(projekt: resource) }
+      },
+      Proposal => {
+        i18n_namespace: "custom.proposals.index",
+        component: ->(resource, context) {
+          Proposals::ListItemComponent.new(
+            proposal: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
+      },
+      Debate => {
+        i18n_namespace: "custom.debates.index",
+        component: ->(resource, context) {
+          Debates::ListItemComponent.new(
+            debate: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
+      },
+      Poll => {
+        i18n_namespace: "custom.polls.index",
+        component: ->(resource, context) {
+          Polls::ListItemComponent.new(
+            poll: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
+      },
+      DeficiencyReport => {
+        i18n_namespace: "custom.deficiency_reports.index",
+        component: ->(resource, _) { DeficiencyReports::ListItemComponent.new(deficiency_report: resource) }
+      },
+      Budget::Investment => {
+        i18n_namespace: "custom.budgets.investments.index",
+        component: ->(resource, context) {
+          Budgets::Investments::ListItemComponent.new(
+            budget_investment: resource,
+            budget_investment_ids: context[:resources].pluck(:id),
+            ballot: context[:additional_data][:ballot],
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
+      },
+      Idea => {
+        i18n_namespace: "custom.ideas.index",
+        component: ->(resource, _) { Ideas::ListItemComponent.new(idea: resource) }
+      },
+      Topic => {
+        i18n_namespace: "custom.topics.list",
+        component: ->(resource, _) { Topics::ListItemComponent.new(topic: resource) }
+      },
+      ProjektEvent => {
+        i18n_namespace: nil,
+        component: ->(resource, context) {
+          Projekts::ProjektEvents::ListItemComponent.new(
+            projekt_event: resource,
+            hide_projekt_breadcrumb: context[:hide_projekt_breadcrumb]
+          )
+        }
+      }
+    }
   end
 end

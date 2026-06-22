@@ -1,8 +1,8 @@
-<% provide :title do %><%= t("custom.deficiency_reports.index.title") %><% end %>
+<% provide :title do %><%= deficiency_reports_feature_name %><% end %>
 
 <main>
   <h1>
-    <%= t("custom.deficiency_reports.index.title") %>
+    <%= deficiency_reports_feature_name %>
   </h1>
 
   <% if Setting["deficiency_reports.intro_text"].present? %>
@@ -18,7 +18,9 @@
   <div class="margin-bottom">
     <%= render Shared::MapComponent.new(
       features: @deficiency_reports_coordinates,
-      process: 'deficiency_reports'
+      features_count: @deficiency_reports_map_pin_count,
+      process: 'deficiency_reports',
+      map_data_url: deficiency_reports_path(**request.query_parameters, format: :json)
     ) %>
   </div>
 
@@ -26,8 +28,10 @@
     <div class="main-column">
       <% if deficiency_reports_feature?("show_create_report_button") %>
         <div class="show-on-small-tablet margin-bottom text-center">
-          <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
-            class: "button -orange", data: { turbolinks: false } %>
+          <%= deficiency_report_create_cta_button(
+            css_class: "button -orange",
+            link_data: { turbolinks: false }
+          ) %>
         </div>
       <% end %>
 
@@ -42,6 +46,10 @@
           )) %>
 
       <%= paginate @deficiency_reports %>
+
+      <div id="section_help" class="margin" data-magellan-target="section_help">
+        <%= render_custom_block "deficiency_reports_help" %>
+      </div>
     </div>
 
     <div id="deficiency_reports-sidebar" class="sidebar">
@@ -61,8 +69,11 @@
 
         <% if deficiency_reports_feature?("show_create_report_button") %>
           <div class="hide-on-mobile">
-            <%= link_to t("custom.deficiency_reports.index.start_deficiency_report"), new_deficiency_report_path,
-              class: "button -orange", data: { turbolinks: false }, style: "display:inline-flex;" %>
+            <%= deficiency_report_create_cta_button(
+              css_class: "button -orange",
+              link_data: { turbolinks: false },
+              style: "display:inline-flex;"
+            ) %>
           </div>
         <% end %>
       <% end %>
@@ -100,3 +111,5 @@
     </div>
   </div>
 </main>
+
+<%= render "create_cta_modal" %>

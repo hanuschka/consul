@@ -1,8 +1,9 @@
 .custom-new-design {
   &.home-page {
     header {
-      .top-bar-background-wrapper {
+      .top-bar-wrapper {
         background-color: transparent;
+        box-shadow: none;
       }
     }
 
@@ -25,10 +26,10 @@
     }
 
     .main-column .custom-content-block-body {
-      margin-bottom: 40px;
+      // margin-bottom: 40px;
 
       @media(max-width: $small-tablet-viewport-start) {
-        margin-bottom: 30px;
+        // margin-bottom: 30px;
       }
     }
   }

@@ -92,6 +92,8 @@ de:
           dates_description: Legt den Zeitraum fest, in dem diese Beteiligungsphase aktiv ist. Innerhalb dieser Laufzeit können Nutzer an der Phase teilnehmen. Außerhalb des Zeitraums wird die Phase als abgeschlossen oder noch nicht gestartet angezeigt. Die Laufzeit ist unabhängig von der übergeordneten Projektlaufzeit konfigurierbar.
         naming:
           title: Benennung
+          poll_image_label: Bild der Abstimmung
+          poll_image_description: "Wird in der Übersicht der Abstimmungen als Vorschaubild neben dem Titel angezeigt und unterstützt die schnelle visuelle Wiedererkennung. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zur Abstimmung passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG."
         restrictions:
           title: Beteiligungsbeschränkung
           intro_title: Hinweis zur Beteiligungsbeschränkung
@@ -130,10 +132,20 @@ de:
           title: Nutzerfunktionen
         proposals:
           title: Vorschläge
+          columns: Spalten
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           no_proposals_title: Keine Vorschläge vorhanden
           no_proposals_description: Sobald Nutzer in dieser Beteiligungsphase Vorschläge einreichen, werden diese hier aufgelistet und können moderiert werden. Sie haben die Möglichkeit, Vorschläge freizugeben, herauszumoderieren oder gemeldete Beiträge zu prüfen. Die Tabelle zeigt Titel, Autor und Moderationsstatus jedes einzelnen Vorschlags an.
+          no_results_filtered_title: Keine Vorschläge für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Vorschläge zu sehen.
+          total_label:
+            one: Vorschlag
+            other: Vorschläge
+          total_hint: Anzahl der Vorschläge in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
+            image: Bild
             admin_accepted: Freigegeben
             title: Titel
             moderation: Moderation
@@ -148,6 +160,7 @@ de:
           title: Kommentare
           no_comments_title: Keine Kommentare vorhanden
           no_comments_description: Sobald Nutzer in dieser Beteiligungsphase Kommentare verfassen, werden diese hier aufgelistet und können moderiert werden. Sie haben die Möglichkeit, einzelne Kommentare herauszumoderieren, wiederherzustellen oder gemeldete Beiträge zu überprüfen. Die Tabelle zeigt Autor, Inhalt und Moderationsstatus jedes Kommentars an.
+          download_csv: CSV herunterladen
           table:
             body: Kommentar
             author: Autor
@@ -176,6 +189,9 @@ de:
             actions: Aktionen
         map:
           title: Karte
+          masterportal_import_success: Import erfolgreich abgeschlossen.
+        masterportal_pins:
+          title: Importierte Masterportal-Pins
         officing_managers:
           title: Abstimmungshelfer
           lock_on: Sperrdatum
@@ -258,6 +274,7 @@ de:
             actions: Aktionen
         projekt_point_of_interest_pins:
           title: Pins
+          download_geojson: GeoJSON herunterladen
           no_pins: Keine Pins vorhanden.
           no_pins_title: Keine Pins vorhanden
           no_pins_description: Sobald Nutzer im Frontend Orte von Interesse auf der Karte markieren, werden die erstellten Pins hier aufgelistet und können verwaltet werden. Jeder Pin enthält eine Adresse, eine Kategorie und den zugehörigen Autor. Über die Tabelle können Sie Pins einsehen, bearbeiten oder bei Bedarf entfernen und so die Karteninhalte gezielt steuern.
@@ -267,6 +284,7 @@ de:
             author: Autor
             category: Kategorie
             created_at: Erstellt am
+            actions: Aktionen
         map_resources_overview:
           title: Kartenübersicht
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.
@@ -294,6 +312,8 @@ de:
             datetime: Datum
             actions: Aktionen
             open_ended: Offenes Ende
+            show: Übersicht
+            registrations_count: "Anmeldungen (%{count})"
             send_notifications: Benachrichtigungen senden
             send_notifications_confirm: Möchten Sie wirklich Benachrichtigungen an alle Nutzer senden?
         milestones:
@@ -368,6 +388,11 @@ de:
           empty_description: Diese Funktion muss zunächst durch demokratie.today für Ihre Plattform freigeschaltet werden. Bitte wenden Sie sich an Ihren Ansprechpartner, um die KI-gestützten Bewertungskriterien zu aktivieren. Nach der Freischaltung können Sie hier Kriterien definieren, anhand derer eingereichte Beiträge automatisch bewertet und kategorisiert werden.
         email_templates:
           title: System-E-Mails
+          groups:
+            submission: Einreichung (Phase 2)
+            feasibility: Bewertung der Umsetzbarkeit (Phase 2 + 3)
+            preselection: Vorauswahl (Übergang Phase 4 → 5)
+            selection: Finale Auswahl zur Abstimmung (Phase 5)
         ai_settings:
           title: KI Sprachassistent
           empty_title: KI Sprachassistent nicht verfügbar
@@ -468,11 +493,19 @@ de:
           recalculate_winners: Gewinner neu ermitteln
           recalculate_winners_confirm: Gewinner werden sofort neu berechnet. Fortfahren?
           download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           columns: Spalten
           no_investments_title: Keine Vorschläge vorhanden
           no_investments_description: Sobald Nutzer in dieser Beteiligungsphase Investitionsvorschläge einreichen, werden diese hier aufgelistet und können von Gutachtern bewertet, auf Machbarkeit geprüft und bei Bedarf moderiert werden. Über die Tabelle haben Sie Zugriff auf alle relevanten Details wie Kosten, Status und Bewertungsergebnisse jedes einzelnen Vorschlags.
+          no_results_filtered_title: Keine Vorschläge für die aktuellen Filter
+          no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Vorschläge zu sehen.
+          total_label:
+            one: Vorschlag
+            other: Vorschläge
+          total_hint: Anzahl der Vorschläge in der aktuellen Ansicht (inkl. aktiver Filter).
           table:
             id: ID
+            image: Bild
             created_at: Eingereicht
             title: Titel
             feasibility: Kriterien

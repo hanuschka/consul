@@ -4,9 +4,10 @@ class Budgets::Investments::FormComponent < ApplicationComponent
   attr_reader :investment, :url
   delegate :current_user, :budget_heading_select_options, :suggest_data, :pick_text_color, :resources_back_link, to: :helpers
 
-  def initialize(investment, url:)
+  def initialize(investment, url:, embbeded_in_ai_flow: false)
     @investment = investment
     @url = url
+    @embbeded_in_ai_flow = embbeded_in_ai_flow
   end
 
   private

@@ -9,6 +9,30 @@ de:
       access_level:
         public_data: Öffentliche Daten
         admin: Admin
+        tooltip:
+          public_data:
+            description: >
+              Nur lesender Zugriff auf öffentlich verfügbare Inhalte. Dieser
+              Client kann ausschließlich GET-Anfragen senden — er kann nichts
+              erstellen, ändern oder löschen. Ideal für Integrationen, die
+              Daten lediglich anzeigen, etwa ein Website-Widget oder ein
+              öffentliches Dashboard.
+            alternative_label: Admin-Modus
+            alternative: >
+              Gewährt vollständigen Zugriff zum Erstellen, Aktualisieren und
+              Löschen. Nur wählen, wenn der Client tatsächlich Daten schreiben
+              muss.
+          admin:
+            description: >
+              Vollständiger Zugriff auf alle Ressourcen. Dieser Client kann
+              Inhalte über die API abrufen, erstellen, aktualisieren und
+              löschen. Nur an vertrauenswürdige Integrationen vergeben, die
+              wirklich Schreibzugriff benötigen.
+            alternative_label: Modus „Öffentliche Daten"
+            alternative: >
+              Beschränkt den Client auf nur lesende GET-Anfragen auf
+              öffentliche Inhalte. Für Integrationen wählen, die Daten nur
+              anzeigen müssen.
       index:
         title: API-Clients
         intro: >
@@ -16,13 +40,28 @@ de:
         create_new: Neuen API-Client erstellen
         api_docs_link: API-Dokumentation
         id: API-Client ID
+        posts_as: Veröffentlicht als
         no_api_clients: Keine API-Clients vorhanden.
         delete_confirm: >
           Sind Sie sicher, dass Sie diesen API-Client löschen möchten?
+      logs:
+        title: API-Anfragen-Logs
+        intro: >
+          Alle API-Anfragen des Clients „%{name}". Nutzen Sie die Filter, um nach Pfad, Methode, Status oder Zeitraum einzugrenzen.
+        no_logs: Für diesen API-Client liegen keine Anfragen-Logs vor.
       new:
         title: Neuen API-Client erstellen
       edit:
         title: API-Client bearbeiten
+      service_users:
+        edit:
+          title: Service-Benutzer bearbeiten
+          intro: >
+            Bearbeiten Sie das öffentliche Profil des Service-Benutzers, der
+            als Autor für alle über diesen API-Client erstellten Inhalte dient.
+        flash:
+          updated: Service-Benutzer erfolgreich aktualisiert
+          no_service_user: Dieser API-Client verwendet keinen eigenen Service-Benutzer.
       show:
         auth_token_explanation_text: >
           Fügen Sie diesen Token im Authorization-Header Ihrer
@@ -32,6 +71,11 @@ de:
         auth_token_example: "Authorization: Bearer IHR_AUTH_TOKEN_HIER"
         service_user_title: Service-Benutzer
         service_user_name: Name
+        system_user_title: Systembenutzer
+        system_user_note: >
+          Dieser API-Client verwendet keinen eigenen Service-Benutzer.
+          Alle über diesen Client erstellten Inhalte werden unter dem
+          Systembenutzer veröffentlicht.
         service_user_login_warning: >
           Hinweis: Sie sollten sich nicht direkt mit diesem
           Service-Benutzer anmelden. Verwenden Sie stattdessen
@@ -47,12 +91,42 @@ de:
           und wird für die API-Authentifizierung verwendet.
         service_user_email_description: >
           Geben Sie eine gültige E-Mail-Adresse für das automatisch erstellte Service-Benutzerkonto an. Der Service-Benutzer wird als Autor für alle Inhalte verwendet, die über diesen API-Client erstellt werden — z.B. Vorschläge, Kommentare oder Abstimmungen. Die Adresse muss eindeutig sein und darf nicht bereits von einem anderen Konto verwendet werden.
-        service_user_form_title: Service-Benutzerinformationen aktualisieren
+        service_user_section_title: Service-Benutzer
+        edit_service_user: Service-Benutzer bearbeiten
+        service_user_section_description: >
+          Der Service-Benutzer ist die öffentliche Autorenidentität dieses
+          API-Clients: Alle über die API erstellten Inhalte — z.B. Vorschläge
+          oder Kommentare — werden unter diesem Benutzer veröffentlicht. Eine
+          direkte Anmeldung mit diesem Benutzer ist nicht möglich.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Hintergrundbild
-        service_user_errors_message: "%{count} Fehler"
-        service_user_errors_title: "hinderte diesen Service-Benutzer daran, gespeichert zu werden:"
-        update_service_user: Service-Benutzer aktualisieren
+        service_user_username_description: >
+          Der interne Anmeldename des Service-Benutzers. Er wird automatisch aus
+          dem Namen des API-Clients erzeugt, muss plattformweit eindeutig sein
+          und dient ausschließlich der internen Zuordnung.
+        service_user_first_name_description: >
+          Vorname des Service-Benutzers. Bildet zusammen mit dem Nachnamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_last_name_description: >
+          Nachname des Service-Benutzers. Bildet zusammen mit dem Vornamen den
+          öffentlich angezeigten Autorennamen für alle über die API erstellten
+          Inhalte.
+        service_user_avatar_description: >
+          Profilbild des Service-Benutzers. Es wird neben den über die API
+          erstellten Inhalten angezeigt. Quadratische Bilder werden am besten
+          dargestellt.
+        service_user_background_image_description: >
+          Hintergrundbild für die öffentliche Profilseite des Service-Benutzers.
+        use_system_user_label: Systembenutzer verwenden
+        use_system_user_description: >
+          Wenn aktiviert, werden über diesen API-Client erstellte Inhalte
+          unter dem Systembenutzer veröffentlicht. Deaktivieren Sie die
+          Option, um einen eigenen Service-Benutzer für diesen Client
+          anzulegen.
+        system_user_note: >
+          Alle über diesen API-Client erstellten Inhalte werden unter
+          diesem Systembenutzer veröffentlicht.
         regenerate_token: Token erneuern
         regenerate_token_explanation: >
           Erstellt einen neuen Token und macht den aktuellen ungültig.

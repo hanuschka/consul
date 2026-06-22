@@ -14,13 +14,17 @@
         }
       }
 
-      $("body").on("click", ".js-icon-toggle-budget-phases", function(event) {
-        var $phase = $(this).closest('.sidebar-projekt-phase')
-        $phase.attr('aria-expanded', function (i, attr) {
-          return attr == 'true' ? 'false' : 'true'
-        });
+      $("body").off("click.budgetPhasesToggle").on("click.budgetPhasesToggle", ".js-icon-toggle-budget-phases", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var $button = $(this);
+        var $phase = $button.closest('.sidebar-projekt-phase');
+        // Source of truth: the BUTTON's aria-expanded. Falls back to phase's, then to "true".
+        var current = $button.attr('aria-expanded') || $phase.attr('aria-expanded') || 'true';
+        var newState = current === 'true' ? 'false' : 'true';
 
-        $(this).attr('aria-expanded', $phase.attr('aria-expanded'))
+        $phase.attr('aria-expanded', newState);
+        $button.attr('aria-expanded', newState);
       })
 
       $("body").on("click", ".js-left-arrow-control", function(event) {

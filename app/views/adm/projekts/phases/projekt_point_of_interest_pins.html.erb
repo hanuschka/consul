@@ -6,6 +6,13 @@
 
 <div class="kern-container mb-5">
   <% if @pins.any? %>
+    <div class="d-flex align-items-center justify-content-end mb-3">
+      <a href="<%= projekt_point_of_interest_pins_adm_projekts_phase_path(@projekt_phase, format: :geojson, **request.query_parameters) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">map</span>
+        <%= t(".download_geojson") %>
+      </a>
+    </div>
+
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
         <thead class="kern-table__head">
@@ -15,6 +22,7 @@
             <th scope="col" class="kern-table__header"><%= t(".table.author") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.category") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.created_at") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
           </tr>
         </thead>
 
@@ -26,6 +34,13 @@
               <td class="kern-table__cell"><%= pin.author.username %></td>
               <td class="kern-table__cell"><%= pin.projekt_point_of_interest_category&.name %></td>
               <td class="kern-table__cell"><%= l pin.created_at, format: :short %></td>
+              <td class="kern-table__cell">
+                <% if pin.masterportal_pin_id.blank? %>
+                  <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                    <% actions.with_action(label: t("shared.delete"), url: destroy_projekt_point_of_interest_pin_adm_projekts_phase_path(@projekt_phase, pin_id: pin.id), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
+                  <% end %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>

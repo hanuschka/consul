@@ -1,0 +1,65 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container mb-5">
+  <h2 class="h3 mb-4"><%= t(".heading") %></h2>
+  <p class="text-muted mb-4"><%= t(".description") %></p>
+
+  <%= form_with(
+    model: @visibility,
+    url: update_evaluation_visibility_adm_projekts_phase_path(@projekt_phase),
+    method: :patch,
+    local: true,
+    class: "evaluation-visibility-form"
+  ) do |form| %>
+    <%
+      phase_type = @projekt_phase.type
+      available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase_type)
+    %>
+
+    <div class="evaluation-visibility-form__phase">
+      <div class="evaluation-visibility-form__phase-header">
+        <strong><%= @projekt_phase.title %></strong>
+        <span class="evaluation-visibility-form__phase-type">
+          <%= t("adm.projekts.projekts.evaluation.#{phase_type.to_s.split("::").last.underscore}",
+            default: phase_type.to_s.split("::").last) %>
+        </span>
+      </div>
+
+      <div class="evaluation-visibility-form__sections">
+        <% available_sections.each do |section_key| %>
+          <%
+            field_name = "projekt_phase_evaluation_visibility[show_#{section_key}]"
+            field_id = "projekt_phase_evaluation_visibility_show_#{section_key}"
+            checked = @visibility["show_#{section_key}"]
+          %>
+          <%= render Kern::SwitchComponent.new(
+            name: field_name,
+            id: field_id,
+            checked: checked,
+            row: true,
+            label: t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}"),
+            description: t("adm.projekts.projekts.evaluation.pdf_options.section_descriptions.#{section_key}")
+          ) %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between gap-2 mt-4">
+      <%= kern_link_button(
+        evaluation_adm_projekts_projekt_path(
+          @projekt_phase.projekt,
+          anchor: "phase-#{@projekt_phase.id}"
+        ),
+        text: t(".cancel"),
+        icon: "arrow_back",
+        style: :secondary
+      ) %>
+      <%= button_tag type: "submit", class: "kern-btn kern-btn--primary" do %>
+        <span class="kern-label material-symbols-outlined" aria-hidden="true">save</span>
+        <span class="kern-label"><%= t(".save") %></span>
+      <% end %>
+    </div>
+  <% end %>
+</div>

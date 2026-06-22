@@ -1,0 +1,94 @@
+de:
+  components:
+    adm:
+      delete_collection_component:
+        default_headline: "Löschen läuft…"
+        default_hint: "Bei großen Datenmengen kann dies einen Moment dauern. Bitte diesen Tab nicht schließen."
+        error_headline: "Löschen fehlgeschlagen. Bitte erneut versuchen."
+      masterportal_import_panel_component:
+        progress:
+          running: "Import läuft"
+          processed: "%{count} Einträge bisher verarbeitet"
+          create_resource_on: "Aus jedem importierten Eintrag wird ein %{resource_name} erstellt"
+          create_resource_off: "Nur Pins werden importiert — keine Modul-Einträge"
+    kern:
+      map_component:
+        masterportal_wms_layer_name: "Masterportal (Regensburg)"
+        masterportal_popup:
+          category: "Kategorie"
+          accessibility: "Barrierefreiheit"
+          go_to_resource: "Zur Ressource"
+      map_legend_component:
+        aria_label: "Kartenlegende"
+        user_pin: "Benutzer-erstellt"
+        imported_pin: "Aus Masterportal importiert"
+    shared:
+      map_component:
+        layers:
+          masterportal_pins: "Masterportal-Pins"
+          masterportal_wms_layer_name: "Masterportal (Regensburg)"
+      masterportal_pin_properties_component:
+        title: "Eigenschaften aus dem Masterportal"
+        flag_true: "Ja"
+        flag_false: "Nein"
+  masterportal:
+    imported_proposal_default_title: "Importierter Punkt %{external_id}"
+    imported_investment_default_title: "Importierter Punkt %{external_id}"
+    imported_resource_description: "Dieser Eintrag gehört zu der von der Stadt Regensburg erstellten Karte der Kühlen Orten."
+    description:
+      properties_heading: "Eigenschaften aus dem Masterportal"
+    feature:
+      category_label: "Kategorie"
+    accessibility_flags:
+      ZUGAENGLICH_VOLL: "Barrierefrei zugänglich"
+      ZUGAENGLICH_EINGESCHRAENKT: "Eingeschränkt zugänglich"
+      ZUGAENGLICH_NICHT: "Nicht barrierefrei"
+      ZUGAENGLICH_BEGLEITPERSON: "Mit Begleitperson zugänglich"
+      ROLLSTUHL_PARKPLATZ: "Rollstuhl-Parkplatz"
+      ROLLSTUHL_WC: "Rollstuhl-WC"
+      HOERANLAGE_IND: "Induktive Höranlage"
+      INFO_BLINDENSCHRIFT: "Info in Blindenschrift"
+      INFO_GEBAERDENSPRACHE: "Info in Gebärdensprache"
+      INFO_LEICHTE_SPRACHE: "Info in leichter Sprache"
+      WELTERBERELEVANT: "Welterbe-relevant"
+      VALUE_BARRIEREFREI: "Barrierefrei"
+      VALUE_SITZMOEGLICHKEITEN: "Sitzmöglichkeiten"
+      BAR_VOLL_ZUGAENGLICH: "Barrierefrei zugänglich"
+      BAR_EING_ZUGAENGLICH: "Eingeschränkt zugänglich"
+      BAR_NICHT_ZUGAENGLICH: "Nicht barrierefrei"
+      BAR_BEGLEITPERS_ZUGAENGLICH: "Mit Begleitperson zugänglich"
+    popup:
+      value_yes: "Ja"
+      property_labels:
+        address: "Adresse"
+        name: "Name"
+        kategorie: "Kategorie"
+        category: "Kategorie"
+        art: "Art"
+        art_name: "Art"
+        art_category: "Kategorie"
+        tel_nr: "Telefon"
+        telefon: "Telefon"
+        phone: "Telefon"
+        fax_nr: "Fax"
+        e_mail_adresse: "E-Mail"
+        email: "E-Mail"
+        internet: "Webseite"
+        homepage: "Webseite"
+        website: "Webseite"
+        denkmal_name: "Denkmalname"
+        ort: "Ort"
+        plz: "PLZ"
+        strasse: "Straße"
+        haus_nr: "Hausnummer"
+        haus_nr_zusatz: "Hausnummer-Zusatz"
+        adresse: "Adresse"
+        oeffnungszeiten: "Öffnungszeiten"
+        traeger: "Betreiber"
+        preis: "Preis"
+        image: "Bild"
+        alg_lagebeschreibung: "Lagebeschreibung"
+        aufent_bem: "Aufenthalt"
+        barr_bem: "Barrierefreiheit"
+        fam_bem: "Für Familien"
+        sitz_bem: "Sitzmöglichkeiten"

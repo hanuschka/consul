@@ -10,8 +10,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     @contact_persons = SectionContactPerson.for_section("projekts")
     visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
     @pagy_activities, @activities = pagy(
-      SectionActivity.for_section("projekts")
-        .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids),
+      SectionActivity.for_section("projekts").for_trackables("Projekt", visible_projekt_ids),
       limit: 10,
       page_param: :activity_page
     )

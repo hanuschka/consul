@@ -11,7 +11,9 @@ module Abilities
 
         can [:show, :add_memo, :audits], DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_assign_officer"].present?
-            dr.responsible == dr_officer || dr.responsible.is_a?(DeficiencyReport::OfficerGroup) && dr.responsible.officers.include?(dr_officer)
+            dr_officer&.manage_all? ||
+              dr.responsible == dr_officer ||
+              dr.responsible.is_a?(DeficiencyReport::OfficerGroup) && dr.responsible.officers.include?(dr_officer)
           else
             true
           end
@@ -19,7 +21,8 @@ module Abilities
 
         can [:edit, :update], DeficiencyReport do |dr|
           if Setting["deficiency_reports.admins_must_assign_officer"].present?
-            dr.responsible == dr_officer ||
+            dr_officer&.manage_all? ||
+              dr.responsible == dr_officer ||
               (dr.responsible.is_a?(DeficiencyReport::OfficerGroup) &&
                 dr.responsible.officers.include?(dr_officer))
           else

@@ -55,45 +55,34 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
         class="add-new-content-block-section js-show-content-block-templates-section js-add-content-block-at-top -at-top js-studio-hide-on-preview"
         style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
       >
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button
-            type="button"
-            class="add-new-content-block-floating-control content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
-            tabindex="-1"
-          >
-            <i class="fas fa-magic"></i>
-          </button>
-        `, {
-          title: "Inhaltsblock mit KI erstellen",
-          text: "Erstellt mit künstlicher Intelligenz einen neuen Inhaltsblock aus Ihrer Beschreibung.",
-          delay: 1500
-        })}
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button
-            type="button"
-            class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
-            tabindex="-1"
-          >
-            <i class="far fa-file"></i>
-          </button>
-        `, {
-          title: "Leeren Inhaltsblock am Anfang hinzufügen",
-          text: "Fügt ganz oben auf der Seite einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
-          delay: 1500
-        })}
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button
-            type="button"
-            class="js-show-content-block-templates add-new-content-block-button"
-            tabindex="-1"
-          >
-            <i class="fas fa-plus"></i>
-          </button>
-        `, {
-          title: "Inhaltsblock am Anfang hinzufügen",
-          text: "Fügt ganz oben auf der Seite einen neuen Inhaltsblock aus einer Vorlage hinzu.",
-          delay: 1500
-        })}
+        <div class="add-new-content-block-section--controls">
+          ${ProjektStudio.templateFunctions.studioControlTooltip(`
+            <button
+              type="button"
+              class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
+              tabindex="-1"
+            >
+              <i class="far fa-file"></i>
+            </button>
+          `, {
+            title: "Leeren Inhaltsblock am Anfang hinzufügen",
+            text: "Fügt ganz oben auf der Seite einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
+            delay: 1500
+          })}
+          ${ProjektStudio.templateFunctions.studioControlTooltip(`
+            <button
+              type="button"
+              class="js-show-content-block-templates add-new-content-block-button"
+              tabindex="-1"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          `, {
+            title: "Inhaltsblock am Anfang hinzufügen",
+            text: "Fügt ganz oben auf der Seite einen neuen Inhaltsblock aus einer Vorlage hinzu.",
+            delay: 1500
+          })}
+        </div>
       </div>
 
       ${contentBlocks && contentBlocks.join("")}
@@ -401,48 +390,36 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 function showContentBlockTemplatesButton(isDraft = false) {
   return `
     <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
-      ${ProjektStudio.templateFunctions.studioControlTooltip(`
-        <button
-          type="button"
-          class="add-new-content-block-floating-control content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
-          tabindex="-1"
-          ${isDraft ? "disabled" : ''}
-        >
-          <i class="fas fa-magic"></i>
-        </button>
-      `, {
-        title: "Inhaltsblock mit KI erstellen",
-        text: "Erstellt mit künstlicher Intelligenz einen neuen Inhaltsblock aus Ihrer Beschreibung.",
-        delay: 1500
-      })}
-      ${ProjektStudio.templateFunctions.studioControlTooltip(`
-        <button
-          type="button"
-          class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
-          tabindex="-1"
-          ${isDraft ? "disabled" : ''}
-        >
-          <i class="far fa-file"></i>
-        </button>
-      `, {
-        title: "Leeren Inhaltsblock hinzufügen",
-        text: "Fügt an dieser Stelle einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
-        delay: 1500
-      })}
-      ${ProjektStudio.templateFunctions.studioControlTooltip(`
-        <button
-          type="button"
-          class="js-show-content-block-templates add-new-content-block-button"
-          tabindex="-1"
-          ${isDraft ? "disabled" : ''}
-        >
-          <i class="fas fa-plus"></i>
-        </button>
-      `, {
-        title: "Inhaltsblock hinzufügen",
-        text: "Fügt an dieser Stelle einen neuen Inhaltsblock aus einer Vorlage hinzu.",
-        delay: 1500
-      })}
+      <div class="add-new-content-block-section--controls">
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button
+            type="button"
+            class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
+            tabindex="-1"
+            ${isDraft ? "disabled" : ''}
+          >
+            <i class="far fa-file"></i>
+          </button>
+        `, {
+          title: "Leeren Inhaltsblock hinzufügen",
+          text: "Fügt an dieser Stelle einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
+          delay: 1500
+        })}
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button
+            type="button"
+            class="js-show-content-block-templates add-new-content-block-button"
+            tabindex="-1"
+            ${isDraft ? "disabled" : ''}
+          >
+            <i class="fas fa-plus"></i>
+          </button>
+        `, {
+          title: "Inhaltsblock hinzufügen",
+          text: "Fügt an dieser Stelle einen neuen Inhaltsblock aus einer Vorlage hinzu.",
+          delay: 1500
+        })}
+      </div>
     </div>
   `
 }

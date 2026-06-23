@@ -24,6 +24,9 @@ module Adm
       end
 
       check_api_connection
+
+      @all_checks_passed =
+        @dt_connected && @api_accessible && @connection_works
     end
 
     private

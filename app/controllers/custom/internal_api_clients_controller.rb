@@ -51,7 +51,7 @@ class InternalApiClientsController < ApplicationController
 
     if dt_response.code === 200
       flash[:notice] = I18n.t("internal_api_clients.connect.success")
-      redirect_to admin_connection_path
+      redirect_back(fallback_location: admin_connection_path)
     else
       if dt_response.code == 200
         flash[:error] =

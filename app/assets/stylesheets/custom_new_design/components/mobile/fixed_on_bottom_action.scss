@@ -20,14 +20,6 @@
     padding-bottom: calc(10px + env(safe-area-inset-bottom));
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.10);
 
-    @media(hover: hover) and (pointer: fine) {
-      position: static;
-      z-index: auto;
-      background: transparent;
-      padding: 0;
-      box-shadow: none;
-    }
-
     @media(max-height: 600px) {
       position: static;
       border-top: 1px solid #e0e0e0;
@@ -87,10 +79,6 @@
 body.has-mobile-sticky-cta {
   @media(max-width: $small-tablet-viewport-start) {
     padding-bottom: 80px;
-
-    @media(hover: hover) and (pointer: fine) {
-      padding-bottom: 0;
-    }
 
     @media(max-height: 600px) {
       padding-bottom: 0;

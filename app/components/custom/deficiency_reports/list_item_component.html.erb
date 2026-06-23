@@ -11,7 +11,7 @@
   <% c.with_footer_section do %>
     <% status = deficiency_report.status %>
     <% if status&.description.present? %>
-      <rich-tooltip placement="top" shadow="heavy" class="deficiency-report-footer-status-tooltip">
+      <rich-tooltip placement="top" delay="2000" shadow="heavy" class="deficiency-report-footer-status-tooltip">
         <div class="deficiency-report-footer-status" style="color:<%= status.color %>;">
           <i class="fas fa-<%= status.icon %>"></i>
           <%= status.title %>

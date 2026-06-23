@@ -34,6 +34,8 @@ de:
             stalled_message: "Die Analyse dauert ungewöhnlich lange und ist möglicherweise fehlgeschlagen. Sie können diesen Import verwerfen und es erneut versuchen."
             dismiss: "Verwerfen"
             upload_new: "Neues Dokument hochladen"
+            diagnostics_title: "Technische Details"
+            diagnostics_stage: "Fehlerphase"
         list:
           sections:
             in_progress: "Laufende Importe"
@@ -56,6 +58,7 @@ de:
           created_at: "Erstellt: %{time}"
           finished_at: "Beendet: %{time}"
           projekt_created: "Projekt erstellt: %{title}"
+          image_failed_note: "Titelbild konnte nicht generiert werden"
           filters:
             aria: "Nach Status filtern"
             all: "Alle"
@@ -163,6 +166,18 @@ de:
           resolve_content_blocks_failed: "Inhaltsblöcke konnten nicht erstellt werden: %{message}"
           create_projekt_failed: "Projekt konnte nicht erstellt werden: %{message}"
           missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
+          extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
+        failure_stages:
+          extract: "Textextraktion"
+          extracting: "Textextraktion"
+          ai_processing: "KI-Analyse"
+          processing: "KI-Analyse"
+          finalize: "Datenfinalisierung"
+          resolve_content_blocks: "Inhaltsblöcke"
+          create_projekt: "Projekterstellung"
+          submitting: "Projekterstellung"
+          image_generation: "Titelbildgenerierung"
+          unknown: "Unbekannt"
         badge:
           imported_by_ai: "KI"
           imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."

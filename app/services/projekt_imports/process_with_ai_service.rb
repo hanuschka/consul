@@ -18,7 +18,10 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     data = call_ai_with_retry(system_prompt: system_prompt, schema: schema, message: message)
 
     if data.blank? || data["content_blocks"].blank?
-      return ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.ai_malformed"))
+      return ServiceResult.failure(
+        error: I18n.t("adm.projekts.imports.errors.ai_malformed"),
+        error_details: malformed_details(data)
+      )
     end
 
     ensure_clarification_questions(data)
@@ -26,7 +29,16 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     ServiceResult.success(ai_result: data)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ProcessWithAiService] failed: #{e.message}")
-    ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.ai_processing_failed", message: e.message))
+    Sentry.capture_exception(e, extra: { stage: "ai_processing", input_text_length: text.to_s.length }) if defined?(Sentry)
+    ServiceResult.failure(
+      error: I18n.t("adm.projekts.imports.errors.ai_processing_failed", message: e.message),
+      error_details: {
+        "failure_reason" => "exception",
+        "error_class" => e.class.name,
+        "error_message" => e.message,
+        "input_text_length" => text.to_s.length
+      }
+    )
   end
 
   private
@@ -74,8 +86,22 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
     response.content
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ProcessWithAiService] AI call error: #{e.message}")
+    @last_ai_error = e
+    Rails.logger.error("[ProjektImports::ProcessWithAiService] AI call error: #{e.class}: #{e.message}")
+    Sentry.capture_exception(e, extra: { stage: "ai_processing", input_text_length: text.to_s.length }) if defined?(Sentry)
     nil
+  end
+
+  def malformed_details(data)
+    reason = data.blank? ? "ai_call_failed" : "schema_non_adherence"
+
+    {
+      "failure_reason" => reason,
+      "input_text_length" => text.to_s.length,
+      "ai_error_class" => @last_ai_error&.class&.name,
+      "ai_error_message" => @last_ai_error&.message,
+      "returned_keys" => (data.is_a?(Hash) ? data.keys : nil)
+    }.compact
   end
 
   def ensure_clarification_questions(data)

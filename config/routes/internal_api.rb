@@ -64,5 +64,7 @@ namespace :internal_api do
 
   get "dashboard/api_works", to: "dashboard#api_works"
 
+  get "connection/dt_status", to: "connection#dt_status"
+
   get "stats", to: "stats#show"
 end

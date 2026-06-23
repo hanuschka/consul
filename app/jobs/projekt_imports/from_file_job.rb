@@ -8,7 +8,7 @@ class ProjektImports::FromFileJob < ApplicationJob
     extract_result = extract_all_files(projekt_import)
 
     if !extract_result.success?
-      projekt_import.mark_failed!(extract_result.error)
+      projekt_import.mark_failed!(extract_result.error, stage: "extract")
       return
     end
 
@@ -23,7 +23,7 @@ class ProjektImports::FromFileJob < ApplicationJob
     )
 
     if !ai_result.success?
-      projekt_import.mark_failed!(ai_result.error)
+      projekt_import.mark_failed!(ai_result.error, stage: "ai_processing", details: ai_result.error_details)
       return
     end
 
@@ -32,8 +32,9 @@ class ProjektImports::FromFileJob < ApplicationJob
     transition_to_chat(projekt_import)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::FromFileJob] failed: #{e.message}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import_id, stage: "from_file_job" }) if defined?(Sentry)
     pi = ProjektImport.find_by(id: projekt_import_id)
-    pi&.mark_failed!(e.message)
+    pi&.mark_failed!(e.message, exception: e)
     raise
   end
 
@@ -44,7 +45,13 @@ class ProjektImports::FromFileJob < ApplicationJob
 
     projekt_import.source_files.each do |source_file|
       result = extract_single_file(source_file)
-      return result if !result.success?
+
+      if !result.success?
+        return ServiceResult.failure(
+          error: I18n.t("adm.projekts.imports.errors.extract_file_failed",
+            filename: source_file.filename.to_s, message: result.error)
+        )
+      end
 
       chunks << result.data[:text]
     end

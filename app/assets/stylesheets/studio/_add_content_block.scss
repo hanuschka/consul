@@ -79,16 +79,35 @@
   }
 }
 
-.add-new-content-block-button {
-  // Base-Translate als CSS-Variable, damit Hover/Active nur die Scale ändern müssen.
-  --plus-base-translate: translateY(-50%);
-
+// The whole control row is positioned absolutely in the block gap to the left
+// of the content edge; the buttons inside flow as flex items (no per-button
+// absolute offsets). `right: calc(100% + 8px)` pins the row's right edge 8px
+// left of the content, and the shrink-to-fit width grows it leftward.
+.add-new-content-block-section--controls {
   position: absolute;
   top: 50%;
-  left: -40px;
-  transform: var(--plus-base-translate);
+  right: calc(100% + 7px);
+  transform: translateY(-50%);
   z-index: 2;
 
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  opacity: 0.5;
+  transition: opacity 180ms ease;
+}
+
+// Voll sichtbar wenn Maus in der Nähe ist (Section selbst oder umgebende Blöcke)
+.add-new-content-block-section:hover .add-new-content-block-section--controls,
+.add-new-content-block-section:focus-within .add-new-content-block-section--controls,
+.add-new-content-block-section.-opened .add-new-content-block-section--controls,
+.projekt-content-block-wrapper:hover + .add-new-content-block-section .add-new-content-block-section--controls,
+.add-new-content-block-section:has(+ .projekt-content-block-wrapper:hover) .add-new-content-block-section--controls {
+  opacity: 1;
+}
+
+.add-new-content-block-button {
   color: $dt-base !important;
   padding: 5px;
   border-radius: 50%;
@@ -104,9 +123,7 @@
   background-color: rgba(255, 255, 255, 0.95) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-  opacity: 0.5;
-  pointer-events: auto;
-  transition: opacity 180ms ease, background-color 150ms ease, transform 150ms ease, box-shadow 180ms ease;
+  transition: background-color 150ms ease, box-shadow 180ms ease;
 
   i {
     font-size: 14px !important;
@@ -115,7 +132,6 @@
 
   &:hover {
     background-color: $dt-base-light !important;
-    opacity: 1;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   }
 
@@ -138,24 +154,7 @@
   }
 }
 
-// Plus wird voll sichtbar wenn Maus in der Nähe ist (Section selbst oder umgebende Blöcke)
-.add-new-content-block-section:hover .add-new-content-block-button,
-.add-new-content-block-section:focus-within .add-new-content-block-button,
-.add-new-content-block-section.-opened .add-new-content-block-button,
-.projekt-content-block-wrapper:hover + .add-new-content-block-section .add-new-content-block-button,
-.add-new-content-block-section:has(+ .projekt-content-block-wrapper:hover) .add-new-content-block-button {
-  opacity: 1;
-}
-
-.add-new-content-block-section .content-block-templates-selector--ai-create {
-  --ai-base-translate: translateY(-50%);
-
-  position: absolute;
-  top: 50%;
-  left: -80px;
-  transform: var(--ai-base-translate);
-  z-index: 2;
-
+.add-new-content-block-section .add-new-content-block-floating-control {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,9 +170,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-  opacity: 0.5;
-  pointer-events: auto;
-  transition: opacity 180ms ease, background-color 150ms ease, box-shadow 180ms ease;
+  transition: background-color 150ms ease, box-shadow 180ms ease;
 
   i {
     font-size: 14px;
@@ -191,34 +188,13 @@
   }
 }
 
-.add-new-content-block-section:hover .content-block-templates-selector--ai-create,
-.add-new-content-block-section:focus-within .content-block-templates-selector--ai-create,
-.add-new-content-block-section.-opened .content-block-templates-selector--ai-create,
-.projekt-content-block-wrapper:hover + .add-new-content-block-section .content-block-templates-selector--ai-create,
-.add-new-content-block-section:has(+ .projekt-content-block-wrapper:hover) .content-block-templates-selector--ai-create {
-  opacity: 1;
-}
-
 @media (max-width: $small-tablet-viewport-start) {
-  .add-new-content-block-button {
-    // Mobile: kein vertikales Centering nötig — Base-Translate auf none setzen,
-    // damit Hover/Active-Scales weiter via Variable funktionieren.
-    --plus-base-translate: none;
-
+  // Mobile: the row flows in the gap (no absolute positioning) and is centered.
+  .add-new-content-block-section--controls {
     position: static;
+    transform: none;
     margin: 8px auto;
-    opacity: 1;
-
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-
-  .add-new-content-block-section .content-block-templates-selector--ai-create {
-    --ai-base-translate: none;
-
-    position: static;
-    margin: 8px 4px;
+    justify-content: center;
     opacity: 1;
   }
 

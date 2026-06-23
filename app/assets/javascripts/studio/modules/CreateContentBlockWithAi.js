@@ -378,6 +378,7 @@
       }
 
       App.ContentBlockEditor.Crud.rerenderContentBlockListControls();
+      App.ContentBlockEditor.EmptyHintToggle.refreshAll();
 
       newWrapper.classList.add("-highlight-changed");
       setTimeout(() => {

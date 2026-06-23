@@ -1,14 +1,16 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
     <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
+    <% show_admin_controls = show_admin_controls_for_projekt?(@custom_page&.projekt) %>
 
-    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.empty? %>
+    <% if show_admin_controls && content_blocks.empty? %>
       <%= render Projekts::ContentStartSectionComponent.new(@custom_page.projekt) %>
     <% end %>
     <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
         <% if content_blocks.any? %>
           <% content_blocks.each do |content_block| %>
+            <% next if !show_admin_controls && content_block_body_blank?(content_block.body) %>
             <div
               class="projekt-content-block js-content-block"
               data-id="<%= content_block.id %>"
@@ -25,7 +27,7 @@
       </div>
     </div>
 
-    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) %>
+    <% if show_admin_controls %>
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
       <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-studio-hide-on-preview">
         <%= studio_rich_tooltip(

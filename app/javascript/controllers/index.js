@@ -227,3 +227,6 @@ application.register("projekt-imports--delete-confirm", ProjektImportsDeleteConf
 
 import SharedImageCropperController from "./shared/image_cropper_controller"
 application.register("shared--image-cropper", SharedImageCropperController)
+
+import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
+application.register("shared--anchor-highlight", SharedAnchorHighlightController)

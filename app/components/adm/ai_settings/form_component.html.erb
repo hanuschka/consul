@@ -7,7 +7,7 @@
       <% when "ai.llm_model" %>
         <%= form.select :value, ai_model_options, { include_blank: "Modell wählen" }, { label: false, class: "kern-select" } %>
       <% else %>
-        <%= form.text_field :value, label: false, class: "kern-input" %>
+        <%= form.text_field :value, label: false, class: "kern-input", required: custom_model_required? %>
       <% end %>
     </div>
     <%= helpers.kern_button(icon: "save", type: "submit") %>

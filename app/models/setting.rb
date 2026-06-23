@@ -130,11 +130,9 @@ class Setting < ApplicationRecord
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
         # Images and Documents
+        "uploads.images.max_size": 1,
         "uploads.images.title.min_length": 4,
         "uploads.images.title.max_length": 80,
-        "uploads.images.min_width": 0,
-        "uploads.images.min_height": 475,
-        "uploads.images.max_size": 1,
         "uploads.images.content_types": "image/jpeg",
         "uploads.documents.max_amount": 3,
         "uploads.documents.max_size": 3,

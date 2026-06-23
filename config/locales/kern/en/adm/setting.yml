@@ -38,6 +38,24 @@ en:
     youtube_handle_description: "YouTube username or channel ID of your municipality. If filled in, a YouTube logo with a link to the channel automatically appears in the footer. You can use either the custom channel name or the technical channel ID. Leave the field empty if no YouTube channel should be linked."
     advanced_newsletter: "Advanced newsletter"
     advanced_newsletter_description: "Enables advanced newsletter features. Disabled by default — only enable this option if you need the advanced features."
+    uploads:
+      images:
+        max_size: "Maximum image size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded images. Larger files are rejected on upload. A moderate value keeps load times short and saves storage space."
+        content_types: "Allowed image formats"
+        content_types_description: "Determines which file formats are allowed when uploading images. Enable only the formats you actually want to permit. JPEG suits photos, PNG suits graphics with a transparent background."
+        title:
+          min_length: "Minimum image title length"
+          min_length_description: "Sets the minimum number of characters an uploaded image's title must contain. The title is used as alternative text (alt attribute) for accessibility. A sensible minimum encourages meaningful image descriptions."
+          max_length: "Maximum image title length"
+          max_length_description: "Sets the maximum number of characters an uploaded image's title may contain. The title is used as alternative text (alt attribute) for accessibility. A sensible limit keeps image titles short and readable."
+      documents:
+        max_amount: "Maximum number of documents"
+        max_amount_description: "Sets how many documents may be attached to a single contribution (e.g. proposal or investment) at most. This keeps the number of uploaded attachments under control."
+        max_size: "Maximum document size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded documents. Larger files are rejected on upload. A moderate value saves storage space and keeps load times short."
+        content_types: "Allowed document formats"
+        content_types_description: "Determines which file formats are allowed when uploading documents. Enable only the formats you actually want to permit, e.g. PDF for fixed-layout documents."
     welcomepage:
       usage_stats: User overview
       usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."

@@ -229,6 +229,8 @@ en:
         form:
           title_label: Title
           title_hint: The status title is used in the report overview and on the detail page as the status indicator. It should clearly describe the processing state, e.g. "In progress", "Done", or "Rejected". Citizens see this title on the public page, so it should be commonly understandable.
+          description_label: Explanation
+          description_hint: A short explanation of what this status means. It is shown to citizens as a tooltip in the report overview when they point at the status indicator. Describe in plain language what the processing state means for the report, e.g. "Your report has been received and is currently being reviewed." If left empty, no tooltip is shown.
           color_label: Color
           color_hint: The color is used as a visual marker of the status in lists and on the detail page of the report. It helps distinguish different processing states at a glance. Choose high-contrast colors that stand out clearly from one another to keep the list view readable.
           icon_label: Icon

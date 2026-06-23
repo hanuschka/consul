@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: @draft_version.title, breadcrumbs: @breadcrumbs, narrow: true) %>
+<%= render Adm::HeaderComponent.new(title: @draft_version.title, breadcrumbs: @breadcrumbs, back_button_url: legislation_process_draft_versions_adm_projekts_phase_path(@projekt_phase), narrow: true) %>
 <%= render Adm::TabsComponent.new(tabs: legislation_draft_version_tabs(@draft_version)) %>
 
 <div class="kern-container kern-container--form my-5">

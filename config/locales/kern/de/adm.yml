@@ -22,7 +22,7 @@ de:
           registration_settings: Registrierung & Verifizierung
           registered_addresses: Adressen
           default_map_location: Standardkarte
-          system_user: Systembenutzer
+          system_user: Systemnutzer
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
@@ -46,13 +46,15 @@ de:
           overview: Consul
           matomo: Matomo
         apps: Apps
+        api: API
+        api_subitems:
+          api_clients: API-Clients
+          api_request_logs: API-Anfragen-Logs
         developer: Bereich für Entwickler
         developer_subitems:
           connection: DT-Verbindung
           ai_settings: KI-Einstellungen
           external_api_keys: API-Schlüssel
-          api_clients: API-Clients
-          api_request_logs: API-Anfragen-Logs
     email_templates:
       send_test:
         success: "Test-E-Mail wurde an %{email} gesendet."

@@ -1,7 +1,7 @@
 <%= form_with model: @map_layer, url: @form_url, multipart: true, data: { controller: "map-layer-form" } do |f| %>
   <%= render Kern::FormFieldComponent.new(label: t(".protocol_label"), hint: t(".hints.protocol")) do %>
-    <%= f.select :protocol, MapLayer.protocol_attributes_for_select.map(&:reverse), { label: false },
-          data: { "map-layer-form-target": "protocol", action: "map-layer-form#protocolChanged" } %>
+    <%= f.select :protocol, MapLayer.protocol_attributes_for_select.map(&:reverse), {},
+          { label: false, data: { "map-layer-form-target": "protocol", action: "map-layer-form#protocolChanged" } } %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: MapLayer.human_attribute_name(:name), hint: t(".hints.name")) do %>

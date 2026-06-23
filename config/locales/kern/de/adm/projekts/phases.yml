@@ -284,6 +284,7 @@ de:
             author: Autor
             category: Kategorie
             created_at: Erstellt am
+            actions: Aktionen
         map_resources_overview:
           title: Kartenübersicht
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.

@@ -23,6 +23,7 @@ en:
       username: "Username"
       user: "User"
       email: "Email"
+      status: "Status"
       actions: "Actions"
       filter:
         search_placeholder: "Search %{column_label}..."

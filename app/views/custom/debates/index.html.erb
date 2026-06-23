@@ -98,9 +98,6 @@
 
         <div class='row'>
           <div class='small-6 column small'>
-            <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-              <%= link_to t('debates.index.section_header.help'), '#section_help' %>
-            <% end %>
           </div>
           <div class='small-6 column small'>
             <% if extended_feature?('modulewide.show_number_of_entries_in_modules') %>
@@ -125,13 +122,6 @@
         <% end %>
         <%= paginate @debates %>
 
-        <% unless @search_terms || @advanced_search_terms %>
-          <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-            <div id="section_help" class="margin" data-magellan-target="section_help">
-              <%=render_custom_block 'debates_help' %>
-            </div>
-          <% end %>
-        <% end %>
       </div>
     </div>
   </main>

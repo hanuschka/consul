@@ -10,7 +10,12 @@ class Adm::DeficiencyReports::HomeController < Adm::DeficiencyReports::BaseContr
                 Setting["adm.deficiency_reports.notice_message"]
               end
     @contact_persons = SectionContactPerson.for_section("deficiency_reports")
-    @pagy_activities, @activities = pagy(SectionActivity.for_section("deficiency_reports"), limit: 10, page_param: :activity_page)
+    @pagy_activities, @activities = pagy(
+      SectionActivity.for_section("deficiency_reports")
+        .for_trackables("DeficiencyReport", scoped_deficiency_reports.select(:id)),
+      limit: 10,
+      page_param: :activity_page
+    )
 
     @stats = [
       { value: DeficiencyReport.count, label: t("adm.deficiency_reports.home.stats.total"), icon: "report" },

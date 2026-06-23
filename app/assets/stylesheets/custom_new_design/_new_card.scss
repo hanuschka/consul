@@ -35,9 +35,16 @@
     // TODO change if needed
     overflow: visible;
     min-height: 114px;
+    border-color: $soft-border;
+    border-radius: $radius-large;
+    box-shadow: $shadow-small;
 
     h1 {
       margin-top: 0;
+    }
+
+    h1, h2, h3 {
+      font-family: $heading-font;
     }
 
     &.-hide-background {

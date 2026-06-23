@@ -10,8 +10,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
     @contact_persons = SectionContactPerson.for_section("projekts")
     visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
     @pagy_activities, @activities = pagy(
-      SectionActivity.for_section("projekts")
-        .where(trackable_type: "Projekt", trackable_id: visible_projekt_ids),
+      SectionActivity.for_section("projekts").for_trackables("Projekt", visible_projekt_ids),
       limit: 10,
       page_param: :activity_page
     )
@@ -28,7 +27,7 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
        end),
       (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
-         { label: t("adm.projekts.home.quick_links.import_projekt"), path: new_adm_projekts_import_path }
+         { label: t("adm.projekts.home.quick_links.imports"), path: adm_projekts_imports_path }
        end)
     ].compact
 

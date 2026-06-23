@@ -24,6 +24,10 @@ namespace :adm do
       post :order_areas, on: :collection
     end
 
+    resources :email_templates, only: [:index] do
+      get :settings, on: :collection
+    end
+
     resource :stats, only: :show
     resource :ai_settings, only: [:show, :update]
     resource :settings, only: [:show], controller: "settings" do
@@ -41,7 +45,7 @@ namespace :adm do
       post :search, on: :collection
     end
 
-    resources :deficiency_reports, only: [:show, :edit, :update, :destroy], path: "" do
+    resources :deficiency_reports, only: [:new, :create, :show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "deficiency_report_audits"
       resources :milestones, controller: "deficiency_report_milestones"
       resources :progress_bars, except: :show, controller: "deficiency_report_progress_bars"

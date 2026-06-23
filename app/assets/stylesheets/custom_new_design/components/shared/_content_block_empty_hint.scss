@@ -74,3 +74,25 @@
   display: block;
   color: rgba(0, 0, 0, 0.6);
 }
+
+// Projekt page content blocks are studio-wrapped client-side
+// (`addStudioControlsToContentBlock`), so the marker class sits on the
+// `.projekt-content-block-wrapper` itself — there is no separate
+// `.content-block-empty-hint-wrap` ancestor. These mirror the site-block rules
+// above with the wrapper as the marker. Kept here next to the site rules so the
+// two empty-state variants stay in sync.
+.projekt-content-block-wrapper.is-content-empty .content-block-empty-hint {
+  display: flex;
+}
+
+.projekt-content-block-wrapper.is-content-empty:not(.-in-edit-mode) .projekt-content-block {
+  min-height: 0;
+}
+
+.projekt-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {
+  display: none;
+}
+
+.projekt-content-block-wrapper.is-content-empty.-in-edit-mode .projekt-content-block {
+  min-height: var(--empty-hint-height, 55px);
+}

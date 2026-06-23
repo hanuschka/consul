@@ -46,6 +46,9 @@ de:
         fallback_note: "demokratie.today Vorlagen können nicht geladen werden. Es werden lokale Standardvorlagen angezeigt."
         load_error: "Inhaltsblockvorlagen konnten nicht geladen werden."
         retry: "Erneut versuchen"
+        blank_create_button:
+          label: Leeren Block hinzufügen
+          title: Einen leeren Inhaltsblock hinzufügen, den Sie selbst gestalten
         ai_create_button:
           label: Mit KI erstellen
           title: Inhaltsblock von KI erstellen lassen

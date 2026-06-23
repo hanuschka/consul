@@ -12,7 +12,7 @@
 }
 
 .adm-anchor-highlight {
-  --adm-anchor-highlight-tint: color-mix(in oklch, var(--kern-darkblue-750) 32%, white);
+  --adm-anchor-highlight-tint: hsl(210, 88%, 93%);
 
   border-radius: 6px;
   animation: adm-anchor-highlight-blink 1.4s ease-out 1;

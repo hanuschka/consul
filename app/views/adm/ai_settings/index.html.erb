@@ -1,42 +1,59 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, compact: true) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".intro") %></p>
   <% end %>
 <% end %>
 
 <div class="kern-container">
+  <% if endpoint_without_custom_model? %>
+    <div class="mb-3">
+      <%= kern_alert(title: t("adm.ai_settings.warnings.custom_model_required.title"), style: :warning) do %>
+        <p class="kern-body"><%= t("adm.ai_settings.warnings.custom_model_required.body") %></p>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if @ai_settings.any? %>
     <% @ai_settings.each do |setting| %>
       <% next if setting.key == "ai.llm_api_endpoint" && !show_api_endpoint? %>
       <% next if setting.key == "ai.llm_model" && !show_model_field? %>
       <% next if setting.key == "ai.llm_custom_model" && !show_custom_model_field? %>
 
-      <div class="mb-5">
+      <% highlight_custom_model = setting.key == "ai.llm_custom_model" && endpoint_without_custom_model? %>
+
+      <div class="mb-2 <%= "kern-ai-setting--highlight" if highlight_custom_model %>">
         <div class="kern-title kern-title--small mb-3">
           <%= t("custom.settings.#{setting.key}") %>
         </div>
-        <div class="kern-row">
+        <div class="kern-row mb-2">
           <div class="kern-col-12 kern-col-md-5">
-            <p class="kern-body mb-3 mb-md-0">
+            <p class="kern-body mb-2 mb-md-0">
               <%= t("custom.settings.#{setting.key}_description", default: t("admin.settings.no_description")) %>
             </p>
           </div>
           <div class="kern-col-12 kern-col-md-5">
             <%= render Adm::AiSettings::FormComponent.new(setting, setting.key) %>
+
+            <% if highlight_custom_model %>
+              <p class="kern-ai-setting--inline-warning" role="alert">
+                <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
+                <%= t("adm.ai_settings.warnings.custom_model_required.inline") %>
+              </p>
+            <% end %>
           </div>
         </div>
       </div>
 
       <div class="kern-row">
         <div class="kern-col-12 kern-col-md-10">
-          <hr class="kern-divider mb-5" aria-hidden="true">
+          <hr class="kern-divider mb-3" aria-hidden="true">
         </div>
       </div>
     <% end %>
 
-    <div class="mb-5">
+    <div class="mb-2">
       <div class="kern-title kern-title--small mb-3">
         <%= t("custom.settings.ai.llm_api_key") %>
       </div>

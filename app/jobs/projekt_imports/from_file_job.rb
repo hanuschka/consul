@@ -29,7 +29,15 @@ class ProjektImports::FromFileJob < ApplicationJob
 
     projekt_import.update!(ai_result: ai_result.data[:ai_result])
 
-    transition_to_chat(projekt_import)
+    text_truncated = ai_result.data[:text_truncated]
+
+    if text_truncated
+      projekt_import.add_warning!(
+        "input_truncated: analyzed #{ai_result.data[:analyzed_text_length]} of #{ai_result.data[:original_text_length]} chars"
+      )
+    end
+
+    transition_to_chat(projekt_import, text_truncated: text_truncated)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::FromFileJob] failed: #{e.message}")
     Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import_id, stage: "from_file_job" }) if defined?(Sentry)
@@ -70,11 +78,12 @@ class ProjektImports::FromFileJob < ApplicationJob
     end
   end
 
-  def transition_to_chat(projekt_import)
+  def transition_to_chat(projekt_import, text_truncated: false)
     ai_chat = AiChat.create!(resource: projekt_import)
 
     initial_message_result = ProjektImports::BuildInitialMessageService.call(
-      projekt_import: projekt_import
+      projekt_import: projekt_import,
+      text_truncated: text_truncated
     )
 
     if initial_message_result.success?

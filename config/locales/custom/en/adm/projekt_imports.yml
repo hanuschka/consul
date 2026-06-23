@@ -124,6 +124,7 @@ en:
         initial_message:
           analysis_complete: "Document analysis complete"
           analysis_intro: "Here is what I extracted from your document. Review the fields below — anything that doesn't look right, just tell me."
+          input_truncated_notice: "The document was very large and was shortened for analysis. Please review the extracted content carefully and add anything missing in the chat."
           title: "Title"
           subtitle: "Subtitle"
           period: "Period"

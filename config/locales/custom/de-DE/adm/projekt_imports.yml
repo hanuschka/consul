@@ -124,6 +124,7 @@ de:
         initial_message:
           analysis_complete: "Dokumentanalyse abgeschlossen"
           analysis_intro: "Folgendes habe ich aus Ihrem Dokument extrahiert. Bitte prüfen Sie die Felder — falls etwas nicht passt, sagen Sie es mir einfach."
+          input_truncated_notice: "Das Dokument war sehr groß und wurde für die Analyse gekürzt. Bitte prüfen Sie die extrahierten Inhalte besonders sorgfältig und ergänzen Sie fehlende Punkte im Chat."
           title: "Titel"
           subtitle: "Untertitel"
           period: "Zeitraum"

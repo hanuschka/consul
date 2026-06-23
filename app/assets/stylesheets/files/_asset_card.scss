@@ -127,12 +127,50 @@
   font-size: 18px;
   line-height: 1;
   color: #ffffff;
-  background: rgba(28, 25, 23, 0.78);
+  background: #5a6068;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-pdf) {
+  background: #c43e1c;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-word) {
+  background: #2b579a;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-excel) {
+  background: #217346;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-csv) {
+  background: #217346;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-powerpoint) {
+  background: #d24726;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-zipper) {
+  background: #8a7034;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-image) {
+  background: #6b3fa0;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-video) {
+  background: #5b6bbf;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-audio) {
+  background: #b07a3a;
+}
+
+.files-asset-card--filetype-badge:has(.fa-file-code) {
+  background: #4a4a4a;
 }
 
 .files-asset-card--alt-badge {
@@ -259,6 +297,12 @@
   gap: 12px;
   padding: 10px 16px;
   flex: 1;
+}
+
+.files-asset-card--filetype-text {
+  font-weight: 500;
+  color: #737373;
+  user-select: none;
 }
 
 .files-asset-card--filename {

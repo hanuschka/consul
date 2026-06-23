@@ -111,7 +111,7 @@
       class="files-asset-card--filename"
       title="<%= display_title %>"
     >
-      <%= display_title %>
+      <%= display_title %><% if file_extension.present? %> <span class="files-asset-card--filetype-text">(<%= file_extension %>)</span><% end %>
     </p>
 
     <dl class="files-asset-card--details">

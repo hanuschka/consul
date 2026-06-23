@@ -15,13 +15,15 @@ en:
     allowed_types_admins_html: "Admins &amp; project managers can upload the following file types: %{types}"
     allowed_types_users_html: "Regular users can upload the following file types: %{types}"
     allowed_types_settings_link: "edit here"
+    max_file_size_note_html: "Maximum file size: %{size} MB. Larger files are rejected on upload."
+    max_file_size_edit_link: "edit here"
     images:
       index:
         title: Admin images
         description: Lists all images uploaded by administrators and project managers — e.g. via the file manager in the content block editor or on the projekt edit page. Use this page to upload, review, rename or delete image files.
     documents:
       index:
-        title: Overview of all documents
+        title: Admin documents
         description: Lists all documents uploaded by administrators and project managers — e.g. via the file manager in the content block editor or on the projekt edit page. Use this page to upload, review, rename or delete document files.
     resource_images:
       index:
@@ -29,7 +31,7 @@ en:
         description: Lists every image attached to platform content — e.g. projekts, proposals, pages and polls. User avatars are not shown. Use this page to review, rename or delete image files across the whole system.
     resource_documents:
       index:
-        title: Overview of all resource documents
+        title: Resource documents (users & admin)
         description: Lists every document attached to platform content — e.g. files added to proposals by their authors or to projekt milestones. These documents are uploaded via the content's own forms, not via the file manager. Use this page to review, rename or delete document files across the whole system.
     empty:
       images:

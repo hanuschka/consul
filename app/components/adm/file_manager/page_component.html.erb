@@ -25,7 +25,7 @@
           <% if upload? %>
             <div class="ml-auto d-flex gap-2">
               <% if images? %>
-                <rich-tooltip placement="top" delay="300" trigger-only shadow="heavy">
+                <rich-tooltip placement="top" delay="1000" trigger-only hover-only shadow="heavy">
                   <%= render Adm::ButtonWithProgressComponent.new(
                     label: t("files.card.upload_with_crop"),
                     loading_label: t("files.upload_loading"),

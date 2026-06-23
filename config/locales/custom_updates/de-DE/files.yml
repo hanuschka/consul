@@ -15,13 +15,15 @@ de:
     allowed_types_admins_html: "Admins &amp; Projektmanager können folgende Dateitypen hochladen: %{types}"
     allowed_types_users_html: "Normale Nutzer können folgende Dateitypen hochladen: %{types}"
     allowed_types_settings_link: "hier bearbeiten"
+    max_file_size_note_html: "Maximale Dateigröße: %{size} MB. Größere Dateien werden beim Hochladen abgelehnt."
+    max_file_size_edit_link: "hier bearbeiten"
     images:
       index:
         title: Admin-Bilder
         description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     documents:
       index:
-        title: Übersicht aller Dokumente
+        title: Admin-Dokumente
         description: Zeigt alle Dokumente, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Dokumente hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     resource_images:
       index:
@@ -29,7 +31,7 @@ de:
         description: Zeigt alle Bilder, die mit Inhalten der Plattform verknüpft sind — z. B. Projekte, Vorschläge, Seiten und Umfragen. Benutzer-Avatare werden nicht angezeigt. Nutzen Sie diese Seite, um Bilddateien systemweit zu prüfen, umzubenennen oder zu löschen.
     resource_documents:
       index:
-        title: Übersicht aller Ressourcen-Dokumente
+        title: Ressourcen-Dokumente (Nutzer & Admin)
         description: Zeigt alle Dokumente, die mit Inhalten der Plattform verknüpft sind — z. B. Dateien, die Autoren zu Vorschlägen oder zu Projekt-Meilensteinen hinzugefügt haben. Diese Dokumente werden über die Formulare der Inhalte hochgeladen, nicht über den Dateimanager. Nutzen Sie diese Seite, um Dokumente systemweit zu prüfen, umzubenennen oder zu löschen.
     empty:
       images:

@@ -1,0 +1,29 @@
+<%= form_with model: @record, url: path do |form| %>
+  <%= hidden_field_tag :kind, "content_types" %>
+  <%= hidden_field_tag :attribute, @attribute %>
+
+  <fieldset class="kern-fieldset">
+    <div class="kern-fieldset__body kern-fieldset__body--horizontal">
+      <% mime_options.each do |extension, mime_value| %>
+        <div class="kern-form-check">
+          <%= check_box_tag "content_types[]",
+                mime_value,
+                checked?(mime_value),
+                id: checkbox_id(extension),
+                class: "kern-form-check__checkbox",
+                disabled: disabled?,
+                aria: aria_attributes %>
+          <label class="kern-label" for="<%= checkbox_id(extension) %>"><%= extension.upcase %></label>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
+<% end %>
+
+<% if flash[:success].present? %>
+  <div class="input-success-message mt-2" data-controller="auto-remove">
+    <%= flash[:success] %>
+  </div>
+<% end %>

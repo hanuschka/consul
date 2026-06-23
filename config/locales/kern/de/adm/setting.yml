@@ -38,6 +38,24 @@ de:
     youtube_handle_description: "YouTube-Nutzername oder Kanal-ID Ihrer Kommune. Wenn ausgefüllt, erscheint in der Fußzeile automatisch ein YouTube-Logo mit Verlinkung zum Kanal. Sie können den benutzerdefinierten Kanalnamen oder die technische Kanal-ID verwenden. Lassen Sie das Feld leer, wenn kein YouTube-Kanal verlinkt werden soll."
     advanced_newsletter: "Erweiterter Newsletter"
     advanced_newsletter_description: "Aktiviert erweiterte Newsletter-Funktionen. Standardmäßig deaktiviert – aktivieren Sie diese Option nur, wenn Sie die erweiterten Funktionen benötigen."
+    uploads:
+      images:
+        max_size: "Maximale Bildgröße"
+        max_size_description: "Legt die maximal zulässige Dateigröße (in Megabyte, MB) für hochgeladene Bilder fest. Größere Dateien werden beim Hochladen abgelehnt. Ein moderater Wert hält die Ladezeiten kurz und schont den Speicherplatz."
+        content_types: "Erlaubte Bildformate"
+        content_types_description: "Bestimmt, welche Dateiformate beim Hochladen von Bildern zulässig sind. Aktivieren Sie nur die Formate, die Sie tatsächlich zulassen möchten. JPEG eignet sich für Fotos, PNG für Grafiken mit transparentem Hintergrund."
+        title:
+          min_length: "Mindestlänge des Bildtitels"
+          min_length_description: "Legt fest, wie viele Zeichen der Titel eines hochgeladenen Bildes mindestens enthalten muss. Der Titel wird als Alternativtext (alt-Attribut) für die Barrierefreiheit verwendet. Ein sinnvoller Mindestwert sorgt für aussagekräftige Bildbeschreibungen."
+          max_length: "Maximallänge des Bildtitels"
+          max_length_description: "Legt fest, wie viele Zeichen der Titel eines hochgeladenen Bildes höchstens enthalten darf. Der Titel wird als Alternativtext (alt-Attribut) für die Barrierefreiheit verwendet. Eine sinnvolle Obergrenze hält Bildtitel kurz und lesbar."
+      documents:
+        max_amount: "Maximale Anzahl von Dokumenten"
+        max_amount_description: "Legt fest, wie viele Dokumente einem einzelnen Beitrag (z. B. Vorschlag oder Investition) maximal angehängt werden dürfen. So behalten Sie die Menge hochgeladener Anhänge unter Kontrolle."
+        max_size: "Maximale Dokumentgröße"
+        max_size_description: "Legt die maximal zulässige Dateigröße (in Megabyte, MB) für hochgeladene Dokumente fest. Größere Dateien werden beim Hochladen abgelehnt. Ein moderater Wert schont den Speicherplatz und hält die Ladezeiten kurz."
+        content_types: "Erlaubte Dokumentformate"
+        content_types_description: "Bestimmt, welche Dateiformate beim Hochladen von Dokumenten zulässig sind. Aktivieren Sie nur die Formate, die Sie tatsächlich zulassen möchten, z. B. PDF für unveränderliche Dokumente."
     welcomepage:
       usage_stats: Nutzerübersicht
       usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzer eingeblendet. Zusätzlich erscheint ein öffentlicher Link zur Nutzerübersichtsseite. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Deaktivieren, wenn nicht gewünscht."

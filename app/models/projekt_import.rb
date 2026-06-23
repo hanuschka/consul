@@ -22,7 +22,7 @@ class ProjektImport < ApplicationRecord
     image_completed: "completed",
     image_failed: "failed",
     image_skipped: "skipped"
-  }, _prefix: :image
+  }
 
   ANALYSIS_STALL_AFTER = 15.minutes
 

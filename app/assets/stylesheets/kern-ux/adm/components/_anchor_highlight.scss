@@ -1,0 +1,27 @@
+@keyframes adm-anchor-highlight-blink {
+  0% { background-color: transparent; }
+  10% { background-color: var(--adm-anchor-highlight-tint); }
+  25% { background-color: transparent; }
+  40% { background-color: var(--adm-anchor-highlight-tint); }
+  55% { background-color: transparent; }
+  70% { background-color: var(--adm-anchor-highlight-tint); }
+  100% { background-color: transparent; }
+}
+
+@keyframes adm-anchor-highlight-fade {
+  0% { background-color: var(--adm-anchor-highlight-tint); }
+  100% { background-color: transparent; }
+}
+
+.adm-anchor-highlight {
+  --adm-anchor-highlight-tint: color-mix(in srgb, var(--kern-darkblue-750) 45%, transparent);
+
+  border-radius: 6px;
+  animation: adm-anchor-highlight-blink 1.8s ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-anchor-highlight {
+    animation: adm-anchor-highlight-fade 1.2s ease-out 1;
+  }
+}

@@ -96,6 +96,8 @@ en:
       delete_confirm: Are you sure you want to delete this item?
       upload: Upload
       upload_with_crop: Upload with crop
+      upload_with_crop_tooltip_title: Upload with crop
+      upload_with_crop_tooltip_text: Opens a crop editor where you can adjust the framing and aspect ratio before uploading. Use “Upload” to keep the image unchanged.
       open_in_new_tab: Open in new tab
       copy_url: Copy link
       copy_url_success: Link copied to clipboard
@@ -109,6 +111,8 @@ en:
       projekt: Project
       resource_type: Resource type
       admin_badge: Admin upload
+      file_type: "File type: %{type}"
+      file_type_generic: File
       alt_text: Alt text
       alt_text_missing_hint: Alt text is missing. Add it so screen readers can describe this image.
       edit_alt_text: Edit alt text

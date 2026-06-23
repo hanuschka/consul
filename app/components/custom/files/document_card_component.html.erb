@@ -19,8 +19,8 @@
       <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
     <% end %>
 
-    <% if admin_upload? %>
-      <div class="files-asset-card--badges">
+    <div class="files-asset-card--badges">
+      <% if admin_upload? %>
         <rich-tooltip>
           <span
             class="files-asset-card--admin-badge"
@@ -30,8 +30,18 @@
           </span>
           <template><%= t("files.card.admin_badge") %></template>
         </rich-tooltip>
-      </div>
-    <% end %>
+      <% end %>
+
+      <rich-tooltip>
+        <span
+          class="files-asset-card--filetype-badge"
+          aria-label="<%= filetype_label %>"
+        >
+          <i class="fa <%= icon_class %>"></i>
+        </span>
+        <template><%= filetype_label %></template>
+      </rich-tooltip>
+    </div>
 
     <div class="files-asset-card--actions">
       <button

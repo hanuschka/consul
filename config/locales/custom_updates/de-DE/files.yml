@@ -96,6 +96,8 @@ de:
       delete_confirm: Möchten Sie dieses Element wirklich löschen?
       upload: Hochladen
       upload_with_crop: Mit Zuschnitt hochladen
+      upload_with_crop_tooltip_title: Mit Zuschnitt hochladen
+      upload_with_crop_tooltip_text: Öffnet einen Zuschnitt-Editor, in dem Sie Bildausschnitt und Seitenverhältnis vor dem Hochladen anpassen können. Mit „Hochladen“ wird das Bild unverändert übernommen.
       open_in_new_tab: In neuem Tab öffnen
       copy_url: Link kopieren
       copy_url_success: Link in die Zwischenablage kopiert
@@ -109,6 +111,8 @@ de:
       projekt: Projekt
       resource_type: Ressourcentyp
       admin_badge: Admin-Upload
+      file_type: "Dateityp: %{type}"
+      file_type_generic: Datei
       alt_text: Alternativer Text
       alt_text_missing_hint: Alternativer Text fehlt. Fügen Sie ihn hinzu, damit Screenreader dieses Bild beschreiben können.
       edit_alt_text: Alt-Text bearbeiten

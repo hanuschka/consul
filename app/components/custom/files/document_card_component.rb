@@ -76,6 +76,14 @@ class Files::DocumentCardComponent < Files::ResourceAssetComponent
       FileTypeIcons.for(attachment_content_type)
     end
 
+    def filetype_label
+      extension = File.extname(filename).delete(".").upcase
+
+      return I18n.t("files.card.file_type", type: extension) if extension.present?
+
+      I18n.t("files.card.file_type_generic")
+    end
+
     def attachment_url
       return "" if !document.attachment.attached?
 

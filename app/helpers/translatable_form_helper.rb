@@ -24,7 +24,9 @@ module TranslatableFormHelper
         @translations[locale] = translation_for(locale)
       end
       safe_join(visible_locales.map do |locale|
-        Globalize.with_locale(locale) { fields_for_locale(locale, &) }
+        I18n.with_locale(locale) do
+          Globalize.with_locale(locale) { fields_for_locale(locale, &) }
+        end
       end)
     end
 
@@ -79,11 +81,7 @@ module TranslatableFormHelper
       end
 
       def visible_locales
-        if @template.translations_interface_enabled?
-          @object.globalize_locales
-        else
-          [I18n.locale]
-        end
+        [I18n.default_locale]
       end
   end
 

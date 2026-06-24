@@ -17,6 +17,8 @@
   //   shadow        "default" | "heavy" (body drop-shadow strength)
   //   trigger-only  show only while the trigger is hovered (body ignores
   //                 pointer events)
+  //   hover-only    show on pointer hover only; do not show on keyboard
+  //                 focus / focusout
   //   template-id   use an external <template> by id instead of an inline one
   //   body-class    extra css class(es) added to the tooltip body element
   class RichTooltip extends HTMLElement {
@@ -48,6 +50,7 @@
       this.shadow = this.getAttribute("shadow") || "default"
       this.bodyClass = this.getAttribute("body-class") || ""
       this.triggerOnly = this.hasAttribute("trigger-only")
+      this.hoverOnly = this.hasAttribute("hover-only")
 
       this.buildTooltipBody(template)
       this.bindEvents()
@@ -128,8 +131,13 @@
 
     bindEvents() {
       this.trigger.addEventListener("mouseenter", this.scheduleShow.bind(this))
-      this.trigger.addEventListener("focusin", this.scheduleShow.bind(this))
-      this.trigger.addEventListener("focusout", this.scheduleHide.bind(this))
+      this.trigger.addEventListener("pointerdown", this.hide.bind(this))
+
+      if (!this.hoverOnly) {
+        this.trigger.addEventListener("focusin", this.scheduleShow.bind(this))
+        this.trigger.addEventListener("focusout", this.scheduleHide.bind(this))
+      }
+
       this.addEventListener("keydown", this.handleKeydown.bind(this))
 
       if (this.triggerOnly) {

@@ -3,6 +3,15 @@ de:
     ai_settings:
       flash:
         updated: KI-Einstellung erfolgreich aktualisiert
+        custom_model_required: >
+          Bitte geben Sie ein benutzerdefiniertes Modell an. Wenn ein API-Endpunkt gesetzt ist, funktioniert die KI ohne benutzerdefiniertes Modell nicht.
+      warnings:
+        custom_model_required:
+          title: Benutzerdefiniertes Modell erforderlich
+          body: >
+            Ein API-Endpunkt ist gesetzt, aber kein benutzerdefiniertes Modell. Die KI funktioniert nicht, bis Sie ein benutzerdefiniertes Modell angeben.
+          inline: >
+            Erforderlich, da ein API-Endpunkt gesetzt ist. Die KI funktioniert nicht, bis Sie ein benutzerdefiniertes Modell angeben.
       index:
         title: KI-Einstellungen
         intro: >

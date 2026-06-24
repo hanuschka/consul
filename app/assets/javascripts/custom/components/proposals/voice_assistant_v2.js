@@ -61,6 +61,7 @@
       App.AssistantUserResourceForm.initialize(this.element);
 
       if (this.initialData.collapsible) {
+        this.element.classList.add("-collapsible");
         this.getCollapseButton().style.display = "flex";
         this.isCollapsed = this.initialData.collapsed;
         this.initCollapseState();
@@ -89,6 +90,10 @@
       this.isCollapsed = false;
       this.element.classList.remove("-collapsed");
       this.toggleAssistantCollapseState(false);
+
+      if (this.status === this.statuses.initialized) {
+        this.startAssistant();
+      }
     },
 
     toggleAssistant: function() {

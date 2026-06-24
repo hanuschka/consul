@@ -27,12 +27,28 @@ class Attachable::FieldsComponent < ApplicationComponent
       attachable.attachment_file_name
     end
 
+    def show_image_preview?
+      attachable.is_a?(Image) &&
+        attachable.attachment.attached? &&
+        attachable.attachment.image?
+    end
+
     def destroy_link
       if !attachable.persisted? && attachable.cached_attachment.present?
-        link_to t("#{plural_name}.form.delete_button"), "#", class: "delete remove-cached-attachment"
+        link_to delete_icon, "#",
+          class: "delete attachment-remove-icon remove-cached-attachment",
+          title: t("#{plural_name}.form.delete_button"),
+          aria: { label: t("#{plural_name}.form.delete_button") }
       else
-        link_to_remove_association remove_association_text, f, class: "delete remove-#{singular_name}"
+        link_to_remove_association delete_icon, f,
+          class: "delete attachment-remove-icon remove-#{singular_name}",
+          title: remove_association_text,
+          aria: { label: remove_association_text }
       end
+    end
+
+    def delete_icon
+      tag.i(class: "fa fa-trash", aria: { hidden: true })
     end
 
     def remove_association_text

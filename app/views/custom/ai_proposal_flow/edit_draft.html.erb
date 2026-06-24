@@ -1,3 +1,7 @@
+<% has_criteria = @draft_resource.projekt_phase.user_resource_criteria.exists? %>
+<% loader_message_key = has_criteria ? "ai_proposal_flow.loader.evaluating_message" : "ai_proposal_flow.loader.creating_message" %>
+<% loader_submessage_key = has_criteria ? "ai_proposal_flow.loader.evaluating_submessage" : "ai_proposal_flow.loader.creating_submessage" %>
+
 <main class="ai-proposal-flow--page">
   <%= render AiProposalFlow::HeaderComponent.new(projekt_phase: @draft_resource.projekt_phase, current_step: 2) %>
 
@@ -35,7 +39,11 @@
           form="<%= dom_id(@draft_resource, :form) %>"
           class="button ai-proposal-flow--navigation--submit js-ai-flow-step2-submit"
         >
-          <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
+          <% if has_criteria %>
+            <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
+          <% else %>
+            <i class="fas fa-check"></i> <%= t("ai_proposal_flow.nav.create") %>
+          <% end %>
         </button>
         <%= link_to @back_to_new_url, class: "button -outline" do %>
           <i class="fas fa-arrow-left"></i> <%= t("ai_proposal_flow.nav.back") %>
@@ -44,8 +52,8 @@
     </div>
 
     <%= render AiProposalFlow::AiLoaderComponent.new(
-      message_key: "ai_proposal_flow.loader.evaluating_message",
-      submessage_key: "ai_proposal_flow.loader.evaluating_submessage"
+      message_key: loader_message_key,
+      submessage_key: loader_submessage_key
     ) %>
   </div>
 </main>

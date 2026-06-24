@@ -18,9 +18,15 @@
 
     <div class="sidebar-card--section">
       <% if edit_link? %>
-        <div class="js-sidebar-card-edit-link margin-bottom-10">
-          <%= edit_link %>
-        </div>
+        <%= studio_rich_tooltip(
+          title: "Bereich bearbeiten",
+          text: "Öffnet die Einstellungen dieses Seitenleisten-Bereichs zur Bearbeitung.",
+          delay: 1200
+        ) do %>
+          <div class="js-sidebar-card-edit-link margin-bottom-10">
+            <%= edit_link %>
+          </div>
+        <% end %>
       <% end %>
 
       <%= content %>

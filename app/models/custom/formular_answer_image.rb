@@ -3,7 +3,7 @@ class FormularAnswerImage < ApplicationRecord
 
   def self.styles
     {
-      large: { resize: "x#{Setting["uploads.images.min_height"]}" }
+      large: { resize: "x#{Image::MIN_IMAGE_HEIGHT}" }
     }
   end
 

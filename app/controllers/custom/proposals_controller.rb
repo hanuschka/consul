@@ -62,8 +62,7 @@ class ProposalsController
         .where(admin_accepted: true)
         .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
-        .includes(:translations, :image, :projekt_labels, :votes_for,
-                  :community, projekt_phase: :settings)
+        .with_index_card_associations
 
     @all_resources = @resources
 

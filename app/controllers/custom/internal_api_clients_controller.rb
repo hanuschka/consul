@@ -2,10 +2,8 @@ class InternalApiClientsController < ApplicationController
   skip_authorization_check
 
   def connect
-    api_client = InternalApiClient.find_or_create_by!(
-      name: "DT",
-      domain: Dt.domain
-    )
+    api_client = InternalApiClient.find_or_initialize_dt
+    api_client.update!(domain: Dt.domain)
 
     user_role =
       if current_user.administrator?
@@ -51,7 +49,7 @@ class InternalApiClientsController < ApplicationController
 
     if dt_response.code === 200
       flash[:notice] = I18n.t("internal_api_clients.connect.success")
-      redirect_to admin_connection_path
+      redirect_back(fallback_location: admin_connection_path)
     else
       if dt_response.code == 200
         flash[:error] =

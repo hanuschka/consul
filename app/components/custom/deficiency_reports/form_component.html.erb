@@ -29,7 +29,7 @@
       </div>
     <% end %>
 
-    <% if feature?(:allow_images) %>
+    <% if Setting["deficiency_reports.image_upload"].present? %>
       <div class="images">
         <%= render "images/nested_image", imageable: deficiency_report, f: f %>
       </div>
@@ -55,15 +55,17 @@
       </div>
     <% end %>
 
-    <div class="small-12" id='map-for-new-deficiency_report'>
-      <%= render "map_locations/form_fields",
-                 form:     f,
-                 map_location: @deficiency_report.map_location || MapLocation.new,
-                 label:    t("proposals.form.map_location"),
-                 help:     t("proposals.form.map_location_instructions"),
-                 remove_marker_label: t("proposals.form.map_remove_marker"),
-                 parent_class: "proposal",
-                 i18n_namespace: "proposals" %>
+    <% if Setting["deficiency_reports.show_map"].present? %>
+      <div class="small-12" id='map-for-new-deficiency_report'>
+        <%= render "map_locations/form_fields",
+                   form:     f,
+                   map_location: @deficiency_report.map_location || MapLocation.new,
+                   label:    t("proposals.form.map_location"),
+                   help:     t("proposals.form.map_location_instructions"),
+                   remove_marker_label: t("proposals.form.map_remove_marker"),
+                   parent_class: "proposal",
+                   i18n_namespace: "proposals" %>
+    <% end %>
 
   </fieldset>
 

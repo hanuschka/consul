@@ -196,7 +196,7 @@ App.ContentBlockEditor.AiEditMode = {
       dataType: "json",
       data: {
         instructions: instructions,
-        content_block_html: contentBlock.innerHTML,
+        content_block_html: ProjektStudio.utils.resetMapEmbeds(contentBlock.innerHTML),
         use_full_projekt_context: useFullProjektContext,
         allow_text_modification: allowTextModification
       }

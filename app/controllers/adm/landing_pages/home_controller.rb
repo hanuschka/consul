@@ -12,7 +12,12 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
                 Setting["adm.landing_pages.notice_message"]
               end
     @contact_persons = SectionContactPerson.for_section("landing_pages")
-    @pagy_activities, @activities = pagy(SectionActivity.for_section("landing_pages"), limit: 10, page_param: :activity_page)
+    @pagy_activities, @activities = pagy(
+      SectionActivity.for_section("landing_pages")
+        .for_trackables("SiteCustomization::Page", @landing_pages.reorder(nil).select(:id)),
+      limit: 10,
+      page_param: :activity_page
+    )
 
     landing_pages_for_stats = ::SiteCustomization::Page.landing
 

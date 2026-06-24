@@ -68,7 +68,6 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def show_projekt_link?
     return false unless resource.respond_to?(:projekt)
 
-    projekt_feature?(resource.projekt, "general.show_in_navigation") ||
-      projekt_feature?(resource.projekt, "general.show_in_homepage")
+    projekt_feature?(resource.projekt, "general.show_related_projekt_link")
   end
 end

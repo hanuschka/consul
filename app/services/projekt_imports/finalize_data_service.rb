@@ -26,6 +26,7 @@ class ProjektImports::FinalizeDataService < ApplicationService
     ServiceResult.success(ai_result: updated_data)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::FinalizeDataService] failed: #{e.message}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "finalize" }) if defined?(Sentry)
     ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.finalize_failed", message: e.message))
   end
 

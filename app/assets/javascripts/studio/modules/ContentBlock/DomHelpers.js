@@ -112,9 +112,6 @@ App.ContentBlockEditor.DomHelpers = {
   applyDefaultMarginIfMissing(contentBlockWrapper) {
     if (!contentBlockWrapper || contentBlockWrapper.style.marginBottom) return;
 
-    const defaultMargin = ProjektStudio.config.defaultMarginBottom;
-    if (!defaultMargin) return;
-
-    contentBlockWrapper.style.marginBottom = `${defaultMargin}px`;
+    contentBlockWrapper.style.marginBottom = `${ProjektStudio.getDefaultMarginBottom()}px`;
   }
 };

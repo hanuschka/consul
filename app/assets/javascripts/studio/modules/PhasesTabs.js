@@ -66,7 +66,7 @@ ProjektStudio.PhasesTabs = {
     icon.classList.toggle("fa-eye", !active)
     icon.classList.toggle("fa-eye-slash", active)
     const dataset = e.currentTarget.dataset;
-    e.currentTarget.title = active ? dataset.hideTitle : dataset.showTitle;
+    ProjektStudio.utils.updateRichTooltipTitle(e.currentTarget, active ? dataset.hideTitle : dataset.showTitle);
 
     $.ajax({
       url: `/admin/projekts/${projektId}/projekt_phases/${projektPhaseId}/toggle_active_status`,
@@ -105,7 +105,7 @@ ProjektStudio.PhasesTabs = {
     icon.classList.toggle("fa-thumbtack", !isDefault)
     icon.classList.toggle("fa-gem", isDefault)
     const dataset = e.currentTarget.dataset;
-    e.currentTarget.title = isDefault ? dataset.makeDefaultTitle : dataset.unsetDefaultTitle;
+    ProjektStudio.utils.updateRichTooltipTitle(e.currentTarget, isDefault ? dataset.makeDefaultTitle : dataset.unsetDefaultTitle);
 
     $.ajax({
       url: `/admin/projekts/${projektId}/update_standard_phase`,

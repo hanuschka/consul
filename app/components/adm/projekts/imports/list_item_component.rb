@@ -80,6 +80,10 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
     display_state.in?(%i[failed stalled]) && error_preview.present?
   end
 
+  def show_image_failed_note?
+    display_state == :completed && projekt_import.image_failed?
+  end
+
   def created_projekts
     ids = (projekt_import.created_projekt_ids + [projekt_import.projekt_id]).compact.uniq
     ids.filter_map { |id| created_projekts_by_id[id] }

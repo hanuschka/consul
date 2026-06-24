@@ -1,9 +1,10 @@
 class Shared::ModalComponent < ApplicationComponent
-  attr_reader :id, :closeable, :blur_backdrop, :close_on_backdrop, :close_on_esc,
-    :content_wrapper, :modal_class, :data
+  attr_reader :id, :title, :closeable, :blur_backdrop, :close_on_backdrop,
+    :close_on_esc, :content_wrapper, :modal_class, :data
 
   def initialize(
     id:,
+    title: nil,
     closeable: true,
     blur_backdrop: true,
     close_on_backdrop: true,
@@ -13,6 +14,7 @@ class Shared::ModalComponent < ApplicationComponent
     data: {}
   )
     @id = id
+    @title = title
     @closeable = closeable
     @blur_backdrop = blur_backdrop
     @close_on_backdrop = close_on_backdrop

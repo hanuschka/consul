@@ -24,6 +24,8 @@ de:
           avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
           aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
           your_avatar: "Dein Avatar"
+        remove_avatar:
+          aria-label: "Aktuelles Avatarbild entfernen."
         edit_username:
           edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
           cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
@@ -51,7 +53,6 @@ de:
         user_avatar_title: "Profil von %{name} öffnen"
       map:
         marker-label: "Kartenmarkierung"
-        toggle_label: "Karte anzeigen"
         region_label: "Interaktive Karte. Mit den Pfeiltasten verschieben, mit Plus oder Minus zoomen."
       phases:
         scroll_left: "Phasen nach links scrollen"
@@ -59,6 +60,9 @@ de:
       phase_subscription:
         subscribe: "Benachrichtigungen für diese Phase abonnieren"
         unsubscribe: "Benachrichtigungen für diese Phase abbestellen"
+      skip_links:
+        skip_to_content: "Direkt zum Inhalt"
+        skip_to_navigation: "Direkt zur Navigation"
       navigation:
         main: "Hauptnavigation"
         mobile: "Mobilnavigation"

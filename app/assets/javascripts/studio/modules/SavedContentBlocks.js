@@ -58,7 +58,9 @@ App.ContentBlockEditor.SavedContentBlocks = {
 
   editSavedContentBlock(e) {
     const container = this.getItemContainer(e.currentTarget)
-    const currentHTML = container.querySelector(".js-content-block-template-content").innerHTML.trim()
+    const currentHTML = ProjektStudio.utils.resetMapEmbeds(
+      container.querySelector(".js-content-block-template-content").innerHTML.trim()
+    )
 
     const editor = this.setupAceEditor(container, currentHTML)
 
@@ -96,6 +98,8 @@ App.ContentBlockEditor.SavedContentBlocks = {
 
     const templateContentElement = container.querySelector(".js-content-block-template-content")
     templateContentElement.innerHTML = content
+
+    App.ContentBlockEditor.MapEmbed.hydrateIn(templateContentElement)
 
     this.turnOffEditModeForItem(container)
 
@@ -293,5 +297,7 @@ App.ContentBlockEditor.SavedContentBlocks = {
     if (current === response.content.trim()) return
 
     templateContentElement.innerHTML = response.content;
+
+    App.ContentBlockEditor.MapEmbed.hydrateIn(templateContentElement);
   }
 };

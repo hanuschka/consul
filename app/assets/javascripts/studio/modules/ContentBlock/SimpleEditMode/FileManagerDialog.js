@@ -112,6 +112,7 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
     $document.on("click", ".js-fm-filter-reset", this.handleResetClicked.bind(this));
 
     $document.on("click", ".js-file-upload-manager-upload", this.handleUploadButtonClick.bind(this));
+    $document.on("click", ".js-file-upload-manager-upload-crop", this.handleUploadWithCropButtonClick.bind(this));
     $document.on("change", ".js-file-upload-manager-file-input", this.handleFileInputChange.bind(this));
 
     $document.on("click", ".js-file-upload-manager-info", this.openInfoModal.bind(this));
@@ -165,7 +166,8 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
       selectedImage: null,
       isLoading: false,
       uploadingCount: 0,
-      removedItemsStack: []
+      removedItemsStack: [],
+      cropOnUpload: false
     };
 
     this.activeDialog = this.getDialogElement(type);
@@ -308,6 +310,16 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
   },
 
   handleUploadButtonClick(_e) {
+    this.state.cropOnUpload = false;
+    this.openFilePicker();
+  },
+
+  handleUploadWithCropButtonClick(_e) {
+    this.state.cropOnUpload = true;
+    this.openFilePicker();
+  },
+
+  openFilePicker() {
     const fileInput = this.q('.js-file-upload-manager-file-input');
     fileInput.value = '';
     fileInput.accept = this.fileAccept[this.state.type];
@@ -322,7 +334,29 @@ App.ContentBlockEditor.SimpleEditMode.FileManagerDialog = {
     if (!files || files.length === 0) return;
 
     const file = files[0];
+    const cropRequested = this.state.cropOnUpload;
+    this.state.cropOnUpload = false;
 
+    if (cropRequested && this.canCropImage(file)) {
+      this.openCropThenUpload(file);
+      return;
+    }
+
+    this.startUpload(file);
+  },
+
+  canCropImage(file) {
+    return !!(window.App && App.ImageCropper) &&
+      App.ImageCropper.isCroppableImage(file);
+  },
+
+  openCropThenUpload(file) {
+    App.ImageCropper.open(file, {
+      onConfirm: (croppedFile) => this.startUpload(croppedFile)
+    });
+  },
+
+  startUpload(file) {
     if (file.type.startsWith('image/')) {
       this.genImageInMemoryPreview(file, (previewUrl) => {
         const uploadingItem = this.buildImageUploadingItem(file, previewUrl);

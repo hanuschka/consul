@@ -7,8 +7,12 @@ module Abilities
       can [:read, :map, :summary, :share, :json_data], Proposal
       can :read, Comment
       can :read, Poll
-      can :results, Poll, id: Poll.with_phase_feature("resource.results_enabled").not_budget.ids
-      can :stats, Poll, id: Poll.with_phase_feature("resource.stats_enabled").not_budget.ids
+      can :results, Poll,
+          budget_id: nil,
+          projekt_phase: { settings: { key: "feature.resource.results_enabled", value: "active" } }
+      can :stats, Poll,
+          budget_id: nil,
+          projekt_phase: { settings: { key: "feature.resource.stats_enabled", value: "active" } }
       can :read, Poll::Question
       can [:read, :refresh_activities], User
       can [:read, :welcome], Budget
@@ -30,7 +34,7 @@ module Abilities
       can [:read, :debate, :draft_publication, :allegations, :result_publication,
            :proposals, :milestones], Legislation::Process, published: true
       can :summary, Legislation::Process,
-          id: Legislation::Process.past.published.where(result_publication_enabled: true).ids
+          published: true, result_publication_enabled: true, end_date: (...Date.current)
       can [:read, :changes, :go_to_version], Legislation::DraftVersion
       can [:read], Legislation::Question
       can [:read, :map, :share], Legislation::Proposal
@@ -42,7 +46,11 @@ module Abilities
       can :read, ::SDG::Phase
 
       can [:json_data], DeficiencyReport
-      can [:index, :show], DeficiencyReport, id: DeficiencyReport.admin_accepted.ids
+      if Setting["deficiency_reports.admin_acceptance_required"].present?
+        can [:index, :show], DeficiencyReport, admin_accepted: true
+      else
+        can [:index, :show], DeficiencyReport
+      end
 
       can :toggle_subscription, ProjektSubscription do |subscription|
         subscription.user == user
@@ -116,7 +124,7 @@ module Abilities
 
       can :read_stats, ProjektPhase
 
-      can [:index, :show, :json_data], Idea, id: Idea.accepted.ids
+      can [:index, :show, :json_data], Idea, admin_accepted_at: (Time.zone.at(0)..)
     end
   end
 end

@@ -153,6 +153,11 @@
           instance.renderFeatures();
           instance.toggleControlVisibility();
           instance.setupEditingControls();
+
+          if (!instance.editable) {
+            instance.map.keyboard.disable();
+            App.MapKeyboardFocus.neutralize(instance.element);
+          }
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();

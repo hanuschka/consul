@@ -170,6 +170,10 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
   def generate_evaluation
     authorize [:adm, :projekts, @projekt], :update?
+
+    evaluation = @projekt.projekt_evaluation || @projekt.build_projekt_evaluation
+    evaluation.update!(status: :processing)
+
     ProjektEvaluations::GenerateEvaluationJob.perform_later(@projekt.id)
 
     flash[:notice] = I18n.t("adm.projekts.projekts.generate_evaluation.started")

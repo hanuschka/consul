@@ -34,7 +34,7 @@ $phase-marker-border: #cbd5e1;
   // eine durchgehende Linie auf dem Container.
   .sidebar-projekt-phase:not(:last-child) > .sidebar-projekt-phase-details::before {
     display: none;
-    color: $civic-accent !important;
+    color: $accent-blue !important;
   }
 
   .sidebar-projekt-phase {
@@ -124,11 +124,11 @@ $phase-marker-border: #cbd5e1;
 
   .sidebar-projekt-phase.active > .sidebar-projekt-phase-status {
     background-color: #93C5E4 !important;
-    border-color: $civic-accent !important;
+    border-color: $accent-blue !important;
   }
 
   .sidebar-projekt-phase.active > .sidebar-projekt-phase-details {
-    color: $civic-accent !important;
+    color: $accent-blue !important;
   }
 
   .sidebar-projekt-phase-details {
@@ -142,14 +142,10 @@ $phase-marker-border: #cbd5e1;
       line-height: 1.35;
       color: inherit;
 
-      a {
-        color: inherit;
-
-        i {
-          opacity: 0;
-          margin-left: 4px;
-          transition: opacity 150ms ease;
-        }
+      i {
+        opacity: 0;
+        margin-left: 4px;
+        transition: opacity 150ms ease;
       }
     }
 
@@ -162,7 +158,13 @@ $phase-marker-border: #cbd5e1;
     }
   }
 
-  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name a i {
+  .sidebar-projekt-phase-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name i {
     opacity: 0.6;
   }
 
@@ -251,7 +253,7 @@ $phase-marker-border: #cbd5e1;
         height: 6px;
         font-size: 0;
         font-family: inherit;
-        background: $civic-accent !important;
+        background: $accent-blue !important;
         border-radius: 50%;
         transition: background-color 150ms ease, width 150ms ease, height 150ms ease, top 150ms ease, left 150ms ease;
       }
@@ -261,7 +263,7 @@ $phase-marker-border: #cbd5e1;
         text-decoration: none !important;
         display: block;
         line-height: 1.35;
-        font-family: $civic-body-font;
+        font-family: $body-font;
 
         &:hover,
         &:focus,
@@ -290,7 +292,7 @@ $phase-marker-border: #cbd5e1;
         }
 
         > a {
-          color: $civic-accent !important;
+          color: $accent-blue !important;
           font-weight: 600;
         }
       }
@@ -527,13 +529,19 @@ $phase-marker-border: #cbd5e1;
       height: 100%;
     }
 
+    &:has(a:focus-visible) {
+      outline: $outline-focus;
+      outline-offset: 2px;
+    }
+
     .image-maximize-button {
       visibility: hidden;
       opacity: 0;
       transition: all 100ms ease;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       .image-maximize-button {
         visibility: visible;
         opacity: 1;
@@ -655,6 +663,16 @@ $phase-marker-border: #cbd5e1;
       }
     }
 
+    // Offset for the fixed topbar so the "Jetzt mitmachen" CTA anchor
+    // (#new_comments_component) lands below it instead of behind it.
+    #new_comments_component {
+      scroll-margin-top: calc(#{$topbar-height} + var(--admin-topbar-height) + 20px);
+
+      @media (max-width: $small-tablet-viewport-start) {
+        scroll-margin-top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height) + 20px);
+      }
+    }
+
     .key-dates {
       margin: 0;
       width: 100%;
@@ -690,83 +708,83 @@ $phase-marker-border: #cbd5e1;
       }
 
       .comment-form {
-        border-color: $civic-border;
-        border-radius: $civic-radius-lg;
-        box-shadow: $civic-shadow-sm;
-        font-family: $civic-body-font;
+        border-color: $soft-border;
+        border-radius: $radius-large;
+        box-shadow: $shadow-small;
+        font-family: $body-font;
 
         textarea {
-          border: 2px solid $civic-border;
+          border: 2px solid $soft-border;
           border-radius: 6px;
-          font-family: $civic-body-font;
+          font-family: $body-font;
           font-size: 16px;
           padding: 12px 16px;
-          transition: border-color $civic-transition, box-shadow $civic-transition;
+          transition: border-color $transition-base, box-shadow $transition-base;
 
           &:focus {
-            border-color: $civic-accent;
+            border-color: $accent-blue;
             box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
             outline: none;
           }
         }
 
         h2 {
-          font-family: $civic-heading-font;
+          font-family: $heading-font;
           font-size: 18px;
           font-weight: 600;
-          color: $civic-primary;
+          color: $dark-navy;
         }
 
         // Submit button
         input[type="submit"], button[type="submit"], .button.is-outlined {
-          background: $civic-cta !important;
+          background: $cta-orange !important;
           color: #FFFFFF !important;
           border: none !important;
           border-radius: 6px !important;
-          font-family: $civic-heading-font;
+          font-family: $heading-font;
           font-weight: 600;
           font-size: 16px;
           padding: 12px 24px;
-          transition: background $civic-transition;
+          transition: background $transition-base;
           cursor: pointer;
 
           &:hover {
-            background: $civic-cta-hover !important;
+            background: $cta-orange-hover !important;
           }
         }
 
         // Checkboxes
         label {
-          font-family: $civic-body-font;
+          font-family: $body-font;
           font-size: 14px;
-          color: $civic-muted-text;
+          color: $muted-text;
         }
       }
 
       .comment {
-        border-color: $civic-border;
-        border-radius: $civic-radius;
+        border-color: $soft-border;
+        border-radius: $radius-base;
       }
     }
   }
 
   .projekt-page {
-    font-family: $civic-body-font;
-    color: $civic-primary;
+    font-family: $body-font;
+    color: $dark-navy;
 
     h1, h2, h3, h4, h5, h6 {
-      font-family: $civic-heading-font;
-      color: $civic-primary;
+      font-family: $heading-font;
+      color: $dark-navy;
     }
 
     .button {
-      font-family: $civic-heading-font;
+      font-family: $heading-font;
       border-radius: 6px;
     }
 
     // Primary buttons (brand-color based)
     .button:not(.hollow):not(.clear) {
-      transition: background $civic-transition;
+      transition: background $transition-base;
     }
 
     .main-column {
@@ -803,7 +821,7 @@ $phase-marker-border: #cbd5e1;
   }
 
   &.custom-page {
-    background-color: $civic-bg;
+    background-color: $page-bg-light;
   }
 
   .custom-page-content {
@@ -814,6 +832,11 @@ $phase-marker-border: #cbd5e1;
       @media(max-width: $big-tablet-viewport-start) {
         margin-top: 1rem;
       }
+    }
+
+    .glightbox:focus-visible {
+      outline: $outline-focus;
+      outline-offset: -3px;
     }
   }
 

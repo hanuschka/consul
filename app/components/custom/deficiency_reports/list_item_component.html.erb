@@ -17,10 +17,26 @@
   <% end %>
 
   <% c.with_footer_section do %>
-    <div class="deficiency-report-footer-status" style="color:<%= deficiency_report.status&.color %>;">
-      <i class="fas fa-<%= deficiency_report.status&.icon %>"></i>
-      <%= deficiency_report.status&.title %>
-    </div>
+    <% status = deficiency_report.status %>
+    <% if status&.description.present? %>
+      <rich-tooltip placement="top" delay="2000" shadow="heavy" class="deficiency-report-footer-status-tooltip">
+        <div class="deficiency-report-footer-status" style="color:<%= status.color %>;">
+          <i class="fas fa-<%= status.icon %>"></i>
+          <%= status.title %>
+        </div>
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= status.title %></span>
+            <span class="rich-tooltip-content--text"><%= status.description %></span>
+          </span>
+        </template>
+      </rich-tooltip>
+    <% else %>
+      <div class="deficiency-report-footer-status" style="color:<%= status&.color %>;">
+        <i class="fas fa-<%= status&.icon %>"></i>
+        <%= status&.title %>
+      </div>
+    <% end %>
   <% end %>
 
   <% if helpers.deficiency_reports_feature?("allow_voting") %>

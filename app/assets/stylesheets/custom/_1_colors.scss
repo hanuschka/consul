@@ -17,6 +17,7 @@ $gray-1: #e2e2e2;
 $blue-gray-1: #919dab;
 
 $green-success-color: #00AA0B;
+$green-success-soft-color: #2e7d32;
 
 $orange-button-color: #FFA42D;
 $grey-button-color: #cfd9e2;
@@ -34,21 +35,7 @@ $dt-base-hover: lighten($dt-base, 10%);
 $dt-base-secondary: lighten($dt-base, 70%);
 $dt-base-transparent-background-hover: #dfebf5;
 
-// Civic design palette (projekt page theme)
-$civic-primary: #0F172A;
-$civic-secondary: #334155;
-$civic-accent: #0369A1;
-$civic-accent-light: rgba(3, 105, 161, 0.08);
-$civic-accent-lighter: rgba(3, 105, 161, 0.04);
-$civic-cta: #F97316;
-$civic-cta-hover: #EA580C;
-$civic-bg: #F8FAFC;
-$civic-card: #FFFFFF;
-$civic-muted: #E8ECF1;
-$civic-muted-text: #64748B;
-$civic-border: #E2E8F0;
-$civic-success: #16A34A;
-$civic-destructive: #DC2626;
+// Projekt page theme palette lives in cross_pack/1_colors.scss (shared with /adm).
 
 :root {
   --medium-gray-3: #{$medium-gray-3};

@@ -1,4 +1,9 @@
-<div class="dropzone-image-upload js-dropzone-image-upload" data-submit-form="<%= @submit_form %>">
+<div
+  class="dropzone-image-upload js-dropzone-image-upload"
+  data-submit-form="<%= @submit_form %>"
+  data-crop="<%= @crop %>"
+  data-crop-aspect-ratio="<%= @crop_aspect_ratio %>"
+>
   <div class="dropzone-image-upload--file-attach-area">
     <% if placeholder.present? %>
       <%= placeholder %>

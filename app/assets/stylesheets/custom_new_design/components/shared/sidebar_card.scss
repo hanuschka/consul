@@ -9,18 +9,18 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 .sidebar-card {
   position: relative;
   background: white;
-  border-radius: $civic-radius-lg;
-  border: 1px solid $civic-border;
-  box-shadow: $civic-shadow-sm;
+  border-radius: $radius-large;
+  border: 1px solid $soft-border;
+  box-shadow: $shadow-small;
   margin-bottom: 18px;
   color: $main-text-color;
   font-size: 15px;
   width: 100%;
   overflow: hidden;
-  transition: box-shadow $civic-transition;
+  transition: box-shadow $transition-base;
 
   &:hover {
-    box-shadow: $civic-shadow-md;
+    box-shadow: $shadow-medium;
   }
 
   .sidebar-collapse-icon {
@@ -28,11 +28,11 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 
   .switch-paddle {
-    background: $civic-muted;
+    background: $muted-bg;
   }
 
   input:checked ~ .switch-paddle {
-    background: $civic-accent;
+    background: $accent-blue;
   }
 
   .button {
@@ -133,9 +133,9 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
 .sidebar-card--section {
   padding: 20px $sidebar-card-horizontal-padding;
-  font-family: $civic-body-font;
+  font-family: $body-font;
   font-size: 15px;
-  color: $civic-secondary;
+  color: $slate-gray;
 
   .sdg-target-tag-list {
     margin-top: 10px;
@@ -163,11 +163,11 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  font-family: $civic-heading-font;
+  font-family: $heading-font;
   font-size: 15px !important;
   line-height: 1.25;
   margin-bottom: 0 !important;
-  color: $civic-primary;
+  color: $dark-navy;
   font-weight: 600;
   letter-spacing: -0.005em;
   padding: 15px $sidebar-card-horizontal-padding 16px;
@@ -264,6 +264,15 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
 .sidebar-card.is-content-empty .sidebar-card--admin-empty-hint {
   display: flex;
+}
+
+// When empty, the admin hint stands in for the content, so collapse the empty
+// editable body — otherwise it keeps its studio min-height and leaves a gap
+// below the hint, splitting the hint and the block apart. Mirrors the studio
+// content-block empty state in _content_block_empty_hint.scss. The body
+// regains its height in edit mode so admins can type.
+.sidebar-card.is-content-empty .projekt-content-block-wrapper:not(.-in-edit-mode) .projekt-content-block {
+  min-height: 0;
 }
 
 .sidebar-card--admin-empty-hint-icon {
@@ -408,7 +417,16 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   &:hover,
   &:focus-within {
     .projekt-content-block--toolbar {
-      max-height: 60px;
+      // `display: flex` here, not only via `.projekt-content-block-wrapper--inner:hover`
+      // (_content_block_toolbar.scss): when the block is empty the body collapses
+      // to min-height:0, so the inner wrapper has no hoverable area and that rule
+      // never fires — the card-level reveal must set display itself.
+      display: flex;
+      // High enough to fit the toolbar when it wraps onto a second row in
+      // narrow sidebar/footer cards (see -compact-mode wrap in
+      // studio/_content_block_buttons.scss); harmless as a ceiling for the
+      // single-row case.
+      max-height: 130px;
       opacity: 1;
       pointer-events: auto;
     }

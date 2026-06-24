@@ -107,5 +107,11 @@ App.ContentBlockEditor.DomHelpers = {
       status.classList.add("-leaving");
       setTimeout(() => status.remove(), 200);
     }, duration);
+  },
+
+  applyDefaultMarginIfMissing(contentBlockWrapper) {
+    if (!contentBlockWrapper || contentBlockWrapper.style.marginBottom) return;
+
+    contentBlockWrapper.style.marginBottom = `${ProjektStudio.getDefaultMarginBottom()}px`;
   }
 };

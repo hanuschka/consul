@@ -620,6 +620,129 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
     end
   end
 
+  path '/api/projekts/{id}/update_page_image' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update projekt page image' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Replace the projekt page header/cover image. Provide the image as base64-encoded data under image_attributes. Returns the updated projekt. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :projekt, in: :body, description: 'Projekt image attributes containing the base64-encoded attachment to set as the page image', schema: {
+        type: :object,
+        properties: {
+          projekt: {
+            type: :object,
+            properties: {
+              image_attributes: {
+                type: :object,
+                description: 'Image to set as the projekt page image. Upload as base64-encoded data.',
+                properties: {
+                  id: { type: :integer, nullable: true },
+                  attachment: { type: :string, description: 'Base64-encoded image file. Required. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
+                  title: { type: :string, nullable: true, description: 'Image caption or alt text used for accessibility.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution or copyright information.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current page image.' }
+                },
+                required: ['attachment']
+              }
+            },
+            required: ['image_attributes']
+          }
+        },
+        required: ['projekt']
+      }
+
+      response '200', 'projekt page image updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt With Image') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              image_attributes: {
+                attachment: base64_fixture('clippy.png'),
+                title: 'Page Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'no image provided' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          { projekt: { image_attributes: {} } }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              image_attributes: {
+                attachment: base64_fixture('clippy.png'),
+                title: 'Page Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+  end
+
   path '/api/projekts/{id}/update_setting' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
 
@@ -791,6 +914,79 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       end
 
       unauthorized_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/projekts/{id}/update_settings' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update multiple projekt settings' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Bulk-update several projekt settings in a single request. Provide a settings object mapping each existing setting key to its new value. Returns the list of updated keys and a per-key errors map for keys that could not be updated (e.g. unknown keys). #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :settings, in: :body, description: 'Object whose keys are setting keys and whose values are the new setting values', schema: {
+        type: :object,
+        properties: {
+          settings: {
+            type: :object,
+            description: 'Map of setting key => value. Each key must match an existing projekt setting.',
+            additionalProperties: { type: :string },
+            example: { 'show_map' => 'true', 'enable_comments' => 'false' }
+          }
+        },
+        required: ['settings']
+      }
+
+      response '200', 'settings processed' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt With Settings') }
+        let(:id) { test_projekt.id }
+        let(:settings) do
+          { settings: { 'show_map' => 'true' } }
+        end
+
+        before do
+          test_projekt.projekt_settings.create!(key: 'show_map', value: 'false')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     updated: { type: :array, items: { type: :string } },
+                     errors: { type: :object }
+                   },
+                   required: %w[updated errors]
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'settings parameter missing' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt') }
+        let(:id) { test_projekt.id }
+        let(:settings) { {} }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 

@@ -44,7 +44,7 @@ ProjektStudio.Sidebar = {
     iconClassList.toggle("fa-eye", sectionDeactivatedNew);
 
     const newTitle = sectionDeactivatedNew ? e.currentTarget.dataset.offTitle : e.currentTarget.dataset.onTitle;
-    e.currentTarget.setAttribute("title", newTitle);
+    ProjektStudio.utils.updateRichTooltipTitle(e.currentTarget, newTitle);
 
     // const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;

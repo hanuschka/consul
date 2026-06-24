@@ -16,14 +16,14 @@ $mobile-custom-fixed-tabs-height: 50px;
 // $top-bar-banner-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 $top-bar-banner-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
 
-// Civic design tokens (projekt page theme). Colors live in _1_colors.scss.
-$civic-heading-font: 'Asap', sans-serif;
-$civic-body-font: 'Asap', sans-serif;
-$civic-radius: 8px;
-$civic-radius-lg: 12px;
-$civic-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-$civic-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
-$civic-transition: 200ms ease;
+// Projekt page theme tokens. Colors live in cross_pack/1_colors.scss.
+$heading-font: 'Asap', sans-serif;
+$body-font: 'Asap', sans-serif;
+$radius-base: 8px;
+$radius-large: 12px;
+$shadow-small: 0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.06);
+$transition-base: 200ms ease;
 
 :root {
   --topbar-height: #{$topbar-height};

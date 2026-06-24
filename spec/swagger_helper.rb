@@ -89,7 +89,16 @@ RSpec.configure do |config|
         { name: 'Deficiency Reports', description: 'Reports of deficiencies or issues' },
         { name: 'Iframes', description: 'Embedded iframe content' },
         { name: 'Poll Questions', description: 'Questions within polls' },
-        { name: 'Poll Question Answers', description: 'Answer options for poll questions' }
+        { name: 'Poll Question Answers', description: 'Answer options for poll questions' },
+        { name: 'Question Options', description: 'Answer options for projekt phase questions' },
+        { name: 'Budget Phases', description: 'Workflow phases and timeline for budgets' },
+        { name: 'Milestone Statuses', description: 'Status definitions for milestones' },
+        { name: 'Progress Bars', description: 'Progress indicators for projekt phases' },
+        { name: 'Idea Categories', description: 'Categories for citizen ideas' },
+        { name: 'Idea Officers', description: 'Officers responsible for citizen ideas' },
+        { name: 'Deficiency Report Categories', description: 'Categories for deficiency reports' },
+        { name: 'Masterportal', description: 'Masterportal GIS integration endpoints' },
+        { name: 'Error Handling', description: 'Responses for unknown or unsupported API routes' }
       ],
       'x-tagGroups': [
         {
@@ -104,15 +113,19 @@ RSpec.configure do |config|
             'Proposals',
             'Polls',
             'Milestones',
+            'Milestone Statuses',
             'Budgets',
             'Budget Investments',
+            'Budget Phases',
             'Comments',
             'Events',
             'Arguments',
             'Livestreams',
             'Notifications',
             'Questions',
+            'Question Options',
             'Formulars',
+            'Progress Bars',
             'Texts',
             'Iframes',
             'Point Of Interest Categories',
@@ -123,11 +136,19 @@ RSpec.configure do |config|
         },
         {
           name: 'Ideas',
-          tags: ['Ideas']
+          tags: ['Ideas', 'Idea Categories', 'Idea Officers']
         },
         {
           name: 'Deficiency Reports',
-          tags: ['Deficiency Reports']
+          tags: ['Deficiency Reports', 'Deficiency Report Categories']
+        },
+        {
+          name: 'Integrations',
+          tags: ['Masterportal']
+        },
+        {
+          name: 'General',
+          tags: ['Error Handling']
         }
       ],
       components: {

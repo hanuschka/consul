@@ -38,10 +38,10 @@
     display: none;
     z-index: 1000;
     height: $mobile-custom-fixed-tabs-height;
-    background-color: $civic-card !important;
+    background-color: $surface-white !important;
     color: black;
     border: 1px solid #D9D9D9;
-    border-color: $civic-border !important;
+    border-color: $soft-border !important;
     border-bottom-width: 2px;
     margin-bottom: 20px;
     z-index: 1004;
@@ -65,19 +65,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: $civic-heading-font;
+    font-family: $heading-font;
     font-weight: 500;
     font-size: 16px !important;
     width: 100%;
     height: 100%;
-    color: $civic-muted-text;
+    color: $muted-text;
     border-right: 1px solid $gray-1;
     user-select: none;
-    transition: color $civic-transition, background-color $civic-transition;
+    transition: color $transition-base, background-color $transition-base;
 
     &:hover {
       text-decoration: none;
-      color: $civic-secondary;
+      color: $slate-gray;
     }
 
     &:active {
@@ -85,10 +85,10 @@
     }
 
     &.-selected {
-      color: $civic-accent !important;
-      background-color: $civic-accent-lighter !important;
+      color: $accent-blue !important;
+      background-color: $accent-blue-lighter !important;
       font-weight: 600;
-      border-bottom: 3px solid $civic-accent !important;
+      border-bottom: 3px solid $accent-blue !important;
     }
 
     &:last-child {

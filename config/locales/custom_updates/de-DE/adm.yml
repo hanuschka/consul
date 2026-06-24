@@ -126,6 +126,8 @@ de:
           success: Alle Masterportal-Pins und die zugehörigen Ressourcen wurden gelöscht.
         destroy_masterportal_pin:
           success: Pin und ggf. die verknüpfte Ressource wurden gelöscht.
+        destroy_projekt_point_of_interest_pin:
+          success: Der Pin wurde gelöscht.
         masterportal_pins_summary:
           loading: Karte wird geladen…
   projekt_phase_setting:

@@ -1,5 +1,5 @@
 class Shared::MapComponent < ApplicationComponent
-  LAZY_LOAD_THRESHOLD = 100
+  LAZY_LOAD_THRESHOLD = 200
 
   def initialize(
     mappable: nil,
@@ -10,7 +10,8 @@ class Shared::MapComponent < ApplicationComponent
     placement: nil,
     map_data_url: nil,
     lazy_load_threshold: LAZY_LOAD_THRESHOLD,
-    masterportal_focus_view: false
+    masterportal_focus_view: false,
+    instance_suffix: nil
   )
     @mappable = mappable
     @features = features
@@ -21,6 +22,7 @@ class Shared::MapComponent < ApplicationComponent
     @map_data_url = map_data_url
     @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
+    @instance_suffix = instance_suffix
   end
 
   def lazy_load_map_data?
@@ -30,8 +32,11 @@ class Shared::MapComponent < ApplicationComponent
     (@explicit_features_count || features_count) > @lazy_load_threshold
   end
 
-  def accessibility_hidden?
-    !@editable
+  def hide_from_screen_readers?
+    return false if @editable
+    return false if extended_sidebar_map?
+
+    true
   end
 
   def map_accessibility_note
@@ -55,6 +60,10 @@ class Shared::MapComponent < ApplicationComponent
   end
 
   private
+
+    def extended_sidebar_map?
+      @placement == "extended_sidebar_map"
+    end
 
     def features_count
       data = resolved_features
@@ -122,11 +131,18 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def map_id
-      return dom_id(@mappable, [@placement, "map"].compact.join("_")) if @mappable
-      return "#{@process}_map" if @process
-      return "default_map" if map_location.default?
+      base =
+        if @mappable
+          dom_id(@mappable, [@placement, "map"].compact.join("_"))
+        elsif @process
+          "#{@process}_map"
+        elsif map_location.default?
+          "default_map"
+        else
+          "map"
+        end
 
-      "map"
+      [base, @instance_suffix].compact.join("_")
     end
 
     def map_zoom

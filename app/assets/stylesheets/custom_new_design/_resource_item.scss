@@ -16,7 +16,7 @@
     // The title is the full-card link (its ::after overlays the whole tile),
     // so focusing it rings the entire tile. Raised secondary links (tag,
     // phase, author) ring themselves below.
-    &:has(.resource-item--title:focus-visible) {
+    &:has(.resource-item--title-link:focus-visible) {
       outline: $outline-focus;
       outline-offset: 2px;
     }
@@ -144,10 +144,19 @@
   .resource-item--title {
     display: block;
     font-size: 20px;
+    font-weight: normal;
     margin-bottom: 10px;
     width: 200px;
     line-height: 1.2;
     margin-top: -2px;
+    color: inherit;
+
+    &:nth-child(n+3) {
+      width: 100%;
+    }
+  }
+
+  .resource-item--title-link {
     text-decoration: none;
     color: inherit;
 
@@ -158,10 +167,6 @@
 
     &:focus-visible {
       text-decoration: underline;
-    }
-
-    &:nth-child(n+3) {
-      width: 100%;
     }
 
     &::after {

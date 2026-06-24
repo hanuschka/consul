@@ -6,7 +6,7 @@ module Abilities
       merge Abilities::Everyone.new(user)
 
       can [:read, :update, :refresh_activities,
-           :edit_username, :update_username, :edit_details, :update_details], User, id: user.id
+           :update_username, :edit_details, :update_details], User, id: user.id
 
       can :read, Debate
       can :update, Debate do |debate|
@@ -158,8 +158,15 @@ module Abilities
         projekt_phase.selectable_by?(user)
       end
 
-      can [:index, :show, :vote, :json_data, :suggest], DeficiencyReport,
-        id: DeficiencyReport.admin_accepted.or(DeficiencyReport.by_author(user)).ids
+      deficiency_report_read_actions = [:index, :show, :vote, :json_data, :suggest]
+
+      if Setting["deficiency_reports.admin_acceptance_required"].present?
+        can deficiency_report_read_actions, DeficiencyReport, admin_accepted: true
+      else
+        can deficiency_report_read_actions, DeficiencyReport
+      end
+
+      can deficiency_report_read_actions, DeficiencyReport, author_id: user.id
       can [:create], DeficiencyReport
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&
@@ -221,7 +228,10 @@ module Abilities
           projekt_phase.permission_problem(user).blank?
       end
 
-      can [:index, :show, :vote, :unvote, :json_data, :suggest], Idea, id: Idea.accepted.or(Idea.by_author(user)).ids
+      idea_read_actions = [:index, :show, :vote, :unvote, :json_data, :suggest]
+
+      can idea_read_actions, Idea, admin_accepted_at: (Time.zone.at(0)..)
+      can idea_read_actions, Idea, author_id: user.id
       can [:create], Idea
       can [:create], ProjektPointOfInterestPin do |pin|
         pin.projekt_phase.permission_problem(user).blank?

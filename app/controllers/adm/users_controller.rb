@@ -2,12 +2,12 @@ module Adm
   class UsersController < Adm::BaseController
     def index
       authorize [:adm, User]
-      base_scope = UsersQuery.call(policy_scope([:adm, User]), params)
+      base_scope = UsersQuery.call(policy_scope([:adm, User]).order(created_at: :desc), params)
         .includes(:registered_address, :administrator, :moderator, :valuator, :manager, :poll_officer, :organization)
 
       respond_to do |format|
         format.html do
-          @pagy, @users = pagy(base_scope)
+          @pagy, @users = pagy(base_scope, limit: 20)
 
           @username_header_options = { sort: true, search: true }
           @email_header_options = { search: true }

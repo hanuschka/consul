@@ -271,6 +271,9 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       raise Pundit::NotAuthorizedError unless current_user.deficiency_report_officer?
 
       officer = current_user.deficiency_report_officer
+
+      return scope if officer.manage_all?
+
       officer_group_ids = DeficiencyReport::OfficerGroup.joins(:officers).where(deficiency_report_officers: { id: officer.id }).pluck(:id)
 
       scope.where(

@@ -46,6 +46,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     ServiceResult.success(projekt: projekt)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::CreateProjektFromImportService] failed: #{e.message}\n#{e.backtrace.first(10).join("\n")}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "create_projekt" }) if defined?(Sentry)
     ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.create_projekt_failed", message: e.message))
   end
 

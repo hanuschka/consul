@@ -158,11 +158,9 @@ class Setting < ApplicationRecord
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
         # Images and Documents
+        "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
         "uploads.images.title.max_length": 80,
-        "uploads.images.min_width": 0,
-        "uploads.images.min_height": 475,
-        "uploads.images.max_size": 4,
         "uploads.images.content_types": "image/jpeg image/png image/gif",
         "uploads.documents.max_amount": 3,
         "uploads.documents.max_size": 3,
@@ -277,7 +275,6 @@ class Setting < ApplicationRecord
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,
         "extended_feature.modulewide.show_affiliation_filter_in_index_sidebar": true,
         "extended_feature.modulewide.hide_comment_replies_by_default": false,
-        "extended_feature.modulewide.custom_help_text_in_modules": false,
         # temporarily disabled  "extended_feature.modulewide.enable_custom_tags": false,
 
         "extended_feature.debates.intro_text_for_debates": true,

@@ -111,7 +111,7 @@ de:
             Wählen Sie eine vorgefertigte Antwortvorlage aus, um den Text automatisch in das Antwortfeld zu übernehmen. Die Vorlage kann anschließend individuell angepasst werden. Antwortvorlagen werden unter „Antwortvorlagen" in der Seitennavigation verwaltet.
           answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
-          official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. Hinweis: Dieser Text ist öffentlich sichtbar."
+          official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. <strong>Wichtiger Hinweis:</strong> Dieser Text ist öffentlich sichtbar."
         update_official_answer:
           success: Offizielle Antwort wurde erfolgreich aktualisiert.
         new:
@@ -126,7 +126,7 @@ de:
           labels:
             title: Titel der Meldung
             description: Beschreibung
-            image: Bild
+            image: Titelbild
             documents: Dokumente
             video_url: Video-URL
             category: Kategorie
@@ -135,7 +135,7 @@ de:
           hints:
             title: Der Titel des Beitrags wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte das gemeldete Anliegen kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können.
             description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Anliegen, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird - je nach gewählter Voreinstellung - öffentlich auf der Detailseite des Beitrags angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
-            image: Das Bild dokumentiert das gemeldete Anliegen visuell und wird auf der öffentlichen Detailseite des Beitrags angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, das Anliegen schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
+            image: Das Titelbild dokumentiert den gemeldeten Mangel visuell und wird – bei entsprechender Einstellung – auf der öffentlichen Detailseite der Meldung angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, den Mangel schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
             documents: Hier können ergänzende Dokumente wie Gutachten, Pläne oder Berichte zum Beitrag hinzugefügt werden. Die Dateien werden auf der Detailseite zum Download bereitgestellt und sind für alle Nutzer sichtbar. Mehrere Dokumente können gleichzeitig hochgeladen werden, um den Sachverhalt umfassend zu dokumentieren.
             video_url: Geben Sie die URL eines Videos ein, das das gemeldete Anliegen dokumentiert. Das Video wird auf der öffentlichen Detailseite des Beitrags eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
             on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag der Beitrag erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator einen Beitrag stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung des Beitrags.
@@ -229,6 +229,8 @@ de:
         form:
           title_label: Titel
           title_hint: Der Titel des Status wird in der Meldungsübersicht und auf der Detailseite als Statusanzeige verwendet. Er sollte den Bearbeitungsstand klar beschreiben, z. B. „In Bearbeitung", „Erledigt" oder „Abgelehnt". Bürger sehen diesen Titel auf der öffentlichen Seite, daher sollte er allgemein verständlich formuliert sein.
+          description_label: Erläuterung
+          description_hint: Eine kurze Erläuterung, was dieser Status bedeutet. Sie wird Bürgern in der Meldungsübersicht als Tooltip angezeigt, wenn sie den Statushinweis ansteuern. Beschreiben Sie verständlich, was der jeweilige Bearbeitungsstand für die Meldung bedeutet, z. B. „Ihre Meldung wurde eingegangen und wird derzeit geprüft." Bleibt das Feld leer, wird kein Tooltip angezeigt.
           color_label: Farbe
           color_hint: Die Farbe wird als visuelle Kennzeichnung des Status in Listen und auf der Detailseite der Meldung verwendet. Sie hilft dabei, verschiedene Bearbeitungsstände auf einen Blick zu unterscheiden. Wählen Sie kontrastreiche Farben, die sich gut voneinander abheben, um die Übersichtlichkeit in der Listenansicht zu gewährleisten.
           icon_label: Symbol
@@ -252,7 +254,7 @@ de:
           table:
             name: Name
             email: E-Mail
-            admin: Admin
+            manage_all: Alle verwalten
         officer:
           add: Hinzufügen
         search:

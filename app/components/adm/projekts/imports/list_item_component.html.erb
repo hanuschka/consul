@@ -38,6 +38,13 @@
       <p class="projekt-import-list-item--error"><%= error_preview %></p>
     <% end %>
 
+    <% if show_image_failed_note? %>
+      <p class="projekt-import-list-item--note">
+        <span class="material-symbols-outlined" aria-hidden="true">image_not_supported</span>
+        <%= t("adm.projekts.imports.list.image_failed_note") %>
+      </p>
+    <% end %>
+
     <% if show_created_projekts? %>
       <div class="projekt-import-list-item--projekts">
         <% created_projekts.each do |projekt| %>

@@ -28,6 +28,23 @@ ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { t
   `;
 };
 
+// Admin-only placeholder shown inside an empty projekt content block (studio
+// only, hidden in preview-as-user). Mirrors the site-block hint rendered by
+// `wrap_with_admin_empty_hint`; reuses the same `.content-block-empty-hint`
+// markup/CSS. Visibility is driven by the `is-content-empty` marker on the
+// wrapper, toggled live by `App.ContentBlockEditor.EmptyHintToggle`.
+ProjektStudio.templateFunctions.contentBlockEmptyHintHtml = function() {
+  return `
+    <div class="content-block-empty-hint js-content-block-empty-hint js-studio-hide-on-preview" role="note">
+      <span class="content-block-empty-hint--icon" aria-hidden="true"><i class="fas fa-circle-info"></i></span>
+      <span class="content-block-empty-hint--text">
+        <strong class="content-block-empty-hint--title">Leerer Inhaltsblock</strong>
+        <span class="content-block-empty-hint--description">Nur Sie (Admins &amp; Manager*innen) sehen diesen Hinweis. Bewegen Sie den Mauszeiger über den Block und klicken Sie auf die Symbolleiste, um Inhalte hinzuzufügen — der Block bleibt für Besucher*innen verborgen, bis er Inhalt enthält.</span>
+      </span>
+    </div>
+  `;
+};
+
 ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocks, projektId) {
   return `
     <div
@@ -38,32 +55,34 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
         class="add-new-content-block-section js-show-content-block-templates-section js-add-content-block-at-top -at-top js-studio-hide-on-preview"
         style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
       >
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button
-            type="button"
-            class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
-            tabindex="-1"
-          >
-            <i class="fas fa-magic"></i>
-          </button>
-        `, {
-          title: "Inhaltsblock mit KI erstellen",
-          text: "Erstellt mit künstlicher Intelligenz einen neuen Inhaltsblock aus Ihrer Beschreibung.",
-          delay: 1500
-        })}
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button
-            type="button"
-            class="js-show-content-block-templates add-new-content-block-button"
-            tabindex="-1"
-          >
-            <i class="fas fa-plus"></i>
-          </button>
-        `, {
-          title: "Inhaltsblock am Anfang hinzufügen",
-          text: "Fügt ganz oben auf der Seite einen neuen Inhaltsblock aus einer Vorlage hinzu.",
-          delay: 1500
-        })}
+        <div class="add-new-content-block-section--controls">
+          ${ProjektStudio.templateFunctions.studioControlTooltip(`
+            <button
+              type="button"
+              class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
+              tabindex="-1"
+            >
+              <i class="far fa-file"></i>
+            </button>
+          `, {
+            title: "Leeren Inhaltsblock am Anfang hinzufügen",
+            text: "Fügt ganz oben auf der Seite einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
+            delay: 1500
+          })}
+          ${ProjektStudio.templateFunctions.studioControlTooltip(`
+            <button
+              type="button"
+              class="js-show-content-block-templates add-new-content-block-button"
+              tabindex="-1"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          `, {
+            title: "Inhaltsblock am Anfang hinzufügen",
+            text: "Fügt ganz oben auf der Seite einen neuen Inhaltsblock aus einer Vorlage hinzu.",
+            delay: 1500
+          })}
+        </div>
       </div>
 
       ${contentBlocks && contentBlocks.join("")}
@@ -73,10 +92,13 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
 
 ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, toolbarPosition} = {}) {
   const isSiteContext = context === 'site';
+  const showEmptyHint = !context || context === 'projekt';
+  const isEmpty = showEmptyHint && App.ContentBlockEditor.Crud.isContentEmpty(contentBlockHTML);
+  const emptyHintClasses = `${showEmptyHint ? ' js-toggle-empty-hint-on-content' : ''}${isEmpty ? ' is-content-empty' : ''}`;
 
   return `
     <div
-      class="js-content-block-wrapper projekt-content-block-wrapper ${draftContentBlockIndex ? ' -draft' : ''}"
+      class="js-content-block-wrapper projekt-content-block-wrapper${emptyHintClasses} ${draftContentBlockIndex ? ' -draft' : ''}"
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
@@ -350,6 +372,8 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
         <div class="projekt-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
 
+        ${showEmptyHint ? ProjektStudio.templateFunctions.contentBlockEmptyHintHtml() : ''}
+
         <div class="projekt-content-block js-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
           ${contentBlockHTML}
         </div>
@@ -366,34 +390,36 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 function showContentBlockTemplatesButton(isDraft = false) {
   return `
     <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
-      ${ProjektStudio.templateFunctions.studioControlTooltip(`
-        <button
-          type="button"
-          class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
-          tabindex="-1"
-          ${isDraft ? "disabled" : ''}
-        >
-          <i class="fas fa-magic"></i>
-        </button>
-      `, {
-        title: "Inhaltsblock mit KI erstellen",
-        text: "Erstellt mit künstlicher Intelligenz einen neuen Inhaltsblock aus Ihrer Beschreibung.",
-        delay: 1500
-      })}
-      ${ProjektStudio.templateFunctions.studioControlTooltip(`
-        <button
-          type="button"
-          class="js-show-content-block-templates add-new-content-block-button"
-          tabindex="-1"
-          ${isDraft ? "disabled" : ''}
-        >
-          <i class="fas fa-plus"></i>
-        </button>
-      `, {
-        title: "Inhaltsblock hinzufügen",
-        text: "Fügt an dieser Stelle einen neuen Inhaltsblock aus einer Vorlage hinzu.",
-        delay: 1500
-      })}
+      <div class="add-new-content-block-section--controls">
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button
+            type="button"
+            class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
+            tabindex="-1"
+            ${isDraft ? "disabled" : ''}
+          >
+            <i class="far fa-file"></i>
+          </button>
+        `, {
+          title: "Leeren Inhaltsblock hinzufügen",
+          text: "Fügt an dieser Stelle einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
+          delay: 1500
+        })}
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button
+            type="button"
+            class="js-show-content-block-templates add-new-content-block-button"
+            tabindex="-1"
+            ${isDraft ? "disabled" : ''}
+          >
+            <i class="fas fa-plus"></i>
+          </button>
+        `, {
+          title: "Inhaltsblock hinzufügen",
+          text: "Fügt an dieser Stelle einen neuen Inhaltsblock aus einer Vorlage hinzu.",
+          delay: 1500
+        })}
+      </div>
     </div>
   `
 }

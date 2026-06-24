@@ -4,6 +4,8 @@ en:
       show:
         title: "DT API connection status"
         connection_error_label: "Error:"
+        reconnect: "Reconnect to DemokratieToday"
+        reconnect_confirm: "Do you really want to reconnect to the DemokratieToday App?"
         errors:
           no_client: "No registered DT API client found (InternalApiClient with name 'DT')."
           no_token: "DT API client found, but service_api_token is missing."

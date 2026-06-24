@@ -5,6 +5,7 @@ App.ContentBlockEditor.Crud = {
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-add-new-content-block", this.handleCreateContentBlock.bind(this));
+    $document.on("click", ".js-add-blank-content-block", this.handleAddBlankContentBlock.bind(this));
     $document.on("click", ".js-delete-content-block", this.handleDeleteContentBlock.bind(this));
   },
 
@@ -20,6 +21,41 @@ App.ContentBlockEditor.Crud = {
     }
 
     this.addContentBlock(this.addContentBlockAfter, contentBlockTemplate)
+  },
+
+  handleAddBlankContentBlock(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const directSection = button.closest(".js-show-content-block-templates-section");
+
+    if (directSection) {
+      const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(button);
+      const isAtTop = directSection.classList.contains("js-add-content-block-at-top");
+
+      App.ContentBlockEditor.TemplateSelector.selectionMode = "add";
+      App.ContentBlockEditor.TemplateSelector.replaceTargetWrapper = null;
+      App.ContentBlockEditor.TemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+      this.addContentBlockAfter = wrapper;
+      this.addContentBlockAtTop = isAtTop;
+    }
+
+    const templateSelector = App.ContentBlockEditor.TemplateSelector;
+    const blankTemplate = this.buildEmptyContentBlockNode();
+
+    if (templateSelector.selectionMode === "replace") {
+      this.replaceContentBlockWithTemplate(templateSelector.replaceTargetWrapper, blankTemplate);
+      return
+    }
+
+    this.addContentBlock(this.addContentBlockAfter, blankTemplate)
+  },
+
+  buildEmptyContentBlockNode() {
+    const node = document.createElement("div");
+    node.innerHTML = ProjektStudio.templateFunctions.emptyContentBlockHtml;
+
+    return node;
   },
 
   // The template preview hydrates its map region in place for display, so the
@@ -158,6 +194,8 @@ App.ContentBlockEditor.Crud = {
 
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
     App.ContentBlockEditor.DomHelpers.applyDefaultMarginIfMissing(newContentBlockContainer)
+
+    App.ContentBlockEditor.EmptyHintToggle.refreshAll()
 
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })

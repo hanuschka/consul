@@ -859,4 +859,55 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       unauthorized_response { let(:id) { 1 } }
     end
   end
+
+  path '/api/budget_investments/{id}' do
+    parameter name: :id, in: :path, type: :integer, description: 'Budget Investment ID'
+
+    get 'Retrieve a budget investment (alias)' do
+      tags 'Budget Investments'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Alias of `GET /api/investments/{id}`. Retrieve a single budget investment by ID with full details. Returns project information, feasibility assessment, admin valuation status, voting statistics, and selected status.#{ApiAccessRequirements::GET_READ_ONLY}"
+
+      response '200', 'budget investment found and returned' do
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            title: 'Test Investment',
+            description: 'Test Description'
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { type: :object }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '404', 'budget investment not found' do
+        let(:id) { 999999 }
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+  end
 end

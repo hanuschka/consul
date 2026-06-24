@@ -23,7 +23,44 @@
           <% end %>
 
           <% if upload? %>
-            <div class="ml-auto">
+            <div class="ml-auto d-flex gap-2">
+              <% if images? %>
+                <rich-tooltip placement="top" delay="1000" trigger-only hover-only shadow="heavy">
+                  <%= render Adm::ButtonWithProgressComponent.new(
+                    label: t("files.card.upload_with_crop"),
+                    loading_label: t("files.upload_loading"),
+                    success_label: t("files.upload_success"),
+                    icon: "crop",
+                    button_data: { action: "click->files--upload#triggerCropPicker" },
+                    extra_controllers: ["files--upload", "shared--image-cropper"],
+                    extra_root_data: {
+                      "files--upload-endpoint-value": upload_endpoint,
+                      "action": "shared--image-cropper:cropped->files--upload#uploadCropped"
+                    }
+                  ) do %>
+                    <%= tag.input(
+                      type: "file",
+                      accept: upload_accept,
+                      class: "js-files-upload-crop-input",
+                      hidden: true,
+                      data: {
+                        "files--upload-target" => "cropInput",
+                        "shared--image-cropper-target" => "input",
+                        "action" => "change->shared--image-cropper#cropOnSelect"
+                      }
+                    ) %>
+                    <%= render Kern::ImageCropperDialogComponent.new %>
+                    <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+                  <% end %>
+                  <template>
+                    <span class="rich-tooltip-content">
+                      <span class="rich-tooltip-content--title"><%= t("files.card.upload_with_crop_tooltip_title") %></span>
+                      <span class="rich-tooltip-content--text"><%= t("files.card.upload_with_crop_tooltip_text") %></span>
+                    </span>
+                  </template>
+                </rich-tooltip>
+              <% end %>
+
               <%= render Adm::ButtonWithProgressComponent.new(
                 label: t("files.card.upload"),
                 loading_label: t("files.upload_loading"),

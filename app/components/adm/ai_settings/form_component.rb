@@ -8,6 +8,10 @@ class Adm::AiSettings::FormComponent < ApplicationComponent
 
   private
 
+    def custom_model_required?
+      key == "ai.llm_custom_model" && Setting["ai.llm_api_endpoint"].present?
+    end
+
     def ai_provider_options
       RubyLLM.providers.map { |p| [p.name, p.name.downcase] }
     end

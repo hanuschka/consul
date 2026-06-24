@@ -1,6 +1,9 @@
 class Image < ApplicationRecord
   include Attachable
 
+  MIN_IMAGE_WIDTH = 0
+  MIN_IMAGE_HEIGHT = 475
+
   def self.styles
     {
       large: { coalesce: true, resize: "x475", loader: { page: nil }},
@@ -31,7 +34,7 @@ class Image < ApplicationRecord
   default_scope { with_attached_attachment }
 
   def self.max_file_size
-    10
+    Setting["uploads.images.max_size"].to_i.nonzero? || 10
   end
 
   def self.accepted_content_types
@@ -117,10 +120,8 @@ class Image < ApplicationRecord
 
         return true if width.blank? || height.blank?
 
-        min_width = Setting["uploads.images.min_width"].to_i
-        min_height = Setting["uploads.images.min_height"].to_i
-        errors.add(:attachment, :min_image_width, required_min_width: min_width) if width < min_width
-        errors.add(:attachment, :min_image_height, required_min_height: min_height) if height < min_height
+        errors.add(:attachment, :min_image_width, required_min_width: MIN_IMAGE_WIDTH) if width < MIN_IMAGE_WIDTH
+        errors.add(:attachment, :min_image_height, required_min_height: MIN_IMAGE_HEIGHT) if height < MIN_IMAGE_HEIGHT
       end
     end
 

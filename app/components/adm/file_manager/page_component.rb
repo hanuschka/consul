@@ -3,13 +3,17 @@ class Adm::FileManager::PageComponent < ApplicationComponent
   renders_one :description
 
   renders_one :types_note,
-              ->(types:, note_key: "files.allowed_types_note_html", settings_link: false) do
+              ->(types:, note_key: "files.allowed_types_note_html", settings_link: false,
+                 settings_edit_path: nil, max_file_size: nil, max_size_edit_path: nil) do
     render(
       "adm/files/allowed_types_note",
       admin_types: types,
       user_types: types,
       note_key: note_key,
-      show_settings_link: settings_link
+      show_settings_link: settings_link,
+      settings_edit_path: settings_edit_path,
+      max_file_size: max_file_size,
+      max_size_edit_path: max_size_edit_path
     )
   end
 

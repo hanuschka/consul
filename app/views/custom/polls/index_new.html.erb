@@ -22,10 +22,6 @@
 
   <div class="flex-layout">
     <div class="main-column">
-      <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-        <%= link_to t("polls.index.section_header.help"), "#section_help" %>
-      <% end %>
-
       <%= render "shared/loader_spinner" %>
 
       <%= render(
@@ -38,6 +34,10 @@
           filters: @valid_orders
         )) %>
     <%= paginate @polls %>
+
+      <div id="section_help" class="margin" data-magellan-target="section_help">
+        <%= render_custom_block "polls_help" %>
+      </div>
     </div>
 
     <div id="polls-sidebar" class="sidebar">

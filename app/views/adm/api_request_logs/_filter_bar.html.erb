@@ -1,0 +1,74 @@
+<% live = local_assigns.fetch(:live, false) %>
+<% url = local_assigns.fetch(:url, adm_api_request_logs_path) %>
+<% reset_url = local_assigns.fetch(:reset_url, url) %>
+<% show_api_client_filter = local_assigns.fetch(:show_api_client_filter, true) %>
+<%
+  form_data =
+    if live
+      {
+        controller: "shared--auto-submit-form",
+        action: "change->shared--auto-submit-form#submit input->shared--auto-submit-form#debouncedSubmit"
+      }
+    else
+      {}
+    end
+
+  search_data = live ? { turbo_permanent: true } : {}
+  reset_data = live ? { turbo: false } : {}
+%>
+
+<%= form_tag url, method: :get, class: "adm-filter-bar -labeled", data: form_data do %>
+  <div class="adm-filter-bar--field adm-filter-bar--field-search adm-filter-bar--field-grow">
+    <%= label_tag :url, t("adm.api_request_logs.filters.url_label"), class: "adm-filter-bar--label" %>
+    <div class="adm-filter-bar--control">
+      <i class="fa fa-search adm-filter-bar--search-icon" aria-hidden="true"></i>
+      <%= search_field_tag :url, params[:url],
+        class: "adm-filter-bar--input adm-filter-bar--input-search",
+        placeholder: t("adm.api_request_logs.filters.url_placeholder"),
+        data: search_data %>
+    </div>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :http_method, t("adm.api_request_logs.index.http_method"), class: "adm-filter-bar--label" %>
+    <%= select_tag :http_method,
+      options_for_select(@http_method_options, params[:http_method]),
+      include_blank: t("adm.api_request_logs.filters.http_method_any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :response_status, t("adm.api_request_logs.index.response_status"), class: "adm-filter-bar--label" %>
+    <%= select_tag :response_status,
+      options_for_select(@response_status_options, params[:response_status]&.to_i),
+      include_blank: t("adm.api_request_logs.filters.response_status_any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <% if show_api_client_filter %>
+    <div class="adm-filter-bar--field">
+      <%= label_tag :api_client_id, t("adm.api_request_logs.index.api_client"), class: "adm-filter-bar--label" %>
+      <%= select_tag :api_client_id,
+        options_for_select(@api_client_options, params[:api_client_id]&.to_i),
+        include_blank: t("adm.api_request_logs.filters.api_client_any"),
+        class: "adm-filter-bar--input" %>
+    </div>
+  <% end %>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :start_date, t("adm.api_request_logs.filters.start_date_label"), class: "adm-filter-bar--label" %>
+    <%= date_field_tag :start_date, params[:start_date], class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :end_date, t("adm.api_request_logs.filters.end_date_label"), class: "adm-filter-bar--label" %>
+    <%= date_field_tag :end_date, params[:end_date], class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--actions">
+    <% if !live %>
+      <%= submit_tag t("adm.api_request_logs.filters.submit"), name: nil, class: "adm-filter-bar--submit-button" %>
+    <% end %>
+    <%= link_to t("adm.api_request_logs.filters.reset"), reset_url, class: "adm-filter-bar--reset-button", data: reset_data %>
+  </div>
+<% end %>

@@ -14,9 +14,14 @@
     <%= t("files.resource_documents.index.description") %>
   <% end %>
 
+  <% documents_max_size_setting = Setting.find_by!(key: "uploads.documents.max_size") %>
+  <% documents_content_types_setting = Setting.find_by!(key: "uploads.documents.content_types") %>
   <% page.with_types_note(
        types: Document.humanized_accepted_content_types,
        note_key: "files.allowed_types_note_users_html",
-       settings_link: true
+       settings_link: true,
+       settings_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_content_types_setting, :value)),
+       max_file_size: Document.max_file_size,
+       max_size_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_max_size_setting, :value))
      ) %>
 <% end %>

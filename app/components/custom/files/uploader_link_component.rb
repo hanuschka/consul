@@ -14,7 +14,7 @@ class Files::UploaderLinkComponent < ApplicationComponent
     attr_reader :user
 
     def profile_url
-      helpers.edit_adm_user_path(user)
+      helpers.user_path(user)
     end
 
     def avatar_image

@@ -68,4 +68,13 @@ module WelcomeHelper
     target = button_link.start_with?("http") ? "_blank" : "_self"
     link_to(button_text, button_link, class: "button homepage-image-header--button", target: target)
   end
+
+  def homepage_deficiency_report_cta_html
+    return unless Setting["process.deficiency_reports"].present?
+    return unless Setting["deficiency_reports.show_homepage_cta"].present?
+
+    deficiency_report_create_cta_button(
+      css_class: "button homepage-image-header--button homepage-image-header--button--secondary"
+    )
+  end
 end

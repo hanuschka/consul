@@ -5,6 +5,21 @@ module AdmHelper
     t("shared.#{value == true}")
   end
 
+  def pretty_json(value)
+    JSON.pretty_generate(value)
+  rescue JSON::GeneratorError, TypeError
+    value.to_json
+  end
+
+  def http_status_label(status)
+    reason = Rack::Utils::HTTP_STATUS_CODES[status]
+    reason ? "#{status} #{reason}" : status.to_s
+  end
+
+  def http_status_explanation(status)
+    I18n.t("adm.api_request_logs.status_explanations.#{status}", default: nil)
+  end
+
   def restriction_label_for(projekt_phase)
     restrictions = []
     restrictions << I18n.t("adm.projekts.phases.restrictions.user_status.#{projekt_phase.user_status}") if projekt_phase.user_status.present?

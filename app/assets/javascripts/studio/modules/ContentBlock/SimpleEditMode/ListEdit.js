@@ -18,6 +18,7 @@ App.ContentBlockEditor.SimpleEditMode.ListEdit = {
         .querySelectorAll("ul, ol")
         .forEach((ul) => {
           if (this.isFollowerList(ul)) return;
+          if (ul.closest(".js-content-block-element-not-editable")) return;
 
           const foundationSlider = ul.closest(".orbit")
 
@@ -34,6 +35,7 @@ App.ContentBlockEditor.SimpleEditMode.ListEdit = {
         .querySelectorAll(`li:not(.${this.listControlClass})`)
         .forEach((li) => {
           if (this.isInsideFollowerList(li)) return;
+          if (li.closest(".js-content-block-element-not-editable")) return;
 
           this.addItemControlls(li)
         })

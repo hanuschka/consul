@@ -132,38 +132,38 @@ de:
       recipient: Der betroffene Nutzer.
     new_deficiency_report:
       title: Neue Mangelmeldung (intern)
-      description: Wird gesendet, wenn eine neue Mangelmeldung eingereicht wurde.
+      description: Wird bei jeder neu eingereichten Mangelmeldung an Administratoren (sofern sie diese Benachrichtigung aktiviert haben) sowie an die Mängelmelder-Verantwortlichen gesendet.
       recipient: Administratoren und Mängelmelder-Verantwortliche.
     new_comments_for_deficiency_report:
       title: Neue Kommentare zu einer Mangelmeldung
-      description: Wird gesendet, wenn neue Kommentare zu einer noch nicht bearbeiteten Mangelmeldung geschrieben wurden.
+      description: "Wird an den zuständigen Sachbearbeiter gesendet, wenn neue Kommentare zu einer Mangelmeldung eingehen. Voraussetzung: Der Sachbearbeiter hat die Benachrichtigung bei der jeweiligen Mangelmeldung aktiviert."
       recipient: Der zuständige Sachbearbeiter der Mangelmeldung.
     overdue_deficiency_reports:
       title: Überfällige Mangelmeldungen
-      description: Erinnerung, wenn zugewiesene Mangelmeldungen nicht rechtzeitig bearbeitet wurden.
+      description: Automatische Erinnerung an den zuständigen Sachbearbeiter, wenn eine zugewiesene Mangelmeldung nicht innerhalb der für ihren Status festgelegten Frist bearbeitet wurde.
       recipient: Der zuständige Sachbearbeiter der Mangelmeldungen.
     not_assigned_deficiency_reports:
       title: Nicht zugewiesene Mangelmeldungen
-      description: Erinnerung, wenn Mangelmeldungen keinem Sachbearbeiter zugewiesen wurden.
+      description: Automatische Erinnerung an Administratoren und Mängelmelder-Verantwortliche, wenn Mangelmeldungen über einen längeren Zeitraum keinem Sachbearbeiter zugewiesen wurden.
       recipient: Administratoren.
   deficiency_report_mailer:
     notify_author_about_status_change:
       title: Statusänderung einer Mangelmeldung
-      description: Wird an den Verfasser gesendet, wenn sich der Status seiner Mangelmeldung ändert.
+      description: Wird an den Verfasser gesendet, sobald ein Administrator oder Sachbearbeiter den Status seiner Mangelmeldung ändert.
       recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
     notify_officer:
       title: Mangelmeldung einem Sachbearbeiter zugewiesen
-      description: Wird gesendet, wenn eine Mangelmeldung einem einzelnen Sachbearbeiter zugewiesen wird.
+      description: Wird an einen Sachbearbeiter gesendet, sobald ihm eine Mangelmeldung zugewiesen wird – automatisch bei der Einreichung oder durch manuelle (Neu-)Zuweisung im Backend.
       recipient: Der zuständige Sachbearbeiter.
     notify_default_officer_group_email:
       title: Mangelmeldung an Sachbearbeitergruppe zugewiesen
-      description: Wird an die Standardadresse einer Sachbearbeitergruppe gesendet, wenn eine Mangelmeldung der Gruppe statt einem einzelnen Sachbearbeiter zugewiesen wird.
+      description: "Wird an die Sammeladresse einer Sachbearbeitergruppe gesendet, wenn eine Mangelmeldung der Gruppe statt einem einzelnen Sachbearbeiter zugewiesen wird. Voraussetzung: Für die Gruppe ist eine Standard-E-Mail-Adresse hinterlegt."
       recipient: Die Standard-E-Mail-Adresse der Sachbearbeitergruppe.
     notify_author_about_submission:
       title: Eingangsbestätigung einer Mangelmeldung
-      description: Wird an den Verfasser gesendet, wenn seine Mangelmeldung erfolgreich eingereicht wurde.
+      description: Wird als Eingangsbestätigung an den Verfasser gesendet, sobald er eine neue Mangelmeldung erfolgreich eingereicht hat.
       recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
     send_feedback_form_link:
       title: Feedback-Anfrage zur Mangelmeldung
-      description: Wird an den Verfasser gesendet, nachdem seine Mangelmeldung abgeschlossen wurde, mit der Bitte um Feedback.
+      description: "Wird etwa 24 Stunden nach Abschluss einer Mangelmeldung (Statuswechsel in einen archivierenden Status) an den Verfasser gesendet und bittet um Feedback. Voraussetzung: Die Feedback-Funktion ist in den %{settings_link} aktiviert."
       recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.

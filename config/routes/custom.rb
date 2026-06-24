@@ -130,6 +130,8 @@ resources :projekt_content_block_templates, only: [:index] do
   end
 end
 
+get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projekt_map_embed
+
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 
 namespace :api do

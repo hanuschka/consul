@@ -6,7 +6,7 @@ export default class extends Controller {
     endpoint: String
   }
 
-  static targets = ["input"]
+  static targets = ["input", "cropInput"]
 
   triggerPicker(event) {
     event.preventDefault()
@@ -15,12 +15,34 @@ export default class extends Controller {
     this.inputTarget.click()
   }
 
+  triggerCropPicker(event) {
+    event.preventDefault()
+
+    this.cropInputTarget.value = ""
+    this.cropInputTarget.click()
+  }
+
   async fileChanged(event) {
     const files = event.target.files
 
     if (!files || files.length === 0) return
 
-    const file = files[0]
+    try {
+      await this.uploadFile(files[0])
+    } finally {
+      event.target.value = ""
+    }
+  }
+
+  async uploadCropped(event) {
+    const file = event.detail.file
+
+    if (!file) return
+
+    await this.uploadFile(file)
+  }
+
+  async uploadFile(file) {
     const formData = new FormData()
 
     formData.append("upload", file)
@@ -49,8 +71,6 @@ export default class extends Controller {
       console.error("Files upload failed", error)
       this.dispatchProgress("restore")
       addFlashMessage(this.failedMessage(file.name), "danger")
-    } finally {
-      event.target.value = ""
     }
   }
 

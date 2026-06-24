@@ -4,10 +4,15 @@
   width: 100%;
   align-items: center;
   gap: 12px;
+  margin-bottom: 15px;
   padding: 12px 16px;
   background: #fafafa;
   border: 1px solid #d9d9d9;
   border-radius: 8px;
+}
+
+.adm-filter-bar.-labeled {
+  align-items: flex-end;
 }
 
 .adm-filter-bar--field {
@@ -15,6 +20,19 @@
   flex-direction: column;
   margin: 0;
   min-width: 0;
+}
+
+.adm-filter-bar--label {
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #4a4a4a;
+}
+
+.adm-filter-bar--control {
+  position: relative;
+  display: block;
 }
 
 .adm-filter-bar--field-search {
@@ -70,13 +88,31 @@
   padding-left: 32px;
 }
 
+.adm-filter-bar--input-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+  cursor: pointer;
+  background-color: #6b7280;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6 18 18 M18 6 6 18' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / 14px 14px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6 18 18 M18 6 6 18' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") center / 14px 14px no-repeat;
+  border-radius: 4px;
+  transition: background-color 150ms ease-out;
+
+  &:hover {
+    background-color: #1f2937;
+  }
+}
+
 .adm-filter-bar--input-sort {
   padding-left: 32px;
 }
 
 .adm-filter-bar .adm-filter-bar--field:has(.js-fm-filter-search) {
-  flex: 1 1 220px;
-  max-width: 360px;
+  flex: 1 1 154px;
+  max-width: 252px;
 }
 
 .adm-filter-bar .adm-filter-bar--field:has(.js-fm-filter-extension) {
@@ -104,6 +140,18 @@ select.adm-filter-bar--input {
   background-size: 12px;
 }
 
+.adm-filter-bar--field-grow {
+  flex: 1 1 154px;
+  max-width: 252px;
+}
+
+.adm-filter-bar--actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
 .adm-filter-bar--reset-button {
   box-sizing: border-box;
   display: inline-flex;
@@ -114,6 +162,7 @@ select.adm-filter-bar--input {
   font-size: 14px;
   line-height: 1;
   color: #222;
+  text-decoration: none;
   background: #ededed;
   border: 0;
   border-radius: 6px;
@@ -127,6 +176,33 @@ select.adm-filter-bar--input {
 
   &:focus-visible {
     outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.adm-filter-bar--submit-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px;
+  line-height: 1;
+  color: #ffffff;
+  background: #005fcc;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0;
+  white-space: nowrap;
+
+  &:hover {
+    background: #004ea8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #003c80;
     outline-offset: 1px;
   }
 }
@@ -146,6 +222,12 @@ select.adm-filter-bar--input {
 
   .adm-filter-bar--field-sort {
     margin-left: 0;
+  }
+
+  .adm-filter-bar--actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .adm-filter-bar--reset-button {

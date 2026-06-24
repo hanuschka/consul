@@ -13,8 +13,9 @@
       this.sessions = new WeakMap();
 
       $document.on("click", ".js-va-demo-toggle", this.handleToggle.bind(this));
+      $document.on("click", ".js-va-demo-start", this.handleStart.bind(this));
+      $document.on("click", ".js-va-demo-mute", this.handleMute.bind(this));
       $document.on("click", ".js-va-demo-close", this.handleClose.bind(this));
-      $document.on("click", ".js-va-demo-mic", this.handleMic.bind(this));
     },
 
     handleToggle(event) {
@@ -25,10 +26,19 @@
       this.deactivateAll(widget);
       widget.classList.add("-active");
       widget.dataset.state = "active";
+
       this.startSession(widget);
     },
 
-    handleMic(event) {
+    handleStart(event) {
+      const widget = event.currentTarget.closest(".js-va-demo");
+
+      if (!widget) { return; }
+
+      this.startSession(widget);
+    },
+
+    handleMute(event) {
       const widget = event.currentTarget.closest(".js-va-demo");
 
       if (!widget) { return; }
@@ -37,8 +47,6 @@
 
       if (session) {
         session.pauseToggle();
-      } else {
-        this.startSession(widget);
       }
     },
 
@@ -77,19 +85,45 @@
     handleStatusChange(widget, status) {
       widget.dataset.state = status;
 
-      if (status === "running") {
-        widget.classList.add("-listening");
-      } else if (status === "paused") {
-        widget.classList.remove("-listening");
-      } else if (status === "initialized") {
-        widget.classList.remove("-listening");
+      const live = status === "starting" || status === "running" || status === "paused";
+
+      widget.classList.toggle("-va-live", live);
+      widget.classList.toggle("-va-starting", status === "starting");
+      widget.classList.toggle("-listening", status === "running");
+      widget.classList.toggle("-va-muted", status === "paused");
+
+      this.updateMuteTooltip(widget, status === "paused" ? "unmute" : "mute");
+
+      if (status === "initialized") {
         this.sessions.delete(widget);
       }
     },
 
     handleError(widget, message) {
       widget.classList.remove("-listening");
+      widget.classList.remove("-va-muted");
+      widget.classList.remove("-va-live");
+      widget.classList.remove("-va-starting");
       console.error("Voice assistant session error:", message);
+    },
+
+    updateMuteTooltip(widget, kind) {
+      const muteButton = widget.querySelector(".js-va-demo-mute");
+
+      if (!muteButton) { return; }
+
+      const text = kind === "unmute" ? muteButton.dataset.unmuteText : muteButton.dataset.muteText;
+      muteButton.setAttribute("aria-label", text);
+
+      const tip = widget.querySelector(".voice-assistant-design-mute-tip");
+
+      if (!tip) { return; }
+
+      const body = tip.querySelector(".rich-tooltip--body");
+
+      if (body) {
+        body.textContent = text;
+      }
     },
 
     deactivate(widget) {
@@ -104,6 +138,9 @@
 
       widget.classList.remove("-active");
       widget.classList.remove("-listening");
+      widget.classList.remove("-va-muted");
+      widget.classList.remove("-va-live");
+      widget.classList.remove("-va-starting");
       widget.dataset.state = "idle";
     },
 

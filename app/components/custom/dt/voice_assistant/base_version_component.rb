@@ -53,12 +53,20 @@ class Dt::VoiceAssistant::BaseVersionComponent < ApplicationComponent
     I18n.t("custom.voice_assistant_designs.listening")
   end
 
+  def muted_label
+    I18n.t("custom.voice_assistant_designs.muted")
+  end
+
   def mic_start_label
     I18n.t("custom.voice_assistant_designs.mic_start")
   end
 
   def mic_stop_label
     I18n.t("custom.voice_assistant_designs.mic_stop")
+  end
+
+  def mic_unmute_label
+    I18n.t("custom.voice_assistant_designs.mic_unmute")
   end
 
   def stop_label

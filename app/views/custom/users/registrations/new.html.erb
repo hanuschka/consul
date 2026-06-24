@@ -40,12 +40,17 @@
 
         <% if resource.extended_registration? %>
           <%= f.select :gender, options_for_gender_select,
-            { prompt: t("custom.helpers.select.gender_prompt") },
-            { class: "show-arrow", style: "background-color:#f8f8f8;", "aria-label": t("custom.helpers.select.gender_prompt") } %>
-          <%= label_tag :title, "Titel" %>
-          <%= text_field_tag :title, nil, placeholder: "Titel" %>
-          <%= f.text_field :first_name, autocomplete: "given-name", placeholder: t("custom.devise_views.users.registrations.new.first_name_label") %>
-          <%= f.text_field :last_name, autocomplete: "family-name", placeholder: t("custom.devise_views.users.registrations.new.last_name_label") %>
+            { prompt: t("custom.helpers.select.gender_prompt"),
+              label_options: { class: "auth-page-template--field-label" } },
+            { class: "show-arrow" } %>
+          <%= label_tag :title, "Titel", class: "auth-page-template--field-label" %>
+          <%= text_field_tag :title %>
+          <%= f.text_field :first_name, autocomplete: "given-name",
+                           label: t("custom.devise_views.users.registrations.new.first_name_label"),
+                           label_options: { class: "auth-page-template--field-label" } %>
+          <%= f.text_field :last_name, autocomplete: "family-name",
+                           label: t("custom.devise_views.users.registrations.new.last_name_label"),
+                           label_options: { class: "auth-page-template--field-label" } %>
 
           <%= render Users::RegisteredAddressFieldsComponent.new(
             resource: resource,
@@ -66,8 +71,12 @@
         <% end %>
 
         <% if resource.document_required? && false #cli specific fix %>
-          <%= f.select :document_type, user_document_types, prompt: t("custom.helpers.select.document_prompt") %>
-          <%= f.text_field :document_last_digits, placeholder: t("custom.devise_views.users.registrations.new.document_last_digits_label") %>
+          <%= f.select :document_type, user_document_types,
+            prompt: t("custom.helpers.select.document_prompt"),
+            label_options: { class: "auth-page-template--field-label" } %>
+          <%= f.text_field :document_last_digits,
+                           label: t("custom.devise_views.users.registrations.new.document_last_digits_label"),
+                           label_options: { class: "auth-page-template--field-label" } %>
 
           <div>
             <label><%= t('custom.users.document_help') %></label>

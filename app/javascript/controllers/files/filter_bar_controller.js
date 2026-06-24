@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { addFlashMessage } from "../../utils/adm_flash"
 
-const SEARCH_DEBOUNCE_MS = 200
+const SEARCH_DEBOUNCE_MS = 400
 
 export default class extends Controller {
   static values = {

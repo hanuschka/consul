@@ -163,18 +163,9 @@
     <% end %>
 
     <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
-      <div class="adm-detail-table">
-        <div class="adm-detail-table__row">
-          <div class="adm-detail-table__label"><%= t(".admin_accepted_status") %></div>
-          <div class="adm-detail-table__value">
-            <% if @deficiency_report.admin_accepted %>
-              <span class="kern-badge kern-badge--success"><%= t(".accepted") %></span>
-            <% else %>
-              <span class="kern-badge kern-badge--info"><%= t(".not_accepted") %></span>
-            <% end %>
-          </div>
-        </div>
-      </div>
+      <%= render Kern::FormFieldComponent.new(label: t(".admin_accepted_status"), hint: t(".admin_accepted_status_hint")) do %>
+        <%= render "admin_accepted_toggle", deficiency_report: @deficiency_report %>
+      <% end %>
     <% end %>
   </section>
 

@@ -13,6 +13,7 @@
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_overview_page"), :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_homepage"), :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_individual_list"), :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_related_projekt_link"), :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.allow_indexing"), :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.consider_underway"), :value, :boolean) %>
 

@@ -102,9 +102,6 @@
 
       <div class='row'>
         <div class='small-6 column small'>
-          <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-            <%= link_to t('custom.deficiency_reports.index.section_header.help'), '#section_help' %>
-          <% end %>
         </div>
 
         <div class='small-6 column small'>
@@ -132,14 +129,6 @@
           <% end %>
         <% end %>
         <%= paginate @deficiency_reports%>
-
-        <% unless @search_terms || @advanced_search_terms %>
-          <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-            <div id="section_help" class="margin" data-magellan-target="section_help">
-              <%=render_custom_block 'deficiency_reports_help' %>
-            </div>
-          <% end %>
-        <% end %>
       </div>
     </div>
   </div>

@@ -1,13 +1,7 @@
 (function() {
   "use strict";
   App.StikyHeader = {
-    initialized: false,
-
     initialize: function() {
-      if (this.initialized) {
-        return;
-      }
-
       if (!this.header()) {
         return;
       }
@@ -19,7 +13,6 @@
       this.updateHeaderStyles()
 
       window.onscroll = this.updateHeaderStyles;
-      this.initialized = true;
     },
 
     header() {

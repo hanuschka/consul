@@ -54,8 +54,10 @@ module DeficiencyReportsHelper
     common[:style] = style if style.present?
 
     if active_deficiency_report_confirmation_popup
+      common[:class] = "#{css_class} js-shared-modal-open"
+
       button_tag(label, **common, type: "button",
-        data: { open: "deficiency-report-create-cta-modal" })
+        data: { shared_modal_id: "deficiency-report-create-cta-modal" })
     else
       link_to(label, new_deficiency_report_path, **common, data: link_data)
     end

@@ -5,6 +5,8 @@ class WelcomeController < ApplicationController
   include ProjektControllerHelper
   include GuestUsers
 
+  helper DeficiencyReportsHelper
+
   def welcome
     redirect_to root_path
   end

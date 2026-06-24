@@ -1,0 +1,12 @@
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.deficiency_reports.email_templates.tabs.templates"),
+    url: adm_deficiency_reports_email_templates_path,
+    current: current == :templates
+  },
+  {
+    label: t("adm.deficiency_reports.email_templates.tabs.settings"),
+    url: settings_adm_deficiency_reports_email_templates_path,
+    current: current == :settings
+  }
+]) %>

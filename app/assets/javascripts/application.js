@@ -140,6 +140,10 @@
 
 var initialize_modules = function() {
   "use strict";
+  App.FocusTrap.resetInert();
+  App.FocusTrap.initialize();
+  App.SharedModal.reset();
+  App.Map.destroy();
   App.RemoveOnMobileSections.initialize();
   App.Answers.initialize();
   App.Questions.initialize();
@@ -240,6 +244,8 @@ var destroy_non_idempotent_modules = function() {
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();
+  App.FocusTrap.resetInert();
+  App.SharedModal.reset();
 };
 
 

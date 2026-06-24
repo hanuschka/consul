@@ -58,7 +58,7 @@ App.ContentBlockEditor.CodeEditMode = {
     this.removeEditor(contentBlockWrapper);
 
     const contentBlock = App.ContentBlockEditor.DomHelpers.getContentBlock(contentBlockWrapper);
-    const currentHTML = contentBlock.innerHTML.trim();
+    const currentHTML = ProjektStudio.utils.resetMapEmbeds(contentBlock.innerHTML.trim());
 
     if (this.isCompactContext(contentBlockWrapper)) {
       this.createAndShowEditorInModal(contentBlockWrapper, currentHTML);

@@ -76,7 +76,8 @@ App.ContentBlockEditor.TemplateSelector = {
 
   copyContentBlockTemplate(templateItem) {
     const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
-    const cleanedContent = this.stripAttributesFromContent(contentTemplate.innerHTML.trim());
+    const normalizedContent = ProjektStudio.utils.resetMapEmbeds(contentTemplate.innerHTML.trim());
+    const cleanedContent = this.stripAttributesFromContent(normalizedContent);
 
     navigator.clipboard.writeText(cleanedContent).then(() => {
       this.showCopySuccessFeedback(templateItem.querySelector('.js-copy-content-block-template'));

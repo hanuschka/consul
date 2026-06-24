@@ -119,6 +119,8 @@ class DeficiencyReportManagement::DeficiencyReportsController < DeficiencyReport
       return unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       raise CanCan::AccessDenied unless current_user.deficiency_report_officer?
 
+      return if current_user.deficiency_report_officer.manage_all?
+
       deficiency_report_ids = @deficiency_reports.select do |dr|
         dr.responsible.is_a?(DeficiencyReport::Officer) && dr.responsible == current_user.deficiency_report_officer ||
           dr.responsible.is_a?(DeficiencyReport::OfficerGroup) && dr.responsible.officers.include?(current_user.deficiency_report_officer)

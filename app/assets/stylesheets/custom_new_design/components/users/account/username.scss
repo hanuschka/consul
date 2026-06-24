@@ -21,6 +21,14 @@
   justify-content: center;
 }
 
+.account-username--label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px !important;
+  text-align: left;
+  color: $main-text-color;
+}
+
 .account-username--row {
   display: flex;
   align-items: center;

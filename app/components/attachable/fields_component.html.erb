@@ -7,7 +7,7 @@
     <%= f.text_field :title, placeholder: t("#{plural_name}.form.title_placeholder") %>
   </div>
 
-  <% if attachable.attachment.attached? && attachable.attachment.image? %>
+  <% if show_image_preview? %>
     <%= render_image(attachable, :large, false) %>
   <% end %>
 

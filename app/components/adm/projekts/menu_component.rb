@@ -9,7 +9,7 @@ class Adm::Projekts::MenuComponent < Adm::BaseMenuComponent
       (if Adm::Projekts::ProjektManagerPolicy.new(current_user, nil).index?
          { label: t("adm.projekts.menu.items.managers"), icon: "badge", path: adm_projekts_managers_path }
        end),
-      (if current_user&.administrator? || current_user&.projekt_manager?
+      (if Adm::Projekts::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.projekts.menu.items.settings"), icon: "settings", path: adm_projekts_settings_path }
        end)
     ].compact

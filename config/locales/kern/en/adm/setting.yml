@@ -211,6 +211,8 @@ en:
         allow_indexing_description: Allows search engines like Google to index the project page and show it in search results. If this option is disabled, a "noindex" tag is set, so the page remains reachable via the platform but cannot be found through external search engines.
         consider_underway: List project as active participation
         consider_underway_description: Ensures the project is always listed as active participation on the overview — even when no regular participation phase is currently running. Useful for permanently featured projects or for projects between phases that should remain visible to users as an active participation option.
+        show_related_projekt_link: Related project link on resource pages
+        show_related_projekt_link_description: Shows a link back to this project in the header of its resources (proposals, polls, debates, etc.). Lets users navigate from an individual contribution to the project it belongs to.
     ideas:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >

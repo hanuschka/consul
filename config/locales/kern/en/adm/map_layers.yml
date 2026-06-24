@@ -35,21 +35,65 @@ en:
           legend_title: Legend title
           no_data_color: Color for missing values
         hints:
-          name: Label of the map layer as shown to users on the frontend.
-          protocol: "Type of data source: a WMS service, a tile map (XYZ), or an uploaded GeoJSON file."
-          provider: URL of the external map source used to include the layer.
-          attribution: "Text shown as source or license notice at the bottom right of the map (e.g. '© Leaflet' or 'Data: OpenStreetMap'). This is often mandatory and should comply with the provider's terms of use."
-          layer_names: Technical name of the map layer according to the WMS service's Capabilities file. Multiple layers can be specified comma-separated without spaces. This name is not the same as the label shown to users in the map menu.
-          presentation: Configure how this map layer is shown when the map loads. You can set it as base map, show it by default, or mark it as transparent.
-          opacity: Marks this map layer as transparent. Underlying base maps or additional layers remain visible when both are displayed at the same time.
-          geojson_file: "GeoJSON file with the geometries to display (max. 20 MB). The file is fetched and rendered in the browser when the layer is enabled."
-          label_property: Name of the GeoJSON property used as a label (e.g. BEZ_GEM).
-          popup_properties: Comma-separated list of properties shown in the popup when a feature is clicked.
-          choropleth: Colors the features automatically based on a numeric data field and shows a legend. Overrides the uniform fill color.
-          choropleth_property: Name of the numeric GeoJSON data field used for coloring (e.g. "HTTP Downl").
-          breaks: Comma-separated, ascending break values (e.g. 10,30,50,100).
-          colors: Comma-separated hex colors. There must be exactly one more color than breaks.
-          no_data_color: Hex color for features without a valid value.
+          name: >
+            Label of the map layer as shown to users in the map menu on the frontend. Choose a
+            short, clear name that unambiguously describes the layer's content.
+          protocol: >
+            Determines the type of data source and which additional fields are shown: a WMS service,
+            a tile map (XYZ), or an uploaded GeoJSON file. WMS and XYZ embed external maps via a URL,
+            while GeoJSON renders directly from a file in the browser.
+          provider: >
+            URL of the external map source used to include the layer (e.g. the base URL of a WMS
+            service or the tile scheme of an XYZ map). Make sure the service is publicly reachable
+            and supports HTTPS so it also loads on the live platform.
+          attribution: >
+            Text shown as a source or license notice at the bottom right of the map (e.g.
+            '© Leaflet' or 'Data: OpenStreetMap'). This is often mandatory and should comply with
+            the respective provider's terms of use.
+          layer_names: >
+            Technical name of the map layer according to the WMS service's Capabilities file;
+            multiple layers comma-separated without spaces. This is not the label shown in the map
+            menu – an incorrect spelling prevents the layer from being displayed.
+          presentation: >
+            Defines how this map layer is displayed when the map loads: as the base map
+            (background), shown by default, or as a transparent overlay on top. Transparent layers
+            keep underlying content visible.
+          opacity: >
+            Marks this map layer as transparent so underlying base maps or layers remain visible.
+            Useful for overlays such as district boundaries that should not fully hide the
+            background.
+          geojson_file: >
+            GeoJSON file with the geometries to display (max. 20 MB), fetched and rendered directly
+            in the browser when the layer is enabled. Points, lines, and polygons with arbitrary
+            properties are supported.
+          label_property: >
+            Name of the GeoJSON property whose value is shown as a label on the geometries (e.g.
+            BEZ_GEM). The spelling must match the GeoJSON file exactly; if left empty, no labels are
+            shown.
+          popup_properties: >
+            Comma-separated list of properties shown in a popup when a feature is clicked (e.g.
+            name,population,area). The names must match the properties in the GeoJSON file exactly;
+            the order determines their order in the popup.
+          choropleth: >
+            Colors the features automatically based on a numeric data field and shows a legend,
+            overriding the uniform fill color. After enabling it, you define the data field, breaks,
+            and colors.
+          choropleth_property: >
+            Name of the numeric GeoJSON data field whose values are used to color the features
+            (e.g. "HTTP Downl"). The field must contain numeric values, and the spelling must match
+            the property in the file exactly.
+          breaks: >
+            Comma-separated, ascending break values that separate the value ranges of the coloring
+            (e.g. 10,30,50,100). Each range between two breaks gets its own color; the number of
+            breaks sets the number of classes.
+          colors: >
+            Comma-separated hex colors for the value ranges of the coloring (e.g.
+            #ffffcc,#a1dab4,#41b6c4). Provide exactly one more color than breaks; the order matches
+            the ascending value ranges.
+          no_data_color: >
+            Hex color for features without a valid value in the selected data field (e.g. #cccccc).
+            This keeps areas with no data distinguishable from the colored ranges; the color also
+            appears in the legend as "no data".
       map_layers:
         title: Map layers
         description: Additional map layers can be included here – via a WMS service, a tile map (XYZ), or an uploaded GeoJSON file.

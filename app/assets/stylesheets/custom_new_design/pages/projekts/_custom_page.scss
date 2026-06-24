@@ -663,6 +663,16 @@ $phase-marker-border: #cbd5e1;
       }
     }
 
+    // Offset for the fixed topbar so the "Jetzt mitmachen" CTA anchor
+    // (#new_comments_component) lands below it instead of behind it.
+    #new_comments_component {
+      scroll-margin-top: calc(#{$topbar-height} + var(--admin-topbar-height) + 20px);
+
+      @media (max-width: $small-tablet-viewport-start) {
+        scroll-margin-top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height) + 20px);
+      }
+    }
+
     .key-dates {
       margin: 0;
       width: 100%;

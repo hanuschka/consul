@@ -7,7 +7,7 @@
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("custom.deficiency_reports.mailers.send_feedback_form_link.p1",
-        deficiency_report_link: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report)),
+        deficiency_report_link: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank"),
         status: @deficiency_report.status.name)
     ) %>
   </p>

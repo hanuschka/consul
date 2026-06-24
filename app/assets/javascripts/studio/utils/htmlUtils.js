@@ -199,6 +199,27 @@ ProjektStudio.utils.sanitizeAdminHtml = function(html) {
   return ProjektStudio.utils.sanitizeHtml(html, ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST);
 }
 
+// Map embeds are hydrated into live maps for display in the studio, but the
+// saved body must always keep the {{projekt_map}} token so the server
+// re-renders the map on each request. This strips any hydrated map markup and
+// restores the token before a content block is persisted.
+ProjektStudio.utils.resetMapEmbeds = function(html) {
+  if (!html || html.indexOf("js-projekt-map-embed") === -1) return html;
+
+  const container = ProjektStudio.utils.htmlToDomElement(html);
+
+  container.querySelectorAll(".js-projekt-map-embed").forEach((embed) => {
+    embed.querySelectorAll(".projekt-map-shortcode").forEach((map) => map.remove());
+    embed.querySelectorAll(".js-map-height-control").forEach((control) => control.remove());
+
+    if (embed.innerHTML.indexOf("{{projekt_map}}") === -1) {
+      embed.appendChild(document.createTextNode("{{projekt_map}}"));
+    }
+  });
+
+  return container.innerHTML;
+}
+
 ProjektStudio.utils.formatHTML = function(html) {
   let formatted = '';
   let indent = 0;
@@ -232,4 +253,17 @@ ProjektStudio.utils.formatHTML = function(html) {
   });
 
   return formatted.trim();
+}
+
+// Updates the title text of the <rich-tooltip> that wraps a given trigger
+// element. Used by stateful toggle buttons whose tooltip text changes with
+// their state (e.g. show/hide phase, set/unset default phase, sidebar section).
+ProjektStudio.utils.updateRichTooltipTitle = function(trigger, newTitle) {
+  const tooltip = trigger.closest("rich-tooltip");
+
+  if (!tooltip) return
+
+  const titleEl = tooltip.querySelector(".rich-tooltip-content--title");
+
+  if (titleEl) titleEl.textContent = newTitle;
 }

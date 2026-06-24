@@ -10,6 +10,7 @@ de:
           proposal_phase: Vorschläge
           budget_phase: Investitionsvorschläge
           comment_phase: Kommentare
+          voting_phase: Abstimmungen
       stats:
         title: Statistiken
         banner_title: "Auswertung der %{phase_title}"

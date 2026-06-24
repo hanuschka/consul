@@ -14,6 +14,7 @@
       App.Tabs.initialize();
       App.ContentBlockEditor.TemplateSelector.initialize();
       App.ContentBlockEditor.Crud.initialize();
+      App.ContentBlockEditor.MapEmbed.initialize();
       App.ContentBlockEditor.ChangeHistory.initialize();
       App.ContentBlockEditor.CKEditorMode.initialize();
       App.ContentBlockEditor.EditModeSwitcher.initialize();
@@ -25,6 +26,7 @@
       App.ContentBlockEditor.SimpleEditMode.ListEdit.initialize();
       App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.initialize();
       App.ContentBlockEditor.SimpleEditMode.ImageEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.MapEdit.initialize();
       App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.initialize();
       App.ContentBlockEditor.AiEditMode.initialize();
       App.ContentBlockEditor.CodeEditMode.initialize();

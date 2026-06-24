@@ -55,9 +55,10 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Debug mode disables concatenation and preprocessing of assets.
+  # In Sprockets 4 this enables source maps for JS and SCSS assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
+  # Disabled: source maps make rules read-only/uneditable in DevTools.
   config.assets.debug = false
 
   # Adds additional error checking when serving assets at runtime.

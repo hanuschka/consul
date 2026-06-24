@@ -260,6 +260,18 @@ textarea.user-resources-form--banner-editor-title {
     margin-bottom: 15px;
   }
 
+  .attachment-remove-icon {
+    border-bottom: 0;
+    font-size: 18px;
+    line-height: 1;
+
+    &:hover,
+    &:active,
+    &:focus {
+      border-bottom: 0;
+    }
+  }
+
   .small-9 {
     width: 100%;
   }

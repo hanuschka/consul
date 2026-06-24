@@ -9,7 +9,7 @@ en:
         author: Author
     content_blocks:
       admin_empty_hint_title: "Empty content block"
-      admin_empty_hint: "Only you (admins & managers) see this notice. Click here to add content — the block stays hidden from visitors until it has content."
+      admin_empty_hint: "Only you (admins & managers) see this notice. Hover over the block and click the toolbar to add content — the block stays hidden from visitors until it has content."
     account:
       settings:
         email_digest: Receive a summary of proposal notifications

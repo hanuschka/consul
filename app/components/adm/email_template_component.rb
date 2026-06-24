@@ -25,7 +25,13 @@ class Adm::EmailTemplateComponent < ApplicationComponent
   end
 
   def description
-    I18n.t("#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.description")
+    key = "#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.description"
+
+    helpers.sanitize(
+      I18n.t(key, **description_interpolations),
+      tags: %w[a],
+      attributes: %w[href data-turbo-frame]
+    )
   end
 
   def recipient
@@ -61,6 +67,18 @@ class Adm::EmailTemplateComponent < ApplicationComponent
   end
 
   private
+
+    def description_interpolations
+      return {} unless @email_template.deficiency_report_template?
+
+      {
+        settings_link: helpers.link_to(
+          I18n.t("components.adm.email_template_component.settings_link_text"),
+          helpers.adm_deficiency_reports_settings_path,
+          data: { turbo_frame: "_top" }
+        )
+      }
+    end
 
     def default_template_source
       view_dir = @email_template.mailer_class.underscore

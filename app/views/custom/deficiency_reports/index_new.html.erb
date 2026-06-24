@@ -46,6 +46,10 @@
           )) %>
 
       <%= paginate @deficiency_reports %>
+
+      <div id="section_help" class="margin" data-magellan-target="section_help">
+        <%= render_custom_block "deficiency_reports_help" %>
+      </div>
     </div>
 
     <div id="deficiency_reports-sidebar" class="sidebar">

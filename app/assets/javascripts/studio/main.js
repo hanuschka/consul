@@ -5,6 +5,11 @@ window.ProjektStudio = {
   ContentBlock: App.ContentBlockEditor,
   config: {},
 
+  // Fallback used outside projekt-studio pages (e.g. inline site content
+  // blocks on the homepage/sidebar), where loadConfig never runs and
+  // config.defaultMarginBottom stays undefined.
+  FALLBACK_MARGIN_BOTTOM: 20,
+
   initialized: false,
 
   initialize() {
@@ -46,6 +51,12 @@ window.ProjektStudio = {
 
   getCurrentProjektId() {
     return  document.querySelector(".js-projekt-page").dataset.projektId;
+  },
+
+  getDefaultMarginBottom() {
+    const configured = this.config.defaultMarginBottom;
+
+    return Number.isInteger(configured) ? configured : this.FALLBACK_MARGIN_BOTTOM;
   },
 
   reinitializeUI() {

@@ -8,5 +8,7 @@ en:
         name_hint: This name appears publicly as the author of all imported proposals and investments (e.g. "City name"). Choose a label that is clearly recognisable to citizens and that plainly represents your municipality or organisation.
         avatar_label: Avatar
         avatar_hint: This image is displayed publicly next to all imported proposals and investments and replaces the current avatar. Use a PNG or JPEG file, ideally square and in sufficient resolution so that it remains clearly recognisable even at small sizes.
+        background_label: Background image
+        background_hint: This image is shown as the wide background of the system user's profile. Use a PNG or JPEG file in landscape format (3.5:1 aspect ratio) at sufficient resolution.
       update:
         success: System user updated successfully.

@@ -12,6 +12,8 @@ en:
     mailer_from_address_description: "This email address appears as the sender on all automatically sent emails from the platform (e.g. notifications, confirmations). The address must match the one configured on the mail server. Changes cannot be made independently — please contact demokratie.today support."
     mailer_from_name: "Sender display name"
     mailer_from_name_description: "This name is shown to recipients as the sender of emails. Choose a meaningful name that clearly identifies your municipality, e.g. 'Participation Platform City of Exampletown'. The display name can be set independently of the technical sender address and helps with recognition."
+    mailer_from_deficiency_report_address: "Sender address for deficiency report emails"
+    mailer_from_deficiency_report_address_description: "This email address is used as the sender for all automatically sent deficiency-report emails and is shown to citizens as the contact address in those emails. Use a valid, sending-enabled address of your municipality."
     meta_title: "Page title (SEO)"
     meta_title_description: "This title is used by search engines as the main heading in search results and also appears in the browser tab. A clearly formulated title improves your platform's visibility on Google. Ideally it contains the name of the municipality and a reference to citizen participation. Recommended length: 50–60 characters."
     meta_description: "Page description (SEO)"
@@ -36,6 +38,24 @@ en:
     youtube_handle_description: "YouTube username or channel ID of your municipality. If filled in, a YouTube logo with a link to the channel automatically appears in the footer. You can use either the custom channel name or the technical channel ID. Leave the field empty if no YouTube channel should be linked."
     advanced_newsletter: "Advanced newsletter"
     advanced_newsletter_description: "Enables advanced newsletter features. Disabled by default — only enable this option if you need the advanced features."
+    uploads:
+      images:
+        max_size: "Maximum image size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded images. Larger files are rejected on upload. A moderate value keeps load times short and saves storage space."
+        content_types: "Allowed image formats"
+        content_types_description: "Determines which file formats are allowed when uploading images. Enable only the formats you actually want to permit. JPEG suits photos, PNG suits graphics with a transparent background."
+        title:
+          min_length: "Minimum image title length"
+          min_length_description: "Sets the minimum number of characters an uploaded image's title must contain. The title is used as alternative text (alt attribute) for accessibility. A sensible minimum encourages meaningful image descriptions."
+          max_length: "Maximum image title length"
+          max_length_description: "Sets the maximum number of characters an uploaded image's title may contain. The title is used as alternative text (alt attribute) for accessibility. A sensible limit keeps image titles short and readable."
+      documents:
+        max_amount: "Maximum number of documents"
+        max_amount_description: "Sets how many documents may be attached to a single contribution (e.g. proposal or investment) at most. This keeps the number of uploaded attachments under control."
+        max_size: "Maximum document size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded documents. Larger files are rejected on upload. A moderate value saves storage space and keeps load times short."
+        content_types: "Allowed document formats"
+        content_types_description: "Determines which file formats are allowed when uploading documents. Enable only the formats you actually want to permit, e.g. PDF for fixed-layout documents."
     welcomepage:
       usage_stats: User overview
       usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."
@@ -195,12 +215,6 @@ en:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new idea to a responsible officer. Without assignment, the idea cannot be processed. This ensures that every idea has a responsible person and no submission remains without clear ownership.
-      officers_can_administer_assigned_reports: Officer administration for ideas
-      officers_can_administer_assigned_reports_description: >
-        Gives officers full administrative control over the ideas assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view ideas, not manage them or make structural adjustments.
-      officers_can_edit_assigned_reports: Officer editing for ideas
-      officers_can_edit_assigned_reports_description: >
-        Lets officers edit the content of assigned ideas directly — e.g. correct the title, description, or location. This is useful when submitted ideas are incomplete or contain errors and need to be adjusted editorially before further processing.
       enable_comments: Comments
       enable_comments_description: >
         When enabled, users can write comments below an idea. This enables public exchange between citizens and administration, e.g. for follow-up questions, additional suggestions, or supplementary notes on the submitted idea. Comments can be moderated by administrators.
@@ -235,12 +249,6 @@ en:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new deficiency report to a responsible officer. Without assignment, the report cannot be processed. This ensures that every report has a responsible person and no report remains without ownership.
-      officers_can_administer_assigned_reports: Officer administration for deficiencies
-      officers_can_administer_assigned_reports_description: >
-        Gives officers full administrative control over the deficiency reports assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view reports, not manage them.
-      officers_can_edit_assigned_reports: Officer editing for deficiencies
-      officers_can_edit_assigned_reports_description: >
-        Lets officers edit the content of assigned deficiency reports directly — e.g. correct the title, description, or location. This is useful when submitted reports are incomplete or incorrect and need to be adjusted before processing.
       allow_voting: User rating per deficiency
       allow_voting_description: >
         Enables a rating feature letting users support or prioritize individual deficiency reports. The number of ratings is shown publicly and helps administration identify frequently reported or especially urgent deficiencies sooner and prioritize accordingly.
@@ -253,12 +261,21 @@ en:
       enable_my_posts_filter: My posts
       enable_my_posts_filter_description: >
         Shows a filter on the deficiency overview page letting logged-in users view only their own submitted deficiency reports. This makes it easier to track the status of their own reports without searching through all entries.
+      show_map: Show map
+      show_map_description: >
+        Shows the map in the report form where users can select the location of their report. Disable this option if no map should be offered in the form.
       enable_geoman_controls_in_maps: Enable drawing tools on maps
       enable_geoman_controls_in_maps_description: >
         Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when a deficiency affects not just a single point but an area — e.g. a damaged road or a contaminated area. The drawing is saved together with the report.
+      map_location_required: Require map location
+      map_location_required_description: >
+        When enabled, a location must be selected on the map before a report can be submitted. This guarantees every report is geographically located, which is essential for assigning it to the right area and officer. Disable it if reports may be created without a precise location.
       admin_acceptance_required: Administrator approval
       admin_acceptance_required_description: >
         When enabled, administrators must review and approve new deficiency reports before they become publicly visible. Unconfirmed reports are visible only to administrators. This prevents inappropriate or duplicate reports from being published directly.
+      image_upload: Image upload
+      image_upload_description: >
+        Allows users to attach an image to their deficiency report. Disable this option if no image upload should be offered in the report form.
       document_upload: Additional documents
       document_upload_description: >
         Allows users to upload documents like PDFs, text files, or other attachments to their deficiency reports. This is helpful when supplementary materials are needed — e.g. expert reports, correspondence with authorities, or detailed descriptions beyond a simple text field.
@@ -274,6 +291,9 @@ en:
       show_create_report_button: Submit button for deficiency reports
       show_create_report_button_description: >
         Shows a clearly visible button for submitting new deficiency reports in the sidebar of the deficiency overview page. The button makes it easier for users to report a new deficiency. Disable this option if submission should happen through other channels or if no new reports should be accepted temporarily.
+      show_homepage_cta: Report button on the homepage
+      show_homepage_cta_description: >
+        Shows an additional button in the homepage hero, below the main call-to-action, that takes users straight to the new deficiency report form. The button label is taken from the "Label of the report button" naming setting. Requires the deficiency reports feature to be enabled.
 
     process:
       proposals: Proposals overview

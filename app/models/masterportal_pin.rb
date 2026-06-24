@@ -59,8 +59,7 @@ class MasterportalPin < ApplicationRecord
       "resource_type" => "masterportal_pin",
       "id" => id
     }
-    # Temporarily disabled — masterportal pin icon set will be reimplemented.
-    # properties["feature_icon_url"] = feature_icon_url if include_icon_url
+    properties["feature_icon_url"] = feature_icon_url if include_icon_url
     properties["search_text"] = searchable_text if include_search_text
 
     {
@@ -85,13 +84,11 @@ class MasterportalPin < ApplicationRecord
   end
 
   def feature_icon_url
-    # Temporarily disabled — masterportal pin icon set will be reimplemented.
-    # asset_name = "masterportal/pins/#{collection_id}.png"
-    # path = Rails.root.join("app/assets/images/#{asset_name}")
-    # return nil if !path.exist?
-    #
-    # ActionController::Base.helpers.asset_path(asset_name)
-    nil
+    asset_name = "masterportal/pins/#{collection_id}.png"
+    path = Rails.root.join("app/assets/images/#{asset_name}")
+    return nil if !path.exist?
+
+    ActionController::Base.helpers.asset_path(asset_name)
   end
 
   def associated_resource_url

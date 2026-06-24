@@ -31,6 +31,7 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
     ServiceResult.success(ai_result: data)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ResolveContentBlocksService] failed: #{e.message}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "resolve_content_blocks" }) if defined?(Sentry)
     ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.resolve_content_blocks_failed", message: e.message))
   end
 

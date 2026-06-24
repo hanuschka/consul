@@ -199,46 +199,69 @@
       const instance = this;
 
       L.Control.Expand = L.Control.extend({
-        onAdd: function(map) {
+        onAdd: function() {
           let container = document.createElement('div');
           container.className = 'control-container';
 
           let button = document.createElement('button');
           button.type = 'button';
-          button.className = 'control-button';
+          button.className = 'control-button js-map-expand-toggle';
           button.innerHTML = '<i class="fas fa-expand"></i>';
           button.title = 'Vollbild-Modus';
 
           container.appendChild(button);
+
+          instance.expandButton = button;
 
           L.DomEvent.disableClickPropagation(container);
 
           container.addEventListener('click', (e) => {
             L.DomEvent.stopPropagation(e);
 
-            if (instance.element.classList.contains('expanded')) {
-              instance.element.classList.remove('expanded');
-              button.innerHTML = '<i class="fas fa-expand"></i>';
-              map.invalidateSize();
-              instance.toggleControlVisibility();
-            } else {
-              instance.element.classList.add('expanded');
-              button.innerHTML = '<i class="fas fa-compress"></i>';
-              map.invalidateSize();
-              instance.toggleControlVisibility();
-            }
+            instance.toggleExpand();
           });
 
           return container;
         },
 
-        onRemove() {
-          container.remove();
-        }
+        onRemove() {}
       })
 
       const expandControl = new L.Control.Expand({ position: 'topright' })
       this.map.addControl(expandControl);
+
+      App.Map.bindEscToCollapseExpanded();
+    }
+
+    toggleExpand() {
+      if (this.element.classList.contains('expanded')) {
+        this.collapseMap();
+      } else {
+        this.expandMap();
+      }
+    }
+
+    expandMap() {
+      this.element.classList.add('expanded');
+      this.updateExpandButton(true);
+      this.map.invalidateSize();
+      this.toggleControlVisibility();
+    }
+
+    collapseMap() {
+      if (!this.element.classList.contains('expanded')) return;
+
+      this.element.classList.remove('expanded');
+      this.updateExpandButton(false);
+      this.map.invalidateSize();
+      this.toggleControlVisibility();
+    }
+
+    updateExpandButton(expanded) {
+      if (!this.expandButton) return;
+
+      const iconClass = expanded ? 'fa-compress' : 'fa-expand';
+      this.expandButton.innerHTML = `<i class="fas ${iconClass}"></i>`;
     }
 
     addResetViewControl() {

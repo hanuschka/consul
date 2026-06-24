@@ -34,6 +34,8 @@ en:
             stalled_message: "The analysis is taking unusually long and may have failed. You can discard this import and try again."
             dismiss: "Discard"
             upload_new: "Upload a new document"
+            diagnostics_title: "Technical details"
+            diagnostics_stage: "Failure stage"
         list:
           sections:
             in_progress: "In progress"
@@ -56,6 +58,7 @@ en:
           created_at: "Created: %{time}"
           finished_at: "Finished: %{time}"
           projekt_created: "Projekt created: %{title}"
+          image_failed_note: "Title image could not be generated"
           filters:
             aria: "Filter by status"
             all: "All"
@@ -121,6 +124,7 @@ en:
         initial_message:
           analysis_complete: "Document analysis complete"
           analysis_intro: "Here is what I extracted from your document. Review the fields below — anything that doesn't look right, just tell me."
+          input_truncated_notice: "The document was very large and was shortened for analysis. Please review the extracted content carefully and add anything missing in the chat."
           title: "Title"
           subtitle: "Subtitle"
           period: "Period"
@@ -163,6 +167,18 @@ en:
           resolve_content_blocks_failed: "Failed to resolve content blocks: %{message}"
           create_projekt_failed: "Failed to create the projekt: %{message}"
           missing_title: "AI did not return a projekt title."
+          extract_file_failed: "Could not read file %{filename}: %{message}"
+        failure_stages:
+          extract: "Text extraction"
+          extracting: "Text extraction"
+          ai_processing: "AI analysis"
+          processing: "AI analysis"
+          finalize: "Data finalization"
+          resolve_content_blocks: "Content blocks"
+          create_projekt: "Projekt creation"
+          submitting: "Projekt creation"
+          image_generation: "Title image generation"
+          unknown: "Unknown"
         badge:
           imported_by_ai: "AI"
           imported_by_ai_title: "This projekt was imported from a document with AI."

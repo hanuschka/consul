@@ -5,8 +5,14 @@
     isModalActive: false,
     klaroElement: null,
     observer: null,
+    bodyObserver: null,
+    keyHandlerBound: false,
 
     initialize: function() {
+      this.disconnectObservers();
+
+      this.isModalActive = false;
+
       this.klaroElement = document.getElementById('klaro');
 
       if (this.klaroElement) {
@@ -16,17 +22,30 @@
       }
     },
 
+    disconnectObservers: function() {
+      if (this.observer) {
+        this.observer.disconnect();
+        this.observer = null;
+      }
+
+      if (this.bodyObserver) {
+        this.bodyObserver.disconnect();
+        this.bodyObserver = null;
+      }
+    },
+
     waitForKlaro: function() {
-      var bodyObserver = new MutationObserver(() => {
+      this.bodyObserver = new MutationObserver(() => {
         this.klaroElement = document.getElementById('klaro');
 
         if (this.klaroElement) {
-          bodyObserver.disconnect();
+          this.bodyObserver.disconnect();
+          this.bodyObserver = null;
           this.startObserving();
         }
       });
 
-      bodyObserver.observe(document.body, { childList: true });
+      this.bodyObserver.observe(document.body, { childList: true });
     },
 
     startObserving: function() {
@@ -69,7 +88,7 @@
       dialogEl.setAttribute('role', 'dialog');
       dialogEl.setAttribute('aria-modal', 'true');
 
-      App.FocusTrap.setBackgroundInert([this.klaroElement]);
+      App.FocusTrap.setBackgroundInert([this.klaroElement], modal);
 
       setTimeout(() => {
         var focusable = App.FocusTrap.getFocusableElements(modal);
@@ -86,6 +105,10 @@
     },
 
     bindKeyHandler: function() {
+      if (this.keyHandlerBound) return;
+
+      this.keyHandlerBound = true;
+
       document.addEventListener('keydown', (event) => {
         if (!this.isModalActive) return;
         if (event.key !== 'Tab' && event.which !== 9) return;

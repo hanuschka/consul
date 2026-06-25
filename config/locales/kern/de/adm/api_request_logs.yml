@@ -13,7 +13,7 @@ de:
         client_logs: Logs dieses Clients
         no_logs: Keine API-Anfragen-Logs vorhanden.
         no_results: Keine Logs entsprechen den gewählten Filtern.
-        destroy_all: Alle Logs löschen
+        destroy_all: Anfragen-Log leeren
         destroy_all_confirm: Alle API-Anfragen-Logs wirklich löschen?
       filters:
         url_label: Nach Pfad oder URL suchen

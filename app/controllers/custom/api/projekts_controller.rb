@@ -7,6 +7,15 @@ class Api::ProjektsController < Api::BaseController
 
   DEFAULT_PROJEKTS_PER_PAGE = 20
 
+  SORTABLE_COLUMNS = {
+    "created_at" => ->(projekt) { projekt.created_at },
+    "total_duration_start" => ->(projekt) { projekt.total_duration_start },
+    "total_duration_end" => ->(projekt) { projekt.total_duration_end },
+    "order_number" => ->(projekt) { projekt.order_number }
+  }.freeze
+
+  DEFAULT_SORT_COLUMN = "created_at"
+
   def index
     check_read_access!
 
@@ -32,11 +41,7 @@ class Api::ProjektsController < Api::BaseController
     current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
     projekts = projekts.send(current_filter)
 
-    if projekts.is_a?(ActiveRecord::Relation)
-      projekts = projekts.order(created_at: :asc)
-    elsif projekts.is_a?(Array)
-      projekts = projekts.sort_by { |p| p.created_at }
-    end
+    projekts = sort_projekts(projekts)
 
     include_phases = params[:include_phases] == 'true'
     include_content_blocks = params[:include_content_blocks] == 'true'

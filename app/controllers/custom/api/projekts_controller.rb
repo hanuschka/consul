@@ -7,6 +7,15 @@ class Api::ProjektsController < Api::BaseController
 
   DEFAULT_PROJEKTS_PER_PAGE = 20
 
+  SORTABLE_COLUMNS = {
+    "created_at" => ->(projekt) { projekt.created_at },
+    "total_duration_start" => ->(projekt) { projekt.total_duration_start },
+    "total_duration_end" => ->(projekt) { projekt.total_duration_end },
+    "order_number" => ->(projekt) { projekt.order_number }
+  }.freeze
+
+  DEFAULT_SORT_COLUMN = "created_at"
+
   def index
     check_read_access!
 
@@ -32,11 +41,7 @@ class Api::ProjektsController < Api::BaseController
     current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
     projekts = projekts.send(current_filter)
 
-    if projekts.is_a?(ActiveRecord::Relation)
-      projekts = projekts.order(created_at: :asc)
-    elsif projekts.is_a?(Array)
-      projekts = projekts.sort_by { |p| p.created_at }
-    end
+    projekts = sort_projekts(projekts)
 
     include_phases = params[:include_phases] == 'true'
     include_content_blocks = params[:include_content_blocks] == 'true'
@@ -252,6 +257,39 @@ class Api::ProjektsController < Api::BaseController
   end
 
   private
+
+  def sort_projekts(projekts)
+    column = sort_column
+    direction = sort_direction
+
+    if projekts.is_a?(ActiveRecord::Relation)
+      return projekts.reorder(Arel.sql("projekts.#{column} #{direction.upcase} NULLS LAST"))
+    end
+
+    return sort_projekts_array(projekts, column, direction) if projekts.is_a?(Array)
+
+    projekts
+  end
+
+  def sort_column
+    SORTABLE_COLUMNS.key?(params[:sort_by]) ? params[:sort_by] : DEFAULT_SORT_COLUMN
+  end
+
+  def sort_direction
+    params[:sort_direction] == "desc" ? "desc" : "asc"
+  end
+
+  def sort_projekts_array(projekts, column, direction)
+    accessor = SORTABLE_COLUMNS[column]
+    present_values, nil_values = projekts.partition { |projekt| accessor.call(projekt) }
+    sorted = present_values.sort_by { |projekt| accessor.call(projekt) }
+
+    if direction == "desc"
+      sorted = sorted.reverse
+    end
+
+    sorted + nil_values
+  end
 
   def paginate_projekts(projekts)
     per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i

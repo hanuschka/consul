@@ -544,6 +544,7 @@
 
     renderFeatures() {
       if (this.editable) return;
+      if (!this.map || !this.map.isStyleLoaded()) return;
 
       const split = App.Map.splitMasterportalFeatures(this.features);
 

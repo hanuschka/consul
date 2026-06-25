@@ -27,13 +27,6 @@
   </div>
 
   <% if @questions.any? %>
-    <div class="d-flex align-items-center justify-content-end gap-3 mb-3">
-      <a href="<%= poll_questions_adm_projekts_phase_path(@projekt_phase, format: :csv) %>" class="adm-text-link" data-turbo="false">
-        <span class="material-symbols-outlined" aria-hidden="true">download</span>
-        <%= t(".download_individual_answers") %>
-      </a>
-    </div>
-
     <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
         <thead class="kern-table__head">

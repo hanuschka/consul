@@ -19,7 +19,7 @@ class MapData::BudgetPhase < ApplicationService
                           .map(&:features_json_data)
     features += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
-    { type: "FeatureCollection", features: features }
+    MapLocation.flatten_feature_collections(features)
   end
 
   private

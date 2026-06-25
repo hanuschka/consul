@@ -21,4 +21,6 @@
       <span class="pref-count"><%= answer["count"].to_i %></span>
     </div>
   <% end %>
+
+  <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>
 </div>

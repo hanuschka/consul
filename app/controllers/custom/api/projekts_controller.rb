@@ -5,6 +5,12 @@ class Api::ProjektsController < Api::BaseController
 
   before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_page_image, :update_body]
 
+  DEFAULT_PROJEKTS_PER_PAGE = 20
+
+  SORTABLE_COLUMNS = %w[created_at total_duration_start total_duration_end order_number].freeze
+
+  DEFAULT_SORT_COLUMN = "created_at"
+
   def index
     check_read_access!
 
@@ -30,19 +36,14 @@ class Api::ProjektsController < Api::BaseController
     current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
     projekts = projekts.send(current_filter)
 
-    if projekts.is_a?(ActiveRecord::Relation)
-      projekts =
-        projekts
-          .includes(:projekt_settings, :translations)
-          .order(created_at: :asc)
-    elsif projekts.is_a?(Array)
-      projekts = projekts.sort_by { |p| p.created_at }
-    end
+    projekts = sort_projekts(projekts)
 
     include_phases = params[:include_phases] == 'true'
     include_content_blocks = params[:include_content_blocks] == 'true'
 
     includes_hash = {}
+    includes_hash[:translations] = {}
+    includes_hash[:projekt_settings] = {}
     includes_hash[:content_blocks] = {}
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
 
@@ -54,7 +55,13 @@ class Api::ProjektsController < Api::BaseController
       ]
     end
 
-    projekts = projekts.includes(includes_hash) if includes_hash.any?
+    paginating = params[:page].present? || params[:per_page].present?
+
+    if paginating
+      projekts = paginate_projekts(projekts)
+    end
+
+    projekts = eager_load_projekt_associations(projekts, includes_hash)
 
     serailized_projekts = ProjektSerializer.serialize_collection(
       projekts,
@@ -63,7 +70,13 @@ class Api::ProjektsController < Api::BaseController
       current_api_client: current_client
     )
 
-    render json: { data: { projekts: serailized_projekts } }
+    response = { data: { projekts: serailized_projekts } }
+
+    if paginating
+      response[:pagination] = pagination_meta(projekts)
+    end
+
+    render json: response
   end
 
   def show
@@ -239,6 +252,39 @@ class Api::ProjektsController < Api::BaseController
   end
 
   private
+
+  def sort_projekts(projekts)
+    projekts.reorder(Arel.sql("projekts.#{sort_column} #{sort_direction.upcase} NULLS LAST"))
+  end
+
+  def sort_column
+    SORTABLE_COLUMNS.include?(params[:sort_by]) ? params[:sort_by] : DEFAULT_SORT_COLUMN
+  end
+
+  def sort_direction
+    params[:sort_direction] == "desc" ? "desc" : "asc"
+  end
+
+  def paginate_projekts(projekts)
+    per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
+
+    projekts.page(params[:page]).per(per_page)
+  end
+
+  def eager_load_projekt_associations(projekts, includes_hash)
+    return projekts if includes_hash.blank?
+
+    projekts.includes(includes_hash)
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
+  end
 
   def projekt_params
     attributes = [

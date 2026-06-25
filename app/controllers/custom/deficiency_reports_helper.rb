@@ -10,10 +10,7 @@ module DeficiencyReportsHelper
   def all_deficiency_report_map_locations(deficiency_reports_for_map)
     ids = deficiency_reports_for_map.except(:limit, :offset, :order).ids.uniq
 
-    MapLocation
-      .with_deficiency_report_associations
-      .where(mappable_id: ids)
-      .map(&:features_json_data)
+    MapLocation.deficiency_report_features(ids)
   end
 
   def deficiency_report_map_locations_count(deficiency_reports_for_map)

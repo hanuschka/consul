@@ -13,7 +13,7 @@ class MapData::ProposalPhase < ApplicationService
     features = MapLocation.proposal_features(proposal_ids)
     features += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
-    { type: "FeatureCollection", features: features }
+    MapLocation.flatten_feature_collections(features)
   end
 
   private

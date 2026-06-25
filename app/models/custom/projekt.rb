@@ -771,10 +771,6 @@ class Projekt < ApplicationRecord
       .join("\n")
   end
 
-  def content_blocks_text
-    ActionView::Base.full_sanitizer.sanitize(content_blocks_body).to_s.squish
-  end
-
   def perform_sync_update_for_global_overview
     if should_be_exported_for_global_overview?
       if hidden_at.present?

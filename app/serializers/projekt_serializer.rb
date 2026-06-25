@@ -5,6 +5,8 @@ class ProjektSerializer < BaseSerializer
     @projekt = projekt
     @include_phases = options.fetch(:include_phases, false)
     @include_content_blocks = options.fetch(:include_content_blocks, false)
+    @include_text = options.fetch(:include_text, true)
+    @include_projekt_settings = options.fetch(:include_projekt_settings, true)
     @include_nested_fields = options.fetch(:include_nested_fields, false)
     @current_api_client = options.fetch(:current_api_client, nil)
   end
@@ -48,14 +50,23 @@ class ProjektSerializer < BaseSerializer
     projekt_data.merge!(
       title: projekt&.page&.title,
       subtitle: projekt&.page&.subtitle,
-      image: serialized_image,
-      text: projekt.content_blocks_text,
-      text_html: projekt.content_blocks_body
+      image: serialized_image
     )
 
-    projekt_data.merge!({
-      projekt_settings: projekt_settings
-    })
+    if @include_text
+      concatenated_body = projekt.content_blocks_body
+
+      projekt_data.merge!(
+        text: concatenated_body,
+        text_html: concatenated_body
+      )
+    end
+
+    if @include_projekt_settings
+      projekt_data.merge!({
+        projekt_settings: projekt_settings
+      })
+    end
 
     # Include projekt phases if requested
     if @include_phases

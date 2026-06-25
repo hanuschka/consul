@@ -48,6 +48,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 description: 'If true, includes projekt phases in response with full phase details including type, active status, and dates. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases. Default: false (excludes phases).'
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: 'If true, includes content blocks in response with HTML content organized by locale. Default: false (excludes content blocks).'
+      parameter name: :include_text, in: :query, type: :boolean, required: false,
+                description: 'If true, includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position). Default: false (both fields are omitted). Always included in the single projekt (show) response.'
+      parameter name: :include_projekt_settings, in: :query, type: :boolean, required: false,
+                description: 'If true, includes the projekt_settings array (key/value configuration pairs) in the response. Default: false (the field is omitted). Always included in the single projekt (show) response.'
       parameter name: :page, in: :query, type: :integer, required: false,
                 description: 'Pagination page number. When provided, results are paginated and a pagination object is added to the response. Omit to return all matching projekts (default).'
       parameter name: :per_page, in: :query, type: :integer, required: false,
@@ -65,9 +69,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -88,9 +93,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -109,9 +115,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -131,9 +138,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end

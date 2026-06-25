@@ -7,12 +7,7 @@ class Api::ProjektsController < Api::BaseController
 
   DEFAULT_PROJEKTS_PER_PAGE = 20
 
-  SORTABLE_COLUMNS = {
-    "created_at" => ->(projekt) { projekt.created_at },
-    "total_duration_start" => ->(projekt) { projekt.total_duration_start },
-    "total_duration_end" => ->(projekt) { projekt.total_duration_end },
-    "order_number" => ->(projekt) { projekt.order_number }
-  }.freeze
+  SORTABLE_COLUMNS = %w[created_at total_duration_start total_duration_end order_number].freeze
 
   DEFAULT_SORT_COLUMN = "created_at"
 
@@ -259,58 +254,27 @@ class Api::ProjektsController < Api::BaseController
   private
 
   def sort_projekts(projekts)
-    column = sort_column
-    direction = sort_direction
-
-    if projekts.is_a?(ActiveRecord::Relation)
-      return projekts.reorder(Arel.sql("projekts.#{column} #{direction.upcase} NULLS LAST"))
-    end
-
-    return sort_projekts_array(projekts, column, direction) if projekts.is_a?(Array)
-
-    projekts
+    projekts.reorder(Arel.sql("projekts.#{sort_column} #{sort_direction.upcase} NULLS LAST"))
   end
 
   def sort_column
-    SORTABLE_COLUMNS.key?(params[:sort_by]) ? params[:sort_by] : DEFAULT_SORT_COLUMN
+    SORTABLE_COLUMNS.include?(params[:sort_by]) ? params[:sort_by] : DEFAULT_SORT_COLUMN
   end
 
   def sort_direction
     params[:sort_direction] == "desc" ? "desc" : "asc"
   end
 
-  def sort_projekts_array(projekts, column, direction)
-    accessor = SORTABLE_COLUMNS[column]
-    present_values, nil_values = projekts.partition { |projekt| accessor.call(projekt) }
-    sorted = present_values.sort_by { |projekt| accessor.call(projekt) }
-
-    if direction == "desc"
-      sorted = sorted.reverse
-    end
-
-    sorted + nil_values
-  end
-
   def paginate_projekts(projekts)
     per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
 
-    if projekts.is_a?(Array)
-      Kaminari.paginate_array(projekts).page(params[:page]).per(per_page)
-    else
-      projekts.page(params[:page]).per(per_page)
-    end
+    projekts.page(params[:page]).per(per_page)
   end
 
   def eager_load_projekt_associations(projekts, includes_hash)
     return projekts if includes_hash.blank?
 
-    if projekts.is_a?(ActiveRecord::Relation)
-      return projekts.includes(includes_hash)
-    end
-
-    ActiveRecord::Associations::Preloader.new.preload(projekts.to_a, includes_hash)
-
-    projekts
+    projekts.includes(includes_hash)
   end
 
   def pagination_meta(collection)

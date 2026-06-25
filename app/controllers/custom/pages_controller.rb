@@ -191,7 +191,6 @@ class PagesController < ApplicationController
       @resources = @projekt_phase.proposals
                                  .base_selection
                                  .with_min_supports(min_supports)
-                                 .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
       if params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
@@ -217,6 +216,7 @@ class PagesController < ApplicationController
           @resources
             .perform_sort_by(@current_order, session[:random_seed])
             .page(params[:page])
+            .includes([:image, :projekt_labels, :translations, :community, author: [:image, :organization], sentiment: [:translations], projekt_phase: [:settings, :projekt_labels, :geozone_restrictions, { projekt: [:translations, { page: :translations }] }]])
 
         if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
           @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)

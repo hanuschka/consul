@@ -62,7 +62,6 @@ class ProposalsController
         .where(admin_accepted: true)
         .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
-        .with_index_card_associations
 
     @all_resources = @resources
 
@@ -82,7 +81,7 @@ class ProposalsController
         []
       end
 
-    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
+    @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24).with_index_card_associations
 
     respond_to do |format|
       format.html do

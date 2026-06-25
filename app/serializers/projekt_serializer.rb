@@ -29,7 +29,6 @@ class ProjektSerializer < BaseSerializer
           :show_start_date_in_frontend,
           :show_end_date_in_frontend,
           :top_level_projekt_id,
-          :tsv,
           :preview_code
         ]
       )

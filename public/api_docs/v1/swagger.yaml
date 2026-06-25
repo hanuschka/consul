@@ -14300,12 +14300,6 @@ components:
           description: ID of the top-level projekt in the hierarchy. Null if this
             is the top level.
           example:
-        tsv:
-          type: string
-          nullable: true
-          description: Text search vector for full-text search optimization. Maintained
-            automatically.
-          example:
         preview_code:
           type: string
           nullable: true

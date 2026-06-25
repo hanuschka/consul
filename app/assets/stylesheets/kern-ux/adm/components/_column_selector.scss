@@ -69,3 +69,22 @@
   height: 16px;
   flex-shrink: 0;
 }
+
+.adm-table-count {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  color: var(--kern-grey-700);
+  cursor: help;
+}
+
+.adm-table-count__value {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-table-count__label {
+  color: var(--kern-grey-600);
+}

@@ -1,7 +1,7 @@
 require_dependency Rails.root.join("app", "models", "user").to_s
 
 User.class_eval do
-  audited only: [:username, :first_name, :last_name, :registered_address_id,
+  audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
                  :unique_stamp, :verified_at]
 
@@ -15,6 +15,12 @@ User.class_eval do
          :timeoutable,
          :trackable, :validatable, :omniauthable, :password_expirable, :secure_validatable,
          authentication_keys: [:login]
+
+  def self.timeout_in
+    minutes = Setting["extended_option.gdpr.devise_timeout_min"].to_i
+    minutes = 30 if minutes < 1
+    minutes.minutes
+  end
 
   delegate :registered_address_street, to: :registered_address, allow_nil: true
   delegate :registered_address_city, to: :registered_address, allow_nil: true
@@ -34,9 +40,8 @@ User.class_eval do
   after_create :assign_individual_group_values_based_on_auto_join_emails
   after_create :fulfill_pending_role_assignments
 
-  has_secure_token :frame_sign_in_token
-
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
+  has_many :projekt_imports, dependent: :destroy
   has_many :projekt_questions, foreign_key: :author_id #, inverse_of: :author
   has_many :memos
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -57,9 +62,13 @@ User.class_eval do
 
   belongs_to :api_client, optional: true
 
-  scope :projekt_managers, -> { joins(:projekt_manager) }
+  scope :projekt_managers,           -> { joins(:projekt_manager) }
+  scope :valuators,                  -> { joins(:valuator) }
+  scope :idea_managers,              -> { joins(:idea_manager) }
+  scope :officing_managers,          -> { joins(:officing_manager) }
+  scope :deficiency_report_managers, -> { joins(:deficiency_report_manager) }
   scope :verified, -> { where.not(verified_at: nil) }
-  scope :to_reverify, -> { verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
+  scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
 
@@ -84,6 +93,8 @@ User.class_eval do
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
+
+  validate :only_one_system_user, if: :system_user?
 
   class << self
     def order_filter(params)
@@ -113,6 +124,10 @@ User.class_eval do
     def administrators_ids
       joins(:administrator).ids
     end
+
+    def system
+      @system_user ||= Users::SystemUserService.call
+    end
   end
 
   def actual?
@@ -121,6 +136,12 @@ User.class_eval do
 
   def not_actual?
     !actual?
+  end
+
+  def only_one_system_user
+    return if User.where(system_user: true).where.not(id: id).none?
+
+    errors.add(:system_user, :taken)
   end
 
   def validate_registered_address?
@@ -219,7 +240,9 @@ User.class_eval do
 
   def projekt_manager?(projekt = nil)
     if projekt.present?
-      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+      projekt_manager.present? &&
+        (projekt_manager.manage_all_projekts? ||
+          projekt.projekt_managers.include?(projekt_manager))
     else
       projekt_manager.present?
     end
@@ -332,16 +355,6 @@ User.class_eval do
     idea_manager.present?
   end
 
-  def generate_frame_sign_in_token!
-    regenerate_frame_sign_in_token
-
-    update!(frame_sign_in_token_valid_until: 1.minute.from_now)
-  end
-
-  def frame_sign_in_token_valid?
-    frame_sign_in_token_valid_until > Time.current
-  end
-
   private
 
     def geozone_with_plz
@@ -382,6 +395,7 @@ User.class_eval do
     def attempt_verification
       return false if organization?
       return false if erased?
+      return false unless data_complete?
       return false unless residency_valid?
 
       verify!

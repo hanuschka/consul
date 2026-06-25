@@ -3,15 +3,15 @@ de:
     settings:
       ai:
         llm_provider: KI-Anbieter
-        llm_provider_description: Konfigurieren Sie, welcher KI-Dienstanbieter für KI-Funktionen verwendet werden soll
+        llm_provider_description: Legt fest, welcher KI-Dienstanbieter für alle KI-gestützten Funktionen der Plattform genutzt wird. Unterstützt werden unter anderem OpenAI, Anthropic, Google Gemini, DeepSeek, Mistral und weitere Anbieter. Die Auswahl bestimmt, über welche Schnittstelle Anfragen verarbeitet werden. Änderungen wirken sich auf alle aktiven KI-Funktionen aus.
         llm_model: KI-Modell
-        llm_model_description: Wählen Sie das KI-Modell für die Verarbeitung von Anfragen
+        llm_model_description: Bestimmt, welches Sprachmodell des gewählten Anbieters für die Verarbeitung von KI-Anfragen verwendet wird. Unterschiedliche Modelle variieren in Qualität, Geschwindigkeit und Kosten. Wählen Sie ein leistungsstarkes Modell für komplexe Analysen oder ein schnelleres für einfache Aufgaben wie Texterstellung und Zusammenfassungen.
         llm_custom_model: Benutzerdefiniertes Modell
         llm_custom_model_description: Benutzerdefinierter Modellname (für Ollama oder bei benutzerdefiniertem API-Endpunkt)
         llm_api_endpoint: API-Endpunkt
         llm_api_endpoint_description: Benutzerdefinierte API-Endpunkt-URL für OpenAI-kompatible Dienste (z. B. Azure OpenAI, Proxy-Dienste)
         llm_api_key: API-Schlüssel
-        llm_api_key_description: API-Schlüssel zur Authentifizierung mit dem OpenAI-Dienst
+        llm_api_key_description: Der API-Schlüssel authentifiziert Ihre Plattform gegenüber dem gewählten KI-Anbieter. Den Schlüssel erhalten Sie im Entwicklerportal des jeweiligen Anbieters. Er wird verschlüsselt gespeichert und ist nach dem Speichern aus Sicherheitsgründen nicht mehr im Klartext einsehbar. Ohne gültigen Schlüssel sind keine KI-Funktionen verfügbar.
       map_latitude: Breitengrad
       map_latitude_description: Breitengrad zur Anzeige der Kartenposition
       map_longitude: Längengrad
@@ -71,8 +71,6 @@ de:
           show_number_of_entries_in_modules_description: Zeigt die Anzahl der Diskussionsbeiträge, Vorschläge und Abstimmungen an
           hide_comment_replies_by_default: Antworten auf Kommentare standardmäßig einklappen
           hide_comment_replies_by_default_description: Aktivieren Sie das standardmäßige Einklappen von Kommentaren, um Übersichtlichkeit zu schaffen
-          custom_help_text_in_modules: Individuelle Hilfstexte zu Modulen
-          custom_help_text_in_modules_description: Am unteren Ende der Modulübersicht können individuelle Hilfstexte platziert werden
           show_affiliation_filter_in_index_sidebar: Gebietsfilter anzeigen
           show_affiliation_filter_in_index_sidebar_description: Zeigt den Gebietsfilter in der rechten Seitenleiste der einzelnen Module
         debates:
@@ -295,45 +293,47 @@ de:
           external_participation_link: Alternativen Link in den Projektressourcen verwenden
           external_participation_link_description: Anstatt zum Projekt zu verlinken wird auf eine (externe) Seite verlinkt
       deficiency_reports:
-        show_in_main_menu: Mängelmelder in Navigation anzeigen
-        show_in_main_menu_description: Zeigt den Mängelmelder in der Hauptnavigation an
-        admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
-        admins_must_assign_officer_description: Administratoren weisen Mangel an Sachbearbeiter*in zu
-        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen administrieren
-        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Mängel
-        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Mangelmeldungen editieren
-        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Mängel
-        allow_voting: Nutzer*innen Bewertung pro Mangel
-        allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Mängelmelder
+        admins_must_assign_officer: Admins müssen Sachbearbeiter zuweisen
+        admins_must_assign_officer_description: >
+          Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
+        allow_voting: Nutzer-Bewertung pro Mangel
+        allow_voting_description: >
+          Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.
         enable_comments: Kommentarfunktion
-        enable_comments_description: Nutzer*innen können unterhalb eines Mangels kommentieren
+        enable_comments_description: >
+          Wenn aktiviert, können Nutzer unterhalb einer Mangelmeldung Kommentare verfassen. Dies ermöglicht einen öffentlichen Austausch zwischen Bürgern und Verwaltung, z.B. für Rückfragen, Statusupdates oder ergänzende Hinweise zum gemeldeten Mangel. Kommentare können von Administratoren moderiert werden.
         intro_text: Einleitungstext für den Mängelmelder
-        intro_text_description: Aktivieren Sie einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite
+        intro_text_description: >
+          Zeigt einen individuellen Einleitungstext oberhalb der Mängelübersichtsseite an. Nutzen Sie diesen Text, um Bürgern den Zweck des Mängelmelders zu erklären, Hinweise zur Nutzung zu geben oder auf wichtige Rahmenbedingungen hinzuweisen — z.B. welche Arten von Mängeln gemeldet werden können und wie der Bearbeitungsprozess abläuft.
         enable_my_posts_filter: Meine Beiträge
-        enable_my_posts_filter_description: Zeigt einen Filter für meine Beiträge in der Diskussionsübersichtsseite
-        enable_geoman_controls_in_maps: Nutzer*innen ermöglichen Figuren in die Karte einzuzeichnen.
-        enable_geoman_controls_in_maps_description: Ermöglicht es den Nutzer*innen Rechtecke, Kreise etc. einzuzeichnen.
+        enable_my_posts_filter_description: >
+          Zeigt einen Filter auf der Mängelübersichtsseite, mit dem eingeloggte Nutzer gezielt nur ihre eigenen eingereichten Mangelmeldungen anzeigen lassen können. Dies erleichtert die Übersicht über den Status der eigenen Meldungen, ohne alle Einträge durchsuchen zu müssen.
+        enable_geoman_controls_in_maps: Zeichenwerkzeuge in Karten aktivieren
+        enable_geoman_controls_in_maps_description: >
+          Ermöglicht es Nutzern, geometrische Formen wie Rechtecke, Kreise oder Polygone auf der Karte einzuzeichnen. Dies ist nützlich, wenn ein Mangel nicht nur einen einzelnen Punkt, sondern einen Bereich betrifft — z.B. eine beschädigte Straße oder ein verschmutztes Areal. Die Zeichnung wird zusammen mit der Meldung gespeichert.
         admin_acceptance_required: Bestätigung durch Administratoren
-        admin_acceptance_required_description: Administratoren müssen neue Meldungen vor der Veröffentlichung zunächst bestätigen.
+        admin_acceptance_required_description: >
+          Wenn aktiviert, müssen Administratoren neue Mangelmeldungen zunächst prüfen und freigeben, bevor sie öffentlich sichtbar werden. Nicht bestätigte Meldungen sind nur für Administratoren einsehbar. Dies verhindert, dass unangemessene oder doppelte Meldungen direkt veröffentlicht werden.
         document_upload: Zusätzliche Dokumente
-        document_upload_description: Ermöglicht es den Nutzer:innen Dokumente den Vorschlägen anzuhängen
+        document_upload_description: >
+          Erlaubt es Nutzern, Dokumente wie PDFs, Textdateien oder andere Anhänge zu ihren Mangelmeldungen hochzuladen. Dies ist hilfreich, wenn ergänzende Unterlagen benötigt werden — z.B. Gutachten, Korrespondenz mit Behörden oder detaillierte Beschreibungen, die über ein einfaches Textfeld hinausgehen.
         external_video: Externes Video einbinden
-        external_video_description: Ermöglicht es den Nutzer:innen externe Videos über YouTube und Vimeo einzubinden
-        voice_assistant: Sprachassistent zur Erstellung von Mängeln aktivieren
-        voice_assistant_description: Aktiviert einen KI-unterstützten Sprachassistenten, der die Nutzer beim Erstellen von Mangelmeldungen unterstützt
-        send_feedback_form_link: Feedback-Formular
-        send_feedback_form_link_description: Sendet einen Link zu einem Feedback-Formular an die Nutzer*innen, nachdem die Mängelmeldung abgeschlossen wurde
-        show_create_report_button: Button zum Einreichen von Mangelmeldungen anzeigen
-        show_create_report_button_description: Zeigt einen Button zum Einreichen von Mängelmeldungen in der Seitenleiste der Mängelübersichtsseite an
+        external_video_description: >
+          Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Mangelmeldungen einzubetten. So können z.B. Videoaufnahmen eines Mangels, Erklärvideos oder Dokumentationen direkt in der Meldung angezeigt werden, ohne dass große Dateien hochgeladen werden müssen.
+        voice_assistant: Sprachassistent aktivieren
+        voice_assistant_description: >
+          Aktiviert einen KI-unterstützten Sprachassistenten, der Nutzer beim Erstellen von Mangelmeldungen unterstützt. Nutzer können den Mangel per Spracheingabe beschreiben, und der Assistent erstellt daraus automatisch eine strukturierte Meldung mit Titel und Beschreibung. Besonders geeignet für mobile Nutzung und barrierefreien Zugang.
+        send_feedback_form_link: Feedback-Formular versenden
+        send_feedback_form_link_description: >
+          Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
+        show_create_report_button: Button zum Einreichen anzeigen
+        show_create_report_button_description: >
+          Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
       ideas:
         show_in_main_menu: Ideen in Navigation anzeigen
         show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an
         admins_must_assign_officer: Admins müssen Sachbearbeiter*in zuweisen
         admins_must_assign_officer_description: Administratoren weisen Idee an Sachbearbeiter*in zu
-        officers_can_administer_assigned_reports: Sachbearbeiter*innen können Ideen administrieren
-        officers_can_administer_assigned_reports_description: Sachbearbeiter*innen haben die volle Administrationskontrolle über ihnen zugewiesene Idee
-        officers_can_edit_assigned_reports: Sachbearbeiter*innen können Ideen editieren
-        officers_can_edit_assigned_reports_description: Sachbearbeiter*innen haben die volle Kontrolle über ihnen zugewiesene Idee
         allow_voting: Nutzer*innen Bewertung pro Idee
         allow_voting_description: Aktiviert die Nutzer*innen-Bewertung für den Ideen
         enable_comments: Kommentarfunktion

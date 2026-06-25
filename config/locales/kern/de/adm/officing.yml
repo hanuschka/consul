@@ -1,12 +1,19 @@
 de:
   adm:
     officing:
+      title: Abstimmungshelfer
       menu:
         aria_label: Officing Navigation
         items:
-          dashboard: Übersicht
-      dashboard:
-        title: Officing
+          home: Home
+          officing_managers: Team
+          settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+      home:
+        title: Willkommen im Bereich für Abstimmungshelfer
         budgets: Budgets zur Abstimmung
         proposals: Vorschläge zur Abstimmung
         polls: Umfragen zur Abstimmung
@@ -16,7 +23,12 @@ de:
           open: Öffnen
           vote: Abstimmen
           bulk_votes: Sammelabstimmung
-        no_assignments: Ihnen sind derzeit keine Abstimmungen zugewiesen.
+        no_assignments_title: Keine zugewiesenen Abstimmungen
+        no_assignments_description: Sobald Ihnen Budgets, Vorschlagsphasen oder Umfragen zugewiesen werden, erscheinen diese hier. Wenden Sie sich an Ihren Administrator, falls Sie eine Zuweisung erwarten.
+        stats:
+          budgets: Zugewiesene Budgets
+          proposals: Zugewiesene Vorschlagsphasen
+          polls: Zugewiesene Umfragen
       verification:
         title: Offline-Stimme hinzufügen
         skip_verification: Ohne Verifizierung fortfahren

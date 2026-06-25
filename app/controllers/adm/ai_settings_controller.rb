@@ -1,5 +1,6 @@
 class Adm::AiSettingsController < Adm::BaseController
-  helper_method :show_api_endpoint?, :show_model_field?, :show_custom_model_field?
+  helper_method :show_api_endpoint?, :show_model_field?, :show_custom_model_field?,
+    :endpoint_without_custom_model?
 
   def index
     authorize [:adm, Setting], :index?, policy_class: Adm::AiSettingPolicy
@@ -15,6 +16,12 @@ class Adm::AiSettingsController < Adm::BaseController
   def update
     @setting = Setting.find(params[:id])
     authorize [:adm, @setting], :update?, policy_class: Adm::AiSettingPolicy
+
+    if clearing_required_custom_model?
+      redirect_to adm_ai_settings_path, alert: t("adm.ai_settings.flash.custom_model_required")
+      return
+    end
+
     @setting.update!(settings_params)
 
     redirect_to adm_ai_settings_path, notice: t("adm.ai_settings.flash.updated")
@@ -23,7 +30,7 @@ class Adm::AiSettingsController < Adm::BaseController
   def update_api_key
     authorize [:adm, Setting], :update_api_key?, policy_class: Adm::AiSettingPolicy
 
-    api_key = ExternalApiKey.find_by(
+    api_key = ExternalApiKey.find_or_initialize_by(
       name: api_key_params[:name],
       service: api_key_params[:service]
     )
@@ -58,5 +65,15 @@ class Adm::AiSettingsController < Adm::BaseController
       provider = Setting["ai.llm_provider"].to_s.downcase
 
       provider == "ollama" || Setting["ai.llm_api_endpoint"].present?
+    end
+
+    def endpoint_without_custom_model?
+      Setting["ai.llm_api_endpoint"].present? && Setting["ai.llm_custom_model"].blank?
+    end
+
+    def clearing_required_custom_model?
+      @setting.key == "ai.llm_custom_model" &&
+        settings_params[:value].blank? &&
+        Setting["ai.llm_api_endpoint"].present?
     end
 end

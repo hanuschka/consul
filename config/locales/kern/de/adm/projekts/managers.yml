@@ -10,21 +10,21 @@ de:
             Erstellen Sie einen neuen Projektmanager, indem Sie einen registrierten Nutzer suchen
             und hinzufügen. Projektmanager können anschließend einzelnen Projekten zugewiesen werden
             und erhalten dort individuelle Berechtigungen.
-          manage_all_projekts: Admin
+          manage_all_projekts: Alle verwalten
           hint_text: >
             Hier verwalten Sie die Projektmanager der Plattform. Projektmanager sind Nutzer, die
             erweiterte Rechte für bestimmte Projekte erhalten – z. B. Administration, Moderation
             oder das Erstellen von Beiträgen im Namen anderer. Die Zuweisung zu einzelnen Projekten
             und die Vergabe spezifischer Berechtigungen erfolgt in den jeweiligen Projekteinstellungen.
-            Der „Admin"-Toggle in der Tabelle gewährt einem Projektmanager automatisch Zugriff auf alle
+            Der Schalter „Alle verwalten" in der Tabelle gewährt einem Projektmanager automatisch Zugriff auf alle
             Projekte der Plattform – ohne dass eine einzelne Zuweisung pro Projekt erforderlich ist.
         new:
-          title: Neuen Projektmanager hinzufügen
+          title: Neues Teammitglied hinzufügen
           search_label: Nutzer durchsuchen
           search_description: >
             Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern. Diese können Sie
             anschließend als Projektmanager hinzufügen und in den jeweiligen Projekteinstellungen
-            mit spezifischen Berechtigungen ausstatten. Über den „Admin"-Toggle auf der
+            mit spezifischen Berechtigungen ausstatten. Über den Schalter „Alle verwalten" auf der
             Übersichtsseite kann dem Projektmanager anschließend Zugriff auf alle Projekte gewährt werden.
         search:
           no_results: Keine Nutzer gefunden mit diesen Kriterien.

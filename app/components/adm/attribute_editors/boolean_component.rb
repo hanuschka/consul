@@ -16,7 +16,14 @@ class Adm::AttributeEditors::BooleanComponent < Adm::AttributeEditorComponent
   end
 
   def toggled_on?
-    @toggled_on ||= @record.public_send(@attribute) == value_options.first
+    @toggled_on ||= begin
+      current = @record.public_send(@attribute)
+      if SETTING_TYPES.any? { |type| @record.is_a?(type) }
+        current.present? && current != "0" && current != "false"
+      else
+        current == value_options.first
+      end
+    end
   end
 
   def alternate_value
@@ -25,6 +32,7 @@ class Adm::AttributeEditors::BooleanComponent < Adm::AttributeEditorComponent
 
   def aria_attributes
     attrs = { checked: toggled_on?, disabled: disabled? }
+    attrs[:label] = @options[:aria_label] if @options[:aria_label].present?
     attrs[:labelledby] = @options[:labelledby] if @options[:labelledby].present?
     attrs[:describedby] = @options[:describedby] if @options[:describedby].present?
     attrs

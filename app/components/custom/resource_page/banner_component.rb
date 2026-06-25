@@ -5,35 +5,48 @@ class ResourcePage::BannerComponent < ApplicationComponent
 
   delegate :current_user, :projekt_feature?, :projekt_phase_feature?, :format_date_range, to: :helpers
 
-  def initialize(resource:, compact: false)
+  def initialize(resource:, compact: false, heading_level: nil)
     @resource = resource
     @compact = compact
+    @heading_level = heading_level
+  end
+
+  def heading_level
+    @heading_level || (@compact ? :h2 : :h1)
   end
 
   def image_url
-    # resource.image&.variant(:large)
+    return nil unless resource.image&.attached?
+
     polymorphic_path(resource.image.attachment.variant(
+      # TODO Resize to `[415, 260]` when image croping will be inroduced
+      # resize_to_limit: [415, 260],
       resize_to_limit: [500, 500],
       saver: { quality: 80 },
       strip: true,
       format: "jpeg"
     ))
+  rescue ArgumentError, URI::InvalidURIError, ActiveStorage::InvariableError
+    nil
   end
 
   def big_image_url
-    # resource.image&.variant(:large)
+    return nil unless resource.image&.attached?
+
     polymorphic_path(resource.image.attachment.variant(
       resize_to_limit: [1750, 900],
       saver: { quality: 80 },
       strip: true,
       format: "jpeg"
     ))
+  rescue ArgumentError, URI::InvalidURIError, ActiveStorage::InvariableError
+    nil
   end
 
   def resource_class
     base_class = "-#{@resource.class.name.split("::").last.downcase}"
 
-    if @resource.image.present?
+    if @resource.image&.attached?
       base_class += " -with-image"
     end
 
@@ -55,7 +68,6 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def show_projekt_link?
     return false unless resource.respond_to?(:projekt)
 
-    projekt_feature?(resource.projekt, "general.show_in_navigation") ||
-      projekt_feature?(resource.projekt, "general.show_in_homepage")
+    projekt_feature?(resource.projekt, "general.show_related_projekt_link")
   end
 end

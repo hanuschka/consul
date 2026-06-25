@@ -1,0 +1,59 @@
+class Adm::Projekts::HomeController < Adm::Projekts::BaseController
+  def show
+    authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
+
+    @team_members = scoped_team_members
+
+    @intro_text = Setting["adm.projekts.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.projekts", default: nil)
+    @notice = Setting["adm.projekts.notice_active"].present? ? Setting["adm.projekts.notice_message"] : nil
+    @contact_persons = SectionContactPerson.for_section("projekts")
+    visible_projekt_ids = policy_scope([:adm, :projekts, Projekt]).select(:id)
+    @pagy_activities, @activities = pagy(
+      SectionActivity.for_section("projekts").for_trackables("Projekt", visible_projekt_ids),
+      limit: 10,
+      page_param: :activity_page
+    )
+
+    @stats = [
+      { value: Projekt.regular.count, label: t("adm.projekts.home.stats.total"), icon: "folder" },
+      { value: Projekt.current.count, label: t("adm.projekts.home.stats.current"), icon: "play_circle" },
+      { value: Projekt.expired.count, label: t("adm.projekts.home.stats.expired"), icon: "check_circle" },
+      { value: Projekt.not_activated.count, label: t("adm.projekts.home.stats.draft"), icon: "edit_note" }
+    ]
+
+    @quick_links = [
+      (if policy([:adm, :projekts, Projekt]).create?
+         { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
+       end),
+      (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
+         { label: t("adm.projekts.home.quick_links.imports"), path: adm_projekts_imports_path }
+       end)
+    ].compact
+
+    @breadcrumbs = [
+      { name: t("adm.projekts.menu.items.home"), icon: "home" }
+    ]
+  end
+
+  private
+
+    def scoped_team_members
+      base = ProjektManager.includes(user: :image).order(:id)
+
+      if current_user.administrator? || current_user.projekt_manager&.manage_all_projekts?
+        base
+      else
+        shared_projekt_ids = current_user.projekt_manager
+          &.projekt_manager_assignments
+          &.pluck(:projekt_id) || []
+
+        pm_ids = ProjektManagerAssignment.unscoped
+          .where(projekt_id: shared_projekt_ids)
+          .select(:projekt_manager_id)
+          .distinct
+
+        base.where(id: pm_ids)
+      end
+    end
+end

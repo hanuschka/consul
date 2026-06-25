@@ -6,8 +6,8 @@
         <span class="kern-status-dot kern-status-dot--active" title="<%= t("adm.projekts.phases.budget_phases.table.current") %>"></span>
       <% end %>
     </th>
-    <td class="kern-table__cell"><%= budget_phase.starts_at&.strftime("%d.%m.%Y") %></td>
-    <td class="kern-table__cell"><%= budget_phase.ends_at&.strftime("%d.%m.%Y") %></td>
+    <td class="kern-table__cell"><%= budget_phase.starts_at&.strftime("%d.%m.%Y %H:%M") %></td>
+    <td class="kern-table__cell"><%= (budget_phase.ends_at - 1.minute)&.strftime("%d.%m.%Y %H:%M") if budget_phase.ends_at %></td>
     <td class="kern-table__cell">
       <div id="<%= dom_id(budget_phase, :enabled) %>">
         <%= render Adm::AttributeEditors::BooleanComponent.new(

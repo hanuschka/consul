@@ -25,7 +25,11 @@ module TagsHelper
     when "legislation/proposal"
       legislation_process_proposals_path(@process, updated_params)
     when "projekt"
-      projekts_path(updated_params)
+      if params[:landing_page_slug].present?
+        landing_page_projekts_path(params[:landing_page_slug], updated_params)
+      else
+        projekts_path(updated_params)
+      end
     else
       "#"
     end

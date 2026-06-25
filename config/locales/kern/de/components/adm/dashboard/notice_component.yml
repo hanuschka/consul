@@ -1,0 +1,6 @@
+de:
+  components:
+    adm:
+      dashboard:
+        notice_component:
+          dismiss: "Hinweis schließen"

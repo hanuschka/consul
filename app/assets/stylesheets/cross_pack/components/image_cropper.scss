@@ -1,0 +1,55 @@
+// Shared image-cropper UI. Lives in cross_pack so the crop modal renders
+// identically in both stylesheet packs: the main user-facing app
+// (Foundation/Sprockets, driven by App.ImageCropper) and the /adm pack
+// (kern/esbuild, driven by the shared--image-cropper Stimulus controller).
+// Self-contained — no Foundation/pack tokens. The vendor Cropper.js CSS is
+// imported separately by each pack.
+
+.image-cropper-modal {
+  width: 640px;
+  max-width: 90vw;
+}
+
+.image-cropper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.image-cropper--title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #1a1a1a;
+}
+
+.image-cropper--instructions {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+// Cropper.js measures the <img> to build its crop box, so the image needs a
+// block container with a bounded height; overflow is hidden because the plugin
+// renders its own absolutely-positioned canvas inside.
+.image-cropper--canvas-wrapper {
+  width: 100%;
+  max-height: 60vh;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-cropper--image {
+  display: block;
+  max-width: 100%;
+  max-height: 60vh;
+}
+
+.image-cropper--actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

@@ -2,28 +2,40 @@ de:
   mailer:
     budget_investment_created:
       title: Bestätigung nach Einreichung
-      description: Wird an den Autor gesendet, wenn ein Bürgervorschlag erfolgreich eingereicht wurde.
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" (2. Phase) an den Autor gesendet, sobald sein Bürgervorschlag erfolgreich eingereicht wurde.'
+      recipient: Der Nutzer, der den Bürgervorschlag eingereicht hat.
     budget_investment_feasible:
       title: Vorschlag als umsetzbar bewertet
-      description: Wird an den Autor gesendet, wenn sein Vorschlag als umsetzbar bewertet wurde.
+      description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als umsetzbar bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_unfeasible:
       title: Vorschlag als nicht umsetzbar bewertet
-      description: Wird an den Autor gesendet, wenn sein Vorschlag als nicht umsetzbar bewertet wurde.
+      description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als nicht umsetzbar bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_selected:
       title: Vorschlag ausgewählt
-      description: Wird an den Autor gesendet, wenn sein Vorschlag in die engere Auswahl aufgenommen wurde.
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor gesendet, sobald sein Vorschlag von einer Sachbearbeitung als ausgewählt markiert wurde — und damit für die Abstimmungsphase (7. Phase) qualifiziert ist.'
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_unselected:
       title: Vorschlag nicht ausgewählt
-      description: Wird an den Autor gesendet, wenn sein Vorschlag nicht in die engere Auswahl aufgenommen wurde.
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor gesendet, sobald sein Vorschlag von einer Sachbearbeitung als nicht ausgewählt markiert wurde — und damit nicht in die Abstimmungsphase (7. Phase) übernommen wird.'
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_preselected:
       title: Vorschlag vorausgewählt
-      description: Wird an den Autor gesendet, wenn sein Vorschlag vorausgewählt wurde.
+      description: 'Wird beim Übergang in die Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor eines umsetzbaren Vorschlags gesendet, wenn sein Vorschlag auf Basis der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen automatisch in die Vorauswahl aufgenommen wurde.'
+      recipient: 'Der Nutzer, dessen Vorschlag (1) als umsetzbar markiert wurde und (2) aufgrund der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen in die Vorauswahl aufgenommen wurde.'
     budget_investment_not_preselected:
       title: Vorschlag nicht vorausgewählt
-      description: Wird an den Autor gesendet, wenn sein Vorschlag nicht vorausgewählt wurde.
+      description: 'Wird beim Übergang in die Budget-Phase „Investitionsvorschläge begutachten" (5. Phase) an den Autor eines umsetzbaren Vorschlags gesendet, wenn sein Vorschlag auf Basis der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen nicht in die Vorauswahl aufgenommen wurde.'
+      recipient: 'Der Nutzer, dessen Vorschlag (1) als umsetzbar markiert wurde, aber (2) aufgrund der in der „Unterstützungsphase" (4. Phase) abgegebenen Stimmen nicht in die Vorauswahl aufgenommen wurde.'
     proposal_created:
       title: Bestätigung nach Einreichung
       description: Wird an den Autor gesendet, wenn ein Vorschlag erfolgreich eingereicht wurde.
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    formular_answer_created:
+      title: Bestätigung nach Formulareinsendung
+      description: Wird an eingeloggte Nutzer gesendet, wenn sie ein Formular erfolgreich ausgefüllt und abgesendet haben.
+      recipient: Der eingeloggte Nutzer, der das Formular abgesendet hat (an die im Konto hinterlegte E-Mail-Adresse).
     comment:
       title: Neuer Kommentar
       description: Wird an den Autor gesendet, wenn jemand einen Kommentar zu seinem Beitrag geschrieben hat.
@@ -73,36 +85,85 @@ de:
     new_proposal:
       title: Benachrichtigung über neuen Vorschlag
       description: Wird an Abonnenten gesendet, wenn ein neuer Vorschlag eingereicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_poll:
       title: Benachrichtigung über neue Abstimmung
       description: Wird an Abonnenten gesendet, wenn eine neue Abstimmung erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_comment:
       title: Benachrichtigung über neuen Kommentar
       description: Wird an Abonnenten gesendet, wenn ein neuer Kommentar geschrieben wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     projekt_questions:
       title: Benachrichtigung über neue Kurzumfrage
       description: Wird an Abonnenten gesendet, wenn eine neue Kurzumfrage erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     projekt_arguments:
       title: Benachrichtigung über neue Stimme
       description: Wird an Abonnenten gesendet, wenn eine neue Stimme erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_projekt_notification:
       title: Benachrichtigung über neue Projektmitteilung
       description: Wird an Abonnenten gesendet, wenn eine neue Projektmitteilung veröffentlicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_projekt_event:
       title: Benachrichtigung über neue Veranstaltung
       description: Wird an Abonnenten gesendet, wenn eine neue Veranstaltung erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_projekt_milestone:
       title: Benachrichtigung über neuen Meilenstein
       description: Wird an Abonnenten gesendet, wenn ein neuer Meilenstein veröffentlicht wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_projekt_livestream:
       title: Benachrichtigung über neuen Livestream
       description: Wird an Abonnenten gesendet, wenn ein neuer Livestream erstellt wurde.
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_budget_investment:
       title: Benachrichtigung über neuen Bürgervorschlag
-      description: Wird an Abonnenten gesendet, wenn ein neuer Bürgervorschlag eingereicht wurde.
+      description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" (2. Phase) an Abonnenten gesendet, sobald ein neuer Bürgervorschlag eingereicht wurde.'
+      recipient: Alle Nutzer, die das Projekt abonniert haben.
     user_reverification_failed:
       title: Re-Verifizierung fehlgeschlagen
       description: Wird an den Nutzer gesendet, wenn die erneute Identitätsprüfung fehlgeschlagen ist.
+      recipient: Der betroffene Nutzer.
     user_reverification_succeeded:
       title: Re-Verifizierung erfolgreich
       description: Wird an den Nutzer gesendet, wenn die erneute Identitätsprüfung erfolgreich war.
+      recipient: Der betroffene Nutzer.
+    new_deficiency_report:
+      title: Neue Mangelmeldung (intern)
+      description: Wird bei jeder neu eingereichten Mangelmeldung an Administratoren (sofern sie diese Benachrichtigung aktiviert haben) sowie an die Mängelmelder-Verantwortlichen gesendet.
+      recipient: Administratoren und Mängelmelder-Verantwortliche.
+    new_comments_for_deficiency_report:
+      title: Neue Kommentare zu einer Mangelmeldung
+      description: "Wird an den zuständigen Sachbearbeiter gesendet, wenn neue Kommentare zu einer Mangelmeldung eingehen. Voraussetzung: Der Sachbearbeiter hat die Benachrichtigung bei der jeweiligen Mangelmeldung aktiviert."
+      recipient: Der zuständige Sachbearbeiter der Mangelmeldung.
+    overdue_deficiency_reports:
+      title: Überfällige Mangelmeldungen
+      description: Automatische Erinnerung an den zuständigen Sachbearbeiter, wenn eine zugewiesene Mangelmeldung nicht innerhalb der für ihren Status festgelegten Frist bearbeitet wurde.
+      recipient: Der zuständige Sachbearbeiter der Mangelmeldungen.
+    not_assigned_deficiency_reports:
+      title: Nicht zugewiesene Mangelmeldungen
+      description: Automatische Erinnerung an Administratoren und Mängelmelder-Verantwortliche, wenn Mangelmeldungen über einen längeren Zeitraum keinem Sachbearbeiter zugewiesen wurden.
+      recipient: Administratoren.
+  deficiency_report_mailer:
+    notify_author_about_status_change:
+      title: Statusänderung einer Mangelmeldung
+      description: Wird an den Verfasser gesendet, sobald ein Administrator oder Sachbearbeiter den Status seiner Mangelmeldung ändert.
+      recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
+    notify_officer:
+      title: Mangelmeldung einem Sachbearbeiter zugewiesen
+      description: Wird an einen Sachbearbeiter gesendet, sobald ihm eine Mangelmeldung zugewiesen wird – automatisch bei der Einreichung oder durch manuelle (Neu-)Zuweisung im Backend.
+      recipient: Der zuständige Sachbearbeiter.
+    notify_default_officer_group_email:
+      title: Mangelmeldung an Sachbearbeitergruppe zugewiesen
+      description: "Wird an die Sammeladresse einer Sachbearbeitergruppe gesendet, wenn eine Mangelmeldung der Gruppe statt einem einzelnen Sachbearbeiter zugewiesen wird. Voraussetzung: Für die Gruppe ist eine Standard-E-Mail-Adresse hinterlegt."
+      recipient: Die Standard-E-Mail-Adresse der Sachbearbeitergruppe.
+    notify_author_about_submission:
+      title: Eingangsbestätigung einer Mangelmeldung
+      description: Wird als Eingangsbestätigung an den Verfasser gesendet, sobald er eine neue Mangelmeldung erfolgreich eingereicht hat.
+      recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
+    send_feedback_form_link:
+      title: Feedback-Anfrage zur Mangelmeldung
+      description: "Wird etwa 24 Stunden nach Abschluss einer Mangelmeldung (Statuswechsel in einen archivierenden Status) an den Verfasser gesendet und bittet um Feedback. Voraussetzung: Die Feedback-Funktion ist in den %{settings_link} aktiviert."
+      recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.

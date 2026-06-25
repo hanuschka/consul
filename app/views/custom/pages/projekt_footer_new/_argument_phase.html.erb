@@ -1,49 +1,49 @@
+<div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<% unless embedded? %>
-  <div class="main-column">
-    <div class="projekt-arguments-containerr">
-      <%= check_box_tag :show_cons, nil, !@projekt_arguments_pro.exists? %>
+<div class="main-column">
+  <div class="projekt-arguments-containerr">
+    <%= check_box_tag :show_cons, nil, !@projekt_arguments_pro.exists? %>
 
-        <nav class="projekt-arguments-nav">
-          <ul class="projekt-arguments-nav-list">
-            <% if @projekt_arguments_pro.exists? %>
-              <li class="projekt-arguments-nav-item">
-                <%= link_to t("custom.projekts.projekt_arguments.pro"), "#", class: "pro",
-                            onclick: "event.preventDefault();document.getElementById('show_cons').checked = false;" %>
-              </li>
-            <% end %>
-            <% if @projekt_arguments_cons.exists? %>
-              <li class="projekt-arguments-nav-item">
-                <%= link_to t("custom.projekts.projekt_arguments.cons"), "#", class: "contra",
-                            onclick: "event.preventDefault();document.getElementById('show_cons').checked = true;" %>
-              </li>
-            <% end %>
-          </ul>
-        </nav>
-
-      <div class="projekt-arguments --pro">
-        <% if @projekt_arguments_pro.any? %>
-          <h2 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.pro") %></h2>
-          <% @projekt_arguments_pro.each do |argument| %>
-            <%= render "custom/pages/projekt_footer/partials/projekt_argument", argument: argument %>
+      <nav class="projekt-arguments-nav">
+        <ul class="projekt-arguments-nav-list">
+          <% if @projekt_arguments_pro.exists? %>
+            <li class="projekt-arguments-nav-item">
+              <%= link_to t("custom.projekts.projekt_arguments.pro"), "#", class: "pro",
+                          onclick: "event.preventDefault();document.getElementById('show_cons').checked = false;" %>
+            </li>
           <% end %>
-        <% end %>
-      </div>
+          <% if @projekt_arguments_cons.exists? %>
+            <li class="projekt-arguments-nav-item">
+              <%= link_to t("custom.projekts.projekt_arguments.cons"), "#", class: "contra",
+                          onclick: "event.preventDefault();document.getElementById('show_cons').checked = true;" %>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
 
-      <% if @projekt_arguments_pro.exists? && @projekt_arguments_cons.exists? %>
-        <span class="projekt-arguments-separator">
-        </span>
+    <div class="projekt-arguments --pro">
+      <% if @projekt_arguments_pro.any? %>
+        <h2 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.pro") %></h2>
+        <% @projekt_arguments_pro.each do |argument| %>
+          <%= render "custom/pages/projekt_footer/partials/projekt_argument", argument: argument %>
+        <% end %>
       <% end %>
+    </div>
 
-      <div class="projekt-arguments --contra">
-        <% if @projekt_arguments_cons.any? %>
-          <h2 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.cons") %></h2>
-          <% @projekt_arguments_cons.each do |argument| %>
-            <%= render "custom/pages/projekt_footer/partials/projekt_argument", argument: argument %>
-          <% end %>
+    <% if @projekt_arguments_pro.exists? && @projekt_arguments_cons.exists? %>
+      <span class="projekt-arguments-separator">
+      </span>
+    <% end %>
+
+    <div class="projekt-arguments --contra">
+      <% if @projekt_arguments_cons.any? %>
+        <h2 class="projekt-arguments-title"><%= t("custom.projekts.projekt_arguments.cons") %></h2>
+        <% @projekt_arguments_cons.each do |argument| %>
+          <%= render "custom/pages/projekt_footer/partials/projekt_argument", argument: argument %>
         <% end %>
-      </div>
+      <% end %>
     </div>
   </div>
-<% end %>
+</div>
+</div>

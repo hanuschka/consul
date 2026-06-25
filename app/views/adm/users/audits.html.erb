@@ -1,0 +1,11 @@
+<%= content_for :title, t("adm.shared.audits.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: @user.name.presence || @user.email,
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_users_path
+) %>
+
+<div class="kern-container my-5">
+  <%= render "adm/shared/audits", auditable: @user %>
+</div>

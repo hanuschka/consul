@@ -8,6 +8,7 @@ class DeficiencyReport < ApplicationRecord
   include Notifiable
   include Milestoneable
   include Memoable
+  include SectionTrackable
   translates :title, touch: true
   translates :description, touch: true
   translates :summary, touch: true
@@ -44,7 +45,7 @@ class DeficiencyReport < ApplicationRecord
 
   validates :deficiency_report_category_id, presence: true
   validates :author, presence: true
-  validates :map_location, presence: true, on: :create
+  validates :map_location, presence: true, on: :create, if: :map_location_required?
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
@@ -208,6 +209,14 @@ class DeficiencyReport < ApplicationRecord
     self.class.archived.exists?(id: id)
   end
 
+  def section_tracking_section
+    "deficiency_reports"
+  end
+
+  def section_tracking_user
+    author
+  end
+
   def assign_default_responsible
     default_responsible = district&.default_deficiency_report_responsible || category&.default_responsible
 
@@ -218,5 +227,10 @@ class DeficiencyReport < ApplicationRecord
         assigned_at: Time.zone.now
       )
     end
+  end
+
+  def map_location_required?
+    setting = Setting["deficiency_reports.map_location_required"]
+    setting.nil? || setting.present?
   end
 end

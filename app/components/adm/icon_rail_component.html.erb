@@ -1,0 +1,27 @@
+<nav class="adm-icon-rail" aria-label="<%= t('.aria_label', default: 'Global navigation') %>">
+  <div class="adm-icon-rail__decorations">
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--rounded-rect"></div>
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--top"></div>
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--middle"></div>
+    <div class="adm-icon-rail__decoration adm-icon-rail__decoration--bottom"></div>
+  </div>
+  <div class="adm-icon-rail__logo">
+    <%= image_tag(helpers.image_path_for("adm_logo.png"), alt: Setting["org_name"], size: "36x36") %>
+  </div>
+
+  <div class="adm-icon-rail__items">
+    <% items.each do |item| %>
+      <rich-tooltip placement="right" delay="0" trigger-only shadow="heavy" class="adm-icon-rail__item-tooltip">
+        <%= link_to item[:path], class: ["adm-icon-rail__item", ("active" if active?(item))].compact.join(" "), "aria-label": Setting["#{item[:key]}.feature_name"].presence || t(".#{item[:key]}"), data: { turbo: false } do %>
+          <span class="material-symbols-outlined" aria-hidden="true"><%= item[:icon] %></span>
+        <% end %>
+        <template>
+          <span class="adm-icon-rail__tooltip-label">
+            <span class="material-symbols-outlined" aria-hidden="true"><%= item[:icon] %></span>
+            <span><%= Setting["#{item[:key]}.feature_name"].presence || t(".#{item[:key]}") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
+    <% end %>
+  </div>
+</nav>

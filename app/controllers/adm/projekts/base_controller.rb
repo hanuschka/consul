@@ -1,11 +1,11 @@
 class Adm::Projekts::BaseController < Adm::BaseController
   private
 
-    def adm_menu_component
-      Adm::Projekts::MenuComponent.new
-    end
-
-    def adm_header_title
-      I18n.t("adm.projekts.title")
-    end
+  # Every controller in this section renders the Projekts sidebar/title/nav —
+  # including deeper-nested ones (e.g. Imports) whose Ruby parent namespace
+  # (Adm::Projekts::Imports) would otherwise resolve to a missing menu and fall
+  # back to the global Adm menu.
+  def current_adm_section_namespace
+    "Adm::Projekts"
+  end
 end

@@ -6,6 +6,13 @@
     </div>
   <% end %>
 
+  <% if error.present? %>
+    <p class="kern-error mb-2" role="alert">
+      <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>
+      <span class="kern-body"><%= error %></span>
+    </p>
+  <% end %>
+
   <div id="<%= container_id %>"
        class="map_location map <%= map_location.rendering_library %> mb-4"
        style="<%= container_style %>"
@@ -35,6 +42,17 @@
       <%= form.collection_radio_buttons :rendering_library, rendering_library_options, :first, :last,
           {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
     <% end %>
+
+    <div data-map-target="mapboxStyleField" class="<%= 'd-none' unless map_location.mapbox? %>">
+      <%= render Kern::FormFieldComponent.new(
+        label: t('components.kern.map_component.mapbox_style_id_label'),
+        hint: t('components.kern.map_component.mapbox_style_id_description')
+      ) do %>
+        <%= form.text_field :mapbox_style_id,
+            class: "kern-input",
+            placeholder: "mapbox://styles/..." %>
+      <% end %>
+    </div>
   <% end %>
 
   <%= content %>

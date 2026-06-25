@@ -3,7 +3,30 @@ class Api::ProjektsController < Api::BaseController
   include ImageAttributes
   include Translatable
 
-  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_page, :update_body]
+  before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_page_image, :update_body]
+
+  DEFAULT_PROJEKTS_PER_PAGE = 20
+
+  SORTABLE_COLUMNS = %w[
+    created_at total_duration_start total_duration_end
+    order_number name published_at page_title
+  ].freeze
+
+  DEFAULT_SORT_COLUMN = "created_at"
+
+  PAGE_TITLE_SORT_LOCALE = "de"
+
+  PAGE_TITLE_SORT_JOIN =
+    "LEFT JOIN site_customization_pages scp_sort " \
+    "ON scp_sort.projekt_id = projekts.id " \
+    "LEFT JOIN site_customization_page_translations spt_sort " \
+    "ON spt_sort.site_customization_page_id = scp_sort.id " \
+    "AND spt_sort.locale = '#{PAGE_TITLE_SORT_LOCALE}'"
+
+  SORT_EXPRESSIONS = {
+    "name" => "LOWER(projekts.name)",
+    "page_title" => "LOWER(spt_sort.title)"
+  }.freeze
 
   def index
     check_read_access!
@@ -30,20 +53,17 @@ class Api::ProjektsController < Api::BaseController
     current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
     projekts = projekts.send(current_filter)
 
-    if projekts.is_a?(ActiveRecord::Relation)
-      projekts =
-        projekts
-          .includes(:projekt_settings, :translations)
-          .order(created_at: :asc)
-    elsif projekts.is_a?(Array)
-      projekts = projekts.sort_by { |p| p.created_at }
-    end
+    projekts = sort_projekts(projekts)
 
     include_phases = params[:include_phases] == 'true'
     include_content_blocks = params[:include_content_blocks] == 'true'
+    include_text = params[:include_text] == 'true'
+    include_projekt_settings = params[:include_projekt_settings] == 'true'
 
     includes_hash = {}
-    includes_hash[:content_blocks] = {} if include_content_blocks
+    includes_hash[:translations] = {}
+    includes_hash[:projekt_settings] = {} if include_projekt_settings
+    includes_hash[:content_blocks] = {}
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
 
     if include_phases
@@ -54,16 +74,33 @@ class Api::ProjektsController < Api::BaseController
       ]
     end
 
-    projekts = projekts.includes(includes_hash) if includes_hash.any?
+    paginating = params[:page].present? || params[:per_page].present?
+
+    if paginating
+      projekts = paginate_projekts(projekts)
+    end
+
+    projekts = eager_load_projekt_associations(projekts, includes_hash)
 
     serailized_projekts = ProjektSerializer.serialize_collection(
       projekts,
       include_phases: include_phases,
       include_content_blocks: include_content_blocks,
+      include_text: include_text,
+      include_projekt_settings: include_projekt_settings,
       current_api_client: current_client
     )
 
-    render json: { data: { projekts: serailized_projekts } }
+    response = { data: { projekts: serailized_projekts } }
+
+    response[:pagination] =
+      if paginating
+        pagination_meta(projekts)
+      else
+        no_pagination_meta
+      end
+
+    render json: response
   end
 
   def show
@@ -134,6 +171,22 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_page_image
+    check_admin_access!
+
+    image_data = params[:projekt]&.dig(:image_attributes)
+
+    if image_data.blank? || image_data[:attachment].blank?
+      return render json: { error: { messages: ["No image provided"] } }, status: 422
+    end
+
+    process_image_with_base64(@projekt.page, image_data)
+
+    render json: { data: { projekt: ProjektSerializer.new(@projekt).serialize } }
+  rescue => e
+    render json: { error: { messages: [e.message] } }, status: 422
+  end
+
   def destroy
     check_admin_access!
     if @projekt.destroy
@@ -172,6 +225,35 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
+  def update_settings
+    check_admin_access!
+    settings_hash = params[:settings]
+
+    if settings_hash.blank?
+      return render json: { error: { messages: ["settings parameter is required"] } }, status: 422
+    end
+
+    updated = []
+    errors = {}
+
+    settings_hash.each do |key, value|
+      setting = @projekt.projekt_settings.find_by(key: key)
+
+      if setting.blank?
+        errors[key] = ["Setting not found"]
+        next
+      end
+
+      if setting.update(value: value.to_s)
+        updated << key
+      else
+        errors[key] = setting.errors.full_messages
+      end
+    end
+
+    render json: { data: { updated: updated, errors: errors } }
+  end
+
   def update_body
     check_admin_access!
 
@@ -194,6 +276,52 @@ class Api::ProjektsController < Api::BaseController
   end
 
   private
+
+  def sort_projekts(projekts)
+    apply_sort_join(projekts)
+      .reorder(Arel.sql("#{sort_expression} #{sort_direction.upcase} NULLS LAST"))
+  end
+
+  def apply_sort_join(projekts)
+    if sort_column == "page_title"
+      return projekts.joins(PAGE_TITLE_SORT_JOIN)
+    end
+
+    projekts
+  end
+
+  def sort_column
+    SORTABLE_COLUMNS.include?(params[:sort_by]) ? params[:sort_by] : DEFAULT_SORT_COLUMN
+  end
+
+  def sort_direction
+    params[:sort_direction] == "desc" ? "desc" : "asc"
+  end
+
+  def sort_expression
+    SORT_EXPRESSIONS[sort_column] || "projekts.#{sort_column}"
+  end
+
+  def paginate_projekts(projekts)
+    per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
+
+    projekts.page(params[:page]).per(per_page)
+  end
+
+  def eager_load_projekt_associations(projekts, includes_hash)
+    return projekts if includes_hash.blank?
+
+    projekts.includes(includes_hash)
+  end
+
+  def pagination_meta(collection)
+    {
+      current_page: collection.current_page,
+      total_pages: collection.total_pages,
+      total_count: collection.total_count,
+      per_page: collection.limit_value
+    }
+  end
 
   def projekt_params
     attributes = [
@@ -229,6 +357,7 @@ class Api::ProjektsController < Api::BaseController
   def find_projekt
     @projekt = Projekt
       .includes(
+        :content_blocks,
         projekt_phases: [
           :settings,
           :individual_group_values,

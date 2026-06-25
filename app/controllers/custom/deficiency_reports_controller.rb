@@ -7,14 +7,15 @@ class DeficiencyReportsController < ApplicationController
   include DeficiencyReportsHelper
   include Search
 
-  before_action :authenticate_user!, except: [:index, :show, :json_data]
+  before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
   before_action :load_categories
   before_action :set_view, only: :index
   before_action :destroy_map_location_association, only: :update
 
   feature_flag :deficiency_reports
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: :blocked
+  skip_authorization_check only: :blocked
 
   has_orders ->(c) { DeficiencyReport.deficiency_report_orders }, only: :index
   has_orders %w[newest most_voted oldest], only: :show
@@ -42,7 +43,14 @@ class DeficiencyReportsController < ApplicationController
 
     @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
-    @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
+    @deficiency_reports_map_pin_count = deficiency_report_map_locations_count(@deficiency_reports)
+
+    @deficiency_reports_coordinates =
+      if @deficiency_reports_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+        all_deficiency_report_map_locations(@deficiency_reports)
+      else
+        []
+      end
 
     set_deficiency_report_votes(@deficiency_reports)
 
@@ -53,6 +61,14 @@ class DeficiencyReportsController < ApplicationController
         else
           render :index
         end
+      end
+
+      format.json do
+        render json: JSON.generate(
+          MapLocation.flatten_feature_collections(
+            all_deficiency_report_map_locations(@deficiency_reports)
+          )
+        )
       end
 
       format.csv do
@@ -80,8 +96,15 @@ class DeficiencyReportsController < ApplicationController
     @deficiency_report = DeficiencyReport.new
   end
 
+  def blocked
+    answer = DeficiencyReport::ConfirmationPopupAnswer.find_by(id: params[:answer_id])
+    notice = answer&.flash_notice.presence
+    flash[:notice] = notice if notice
+    redirect_back(fallback_location: deficiency_reports_path)
+  end
+
   def create
-    if deficiency_report_params["image_attributes"]["cached_attachment"].blank?
+    if deficiency_report_params.dig("image_attributes", "cached_attachment").blank?
       filtered_deficiency_report_params = deficiency_report_params.except("image_attributes")
     else
       filtered_deficiency_report_params = deficiency_report_params
@@ -115,11 +138,6 @@ class DeficiencyReportsController < ApplicationController
   def vote
     @deficiency_report.register_vote(current_user, params[:value])
     set_deficiency_report_votes(@deficiency_report)
-  end
-
-  def suggest
-    @limit = 5
-    @resources = @search_terms.present? ? DeficiencyReport.admin_accepted.search(@search_terms) : nil
   end
 
   def notify_officer_about_new_comments

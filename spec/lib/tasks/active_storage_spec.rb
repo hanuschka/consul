@@ -35,7 +35,7 @@ describe "active storage tasks" do
     end
 
     it "does not modify old ckeditor attachments" do
-      image = Ckeditor::Picture.create!(data: fixture_file_upload("clippy.png"))
+      image = AdminImage.create!(data: fixture_file_upload("clippy.png"))
 
       expect(image.storage_data.attachment.name).to eq "storage_data"
 

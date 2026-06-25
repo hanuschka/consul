@@ -1,4 +1,9 @@
-<div class="dropzone-image-upload js-dropzone-image-upload" data-submit-form="<%= @submit_form %>">
+<div
+  class="dropzone-image-upload js-dropzone-image-upload"
+  data-submit-form="<%= @submit_form %>"
+  data-crop="<%= @crop %>"
+  data-crop-aspect-ratio="<%= @crop_aspect_ratio %>"
+>
   <div class="dropzone-image-upload--file-attach-area">
     <% if placeholder.present? %>
       <%= placeholder %>
@@ -11,8 +16,8 @@
   <%= presetuped_file_field %>
 
   <% if custom_edit_button.present? %>
-    <button type="button" class="dropzone-image-upload-custom-edit-button js-dropzone-image-upload-custom-edit-button">
+    <div class="dropzone-image-upload-custom-edit-button js-dropzone-image-upload-custom-edit-button">
       <%= custom_edit_button %>
-    </button>
+    </div>
   <% end %>
 </div>

@@ -1,0 +1,35 @@
+en:
+  adm:
+    documents:
+      index:
+        title: Documents
+        intro_title: About documents
+        intro_text_p1: >
+          In this area you manage documents stored centrally on the platform. Each uploaded file gets
+          a unique URL that can be linked from anywhere on the platform — in content blocks, project
+          texts, or the navigation. Documents can therefore be uploaded once and reused platform-wide.
+        intro_text_p2: >
+          Use meaningful titles, since the file name is shown in the overview. Use the "Copy download link"
+          button to copy a document's direct download URL to the clipboard for use elsewhere.
+        new_document: Add new document
+        empty_title: No documents available
+        empty_description: Upload a document to make it linkable across the platform.
+        table:
+          title: Title
+          format: Format
+          size: Size
+          url: URL
+          copy_link: Copy download link
+          actions: Actions
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this document?
+      new:
+        title: Upload new document
+        form:
+          submit: Upload document
+          attachment_label: File
+          hints:
+            attachment: >
+              Select a file from your computer. Supported formats are PDF, Word (DOCX), Excel (XLSX),
+              JPEG, and PNG. The file name is automatically used as the document title.
+              After upload, you'll receive a unique URL that lets you link to the document platform-wide.

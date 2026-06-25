@@ -1,0 +1,19 @@
+<%= content_for :title, t("adm.deficiency_reports.email_templates.index.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.deficiency_reports.email_templates.index.title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%= render "adm/deficiency_reports/email_templates/tabs", current: :settings %>
+
+<div class="kern-container my-5">
+  <div class="mb-5">
+    <%= render Adm::AttributeEditorComponent.new(@from_address_setting, :value, :string) %>
+  </div>
+
+  <div class="mb-5">
+    <%= render Adm::AttributeEditorComponent.new(@footer_block, :body, :rich_text, wide: true, toolbar: "email") %>
+  </div>
+</div>

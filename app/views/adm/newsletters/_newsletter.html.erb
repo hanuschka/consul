@@ -9,14 +9,32 @@
     <% end %>
   </td>
   <td class="kern-table__cell">
-    <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t('adm.newsletters.index.table.edit'), url: edit_adm_newsletter_path(newsletter), icon: "edit", style: :edit) %>
-      <% actions.with_action(
-        label: t('adm.newsletters.index.table.delete'),
-        url: adm_newsletter_path(newsletter),
-        icon: "delete", style: :delete,
+    <div class="d-flex align-items-center gap-1">
+      <%= kern_link_button(
+        adm_newsletter_path(newsletter),
+        icon: "visibility",
+        style: :tertiary,
+        class: "kern-btn--xs",
+        title: t('adm.newsletters.index.table.show'),
+        "aria-label": t('adm.newsletters.index.table.show')
+      ) %>
+      <%= kern_link_button(
+        edit_adm_newsletter_path(newsletter),
+        icon: "edit",
+        style: :tertiary,
+        class: "kern-btn--xs",
+        title: t('adm.newsletters.index.table.edit'),
+        "aria-label": t('adm.newsletters.index.table.edit')
+      ) %>
+      <%= kern_link_button(
+        adm_newsletter_path(newsletter),
+        icon: "delete",
+        style: :tertiary,
+        class: "kern-btn--xs kern-btn--danger",
+        title: t('adm.newsletters.index.table.delete'),
+        "aria-label": t('adm.newsletters.index.table.delete'),
         data: { turbo_method: :delete, turbo_confirm: t('adm.newsletters.index.table.delete_confirm') }
       ) %>
-    <% end %>
+    </div>
   </td>
 </tr>

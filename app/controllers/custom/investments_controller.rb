@@ -3,6 +3,7 @@ class InvestmentsController < ApplicationController
   include RandomSeed
   include LandingPageResolvable
 
+  before_action :check_investments_overview_enabled, only: :index
   before_action :set_random_seed, only: :index
 
   skip_authorization_check only: [:index]
@@ -29,7 +30,7 @@ class InvestmentsController < ApplicationController
     filter_by_status
     filter_by_searched
 
-    @investment_coordinates = MapLocation.where(mappable: @investments).map(&:features_json_data)
+    @investment_coordinates = MapLocation.with_investment_associations.where(mappable: @investments).map(&:features_json_data)
     @investments = @investments.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(12)
   end
 
@@ -56,5 +57,9 @@ class InvestmentsController < ApplicationController
 
       @status_filter_options << [t("budgets.investments.index.filters.selected"), "selected"] if @investments.selected.any?
       @status_filter_options << [t("budgets.investments.index.filters.unfeasible"), "unfeasible"] if @investments.unfeasible.any?
+    end
+
+    def check_investments_overview_enabled
+      raise FeatureFlags::FeatureDisabled, :investments_overview unless Setting["extended_feature.general.enable_investments_overview"].present?
     end
 end

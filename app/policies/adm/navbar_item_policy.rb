@@ -3,6 +3,10 @@ class Adm::NavbarItemPolicy < ApplicationPolicy
     @user&.administrator? || landing_page_manager_for_record?
   end
 
+  def update?
+    @user&.administrator? || landing_page_manager_for_record?
+  end
+
   def destroy?
     @user&.administrator? || landing_page_manager_for_record?
   end

@@ -1,12 +1,12 @@
 class ProjektPhaseSetting < ApplicationRecord
   SelectableSettingSet = Struct.new(:setting, :options, keyword_init: true)
 
-  PRO_SETTINGS = [
-    "feature.form.voice_assistant"
-  ]
-
   SETTING_KINDS = %w[feature option selectable_setting].freeze
   SETTING_BANDS = %w[general form resource].freeze
+
+  AI_GATED_KEYS = %w[
+    feature.form.voice_assistant
+  ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
@@ -16,6 +16,10 @@ class ProjektPhaseSetting < ApplicationRecord
   validates :key, uniqueness: { scope: :projekt_phase_id }
 
   default_scope { order(id: :asc) }
+
+  def ai_gated?
+    AI_GATED_KEYS.include?(key)
+  end
 
   def kind_prefix
     key.split(".").first
@@ -91,6 +95,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_report_button_in_sidebar": "active",
           "feature.resource.show_follow_button_in_proposal_sidebar": "",
           "feature.resource.show_community_button_in_proposal_sidebar": "",
+          "feature.resource.show_social_share_buttons": "active",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
@@ -136,6 +141,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_report_button_in_sidebar": "active",
           "feature.resource.show_follow_button_in_sidebar": "",
           "feature.resource.show_community_button_in_sidebar": "",
+          "feature.resource.show_social_share_buttons": "active",
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",

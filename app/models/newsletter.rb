@@ -4,12 +4,16 @@ class Newsletter < ApplicationRecord
   after_initialize :set_default_body, if: :new_record?
 
   has_many :activities, as: :actionable, inverse_of: :actionable
+  has_many :content_blocks,
+           -> { order(:position) },
+           class_name: "SiteCustomization::ContentBlock",
+           dependent: :destroy
   belongs_to :recipient_group
 
   validates :subject, presence: true
   # validates :segment_recipient, presence: true
   validates :from, presence: true, format: { with: /\A.+@.+\Z/ }
-  validates :body, presence: true
+  validates :body, presence: true, unless: -> { new_record? || content_blocks.exists? }
   # validate :validate_segment_recipient
   validates :recipient_group_id, presence: true
 
@@ -23,9 +27,25 @@ class Newsletter < ApplicationRecord
   end
 
   def list_of_recipient_emails
-    return recipient_group.user_emails if recipient_group
+    emails =
+      if recipient_group
+        recipient_group.user_emails
+      elsif valid_segment_recipient?
+        UserSegments.user_segment_emails(segment_recipient)
+      end
 
-    UserSegments.user_segment_emails(segment_recipient) if valid_segment_recipient?
+    return emails if emails.blank?
+
+    normalize = ->(list) { list.filter_map { |e| e.to_s.strip.downcase.presence }.uniq }
+    emails = normalize.call(emails)
+
+    return emails unless respect_newsletter_optout?
+
+    optin_set = normalize.call(
+      User.actual.where(newsletter: true).pluck(:email) +
+        UnregisteredNewsletterSubscriber.confirmed.pluck(:email)
+    ).to_set
+    emails.select { |e| optin_set.include?(e) }
   end
 
   def valid_segment_recipient?
@@ -65,6 +85,85 @@ class Newsletter < ApplicationRecord
     list_of_recipient_emails.in_groups_of(batch_size, false)
   end
 
+  def renders_from_content_blocks?
+    draft? && content_blocks.exists?
+  end
+
+  def composed_content_blocks_html
+    content_blocks.map do |content_block|
+      margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
+
+      %(<div style="margin-bottom:#{margin}px;">#{content_block.body}</div>)
+    end.join("\n")
+  end
+
+  def snapshot_content_blocks_to_body!
+    return if !renders_from_content_blocks?
+
+    update_column(:body, composed_content_blocks_html)
+  end
+
+  def email_safe_body(container_width: 620)
+    source_html = renders_from_content_blocks? ? composed_content_blocks_html : body
+    return "" if source_html.blank?
+
+    doc = Nokogiri::HTML.fragment(source_html)
+
+    doc.css("figure.image_resized, figure.image").each do |figure|
+      img = figure.at_css("img")
+      next unless img
+
+      figure_style = figure["style"].to_s
+      pct_match = figure_style.match(/width:\s*([\d.]+)%/)
+
+      if pct_match
+        pixel_width = (pct_match[1].to_f / 100.0 * container_width).round
+        img["width"] = pixel_width.to_s
+      end
+
+      img.remove_attribute("height")
+      img["style"] = img["style"].to_s.gsub(/aspect-ratio:[^;]+;?/, "").strip
+      img.remove_attribute("class")
+
+      figure_classes = figure["class"].to_s
+      if figure_classes.include?("image-style-align-left")
+        img["align"] = "left"
+        img["style"] = [img["style"], "max-width:100%;height:auto;margin:0 15px 10px 0;"].compact.reject(&:blank?).join(";")
+      elsif figure_classes.include?("image-style-align-right")
+        img["align"] = "right"
+        img["style"] = [img["style"], "max-width:100%;height:auto;margin:0 0 10px 15px;"].compact.reject(&:blank?).join(";")
+      else
+        img["style"] = [img["style"], "display:block;margin:0 auto;max-width:100%;height:auto;"].compact.reject(&:blank?).join(";")
+      end
+
+      figure.replace(img)
+    end
+
+    doc.css("img").each do |img|
+      img.remove_attribute("height")
+      style = img["style"].to_s.gsub(/height\s*:[^;]+;?/i, "").strip
+      style << ";" unless style.empty? || style.end_with?(";")
+      style << "height:auto;" unless style =~ /height\s*:\s*auto/i
+      style << "max-width:100%;" unless style =~ /max-width\s*:/i
+      img["style"] = style
+    end
+
+    doc.css("a[href], img[src]").each do |node|
+      attr = node.name == "a" ? "href" : "src"
+      url = node[attr].to_s
+      next if url.blank?
+      next if url.match?(/\A(?:https?:|mailto:|tel:|cid:|data:|#)/i)
+
+      begin
+        node[attr] = URI.join(Setting["url"].to_s, url).to_s
+      rescue URI::Error
+        next
+      end
+    end
+
+    doc.to_html
+  end
+
   private
 
     # def validate_segment_recipient
@@ -81,6 +180,6 @@ class Newsletter < ApplicationRecord
     end
 
     def set_default_body
-      self.body ||= self.class.default_body
+      self.body ||= self.class.default_body if Setting["advanced_newsletter"].present?
     end
 end

@@ -5,10 +5,14 @@
     <%= f.text_field :title, label: false, placeholder: t(".title_label") %>
   <% end %>
 
+  <%= render Kern::FormFieldComponent.new(label: t(".description_label"), hint: t(".description_hint"), stacked: true) do %>
+    <%= f.text_area :description, label: false, rows: 3, placeholder: t(".description_label") %>
+  <% end %>
+
   <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
     <div data-controller="adm-color-picker">
       <div class="color-picker" data-adm-color-picker-target="picker"></div>
-      <%= f.hidden_field :color, data: { "adm-color-picker-target": "colorInput" } %>
+      <%= f.hidden_field :color, value: @status.color.presence || "#3366CC", data: { "adm-color-picker-target": "colorInput" } %>
     </div>
   <% end %>
 

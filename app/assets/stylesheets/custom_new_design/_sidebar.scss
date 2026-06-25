@@ -11,17 +11,23 @@
       display: none;
     }
 
-    @media(max-width: $medium-tablet-viewport-start) {
-      min-width: 0;
-      max-width: 250px;
+    .globalize-languages.highlight .column {
+      padding: 0 !important;
+      border-radius: 0;
     }
 
-    @media(max-width: $small-tablet-viewport-start) {
+    // @media(max-width: $medium-tablet-viewport-start) {
+    //   min-width: 0;
+    //   max-width: 250px;
+    // }
+
+    @media(max-width: $medium-tablet-viewport-start) {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       width: 100%;
+      min-width: 0;
       max-width: none;
       margin: auto;
       margin-bottom: 20px;
@@ -71,8 +77,7 @@
   }
 
   .sdg-goal-tag-cloud {
-    margin-top: 20px;
-
+    margin-top: 5px;
 
     .sdg-goal-tag-list {
       gap: 7px;
@@ -83,7 +88,6 @@
     }
 
     .sdg-goal-icon {
-      // border-radius: 0;
       min-width: 58px;
     }
   }
@@ -110,18 +114,14 @@
       max-height: calc(100vh - 60px);
       overflow-x: hidden;
     }
-  }
 
-  .sidebar {
-    .globalize-languages.highlight .column {
-      padding: 0 !important;
-      border-radius: 0;
-    }
-  }
-
-  @media (max-width: $small-tablet-viewport-start) {
-    .sidebar {
-      // display: none;
+    // The subnavigation stacks its rows in a flex column. Foundation's
+    // `.column` carries `flex: 0 0 100%` for full-width rows, but here that
+    // 100% resolves against the main (vertical) axis and inflates an often
+    // empty column (the `top_links` wrapper) into a full-height void, adding
+    // dead scroll space. Size these columns to their content instead.
+    .subnavigation > .column {
+      flex: 0 0 auto;
     }
   }
 
@@ -138,4 +138,49 @@
 
 #sidebar-cta {
   width: 100%;
+
+  .sidebar-card {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .button.-orange,
+  .button.-green {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 8px;
+    transition: transform 150ms ease, box-shadow 200ms ease, background-color 150ms ease, filter 150ms ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    &:active {
+      transform: translateY(0);
+      filter: brightness(0.97);
+    }
+  }
+
+  .button.-orange {
+    box-shadow: 0 4px 14px rgba(255, 164, 45, 0.32);
+
+    &:hover {
+      box-shadow: 0 8px 22px rgba(255, 164, 45, 0.42);
+    }
+  }
+
+  .button.-green {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+    }
+  }
 }

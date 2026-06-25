@@ -26,6 +26,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "Mailer#proposal_created" => {
       variables: %w[username proposal_title proposal_url]
     },
+    "Mailer#formular_answer_created" => {
+      variables: %w[username projekt_title phase_title]
+    },
     "NotificationServiceMailer#new_proposal" => {
       variables: %w[username proposal_title proposal_url]
     },
@@ -106,6 +109,33 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "Mailer#user_verification_failed" => {
       variables: %w[username verification_url]
+    },
+    "DeficiencyReportMailer#notify_author_about_status_change" => {
+      variables: %w[username deficiency_report_title deficiency_report_url status_name status_notice_text]
+    },
+    "DeficiencyReportMailer#notify_officer" => {
+      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
+    },
+    "DeficiencyReportMailer#notify_default_officer_group_email" => {
+      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
+    },
+    "DeficiencyReportMailer#notify_author_about_submission" => {
+      variables: %w[username deficiency_report_title deficiency_report_url account_url]
+    },
+    "DeficiencyReportMailer#send_feedback_form_link" => {
+      variables: %w[username deficiency_report_title deficiency_report_url status_name feedback_form_url]
+    },
+    "NotificationServiceMailer#new_deficiency_report" => {
+      variables: %w[username deficiency_report_id deficiency_report_title deficiency_report_url]
+    },
+    "NotificationServiceMailer#new_comments_for_deficiency_report" => {
+      variables: %w[deficiency_report_title deficiency_report_url comment_count]
+    },
+    "NotificationServiceMailer#overdue_deficiency_reports" => {
+      variables: %w[officer_name overdue_count]
+    },
+    "NotificationServiceMailer#not_assigned_deficiency_reports" => {
+      variables: %w[admin_name not_assigned_count]
     }
   }.freeze
 
@@ -129,6 +159,33 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     ["Mailer", "user_verification_failed"]
   ].freeze
 
+  # Deficiency-report emails are not tied to a projekt phase (so they are stored
+  # with projekt_phase: nil), but they are edited inside the /adm/deficiency_reports
+  # section rather than on the generic global email-templates page.
+  #
+  # Grouped by recipient for display: emails to external users (the citizen who
+  # filed the report) vs. emails to staff (admins, officers, managers). Within
+  # each group the entries follow the report lifecycle
+  # (submission -> assignment -> processing -> closing).
+  DEFICIENCY_REPORT_EMAIL_TEMPLATE_GROUPS = {
+    external: [
+      ["DeficiencyReportMailer", "notify_author_about_submission"],
+      ["DeficiencyReportMailer", "notify_author_about_status_change"],
+      ["DeficiencyReportMailer", "send_feedback_form_link"]
+    ],
+    internal: [
+      ["NotificationServiceMailer", "new_deficiency_report"],
+      ["DeficiencyReportMailer", "notify_officer"],
+      ["DeficiencyReportMailer", "notify_default_officer_group_email"],
+      ["NotificationServiceMailer", "not_assigned_deficiency_reports"],
+      ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
+      ["NotificationServiceMailer", "overdue_deficiency_reports"]
+    ]
+  }.freeze
+
+  DEFICIENCY_REPORT_EMAIL_TEMPLATES =
+    DEFICIENCY_REPORT_EMAIL_TEMPLATE_GROUPS.values.flatten(1).freeze
+
   audited only: %i[subject body]
 
   belongs_to :projekt_phase, optional: true
@@ -141,6 +198,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
 
   def template_key
     "#{mailer_class}##{mailer_action}"
+  end
+
+  def deficiency_report_template?
+    DEFICIENCY_REPORT_EMAIL_TEMPLATES.include?([mailer_class, mailer_action])
   end
 
   def registered_variables
@@ -158,7 +219,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
   def render_body(variables = {})
     return nil if body.blank?
 
-    Liquid::Template.parse(body).render(variables.stringify_keys)
+    rendered = Liquid::Template.parse(body).render(variables.stringify_keys)
+
+    Rinku.auto_link(rendered, :urls, 'target="_blank"')
   rescue Liquid::Error
     nil
   end

@@ -8,10 +8,22 @@ $mobile-side-padding: 20px;
 
 $main-column-max-width: 925px;
 $topbar-max-width: 1245px;
-$topbar-height: 90px;
-$admin-topbar-height: 40px;
+$topbar-height: 80px;
+$admin-topbar-height: 48px;
 $topbar-height-mobile: 60px;
 $mobile-custom-fixed-tabs-height: 50px;
+
+// $top-bar-banner-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+$top-bar-banner-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+
+// Projekt page theme tokens. Colors live in cross_pack/1_colors.scss.
+$heading-font: 'Asap', sans-serif;
+$body-font: 'Asap', sans-serif;
+$radius-base: 8px;
+$radius-large: 12px;
+$shadow-small: 0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.06);
+$transition-base: 200ms ease;
 
 :root {
   --topbar-height: #{$topbar-height};
@@ -19,4 +31,18 @@ $mobile-custom-fixed-tabs-height: 50px;
   --admin-topbar-height: #{$admin-topbar-height};
   --tobar-max-width: #{$topbar-max-width};
   --mobile-custom-fixed-tabs-height: #{$mobile-custom-fixed-tabs-height};
+}
+
+// Below the small-tablet breakpoint the admin topbar is hidden (see
+// _admin_topbar.scss), so its height collapses to 0 — this reclaims the space
+// every `var(--admin-topbar-height)` consumer reserves (body padding, mobile
+// subnavigation offset, content-block toolbar). Defined here in the variables
+// file so every bundle (application.scss, custom_new_design.scss, studio.scss)
+// that re-imports _1_variables picks it up — otherwise the last bundle's
+// top-level `:root` declaration overrides any media-query override placed
+// elsewhere.
+@media (max-width: $small-tablet-viewport-start) {
+  :root {
+    --admin-topbar-height: 0px;
+  }
 }

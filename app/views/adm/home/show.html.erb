@@ -6,82 +6,56 @@
 
   <%# ── Intro ───────────────────────────────────────────── %>
   <p class="adm-dashboard__intro">
-    Willkommen im Verwaltungsbereich von <strong><%= Setting["org_name"] %></strong>.
-    Hier sehen Sie eine Übersicht über Nutzer, Projekte und Beteiligungsaktivitäten auf Ihrer Plattform.
-    Über die Navigation auf der linken Seite erreichen Sie alle Verwaltungsbereiche — von der Nutzerverwaltung bis hin zu Einstellungen und Inhalten.
-    Bei Fragen oder technischen Problemen steht Ihnen das demokratie.today-Team über das <%= link_to "Ticketsystem", Dt.ticket_system_url, target: "_blank", rel: "noopener" %> zur Verfügung.
+    <%= t("adm.home.show.intro_html",
+          org_name: Setting["org_name"],
+          ticket_link: link_to(t("adm.home.show.ticket_system"), Dt.ticket_system_url, target: "_blank", rel: "noopener")) %>
   </p>
 
-  <%# ── Nutzer ──────────────────────────────────────────── %>
+  <%# ── Users ───────────────────────────────────────────── %>
   <div class="adm-dashboard__section">
     <div class="adm-dashboard__section-header">
       <span class="material-symbols-outlined" aria-hidden="true">group</span>
-      <h3>Nutzer</h3>
+      <h3><%= t("adm.home.show.users.title") %></h3>
     </div>
     <div class="adm-dashboard__stats">
       <div class="adm-stat-card">
         <div class="adm-stat-card__value"><%= @users_total %></div>
-        <div class="adm-stat-card__label">Gesamt (aktiv)</div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.users.total") %></div>
       </div>
       <div class="adm-stat-card">
         <div class="adm-stat-card__value"><%= @users_new_week %></div>
-        <div class="adm-stat-card__label">Neu diese Woche</div>
+        <div class="adm-stat-card__label"><%= t("adm.home.show.users.new_this_week") %></div>
       </div>
     </div>
   </div>
 
-  <%# ── Mängelanzeigen (nur wenn Modul aktiv) ──────────── %>
-  <% if feature?(:deficiency_reports) %>
-    <div class="adm-dashboard__section">
-      <div class="adm-dashboard__section-header">
-        <span class="material-symbols-outlined" aria-hidden="true">report</span>
-        <h3>Mängelanzeigen</h3>
-      </div>
-      <div class="adm-dashboard__stats">
-        <div class="adm-stat-card">
-          <div class="adm-stat-card__value"><%= @reports_total %></div>
-          <div class="adm-stat-card__label">Gesamt</div>
-        </div>
-        <div class="adm-stat-card adm-stat-card--accent">
-          <div class="adm-stat-card__value"><%= @reports_open %></div>
-          <div class="adm-stat-card__label">Offen</div>
-        </div>
-        <div class="adm-stat-card adm-stat-card--warning">
-          <div class="adm-stat-card__value"><%= @reports_unassigned %></div>
-          <div class="adm-stat-card__label">Nicht zugewiesen</div>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <%# ── Projekte ─────────────────────────────────────────── %>
+  <%# ── Verwaltungsbereiche ─────────────────────────────── %>
   <div class="adm-dashboard__section">
     <div class="adm-dashboard__section-header">
-      <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-      <h3>Projekte</h3>
+      <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+      <h3><%= t("adm.home.show.adm_sections.title") %></h3>
     </div>
-    <div class="adm-dashboard__stats">
-      <div class="adm-stat-card">
-        <div class="adm-stat-card__value"><%= @projects_total %></div>
-        <div class="adm-stat-card__label">Gesamt</div>
-      </div>
-      <div class="adm-stat-card adm-stat-card--accent">
-        <div class="adm-stat-card__value"><%= @projects_current %></div>
-        <div class="adm-stat-card__label">Aktiv</div>
-      </div>
-      <div class="adm-stat-card">
-        <div class="adm-stat-card__value"><%= @projects_expired %></div>
-        <div class="adm-stat-card__label">Abgelaufen</div>
-      </div>
+    <p class="adm-dashboard__hint"><%= t("adm.home.show.adm_sections.hint") %></p>
+    <div class="adm-module-bento">
+      <% @adm_sections.each do |section| %>
+        <%
+          section_label = Setting["#{section[:key]}.feature_name"].presence || t("components.adm.icon_rail_component.#{section[:key]}")
+          metric        = section[:metric]
+          card_title    = t("adm.home.show.adm_sections.card_title", section: section_label)
+          metric_text   = metric.present? ?
+            t("adm.home.show.adm_sections.metrics.#{metric[:key]}", count: metric[:count]) :
+            nil
+        %>
+        <%= render Adm::ModuleBentoCardComponent.new(
+              path: section[:path],
+              icon: section[:icon],
+              title: section_label,
+              metric_text: metric_text,
+              cta_text: t("adm.home.show.adm_sections.go_to_dashboard"),
+              card_title: card_title
+            ) %>
+      <% end %>
     </div>
-  </div>
-
-  <%# ── Stats-Link ─────────────────────────────────────── %>
-  <div class="adm-dashboard__stats-link">
-    <%= link_to adm_statistics_path, class: "kern-link d-flex align-items-center gap-1" do %>
-      <span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>
-      Detaillierte Statistiken
-    <% end %>
   </div>
 
   <%# ── demokratie.today ────────────────────────────────── %>
@@ -93,21 +67,21 @@
     <div class="adm-dt-links">
       <%= link_to Dt.ticket_system_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
         <%= image_tag "dt/ticket_system.jpg", alt: "" %>
-        <span>Ticketsystem</span>
+        <span><%= t("adm.home.show.dt.ticket_system") %></span>
       <% end %>
       <%= link_to Dt.meetups_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
         <%= image_tag "dt/meetups.jpg", alt: "" %>
-        <span>Monatliches Consul-Meetup</span>
+        <span><%= t("adm.home.show.dt.meetup") %></span>
       <% end %>
       <% if Dt.url.present? %>
         <%= link_to Dt.url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
           <%= image_tag "dt/projekts_overview.jpg", alt: "" %>
-          <span>Beteiligungsprojekte anderer Städte</span>
+          <span><%= t("adm.home.show.dt.projekts_overview") %></span>
         <% end %>
       <% end %>
       <%= link_to Dt.newsletter_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
         <%= image_tag "dt/newsletter.jpg", alt: "" %>
-        <span>Newsletter abonnieren</span>
+        <span><%= t("adm.home.show.dt.newsletter") %></span>
       <% end %>
     </div>
   </div>

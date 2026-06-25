@@ -39,6 +39,8 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
     end
 
     post 'Create a milestone status' do
@@ -107,6 +109,9 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
+      forbidden_response
     end
   end
 
@@ -143,6 +148,8 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a milestone status' do
@@ -227,6 +234,9 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a milestone status' do
@@ -277,6 +287,9 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 

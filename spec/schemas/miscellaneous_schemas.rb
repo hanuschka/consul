@@ -44,6 +44,19 @@ module Schemas
       }
     }.freeze
 
+    NO_PAGINATION_RESPONSE_SCHEMA = {
+      type: :object,
+      description: 'Returned in place of pagination metadata when no pagination was applied (all matching records returned in a single response). Supply the page and/or per_page query parameters to paginate.',
+      properties: {
+        message: {
+          type: :string,
+          description: 'Help text stating that all records were returned without pagination and how to enable it.',
+          example: "All matching records were returned in a single response without pagination. To paginate, supply the 'page' and/or 'per_page' query parameters (for example: ?page=1&per_page=20)."
+        }
+      },
+      required: ['message']
+    }.freeze
+
     IMAGE_RESPONSE_SCHEMA = {
       type: :object,
       nullable: true,

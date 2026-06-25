@@ -10,7 +10,8 @@ class Api::BaseController < ActionController::API
 
   before_action :authenticate_http_basic, if: :require_http_basic_auth?
   before_action :authenticate_api_client!
-  after_action :log_api_request
+
+  BODY_PARAM_MAX_BYTES = 8192
 
   rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -104,19 +105,35 @@ class Api::BaseController < ActionController::API
       }, status: :not_found
     end
 
-    def log_api_request
+    def no_pagination_meta
+      {
+        message: "All matching records were returned in a single response " \
+          "without pagination. To paginate, supply the 'page' and/or " \
+          "'per_page' query parameters (for example: ?page=1&per_page=20)."
+      }
+    end
+
+    def append_info_to_payload(payload)
+      super
       return if skip_api_request_log?
 
-      ApiRequestLogs::CreateAndPushJob.perform_later(
-        request.method,
-        request.path,
-        request.url,
-        request.query_parameters.to_h,
-        request.request_parameters.to_h,
-        response.status,
-        @current_client&.id
-      )
+      payload[:api_request_log] = {
+        full_url: request.url,
+        query_params: request.query_parameters.to_h,
+        body_params: loggable_body_params,
+        api_client_id: @current_client&.id
+      }
     rescue StandardError
+    end
+
+    def loggable_body_params
+      request.request_parameters.to_h.deep_transform_values do |value|
+        if value.is_a?(String) && value.bytesize > BODY_PARAM_MAX_BYTES
+          "[truncated #{value.bytesize} bytes]"
+        else
+          value
+        end
+      end
     end
 
     SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404, 405].freeze

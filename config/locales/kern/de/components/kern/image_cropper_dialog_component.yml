@@ -1,0 +1,8 @@
+de:
+  components:
+    kern:
+      image_cropper_dialog_component:
+        title: Bild zuschneiden
+        instructions: Ziehen und skalieren Sie den Ausschnitt, um den sichtbaren Bereich festzulegen.
+        cancel: Abbrechen
+        confirm: Übernehmen

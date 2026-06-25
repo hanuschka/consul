@@ -1,14 +1,16 @@
 <div class="custom-page-content" id='page-content'>
   <% if @custom_page&.projekt&.new_content_block_mode? %>
     <% content_blocks = @custom_page.projekt.content_blocks.order(:position) %>
+    <% show_admin_controls = show_admin_controls_for_projekt?(@custom_page&.projekt) %>
 
-    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) && content_blocks.empty? %>
+    <% if show_admin_controls && content_blocks.empty? %>
       <%= render Projekts::ContentStartSectionComponent.new(@custom_page.projekt) %>
     <% end %>
     <div class="js-custom-page-content--inner">
       <div class="content-blocks-container">
         <% if content_blocks.any? %>
           <% content_blocks.each do |content_block| %>
+            <% next if !show_admin_controls && content_block_body_blank?(content_block.body) %>
             <div
               class="projekt-content-block js-content-block"
               data-id="<%= content_block.id %>"
@@ -18,26 +20,32 @@
                 style="margin-bottom: <%= effective_margin %>px;"
               <% end %>
             >
-              <%= process_custom_content_if_needed(safe_content_block_body(content_block&.body))&.html_safe %>
+              <%= process_custom_content_if_needed(safe_content_block_body(content_block&.body), projekt: @custom_page.projekt)&.html_safe %>
             </div>
           <% end %>
         <% end %>
       </div>
     </div>
 
-    <% if show_admin_controls_for_projekt?(@custom_page&.projekt) %>
+    <% if show_admin_controls %>
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
       <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-studio-hide-on-preview">
-        <%= button_to(
-          [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
-          method: :delete,
-          class: "button -red",
+        <%= studio_rich_tooltip(
           title: "Alle Inhaltsblöcke löschen",
-          form: { data: { turbolinks: false } },
-          data: { confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden." }
+          text: "Entfernt sämtliche Inhaltsblöcke dieser Seite auf einmal. Diese Aktion kann nicht rückgängig gemacht werden — die Inhalte müssen anschließend neu erstellt werden.",
+          delay: 1200
         ) do %>
-          <i class="fas fa-trash"></i>
-          Alle Inhaltsblöcke löschen
+          <%= button_to(
+            [:destroy_all, namespace, @custom_page.projekt, :projekt_content_blocks],
+            method: :delete,
+            class: "button -red",
+            tabindex: "-1",
+            form: { data: { turbolinks: false } },
+            data: { confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden." }
+          ) do %>
+            <i class="fas fa-trash"></i>
+            Alle Inhaltsblöcke löschen
+          <% end %>
         <% end %>
       </div>
     <% end %>

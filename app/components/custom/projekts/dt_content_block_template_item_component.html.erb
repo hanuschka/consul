@@ -29,12 +29,17 @@
     </div>
   </div>
   <div class="custom-content-template--item-actions">
-    <button
-      class="content-block-template-copy-button js-copy-content-block-template"
-      type="button"
-      title="Template in Zwischenablage kopieren"
-    >
-      <i class="fa fas fa-copy"></i>
-    </button>
+    <%= studio_rich_tooltip(
+      title: "Vorlage kopieren",
+      text: "Kopiert den HTML-Code dieser Vorlage in die Zwischenablage, um ihn an anderer Stelle einzufügen.",
+      delay: 1200
+    ) do %>
+      <button
+        class="content-block-template-copy-button js-copy-content-block-template"
+        type="button"
+      >
+        <i class="fa fas fa-copy"></i>
+      </button>
+    <% end %>
   </div>
 </div>

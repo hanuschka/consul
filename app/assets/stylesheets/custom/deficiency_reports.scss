@@ -169,6 +169,25 @@ ul.deficiency-reports-sidebar-filter {
   margin-top: 1rem;
 }
 
+.shared-modal.deficiency-report-create-cta-modal {
+  width: 580px;
+}
+
+.deficiency-report-create-cta-modal--answers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 480px;
+  margin: 0 auto;
+
+  .button {
+    margin: 0 !important;
+    width: 100%;
+    max-width: 380px;
+  }
+}
+
 .deficiency-report-new {
   @extend %public-form-header;
 

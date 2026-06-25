@@ -97,7 +97,7 @@
           },
           role: "button",
           aria: { label: t("custom.accessibility.banner-image.glightbox-aria-label") } do %>
-          <span class="image-maximize-button">
+          <span class="image-maximize-button" aria-hidden="true">
             <i class="fas fa-magnifying-glass-plus"></i>
           </span>
           <%= render(
@@ -144,9 +144,15 @@
                 <%= t('custom.projekts.banner_upload.uploading') %>
               </div>
             </div>
-            <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
-              <i class="fas fa-pencil-alt"></i>
-            </label>
+            <%= studio_rich_tooltip(
+              title: "Titelbild ändern",
+              text: "Lädt ein neues Titelbild für diese Seite hoch. Empfohlen wird ein breites Querformat in hoher Auflösung.",
+              delay: 1200
+            ) do %>
+              <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
+                <i class="fas fa-pencil-alt"></i>
+              </label>
+            <% end %>
             <input
               id="projektImageUploadInput"
               type="file"
@@ -154,11 +160,18 @@
               class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
-            <button type="button"
-                    class="image-change-button projekt-image-upload-button projekt-image-delete-button js-projekt-banner--image-delete-button js-studio-hide-on-preview <%= 'd-none' unless @custom_page.image.present? %>"
-                    aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>">
-              <i class="fas fa-trash"></i>
-            </button>
+            <%= studio_rich_tooltip(
+              title: "Titelbild entfernen",
+              text: "Entfernt das aktuelle Titelbild. Die Seite wird anschließend ohne Banner angezeigt.",
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-delete-button js-projekt-banner--image-delete-button js-studio-hide-on-preview <%= 'd-none' unless @custom_page.image.present? %>"
+                      aria-label="<%= t('custom.accessibility.banner-image.delete-aria-label') %>"
+                      tabindex="-1">
+                <i class="fas fa-trash"></i>
+              </button>
+            <% end %>
           </div>
         <% else %>
           <%= banner_image %>

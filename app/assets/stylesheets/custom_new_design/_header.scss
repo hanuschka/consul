@@ -266,6 +266,25 @@ $homepage-image-header-max-width: 1920px;
         outline-offset: 3px;
       }
     }
+
+    .homepage-image-header--button--secondary.button {
+      background-color: #fff;
+      background-image: none;
+      color: var(--brand-color);
+      border: 2px solid var(--brand-color);
+      box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35),
+                  0 4px 10px -4px rgba(0, 0, 0, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+      &::after {
+        content: none;
+      }
+
+      &:hover {
+        background-color: var(--brand-color);
+        color: #fff;
+      }
+    }
   }
 
   .homepage-search-form {
@@ -279,6 +298,9 @@ $homepage-image-header-max-width: 1920px;
 
     .input-group-button {
       display: none;
+    }
+
+    @media (max-width: $small-tablet-viewport-start) {
     }
 
     // "Premium Glass Tablet" — heavy frosted glass mit eigenständigem
@@ -924,10 +946,14 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
           text-decoration: none;
         }
 
-        // Keep d-flex links (icon + label) horizontally aligned —
+        &:focus-visible {
+          outline-offset: -3px;
+        }
+
+        // Keep flyout links (icon + label) horizontally aligned —
         // overrides the inline-block default above so the Material
         // Symbols icons sit next to the label, not above it.
-        &.d-flex {
+        &.flyout-item--link {
           display: flex;
         }
 
@@ -940,10 +966,20 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       &:first-child {
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
+
+        a {
+          border-top-right-radius: 10px;
+          border-top-left-radius: 10px;
+        }
       }
       &:last-child {
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
+
+        a {
+          border-bottom-right-radius: 10px;
+          border-bottom-left-radius: 10px;
+        }
       }
 
       @media screen and (min-width: $small-tablet-viewport-start) {
@@ -991,14 +1027,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     li.flyout-item {
       border-top: 0;
       border-bottom: 0;
-    }
-
-    // gap-1 utility from Bootstrap-style spacing isn't available in this
-    // bundle, so the Material Symbols icon collapses against the label.
-    // Explicit gap on the d-flex links inside the dropdown restores the
-    // icon ↔ label spacing seen in the /adm subnavigation-konto flyout.
-    .nav-element a.d-flex {
-      gap: 0.5rem;
     }
 
     // Hairline divider rows rendered via .flyout-item--divider in
@@ -1108,6 +1136,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 
     .hamburger-menu {
       margin-left: 0;
+      margin-right: 15px;
     }
 
     .homepage-image-header--title {
@@ -1181,7 +1210,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header {
       height: 280px;
       margin-bottom: 5px;
-      border-radius: 12px;
     }
 
     .top-bar-wrapper {
@@ -1278,8 +1306,8 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .sticky-header {
       .header--mobile-hamburger-menu {
         .menu-icon::after {
-          background: black;
-          box-shadow: 0 7px 0 black, 0 14px 0 black;
+          background: black !important;
+          box-shadow: 0 7px 0 black, 0 14px 0 black !important;
         }
       }
     }
@@ -1399,7 +1427,7 @@ body.custom-new-design {
   }
 }
 
-body.custom-new-design:has(.projekt-page--admin-topbar) {
+body.custom-new-design:has(.studio-admin-topbar) {
   padding-top: calc(#{$topbar-height} + var(--admin-topbar-height));
 
   @media(max-width: $small-tablet-viewport-start) {
@@ -1407,9 +1435,18 @@ body.custom-new-design:has(.projekt-page--admin-topbar) {
   }
 
   @media (max-width: $small-tablet-viewport-start) {
+    // Pin the open menu to the visible viewport via the fixed-position
+    // #responsive-menu: top sits below the mobile topbar, bottom on the
+    // screen edge. The panel is then always exactly screen-minus-topbar
+    // and scrolls only inside itself. Avoids `100vh`, which on mobile is
+    // the URL-bar-hidden height and overshoots the real visible area.
     #responsive-menu .subnavigation {
-      top: calc(60px + var(--admin-topbar-height));
-      height: calc(100vh - 70px - var(--admin-topbar-height));
+      position: fixed;
+      top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height));
+      bottom: 0;
+      height: auto;
+      max-height: none;
+      overflow-y: auto;
     }
   }
 }

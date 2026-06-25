@@ -13,7 +13,8 @@
     <% content_for :admin_topbar_display_settings do %>
       <button
         type="button"
-        class="projekt-page--admin-topbar-toggle js-toggle-content-background"
+        tabindex="-1"
+        class="studio-admin-topbar-toggle js-toggle-content-background"
         role="switch"
         aria-checked="<%= @custom_page.projekt.show_content_background %>"
         data-projekt-id="<%= @custom_page.projekt.id %>"
@@ -23,10 +24,10 @@
         data-tooltip
         data-hover-delay="500"
       >
-        <span class="projekt-page--admin-topbar-toggle--track" aria-hidden="true">
-          <span class="projekt-page--admin-topbar-toggle--thumb"></span>
+        <span class="studio-admin-topbar-toggle--track" aria-hidden="true">
+          <span class="studio-admin-topbar-toggle--thumb"></span>
         </span>
-        <span class="projekt-page--admin-topbar-toggle--label">
+        <span class="studio-admin-topbar-toggle--label">
           <%= t('custom.projekts.page.toggle_background_label') %>
         </span>
       </button>
@@ -37,7 +38,8 @@
         <%= button_to convert_to_new_content_block_mode_adm_projekts_projekt_path(@custom_page.projekt),
               method: :patch,
               form: { class: "projekt-studio--convert-to-blocks-form" },
-              class: "projekt-page--admin-topbar-button projekt-studio--convert-to-blocks-button",
+              class: "studio-admin-topbar-button projekt-studio--convert-to-blocks-button",
+              tabindex: "-1",
               title: t("custom.projekts.page.convert_to_content_blocks.tooltip"),
               data: {
                 tooltip: true,
@@ -57,8 +59,9 @@
     <% if @custom_page.landing? %>
       <% if current_user&.administrator? %>
         <%= link_to edit_adm_landing_pages_landing_page_path(@custom_page),
-              class: "button hollow projekt-page--admin-topbar-button",
-              target: "_blank" do %>
+              class: "button hollow studio-admin-topbar-button",
+              target: "_blank",
+              tabindex: "-1" do %>
           <i class="fas fa-edit"></i>
           <span><%= t("custom.projekts.page.topbar.edit_landing") %></span>
         <% end %>
@@ -68,8 +71,9 @@
     <% else %>
       <% if current_user&.administrator? %>
         <%= link_to adm_site_customization_edit_page_by_slug_path(@custom_page.slug),
-              class: "button hollow projekt-page--admin-topbar-button",
-              target: "_blank" do %>
+              class: "button hollow studio-admin-topbar-button",
+              target: "_blank",
+              tabindex: "-1" do %>
           <i class="fas fa-edit"></i>
           <span><%= t("custom.projekts.page.topbar.edit_page") %></span>
         <% end %>
@@ -156,6 +160,7 @@
               <div id="footer-content" class="js-projekt-footer-content">
                 <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
                   <%= render "pages/projekt_footer_new/#{@default_projekt_phase.name}" %>
+                  <%= render "pages/projekt_footer/partials/phase_outro", projekt_phase: @default_projekt_phase %>
                 <% end %>
               </div>
             <% end %>

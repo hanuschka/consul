@@ -44,6 +44,10 @@ class Setting < ApplicationRecord
       all_settings_hash[key]
     end
 
+    def newsletter_brand_color
+      self["newsletter_brand_color"].presence || defaults[:newsletter_brand_color]
+    end
+
     def humanized_content_types_for(group, content_types = nil)
       content_types ||= self["uploads.#{group}.content_types"].to_s.split(" ")
       labels = mime_types[group].invert
@@ -154,11 +158,9 @@ class Setting < ApplicationRecord
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
         # Images and Documents
+        "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
         "uploads.images.title.max_length": 80,
-        "uploads.images.min_width": 0,
-        "uploads.images.min_height": 475,
-        "uploads.images.max_size": 4,
         "uploads.images.content_types": "image/jpeg image/png image/gif",
         "uploads.documents.max_amount": 3,
         "uploads.documents.max_size": 3,
@@ -224,26 +226,26 @@ class Setting < ApplicationRecord
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.admins_must_assign_officer": false,
-        "deficiency_reports.officers_can_administer_assigned_reports": true,
-        "deficiency_reports.officers_can_edit_assigned_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,
+        "deficiency_reports.show_map": true,
         "deficiency_reports.enable_geoman_controls_in_maps": true,
+        "deficiency_reports.map_location_required": true,
         "deficiency_reports.admin_acceptance_required": false,
+        "deficiency_reports.image_upload": true,
         "deficiency_reports.document_upload": true,
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
         "deficiency_reports.show_create_report_button": "active",
+        "deficiency_reports.show_homepage_cta": false,
         "deficiency_reports.feature_name": nil,
         "deficiency_reports.create_cta": nil,
         "deficiency_reports.new_form_title": nil,
         "deficiency_reports.new_form_title_placeholder": nil,
 
         "ideas.admins_must_assign_officer": false,
-        "ideas.officers_can_administer_assigned_reports": true,
-        "ideas.officers_can_edit_assigned_reports": false,
         "ideas.enable_comments": true,
         "ideas.intro_text": false,
         "ideas.enable_geoman_controls_in_maps": true,
@@ -273,7 +275,6 @@ class Setting < ApplicationRecord
         "extended_feature.modulewide.show_number_of_entries_in_modules": true,
         "extended_feature.modulewide.show_affiliation_filter_in_index_sidebar": true,
         "extended_feature.modulewide.hide_comment_replies_by_default": false,
-        "extended_feature.modulewide.custom_help_text_in_modules": false,
         # temporarily disabled  "extended_feature.modulewide.enable_custom_tags": false,
 
         "extended_feature.debates.intro_text_for_debates": true,

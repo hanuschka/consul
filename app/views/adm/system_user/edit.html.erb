@@ -4,7 +4,8 @@
   title: t(".title"),
   breadcrumbs: @breadcrumbs,
   back_button_url: adm_root_path,
-  narrow: true
+  narrow: true,
+  compact: true
 ) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".intro") %></p>
@@ -32,7 +33,11 @@
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(label: t(".avatar_label"), hint: t(".avatar_hint"), inline: true, divider: false) do %>
-      <%= render Kern::Form::ImageableImageComponent.new(form: f) %>
+      <%= render Kern::Form::ImageableImageComponent.new(form: f, crop: true, crop_aspect_ratio: 1) %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t(".background_label"), hint: t(".background_hint"), inline: true, divider: false) do %>
+      <%= render Kern::Form::ImageComponent.new(form: f, attribute: :background_image, crop: true, crop_aspect_ratio: 3.5) %>
     <% end %>
 
     <%= form_submit_button(text: t("shared.submit")) %>

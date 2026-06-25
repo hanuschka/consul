@@ -11,7 +11,7 @@ de:
           draft: Entwurf
         quick_links:
           new: Neues Projekt
-          import_projekt: Projekt aus Datei importieren
+          imports: Projektimport
           all: Alle Projekte
           current: Aktive Projekte
       menu:
@@ -85,6 +85,8 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           projekt_phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
         tabs:
@@ -180,6 +182,10 @@ de:
             active: Aktiv
             visible: Sichtbar
             actions: Aktionen
+        images:
+          title: Bilder
+        documents:
+          title: Dokumente
         update:
           success: Projekt erfolgreich aktualisiert.
         notify_reviewers:

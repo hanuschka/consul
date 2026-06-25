@@ -29,6 +29,24 @@ class Proposal < ApplicationRecord
   scope :admin_accepted, -> { where(admin_accepted: true) }
   scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
   scope :user_created, -> { where(masterportal_pin_id: nil) }
+  scope :with_index_card_associations, -> {
+    includes(
+      :translations,
+      :image,
+      :sentiment,
+      :tags,
+      :community,
+      :votes_for,
+      :projekt_labels,
+      author: [:organization, :image],
+      projekt_phase: [
+        :settings,
+        :projekt_labels,
+        :geozone_restrictions,
+        { projekt: [:translations, { page: :translations }] }
+      ]
+    )
+  }
   scope :with_min_supports, ->(min_supports) {
     if min_supports.to_i > 0
       where("proposals.cached_votes_up >= ?", min_supports.to_i)
@@ -142,7 +160,7 @@ class Proposal < ApplicationRecord
   def custom_votes_needed_for_success
     return Proposal.votes_needed_for_success unless projekt_phase.present?
 
-    projekt_phase.settings.find_by(key: "option.resource.votes_for_proposal_success").value.to_i
+    projekt_phase.settings.find { |setting| setting.key == "option.resource.votes_for_proposal_success" }.value.to_i
   end
 
   def publish

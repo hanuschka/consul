@@ -8,7 +8,7 @@ class Adm::Officing::MenuComponent < Adm::BaseMenuComponent
       { label: t("adm.officing.menu.items.home"), icon: "home", path: adm_officing_root_path }
     ]
 
-    if current_user&.administrator?
+    if Adm::OfficingManagerPolicy.new(current_user, OfficingManager).index?
       items << { label: t("adm.officing.menu.items.officing_managers"), icon: "badge", path: adm_officing_managers_path, active_prefix: "/adm/officing_managers" }
     end
 

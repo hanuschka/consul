@@ -74,6 +74,8 @@ namespace :adm do
                as: :clean_masterportal_collection_stale_pins
         get :projekt_point_of_interest_categories
         get :projekt_point_of_interest_pins
+        delete "projekt_point_of_interest_pins/:pin_id" => "phases#destroy_projekt_point_of_interest_pin",
+               as: :destroy_projekt_point_of_interest_pin
         get :map_resources_overview
 
         # Labels & sentiments
@@ -208,7 +210,9 @@ namespace :adm do
       end
     end
 
-    resources :imports, only: [:new, :create, :show], controller: "imports/from_files" do
+    resources :imports, only: [:index, :new, :create, :show, :destroy],
+              controller: "imports/from_files",
+              defaults: { adm_section: "projekts" } do
       member do
         get :status
         post :reset

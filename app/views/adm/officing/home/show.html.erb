@@ -2,15 +2,25 @@
 
 <%= render Adm::HeaderComponent.new(title: t("adm.officing.home.title"), breadcrumbs: @breadcrumbs) %>
 
-<%= render Adm::DashboardHomeComponent.new do |d| %>
-  <% d.with_notice(message: @notice) if @notice.present? %>
-  <% d.with_header_row(intro: @intro_text, stats: @stats) %>
-  <% d.with_team(members: @team_members, add_url: current_user&.administrator? ? adm_officing_managers_path : nil) %>
-  <% d.with_contacts(contacts: @contact_persons) if @contact_persons.any? %>
-  <% d.with_activity_feed(activities: @activities, pagy: @pagy_activities) %>
-<% end %>
-
 <div class="kern-container">
+  <%= render Adm::Dashboard::NoticeComponent.new(message: @notice) if @notice.present? %>
+
+  <div class="adm-dashboard__intro-row">
+    <div class="adm-dashboard__intro-col">
+      <% if @intro_text.present? %>
+        <p class="adm-dashboard__intro"><%= @intro_text %></p>
+      <% end %>
+    </div>
+    <% if @contact_persons.any? %>
+      <div class="adm-dashboard__intro-aside">
+        <%= render Adm::Dashboard::ContactsComponent.new(contacts: @contact_persons) %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Stat-Pills als eigene Zeile, da 3 getrennte Tabellen ohne einzelnen Haupt-Header %>
+  <%= render Adm::Dashboard::StatPillsComponent.new(stats: @stats) %>
+
   <% if @budgets.any? %>
     <div class="adm-dashboard__section">
       <div class="adm-dashboard__section-header">
@@ -120,4 +130,9 @@
       icon: "how_to_vote"
     ) %>
   <% end %>
+
+  <div class="adm-dashboard__feed-row">
+    <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+    <%= render Adm::Dashboard::TeamComponent.new(members: @team_members, add_url: current_user&.administrator? ? adm_officing_managers_path : nil) %>
+  </div>
 </div>

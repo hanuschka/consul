@@ -1,8 +1,9 @@
 class ProjektImports::BuildInitialMessageService < ApplicationService
-  attr_reader :projekt_import
+  attr_reader :projekt_import, :text_truncated
 
-  def initialize(projekt_import:)
+  def initialize(projekt_import:, text_truncated: false)
     @projekt_import = projekt_import
+    @text_truncated = text_truncated
   end
 
   def call
@@ -23,6 +24,11 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
     lines << ""
     lines << t(:analysis_intro)
     lines << ""
+
+    if text_truncated
+      lines << "**⚠️ #{t(:input_truncated_notice)}**"
+      lines << ""
+    end
     lines << "**#{t(:title)}:** #{data['title']}"
     lines << "**#{t(:subtitle)}:** #{data['subtitle']}" if data["subtitle"].present?
     lines << ""
@@ -63,8 +69,9 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
       lines << t(:questions_intro)
       lines << ""
 
-      data["clarification_questions"].each do |question|
-        lines << "- #{question}"
+      data["clarification_questions"].each_with_index do |question, index|
+        clean_question = question.to_s.strip.sub(/\A\d+[.)]\s*/, "")
+        lines << "- #{index + 1}\\. #{clean_question}"
       end
 
       lines << ""

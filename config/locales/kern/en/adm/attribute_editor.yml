@@ -69,6 +69,12 @@ en:
         newsletter_email_footer_block_1:
           body_label: Newsletter footer
           body_description: "The footer is shown at the end of every newsletter email. Here you can add, for example, contact details, legal-notice links, or unsubscribe hints. The content is automatically included in all sent newsletters and should meet your municipality's legal requirements. Changes take effect immediately for new newsletters."
+        email_footer:
+          body_label: Email footer (all emails)
+          body_description: "Shown in the footer of every system email, above the organization name and the unsubscribe lines. Use it for contact details, legal-notice links, or general information. Leave empty to show only the standard footer."
+        email_footer_deficiency_report:
+          body_label: Email footer (issue reports)
+          body_description: "Shown in issue-report emails instead of the general email footer. When left empty, the general system footer is used. Use it for contact details or notes specific to issue reports."
       site_customization/image:
         header_image_label: Background image for desktop
         header_image_description: "This image is shown at the top of the homepage on desktop devices. Please use a high-resolution landscape image with a clear subject. It should fit thematically with the participation platform and work well across different screen sizes. Recommended format: 1920 × 760 pixels. Ignored when a desktop background video is uploaded below."
@@ -154,8 +160,8 @@ This logo should be readable on both light and dark backgrounds, since it appear
           "$": "$ (Dollar)"
           "£": "£ (Pound)"
           "¥": "¥ (Yen)"
-        max_preselected_label: Shortlist (optional)
-        max_preselected_description: "Limits the number of top-rated proposals that move on from the support phase to the review phase. Only proposals with the most supports are carried over. Leave the field empty if all proposals should go to review without pre-selection."
+        max_preselected_label: Shortlist
+        max_preselected_description: "Limits the number of top-rated proposals carried over from the support phase to the review phase. The proposals with the most supports are carried over. Leave the field empty if all proposals should go to review without pre-selection.<br><br><strong>Important:</strong> As soon as you enter a number greater than 0 here, a system email is automatically sent to all submitters when the support phase ends – an acceptance to those whose proposal was carried over, and a rejection to everyone else."
         hide_money_label: Hide money
         hide_money_description: "Hides all monetary amounts throughout the participatory budget — on individual proposals as well as overviews and results. This option is suitable if the budget is not measured in monetary values or if proposal costs are not relevant to participants."
         max_number_of_winners_label: Maximum number of winners

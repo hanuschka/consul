@@ -317,11 +317,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @poll = @projekt_phase.poll
     @questions = @poll.questions.root_questions.where(context_id: nil)
 
-    @breadcrumbs = [
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+    respond_to do |format|
+      format.html do
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::PollIndividualAnswersExporter.call(@poll),
+          filename: "poll_#{@poll.id}_individual_answers-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   def formular

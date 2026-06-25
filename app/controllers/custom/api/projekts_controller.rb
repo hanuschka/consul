@@ -258,6 +258,39 @@ class Api::ProjektsController < Api::BaseController
 
   private
 
+  def sort_projekts(projekts)
+    column = sort_column
+    direction = sort_direction
+
+    if projekts.is_a?(ActiveRecord::Relation)
+      return projekts.reorder(Arel.sql("projekts.#{column} #{direction.upcase} NULLS LAST"))
+    end
+
+    return sort_projekts_array(projekts, column, direction) if projekts.is_a?(Array)
+
+    projekts
+  end
+
+  def sort_column
+    SORTABLE_COLUMNS.key?(params[:sort_by]) ? params[:sort_by] : DEFAULT_SORT_COLUMN
+  end
+
+  def sort_direction
+    params[:sort_direction] == "desc" ? "desc" : "asc"
+  end
+
+  def sort_projekts_array(projekts, column, direction)
+    accessor = SORTABLE_COLUMNS[column]
+    present_values, nil_values = projekts.partition { |projekt| accessor.call(projekt) }
+    sorted = present_values.sort_by { |projekt| accessor.call(projekt) }
+
+    if direction == "desc"
+      sorted = sorted.reverse
+    end
+
+    sorted + nil_values
+  end
+
   def paginate_projekts(projekts)
     per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
 

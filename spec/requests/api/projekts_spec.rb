@@ -11,7 +11,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a list of all projekts ordered by creation date (oldest first). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :filter, in: :query, type: :string, required: false,
                 description: <<~DESC
                   Filter projekts by lifecycle stage or special status. Default: 'index_order_all'. Valid values:
@@ -29,6 +29,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
                   Results are ordered by creation date (oldest first).
                 DESC
+      parameter name: :sort_by, in: :query, type: :string, required: false,
+                description: "Column to order projekts by. Default: 'created_at'. Valid values: 'created_at', 'total_duration_start', 'total_duration_end', 'order_number'. Projekts with a null value for the chosen column are always placed last. Invalid values fall back to 'created_at'."
+      parameter name: :sort_direction, in: :query, type: :string, required: false,
+                description: "Sort direction for 'sort_by'. Default: 'asc'. Valid values: 'asc', 'desc'. Combine 'sort_by=total_duration_end' with 'sort_direction=asc' to list the projekts expiring next first."
       parameter name: :only_public, in: :query, type: :boolean, required: false,
                 description: 'If false, returns all projekts (admin only). Default: true (returns activated projekts with published pages shown in overview). Users with public_data access can only access public projekts.'
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
@@ -84,6 +88,28 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
       response '200', 'projekts found filtered by status' do
         let(:filter) { 'index_order_all' }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '200', 'projekts found sorted by total_duration_end' do
+        let(:sort_by) { 'total_duration_end' }
+        let(:sort_direction) { 'asc' }
 
         schema type: :object,
                properties: {

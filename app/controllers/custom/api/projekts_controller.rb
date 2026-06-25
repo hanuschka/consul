@@ -61,9 +61,8 @@ class Api::ProjektsController < Api::BaseController
     include_projekt_settings = params[:include_projekt_settings] == 'true'
 
     includes_hash = {}
-    includes_hash[:translations] = {}
     includes_hash[:projekt_settings] = {} if include_projekt_settings
-    includes_hash[:content_blocks] = {}
+    includes_hash[:content_blocks] = {} if include_text || include_content_blocks
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
 
     if include_phases

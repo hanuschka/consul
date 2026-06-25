@@ -30,7 +30,16 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                   Results are ordered by creation date (oldest first).
                 DESC
       parameter name: :sort_by, in: :query, type: :string, required: false,
-                description: "Column to order projekts by. Default: 'created_at'. Valid values: 'created_at', 'total_duration_start', 'total_duration_end', 'order_number'. Projekts with a null value for the chosen column are always placed last. Invalid values fall back to 'created_at'."
+                description: <<~DESC
+                  Field to order projekts by. Default: 'created_at'. Valid values:
+                  'created_at', 'total_duration_start', 'total_duration_end',
+                  'order_number', 'name', 'published_at', 'page_title'.
+
+                  - 'name': the projekt's internal name (case-insensitive A–Z).
+                  - 'page_title': the public-facing page title, ordered by the German (de) title, case-insensitive. This is the title shown to users; prefer it over 'name' for display ordering.
+
+                  Projekts with a null value for the chosen field (e.g. no page title, or an unset publish date) are always placed last, in both directions. Invalid values fall back to 'created_at'.
+                DESC
       parameter name: :sort_direction, in: :query, type: :string, required: false,
                 description: "Sort direction for 'sort_by'. Default: 'asc'. Valid values: 'asc', 'desc'. Combine 'sort_by=total_duration_end' with 'sort_direction=asc' to list the projekts expiring next first."
       parameter name: :only_public, in: :query, type: :boolean, required: false,

@@ -65,8 +65,9 @@ class DeficiencyReportsController < ApplicationController
 
       format.json do
         render json: JSON.generate(
-          type: "FeatureCollection",
-          features: all_deficiency_report_map_locations(@deficiency_reports)
+          MapLocation.flatten_feature_collections(
+            all_deficiency_report_map_locations(@deficiency_reports)
+          )
         )
       end
 

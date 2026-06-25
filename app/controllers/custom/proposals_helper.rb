@@ -18,10 +18,7 @@ module ProposalsHelper
   end
 
   def map_pin_proposal_ids(proposals_for_map)
-    proposals_for_map
-      .except(:includes, :eager_load, :preload, :references, :select, :limit, :offset, :order)
-      .ids
-      .uniq
+    proposals_for_map.select(:id)
   end
 
   def label_error_class?(field)

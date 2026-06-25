@@ -34,8 +34,7 @@ module Takeable
 
     @resources =
       @resources
-        .includes(projekt_phase: :projekt)
-        .references(:projekt)
+        .joins(projekt_phase: :projekt)
         .where(projekts: { id: filtered_projekt_ids })
   end
 

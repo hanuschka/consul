@@ -51,4 +51,6 @@
       <% end %>
     </div>
   </div>
+
+  <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>
 </div>

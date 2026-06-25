@@ -12,12 +12,19 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
                 Setting["adm.landing_pages.notice_message"]
               end
     @contact_persons = SectionContactPerson.for_section("landing_pages")
-    @pagy_activities, @activities = pagy(SectionActivity.for_section("landing_pages"), limit: 10, page_param: :activity_page)
+    @pagy_activities, @activities = pagy(
+      SectionActivity.for_section("landing_pages")
+        .for_trackables("SiteCustomization::Page", @landing_pages.reorder(nil).select(:id)),
+      limit: 10,
+      page_param: :activity_page
+    )
+
+    landing_pages_for_stats = ::SiteCustomization::Page.landing
 
     @stats = [
-      { value: ::SiteCustomization::Page.count, label: t("adm.landing_pages.home.stats.total"), icon: "web" },
-      { value: ::SiteCustomization::Page.where(status: "published").count, label: t("adm.landing_pages.home.stats.published"), icon: "visibility" },
-      { value: ::SiteCustomization::Page.where(status: "draft").count, label: t("adm.landing_pages.home.stats.draft"), icon: "edit_note" }
+      { value: landing_pages_for_stats.count, label: t("adm.landing_pages.home.stats.total"), icon: "web" },
+      { value: landing_pages_for_stats.where(status: "published").count, label: t("adm.landing_pages.home.stats.published"), icon: "visibility" },
+      { value: landing_pages_for_stats.where(status: "draft").count, label: t("adm.landing_pages.home.stats.draft"), icon: "edit_note" }
     ]
 
     @quick_links = [

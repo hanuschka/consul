@@ -148,6 +148,10 @@
       border-top: 1px solid rgba(0, 0, 0, 0.06);
       font-size: 13px;
 
+      @media(max-width: $small-tablet-viewport-start) {
+        flex-direction: column;
+      }
+
       &.row {
         display: flex;
         flex-wrap: wrap;
@@ -188,6 +192,10 @@
         margin: 0;
         padding: 0;
         list-style: none;
+
+        @media(max-width: $small-tablet-viewport-start) {
+          flex-direction: column;
+        }
 
         li {
           margin: 0;
@@ -230,7 +238,7 @@
     // ---- Admin-only empty hint for footer content blocks -------------------
     // Dezent: inline italic note (no box, no background) so the hint doesn't
     // outshine the actual brand content. Marker class is toggled live by
-    // `ProjektStudio.ContentBlock.EmptyHintToggle` based on
+    // `App.ContentBlockEditor.EmptyHintToggle` based on
     // `.custom-content-block-body` content (see EmptyHintToggle.js).
     .footer-content-block--admin-empty-hint {
       display: none;

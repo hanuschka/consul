@@ -17,8 +17,8 @@ RSpec.describe 'Masterportal Category Icons API', type: :request, openapi_spec: 
       tags 'Masterportal'
       consumes 'multipart/form-data'
       produces 'application/json'
-      security [bearer_auth: []]
-      description "Upload and attach an icon image to a ProjektPointOfInterestCategory identified by projekt_phase_id + category_name. Used by external Masterportal systems to sync POI category icons."
+      security [masterportal_sync_auth: []]
+      description "Upload and attach an icon image to a ProjektPointOfInterestCategory identified by projekt_phase_id + category_name. Used by external Masterportal systems to sync POI category icons.\n\n*Authentication: This endpoint uses the static Masterportal sync secret sent as `Authorization: Bearer <token>`, NOT an ApiClient access token. The `admin` / `public_data` access-level model does not apply.*"
 
       parameter name: :projekt_phase_id, in: :formData, type: :integer, required: true,
                 description: 'Projekt Phase ID (PointOfInterestPhase)'

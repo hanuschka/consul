@@ -15,7 +15,7 @@ class ImageSerializer
       id: image.id,
       title: image.title,
       credits: image.credits,
-      url: rails_blob_url(image.attachment, host: host)
+      url: rails_blob_url(image.attachment, **image_url_options)
     }
 
     if include_variants
@@ -36,7 +36,7 @@ class ImageSerializer
       "900": variant_url_by_width(900),
       "1200": variant_url_by_width(1200),
       "1920": variant_url_by_width(1920),
-      "original": rails_blob_url(image.attachment, host: host)
+      "original": rails_blob_url(image.attachment, **image_url_options)
     }
   end
 
@@ -44,12 +44,12 @@ class ImageSerializer
     return nil unless image.attachment.attached?
 
     variant = image.attachment.variant(resize_to_limit: [width, nil])
-    rails_representation_url(variant, host: host)
+    rails_representation_url(variant, **image_url_options)
   rescue StandardError
     nil
   end
 
-  def host
-    "#{Rails.application.secrets.server_name}:3000"
+  def image_url_options
+    UrlOptions.default
   end
 end

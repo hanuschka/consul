@@ -31,6 +31,7 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
     ServiceResult.success(ai_result: data)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ResolveContentBlocksService] failed: #{e.message}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "resolve_content_blocks" }) if defined?(Sentry)
     ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.resolve_content_blocks_failed", message: e.message))
   end
 
@@ -40,11 +41,9 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
     ids = blocks.map { |b| b["template_id"] }.compact.uniq
     return {} if ids.empty?
 
-    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: "projekt_page")
-    body = response.parsed_response
-    list = Array(body.is_a?(Hash) ? body["content_block_templates"] : body)
-
-    list.select { |t| ids.include?(t["id"]) }.index_by { |t| t["id"] }
+    ProjektImports::ReferencesBuilder.fetch_content_block_templates
+      .select { |template| ids.include?(template["id"]) }
+      .index_by { |template| template["id"] }
   end
 
   def build_input_blocks(blocks, templates)

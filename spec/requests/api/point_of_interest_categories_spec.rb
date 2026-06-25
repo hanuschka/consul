@@ -45,6 +45,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt point of interest category' do
@@ -129,6 +131,9 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -170,6 +175,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -214,6 +221,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt point of interest category' do
@@ -324,6 +333,9 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt point of interest category' do
@@ -390,6 +402,9 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

@@ -21,7 +21,11 @@ class Adm::Ideas::HomeController < Adm::Ideas::BaseController
                       I18n.t("adm.section_settings.intro_text_defaults.ideas", default: nil)
         @notice = Setting["adm.ideas.notice_active"].present? ? Setting["adm.ideas.notice_message"] : nil
         @contact_persons = SectionContactPerson.for_section("ideas")
-        @pagy_activities, @activities = pagy(SectionActivity.for_section("ideas"), limit: 10, page_param: :activity_page)
+        @pagy_activities, @activities = pagy(
+          SectionActivity.for_section("ideas").for_trackables("Idea", base_scope.select(:id)),
+          limit: 10,
+          page_param: :activity_page
+        )
 
         @stats = [
           { value: Idea.count, label: t("adm.ideas.home.stats.total"), icon: "lightbulb" },

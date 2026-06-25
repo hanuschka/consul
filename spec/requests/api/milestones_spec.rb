@@ -71,36 +71,13 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
         end
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:projekt_phase_id) { ProjektPhase::MilestonePhase.create!(projekt: test_projekt).id }
-
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '404', 'projekt phase not found' do
         let(:projekt_phase_id) { 999999 }
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a milestone' do
@@ -208,6 +185,10 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 end

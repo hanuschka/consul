@@ -98,14 +98,6 @@ module ProjektAdminActions
     end
   end
 
-  def frame_new_phase_selector
-    @projekt = Projekt.find(params[:id])
-
-    authorize!(:edit, @projekt)
-
-    render "admin/projekt_phases/frame_new_phase_selector"
-  end
-
   def notify_reviewers
     @projekt = Projekt.find(params[:id])
 

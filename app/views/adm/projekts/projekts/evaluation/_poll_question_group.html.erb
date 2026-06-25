@@ -13,11 +13,13 @@
   flow_questions = questions.reject do |q|
     full_width_types.include?(q["chart_type"]) || q["chart_type"] == "measure"
   end
+
+  exportable = local_assigns.fetch(:exportable, false)
 %>
 
 <% full_width_questions.each do |question| %>
   <%= render partial: "adm/projekts/projekts/evaluation/poll_question_#{question["chart_type"]}",
-    locals: { question: question, accent: accent, accent_light: accent_light } %>
+    locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
 <% end %>
 
 <% if flow_questions.any? %>
@@ -25,7 +27,7 @@
     <% flow_questions.each do |question| %>
       <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
       <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
-        locals: { question: question, accent: accent, accent_light: accent_light } %>
+        locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
     <% end %>
   </div>
 <% end %>
@@ -34,7 +36,7 @@
   <div class="measure-grid">
     <% measure_questions.each do |question| %>
       <%= render partial: "adm/projekts/projekts/evaluation/poll_question_measure",
-        locals: { question: question, accent: accent, accent_light: accent_light } %>
+        locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
     <% end %>
   </div>
 <% end %>

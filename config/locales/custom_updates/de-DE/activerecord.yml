@@ -91,6 +91,10 @@ de:
         excluded_file_content_types: 'Datei kann nicht %{types} sein'
 
       models:
+        deficiency_report:
+          attributes:
+            map_location:
+              blank: Bitte wählen Sie einen Standort auf der Karte aus
         proposal:
           attributes:
             description:

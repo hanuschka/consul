@@ -1,13 +1,15 @@
-<div
-  data-reveal
-  id="contentBlockAiModal"
-  class="reveal modern-modal projekt-content-block-ai-create js-content-block-ai-modal"
-  data-close-on-click="false"
-  data-close-on-esc="false"
-  data-state="idle"
->
+<%= render Shared::ModalComponent.new(
+  id: "contentBlockAiModal",
+  modal_class: "modern-modal projekt-content-block-ai-create js-content-block-ai-modal",
+  closeable: false,
+  content_wrapper: false,
+  blur_backdrop: false,
+  close_on_backdrop: false,
+  close_on_esc: false,
+  data: { state: "idle" }
+) do %>
   <div class="content-block-ai-create--header">
-    <div class="d-flex">
+    <div class="modern-modal--header">
       <h3>
         <%= t("custom.projekt_content_blocks.ai_create.modal_title") %>
       </h3>
@@ -15,7 +17,6 @@
         class="close-button round-icon-button js-content-block-ai-modal-close"
         aria-label="<%= t('application.close') %>"
         type="button"
-        data-close
       >
         <i class="fa fa-xmark"></i>
       </button>
@@ -56,26 +57,28 @@
       </p>
     </div>
 
-    <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
-      <label>
-        <input
-          type="checkbox"
-          name="use_projekt_context"
-          class="js-content-block-ai-context"
-        >
-        <span class="content-block-ai-create--checkbox-text">
-          <span class="content-block-ai-create--checkbox-label">
-            <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
+    <% if show_projekt_context_toggle? %>
+      <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
+        <label>
+          <input
+            type="checkbox"
+            name="use_projekt_context"
+            class="js-content-block-ai-context"
+          >
+          <span class="content-block-ai-create--checkbox-text">
+            <span class="content-block-ai-create--checkbox-label">
+              <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
+            </span>
+            <span class="content-block-ai-create--checkbox-hint">
+              <%= t("custom.projekt_content_blocks.ai_create.use_context_hint") %>
+            </span>
           </span>
-          <span class="content-block-ai-create--checkbox-hint">
-            <%= t("custom.projekt_content_blocks.ai_create.use_context_hint") %>
-          </span>
-        </span>
-      </label>
-    </div>
+        </label>
+      </div>
+    <% end %>
 
     <div
-      class="content-block-ai-create--fallback-note js-content-block-ai-fallback-note"
+      class="modern-modal--note js-content-block-ai-fallback-note"
       style="display: none;"
     >
       <i class="fas fa-circle-exclamation"></i>
@@ -90,8 +93,16 @@
     <div class="content-block-ai-create--loader js-content-block-ai-loader" style="display: none;">
       <%= render Shared::LoadingSpinnerComponent.new(
         message: t("custom.projekt_content_blocks.ai_create.processing_message"),
-        size: "large"
+        size: "large",
+        vertical: true
       ) %>
+      <button
+        type="button"
+        class="button -grey js-content-block-ai-cancel"
+      >
+        <i class="fas fa-xmark"></i>
+        <%= t("custom.projekt_content_blocks.ai_create.cancel") %>
+      </button>
     </div>
 
     <div class="content-block-ai-create--actions">
@@ -108,14 +119,6 @@
         <i class="fas fa-magic"></i>
         <%= t("custom.projekt_content_blocks.ai_create.submit") %>
       </button>
-      <button
-        type="button"
-        class="button -grey js-content-block-ai-cancel"
-        style="display: none;"
-      >
-        <i class="fas fa-xmark"></i>
-        <%= t("custom.projekt_content_blocks.ai_create.cancel") %>
-      </button>
     </div>
   </form>
-</div>
+<% end %>

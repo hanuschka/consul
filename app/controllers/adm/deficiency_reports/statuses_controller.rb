@@ -74,7 +74,7 @@ class Adm::DeficiencyReports::StatusesController < Adm::DeficiencyReports::BaseC
 
     def status_params
       params.require(:deficiency_report_status).permit(
-        :title, :color, :archive_reports, :icon, :notice_text, :reminder_delay
+        :title, :description, :color, :archive_reports, :icon, :notice_text, :reminder_delay
       )
     end
 end

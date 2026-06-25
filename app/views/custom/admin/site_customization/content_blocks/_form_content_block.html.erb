@@ -3,12 +3,10 @@
   <%= render "shared/errors", resource: @content_block %>
 
   <%if @content_block.custom?%>
-    <% unless embedded? %>
-      <div class="small-12 medium-6 column">
-        <%=t("admin.site_customization.content_blocks.content_block.key") %>
-        <strong><%=@content_block.key%></strong>
-      </div>
-    <% end %>
+    <div class="small-12 medium-6 column">
+      <%=t("admin.site_customization.content_blocks.content_block.key") %>
+      <strong><%=@content_block.key%></strong>
+    </div>
 
     <%=f.hidden_field :name%>
     <%=hidden_field_tag :return_to, params[:return_to]%>

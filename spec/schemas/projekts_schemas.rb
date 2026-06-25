@@ -11,8 +11,8 @@ module Schemas
         title: { type: :string, nullable: true, description: 'The projekt page title (same value as page.title), exposed at the top level for convenience.', example: 'Sample Projekt Page' },
         subtitle: { type: :string, nullable: true, description: 'The projekt page subtitle (same value as page.subtitle).', example: 'A short tagline for the projekt' },
         image: { '$ref' => '#/components/schemas/Image' },
-        text: { type: :string, description: 'The full projekt page text as plain text: the combined content blocks (ordered by position) with all HTML tags stripped and whitespace normalized. Empty string when the projekt has no content blocks.', example: 'Welcome About this projekt.' },
-        text_html: { type: :string, description: 'The full projekt page content as HTML: the body of all content blocks (ordered by position) combined into a single string. Empty string when the projekt has no content blocks.', example: '<h2>Welcome</h2><p>About this projekt.</p>' },
+        text: { type: :string, description: 'The full projekt page content: the body of all content blocks (ordered by position) combined into a single string. Same value as text_html (already sanitized at save time, not re-processed here). Only present when include_text=true on the list endpoint; always present in the single projekt response. Empty string when the projekt has no content blocks.', example: '<h2>Welcome</h2><p>About this projekt.</p>' },
+        text_html: { type: :string, description: 'The full projekt page content as HTML: the body of all content blocks (ordered by position) combined into a single string. Only present when include_text=true on the list endpoint; always present in the single projekt response. Empty string when the projekt has no content blocks.', example: '<h2>Welcome</h2><p>About this projekt.</p>' },
         parent_id: { type: :integer, nullable: true, description: 'ID of the parent projekt if this is a sub-projekt. Null if this is a top-level projekt.', example: nil },
         created_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was last modified', example: '2024-01-01T00:00:00Z' },
@@ -39,7 +39,7 @@ module Schemas
         },
         projekt_settings: {
           type: :array,
-          description: 'Configuration settings for the projekt as key-value pairs',
+          description: 'Configuration settings for the projekt as key-value pairs. Only present when include_projekt_settings=true on the list endpoint; always present in the single projekt response.',
           items: {
             type: :object,
             properties: {

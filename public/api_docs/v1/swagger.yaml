@@ -11148,10 +11148,15 @@ paths:
       - name: sort_by
         in: query
         required: false
-        description: 'Column to order projekts by. Default: ''created_at''. Valid
-          values: ''created_at'', ''total_duration_start'', ''total_duration_end'',
-          ''order_number''. Projekts with a null value for the chosen column are always
-          placed last. Invalid values fall back to ''created_at''.'
+        description: |
+          Field to order projekts by. Default: 'created_at'. Valid values:
+          'created_at', 'total_duration_start', 'total_duration_end',
+          'order_number', 'name', 'published_at', 'page_title'.
+
+          - 'name': the projekt's internal name (case-insensitive A–Z).
+          - 'page_title': the public-facing page title, ordered by the German (de) title, case-insensitive. This is the title shown to users; prefer it over 'name' for display ordering.
+
+          Projekts with a null value for the chosen field (e.g. no page title, or an unset publish date) are always placed last, in both directions. Invalid values fall back to 'created_at'.
         schema:
           type: string
       - name: sort_direction
@@ -11185,6 +11190,23 @@ paths:
         required: false
         description: 'If true, includes content blocks in response with HTML content
           organized by locale. Default: false (excludes content blocks).'
+        schema:
+          type: boolean
+      - name: include_text
+        in: query
+        required: false
+        description: 'If true, includes the combined content block body in the response
+          as both text and text_html (the concatenated content block bodies, ordered
+          by position). Default: false (both fields are omitted). Always included
+          in the single projekt (show) response.'
+        schema:
+          type: boolean
+      - name: include_projekt_settings
+        in: query
+        required: false
+        description: 'If true, includes the projekt_settings array (key/value configuration
+          pairs) in the response. Default: false (the field is omitted). Always included
+          in the single projekt (show) response.'
         schema:
           type: boolean
       - name: page
@@ -11221,7 +11243,18 @@ paths:
                     - projekts
                   pagination:
                     type: object
+                    description: Returned in place of pagination metadata when no
+                      pagination was applied (all matching records returned in a single
+                      response). Supply the page and/or per_page query parameters
+                      to paginate.
                     properties:
+                      message:
+                        type: string
+                        description: Help text stating that all records were returned
+                          without pagination and how to enable it.
+                        example: 'All matching records were returned in a single response
+                          without pagination. To paginate, supply the ''page'' and/or
+                          ''per_page'' query parameters (for example: ?page=1&per_page=20).'
                       current_page:
                         type: integer
                       total_pages:
@@ -11230,6 +11263,8 @@ paths:
                         type: integer
                       per_page:
                         type: integer
+                    required:
+                    - message
                 required:
                 - data
                 - pagination
@@ -14177,15 +14212,18 @@ components:
           "$ref": "#/components/schemas/Image"
         text:
           type: string
-          description: 'The full projekt page text as plain text: the combined content
-            blocks (ordered by position) with all HTML tags stripped and whitespace
-            normalized. Empty string when the projekt has no content blocks.'
-          example: Welcome About this projekt.
+          description: 'The full projekt page content: the body of all content blocks
+            (ordered by position) combined into a single string. Same value as text_html
+            (already sanitized at save time, not re-processed here). Only present
+            when include_text=true on the list endpoint; always present in the single
+            projekt response. Empty string when the projekt has no content blocks.'
+          example: "<h2>Welcome</h2><p>About this projekt.</p>"
         text_html:
           type: string
           description: 'The full projekt page content as HTML: the body of all content
-            blocks (ordered by position) combined into a single string. Empty string
-            when the projekt has no content blocks.'
+            blocks (ordered by position) combined into a single string. Only present
+            when include_text=true on the list endpoint; always present in the single
+            projekt response. Empty string when the projekt has no content blocks.'
           example: "<h2>Welcome</h2><p>About this projekt.</p>"
         parent_id:
           type: integer
@@ -14293,7 +14331,9 @@ components:
               "$ref": "#/components/schemas/Image"
         projekt_settings:
           type: array
-          description: Configuration settings for the projekt as key-value pairs
+          description: Configuration settings for the projekt as key-value pairs.
+            Only present when include_projekt_settings=true on the list endpoint;
+            always present in the single projekt response.
           items:
             type: object
             properties:

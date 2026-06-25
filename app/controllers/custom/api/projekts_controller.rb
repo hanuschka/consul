@@ -7,9 +7,26 @@ class Api::ProjektsController < Api::BaseController
 
   DEFAULT_PROJEKTS_PER_PAGE = 20
 
-  SORTABLE_COLUMNS = %w[created_at total_duration_start total_duration_end order_number].freeze
+  SORTABLE_COLUMNS = %w[
+    created_at total_duration_start total_duration_end
+    order_number name published_at page_title
+  ].freeze
 
   DEFAULT_SORT_COLUMN = "created_at"
+
+  PAGE_TITLE_SORT_LOCALE = "de"
+
+  PAGE_TITLE_SORT_JOIN =
+    "LEFT JOIN site_customization_pages scp_sort " \
+    "ON scp_sort.projekt_id = projekts.id " \
+    "LEFT JOIN site_customization_page_translations spt_sort " \
+    "ON spt_sort.site_customization_page_id = scp_sort.id " \
+    "AND spt_sort.locale = '#{PAGE_TITLE_SORT_LOCALE}'"
+
+  SORT_EXPRESSIONS = {
+    "name" => "LOWER(projekts.name)",
+    "page_title" => "LOWER(spt_sort.title)"
+  }.freeze
 
   def index
     check_read_access!
@@ -254,7 +271,16 @@ class Api::ProjektsController < Api::BaseController
   private
 
   def sort_projekts(projekts)
-    projekts.reorder(Arel.sql("projekts.#{sort_column} #{sort_direction.upcase} NULLS LAST"))
+    apply_sort_join(projekts)
+      .reorder(Arel.sql("#{sort_expression} #{sort_direction.upcase} NULLS LAST"))
+  end
+
+  def apply_sort_join(projekts)
+    if sort_column == "page_title"
+      return projekts.joins(PAGE_TITLE_SORT_JOIN)
+    end
+
+    projekts
   end
 
   def sort_column
@@ -263,6 +289,10 @@ class Api::ProjektsController < Api::BaseController
 
   def sort_direction
     params[:sort_direction] == "desc" ? "desc" : "asc"
+  end
+
+  def sort_expression
+    SORT_EXPRESSIONS[sort_column] || "projekts.#{sort_column}"
   end
 
   def paginate_projekts(projekts)

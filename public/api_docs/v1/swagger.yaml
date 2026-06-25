@@ -11115,10 +11115,15 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: "Retrieve a list of all projekts ordered by creation date (oldest
-        first). By default returns only public projekts (activated with published
-        pages). Users with public_data access level can only access public projekts.
-        \n\n*Authorization: Available to both `admin` and `public_data` access levels.*"
+      description: "Retrieve a list of all projekts. By default ordered by creation
+        date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering
+        (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring
+        next at the top). By default returns only public projekts (activated with
+        published pages). Users with public_data access level can only access public
+        projekts. Pagination is optional: by default all matching projekts are returned,
+        but supplying 'page' (and optionally 'per_page', default 20) paginates the
+        results and adds a 'pagination' object to the response. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: filter
         in: query
@@ -11138,6 +11143,28 @@ paths:
           - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
 
           Results are ordered by creation date (oldest first).
+        schema:
+          type: string
+      - name: sort_by
+        in: query
+        required: false
+        description: |
+          Field to order projekts by. Default: 'created_at'. Valid values:
+          'created_at', 'total_duration_start', 'total_duration_end',
+          'order_number', 'name', 'published_at', 'page_title'.
+
+          - 'name': the projekt's internal name (case-insensitive A–Z).
+          - 'page_title': the public-facing page title, ordered by the German (de) title, case-insensitive. This is the title shown to users; prefer it over 'name' for display ordering.
+
+          Projekts with a null value for the chosen field (e.g. no page title, or an unset publish date) are always placed last, in both directions. Invalid values fall back to 'created_at'.
+        schema:
+          type: string
+      - name: sort_direction
+        in: query
+        required: false
+        description: 'Sort direction for ''sort_by''. Default: ''asc''. Valid values:
+          ''asc'', ''desc''. Combine ''sort_by=total_duration_end'' with ''sort_direction=asc''
+          to list the projekts expiring next first.'
         schema:
           type: string
       - name: only_public
@@ -11165,9 +11192,24 @@ paths:
           organized by locale. Default: false (excludes content blocks).'
         schema:
           type: boolean
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number. When provided, results are paginated
+          and a pagination object is added to the response. Omit to return all matching
+          projekts (default).
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of projekts per page when paginating. Default: 20. Only
+          applies when page or per_page is provided.'
+        schema:
+          type: integer
       responses:
         '200':
-          description: projekts found filtered by status
+          description: projekts found paginated
           content:
             application/json:
               schema:
@@ -11182,8 +11224,20 @@ paths:
                           "$ref": "#/components/schemas/Projekt"
                     required:
                     - projekts
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
                 required:
                 - data
+                - pagination
         '401':
           description: unauthorized - missing or invalid token
           content:

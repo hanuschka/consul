@@ -5,12 +5,13 @@
     <thead class="kern-table__head">
       <tr class="kern-table__row">
         <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.id") %></th>
-        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.http_method") %></th>
-        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.request_path") %></th>
-        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.response_status") %></th>
         <% if show_api_client_column %>
           <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.api_client") %></th>
         <% end %>
+        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.http_method") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.request_path") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.response_status") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.api_request_logs.index.duration") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.shared.created_at") %></th>
         <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
       </tr>
@@ -20,6 +21,13 @@
       <% api_request_logs.each do |log| %>
         <tr id="<%= dom_id(log) %>" class="kern-table__row">
           <td class="kern-table__cell"><%= log.id %></td>
+          <% if show_api_client_column %>
+            <td class="kern-table__cell">
+              <% if log.api_client.present? %>
+                <%= link_to log.api_client.name, adm_api_client_path(log.api_client), class: "kern-link" %>
+              <% end %>
+            </td>
+          <% end %>
           <td class="kern-table__cell">
             <span class="kern-badge kern-badge--<%= log.http_method_badge_variant %>"><%= log.http_method %></span>
           </td>
@@ -29,13 +37,7 @@
               <%= render "adm/api_request_logs/status_badge", status: log.response_status %>
             <% end %>
           </td>
-          <% if show_api_client_column %>
-            <td class="kern-table__cell">
-              <% if log.api_client.present? %>
-                <%= link_to log.api_client.name, adm_api_client_path(log.api_client), class: "kern-link" %>
-              <% end %>
-            </td>
-          <% end %>
+          <td class="kern-table__cell"><%= format_runtime_ms(log.duration_ms) %></td>
           <td class="kern-table__cell"><%= l(log.created_at, format: :short) %></td>
           <td class="kern-table__cell">
             <%= render Kern::Table::ActionsComponent.new do |actions| %>

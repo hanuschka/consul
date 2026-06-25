@@ -46,6 +46,7 @@ de:
           Sind Sie sicher, dass Sie diesen API-Client löschen möchten?
       logs:
         title: API-Anfragen-Logs
+        title_for: API-Anfragen-Logs für %{name}
         intro: >
           Alle API-Anfragen des Clients „%{name}". Nutzen Sie die Filter, um nach Pfad, Methode, Status oder Zeitraum einzugrenzen.
         no_logs: Für diesen API-Client liegen keine Anfragen-Logs vor.

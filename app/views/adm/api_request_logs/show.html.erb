@@ -9,17 +9,17 @@
 <div class="kern-container kern-container--form my-5">
   <div class="kern-card p-4 mb-4">
     <p class="mb-3">
+      <strong><%= t(".http_method") %></strong><br>
+      <span class="kern-badge kern-badge--<%= @api_request_log.http_method_badge_variant %>"><%= @api_request_log.http_method %></span>
+    </p>
+
+    <p class="mb-3">
       <strong><%= t(".api_client") %></strong><br>
       <% if @api_request_log.api_client.present? %>
         <%= link_to @api_request_log.api_client.name, adm_api_client_path(@api_request_log.api_client), class: "kern-link" %>
       <% else %>
         —
       <% end %>
-    </p>
-
-    <p class="mb-3">
-      <strong><%= t(".http_method") %></strong><br>
-      <span class="kern-badge kern-badge--<%= @api_request_log.http_method_badge_variant %>"><%= @api_request_log.http_method %></span>
     </p>
 
     <p class="mb-3">
@@ -39,6 +39,21 @@
       <% else %>
         —
       <% end %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".duration") %></strong><br>
+      <%= format_runtime_ms(@api_request_log.duration_ms) %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".db_runtime") %></strong><br>
+      <%= format_runtime_ms(@api_request_log.db_runtime) %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".view_runtime") %></strong><br>
+      <%= format_runtime_ms(@api_request_log.view_runtime) %>
     </p>
 
     <p class="mb-3">

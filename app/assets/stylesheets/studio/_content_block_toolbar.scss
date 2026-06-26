@@ -150,6 +150,12 @@
       display: flex;
       outline: 1px solid #c9dced;
     }
+
+    &:not(.-compact-mode) {
+      .projekt-content-block--toolbar {
+        width: 100%;
+      }
+    }
   }
 
   // Variant: toolbar anchored to the LEFT side of the wrapper instead of

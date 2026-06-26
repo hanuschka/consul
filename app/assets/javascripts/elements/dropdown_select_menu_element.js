@@ -221,6 +221,4 @@
   if (!customElements.get(TAG_NAME)) {
     customElements.define(TAG_NAME, DropdownSelectMenuElement);
   }
-
-  App.DropdownSelectMenuElement = DropdownSelectMenuElement;
 }).call(this);

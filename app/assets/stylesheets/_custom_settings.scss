@@ -62,6 +62,7 @@ $welcomespan:                 $brand;
   --brand-color-secondary: color-mix(in srgb, var(--brand-color), white 70%);
   --brand-color-accent: color-mix(in srgb, var(--brand-color), white 50%);
   --brand-color-dark: color-mix(in srgb, var(--brand-color), black 30%);
+  --effective-brand-color: var(--brand-color);
   --main-background-color: #{$main-background-color};
 }
 

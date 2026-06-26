@@ -1,0 +1,40 @@
+<%= render Kern::FormFieldComponent.new(
+  label: User.human_attribute_name(:username),
+  hint: t("adm.api_clients.form.service_user_username_description"),
+  stacked: true
+) do %>
+  <%= form.text_field :username, label: false, placeholder: User.human_attribute_name(:username) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(
+  label: User.human_attribute_name(:first_name),
+  hint: t("adm.api_clients.form.service_user_first_name_description"),
+  stacked: true
+) do %>
+  <%= form.text_field :first_name, label: false, placeholder: User.human_attribute_name(:first_name) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(
+  label: User.human_attribute_name(:last_name),
+  hint: t("adm.api_clients.form.service_user_last_name_description"),
+  stacked: true
+) do %>
+  <%= form.text_field :last_name, label: false, placeholder: User.human_attribute_name(:last_name) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(
+  label: t("adm.api_clients.form.service_user_avatar_title"),
+  hint: t("adm.api_clients.form.service_user_avatar_description"),
+  stacked: true
+) do %>
+  <%= render Kern::Form::ImageableImageComponent.new(form: form, show_actions: false, crop: true, crop_aspect_ratio: 1) %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(
+  label: t("adm.api_clients.form.service_user_background_image_title"),
+  hint: t("adm.api_clients.form.service_user_background_image_description"),
+  stacked: true,
+  divider: false
+) do %>
+  <%= render Kern::Form::ImageComponent.new(form: form, attribute: :background_image, show_actions: false, crop: true, crop_aspect_ratio: 3.5) %>
+<% end %>

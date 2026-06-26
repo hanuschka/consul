@@ -43,7 +43,14 @@ class DeficiencyReportsController < ApplicationController
 
     @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
-    @deficiency_reports_coordinates = all_deficiency_report_map_locations(@deficiency_reports)
+    @deficiency_reports_map_pin_count = deficiency_report_map_locations_count(@deficiency_reports)
+
+    @deficiency_reports_coordinates =
+      if @deficiency_reports_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
+        all_deficiency_report_map_locations(@deficiency_reports)
+      else
+        []
+      end
 
     set_deficiency_report_votes(@deficiency_reports)
 
@@ -54,6 +61,14 @@ class DeficiencyReportsController < ApplicationController
         else
           render :index
         end
+      end
+
+      format.json do
+        render json: JSON.generate(
+          MapLocation.flatten_feature_collections(
+            all_deficiency_report_map_locations(@deficiency_reports)
+          )
+        )
       end
 
       format.csv do
@@ -85,11 +100,11 @@ class DeficiencyReportsController < ApplicationController
     answer = DeficiencyReport::ConfirmationPopupAnswer.find_by(id: params[:answer_id])
     notice = answer&.flash_notice.presence
     flash[:notice] = notice if notice
-    redirect_to deficiency_reports_path
+    redirect_back(fallback_location: deficiency_reports_path)
   end
 
   def create
-    if deficiency_report_params["image_attributes"]["cached_attachment"].blank?
+    if deficiency_report_params.dig("image_attributes", "cached_attachment").blank?
       filtered_deficiency_report_params = deficiency_report_params.except("image_attributes")
     else
       filtered_deficiency_report_params = deficiency_report_params

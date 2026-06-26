@@ -317,11 +317,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @poll = @projekt_phase.poll
     @questions = @poll.questions.root_questions.where(context_id: nil)
 
-    @breadcrumbs = [
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+    respond_to do |format|
+      format.html do
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::PollIndividualAnswersExporter.call(@poll),
+          filename: "poll_#{@poll.id}_individual_answers-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   def formular
@@ -588,6 +596,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  def destroy_projekt_point_of_interest_pin
+    authorize_phase(:update?)
+    pin = @projekt_phase.projekt_point_of_interest_pins.user_created.find(params[:pin_id])
+    pin.destroy!
+
+    flash[:success] = t(".success")
+
+    redirect_to projekt_point_of_interest_pins_adm_projekts_phase_path(
+      @projekt_phase,
+      params.permit(:page).to_h.compact_blank
+    )
+  end
+
   def projekt_point_of_interest_pins
     authorize_phase(:update?)
     base_scope = @projekt_phase.projekt_point_of_interest_pins.ordered
@@ -603,7 +624,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         ]
       end
       format.geojson do
-        send_data GeoServices::MappablesGeojsonExporter.call(base_scope),
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:masterportal_pin)),
                   filename: "projekt_point_of_interest_pins-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
                   type: "application/geo+json"
       end

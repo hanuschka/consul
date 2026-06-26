@@ -1,4 +1,4 @@
-<div class="adm-system-user-info">
+<%= content_tag wrapper_tag, wrapper_options do %>
   <div class="adm-system-user-info--avatar">
     <%= render Adm::TableThumbComponent.new(
       image: user.image,
@@ -8,8 +8,14 @@
   </div>
 
   <div class="adm-system-user-info--text">
-    <span class="adm-system-user-info--label"><%= t(".label") %></span>
-    <span class="adm-system-user-info--name"><%= name %></span>
+    <span class="adm-system-user-info--label"><%= label %></span>
+    <span class="adm-system-user-info--name">
+      <%= name %>
+
+      <% if show_system_user_tag? %>
+        <span class="adm-system-user-info--tag"><%= t(".system_user_tag") %></span>
+      <% end %>
+    </span>
   </div>
 
   <% if show_edit_link? %>
@@ -18,4 +24,4 @@
       <%= t(".edit") %>
     <% end %>
   <% end %>
-</div>
+<% end %>

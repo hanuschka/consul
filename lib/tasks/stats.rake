@@ -12,9 +12,11 @@ namespace :stats do
 
     admin_ability = Ability.new(admin_user)
 
-    Budget.accessible_by(admin_ability, :read_stats).find_each do |budget|
-      Budget::Stats.new(budget).generate
-      print "."
+    Budget.find_each do |budget|
+      if admin_ability.can?(:read_stats, budget)
+        Budget::Stats.new(budget).generate
+        print "."
+      end
     end
 
     Poll.accessible_by(admin_ability, :stats).find_each do |poll|

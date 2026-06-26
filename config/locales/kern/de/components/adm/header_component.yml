@@ -8,4 +8,5 @@ de:
           landing_page: "Zur Themenseite"
           deficiency_reports: "Zum Mängelmelder"
           ideas: "Zum Ideenmanagement"
+          feature: "Zum %{feature}"
           default: "Zur Webseite"

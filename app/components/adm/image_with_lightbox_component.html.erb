@@ -2,7 +2,8 @@
   <a class="adm-image-with-lightbox__lightbox glightbox"
      href="<%= original_url %>"
      data-controller="glightbox"
-     data-glightbox-title-value="<%= title %>">
+     data-alt="<%= title %>"
+     aria-label="<%= t("custom.accessibility.image-lightbox.aria-label") %>">
     <%= image_tag display_url,
           class: "adm-image-with-lightbox__image",
           alt: title,

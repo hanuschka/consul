@@ -1,0 +1,23 @@
+<%= render Shared::ModalComponent.new(
+  id: modal_id,
+  modal_class: "image-cropper-modal",
+  close_on_backdrop: false
+) do %>
+  <div class="image-cropper js-image-cropper">
+    <h2 class="image-cropper--title"><%= t("custom.shared.image_cropper.title") %></h2>
+    <p class="image-cropper--instructions"><%= t("custom.shared.image_cropper.instructions") %></p>
+
+    <div class="image-cropper--canvas-wrapper">
+      <img class="image-cropper--image js-image-cropper--image" alt="">
+    </div>
+
+    <div class="image-cropper--actions">
+      <button type="button" class="button hollow js-image-cropper--cancel">
+        <%= t("custom.shared.image_cropper.cancel") %>
+      </button>
+      <button type="button" class="button js-image-cropper--confirm">
+        <%= t("custom.shared.image_cropper.confirm") %>
+      </button>
+    </div>
+  </div>
+<% end %>

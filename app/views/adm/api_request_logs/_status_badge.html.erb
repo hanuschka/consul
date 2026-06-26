@@ -1,0 +1,16 @@
+<% explanation = http_status_explanation(status) %>
+<% variant = status < 400 ? "success" : "danger" %>
+
+<% if explanation.present? %>
+  <rich-tooltip delay="550" body-class="-wide">
+    <span class="kern-badge kern-badge--<%= variant %>"><%= http_status_label(status) %></span>
+    <template>
+      <span class="rich-tooltip-content">
+        <span class="rich-tooltip-content--title"><%= http_status_label(status) %></span>
+        <span class="rich-tooltip-content--text"><%= explanation %></span>
+      </span>
+    </template>
+  </rich-tooltip>
+<% else %>
+  <span class="kern-badge kern-badge--<%= variant %>"><%= http_status_label(status) %></span>
+<% end %>

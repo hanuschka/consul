@@ -4,7 +4,12 @@ class Widget::Feed < ApplicationRecord
   KINDS = %w[active_projekts polls proposals debates expired_projekts investment_proposals].freeze
 
   def active_projekts(current_user)
-    Projekt.visible_for(current_user).show_in_homepage.index_order_underway.first(limit)
+    Projekt
+      .visible_for(current_user)
+      .show_in_homepage
+      .index_order_underway
+      .preload(:projekt_phases, :projekt_settings)
+      .first(limit)
   end
 
   def expired_projekts(current_user)

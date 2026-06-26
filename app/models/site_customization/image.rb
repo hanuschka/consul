@@ -22,6 +22,10 @@ class SiteCustomization::Image < ApplicationRecord
   LOGO_IMAGE_NAMES = %w[logo_header logo_header_for_transparent].freeze
   LOGO_MAX_FILE_SIZE = 2.megabytes
 
+  # Images that only enforce a minimum size: the stored dimensions act as a
+  # floor, larger uploads are allowed (cropped client-side to a fixed ratio).
+  MIN_DIMENSION_IMAGE_NAMES = %w[logo_newsletter_email].freeze
+
   alias_attribute :key, :name
 
   has_one_attached :image
@@ -65,6 +69,10 @@ class SiteCustomization::Image < ApplicationRecord
       name.in?(LOGO_IMAGE_NAMES)
     end
 
+    def min_dimension_image?
+      name.in?(MIN_DIMENSION_IMAGE_NAMES)
+    end
+
     def check_image
       return unless image.attached?
 
@@ -80,6 +88,12 @@ class SiteCustomization::Image < ApplicationRecord
       width = image.metadata[:width]
       height = image.metadata[:height]
 
+      if min_dimension_image?
+        check_minimum_dimensions(width, height)
+
+        return
+      end
+
       wrong_width = width != required_width
       wrong_height = height != required_height
 
@@ -89,6 +103,16 @@ class SiteCustomization::Image < ApplicationRecord
         errors.add(:image, :image_width, required_width: required_width)
       elsif wrong_height
         errors.add(:image, :image_height, required_height: required_height)
+      end
+    end
+
+    def check_minimum_dimensions(width, height)
+      if width < required_width
+        errors.add(:image, :min_image_width, required_min_width: required_width)
+      end
+
+      if height < required_height
+        errors.add(:image, :min_image_height, required_min_height: required_height)
       end
     end
 end

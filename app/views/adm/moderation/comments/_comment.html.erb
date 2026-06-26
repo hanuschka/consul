@@ -3,6 +3,10 @@
   <td class="kern-table__cell" data-field="projekt"><%= comment.projekt&.name %></td>
   <td class="kern-table__cell" data-field="author"><%= comment.author.username %></td>
   <td class="kern-table__cell" data-field="flags_count"><%= comment.flags_count %></td>
+  <td class="kern-table__cell" data-field="status">
+    <% status_key, badge_variant = moderation_status_badge(comment) %>
+    <span class="kern-badge <%= badge_variant %> kern-badge--small"><%= t("adm.moderation.comments.index.statuses.#{status_key}") %></span>
+  </td>
   <td class="kern-table__cell" data-field="actions">
     <% if comment.hidden? %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
@@ -12,12 +16,26 @@
       <% end %>
     <% elsif comment.ignored_flag? %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <% if moderation_comment_resource_reachable?(comment) %>
+          <%= c.with_action label: t("adm.moderation.comments.index.actions.view"),
+                            url: comment_path(comment),
+                            icon: "open_in_new",
+                            target: "_blank",
+                            rel: "noopener" %>
+        <% end %>
         <%= c.with_action label: t("adm.moderation.comments.index.actions.hide"),
                           url: hide_adm_moderation_comment_path(comment),
                           data: { turbo_method: :put, turbo_confirm: t("adm.moderation.comments.index.confirm_hide") } %>
       <% end %>
     <% else %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <% if moderation_comment_resource_reachable?(comment) %>
+          <%= c.with_action label: t("adm.moderation.comments.index.actions.view"),
+                            url: comment_path(comment),
+                            icon: "open_in_new",
+                            target: "_blank",
+                            rel: "noopener" %>
+        <% end %>
         <%= c.with_action label: t("adm.moderation.comments.index.actions.ignore_flag"),
                           url: ignore_flag_adm_moderation_comment_path(comment),
                           data: { turbo_method: :put } %>

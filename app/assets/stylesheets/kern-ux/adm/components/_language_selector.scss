@@ -1,0 +1,40 @@
+.adm-language-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 25px !important;
+}
+
+.adm-language-selector__select {
+  appearance: none;
+  padding: 6px 36px 6px 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--kern-metric-border-radius-default);
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+}
+
+.adm-language-selector__select option {
+  color: var(--kern-color-layout-text-default);
+  background-color: #fff;
+}
+
+.adm-language-selector__chevron {
+  position: absolute;
+  right: 8px;
+  font-size: 20px;
+  color: #fff;
+  pointer-events: none;
+}

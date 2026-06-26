@@ -11,7 +11,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a list of all projekts ordered by creation date (oldest first). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :filter, in: :query, type: :string, required: false,
                 description: <<~DESC
                   Filter projekts by lifecycle stage or special status. Default: 'index_order_all'. Valid values:
@@ -29,12 +29,33 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
                   Results are ordered by creation date (oldest first).
                 DESC
+      parameter name: :sort_by, in: :query, type: :string, required: false,
+                description: <<~DESC
+                  Field to order projekts by. Default: 'created_at'. Valid values:
+                  'created_at', 'total_duration_start', 'total_duration_end',
+                  'order_number', 'name', 'published_at', 'page_title'.
+
+                  - 'name': the projekt's internal name (case-insensitive A–Z).
+                  - 'page_title': the public-facing page title, ordered by the German (de) title, case-insensitive. This is the title shown to users; prefer it over 'name' for display ordering.
+
+                  Projekts with a null value for the chosen field (e.g. no page title, or an unset publish date) are always placed last, in both directions. Invalid values fall back to 'created_at'.
+                DESC
+      parameter name: :sort_direction, in: :query, type: :string, required: false,
+                description: "Sort direction for 'sort_by'. Default: 'asc'. Valid values: 'asc', 'desc'. Combine 'sort_by=total_duration_end' with 'sort_direction=asc' to list the projekts expiring next first."
       parameter name: :only_public, in: :query, type: :boolean, required: false,
                 description: 'If false, returns all projekts (admin only). Default: true (returns activated projekts with published pages shown in overview). Users with public_data access can only access public projekts.'
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
                 description: 'If true, includes projekt phases in response with full phase details including type, active status, and dates. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases. Default: false (excludes phases).'
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: 'If true, includes content blocks in response with HTML content organized by locale. Default: false (excludes content blocks).'
+      parameter name: :include_text, in: :query, type: :boolean, required: false,
+                description: 'If true, includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position). Default: false (both fields are omitted). Always included in the single projekt (show) response.'
+      parameter name: :include_projekt_settings, in: :query, type: :boolean, required: false,
+                description: 'If true, includes the projekt_settings array (key/value configuration pairs) in the response. Default: false (the field is omitted). Always included in the single projekt (show) response.'
+      parameter name: :page, in: :query, type: :integer, required: false,
+                description: 'Pagination page number. When provided, results are paginated and a pagination object is added to the response. Omit to return all matching projekts (default).'
+      parameter name: :per_page, in: :query, type: :integer, required: false,
+                description: 'Number of projekts per page when paginating. Default: 20. Only applies when page or per_page is provided.'
 
       response '200', 'projekts found' do
         schema type: :object,
@@ -48,33 +69,12 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
-      end
-
-      response '403', 'forbidden - insufficient access' do
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
       end
 
       response '200', 'projekts found with public_data access' do
@@ -93,9 +93,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -114,12 +115,61 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
+
+      response '200', 'projekts found sorted by total_duration_end' do
+        let(:sort_by) { 'total_duration_end' }
+        let(:sort_direction) { 'asc' }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data', 'pagination']
+
+        run_test!
+      end
+
+      response '200', 'projekts found paginated' do
+        let(:page) { 1 }
+        let(:per_page) { 20 }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 },
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data', 'pagination']
+
+        run_test!
+      end
+
+      unauthorized_response
     end
 
     post 'Create a projekt' do
@@ -214,6 +264,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response
     end
   end
 
@@ -332,6 +384,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt' do
@@ -437,6 +491,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt' do
@@ -515,6 +571,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 
@@ -627,6 +685,131 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/projekts/{id}/update_page_image' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update projekt page image' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Replace the projekt page header/cover image. Provide the image as base64-encoded data under image_attributes. Returns the updated projekt. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :projekt, in: :body, description: 'Projekt image attributes containing the base64-encoded attachment to set as the page image', schema: {
+        type: :object,
+        properties: {
+          projekt: {
+            type: :object,
+            properties: {
+              image_attributes: {
+                type: :object,
+                description: 'Image to set as the projekt page image. Upload as base64-encoded data.',
+                properties: {
+                  id: { type: :integer, nullable: true },
+                  attachment: { type: :string, description: 'Base64-encoded image file. Required. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
+                  title: { type: :string, nullable: true, description: 'Image caption or alt text used for accessibility.' },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution or copyright information.' },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current page image.' }
+                },
+                required: ['attachment']
+              }
+            },
+            required: ['image_attributes']
+          }
+        },
+        required: ['projekt']
+      }
+
+      response '200', 'projekt page image updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt With Image') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              image_attributes: {
+                attachment: base64_fixture('clippy.png'),
+                title: 'Page Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'no image provided' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          { projekt: { image_attributes: {} } }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let(:test_projekt) { Projekt.create!(name: 'Projekt') }
+        let(:id) { test_projekt.id }
+        let(:projekt) do
+          {
+            projekt: {
+              image_attributes: {
+                attachment: base64_fixture('clippy.png'),
+                title: 'Page Image'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 
@@ -799,6 +982,81 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/projekts/{id}/update_settings' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt ID'
+
+    patch 'Update multiple projekt settings' do
+      tags 'Projekts'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Bulk-update several projekt settings in a single request. Provide a settings object mapping each existing setting key to its new value. Returns the list of updated keys and a per-key errors map for keys that could not be updated (e.g. unknown keys). #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :settings, in: :body, description: 'Object whose keys are setting keys and whose values are the new setting values', schema: {
+        type: :object,
+        properties: {
+          settings: {
+            type: :object,
+            description: 'Map of setting key => value. Each key must match an existing projekt setting.',
+            additionalProperties: { type: :string },
+            example: { 'show_map' => 'true', 'enable_comments' => 'false' }
+          }
+        },
+        required: ['settings']
+      }
+
+      response '200', 'settings processed' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt With Settings') }
+        let(:id) { test_projekt.id }
+        let(:settings) do
+          { settings: { 'show_map' => 'true' } }
+        end
+
+        before do
+          test_projekt.projekt_settings.create!(key: 'show_map', value: 'false')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     updated: { type: :array, items: { type: :string } },
+                     errors: { type: :object }
+                   },
+                   required: %w[updated errors]
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'settings parameter missing' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt') }
+        let(:id) { test_projekt.id }
+        let(:settings) { {} }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 
@@ -980,6 +1238,8 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

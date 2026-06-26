@@ -13,7 +13,7 @@ en:
           new: New project
           all: All projects
           current: Active projects
-          import_projekt: Import project from file
+          imports: Projekt import
       menu:
         aria_label: Projects navigation
         items:
@@ -85,6 +85,8 @@ en:
           projekt_managers: Project managers
           map: Map
           projekt_phases: Participation phases
+          images: Images
+          documents: Documents
           delete: Delete
           delete_confirm: Are you sure you want to delete this project? All associated phases will also be deleted.
         tabs:
@@ -179,6 +181,10 @@ en:
             active: Active
             visible: Visible
             actions: Actions
+        images:
+          title: Images
+        documents:
+          title: Documents
         update:
           success: Project updated successfully.
         notify_reviewers:

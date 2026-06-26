@@ -27,7 +27,7 @@ class RecipientGroupResolver
 
       @recipient_group.filters.each_with_index do |filter, index|
         resolver = RecipientGroups::FilterResolvers.for(filter.kind).new(filter.params)
-        new_emails = Set.new(resolver.emails.compact)
+        new_emails = Set.new(resolver.emails.filter_map { |e| e.to_s.strip.downcase.presence })
 
         previous_size = emails.size
 

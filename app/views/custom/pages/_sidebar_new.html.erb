@@ -8,7 +8,7 @@
   <% content_block_sidebar_name = "projekt_sidebar_#{projekt.id}" %>
   <% if render_custom_projekt_content_block?(content_block_sidebar_name, projekt) || show_admin_controls_for_projekt?(@projekt) %>
     <% return_path = page_path(@projekt.page.slug) %>
-    <% rendered_custom_block = capture { render_custom_block(content_block_sidebar_name, projekt: @projekt, return_path: return_path) } %>
+    <% rendered_custom_block = capture { render_custom_block(content_block_sidebar_name, projekt: @projekt, return_path: return_path, empty_hint: false) } %>
     <% sidebar_block_body = Nokogiri::HTML::DocumentFragment.parse(rendered_custom_block).at_css(".custom-content-block-body")&.inner_html %>
     <% admin_view = show_admin_controls_for_projekt?(@projekt) %>
     <% initial_empty = admin_view && content_block_body_blank?(sidebar_block_body) %>
@@ -90,14 +90,8 @@
 
         <% if show_admin_controls_for_projekt?(@projekt) %>
           <% c.with_edit_link do %>
-            <% if embedded? %>
-              <button type="button" data-path="/projekts/<%= @projekt.id %>/edit#tab-projekt-map" class="sidebar-card--edit-icon-button js-frame-open-admin-page js-studio-hide-on-preview" title="<%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>" aria-label="<%= t("custom.projekts.page.sidebar.admin_controls.edit_map") %>">
-                <i class="fas fa-pen"></i>
-              </button>
-            <% else %>
-              <%= link_to(map_adm_projekts_projekt_path(@projekt), target: "_blank", class: "sidebar-card--edit-icon-button js-studio-hide-on-preview", title: t("custom.projekts.page.sidebar.admin_controls.edit_map"), aria: { label: t("custom.projekts.page.sidebar.admin_controls.edit_map") }) do %>
-                <i class="fas fa-pen"></i>
-              <% end %>
+            <%= link_to(map_adm_projekts_projekt_path(@projekt), target: "_blank", tabindex: "-1", class: "sidebar-card--edit-icon-button js-studio-hide-on-preview", title: t("custom.projekts.page.sidebar.admin_controls.edit_map"), aria: { label: t("custom.projekts.page.sidebar.admin_controls.edit_map") }) do %>
+              <i class="fas fa-pen"></i>
             <% end %>
           <% end %>
         <% end %>

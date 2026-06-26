@@ -5,7 +5,7 @@ const html = (strings, ...values) => {
 ProjektStudio.templateFunctions.emptyContentBlockHtml = '<div><p></p></div>';
 
 // Wraps a studio control (button or control group) in a <rich-tooltip>
-// (app/assets/javascripts/custom/rich_tooltip.js) with a title + explanation
+// (app/assets/javascripts/elements/rich_tooltip.js) with a title + explanation
 // body. Declarative only — no extra tooltip JS. `delay` is the show delay in ms.
 ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { title, text, note, delay, placement } = {}) {
   const delayAttribute = delay ? ` delay="${delay}"` : "";

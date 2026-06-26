@@ -1,6 +1,6 @@
 <div class="tabs-notifications" id="tab-notifications">
   <div class="row">
-    <div id="proposal_notifications" class="small-12 column notification-body">
+    <p id="proposal_notifications" class="small-12 column notification-body">
       <% if @notifications.blank? %>
         <div class="callout primary text-center">
           <%= t("proposals.show.no_notifications") %>
@@ -16,6 +16,6 @@
           <%= render "proposal_notifications/actions", notification: notification %>
         </div>
       <% end %>
-    </div>
+    </p>
   </div>
 </div>

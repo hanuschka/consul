@@ -1,6 +1,6 @@
 class Adm::AiSettingsController < Adm::BaseController
   helper_method :show_api_endpoint?, :show_model_field?, :show_custom_model_field?,
-    :endpoint_without_custom_model?
+    :endpoint_without_custom_model?, :ai_feature_enabled?
 
   def index
     authorize [:adm, Setting], :index?, policy_class: Adm::AiSettingPolicy
@@ -69,6 +69,10 @@ class Adm::AiSettingsController < Adm::BaseController
 
     def endpoint_without_custom_model?
       Setting["ai.llm_api_endpoint"].present? && Setting["ai.llm_custom_model"].blank?
+    end
+
+    def ai_feature_enabled?
+      Ai::Settings.feature_enabled?
     end
 
     def clearing_required_custom_model?

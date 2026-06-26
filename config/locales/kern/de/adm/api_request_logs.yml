@@ -9,6 +9,7 @@ de:
         http_method: Methode
         request_path: Pfad
         response_status: Status
+        duration: Dauer
         api_client: API-Client
         client_logs: Logs dieses Clients
         no_logs: Keine API-Anfragen-Logs vorhanden.
@@ -32,6 +33,9 @@ de:
         request_path: Anfrage-Pfad
         full_url: Vollständige URL
         response_status: Antwort-Status
+        duration: Dauer
+        db_runtime: Datenbankzeit
+        view_runtime: Renderzeit
         api_client: API-Client
         created_at: Erstellt am
         query_params: Query-Parameter

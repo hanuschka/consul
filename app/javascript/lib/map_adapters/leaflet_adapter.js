@@ -131,8 +131,8 @@ export default class LeafletAdapter extends BaseAdapter {
     this.initialZoom = options.zoom
 
     this.map = L.map(container, {
-      gestureHandling: true,
-      maxZoom: 18,
+      gestureHandling: options.gestureHandling !== false,
+      maxZoom: 19,
       zoomControl: false
     }).setView(center, options.zoom)
 

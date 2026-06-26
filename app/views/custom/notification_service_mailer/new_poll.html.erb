@@ -12,9 +12,11 @@
     <%= link_to @poll.title, poll_url(@poll) %>
   </p>
 
-  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("mailers.shared.sincerely") %>
-    <br>
-    <%= t("mailers.shared.signature") %>
-  </p>
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

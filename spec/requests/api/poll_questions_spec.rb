@@ -57,6 +57,8 @@ RSpec.describe "Poll Questions API", type: :request, openapi_spec: "v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:poll_id) { 1 } }
     end
 
     post "Create a poll question" do
@@ -189,6 +191,8 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
           expect(data["error"]["type"]).to eq("forbidden")
         end
       end
+
+      unauthorized_response { let(:poll_id) { 1 } }
     end
   end
 
@@ -235,6 +239,8 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch "Update a poll question" do
@@ -316,6 +322,8 @@ schema: Schemas::Polls::POLL_QUESTION_UPDATE_PARAMS
           expect(data["error"]["type"]).to eq("forbidden")
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete "Delete a poll question" do
@@ -383,6 +391,8 @@ schema: Schemas::Polls::POLL_QUESTION_UPDATE_PARAMS
           expect(data["error"]["type"]).to eq("forbidden")
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

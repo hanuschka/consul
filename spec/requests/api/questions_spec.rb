@@ -49,6 +49,8 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt question' do
@@ -124,6 +126,9 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -169,6 +174,8 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -211,6 +218,8 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt question' do
@@ -308,6 +317,9 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt question' do
@@ -370,6 +382,84 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/livestreams/{livestream_id}/questions' do
+    parameter name: :livestream_id, in: :path, type: :integer, description: 'Projekt Livestream ID'
+
+    post 'Create a question for a livestream' do
+      tags 'Questions'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Create a question attached to a specific livestream. The question is associated with the livestream and its projekt phase automatically. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :projekt_question, in: :body, description: 'Projekt question creation payload', schema: {
+        type: :object,
+        properties: {
+          projekt_question: {
+            type: :object,
+            properties: {
+              title: { type: :string, description: 'Title of the question' }
+            },
+            required: ['title']
+          }
+        },
+        required: ['projekt_question']
+      }
+
+      response '201', 'projekt question created' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:livestream_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true) }
+        let(:livestream) { livestream_phase.projekt_livestreams.create!(title: 'Livestream', url: 'https://example.com/live') }
+        let(:livestream_id) { livestream.id }
+        let(:projekt_question) do
+          { projekt_question: { title: 'Livestream Question' } }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_question: { type: :object }
+                   },
+                   required: ['projekt_question']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:livestream_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true) }
+        let(:livestream) { livestream_phase.projekt_livestreams.create!(title: 'Livestream', url: 'https://example.com/live') }
+        let(:livestream_id) { livestream.id }
+        let(:projekt_question) do
+          { projekt_question: { title: '' } }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:livestream_id) { 1 } }
+      forbidden_response { let(:livestream_id) { 1 } }
     end
   end
 end

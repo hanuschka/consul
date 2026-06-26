@@ -10,6 +10,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       { label: t("adm.menu.items.stats"),             icon: "bar_chart_4_bars", path: "#", subitems: stats_subitems },
       { label: t("adm.menu.items.files"),         icon: "folder",           path: "#", subitems: files_subitems },
       { label: t("adm.menu.items.apps"),              icon: "dashboard",        path: adm_apps_path },
+      { label: t("adm.menu.items.api"),               icon: "integration_instructions", path: "#", subitems: api_subitems },
       { label: t("adm.menu.items.developer"),         icon: "logo_dev",         path: "#", subitems: developer_subitems }
     ]
   end
@@ -37,8 +38,9 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
 
     def files_subitems
       [
-        { label: t("adm.menu.items.files_subitems.images"),    path: adm_files_images_path },
-        { label: t("adm.menu.items.files_subitems.documents"), path: adm_files_documents_path }
+        { label: t("adm.menu.items.files_subitems.images"),             path: adm_files_images_path },
+        { label: t("adm.menu.items.files_subitems.documents"),          path: adm_files_documents_path },
+        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path }
       ]
     end
 
@@ -49,13 +51,17 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       ].compact
     end
 
+    def api_subitems
+      [
+        { label: t("adm.menu.items.api_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
+        { label: t("adm.menu.items.api_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" }
+      ]
+    end
+
     def developer_subitems
       [
-        { label: t("adm.menu.items.developer_subitems.ai_settings"),        path: adm_ai_settings_path,        active_prefix: "/adm/ai_settings" },
-        { label: t("adm.menu.items.developer_subitems.external_api_keys"),  path: adm_external_api_keys_path,  active_prefix: "/adm/external_api_keys" },
-        { label: t("adm.menu.items.developer_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
-        { label: t("adm.menu.items.developer_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" },
-        { label: t("adm.menu.items.developer_subitems.connection"),         path: adm_connection_path,         active_prefix: "/adm/connection" }
+        { label: t("adm.menu.items.developer_subitems.ai_settings"),       path: adm_ai_settings_path,       active_prefix: "/adm/ai_settings" },
+        { label: t("adm.menu.items.developer_subitems.external_api_keys"), path: adm_external_api_keys_path, active_prefix: "/adm/external_api_keys" }
       ]
     end
 

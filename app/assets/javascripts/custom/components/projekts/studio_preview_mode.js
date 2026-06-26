@@ -70,7 +70,7 @@
 
     toggleEmptyContentBlocks(previewModeEnabled) {
       if (previewModeEnabled) {
-        const contentBlocks = document.querySelectorAll(".js-projekt-content-block");
+        const contentBlocks = document.querySelectorAll(".js-content-block");
         contentBlocks.forEach((block) => this.hideEmptyContentBlock(block));
       } else {
         document.querySelectorAll(".-hidden-by-preview").forEach((element) => {

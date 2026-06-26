@@ -99,6 +99,19 @@ namespace :adm do
     collection do
       get :settings
     end
+    resources :content_blocks,
+              controller: "newsletters/content_blocks",
+              only: [:create, :update, :destroy] do
+      member do
+        patch :update_position
+        patch :change_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
+      end
+      collection do
+        post :generate_with_ai
+      end
+    end
   end
   # notifications
 
@@ -119,6 +132,8 @@ namespace :adm do
   resources :external_api_keys, only: [:index, :show, :edit, :update]
   resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     post :regenerate_token, on: :member
+    get :logs, on: :member
+    resource :service_user, only: [:edit, :update], controller: "api_clients/service_users"
   end
   resources :api_request_logs, only: [:index, :show] do
     delete :destroy_all, on: :collection

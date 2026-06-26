@@ -1,36 +1,40 @@
 class ProjektImports::ExecuteImportJob < ApplicationJob
   queue_as :projekt_imports
 
+  BANNER_ASPECT_RATIO = "16:9".freeze
+
   def perform(projekt_import_id)
     projekt_import = ProjektImport.find(projekt_import_id)
     projekt_import.update!(status: "submitting")
 
     finalize_result = ProjektImports::FinalizeDataService.call(projekt_import: projekt_import)
     if !finalize_result.success?
-      projekt_import.mark_failed!(finalize_result.error)
+      projekt_import.mark_failed!(finalize_result.error, stage: "finalize", details: finalize_result.error_details)
       return
     end
 
     resolve_result = ProjektImports::ResolveContentBlocksService.call(projekt_import: projekt_import)
     if !resolve_result.success?
-      projekt_import.mark_failed!(resolve_result.error)
+      projekt_import.mark_failed!(resolve_result.error, stage: "resolve_content_blocks", details: resolve_result.error_details)
       return
     end
 
     create_result = ProjektImports::CreateProjektFromImportService.call(projekt_import: projekt_import)
     if !create_result.success?
-      projekt_import.mark_failed!(create_result.error)
+      projekt_import.mark_failed!(create_result.error, stage: "create_projekt", details: create_result.error_details)
       return
     end
 
     projekt = create_result.data[:projekt]
-    projekt_import.update!(status: "completed", error_message: nil)
 
     generate_image_if_requested(projekt_import, projekt)
+
+    projekt_import.update!(status: "completed", error_message: nil)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ExecuteImportJob] failed: #{e.message}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import_id, stage: "execute_import_job" }) if defined?(Sentry)
     pi = ProjektImport.find_by(id: projekt_import_id)
-    pi&.mark_failed!(e.message)
+    pi&.mark_failed!(e.message, exception: e)
     raise
   end
 
@@ -51,7 +55,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
     projekt_import.update!(image_status: "running")
 
-    response = DtApi::Client.new.ai.generate_image(prompt: image_prompt)
+    response = DtApi::Client.new.ai.generate_image(prompt: image_prompt, aspect_ratio: BANNER_ASPECT_RATIO)
 
     if !response.success?
       projekt_import.update!(image_status: "failed", image_error: "DT image generation failed")
@@ -70,6 +74,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     projekt_import.update!(image_status: "completed")
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ExecuteImportJob#generate_image] failed: #{e.message}")
+    Sentry.capture_exception(e, level: :warning, extra: { projekt_import_id: projekt_import.id, stage: "image_generation" }) if defined?(Sentry)
     projekt_import.update!(image_status: "failed", image_error: e.message)
     projekt_import.add_warning!("image_generation: #{e.message}")
   end

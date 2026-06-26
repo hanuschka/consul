@@ -45,6 +45,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a poll' do
@@ -169,6 +171,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -210,6 +214,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -248,32 +254,6 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:projekt) { Projekt.create!(name: 'Projekt') }
-        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
-        let(:created_poll) { voting_phase.polls.create!(name: 'Poll name') }
-        let(:id) { created_poll.id }
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'poll found with public_data access' do
         before do
           api_client.update!(access_level: :public_data)
@@ -298,6 +278,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a poll' do
@@ -408,6 +390,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a poll' do
@@ -483,6 +467,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

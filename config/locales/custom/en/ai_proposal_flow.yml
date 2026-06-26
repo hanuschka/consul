@@ -16,12 +16,14 @@ en:
       generating_submessage: "Title and description are being created."
       evaluating_message: "AI is analysing your proposal …"
       evaluating_submessage: "Evaluation against the criteria is running."
+      creating_message: "Submitting your contribution …"
+      creating_submessage: "One moment please."
     step1:
       criteria_heading: "Criteria for submitting your idea"
       idea_heading: "Your Idea"
       textarea_label: "What would you like to improve? Briefly describe the problem, location and your idea."
       placeholder: "e.g. »I would like a drinking fountain in the city park near the playground.«\nor: »The road on Maple Avenue is very rough and needs repair.«\nor: »We need a safe pedestrian crossing near the school entrance on Oak Street.«"
-      submit_button: "Submit proposal"
+      submit_button: "Create proposal draft"
       chars_label: "characters"
     criteria:
       hard_title: "Required Criteria"
@@ -51,6 +53,7 @@ en:
       back: "Back"
       back_edit: "Edit proposal"
       next_evaluation: "Continue to Evaluation"
+      create: "Create"
       submit: "Submit proposal"
       back_to_projekt_phase: "Back to Projekt"
   admin:

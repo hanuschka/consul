@@ -16,7 +16,6 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   color: $main-text-color;
   font-size: 15px;
   width: 100%;
-  overflow: hidden;
   transition: box-shadow $transition-base;
 
   &:hover {

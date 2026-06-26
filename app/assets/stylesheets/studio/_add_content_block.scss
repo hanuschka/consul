@@ -86,7 +86,7 @@
 .add-new-content-block-section--controls {
   position: absolute;
   top: 50%;
-  right: calc(100% + 7px);
+  right: calc(100% + 37px);
   transform: translateY(-50%);
   z-index: 2;
 
@@ -94,7 +94,7 @@
   align-items: center;
   gap: 3px;
 
-  opacity: 0.5;
+  opacity: 0.8;
   transition: opacity 180ms ease;
 }
 

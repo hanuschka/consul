@@ -18,6 +18,7 @@
 
 <%= content_for :additional_plugin_styles %>
 <%= stylesheet_link_tag "application" %>
+<%= stylesheet_link_tag "elements" %>
 
 <% if Setting.new_design_enabled? %>
   <%= stylesheet_link_tag "custom_new_design" %>
@@ -31,6 +32,7 @@
 
 <%= content_for :additional_plugin_scripts %>
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
+<%= javascript_include_tag "elements", "data-turbolinks-track" => "reload" %>
 <%= content_for :additional_scripts %>
 
 

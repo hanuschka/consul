@@ -254,7 +254,7 @@ de:
           table:
             name: Name
             email: E-Mail
-            admin: Admin
+            manage_all: Alle verwalten
         officer:
           add: Hinzufügen
         search:

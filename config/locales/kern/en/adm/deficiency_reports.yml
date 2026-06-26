@@ -254,7 +254,7 @@ en:
           table:
             name: Name
             email: Email
-            admin: Admin
+            manage_all: Manage all
         officer:
           add: Add
         search:

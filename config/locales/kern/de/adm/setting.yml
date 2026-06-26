@@ -214,6 +214,8 @@ de:
         allow_indexing_description: Erlaubt Suchmaschinen wie Google, die Projektseite zu indexieren und in Suchergebnissen anzuzeigen. Ist diese Option deaktiviert, wird ein „noindex”-Tag gesetzt, sodass die Seite zwar über die Plattform erreichbar bleibt, aber nicht über externe Suchmaschinen gefunden werden kann.
         consider_underway: Projekt als aktive Beteiligung führen
         consider_underway_description: Stellt sicher, dass das Projekt in der Übersicht stets als aktive Beteiligung aufgeführt wird – auch dann, wenn aktuell keine reguläre Beteiligungsphase läuft. Geeignet z. B. für dauerhaft beworbene Projekte oder solche zwischen zwei Phasen, die für Nutzer weiterhin als aktive Beteiligungsmöglichkeit sichtbar bleiben sollen.
+        show_related_projekt_link: Projektlink auf Beitragsseiten
+        show_related_projekt_link_description: Zeigt im Kopfbereich der Beiträge dieses Projekts (Vorschläge, Abstimmungen, Debatten usw.) einen Link zurück zum Projekt an. So können Nutzer von einem einzelnen Beitrag zum zugehörigen Projekt navigieren.
     ideas:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >

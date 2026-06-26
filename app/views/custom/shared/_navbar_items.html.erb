@@ -1,21 +1,19 @@
 <% navbar_scope = defined?(landing_page) && landing_page.present? ? NavbarItem.for_landing_page(landing_page.id) : NavbarItem.global %>
-<div data-navbar data-navbar-more-label="<%= t('shared.navbar_more') %>" style="display: contents;">
-  <% navbar_scope.top_level.includes(:landing_page, :projekt, children: [:landing_page, :projekt, children: [:landing_page, :projekt, :children]]).select { |item| navbar_item_visible?(item) }.each do |item| %>
-    <% visible_children = item.children.order(:position).select { |child| navbar_item_visible?(child) } %>
-    <% has_children = visible_children.any? %>
-    <% submenu_id = "navbar-submenu-#{item.id}" if has_children %>
-    <li class="nav-element top-level-item"<%= ' aria-expanded="false"'.html_safe if has_children %>>
-      <a href="<%= navbar_item_url(item) %>"<%= navbar_item_link_attrs(item).html_safe %>><%= item.title %></a>
-      <% if has_children %>
-        <button type="button"
-                class="nav-toggle-arrow"
-                aria-expanded="false"
-                aria-haspopup="true"
-                aria-controls="<%= submenu_id %>"
-                aria-label="<%= t('shared.toggle_submenu', title: item.title) %>"
-                data-navbar-toggle><span aria-hidden="true">&#9660;</span></button>
-        <%= render partial: "shared/navbar_item_children", locals: { children: visible_children, depth: 1, submenu_id: submenu_id } %>
-      <% end %>
-    </li>
-  <% end %>
-</div>
+<% navbar_scope.top_level.includes(:landing_page, :projekt, children: [:landing_page, :projekt, children: [:landing_page, :projekt, :children]]).select { |item| navbar_item_visible?(item) }.each do |item| %>
+  <% visible_children = item.children.order(:position).select { |child| navbar_item_visible?(child) } %>
+  <% has_children = visible_children.any? %>
+  <% submenu_id = "navbar-submenu-#{item.id}" if has_children %>
+  <li class="nav-element top-level-item"<%= ' aria-expanded="false"'.html_safe if has_children %>>
+    <a href="<%= navbar_item_url(item) %>"<%= navbar_item_link_attrs(item).html_safe %>><%= item.title %></a>
+    <% if has_children %>
+      <button type="button"
+              class="nav-toggle-arrow"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="<%= submenu_id %>"
+              aria-label="<%= t('shared.toggle_submenu', title: item.title) %>"
+              data-navbar-toggle><span aria-hidden="true">&#9660;</span></button>
+      <%= render partial: "shared/navbar_item_children", locals: { children: visible_children, depth: 1, submenu_id: submenu_id } %>
+    <% end %>
+  </li>
+<% end %>

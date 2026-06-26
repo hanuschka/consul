@@ -118,6 +118,7 @@ en:
       alt_text: Alt text
       alt_text_missing_hint: Alt text is missing. Add it so screen readers can describe this image.
       edit_alt_text: Edit alt text
+      alt_badge_tooltip: Click to open the editor and add or edit the alt text for this image.
       alt_edit:
         description: The alt text describes the image for people who use screen readers and is shown when the image cannot load. It improves accessibility and search engine visibility.
         placeholder: e.g. People discussing at a round table

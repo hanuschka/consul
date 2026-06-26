@@ -95,15 +95,15 @@
           <% end %>
 
           <% if @url.present? %>
-            <h3 class="resource-item--title">
+            <%= content_tag(title_heading_tag, class: "resource-item--title") do %>
               <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title-link", target: @url_target, data: { turbolinks: false }) %>
-            </h3>
+            <% end %>
 
             <div class="resource-item--description">
               <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
             </div>
           <% else %>
-            <h3 class="no-link resource-item--title"><%= truncate(@title, length: 72) %></h3>
+            <%= content_tag(title_heading_tag, truncate(@title, length: 72), class: "no-link resource-item--title") %>
 
             <div class="resource-item--description">
               <%= truncate(sanitize(strip_tags(@description)), length: 160, escape: false) %>

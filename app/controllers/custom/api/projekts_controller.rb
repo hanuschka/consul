@@ -53,15 +53,14 @@ class Api::ProjektsController < Api::BaseController
     current_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
     projekts = projekts.send(current_filter)
 
-    projekts = sort_projekts(projekts)
-
     include_phases = params[:include_phases] == 'true'
     include_content_blocks = params[:include_content_blocks] == 'true'
+    include_text = params[:include_text] != 'false'
+    include_projekt_settings = params[:include_projekt_settings] == 'true'
 
     includes_hash = {}
-    includes_hash[:translations] = {}
-    includes_hash[:projekt_settings] = {}
-    includes_hash[:content_blocks] = {}
+    includes_hash[:projekt_settings] = {} if include_projekt_settings
+    includes_hash[:content_blocks] = {} if include_text || include_content_blocks
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
 
     if include_phases
@@ -71,6 +70,8 @@ class Api::ProjektsController < Api::BaseController
         :geozone_restrictions
       ]
     end
+
+    projekts = sort_projekts(projekts)
 
     paginating = params[:page].present? || params[:per_page].present?
 
@@ -84,14 +85,20 @@ class Api::ProjektsController < Api::BaseController
       projekts,
       include_phases: include_phases,
       include_content_blocks: include_content_blocks,
+      include_text: include_text,
+      include_projekt_settings: include_projekt_settings,
+      image_variant_versions: image_variant_versions,
       current_api_client: current_client
     )
 
     response = { data: { projekts: serailized_projekts } }
 
-    if paginating
-      response[:pagination] = pagination_meta(projekts)
-    end
+    response[:pagination] =
+      if paginating
+        pagination_meta(projekts)
+      else
+        no_pagination_meta
+      end
 
     render json: response
   end
@@ -299,6 +306,12 @@ class Api::ProjektsController < Api::BaseController
     per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
 
     projekts.page(params[:page]).per(per_page)
+  end
+
+  def image_variant_versions
+    return nil if params[:image_variant_versions].blank?
+
+    params[:image_variant_versions].to_s.split(",").map(&:strip).reject(&:blank?)
   end
 
   def eager_load_projekt_associations(projekts, includes_hash)

@@ -21,7 +21,7 @@ class Projekts::BannerComponent < ApplicationComponent
     return false if @compact
     return false unless @projekt.present?
 
-    start_date_chip_text.present? || end_date_chip_text.present? || phase_status_chips.any?
+    start_date_chip_text.present? || end_date_chip_text.present? || status_chips.any?
   end
 
   def start_date_chip_text
@@ -38,15 +38,42 @@ class Projekts::BannerComponent < ApplicationComponent
       date: I18n.l(@projekt.total_duration_end, format: :long))
   end
 
-  def phase_status_chips
+  def status_chips
     return [] unless @projekt.present?
 
-    visible_phases = @projekt.active_and_visible_projekt_phases
-    return [] if visible_phases.empty?
+    if @projekt.expired?
+      return [] unless @projekt.show_end_date_in_frontend?
 
-    current_phases = visible_phases.current
-    if current_phases.any?
-      current_phases.map do |phase|
+      [{ icon: "check-circle",
+         icon_style: "far",
+         text: I18n.t("custom.projekts.page.sidebar.banner.projekt_completed_chip"),
+         modifier: "-completed" }]
+    elsif projekt_not_started?
+      return [] unless @projekt.show_start_date_in_frontend?
+
+      [{ icon: "clock",
+         icon_style: "far",
+         text: I18n.t("custom.projekts.page.sidebar.banner.projekt_starts_soon_chip"),
+         modifier: "-upcoming" }]
+    else
+      running_phase_chips
+    end
+  end
+
+  private
+
+    # Completed/upcoming status is driven by the projekt's own duration, never
+    # by its phases. `expired?` covers the past end date; this covers the
+    # not-yet-started case (a future start date).
+    def projekt_not_started?
+      @projekt.total_duration_start.present? &&
+        @projekt.total_duration_start > Time.zone.today
+    end
+
+    # While the projekt is within its duration we keep the per-phase chips,
+    # each linking to its footer tab.
+    def running_phase_chips
+      @projekt.active_and_visible_projekt_phases.current.map do |phase|
         { phase: phase,
           index: footer_tab_index_for(phase),
           icon: "circle",
@@ -54,20 +81,7 @@ class Projekts::BannerComponent < ApplicationComponent
           text: phase.title,
           modifier: "-running" }
       end
-    elsif visible_phases.all?(&:expired?)
-      [{ icon: "check-circle",
-         icon_style: "far",
-         text: I18n.t("custom.projekts.page.sidebar.banner.projekt_completed_chip"),
-         modifier: "-completed" }]
-    else
-      [{ icon: "clock",
-         icon_style: "far",
-         text: I18n.t("custom.projekts.page.sidebar.banner.projekt_starts_soon_chip"),
-         modifier: "-upcoming" }]
     end
-  end
-
-  private
 
     # Mirrors the iteration used by Pages::Projekts::SidebarPhasesComponent
     # (`projekt.projekt_phases.active.sorted` with the same skip rules) so the

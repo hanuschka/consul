@@ -544,6 +544,14 @@
 
     renderFeatures() {
       if (this.editable) return;
+      if (!this.map) return;
+
+      if (!this.map.isStyleLoaded()) {
+        this.map.once('idle', this.renderFeatures.bind(this));
+        return;
+      }
+
+      if (this.map.getSource('user-features-points')) return;
 
       const split = App.Map.splitMasterportalFeatures(this.features);
 

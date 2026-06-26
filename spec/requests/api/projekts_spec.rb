@@ -11,10 +11,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a list of all projekts ordered by creation date (oldest first). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :filter, in: :query, type: :string, required: false,
                 description: <<~DESC
-                  Filter projekts by lifecycle stage or special status. Default: 'index_order_all'. Valid values:
+                  Filter projekts by lifecycle stage or special status. Valid values:
 
                   **Timeline-based filters** (all require projekt to be activated):
                   - 'index_order_underway': Projekts in current/active phase where at least one phase is currently accepting contributions (current_at date is today). Indicators of active participation.
@@ -23,18 +23,85 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                   - 'index_order_expired': Projekts past their end date. Shows completed projects.
 
                   **Special status filters**:
-                  - 'index_order_all': All activated projekts with published pages shown in overview (default). Broader view excluding special lists.
+                  - 'index_order_all': All activated projekts with published pages shown in overview. Broader view excluding special lists.
                   - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
                   - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
 
                   Results are ordered by creation date (oldest first).
+
+                  **Default:** 'index_order_all'.
+                DESC
+      parameter name: :sort_by, in: :query, type: :string, required: false,
+                description: <<~DESC
+                  Field to order projekts by. Valid values:
+                  'created_at', 'total_duration_start', 'total_duration_end',
+                  'order_number', 'name', 'published_at', 'page_title'.
+
+                  - 'name': the projekt's internal name (case-insensitive A–Z).
+                  - 'page_title': the public-facing page title, ordered by the German (de) title, case-insensitive. This is the title shown to users; prefer it over 'name' for display ordering.
+
+                  Projekts with a null value for the chosen field (e.g. no page title, or an unset publish date) are always placed last, in both directions. Invalid values fall back to 'created_at'.
+
+                  **Default:** 'created_at'.
+                DESC
+      parameter name: :sort_direction, in: :query, type: :string, required: false,
+                description: <<~DESC
+                  Sort direction for 'sort_by'. Valid values: 'asc', 'desc'. Combine 'sort_by=total_duration_end' with 'sort_direction=asc' to list the projekts expiring next first.
+
+                  **Default:** 'asc'.
                 DESC
       parameter name: :only_public, in: :query, type: :boolean, required: false,
-                description: 'If false, returns all projekts (admin only). Default: true (returns activated projekts with published pages shown in overview). Users with public_data access can only access public projekts.'
+                description: <<~DESC
+                  If false, returns all projekts (admin only); true returns only activated projekts with published pages shown in overview. Users with public_data access can only access public projekts.
+
+                  **Default:** true (only public projekts).
+                DESC
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
-                description: 'If true, includes projekt phases in response with full phase details including type, active status, and dates. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases. Default: false (excludes phases).'
+                description: <<~DESC
+                  If true, includes projekt phases in response with full phase details including type, active status, and dates. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases.
+
+                  **Default:** false (excludes phases).
+                DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
-                description: 'If true, includes content blocks in response with HTML content organized by locale. Default: false (excludes content blocks).'
+                description: <<~DESC
+                  If true, includes content blocks in response with HTML content organized by locale.
+
+                  **Default:** false (excludes content blocks).
+                DESC
+      parameter name: :include_text, in: :query, type: :boolean, required: false,
+                description: <<~DESC
+                  Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response.
+
+                  **Default:** true (the fields are included).
+                DESC
+      parameter name: :include_projekt_settings, in: :query, type: :boolean, required: false,
+                description: <<~DESC
+                  If true, includes the projekt_settings array (key/value configuration pairs) in the response. Always included in the single projekt (show) response.
+
+                  **Default:** false (the field is omitted).
+                DESC
+      parameter name: :page, in: :query, type: :integer, required: false,
+                description: <<~DESC
+                  Pagination page number. When provided, results are paginated and a pagination object is added to the response.
+
+                  **Default:** omitted (all matching projekts are returned, unpaginated).
+                DESC
+      parameter name: :per_page, in: :query, type: :integer, required: false,
+                description: <<~DESC
+                  Number of projekts per page when paginating. Only applies when page or per_page is provided.
+
+                  **Default:** 20.
+                DESC
+      parameter name: :image_variant_versions, in: :query, type: :string, required: false,
+                description: <<~DESC
+                  Comma-separated list of image variant versions to include in each projekt's page image 'variants' object. Use this to shrink the response payload when only specific sizes are needed (image-variant URL generation is the main serialization cost of this endpoint).
+
+                  Valid versions: '150', '300', '450', '600', '900', '1200', '1920', 'original'. Each numeric version is the image scaled to fit within that maximum width in pixels — height scales proportionally to preserve the aspect ratio, and the image is never upscaled past its original size (so the result may be narrower than the requested width). 'original' is the unmodified upload at its native dimensions. Rough guidance: 150 = thumbnail, 300 = small/mobile, 450–600 = card/body, 900–1200 = wide/desktop header, 1920 = full-bleed/retina hero.
+
+                  Example: 'image_variant_versions=300,900' returns only those two keys. Unknown versions are ignored. Only applies to the list (index) response; the single projekt (show) response always returns all versions.
+
+                  **Default:** all versions are returned.
+                DESC
 
       response '200', 'projekts found' do
         schema type: :object,
@@ -48,9 +115,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -71,9 +139,10 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -92,9 +161,78 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                     }
                    },
                    required: ['projekts']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
                },
-               required: ['data']
+               required: ['data', 'pagination']
+
+        run_test!
+      end
+
+      response '200', 'projekts found sorted by total_duration_end' do
+        let(:sort_by) { 'total_duration_end' }
+        let(:sort_direction) { 'asc' }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data', 'pagination']
+
+        run_test!
+      end
+
+      response '200', 'projekts found paginated' do
+        let(:page) { 1 }
+        let(:per_page) { 20 }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 },
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data', 'pagination']
+
+        run_test!
+      end
+
+      response '200', 'projekts found with limited image variant versions' do
+        let(:image_variant_versions) { '300,900' }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                    projekts: {
+                      type: :array,
+                      items: { '$ref' => '#/components/schemas/Projekt' }
+                    }
+                   },
+                   required: ['projekts']
+                 },
+                 pagination: Schemas::Miscellaneous::NO_PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data', 'pagination']
 
         run_test!
       end
@@ -208,9 +346,17 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       security [bearer_auth: []]
       description "Retrieve a single projekt by ID with all its details. Can optionally include/exclude nested phases and content blocks. Returns full projekt hierarchy information, page metadata, and settings. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
-                description: 'If true, includes projekt phases in response with all phases, settings, and configuration. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases. Default: false (excludes phases).'
+                description: <<~DESC
+                  If true, includes projekt phases in response with all phases, settings, and configuration. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases.
+
+                  **Default:** false (excludes phases).
+                DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
-                description: 'If true, includes content blocks in response with all localized content blocks. Default: false (excludes content blocks).'
+                description: <<~DESC
+                  If true, includes content blocks in response with all localized content blocks.
+
+                  **Default:** false (excludes content blocks).
+                DESC
 
       response '200', 'projekt found and returned' do
         schema type: :object,

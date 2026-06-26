@@ -1,7 +1,7 @@
-<%= content_for :title, t("adm.api_clients.logs.title") %>
+<%= content_for :title, t("adm.api_clients.logs.title_for", name: @api_client.name) %>
 
 <%= render Adm::HeaderComponent.new(
-  title: t("adm.api_clients.logs.title"),
+  title: t("adm.api_clients.logs.title_for", name: @api_client.name),
   breadcrumbs: @breadcrumbs,
   back_button_url: adm_api_client_path(@api_client),
   compact: true

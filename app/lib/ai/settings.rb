@@ -2,12 +2,16 @@ module Ai::Settings
   DEFAULT_GPT_MODEL = "gpt-5.4"
   # DEFAULT_GPT_MODEL = "gpt-5.2"
 
-  def self.voice_assistant_allowed?
+  def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true
   end
 
+  def self.voice_assistant_allowed?
+    feature_enabled?
+  end
+
   def self.ai_available?
-    return false unless Rails.application.secrets.dig(:ai, :enabled) == true
+    return false unless feature_enabled?
 
     case current_llm_provider
     when "openai"

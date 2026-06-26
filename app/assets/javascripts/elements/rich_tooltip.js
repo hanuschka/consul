@@ -164,6 +164,8 @@
     }
 
     show() {
+      if (this.trigger.querySelector(":popover-open")) return
+
       if (SUPPORTS_POPOVER) {
         this.tooltipBody.showPopover()
       } else {

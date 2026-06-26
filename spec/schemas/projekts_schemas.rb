@@ -25,7 +25,6 @@ module Schemas
         show_start_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project start date on the frontend', example: true },
         show_end_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project end date on the frontend', example: true },
         top_level_projekt_id: { type: :integer, nullable: true, description: 'ID of the top-level projekt in the hierarchy. Null if this is the top level.', example: nil },
-        tsv: { type: :string, nullable: true, description: 'Text search vector for full-text search optimization. Maintained automatically.', example: nil },
         preview_code: { type: :string, nullable: true, description: 'A unique code used for generating preview links to the projekt before publication', example: 'abc123' },
         page: {
           type: :object,

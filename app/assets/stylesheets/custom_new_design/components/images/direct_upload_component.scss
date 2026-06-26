@@ -54,8 +54,7 @@
   left: 0;
   z-index: 2;
   pointer-events: none;
-  backdrop-filter: saturate(1.2) brightness(0.96);
-  background: rgba(255, 255, 255, 0.65);
+  background: var(--generating-overlay-color, #faf6ea);
 
   svg {
     width: 50px;
@@ -153,7 +152,13 @@
 .direct-image-upload {
   &.-confirmation-pending {
     .direct-image-upload--file-attach-area {
-      display: none;
+      // Hide without removing the layout box so the container keeps its
+      // content height. On mobile the container is `height: auto`, so using
+      // `display: none` here would collapse it to 0 and the absolutely
+      // positioned confirmation step (anchored to the container edges) would
+      // have no height to fill. `visibility: hidden` also disables pointer
+      // events on the placeholder, and is a no-op on desktop (fixed height).
+      visibility: hidden;
     }
 
     .direct-image-upload--confirmation-step {
@@ -226,7 +231,7 @@
   &.-preview-set {
     display: block;
 
-    .direct-image-upload--image-preview {
+    .direct-image-upload--image-preview:not([src=""]) {
       display: block;
       z-index: 2;
     }
@@ -235,6 +240,10 @@
       background-color: white;
     }
   }
+}
+
+.direct-image-upload--image-preview {
+  display: none;
 }
 
 .direct-image-upload--file-title {

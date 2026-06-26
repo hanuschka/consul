@@ -3,11 +3,25 @@ require_dependency Rails.root.join("app", "helpers", "proposals_helper").to_s
 module ProposalsHelper
 
   def all_proposal_map_locations(proposals_for_map)
-    ids = proposals_for_map.except(:limit, :offset, :order).ids.uniq
+    MapLocation.proposal_features(map_pin_proposal_ids(proposals_for_map))
+  end
 
-    map_locations = MapLocation.where(mappable_type: "Proposal", mappable_id: ids)
-                               .includes(mappable: [:projekt_labels, :projekt_phase, :sentiment, :masterportal_pin])
-                               .map(&:features_json_data)
+  def proposal_map_locations_count(proposals_for_map, projekt_phase = nil)
+    ids = map_pin_proposal_ids(proposals_for_map)
+    count = MapLocation.where(mappable_type: "Proposal", mappable_id: ids).count
+
+    if projekt_phase.present?
+      count += MasterportalPin.where(projekt_phase_id: projekt_phase.id).standalone.count
+    end
+
+    count
+  end
+
+  def map_pin_proposal_ids(proposals_for_map)
+    proposals_for_map
+      .except(:includes, :eager_load, :preload, :references, :select, :limit, :offset, :order)
+      .ids
+      .uniq
   end
 
   def label_error_class?(field)

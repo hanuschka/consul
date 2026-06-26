@@ -1,4 +1,6 @@
 class Projekts::DtContentBlockTemplateItemComponent < ViewComponent::Base
+  include StudioTooltipHelper
+
   def initialize(template:)
     @template = template
   end

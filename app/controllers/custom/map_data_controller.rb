@@ -3,7 +3,8 @@ class MapDataController < ApplicationController
 
   SOURCE_SERVICES = {
     "point_of_interest_phase" => MapData::PointOfInterestPhase,
-    "budget_phase" => MapData::BudgetPhase
+    "budget_phase" => MapData::BudgetPhase,
+    "proposal_phase" => MapData::ProposalPhase
   }.freeze
 
   def show
@@ -41,6 +42,20 @@ class MapDataController < ApplicationController
           projekt_label_ids: params[:projekt_label_ids],
           sentiment_id: params[:sentiment_id]
         }
+      when "MapData::ProposalPhase"
+        {
+          projekt_phase: projekt_phase,
+          search: params[:search],
+          projekt_label_ids: params[:projekt_label_ids],
+          sentiment_id: params[:sentiment_id],
+          my_posts_user_id: my_posts_user_id
+        }
       end
+    end
+
+    def my_posts_user_id
+      return nil if params[:my_posts_filter] != "true"
+
+      current_user&.id
     end
 end

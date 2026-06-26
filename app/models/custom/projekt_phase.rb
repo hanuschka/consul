@@ -410,9 +410,6 @@ class ProjektPhase < ApplicationRecord
     []
   end
 
-  def embedded_admin_nav_bar_items
-    admin_nav_bar_items
-  end
 
   def settings_in_tabs
     {}
@@ -509,6 +506,12 @@ class ProjektPhase < ApplicationRecord
   # (e.g. BudgetPhase) override this.
   def sidebar_cta_label
     cta_button_name.presence || I18n.t("custom.projekt_phases.cta.#{name}")
+  end
+
+  # DOM id the sidebar CTA link scrolls to. Defaults to the footer phase
+  # subnav; subclasses override to target a more specific element.
+  def sidebar_cta_anchor
+    "filter-subnav"
   end
 
   def regular

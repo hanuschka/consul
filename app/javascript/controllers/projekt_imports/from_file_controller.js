@@ -1,12 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 import AjaxFetch from "../../shared/ajax_fetch"
 
-// Upload screen: validates files, POSTs multipart to create, then polls status
-// every 2 s until the import transitions to chatting (or fails).
+// Upload screen: validates files, POSTs multipart to create, then hands off to
+// the dedicated loading screen (import show), which polls status and redirects to
+// the chat. Navigating to a real URL keeps in-flight analysis reload-safe.
 export default class extends Controller {
   static targets = [
     "form", "dropzone", "fileInput", "fileList", "secondary",
-    "instructions", "generateImage", "submitButton",
+    "instructions", "submitButton",
     "error", "progress", "progressLabel", "progressFill", "loaderFiles"
   ]
 
@@ -15,10 +16,7 @@ export default class extends Controller {
     maxBytes: Number,
     allowed: String,
     csrf: String,
-    pollInterval: { type: Number, default: 1000 },
     progressExtracting: String,
-    progressProcessing: String,
-    progressChatting: String,
     errorTooLarge: String,
     errorUnsupported: String,
     errorNoFiles: String
@@ -26,13 +24,11 @@ export default class extends Controller {
 
   connect() {
     this.files = []
-    this.pollTimer = null
     this.bindDragEvents()
     this.updateVisibility()
   }
 
   disconnect() {
-    this.clearPollTimer()
     this.unbindDragEvents()
   }
 
@@ -195,7 +191,6 @@ export default class extends Controller {
 
     const formData = new FormData()
     this.files.forEach((file) => formData.append("files[]", file))
-    formData.append("generate_image", this.generateImageTarget.checked ? "true" : "false")
 
     if (this.instructionsTarget.value) {
       formData.append("additional_user_instructions", this.instructionsTarget.value)
@@ -206,7 +201,7 @@ export default class extends Controller {
 
     AjaxFetch.post(this.createUrlValue, formData)
       .then((data) => {
-        this.pollStatus(data.status_url)
+        window.location.href = data.import_url
       })
       .catch((error) => {
         this.hideProgress()
@@ -221,7 +216,6 @@ export default class extends Controller {
     if (this.hasProgressTarget) this.progressTarget.classList.remove("-hidden")
 
     this.renderLoaderFiles()
-    this.setProgressPercent(15)
   }
 
   hideProgress() {
@@ -250,57 +244,6 @@ export default class extends Controller {
       row.appendChild(size)
       this.loaderFilesTarget.appendChild(row)
     })
-  }
-
-  setProgressPercent(percent) {
-    if (!this.hasProgressFillTarget) return
-    this.progressFillTarget.style.width = `${Math.max(0, Math.min(100, percent))}%`
-  }
-
-  pollStatus(url) {
-    this.clearPollTimer()
-    AjaxFetch.get(url)
-      .then((data) => this.handleStatus(data, url))
-      .catch(() => this.schedulePoll(url))
-  }
-
-  schedulePoll(url) {
-    this.pollTimer = setTimeout(() => this.pollStatus(url), this.pollIntervalValue)
-  }
-
-  clearPollTimer() {
-    if (this.pollTimer) {
-      clearTimeout(this.pollTimer)
-      this.pollTimer = null
-    }
-  }
-
-  handleStatus(data, url) {
-    switch (data.status) {
-      case "extracting":
-        this.progressLabelTarget.textContent = this.progressExtractingValue
-        this.setProgressPercent(35)
-        this.schedulePoll(url)
-        break
-      case "processing":
-        this.progressLabelTarget.textContent = this.progressProcessingValue
-        this.setProgressPercent(70)
-        this.schedulePoll(url)
-        break
-      case "chatting":
-        this.progressLabelTarget.textContent = this.progressChattingValue
-        this.setProgressPercent(100)
-        window.location.href = data.chat_url
-        break
-      case "failed":
-        this.clearPollTimer()
-        this.hideProgress()
-        this.submitButtonTarget.disabled = false
-        this.showError(data.error || "")
-        break
-      default:
-        this.schedulePoll(url)
-    }
   }
 
   showError(message) {

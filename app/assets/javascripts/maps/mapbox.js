@@ -153,6 +153,11 @@
           instance.renderFeatures();
           instance.toggleControlVisibility();
           instance.setupEditingControls();
+
+          if (!instance.editable) {
+            instance.map.keyboard.disable();
+            App.MapKeyboardFocus.neutralize(instance.element);
+          }
         });
         instance.addInstructionOverlay();
         instance.setupExpandControl();
@@ -520,8 +525,16 @@
           accessToken: mapboxgl.accessToken,
           mapboxgl: mapboxgl,
           countries: 'DE',
-          marker: false
+          marker: false,
+          placeholder: 'Nach Adresse suchen'
       }), 'top-left');
+
+      const searchInput = this.element.querySelector('.mapboxgl-ctrl-geocoder--input');
+      if (searchInput) {
+        searchInput.setAttribute('title', 'Nach Adresse suchen');
+        searchInput.setAttribute('aria-label', 'Nach Adresse suchen');
+      }
+
       this.map.addControl(new mapboxgl.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
         trackUserLocation: true
@@ -531,6 +544,14 @@
 
     renderFeatures() {
       if (this.editable) return;
+      if (!this.map) return;
+
+      if (!this.map.isStyleLoaded()) {
+        this.map.once('idle', this.renderFeatures.bind(this));
+        return;
+      }
+
+      if (this.map.getSource('user-features-points')) return;
 
       const split = App.Map.splitMasterportalFeatures(this.features);
 

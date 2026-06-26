@@ -1,5 +1,5 @@
-<tr
-  class="kern-table__row files-asset-row"
+<li
+  class="files-asset-row"
   data-id="<%= document.id %>"
   data-type="document"
   data-only-title="true"
@@ -7,44 +7,83 @@
   data-title="<%= document.title %>"
   data-filename="<%= filename %>"
 >
-  <th scope="row" class="kern-table__header files-asset-row--icon-cell">
-    <span class="files-asset-row--icon-wrapper">
-      <i class="fa <%= icon_class %> files-asset-card--thumb-icon files-asset-row--icon"></i>
-      <% if admin_upload? %>
-        <span
-          class="files-asset-row--admin-badge"
-          title="<%= t("files.card.admin_badge") %>"
-          aria-label="<%= t("files.card.admin_badge") %>"
-        >
-          <i class="fa fa-shield-alt"></i>
-        </span>
-      <% end %>
-    </span>
-  </th>
-
-  <td class="kern-table__cell files-asset-row--title-cell">
-    <span title="<%= display_title %>"><%= display_title %></span>
-  </td>
-
-  <td class="kern-table__cell"><%= documentable_type_label %></td>
-
-  <td class="kern-table__cell">
-    <% if documentable_name.present? && documentable_url.present? %>
-      <%= link_to documentable_name, documentable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
-    <% elsif documentable_name.present? %>
-      <%= documentable_name %>
+  <span class="files-asset-row--icon-wrapper">
+    <i class="fa <%= icon_class %> files-asset-card--thumb-icon files-asset-row--icon"></i>
+    <% if admin_upload? %>
+      <span
+        class="files-asset-row--admin-badge"
+        title="<%= t("files.card.admin_badge") %>"
+        aria-label="<%= t("files.card.admin_badge") %>"
+      >
+        <i class="fa fa-shield-alt"></i>
+      </span>
     <% end %>
-  </td>
+  </span>
 
-  <td class="kern-table__cell"><%= humanized_size %></td>
+  <div class="files-asset-row--name">
+    <% if title_truncated? %>
+      <button
+        type="button"
+        class="files-asset-row--title-trigger"
+        popovertarget="<%= title_popover_id %>"
+        title="<%= display_title %>"
+      ><%= truncated_title %></button>
 
-  <td class="kern-table__cell"><%= updated_at_formatted %></td>
+      <div
+        id="<%= title_popover_id %>"
+        class="files-asset-row--title-popover"
+        popover
+      ><%= display_title %></div>
+    <% else %>
+      <span title="<%= display_title %>"><%= display_title %></span>
+    <% end %>
+  </div>
 
-  <td class="kern-table__cell">
-    <%= render Files::UploaderLinkComponent.new(user: uploaded_by) %>
-  </td>
+  <div class="files-asset-row--meta">
+    <div class="files-asset-row--field -type">
+      <span class="files-asset-row--field-label"><%= t("files.list.resource_type") %></span>
+      <span class="files-asset-row--field-value">
+        <%= documentable_type_label.presence || "—" %>
+      </span>
+    </div>
 
-  <td class="kern-table__cell files-asset-row--actions-cell">
+    <div class="files-asset-row--field -assigned">
+      <span class="files-asset-row--field-label"><%= t("files.list.assigned_to") %></span>
+      <span class="files-asset-row--field-value">
+        <% if documentable_name.present? && documentable_url.present? %>
+          <%= link_to documentable_name,
+                documentable_url,
+                target: "_blank",
+                rel: "noopener",
+                title: documentable_name,
+                class: "files-asset-card--resource-link" %>
+        <% elsif documentable_name.present? %>
+          <%= documentable_name %>
+        <% else %>
+          —
+        <% end %>
+      </span>
+    </div>
+
+    <div class="files-asset-row--field -size">
+      <span class="files-asset-row--field-label"><%= t("files.list.size") %></span>
+      <span class="files-asset-row--field-value"><%= humanized_size.presence || "—" %></span>
+    </div>
+
+    <div class="files-asset-row--field -modified">
+      <span class="files-asset-row--field-label"><%= t("files.list.modified") %></span>
+      <span class="files-asset-row--field-value"><%= updated_at_formatted %></span>
+    </div>
+
+    <div class="files-asset-row--field -uploader">
+      <span class="files-asset-row--field-label"><%= t("files.list.uploaded_by") %></span>
+      <span class="files-asset-row--field-value">
+        <%= render Files::UploaderLinkComponent.new(user: uploaded_by) %>
+      </span>
+    </div>
+  </div>
+
+  <div class="files-asset-row--actions">
     <% if document.attachment.attached? %>
       <a
         href="<%= attachment_url %>"
@@ -89,5 +128,5 @@
     >
       <i class="fa fa-trash"></i>
     </button>
-  </td>
-</tr>
+  </div>
+</li>

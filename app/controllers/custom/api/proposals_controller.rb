@@ -75,7 +75,7 @@ class Api::ProposalsController < Api::BaseController
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
     proposal = @projekt_phase.resources.new(proposal_params.except("image_attributes"))
-    proposal.author = @current_client.user
+    proposal.author = @current_client.content_author
     proposal.resource_terms = true
 
     if proposal.save

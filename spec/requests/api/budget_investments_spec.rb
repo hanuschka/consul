@@ -35,13 +35,13 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of investments per page (default: 100, max: 500)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of investments per page (**default:** 100, max: 500)'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
       parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category group'
       parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible", "unfeasible", or "undecided"'
       parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status: "true" for selected investments, "false" for unselected'
-      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (default), "supports" (vote count), "confidence_score", "price", "ballots", or "newest"'
+      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (**default**), "supports" (vote count), "confidence_score", "price", "ballots", or "newest"'
 
       response '200', 'budget investments found and returned' do
         let(:budget_id) do
@@ -74,29 +74,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                required: ['data']
 
         run_test!
-      end
-
-      response '403', 'forbidden - insufficient access' do
-        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
       end
 
       response '200', 'budget investments found with public_data access' do
@@ -132,6 +109,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:budget_id) { 1 } }
     end
 
     post 'Create a budget investment' do
@@ -356,6 +335,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           expect(response.status).to eq(201)
         end
       end
+
+      unauthorized_response { let(:budget_id) { 1 } }
     end
   end
 
@@ -365,8 +346,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all budget investments across all budgets. Includes investment details (title, description, status, cost) and voting/support statistics. Useful for global investment tracking and analytics.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of investments per page (default: 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of investments per page (**default:** 100, max: 500)', required: false
 
       response '200', 'budget investments found and returned' do
         before do
@@ -410,6 +391,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -460,44 +443,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
-        let(:group) { budget.create_group!(name: 'Test Group') }
-        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
-        let(:budget_investment) do
-          investment = Budget::Investment.new(
-            author: api_client.user,
-            heading: heading,
-            budget: budget,
-            resource_terms: true,
-            title: 'Test Investment',
-            description: 'Test Description'
-          )
-          investment.save!
-          investment
-        end
-        let(:id) { budget_investment.id }
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '200', 'budget investment found with public_data access' do
         let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
         let(:group) { budget.create_group!(name: 'Test Group') }
@@ -533,6 +478,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a budget investment' do
@@ -790,6 +737,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           expect(response.status).to eq(200)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a budget investment' do
@@ -906,6 +855,59 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/budget_investments/{id}' do
+    parameter name: :id, in: :path, type: :integer, description: 'Budget Investment ID'
+
+    get 'Retrieve a budget investment (alias)' do
+      tags 'Budget Investments'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Alias of `GET /api/investments/{id}`. Retrieve a single budget investment by ID with full details. Returns project information, feasibility assessment, admin valuation status, voting statistics, and selected status.#{ApiAccessRequirements::GET_READ_ONLY}"
+
+      response '200', 'budget investment found and returned' do
+        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+        let(:budget_investment) do
+          investment = Budget::Investment.new(
+            author: api_client.user,
+            heading: heading,
+            budget: budget,
+            resource_terms: true,
+            title: 'Test Investment',
+            description: 'Test Description'
+          )
+          investment.save!
+          investment
+        end
+        let(:id) { budget_investment.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { type: :object }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '404', 'budget investment not found' do
+        let(:id) { 999999 }
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

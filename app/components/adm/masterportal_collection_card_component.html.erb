@@ -25,11 +25,11 @@
       <a
         class="adm-masterportal-collection-card--source"
         href="<%= collection.source_url %>"
+        title="<%= collection.source_url %>"
         target="_blank"
         rel="noopener noreferrer"
       >
         <span class="material-symbols-outlined" aria-hidden="true">link</span>
-        <span class="adm-masterportal-collection-card--source-text"><%= collection.source_url %></span>
       </a>
     <% end %>
 
@@ -95,15 +95,6 @@
     class="adm-masterportal-collection-card--actions"
     data-adm--masterportal-collection-target="actions"
   >
-    <button
-      type="button"
-      class="adm-masterportal-collection-card--button -update"
-      title="<%= t(".update_tooltip") %>"
-      data-action="adm--masterportal-collection#update"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">sync</span>
-      <%= t(".update") %>
-    </button>
     <button
       type="button"
       class="adm-masterportal-collection-card--button -resync"

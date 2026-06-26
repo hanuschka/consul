@@ -4,10 +4,11 @@ class Adm::Files::DocumentsController < Adm::Files::BaseController
 
     @assets =
       DocumentsQuery
-        .new(query_params)
+        .new(query_params.merge(admin_flag: "true"))
         .call
+        .with_attached_attachment
         .merge(policy_scope([:adm, Document]))
-        .includes(user: :image)
+        .preload(:documentable, user: :image)
         .page(params[:page])
         .per(24)
 
@@ -38,7 +39,7 @@ class Adm::Files::DocumentsController < Adm::Files::BaseController
   def documentable_type_filter
     authorize [:adm, :document], :index?
 
-    @documentable_types = DocumentsQuery.available_documentable_types
+    @documentable_types = DocumentsQuery.available_documentable_types(Document.where(admin: true))
     @selected = params[:documentable_type]
 
     render layout: false
@@ -50,7 +51,7 @@ class Adm::Files::DocumentsController < Adm::Files::BaseController
       params.permit(
         :search, :extension, :size_min_mb, :size_max_mb,
         :created_from, :created_to, :updated_from, :updated_to,
-        :documentable_type, :admin_flag, :sort
+        :documentable_type, :sort
       )
     end
 

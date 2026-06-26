@@ -4,6 +4,7 @@ en:
       email_template_component:
         trigger: Trigger
         trigger_description: Describes the event that triggers the automatic sending of this email.
+        settings_link_text: settings
         recipient: Recipient
         recipient_description: Who is this email sent to?
         subject: Subject

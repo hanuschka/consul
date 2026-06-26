@@ -1,75 +1,26 @@
 .files-edit-modal {
-  width: 90vw;
-  max-width: 480px;
-  padding: 0;
-  background: #ffffff;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
-
-  &::backdrop {
-    background: rgba(0, 0, 0, 0.4);
-  }
+  width: 480px;
 }
 
-.files-edit-modal--content {
+.files-edit-modal--form {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  width: 100%;
-}
-
-.files-edit-modal--header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 20px 24px;
-  border-bottom: 1px solid #ededed;
+  gap: 16px;
 }
 
 .files-edit-modal--title {
   margin: 0;
+  padding-right: 36px;
   font-size: 18px;
   font-weight: 600;
   line-height: 1.2;
   color: #222222;
 }
 
-.files-edit-modal--close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
-  line-height: 1;
-  color: #555555;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
-
-  &:hover {
-    color: #222222;
-    background: #f5f5f5;
-    border-color: #d9d9d9;
-  }
-
-  &:focus-visible {
-    outline: 2px solid #005fcc;
-    outline-offset: 1px;
-  }
-}
-
 .files-edit-modal--body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 20px 24px;
 }
 
 .files-edit-modal--field {
@@ -91,7 +42,7 @@
   width: 100%;
   padding: 8px 12px;
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   color: #222222;
   background: #ffffff;
@@ -117,7 +68,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
-  padding: 16px 24px;
+  padding-top: 16px;
   border-top: 1px solid #ededed;
 }
 

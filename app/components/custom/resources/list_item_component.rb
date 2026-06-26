@@ -14,6 +14,7 @@ class Resources::ListItemComponent < ApplicationComponent
     description:,
     resource: nil,
     projekt: nil,
+    hide_projekt_breadcrumb: false,
     image: nil,
     subline: nil,
     url: nil,
@@ -23,10 +24,13 @@ class Resources::ListItemComponent < ApplicationComponent
     header_style: nil,
     narrow_header: false,
     date: nil,
-    no_footer_bottom_padding: false
+    no_footer_bottom_padding: false,
+    title_heading_level: 3
   )
     @title = title
+    @title_heading_level = title_heading_level
     @projekt = projekt
+    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
     @description = description
     @resource = resource
     @image = image
@@ -63,6 +67,17 @@ class Resources::ListItemComponent < ApplicationComponent
     l(@date, format: :date_only)
   end
 
+  def show_projekt_breadcrumb?
+    @projekt.present? && !@hide_projekt_breadcrumb
+  end
+
+  def show_body_heading?
+    @subline.present? ||
+      show_projekt_breadcrumb? ||
+      (@projekt.blank? && @tags.present?) ||
+      date.present?
+  end
+
   def truncate_length
     if @wide
       150
@@ -92,6 +107,10 @@ class Resources::ListItemComponent < ApplicationComponent
     return unless show_author_name?
 
     @resource.on_behalf_of.present?
+  end
+
+  def title_heading_tag
+    "h#{@title_heading_level}"
   end
 
   def show_image?

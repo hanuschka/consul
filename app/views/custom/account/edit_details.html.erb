@@ -34,7 +34,11 @@
           <fieldset class="user-date-of-birth sign-up">
             <legend><%= User.human_attribute_name(:date_of_birth) %></legend>
             <%= f.date_select :date_of_birth,
-                              { prompt: true, start_year: 1900, end_year: minimum_required_age.years.ago.year },
+                              { label: false,
+                                prompt: { day: t("custom.helpers.select.birth_day"),
+                                          month: t("custom.helpers.select.birth_month"),
+                                          year: t("custom.helpers.select.birth_year") },
+                                start_year: 1900, end_year: minimum_required_age.years.ago.year },
                               { autocomplete: "bday" } %>
           </fieldset>
         <% end %>

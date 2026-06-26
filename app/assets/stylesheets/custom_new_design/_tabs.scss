@@ -38,9 +38,11 @@
     display: none;
     z-index: 1000;
     height: $mobile-custom-fixed-tabs-height;
-    background-color: white;
+    background-color: $surface-white !important;
     color: black;
     border: 1px solid #D9D9D9;
+    border-color: $soft-border !important;
+    border-bottom-width: 2px;
     margin-bottom: 20px;
     z-index: 1004;
 
@@ -63,16 +65,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    font-family: $heading-font;
+    font-weight: 500;
+    font-size: 16px !important;
     width: 100%;
     height: 100%;
-    color: inherit;
+    color: $muted-text;
     border-right: 1px solid $gray-1;
     user-select: none;
-    transition: 80ms ease background-color;
+    transition: color $transition-base, background-color $transition-base;
 
     &:hover {
       text-decoration: none;
+      color: $slate-gray;
     }
 
     &:active {
@@ -80,9 +85,10 @@
     }
 
     &.-selected {
-      background-color: #BFCDDB;
-      font-weight: bold;
-      border-bottom: 3px solid var(--brand-color);
+      color: $accent-blue !important;
+      background-color: $accent-blue-lighter !important;
+      font-weight: 600;
+      border-bottom: 3px solid $accent-blue !important;
     }
 
     &:last-child {

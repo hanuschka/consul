@@ -40,13 +40,6 @@ export default class extends Controller {
     this.stopPolling()
   }
 
-  update(event) {
-    event.preventDefault()
-
-    this.pendingClean = false
-    this.startImport()
-  }
-
   importAndClean(event) {
     event.preventDefault()
 

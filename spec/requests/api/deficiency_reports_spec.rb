@@ -74,6 +74,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
     end
 
     post 'Create a deficiency report' do
@@ -239,6 +241,9 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
           expect(response.status).to eq(201)
         end
       end
+
+      unauthorized_response
+      forbidden_response
     end
   end
 
@@ -289,6 +294,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
         let(:id) { 999999 }
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a deficiency report' do
@@ -485,6 +492,9 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
           expect(response.status).to eq(200)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 

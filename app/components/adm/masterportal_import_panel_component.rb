@@ -32,6 +32,16 @@ class Adm::MasterportalImportPanelComponent < ApplicationComponent
     Masterportal::ImportService::CATEGORY_PHASE_TYPES.include?(@projekt_phase.type)
   end
 
+  def create_resource_switch_description
+    parts = [t(".create_resource_description")]
+
+    if creates_categories?
+      parts << t(".create_resource_categories_note")
+    end
+
+    safe_join(parts, " ")
+  end
+
   def resource_name
     key = RESOURCE_NAME_KEYS[@projekt_phase.type]
     return nil if key.blank?

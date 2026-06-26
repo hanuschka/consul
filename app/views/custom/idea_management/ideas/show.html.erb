@@ -6,7 +6,7 @@
 
 <%= render "custom/idea_management/ideas/show/basic_data", idea: @idea %>
 
-<% if (Setting["ideas.officers_can_administer_assigned_reports"].present? && current_user.idea_officer?) ||
+<% if current_user.idea_officer? ||
        current_user.idea_manager? ||
        current_user.administrator? %>
   <% if can?(:edit, @idea) %>

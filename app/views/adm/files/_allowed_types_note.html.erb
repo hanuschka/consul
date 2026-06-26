@@ -2,10 +2,22 @@
   <span class="icon material-symbols-outlined" aria-hidden="true">info</span>
   <span class="adm-files-allowed-types--lines">
     <%
+      settings_edit_path = local_assigns[:settings_edit_path].presence ||
+        admin_settings_path(anchor: "tab-images-and-documents")
       settings_link =
-        if current_user&.administrator?
+        if local_assigns.fetch(:show_settings_link, false) && current_user&.administrator?
           link_to(t("files.allowed_types_settings_link"),
-                  admin_settings_path(anchor: "tab-images-and-documents"),
+                  settings_edit_path,
+                  class: "adm-files-allowed-types--settings-link",
+                  target: "_blank", rel: "noopener")
+        end
+
+      max_file_size = local_assigns[:max_file_size]
+      max_size_edit_path = local_assigns[:max_size_edit_path]
+      max_size_edit_link =
+        if max_file_size.present? && max_size_edit_path.present? && current_user&.administrator?
+          link_to(t("files.max_file_size_edit_link"),
+                  max_size_edit_path,
                   class: "adm-files-allowed-types--settings-link",
                   target: "_blank", rel: "noopener")
         end
@@ -13,7 +25,8 @@
 
     <% if admin_types == user_types %>
       <span>
-        <%= t("files.allowed_types_note_html", types: tag.span(admin_types, class: "adm-files-allowed-types--type")) %>
+        <%= t(local_assigns.fetch(:note_key, "files.allowed_types_note_html"),
+              types: tag.span(admin_types, class: "adm-files-allowed-types--type")) %>
         <% if settings_link %>(<%= settings_link %>)<% end %>
       </span>
     <% else %>
@@ -21,6 +34,13 @@
       <span>
         <%= t("files.allowed_types_users_html", types: tag.span(user_types, class: "adm-files-allowed-types--type")) %>
         <% if settings_link %>(<%= settings_link %>)<% end %>
+      </span>
+    <% end %>
+
+    <% if max_file_size.present? %>
+      <span>
+        <%= t("files.max_file_size_note_html", size: max_file_size) %>
+        <% if max_size_edit_link %>(<%= max_size_edit_link %>)<% end %>
       </span>
     <% end %>
   </span>

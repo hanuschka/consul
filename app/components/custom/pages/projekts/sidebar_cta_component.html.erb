@@ -5,6 +5,6 @@
   <% when :new_button %>
     <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
   <% when :link, :budget_vote, :budget_ballot %>
-    <a class="button -orange" href="#filter-subnav"><%= @projekt_phase.sidebar_cta_label %></a>
+    <a class="button -orange" href="#<%= @projekt_phase.sidebar_cta_anchor %>"><%= @projekt_phase.sidebar_cta_label %></a>
   <% end %>
 <% end %>

@@ -39,7 +39,11 @@
 
     selectCategory: function(categoryId, shouldScroll) {
       var categorySelectElement = document.querySelector(".js-user-resource-select-category");
+
+      if (!categorySelectElement) return;
+
       categorySelectElement.value = categoryId;
+      categorySelectElement.dispatchEvent(new Event("change", { bubbles: true }));
       this.highlightAndScrollToContentCard(categorySelectElement, shouldScroll);
     },
 
@@ -133,17 +137,26 @@
     },
 
     toggleLabels: function(labelIds, checked, shouldScroll) {
-      if (labelIds && labelIds.length > 0) {
-        var recentLabelElements;
+      if (!labelIds || labelIds.length === 0) return;
 
-        labelIds.forEach(function(labelId) {
-          recentLabelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
-          recentLabelElements.forEach(function(labelElement) {
+      var lastLabelElement;
+
+      labelIds.forEach(function(labelId) {
+        var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
+
+        labelElements.forEach(function(labelElement) {
+          var checkbox = document.getElementById(labelElement.htmlFor);
+
+          if (checkbox.checked !== checked) {
             labelElement.click();
-          });
-        });
+          }
 
-        this.highlightAndScrollToContentCard(Array.from(recentLabelElements)[0], shouldScroll);
+          lastLabelElement = labelElement;
+        });
+      });
+
+      if (lastLabelElement) {
+        this.highlightAndScrollToContentCard(lastLabelElement, shouldScroll);
       }
     },
 

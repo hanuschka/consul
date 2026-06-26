@@ -39,6 +39,7 @@ en:
       ai_question:
         title: "Individual Analysis by Question"
         subtitle: "Ask your own questions about the submitted proposals and receive a comprehensive evaluation."
+        question_label: "Question"
         placeholder: "Enter your question about the proposals..."
         submit: "Ask AI"
         submitting: "Sending..."

@@ -9,10 +9,23 @@ en:
         http_method: Method
         request_path: Path
         response_status: Status
+        duration: Duration
         api_client: API client
+        client_logs: This client's logs
         no_logs: No API request logs available.
-        destroy_all: Delete all logs
+        no_results: No logs match the selected filters.
+        destroy_all: Clear request log
         destroy_all_confirm: Really delete all API request logs?
+      filters:
+        url_label: Search by path or URL
+        url_placeholder: Path or URL …
+        http_method_any: All methods
+        response_status_any: All statuses
+        api_client_any: All API clients
+        start_date_label: From date
+        end_date_label: To date
+        submit: Filter
+        reset: Reset
       destroy_all:
         success: All API request logs have been deleted.
       show:
@@ -20,7 +33,24 @@ en:
         request_path: Request path
         full_url: Full URL
         response_status: Response status
+        duration: Duration
+        db_runtime: Database time
+        view_runtime: View time
         api_client: API client
         created_at: Created on
         query_params: Query parameters
         body_params: Body parameters
+      status_explanations:
+        "200": The request completed successfully.
+        "201": The resource was created successfully.
+        "204": Success – the response contains no content.
+        "304": Not modified – the cached version is still valid.
+        "400": Bad request – the request was malformed or incomplete.
+        "401": Unauthorized – a valid token is missing or invalid.
+        "403": Forbidden – the client is not permitted to perform this action.
+        "404": Not found – the requested resource does not exist.
+        "422": Unprocessable – the submitted data failed validation.
+        "429": Too many requests – the rate limit was exceeded.
+        "500": Internal server error – an unexpected error occurred on the server.
+        "502": Bad gateway – an upstream service returned an invalid response.
+        "503": Service unavailable – the server is temporarily overloaded or under maintenance.

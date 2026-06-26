@@ -1,4 +1,6 @@
 module CustomHelper
+  include HasEmbeddableShortcodes
+
   def tag_kind_name(kind)
     if kind == 'category'
       t('admin.tags.logic.category')
@@ -73,14 +75,18 @@ module CustomHelper
     end
   end
 
-  def process_custom_content_if_needed(content)
+  def process_custom_content_if_needed(content, projekt: nil)
     return content if content.blank?
 
     new_content = content
 
+    if projekt.present?
+      new_content = process_shortcodes(new_content, projekt: projekt)
+    end
+
     if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? &&
-        content&.include?("</iframe>")
-      new_content = process_iframe_embeds(content)
+        new_content&.include?("</iframe>")
+      new_content = process_iframe_embeds(new_content)
     end
 
     new_content = process_oembeds(new_content)
@@ -110,7 +116,7 @@ module CustomHelper
       url = oembed["url"]&.strip
       next unless url&.include?("youtube.com")
 
-      rendered_html = Shared::ExternalVideoPlayer.new(url: url).render_in(view_context)
+      rendered_html = Shared::ExternalVideoPlayer.new(url: url).render_in(view_render_context)
       fragment = Nokogiri::HTML::DocumentFragment.parse(rendered_html)
 
       p_node = Nokogiri::XML::Node.new('p', doc)

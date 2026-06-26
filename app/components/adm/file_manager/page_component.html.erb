@@ -1,0 +1,144 @@
+<span hidden data-files-upload-success-template="<%= t("files.upload_success_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-upload-failed-template="<%= t("files.upload_failed_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-delete-failed-message="<%= t("files.delete_failed") %>"></span>
+<span hidden data-files-delete-success-template="<%= t("files.delete_success_with_name", filename: "__FILENAME__") %>"></span>
+<span hidden data-files-delete-failed-template="<%= t("files.delete_failed_with_name", filename: "__FILENAME__") %>"></span>
+
+<%= render Adm::HeaderComponent.new(
+  title: title,
+  breadcrumbs: breadcrumbs,
+  frontend_url: frontend_url,
+  compact: true
+) do |header| %>
+  <% if after_title? %>
+    <% header.with_after_title do %>
+      <% if description? %>
+        <p class="text-muted"><%= description %></p>
+      <% end %>
+
+      <% if types_note? || upload? %>
+        <div class="adm-files-meta-row">
+          <% if types_note? %>
+            <%= types_note %>
+          <% end %>
+
+          <% if upload? %>
+            <div class="ml-auto d-flex gap-2">
+              <% if images? %>
+                <rich-tooltip placement="top" delay="1000" trigger-only hover-only shadow="heavy">
+                  <%= render Adm::ButtonWithProgressComponent.new(
+                    label: t("files.card.upload_with_crop"),
+                    loading_label: t("files.upload_loading"),
+                    success_label: t("files.upload_success"),
+                    icon: "crop",
+                    button_data: { action: "click->files--upload#triggerCropPicker" },
+                    extra_controllers: ["files--upload", "shared--image-cropper"],
+                    extra_root_data: {
+                      "files--upload-endpoint-value": upload_endpoint,
+                      "action": "shared--image-cropper:cropped->files--upload#uploadCropped"
+                    }
+                  ) do %>
+                    <%= tag.input(
+                      type: "file",
+                      accept: upload_accept,
+                      class: "js-files-upload-crop-input",
+                      hidden: true,
+                      data: {
+                        "files--upload-target" => "cropInput",
+                        "shared--image-cropper-target" => "input",
+                        "action" => "change->shared--image-cropper#cropOnSelect"
+                      }
+                    ) %>
+                    <%= render Kern::ImageCropperDialogComponent.new %>
+                    <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+                  <% end %>
+                  <template>
+                    <span class="rich-tooltip-content">
+                      <span class="rich-tooltip-content--title"><%= t("files.card.upload_with_crop_tooltip_title") %></span>
+                      <span class="rich-tooltip-content--text"><%= t("files.card.upload_with_crop_tooltip_text") %></span>
+                    </span>
+                  </template>
+                </rich-tooltip>
+              <% end %>
+
+              <%= render Adm::ButtonWithProgressComponent.new(
+                label: t("files.card.upload"),
+                loading_label: t("files.upload_loading"),
+                success_label: t("files.upload_success"),
+                icon: "upload",
+                button_data: { action: "click->files--upload#triggerPicker" },
+                extra_controllers: ["files--upload"],
+                extra_root_data: { "files--upload-endpoint-value": upload_endpoint }
+              ) do %>
+                <%= tag.input(
+                  type: "file",
+                  accept: upload_accept,
+                  class: "js-files-upload-input",
+                  hidden: true,
+                  data: {
+                    "files--upload-target" => "input",
+                    "action" => "change->files--upload#fileChanged"
+                  }
+                ) %>
+                <span hidden data-files-upload-failed-message="<%= t("files.upload_failed") %>"></span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= sub_header %>
+
+<div class="kern-container my-3">
+  <div
+    class="files-index"
+    data-controller="files--filter-bar"
+    data-files--filter-bar-type-value="<%= type %>"
+    data-files--filter-bar-endpoint-value="<%= endpoint %>"
+  >
+    <div class="files-index--filter-bar" data-files--filter-bar-target="form">
+      <%= render Adm::FilterBarComponent.new(
+        type: type,
+        imageable_type_frame_src: imageable_type_frame_src,
+        documentable_type_frame_src: documentable_type_frame_src,
+        show_view_modes: supports_view_modes?
+      ) %>
+    </div>
+
+    <div class="files-index--grid" data-files--filter-bar-target="grid">
+      <% if assets.any? %>
+        <%= render(card_component.with_collection(assets, type: type)) %>
+      <% else %>
+        <div class="files-index--empty">
+          <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if supports_view_modes? %>
+      <div class="files-index--list">
+        <ul class="files-index--list-items" data-files--filter-bar-target="list">
+          <% if assets.any? %>
+            <%= render(row_component.with_collection(assets)) %>
+          <% else %>
+            <li class="files-index--list-empty">
+              <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div
+      class="files-index--pagination"
+      data-files--filter-bar-target="pagination"
+    >
+      <%= render partial: "ckeditor/assets/pagination", locals: { assets: assets } %>
+    </div>
+
+    <%= render Files::EditModalComponent.new %>
+  </div>
+</div>

@@ -49,6 +49,7 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.vc_map_enabled": '',
         "projekt_feature.general.consider_underway": "",
         "projekt_feature.general.allow_indexing": "active",
+        "projekt_feature.general.show_related_projekt_link": "active",
 
         "projekt_option.general.external_participation_link": "",
 

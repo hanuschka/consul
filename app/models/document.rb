@@ -11,14 +11,6 @@ class Document < ApplicationRecord
 
   scope :admin, -> { where(admin: true) }
 
-  scope :for_studio_file_manager, ->(projekt) {
-    if projekt
-      where(admin: true, documentable_type: "Projekt", documentable_id: projekt.id)
-    else
-      where(admin: true, documentable_id: nil)
-    end
-  }
-
   def self.accepted_content_types
     Setting["uploads.documents.content_types"]&.split(" ") || %w[application/pdf]
   end

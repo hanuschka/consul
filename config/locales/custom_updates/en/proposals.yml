@@ -25,6 +25,9 @@ en:
           save_draft: Save draft
           publish: Publish proposal
       index:
+        title: "Overview of all proposals"
+        count: Proposals
+        participation_information: Participation information
         max_number_reached: You have reached the maximum number (%{max_number}) of proposals per user. Before you can create another suggestion, you must withdraw an active suggestion.
         no_active_projekt: Currently no participation procedure
         no_active_phase: Phase expired

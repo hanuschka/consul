@@ -225,8 +225,7 @@
   // the icons evenly on a single row — the icons (7 x 28px) fit comfortably in
   // the ~254px card, so no wrapping is needed.
   .projekt-content-block--toolbar {
-    width: 100%;
-    max-width: 100%;
+    // width: auto !important;
     margin-left: 0;
     flex-wrap: nowrap;
     padding: 3px 5px;
@@ -243,9 +242,9 @@
 
   // The group dividers add ~7px each and crowd the full-width row; the even
   // spacing of space-between already separates the icons, so drop them.
-  .projekt-content-block-edit--separator {
-    display: none;
-  }
+  // .projekt-content-block-edit--separator {
+  //   display: none;
+  // }
 
   .studio-icon-button {
     width: 28px;
@@ -257,13 +256,13 @@
     }
   }
 
-  .content-block-margin-input {
-    display: none !important;
-  }
+  // .content-block-margin-input {
+  //   display: none !important;
+  // }
 
-  .js-content-block-header-dropdown {
-    display: none !important;
-  }
+  // .js-content-block-header-dropdown {
+  //   display: none !important;
+  // }
 
   .content-block-edit-toolbar {
     gap: 2px;

@@ -51,6 +51,10 @@
       background: transparent;
       padding: 0;
       border: 0;
+
+      .add-new-content-block-section--controls {
+        right: calc(100% + 12px);
+      }
     }
   }
 

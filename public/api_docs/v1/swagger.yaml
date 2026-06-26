@@ -209,13 +209,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Page number for pagination (default: 1)'
+        description: Page number for pagination (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of items per page (default: depends on configuration)'
+        description: Number of items per page (**default:** depends on configuration)
         schema:
           type: integer
       responses:
@@ -738,13 +738,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of investments per page (default: 100, max: 500)'
+        description: 'Number of investments per page (**default:** 100, max: 500)'
         schema:
           type: integer
       - name: heading_id
@@ -776,7 +776,7 @@ paths:
       - name: order
         in: query
         required: false
-        description: 'Sort by: "id" (default), "supports" (vote count), "confidence_score",
+        description: 'Sort by: "id" (**default**), "supports" (vote count), "confidence_score",
           "price", "ballots", or "newest"'
         schema:
           type: string
@@ -1096,13 +1096,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of investments per page (default: 100, max: 500)'
+        description: 'Number of investments per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -1917,13 +1917,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number for pagination (default: 1)'
+        description: Page number for pagination (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of budgets per page (default: 100, max: 500)'
+        description: 'Number of budgets per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -1994,13 +1994,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number for pagination (default: 1)'
+        description: Page number for pagination (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of budgets per page (default: 100, max: 500)'
+        description: 'Number of budgets per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -2570,7 +2570,7 @@ paths:
       - name: sort
         in: query
         required: false
-        description: 'Sort comments by. Valid values: ''oldest'' (default, oldest
+        description: 'Sort comments by. Valid values: ''oldest'' (**default**, oldest
           comments first), ''newest'' (newest comments first), ''most_voted'' (highest
           voted first, then oldest)'
         schema:
@@ -2578,13 +2578,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number for results (default: 1)'
+        description: Pagination page number for results (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of comments per page (default: 100, max: 500)'
+        description: 'Number of comments per page (**default:** 100, max: 500)'
         schema:
           type: integer
       responses:
@@ -2762,13 +2762,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number for results (default: 1)'
+        description: Pagination page number for results (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of comments per page (default: 100, max: 500)'
+        description: 'Number of comments per page (**default:** 100, max: 500)'
         schema:
           type: integer
       responses:
@@ -2972,7 +2972,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: Items per page (default 100)
+        description: Items per page (**default:** 100)
         schema:
           type: integer
       responses:
@@ -3028,13 +3028,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of reports per page (default: 100, max: 500)'
+        description: 'Number of reports per page (**default:** 100, max: 500)'
         schema:
           type: integer
       responses:
@@ -3571,13 +3571,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of events per page (default: 100, max: 500)'
+        description: 'Number of events per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -4104,13 +4104,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of events per page (default: 100, max: 500)'
+        description: 'Number of events per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -4181,13 +4181,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of formulars per page (default: 100, max: 500)'
+        description: 'Number of formulars per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -4754,7 +4754,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: Items per page (default 100)
+        description: Items per page (**default:** 100)
         schema:
           type: integer
       responses:
@@ -5111,7 +5111,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: Items per page (default 100)
+        description: Items per page (**default:** 100)
         schema:
           type: integer
       responses:
@@ -5175,13 +5175,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of ideas per page (default: 100, max: 500)'
+        description: 'Number of ideas per page (**default:** 100, max: 500)'
         schema:
           type: integer
       responses:
@@ -5830,13 +5830,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of livestreams per page (default: 100, max: 500)'
+        description: 'Number of livestreams per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -6008,13 +6008,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -6340,13 +6340,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -6714,13 +6714,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of milestones per page (default: 100, max: 500)'
+        description: 'Number of milestones per page (**default:** 100, max: 500)'
         schema:
           type: integer
       responses:
@@ -7066,13 +7066,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of notifications per page (default: 100, max: 500)'
+        description: 'Number of notifications per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -7240,13 +7240,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -7531,13 +7531,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -7694,13 +7694,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -7983,13 +7983,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -8160,13 +8160,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -9476,13 +9476,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -9668,13 +9668,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -12244,22 +12244,22 @@ paths:
       - name: sort
         in: query
         required: false
-        description: 'Sort proposals by. Valid values: ''created_at'' (default, oldest
-          first), ''hot_score'' (trending/most activity), ''confidence_score'' (highest
-          confidence first), ''relevance'' (most voted first), ''archival_date'' (most
-          recently archived first)'
+        description: 'Sort proposals by. Valid values: ''created_at'' (**default**,
+          oldest first), ''hot_score'' (trending/most activity), ''confidence_score''
+          (highest confidence first), ''relevance'' (most voted first), ''archival_date''
+          (most recently archived first)'
         schema:
           type: string
       - name: page
         in: query
         required: false
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of proposals per page (default: 100, max: 500)'
+        description: 'Number of proposals per page (**default:** 100, max: 500)'
         schema:
           type: integer
       - name: for_public_render
@@ -12617,13 +12617,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -13477,13 +13477,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number for pagination (default: 1)'
+        description: Page number for pagination (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of questions per page (default: 100, max: 500)'
+        description: 'Number of questions per page (**default:** 100, max: 500)'
         required: false
         schema:
           type: integer
@@ -13645,13 +13645,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: 'Page number (default: 1)'
+        description: Page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Items per page (default: 100)'
+        description: Items per page (**default:** 100)
         required: false
         schema:
           type: integer
@@ -14034,13 +14034,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: 'Pagination page number (default: 1)'
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of texts per page (default: 100, max: 500)'
+        description: 'Number of texts per page (**default:** 100, max: 500)'
         schema:
           type: integer
       responses:

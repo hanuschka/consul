@@ -1,5 +1,5 @@
 <div class="row">
-  <div id="proposal_notifications" class="small-12 column notification-body">
+  <p id="proposal_notifications" class="small-12 column notification-body">
     <% if @projekt_notifications.blank? %>
       <div class="callout primary text-center">
         <%= t("proposals.show.no_notifications") %>
@@ -13,5 +13,5 @@
         <%= simple_format sanitize_and_auto_link(notification.body), {}, sanitize: false %>
       </div>
     <% end %>
-  </div>
+  </p>
 </div>

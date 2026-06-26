@@ -29,7 +29,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
                   Results are ordered by creation date (oldest first).
 
-                  Default: **'index_order_all'**.
+                  **Default:** 'index_order_all'.
                 DESC
       parameter name: :sort_by, in: :query, type: :string, required: false,
                 description: <<~DESC
@@ -42,55 +42,55 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
                   Projekts with a null value for the chosen field (e.g. no page title, or an unset publish date) are always placed last, in both directions. Invalid values fall back to 'created_at'.
 
-                  Default: **'created_at'**.
+                  **Default:** 'created_at'.
                 DESC
       parameter name: :sort_direction, in: :query, type: :string, required: false,
                 description: <<~DESC
                   Sort direction for 'sort_by'. Valid values: 'asc', 'desc'. Combine 'sort_by=total_duration_end' with 'sort_direction=asc' to list the projekts expiring next first.
 
-                  Default: **'asc'**.
+                  **Default:** 'asc'.
                 DESC
       parameter name: :only_public, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   If false, returns all projekts (admin only); true returns only activated projekts with published pages shown in overview. Users with public_data access can only access public projekts.
 
-                  **Default: true (only public projekts).**
+                  **Default:** true (only public projekts).
                 DESC
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   If true, includes projekt phases in response with full phase details including type, active status, and dates. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases.
 
-                  **Default: false (excludes phases).**
+                  **Default:** false (excludes phases).
                 DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   If true, includes content blocks in response with HTML content organized by locale.
 
-                  **Default: false (excludes content blocks).**
+                  **Default:** false (excludes content blocks).
                 DESC
       parameter name: :include_text, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response.
 
-                  **Default: true (the fields are included).**
+                  **Default:** true (the fields are included).
                 DESC
       parameter name: :include_projekt_settings, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   If true, includes the projekt_settings array (key/value configuration pairs) in the response. Always included in the single projekt (show) response.
 
-                  **Default: false (the field is omitted).**
+                  **Default:** false (the field is omitted).
                 DESC
       parameter name: :page, in: :query, type: :integer, required: false,
                 description: <<~DESC
                   Pagination page number. When provided, results are paginated and a pagination object is added to the response.
 
-                  **Default: omitted (all matching projekts are returned, unpaginated).**
+                  **Default:** omitted (all matching projekts are returned, unpaginated).
                 DESC
       parameter name: :per_page, in: :query, type: :integer, required: false,
                 description: <<~DESC
                   Number of projekts per page when paginating. Only applies when page or per_page is provided.
 
-                  **Default: 20.**
+                  **Default:** 20.
                 DESC
       parameter name: :image_variant_versions, in: :query, type: :string, required: false,
                 description: <<~DESC
@@ -100,7 +100,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
 
                   Example: 'image_variant_versions=300,900' returns only those two keys. Unknown versions are ignored. Only applies to the list (index) response; the single projekt (show) response always returns all versions.
 
-                  **Default: all versions are returned.**
+                  **Default:** all versions are returned.
                 DESC
 
       response '200', 'projekts found' do
@@ -349,13 +349,13 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 description: <<~DESC
                   If true, includes projekt phases in response with all phases, settings, and configuration. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases.
 
-                  **Default: false (excludes phases).**
+                  **Default:** false (excludes phases).
                 DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   If true, includes content blocks in response with all localized content blocks.
 
-                  **Default: false (excludes content blocks).**
+                  **Default:** false (excludes content blocks).
                 DESC
 
       response '200', 'projekt found and returned' do

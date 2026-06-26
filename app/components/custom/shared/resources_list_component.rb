@@ -88,7 +88,8 @@ class Shared::ResourcesListComponent < ApplicationComponent
     context = {
       resources: resources,
       additional_data: @additional_data,
-      hide_projekt_breadcrumb: @projekt_phase.present?
+      hide_projekt_breadcrumb: @projekt_phase.present?,
+      item_heading_level: item_heading_level
     }
 
     match.last[:component].call(resource, context)
@@ -96,11 +97,15 @@ class Shared::ResourcesListComponent < ApplicationComponent
 
   private
 
+  def item_heading_level
+    @title.present? ? 3 : 2
+  end
+
   def resource_types
     @resource_types ||= {
       Projekt => {
         i18n_namespace: "custom.projekts",
-        component: ->(resource, _) { Projekts::ListItemComponent.new(projekt: resource) }
+        component: ->(resource, context) { Projekts::ListItemComponent.new(projekt: resource, title_heading_level: context[:item_heading_level]) }
       },
       Proposal => {
         i18n_namespace: "custom.proposals.index",

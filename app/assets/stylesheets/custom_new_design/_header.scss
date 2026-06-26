@@ -1348,8 +1348,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 // -- NavbarItem-driven navbar (scoped to [data-navbar]) -------------------
 
 [data-navbar] {
-  display: contents;
-
   // Desktop: hide toggle buttons — flyouts open on hover via existing CSS
   @media screen and (min-width: $small-tablet-viewport-start) {
     button[data-navbar-toggle] {

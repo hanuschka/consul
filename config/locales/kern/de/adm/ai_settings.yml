@@ -6,6 +6,10 @@ de:
         custom_model_required: >
           Bitte geben Sie ein benutzerdefiniertes Modell an. Wenn ein API-Endpunkt gesetzt ist, funktioniert die KI ohne benutzerdefiniertes Modell nicht.
       warnings:
+        feature_disabled:
+          title: KI-Funktion nicht aktiviert
+          body: >
+            Die KI-Funktion ist für diese Plattform nicht aktiviert. Die hier vorgenommenen Einstellungen haben keine Wirkung, bis die Funktion freigeschaltet wird. Wenden Sie sich an info@demokratie.today, um die KI-Funktion zu aktivieren.
         custom_model_required:
           title: Benutzerdefiniertes Modell erforderlich
           body: >

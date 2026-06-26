@@ -9,6 +9,7 @@ en:
         http_method: Method
         request_path: Path
         response_status: Status
+        duration: Duration
         api_client: API client
         client_logs: This client's logs
         no_logs: No API request logs available.
@@ -32,6 +33,9 @@ en:
         request_path: Request path
         full_url: Full URL
         response_status: Response status
+        duration: Duration
+        db_runtime: Database time
+        view_runtime: View time
         api_client: API client
         created_at: Created on
         query_params: Query parameters

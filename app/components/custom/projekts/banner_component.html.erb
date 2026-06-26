@@ -44,7 +44,7 @@
                 <%= end_date_chip_text %>
               </span>
             <% end %>
-            <% phase_status_chips.each do |chip| %>
+            <% status_chips.each do |chip| %>
               <% if chip[:phase].present? %>
                 <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
                   class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",

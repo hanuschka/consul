@@ -9,6 +9,7 @@ class ProjektSerializer < BaseSerializer
     @include_projekt_settings = options.fetch(:include_projekt_settings, true)
     @include_nested_fields = options.fetch(:include_nested_fields, false)
     @current_api_client = options.fetch(:current_api_client, nil)
+    @image_variant_versions = options.fetch(:image_variant_versions, nil)
   end
 
   def serialize
@@ -29,14 +30,17 @@ class ProjektSerializer < BaseSerializer
           :show_start_date_in_frontend,
           :show_end_date_in_frontend,
           :top_level_projekt_id,
-          :tsv,
           :preview_code
         ]
       )
 
     serialized_image =
       if projekt&.page&.image.present?
-        ImageSerializer.new(projekt.page.image, include_variants: true).serialize
+        ImageSerializer.new(
+          projekt.page.image,
+          include_variants: true,
+          variant_versions: @image_variant_versions
+        ).serialize
       end
 
     page_data = {

@@ -75,7 +75,6 @@
     border-radius: 14px;
     box-shadow: 0 6px 22px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.55);
     pointer-events: auto;
-    width: 100%;
 
     // Invisible hover bridge between toolbar and block — prevents the toolbar
     // from disappearing when the mouse moves through the 8px gap
@@ -150,6 +149,12 @@
     .projekt-content-block--toolbar {
       display: flex;
       outline: 1px solid #c9dced;
+    }
+
+    &:not(.-compact-mode) {
+      .projekt-content-block--toolbar {
+        width: 100%;
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 ProjektStudio.utils.removeFoundationIds = function(element) {
-  element.querySelectorAll('[data-accordion]').forEach((accordion) => {
-    accordion.setAttribute('data-accordion', '');
+  element.querySelectorAll("[data-accordion]").forEach((accordion) => {
+    accordion.setAttribute("data-accordion", "");
 
     ProjektStudio.utils.removeChildHtmlAttributes(
       accordion,
@@ -9,15 +9,15 @@ ProjektStudio.utils.removeFoundationIds = function(element) {
   });
 }
 
-ProjektStudio.utils.resetFoundationAccordionStateFor = function(accordionRoot) {
-  accordionRoot.querySelectorAll(".accordion-item.is-active").forEach((element) => {
-    element.classList.remove('is-active')
-  })
-  accordionRoot.querySelectorAll(".accordion-content").forEach((element) => {
-    element.style.display = 'none';
-    element.ariaHidden = "true";
-  })
-  accordionRoot.querySelectorAll(".accordion-title").forEach((element) => {
-    element.ariaSelected = "false";
-  })
+ProjektStudio.utils.cleanContentForClipboard = function(element) {
+  element.querySelectorAll("*").forEach((node) => {
+    if (node.hasAttribute("data-orbit")) {
+      node.setAttribute("data-orbit", "");
+    }
+
+    node.removeAttribute("data-resize");
+    node.removeAttribute("id");
+  });
+
+  ProjektStudio.utils.removeFoundationIds(element);
 }

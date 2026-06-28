@@ -239,7 +239,8 @@ dialog.modern-modal {
     background-color: #d8d8d8;
   }
 
-  &.-copied {
+  &.-copied i {
+    color: $green-success-color;
   }
 }
 

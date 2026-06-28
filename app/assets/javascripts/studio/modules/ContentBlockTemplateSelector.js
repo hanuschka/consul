@@ -77,46 +77,12 @@ App.ContentBlockEditor.TemplateSelector = {
   copyContentBlockTemplate(templateItem) {
     const contentTemplate = templateItem.querySelector('.js-content-block-template-content');
     const normalizedContent = ProjektStudio.utils.resetMapEmbeds(contentTemplate.innerHTML.trim());
-    const cleanedContent = this.stripAttributesFromContent(normalizedContent);
+    const cleanedContainer = ProjektStudio.utils.htmlToDomElement(normalizedContent);
 
-    navigator.clipboard.writeText(cleanedContent).then(() => {
-      this.showCopySuccessFeedback(templateItem.querySelector('.js-copy-content-block-template'));
+    ProjektStudio.utils.cleanContentForClipboard(cleanedContainer);
+
+    navigator.clipboard.writeText(cleanedContainer.innerHTML).then(() => {
+      App.ContentBlockEditor.CopyFeedback.show(templateItem.querySelector('.js-copy-content-block-template'));
     })
-  },
-
-  stripAttributesFromContent(htmlContent) {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-
-    const attributesToEmpty = ['data-orbit', 'data-accordion'];
-    const attributesToRemove = ['data-resize', 'id'];
-    const allElements = tempDiv.querySelectorAll('*');
-
-    allElements.forEach((element) => {
-      attributesToEmpty.forEach((attr) => {
-        if (element.hasAttribute(attr)) {
-          element.setAttribute(attr, '');
-        }
-      });
-
-      attributesToRemove.forEach((attr) => {
-        element.removeAttribute(attr);
-      });
-    });
-
-    return tempDiv.innerHTML;
-  },
-
-  showCopySuccessFeedback(button) {
-    const originalIcon = button.querySelector('i');
-    const originalClass = originalIcon.className;
-
-    originalIcon.className = 'fa fas fa-check';
-    button.classList.add("-copied")
-
-    setTimeout(() => {
-      originalIcon.className = originalClass;
-      button.classList.remove("-copied")
-    }, 300);
   }
 };

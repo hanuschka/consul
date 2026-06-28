@@ -46,6 +46,7 @@
 //= require ../studio/modules/ContentBlock/CodeEditMode
 //= require ../studio/modules/ContentBlock/EditModeSwitcher
 //= require ../studio/modules/ContentBlock/EditModeButtons
+//= require ../studio/modules/ContentBlock/CopyFeedback
 //= require ../studio/modules/ContentBlock/Copy
 //= require ../studio/modules/ContentBlock/EmptyHintToggle
 //= require ../studio/modules/ContentBlock/SimpleEditMode

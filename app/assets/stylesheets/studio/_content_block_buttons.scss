@@ -209,6 +209,38 @@
 // }
 
 // =============================================================================
+// Copy-Erfolg-Feedback — grüner Haken + "Kopiert!"-Tooltip links vom Button
+// =============================================================================
+.studio-icon-button.-copied i {
+  color: $green-success-color;
+}
+
+.studio-copy-feedback-tooltip {
+  position: fixed;
+  inset: auto;
+  z-index: 10010;
+  transform: translate(-100%, -50%);
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #1c1c1e;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+
+.studio-copy-feedback-tooltip.-visible {
+  opacity: 1;
+}
+
+// =============================================================================
 // AI-Submit (separates Spezial-Element, behalten)
 // =============================================================================
 .custom-content-block-edit--ai-submit {

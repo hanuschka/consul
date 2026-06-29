@@ -7,6 +7,8 @@
   const SUPPORTS_ANCHOR = window.CSS && CSS.supports("anchor-name: --rich-tooltip-probe");
   const DEFAULT_HIDE_DELAY = 150;
   const DEFAULT_SHOW_DELAY = 600;
+  const INSTANT_SHOW_DELAY = 100;
+  const INSTANT_HIDE_DELAY = 80;
 
   // <rich-tooltip> wraps a trigger (first non-template child) + a <template>
   // body. Attributes:
@@ -19,6 +21,9 @@
   //                 pointer events)
   //   hover-only    show on pointer hover only; do not show on keyboard
   //                 focus / focusout
+  //   instant       near-instant: forces show delay to 100ms and hide delay
+  //                 to 80ms, and disables the body show/hide transition +
+  //                 animation
   //   template-id   use an external <template> by id instead of an inline one
   //   body-class    extra css class(es) added to the tooltip body element
   class RichTooltip extends HTMLElement {
@@ -43,14 +48,16 @@
 
       if (!this.trigger || !template) return
 
-      this.showDelay = this.parseDelay("delay", DEFAULT_SHOW_DELAY)
-      this.hideDelay = this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
+      this.instant = this.hasAttribute("instant")
+      this.showDelay = this.instant ? INSTANT_SHOW_DELAY : this.parseDelay("delay", DEFAULT_SHOW_DELAY)
+      this.hideDelay = this.instant ? INSTANT_HIDE_DELAY : this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
       this.placement = this.getAttribute("placement") || "top"
       this.size = this.getAttribute("size") || "default"
       this.shadow = this.getAttribute("shadow") || "default"
       this.bodyClass = this.getAttribute("body-class") || ""
       this.triggerOnly = this.hasAttribute("trigger-only")
       this.hoverOnly = this.hasAttribute("hover-only")
+      this.focusable = this.hasAttribute("focusable")
 
       this.buildTooltipBody(template)
       this.bindEvents()
@@ -94,8 +101,12 @@
         body.classList.add(...extraClasses)
       }
 
-      if (this.triggerOnly) {
+      if (this.triggerOnly && !this.focusable) {
         body.style.pointerEvents = "none"
+      }
+
+      if (this.instant) {
+        body.classList.add("-instant")
       }
 
       if (SUPPORTS_POPOVER) {
@@ -140,7 +151,10 @@
 
       this.addEventListener("keydown", this.handleKeydown.bind(this))
 
-      if (this.triggerOnly) {
+      if (this.focusable) {
+        this.tooltipBody.addEventListener("mouseenter", this.cancelHide.bind(this))
+        this.addEventListener("mouseleave", this.scheduleHide.bind(this))
+      } else if (this.triggerOnly) {
         this.trigger.addEventListener("mouseleave", this.scheduleHide.bind(this))
       } else {
         this.tooltipBody.addEventListener("mouseenter", this.cancelHide.bind(this))

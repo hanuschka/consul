@@ -36,6 +36,8 @@ App.Studio.ContentBlocks.EditModeSwitcher = {
   },
 
   handleAiEditClick(e) {
+    if (!App.Studio.Projekt.config.aiAvailable) return
+
     const { contentBlockWrapper } = App.Studio.ContentBlocks.DomHelpers.getContentBlockAndWrapper(e.target);
     const currentMode = this.getCurrentMode(contentBlockWrapper);
 

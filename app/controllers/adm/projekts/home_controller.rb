@@ -26,8 +26,11 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
       (if policy([:adm, :projekts, Projekt]).create?
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
        end),
-      (if policy([:adm, :projekts, Projekt]).create? && Ai::Settings.ai_available?
-         { label: t("adm.projekts.home.quick_links.imports"), path: adm_projekts_imports_path }
+      (if policy([:adm, :projekts, Projekt]).create?
+         { label: t("adm.projekts.home.quick_links.imports"),
+           path: adm_projekts_imports_path,
+           ai_gated: true,
+           description: t("adm.projekts.imports.index.new_button_description") }
        end)
     ].compact
 

@@ -28,6 +28,7 @@
 
     loadConfig(contentBlocksList) {
       App.Studio.Projekt.config.defaultMarginBottom = parseInt(contentBlocksList.dataset.defaultMarginBottom);
+      App.Studio.Projekt.config.aiAvailable = contentBlocksList.dataset.aiAvailable === "true";
     },
 
     wrapContentBlocks(contentBlocksList) {

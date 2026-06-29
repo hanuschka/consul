@@ -50,6 +50,7 @@ de:
         api_subitems:
           api_clients: API-Clients
           api_request_logs: API-Anfragen-Logs
+          api_changelog: API-Änderungsprotokoll
         developer: Bereich für Entwickler
         developer_subitems:
           connection: DT-Verbindung

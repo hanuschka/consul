@@ -103,7 +103,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
   return `
     <div
-      class="js-content-block-wrapper projekt-content-block-wrapper${emptyHintClasses} ${draftContentBlockIndex ? ' -draft' : ''}"
+      class="js-content-block-wrapper custom-content-block-wrapper${emptyHintClasses} ${draftContentBlockIndex ? ' -draft' : ''}"
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
@@ -115,11 +115,11 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       ${toolbarPosition ? `data-toolbar-position="${toolbarPosition}"` : ''}
       data-context="${context || 'projekt'}"
       >
-      <div class="projekt-content-block-wrapper--inner">
-        <div class="projekt-content-block--toolbar-zone js-studio-hide-on-preview">
-        <div class="projekt-content-block--toolbar">
+      <div class="custom-content-block-wrapper--inner">
+        <div class="custom-content-block--toolbar-zone js-studio-hide-on-preview">
+        <div class="custom-content-block--toolbar">
 
-            <div class="projekt-content-block-edit--buttons-wrapper">
+            <div class="custom-content-block-edit--buttons-wrapper">
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -150,7 +150,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               })}
             </div>
             <div
-              class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
+              class="custom-content-block-edit custom-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
               <div class="content-block-edit-toolbar">
                 <div
                   class="content-block-margin-input d-flex align-items-center u-gap-5"
@@ -246,7 +246,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 })}
               </div>
             </div>
-            <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-content-block-edit-main-controlls">
+            <div class="custom-content-block-edit custom-content-block-edit-main-controlls js-content-block-edit-main-controlls">
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -296,7 +296,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <!--   <i class="fas fa-edit"> -->
               <!--   </i> -->
               <!-- </button> -->
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -322,7 +322,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 text: "Zeigt frühere Versionen dieses Blocks an und macht Änderungen rückgängig."
               })}
               ${isSiteContext ? `
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               <button
                 type="button"
                 tabindex="-1"
@@ -332,7 +332,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-exchange-alt">
                 </i>
               </button>
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               <button
                 type="button"
                 tabindex="-1"
@@ -343,15 +343,15 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               ` : `
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               <button
-                class="studio-icon-button projekt-content-block--move-button js-dnd-handle"
+                class="studio-icon-button custom-content-block--move-button js-dnd-handle"
                 title="Inhaltsbock verschieben"
                 tabindex="-1"
               >
                 <i class="fas fa-up-down-left-right"></i>
               </button>
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -368,23 +368,23 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
+            <div class="custom-content-block-edit custom-content-block--mode-controlls js-html-edit-mode-controlls">
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
+            <div class="custom-content-block-edit custom-content-block--mode-controlls js-code-edit-mode-controlls">
             </div>
         </div>
         </div>
 
-        <div class="projekt-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
+        <div class="custom-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
 
         ${showEmptyHint ? ProjektStudio.templateFunctions.contentBlockEmptyHintHtml() : ''}
 
-        <div class="projekt-content-block js-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
+        <div class="custom-content-block js-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
           ${contentBlockHTML}
         </div>
 
-        <div class="projekt-content-block--overlay">
+        <div class="custom-content-block--overlay">
         </div>
       </div>
 

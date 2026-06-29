@@ -1,12 +1,12 @@
 <%= render Shared::ModalComponent.new(
   id: "contentBlockTemplatesModal",
-  modal_class: "modern-modal projekt-content-block-templates-selector-wrapper js-content-block-templates-selector",
+  modal_class: "modern-modal custom-content-block-templates-selector-wrapper js-content-block-templates-selector",
   closeable: false,
   content_wrapper: false,
   blur_backdrop: false,
   data: { saved_content_block_context: "newsletter" }
 ) do %>
-  <div class="projekt-content-block-templates-selector">
+  <div class="custom-content-block-templates-selector">
     <div class="content-block-templates-selector--header">
       <div class="modern-modal--header -compact-title">
         <h3><%= t('custom.newsletters.content_block_templates_selector.title') %></h3>
@@ -44,7 +44,7 @@
       ) %>
     </div>
     <div
-      class="js-content-block-templates-selector--inner projekt-content-block-templates-selector--inner"
+      class="js-content-block-templates-selector--inner custom-content-block-templates-selector--inner"
       style="display: none;"
     >
     </div>
@@ -52,18 +52,18 @@
 <% end %>
 
 <template class="js-content-block-templates-fallback">
-  <ul id="contentBlockSelectorTabs" class="shared-tabs projekt-content-block-templates-selector--tabs js-tabs">
-    <li class="projekt-content-block-templates-selector--tab shared-tabs--item is-active">
+  <ul id="contentBlockSelectorTabs" class="shared-tabs custom-content-block-templates-selector--tabs js-tabs">
+    <li class="custom-content-block-templates-selector--tab shared-tabs--item is-active">
       <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--emailDefaults" aria-selected="true">
         <%= t('custom.newsletters.content_block_templates_selector.tabs.email_defaults') %>
       </a>
     </li>
-    <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+    <li class="shared-tabs--item custom-content-block-templates-selector--tab">
       <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--globalContentBlocks">
         <%= t('custom.projekt.content_block_templates_selector.tabs.internal_content_blocks') %>
       </a>
     </li>
-    <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+    <li class="shared-tabs--item custom-content-block-templates-selector--tab">
       <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--userContentBlocks">
         <%= t('custom.projekt.content_block_templates_selector.tabs.own_content_blocks') %>
       </a>

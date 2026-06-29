@@ -45,7 +45,7 @@ App.ContentBlockEditor.AiEditMode = {
   },
 
   getPopup(contentBlockWrapper) {
-    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const innerContainer = contentBlockWrapper.querySelector('.custom-content-block-wrapper--inner');
     const searchContainer = innerContainer || contentBlockWrapper;
     return searchContainer.querySelector('.js-content-block-ai-edit-popup');
   },

@@ -22,10 +22,6 @@ module ContentBlocksHelper
 
     block_body = convert_br_to_paragraphs(block_body)
 
-    if use_p_tag
-      block_body = wrap_body_in_paragraph(block_body)
-    end
-
     if custom_prefix
       block_body = "#{custom_prefix} #{block_body}"
     end
@@ -51,7 +47,7 @@ module ContentBlocksHelper
         empty_hint: empty_hint
       ).html_safe
     else
-      res = build_standard_block(key, block, block_body, projekt, return_path)
+      res = build_standard_block(key, block, block_body, projekt, return_path, use_p_tag: use_p_tag)
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? && res.include?("</iframe>")
         res = process_iframe_embeds(res)
@@ -121,7 +117,7 @@ module ContentBlocksHelper
     "<div class=\"#{wrapper_classes}\">#{hint}#{block_html}</div>"
   end
 
-  def build_standard_block(key, block, block_body, projekt, return_path)
+  def build_standard_block(key, block, block_body, projekt, return_path, use_p_tag: false)
     edit_link = nil
 
     if current_user&.administrator? && block.present?
@@ -136,7 +132,9 @@ module ContentBlocksHelper
       )
     end
 
-    res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</div>"
+    block_tag = use_p_tag ? "p" : "div"
+
+    res = "<#{block_tag} id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</#{block_tag}>"
 
     if edit_link
       res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
@@ -209,18 +207,6 @@ module ContentBlocksHelper
     without_empty_tags = without_empty_tags.gsub(/<\/?(p|div|span)(\s[^>]*)?>/, "")
     without_empty_tags = without_empty_tags.gsub(/[\s\u00A0]/, "")
     without_empty_tags.blank?
-  end
-
-  def wrap_body_in_paragraph(body)
-    return body if body.blank?
-
-    stripped = body.strip
-
-    if stripped.match?(/\A<(p|div|ul|ol|h[1-6]|blockquote|table|figure|section|article|pre)[\s>\/]/i)
-      return body
-    end
-
-    "<p>#{stripped}</p>"
   end
 
   def convert_br_to_paragraphs(html)

@@ -15,13 +15,15 @@ de:
     allowed_types_admins_html: "Admins &amp; Projektmanager können folgende Dateitypen hochladen: %{types}"
     allowed_types_users_html: "Normale Nutzer können folgende Dateitypen hochladen: %{types}"
     allowed_types_settings_link: "hier bearbeiten"
+    max_file_size_note_html: "Maximale Dateigröße: %{size} MB. Größere Dateien werden beim Hochladen abgelehnt."
+    max_file_size_edit_link: "hier bearbeiten"
     images:
       index:
         title: Admin-Bilder
         description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     documents:
       index:
-        title: Übersicht aller Dokumente
+        title: Admin-Dokumente
         description: Zeigt alle Dokumente, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Dokumente hochzuladen, zu prüfen, umzubenennen oder zu löschen.
     resource_images:
       index:
@@ -29,7 +31,7 @@ de:
         description: Zeigt alle Bilder, die mit Inhalten der Plattform verknüpft sind — z. B. Projekte, Vorschläge, Seiten und Umfragen. Benutzer-Avatare werden nicht angezeigt. Nutzen Sie diese Seite, um Bilddateien systemweit zu prüfen, umzubenennen oder zu löschen.
     resource_documents:
       index:
-        title: Übersicht aller Ressourcen-Dokumente
+        title: Ressourcen-Dokumente (Nutzer & Admin)
         description: Zeigt alle Dokumente, die mit Inhalten der Plattform verknüpft sind — z. B. Dateien, die Autoren zu Vorschlägen oder zu Projekt-Meilensteinen hinzugefügt haben. Diese Dokumente werden über die Formulare der Inhalte hochgeladen, nicht über den Dateimanager. Nutzen Sie diese Seite, um Dokumente systemweit zu prüfen, umzubenennen oder zu löschen.
     empty:
       images:
@@ -95,6 +97,9 @@ de:
       delete: Löschen
       delete_confirm: Möchten Sie dieses Element wirklich löschen?
       upload: Hochladen
+      upload_with_crop: Mit Zuschnitt hochladen
+      upload_with_crop_tooltip_title: Mit Zuschnitt hochladen
+      upload_with_crop_tooltip_text: Öffnet einen Zuschnitt-Editor, in dem Sie Bildausschnitt und Seitenverhältnis vor dem Hochladen anpassen können. Mit „Hochladen“ wird das Bild unverändert übernommen.
       open_in_new_tab: In neuem Tab öffnen
       copy_url: Link kopieren
       copy_url_success: Link in die Zwischenablage kopiert
@@ -108,9 +113,12 @@ de:
       projekt: Projekt
       resource_type: Ressourcentyp
       admin_badge: Admin-Upload
+      file_type: "Dateityp: %{type}"
+      file_type_generic: Datei
       alt_text: Alternativer Text
       alt_text_missing_hint: Alternativer Text fehlt. Fügen Sie ihn hinzu, damit Screenreader dieses Bild beschreiben können.
       edit_alt_text: Alt-Text bearbeiten
+      alt_badge_tooltip: Klicken Sie, um den Editor zu öffnen und den Alt-Text für dieses Bild hinzuzufügen oder zu bearbeiten.
       alt_edit:
         description: Der Alternativtext beschreibt das Bild für Menschen, die Screenreader nutzen, und wird angezeigt, wenn das Bild nicht geladen werden kann. Er verbessert Barrierefreiheit und Suchmaschinen-Sichtbarkeit.
         placeholder: z. B. Menschen diskutieren an einem runden Tisch

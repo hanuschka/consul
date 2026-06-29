@@ -8,6 +8,7 @@ class DowncaseRoute
     /vcmap
     /admin
     /letter_opener
+    /unregistered_newsletter_subscribers
   ].freeze
 
   def initialize(app)

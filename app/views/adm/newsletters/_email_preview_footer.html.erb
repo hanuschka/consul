@@ -3,7 +3,7 @@
     <% if Setting["advanced_newsletter"].present? %>
       <%= render "mailer/newsletter_email_footer" %>
     <% else %>
-      <%= render "layouts/mailer_footer" %>
+      <%= render "mailer/newsletter_simple_footer" %>
     <% end %>
   </div>
 

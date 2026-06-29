@@ -14,11 +14,12 @@ class MapData::BudgetPhase < ApplicationService
     return empty_collection if budget.blank?
 
     investment_ids = filtered_investments(budget).ids
-    features = MapLocation.where(mappable_type: "Budget::Investment",
-                                 mappable_id: investment_ids).map(&:features_json_data)
+    features = MapLocation.with_investment_associations
+                          .where(mappable_id: investment_ids)
+                          .map(&:features_json_data)
     features += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
-    { type: "FeatureCollection", features: features }
+    MapLocation.flatten_feature_collections(features)
   end
 
   private

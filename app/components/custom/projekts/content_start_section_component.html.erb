@@ -5,10 +5,10 @@
       type="button"
       class="projekt-content-start-button js-projekt-file-import-trigger <%= 'ai-feature-disabled' if ai_disabled? %>"
       title="<%= file_import_button_title %>"
+      tabindex="-1"
       <%= 'disabled' if ai_disabled? %>
       <% if ai_disabled? %>
       data-tooltip
-      tabindex="0"
       <% end %>
     >
       <i class="fas fa-file-upload"></i>
@@ -25,10 +25,10 @@
       type="button"
       class="projekt-content-start-button js-projekt-prompt-trigger <%= 'ai-feature-disabled' if ai_disabled? %>"
       title="<%= prompt_button_title %>"
+      tabindex="-1"
       <%= 'disabled' if ai_disabled? %>
       <% if ai_disabled? %>
       data-tooltip
-      tabindex="0"
       <% end %>
     >
       <i class="fas fa-pen"></i>
@@ -45,6 +45,7 @@
       type="button"
       class="projekt-content-start-button js-projekt-template-trigger"
       title="<%= t('custom.projekts.content_start_section.template_button.title') %>"
+      tabindex="-1"
     >
       <i class="fas fa-th-large"></i>
       <div class="projekt-content-start-button--content">
@@ -60,6 +61,7 @@
       type="button"
       class="projekt-content-start-button js-projekt-empty-block-trigger"
       title="<%= t('custom.projekts.content_start_section.empty_block_button.title') %>"
+      tabindex="-1"
     >
       <i class="fas fa-plus"></i>
       <div class="projekt-content-start-button--content">
@@ -96,6 +98,7 @@
         <button
           type="button"
           class="button secondary hollow small js-projekt-file-import-select-other"
+          tabindex="-1"
         >
           <i class="fas fa-folder-open"></i>
           <%= t('custom.projekts.content_start_section.file_import_preview.select_other_file') %>
@@ -104,6 +107,7 @@
           type="button"
           class="round-icon-button js-projekt-file-import-cancel"
           aria-label="<%= t('custom.projekts.content_start_section.file_import_preview.cancel') %>"
+          tabindex="-1"
         >
           <i class="fas fa-times"></i>
         </button>
@@ -123,6 +127,7 @@
     <button
       type="button"
       class="button projekt-file-import-button js-projekt-file-import-submit"
+      tabindex="-1"
     >
       <i class="fas fa-upload"></i>
       <%= t('custom.projekts.content_start_section.file_import_preview.submit') %>
@@ -139,6 +144,7 @@
         type="button"
         class="round-icon-button js-projekt-prompt-cancel"
         aria-label="<%= t('custom.projekts.content_start_section.prompt_form.cancel') %>"
+        tabindex="-1"
       >
         <i class="fas fa-times"></i>
       </button>
@@ -157,6 +163,7 @@
     <button
       type="button"
       class="button projekt-file-import-button js-projekt-prompt-submit"
+      tabindex="-1"
     >
       <i class="fas fa-magic"></i>
       <%= t('custom.projekts.content_start_section.prompt_form.submit') %>

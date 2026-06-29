@@ -26,7 +26,7 @@
         records: @comments,
         pagy: @pagy,
         headers: headers,
-        column_count: 5,
+        column_count: 6,
         empty_state: {
           title: t(".no_items_title"),
           description: t(".no_items_description"),
@@ -43,6 +43,7 @@
       <th scope="col" class="kern-table__header" data-field="projekt"><%= t(".projekt") %></th>
       <th scope="col" class="kern-table__header" data-field="author"><%= t(".author") %></th>
       <%= render headers[:flags_count] %>
+      <th scope="col" class="kern-table__header" data-field="status"><%= t("shared.table.status") %></th>
       <th scope="col" class="kern-table__header" data-field="actions" style="width: 200px"><%= t("shared.table.actions") %></th>
     <% end %>
 

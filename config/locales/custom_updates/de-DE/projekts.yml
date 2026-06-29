@@ -136,6 +136,7 @@ de:
             ended_on: Beendet am %{date}
           banner:
             end_date_chip: "bis %{date}"
+            start_date_chip: "ab %{date}"
             projekt_completed_chip: Projekt abgeschlossen
             projekt_starts_soon_chip: Startet bald
             go_to_phase: "Zur Phase: %{title}"

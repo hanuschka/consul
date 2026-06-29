@@ -164,7 +164,7 @@
           <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, @legislation_phase),
                       title: t("legislation.draft_versions.changes.see_text"), class: "button hollow projekt-all-comments-button", remote: true do %>
             <%= t("legislation.draft_versions.changes.see_text") %>
-          </div>
+          <% end %>
         </div>
 
         <div class="row">
@@ -230,5 +230,4 @@
     </div>
   <% end %>
   </div>
-<% end %>
 </div>

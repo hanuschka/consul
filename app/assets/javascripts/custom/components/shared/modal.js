@@ -9,7 +9,15 @@
     },
 
     attachEventListeners: function() {
+      if (this.listenersBound) return;
+
+      this.listenersBound = true;
+
       const $document = $(document);
+
+      $document.on("click", ".js-shared-modal-open", (event) => {
+        this.openFromTrigger(event.currentTarget);
+      });
 
       $document.on("click", ".js-shared-modal-close", (event) => {
         this.close(event.currentTarget);
@@ -24,6 +32,10 @@
         this.unlockScroll();
         document.body.style.overflow = "";
       });
+    },
+
+    openFromTrigger: function(trigger) {
+      this.open(trigger.dataset.sharedModalId);
     },
 
     open: function(modalId) {
@@ -96,6 +108,18 @@
         // the top and then visibly scroll back down after the modal closes.
         window.scrollTo({ top: -scrollTop, left: 0, behavior: "instant" });
       }
+    },
+
+    reset: function() {
+      this.openCount = 0;
+
+      const htmlEl = document.documentElement;
+      htmlEl.classList.remove("is-shared-modal-open", "shared-modal-has-scroll");
+      htmlEl.style.top = "";
+
+      document.querySelectorAll("dialog.shared-modal[open]").forEach((modal) => {
+        modal.close();
+      });
     }
   };
 }).call(this);

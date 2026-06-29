@@ -1,5 +1,21 @@
 class Adm::FileManager::PageComponent < ApplicationComponent
   renders_one :sub_header
+  renders_one :description
+
+  renders_one :types_note,
+              ->(types:, note_key: "files.allowed_types_note_html", settings_link: false,
+                 settings_edit_path: nil, max_file_size: nil, max_size_edit_path: nil) do
+    render(
+      "adm/files/allowed_types_note",
+      admin_types: types,
+      user_types: types,
+      note_key: note_key,
+      show_settings_link: settings_link,
+      settings_edit_path: settings_edit_path,
+      max_file_size: max_file_size,
+      max_size_edit_path: max_size_edit_path
+    )
+  end
 
   def initialize(
     type:,
@@ -7,16 +23,11 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     breadcrumbs:,
     assets:,
     endpoint:,
-    card_component:,
+    card_component: Files::AssetCardComponent,
     row_component: nil,
-    description: nil,
     frontend_url: nil,
     upload_endpoint: nil,
     upload_accept: nil,
-    allowed_types: nil,
-    allowed_user_types: nil,
-    allowed_types_note_key: "files.allowed_types_note_html",
-    types_settings_link: false,
     imageable_type_frame_src: nil,
     documentable_type_frame_src: nil
   )
@@ -27,14 +38,9 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     @endpoint = endpoint
     @card_component = card_component
     @row_component = row_component
-    @description = description
     @frontend_url = frontend_url
     @upload_endpoint = upload_endpoint
     @upload_accept = upload_accept
-    @allowed_types = allowed_types
-    @allowed_user_types = allowed_user_types
-    @allowed_types_note_key = allowed_types_note_key
-    @types_settings_link = types_settings_link
     @imageable_type_frame_src = imageable_type_frame_src
     @documentable_type_frame_src = documentable_type_frame_src
   end
@@ -42,20 +48,35 @@ class Adm::FileManager::PageComponent < ApplicationComponent
   private
 
     attr_reader :type, :title, :breadcrumbs, :assets, :endpoint,
-                :card_component, :row_component, :description, :frontend_url,
-                :upload_endpoint, :upload_accept, :allowed_types,
-                :allowed_user_types, :allowed_types_note_key, :types_settings_link,
-                :imageable_type_frame_src, :documentable_type_frame_src
+                :card_component, :row_component, :frontend_url,
+                :upload_endpoint, :upload_accept, :imageable_type_frame_src,
+                :documentable_type_frame_src
 
     def after_title?
-      description.present? || allowed_types_note? || upload?
-    end
-
-    def allowed_types_note?
-      allowed_types.present?
+      description? || types_note? || upload?
     end
 
     def upload?
       upload_endpoint.present?
+    end
+
+    def supports_view_modes?
+      row_component.present?
+    end
+
+    def images?
+      type == "picture"
+    end
+
+    def empty_title
+      images? ? t("files.empty.images.title") : t("files.empty.documents.title")
+    end
+
+    def empty_description
+      images? ? t("files.empty.images.description") : t("files.empty.documents.description")
+    end
+
+    def empty_icon
+      images? ? "image" : "description"
     end
 end

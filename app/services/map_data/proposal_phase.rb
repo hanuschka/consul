@@ -10,13 +10,10 @@ class MapData::ProposalPhase < ApplicationService
 
   def call
     proposal_ids = filtered_proposals.ids
-    features = MapLocation.where(mappable_type: "Proposal", mappable_id: proposal_ids)
-                          .includes(mappable: [:projekt_labels, :projekt_phase,
-                                               :sentiment, :masterportal_pin])
-                          .map(&:features_json_data)
+    features = MapLocation.proposal_features(proposal_ids)
     features += MasterportalPin.standalone_features_for_phase(@projekt_phase)
 
-    { type: "FeatureCollection", features: features }
+    MapLocation.flatten_feature_collections(features)
   end
 
   private

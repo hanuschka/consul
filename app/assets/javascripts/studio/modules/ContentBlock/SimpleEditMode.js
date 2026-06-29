@@ -105,6 +105,9 @@ App.ContentBlockEditor.SimpleEditMode = {
         App.ContentBlockEditor.SimpleEditMode.ImageEdit.toggleImageControls(
           contentBlock, enabled
         )
+        App.ContentBlockEditor.SimpleEditMode.MapEdit.toggleMapControls(
+          contentBlock, enabled
+        )
         App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(
           contentBlock, enabled
         )
@@ -121,6 +124,9 @@ App.ContentBlockEditor.SimpleEditMode = {
         contentBlock, enabled
       )
       App.ContentBlockEditor.SimpleEditMode.ImageEdit.toggleImageControls(
+        contentBlock, enabled
+      )
+      App.ContentBlockEditor.SimpleEditMode.MapEdit.toggleMapControls(
         contentBlock, enabled
       )
       App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(
@@ -217,8 +223,12 @@ App.ContentBlockEditor.SimpleEditMode = {
   handleMarginBottomInput(e) {
     const input = e.currentTarget;
     const { contentBlockWrapper } = App.ContentBlockEditor.DomHelpers.getContentBlockAndWrapper(input);
-    const marginValue = parseInt(input.value) || 0;
+    const min = parseInt(input.min);
+    let marginValue = parseInt(input.value) || 0;
 
+    if (!isNaN(min)) marginValue = Math.max(marginValue, min);
+
+    input.value = marginValue;
     contentBlockWrapper.style.marginBottom = `${marginValue}px`;
 
     const updateUrl = App.ContentBlockEditor.Crud.getUpdateUrl(contentBlockWrapper);
@@ -263,7 +273,7 @@ App.ContentBlockEditor.SimpleEditMode = {
     if (input) {
       const marginBottom = contentBlockWrapper.style.marginBottom || '0px';
       const parsedValue = parseInt(marginBottom);
-      input.value = isNaN(parsedValue) ? ProjektStudio.config.defaultMarginBottom : parsedValue;
+      input.value = isNaN(parsedValue) ? ProjektStudio.getDefaultMarginBottom() : parsedValue;
     }
   },
 

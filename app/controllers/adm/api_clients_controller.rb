@@ -23,6 +23,22 @@ class Adm::ApiClientsController < Adm::BaseController
     @breadcrumbs = breadcrumbs_with(@api_client.name)
   end
 
+  def logs
+    @api_client = ApiClient.find(params[:id])
+    authorize [:adm, @api_client], policy_class: Adm::ApiClientPolicy
+
+    scope = policy_scope(ApiRequestLog, policy_scope_class: Adm::ApiRequestLogPolicy::Scope)
+      .where(api_client_id: @api_client.id)
+    filtered = Adm::ApiRequestLogsQuery.call(scope.includes(:api_client), params)
+
+    @pagy, @api_request_logs = pagy(filtered.order(created_at: :desc), items: 50)
+
+    @logs_present = scope.exists?
+    assign_log_filter_options(@api_client)
+
+    @breadcrumbs = logs_breadcrumbs(@api_client)
+  end
+
   def new
     @api_client = ApiClient.new
     authorize [:adm, @api_client], policy_class: Adm::ApiClientPolicy
@@ -114,6 +130,24 @@ class Adm::ApiClientsController < Adm::BaseController
         { name: t("adm.api_clients.index.title"), icon: "api", url: adm_api_clients_path },
         { name: name }
       ]
+    end
+
+    def logs_breadcrumbs(api_client)
+      [
+        { name: t("adm.api_clients.index.title"), icon: "api", url: adm_api_clients_path },
+        { name: api_client.name, url: adm_api_client_path(api_client) },
+        { name: t("adm.api_clients.logs.title") }
+      ]
+    end
+
+    def assign_log_filter_options(api_client)
+      @http_method_options = ApiRequestLog::HTTP_METHOD_BADGE_VARIANTS.keys
+      @response_status_options = ApiRequestLog
+        .where(api_client_id: api_client.id)
+        .where.not(response_status: nil)
+        .distinct
+        .order(:response_status)
+        .pluck(:response_status)
     end
 
     def api_client_params

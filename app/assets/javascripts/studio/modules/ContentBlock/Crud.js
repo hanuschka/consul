@@ -5,12 +5,15 @@ App.ContentBlockEditor.Crud = {
   initialize() {
     const $document = $(document);
     $document.on("click", ".js-add-new-content-block", this.handleCreateContentBlock.bind(this));
+    $document.on("click", ".js-add-blank-content-block", this.handleAddBlankContentBlock.bind(this));
     $document.on("click", ".js-delete-content-block", this.handleDeleteContentBlock.bind(this));
   },
 
   handleCreateContentBlock(e) {
     const templateSelector = App.ContentBlockEditor.TemplateSelector;
-    const contentBlockTemplate = e.currentTarget.querySelector(".js-content-block-template-content");
+    const contentBlockTemplate = this.normalizedTemplateNode(
+      e.currentTarget.querySelector(".js-content-block-template-content")
+    );
 
     if (templateSelector.selectionMode === "replace") {
       this.replaceContentBlockWithTemplate(templateSelector.replaceTargetWrapper, contentBlockTemplate);
@@ -18,6 +21,53 @@ App.ContentBlockEditor.Crud = {
     }
 
     this.addContentBlock(this.addContentBlockAfter, contentBlockTemplate)
+  },
+
+  handleAddBlankContentBlock(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const directSection = button.closest(".js-show-content-block-templates-section");
+
+    if (directSection) {
+      const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(button);
+      const isAtTop = directSection.classList.contains("js-add-content-block-at-top");
+
+      App.ContentBlockEditor.TemplateSelector.selectionMode = "add";
+      App.ContentBlockEditor.TemplateSelector.replaceTargetWrapper = null;
+      App.ContentBlockEditor.TemplateSelector.currentContentBlockId = wrapper ? wrapper.dataset.contentBlockId : null;
+      this.addContentBlockAfter = wrapper;
+      this.addContentBlockAtTop = isAtTop;
+    }
+
+    const templateSelector = App.ContentBlockEditor.TemplateSelector;
+    const blankTemplate = this.buildEmptyContentBlockNode();
+
+    if (templateSelector.selectionMode === "replace") {
+      this.replaceContentBlockWithTemplate(templateSelector.replaceTargetWrapper, blankTemplate);
+      return
+    }
+
+    this.addContentBlock(this.addContentBlockAfter, blankTemplate)
+  },
+
+  buildEmptyContentBlockNode() {
+    const node = document.createElement("div");
+    node.innerHTML = ProjektStudio.templateFunctions.emptyContentBlockHtml;
+
+    return node;
+  },
+
+  // The template preview hydrates its map region in place for display, so the
+  // live .js-content-block-template-content node may hold a real map. Return a
+  // detached node whose map is reset to the {{projekt_map}} token, so the
+  // inserted block persists the canonical placeholder (the editor re-hydrates
+  // it for display). Non-map templates pass through unchanged.
+  normalizedTemplateNode(templateContentEl) {
+    const node = document.createElement("div");
+    node.innerHTML = ProjektStudio.utils.resetMapEmbeds(templateContentEl.innerHTML);
+
+    return node;
   },
 
   replaceContentBlockWithTemplate(wrapper, contentBlockTemplate) {
@@ -34,6 +84,7 @@ App.ContentBlockEditor.Crud = {
     ProjektStudio.utils.removeFoundationIds(updatedContent);
     contentBlock.innerHTML = updatedContent.innerHTML;
     App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock);
+    App.ContentBlockEditor.MapEmbed.hydrateIn(contentBlock);
 
     App.ContentBlockEditor.SimpleEditMode.switchToSimpleEditMode(wrapper);
   },
@@ -144,10 +195,13 @@ App.ContentBlockEditor.Crud = {
   createContentBlock(newContentBlockContainer, contentBlockHTML, draftContentBlockIndex, previousContentBlockId = null) {
     App.ContentBlockEditor.DomHelpers.applyDefaultMarginIfMissing(newContentBlockContainer)
 
+    App.ContentBlockEditor.EmptyHintToggle.refreshAll()
+
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
       App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.projekt-content-block'))
       App.ImageGallery.initialize()
+      App.ContentBlockEditor.MapEmbed.hydrateIn(newContentBlockContainer)
     }, 0)
 
     App.Ajax.request({
@@ -235,11 +289,16 @@ App.ContentBlockEditor.Crud = {
     const contentBlockWrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(contentBlock);
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    const sanitized = ProjektStudio.utils.sanitizeAdminHtml(newContent);
+    // Strip any hydrated map back to the {{projekt_map}} placeholder so the
+    // persisted body stays canonical; the live map is re-hydrated below.
+    const normalized = ProjektStudio.utils.resetMapEmbeds(newContent);
+    const sanitized = ProjektStudio.utils.sanitizeAdminHtml(normalized);
 
-    const oldContent = contentBlock.dataset.previousContentBlockHtml
-      ? contentBlock.dataset.previousContentBlockHtml
-      : contentBlock.innerHTML.trim();
+    const oldContent = ProjektStudio.utils.resetMapEmbeds(
+      contentBlock.dataset.previousContentBlockHtml
+        ? contentBlock.dataset.previousContentBlockHtml
+        : contentBlock.innerHTML.trim()
+    );
 
     const updatedContentBlock = ProjektStudio.utils.htmlToDomElement(sanitized);
     const newContentTrimmed = updatedContentBlock.innerHTML.trim();
@@ -293,6 +352,9 @@ App.ContentBlockEditor.Crud = {
 
     App.ContentBlockEditor.DomHelpers.reinitPluginElementsAndWidgets(contentBlock)
 
+    // Display reset above replaced the live map with the placeholder token;
+    // re-hydrate so the editor keeps showing a map after saving.
+    App.ContentBlockEditor.MapEmbed.hydrateIn(contentBlock)
   },
 
   syncDomFromServer(contentBlock, response) {

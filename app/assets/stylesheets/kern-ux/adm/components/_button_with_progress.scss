@@ -27,6 +27,12 @@
   visibility: visible;
 }
 
+.fonts-loaded .adm-button-with-progress__trigger .material-symbols-outlined,
+.fonts-loaded .adm-button-with-progress__loading .material-symbols-outlined,
+.fonts-loaded .adm-button-with-progress__success .material-symbols-outlined {
+  visibility: inherit;
+}
+
 .adm-button-with-progress__success {
   border-color: var(--kern-color-feedback-success, #1B7B3A);
 

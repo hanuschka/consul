@@ -14,9 +14,10 @@
   gap: 10px;
   margin-bottom: 12px;
   padding: 10px 14px;
-  border: 1px dashed $medium-gray-3;
-  border-radius: 8px;
-  color: $medium-gray-3;
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.6);
   font-size: 14px;
   line-height: 1.4;
 
@@ -46,21 +47,52 @@
   display: none;
 }
 
+// With the hint hidden in edit mode, reserve its measured height on the
+// now-editable body so the block keeps the same height it had as the empty
+// placeholder — no shrink/jump when entering any edit mode. The
+// --empty-hint-height var is set live by App.ContentBlockEditor.EmptyHintToggle
+// while the hint is visible; falls back to the studio min-height.
+.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper.-in-edit-mode .projekt-content-block {
+  min-height: var(--empty-hint-height, 55px);
+}
+
 .content-block-empty-hint--icon {
   flex-shrink: 0;
   margin-top: 1px;
-  color: $medium-gray-2;
+  color: rgba(0, 0, 0, 0.45);
   font-size: 15px;
 }
 
 .content-block-empty-hint--title {
   display: block;
   margin-bottom: 1px;
-  color: $medium-gray-3;
+  color: rgba(0, 0, 0, 0.72);
   font-weight: 600;
 }
 
 .content-block-empty-hint--description {
   display: block;
-  color: $medium-gray-3;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+// Projekt page content blocks are studio-wrapped client-side
+// (`addStudioControlsToContentBlock`), so the marker class sits on the
+// `.projekt-content-block-wrapper` itself — there is no separate
+// `.content-block-empty-hint-wrap` ancestor. These mirror the site-block rules
+// above with the wrapper as the marker. Kept here next to the site rules so the
+// two empty-state variants stay in sync.
+.projekt-content-block-wrapper.is-content-empty .content-block-empty-hint {
+  display: flex;
+}
+
+.projekt-content-block-wrapper.is-content-empty:not(.-in-edit-mode) .projekt-content-block {
+  min-height: 0;
+}
+
+.projekt-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {
+  display: none;
+}
+
+.projekt-content-block-wrapper.is-content-empty.-in-edit-mode .projekt-content-block {
+  min-height: var(--empty-hint-height, 55px);
 }

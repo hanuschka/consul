@@ -62,8 +62,7 @@ class ProposalsController
         .where(admin_accepted: true)
         .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
-        .includes(:translations, :image, :projekt_labels, :votes_for,
-                  :community, projekt_phase: :settings)
+        .with_index_card_associations
 
     @all_resources = @resources
 
@@ -96,8 +95,9 @@ class ProposalsController
 
       format.json do
         render json: JSON.generate(
-          type: "FeatureCollection",
-          features: all_proposal_map_locations(@resources)
+          MapLocation.flatten_feature_collections(
+            all_proposal_map_locations(@resources)
+          )
         )
       end
 

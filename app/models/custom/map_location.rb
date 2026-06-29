@@ -22,6 +22,48 @@ class MapLocation < ApplicationRecord
     end
   end
 
+  def self.deficiency_report_features(deficiency_report_ids)
+    return [] if deficiency_report_ids.blank?
+
+    unicode_cache = awesome_icon_unicode_cache
+
+    rows = where(mappable_type: "DeficiencyReport", mappable_id: deficiency_report_ids)
+      .joins(
+        "INNER JOIN deficiency_reports " \
+        "ON deficiency_reports.id = map_locations.mappable_id"
+      )
+      .joins(
+        "LEFT JOIN deficiency_report_categories " \
+        "ON deficiency_report_categories.id = deficiency_reports.deficiency_report_category_id"
+      )
+      .order("map_locations.id")
+      .pluck(
+        "map_locations.mappable_id",
+        "map_locations.features",
+        "deficiency_report_categories.color",
+        "deficiency_report_categories.icon"
+      )
+
+    rows.map do |mappable_id, features, color, icon|
+      feature_collection = normalize_feature_collection(features)
+
+      extra_properties = {
+        "resource_type" => RESOURCE_TYPE_MAPPING[:DeficiencyReport],
+        "id" => mappable_id,
+        "feature_color" => color,
+        "feature_icon_name" => icon,
+        "feature_icon_unicode" => unicode_cache[icon]
+      }.reject { |_key, value| value.in?([nil, ""]) }
+
+      feature_collection["features"].each do |feature|
+        feature["properties"] ||= {}
+        feature["properties"].merge!(extra_properties)
+      end
+
+      feature_collection
+    end
+  end
+
   def self.regular_proposal_features(map_location_ids)
     return {} if map_location_ids.blank?
 
@@ -56,7 +98,25 @@ class MapLocation < ApplicationRecord
     { "type" => "FeatureCollection", "features" => [] }
   end
 
+  def self.flatten_feature_collections(items)
+    features = Array(items).flat_map do |item|
+      next [] if item.blank?
+
+      if item["type"] == "FeatureCollection"
+        item["features"] || []
+      elsif item["type"] == "Feature"
+        [item]
+      else
+        []
+      end
+    end
+
+    { "type" => "FeatureCollection", "features" => features }
+  end
+
   def self.enriched_feature_collection(map_locations, category_icons: nil, extra_features: [])
+    map_locations = map_locations.to_a
+
     icon_names = map_locations.flat_map do |ml|
       ml.to_geo_json["features"].map do |f|
         f["properties"]["feature_icon_name"] || f["properties"]["fa_icon_class"]

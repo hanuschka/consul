@@ -192,6 +192,20 @@ $_list-neutral-bg: #f0f1f3;
   color: var(--kern-color-feedback-danger, #bd0f09);
 }
 
+.projekt-import-list-item--note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $_list-text-muted;
+}
+
+.projekt-import-list-item--note .material-symbols-outlined {
+  font-size: 16px;
+}
+
 .projekt-import-list-item--projekts {
   display: flex;
   flex-direction: column;

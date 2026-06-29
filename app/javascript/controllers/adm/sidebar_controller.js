@@ -5,6 +5,7 @@ export default class extends Controller {
 
   connect() {
     this.sidebarHidden = true
+    document.body.style.overflow = ""
     this.togglerTarget.addEventListener("click", () => { this.toggle() })
     this.togglerTarget.addEventListener("keypress", (event) => {
       event.preventDefault();

@@ -266,6 +266,25 @@ $homepage-image-header-max-width: 1920px;
         outline-offset: 3px;
       }
     }
+
+    .homepage-image-header--button--secondary.button {
+      background-color: #fff;
+      background-image: none;
+      color: var(--brand-color);
+      border: 2px solid var(--brand-color);
+      box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35),
+                  0 4px 10px -4px rgba(0, 0, 0, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+      &::after {
+        content: none;
+      }
+
+      &:hover {
+        background-color: var(--brand-color);
+        color: #fff;
+      }
+    }
   }
 
   .homepage-search-form {
@@ -1039,7 +1058,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 
   @media screen and (max-width: $big-tablet-viewport-start) {
     .homepage-image-header {
-      height: 500px;
+      min-height: 500px;
     }
 
     .homepage-image-header--title-wrapper {
@@ -1189,7 +1208,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     }
 
     .homepage-image-header {
-      height: 450px;
+      min-height: 450px;
       margin-bottom: 5px;
     }
 
@@ -1329,8 +1348,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
 // -- NavbarItem-driven navbar (scoped to [data-navbar]) -------------------
 
 [data-navbar] {
-  display: contents;
-
   // Desktop: hide toggle buttons — flyouts open on hover via existing CSS
   @media screen and (min-width: $small-tablet-viewport-start) {
     button[data-navbar-toggle] {

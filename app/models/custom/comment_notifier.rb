@@ -11,7 +11,9 @@ class CommentNotifier
 
       return false unless commentable_author.present?
 
-      commentable_author != @author && commentable_author.email_on_comment?
+      # The author of a resource is always emailed when their resource is
+      # commented on, regardless of their email_on_comment preference.
+      commentable_author != @author
     end
 
     def email_on_comment_reply?
@@ -20,7 +22,12 @@ class CommentNotifier
       parent_author = @comment.parent.author
 
       return false unless parent_author.present?
+      return false if parent_author == @author
 
-      parent_author != @author && parent_author.email_on_comment_reply?
+      # If the parent author is also the resource author, always email them,
+      # regardless of their email_on_comment_reply preference.
+      return true if parent_author == @comment.commentable.author
+
+      parent_author.email_on_comment_reply?
     end
 end

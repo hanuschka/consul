@@ -5,8 +5,9 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   delegate :projekt_option, to: :helpers
 
-  def initialize(projekt:)
+  def initialize(projekt:, title_heading_level: 3)
     @projekt = projekt
+    @title_heading_level = title_heading_level
   end
 
   def component_attributes
@@ -18,7 +19,8 @@ class Projekts::ListItemComponent < ApplicationComponent
       narrow_header: true,
       url: projekt_url,
       url_target: url_target,
-      image: projekt.image
+      image: projekt.image,
+      title_heading_level: @title_heading_level
     }
   end
 

@@ -32,6 +32,7 @@
       App.RevealAccessibility.initialize();
       App.VoiceAssistant.initialize();
       App.VoiceAssistantV2.initialize();
+      App.VoiceAssistantDesignsPreview.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();

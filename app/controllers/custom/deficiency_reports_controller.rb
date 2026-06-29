@@ -65,8 +65,9 @@ class DeficiencyReportsController < ApplicationController
 
       format.json do
         render json: JSON.generate(
-          type: "FeatureCollection",
-          features: all_deficiency_report_map_locations(@deficiency_reports)
+          MapLocation.flatten_feature_collections(
+            all_deficiency_report_map_locations(@deficiency_reports)
+          )
         )
       end
 
@@ -99,11 +100,11 @@ class DeficiencyReportsController < ApplicationController
     answer = DeficiencyReport::ConfirmationPopupAnswer.find_by(id: params[:answer_id])
     notice = answer&.flash_notice.presence
     flash[:notice] = notice if notice
-    redirect_to deficiency_reports_path
+    redirect_back(fallback_location: deficiency_reports_path)
   end
 
   def create
-    if deficiency_report_params["image_attributes"]["cached_attachment"].blank?
+    if deficiency_report_params.dig("image_attributes", "cached_attachment").blank?
       filtered_deficiency_report_params = deficiency_report_params.except("image_attributes")
     else
       filtered_deficiency_report_params = deficiency_report_params

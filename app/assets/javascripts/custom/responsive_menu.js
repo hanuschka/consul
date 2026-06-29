@@ -1,5 +1,8 @@
 (function() {
   "use strict";
+
+  var recentTouch = false;
+
   App.ResponsiveMenu = {
 
     toggleMenu: function($arrow) {
@@ -29,7 +32,7 @@
         if (header) excludeElements.push(header);
         if (menuWrapper) excludeElements.push(menuWrapper);
 
-        App.FocusTrap.setBackgroundInert(excludeElements);
+        App.FocusTrap.setBackgroundInert(excludeElements, document.getElementById('responsive-menu'));
       } else {
         App.FocusTrap.removeBackgroundInert();
       }
@@ -189,15 +192,33 @@
 
       redistribute();
 
+      App.ResponsiveMenu.latestRedistribute = redistribute;
+      App.ResponsiveMenu.bindResizeOnce();
+    },
+
+    bindResizeOnce: function() {
+      if (this.resizeBound) return;
+
+      this.resizeBound = true;
+
       var resizeTimer;
       $(window).on('resize', function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(redistribute, 100);
+        resizeTimer = setTimeout(function() {
+          if (App.ResponsiveMenu.latestRedistribute) {
+            App.ResponsiveMenu.latestRedistribute();
+          }
+        }, 100);
       });
     },
 
     initialize: function() {
+      this.bindBodyEvents();
+      this.bindGlobalEvents();
+      this.initPriorityPlus();
+    },
 
+    bindBodyEvents: function() {
       $("body").on("click", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -211,13 +232,6 @@
           App.ResponsiveMenu.toggleMenu($(this))
         }
 
-      });
-
-      $(document).on("click", function(event) {
-        if (!$(event.target).closest("[data-navbar]").length) {
-          $("[data-navbar] li.nav-element[aria-expanded='true']").attr("aria-expanded", "false");
-          $("[data-navbar] button[aria-expanded='true']").attr("aria-expanded", "false");
-        }
       });
 
       $("body").on("keydown", ".js-toggle-mobile-menu", App.ResponsiveMenu.handleToggleKey);
@@ -238,6 +252,33 @@
         }, 0);
       });
 
+      $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
+        if (!recentTouch) {
+          $(this).attr("aria-expanded", "true");
+          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "true");
+        }
+      });
+
+      $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
+        if (!recentTouch) {
+          $(this).attr("aria-expanded", "false");
+          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "false");
+        }
+      });
+    },
+
+    bindGlobalEvents: function() {
+      if (this.globalEventsBound) return;
+
+      this.globalEventsBound = true;
+
+      $(document).on("click", function(event) {
+        if (!$(event.target).closest("[data-navbar]").length) {
+          $("[data-navbar] li.nav-element[aria-expanded='true']").attr("aria-expanded", "false");
+          $("[data-navbar] button[aria-expanded='true']").attr("aria-expanded", "false");
+        }
+      });
+
       $(document).on("keydown", function(event) {
         if (event.which === 27 && App.ResponsiveMenu.isMobileMenuOpen()) {
           event.preventDefault();
@@ -253,28 +294,10 @@
         App.ResponsiveMenu.trapFocus();
       });
 
-      var recentTouch = false;
       document.addEventListener("touchstart", function() {
         recentTouch = true;
         setTimeout(function() { recentTouch = false; }, 500);
       }, true);
-
-      $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
-        if (!recentTouch) {
-          $(this).attr("aria-expanded", "true");
-          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "true");
-        }
-      });
-
-      $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
-        if (!recentTouch) {
-          $(this).attr("aria-expanded", "false");
-          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "false");
-        }
-      });
-
-      App.ResponsiveMenu.initPriorityPlus();
-
-    }
+    },
   };
 }).call(this);

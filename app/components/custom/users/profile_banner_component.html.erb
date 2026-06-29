@@ -2,7 +2,7 @@
   <div class="users-profile-banner--background-image">
     <% if @edit_mode && @user == current_user %>
       <%= form_for @user, as: :account, remote: true, authenticity_token: true, url: account_path do |f| %>
-        <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true, crop: true, crop_aspect_ratio: 4) do |c|%>
+        <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true, crop: true, crop_aspect_ratio: 3.5) do |c|%>
           <% c.with_custom_edit_button do %>
             <button type="button" class="users-profile-banner--edit-button users-profile-banner--background-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
               <i class="fa fa-pencil-alt" aria-hidden="true"></i>
@@ -10,7 +10,7 @@
           <% end %>
           <% c.with_placeholder do %>
             <% if @user.background_image.attached? %>
-              <%= image_tag(@user.background_image.variant(resize_to_fit: [2000, 500])) %>
+              <%= image_tag(@user.background_image.variant(resize_to_fit: [1750, 500])) %>
             <% end %>
           <% end %>
         <% end %>
@@ -32,8 +32,7 @@
               <% c.with_placeholder do %>
                 <div
                   class="users-profile-banner--avatar-placeholder"
-                  aria-hidden="<%= @user.image.attached? %>"
-                  aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>"
+                  aria-hidden="true"
                 >
                   <%= @user.first_letter_of_name %>
                 </div>

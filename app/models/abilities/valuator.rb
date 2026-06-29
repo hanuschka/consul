@@ -16,7 +16,9 @@ module Abilities
         can [:comment_valuation], Budget::Investment, id: assigned_investment_ids
       end
 
-      cannot [:valuate, :comment_valuation], Budget::Investment, budget: { id: Budget.finished.pluck(:id) }
+      cannot [:valuate, :comment_valuation], Budget::Investment do |investment|
+        investment.budget.finished?
+      end
     end
   end
 end

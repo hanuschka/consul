@@ -20,7 +20,7 @@
   default_color  = current_color.presence || fallback_color
 %>
 <div
-  class="projekt-page--admin-topbar-color-picker js-admin-topbar-color-picker"
+  class="studio-admin-topbar-color-picker js-admin-topbar-color-picker"
   data-css-variable="<%= css_variable %>"
   data-style-element-id=""
   data-url="<%= update_url %>"
@@ -31,14 +31,14 @@
   data-i18n-error="<%= t('custom.welcome.topbar.nav_link_color_picker.status.error') %>"
 >
   <label
-    class="projekt-page--admin-topbar-color-picker--label"
+    class="studio-admin-topbar-color-picker--label"
     for="<%= input_id %>"
     title="<%= t('custom.welcome.topbar.nav_link_color_picker.tooltip') %>"
     data-tooltip
     data-hover-delay="500"
   >
-    <i class="fas fa-palette projekt-page--admin-topbar-color-picker--label-icon" aria-hidden="true"></i>
-    <span class="projekt-page--admin-topbar-color-picker--label-text">
+    <i class="fas fa-palette studio-admin-topbar-color-picker--label-icon" aria-hidden="true"></i>
+    <span class="studio-admin-topbar-color-picker--label-text">
       <%= t('custom.welcome.topbar.nav_link_color_picker.label') %>
     </span>
   </label>
@@ -46,14 +46,16 @@
   <input
     type="color"
     id="<%= input_id %>"
-    class="projekt-page--admin-topbar-color-picker--input js-admin-topbar-color-picker-input"
+    class="studio-admin-topbar-color-picker--input js-admin-topbar-color-picker-input"
     value="<%= default_color %>"
+    tabindex="-1"
     aria-label="<%= t('custom.welcome.topbar.nav_link_color_picker.label') %>"
   >
 
   <button
     type="button"
-    class="projekt-page--admin-topbar-color-picker--reset js-admin-topbar-color-picker-reset"
+    tabindex="-1"
+    class="studio-admin-topbar-color-picker--reset js-admin-topbar-color-picker-reset"
     title="<%= t('custom.welcome.topbar.nav_link_color_picker.reset') %>"
     aria-label="<%= t('custom.welcome.topbar.nav_link_color_picker.reset') %>"
     data-tooltip
@@ -63,7 +65,7 @@
   </button>
 
   <span
-    class="projekt-page--admin-topbar-color-picker--status js-admin-topbar-color-picker-status"
+    class="studio-admin-topbar-color-picker--status js-admin-topbar-color-picker-status"
     aria-live="polite"
   ></span>
 </div>

@@ -3,7 +3,8 @@
 <%= render Adm::HeaderComponent.new(
   title: (@projekt.page&.title || @projekt.name),
   breadcrumbs: @breadcrumbs,
-  frontend_url: projekt_path(@projekt)
+  frontend_url: projekt_path(@projekt),
+  compact: true
 ) %>
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>

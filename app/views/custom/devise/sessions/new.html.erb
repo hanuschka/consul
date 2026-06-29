@@ -20,14 +20,12 @@
                          autofocus: true,
                          autocomplete: "email",
                          label: t("devise_views.sessions.new.login_label"),
-                         label_options: { class: "show-for-sr" },
-                         placeholder: t("devise_views.sessions.new.login_label") %>
+                         label_options: { class: "auth-page-template--field-label" } %>
 
         <%= f.password_field :password,
                              autocomplete: "current-password",
                              label: t("devise_views.sessions.new.password_label"),
-                             label_options: { class: "show-for-sr" },
-                             placeholder: t("devise_views.sessions.new.password_label") %>
+                             label_options: { class: "auth-page-template--field-label" } %>
 
         <%= f.submit(t("devise_views.sessions.new.submit"), class: "button expanded") %>
 

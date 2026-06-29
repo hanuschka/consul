@@ -2,6 +2,8 @@
 //= link application.css
 //= link application-rtl.css
 //= link application.js
+//= link elements.css
+//= link elements.js
 //
 //= link stat_graphs.js
 //= link dashboard_graphs.js

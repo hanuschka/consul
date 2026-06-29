@@ -5,6 +5,8 @@
 // where Foundation is not loaded. Self-contained — no pack tokens.
 
 .close-button {
+  top: 10px;
+  right: 10px;
   position: absolute;
   z-index: 10;
   right: 1rem;

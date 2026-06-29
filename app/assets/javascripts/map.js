@@ -46,6 +46,40 @@
       }, 150);
     },
 
+    bindEscToCollapseExpanded: function() {
+      if (App.Map.escCollapseBound) return;
+
+      App.Map.escCollapseBound = true;
+
+      document.addEventListener("keydown", function(event) {
+        if (event.key !== "Escape" && event.keyCode !== 27) return;
+
+        var expanded = document.querySelector(".map_location.expanded");
+
+        if (!expanded) return;
+
+        var instance = App.Map.maps.find(function(mapInstance) {
+          return mapInstance.element === expanded;
+        });
+
+        if (instance && instance.collapseMap) {
+          instance.collapseMap();
+        }
+      });
+    },
+
+    invalidateSizeIn: function(container) {
+      var containerEl = $(container)[0];
+
+      if (!containerEl) return;
+
+      App.Map.maps.forEach(function(mapInstance) {
+        if (containerEl.contains(mapInstance.element) && mapInstance.map && mapInstance.map.invalidateSize) {
+          mapInstance.map.invalidateSize();
+        }
+      });
+    },
+
     destroyMapForElementId: function(elementId) {
       var mapInstance = null;
 
@@ -198,37 +232,33 @@
     },
 
     formattedFeatures(input) {
+      let items;
+
       if (Array.isArray(input)) {
-        let merged = {
-          type: 'FeatureCollection',
-          id: 'formatted-features',
-          features: []
-        };
-
-        input.forEach(function(resource_features) {
-          if (resource_features && resource_features.type === 'FeatureCollection' && Array.isArray(resource_features.features)) {
-            Array.prototype.push.apply(merged.features, resource_features.features);
-          } else if (resource_features && resource_features.type === 'Feature' && resource_features.geometry) {
-            merged.features.push(resource_features);
-          }
-        });
-
-        return merged;
-      } else if (input && input.type === 'FeatureCollection') {
-        return input;
+        items = input;
+      } else if (input && input.type === 'FeatureCollection' && Array.isArray(input.features)) {
+        items = input.features;
       } else if (input && input.type === 'Feature' && input.geometry) {
-        return {
-          type: 'FeatureCollection',
-          id: 'formatted-features',
-          features: [input]
-        };
+        items = [input];
       } else {
-        return {
-          type: 'FeatureCollection',
-          id: 'formatted-features',
-          features: []
-        }
+        items = [];
       }
+
+      const merged = {
+        type: 'FeatureCollection',
+        id: 'formatted-features',
+        features: []
+      };
+
+      items.forEach(function(item) {
+        if (item && item.type === 'FeatureCollection' && Array.isArray(item.features)) {
+          Array.prototype.push.apply(merged.features, item.features);
+        } else if (item && item.type === 'Feature' && item.geometry) {
+          merged.features.push(item);
+        }
+      });
+
+      return merged;
     },
 
     setupEventListenersForMarkerStyleChanges(instance) {

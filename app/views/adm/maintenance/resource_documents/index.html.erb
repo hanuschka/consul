@@ -4,21 +4,24 @@
   type: "document",
   title: t("files.resource_documents.index.title"),
   breadcrumbs: @breadcrumbs,
-  grid: {
-    assets: @assets,
-    endpoint: adm_maintenance_resource_documents_path,
-    card_component: Files::DocumentCardComponent,
-    row_component: Files::DocumentRowComponent,
-    documentable_type_frame_src: documentable_type_filter_adm_maintenance_resource_documents_path(documentable_type: params[:documentable_type])
-  }
+  assets: @assets,
+  endpoint: adm_maintenance_resource_documents_path,
+  card_component: Files::DocumentCardComponent,
+  row_component: Files::DocumentRowComponent,
+  documentable_type_frame_src: documentable_type_filter_adm_maintenance_resource_documents_path(documentable_type: params[:documentable_type])
 ) do |page| %>
   <% page.with_description do %>
     <%= t("files.resource_documents.index.description") %>
   <% end %>
 
+  <% documents_max_size_setting = Setting.find_by!(key: "uploads.documents.max_size") %>
+  <% documents_content_types_setting = Setting.find_by!(key: "uploads.documents.content_types") %>
   <% page.with_types_note(
        types: Document.humanized_accepted_content_types,
        note_key: "files.allowed_types_note_users_html",
-       settings_link: true
+       settings_link: true,
+       settings_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_content_types_setting, :value)),
+       max_file_size: Document.max_file_size,
+       max_size_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_max_size_setting, :value))
      ) %>
 <% end %>

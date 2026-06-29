@@ -71,11 +71,15 @@ class Adm::HeaderComponent < ApplicationComponent
       return ["/#{landing_page.slug}", t.call(:landing_page)] if landing_page&.slug.present?
 
       if controller.class.module_parent_name == "Adm::DeficiencyReports"
-        return [helpers.deficiency_reports_path, t.call(:deficiency_reports)]
+        feature = Setting["deficiency_reports.feature_name"].presence
+        label = feature ? I18n.t("components.adm.header_component.frontend_labels.feature", feature: feature) : t.call(:deficiency_reports)
+        return [helpers.deficiency_reports_path, label]
       end
 
       if controller.class.module_parent_name == "Adm::Ideas"
-        return [helpers.ideas_path, t.call(:ideas)]
+        feature = Setting["ideas.feature_name"].presence
+        label = feature ? I18n.t("components.adm.header_component.frontend_labels.feature", feature: feature) : t.call(:ideas)
+        return [helpers.ideas_path, label]
       end
 
       [helpers.root_path, t.call(:default)]

@@ -51,6 +51,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::ColorComponent
     when :select
       Adm::AttributeEditors::SelectComponent
+    when :content_types
+      Adm::AttributeEditors::ContentTypesComponent
     when :date
       Adm::AttributeEditors::DateComponent
     else

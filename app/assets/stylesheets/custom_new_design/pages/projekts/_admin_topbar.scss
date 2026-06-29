@@ -1,5 +1,5 @@
 // Admin topbar — three-cluster layout: View-Switch | Display-Toggle | Actions
-// Specificity strategy: scope all overrides under `.projekt-page--admin-topbar`
+// Specificity strategy: scope all overrides under `.studio-admin-topbar`
 // so we beat Foundation `.button.hollow` defaults without `!important`.
 
 // ---------------------------------------------------------------
@@ -41,7 +41,7 @@ $topbar-transition: 150ms ease;
 // without `!important`. Adds +1 class specificity across the file.
 .custom-new-design {
 
-.projekt-page--admin-topbar {
+.studio-admin-topbar {
   // UI-chrome accent — anchored to the platform's compile-time $brand,
   // intentionally NOT following per-projekt --brand-color overrides so the
   // admin topbar stays visually stable when the color-picker changes the page.
@@ -64,7 +64,7 @@ $topbar-transition: 150ms ease;
   }
 }
 
-.projekt-page--admin-topbar--inner {
+.studio-admin-topbar--inner {
   margin: auto;
   width: 100%;
   max-width: var(--tobar-max-width);
@@ -74,7 +74,7 @@ $topbar-transition: 150ms ease;
 }
 
 // Vertical divider between clusters
-.projekt-page--admin-topbar-divider {
+.studio-admin-topbar-divider {
   display: inline-block;
   width: 1px;
   height: 22px;
@@ -85,7 +85,7 @@ $topbar-transition: 150ms ease;
 // ---------------------------------------------------------------
 // Cluster 1: View-Switch (Pill segmented control)
 // ---------------------------------------------------------------
-.projekt-page--admin-topbar-left {
+.studio-admin-topbar-left {
   display: inline-flex;
   align-items: center;
   background: $topbar-surface;
@@ -99,7 +99,7 @@ $topbar-transition: 150ms ease;
   // `.button.hollow` overrides Foundation defaults. Foundation 6 sets
   // `.button.hollow` (and its `:hover`, `:focus`, `:active`) `color` and
   // `border-color` to `$primary-color` (= brand-color). We beat all four
-  // states by scoping to `.projekt-page--admin-topbar-left .button.hollow`
+  // states by scoping to `.studio-admin-topbar-left .button.hollow`
   // (specificity 0,2,1) — no `!important`.
   .button.hollow,
   .button.hollow:hover,
@@ -166,7 +166,7 @@ $topbar-transition: 150ms ease;
 // ---------------------------------------------------------------
 // Cluster 2: Display-Toggle (Switch-track look, distinct from actions)
 // ---------------------------------------------------------------
-.projekt-page--admin-topbar-settings {
+.studio-admin-topbar-settings {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -177,7 +177,7 @@ $topbar-transition: 150ms ease;
   }
 }
 
-.projekt-page--admin-topbar-toggle {
+.studio-admin-topbar-toggle {
   @extend %topbar-focus-ring;
   display: inline-flex;
   align-items: center;
@@ -226,11 +226,11 @@ $topbar-transition: 150ms ease;
     transition: transform 200ms ease;
   }
 
-  &[aria-checked="true"] .projekt-page--admin-topbar-toggle--track {
+  &[aria-checked="true"] .studio-admin-topbar-toggle--track {
     background: var(--admin-topbar-accent);
   }
 
-  &[aria-checked="true"] .projekt-page--admin-topbar-toggle--thumb {
+  &[aria-checked="true"] .studio-admin-topbar-toggle--thumb {
     transform: translateX(18px);
   }
 
@@ -244,7 +244,7 @@ $topbar-transition: 150ms ease;
 // ---------------------------------------------------------------
 // Cluster 3: Action buttons (right-aligned)
 // ---------------------------------------------------------------
-.projekt-page--admin-topbar-right {
+.studio-admin-topbar-right {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -264,21 +264,21 @@ $topbar-transition: 150ms ease;
 //
 // Foundation 6 sets `.button.hollow` (and `:hover`, `:focus`, `:active`)
 // `border-color` and `color` to `$primary-color` (= brand-color). We beat
-// every state with the chained selector `.projekt-page--admin-topbar
-// .projekt-page--admin-topbar-button` (specificity 0,2,0) — same as
+// every state with the chained selector `.studio-admin-topbar
+// .studio-admin-topbar-button` (specificity 0,2,0) — same as
 // Foundation, but our rule comes later in the cascade. To rule out edge
 // cases (Foundation `.button.hollow.something` partials elsewhere), we
 // list every state explicitly so no Foundation default leaks through.
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button,
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button:hover,
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button:focus,
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button:active {
+.studio-admin-topbar .studio-admin-topbar-button,
+.studio-admin-topbar .studio-admin-topbar-button:hover,
+.studio-admin-topbar .studio-admin-topbar-button:focus,
+.studio-admin-topbar .studio-admin-topbar-button:active {
   // Foundation reset — defaults are then re-applied per-state below
   border-style: solid;
   border-width: 1px;
 }
 
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button {
+.studio-admin-topbar .studio-admin-topbar-button {
   @extend %topbar-focus-ring;
   display: inline-flex;
   align-items: center;
@@ -352,10 +352,10 @@ $topbar-transition: 150ms ease;
 // Primary action: Projekteinstellungen — visually emphasised, brand-color CTA.
 // On a dark surface, lifting the hover state brighter (mix with white) feels
 // more "raised" than darker mix.
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button--primary,
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button--primary:hover,
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button--primary:focus,
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button--primary:active {
+.studio-admin-topbar .studio-admin-topbar-button--primary,
+.studio-admin-topbar .studio-admin-topbar-button--primary:hover,
+.studio-admin-topbar .studio-admin-topbar-button--primary:focus,
+.studio-admin-topbar .studio-admin-topbar-button--primary:active {
   color: #fff;
 
   i {
@@ -363,7 +363,7 @@ $topbar-transition: 150ms ease;
   }
 }
 
-.projekt-page--admin-topbar .projekt-page--admin-topbar-button--primary {
+.studio-admin-topbar .studio-admin-topbar-button--primary {
   background: var(--admin-topbar-accent);
   border-color: var(--admin-topbar-accent);
 
@@ -387,7 +387,11 @@ $topbar-transition: 150ms ease;
 // 640–750px range where icons are already enlarged.
 // ---------------------------------------------------------------
 @media (max-width: $small-tablet-viewport-start) {
-  .projekt-page--admin-topbar {
+  // Hidden below the small-tablet breakpoint — admin/PM controls are not
+  // offered on touch viewports. The reserved layout space is reclaimed by
+  // collapsing --admin-topbar-height to 0 in _1_variables.scss.
+  .studio-admin-topbar {
+    display: none;
     padding: 0 10px;
     // Allow overflowing button row to scroll horizontally INSIDE the dark
     // surface — without this, `flex-shrink: 0` clusters render outside the
@@ -408,14 +412,14 @@ $topbar-transition: 150ms ease;
   // WCAG 2.1 / iOS HIG: 44x44 tap target minimum on touch devices.
   // Applied at small-tablet (<=750px) — tablets are touch too, and the
   // buttons are already in icon-only "small" mode at this breakpoint.
-  .projekt-page--admin-topbar .projekt-page--admin-topbar-button,
-  .projekt-page--admin-topbar-toggle,
-  .projekt-page--admin-topbar-left .button.hollow {
+  .studio-admin-topbar .studio-admin-topbar-button,
+  .studio-admin-topbar-toggle,
+  .studio-admin-topbar-left .button.hollow {
     min-height: $topbar-tap-target;
     min-width: $topbar-tap-target;
   }
 
-  .projekt-page--admin-topbar--inner {
+  .studio-admin-topbar--inner {
     gap: 8px;
     // Explicit nowrap — keep the cluster row consolidated so horizontal
     // scrolling (above) is the only overflow direction.
@@ -426,13 +430,13 @@ $topbar-transition: 150ms ease;
     min-width: 100%;
   }
 
-  .projekt-page--admin-topbar-right {
+  .studio-admin-topbar-right {
     gap: 4px;
   }
 
   // Per-cluster icon-only treatment — sizes/min-widths are intentionally
   // omitted here so the bulk `$topbar-tap-target` (44px) rule above wins.
-  .projekt-page--admin-topbar-left .button.hollow {
+  .studio-admin-topbar-left .button.hollow {
     padding: 8px 10px;
     justify-content: center;
 
@@ -445,15 +449,15 @@ $topbar-transition: 150ms ease;
     }
   }
 
-  .projekt-page--admin-topbar-toggle {
+  .studio-admin-topbar-toggle {
     padding: 8px;
 
-    .projekt-page--admin-topbar-toggle--label {
+    .studio-admin-topbar-toggle--label {
       display: none;
     }
   }
 
-  .projekt-page--admin-topbar .projekt-page--admin-topbar-button {
+  .studio-admin-topbar .studio-admin-topbar-button {
     padding: 8px;
     justify-content: center;
 
@@ -466,14 +470,14 @@ $topbar-transition: 150ms ease;
     }
   }
 
-  .projekt-page--admin-topbar-divider {
+  .studio-admin-topbar-divider {
     height: 24px;
   }
 }
 
 // Tighter horizontal padding on the smallest viewports — purely cosmetic.
 @media (max-width: $mobile-viewport-start) {
-  .projekt-page--admin-topbar {
+  .studio-admin-topbar {
     padding: 0 8px;
   }
 }

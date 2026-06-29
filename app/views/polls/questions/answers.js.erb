@@ -1,6 +1,7 @@
 $("#poll-participation-confirmed-callout").remove();
 $("#<%= dom_id(@question) %>_answers").html("<%= j render Polls::Questions::AnswersComponent.new(@question, answer_updated: @answer_updated, open_answer_updated: @open_answer_updated) %>");
 App.PollsCustom.showOpenAnswers();
+App.PollsCustom.formatVisibleRatingScalesAfterRepaint();
 
 
 <% if @question_answer.present? && @question_answer.terminates_poll? %>

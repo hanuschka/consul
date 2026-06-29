@@ -2,7 +2,7 @@
   display: inline-block;
   margin: 0;
 
-  [aria-pressed] {
+  [aria-checked] {
     position: relative;
     display: inline-block;
     width: 44px;
@@ -44,7 +44,7 @@
     }
   }
 
-  [aria-pressed="true"] {
+  [aria-checked="true"] {
     background: var(--brand-color);
 
     &::after {

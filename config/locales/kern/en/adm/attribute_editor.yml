@@ -160,8 +160,8 @@ This logo should be readable on both light and dark backgrounds, since it appear
           "$": "$ (Dollar)"
           "£": "£ (Pound)"
           "¥": "¥ (Yen)"
-        max_preselected_label: Shortlist (optional)
-        max_preselected_description: "Limits the number of top-rated proposals that move on from the support phase to the review phase. Only proposals with the most supports are carried over. Leave the field empty if all proposals should go to review without pre-selection."
+        max_preselected_label: Shortlist
+        max_preselected_description: "Limits the number of top-rated proposals carried over from the support phase to the review phase. The proposals with the most supports are carried over. Leave the field empty if all proposals should go to review without pre-selection.<br><br><strong>Important:</strong> As soon as you enter a number greater than 0 here, a system email is automatically sent to all submitters when the support phase ends – an acceptance to those whose proposal was carried over, and a rejection to everyone else."
         hide_money_label: Hide money
         hide_money_description: "Hides all monetary amounts throughout the participatory budget — on individual proposals as well as overviews and results. This option is suitable if the budget is not measured in monetary values or if proposal costs are not relevant to participants."
         max_number_of_winners_label: Maximum number of winners

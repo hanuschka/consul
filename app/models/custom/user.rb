@@ -248,7 +248,9 @@ User.class_eval do
 
   def projekt_manager?(projekt = nil)
     if projekt.present?
-      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+      projekt_manager.present? &&
+        (projekt_manager.manage_all_projekts? ||
+          projekt.projekt_managers.include?(projekt_manager))
     else
       projekt_manager.present?
     end

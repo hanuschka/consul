@@ -8,42 +8,17 @@ module Adm
         { name: t("adm.connection.show.title") }
       ]
 
-      @dt_connected = Dt.connected?
-      @api_accessible = false
-      @connection_works = false
+      check = DtApi::ConnectionCheck.call
 
-      if @dt_connected.blank?
-        dt_client = InternalApiClient.dt
-
-        @dt_connected_error =
-          if dt_client.blank?
-            I18n.t("adm.connection.show.errors.no_client")
-          else
-            I18n.t("adm.connection.show.errors.no_token")
-          end
-      end
-
-      check_api_connection
+      @dt_connected = check.dt_connected
+      @api_accessible = check.api_accessible
+      @connection_works = check.connection_works
+      @status_code = check.status_code
+      @status_data = check.status_data
+      @dt_connected_error = check.dt_connected_error
+      @api_accessible_error = check.api_accessible_error
+      @connection_error = check.connection_error
+      @all_checks_passed = check.all_checks_passed?
     end
-
-    private
-
-      def check_api_connection
-        response = DtApi::Client.new.connection.status
-        @status_code = response.code
-        @status_data = response.parsed_response
-        @api_accessible = !response.code.between?(500, 599)
-        @connection_works =
-          response.code == 200 &&
-          @status_data.is_a?(Hash) &&
-          @status_data["authenticated"] == true
-
-        if @api_accessible.blank?
-          @api_accessible_error = "HTTP #{@status_code}\n#{@status_data.inspect}"
-        end
-      rescue StandardError => e
-        @connection_error = e.message
-        @api_accessible_error = e.message
-      end
   end
 end

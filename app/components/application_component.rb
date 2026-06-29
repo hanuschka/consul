@@ -3,6 +3,7 @@ class ApplicationComponent < ViewComponent::Base
   delegate :kern_button, :form_submit_button, to: :helpers
 
   include SettingsHelper
+  include StudioTooltipHelper
   delegate :back_link_to, to: :helpers
   delegate :default_form_builder, to: :controller
 

@@ -189,26 +189,22 @@ class Projekt < ApplicationRecord
       .order("projekts.created_at DESC")
   }
 
-  scope :index_order_underway, ->() {
-    current
+  scope :index_order_underway, ->(timestamp = Time.zone.today) {
+    current(timestamp)
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases, :projekt_settings)
+      .where(current_regular_phase_exists(timestamp).or(consider_underway_setting_exists))
       .order("projekts.created_at DESC")
-      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
-  scope :index_order_ongoing, ->() {
-    current
+  scope :index_order_ongoing, ->(timestamp = Time.zone.today) {
+    current(timestamp)
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases)
+      .where(Arel::Nodes::Not.new(current_regular_phase_exists(timestamp)))
       .order("projekts.created_at DESC")
-      .select do |p|
-        p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
-      end
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
@@ -240,6 +236,26 @@ class Projekt < ApplicationRecord
     not_activated
       .order("projekts.created_at DESC")
   }
+
+  def self.current_regular_phase_exists(timestamp = Time.zone.today)
+    ProjektPhase
+      .regular_phases
+      .current(timestamp)
+      .where(ProjektPhase.arel_table[:projekt_id].eq(arel_table[:id]))
+      .unscope(:order)
+      .arel
+      .exists
+  end
+
+  def self.consider_underway_setting_exists
+    ProjektSetting
+      .where(ProjektSetting.arel_table[:projekt_id].eq(arel_table[:id]))
+      .where(key: "projekt_feature.general.consider_underway")
+      .where.not(value: [nil, ""])
+      .unscope(:order)
+      .arel
+      .exists
+  end
 
   scope :not_in_individual_list, -> {
     joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
@@ -753,10 +769,6 @@ class Projekt < ApplicationRecord
       .map(&:body)
       .compact_blank
       .join("\n")
-  end
-
-  def content_blocks_text
-    ActionView::Base.full_sanitizer.sanitize(content_blocks_body).to_s.squish
   end
 
   def perform_sync_update_for_global_overview

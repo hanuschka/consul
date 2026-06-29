@@ -45,6 +45,10 @@ App.ContentBlockEditor.SimpleEditMode.LinkEdit = {
   },
 
   wrapLinkWithControls(link) {
+    if (link.closest(".js-content-block-element-not-editable")) {
+      return
+    }
+
     if (link.parentElement.classList.contains("js-content-block-link-wrapper")) {
       return
     }

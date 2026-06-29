@@ -1,0 +1,25 @@
+// Shared title + close row for modern modals (Shared::ModalComponent title,
+// studio templates selector, AI create). Lives in cross_pack so it renders
+// identically in every pack: main app (Foundation/Sprockets), studio, and /adm
+// (kern/esbuild). The close button is pushed to the far edge; any leading
+// actions (e.g. the AI-create button) sit next to the title.
+// Self-contained — no Foundation/pack tokens.
+
+.modern-modal--header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+
+  h3 {
+    margin-bottom: 0;
+  }
+}
+
+.modern-modal--header.-compact-title {
+  margin-bottom: 1rem;
+}
+
+.modern-modal--header .close-button {
+  margin-left: auto;
+}

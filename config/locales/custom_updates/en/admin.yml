@@ -575,6 +575,7 @@ en:
           page_title: Projekt notifications
           button: Send notification
         projekt_arguments:
+          projekt_phase_default_title: Votes / Opinions
           page_title: Arguments
           send_notifications_button: Send notifications
           notifications_sent_notice: Notifications sent successfully

@@ -18,7 +18,7 @@
     <div class="flex-layout">
       <div class="main-column">
         <div class="margin-bottom-50">
-          <%= render ResourcePage::BannerComponent.new(resource: @proposal) %>
+          <%= render ResourcePage::BannerComponent.new(resource: @proposal, heading_level: :h2) %>
         </div>
 
         <%= render Shared::ResourcesListComponent.new(

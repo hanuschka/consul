@@ -3,7 +3,8 @@
     <%= render Shared::SidebarCardComponent.new(title: "Export", icon_name: "file-download") do |c| %>
       <%= link_to t("custom.admin.common.download_current_selection"),
         @path,
-        target: "_blank" %>
+        target: "_blank",
+        tabindex: "-1" %>
     <% end %>
   </div>
 <% end %>

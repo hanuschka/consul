@@ -25,6 +25,7 @@ module Adm
       def system_user_params
         params.require(:user).permit(
           :username,
+          :background_image,
           image_attributes: [:id, :attachment, :cached_attachment, :user_id, :_destroy]
         )
       end

@@ -30,6 +30,10 @@ html.is-shared-modal-open {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
   }
+
+  h3 {
+    font-size: 25px;
+  }
 }
 
 .shared-modal--content {
@@ -37,6 +41,10 @@ html.is-shared-modal-open {
   padding: 20px 25px;
   background-color: #fff;
   border-radius: 8px;
+}
+
+.shared-modal--content .modern-modal--header {
+  padding-right: 40px;
 }
 
 .shared-modal--close {

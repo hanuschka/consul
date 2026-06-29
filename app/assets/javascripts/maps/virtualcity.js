@@ -271,6 +271,8 @@
     }
 
     renderFeatures() {
+      if (!this.app || !this.map) return;
+
       if (this.features && Object.keys(this.features).length > 0) {
         const instance = this;
         const layerName = instance.editable ? '_editorLayer' : '_predefinedFeaturesLayer';

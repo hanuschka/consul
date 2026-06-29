@@ -5,10 +5,12 @@ class Images::DropzoneComponent < ApplicationComponent
   attr_reader :f
   delegate :current_user, :render_image, to: :helpers
 
-  def initialize(f, attachment_name:, submit_form: false)
+  def initialize(f, attachment_name:, submit_form: false, crop: false, crop_aspect_ratio: nil)
     @f = f
     @attachment_name = attachment_name.to_sym
     @submit_form = submit_form
+    @crop = crop
+    @crop_aspect_ratio = crop_aspect_ratio
   end
 
   private

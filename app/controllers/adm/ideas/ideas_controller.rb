@@ -144,7 +144,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
       return scope unless Setting["ideas.admins_must_assign_officer"].present?
       raise Pundit::NotAuthorizedError unless current_user.idea_officer?
 
-      scope.where(officer: current_user.idea_officer)
+      officer = current_user.idea_officer
+
+      return scope if officer.manage_all?
+
+      scope.where(officer: officer)
     end
 
     def notify_new_officer(idea)

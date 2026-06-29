@@ -44,6 +44,19 @@ module Schemas
       }
     }.freeze
 
+    NO_PAGINATION_RESPONSE_SCHEMA = {
+      type: :object,
+      description: 'Returned in place of pagination metadata when no pagination was applied (all matching records returned in a single response). Supply the page and/or per_page query parameters to paginate.',
+      properties: {
+        message: {
+          type: :string,
+          description: 'Help text stating that all records were returned without pagination and how to enable it.',
+          example: "All matching records were returned in a single response without pagination. To paginate, supply the 'page' and/or 'per_page' query parameters (for example: ?page=1&per_page=20)."
+        }
+      },
+      required: ['message']
+    }.freeze
+
     IMAGE_RESPONSE_SCHEMA = {
       type: :object,
       nullable: true,
@@ -56,16 +69,16 @@ module Schemas
         variants: {
           type: :object,
           nullable: true,
-          description: 'Different sized versions of the image with width-based keys',
+          description: "Pre-generated resized versions of the image, keyed by their target maximum width in pixels (plus 'original'). Each numeric key is a variant scaled to fit within that width: the width is the upper bound, height scales proportionally so the aspect ratio is preserved, and the image is never enlarged beyond its original size (a source narrower than the key yields the smaller source dimensions, not an upscaled image). Pick the key closest to (and at least as large as) the width you will render at. By default every version is returned. The projekts list (index) endpoint accepts an 'image_variant_versions' query parameter (comma-separated, e.g. '300,900') to restrict this object to specific versions and shrink the payload; in that case only the requested keys are present.",
           properties: {
-            "150": { type: :string, nullable: true, description: 'Thumbnail 150px width', example: 'https://example.com/uploads/150.jpg' },
-            "300": { type: :string, nullable: true, description: 'Small 300px width', example: 'https://example.com/uploads/300.jpg' },
-            "450": { type: :string, nullable: true, description: 'Medium 450px width', example: 'https://example.com/uploads/450.jpg' },
-            "600": { type: :string, nullable: true, description: 'Medium-large 600px width', example: 'https://example.com/uploads/600.jpg' },
-            "900": { type: :string, nullable: true, description: 'Large 900px width', example: 'https://example.com/uploads/900.jpg' },
-            "1200": { type: :string, nullable: true, description: 'Extra large 1200px width', example: 'https://example.com/uploads/1200.jpg' },
-            "1920": { type: :string, nullable: true, description: 'Full HD 1920px width', example: 'https://example.com/uploads/1920.jpg' },
-            "original": { type: :string, nullable: true, description: 'Original unmodified image', example: 'https://example.com/uploads/original.jpg' }
+            "150": { type: :string, nullable: true, description: 'Max 150px wide. Thumbnail (avatars, list rows, tight grids).', example: 'https://example.com/uploads/150.jpg' },
+            "300": { type: :string, nullable: true, description: 'Max 300px wide. Small (card teasers, mobile inline images).', example: 'https://example.com/uploads/300.jpg' },
+            "450": { type: :string, nullable: true, description: 'Max 450px wide. Medium (sidebar, two-column card images).', example: 'https://example.com/uploads/450.jpg' },
+            "600": { type: :string, nullable: true, description: 'Max 600px wide. Medium-large (single-column body images).', example: 'https://example.com/uploads/600.jpg' },
+            "900": { type: :string, nullable: true, description: 'Max 900px wide. Large (wide content area, retina cards).', example: 'https://example.com/uploads/900.jpg' },
+            "1200": { type: :string, nullable: true, description: 'Max 1200px wide. Extra large (page headers, hero on desktop).', example: 'https://example.com/uploads/1200.jpg' },
+            "1920": { type: :string, nullable: true, description: 'Max 1920px wide. Full-width Full HD (full-bleed banners, retina hero).', example: 'https://example.com/uploads/1920.jpg' },
+            "original": { type: :string, nullable: true, description: 'The unmodified uploaded file at its original dimensions (no resizing). Largest payload; use only when the exact source is required.', example: 'https://example.com/uploads/original.jpg' }
           }
         }
       }

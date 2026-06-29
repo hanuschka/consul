@@ -5,9 +5,14 @@ class ResourcePage::BannerComponent < ApplicationComponent
 
   delegate :current_user, :projekt_feature?, :projekt_phase_feature?, :format_date_range, to: :helpers
 
-  def initialize(resource:, compact: false)
+  def initialize(resource:, compact: false, heading_level: nil)
     @resource = resource
     @compact = compact
+    @heading_level = heading_level
+  end
+
+  def heading_level
+    @heading_level || (@compact ? :h2 : :h1)
   end
 
   def image_url
@@ -63,7 +68,6 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def show_projekt_link?
     return false unless resource.respond_to?(:projekt)
 
-    projekt_feature?(resource.projekt, "general.show_in_navigation") ||
-      projekt_feature?(resource.projekt, "general.show_in_homepage")
+    projekt_feature?(resource.projekt, "general.show_related_projekt_link")
   end
 end

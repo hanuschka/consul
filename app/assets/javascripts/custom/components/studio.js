@@ -1,6 +1,13 @@
 (function() {
   "use strict";
 
+  // This file is pulled into BOTH the studio pack and the application pack
+  // (via require_tree ./custom). The studio pack creates App.Studio in
+  // lib/studio_namespace.js / studio/main.js, but the application pack does
+  // not, so guard the namespace here to avoid a top-level crash there.
+  window.App = window.App || {};
+  window.App.Studio = window.App.Studio || {};
+
   App.Studio.initContentBlockModules = function() {
     // Window-level flag: survives re-evaluation of this pack (e.g. Turbo
     // re-running body scripts), preventing duplicate document-level

@@ -54,7 +54,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def api_subitems
       [
         { label: t("adm.menu.items.api_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
-        { label: t("adm.menu.items.api_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" }
+        { label: t("adm.menu.items.api_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" },
+        { label: t("adm.menu.items.api_subitems.api_changelog"),      path: api_docs_path(anchor: "section/Changelog"), target: "_blank" }
       ]
     end
 

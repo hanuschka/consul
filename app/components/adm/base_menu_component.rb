@@ -36,6 +36,8 @@ class Adm::BaseMenuComponent < ApplicationComponent
       {
         class: class_names("nav-item-link", "with-subitems": has_subitems, "expanded": subitems_expanded),
         role: ("button" if has_subitems),
+        target: item[:target],
+        rel: ("noopener" if item[:target]),
         aria: {
           current: ("page" if item_active?(item)),
           expanded: (subitems_expanded if has_subitems)

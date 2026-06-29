@@ -17,8 +17,8 @@ require_relative 'schemas/polls_schemas'
 
 Rswag::Specs::SwaggerRoot = Rails.root.join('public').to_s
 
-def api_description
-  content = File.read(Rails.root.join('doc/api/api_description.md'))
+def read_api_doc(relative_path)
+  content = File.read(Rails.root.join(relative_path))
   lines = content.lines
 
   min_indent = lines
@@ -38,7 +38,10 @@ def api_description
     .join("\n")
 end
 
-API_DESCRIPTION = api_description
+API_DESCRIPTION = [
+  read_api_doc('doc/api/api_description.md'),
+  read_api_doc('doc/api/api_changelog.md')
+].join("\n\n")
 
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated

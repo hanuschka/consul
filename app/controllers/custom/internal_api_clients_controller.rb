@@ -2,10 +2,8 @@ class InternalApiClientsController < ApplicationController
   skip_authorization_check
 
   def connect
-    api_client = InternalApiClient.find_or_create_by!(
-      name: "DT",
-      domain: Dt.domain
-    )
+    api_client = InternalApiClient.find_or_initialize_dt
+    api_client.update!(domain: Dt.domain)
 
     user_role =
       if current_user.administrator?
@@ -28,9 +26,7 @@ class InternalApiClientsController < ApplicationController
         name: Setting["org_name"],
         platform_url: Setting["url"],
         auth_token: api_client.auth_token,
-        latitude: Setting["map.latitude"],
-        longitude: Setting["map.longitude"],
-        zoom: Setting["map.zoom"],
+        **Dt.map_settings,
         consul_env: Rails.env.to_s,
         user_email: current_user.email,
         user_first_name: current_user.first_name,
@@ -51,7 +47,7 @@ class InternalApiClientsController < ApplicationController
 
     if dt_response.code === 200
       flash[:notice] = I18n.t("internal_api_clients.connect.success")
-      redirect_to admin_connection_path
+      redirect_back(fallback_location: admin_connection_path)
     else
       if dt_response.code == 200
         flash[:error] =

@@ -10,6 +10,7 @@ en:
           proposal_phase: Proposals
           budget_phase: Investments
           comment_phase: Comments
+          debate_phase: Debates
           voting_phase: Polls
       stats:
         title: Statistics

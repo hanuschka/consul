@@ -10,6 +10,7 @@
 @use "adm/components/icon_selector";
 @use "adm/components/flash_component";
 @use "adm/components/empty_state";
+@use "adm/components/anchor_highlight";
 @use "adm/components/detail_page";
 @use "adm/components/form_image_component";
 @use "adm/components/button_with_progress";
@@ -34,6 +35,7 @@
 @use "components/shared_admin_iframe";
 @use "components/subnavigation_konto_component";
 @use "adm/components/admin_projekt_import";
+@use "adm/components/kern_ai_setting";
 @use "adm/components/files";
 @use "adm/components/evaluation_report";
 @use "adm/components/masterportal_import_panel";
@@ -62,10 +64,9 @@
 @use "cross_pack/components/shared_modal";
 @use "cross_pack/components/modern_modal_header";
 @use "cross_pack/components/close_button";
-@use "cross_pack/components/rich_tooltip";
-@use "cross_pack/components/inline_popup";
 @use "cross_pack/components/flyout_item_link";
 @use "cross_pack/components/image_cropper";
+@use "cross_pack/components/ai_feature_tooltip";
 
 @use "adm/components/newsletter_email_preview";
 @use "adm/components/image_cropper_dialog";

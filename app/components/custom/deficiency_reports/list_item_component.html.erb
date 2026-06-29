@@ -1,4 +1,12 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_author(resource: deficiency_report) %>
+
+  <% c.with_subheading do %>
+    <%= subline %>
+  <% end %>
+
+  <% c.with_image(image: deficiency_report.image, image_placeholder_icon_class: "fa-lightbulb", resource: deficiency_report) %>
+
   <% c.with_header do %>
     <div>
     </div>

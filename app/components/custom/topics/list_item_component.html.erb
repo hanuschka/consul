@@ -1,5 +1,11 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_author(resource: topic) %>
+
+  <% c.with_subheading do %>
+    <%= "#{topic.comments_count} kommentare" %>
+  <% end %>
+
   <% c.with_footer_section do %>
-    <%= link_to "Mitmachen", community_topic_path(topic.community, topic), class: "button -grey" %></h3>
+    <%= link_to "Mitmachen", community_topic_path(topic.community, topic), class: "button -grey" %>
   <% end %>
 <% end %>

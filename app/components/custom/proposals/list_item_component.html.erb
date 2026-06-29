@@ -1,10 +1,22 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% if !proposal.submitted_anonymously? %>
+    <% c.with_author(resource: proposal) %>
+  <% end %>
+
+  <% if helpers.form_attached_image_visible?(proposal) %>
+    <% c.with_image(image: proposal.image, image_placeholder_icon_class: "fa-lightbulb", resource: proposal) %>
+  <% end %>
+
   <% c.with_header do %>
     <div>
       <% if @sentiment.present? %>
         <%= @sentiment.name %>
       <% end %>
     </div>
+
+    <% if helpers.resource_follow_icon_visible?(proposal) %>
+      <%= render Shared::FollowIconComponent.new(resource: proposal) %>
+    <% end %>
   <% end %>
 
   <% if proposal.labels_available? %>

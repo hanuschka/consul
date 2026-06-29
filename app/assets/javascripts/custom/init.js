@@ -4,6 +4,7 @@
   App.CustomJS = {
     initialize: function() {
       App.DropdownSelectMenuComponent.initialize();
+      App.FilterDropdownComponent.initialize();
       App.ResourcesListComponent.initialize();
       App.StikyHeader.initialize();
       App.DirectUploadComponent.initialize();

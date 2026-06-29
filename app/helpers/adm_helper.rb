@@ -11,6 +11,12 @@ module AdmHelper
     value.to_json
   end
 
+  def format_runtime_ms(milliseconds)
+    return "—" if milliseconds.blank?
+
+    "#{number_with_delimiter(milliseconds.round(1))} ms"
+  end
+
   def http_status_label(status)
     reason = Rack::Utils::HTTP_STATUS_CODES[status]
     reason ? "#{status} #{reason}" : status.to_s

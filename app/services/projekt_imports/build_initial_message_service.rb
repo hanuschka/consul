@@ -1,8 +1,9 @@
 class ProjektImports::BuildInitialMessageService < ApplicationService
-  attr_reader :projekt_import
+  attr_reader :projekt_import, :text_truncated
 
-  def initialize(projekt_import:)
+  def initialize(projekt_import:, text_truncated: false)
     @projekt_import = projekt_import
+    @text_truncated = text_truncated
   end
 
   def call
@@ -23,6 +24,11 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
     lines << ""
     lines << t(:analysis_intro)
     lines << ""
+
+    if text_truncated
+      lines << "**⚠️ #{t(:input_truncated_notice)}**"
+      lines << ""
+    end
     lines << "**#{t(:title)}:** #{data['title']}"
     lines << "**#{t(:subtitle)}:** #{data['subtitle']}" if data["subtitle"].present?
     lines << ""

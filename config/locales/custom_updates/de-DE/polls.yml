@@ -88,6 +88,7 @@ de:
   polls:
     index:
       filters:
+        status: Status
         title: Status
         all: Alle Abstimmungen
         currrent: Aktiv Abstimmungen

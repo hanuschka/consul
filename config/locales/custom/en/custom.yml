@@ -64,9 +64,13 @@ en:
         fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
         load_error: "Content block templates could not be loaded."
         retry: "Try again"
+        blank_create_button:
+          label: Add blank block
+          title: Add an empty content block to design yourself
         ai_create_button:
           label: Create with AI
           title: Let AI create a content block
+          tooltip_description: "Describe what you want and the AI builds a ready-made content block for you — tailored to the projekt — which you can then edit freely."
         visibility:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"

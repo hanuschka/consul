@@ -209,6 +209,38 @@
 // }
 
 // =============================================================================
+// Copy-Erfolg-Feedback — grüner Haken + "Kopiert!"-Tooltip links vom Button
+// =============================================================================
+.studio-icon-button.-copied i {
+  color: $green-success-color;
+}
+
+.studio-copy-feedback-tooltip {
+  position: fixed;
+  inset: auto;
+  z-index: 10010;
+  transform: translate(-100%, -50%);
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #1c1c1e;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+
+.studio-copy-feedback-tooltip.-visible {
+  opacity: 1;
+}
+
+// =============================================================================
 // AI-Submit (separates Spezial-Element, behalten)
 // =============================================================================
 .projekt-content-block-edit--ai-submit {
@@ -219,24 +251,32 @@
 // Compact-Mode-Overrides (kleinere Toolbar in schmalen Containern)
 // =============================================================================
 .projekt-content-block-wrapper.-compact-mode {
-  // The full studio toolbar is wider than a narrow sidebar/footer card, so let
-  // it wrap onto multiple rows and never exceed the container width instead of
-  // spilling past the card's right edge.
+  // In a narrow sidebar/footer card the full studio toolbar would otherwise
+  // sit as a fit-content pill on the right and tip its last icon onto a second
+  // row. Instead span the toolbar across the card's full width and distribute
+  // the icons evenly on a single row — the icons (7 x 28px) fit comfortably in
+  // the ~254px card, so no wrapping is needed.
   .projekt-content-block--toolbar {
-    flex-wrap: wrap;
-    max-width: 100%;
+    // width: auto !important;
+    margin-left: 0;
+    flex-wrap: nowrap;
     padding: 3px 5px;
-    row-gap: 4px;
   }
 
   .projekt-content-block-edit-main-controlls {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    row-gap: 4px;
-    // Lift the single-row cap from .projekt-content-block-edit so wrapped rows
-    // grow the group (and the toolbar pill) instead of overflowing below it.
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    // Lift the single-row cap from .projekt-content-block-edit so the
+    // full-width group keeps its natural height.
     max-height: none;
   }
+
+  // The group dividers add ~7px each and crowd the full-width row; the even
+  // spacing of space-between already separates the icons, so drop them.
+  // .projekt-content-block-edit--separator {
+  //   display: none;
+  // }
 
   .studio-icon-button {
     width: 28px;
@@ -248,13 +288,13 @@
     }
   }
 
-  .content-block-margin-input {
-    display: none !important;
-  }
+  // .content-block-margin-input {
+  //   display: none !important;
+  // }
 
-  .js-content-block-header-dropdown {
-    display: none !important;
-  }
+  // .js-content-block-header-dropdown {
+  //   display: none !important;
+  // }
 
   .content-block-edit-toolbar {
     gap: 2px;

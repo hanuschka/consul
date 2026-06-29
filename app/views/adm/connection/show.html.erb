@@ -37,8 +37,16 @@
       ) %>
     </ul>
 
-    <div class="mt-4">
-      <%= render InternalApiClients::ConnectToClientComponent.new %>
-    </div>
+    <% if !@all_checks_passed %>
+      <div class="mt-4">
+        <%= kern_link_button(
+          connect_api_clients_path,
+          icon: "sync",
+          text: t(".reconnect"),
+          style: :primary,
+          data: { turbo_method: :post, turbo_confirm: t(".reconnect_confirm") }
+        ) %>
+      </div>
+    <% end %>
   </div>
 </div>

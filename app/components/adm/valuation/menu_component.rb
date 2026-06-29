@@ -6,10 +6,10 @@ class Adm::Valuation::MenuComponent < Adm::BaseMenuComponent
   def menu_items
     [
       { label: t("adm.valuation.menu.items.home"), icon: "home", path: adm_valuation_root_path },
-      (if current_user&.administrator?
+      (if Adm::ValuatorPolicy.new(current_user, Valuator).index?
          { label: t("adm.valuation.menu.items.valuators"), icon: "badge", path: adm_valuators_path, active_prefix: "/adm/valuators" }
        end),
-      (if current_user&.administrator? || current_user&.valuator?
+      (if Adm::Valuation::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.valuation.menu.items.settings"), icon: "settings", path: adm_valuation_settings_path }
        end)
     ].compact

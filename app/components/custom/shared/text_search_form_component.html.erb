@@ -1,16 +1,14 @@
 <% inner_content = capture do %>
-  <label for="<%= input_id %>">
-    <span class="show-for-sr"><%= t("custom.accessibility.search.search_input.aria-label") %></span>
-    <input
-      id="<%= input_id %>"
-      type="text"
-      name="search"
-      autocomplete="off"
-      placeholder="<%= t("placeholder", scope: i18n_namespace) %>"
-      class="<%= input_classes %>"
-      value="<%= params[:search] %>"
-    >
-  </label>
+  <input
+    id="<%= input_id %>"
+    type="text"
+    name="search"
+    autocomplete="off"
+    aria-label="<%= t("custom.accessibility.search.search_input.aria-label") %>"
+    placeholder="<%= t("placeholder", scope: i18n_namespace) %>"
+    class="<%= input_classes %>"
+    value="<%= params[:search] %>"
+  >
   <button
     class="text-search-form--search-button js-search-button"
     type="submit"

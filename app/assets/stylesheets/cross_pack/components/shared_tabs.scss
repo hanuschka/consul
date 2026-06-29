@@ -49,13 +49,13 @@
   color: #515151;
 
   &:hover {
-    color: var(--brand-color);
+    color: var(--dt-base);
     text-decoration: none;
   }
 
   &:hover:not([aria-selected="true"]):after {
     border-bottom: 3px solid;
-    border-color: var(--brand-color);
+    border-color: var(--dt-base);
     bottom: 0;
     content: "";
     left: 0;
@@ -72,7 +72,7 @@
   &[aria-selected="true"] {
     &:after {
       border-bottom: 3px solid;
-      border-color: var(--brand-color);
+      border-color: var(--dt-base);
       bottom: 0;
       content: "";
       left: 0;

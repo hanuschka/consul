@@ -150,6 +150,9 @@ application.register("clipboard", ClipboardController)
 import SharedAdminIframeController from "./shared/admin_iframe_controller"
 application.register("shared--admin-iframe", SharedAdminIframeController)
 
+import SharedAutoSubmitFormController from "./shared/auto_submit_form_controller"
+application.register("shared--auto-submit-form", SharedAutoSubmitFormController)
+
 import SharedCollapseController from "./shared/collapse_controller"
 application.register("shared--collapse", SharedCollapseController)
 
@@ -212,3 +215,18 @@ application.register("projekt-imports--from-file", ProjektImportsFromFileControl
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)
+
+import ProjektImportsStatusController from "./projekt_imports/status_controller"
+application.register("projekt-imports--status", ProjektImportsStatusController)
+
+import SharedConfirmDialogController from "./shared/confirm_dialog_controller"
+application.register("shared--confirm-dialog", SharedConfirmDialogController)
+
+import ProjektImportsDeleteConfirmController from "./projekt_imports/delete_confirm_controller"
+application.register("projekt-imports--delete-confirm", ProjektImportsDeleteConfirmController)
+
+import SharedImageCropperController from "./shared/image_cropper_controller"
+application.register("shared--image-cropper", SharedImageCropperController)
+
+import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
+application.register("shared--anchor-highlight", SharedAnchorHighlightController)

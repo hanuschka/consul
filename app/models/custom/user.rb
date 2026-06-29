@@ -240,7 +240,9 @@ User.class_eval do
 
   def projekt_manager?(projekt = nil)
     if projekt.present?
-      projekt_manager.present? && projekt.projekt_managers.include?(projekt_manager)
+      projekt_manager.present? &&
+        (projekt_manager.manage_all_projekts? ||
+          projekt.projekt_managers.include?(projekt_manager))
     else
       projekt_manager.present?
     end
@@ -393,6 +395,7 @@ User.class_eval do
     def attempt_verification
       return false if organization?
       return false if erased?
+      return false unless data_complete?
       return false unless residency_valid?
 
       verify!

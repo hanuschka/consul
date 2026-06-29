@@ -5,6 +5,7 @@ de:
   adm:
     ai_action_button:
       processing: KI arbeitet…
+      feature_description: "Erstellt mit KI eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts."
 
     projekts:
       projekts:
@@ -61,6 +62,7 @@ de:
           comments: Kommentare
           commenters: Kommentierende
           questions: Fragen
+          other_questions_group: Weitere Fragen
           polls: Abstimmungen
           poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
           scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"

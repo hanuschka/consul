@@ -11,11 +11,13 @@ $medium-gray-2: #d3d3d3;
 $medium-gray-3: #737373;
 $light-gray-1: #e5e5e5;
 $light-gray-2: #ededed;
+$light-gray-3: #f5f5f5;
 
 $gray-1: #e2e2e2;
 $blue-gray-1: #919dab;
 
 $green-success-color: #00AA0B;
+$green-success-soft-color: #2e7d32;
 
 $orange-button-color: #FFA42D;
 $grey-button-color: #cfd9e2;
@@ -32,6 +34,8 @@ $dt-base: #004a83;
 $dt-base-hover: lighten($dt-base, 10%);
 $dt-base-secondary: lighten($dt-base, 70%);
 $dt-base-transparent-background-hover: #dfebf5;
+
+// Projekt page theme palette lives in cross_pack/1_colors.scss (shared with /adm).
 
 :root {
   --medium-gray-3: #{$medium-gray-3};

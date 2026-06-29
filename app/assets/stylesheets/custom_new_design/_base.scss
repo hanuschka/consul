@@ -65,7 +65,7 @@ ul.no-ul-style {
     }
   }
 
-  &:has(.projekt-page--admin-topbar)  {
+  &:has(.studio-admin-topbar)  {
     .toast-stack {
       top: 110px + $admin-topbar-height;
     }
@@ -74,17 +74,20 @@ ul.no-ul-style {
       top: 60px + $admin-topbar-height;
     }
 
-    // Mirror the touch-viewport bump of --admin-topbar-height (48px -> 56px)
-    // for these Sass-var consumers, which are evaluated at compile time and
-    // therefore can't follow the runtime CSS custom property. Breakpoint kept
-    // in sync with _admin_topbar.scss ($small-tablet-viewport-start = 750px).
+    // Below the small-tablet breakpoint the admin topbar is hidden
+    // (_admin_topbar.scss), so its height no longer offsets these fixed
+    // overlays — fall back to the no-topbar positions. These are Sass-var
+    // consumers evaluated at compile time, so the runtime
+    // --admin-topbar-height: 0 override can't reach them; zero them here.
+    // Breakpoint kept in sync with _admin_topbar.scss
+    // ($small-tablet-viewport-start = 750px).
     @media (max-width: $small-tablet-viewport-start) {
       .toast-stack {
-        top: 110px + $admin-topbar-height + 8px;
+        top: 110px;
       }
 
       .custom-fixed-tabs--content {
-        top: 60px + $admin-topbar-height + 8px;
+        top: 60px;
       }
     }
   }
@@ -214,7 +217,7 @@ ul.no-ul-style {
   background: #c7c7c7;
   align-self: flex-end;
 
-  @media(max-width: $small-tablet-viewport-start) {
+  @media(max-width: $big-tablet-viewport-start) {
     display: none;
   }
 }
@@ -260,6 +263,8 @@ ul.no-ul-style {
 }
 
 a.resources--info-count {
+  text-decoration: underline;
+
   &:hover {
     text-decoration: underline !important;
     color: black !important;

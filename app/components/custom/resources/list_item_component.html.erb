@@ -47,15 +47,13 @@
       </div>
     <% end %>
 
-    <%= link_to @url, class: 'resource-item--image-link', target: @url_target, tabindex: "-1", 'aria-hidden': true do %>
-      <%= render(
-        Shared::ResourceImageComponent.new(
-          image_url: image_url,
-          image_url_2x: image_url_2x,
-          image_placeholder_icon_class: @image_placeholder_icon_class,
-          resource: @resource)
-      ) %>
-    <% end %>
+    <%= render(
+      Shared::ResourceImageComponent.new(
+        image_url: image_url,
+        image_url_2x: image_url_2x,
+        image_placeholder_icon_class: @image_placeholder_icon_class,
+        resource: @resource)
+    ) %>
   </div>
 
   <div class="resource-item--content">
@@ -63,13 +61,16 @@
 
       <div class="resource-item--body-and-author">
         <div class="resource-item--body">
+          <% if show_body_heading? %>
           <div class="resource-item--body-heading">
             <% if @subline.present? %>
               <%= @subline %>
             <% elsif @projekt.present? %>
-              <div class="resource-item--head-title-projekt-breadcrumbs">
-                <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
-              </div>
+              <% if show_projekt_breadcrumb? %>
+                <div class="resource-item--head-title-projekt-breadcrumbs">
+                  <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
+                </div>
+              <% end %>
             <% elsif @tags.present? %>
               <div class="resource-item--tags">
                 <% @tags.first(2).each do |tag| %>
@@ -91,15 +92,18 @@
               <div class="resource-item--date"><%= date %></div>
             <% end %>
           </div>
+          <% end %>
 
           <% if @url.present? %>
-            <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false }) %>
+            <%= content_tag(title_heading_tag, class: "resource-item--title") do %>
+              <%= link_to(truncate(sanitize(@title), length: 72, escape: false), @url, class: "resource-item--title-link", target: @url_target, data: { turbolinks: false }) %>
+            <% end %>
 
             <div class="resource-item--description">
               <%= truncate(sanitize(strip_tags(@description&.gsub("</p><p>", "</p> <p>"))), length: 160, escape: false) %>
             </div>
           <% else %>
-            <div class="no-link resource-item--title"><%= truncate(@title, length: 72) %></div>
+            <%= content_tag(title_heading_tag, truncate(@title, length: 72), class: "no-link resource-item--title") %>
 
             <div class="resource-item--description">
               <%= truncate(sanitize(strip_tags(@description)), length: 160, escape: false) %>

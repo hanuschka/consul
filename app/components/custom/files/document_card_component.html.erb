@@ -19,15 +19,29 @@
       <i class="fa <%= icon_class %> files-asset-card--thumb-icon"></i>
     <% end %>
 
-    <% if admin_upload? %>
-      <span
-        class="files-asset-card--admin-badge"
-        title="<%= t("files.card.admin_badge") %>"
-        aria-label="<%= t("files.card.admin_badge") %>"
-      >
-        <i class="fa fa-shield-alt"></i>
-      </span>
-    <% end %>
+    <div class="files-asset-card--badges">
+      <% if admin_upload? %>
+        <rich-tooltip>
+          <span
+            class="files-asset-card--admin-badge"
+            aria-label="<%= t("files.card.admin_badge") %>"
+          >
+            <i class="fa fa-shield-alt"></i>
+          </span>
+          <template><%= t("files.card.admin_badge") %></template>
+        </rich-tooltip>
+      <% end %>
+
+      <rich-tooltip>
+        <span
+          class="files-asset-card--filetype-badge"
+          aria-label="<%= filetype_label %>"
+        >
+          <i class="fa <%= icon_class %>"></i>
+        </span>
+        <template><%= filetype_label %></template>
+      </rich-tooltip>
+    </div>
 
     <div class="files-asset-card--actions">
       <button
@@ -97,7 +111,7 @@
       class="files-asset-card--filename"
       title="<%= display_title %>"
     >
-      <%= display_title %>
+      <%= display_title %><% if file_extension.present? %> <span class="files-asset-card--filetype-text">(<%= file_extension %>)</span><% end %>
     </p>
 
     <dl class="files-asset-card--details">

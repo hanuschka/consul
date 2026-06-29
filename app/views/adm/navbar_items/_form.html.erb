@@ -43,7 +43,7 @@
           <%= f.collection_radio_buttons :preset, @available_presets, :first, :first do |cb| %>
             <div class="kern-form-check">
               <%= cb.radio_button(class: "kern-form-check__radio", data: { action: "components-adm-new-navbar-item#selectionChanged" }) %>
-              <%= cb.label(class: "kern-label") { t("navbar.presets.#{cb.text }") } %>
+              <%= cb.label(class: "kern-label") { Setting["#{cb.text}.feature_name"].presence || t("navbar.presets.#{cb.text}") } %>
             </div>
           <% end %>
         <div>

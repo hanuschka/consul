@@ -106,29 +106,43 @@
         }
       });
       this.lightbox.on('slide_after_load', (data) => {
-        this.applySlideAltText(data);
+        this.applySlideAccessibility(data);
       });
     },
 
-    applySlideAltText(data) {
+    SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",
+
+    applySlideAccessibility(data) {
       var slideEl = data.slideNode || data.slide;
       if (!slideEl) return
 
-      var img = slideEl.querySelector('.gslide-media img');
-      if (!img) return
+      var slideImg = slideEl.querySelector(".gslide-media img");
+      if (!slideImg) return
 
-      if (data.trigger) {
-        var altText = data.trigger.getAttribute('data-alt');
+      var sourceImg = this.getSourceImage(data.trigger);
 
-        if (altText) {
-          img.setAttribute('alt', altText);
-          return
-        }
+      slideImg.setAttribute("alt", this.resolveSlideAltText(data.trigger, sourceImg));
+    },
+
+    getSourceImage(trigger) {
+      if (!trigger) return null
+      if (trigger.tagName === "IMG") return trigger
+
+      return trigger.querySelector("img")
+    },
+
+    resolveSlideCaptionText(trigger, sourceImg) {
+      var explicitAlt = trigger ? trigger.getAttribute("data-alt") : null;
+      if (explicitAlt) return explicitAlt
+
+      if (sourceImg) {
+        if (sourceImg.alt) return sourceImg.alt
+
+        var sourceAriaLabel = sourceImg.getAttribute("aria-label");
+        if (sourceAriaLabel) return sourceAriaLabel
       }
 
-      if (!img.alt || img.alt === '') {
-        img.setAttribute('alt', 'Vergrößerte Ansicht');
-      }
+      return this.SLIDE_CAPTION_FALLBACK
     },
 
     setMissingHrefs: function() {

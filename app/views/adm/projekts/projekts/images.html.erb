@@ -7,7 +7,9 @@
   frontend_url: projekt_path(@projekt),
   assets: @assets,
   endpoint: images_adm_projekts_projekt_path(@projekt),
-  card_component: Files::AssetCardComponent
+  card_component: Files::AssetCardComponent,
+  upload_endpoint: file_manager_images_path(projekt_id: @projekt.id),
+  upload_accept: "image/*"
 ) do |page| %>
   <% page.with_sub_header do %>
     <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>

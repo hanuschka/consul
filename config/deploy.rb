@@ -33,7 +33,7 @@ set :pty, true
 set :use_sudo, false
 
 set :linked_files, %w[config/database.yml config/secrets.yml config/secret_emails.yml]
-set :linked_dirs, %w[.bundle log tmp public/system public/assets public/ckeditor_assets public/machine_learning/data storage]
+set :linked_dirs, %w[.bundle log node_modules tmp public/system public/assets public/ckeditor_assets public/machine_learning/data storage]
 
 set :keep_releases, 5
 

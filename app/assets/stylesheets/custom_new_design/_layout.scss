@@ -45,7 +45,7 @@
   }
 
   .flex-layout-reverse-on-mobile {
-    @media screen and (max-width: $small-tablet-viewport-start) {
+    @media screen and (max-width: $medium-tablet-viewport-start) {
       display: flex;
       flex-direction: column-reverse;
     }

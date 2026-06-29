@@ -32,6 +32,29 @@ class AiProposalFlowBaseController < ApplicationController
       end
     end
 
+    def assign_generated_taxonomy(resource, draft_data, projekt_phase)
+      assign_generated_sentiment(resource, draft_data, projekt_phase)
+      assign_generated_labels(resource, draft_data, projekt_phase)
+    end
+
+    def assign_generated_sentiment(resource, draft_data, projekt_phase)
+      sentiment_id = draft_data["sentiment_id"]
+
+      return if sentiment_id.blank?
+      return if !projekt_phase.sentiments.exists?(id: sentiment_id)
+
+      resource.sentiment_id = sentiment_id
+    end
+
+    def assign_generated_labels(resource, draft_data, projekt_phase)
+      generated_ids = Array(draft_data["projekt_label_ids"]).map(&:to_i)
+
+      return if generated_ids.empty?
+
+      valid_ids = projekt_phase.projekt_labels.where(id: generated_ids).pluck(:id)
+      resource.projekt_label_ids = valid_ids if valid_ids.any?
+    end
+
     def resource_class            = raise NotImplementedError
     def build_and_save_draft(_)   = raise NotImplementedError
     def draft_resource_params     = raise NotImplementedError

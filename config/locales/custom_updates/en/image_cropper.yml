@@ -1,0 +1,8 @@
+en:
+  custom:
+    shared:
+      image_cropper:
+        title: "Crop image"
+        instructions: "Drag to reposition and use the corners to resize the crop area."
+        confirm: "Apply"
+        cancel: "Cancel"

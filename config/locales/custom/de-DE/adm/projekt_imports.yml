@@ -27,6 +27,50 @@ de:
               no_files: "Bitte wählen Sie mindestens eine Datei aus."
               too_large: "Die ausgewählten Dateien überschreiten das Limit von 45 MB."
               unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
+          show:
+            title: "Importfortschritt"
+            failed_title: "Import fehlgeschlagen"
+            stalled_title: "Analyse hängt fest"
+            stalled_message: "Die Analyse dauert ungewöhnlich lange und ist möglicherweise fehlgeschlagen. Sie können diesen Import verwerfen und es erneut versuchen."
+            dismiss: "Verwerfen"
+            upload_new: "Neues Dokument hochladen"
+            diagnostics_title: "Technische Details"
+            diagnostics_stage: "Fehlerphase"
+        list:
+          sections:
+            in_progress: "Laufende Importe"
+            failed: "Fehlgeschlagene Importe"
+            completed: "Abgeschlossene Importe"
+          states:
+            analyzing: "Analyse läuft"
+            stalled: "Hängt fest"
+            chatting: "Im Chat"
+            submitting: "Wird erstellt"
+            failed: "Fehlgeschlagen"
+            completed: "Abgeschlossen"
+          actions:
+            continue: "Fortsetzen"
+            open_chat: "Chat öffnen"
+            open_details: "Details ansehen"
+            delete: "Löschen"
+          no_files: "Keine Dateien"
+          files_summary: "%{first} +%{count}"
+          created_at: "Erstellt: %{time}"
+          finished_at: "Beendet: %{time}"
+          projekt_created: "Projekt erstellt: %{title}"
+          image_failed_note: "Titelbild konnte nicht generiert werden"
+          filters:
+            aria: "Nach Status filtern"
+            all: "Alle"
+            in_progress: "Laufend"
+            failed: "Fehlgeschlagen"
+            completed: "Abgeschlossen"
+          delete_dialog:
+            title: "Import löschen?"
+            message: "Dieser Import wird dauerhaft gelöscht:"
+            note: "Das daraus erstellte Projekt bleibt erhalten."
+            confirm: "Löschen"
+            cancel: "Abbrechen"
         chats:
           show:
             title: "Projektimport verfeinern"
@@ -36,11 +80,37 @@ de:
             assistant_label: "KI"
             user_label: "Sie"
             confirm_import: "Projekt jetzt importieren? Damit wird ein neues Projekt mit allen Phasen und Inhaltsblöcken erstellt."
+            import_dialog:
+              title: "Projekt importieren?"
+              confirm: "Jetzt importieren"
+              cancel: "Abbrechen"
             confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
+            generate_image_toggle: "Titelbild generieren"
+            created_banner_title: "Dieser Import hat folgende Projekte erstellt:"
+            tooltips:
+              start_over:
+                title: "Neu starten"
+                text: "Verwirft diesen Import vollständig und kehrt zum Hochladen eines neuen Dokuments zurück."
+              regenerate:
+                title: "Neu generieren"
+                text: "Analysiert das ursprüngliche Dokument noch einmal und erstellt die gesamte Projektstruktur von Grund auf neu."
+              summarize:
+                title: "Zusammenfassen"
+                text: "Erstellt eine kurze, verständliche Zusammenfassung des hochgeladenen Dokuments im Chat."
+              generate_image:
+                title: "Titelbild generieren"
+                text: "Wenn aktiviert, erzeugt die KI beim Import automatisch ein passendes Titelbild für das Projekt."
+              import:
+                title: "Projekt importieren"
+                text: "Erstellt das Projekt mit allen Phasen, Inhaltsblöcken und Einstellungen. Es bleibt zunächst deaktiviert und für Besucher unsichtbar, bis Sie es aktivieren."
+              attach:
+                title: "Dokument anhängen"
+                text: "Fügt ein weiteres Dokument zum Gespräch hinzu, damit die KI zusätzliche Informationen berücksichtigen kann."
             commands:
               regenerate: "Neu generieren"
               summarize: "Dokument zusammenfassen"
               import: "Projekt importieren"
+              import_again: "Als neues Projekt importieren"
               start_over: "Neu starten"
             progress:
               finalizing_data: "Änderungen werden finalisiert…"
@@ -54,6 +124,7 @@ de:
         initial_message:
           analysis_complete: "Dokumentanalyse abgeschlossen"
           analysis_intro: "Folgendes habe ich aus Ihrem Dokument extrahiert. Bitte prüfen Sie die Felder — falls etwas nicht passt, sagen Sie es mir einfach."
+          input_truncated_notice: "Das Dokument war sehr groß und wurde für die Analyse gekürzt. Bitte prüfen Sie die extrahierten Inhalte besonders sorgfältig und ergänzen Sie fehlende Punkte im Chat."
           title: "Titel"
           subtitle: "Untertitel"
           period: "Zeitraum"
@@ -96,8 +167,25 @@ de:
           resolve_content_blocks_failed: "Inhaltsblöcke konnten nicht erstellt werden: %{message}"
           create_projekt_failed: "Projekt konnte nicht erstellt werden: %{message}"
           missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
+          extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
+        failure_stages:
+          extract: "Textextraktion"
+          extracting: "Textextraktion"
+          ai_processing: "KI-Analyse"
+          processing: "KI-Analyse"
+          finalize: "Datenfinalisierung"
+          resolve_content_blocks: "Inhaltsblöcke"
+          create_projekt: "Projekterstellung"
+          submitting: "Projekterstellung"
+          image_generation: "Titelbildgenerierung"
+          unknown: "Unbekannt"
         badge:
           imported_by_ai: "KI"
           imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."
+          imported_by_ai_description: "Eine KI hat aus einem hochgeladenen Dokument automatisch Phasen und Inhalte erzeugt. Bitte prüfen Sie die Angaben, bevor Sie das Projekt veröffentlichen."
         index:
           new_button: "Aus Dokument importieren"
+          new_button_description: "Laden Sie ein Dokument hoch und lassen Sie die KI daraus ein vollständiges Projekt mit Phasen und Inhalten erstellen, das Sie vor dem Import prüfen können."
+          title: "Projektimporte"
+          new_import: "Neuer Projektimport"
+          empty: "Noch keine Projektimporte vorhanden."

@@ -7,7 +7,11 @@
 </head>
 <body style="background: #fff; font-family:font-family: 'Open Sans','Helvetica Neue',arial,sans-serif !important; margin: 0 10px; padding: 0; text-align: left;">
 
-  <%= render "layouts/mailer_header" %>
+  <% if @newsletter.present? %>
+    <%= render "mailer/newsletter_simple_header" %>
+  <% else %>
+    <%= render "layouts/mailer_header" %>
+  <% end %>
 
   <% email_body = yield %>
 
@@ -19,6 +23,10 @@
     </tbody>
   </table>
 
-  <%= render "layouts/mailer_footer" %>
+  <% if @newsletter.present? %>
+    <%= render "mailer/newsletter_simple_footer" %>
+  <% else %>
+    <%= render "layouts/mailer_footer" %>
+  <% end %>
 </body>
 </html>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_04_194934) do
+ActiveRecord::Schema.define(version: 2026_06_25_124215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -260,6 +260,9 @@ ActiveRecord::Schema.define(version: 2026_06_04_194934) do
     t.integer "api_client_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "duration_ms"
+    t.float "db_runtime"
+    t.float "view_runtime"
     t.index ["api_client_id"], name: "index_api_request_logs_on_api_client_id"
     t.index ["created_at"], name: "index_api_request_logs_on_created_at"
     t.index ["request_path"], name: "index_api_request_logs_on_request_path"
@@ -2232,6 +2235,9 @@ ActiveRecord::Schema.define(version: 2026_06_04_194934) do
     t.text "image_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "created_projekt_ids", default: [], null: false, array: true
+    t.string "failure_stage"
+    t.jsonb "error_details", default: {}, null: false
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
     t.index ["status"], name: "index_projekt_imports_on_status"

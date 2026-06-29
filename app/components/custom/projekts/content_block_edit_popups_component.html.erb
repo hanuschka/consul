@@ -45,10 +45,21 @@
   accept_button_class: "js-content-block-accept-image-alt-edit",
   cancel_button_class: "js-content-block-cancel-image-alt-edit"
 ) do %>
+  <div class="content-block-image-alt-popup--intro">
+    <i class="fas fa-universal-access content-block-image-alt-popup--intro-icon"></i>
+    <p class="content-block-image-alt-popup--intro-text">
+      <%= t('custom.projekts.page.content_block_image_alt_popup.description') %>
+    </p>
+  </div>
+
   <div>
     <label class="studio-edit-popup--label">
       <%= t('custom.projekts.page.content_block_image_alt_popup.alt_text') %>:
-      <textarea class="js-content-block-image-alt-input" rows="2"></textarea>
+      <textarea
+        class="js-content-block-image-alt-input"
+        rows="2"
+        placeholder="<%= t('custom.projekts.page.content_block_image_alt_popup.placeholder') %>"
+      ></textarea>
     </label>
   </div>
 <% end %>
@@ -97,15 +108,20 @@
 
           <div class="content-block-ai-edit-popup-checkboxes">
             <div class="u-margin-bottom-5">
-              <label
-                class="content-block-ai-edit-popup-checkbox-label"
-                data-hint="<%= t('ai.allow_text_modification_hint') %>"
-                data-hint-position="left"
-                tabindex="0"
-              >
-                <input type="checkbox" class="js-ai-allow-text-modification">
-                <span><%= t('ai.allow_text_modification') %></span>
-              </label>
+              <%= studio_rich_tooltip(
+                title: t('ai.allow_text_modification'),
+                text: t('ai.allow_text_modification_hint'),
+                delay: 1200,
+                placement: "right"
+              ) do %>
+                <label
+                  class="content-block-ai-edit-popup-checkbox-label"
+                  tabindex="0"
+                >
+                  <input type="checkbox" class="js-ai-allow-text-modification">
+                  <span><%= t('ai.allow_text_modification') %></span>
+                </label>
+              <% end %>
               <div class="ai-context-checkbox-hint u-margin-bottom">
                 <%= t('ai.allow_text_modification_hint_short') %>
               </div>
@@ -113,15 +129,20 @@
 
             <% if show_projekt_context_toggle? %>
               <div class="">
-                <label
-                  class="content-block-ai-edit-popup-checkbox-label"
-                  data-hint="<%= t('ai.use_full_projekt_context_hint') %>"
-                  data-hint-position="left"
-                  tabindex="0"
-                >
-                  <input type="checkbox" class="js-ai-use-full-projekt-context">
-                  <span><%= t('ai.use_full_projekt_context') %></span>
-                </label>
+                <%= studio_rich_tooltip(
+                  title: t('ai.use_full_projekt_context'),
+                  text: t('ai.use_full_projekt_context_hint'),
+                  delay: 1200,
+                  placement: "right"
+                ) do %>
+                  <label
+                    class="content-block-ai-edit-popup-checkbox-label"
+                    tabindex="0"
+                  >
+                    <input type="checkbox" class="js-ai-use-full-projekt-context">
+                    <span><%= t('ai.use_full_projekt_context') %></span>
+                  </label>
+                <% end %>
                 <div class="ai-context-checkbox-hint">
                   <%= t('ai.use_full_projekt_context_hint_short') %>
                 </div>

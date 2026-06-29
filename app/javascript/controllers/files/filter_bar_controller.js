@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { addFlashMessage } from "../../utils/adm_flash"
 
-const SEARCH_DEBOUNCE_MS = 200
+const SEARCH_DEBOUNCE_MS = 400
 
 export default class extends Controller {
   static values = {
@@ -230,33 +230,20 @@ export default class extends Controller {
     this.editingAsset = null
   }
 
+  editModalBackdrop(event) {
+    if (event.target === this.editModalTarget) this.editModalClose()
+  }
+
   async editModalSubmit(event) {
     event.preventDefault()
 
     if (!this.editingAsset) return
 
     const card = this.editingAsset
-    const updateUrl = card.dataset.updateUrl
-    const id = card.dataset.id
-    const type = card.dataset.type
-    const fallbackEndpoint = type === "picture" ? "/ckeditor/pictures" : "/ckeditor/documents"
-    const url = updateUrl || `${fallbackEndpoint}/${id}`
-
     const formData = this.buildEditFormData(card)
 
     try {
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          "X-CSRF-TOKEN": this.csrfToken(),
-          "Accept": "application/json"
-        },
-        body: formData
-      })
-
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
-
-      const data = await response.json()
+      const data = await this.patchAsset(card, formData)
 
       this.applyUpdateToCard(card, data)
       this.editModalClose()
@@ -264,6 +251,58 @@ export default class extends Controller {
       console.error("Files edit submit failed", error)
       alert(this.editFailedMessage())
     }
+  }
+
+  async altPopupSave(event) {
+    event.preventDefault()
+
+    const button = event.currentTarget
+    const popup = button.closest("inline-popup")
+    const card = button.closest(".files-asset-card") || button.closest(".files-asset-row")
+
+    if (!card) return
+
+    const altText = popup.querySelector(".js-files-alt-input").value.trim()
+
+    const formData = new FormData()
+    formData.append("picture[alt_text]", altText)
+
+    button.disabled = true
+
+    try {
+      const data = await this.patchAsset(card, formData)
+
+      this.applyUpdateToCard(card, data)
+      popup.close()
+    } catch (error) {
+      console.error("Files alt save failed", error)
+      addFlashMessage(this.editFailedMessage(), "danger")
+    } finally {
+      button.disabled = false
+    }
+  }
+
+  assetUpdateUrl(card) {
+    if (card.dataset.updateUrl) return card.dataset.updateUrl
+
+    const fallbackEndpoint = card.dataset.type === "picture" ? "/ckeditor/pictures" : "/ckeditor/documents"
+
+    return `${fallbackEndpoint}/${card.dataset.id}`
+  }
+
+  async patchAsset(card, formData) {
+    const response = await fetch(this.assetUpdateUrl(card), {
+      method: "PATCH",
+      headers: {
+        "X-CSRF-TOKEN": this.csrfToken(),
+        "Accept": "application/json"
+      },
+      body: formData
+    })
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+    return response.json()
   }
 
   buildEditFormData(card) {
@@ -295,17 +334,18 @@ export default class extends Controller {
   }
 
   syncAltTextDisplay(card) {
-    const badge = card.querySelector(".js-files-alt-warning-badge")
+    const badge = card.querySelector(".js-files-alt-badge")
 
     if (!badge) return
 
     const altText = (card.dataset.altText || "").trim()
-    const row = card.querySelector(".js-files-alt-text-row")
-    const value = card.querySelector(".js-files-alt-text-value")
+    const input = card.querySelector(".js-files-alt-input")
 
-    badge.hidden = altText !== ""
-    row.hidden = altText === ""
-    value.textContent = altText
+    badge.dataset.altState = altText ? "set" : "missing"
+    card.querySelector(".js-files-alt-text-row").hidden = altText === ""
+    card.querySelector(".js-files-alt-text-value").textContent = altText
+
+    if (input) input.value = altText
   }
 
   csrfToken() {

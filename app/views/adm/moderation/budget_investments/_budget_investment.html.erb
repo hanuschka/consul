@@ -3,6 +3,10 @@
   <td class="kern-table__cell" data-field="projekt"><%= budget_investment.budget&.projekt&.name %></td>
   <td class="kern-table__cell" data-field="author"><%= budget_investment.author.username %></td>
   <td class="kern-table__cell" data-field="flags_count"><%= budget_investment.flags_count %></td>
+  <td class="kern-table__cell" data-field="status">
+    <% status_key, badge_variant = moderation_status_badge(budget_investment) %>
+    <span class="kern-badge <%= badge_variant %> kern-badge--small"><%= t("adm.moderation.budget_investments.index.statuses.#{status_key}") %></span>
+  </td>
   <td class="kern-table__cell" data-field="actions">
     <% if budget_investment.hidden? %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
@@ -12,12 +16,26 @@
       <% end %>
     <% elsif budget_investment.ignored_flag? %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <% if moderation_resource_reachable?(budget_investment) %>
+          <%= c.with_action label: t("adm.moderation.budget_investments.index.actions.view"),
+                            url: polymorphic_path(budget_investment),
+                            icon: "open_in_new",
+                            target: "_blank",
+                            rel: "noopener" %>
+        <% end %>
         <%= c.with_action label: t("adm.moderation.budget_investments.index.actions.hide"),
                           url: hide_adm_moderation_budget_investment_path(budget_investment),
                           data: { turbo_method: :put, turbo_confirm: t("adm.moderation.budget_investments.index.confirm_hide", name: budget_investment.title) } %>
       <% end %>
     <% else %>
       <%= render Kern::Table::ActionsComponent.new do |c| %>
+        <% if moderation_resource_reachable?(budget_investment) %>
+          <%= c.with_action label: t("adm.moderation.budget_investments.index.actions.view"),
+                            url: polymorphic_path(budget_investment),
+                            icon: "open_in_new",
+                            target: "_blank",
+                            rel: "noopener" %>
+        <% end %>
         <%= c.with_action label: t("adm.moderation.budget_investments.index.actions.ignore_flag"),
                           url: ignore_flag_adm_moderation_budget_investment_path(budget_investment),
                           data: { turbo_method: :put } %>

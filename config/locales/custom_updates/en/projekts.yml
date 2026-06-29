@@ -57,6 +57,8 @@ en:
           attach_file: Attach file
         content_block_image_alt_popup:
           alt_text: Alt text
+          description: The alt text describes the image for people who use screen readers and is shown when the image cannot load. It improves accessibility and search engine visibility.
+          placeholder: e.g. People discussing at a round table
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:
@@ -136,6 +138,7 @@ en:
             ended_on: Ended on %{date}
           banner:
             end_date_chip: "until %{date}"
+            start_date_chip: "from %{date}"
             projekt_completed_chip: Projekt completed
             projekt_starts_soon_chip: Starting soon
             go_to_phase: "Go to phase: %{title}"

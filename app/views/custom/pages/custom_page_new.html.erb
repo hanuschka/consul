@@ -122,6 +122,7 @@
     class="projekt-page <%= additional_main_class %> js-projekt-page"
     data-projekt-id="<%= @custom_page.projekt&.id %>"
     data-default-margin-bottom="<%= SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>"
+    data-ai-available="<%= Ai::Settings.ai_available? %>"
   >
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 

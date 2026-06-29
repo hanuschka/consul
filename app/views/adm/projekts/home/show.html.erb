@@ -14,9 +14,17 @@
       <% if @quick_links.any? %>
         <div class="adm-dashboard__section-actions">
           <% @quick_links.each do |link| %>
-            <%= kern_link_button link[:path],
-                  text: link[:label],
-                  style: link[:primary] ? :primary : :secondary %>
+            <% if link[:ai_gated] %>
+              <%= render Shared::AiFeatureTooltipComponent.new(feature_title: link[:label], feature_text: link[:description]) do %>
+                <%= kern_link_button link[:path],
+                      text: link[:label],
+                      style: link[:primary] ? :primary : :secondary %>
+              <% end %>
+            <% else %>
+              <%= kern_link_button link[:path],
+                    text: link[:label],
+                    style: link[:primary] ? :primary : :secondary %>
+            <% end %>
           <% end %>
         </div>
       <% end %>

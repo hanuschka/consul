@@ -33,11 +33,17 @@
 
       var editorContent = document.querySelector(".ck-content.ck-editor__editable");
       this.addChangedFieldsHighlightTo(editorContent);
+
+      setTimeout(App.AssistantUserResourceForm.refreshMaps, 200);
     },
 
     selectCategory: function(categoryId, shouldScroll) {
       var categorySelectElement = document.querySelector(".js-user-resource-select-category");
+
+      if (!categorySelectElement) return;
+
       categorySelectElement.value = categoryId;
+      categorySelectElement.dispatchEvent(new Event("change", { bubbles: true }));
       this.highlightAndScrollToContentCard(categorySelectElement, shouldScroll);
     },
 
@@ -67,6 +73,8 @@
     },
 
     updateMapLocation: function(coordinates, shouldScroll) {
+      this.refreshMaps();
+
       if (App.Mapbox.maps.length > 0) {
         var currentMapInstance = App.Mapbox.maps[0];
 
@@ -92,6 +100,8 @@
       } else if (App.Map.maps.length > 0) {
         App.Map.setMarkerTo(coordinates[0], coordinates[1], false);
       }
+
+      setTimeout(App.AssistantUserResourceForm.refreshMaps, 300);
     },
 
     updateImage: function(image) {
@@ -127,17 +137,26 @@
     },
 
     toggleLabels: function(labelIds, checked, shouldScroll) {
-      if (labelIds && labelIds.length > 0) {
-        var recentLabelElements;
+      if (!labelIds || labelIds.length === 0) return;
 
-        labelIds.forEach(function(labelId) {
-          recentLabelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
-          recentLabelElements.forEach(function(labelElement) {
+      var lastLabelElement;
+
+      labelIds.forEach(function(labelId) {
+        var labelElements = document.querySelectorAll(".js-projekt-label[data-label-id='" + labelId + "']");
+
+        labelElements.forEach(function(labelElement) {
+          var checkbox = document.getElementById(labelElement.htmlFor);
+
+          if (checkbox.checked !== checked) {
             labelElement.click();
-          });
-        });
+          }
 
-        this.highlightAndScrollToContentCard(Array.from(recentLabelElements)[0], shouldScroll);
+          lastLabelElement = labelElement;
+        });
+      });
+
+      if (lastLabelElement) {
+        this.highlightAndScrollToContentCard(lastLabelElement, shouldScroll);
       }
     },
 
@@ -189,6 +208,20 @@
 
     getMessagebar: function() {
       return document.querySelector(".js-voice-assistant-messagebar");
+    },
+
+    refreshMaps: function() {
+      App.Map.maps.forEach(function(mapInstance) {
+        var map = mapInstance.map;
+
+        if (!map) return;
+
+        if (typeof map.resize === "function") {
+          map.resize();
+        } else if (typeof map.invalidateSize === "function") {
+          map.invalidateSize();
+        }
+      });
     }
   };
 

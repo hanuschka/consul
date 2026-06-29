@@ -11,6 +11,7 @@
       App.TextSearchFormComponent.initialize();
       App.CollapseComponent.initialize();
       App.CustomTabs.initialize();
+      App.Tabs.initialize();
       App.SidebarCardComponent.initialize();
       App.CkeEditorPlaceholder.initialize();
       App.QuestionWizard.initialize();
@@ -26,9 +27,12 @@
       App.CoordinatesSearchComponent.initialize();
       App.Shared.initialize();
       App.SharedModal.initialize();
+      App.ImageCropper.initialize();
       App.KlaroAccessibility.initialize();
+      App.RevealAccessibility.initialize();
       App.VoiceAssistant.initialize();
       App.VoiceAssistantV2.initialize();
+      App.VoiceAssistantDesignsPreview.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
@@ -38,9 +42,10 @@
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
-      App.AdminTopbarViewMode.initialize();
+      App.StudioPreviewMode.initialize();
       App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.ProjektFooterPhaseRegenerate.initialize();
       App.HashScroll.initialize();
       App.AiProposalFlow.initialize();
       App.UserResourceCriteria.initialize();
@@ -50,6 +55,7 @@
       App.MobileFixedBottomActionComponentCustom.initialize();
       App.NotifyReviewers.initialize();
       App.LoaderSpinner.initialize();
+      App.AccountUsernameEditComponent.initialize();
     }
   };
 }).call(this);

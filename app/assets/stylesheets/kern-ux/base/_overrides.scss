@@ -12,6 +12,10 @@
   font-size: var(--kern-font-size-24) !important;
 }
 
+.kern-btn--tertiary:has(.material-symbols-outlined) .kern-label {
+  text-decoration: none;
+}
+
 .kern-form-input {
   width: 100%;
   position: relative;

@@ -14,9 +14,6 @@
       <div class="ai-proposal-flow--criteria-grid">
         <% hard_criteria.each do |criterion| %>
           <article class="ai-proposal-flow--criteria-card -hard">
-            <span class="ai-proposal-flow--criteria-card--icon">
-              <i class="fas fa-shield-alt" aria-hidden="true"></i>
-            </span>
             <div class="ai-proposal-flow--criteria-card--body">
               <span class="ai-proposal-flow--criteria-card--title"><%= criterion.name %></span>
               <% if criterion.description.present? %>
@@ -44,9 +41,6 @@
       <div class="ai-proposal-flow--criteria-grid">
         <% soft_criteria.each do |criterion| %>
           <article class="ai-proposal-flow--criteria-card -soft">
-            <span class="ai-proposal-flow--criteria-card--icon">
-              <i class="fas fa-star" aria-hidden="true"></i>
-            </span>
             <div class="ai-proposal-flow--criteria-card--body">
               <span class="ai-proposal-flow--criteria-card--title"><%= criterion.name %></span>
               <% if criterion.description.present? %>

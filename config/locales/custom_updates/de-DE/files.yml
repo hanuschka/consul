@@ -1,0 +1,151 @@
+de:
+  adm:
+    menu:
+      items:
+        files: Dateien
+        files_subitems:
+          images: Admin-Bilder
+          documents: Admin-Dokumente
+          resource_images: Ressourcen-Bilder
+          resource_documents: Ressourcen-Dokumente
+  files:
+    allowed_types_note_html: "Erlaubte Dateitypen: %{types}"
+    allowed_types_note_admin_html: "Erlaubte Admin-Dateitypen: %{types}"
+    allowed_types_note_users_html: "Erlaubte Ressourcen-Dateitypen für Nutzer: %{types}"
+    allowed_types_admins_html: "Admins &amp; Projektmanager können folgende Dateitypen hochladen: %{types}"
+    allowed_types_users_html: "Normale Nutzer können folgende Dateitypen hochladen: %{types}"
+    allowed_types_settings_link: "hier bearbeiten"
+    max_file_size_note_html: "Maximale Dateigröße: %{size} MB. Größere Dateien werden beim Hochladen abgelehnt."
+    max_file_size_edit_link: "hier bearbeiten"
+    images:
+      index:
+        title: Admin-Bilder
+        description: Zeigt alle Bilder, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Bilddateien hochzuladen, zu prüfen, umzubenennen oder zu löschen.
+    documents:
+      index:
+        title: Admin-Dokumente
+        description: Zeigt alle Dokumente, die von Administratoren und Projektmanagern hochgeladen wurden — z. B. über den Dateimanager im Inhaltsblock-Editor oder auf der Projekt-Bearbeitungsseite. Nutzen Sie diese Seite, um Dokumente hochzuladen, zu prüfen, umzubenennen oder zu löschen.
+    resource_images:
+      index:
+        title: Übersicht aller Ressourcen-Bilder
+        description: Zeigt alle Bilder, die mit Inhalten der Plattform verknüpft sind — z. B. Projekte, Vorschläge, Seiten und Umfragen. Benutzer-Avatare werden nicht angezeigt. Nutzen Sie diese Seite, um Bilddateien systemweit zu prüfen, umzubenennen oder zu löschen.
+    resource_documents:
+      index:
+        title: Ressourcen-Dokumente (Nutzer & Admin)
+        description: Zeigt alle Dokumente, die mit Inhalten der Plattform verknüpft sind — z. B. Dateien, die Autoren zu Vorschlägen oder zu Projekt-Meilensteinen hinzugefügt haben. Diese Dokumente werden über die Formulare der Inhalte hochgeladen, nicht über den Dateimanager. Nutzen Sie diese Seite, um Dokumente systemweit zu prüfen, umzubenennen oder zu löschen.
+    empty:
+      images:
+        title: Noch keine Bilder
+        description: Hier sind noch keine Bilder vorhanden. Laden Sie eine Datei hoch, um zu beginnen.
+      documents:
+        title: Noch keine Dokumente
+        description: Hier sind noch keine Dokumente vorhanden. Laden Sie eine Datei hoch, um zu beginnen.
+    search_form:
+      placeholder: Suchen…
+      button_title: Suchen
+    filter_bar:
+      search_placeholder: Suchen…
+      extension: Dateityp
+      extension_any: Alle Dateitypen
+      size_min: Min. Größe (MB)
+      size_max: Max. Größe (MB)
+      created_from: Erstellt ab
+      created_to: Erstellt bis
+      updated_from: Geändert ab
+      updated_to: Geändert bis
+      imageable_type: Zugewiesen an
+      imageable_type_any: "Zugewiesen: Alle"
+      documentable_type: Zugewiesen an
+      documentable_type_any: "Zugewiesen: Alle"
+      sort_label: Sortierung
+      reset: Filter zurücksetzen
+      sort:
+        created_desc: Neueste zuerst
+        created_asc: Älteste zuerst
+        updated_desc: Zuletzt geändert
+        updated_asc: Am längsten unverändert
+        name_asc: Name A–Z
+        name_desc: Name Z–A
+        size_asc: Kleinste zuerst
+        size_desc: Größte zuerst
+      aria:
+        search: Dateien durchsuchen
+        filter_extension: Nach Dateityp filtern
+        filter_imageable_type: Nach Zuweisung filtern
+        filter_documentable_type: Nach Zuweisung filtern
+        sort: Sortieren nach
+    upload_failed: Hochladen fehlgeschlagen
+    upload_loading: Datei wird hochgeladen…
+    upload_success: Hochgeladen
+    upload_success_with_name: 'Datei "%{filename}" wurde hochgeladen.'
+    upload_failed_with_name: 'Datei "%{filename}" konnte nicht hochgeladen werden.'
+    delete_failed: Löschen fehlgeschlagen
+    delete_success_with_name: 'Datei "%{filename}" wurde gelöscht.'
+    delete_failed_with_name: 'Datei "%{filename}" konnte nicht gelöscht werden.'
+    view_mode:
+      cards: Kartenansicht
+      list: Listenansicht
+    list:
+      title: Titel
+      resource_type: Ressourcentyp
+      assigned_to: Zugewiesen an
+      size: Größe
+      modified: Geändert
+      uploaded_by: Hochgeladen von
+    card:
+      edit: Bearbeiten
+      delete: Löschen
+      delete_confirm: Möchten Sie dieses Element wirklich löschen?
+      upload: Hochladen
+      upload_with_crop: Mit Zuschnitt hochladen
+      upload_with_crop_tooltip_title: Mit Zuschnitt hochladen
+      upload_with_crop_tooltip_text: Öffnet einen Zuschnitt-Editor, in dem Sie Bildausschnitt und Seitenverhältnis vor dem Hochladen anpassen können. Mit „Hochladen“ wird das Bild unverändert übernommen.
+      open_in_new_tab: In neuem Tab öffnen
+      copy_url: Link kopieren
+      copy_url_success: Link in die Zwischenablage kopiert
+      copy_url_failed: Link konnte nicht kopiert werden
+      download: Herunterladen
+      file_size: Dateigröße
+      dimensions: Abmessungen
+      uploaded: Hochgeladen
+      uploaded_by: Hochgeladen von
+      last_edited: Zuletzt bearbeitet
+      projekt: Projekt
+      resource_type: Ressourcentyp
+      admin_badge: Admin-Upload
+      file_type: "Dateityp: %{type}"
+      file_type_generic: Datei
+      alt_text: Alternativer Text
+      alt_text_missing_hint: Alternativer Text fehlt. Fügen Sie ihn hinzu, damit Screenreader dieses Bild beschreiben können.
+      edit_alt_text: Alt-Text bearbeiten
+      alt_badge_tooltip: Klicken Sie, um den Editor zu öffnen und den Alt-Text für dieses Bild hinzuzufügen oder zu bearbeiten.
+      alt_edit:
+        description: Der Alternativtext beschreibt das Bild für Menschen, die Screenreader nutzen, und wird angezeigt, wenn das Bild nicht geladen werden kann. Er verbessert Barrierefreiheit und Suchmaschinen-Sichtbarkeit.
+        placeholder: z. B. Menschen diskutieren an einem runden Tisch
+        save: Speichern
+        cancel: Abbrechen
+    edit_modal:
+      title: Datei bearbeiten
+      title_label: Titel
+      description: Beschreibung
+      alt_text: Alternativer Text
+      cancel: Abbrechen
+      save: Speichern
+      close: Schließen
+      update_failed: Aktualisierung fehlgeschlagen
+    info_modal:
+      button: Info
+      close: Schließen
+      filename: Dateiname
+      type: Typ
+      size: Größe
+      dimensions: Abmessungen
+      uploaded: Hochgeladen
+      last_edited: Zuletzt bearbeitet
+      uploaded_by: Hochgeladen von
+      projekt: Projekt
+      open_file: Datei öffnen
+      download_file: Herunterladen
+    fullsize_preview:
+      button: Vorschau
+      close: Schließen

@@ -1,0 +1,8 @@
+de:
+  custom:
+    shared:
+      image_cropper:
+        title: "Bild zuschneiden"
+        instructions: "Ziehen Sie zum Verschieben und passen Sie den Bildausschnitt an den Ecken an."
+        confirm: "Übernehmen"
+        cancel: "Abbrechen"

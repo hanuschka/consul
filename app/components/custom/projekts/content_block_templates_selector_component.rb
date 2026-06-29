@@ -96,11 +96,32 @@ class Projekts::ContentBlockTemplatesSelectorComponent < ApplicationComponent
     )
   end
 
-  def global_content_blocks
-    SavedContentBlock.global.order(:created_at)
-  end
-
-  def user_content_blocks
-    SavedContentBlock.for_user(helpers.current_user).order(:created_at)
+  def local_template_categories
+    [
+      {
+        id: "basic_content",
+        name: I18n.t("custom.projekt.content_block_templates_selector.tabs.basic_content"),
+        template_dir: "projekts/content_block_templates/basic_content",
+        template_names: basic_content_templates
+      },
+      {
+        id: "status_and_notes",
+        name: I18n.t("custom.projekt.content_block_templates_selector.tabs.status_and_notes"),
+        template_dir: "projekts/content_block_templates/status_and_notes",
+        template_names: status_and_notes_templates
+      },
+      {
+        id: "teasers_and_promotions",
+        name: I18n.t("custom.projekt.content_block_templates_selector.tabs.teasers_and_promotions"),
+        template_dir: "projekts/content_block_templates/teasers_and_promotions",
+        template_names: teasers_and_promotions
+      },
+      {
+        id: "media_and_resources",
+        name: I18n.t("custom.projekt.content_block_templates_selector.tabs.media_and_resources"),
+        template_dir: "projekts/content_block_templates/media_and_resources",
+        template_names: media_and_resources_templates
+      }
+    ]
   end
 end

@@ -11,7 +11,7 @@
           <%= render_custom_block("proposals_dashboard_polls_welcome_text", default_content: t("custom.proposals.dashboard.default_welcome_text_html")) %>
         </p>
         <div class="margin-bottom-twice">
-          <%= render ResourcePage::BannerComponent.new(resource: @proposal) %>
+          <%= render ResourcePage::BannerComponent.new(resource: @proposal, heading_level: :h2) %>
         </div>
         <%= render "form_new" %>
       </div>

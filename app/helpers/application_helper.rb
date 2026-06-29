@@ -105,12 +105,4 @@ module ApplicationHelper
   def show_admin_controls_for_projekt?(projekt)
     Pundit.policy(current_user, [:adm, :projekts, projekt])&.update? || false
   end
-
-  # def show_projekt_studio_controls?(projekt)
-  #   show_admin_controls_for_projekt?(projekt)
-  # end
-
-  def native_projekt_studio?(projekt)
-    show_admin_controls_for_projekt?(projekt) && !embedded?
-  end
 end

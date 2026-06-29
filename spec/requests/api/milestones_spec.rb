@@ -33,8 +33,8 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of milestones per page (default: 100, max: 500)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of milestones per page (**default:** 100, max: 500)'
 
       response '200', 'milestones found and returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
@@ -71,36 +71,13 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
         end
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:projekt_phase_id) { ProjektPhase::MilestonePhase.create!(projekt: test_projekt).id }
-
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
-
       response '404', 'projekt phase not found' do
         let(:projekt_phase_id) { 999999 }
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a milestone' do
@@ -208,6 +185,10 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 end

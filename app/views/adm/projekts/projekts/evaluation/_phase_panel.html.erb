@@ -1,0 +1,63 @@
+<%
+  phase_id = phase["phase_id"]
+  processing = row.processing?
+  failed = row.failed?
+  status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+  regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+%>
+
+<div
+  role="tabpanel"
+  class="evaluation-phase-panel"
+  data-controller="adm--phase-regenerate"
+  data-adm--phase-regenerate-status-url-value="<%= status_url %>"
+  data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
+>
+  <div
+    class="evaluation-phase-panel__loading"
+    data-adm--phase-regenerate-target="loading"
+    <%= "hidden" unless processing %>
+  >
+    <div class="adm-empty-state">
+      <h3><%= t("adm.projekts.projekts.evaluation.phase_processing_title") %></h3>
+      <p><%= t("adm.projekts.projekts.evaluation.phase_processing_description") %></p>
+      <span
+        class="material-symbols-outlined adm-spinner adm-spinner--lg"
+        aria-hidden="true"
+      >progress_activity</span>
+    </div>
+  </div>
+
+  <div
+    class="evaluation-phase-panel__content"
+    data-adm--phase-regenerate-target="content"
+    <%= "hidden" if processing %>
+  >
+    <% if failed %>
+      <div class="adm-empty-state">
+        <h3><%= t("adm.projekts.projekts.evaluation.phase_failed_title") %></h3>
+        <p><%= t("adm.projekts.projekts.evaluation.phase_failed_description") %></p>
+
+        <a
+          href="<%= regenerate_url %>"
+          class="kern-btn kern-btn--primary"
+          data-action="click->adm--phase-regenerate#start"
+        >
+          <span class="kern-label material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+          <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.phase_retry_button") %></span>
+        </a>
+      </div>
+    <% else %>
+      <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
+        locals: {
+          projekt: projekt,
+          phase: phase,
+          accent_color: accent_color,
+          accent_light_color: accent_light_color,
+          accent_shades: accent_shades,
+          selection: local_assigns.fetch(:selection, nil),
+          regenerate_url: regenerate_url
+        } %>
+    <% end %>
+  </div>
+</div>

@@ -7,6 +7,9 @@ en:
         content: Content
         comments: Comments
         author: Author
+    content_blocks:
+      admin_empty_hint_title: "Empty content block"
+      admin_empty_hint: "Only you (admins & managers) see this notice. Hover over the block and click the toolbar to add content — the block stays hidden from visitors until it has content."
     account:
       settings:
         email_digest: Receive a summary of proposal notifications
@@ -119,6 +122,12 @@ en:
         contact_us: Contact us
         sign_in_as_guest: Sign in as a guest
         sign_out_as_guest: Sign out as a guest
+        contact:
+          title: Contact
+        block_1:
+          admin_empty_hint: You can add additional footer information here. This block is only shown when it contains content.
+        block_2:
+          admin_empty_hint: You can add additional footer information here. This block is only shown when it contains content.
       header:
         account_link: Account
         admin_link: Administration
@@ -207,6 +216,15 @@ en:
       login_to_vote: You must %{signin} or %{signup} to be able to participate
       verify_account_link_short: verify
     welcome:
+      topbar:
+        nav_link_color_picker:
+          label: "Nav color"
+          tooltip: "Color of the top-navigation links on the homepage"
+          reset: "Reset to default color"
+          status:
+            saving: "Saving…"
+            saved: "Saved"
+            error: "Save failed"
       active_projekt_cards:
         title: Active projekts
       all_debates: All debates
@@ -236,6 +254,7 @@ en:
       sidebar:
         information:
           title: Information
+          admin_empty_hint: "You can add extra information or notes here. This block is only shown when it contains content."
         users:
           title: Users
           sign_in: Sign in

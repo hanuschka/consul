@@ -2,7 +2,7 @@
 
 class Ckeditor::DocumentsController < ApplicationController
   def create
-    document = Ckeditor::Document.new
+    document = AdminDocument.new
     authorize! :create, document
     document.attach_uploaded_file(params[:upload])
 
@@ -19,7 +19,7 @@ class Ckeditor::DocumentsController < ApplicationController
   end
 
   def update
-    document = Ckeditor::Document.find(params[:id])
+    document = AdminDocument.find(params[:id])
     authorize! :update, document
     document.update!(document_params)
     render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
@@ -30,7 +30,7 @@ class Ckeditor::DocumentsController < ApplicationController
   end
 
   def destroy
-    document = Ckeditor::Document.find(params[:id])
+    document = AdminDocument.find(params[:id])
     authorize! :destroy, document
     document.destroy!
     render json: { status: :no_content }

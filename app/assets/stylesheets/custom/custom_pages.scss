@@ -128,6 +128,117 @@ span.sidebar-projekt-phases-title {
   border-radius: 7px;
 }
 
+.projekt-map-shortcode {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.projekt-map-shortcode .map_location {
+  height: 400px;
+}
+
+// Map content-block templates ("maps" category). The wrapper carries the
+// per-template height (inline style) and shows a clean light placeholder until
+// {{projekt_map}} is expanded — by the server on render, or by the studio
+// hydration JS on first insert. The expanded map fills the box and covers the
+// placeholder.
+.projekt-map-embed {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  overflow: hidden;
+  background-color: #eef1f5;
+}
+
+.projekt-map-embed--placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  // Opaque so the raw {{projekt_map}} token is never visible behind it before
+  // the map is expanded (server) or hydrated (editor / template-picker dialog).
+  background-color: #eef1f5;
+  color: #6b7682;
+  pointer-events: none;
+}
+
+.projekt-map-embed--pin {
+  font-size: 30px;
+  opacity: 0.45;
+}
+
+.projekt-map-embed--label {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.projekt-map-embed .projekt-map-shortcode {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  margin: 0;
+}
+
+// The server wraps the live map in an aria-hidden div (screen-reader hiding)
+// and, when lazy-loading, a .map-data-wrapper. Both must carry the embed
+// height so the Leaflet container's height: 100% resolves to the embed's
+// fixed height instead of collapsing to 0.
+//
+// border-radius: inherit propagates the embed's per-template radius (set inline
+// on .projekt-map-embed) down to the Leaflet container. Rounding the ancestor
+// alone does NOT clip Leaflet — its tile panes are transformed and escape an
+// ancestor's overflow/border-radius clip. The .map_location (.leaflet-container)
+// already sets overflow: hidden, so giving IT the radius clips the panes.
+.projekt-map-embed .projekt-map-shortcode,
+.projekt-map-embed .projekt-map-shortcode > div,
+.projekt-map-embed .projekt-map-shortcode .map-data-wrapper,
+.projekt-map-embed .projekt-map-shortcode .map_location {
+  border-radius: inherit;
+}
+
+.projekt-map-embed .projekt-map-shortcode > div,
+.projekt-map-embed .projekt-map-shortcode .map-data-wrapper {
+  height: 100%;
+}
+
+.projekt-map-embed .projekt-map-shortcode .map_location {
+  height: 100%;
+  min-height: 0;
+}
+
+// Fullscreen ("Vollbild-Modus") puts the Leaflet container at position:fixed
+// with z-index:5000. Inside a content block the map is nested under two low
+// stacking contexts — .projekt-map-shortcode (z-index:1, all viewers) and
+// .projekt-content-block (z-index:2, only in the studio editor) — that trap the
+// fixed map below the page header and chrome. While a descendant map is
+// expanded, drop those stacking contexts so the fullscreen map rises above
+// everything. The embed's overflow is opened too, in case a browser treats it
+// as the fixed map's containing block.
+.projekt-map-embed:has(.map_location.map.expanded) {
+  overflow: visible;
+}
+
+.projekt-map-embed:has(.map_location.map.expanded) .projekt-map-shortcode {
+  z-index: auto;
+}
+
+.projekt-content-block:has(.map_location.map.expanded) {
+  z-index: auto;
+}
+
+// The page-content link rule (.custom-page-content a:not(.accordion-title))
+// underlines every <a>, which wrongly underlines the Leaflet controls and the
+// "Leaflet / OpenStreetMap" attribution inside a map embed. Reset those links;
+// the three-class scope outranks the page-content rule.
+.custom-page-content .projekt-map-embed .map_location a {
+  text-decoration: none;
+}
+
 // .projekt-phase {
 //   margin-bottom: 1em;
 //   line-height: 1.75;
@@ -459,7 +570,7 @@ li.projekt-navigator[aria-expanded="false"] {
 
     .phase-subscription {
       position: absolute;
-      top: 15px;
+      top: 7px;
       right: 5px;
 
       a {

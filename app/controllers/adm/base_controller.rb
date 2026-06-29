@@ -1,12 +1,16 @@
 class Adm::BaseController < ActionController::Base
   include Pundit::Authorization
   include Pagy::Backend
+  include LocaleSwitching
+  include GlobalizeFallbacks
 
   default_form_builder KernFormBuilder
 
   layout "adm"
 
+  before_action :store_return_location_for_login
   before_action :authenticate_user!
+  around_action :switch_locale
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
@@ -23,10 +27,22 @@ class Adm::BaseController < ActionController::Base
   SECTION_NAMESPACE_OVERRIDES = {
     "Adm::ModeratorsController" => "Adm::Moderation",
     "Adm::ValuatorsController" => "Adm::Valuation",
-    "Adm::OfficingManagersController" => "Adm::Officing"
+    "Adm::OfficingManagersController" => "Adm::Officing",
+    "Adm::ApiClients::ServiceUsersController" => "Adm"
   }.freeze
 
   private
+
+    # Adm::BaseController inherits from ActionController::Base, so it doesn't run
+    # ApplicationController#set_return_url. Without it, an unauthenticated user
+    # following a deep /adm link (e.g. from the officer notification email) is
+    # bounced to sign in with no stored location and lands on root afterwards.
+    def store_return_location_for_login
+      return if user_signed_in?
+      return unless request.get? && is_navigational_format?
+
+      store_location_for(:user, SessionUrlTruncator.truncate(request.fullpath))
+    end
 
     def frame_partial_path
       turbo_frame_request_id&.gsub("__", "/")
@@ -51,7 +67,9 @@ class Adm::BaseController < ActionController::Base
       namespace = current_adm_section_namespace
       return I18n.t("adm.title") if namespace == "Adm"
 
-      I18n.t("#{namespace.gsub('::', '.').underscore}.title")
+      section_key = namespace.demodulize.underscore
+      Setting["#{section_key}.feature_name"].presence ||
+        I18n.t("#{namespace.gsub('::', '.').underscore}.title")
     end
 
     def policy_class_for(record)
@@ -96,6 +114,12 @@ class Adm::BaseController < ActionController::Base
         Adm::NewsletterPolicy
       when "Image"
         Adm::ImagePolicy
+      when "Document"
+        Adm::DocumentPolicy
+      when "AdminAsset"
+        Adm::AdminAssetPolicy
+      when "AdminImage"
+        Adm::AdminImagePolicy
       when "Poll"
         Adm::Projekts::PollPolicy
       else

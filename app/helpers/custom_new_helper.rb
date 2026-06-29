@@ -18,15 +18,19 @@ module CustomNewHelper
     end
   end
 
+  def flyout_item_icon(icon_set:, material:, font_awesome:)
+    if icon_set == :font_awesome
+      tag.i(class: "fas #{font_awesome} fa-fw flyout-item--icon", aria: { hidden: true })
+    else
+      tag.span(material, class: "material-symbols-outlined flyout-item--icon", aria: { hidden: true })
+    end
+  end
+
   def custom_new_design_body_class
     css_class = Setting.new_design_enabled? ? "custom-new-design" : ""
 
     if Ai::Settings.ai_available?
       css_class += ' -ai-enabled'
-    end
-
-    if embedded?
-      css_class += " -embedded"
     end
 
     css_class

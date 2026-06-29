@@ -1,5 +1,6 @@
 <ul class="document-list">
   <% @documents.each do |document| %>
+  <% next unless document.attachment.attached? %>
   <li class="document-list--document">
   <%= link_to document.title,
               document.attachment, target: "_blank",

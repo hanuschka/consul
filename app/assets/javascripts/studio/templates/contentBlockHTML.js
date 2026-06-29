@@ -2,12 +2,12 @@ const html = (strings, ...values) => {
   return String.raw(strings, ...values);
 };
 
-ProjektStudio.templateFunctions.emptyContentBlockHtml = '<div><p></p></div>';
+App.Studio.Projekt.templateFunctions.emptyContentBlockHtml = '<div><p></p></div>';
 
 // Wraps a studio control (button or control group) in a <rich-tooltip>
 // (app/assets/javascripts/elements/rich_tooltip.js) with a title + explanation
 // body. Declarative only — no extra tooltip JS. `delay` is the show delay in ms.
-ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { title, text, note, delay, placement } = {}) {
+App.Studio.Projekt.templateFunctions.studioControlTooltip = function(triggerHtml, { title, text, note, delay, placement } = {}) {
   const delayAttribute = delay ? ` delay="${delay}"` : "";
   const placementAttribute = placement ? ` placement="${placement}"` : "";
   const titleHtml = title ? `<span class="rich-tooltip-content--title">${title}</span>` : "";
@@ -32,8 +32,8 @@ ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { t
 // only, hidden in preview-as-user). Mirrors the site-block hint rendered by
 // `wrap_with_admin_empty_hint`; reuses the same `.content-block-empty-hint`
 // markup/CSS. Visibility is driven by the `is-content-empty` marker on the
-// wrapper, toggled live by `App.ContentBlockEditor.EmptyHintToggle`.
-ProjektStudio.templateFunctions.contentBlockEmptyHintHtml = function() {
+// wrapper, toggled live by `App.Studio.ContentBlocks.EmptyHintToggle`.
+App.Studio.Projekt.templateFunctions.contentBlockEmptyHintHtml = function() {
   return `
     <div class="content-block-empty-hint js-content-block-empty-hint js-studio-hide-on-preview" role="note">
       <span class="content-block-empty-hint--icon" aria-hidden="true"><i class="fas fa-circle-info"></i></span>
@@ -45,7 +45,7 @@ ProjektStudio.templateFunctions.contentBlockEmptyHintHtml = function() {
   `;
 };
 
-ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocks, projektId) {
+App.Studio.Projekt.templateFunctions.wrapWithContentBlockListHtml = function(contentBlocks, projektId) {
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
@@ -56,7 +56,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
         style="display: ${contentBlocks.length <= 0 ? 'none' : ''}"
       >
         <div class="add-new-content-block-section--controls">
-          ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
             <button
               type="button"
               class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
@@ -69,7 +69,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
             text: "Fügt ganz oben auf der Seite einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
             delay: 1500
           })}
-          ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
             <button
               type="button"
               class="js-show-content-block-templates add-new-content-block-button"
@@ -90,10 +90,10 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
   `
 }
 
-ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, toolbarPosition} = {}) {
+App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, toolbarPosition} = {}) {
   const isSiteContext = context === 'site';
   const showEmptyHint = !context || context === 'projekt';
-  const isEmpty = showEmptyHint && App.ContentBlockEditor.Crud.isContentEmpty(contentBlockHTML);
+  const isEmpty = showEmptyHint && App.Studio.ContentBlocks.Crud.isContentEmpty(contentBlockHTML);
   const emptyHintClasses = `${showEmptyHint ? ' js-toggle-empty-hint-on-content' : ''}${isEmpty ? ' is-content-empty' : ''}`;
 
   return `
@@ -115,7 +115,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
         <div class="projekt-content-block--toolbar">
 
             <div class="projekt-content-block-edit--buttons-wrapper">
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
                   class="studio-edit-button -green js-save-content-block"
@@ -129,7 +129,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 text: "Speichert alle Änderungen an diesem Inhaltsblock und beendet den Bearbeitungsmodus.",
                 delay: 2500
               })}
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
                   class="studio-edit-button js-cancel-content-block"
@@ -150,7 +150,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <div
                   class="content-block-margin-input d-flex align-items-center u-gap-5"
                 >
-                  ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                  ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                     <i class="fas fa-arrows-alt-v content-block-margin-input--icon"></i>
                   `, {
                     title: "Abstand nach unten",
@@ -183,7 +183,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     <i class="fas fa-plus"></i>
                   </button>
                 </div>
-                ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                   <dropdown-select-menu
                     name="header-type"
                     title="Überschrift"
@@ -201,7 +201,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   text: "Wandelt den markierten Text in eine Überschrift (H2 oder H3) um oder setzt ihn auf normalen Fließtext zurück.",
                   delay: 1200
                 })}
-                ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                   <button
                     type="button"
                     tabindex="-1"
@@ -213,7 +213,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   title: "Fett",
                   text: "Formatiert den markierten Text fett oder hebt die Fettformatierung wieder auf."
                 })}
-                ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                   <button
                     type="button"
                     disabled
@@ -226,7 +226,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   title: "Link hinzufügen",
                   text: "Wandelt den markierten Text in einen Link um. Markieren Sie zuerst Text, um diese Funktion zu aktivieren."
                 })}
-                ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                   <button
                     type="button"
                     disabled
@@ -242,7 +242,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               </div>
             </div>
             <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-content-block-edit-main-controlls">
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
                   tabindex="-1"
@@ -255,7 +255,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 text: "Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung."
               })}
               <div class="studio-icon-button-wrapper">
-                ${ProjektStudio.templateFunctions.studioControlTooltip(`
+                ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                   <button
                     type="button"
                     tabindex="-1"
@@ -268,7 +268,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern."
                 })}
               </div>
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
                   tabindex="-1"
@@ -291,7 +291,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <!--   </i> -->
               <!-- </button> -->
               <div class="projekt-content-block-edit--separator"></div>
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
                   tabindex="-1"
@@ -303,7 +303,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 title: "Duplizieren",
                 text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
               })}
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   tabindex="-1"
                   disabled
@@ -346,7 +346,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-up-down-left-right"></i>
               </button>
               <div class="projekt-content-block-edit--separator"></div>
-              ${ProjektStudio.templateFunctions.studioControlTooltip(`
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
                   tabindex="-1"
@@ -372,7 +372,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
         <div class="projekt-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
 
-        ${showEmptyHint ? ProjektStudio.templateFunctions.contentBlockEmptyHintHtml() : ''}
+        ${showEmptyHint ? App.Studio.Projekt.templateFunctions.contentBlockEmptyHintHtml() : ''}
 
         <div class="projekt-content-block js-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
           ${contentBlockHTML}
@@ -391,7 +391,7 @@ function showContentBlockTemplatesButton(isDraft = false) {
   return `
     <div class="add-new-content-block-section js-show-content-block-templates-section js-studio-hide-on-preview">
       <div class="add-new-content-block-section--controls">
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+        ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
           <button
             type="button"
             class="add-new-content-block-floating-control add-new-content-block-blank-button js-add-blank-content-block"
@@ -405,7 +405,7 @@ function showContentBlockTemplatesButton(isDraft = false) {
           text: "Fügt an dieser Stelle einen leeren Inhaltsblock hinzu, den Sie selbst gestalten.",
           delay: 1500
         })}
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+        ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
           <button
             type="button"
             class="js-show-content-block-templates add-new-content-block-button"

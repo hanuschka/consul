@@ -5,11 +5,11 @@
 // anchor targets for in-page "jump to section" links) are intentional and
 // MUST survive, so they are left untouched. For content that leaves the
 // document, use cleanContentForClipboard instead.
-ProjektStudio.utils.removeFoundationIds = function(element) {
+App.Studio.utils.removeFoundationIds = function(element) {
   element.querySelectorAll("[data-accordion]").forEach((accordion) => {
     accordion.setAttribute("data-accordion", "");
 
-    ProjektStudio.utils.removeChildHtmlAttributes(
+    App.Studio.utils.removeChildHtmlAttributes(
       accordion,
       ["id", "aria-labelledby", "aria-controls"]
     );
@@ -26,7 +26,7 @@ ProjektStudio.utils.removeFoundationIds = function(element) {
 // re-init paths share): same input, but the document boundary flips the safe
 // assumption from "ids are unique" to "ids may already exist". Delegates the
 // accordion reset to removeFoundationIds.
-ProjektStudio.utils.cleanContentForClipboard = function(element) {
+App.Studio.utils.cleanContentForClipboard = function(element) {
   element.querySelectorAll("*").forEach((node) => {
     if (node.hasAttribute("data-orbit")) {
       node.setAttribute("data-orbit", "");
@@ -36,5 +36,5 @@ ProjektStudio.utils.cleanContentForClipboard = function(element) {
     node.removeAttribute("id");
   });
 
-  ProjektStudio.utils.removeFoundationIds(element);
+  App.Studio.utils.removeFoundationIds(element);
 }

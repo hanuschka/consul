@@ -194,10 +194,16 @@ span.sidebar-projekt-phases-title {
 // alone does NOT clip Leaflet — its tile panes are transformed and escape an
 // ancestor's overflow/border-radius clip. The .map_location (.leaflet-container)
 // already sets overflow: hidden, so giving IT the radius clips the panes.
+//
+// The .map_location selector carries the extra .map class so it outranks the
+// global .custom-new-design .map.map_location rule (border-radius: 12px, meant
+// for the resources-list map) which otherwise ties on specificity and wins on
+// source order — forcing 12px on every corner and rounding the top of embeds
+// that sit below a sibling section (per-template radius e.g. 0 0 14px 14px).
 .projekt-map-embed .projekt-map-shortcode,
 .projekt-map-embed .projekt-map-shortcode > div,
 .projekt-map-embed .projekt-map-shortcode .map-data-wrapper,
-.projekt-map-embed .projekt-map-shortcode .map_location {
+.projekt-map-embed .projekt-map-shortcode .map_location.map {
   border-radius: inherit;
 }
 

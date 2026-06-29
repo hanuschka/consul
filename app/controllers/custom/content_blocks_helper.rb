@@ -8,7 +8,8 @@ module ContentBlocksHelper
     default_content: nil,
     return_path: nil,
     toolbar_position: nil,
-    empty_hint: true
+    empty_hint: true,
+    use_p_tag: false
   )
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
@@ -20,6 +21,10 @@ module ContentBlocksHelper
       end
 
     block_body = convert_br_to_paragraphs(block_body)
+
+    if use_p_tag
+      block_body = wrap_body_in_paragraph(block_body)
+    end
 
     if custom_prefix
       block_body = "#{custom_prefix} #{block_body}"
@@ -204,6 +209,18 @@ module ContentBlocksHelper
     without_empty_tags = without_empty_tags.gsub(/<\/?(p|div|span)(\s[^>]*)?>/, "")
     without_empty_tags = without_empty_tags.gsub(/[\s\u00A0]/, "")
     without_empty_tags.blank?
+  end
+
+  def wrap_body_in_paragraph(body)
+    return body if body.blank?
+
+    stripped = body.strip
+
+    if stripped.match?(/\A<(p|div|ul|ol|h[1-6]|blockquote|table|figure|section|article|pre)[\s>\/]/i)
+      return body
+    end
+
+    "<p>#{stripped}</p>"
   end
 
   def convert_br_to_paragraphs(html)

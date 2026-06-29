@@ -579,6 +579,12 @@ export default class MapboxAdapter extends BaseAdapter {
         marker: false,
         placeholder: "Nach Adresse suchen"
       }), "top-left")
+
+      const searchInput = this.container.querySelector(".mapboxgl-ctrl-geocoder--input")
+      if (searchInput) {
+        searchInput.setAttribute("title", "Nach Adresse suchen")
+        searchInput.setAttribute("aria-label", "Nach Adresse suchen")
+      }
     }
   }
 

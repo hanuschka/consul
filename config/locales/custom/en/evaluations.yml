@@ -61,6 +61,7 @@ en:
           comments: Comments
           commenters: Commenters
           questions: Questions
+          other_questions_group: Other questions
           polls: Polls
           poll_meta: "%{voters} voters · %{questions} questions"
           scale_subtitle: "Scale %{min} to %{max} · n = %{n}"

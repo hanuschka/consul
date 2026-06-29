@@ -3,13 +3,12 @@ module ProjektPhaseAdminActions
   include Translatable
   include MapLocationAttributes
   include ImageAttributes
-  include ProjektPhaseControllerUtils
 
   included do
     alias_method :namespace_mappable_path, :namespace_projekt_phase_path
 
     before_action :set_projekt_phase, :authorize_nav_bar_action, except: [
-      :create, :order_phases, :frame_phases_restrictions
+      :create, :order_phases
     ]
     before_action :set_namespace
     helper_method :namespace_projekt_phase_path, :namespace_mappable_path
@@ -23,12 +22,8 @@ module ProjektPhaseAdminActions
 
     @projekt_phase.save!
 
-    if embedded? && frame_session_from_authorized_source?
-      redirect_to polymorphic_path([@namespace, @projekt_phase], action: (@projekt_phase.admin_nav_bar_items.first.presence || :naming))
-    else
-      redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
-        notice: t("custom.admin.projekt_phases.notice.created")
-    end
+    redirect_to polymorphic_path([@namespace, @projekt], action: :edit, anchor: "tab-projekt-phases"),
+      notice: t("custom.admin.projekt_phases.notice.created")
   end
 
   def update
@@ -39,11 +34,6 @@ module ProjektPhaseAdminActions
       if params[:action_name].present?
         redirect_to(
           namespace_projekt_phase_path(action: params[:action_name]),
-          notice: t("custom.admin.projekt_phases.notice.updated")
-        )
-      elsif embedded?
-        redirect_to(
-          @projekt_phase.projekt.url,
           notice: t("custom.admin.projekt_phases.notice.updated")
         )
       end
@@ -179,7 +169,9 @@ module ProjektPhaseAdminActions
   end
 
   def map_resources_overview
-    @map_coordinates = MapLocation.where(mappable: @projekt_phase.projekt_point_of_interest_pins).map(&:features_json_data)
+    @map_coordinates = MapLocation.with_point_of_interest_pin_associations
+                                  .where(mappable: @projekt_phase.projekt_point_of_interest_pins)
+                                  .map(&:features_json_data)
     @map_coordinates += MasterportalPin.standalone_features_for_phase(@projekt_phase)
   end
 

@@ -52,7 +52,8 @@
   <% end %>
 
   <span class="total-supports">
-    <%= t("custom.proposals.proposal.supports", count: proposal.total_votes) %>&nbsp;
+    <% supports_key = projekt_phase_feature?(proposal.projekt_phase, "resource.enable_up_and_down_voting") ? "custom.proposals.proposal.votes_cast" : "custom.proposals.proposal.supports" %>
+    <%= t(supports_key, count: proposal.total_votes) %>&nbsp;
 
   </span>
 

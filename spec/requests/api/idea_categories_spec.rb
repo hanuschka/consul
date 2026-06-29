@@ -27,7 +27,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
       security [bearer_auth: []]
       description "Retrieve a paginated list of all idea categories. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (default 100)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (**default:** 100)'
 
       response '200', 'idea categories found' do
         before do
@@ -52,28 +52,6 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                required: ['data']
 
         run_test!
-      end
-
-      response '403', 'forbidden - insufficient access' do
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
       end
 
       response '200', 'idea categories found with public_data access' do
@@ -134,6 +112,8 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
           expect(data['pagination']['total_count']).to eq(5)
         end
       end
+
+      unauthorized_response
     end
 
     post 'Create an idea category' do
@@ -335,34 +315,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:category) do
-          Idea::Category.create!(
-            name: 'Test Category'
-          )
-        end
-        let(:id) { category.id }
-        before do
-          category
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update an idea category' do
@@ -518,6 +471,8 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete an idea category' do
@@ -601,6 +556,8 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
         let(:id) { 999999 }
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

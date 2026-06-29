@@ -7,11 +7,19 @@
       <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
         <%= render "shared/errors", resource: resource %>
 
-        <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+        <%= f.email_field :email,
+                          autofocus: true,
+                          value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
+                          label: t("activerecord.attributes.user.email"),
+                          label_options: { class: "auth-page-template--field-label" } %>
 
         <% if @requires_password %>
-          <p><%= f.password_field :password %></p>
-          <p><%= f.password_field :password_confirmation %></p>
+          <p><%= f.password_field :password,
+                                  label: t("devise_views.users.registrations.new.password_label"),
+                                  label_options: { class: "auth-page-template--field-label" } %></p>
+          <p><%= f.password_field :password_confirmation,
+                                  label: t("devise_views.users.registrations.new.password_confirmation_label"),
+                                  label_options: { class: "auth-page-template--field-label" } %></p>
         <% end %>
 
         <%= hidden_field_tag :confirmation_token, @confirmation_token %>

@@ -42,8 +42,8 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
     end
 
     def excluded_projekts_ids
-      current_projekts_ids = @projekts.index_order_underway.map(&:id)
-      expired_projekts_ids = @projekts.index_order_expired.map(&:id)
+      current_projekts_ids = @projekts.index_order_underway.pluck(:id)
+      expired_projekts_ids = @projekts.index_order_expired.pluck(:id)
 
       [current_projekts_ids + expired_projekts_ids].flatten.uniq
     end

@@ -23,6 +23,7 @@ de:
       username: "Benutzername"
       user: "Nutzer"
       email: "E-Mail"
+      status: "Status"
       actions: "Aktionen"
       filter:
         search_placeholder: "%{column_label} suchen..."

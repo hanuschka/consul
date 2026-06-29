@@ -15,12 +15,6 @@
 
       this.formatVisibleRatingScales();
 
-      $("body").on(
-        "click.pollsCustom",
-        ".js-question-wizard-next, .js-question-wizard-prev, .js-question-wizard-go-to-start",
-        this.formatVisibleRatingScalesAfterRepaint.bind(this)
-      );
-
       if ($(".js-rating-scale").length > 0) {
         $(window).on("resize.pollsCustom", this.handleWindowResize);
       }

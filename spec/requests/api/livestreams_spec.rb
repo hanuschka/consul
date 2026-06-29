@@ -53,8 +53,8 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of livestreams per page (default: 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of livestreams per page (**default:** 100, max: 500)', required: false
 
       response '200', 'projekt livestreams found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -92,6 +92,8 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt livestream' do
@@ -165,6 +167,9 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -174,8 +179,8 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all livestreams across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
 
       response '200', 'projekt livestreams found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
@@ -214,6 +219,8 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -258,6 +265,8 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt livestream' do
@@ -355,6 +364,9 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt livestream' do
@@ -421,6 +433,9 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

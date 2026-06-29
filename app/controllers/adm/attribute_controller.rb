@@ -18,6 +18,10 @@ module Adm
         else
           update_imageable_image
         end
+      elsif @kind == :content_types
+        if @record.update(value: submitted_content_types)
+          flash.now[:success] = t(".success")
+        end
       elsif @record.update(permitted_params)
         flash.now[:success] = t(".success")
       end
@@ -49,6 +53,10 @@ module Adm
         attribute = params[:attribute].to_sym
 
         params.require(param_key).permit(attribute)
+      end
+
+      def submitted_content_types
+        Array(params[:content_types]).reject(&:blank?).join(" ")
       end
 
       def imageable_image_attribute?
@@ -83,6 +91,7 @@ module Adm
         options[:wide] = true if params[:wide].present?
         options[:hide_label] = true if params[:hide_label].present?
         options[:inline] = true if params[:inline].present?
+        options[:toolbar] = params[:toolbar] if params[:toolbar].present?
         options[:divider] = ActiveModel::Type::Boolean.new.cast(params[:divider]) if params.key?(:divider)
         options[:ai_gated] = true if params[:ai_gated].present?
         options

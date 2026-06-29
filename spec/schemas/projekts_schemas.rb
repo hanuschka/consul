@@ -8,6 +8,11 @@ module Schemas
       properties: {
         id: { type: :integer, description: 'Unique identifier for the projekt', example: 1 },
         name: { type: :string, description: 'The name or title of the projekt', example: 'Sample Projekt' },
+        title: { type: :string, nullable: true, description: 'The projekt page title (same value as page.title), exposed at the top level for convenience.', example: 'Sample Projekt Page' },
+        subtitle: { type: :string, nullable: true, description: 'The projekt page subtitle (same value as page.subtitle).', example: 'A short tagline for the projekt' },
+        image: { '$ref' => '#/components/schemas/Image' },
+        text: { type: :string, description: 'The full projekt page content: the body of all content blocks (ordered by position) combined into a single string. Same value as text_html (already sanitized at save time, not re-processed here). Only present when include_text=true on the list endpoint; always present in the single projekt response. Empty string when the projekt has no content blocks.', example: '<h2>Welcome</h2><p>About this projekt.</p>' },
+        text_html: { type: :string, description: 'The full projekt page content as HTML: the body of all content blocks (ordered by position) combined into a single string. Only present when include_text=true on the list endpoint; always present in the single projekt response. Empty string when the projekt has no content blocks.', example: '<h2>Welcome</h2><p>About this projekt.</p>' },
         parent_id: { type: :integer, nullable: true, description: 'ID of the parent projekt if this is a sub-projekt. Null if this is a top-level projekt.', example: nil },
         created_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :datetime, description: 'Timestamp when the projekt was last modified', example: '2024-01-01T00:00:00Z' },
@@ -20,7 +25,6 @@ module Schemas
         show_start_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project start date on the frontend', example: true },
         show_end_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project end date on the frontend', example: true },
         top_level_projekt_id: { type: :integer, nullable: true, description: 'ID of the top-level projekt in the hierarchy. Null if this is the top level.', example: nil },
-        tsv: { type: :string, nullable: true, description: 'Text search vector for full-text search optimization. Maintained automatically.', example: nil },
         preview_code: { type: :string, nullable: true, description: 'A unique code used for generating preview links to the projekt before publication', example: 'abc123' },
         page: {
           type: :object,
@@ -29,21 +33,12 @@ module Schemas
           properties: {
             title: { type: :string, nullable: true, description: 'The page title displayed in the frontend', example: 'Sample Projekt Page' },
             slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the page', example: 'sample-projekt' },
-            image: {
-              type: :object,
-              nullable: true,
-              description: 'The page header/cover image',
-              properties: {
-                url: { type: :string, nullable: true, description: 'URL to the full-size image', example: 'https://example.com/images/page-image.jpg' },
-                title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
-                credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' }
-              }
-            }
+            image: { '$ref' => '#/components/schemas/Image' }
           }
         },
         projekt_settings: {
           type: :array,
-          description: 'Configuration settings for the projekt as key-value pairs',
+          description: 'Configuration settings for the projekt as key-value pairs. Only present when include_projekt_settings=true on the list endpoint; always present in the single projekt response.',
           items: {
             type: :object,
             properties: {
@@ -68,6 +63,33 @@ module Schemas
         }
       },
       required: %w[id name created_at updated_at]
+    }.freeze
+
+    # Image response schema (matches ImageSerializer with include_variants: true)
+    IMAGE_SCHEMA = {
+      type: :object,
+      nullable: true,
+      description: 'An attached image (e.g. the projekt banner/cover) with its responsive variants.',
+      properties: {
+        id: { type: :integer, description: 'Unique identifier for the image', example: 1 },
+        title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
+        credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' },
+        url: { type: :string, description: 'URL to the original full-size image', example: 'https://example.com/images/page-image.jpg' },
+        variants: {
+          type: :object,
+          description: 'URLs of resized variants keyed by maximum width in pixels, plus the original.',
+          properties: {
+            "150": { type: :string, nullable: true, description: 'Variant limited to 150px width', example: 'https://example.com/images/page-image-150.jpg' },
+            "300": { type: :string, nullable: true, description: 'Variant limited to 300px width', example: 'https://example.com/images/page-image-300.jpg' },
+            "450": { type: :string, nullable: true, description: 'Variant limited to 450px width', example: 'https://example.com/images/page-image-450.jpg' },
+            "600": { type: :string, nullable: true, description: 'Variant limited to 600px width', example: 'https://example.com/images/page-image-600.jpg' },
+            "900": { type: :string, nullable: true, description: 'Variant limited to 900px width', example: 'https://example.com/images/page-image-900.jpg' },
+            "1200": { type: :string, nullable: true, description: 'Variant limited to 1200px width', example: 'https://example.com/images/page-image-1200.jpg' },
+            "1920": { type: :string, nullable: true, description: 'Variant limited to 1920px width', example: 'https://example.com/images/page-image-1920.jpg' },
+            original: { type: :string, description: 'URL to the original full-size image', example: 'https://example.com/images/page-image.jpg' }
+          }
+        }
+      }
     }.freeze
 
     # Shared image attributes schema for API (matches image_attributes_api)
@@ -416,9 +438,48 @@ module Schemas
         description: { type: :string, nullable: true, description: 'Detailed description of the event, its purpose, and agenda', example: 'Discussion on city planning' },
         datetime: { type: :string, format: :date_time, nullable: true, description: 'When the event starts. Null means no specific start time is set.', example: '2025-02-01T18:00:00Z' },
         end_datetime: { type: :string, format: :date_time, nullable: true, description: 'When the event ends. Null means no specific end time is set.', example: '2025-02-01T20:00:00Z' },
+        summary: { type: :string, nullable: true, description: 'Short summary or teaser shown in listings', example: 'Quarterly city planning meeting' },
         location: { type: :string, nullable: true, description: 'Physical location or venue where the event takes place. Null for virtual-only events.', example: 'City Hall' },
-        registration_url: { type: :string, nullable: true, description: 'URL for event registration or further information. Null if no registration link is provided.', example: 'https://example.com/register' },
+        weblink: { type: :string, nullable: true, description: 'URL for event registration, livestream, or further information. Null if no link is provided.', example: 'https://example.com/register' },
+        open_ended: { type: :boolean, nullable: true, description: 'Whether the event has no fixed end time', example: false },
+        language: { type: :string, nullable: true, description: 'Primary language of the event (e.g., "de", "en")', example: 'de' },
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this event is associated with', example: 10 },
+        accessibility: {
+          type: :object,
+          description: 'Accessibility features available at the event',
+          properties: {
+            wheelchair_accessible: { type: :boolean, nullable: true },
+            accessible_toilet: { type: :boolean, nullable: true },
+            disabled_parking_nearby: { type: :boolean, nullable: true },
+            tactile_guidance_systems: { type: :boolean, nullable: true },
+            induction_loop_available: { type: :boolean, nullable: true },
+            assistance_dogs_welcome: { type: :boolean, nullable: true },
+            sign_language_interpreter: { type: :boolean, nullable: true }
+          }
+        },
+        projekt_phase: {
+          type: :object,
+          description: 'Summary of the projekt phase this event belongs to (present when the phase is loaded)',
+          properties: {
+            id: { type: :integer, example: 10 },
+            title: { type: :string, nullable: true, example: 'Events Phase' },
+            type: { type: :string, example: 'ProjektPhase::EventPhase' },
+            projekt_id: { type: :integer, example: 2 }
+          }
+        },
+        projekt: {
+          type: :object,
+          description: 'Summary of the projekt this event belongs to (present when the projekt is loaded)',
+          properties: {
+            id: { type: :integer, example: 2 },
+            title: { type: :string, example: 'Community Survey' }
+          }
+        },
+        image: {
+          type: :object,
+          nullable: true,
+          description: 'Associated image, present only when the event has an attached image'
+        },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the event was created', example: '2025-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the event was last modified', example: '2025-01-01T00:00:00Z' }
       },
@@ -463,6 +524,7 @@ module Schemas
     def self.all
       {
         Projekt: PROJEKT_SCHEMA,
+        Image: IMAGE_SCHEMA,
         ImageAttributesApi: IMAGE_ATTRIBUTES_API_SCHEMA,
         ProjektImageUpdateParams: PROJEKT_IMAGE_UPDATE_PARAMS,
         ProjektCreateParams: PROJEKT_CREATE_PARAMS,

@@ -49,8 +49,6 @@ class Kern::Table::ActionComponent < ApplicationComponent
       "d-flex",
       "align-items-center",
       "gap-2",
-      "p-1",
-      "px-3",
       STYLES.dig(@style, :css_class)
     ].compact.join(" ")
   end

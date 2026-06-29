@@ -184,6 +184,7 @@ de:
           imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."
         index:
           new_button: "Aus Dokument importieren"
+          new_button_description: "Laden Sie ein Dokument hoch und lassen Sie die KI daraus ein vollständiges Projekt mit Phasen und Inhalten erstellen, das Sie vor dem Import prüfen können."
           title: "Projektimporte"
           new_import: "Neuer Projektimport"
           empty: "Noch keine Projektimporte vorhanden."

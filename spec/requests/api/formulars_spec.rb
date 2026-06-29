@@ -71,8 +71,8 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all forms configured for a projekt phase. Forms are used to collect structured input from participants with customizable fields and validation rules.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of formulars per page (default: 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of formulars per page (**default:** 100, max: 500)', required: false
 
       response '200', 'formulars found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -97,6 +97,64 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+    end
+
+    post 'Create a formular' do
+      tags 'Formulars'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Create the formular (form) for a FormularPhase. Each phase holds a single formular; its fields are managed separately. No request body attributes are required. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      response '201', 'formular created' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:formular_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::FormularPhase', active: true) }
+        let(:projekt_phase_id) { formular_phase.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     formular: FORMULAR_RESPONSE_SCHEMA
+                   },
+                   required: ['formular']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'invalid request' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:formular_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::FormularPhase', active: true) }
+        let(:projekt_phase_id) { formular_phase.id }
+
+        before do
+          allow_any_instance_of(Formular).to receive(:save).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:full_messages).and_return(['Formular is invalid'])
+          allow_any_instance_of(Formular).to receive(:errors).and_return(errors_mock)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -135,6 +193,97 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+
+    patch 'Update a formular' do
+      tags 'Formulars'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Update a formular. The formular has no editable attributes besides its projekt phase association; this endpoint persists the record and returns it. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      response '200', 'formular updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::FormularPhase.create!(projekt: test_projekt) }
+        let(:test_formular) { Formular.create!(projekt_phase_id: projekt_phase.id) }
+        let(:id) { test_formular.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     formular: FORMULAR_RESPONSE_SCHEMA
+                   },
+                   required: ['formular']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '404', 'formular not found' do
+        let(:id) { 999999 }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
+    end
+
+    delete 'Delete a formular' do
+      tags 'Formulars'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Delete a formular and all associated form fields and submitted answers. This action is permanent and cannot be undone. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      response '200', 'formular destroyed' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::FormularPhase.create!(projekt: test_projekt) }
+        let(:test_formular) { Formular.create!(projekt_phase_id: projekt_phase.id) }
+        let(:id) { test_formular.id }
+
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: ['message']
+
+        run_test!
+      end
+
+      response '422', 'unable to delete formular' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::FormularPhase.create!(projekt: test_projekt) }
+        let(:test_formular) { Formular.create!(projekt_phase_id: projekt_phase.id) }
+        let(:id) { test_formular.id }
+
+        before do
+          allow_any_instance_of(Formular).to receive(:destroy).and_return(false)
+          errors_mock = double('errors').as_null_object
+          allow(errors_mock).to receive(:messages).and_return({ base: ['Cannot delete formular'] })
+          allow_any_instance_of(Formular).to receive(:errors).and_return(errors_mock)
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :object }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

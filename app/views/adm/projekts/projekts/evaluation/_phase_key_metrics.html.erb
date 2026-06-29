@@ -1,0 +1,77 @@
+<%
+  stats = phase["stats"] || {}
+
+  metrics = [
+    {
+      key: "total_unique_participants_count",
+      value: stats["unique_participants"].to_i,
+      icon: "groups",
+      fa_icon: "fa-users"
+    },
+    {
+      key: "visible_proposals_count",
+      value: stats["proposals_count"].to_i,
+      icon: "lightbulb",
+      fa_icon: "fa-lightbulb"
+    },
+    {
+      key: "proposal_authors_count",
+      value: stats["proposal_authors_count"].to_i,
+      icon: "person_edit",
+      fa_icon: "fa-user-edit"
+    },
+    {
+      key: "unique_supporters_count",
+      value: stats["unique_supporters_count"].to_i,
+      icon: "thumb_up",
+      fa_icon: "fa-thumbs-up"
+    },
+    {
+      key: "total_votes_count",
+      value: stats["supports_count"].to_i,
+      icon: "how_to_vote",
+      fa_icon: "fa-check-square"
+    },
+    {
+      key: "online_votes_count",
+      value: stats["online_votes_count"].to_i,
+      icon: "wifi",
+      fa_icon: "fa-wifi"
+    },
+    {
+      key: "offline_votes_count",
+      value: stats["offline_votes_count"].to_i,
+      icon: "edit_note",
+      fa_icon: "fa-edit"
+    },
+    {
+      key: "visible_comments_count",
+      value: stats["comments_count"].to_i,
+      icon: "chat_bubble",
+      fa_icon: "fa-comment"
+    }
+  ]
+%>
+
+<div class="phase-key-metrics-grid">
+  <% metrics.each do |metric| %>
+    <div class="phase-key-metrics-card">
+      <div
+        class="phase-key-metrics-card__icon"
+        style="color:<%= accent %>;background:<%= accent_light %>"
+        aria-hidden="true"
+      >
+        <span class="phase-key-metrics-card__icon-material material-symbols-outlined">
+          <%= metric[:icon] %>
+        </span>
+        <i class="phase-key-metrics-card__icon-fa fas <%= metric[:fa_icon] %>"></i>
+      </div>
+      <div class="phase-key-metrics-card__content">
+        <div class="phase-key-metrics-card__value"><%= metric[:value] %></div>
+        <div class="phase-key-metrics-card__label">
+          <%= t("custom.projekt_phases.stats.proposal_phase.#{metric[:key]}.title") %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

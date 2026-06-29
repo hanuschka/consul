@@ -2,13 +2,15 @@
 
 class Ckeditor::DocumentsController < ApplicationController
   def create
-    document = Ckeditor::Document.new
+    document = AdminDocument.new
     authorize! :create, document
     document.attach_uploaded_file(params[:upload])
 
     if document.save
       render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
         url: document.url_content(editor_id: params[:editor_id]),
+        gallery_thumb_url: document.gallery_thumb_url,
+        custom_thumb_url: document.custom_thumb_url(width: 925),
         created_at: document.created_at.strftime("%d.%m.%Y")
       )
     else
@@ -17,17 +19,18 @@ class Ckeditor::DocumentsController < ApplicationController
   end
 
   def update
-    document = Ckeditor::Document.find(params[:id])
+    document = AdminDocument.find(params[:id])
     authorize! :update, document
     document.update!(document_params)
     render json: document.attributes.symbolize_keys.slice(*allowed_attributes).merge(
       url: document.url_content(editor_id: params[:editor_id]),
+      gallery_thumb_url: document.gallery_thumb_url,
       created_at: document.created_at.strftime("%d.%m.%Y")
     )
   end
 
   def destroy
-    document = Ckeditor::Document.find(params[:id])
+    document = AdminDocument.find(params[:id])
     authorize! :destroy, document
     document.destroy!
     render json: { status: :no_content }

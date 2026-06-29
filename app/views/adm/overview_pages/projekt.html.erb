@@ -1,0 +1,41 @@
+<%= content_for :title, t("adm.overview_pages.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.overview_pages.title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.overview_pages.hint_text") %></p>
+  <% end %>
+<% end %>
+
+<%= render Adm::TabsComponent.new(tabs: overview_pages_tabs) %>
+
+<div class="kern-container my-5">
+  <% if @master_setting.present? %>
+    <%= render Adm::AttributeEditorComponent.new(@master_setting, :value, :boolean) %>
+  <% end %>
+
+  <section class="mt-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.overview_pages.projekt.navigation_heading") %></h2>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-9">
+        <p class="kern-body mb-4"><%= t("adm.overview_pages.projekt.navigation_description") %></p>
+      </div>
+    </div>
+
+    <% @navigation_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+  </section>
+
+  <section class="mt-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.overview_pages.projekt.footer_heading") %></h2>
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-9">
+        <p class="kern-body mb-4"><%= t("adm.overview_pages.projekt.footer_description") %></p>
+      </div>
+    </div>
+
+    <% @footer_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+  </section>
+</div>

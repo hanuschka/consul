@@ -1,0 +1,378 @@
+en:
+  setting:
+    projekt_option:
+      general:
+        external_participation_link: "Use an alternative link in the project resources"
+        external_participation_link_description: "Enter a full (external) URL if the project tiles and lists should link to another page instead of the project's own page. Leave empty to keep the normal link to the project."
+    org_name: "Application name"
+    org_name_description: "This name is shown in many places across the platform, e.g. in the browser tab, in emails, and in the footer. It serves as the official display name of your participation platform and should be unique and recognizable. A good name helps citizens identify the platform at a glance."
+    url: "Main URL of the application"
+    url_description: "Main address of your participation platform, e.g. https://participation.mycity.com. It's used when relative links are automatically expanded to full URLs, e.g. in email notifications. Please enter without a trailing slash. For domain changes, contact support."
+    mailer_from_address: "Sender email address"
+    mailer_from_address_description: "This email address appears as the sender on all automatically sent emails from the platform (e.g. notifications, confirmations). The address must match the one configured on the mail server. Changes cannot be made independently — please contact demokratie.today support."
+    mailer_from_name: "Sender display name"
+    mailer_from_name_description: "This name is shown to recipients as the sender of emails. Choose a meaningful name that clearly identifies your municipality, e.g. 'Participation Platform City of Exampletown'. The display name can be set independently of the technical sender address and helps with recognition."
+    mailer_from_deficiency_report_address: "Sender address for deficiency report emails"
+    mailer_from_deficiency_report_address_description: "This email address is used as the sender for all automatically sent deficiency-report emails and is shown to citizens as the contact address in those emails. Use a valid, sending-enabled address of your municipality."
+    meta_title: "Page title (SEO)"
+    meta_title_description: "This title is used by search engines as the main heading in search results and also appears in the browser tab. A clearly formulated title improves your platform's visibility on Google. Ideally it contains the name of the municipality and a reference to citizen participation. Recommended length: 50–60 characters."
+    meta_description: "Page description (SEO)"
+    meta_description_description: "This description appears in search engines below the page title and gives users a first impression of your platform. It should be short, precise, and appealing, to motivate citizens to click. A good meta description increases the click-through rate in search results. Recommended length: 120–160 characters."
+    brand_color: "Brand color"
+    brand_color_description: "The brand color is used as an accent color across the entire platform — among other things for buttons, links, and highlights. It can be overridden individually on specific landing pages. If no value is set, the default brand color from the platform's stylesheet is used."
+    newsletter_brand_color: "Newsletter brand color"
+    newsletter_brand_color_description: "This color is used as an accent color in the header and footer of newsletter emails, e.g. for buttons, links, and decorative elements. It can be chosen independently of the platform brand color to enable a distinct newsletter design. If no value is set, the platform's default brand color is used."
+    meta_keywords: "Keywords (SEO)"
+    meta_keywords_description: "Optional keywords that thematically describe the page's content. They are embedded in the HTML source as meta keywords. Although search engines barely use this tag anymore, it can be useful for internal purposes. Separate terms with commas, e.g. citizen participation, urban development, projects."
+    facebook_handle: "Facebook username"
+    facebook_handle_description: "Facebook username of your municipality or platform. If filled in, a Facebook logo with a link to the profile automatically appears in the footer. Please enter only the username without the @ sign and without the full URL. Leave the field empty if no Facebook profile should be linked."
+    instagram_handle: "Instagram username"
+    instagram_handle_description: "Instagram username of your municipality or platform. If filled in, an Instagram logo with a link to the profile automatically appears in the footer. Please enter only the username without the @ sign and without the full URL. Leave the field empty if no Instagram profile should be linked."
+    twitter_handle: "X username (formerly Twitter)"
+    twitter_handle_description: "Username of your X profile (formerly Twitter). If this field is filled in, an X logo with a link to the profile automatically appears in the footer. Please enter only the username without the @ sign and without the full URL. Leave the field empty if no X profile should be linked."
+    twitter_hashtag: "X hashtag"
+    twitter_hashtag_description: "Hashtag associated with the platform on X. It appears in the footer and links to the corresponding hashtag page on X. This is especially suitable for campaigns or central participation topics. Please enter without a leading # character. Leave the field empty if not desired."
+    telegram_handle: "Telegram username"
+    telegram_handle_description: "Telegram username of your municipality or platform. If filled in, a Telegram logo with a link to the channel or profile automatically appears in the footer. Please enter only the username without the @ sign and without the full URL. Leave the field empty if no Telegram channel should be linked."
+    youtube_handle: "YouTube username or channel ID"
+    youtube_handle_description: "YouTube username or channel ID of your municipality. If filled in, a YouTube logo with a link to the channel automatically appears in the footer. You can use either the custom channel name or the technical channel ID. Leave the field empty if no YouTube channel should be linked."
+    advanced_newsletter: "Advanced newsletter"
+    advanced_newsletter_description: "Enables advanced newsletter features. Disabled by default — only enable this option if you need the advanced features."
+    uploads:
+      images:
+        max_size: "Maximum image size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded images. Larger files are rejected on upload. A moderate value keeps load times short and saves storage space."
+        content_types: "Allowed image formats"
+        content_types_description: "Determines which file formats are allowed when uploading images. Enable only the formats you actually want to permit. JPEG suits photos, PNG suits graphics with a transparent background."
+        title:
+          min_length: "Minimum image title length"
+          min_length_description: "Sets the minimum number of characters an uploaded image's title must contain. The title is used as alternative text (alt attribute) for accessibility. A sensible minimum encourages meaningful image descriptions."
+          max_length: "Maximum image title length"
+          max_length_description: "Sets the maximum number of characters an uploaded image's title may contain. The title is used as alternative text (alt attribute) for accessibility. A sensible limit keeps image titles short and readable."
+      documents:
+        max_amount: "Maximum number of documents"
+        max_amount_description: "Sets how many documents may be attached to a single contribution (e.g. proposal or investment) at most. This keeps the number of uploaded attachments under control."
+        max_size: "Maximum document size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded documents. Larger files are rejected on upload. A moderate value saves storage space and keeps load times short."
+        content_types: "Allowed document formats"
+        content_types_description: "Determines which file formats are allowed when uploading documents. Enable only the formats you actually want to permit, e.g. PDF for fixed-layout documents."
+    welcomepage:
+      usage_stats: User overview
+      usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."
+      newsletter_subscription: Newsletter signup
+      newsletter_subscription_description: "When enabled, a clearly visible newsletter-signup element is shown on the homepage. Logged-in users can sign up directly; non-logged-in users via a separate registration form. A separately configured newsletter service is required for actual sending."
+      platform_activity: Platform statistics
+      platform_activity_description: "When enabled, key platform metrics are shown on the homepage — including the number of projects, proposals, votes, and comments. The values update automatically and give visitors a quick overview of platform activity."
+      projekt_search: Project search
+      projekt_search_description: "When enabled, a search bar appears on the homepage, letting users search specifically for projects. This option and the homepage button are mutually exclusive. Project search is especially suitable for platforms with many ongoing or planned projects."
+    extended_feature:
+      projekts_overview_page_navigation:
+        show_index_order_all: All projects
+        show_index_order_all_description: >
+          Shows the "All projects" tab in the navigation bar of the projects overview page. This tab lists all public
+          projects regardless of status and gives users a complete view of the platform's entire participation offering.
+          Disable this option if only filtered views are desired.
+        show_index_order_underway: Active participation
+        show_index_order_underway_description: >
+          Shows the "Active participation" tab, which displays only projects with currently ongoing participation phases.
+          Users can see at a glance where they can actively contribute right now. Especially suitable as the default tab
+          to direct attention to current participation opportunities.
+        show_index_order_ongoing: Ongoing projects
+        show_index_order_ongoing_description: >
+          Shows the "Ongoing projects" tab, which displays all projects whose duration has not yet ended — regardless of
+          whether an active participation phase is currently running. This also includes projects in preparation or in
+          intermediate phases without a direct participation opportunity.
+        show_index_order_upcoming: Upcoming projects
+        show_index_order_upcoming_description: >
+          Shows the "Upcoming projects" tab, which displays projects whose start date lies in the future. Users can see
+          early on which participation opportunities are planned. This supports transparency about upcoming projects and
+          enables early interest.
+        show_index_order_expired: Archived projects
+        show_index_order_expired_description: >
+          Shows the "Archived projects" tab, which displays completed projects whose duration has ended. Users can review
+          past participation processes and inspect results. Disable this option if completed projects should no longer be
+          publicly visible.
+        show_index_order_individual_list: Individual list
+        show_index_order_individual_list_description: >
+          Shows the "Individual list" tab, which displays specifically highlighted projects that have been manually
+          configured for this list. Unlike the automatically populated tabs, the content of this list is controlled via
+          the visibility settings of individual projects.
+        show_index_order_drafts: Drafts
+        show_index_order_drafts_description: >
+          Shows the "Drafts" tab, visible only to administrators, which displays projects in draft status. These projects
+          are not visible to regular users on the frontend. Use this tab to prepare and review projects before publishing.
+      projekts_overview_page_footer:
+        show_in_index_order_all: Participation for "All projects"
+        show_in_index_order_all_description: >
+          Shows the participation modules (e.g. active phases, votes) in the footer area of the "All projects" tab.
+          When enabled, the participation options of individual projects are shown below the project list.
+          Disable this option if only the project list without participation details should be shown.
+        show_in_index_order_underway: Participation for "Active participation"
+        show_in_index_order_underway_description: >
+          Shows the participation modules in the footer area of the "Active participation" tab. Users then see the
+          current participation options directly below the project list. Especially useful together with the navigation
+          tab to highlight active phases.
+        show_in_index_order_ongoing: Participation for "Ongoing projects"
+        show_in_index_order_ongoing_description: >
+          Shows the participation modules in the footer area of the "Ongoing projects" tab. Participation phases of
+          ongoing projects appear below the project list, letting users access participation directly without first
+          opening the project page.
+        show_in_index_order_upcoming: Participation for "Upcoming projects"
+        show_in_index_order_upcoming_description: >
+          Shows the participation modules in the footer area of the "Upcoming projects" tab. Since future projects
+          usually don't have active phases yet, this option is less relevant in most cases and can remain disabled.
+        show_in_index_order_expired: Participation for "Archived projects"
+        show_in_index_order_expired_description: >
+          Shows the participation modules in the footer area of the "Archived projects" tab. Even with completed projects,
+          users can see which participation phases took place and which results were achieved. Useful for transparency
+          and traceability.
+        show_in_index_order_individual_list: Individual list
+        show_in_index_order_individual_list_description: >
+          Shows the participation modules in the footer area of the "Individual list" tab. The associated participation
+          phases are shown below the individually compiled project list.
+      gdpr:
+        gdpr_conformity: "GDPR-compliant defaults"
+        gdpr_conformity_description: >
+          Enable this option to switch the platform's email sending to an opt-in process. Users then receive newsletters
+          and system notifications only after they have actively consented. This implements the "Privacy by Design"
+          principle: without explicit consent, no emails are sent to users. This setting affects both newsletters and
+          project-related notifications.
+        link_out_warning: "Warning on external links"
+        link_out_warning_description: >
+          When this option is enabled, a notice popup appears when clicking an external link. It informs users that
+          they are leaving the platform and being redirected to an external website. This ensures that users consciously
+          decide whether to leave the protected environment of the participation platform before data is sent to third
+          parties.
+        two_click_iframe_solution: "Two-click solution for iframes"
+        two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
+      general:
+        enable_google_translate: Enable Google Translate
+        enable_google_translate_description: "Before enabling Google Translate, please agree to the terms of use at the following link: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        show_guest_login_links: Show guest login
+        show_guest_login_links_description: Shows the guest-login link in the footer
+        users_overview_page: Overview of all users
+        users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
+        enable_projekt_events_page: Events calendar
+        enable_projekt_events_page_description: >
+          Enables a central overview page for all public events from the participation projects. Citizens can view upcoming workshops, town-hall meetings, and information events there. The page can be made reachable via the navigation.
+        enable_investments_overview: Budget overview
+        enable_investments_overview_description: >
+          Enables a central overview page summarizing all citizen proposals from ongoing and completed participatory budgets. Citizens can see the status of proposals, feasibility assessments, and voting results across projects.
+    extended_option:
+      general:
+        city_name: Name of the city/municipality
+        city_name_description: "The name of the city or municipality entered here is used during BundID verification to match against the user's registered place of residence. This ensures that only people who are officially registered as residents of your municipality can take part in participation procedures. Please enter the official name exactly as it appears in the population register."
+        title: Application title
+        title_description: "This title is shown in large format inside the background image at the top of the homepage. It serves as the first content anchor for visitors. The text should be short and punchy — ideally one to five words. If the field is empty, no title is shown."
+        subtitle: Application subtitle
+        subtitle_description: "The subtitle appears directly below the main title in the background image on the homepage. It allows a short supplementary piece of information or description of the participation offering. Write it as a concise sentence that captures the platform's context. If the field is empty, no subtitle is shown."
+        homepage_button_text: Homepage button text
+        homepage_button_text_description: "Text shown on the button in the hero area of the homepage. The button serves as the central call-to-action for visitors. Choose a short, action-oriented label (e.g. 'Get involved now' or 'Discover projects'). If the field is empty, no button is shown."
+        homepage_button_link: Homepage button link
+        homepage_button_link_description: "Target URL opened when the homepage button is clicked. You can enter an internal path (e.g. /projekts) or a full external URL (e.g. https://example.com). The link only takes effect if a button text is also entered. Without button text, the link remains invisible."
+        homepage_navigation_link_color: Top navigation link color
+        homepage_navigation_link_color_description: "Sets the text color of the links in the top navigation bar of the homepage. This matters because the header background image can be dark and readability must be ensured."
+      gdpr:
+        devise_timeout_min: "Duration of user sessions in minutes"
+        devise_timeout_min_description: >
+          Set how long a user remains active after logging in before being logged out automatically.
+          The duration is specified in minutes and applies to both regular user accounts and
+          administrative access. A shorter value increases security, especially on publicly
+          accessible devices. A longer value improves comfort during extended participation
+          processes.
+        devise_verification_token_validity_days: "Verification link validity in days"
+        devise_verification_token_validity_days_description: >
+          Set how many days the verification link users receive by email to confirm their account
+          remains valid. After this period, a new link must be requested. A shorter period increases
+          security, since expired links can no longer be misused. A longer period gives users more
+          flexibility if they can't confirm the link immediately.
+    extra_fields:
+      registration:
+        extended: Extended registration
+        extended_description: "Enables additional input fields on the registration form: first name, last name, gender, street, house number, postal code, city, and date of birth. These data can be used for project-specific restrictions and allow more targeted control of participation options by user group or place of residence."
+        check_documents: Document check in registration
+        check_documents_description: "Enables an additional field on the registration form for entering the last four digits of a valid ID document (national ID or passport). This information can be used for later manual or automated verification. The entry is optional and independent of the actual verification check."
+      verification:
+        check_documents: Document check in verification
+        check_documents_description: "Enables a verification method that compares the document number entered at registration (last four digits of ID or passport) against a reference list. This check is independent of pure capture in the registration form and requires an API connection to the registration office."
+        show_data_completeness_status: Data completeness in user account
+        show_data_completeness_status_description: "Shows in the user account whether all profile data required for certain participation phases has been provided. Users can see at a glance whether they still need to add information to participate in a phase. The display appears in the profile area and updates automatically when data changes."
+        show_verification_status: Verification status in user account
+        show_verification_status_description: "Shows the user's current verification status directly in the profile area below the user picture. This creates transparency and makes it easier to judge whether participation in verification-restricted phases is possible. The status updates automatically when the verification state changes."
+    projekt_feature:
+      general:
+        show_in_overview_page: Project on projects overview page
+        show_in_overview_page_description: Controls whether this project is shown on the general projects overview page. The overview lists all public projects on the platform and is the central entry point for users to discover and filter ongoing and completed participation projects.
+        show_in_homepage: Project on the homepage
+        show_in_homepage_description: Shows the project on the platform's homepage, e.g. in the "Current projects" area or under related resources. Especially relevant or current projects get extra attention on the first visit to the platform — independent of the projects overview page.
+        show_in_individual_list: Project in individual list
+        show_in_individual_list_description: Shows the project on the projects overview page in a standalone, individual list — separate from automatically generated lists like "Ongoing projects" or "Completed projects". This option is suitable for highlighted or permanently visible projects.
+        allow_indexing: Search-engine indexing
+        allow_indexing_description: Allows search engines like Google to index the project page and show it in search results. If this option is disabled, a "noindex" tag is set, so the page remains reachable via the platform but cannot be found through external search engines.
+        consider_underway: List project as active participation
+        consider_underway_description: Ensures the project is always listed as active participation on the overview — even when no regular participation phase is currently running. Useful for permanently featured projects or for projects between phases that should remain visible to users as an active participation option.
+        show_related_projekt_link: Related project link on resource pages
+        show_related_projekt_link_description: Shows a link back to this project in the header of its resources (proposals, polls, debates, etc.). Lets users navigate from an individual contribution to the project it belongs to.
+    ideas:
+      admins_must_assign_officer: Required assignment to officer
+      admins_must_assign_officer_description: >
+        When enabled, administrators must manually assign every new idea to a responsible officer. Without assignment, the idea cannot be processed. This ensures that every idea has a responsible person and no submission remains without clear ownership.
+      enable_comments: Comments
+      enable_comments_description: >
+        When enabled, users can write comments below an idea. This enables public exchange between citizens and administration, e.g. for follow-up questions, additional suggestions, or supplementary notes on the submitted idea. Comments can be moderated by administrators.
+      intro_text: Introduction text for ideas
+      intro_text_description: >
+        Shows a custom introduction text above the ideas overview page. Use this text to explain the purpose of the ideas area to citizens, give usage hints, or point out important conditions — e.g. what kinds of ideas can be submitted and how the processing workflow works.
+      enable_geoman_controls_in_maps: User-drawn maps
+      enable_geoman_controls_in_maps_description: >
+        Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when an idea affects not just a single point but an area — e.g. a green space, a public square, or an entire street section. The drawing is saved together with the idea.
+      admin_acceptance_required: Administrator approval
+      admin_acceptance_required_description: >
+        When enabled, administrators must review and approve new ideas before they become publicly visible. Unconfirmed ideas are visible only to administrators. This prevents inappropriate, incomplete, or duplicate submissions from being published on the platform without review.
+      document_upload: Additional documents
+      document_upload_description: >
+        Allows users to upload documents like PDFs, text files, or other attachments to their ideas. This is helpful when supplementary materials are needed — e.g. concepts, sketches, studies, or detailed descriptions that go beyond what a simple text field can convey.
+      external_video: Embed external video
+      external_video_description: >
+        Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
+    deficiency_reports:
+      feature_name: Feature name
+      feature_name_description: >
+        Custom name for the deficiency reporter, e.g. "Mängelmelder", "Hinweisportal", or "Bürgermelder". This name is shown on the list page heading, the main-menu link, and in browser tabs. Leave empty to use the default ("Mängelmelder").
+      create_cta: Primary create-report button label
+      create_cta_description: >
+        Label of the prominent button citizens click to start a new report on the list page (e.g. "Mangel melden", "Hinweis geben"). Leave empty to use the default ("Mangel melden").
+      new_form_title: New-report form heading
+      new_form_title_description: >
+        Heading shown at the top of the new-report form page (e.g. "Neue Meldung", "Mangel melden"). Leave empty to use the platform default.
+      new_form_title_placeholder: New-report title placeholder
+      new_form_title_placeholder_description: >
+        Placeholder text shown inside the report-title field on the new-report form. Use it to guide citizens with a good example (e.g. "Schlagloch in XY-Straße vor Hausnummer 123"). Leave empty to use the platform default.
+      admins_must_assign_officer: Required assignment to officer
+      admins_must_assign_officer_description: >
+        When enabled, administrators must manually assign every new deficiency report to a responsible officer. Without assignment, the report cannot be processed. This ensures that every report has a responsible person and no report remains without ownership.
+      allow_voting: User rating per deficiency
+      allow_voting_description: >
+        Enables a rating feature letting users support or prioritize individual deficiency reports. The number of ratings is shown publicly and helps administration identify frequently reported or especially urgent deficiencies sooner and prioritize accordingly.
+      enable_comments: Comments
+      enable_comments_description: >
+        When enabled, users can write comments below a deficiency report. This enables public exchange between citizens and administration, e.g. for follow-up questions, status updates, or supplementary notes on the reported deficiency. Comments can be moderated by administrators.
+      intro_text: Introduction text for the deficiency reporter
+      intro_text_description: >
+        Shows a custom introduction text above the deficiency overview page. Use this text to explain the purpose of the deficiency reporter to citizens, give usage hints, or point out important conditions — e.g. what kinds of deficiencies can be reported and how the processing workflow works.
+      enable_my_posts_filter: My posts
+      enable_my_posts_filter_description: >
+        Shows a filter on the deficiency overview page letting logged-in users view only their own submitted deficiency reports. This makes it easier to track the status of their own reports without searching through all entries.
+      show_map: Show map
+      show_map_description: >
+        Shows the map in the report form where users can select the location of their report. Disable this option if no map should be offered in the form.
+      enable_geoman_controls_in_maps: Enable drawing tools on maps
+      enable_geoman_controls_in_maps_description: >
+        Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when a deficiency affects not just a single point but an area — e.g. a damaged road or a contaminated area. The drawing is saved together with the report.
+      map_location_required: Require map location
+      map_location_required_description: >
+        When enabled, a location must be selected on the map before a report can be submitted. This guarantees every report is geographically located, which is essential for assigning it to the right area and officer. Disable it if reports may be created without a precise location.
+      admin_acceptance_required: Administrator approval
+      admin_acceptance_required_description: >
+        When enabled, administrators must review and approve new deficiency reports before they become publicly visible. Unconfirmed reports are visible only to administrators. This prevents inappropriate or duplicate reports from being published directly.
+      image_upload: Image upload
+      image_upload_description: >
+        Allows users to attach an image to their deficiency report. Disable this option if no image upload should be offered in the report form.
+      document_upload: Additional documents
+      document_upload_description: >
+        Allows users to upload documents like PDFs, text files, or other attachments to their deficiency reports. This is helpful when supplementary materials are needed — e.g. expert reports, correspondence with authorities, or detailed descriptions beyond a simple text field.
+      external_video: Embed external video
+      external_video_description: >
+        Allows users to embed external videos from YouTube or Vimeo in their deficiency reports. Video recordings of a deficiency, explainer videos, or documentation can be shown directly in the report without uploading large files.
+      voice_assistant: Voice assistant for deficiency reports
+      voice_assistant_description: >
+        Enables an AI-supported voice assistant helping users create deficiency reports. Users can describe the deficiency by voice input, and the assistant automatically creates a structured report with title and description. Especially suitable for mobile use and accessible access.
+      send_feedback_form_link: Send feedback form
+      send_feedback_form_link_description: >
+        When enabled, users receive an email with a link to a feedback form after their deficiency report is closed. They can rate the processing of their concern and give feedback on their satisfaction with the workflow. This helps administration monitor and improve the quality of deficiency processing.
+      show_create_report_button: Submit button for deficiency reports
+      show_create_report_button_description: >
+        Shows a clearly visible button for submitting new deficiency reports in the sidebar of the deficiency overview page. The button makes it easier for users to report a new deficiency. Disable this option if submission should happen through other channels or if no new reports should be accepted temporarily.
+      show_homepage_cta: Report button on the homepage
+      show_homepage_cta_description: >
+        Shows an additional button in the homepage hero, below the main call-to-action, that takes users straight to the new deficiency report form. The button label is taken from the "Label of the report button" naming setting. Requires the deficiency reports feature to be enabled.
+
+    process:
+      proposals: Proposals overview
+      proposals_description: >
+        Enables a central overview page for all submitted proposals from the participation projects. Citizens can browse, comment on, rate, and support proposals there. The page can be made reachable via the navigation.
+      polls: Polls overview
+      polls_description: >
+        Enables a central overview page for all active and completed polls from the participation projects. Citizens can open active polls, cast their vote, and view results of completed polls there. The page can be made reachable via the navigation.
+      budgets: Participatory budget
+      budgets_description: >
+        Enables the participatory budget, in which citizens submit investment proposals and vote on the allocation of a set budget. The process covers multiple phases: submission, feasibility review by the administration, and final citizen vote.
+      legislation: Collaborative text editing
+      legislation_description: >
+        Enables collaborative text work, in which citizens read drafts, comment on individual paragraphs, and submit change proposals. Suitable for jointly developing statutes, guidelines, or regulations as part of participation processes.
+      projekts: Projects overview
+      projekts_description: >
+        Enables the projects overview page, on which all ongoing and completed participation projects are accessible to citizens. The overview offers filters and shows the current status of each project. Individual projects remain reachable via direct links even when the overview is disabled.
+      deficiency_reports: Deficiency reporter
+      deficiency_reports_description: >
+        Enables the deficiency reporter, through which citizens can report damage, pollution, or other deficiencies in public space. Reports are captured with location, category, and description, and can be processed and responded to by officers.
+      ideas: Ideas platform
+      ideas_description: >
+        Enables the ideas platform, on which citizens can submit ideas and suggestions for urban development. Ideas can be rated and commented on by other users. The module is suitable for open idea collection without a formal voting process.
+
+    adm:
+      ideas:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      deficiency_reports:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      projekts:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      moderation:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      valuation:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      landing_pages:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      officing:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+
+  site_customization/image:
+    header_image: "Background image for desktop"
+    header_image_description: "This image is shown at the top of the homepage on desktop devices. Please use a high-resolution landscape image. It should fit thematically with the participation project.<br>Required format: 1920 × 760 pixels."
+    mobile_header_image: "Background image for mobile"
+    mobile_header_image_description: "This image is shown at the top of the homepage on mobile devices. For optimal display, please use a centered image. Recommended format: ??? pixels."

@@ -1,0 +1,24 @@
+<% newsletter_logo = SiteCustomization::Image.image_for("logo_newsletter_email.png") %>
+
+<% if newsletter_logo.present? %>
+  <table cellpadding="0" cellspacing="0" border="0" style="background: #fff; margin: 0 auto; max-width: 700px; width:100%;">
+    <tr>
+      <td>
+        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+          <tr>
+            <td style="border-bottom: 1px solid #dadfe1; padding: 20px 0;">
+              <%= image_tag(
+                image_path_for("logo_newsletter_email.png"),
+                height: 45,
+                style: "border: 0;display: block;height: 45px",
+                alt: setting["org_name"]
+              ) %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+<% else %>
+  <%= render "layouts/mailer_header" %>
+<% end %>

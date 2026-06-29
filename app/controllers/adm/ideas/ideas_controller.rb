@@ -4,24 +4,6 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   include ImageAttributes
   include DocumentAttributes
 
-  def index
-    base_scope = policy_scope(Idea, policy_scope_class: Adm::Ideas::IdeaPolicy::Scope)
-    base_scope = filter_assigned_ideas_only(base_scope)
-    @pagy, @ideas = pagy(Adm::IdeasQuery.call(base_scope, params))
-
-    @title_header_options = { search: true }
-    @created_at_header_options = { sort: true }
-    @category_header_options = { filter_options: category_filter_options }
-    @officer_header_options = { filter_options: officer_filter_options }
-
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.ideas"), icon: "lightbulb" }]
-  end
-
-  def settings
-    authorize :idea, policy_class: Adm::Ideas::IdeaPolicy
-    @breadcrumbs = [{ name: t("adm.ideas.menu.items.settings"), icon: "settings" }]
-  end
-
   def show
     @idea = Idea.find(params[:id])
     authorize @idea, policy_class: Adm::Ideas::IdeaPolicy
@@ -101,6 +83,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
   def audits
     @idea = Idea.find(params[:id])
     authorize @idea, :show?, policy_class: Adm::Ideas::IdeaPolicy
+
+    @breadcrumbs = [
+      { name: t("adm.ideas.menu.items.ideas"), url: adm_ideas_root_path, icon: "lightbulb" },
+      { name: @idea.title }
+    ]
   end
 
   def toggle_accepted
@@ -157,15 +144,11 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
       return scope unless Setting["ideas.admins_must_assign_officer"].present?
       raise Pundit::NotAuthorizedError unless current_user.idea_officer?
 
-      scope.where(officer: current_user.idea_officer)
-    end
+      officer = current_user.idea_officer
 
-    def category_filter_options
-      Idea::Category.all.map { |c| [c.id, c.name] }
-    end
+      return scope if officer.manage_all?
 
-    def officer_filter_options
-      Idea::Officer.all.map { |o| [o.id, o.name] }
+      scope.where(officer: officer)
     end
 
     def notify_new_officer(idea)

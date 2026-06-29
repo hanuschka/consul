@@ -10,8 +10,11 @@ class ProposalsController
   include CustomHelper
   include LandingPageResolvable
 
+  MAP_PINS_LAZY_LOAD_THRESHOLD = 50
+
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
+  prepend_before_action :load_draft_proposal_for_admin, only: :show
 
   def index_customization
     resolve_landing_page_from_slug
@@ -25,6 +28,7 @@ class ProposalsController
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     @selected_geozone_restriction = params[:geozone_restriction] || "no_restriction"
     @restricted_geozones = (params[:restricted_geozones] || "").split(",").map(&:to_i)
 
@@ -58,7 +62,7 @@ class ProposalsController
         .where(admin_accepted: true)
         .meets_minimum_supports
         .by_projekt_id(@scoped_projekt_ids)
-        .includes(:translations, :image, :projekt_labels, :votes_for)
+        .with_index_card_associations
 
     @all_resources = @resources
 
@@ -69,7 +73,15 @@ class ProposalsController
       take_by_projekts(@scoped_projekt_ids)
     end
 
-    @proposals_coordinates = all_proposal_map_locations(@resources)
+    @proposals_map_pin_count = proposal_map_locations_count(@resources)
+
+    @proposals_coordinates =
+      if @proposals_map_pin_count <= MAP_PINS_LAZY_LOAD_THRESHOLD
+        all_proposal_map_locations(@resources)
+      else
+        []
+      end
+
     @proposals = @resources.perform_sort_by(@current_order, session[:random_seed]).page(params[:page]).per(24)
 
     respond_to do |format|
@@ -79,6 +91,14 @@ class ProposalsController
         else
           render :index
         end
+      end
+
+      format.json do
+        render json: JSON.generate(
+          MapLocation.flatten_feature_collections(
+            all_proposal_map_locations(@resources)
+          )
+        )
       end
 
       format.csv do
@@ -183,7 +203,7 @@ class ProposalsController
     end
 
     if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
-      head :not_found, content_type: "text/html" and return
+      redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
     # @notifications = @proposal.notifications
@@ -215,10 +235,8 @@ class ProposalsController
   end
 
   def vote
-    if params[:value] == "no"
-      @follow = Follow.find_by(user: voting_user, followable: @proposal)
-      @follow&.destroy!
-      @voted = !@proposal.register_vote(voting_user, "no")
+    if up_and_down_voting_enabled?
+      @voted = @proposal.register_vote(voting_user, params[:value])
     else
       @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
       @voted = @proposal.register_vote(voting_user, "yes")
@@ -254,6 +272,17 @@ class ProposalsController
 
   private
 
+    def load_draft_proposal_for_admin
+      return if current_user.blank?
+      return if !current_user.administrator?
+
+      proposal = Proposal.unscoped.find_by(id: params[:id])
+
+      if proposal&.draft
+        @proposal = proposal
+      end
+    end
+
     def proposal_params
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,
                     :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
@@ -272,5 +301,9 @@ class ProposalsController
       return current_user unless params[:offline_user_id].present?
 
       current_user.officing_manager? ? User.find(params[:offline_user_id]) : current_user
+    end
+
+    def up_and_down_voting_enabled?
+      @proposal.projekt_phase.feature?("resource.enable_up_and_down_voting")
     end
 end

@@ -3,11 +3,11 @@
     <div class="flex-grow-1">
       <% case key %>
       <% when "ai.llm_provider" %>
-        <%= form.select :value, ai_provider_options, { include_blank: "Select provider" }, { label: false, class: "kern-select" } %>
+        <%= form.select :value, ai_provider_options, { include_blank: "Anbieter wählen" }, { label: false, class: "kern-select" } %>
       <% when "ai.llm_model" %>
-        <%= form.select :value, ai_model_options, { include_blank: "Select model" }, { label: false, class: "kern-select" } %>
+        <%= form.select :value, ai_model_options, { include_blank: "Modell wählen" }, { label: false, class: "kern-select" } %>
       <% else %>
-        <%= form.text_field :value, label: false, class: "kern-input" %>
+        <%= form.text_field :value, label: false, class: "kern-input", required: custom_model_required? %>
       <% end %>
     </div>
     <%= helpers.kern_button(icon: "save", type: "submit") %>

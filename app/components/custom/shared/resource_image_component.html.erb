@@ -1,16 +1,16 @@
 <div class="resource-image">
   <% if @image_url.present? && show_image_thumbnail?(@resource) %>
-    <%= image_tag(@image_url, class: "resource-image--main", alt: alt_text) %>
+    <%= image_tag(@image_url, class: "resource-image--main", alt: alt_text,
+          srcset: @image_url_2x.present? ? "#{url_for(@image_url)} 1x, #{url_for(@image_url_2x)} 2x" : nil) %>
     <%= image_tag(@image_url, class: "resource-image--blur", "aria-hidden": "true") %>
   <% else %>
     <div class="resource-image--missing-image-placeholder" role="img" aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>">
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>" aria-hidden="true"></i>
+      <% if @placeholder_hint.present? %>
+        <div class="resource-image--missing-image-placeholder-hint">
+          <%= @placeholder_hint %>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>
-
-<% if @resource.respond_to?(:image) && @resource.image&.credits&.present? %>
-  <div class="resource-image--credits">
-    <%= @resource.image.credits[0..54] %>
-  </div>
-<% end %>

@@ -1,11 +1,15 @@
 (function() {
   "use strict";
+
+  var recentTouch = false;
+
   App.ResponsiveMenu = {
 
     toggleMenu: function($arrow) {
       var $navElement = $arrow.closest('li.nav-element');
-      var $navElementValue = ( $navElement.attr('aria-expanded') == 'true' );
-      $navElement.attr('aria-expanded', !$navElementValue);
+      var wasOpen = ( $navElement.attr('aria-expanded') == 'true' );
+      $navElement.attr('aria-expanded', !wasOpen);
+      $arrow.attr('aria-expanded', !wasOpen);
     },
 
     isMobileMenuOpen: function() {
@@ -28,7 +32,7 @@
         if (header) excludeElements.push(header);
         if (menuWrapper) excludeElements.push(menuWrapper);
 
-        App.FocusTrap.setBackgroundInert(excludeElements);
+        App.FocusTrap.setBackgroundInert(excludeElements, document.getElementById('responsive-menu'));
       } else {
         App.FocusTrap.removeBackgroundInert();
       }
@@ -71,6 +75,13 @@
 
     getToggleButton: function() {
       return document.querySelector('.js-toggle-mobile-menu');
+    },
+
+    handleToggleKey: function(event) {
+      if (event.which !== 13 && event.which !== 32) return;
+
+      event.preventDefault();
+      $(this).find('[data-toggle]').trigger('click');
     },
 
     handleTabKey: function(event) {
@@ -122,11 +133,14 @@
       if (!$navbar.length) return;
 
       var moreLabel = $navbar.attr('data-navbar-more-label') || 'More';
+      var moreSubmenuId = 'navbar-submenu-more';
       var $moreItem = $(
-        '<li class="nav-element top-level-item navbar-more-item" aria-haspopup="true" aria-expanded="false">' +
+        '<li class="nav-element top-level-item navbar-more-item" aria-expanded="false">' +
           '<a href="#">' + moreLabel + '</a>' +
-          '<button aria-expanded="false" class="nav-toggle-arrow" data-navbar-toggle>&#9660;</button>' +
-          '<ul class="nav-flyout-block"></ul>' +
+          '<button type="button" class="nav-toggle-arrow" aria-expanded="false" aria-haspopup="true"' +
+            ' aria-controls="' + moreSubmenuId + '" aria-label="' + moreLabel + '"' +
+            ' data-navbar-toggle><span aria-hidden="true">&#9660;</span></button>' +
+          '<ul id="' + moreSubmenuId + '" class="nav-flyout-block"></ul>' +
         '</li>'
       );
       var $moreFlyout = $moreItem.children('ul.nav-flyout-block');
@@ -178,15 +192,33 @@
 
       redistribute();
 
+      App.ResponsiveMenu.latestRedistribute = redistribute;
+      App.ResponsiveMenu.bindResizeOnce();
+    },
+
+    bindResizeOnce: function() {
+      if (this.resizeBound) return;
+
+      this.resizeBound = true;
+
       var resizeTimer;
       $(window).on('resize', function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(redistribute, 100);
+        resizeTimer = setTimeout(function() {
+          if (App.ResponsiveMenu.latestRedistribute) {
+            App.ResponsiveMenu.latestRedistribute();
+          }
+        }, 100);
       });
     },
 
     initialize: function() {
+      this.bindBodyEvents();
+      this.bindGlobalEvents();
+      this.initPriorityPlus();
+    },
 
+    bindBodyEvents: function() {
       $("body").on("click", ".js-toggle-mobile-flyout-item, [data-navbar-toggle]", function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -202,12 +234,7 @@
 
       });
 
-      $(document).on("click", function(event) {
-        if (!$(event.target).closest("[data-navbar]").length) {
-          $("[data-navbar] li.nav-element[aria-expanded='true']").attr("aria-expanded", "false");
-          $("[data-navbar] button[aria-expanded='true']").attr("aria-expanded", "false");
-        }
-      });
+      $("body").on("keydown", ".js-toggle-mobile-menu", App.ResponsiveMenu.handleToggleKey);
 
       $("body").on("click", ".js-toggle-mobile-menu", function() {
         var $button = $(this);
@@ -225,6 +252,33 @@
         }, 0);
       });
 
+      $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
+        if (!recentTouch) {
+          $(this).attr("aria-expanded", "true");
+          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "true");
+        }
+      });
+
+      $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
+        if (!recentTouch) {
+          $(this).attr("aria-expanded", "false");
+          $(this).children("[data-navbar-toggle]").attr("aria-expanded", "false");
+        }
+      });
+    },
+
+    bindGlobalEvents: function() {
+      if (this.globalEventsBound) return;
+
+      this.globalEventsBound = true;
+
+      $(document).on("click", function(event) {
+        if (!$(event.target).closest("[data-navbar]").length) {
+          $("[data-navbar] li.nav-element[aria-expanded='true']").attr("aria-expanded", "false");
+          $("[data-navbar] button[aria-expanded='true']").attr("aria-expanded", "false");
+        }
+      });
+
       $(document).on("keydown", function(event) {
         if (event.which === 27 && App.ResponsiveMenu.isMobileMenuOpen()) {
           event.preventDefault();
@@ -240,22 +294,10 @@
         App.ResponsiveMenu.trapFocus();
       });
 
-      var recentTouch = false;
       document.addEventListener("touchstart", function() {
         recentTouch = true;
         setTimeout(function() { recentTouch = false; }, 500);
       }, true);
-
-      $("body").on("mouseenter", ".main-menu li.nav-element[aria-expanded]", function() {
-        if (!recentTouch) $(this).attr("aria-expanded", "true");
-      });
-
-      $("body").on("mouseleave", ".main-menu li.nav-element[aria-expanded]", function() {
-        if (!recentTouch) $(this).attr("aria-expanded", "false");
-      });
-
-      App.ResponsiveMenu.initPriorityPlus();
-
-    }
+    },
   };
 }).call(this);

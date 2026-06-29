@@ -7,16 +7,26 @@
 </head>
 <body style="background: #fff; font-family:font-family: 'Open Sans','Helvetica Neue',arial,sans-serif !important; margin: 0 10px; padding: 0; text-align: left;">
 
-  <%= render "layouts/mailer_header" %>
+  <% if @newsletter.present? %>
+    <%= render "mailer/newsletter_simple_header" %>
+  <% else %>
+    <%= render "layouts/mailer_header" %>
+  <% end %>
+
+  <% email_body = yield %>
 
   <table cellpadding="0" cellspacing="0" border="0" style="background: #fff; margin: 0 auto; max-width: 700px; width:100%;">
     <tbody>
       <tr>
-        <%= yield %>
+        <%= append_custom_email_footer(email_body) %>
       </tr>
     </tbody>
   </table>
 
-  <%= render "layouts/mailer_footer" %>
+  <% if @newsletter.present? %>
+    <%= render "mailer/newsletter_simple_footer" %>
+  <% else %>
+    <%= render "layouts/mailer_footer" %>
+  <% end %>
 </body>
 </html>

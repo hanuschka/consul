@@ -6,6 +6,7 @@ const CKEDITOR = CKEditorModule.default || CKEditorModule
 window.CKEDITOR = CKEDITOR
 
 const UploadFilesPlugin = createUploadFilesPlugin(CKEDITOR)
+window.UploadFilesPlugin = UploadFilesPlugin
 
 function removeWrappingParagraphs(html) {
   const tempDiv = document.createElement("div")
@@ -198,6 +199,29 @@ export default class extends Controller {
           "insertTable", "horizontalLine", "|",
           "mediaEmbed", "sourceEditing", "|",
           "htmlEmbed", "uploadFiles"
+        ]
+      }
+    } else if (this.toolbarValue === "email") {
+      return {
+        plugins: [
+          Essentials, Font, Paragraph, Heading,
+          List, Alignment,
+          ImageBlock, ImageCaption, ImageInline, ImageInsert, ImageResize,
+          ImageStyle, ImageTextAlternative, ImageToolbar, UploadFilesPlugin,
+          Link, Bold, Italic, Underline, RemoveFormat,
+          HorizontalLine, SourceEditing, GeneralHtmlSupport,
+          RemoveWrappingParagraphsPlugin
+        ],
+        toolbarControls: [
+          "bold", "italic", "underline", "|",
+          "link", "|",
+          "heading", "|",
+          "bulletedList", "numberedList", "|",
+          "alignment:left", "alignment:center", "alignment:right", "|",
+          "fontColor", "|",
+          "horizontalLine", "|",
+          "uploadFiles", "|",
+          "sourceEditing"
         ]
       }
     } else {

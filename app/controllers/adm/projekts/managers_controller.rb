@@ -10,8 +10,7 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
     )
 
     @breadcrumbs = [
-      { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.menu.items.managers") }
+      { name: t("adm.projekts.menu.items.managers"), icon: "badge" }
     ]
   end
 
@@ -19,8 +18,7 @@ class Adm::Projekts::ManagersController < Adm::Projekts::BaseController
     authorize ProjektManager, policy_class: Adm::Projekts::ProjektManagerPolicy
 
     @breadcrumbs = [
-      { name: t("adm.projekts.menu.items.projekts"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.menu.items.managers"), url: adm_projekts_managers_path },
+      { name: t("adm.projekts.menu.items.managers"), url: adm_projekts_managers_path, icon: "badge" },
       { name: t(".title") }
     ]
   end

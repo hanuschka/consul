@@ -1,0 +1,48 @@
+<%= content_for :title, t("adm.landing_pages.home.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.landing_pages.home.title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+  <%= render Adm::Dashboard::NoticeComponent.new(message: @notice) if @notice.present? %>
+
+  <div class="adm-dashboard__intro-row">
+    <div class="adm-dashboard__intro-col">
+      <% if @intro_text.present? %>
+        <p class="adm-dashboard__intro"><%= @intro_text %></p>
+      <% end %>
+
+      <% if @quick_links.present? %>
+        <div class="adm-dashboard__section-actions">
+          <% @quick_links.each do |link| %>
+            <%= kern_link_button link[:path], text: link[:label], style: link[:primary] ? :primary : :secondary %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @contact_persons.any? %>
+      <div class="adm-dashboard__intro-aside">
+        <%= render Adm::Dashboard::ContactsComponent.new(contacts: @contact_persons) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header adm-dashboard__section-header--with-stats">
+      <div class="adm-dashboard__section-header-title">
+        <span class="material-symbols-outlined" aria-hidden="true">web</span>
+        <h3><%= t("adm.landing_pages.menu.items.landing_pages") %></h3>
+      </div>
+
+      <%= render Adm::Dashboard::StatPillsComponent.new(stats: @stats) %>
+    </div>
+
+    <%= render "adm/landing_pages/landing_pages/table" %>
+  </div>
+
+  <div class="adm-dashboard__feed-row">
+    <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+
+    <%= render Adm::Dashboard::TeamComponent.new(members: @team_members, add_url: new_adm_landing_pages_manager_path) %>
+  </div>
+</div>

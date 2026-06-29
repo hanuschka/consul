@@ -9,6 +9,7 @@ module Adm
         @content_card_settings = ::SiteCustomization::ContentCard::DEFAULT_SETTINGS[@content_card.kind]
 
         @breadcrumbs = parent_breadcrumbs + [{ name: @content_card.title }]
+        @back_button_url = redirect_path
       end
 
       def update
@@ -30,7 +31,8 @@ module Adm
       def reorder
         authorize [:adm, Setting], :update?
 
-        ::SiteCustomization::ContentCard.order_content_cards(params[:ordered_list])
+        ordered_ids = params[:tree].map { |item| item[:id] }
+        ::SiteCustomization::ContentCard.order_content_cards(ordered_ids)
         head :ok
       end
 

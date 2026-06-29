@@ -59,7 +59,12 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     if @question.update(question_params)
-      redirect_to adm_projekts_phase_poll_question_path(@projekt_phase, @question), notice: t("adm.attribute.update.success")
+      redirect_path = if @question.parent_question.present?
+                        adm_projekts_phase_poll_question_path(@projekt_phase, @question.parent_question)
+                      else
+                        poll_questions_adm_projekts_phase_path(@projekt_phase)
+                      end
+      redirect_to redirect_path, notice: t("adm.attribute.update.success")
     else
       set_context_sources
       @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.poll_questions.edit.title"))
@@ -83,7 +88,7 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
   end
 
   def order_questions
-    authorize [:adm, :projekts, @poll], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
+    authorize [:adm, :projekts, @poll], :update?
     ordered_ids = params[:tree].map { |item| item[:id] }
     ::Poll::Question.order_questions(ordered_ids)
     head :ok
@@ -132,7 +137,6 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
     def breadcrumbs_for_action(action_title)
       [
-        { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
         { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
         { name: @projekt_phase.title },
         { name: t("adm.projekts.phases.poll_questions.title"), url: poll_questions_adm_projekts_phase_path(@projekt_phase) },

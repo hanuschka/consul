@@ -1,48 +1,307 @@
+// Phasen-Timeline: Status-Marker (Kreise) und durchgehende vertikale Linie.
+// Linien-Position ergibt sich aus Marker-Mitte (Marker/2 + Padding-Offset - Linien-Breite/2).
+$phase-marker-size: 16px;
+$phase-marker-size-sub: 12px;
+$phase-line-color: #e5e7eb;
+$phase-line-color-sub: rgba(0, 0, 0, 0.08);
+$phase-marker-border: #cbd5e1;
+
 .custom-new-design {
+  // Phasen-Timeline in der Sidebar
   .sidebar-projekt-phases-title {
-    margin-bottom: 10px;
+    display: none; // Subtitle "Offen für Beteiligung!" entfernen — schon im Banner als Chip
   }
 
-  .sidebar-projekt-phase .sidebar-projekt-phase-status {
-    width: 10px;
-    height: 10px;
-    min-width: 10px;
-    margin-top: 7px;
-    margin-right: 12px;
-  }
-
-  .sidebar-projekt-phase-details {
-    color: #207868 !important;
-  }
-
-  .sidebar-projekt-phase:not(:last-child) > .sidebar-projekt-phase-details {
+  .sidebar-projekt-phases {
     position: relative;
+    padding: 4px 0 4px 4px;
 
+    // Durchgehende vertikale Linie hinter den Status-Kreisen
     &::before {
       content: '';
       position: absolute;
-      height: 100%;
-      border-left: 2px solid;
-      left: -18px;
-      top: 15px;
-      z-index: 1;
-      color: #207868 !important;
+      left: 11px;
+      top: 14px;
+      bottom: 14px;
+      width: 2px;
+      background: $phase-line-color;
+      z-index: 0;
+      border-radius: 1px;
     }
   }
 
-  .sidebar {
-    li.projekt-navigator::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      top: 7px;
-      background: $dt-base;
+  // Alte Phase-Linie (custom_pages.scss) deaktivieren — wir nutzen jetzt
+  // eine durchgehende Linie auf dem Container.
+  .sidebar-projekt-phase:not(:last-child) > .sidebar-projekt-phase-details::before {
+    display: none;
+    color: $accent-blue !important;
+  }
+
+  .sidebar-projekt-phase {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.55);
+    transition: color 150ms ease;
+    z-index: 1;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // Status-Indikator (Kreis links)
+  .sidebar-projekt-phase .sidebar-projekt-phase-status {
+    position: relative;
+    width: $phase-marker-size;
+    height: $phase-marker-size;
+    min-width: $phase-marker-size;
+    margin-top: 4px;
+    margin-right: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid $phase-marker-border;
+    transition: background-color 200ms ease, border-color 200ms ease;
+    z-index: 1;
+
+    .sidebar-projekt-phase-status-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 8px;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .sidebar-projekt-phase-status-pulse {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  // Status: Vergangen + Aktuell — beide bekommen die volle Brand-Color-Markierung
+  .sidebar-projekt-phase.-completed,
+  .sidebar-projekt-phase.-current {
+    > .sidebar-projekt-phase-status {
+      background: var(--brand-color);
+      border-color: var(--brand-color);
+    }
+  }
+
+  // Status: Vergangen
+  .sidebar-projekt-phase.-completed {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  // Status: Aktuell
+  .sidebar-projekt-phase.-current {
+    color: rgba(0, 0, 0, 0.85);
+
+    .sidebar-projekt-phase-name {
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.9);
+    }
+
+    .sidebar-projekt-phase-duration {
+      color: var(--brand-color);
+      font-weight: 500;
+    }
+  }
+
+  // Status: Zukünftig
+  .sidebar-projekt-phase.-upcoming {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar-projekt-phase.active > .sidebar-projekt-phase-status {
+    background-color: #93C5E4 !important;
+    border-color: $accent-blue !important;
+  }
+
+  .sidebar-projekt-phase.active > .sidebar-projekt-phase-details {
+    color: $accent-blue !important;
+  }
+
+  .sidebar-projekt-phase-details {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    .sidebar-projekt-phase-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.35;
+      color: inherit;
+
+      i {
+        opacity: 0;
+        margin-left: 4px;
+        transition: opacity 150ms ease;
+      }
+    }
+
+    .sidebar-projekt-phase-duration {
+      display: block;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.5);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+  }
+
+  .sidebar-projekt-phase-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name i {
+    opacity: 0.6;
+  }
+
+  // Sub-Phasen (z. B. Budget-Phasen) — eingerückt mit eigener Mini-Timeline
+  .sidebar-projekt-phases.-sub-phases,
+  .sidebar-projekt-budget-phases .sidebar-projekt-phases {
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 0 0 0 4px;
+
+    // Eigene durchgehende Linie zentriert auf die Sub-Status-Kreise
+    &::before {
+      left: 9px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: $phase-line-color-sub;
+    }
+
+    .sidebar-projekt-phase {
+      margin-bottom: 10px;
+
+      .sidebar-projekt-phase-status {
+        width: $phase-marker-size-sub;
+        height: $phase-marker-size-sub;
+        min-width: $phase-marker-size-sub;
+        margin-top: 4px;
+        margin-right: 10px;
+      }
+
+      // -current ist 2px größer als der Sub-Default; -1px margin damit die Mitte gleich bleibt
+      &.-current > .sidebar-projekt-phase-status {
+        $marker-current: $phase-marker-size-sub + 2px;
+        width: $marker-current;
+        height: $marker-current;
+        min-width: $marker-current;
+        margin-left: -1px;
+      }
+
+      .sidebar-projekt-phase-name {
+        font-size: 13px;
+      }
+
+      .sidebar-projekt-phase-duration {
+        font-size: 11.5px;
+      }
+    }
+  }
+
+  .sidebar-projekt-budget-phases {
+    margin-top: 4px;
+  }
+
+  // Aufklapp-Pfeil für Budget-Phasen
+  .sidebar-projekt-phase .toggle-arrow {
+    margin-left: 6px;
+    opacity: 0.5;
+    transition: opacity 150ms ease;
+  }
+
+  .sidebar-projekt-phase:hover .toggle-arrow {
+    opacity: 1;
+  }
+
+  .sidebar {
+    ul.projekt-navigator {
+      margin-left: 0;
+      padding-left: 0;
+      list-style: none;
     }
 
     li.projekt-navigator {
-      padding-left: 6px;
-      font-size: 16px;
+      position: relative;
+      padding: 7px 10px 7px 26px;
+      margin-bottom: 2px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background-color 150ms ease;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 12px;
+        top: 14px;
+        width: 6px;
+        height: 6px;
+        font-size: 0;
+        font-family: inherit;
+        background: $accent-blue !important;
+        border-radius: 50%;
+        transition: background-color 150ms ease, width 150ms ease, height 150ms ease, top 150ms ease, left 150ms ease;
+      }
+
+      a {
+        color: rgba(0, 0, 0, 0.75) !important;
+        text-decoration: none !important;
+        display: block;
+        line-height: 1.35;
+        font-family: $body-font;
+
+        &:hover,
+        &:focus,
+        &:active {
+          color: var(--brand-color) !important;
+        }
+      }
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+
+        &::before {
+          background: var(--brand-color);
+        }
+      }
+
+      &.current-projekt {
+        background: color-mix(in srgb, var(--brand-color) 10%, transparent);
+
+        &::before {
+          background: var(--brand-color);
+          width: 8px;
+          height: 8px;
+          top: 13px;
+          left: 11px;
+        }
+
+        > a {
+          color: $accent-blue !important;
+          font-weight: 600;
+        }
+      }
+
+      // Sub-Liste: leichte Einrückung
+      ul.projekt-navigator {
+        margin-top: 4px;
+        margin-left: 8px;
+      }
     }
   }
 
@@ -70,17 +329,30 @@
   .custom-page--banner {
     display: flex;
     justify-content: space-between;
-    // width: 1365px;
-    width: calc(100% + 120px);
-    height: 400px;
-    border-radius: 10px;
-    background: var(--brand-color-lighter) 0% 0% no-repeat padding-box;
-    position: absolute;
-    left: -60px;
-    top: 0;
-    right: 0;
+    align-items: stretch;
+    width: 100%;
+    min-height: 380px;
+    border-radius: 12px;
+    background-color: var(--brand-color-lighter);
+    // Top 3.75px brand-color stripe is the FIRST background-image layer so it
+    // paints above the radial decorative gradients. Drawn on the element
+    // itself (not a ::before) so it's automatically clipped to the
+    // `border-radius: 12px`, which lets us drop `overflow: clip` and let
+    // studio edit-pencils overflow without their rectangle corners poking
+    // past the banner's rounded shape.
+    background-image:
+      linear-gradient(to bottom, var(--brand-color) 4px, transparent 4px),
+      radial-gradient(ellipse 75% 60% at 88% 12%, color-mix(in srgb, var(--brand-color) 32%, transparent), transparent 62%),
+      radial-gradient(ellipse 55% 45% at 8% 88%, rgba(255, 255, 255, 0.5), transparent 65%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 12px 40px rgba(0, 0, 0, 0.08);
+    position: relative;
     padding: 0 60px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     color: $dark;
+    overflow: visible;
 
     @media(max-width: $big-tablet-viewport-start) {
       padding: 0 30px;
@@ -95,15 +367,16 @@
     }
 
     @media(max-width: $mobile-viewport-start) {
-      padding: 0 20px;
+      padding: 0;
     }
   }
 
   .custom-page--banner-wrapper {
     position: relative;
-    width: 100%;
-    height: 400px;
-    margin: auto;
+    width: calc(100% + 120px);
+    margin-left: -60px;
+    min-height: 380px;
+    height: auto;
     margin-bottom: 70px;
 
     @media(max-width: 1150px) {
@@ -116,10 +389,15 @@
   }
 
   .custom-page--banner-title {
-    font-size: 32px;
-    font-weight: 400;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
     margin-top: 0;
     margin-bottom: 0 !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 
     a {
       color: inherit;
@@ -133,21 +411,83 @@
   }
 
   .custom-page--banner-title-wrapper {
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 
   .custom-page--banner-description {
     font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(0, 0, 0, 0.72);
     min-height: 1em;
     min-width: 1em;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  .custom-page--banner-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .custom-page--banner-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.78);
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+    padding: 7px 12px;
+    white-space: nowrap;
+
+    i {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    &.-running .fa-circle {
+      color: $green-success-color;
+      font-size: 0.6em;
+      opacity: 1;
+    }
+
+    @media (max-width: $mobile-viewport-start) {
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+  }
+
+  a.custom-page--banner-chip {
+    color: rgba(0, 0, 0, 0.78);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+
+    &:hover,
+    &:focus {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(255, 255, 255, 0.95);
+      color: rgba(0, 0, 0, 0.9);
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brand-color);
+      outline-offset: 2px;
+    }
   }
 
   .custom-page--banner-text-section-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding-top: 90px;
-    padding-bottom: 40px;
+    justify-content: flex-start;
     max-width: 50%;
     flex-grow: 1;
 
@@ -161,29 +501,37 @@
     }
 
     @media(max-width: $mobile-viewport-start) {
-      padding-top: 35px;
-      padding-bottom: 130px;
+      // Bottom padding muss Description + Chips komplett umschließen, sonst rutscht
+      // der Inhalt im Studio-Edit-Modus (Edit-Pencil rechts, +44px Right-Padding
+      // auf `.projekt-banner-edit-field-container`) optisch unter den Banner-Hintergrund.
+      padding: 28px 20px 32px;
       max-width: 100%;
     }
   }
 
   .custom-page--banner-text-section {
-    max-width: 90%;
+    // max-width: 90%;
+    padding-top: 75px;
   }
 
   .custom-page--banner-image {
-    // width: 54%;
-    min-width: 620px;
-    position: relative;
-    bottom: -50px;
-    height: 390px !important;
+    // min-width: 550px;
+    max-width: 590px;
+    width: 100%;
+    height: 355px !important;
+    align-self: center;
     cursor: zoom-in;
     overflow: hidden;
     border-radius: 10px;
-    max-width: 620px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
 
     a {
       height: 100%;
+    }
+
+    &:has(a:focus-visible) {
+      outline: $outline-focus;
+      outline-offset: 2px;
     }
 
     .image-maximize-button {
@@ -192,40 +540,38 @@
       transition: all 100ms ease;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       .image-maximize-button {
         visibility: visible;
         opacity: 1;
       }
     }
 
-    .resource-image {
-      // border-radius: 10px;
-    }
-
     @media(max-width: 1150px) {
-      min-width: 434px;
-      height: 273px !important;
+      min-width: 380px;
+      max-width: 380px;
+      width: 380px;
+      height: 228px !important;
     }
 
     @media(max-width: 780px) {
-      min-width: 310px;
-      height: 195px !important;
+      min-width: 290px;
+      max-width: 290px;
+      width: 290px;
+      height: 174px !important;
     }
 
     @media(max-width: $mobile-viewport-start) {
-      min-width: 250px;
-      height: 250px !important;
-      position: absolute;
-      bottom: -130px;
-      width: calc(100vw - 40px);
-    }
-  }
-
-  .custom-page--banner-breadcrumbs {
-    .custom-breadcrumbs .breadcrumbs-item, .custom-breadcrumbs .breadcrumbs-divider {
-      font-size: 16px;
-      color: var(--brand-color);
+      min-width: 0;
+      max-width: none;
+      width: calc(100% - 40px);
+      height: 220px !important;
+      position: static;
+      bottom: auto;
+      margin: 0 20px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
     }
   }
 
@@ -239,43 +585,49 @@
     }
   }
 
-
   @media (max-width: 1365px) {
+    .custom-page--banner-wrapper {
+      width: 100%;
+      margin-left: 0;
+    }
+
     .custom-page--banner {
       width: 100%;
       margin: auto;
-      // max-width: 1245px;
-      left: 0;
     }
   }
-
-  // @media (max-width: $small-tablet-viewport-start) {
-  //   .custom-page--banner {
-  //     padding-left: 20px;
-  //     padding-right: 20px;
-  //   }
-  // }
 
   @media (max-width: $mobile-viewport-start) {
     .custom-page--banner {
       flex-direction: column;
-      // height: 100%;
       position: relative;
       top: initial;
       left: initial;
       right: initial;
       bottom: initial;
       height: auto;
-      border-radius: 0;
-      margin-bottom: 160px;
-      padding-left: 20px;
-      padding-right: 20px;
-      width: 100vw;
-      margin-left: (-$mobile-side-padding);
+      min-height: 0;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+      margin-left: 0;
+      // `overflow: clip` (Desktop) clippt im Studio-Edit-Modus die Edit-Pencils
+      // der Description, weil deren `.projekt-banner-edit-field-container`
+      // mit `margin-left: -8px` minimal über die Banner-Bounds hinausragt.
+      // `hidden` ist auf Mobile robuster und verhindert das visuelle Abschneiden.
+      overflow: hidden;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        0 6px 20px rgba(0, 0, 0, 0.08);
     }
 
     .custom-page--banner-wrapper {
       height: auto;
+      min-height: 0;
+      width: 100%;
+      margin-left: 0;
+      margin-top: 16px;
+      margin-bottom: 0;
     }
 
     .custom-page--banner-text-section {
@@ -284,17 +636,43 @@
 
     .custom-page--banner-description {
       font-size: 16px;
-      margin-bottom: 15px;
+      margin-bottom: 0;
+      line-height: 1.45;
     }
 
     .custom-page--banner-title {
-      font-size: 24px;
-      margin-bottom: 15px;
-      margin-top: 0px;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      margin-top: 0;
     }
   }
 
   .projekt-footer {
+    scroll-margin-top: 270px;
+    margin-top: 5px;
+
+    @media (max-width: $small-tablet-viewport-start) {
+      // Phase-Tab-Card und darunter liegender Phase-Content kleben sonst direkt
+      // aneinander, weil die Tabs nicht mehr horizontal scrollen sondern
+      // gestapelt rendern. `padding-top` statt `margin-top` umgeht Margin-Collapse
+      // mit Kind-Elementen im gerenderten Phase-Content.
+      #footer-content.js-projekt-footer-content {
+        padding-top: 20px;
+      }
+    }
+
+    // Offset for the fixed topbar so the "Jetzt mitmachen" CTA anchor
+    // (#new_comments_component) lands below it instead of behind it.
+    #new_comments_component {
+      scroll-margin-top: calc(#{$topbar-height} + var(--admin-topbar-height) + 20px);
+
+      @media (max-width: $small-tablet-viewport-start) {
+        scroll-margin-top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height) + 20px);
+      }
+    }
+
     .key-dates {
       margin: 0;
       width: 100%;
@@ -328,26 +706,122 @@
       @media (max-width: $mobile-viewport-start) {
         width: 100%;
       }
+
+      .comment-form {
+        border-color: $soft-border;
+        border-radius: $radius-large;
+        box-shadow: $shadow-small;
+        font-family: $body-font;
+
+        textarea {
+          border: 2px solid $soft-border;
+          border-radius: 6px;
+          font-family: $body-font;
+          font-size: 16px;
+          padding: 12px 16px;
+          transition: border-color $transition-base, box-shadow $transition-base;
+
+          &:focus {
+            border-color: $accent-blue;
+            box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+            outline: none;
+          }
+        }
+
+        h2 {
+          font-family: $heading-font;
+          font-size: 18px;
+          font-weight: 600;
+          color: $dark-navy;
+        }
+
+        // Submit button
+        input[type="submit"], button[type="submit"], .button.is-outlined {
+          background: $cta-orange !important;
+          color: #FFFFFF !important;
+          border: none !important;
+          border-radius: 6px !important;
+          font-family: $heading-font;
+          font-weight: 600;
+          font-size: 16px;
+          padding: 12px 24px;
+          transition: background $transition-base;
+          cursor: pointer;
+
+          &:hover {
+            background: $cta-orange-hover !important;
+          }
+        }
+
+        // Checkboxes
+        label {
+          font-family: $body-font;
+          font-size: 14px;
+          color: $muted-text;
+        }
+      }
+
+      .comment {
+        border-color: $soft-border;
+        border-radius: $radius-base;
+      }
     }
   }
 
   .projekt-page {
+    font-family: $body-font;
+    color: $dark-navy;
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $heading-font;
+      color: $dark-navy;
+    }
+
+    .button {
+      font-family: $heading-font;
+      border-radius: 6px;
+    }
+
+    // Primary buttons (brand-color based)
+    .button:not(.hollow):not(.clear) {
+      transition: background $transition-base;
+    }
+
     .main-column {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    .projekt-footer-anchor {
-      display: block;
-      position: relative;
-      top: -270px;
-      visibility: hidden;
-    }
-
     @media screen and (min-width: $small-tablet-viewport-start) {
       padding-top: 50px;
     }
+
+    // Mobile: Reihenfolge Banner -> Inhalt -> Beteiligung -> Info-Sidebar.
+    // Auf Desktop bleibt die Markup-Reihenfolge (Banner -> .flex-layout mit
+    // .main-column + #projekt-info nebeneinander -> #projekt-particapation).
+    // Auf Mobile loesen wir den .flex-layout-Wrapper via `display: contents`
+    // auf, damit .main-column und #projekt-info zu direkten Flex-Items
+    // von <main class="projekt-page"> werden und mit `order` neben
+    // #projekt-particapation neu sortiert werden koennen.
+    // A11y-Hinweis: .flex-layout ist ein nicht-semantischer <div> ohne ARIA-
+    // Rolle, daher ist `display: contents` hier unbedenklich.
+    @media (max-width: $small-tablet-viewport-start) {
+      display: flex;
+      flex-direction: column;
+
+      > .flex-layout {
+        display: contents;
+      }
+
+      .main-column { order: 1; }
+      #projekt-particapation { order: 2; }
+      #projekt-info { order: 3; }
+    }
+  }
+
+  &.custom-page {
+    background-color: $page-bg-light;
   }
 
   .custom-page-content {
@@ -358,6 +832,11 @@
       @media(max-width: $big-tablet-viewport-start) {
         margin-top: 1rem;
       }
+    }
+
+    .glightbox:focus-visible {
+      outline: $outline-focus;
+      outline-offset: -3px;
     }
   }
 
@@ -371,6 +850,9 @@
 
   .custom-page--banner-wrapper.-compact {
     height: auto;
+    min-height: 280px;
+    width: 100%;
+    margin-left: 0;
     margin-bottom: 20px;
     padding-top: 20px;
 
@@ -380,16 +862,17 @@
 
     .custom-page--banner {
       position: static;
-      height: 280px;
+      min-height: 280px;
       width: 100%;
       padding: 0 40px;
 
       .custom-page--banner-image {
-        min-width: 300px;
+        min-width: 330px;
         top: 20px;
         bottom: unset;
-        height: 240px !important;
+        height: 264px !important;
       }
     }
   }
+
 }

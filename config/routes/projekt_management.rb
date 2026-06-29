@@ -4,7 +4,6 @@ namespace :projekt_management do
   resources :projekt_phases, only: [:update, :destroy] do
     member do
       get :duration
-      # get :frame_new_phase_selector
       get :naming
       get :restrictions
       get :settings
@@ -15,6 +14,7 @@ namespace :projekt_management do
       get :map
       patch :update_map
       get :proposals
+      get :comments
       get :projekt_labels
       get :sentiments
       get :age_ranges_for_stats
@@ -93,9 +93,6 @@ namespace :projekt_management do
   resources :projekts, only: %i[index edit update] do
     member do
       patch :update_standard_phase
-      get :frame_new_phase_selector
-      patch :update_page
-      patch :update_title_image
       patch :update_map
       post :notify_reviewers
     end
@@ -115,6 +112,7 @@ namespace :projekt_management do
       collection do
         post :import_document
         post :generate_from_prompt
+        post :generate_with_ai
         get :import_status
         delete :destroy_all
       end
@@ -125,6 +123,8 @@ namespace :projekt_management do
     member do
       patch :update_position
       patch :change_with_ai
+      get :ai_generation_status
+      delete :cancel_ai_generation
     end
   end
 

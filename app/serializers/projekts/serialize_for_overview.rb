@@ -11,7 +11,8 @@ class Projekts::SerializeForOverview < ApplicationService
         :total_duration_start,
         :total_duration_end,
         :level,
-        :order_number
+        :order_number,
+        :published_at
       ],
       include: {
         page: { only: [:title, :subtitle, :slug, :status, :published_at, :created_at, :updated_at] },

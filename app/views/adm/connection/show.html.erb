@@ -1,0 +1,52 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+  <div class="adm-connection-status">
+    <ul class="adm-connection-checks">
+      <% if @api_accessible && @dt_connected %>
+        <%= render Adm::ConnectionBadgeComponent.new(
+          status: @connection_works ? "success" : "error",
+          icon: @connection_works ? "check_circle" : "cancel",
+          label: t(@connection_works ? ".checks.connection_works.label_ok" : ".checks.connection_works.label_fail"),
+          description: t(@connection_works ? ".checks.connection_works.description_ok" : ".checks.connection_works.description_fail"),
+          hint: t(".checks.connection_works.hint"),
+          error: @connection_error
+        ) %>
+      <% end %>
+
+      <% if @dt_connected %>
+        <%= render Adm::ConnectionBadgeComponent.new(
+          status: @api_accessible ? "success" : "error",
+          icon: @api_accessible ? "check_circle" : "cancel",
+          label: t(@api_accessible ? ".checks.api_accessible.label_ok" : ".checks.api_accessible.label_fail"),
+          description: t(@api_accessible ? ".checks.api_accessible.description_ok" : ".checks.api_accessible.description_fail"),
+          hint: t(".checks.api_accessible.hint"),
+          error: @api_accessible_error
+        ) %>
+      <% end %>
+
+      <%= render Adm::ConnectionBadgeComponent.new(
+        status: @dt_connected ? "blue" : "gray",
+        icon: @dt_connected ? "power" : "warning",
+        label: t(@dt_connected ? ".checks.dt_connected.label_ok" : ".checks.dt_connected.label_fail"),
+        description: t(@dt_connected ? ".checks.dt_connected.description_ok" : ".checks.dt_connected.description_fail"),
+        hint: t(".checks.dt_connected.hint"),
+        error: @dt_connected_error
+      ) %>
+    </ul>
+
+    <% if !@all_checks_passed %>
+      <div class="mt-4">
+        <%= kern_link_button(
+          connect_api_clients_path,
+          icon: "sync",
+          text: t(".reconnect"),
+          style: :primary,
+          data: { turbo_method: :post, turbo_confirm: t(".reconnect_confirm") }
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,30 +1,21 @@
-<%= render "shared/loader_spinner" %>
-
 <div class='row'>
   <div id="polls" class="polls-list spinner-placeholder small-12 medium-9 column">
-    <%= render "shared/loader_spinner" %>
-
-    <% if extended_feature?('polls.intro_text_for_polls') %>
-      <%= render_custom_block "polls_welcome" %>
-    <% end %>
-
-    <% if show_polls_description? %>
-      <div class="polls-description">
-        <%= auto_link_already_sanitized_html wysiwyg(@active_poll.description) %>
-      </div>
-    <% end %>
-
-    <div class='margin-top'>
-      <%= render "polls/poll_group", poll_group: @polls %>
-    </div>
-
-    <%= paginate @polls, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
-
-    <div id="section_help" class="margin" data-magellan-target="section_help">
-      <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-        <%= render_custom_block "polls_help" %>
-        <%= render_custom_partial "footer" %>
+    <%= render Shared::LoaderSpinnerWrapperComponent.new do %>
+      <% if extended_feature?('polls.intro_text_for_polls') %>
+        <%= render_custom_block "polls_welcome" %>
       <% end %>
-    </div>
+
+      <% if show_polls_description? %>
+        <div class="polls-description">
+          <%= auto_link_already_sanitized_html wysiwyg(@active_poll.description) %>
+        </div>
+      <% end %>
+
+      <div class='margin-top'>
+        <%= render "polls/poll_group", poll_group: @polls %>
+      </div>
+
+      <%= paginate @polls, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
+    <% end %>
   </div>
 </div>

@@ -8,7 +8,7 @@
   <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
     <div data-controller="adm-color-picker">
       <div class="color-picker" data-adm-color-picker-target="picker"></div>
-      <%= f.hidden_field :color, data: { "adm-color-picker-target": "colorInput" } %>
+      <%= f.hidden_field :color, value: @sentiment.color.presence || "#3366CC", data: { "adm-color-picker-target": "colorInput" } %>
     </div>
   <% end %>
 

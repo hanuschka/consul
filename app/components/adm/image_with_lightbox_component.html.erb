@@ -1,0 +1,23 @@
+<div class="adm-image-with-lightbox" style="<%= frame_style %>">
+  <a class="adm-image-with-lightbox__lightbox glightbox"
+     href="<%= original_url %>"
+     data-controller="glightbox"
+     data-alt="<%= title %>"
+     aria-label="<%= t("custom.accessibility.image-lightbox.aria-label") %>">
+    <%= image_tag display_url,
+          class: "adm-image-with-lightbox__image",
+          alt: title,
+          loading: "lazy",
+          style: image_style %>
+    <span class="adm-image-with-lightbox__zoom" aria-hidden="true">
+      <span class="material-symbols-outlined adm-image-with-lightbox__zoom-icon">zoom_in</span>
+    </span>
+  </a>
+  <a class="adm-image-with-lightbox__download"
+     href="<%= original_url %>"
+     download
+     rel="noopener">
+    <span class="material-symbols-outlined adm-image-with-lightbox__download-icon" aria-hidden="true">download</span>
+    <%= download_label %>
+  </a>
+</div>

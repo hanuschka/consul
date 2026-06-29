@@ -1,0 +1,103 @@
+en:
+  adm:
+    newsletters:
+      index:
+        title: Newsletters
+        empty_title: "No newsletters available"
+        empty_description: "Create a new newsletter to inform users about current projects."
+        intro_text_p1: >
+          Here you manage all newsletters for your platform. Newsletters are sent to defined recipient
+          groups and inform users about new projects, participation opportunities, or other news.
+          Before creating a newsletter, you first need to define the desired target groups under
+          "Recipient groups" — these are then available for selection in the newsletter form.
+        intro_text_p2: >
+          Use the other tabs to manage unregistered subscribers and adjust newsletter settings
+          (e.g. sender address and brand color).
+        new_newsletter: New newsletter
+        tabs:
+          list: All newsletters
+          recipient_groups: Recipient groups
+          unregistered_subscribers: Unregistered subscribers
+          settings: Settings
+        table:
+          subject: Subject
+          recipient_group: Recipient group
+          sent: Sent
+          actions: Actions
+          show: Preview
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to delete this newsletter?
+          draft: Draft
+        empty: No newsletters available.
+      show:
+        title: Newsletter preview
+        sent_at: Sent at
+        from: From
+        subject: Subject
+        recipient_group: Recipient group
+        recipients: Recipients
+        affected_users: "(%{n} recipients)"
+        sent_emails: Sent emails
+        body: Content
+        body_help_text: This is how the newsletter is displayed as an email.
+        send: Send
+        send_alert: "Are you sure you want to send this newsletter to %{n} recipients?"
+        send_test: Send test email to me
+        deliver_success: Newsletter is being sent.
+        deliver_no_content: The newsletter has no content yet. Add at least one content block.
+        send_test_success: Test email sent successfully.
+        recipient_emails: "Recipient emails"
+      new:
+        title: Create newsletter
+        hints:
+          subject: "The subject appears as the heading in the email and in the recipients' inbox. Choose a short, meaningful text that clearly names the topic of the newsletter. A good subject increases the open rate and helps recipients categorize the newsletter thematically. Recommended length: 40 to 60 characters."
+          recipient_group: "Choose the recipient group this newsletter should be sent to. Recipient groups define which users receive the newsletter — e.g. all registered users, subscribers of specific projects, or manually compiled groups. You can create and manage new recipient groups under the tab of the same name."
+          respect_newsletter_optout: "When enabled, only users who activated \"Newsletter and system emails\" in their account receive the newsletter. Disable this option only if all recipients of the group should be reached regardless of their newsletter setting."
+        placeholders:
+          subject: "e.g. New participation projects in March 2026"
+      edit:
+        title: Edit newsletter
+        save: Save
+        content_section_title: Newsletter content
+        email_preview:
+          header_label: Email header (not editable here)
+          footer_label: Email footer (not editable here)
+          settings_link: Configure in settings
+      content_blocks:
+        create:
+          success: Content block saved.
+          error: Content block could not be saved.
+        update:
+          success: Content block updated.
+          error: Content block could not be updated.
+        destroy:
+          success: Content block deleted.
+          error: Content block could not be deleted.
+        update_position:
+          success: Position updated.
+          error: Position could not be updated.
+        change_with_ai:
+          success: Content block updated with AI.
+        generate_with_ai:
+          no_prompt: Please enter a prompt.
+          error: Content block could not be created.
+        cancel_ai_generation:
+          success: AI generation cancelled.
+      create:
+        success: Newsletter created successfully.
+      update:
+        success: Newsletter updated successfully.
+      destroy:
+        success: Newsletter deleted successfully.
+      settings:
+        title: Settings
+        email_logo: Email logo
+        logo_hint: Image size should be 130 × 45 pixels.
+        brand_color: Brand color
+        footer: Footer
+        update_success: Setting updated successfully.
+        update_error: Setting could not be updated.
+      form:
+        submit: Save
+        template_block_copy: Copy another content block as source to the clipboard.

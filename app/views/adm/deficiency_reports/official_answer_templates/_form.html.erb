@@ -1,12 +1,12 @@
 <% url = @official_answer_template.persisted? ? adm_deficiency_reports_official_answer_template_path(@official_answer_template) : adm_deficiency_reports_official_answer_templates_path %>
 <%= form_with model: @official_answer_template, url: url do |f| %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
-    <%= f.text_field :title, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint"), stacked: true) do %>
+    <%= f.text_field :title, label: false, placeholder: t(".title_placeholder") %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: t(".text_label"), hint: t(".text_hint")) do %>
-    <%= f.rich_text_area :text, label: false %>
+  <%= render Kern::FormFieldComponent.new(label: t(".text_label"), hint: t(".text_hint"), stacked: true) do %>
+    <%= f.rich_text_area :text, label: false, placeholder: t(".text_placeholder") %>
   <% end %>
 
   <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>

@@ -1,14 +1,13 @@
 <%if @categories.any? && extended_feature?("modulewide.enable_categories") %>
   <div class="sidebar-divider"></div>
   <h2 class="sidebar-title projekt-tag-chip-category projekt-tag-chip-icon"><%= t("shared.tags_cloud.categories") %></h2>
-  <br>
 
   <ul id="categories" class="no-bullet categories">
     <% selected_categories = params[:tags] ? params[:tags].split(',') : []%>
 
     <% @categories.each do |category| %>
       <li class="inline-block">
-        <% css_class = selected_categories.include?(category.name) ? "is-active" : "" %>
+        <% css_class = selected_categories.include?(category.name) ? "selected" : "" %>
         <%= link_to taggables_path(taggable, category.name), class: css_class do %>
           <span class="tag"><%= category.name %></span>
         <% end %>

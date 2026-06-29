@@ -53,9 +53,7 @@ export default class extends Controller {
     document.addEventListener("click", this.handleClickOutside);
     window.addEventListener("scroll", this.handleWindowScroll);
 
-    requestAnimationFrame(() => {
-      this.positionMenu()
-    })
+    this.positionMenu();
   }
 
   close() {
@@ -71,27 +69,40 @@ export default class extends Controller {
     const menu = this.menuTarget;
     const button = this.buttonTarget;
     const buttonRect = button.getBoundingClientRect();
+    const viewportHeight = document.documentElement.clientHeight;
+    const viewportWidth = document.documentElement.clientWidth;
+    const padding = 8;
 
-    menu.style.top = "";
+    menu.style.top = "0px";
     menu.style.bottom = "";
-    menu.style.left = "";
+    menu.style.left = "0px";
     menu.style.right = "";
-
-    menu.style.left = `${buttonRect.left}px`;
-    menu.style.top = `${buttonRect.bottom}px`;
+    menu.style.maxHeight = "";
+    menu.style.overflowY = "";
 
     const menuRect = menu.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
 
-    if (menuRect.bottom > viewportHeight) {
-      menu.style.top = "";
-      menu.style.bottom = `${viewportHeight - buttonRect.top}px`;
-    }
-
-    if (menuRect.right > viewportWidth) {
+    if (buttonRect.left + menuRect.width + padding > viewportWidth) {
       menu.style.left = "";
       menu.style.right = `${viewportWidth - buttonRect.right}px`;
+    } else {
+      menu.style.left = `${buttonRect.left}px`;
+    }
+
+    menu.style.top = `${buttonRect.bottom}px`;
+
+    const spaceBelow = viewportHeight - buttonRect.bottom - padding;
+    const spaceAbove = buttonRect.top - padding;
+
+    if (menuRect.height > spaceBelow) {
+      if (spaceAbove > spaceBelow) {
+        menu.style.top = "";
+        menu.style.bottom = `${viewportHeight - buttonRect.top}px`;
+        menu.style.maxHeight = `${spaceAbove}px`;
+      } else {
+        menu.style.maxHeight = `${spaceBelow}px`;
+      }
+      menu.style.overflowY = "auto";
     }
   }
 }

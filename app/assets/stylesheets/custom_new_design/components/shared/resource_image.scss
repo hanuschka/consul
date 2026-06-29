@@ -6,6 +6,7 @@
     display: flex;
     justify-content: center;
     position: relative;
+    isolation: isolate;
     overflow: hidden;
   }
 
@@ -43,5 +44,15 @@
   .resource-image--missing-image-placeholder-icon {
     font-size: 80px;
     margin-top: 10px;
+  }
+
+  .resource-image--missing-image-placeholder-hint {
+    max-width: 80%;
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: $main-text-color;
+    text-align: center;
+    opacity: 0.75;
   }
 }

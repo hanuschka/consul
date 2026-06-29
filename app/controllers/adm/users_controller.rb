@@ -2,12 +2,12 @@ module Adm
   class UsersController < Adm::BaseController
     def index
       authorize [:adm, User]
-      base_scope = UsersQuery.call(policy_scope([:adm, User]), params)
+      base_scope = UsersQuery.call(policy_scope([:adm, User]).order(created_at: :desc), params)
         .includes(:registered_address, :administrator, :moderator, :valuator, :manager, :poll_officer, :organization)
 
       respond_to do |format|
         format.html do
-          @pagy, @users = pagy(base_scope)
+          @pagy, @users = pagy(base_scope, limit: 20)
 
           @username_header_options = { sort: true, search: true }
           @email_header_options = { search: true }
@@ -25,8 +25,7 @@ module Adm
           @document_type_header_options = { filter_options: document_type_options }
 
           @breadcrumbs = [
-            { name: t("adm.menu.items.profiles"), icon: "3p" },
-            { name: t("adm.menu.items.profiles_subitems.users") }
+            { name: t("adm.menu.items.users"), icon: "3p" }
           ]
         end
 
@@ -54,5 +53,94 @@ module Adm
         redirect_to adm_users_path, alert: t("adm.users.csv_download.not_found")
       end
     end
+
+    def edit
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @breadcrumbs = edit_breadcrumbs
+    end
+
+    def update
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      # Email changes made by an admin here are confirmed immediately: write the
+      # new address straight to :email (skipping Devise's reconfirmation flow)
+      # so it takes effect at once and is captured by the audit log.
+      @user.skip_reconfirmation!
+
+      if @user.update(user_params)
+        # Only reverify when Melderegister is enabled — otherwise reverify!
+        # unverifies the user and hits the remote census API for nothing.
+        if params[:reverify].present? && Setting["feature.melderegister"].present?
+          @user.reverify!
+          @user.update!(reverify: true)
+        end
+
+        redirect_to adm_users_path, notice: t("adm.users.flash.updated")
+      else
+        @breadcrumbs = edit_breadcrumbs
+
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    def audits
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @breadcrumbs = audits_breadcrumbs
+    end
+
+    def verify
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      if @user.verify!
+        @user.update!(reverify: false)
+        Mailer.manual_verification_confirmation(@user).deliver_later
+
+        redirect_to adm_users_path, notice: t("adm.users.flash.verified")
+      else
+        redirect_to adm_users_path, alert: t("adm.users.flash.verify_failed")
+      end
+    end
+
+    def unverify
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @user.unverify!
+      @user.update!(reverify: false)
+
+      redirect_to adm_users_path, notice: t("adm.users.flash.unverified")
+    end
+
+    private
+
+      def user_params
+        params.require(:user).permit(
+          :email,
+          :first_name, :last_name,
+          :city_name, :plz, :street_name, :street_number, :street_number_extension,
+          :gender, :date_of_birth
+        )
+      end
+
+      def edit_breadcrumbs
+        [
+          { name: t("adm.menu.items.users"), icon: "3p", url: adm_users_path },
+          { name: @user.name.presence || @user.email }
+        ]
+      end
+
+      def audits_breadcrumbs
+        [
+          { name: t("adm.menu.items.users"), icon: "3p", url: adm_users_path },
+          { name: @user.name.presence || @user.email, url: edit_adm_user_path(@user) },
+          { name: t("adm.shared.audits.title") }
+        ]
+      end
   end
 end

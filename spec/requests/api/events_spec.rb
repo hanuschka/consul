@@ -14,8 +14,8 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all events scheduled for a specific projekt phase. Events are public meetings, webinars, or participation activities scheduled as part of the project engagement. Returns paginated results with event details (time, location, registration link).#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (default: 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (**default:** 100, max: 500)', required: false
 
       response '200', 'projekt events found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -45,6 +45,8 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt event' do
@@ -75,7 +77,21 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
               tactile_guidance_systems: { type: :boolean, nullable: true },
               induction_loop_available: { type: :boolean, nullable: true },
               assistance_dogs_welcome: { type: :boolean, nullable: true },
-              sign_language_interpreter: { type: :boolean, nullable: true }
+              sign_language_interpreter: { type: :boolean, nullable: true },
+              image_attributes: {
+                type: :object,
+                nullable: true,
+                description: 'Optional: Image associated with the event (e.g., flyer, venue photo, speaker portrait). Upload as base64-encoded data.',
+                properties: {
+                  id: { type: :integer, nullable: true },
+                  title: { type: :string, nullable: true, description: 'Image caption or alt text. Used for accessibility and displayed with the image.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
+                  cached_attachment: { type: :string, nullable: true },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer name, or copyright information.' },
+                  user_id: { type: :integer, nullable: true },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current event image.' }
+                }
+              }
             },
             required: ['title']
           }
@@ -133,6 +149,45 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      response '201', 'projekt event created with base64 image' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
+        let(:projekt_phase_id) { event_phase.id }
+        let(:projekt_event) do
+          {
+            projekt_event: {
+              title: 'Town Hall',
+              datetime: '2025-02-01T18:00:00Z',
+              image_attributes: {
+                attachment: base64_fixture('clippy.jpg'),
+                title: 'Event Photo'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_event: { '$ref' => '#/components/schemas/ProjektEvent' }
+                   },
+                   required: ['projekt_event']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['projekt_event']).to be_present
+          expect(response.status).to eq(201)
+        end
+      end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -170,6 +225,8 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
         let(:id) { 999999 }
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt event' do
@@ -200,7 +257,21 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
               tactile_guidance_systems: { type: :boolean, nullable: true },
               induction_loop_available: { type: :boolean, nullable: true },
               assistance_dogs_welcome: { type: :boolean, nullable: true },
-              sign_language_interpreter: { type: :boolean, nullable: true }
+              sign_language_interpreter: { type: :boolean, nullable: true },
+              image_attributes: {
+                type: :object,
+                nullable: true,
+                description: 'Update, replace, or remove the event image. Attach a new image (base64-encoded), update metadata (title/credits), or set _destroy=true to remove. All fields are optional.',
+                properties: {
+                  id: { type: :integer, nullable: true, description: 'ID of the existing image to update. Omit when adding a new image.' },
+                  title: { type: :string, nullable: true, description: 'Image caption or alt text. Used for accessibility and displayed with the image.' },
+                  attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Provide to replace the current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
+                  cached_attachment: { type: :string, nullable: true },
+                  credits: { type: :string, nullable: true, description: 'Image source attribution, photographer name, or copyright information.' },
+                  user_id: { type: :integer, nullable: true },
+                  _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current event image.' }
+                }
+              }
             }
           }
         }
@@ -258,6 +329,41 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      response '200', 'projekt event updated with base64 image' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
+        let(:id) { created_event.id }
+        let(:projekt_event) do
+          {
+            projekt_event: {
+              description: 'Updated description',
+              image_attributes: {
+                attachment: base64_fixture('clippy.jpg'),
+                title: 'Updated Event Photo'
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_event: { '$ref' => '#/components/schemas/ProjektEvent' }
+                   },
+                   required: ['projekt_event']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt event' do
@@ -304,6 +410,50 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/events' do
+    get 'List all projekt events' do
+      tags 'Events'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Retrieve all events across all projekts. Returns paginated results ordered by creation date. Clients with `public_data` access only see events belonging to phases that are active and frontend-visible.#{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (**default:** 100, max: 500)', required: false
+
+      response '200', 'projekt events found and returned' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
+
+        before do
+          event_phase.projekt_events.create!(title: 'Event 1', datetime: '2025-02-01T18:00:00Z')
+          event_phase.projekt_events.create!(title: 'Event 2', datetime: '2025-02-02T18:00:00Z')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     events: {
+                       type: :array,
+                       items: { '$ref' => '#/components/schemas/ProjektEvent' }
+                     }
+                   },
+                   required: ['events']
+                 },
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      unauthorized_response
     end
   end
 end

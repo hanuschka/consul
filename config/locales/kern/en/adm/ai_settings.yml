@@ -1,0 +1,27 @@
+en:
+  adm:
+    ai_settings:
+      flash:
+        updated: AI setting updated successfully
+        custom_model_required: >
+          Please set a custom model. When an API endpoint is set, the AI will not work without a custom model.
+      warnings:
+        feature_disabled:
+          title: AI feature not enabled
+          body: >
+            The AI feature is not enabled for this platform. The settings configured here have no effect until the feature is activated. Contact info@demokratie.today to enable the AI feature.
+        custom_model_required:
+          title: Custom model required
+          body: >
+            An API endpoint is set but no custom model. The AI will not work until you set a custom model.
+          inline: >
+            Required because an API endpoint is set. The AI will not work until you set a custom model.
+      index:
+        title: AI settings
+        intro: >
+          Here you configure the connection to an AI provider. The platform uses AI features for, among other things, proposal generation, vote analysis, automatic content generation, and semantic analysis. Choose a provider and a model, and enter your API key to enable these features. Caution: changes to these settings require technical knowledge. Incorrect configurations can cause AI features to stop working correctly. When in doubt, contact demokratie.today.
+        setting_name: Setting
+        value: Value
+        update: Update
+        no_settings: No AI settings available
+        enter_api_key: Enter API key here

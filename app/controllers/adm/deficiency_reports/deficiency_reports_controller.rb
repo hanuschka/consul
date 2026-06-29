@@ -5,22 +5,78 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   include DocumentAttributes
 
   def index
+    params[:archived_state] = ["active"] if params[:archived_state].blank?
+    params[:hidden_state] = ["visible"] if params[:hidden_state].blank?
+
     base_scope = policy_scope(DeficiencyReport, policy_scope_class: Adm::DeficiencyReports::DeficiencyReportPolicy::Scope)
     base_scope = filter_assigned_reports_only(base_scope)
-    @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(base_scope, params))
 
-    @title_header_options = { search: true }
-    @created_at_header_options = { sort: true }
-    @category_header_options = { filter_options: category_filter_options }
-    @status_header_options = { filter_options: status_filter_options }
-    @responsible_header_options = { filter_options: responsible_filter_options }
+    respond_to do |format|
+      format.html do
+        preloaded = base_scope.preload(:status, :translations, :author, :category, :responsible, :feedback_form, map_location: :district)
+        @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params))
 
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem" }]
+        @id_header_options = { search: true, sort: true }
+        @title_header_options = { search: true }
+        @author_header_options = { search: true }
+        @created_at_header_options = { sort: true, date_range: true }
+        @updated_at_header_options = { sort: true, date_range: true }
+        @status_changed_at_header_options = { sort: true, date_range: true }
+        @status_header_options = { filter_options: status_filter_options }
+        @address_header_options = { search: true }
+        @district_header_options = { filter_options: district_filter_options }
+        @category_header_options = { filter_options: category_filter_options }
+        @responsible_header_options = { filter_options: responsible_filter_options }
+        @archived_state_header_options = { filter_options: archived_state_filter_options, default: ["active"] }
+        @hidden_state_header_options = { filter_options: hidden_state_filter_options, default: ["visible"] }
+
+        @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.deficiency_reports"), icon: "report_problem" }]
+      end
+
+      format.csv do
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params)
+        send_data CsvServices::DeficiencyReportsExporter.call(scope),
+          filename: "deficiency_reports-#{Time.zone.today}.csv",
+          type: "text/csv"
+      end
+
+      format.geojson do
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params).preload(:category)
+        send_data GeoServices::MappablesGeojsonExporter.call(scope),
+          filename: "deficiency_reports-#{Time.zone.today}.geojson",
+          type: "application/geo+json"
+      end
+    end
   end
 
-  def settings
-    authorize :deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
-    @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.settings"), icon: "settings" }]
+  def new
+    @deficiency_report = DeficiencyReport.new
+    authorize @deficiency_report, :new?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @deficiency_report.build_image(user: current_user)
+    @deficiency_report.build_map_location
+
+    @breadcrumbs = new_breadcrumbs
+  end
+
+  def create
+    @deficiency_report = DeficiencyReport.new(create_params.merge(
+      author: current_user,
+      status: DeficiencyReport::Status.default,
+      status_changed_at: Time.zone.now,
+      resource_terms: "1"
+    ))
+    authorize @deficiency_report, :create?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    if @deficiency_report.save
+      @deficiency_report.assign_default_responsible
+      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report), notice: t("adm.attribute.create.success")
+    else
+      @deficiency_report.build_image(user: current_user) unless @deficiency_report.image
+      @deficiency_report.build_map_location unless @deficiency_report.map_location
+      @breadcrumbs = new_breadcrumbs
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -37,7 +93,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         ]
 
         @image_url = @deficiency_report.image&.attachment&.variant(
-          resize_to_limit: [500, 500],
+          resize_to_limit: [580, nil],
           format: "jpeg"
         )
       end
@@ -100,13 +156,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def administer
-    @deficiency_report = DeficiencyReport.find(params[:id])
-    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
-
-    @breadcrumbs = [
-      { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
-      { name: @deficiency_report.title }
-    ]
+    redirect_to adm_deficiency_reports_deficiency_report_path(params[:id])
   end
 
   def update_administer
@@ -200,12 +250,30 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       params.require(:deficiency_report).permit(attributes)
     end
 
+    def create_params
+      if params.dig(:deficiency_report, :image_attributes, :cached_attachment).blank?
+        deficiency_report_params.except(:image_attributes)
+      else
+        deficiency_report_params
+      end
+    end
+
+    def new_breadcrumbs
+      [
+        { name: t("adm.deficiency_reports.menu.items.deficiency_reports"), url: adm_deficiency_reports_root_path, icon: "report_problem" },
+        { name: t("adm.deficiency_reports.deficiency_reports.new.title") }
+      ]
+    end
+
     def filter_assigned_reports_only(scope)
       return scope if current_user.administrator? || current_user.deficiency_report_manager?
       return scope unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       raise Pundit::NotAuthorizedError unless current_user.deficiency_report_officer?
 
       officer = current_user.deficiency_report_officer
+
+      return scope if officer.manage_all?
+
       officer_group_ids = DeficiencyReport::OfficerGroup.joins(:officers).where(deficiency_report_officers: { id: officer.id }).pluck(:id)
 
       scope.where(
@@ -219,14 +287,31 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       DeficiencyReport::Category.all.map { |c| [c.id, c.name] }
     end
 
+    def district_filter_options
+      scope = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::DeficiencyReports::DistrictPolicy::Scope)
+      scope.pluck(:id, :name)
+    end
+
     def status_filter_options
       DeficiencyReport::Status.all.map { |s| [s.id, s.title] }
     end
 
     def responsible_filter_options
-      officers = DeficiencyReport::Officer.all.map { |o| [o.id, o.name] }
-      groups = DeficiencyReport::OfficerGroup.all.map { |g| [g.id, g.name] }
-      officers + groups
+      deficiency_report_all_responsible_sorted.map do |r|
+        ["#{r.class.name.demodulize}_#{r.id}", r.name]
+      end
+    end
+
+    def archived_state_filter_options
+      %w[active archived].map do |state|
+        [state, t("adm.deficiency_reports.deficiency_reports.index.archived_state.#{state}")]
+      end
+    end
+
+    def hidden_state_filter_options
+      %w[visible hidden].map do |state|
+        [state, t("adm.deficiency_reports.deficiency_reports.index.hidden_state.#{state}")]
+      end
     end
 
     def notify_new_officer(dr)

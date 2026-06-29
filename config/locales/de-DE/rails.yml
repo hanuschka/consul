@@ -105,6 +105,7 @@ de:
       equal_to: muss %{count} entsprechen
       even: muss gerade sein
       exclusion: ist reserviert
+      file_size_is_less_than_or_equal_to: "darf maximal %{count} groß sein"
       greater_than: muss größer als %{count} sein
       greater_than_or_equal_to: muss größer als oder gleich %{count} sein
       inclusion: ist nicht in der Liste enthalten
@@ -142,17 +143,17 @@ de:
   number:
     currency:
       format:
-        delimiter: ","
+        delimiter: "."
         format: "%u%n"
         precision: 2
-        separator: "."
+        separator: ","
         significant: false
         strip_insignificant_zeros: false
-        unit: "$"
+        unit: "€"
     format:
-      delimiter: ","
+      delimiter: "."
       precision: 3
-      separator: "."
+      separator: ","
       significant: false
       strip_insignificant_zeros: false
     human:

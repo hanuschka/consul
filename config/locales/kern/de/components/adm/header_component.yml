@@ -3,3 +3,10 @@ de:
     adm:
       header_component:
         frontend_link: "Zurück zur Webseite"
+        frontend_labels:
+          projekt: "Zur Projektseite"
+          landing_page: "Zur Themenseite"
+          deficiency_reports: "Zum Mängelmelder"
+          ideas: "Zum Ideenmanagement"
+          feature: "Zum %{feature}"
+          default: "Zur Webseite"

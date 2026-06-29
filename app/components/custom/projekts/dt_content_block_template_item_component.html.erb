@@ -5,6 +5,23 @@
 >
   <div class="js-add-new-content-block custom-content-template--item-inner">
     <div class="custom-content-template--item-overlay"></div>
+    <% if show_visibility_badge? %>
+      <div class="custom-content-template--visibility-badges">
+        <% if hidden? %>
+          <span class="custom-content-template--badge -hidden">
+            <i class="fas fa-eye-slash"></i>
+            <%= t('custom.projekt.content_block_templates_selector.visibility.hidden') %>
+          </span>
+        <% end %>
+        <% if hidden_by_date? %>
+          <span class="custom-content-template--badge -hidden-until">
+            <i class="fas fa-clock"></i>
+            <%= t('custom.projekt.content_block_templates_selector.visibility.hidden_until',
+                  date: l(hidden_until_date, format: :long)) %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
     <div class="content-block-template">
       <div class="js-content-block-template-content">
         <%= template_content.html_safe %>
@@ -12,12 +29,17 @@
     </div>
   </div>
   <div class="custom-content-template--item-actions">
-    <button
-      class="content-block-template-copy-button js-copy-content-block-template"
-      type="button"
-      title="Template in Zwischenablage kopieren"
-    >
-      <i class="fa fas fa-copy"></i>
-    </button>
+    <%= studio_rich_tooltip(
+      title: "Vorlage kopieren",
+      text: "Kopiert den HTML-Code dieser Vorlage in die Zwischenablage, um ihn an anderer Stelle einzufügen.",
+      delay: 1200
+    ) do %>
+      <button
+        class="content-block-template-copy-button js-copy-content-block-template"
+        type="button"
+      >
+        <i class="fa fas fa-copy"></i>
+      </button>
+    <% end %>
   </div>
 </div>

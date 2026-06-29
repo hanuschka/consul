@@ -1,7 +1,7 @@
 .custom-new-design {
   .new-card, .main-content-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid $border-color;
     margin-bottom: 15px;
     color: $main-text-color;
@@ -35,15 +35,26 @@
     // TODO change if needed
     overflow: visible;
     min-height: 114px;
+    border-color: $soft-border;
+    border-radius: $radius-large;
+    box-shadow: $shadow-small;
 
     h1 {
       margin-top: 0;
+    }
+
+    h1, h2, h3 {
+      font-family: $heading-font;
     }
 
     &.-hide-background {
       background: transparent;
       padding: 0;
       border: 0;
+
+      .add-new-content-block-section--controls {
+        right: calc(100% + 12px);
+      }
     }
   }
 

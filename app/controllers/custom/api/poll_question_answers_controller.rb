@@ -17,7 +17,7 @@ class Api::PollQuestionAnswersController < Api::BaseController
     check_admin_access!
 
     answer = @question.question_answers.new(answer_params)
-    answer.given_order ||= Poll::Question::Answer.last_position(@question.id) + 1
+    answer.given_order = Poll::Question::Answer.last_position(@question.id) + 1
 
     if answer.save
       serialized_answer = Poll::Question::AnswerSerializer.new(answer).serialize

@@ -50,17 +50,23 @@ class UnregisteredNewsletterSubscribersController < ApplicationController
   def confirm_subscription
     subscriber = UnregisteredNewsletterSubscriber.find_by(confirmation_token: params[:confirmation_token])
 
-    subscriber.update!(confirmed: true)
-
-    redirect_to root_path, notice: t("custom.newsletters.subscription.successfully_subscribed")
+    if subscriber
+      subscriber.update!(confirmed: true)
+      redirect_to root_path, notice: t("custom.newsletters.subscription.successfully_subscribed")
+    else
+      redirect_to root_path, alert: t("custom.newsletters.subscription.invalid_token")
+    end
   end
 
   def unsubscribe
     subscriber = UnregisteredNewsletterSubscriber.find_by(unsubscribe_token: params[:unsubscribe_token])
 
-    subscriber.destroy!
-
-    redirect_to root_path, notice: t("custom.newsletters.subscription.successfully_unsubscribed")
+    if subscriber
+      subscriber.destroy!
+      redirect_to root_path, notice: t("custom.newsletters.subscription.successfully_unsubscribed")
+    else
+      redirect_to root_path, alert: t("custom.newsletters.subscription.invalid_token")
+    end
   end
 
   private

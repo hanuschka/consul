@@ -1,5 +1,6 @@
 de:
   adm:
+    not_authorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
     title: Administration
     sidebar:
       toggle: Seitenleiste umschalten
@@ -7,38 +8,32 @@ de:
       aria_label: Administrationsmenü
       items:
         home: Home
+        team: Team
         projekts: Projekte
         application: Applikation
+        modules: Module
         application_subitems:
           homepage: Startseite
-          documents: Dokumente
-          pages: Seiten
+          pages: Systemseiten
           navbar: Navigation
+          overview_pages: Übersichtsseiten
           metadata_settings: Metadaten
           gdpr_settings: DSGVO
-          registration_settings: Konto & Zugang
+          registration_settings: Registrierung & Verifizierung
           registered_addresses: Adressen
           default_map_location: Standardkarte
+          system_user: Systemnutzer
           tags: Tags
           individual_groups: Nutzergruppen
           age_ranges: Altersgruppen
           email_templates: System-E-Mails
+          features: Funktionen
         pages: Seiten
         pages_subitems:
           privacy: Datenschutzbestimmungen
           conditions: Nutzungsbedingungen
           impressum: Impressum
-        profiles: Profile
-        profiles_subitems:
-          administrators: Administratoren
-          projekt_managers: Projektmanager
-          deficiency_report_managers: Mängel-Administratoren
-          deficiency_report_officers: Mängelmelder (Sachbearbeiter)
-          idea_managers: Ideen-Administratoren
-          moderators: Moderatoren
-          valuators: Budget-Administratoren
-          officing_managers: Abstimmungshelfer
-          users: Nutzer
+        users: Nutzer
         notifications: Benachrichtigungen
         notifications_subitems:
           modal_notifications: Popup-Benachrichtigungen
@@ -47,13 +42,19 @@ de:
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken
+        stats_subitems:
+          overview: Consul
+          matomo: Matomo
         apps: Apps
-        developer: Bereich für Entwickler
-        developer_subitems:
-          ai_settings: KI-Einstellungen
-          external_api_keys: API-Schlüssel
+        api: API
+        api_subitems:
           api_clients: API-Clients
           api_request_logs: API-Anfragen-Logs
+        developer: Bereich für Entwickler
+        developer_subitems:
+          connection: DT-Verbindung
+          ai_settings: KI-Einstellungen
+          external_api_keys: API-Schlüssel
     email_templates:
       send_test:
         success: "Test-E-Mail wurde an %{email} gesendet."
@@ -62,26 +63,5 @@ de:
         title: System-E-Mails
     deficiency_reports:
       title: Mängelmelder
-      menu:
-        aria_label: Mängelmelder Navigation
-        items:
-          deficiency_reports: Meldungen
-          officers: Sachbearbeiter
-          categories: Kategorien
-          statuses: Status
-          settings: Funktionen
-          official_answer_templates: Antwortvorlagen
-          districts: Gebiete
-          officer_groups: Sachbearbeitergruppen
-          stats: Statistiken
-          ai_settings: KI Sprachassistent
     ideas:
       title: Ideen
-      menu:
-        aria_label: Ideen Navigation
-        items:
-          ideas: Ideen
-          officers: Sachbearbeiter
-          categories: Kategorien
-          settings: Funktionen
-          districts: Gebiete

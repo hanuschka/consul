@@ -30,7 +30,7 @@ App.Studio.Projekt.templateFunctions.studioControlTooltip = function(triggerHtml
 };
 
 // Tooltip note shown when AI is not enabled — mirrors Shared::AiFeatureTooltipComponent.
-ProjektStudio.templateFunctions.aiDisabledTooltipNote =
+App.Studio.Projekt.templateFunctions.aiDisabledTooltipNote =
   '<span class="ai-feature-tooltip--note-heading">KI aktivieren, um die Funktion zu nutzen</span> Wenden Sie sich an info@demokratie.today, um die KI-Funktion zu aktivieren.';
 
 // Admin-only placeholder shown inside an empty projekt content block (studio
@@ -264,14 +264,14 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
                   <button
                     type="button"
                     tabindex="-1"
-                    class="js-content-block-enter-ai-edit-mode studio-icon-button ${ProjektStudio.config.aiAvailable ? "" : "ai-feature-disabled"}"
+                    class="js-content-block-enter-ai-edit-mode studio-icon-button ${App.Studio.Projekt.config.aiAvailable ? "" : "ai-feature-disabled"}"
                   >
                     <i class="fas fa-magic"></i>
                   </button>
                 `, {
                   title: "KI-Editor",
                   text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern.",
-                  note: ProjektStudio.config.aiAvailable ? null : ProjektStudio.templateFunctions.aiDisabledTooltipNote
+                  note: App.Studio.Projekt.config.aiAvailable ? null : App.Studio.Projekt.templateFunctions.aiDisabledTooltipNote
                 })}
               </div>
               ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`

@@ -182,8 +182,10 @@ en:
         badge:
           imported_by_ai: "AI"
           imported_by_ai_title: "This projekt was imported from a document with AI."
+          imported_by_ai_description: "An AI automatically generated the phases and content from an uploaded document. Please review the details before publishing the projekt."
         index:
           new_button: "Import from document"
+          new_button_description: "Upload a document and let the AI build a complete projekt from it — phases and content included — which you can review before importing."
           title: "Projekt imports"
           new_import: "New projekt import"
           empty: "No projekt imports yet."

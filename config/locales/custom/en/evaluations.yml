@@ -5,6 +5,7 @@ en:
   adm:
     ai_action_button:
       processing: AI is working…
+      feature_description: "Uses AI to generate an evaluation from this project's participation data."
 
     projekts:
       projekts:

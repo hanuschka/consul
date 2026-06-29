@@ -508,6 +508,12 @@ class ProjektPhase < ApplicationRecord
     cta_button_name.presence || I18n.t("custom.projekt_phases.cta.#{name}")
   end
 
+  # DOM id the sidebar CTA link scrolls to. Defaults to the footer phase
+  # subnav; subclasses override to target a more specific element.
+  def sidebar_cta_anchor
+    "filter-subnav"
+  end
+
   def regular
     ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(self.class.to_s)
   end

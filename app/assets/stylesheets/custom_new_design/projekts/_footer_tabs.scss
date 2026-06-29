@@ -2,12 +2,20 @@
   .projekt-footer-phase-tab {
     margin-top: 0 !important;
     min-width: 322px;
+    min-height: 80px !important;
     background: white;
     border: 1px solid #CFCECE;
     border-radius: 10px 10px 0px 0px;
     margin-right: 10px;
     position: relative;
     flex: 0 0 auto;
+
+    // Meta info (Fortlaufend, Registrierte Nutzer)
+    .tab-info-summary {
+      font-family: $body-font;
+      font-size: 13px;
+      color: $muted-text;
+    }
 
     &:hover {
       // Lift above the content-block edit toolbar (z-index: 200) on hover so
@@ -26,10 +34,11 @@
     }
 
     h2 {
-      color: var(--brand-color);
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 3px;
+      font-family: $heading-font !important;
+      color: var(--brand-color) !important;
+      font-size: 20px !important;
+      font-weight: 600 !important;
+      margin-bottom: 0 !important;
     }
 
     @media(max-width: $small-tablet-viewport-start) {
@@ -71,6 +80,11 @@
       padding-top: 15px;
       padding-left: 22px;
       padding-bottom: 17px;
+
+      &:focus-visible {
+        outline: $outline-focus;
+        outline-offset: -3px;
+      }
     }
 
     .projekt-phase--actions {
@@ -96,6 +110,10 @@
           background-color: var(--brand-color-lighter);
         }
       }
+
+      @media(max-width: 1000px) {
+        display: none;
+      }
     }
 
     &:hover {
@@ -106,6 +124,20 @@
 
     .studio-icon-button {
       color: var(--brand-color);
+    }
+  }
+
+  // Phase navigation arrows
+  .arrow-controls button, .arrow-controls a {
+    color: $accent-blue !important;
+    transition: color $transition-base;
+
+    &:hover {
+      color: #025D8C !important;
+    }
+
+    &.disabled i {
+      opacity: 0.25;
     }
   }
 }

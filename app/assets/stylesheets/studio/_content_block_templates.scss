@@ -40,7 +40,7 @@
 
 dialog.projekt-content-block-templates-selector-wrapper {
   max-width: 1030px;
-  max-height: 90vh;
+  max-height: 93vh;
   margin-top: 3vh;
   overflow: hidden;
 }
@@ -64,24 +64,6 @@ dialog.modern-modal {
     margin-top: 0;
     font-weight: 500;
   }
-}
-
-// Shared title + close row for the studio modals (templates selector, AI
-// create). The close button is pushed to the far edge; any leading actions
-// (e.g. the AI-create button) sit next to the title.
-.modern-modal--header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 1rem;
-
-  h3 {
-    margin-bottom: 0;
-  }
-}
-
-.modern-modal--header .close-button {
-  margin-left: auto;
 }
 
 // Shared info/fallback note used inside the studio modals. Per-modal spacing
@@ -295,6 +277,10 @@ dialog.modern-modal {
   align-items: center;
   gap: 16px;
   padding: 60px 0;
+}
+
+.content-block-templates-selector--blank-create {
+  margin-left: 4px;
 }
 
 .content-block-templates-selector--ai-create {

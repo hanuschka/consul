@@ -317,11 +317,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @poll = @projekt_phase.poll
     @questions = @poll.questions.root_questions.where(context_id: nil)
 
-    @breadcrumbs = [
-      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
-      { name: @projekt_phase.title },
-      { name: t(".title") }
-    ]
+    respond_to do |format|
+      format.html do
+        @breadcrumbs = [
+          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.title },
+          { name: t(".title") }
+        ]
+      end
+      format.csv do
+        send_data CsvServices::PollIndividualAnswersExporter.call(@poll),
+          filename: "poll_#{@poll.id}_individual_answers-#{Time.zone.today}.csv"
+      end
+    end
   end
 
   def formular
@@ -341,10 +349,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @formular = @projekt_phase.formular
     @formular_fields = @formular.formular_fields
-    @formular_answers = @formular.formular_answers
 
     respond_to do |format|
       format.html do
+        @pagy, @formular_answers = pagy(
+          @formular.formular_answers
+            .order(:id)
+            .preload(
+              formular_answer_images: { attachment_attachment: :blob },
+              formular_answer_documents: { attachment_attachment: :blob }
+            )
+        )
         @breadcrumbs = [
           { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
@@ -616,7 +631,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         ]
       end
       format.geojson do
-        send_data GeoServices::MappablesGeojsonExporter.call(base_scope),
+        send_data GeoServices::MappablesGeojsonExporter.call(base_scope.preload(:masterportal_pin)),
                   filename: "projekt_point_of_interest_pins-#{@projekt_phase.id}-#{Time.zone.today}.geojson",
                   type: "application/geo+json"
       end

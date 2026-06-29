@@ -2,7 +2,7 @@
   <div class="users-profile-banner--background-image">
     <% if @edit_mode && @user == current_user %>
       <%= form_for @user, as: :account, remote: true, authenticity_token: true, url: account_path do |f| %>
-        <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true) do |c|%>
+        <%= render Images::DropzoneComponent.new(f, attachment_name: "background_image", submit_form: true, crop: true, crop_aspect_ratio: 3.5) do |c|%>
           <% c.with_custom_edit_button do %>
             <button type="button" class="users-profile-banner--edit-button users-profile-banner--background-edit-button" aria-label="<%= t("custom.accessibility.account.edit_banner.aria-label") %>">
               <i class="fa fa-pencil-alt" aria-hidden="true"></i>
@@ -10,7 +10,7 @@
           <% end %>
           <% c.with_placeholder do %>
             <% if @user.background_image.attached? %>
-              <%= image_tag(@user.background_image.variant(resize_to_fit: [2000, 500])) %>
+              <%= image_tag(@user.background_image.variant(resize_to_fit: [1750, 500])) %>
             <% end %>
           <% end %>
         <% end %>
@@ -28,12 +28,11 @@
             <% f.object.build_image %>
           <% end %>
           <%= f.fields_for :image do |image_builder| %>
-            <%= render Images::DirectUploadComponent.new(image_builder, imageable: @user, submit_form: true, variant: :medium, image_alt: t("custom.accessibility.account.edit_avatar.your_avatar")) do |c| %>
+            <%= render Images::DirectUploadComponent.new(image_builder, imageable: @user, submit_form: true, variant: :medium, image_alt: t("custom.accessibility.account.edit_avatar.your_avatar"), crop: true, crop_aspect_ratio: 1) do |c| %>
               <% c.with_placeholder do %>
                 <div
                   class="users-profile-banner--avatar-placeholder"
-                  aria-hidden="<%= @user.image.attached? %>"
-                  aria-label="<%= t("custom.accessibility.account.edit_avatar.avatar_placeholder") %>"
+                  aria-hidden="true"
                 >
                   <%= @user.first_letter_of_name %>
                 </div>
@@ -45,6 +44,22 @@
                 </button>
               <% end %>
             <% end %>
+        <% end %>
+      <% end %>
+
+      <% if @user.image&.attached? %>
+        <%= form_for @user, as: :account, url: account_path, html: { class: "users-profile-banner--avatar-remove-form" } do |remove_form| %>
+          <%= remove_form.fields_for :image, @user.image do |image_fields| %>
+            <%= image_fields.hidden_field :id %>
+            <%= image_fields.hidden_field :_destroy, value: "1" %>
+          <% end %>
+          <button
+            type="submit"
+            class="users-profile-banner--avatar-remove-button"
+            aria-label="<%= t("custom.accessibility.account.remove_avatar.aria-label") %>"
+          >
+            <i class="fa fa-trash-alt" aria-hidden="true"></i>
+          </button>
         <% end %>
       <% end %>
     <% elsif @user.image.present? %>
@@ -92,3 +107,7 @@
     <%= render Shared::OfficialPositionBadgeComponent.new(user: @user) %>
   </div>
 </div>
+
+<% if @edit_mode && @user == current_user %>
+  <%= render Shared::ImageCropperModalComponent.new %>
+<% end %>

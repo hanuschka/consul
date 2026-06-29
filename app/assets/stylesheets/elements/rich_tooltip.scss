@@ -14,6 +14,12 @@ rich-tooltip[trigger-only] {
   display: contents;
 }
 
+// A focusable tooltip's body must be reachable by the mouse, so the host needs
+// a real box (the trigger↔body hover-bridge relies on it) even with trigger-only.
+rich-tooltip[trigger-only][focusable] {
+  display: inline-block;
+}
+
 rich-tooltip[hidden] {
   display: none;
 }
@@ -137,6 +143,11 @@ rich-tooltip[hidden] {
 
 .rich-tooltip--body.-no-paddings {
   padding: 0;
+}
+
+.rich-tooltip--body.-instant {
+  transition: none;
+  animation: none;
 }
 
 .rich-tooltip--body:not([popover]) {

@@ -22,7 +22,7 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
   end
 
   def edit_draft
-    @generate_image_url = ai_generate_image_path
+    @generate_image_url = ai_generate_image_and_assign_to_resource_path
     @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
     @back_to_new_url    = generate_budget_investment_new_path(
       projekt_phase_id: @draft_resource.projekt_phase.id,
@@ -51,7 +51,7 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
 
     flash[:error] = I18n.t("ai_proposal_flow.evaluate_error")
 
-    @generate_image_url = ai_generate_image_path
+    @generate_image_url = ai_generate_image_and_assign_to_resource_path
     @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
     @back_to_new_url    = generate_budget_investment_new_path(
       projekt_phase_id: @draft_resource.projekt_phase.id,
@@ -101,6 +101,7 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
         description: draft_data["description"]
       )
       investment.tag_list = draft_data["tag_list"]
+      assign_generated_taxonomy(investment, draft_data, @projekt_phase)
       investment.save!(validate: false)
       investment
     end
@@ -118,6 +119,8 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
     def draft_resource_params
       params.require(:budget_investment).permit(
         :title, :description, :tag_list, :video_url, :on_behalf_of,
+        :sentiment_id,
+        projekt_label_ids: [],
         image_attributes: [:attachment, :title, :credits, :cached_attachment, :_destroy, :user_id]
       )
     end

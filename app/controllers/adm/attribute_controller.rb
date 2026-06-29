@@ -9,7 +9,7 @@ module Adm
 
       if ai_gated_blocked?
         flash.now[:error] = t("adm.ai_required_note")
-      elsif attachment_kind? && params[:remove_attachment] == "1" && @record.class.reflect_on_attachment(params[:attribute].to_sym)
+      elsif attachment_kind? && remove_attachment_requested? && @record.class.reflect_on_attachment(params[:attribute].to_sym)
         @record.send(params[:attribute]).purge
         flash.now[:success] = t(".success")
       elsif @kind == :image && imageable_image_attribute?
@@ -17,6 +17,10 @@ module Adm
           remove_imageable_image
         else
           update_imageable_image
+        end
+      elsif @kind == :content_types
+        if @record.update(value: submitted_content_types)
+          flash.now[:success] = t(".success")
         end
       elsif @record.update(permitted_params)
         flash.now[:success] = t(".success")
@@ -34,6 +38,11 @@ module Adm
         [:image, :video].include?(@kind)
       end
 
+      def remove_attachment_requested?
+        params[:remove_attachment] == "1" ||
+          params.dig(@record.model_name.param_key, :_destroy) == "1"
+      end
+
       def find_record
         record_class = params[:record_type].tr("-", "/").classify.constantize
         record_class.find(params[:id])
@@ -44,6 +53,10 @@ module Adm
         attribute = params[:attribute].to_sym
 
         params.require(param_key).permit(attribute)
+      end
+
+      def submitted_content_types
+        Array(params[:content_types]).reject(&:blank?).join(" ")
       end
 
       def imageable_image_attribute?
@@ -78,6 +91,7 @@ module Adm
         options[:wide] = true if params[:wide].present?
         options[:hide_label] = true if params[:hide_label].present?
         options[:inline] = true if params[:inline].present?
+        options[:toolbar] = params[:toolbar] if params[:toolbar].present?
         options[:divider] = ActiveModel::Type::Boolean.new.cast(params[:divider]) if params.key?(:divider)
         options[:ai_gated] = true if params[:ai_gated].present?
         options

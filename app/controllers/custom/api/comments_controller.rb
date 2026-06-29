@@ -61,7 +61,7 @@ class Api::CommentsController < Api::BaseController
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
     comment = @projekt_phase.comments.new(comment_params)
-    comment.user = @current_client.user
+    comment.user = @current_client.content_author
 
     if comment.save
       serialized_comment = CommentSerializer.new(comment).serialize

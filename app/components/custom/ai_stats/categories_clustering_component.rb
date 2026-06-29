@@ -13,6 +13,15 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
     @title_key
   end
 
+  def cluster_modifier_class
+    case @title_key
+    when "custom.ai_stats.topic_clustering"
+      "ai-clustering--topic"
+    when "custom.ai_stats.semantic_clustering"
+      "ai-clustering--semantic"
+    end
+  end
+
   def categories
     return @clustering_data if @clustering_data.is_a?(Array)
 

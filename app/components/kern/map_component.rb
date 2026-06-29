@@ -4,18 +4,21 @@ class Kern::MapComponent < ApplicationComponent
     form: nil,
     editable: false,
     admin_editor: false,
+    gesture_handling: true,
     height: 400,
     width: nil,
     latitude: nil,
     longitude: nil,
     zoom: nil,
     resources: nil,
-    feature_collection: nil
+    feature_collection: nil,
+    error: nil
   )
     @map_location = map_location
     @form = form
     @editable = editable
     @admin_editor = admin_editor
+    @gesture_handling = gesture_handling
     @height = height
     @width = width
     @latitude = latitude
@@ -23,9 +26,10 @@ class Kern::MapComponent < ApplicationComponent
     @zoom = zoom
     @resources = resources
     @feature_collection = feature_collection
+    @error = error
   end
 
-  attr_reader :map_location, :form, :editable, :admin_editor, :height, :width
+  attr_reader :map_location, :form, :editable, :admin_editor, :height, :width, :error
 
   def rendering_library_options
     MapLocation.rendering_libraries.keys.map do |key|
@@ -58,6 +62,7 @@ class Kern::MapComponent < ApplicationComponent
       map_zoom_value: @zoom || map_location.zoom,
       map_altitude_value: map_location.altitude,
       map_editable_value: editable,
+      map_gesture_handling_value: @gesture_handling,
       map_admin_editor_value: admin_editor,
       map_enable_set_center_value: mappable.is_a?(Projekt),
       map_features_value: features_json,
@@ -120,7 +125,37 @@ class Kern::MapComponent < ApplicationComponent
                    MapLayer.default
                end
 
-      (layers.as_json + masterportal_wms_layer_injection).to_json
+      serialized = layers.filter_map { |layer| serialize_layer(layer) }
+
+      (masterportal_wms_layer_injection + serialized).to_json
+    end
+
+    def serialize_layer(layer)
+      common = {
+        "id" => layer.id,
+        "name" => layer.name,
+        "protocol" => layer.protocol,
+        "base" => layer.base,
+        "show_by_default" => layer.show_by_default,
+        "attribution" => layer.attribution
+      }
+
+      if layer.geojson?
+        # Skip geojson layers without an attached file so data_url is never null.
+        return nil unless layer.geojson_file.attached?
+
+        common.merge(
+          "data_url" => helpers.url_for(layer.geojson_file),
+          "config" => layer.config
+        )
+      else
+        common.merge(
+          "provider" => layer.provider,
+          "layer_names" => layer.layer_names,
+          "transparent" => layer.transparent,
+          "opacity" => layer.opacity
+        )
+      end
     end
 
     def masterportal_wms_layer_injection

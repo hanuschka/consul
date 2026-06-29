@@ -1,5 +1,7 @@
 get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
 
+get "/map_data", to: "map_data#show", as: :map_data
+
 post   "/ai/generate_image",                        to: "ai#generate_image",                        as: :ai_generate_image
 post   "/ai/generate_image_and_assign_to_resource", to: "ai#generate_image_and_assign_to_resource", as: :ai_generate_image_and_assign_to_resource
 delete "/ai/remove_image_from_resource",            to: "ai#remove_image_from_resource",            as: :ai_remove_image_from_resource
@@ -36,6 +38,29 @@ namespace :ckeditor do
   resources :documents, only: [:create, :update, :destroy]
 end
 
+namespace :adm do
+  namespace :files do
+    resources :images, only: [:index]
+    resources :documents, only: [:index, :update, :destroy] do
+      get :documentable_type_filter, on: :collection
+    end
+  end
+
+  namespace :maintenance do
+    resources :resource_images, only: [:index, :update, :destroy] do
+      get :imageable_type_filter, on: :collection
+    end
+    resources :resource_documents, only: [:index] do
+      get :documentable_type_filter, on: :collection
+    end
+  end
+end
+
+namespace :file_manager do
+  resources :images, only: [:index, :create, :show, :update, :destroy]
+  resources :documents, only: [:index, :create, :show, :update, :destroy]
+end
+
 resources :user_resources, only: [:index]
 get "/proposals/:proposal_id/dashboard/campaign", to: "dashboard#campaign", as: :proposal_dashbord_campaign
 
@@ -59,10 +84,6 @@ get "users", to: "users#index"
 resources :map_locations, only: [] do
   collection do
     get :get_coordinates
-  end
-
-  member do
-    post :update_screenshot
   end
 end
 
@@ -96,13 +117,20 @@ get "/:landing_page_slug/proposals/:id",
 get "/:landing_page_slug/budgets/:budget_id/investments/:id",
   to: redirect("/budgets/%{budget_id}/investments/%{id}")
 
-post "iframe_sessions", to: "iframe_sessions#create"
 
 post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
-resources :projekt_content_block_templates, only: [:index]
+get  "/voice_assistant_designs", to: "voice_assistant_designs#index", as: :voice_assistant_designs
+
+resources :projekt_content_block_templates, only: [:index] do
+  collection do
+    get :metadata
+  end
+end
+
+get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projekt_map_embed
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 

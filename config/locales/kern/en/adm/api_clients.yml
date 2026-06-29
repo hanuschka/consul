@@ -9,6 +9,26 @@ en:
       access_level:
         public_data: Public data
         admin: Admin
+        tooltip:
+          public_data:
+            description: >
+              Read-only access to publicly available content. This client can
+              only send GET requests — it cannot create, change, or delete
+              anything. Ideal for integrations that just display data, such as
+              a website widget or a public dashboard.
+            alternative_label: Admin mode
+            alternative: >
+              Grants full create, update, and delete access. Choose it only
+              when the client genuinely needs to write data.
+          admin:
+            description: >
+              Full access to every resource. This client can retrieve, create,
+              update, and delete content through the API. Grant it only to
+              trusted integrations that genuinely need write access.
+            alternative_label: Public data mode
+            alternative: >
+              Restricts the client to read-only GET requests on public content.
+              Choose it for integrations that only need to display data.
       index:
         title: API clients
         intro: >
@@ -16,13 +36,29 @@ en:
         create_new: Create new API client
         api_docs_link: API documentation
         id: API client ID
+        posts_as: Posts as
         no_api_clients: No API clients available.
         delete_confirm: >
           Are you sure you want to delete this API client?
+      logs:
+        title: API request logs
+        title_for: API request logs for %{name}
+        intro: >
+          All API requests made by the client “%{name}”. Use the filters to narrow by path, method, status or date range.
+        no_logs: No request logs available for this API client.
       new:
         title: Create new API client
       edit:
         title: Edit API client
+      service_users:
+        edit:
+          title: Edit service user
+          intro: >
+            Edit the public profile of the service user that acts as the
+            author for all content created via this API client.
+        flash:
+          updated: Service user updated successfully
+          no_service_user: This API client does not use a dedicated service user.
       show:
         auth_token_explanation_text: >
           Include this token in the Authorization header of your
@@ -32,6 +68,11 @@ en:
         auth_token_example: "Authorization: Bearer YOUR_AUTH_TOKEN_HERE"
         service_user_title: Service user
         service_user_name: Name
+        system_user_title: System user
+        system_user_note: >
+          This API client does not use a dedicated service user.
+          All content created via this client is published under
+          the system user.
         service_user_login_warning: >
           Note: you should not log in directly with this
           service user. Use the API authentication methods instead.
@@ -46,12 +87,39 @@ en:
           and is used for API authentication.
         service_user_email_description: >
           Enter a valid email address for the automatically created service user account. The service user is used as the author for all content created via this API client — e.g. proposals, comments, or votes. The address must be unique and must not already be used by another account.
-        service_user_form_title: Update service user information
+        service_user_section_title: Service user
+        edit_service_user: Edit service user
+        service_user_section_description: >
+          The service user is the public author identity of this API client:
+          all content created via the API — e.g. proposals or comments — is
+          published under this user. It cannot be used to log in directly.
         service_user_avatar_title: Avatar
         service_user_background_image_title: Background image
-        service_user_errors_message: "%{count} error(s)"
-        service_user_errors_title: "prevented this service user from being saved:"
-        update_service_user: Update service user
+        service_user_username_description: >
+          The internal login name of the service user. It is generated
+          automatically from the API client name, must be unique across the
+          platform, and is used only for internal identification.
+        service_user_first_name_description: >
+          First name of the service user. Together with the last name it forms
+          the publicly displayed author name for all content created via the
+          API.
+        service_user_last_name_description: >
+          Last name of the service user. Together with the first name it forms
+          the publicly displayed author name for all content created via the
+          API.
+        service_user_avatar_description: >
+          Profile picture of the service user. It is shown next to content
+          created via the API. Square images are displayed best.
+        service_user_background_image_description: >
+          Background image for the service user's public profile page.
+        use_system_user_label: Use system user
+        use_system_user_description: >
+          When enabled, content created via this API client is published
+          under the system user. Disable this option to create a dedicated
+          service user for this client.
+        system_user_note: >
+          All content created via this API client is published under
+          this system user.
         regenerate_token: Regenerate token
         regenerate_token_explanation: >
           Creates a new token and invalidates the current one.

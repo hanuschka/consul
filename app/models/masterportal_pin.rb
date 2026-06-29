@@ -1,5 +1,6 @@
 class MasterportalPin < ApplicationRecord
   belongs_to :projekt_phase
+  belongs_to :masterportal_collection, optional: true
   has_one :proposal, foreign_key: :masterportal_pin_id, dependent: :nullify
   has_one :budget_investment, foreign_key: :masterportal_pin_id,
           class_name: "Budget::Investment", dependent: :nullify
@@ -13,6 +14,14 @@ class MasterportalPin < ApplicationRecord
         proposals: { id: nil },
         budget_investments: { id: nil },
         projekt_point_of_interest_pins: { id: nil }
+      )
+  }
+
+  scope :with_associated_record, lambda {
+    left_outer_joins(:proposal, :budget_investment, :projekt_point_of_interest_pin)
+      .where(
+        "proposals.id IS NOT NULL OR budget_investments.id IS NOT NULL " \
+        "OR projekt_point_of_interest_pins.id IS NOT NULL"
       )
   }
 

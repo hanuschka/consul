@@ -9,14 +9,6 @@ class Adm::Ideas::BaseController < Adm::BaseController
 
   private
 
-    def adm_header_title
-      I18n.t("adm.ideas.title")
-    end
-
-    def adm_menu_component
-      Adm::Ideas::MenuComponent.new
-    end
-
     def verify_idea_manager
       raise Pundit::NotAuthorizedError unless current_user&.idea_manager? ||
                                               current_user&.idea_officer? ||
@@ -37,6 +29,10 @@ class Adm::Ideas::BaseController < Adm::BaseController
       return scope unless Setting["ideas.admins_must_assign_officer"].present?
       return scope unless current_user.idea_officer?
 
-      scope.where(officer: current_user.idea_officer)
+      officer = current_user.idea_officer
+
+      return scope if officer.manage_all?
+
+      scope.where(officer: officer)
     end
 end

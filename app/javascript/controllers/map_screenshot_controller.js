@@ -58,18 +58,14 @@ export default class extends Controller {
       console.error("Screenshot failed:", error)
     } finally {
       window.location.href = href
-      this.element.dispatchEvent(new CustomEvent("pdf-download:complete", { bubbles: true }))
+      this.element.dispatchEvent(new CustomEvent("adm-button-with-progress:complete", { bubbles: true }))
     }
   }
 
   async takeScreenshot(element) {
-    // For Mapbox/WebGL maps, use the native canvas directly
-    const canvas = element.querySelector("canvas")
-    if (canvas) {
-      return this.screenshotFromCanvas(canvas)
-    }
-
-    // For Leaflet and other DOM-based maps, use dom-to-image-more
+    // Always serialize the DOM so marker overlays come along.
+    // For Mapbox the underlying WebGL canvas is captured too because the map is
+    // initialized with preserveDrawingBuffer: true (see mapbox_adapter.js).
     return this.screenshotFromDom(element)
   }
 
@@ -197,25 +193,13 @@ export default class extends Controller {
     return !controlClasses.some(cls => node.classList.contains(cls))
   }
 
-  screenshotFromCanvas(canvas) {
-    return new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob)
-        } else {
-          reject(new Error("Failed to generate blob from canvas"))
-        }
-      }, "image/jpeg", 0.95)
-    })
-  }
-
   async uploadScreenshot(blob, mapLocationId) {
     const formData = new FormData()
     formData.append("screenshot", blob, "screenshot.jpg")
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content")
 
-    const response = await fetch(`/map_locations/${mapLocationId}/update_screenshot`, {
+    const response = await fetch(`/adm/map_locations/${mapLocationId}/update_screenshot`, {
       method: "POST",
       headers: {
         "X-CSRF-Token": csrfToken

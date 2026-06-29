@@ -14,29 +14,26 @@ en:
         modules: Modules
         application_subitems:
           homepage: Homepage
-          documents: Documents
           pages: System pages
           navbar: Navigation
+          overview_pages: Overview pages
           metadata_settings: Metadata
           gdpr_settings: GDPR
           registration_settings: Account & access
           registered_addresses: Addresses
           default_map_location: Default map
+          system_user: System user
           tags: Tags
           individual_groups: User groups
           age_ranges: Age groups
           email_templates: System emails
+          features: Features
         pages: Pages
         pages_subitems:
           privacy: Privacy policy
           conditions: Terms of use
           impressum: Legal notice
-        profiles: Profiles
-        profiles_subitems:
-          deficiency_report_managers: Deficiency managers
-          idea_managers: Idea managers
-          section_contact_people: Contact persons
-          users: Users
+        users: Users
         notifications: Notifications
         notifications_subitems:
           modal_notifications: Modal notifications
@@ -49,13 +46,15 @@ en:
           overview: Consul
           matomo: Matomo
         apps: Apps
+        api: API
+        api_subitems:
+          api_clients: API clients
+          api_request_logs: API request logs
         developer: Developer area
         developer_subitems:
           connection: DT connection
           ai_settings: AI settings
           external_api_keys: API keys
-          api_clients: API clients
-          api_request_logs: API request logs
     email_templates:
       send_test:
         success: "Test email sent to %{email}."

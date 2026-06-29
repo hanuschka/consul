@@ -6,7 +6,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--kern-metric-space-x-small, 6px);
-  font-size: var(--kern-font-size-14, 14px);
+  font-size: 16px;
 
   a {
     color: var(--kern-color-action-default);
@@ -208,19 +208,19 @@
   }
 }
 
-.adm-deficiency-report-row__image-cell {
+.adm-table-thumb-cell {
   width: 40px;
   min-width: 55px;
   max-width: 55px;
   padding: 4px;
 }
 
-.adm-deficiency-report-row__thumb-link {
+.adm-table-thumb-link {
   display: inline-block;
   line-height: 0;
 }
 
-.adm-deficiency-report-row__thumb {
+.adm-table-thumb {
   width: 40px;
   height: 40px;
   object-fit: cover;
@@ -228,7 +228,7 @@
   border: 1px solid var(--kern-color-layout-border, #e0e0e0);
 }
 
-.adm-deficiency-report-row__thumb--placeholder {
+.adm-table-thumb--placeholder {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -240,7 +240,7 @@
   }
 }
 
-.adm-deficiency-report-row__thumb--category {
+.adm-table-thumb--category {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -390,6 +390,34 @@
     // Hide remove button (action is in card header as toggle)
     [data-kern--form--image-target="actions"] {
       display: none !important;
+    }
+  }
+
+  // New adm image component: fill the card row like the map beside it
+  [data-controller="adm--form--image"] {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    // Visible preview/empty container fills the remaining row
+    [data-adm--form--image-target="preview"]:not(.d-none),
+    [data-adm--form--image-target="empty"]:not(.d-none) {
+      flex: 1;
+      min-height: 0;
+    }
+
+    // Preview wrapper anchors the overlay action buttons
+    [data-adm--form--image-target="preview"] {
+      position: relative;
+
+      img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        max-width: none !important;
+        display: block;
+      }
     }
   }
 }
@@ -703,6 +731,11 @@ form:has(> .adm-detail-media-card__action) {
   &--danger {
     background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 12%, transparent);
     color: var(--kern-color-feedback-danger, #bd0f09);
+  }
+
+  &--info {
+    background: color-mix(in srgb, var(--kern-color-feedback-info, #1976d2) 12%, transparent);
+    color: var(--kern-color-feedback-info, #1976d2);
   }
 }
 

@@ -4,11 +4,13 @@ de:
       subnav:
         key_metrics: Kennzahlen
         analysis: Analyse
+        evaluation: Auswertung
         full_stats: Auswertung auf separater Seite anzeigen
         overview:
           proposal_phase: Vorschläge
           budget_phase: Investitionsvorschläge
           comment_phase: Kommentare
+          voting_phase: Abstimmungen
       stats:
         title: Statistiken
         banner_title: "Auswertung der %{phase_title}"

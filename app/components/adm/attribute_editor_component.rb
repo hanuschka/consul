@@ -39,6 +39,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::BooleanComponent
     when :string
       Adm::AttributeEditors::StringComponent
+    when :text
+      Adm::AttributeEditors::TextComponent
     when :rich_text
       Adm::AttributeEditors::RichTextComponent
     when :image
@@ -49,6 +51,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       Adm::AttributeEditors::ColorComponent
     when :select
       Adm::AttributeEditors::SelectComponent
+    when :content_types
+      Adm::AttributeEditors::ContentTypesComponent
     when :date
       Adm::AttributeEditors::DateComponent
     else

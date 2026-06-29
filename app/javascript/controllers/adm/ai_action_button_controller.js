@@ -5,10 +5,27 @@ export default class extends Controller {
   static values = {
     statusUrl: String,
     progressMode: { type: String, default: "swap" },
-    pollInterval: { type: Number, default: 4000 }
+    pollInterval: { type: Number, default: 4000 },
+    loading: { type: Boolean, default: false },
+    confirm: String
   }
 
-  start() {
+  connect() {
+    if (!this.loadingValue) return
+    if (!this.hasStatusUrlValue || this.statusUrlValue.length === 0) return
+
+    this.schedulePoll()
+  }
+
+  start(event) {
+    if (this.hasConfirmValue && this.confirmValue.length > 0) {
+      if (!window.confirm(this.confirmValue)) {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        return
+      }
+    }
+
     if (this.progressModeValue === "inline") {
       this.showInlineProgress()
     } else {
@@ -21,6 +38,11 @@ export default class extends Controller {
   }
 
   swapToProgress() {
+    const buttonWidth = this.buttonTarget.offsetWidth
+    if (buttonWidth > 0) {
+      this.progressTarget.style.minWidth = `${buttonWidth}px`
+    }
+
     this.buttonTarget.hidden = true
     this.progressTarget.hidden = false
   }

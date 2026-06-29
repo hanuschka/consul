@@ -4,6 +4,7 @@ en:
       email_template_component:
         trigger: Trigger
         trigger_description: Describes the event that triggers the automatic sending of this email.
+        settings_link_text: settings
         recipient: Recipient
         recipient_description: Who is this email sent to?
         subject: Subject
@@ -16,3 +17,6 @@ en:
         customized: Customized
         default_template: Default template
         default_template_description: The preset template used as long as no individual customization has been made.
+        recipient_types:
+          author: "To: Author"
+          subscribers: "To: Subscribers"

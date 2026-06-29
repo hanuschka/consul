@@ -12,13 +12,18 @@
     <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
     <%= yield :vc_maps %>
 
+    <%= yield :head %>
+
     <%= stylesheet_link_tag "application.adm" %>
+    <%= stylesheet_link_tag "elements" %>
     <!-- Font Awesome for icon selection (temporary until frontend migrates to Material) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <%= javascript_include_tag "elements", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application-kern", "data-turbo-track": "reload", type: "module", crossorigin: "anonymous" %>
   </head>
 
-  <body class="kern-light" data-controller="adm-sidebar">
+  <body class="kern-light" data-controller="adm-sidebar shared--anchor-highlight">
+    <%= render "layouts/brand_color_root_style" %>
     <div class="d-flex">
       <%# Icon Rail: durchgehend von oben bis unten %>
       <div class="d-none d-lg-flex">
@@ -41,7 +46,8 @@
             <div class="fs-5 mx-4 position-relative"><%= adm_header_title %></div>
           </div>
 
-          <div class="d-flex align-items-center mr-4 position-relative">
+          <div class="d-flex align-items-center gap-4 mr-4 position-relative">
+            <%= render Adm::LanguageSelectorComponent.new %>
             <%= render Kern::SubnavigationKontoComponent.new(current_user: current_user) %>
           </div>
         </header>

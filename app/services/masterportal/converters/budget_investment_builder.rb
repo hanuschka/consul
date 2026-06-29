@@ -11,7 +11,7 @@ class Masterportal::Converters::BudgetInvestmentBuilder < ApplicationService
     title = raw_title.length >= 4 ? raw_title.truncate(Budget::Investment.title_max_length) : fallback_title
 
     investment = Budget::Investment.new(
-      author: User.masterportal,
+      author: User.system,
       budget: budget,
       heading: heading,
       title: title,

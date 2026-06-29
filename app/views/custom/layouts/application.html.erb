@@ -13,10 +13,11 @@
     <%= raw setting["html.per_page_code_head"] %>
   </head>
   <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
-    <% if Setting["brand_color"].present? && Setting["brand_color"].match?(/\A#[0-9a-fA-F]{3,8}\z/) %>
-      <style>:root { --brand-color: <%= Setting["brand_color"] %>; }</style>
-    <% end %>
+    <%= render "layouts/brand_color_root_style" %>
     <%= yield :styles %>
+
+    <a href="#main-content" class="show-for-sr"><%= t("custom.accessibility.skip_links.skip_to_content") %></a>
+    <a href="#main-navigation" class="show-for-sr"><%= t("custom.accessibility.skip_links.skip_to_navigation") %></a>
 
     <% wrapper_content = capture do %>
       <% if request.headers["User-Agent"] =~ /MSIE/ && cookies["ie_alert_closed"] != "true" %>
@@ -45,20 +46,18 @@
 
     <%= raw setting["html.per_page_code_body"] %>
 
-    <% if Setting.new_design_enabled? && !embedded? %>
+    <% if Setting.new_design_enabled? %>
       <%= render "layouts/header", with_subnavigation: true %>
     <% end %>
-    <div id="main-content" class="wrapper <%= yield(:wrapper_class) %>">
+    <div id="main-content" class="wrapper <%= yield(:wrapper_class) %>" tabindex="-1">
       <% if Setting.old_design_enabled? %>
         <%= render "layouts/header", with_subnavigation: true %>
       <% end %>
       <%= wrapper_content %>
     </div>
-    <% unless embedded? %>
-      <div class="footer">
-        <%= render "layouts/footer" %>
-      </div>
-    <% end %>
+    <div class="footer">
+      <%= render "layouts/footer" %>
+    </div>
 
     <% if @namespace.present? %>
       <script>
@@ -70,13 +69,14 @@
 
     <% if current_user&.administrator? || current_user&.projekt_manager? %>
       <%= render Projekts::ContentBlockTemplatesSelectorComponent.new %>
+      <%= render Projekts::ContentBlockAiCreateModalComponent.new %>
       <%= render Projekts::ContentBlockEditPopupsComponent.new %>
       <%= render ProjektStudio::FileUploadDialogComponent.new(type: "picture") %>
       <%= render ProjektStudio::FileUploadDialogComponent.new(type: "document") %>
     <% end %>
     <% if user_signed_in? %>
       <%
-        timeout_minutes = (Devise.timeout_in / 60).to_i
+        timeout_minutes = (User.timeout_in / 60).to_i
         warning_minutes = [5, timeout_minutes - 1].min
       %>
       <div

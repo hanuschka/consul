@@ -91,6 +91,10 @@ de:
         excluded_file_content_types: 'Datei kann nicht %{types} sein'
 
       models:
+        deficiency_report:
+          attributes:
+            map_location:
+              blank: Bitte wählen Sie einen Standort auf der Karte aus
         proposal:
           attributes:
             description:
@@ -143,6 +147,10 @@ de:
           attributes:
             email:
               taken: wurde bereits verwendet
+        recipient_group_filter:
+          attributes:
+            operator:
+              must_be_include_for_first_filter: muss „Hinzufügen" sein, solange noch kein anderer Filter vorhanden ist
     attributes:
       map_location:
         latitude: Breitengrad

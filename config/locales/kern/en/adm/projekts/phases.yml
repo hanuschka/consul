@@ -92,6 +92,8 @@ en:
           dates_description: Defines the period during which this participation phase is active. Within this period, users can participate in the phase. Outside the period, the phase is shown as completed or not yet started. The duration is configurable independently of the overall project duration.
         naming:
           title: Naming
+          poll_image_label: Poll image
+          poll_image_description: "Shown as a thumbnail next to the title in the polls overview to aid quick visual recognition. Use a landscape image with a clear subject that fits the topic of the poll. Recommended format: at least 600 pixels wide, JPG or PNG."
         restrictions:
           title: Participation restriction
           intro_title: About participation restrictions
@@ -135,8 +137,15 @@ en:
           download_geojson: Download GeoJSON
           no_proposals_title: No proposals available
           no_proposals_description: As soon as users submit proposals in this participation phase, they are listed here and can be moderated. You can approve proposals, hide them, or review flagged contributions. The table shows title, author, and moderation status of each individual proposal.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
+          total_label:
+            one: proposal
+            other: proposals
+          total_hint: Proposals in the current view (including active filters).
           table:
             id: ID
+            image: Image
             admin_accepted: Approved
             title: Title
             moderation: Moderation
@@ -151,6 +160,7 @@ en:
           title: Comments
           no_comments_title: No comments available
           no_comments_description: As soon as users post comments in this participation phase, they are listed here and can be moderated. You can hide individual comments, restore them, or review flagged contributions. The table shows author, content, and moderation status of each comment.
+          download_csv: Download CSV
           table:
             body: Comment
             author: Author
@@ -179,6 +189,7 @@ en:
             actions: Actions
         map:
           title: Map
+          masterportal_import_success: Import completed successfully.
         masterportal_pins:
           title: Imported Masterportal pins
         officing_managers:
@@ -193,6 +204,7 @@ en:
           title: Questions
           create_question: Create normal question
           create_bundle_question: Create question bundle
+          download_individual_answers: Download individual answers
           intro_text_p1: >
             Here you manage the questions of this voting phase. There are two question types:
           intro_question_types:
@@ -273,6 +285,7 @@ en:
             author: Author
             category: Category
             created_at: Created on
+            actions: Actions
         map_resources_overview:
           title: Map overview
           not_yet_implemented: This feature will be implemented soon.
@@ -376,6 +389,11 @@ en:
           empty_description: This feature must first be enabled by demokratie.today for your platform. Please contact your representative to activate AI-supported evaluation criteria. After activation, you can define criteria here, by which submitted contributions are automatically evaluated and categorized.
         email_templates:
           title: System emails
+          groups:
+            submission: Submission (Phase 2)
+            feasibility: Feasibility review (Phase 2 + 3)
+            preselection: Preselection (Phase 4 → 5 transition)
+            selection: Final selection for voting (Phase 5)
         ai_settings:
           title: AI voice assistant
           empty_title: AI voice assistant not available
@@ -480,8 +498,15 @@ en:
           columns: Columns
           no_investments_title: No proposals available
           no_investments_description: As soon as users submit investment proposals in this participation phase, they are listed here and can be evaluated by valuators, checked for feasibility, and moderated as needed. Via the table you have access to all relevant details like cost, status, and valuation results of each individual proposal.
+          no_results_filtered_title: No proposals match the current filters
+          no_results_filtered_description: Adjust or remove the filters to see more proposals.
+          total_label:
+            one: proposal
+            other: proposals
+          total_hint: Proposals in the current view (including active filters).
           table:
             id: ID
+            image: Image
             created_at: Submitted
             title: Title
             feasibility: Criteria

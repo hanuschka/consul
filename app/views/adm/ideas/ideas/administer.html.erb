@@ -1,6 +1,6 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @idea.title, breadcrumbs: @breadcrumbs, back_button_url: adm_ideas_root_path) %>
 
 <%= render Adm::TabsComponent.new(tabs: idea_tabs(@idea)) %>
 

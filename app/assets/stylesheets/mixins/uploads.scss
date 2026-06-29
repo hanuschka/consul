@@ -13,6 +13,18 @@
   .document,
   .image {
 
+    .attachment-remove-icon {
+      border-bottom: 0;
+      font-size: rem-calc(18);
+      line-height: 1;
+
+      &:hover,
+      &:active,
+      &:focus {
+        border-bottom: 0;
+      }
+    }
+
     .document-attachment,
     .image-attachment {
       padding-left: 0;

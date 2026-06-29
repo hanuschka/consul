@@ -53,10 +53,11 @@
                 <span class="material-symbols-outlined" aria-hidden="true">image</span>
                 <%= t(".image_label") %>
               </div>
-              <%= render Adm::ImageWithLightboxComponent.new(
-                display_url: @image_url,
+              <%= render Shared::ImageWithLightboxComponent.new(
+                image_url: url_for(@image_url),
                 original_url: original_image_url,
-                title: @deficiency_report.title
+                alt: @deficiency_report.title,
+                gallery: "deficiency-report-#{@deficiency_report.id}"
               ) %>
             </div>
           <% end %>
@@ -70,6 +71,7 @@
               <% pin = @deficiency_report.map_location.pin_coordinates %>
               <%= render Kern::MapComponent.new(
                 map_location: @deficiency_report.map_location,
+                gesture_handling: false,
                 height: 400,
                 latitude: pin&.dig(:latitude),
                 longitude: pin&.dig(:longitude),
@@ -161,18 +163,9 @@
     <% end %>
 
     <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
-      <div class="adm-detail-table">
-        <div class="adm-detail-table__row">
-          <div class="adm-detail-table__label"><%= t(".admin_accepted_status") %></div>
-          <div class="adm-detail-table__value">
-            <% if @deficiency_report.admin_accepted %>
-              <span class="kern-badge kern-badge--success"><%= t(".accepted") %></span>
-            <% else %>
-              <span class="kern-badge kern-badge--info"><%= t(".not_accepted") %></span>
-            <% end %>
-          </div>
-        </div>
-      </div>
+      <%= render Kern::FormFieldComponent.new(label: t(".admin_accepted_status"), hint: t(".admin_accepted_status_hint")) do %>
+        <%= render "admin_accepted_toggle", deficiency_report: @deficiency_report %>
+      <% end %>
     <% end %>
   </section>
 

@@ -1,0 +1,5 @@
+de:
+  components:
+    adm:
+      language_selector_component:
+        label: Sprache auswählen

@@ -24,6 +24,7 @@ export default class extends Controller {
     zoom: { type: Number, default: 13 },
     altitude: { type: Number, default: 0 },
     editable: { type: Boolean, default: true },
+    gestureHandling: { type: Boolean, default: true },
     adminEditor: { type: Boolean, default: false },
     enableSetCenter: { type: Boolean, default: false },
     features: { type: Object, default: {} },
@@ -99,8 +100,10 @@ export default class extends Controller {
       zoom: this.zoomValue,
       altitude: this.altitudeValue,
       editable: this.editableValue,
+      gestureHandling: this.gestureHandlingValue,
       adminEditor: this.adminEditorValue,
       enableSetCenter: this.enableSetCenterValue,
+      masterportalEnabled: this.renderingLibraryValue === "leaflet_plus_masterportal",
       mapboxPublicToken: this.mapboxPublicTokenValue,
       mapboxStyleId: this.mapboxStyleIdValue,
       vcMapModuleUrl: this.vcMapModuleUrlValue

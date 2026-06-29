@@ -11,7 +11,7 @@ de:
           draft: Entwurf
         quick_links:
           new: Neues Projekt
-          import_projekt: Projekt aus Datei importieren
+          imports: Projektimport
           all: Alle Projekte
           current: Aktive Projekte
       menu:
@@ -21,14 +21,11 @@ de:
           projekts: Projekte
           managers: Team
           landing_pages: Themenseiten
-          overview_page: Projektübersichtsseite
-      overview_page:
-        title: Projektübersichtsseite
-        hint_text: >
-          Konfigurieren Sie hier die öffentliche Projektübersichtsseite, auf der alle Beteiligungsprojekte
-          gelistet werden. Über die Navigation steuern Sie, welche Projektlisten in der oberen Filterleiste
-          angezeigt werden. Im Footer-Tab legen Sie fest, welche Projektlisten im unteren Bereich der Seite
-          erscheinen.
+          settings: Konfiguration
+      settings:
+        tabs:
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
       landing_pages:
         index:
           title: Themenseiten
@@ -60,6 +57,8 @@ de:
           import_projekt: Projekt aus Datei importieren
           no_projekts_title: Keine Projekte vorhanden
           no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
+          no_results_filtered_title: Keine Projekte für die aktuelle Suche
+          no_results_filtered_description: Passen Sie die Suche an oder entfernen Sie sie, um weitere Projekte zu sehen.
           table:
             status: Status
             actions: Aktionen
@@ -86,6 +85,8 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           projekt_phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Alle zugehörigen Phasen werden ebenfalls gelöscht.
         tabs:
@@ -95,6 +96,8 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           phases: Beteiligungsphasen
+          images: Bilder
+          documents: Dokumente
         details:
           title: Projektdetails
           hint_title: Hinweis zu den Projektdetails
@@ -139,7 +142,7 @@ de:
           no_managers_description: Erstellen Sie einen neuen Projektmanager unter „Projektmanager" in der Seitenleiste, um diesen anschließend dem Projekt zuzuweisen.
           no_managers_link: Projektmanager anlegen
           assignment:
-            hint: Bitte definieren Sie welche Rechte dem Projektmanager zugewiesen werden sollen.
+            hint: Legen Sie hier fest, welche Rechte dem ausgewählten Projektmanager für dieses Projekt erteilt werden sollen. Die Auswahl bestimmt, welche Aktionen verfügbar sind — etwa die Projektverwaltung, die Moderation von Inhalten, das Erstellen von Beiträgen im Namen anderer oder das Empfangen von Benachrichtigungen. Mehrere Rechte können kombiniert werden.
             permissions:
               manage: Projekt administrieren
               moderate: Inhalte moderieren
@@ -179,6 +182,10 @@ de:
             active: Aktiv
             visible: Sichtbar
             actions: Aktionen
+        images:
+          title: Bilder
+        documents:
+          title: Dokumente
         update:
           success: Projekt erfolgreich aktualisiert.
         notify_reviewers:

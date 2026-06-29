@@ -1,0 +1,15 @@
+<%= content_for :title, t("adm.overview_pages.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.overview_pages.title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.overview_pages.hint_text") %></p>
+  <% end %>
+<% end %>
+
+<%= render Adm::TabsComponent.new(tabs: overview_pages_tabs) %>
+
+<div class="kern-container my-5">
+  <% @overview_settings.each do |setting| %>
+    <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+  <% end %>
+</div>

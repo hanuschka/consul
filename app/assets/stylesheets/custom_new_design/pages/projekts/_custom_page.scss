@@ -34,6 +34,7 @@ $phase-marker-border: #cbd5e1;
   // eine durchgehende Linie auf dem Container.
   .sidebar-projekt-phase:not(:last-child) > .sidebar-projekt-phase-details::before {
     display: none;
+    color: $accent-blue !important;
   }
 
   .sidebar-projekt-phase {
@@ -121,6 +122,15 @@ $phase-marker-border: #cbd5e1;
     color: rgba(0, 0, 0, 0.5);
   }
 
+  .sidebar-projekt-phase.active > .sidebar-projekt-phase-status {
+    background-color: #93C5E4 !important;
+    border-color: $accent-blue !important;
+  }
+
+  .sidebar-projekt-phase.active > .sidebar-projekt-phase-details {
+    color: $accent-blue !important;
+  }
+
   .sidebar-projekt-phase-details {
     flex: 1 1 auto;
     min-width: 0;
@@ -132,14 +142,10 @@ $phase-marker-border: #cbd5e1;
       line-height: 1.35;
       color: inherit;
 
-      a {
-        color: inherit;
-
-        i {
-          opacity: 0;
-          margin-left: 4px;
-          transition: opacity 150ms ease;
-        }
+      i {
+        opacity: 0;
+        margin-left: 4px;
+        transition: opacity 150ms ease;
       }
     }
 
@@ -152,7 +158,13 @@ $phase-marker-border: #cbd5e1;
     }
   }
 
-  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name a i {
+  .sidebar-projekt-phase-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sidebar-projekt-phase:hover .sidebar-projekt-phase-name i {
     opacity: 0.6;
   }
 
@@ -241,7 +253,7 @@ $phase-marker-border: #cbd5e1;
         height: 6px;
         font-size: 0;
         font-family: inherit;
-        background: rgba(0, 0, 0, 0.28);
+        background: $accent-blue !important;
         border-radius: 50%;
         transition: background-color 150ms ease, width 150ms ease, height 150ms ease, top 150ms ease, left 150ms ease;
       }
@@ -251,6 +263,7 @@ $phase-marker-border: #cbd5e1;
         text-decoration: none !important;
         display: block;
         line-height: 1.35;
+        font-family: $body-font;
 
         &:hover,
         &:focus,
@@ -279,7 +292,7 @@ $phase-marker-border: #cbd5e1;
         }
 
         > a {
-          color: var(--brand-color) !important;
+          color: $accent-blue !important;
           font-weight: 600;
         }
       }
@@ -516,13 +529,19 @@ $phase-marker-border: #cbd5e1;
       height: 100%;
     }
 
+    &:has(a:focus-visible) {
+      outline: $outline-focus;
+      outline-offset: 2px;
+    }
+
     .image-maximize-button {
       visibility: hidden;
       opacity: 0;
       transition: all 100ms ease;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       .image-maximize-button {
         visibility: visible;
         opacity: 1;
@@ -632,6 +651,7 @@ $phase-marker-border: #cbd5e1;
 
   .projekt-footer {
     scroll-margin-top: 270px;
+    margin-top: 5px;
 
     @media (max-width: $small-tablet-viewport-start) {
       // Phase-Tab-Card und darunter liegender Phase-Content kleben sonst direkt
@@ -640,6 +660,16 @@ $phase-marker-border: #cbd5e1;
       // mit Kind-Elementen im gerenderten Phase-Content.
       #footer-content.js-projekt-footer-content {
         padding-top: 20px;
+      }
+    }
+
+    // Offset for the fixed topbar so the "Jetzt mitmachen" CTA anchor
+    // (#new_comments_component) lands below it instead of behind it.
+    #new_comments_component {
+      scroll-margin-top: calc(#{$topbar-height} + var(--admin-topbar-height) + 20px);
+
+      @media (max-width: $small-tablet-viewport-start) {
+        scroll-margin-top: calc(#{$topbar-height-mobile} + var(--admin-topbar-height) + 20px);
       }
     }
 
@@ -676,10 +706,87 @@ $phase-marker-border: #cbd5e1;
       @media (max-width: $mobile-viewport-start) {
         width: 100%;
       }
+
+      .comment-form {
+        border-color: $soft-border;
+        border-radius: $radius-large;
+        box-shadow: $shadow-small;
+        font-family: $body-font;
+
+        textarea {
+          border: 2px solid $soft-border;
+          border-radius: 6px;
+          font-family: $body-font;
+          font-size: 16px;
+          padding: 12px 16px;
+          transition: border-color $transition-base, box-shadow $transition-base;
+
+          &:focus {
+            border-color: $accent-blue;
+            box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+            outline: none;
+          }
+        }
+
+        h2 {
+          font-family: $heading-font;
+          font-size: 18px;
+          font-weight: 600;
+          color: $dark-navy;
+        }
+
+        // Submit button
+        input[type="submit"], button[type="submit"], .button.is-outlined {
+          background: $cta-orange !important;
+          color: #FFFFFF !important;
+          border: none !important;
+          border-radius: 6px !important;
+          font-family: $heading-font;
+          font-weight: 600;
+          font-size: 16px;
+          padding: 12px 24px;
+          transition: background $transition-base;
+          cursor: pointer;
+
+          &:hover {
+            background: $cta-orange-hover !important;
+          }
+        }
+
+        // Checkboxes
+        label {
+          font-family: $body-font;
+          font-size: 14px;
+          color: $muted-text;
+        }
+      }
+
+      .comment {
+        border-color: $soft-border;
+        border-radius: $radius-base;
+      }
     }
   }
 
   .projekt-page {
+    font-family: $body-font;
+    color: $dark-navy;
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: $heading-font;
+      color: $dark-navy;
+    }
+
+    .button {
+      font-family: $heading-font;
+      border-radius: 6px;
+    }
+
+    // Primary buttons (brand-color based)
+    .button:not(.hollow):not(.clear) {
+      transition: background $transition-base;
+    }
+
     .main-column {
       display: flex;
       flex-direction: column;
@@ -713,6 +820,10 @@ $phase-marker-border: #cbd5e1;
     }
   }
 
+  &.custom-page {
+    background-color: $page-bg-light;
+  }
+
   .custom-page-content {
     h3 {
       margin-bottom: 0.6rem;
@@ -721,6 +832,11 @@ $phase-marker-border: #cbd5e1;
       @media(max-width: $big-tablet-viewport-start) {
         margin-top: 1rem;
       }
+    }
+
+    .glightbox:focus-visible {
+      outline: $outline-focus;
+      outline-offset: -3px;
     }
   }
 

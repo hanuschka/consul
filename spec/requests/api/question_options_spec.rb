@@ -110,6 +110,10 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
         run_test!
       end
+
+      unauthorized_response { let(:question_id) { 1 } }
+
+      forbidden_response { let(:question_id) { 1 } }
     end
   end
 
@@ -157,6 +161,8 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a question option' do
@@ -263,6 +269,10 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a question option' do
@@ -335,6 +345,10 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

@@ -7,7 +7,8 @@ module ContentBlocksHelper
     custom_prefix: nil,
     default_content: nil,
     return_path: nil,
-    toolbar_position: nil
+    toolbar_position: nil,
+    empty_hint: true
   )
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
@@ -41,7 +42,8 @@ module ContentBlocksHelper
         sanitized_body,
         inline_urls,
         default_content: sanitized_default_content,
-        toolbar_position: toolbar_position
+        toolbar_position: toolbar_position,
+        empty_hint: empty_hint
       ).html_safe
     else
       res = build_standard_block(key, block, block_body, projekt, return_path)
@@ -72,7 +74,7 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil)
+  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil, empty_hint: true)
     res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
@@ -86,9 +88,32 @@ module ContentBlocksHelper
       res << " data-toolbar-position=\"#{ERB::Util.html_escape(toolbar_position.to_s)}\""
     end
 
+    persisted_margin = block.attributes_before_type_cast["margin_bottom"]
+    if persisted_margin.present?
+      res << " style=\"margin-bottom: #{persisted_margin.to_i}px\""
+    end
+
     res << ">#{block_body}</div>"
 
+    if empty_hint && content_block_body_blank?(block_body)
+      res = wrap_with_admin_empty_hint(res)
+    end
+
     res
+  end
+
+  def wrap_with_admin_empty_hint(block_html)
+    wrapper_classes = "content-block-empty-hint-wrap js-toggle-empty-hint-on-content is-content-empty"
+
+    hint = "<div class=\"content-block-empty-hint js-content-block-empty-hint js-studio-hide-on-preview\" role=\"note\">"
+    hint << "<span class=\"content-block-empty-hint--icon\" aria-hidden=\"true\"><i class=\"fas fa-circle-info\"></i></span>"
+    hint << "<span class=\"content-block-empty-hint--text\">"
+    hint << "<strong class=\"content-block-empty-hint--title\">#{ERB::Util.html_escape(I18n.t("custom.content_blocks.admin_empty_hint_title"))}</strong>"
+    hint << "<span class=\"content-block-empty-hint--description\">#{ERB::Util.html_escape(I18n.t("custom.content_blocks.admin_empty_hint"))}</span>"
+    hint << "</span>"
+    hint << "</div>"
+
+    "<div class=\"#{wrapper_classes}\">#{hint}#{block_html}</div>"
   end
 
   def build_standard_block(key, block, block_body, projekt, return_path)
@@ -187,5 +212,11 @@ module ContentBlocksHelper
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")
     result
+  end
+
+  def safe_content_block_body(body)
+    return "" if body.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(body)
   end
 end

@@ -349,10 +349,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @formular = @projekt_phase.formular
     @formular_fields = @formular.formular_fields
-    @formular_answers = @formular.formular_answers
 
     respond_to do |format|
       format.html do
+        @pagy, @formular_answers = pagy(
+          @formular.formular_answers
+            .order(:id)
+            .preload(
+              formular_answer_images: { attachment_attachment: :blob },
+              formular_answer_documents: { attachment_attachment: :blob }
+            )
+        )
         @breadcrumbs = [
           { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },

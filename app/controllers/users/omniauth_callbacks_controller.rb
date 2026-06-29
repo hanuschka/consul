@@ -110,7 +110,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       when :bund_id
         "BundID"
       when :kobil
-        "KOBIL Identity"
+        "KOBIL"
       else
         provider.to_s.capitalize
       end

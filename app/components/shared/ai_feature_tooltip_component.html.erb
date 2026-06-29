@@ -1,11 +1,13 @@
 <rich-tooltip
+  class="ai-feature-tooltip<%= " #{layout_class}" if layout_class.present? %>"
   placement="<%= placement %>"
   delay="300"
   trigger-only
+  <%= "focusable" if ai_disabled? %>
   hover-only
   shadow="heavy"
 >
-  <span class="ai-feature-tooltip--trigger<%= " #{trigger_class}" if trigger_class.present? %><%= ' -ai-disabled' if ai_disabled? %>">
+  <span class="ai-feature-tooltip--trigger<%= ' -ai-disabled' if ai_disabled? %>">
     <%= content %>
   </span>
   <template>

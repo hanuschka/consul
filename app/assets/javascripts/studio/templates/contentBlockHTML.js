@@ -13,9 +13,10 @@ ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { t
   const titleHtml = title ? `<span class="rich-tooltip-content--title">${title}</span>` : "";
   const textHtml = text ? `<span class="rich-tooltip-content--text">${text}</span>` : "";
   const noteHtml = note ? `<span class="rich-tooltip-content--note">${note}</span>` : "";
+  const focusableAttribute = note ? " focusable" : "";
 
   return `
-    <rich-tooltip${delayAttribute}${placementAttribute} trigger-only>
+    <rich-tooltip${delayAttribute}${placementAttribute} trigger-only${focusableAttribute}>
       ${triggerHtml}
       <template>
         <div class="rich-tooltip-content">
@@ -27,6 +28,10 @@ ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { t
     </rich-tooltip>
   `;
 };
+
+// Tooltip note shown when AI is not enabled — mirrors Shared::AiFeatureTooltipComponent.
+ProjektStudio.templateFunctions.aiDisabledTooltipNote =
+  '<span class="ai-feature-tooltip--note-heading">KI aktivieren, um die Funktion zu nutzen</span> Wenden Sie sich an info@demokratie.today, um die KI-Funktion zu aktivieren.';
 
 // Admin-only placeholder shown inside an empty projekt content block (studio
 // only, hidden in preview-as-user). Mirrors the site-block hint rendered by
@@ -259,13 +264,14 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <button
                     type="button"
                     tabindex="-1"
-                    class="js-content-block-enter-ai-edit-mode studio-icon-button"
+                    class="js-content-block-enter-ai-edit-mode studio-icon-button ${ProjektStudio.config.aiAvailable ? "" : "ai-feature-disabled"}"
                   >
                     <i class="fas fa-magic"></i>
                   </button>
                 `, {
                   title: "KI-Editor",
-                  text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern."
+                  text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern.",
+                  note: ProjektStudio.config.aiAvailable ? null : ProjektStudio.templateFunctions.aiDisabledTooltipNote
                 })}
               </div>
               ${ProjektStudio.templateFunctions.studioControlTooltip(`

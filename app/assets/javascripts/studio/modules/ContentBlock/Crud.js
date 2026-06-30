@@ -199,7 +199,7 @@ App.ContentBlockEditor.Crud = {
 
     setTimeout(() => {
       newContentBlockContainer.scrollIntoView({ block: "center" })
-      App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.projekt-content-block'))
+      App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newContentBlockContainer).find('.custom-content-block'))
       App.ImageGallery.initialize()
       App.ContentBlockEditor.MapEmbed.hydrateIn(newContentBlockContainer)
     }, 0)
@@ -372,13 +372,13 @@ App.ContentBlockEditor.Crud = {
   },
 
   showDefaultContentNotification(wrapper) {
-    const toolbar = wrapper.querySelector(".projekt-content-block--toolbar");
+    const toolbar = wrapper.querySelector(".custom-content-block--toolbar");
     let notification = toolbar.querySelector(".js-default-content-notification");
 
     if (notification) return
 
     notification = document.createElement("span");
-    notification.className = "projekt-content-block--default-notification js-default-content-notification";
+    notification.className = "custom-content-block--default-notification js-default-content-notification";
     notification.textContent = "Standardinhalt wird angezeigt";
     toolbar.prepend(notification);
 

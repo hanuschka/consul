@@ -25,7 +25,6 @@
       this.extendButton.addEventListener("click", this.handleExtend.bind(this));
       this.logoutButton.addEventListener("click", this.handleLogout.bind(this));
 
-      this.dialog.addEventListener("keydown", this.handleKeydown.bind(this));
       this.dialog.addEventListener("cancel", this.handleExtend.bind(this));
     },
 
@@ -62,7 +61,6 @@
       this.countdownInterval = setInterval(this.tickCountdown.bind(this), 1000);
 
       this.dialog.showModal();
-      App.FocusTrap.setBackgroundInert([this.dialog]);
       this.extendButton.focus();
     },
 
@@ -70,8 +68,6 @@
       if (this.dialog.open) {
         this.dialog.close();
       }
-
-      App.FocusTrap.removeBackgroundInert();
 
       if (this.countdownInterval) {
         clearInterval(this.countdownInterval);
@@ -117,12 +113,6 @@
 
     submitSignOut: function() {
       $.rails.handleMethod($("<a>", { href: "/users/sign_out", "data-method": "delete" }));
-    },
-
-    handleKeydown: function(event) {
-      if (event.key === "Tab") {
-        App.FocusTrap.handleTabKey(event, this.dialog);
-      }
     }
   };
 }).call(this);

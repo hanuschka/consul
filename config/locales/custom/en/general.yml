@@ -4,6 +4,8 @@ en:
       model_not_configured: "Error: AI model not configured"
       generation_failed: "Error: Failed to generate content block with AI"
     disabled_tooltip: "AI features unavailable. Contact administrator."
+    disabled_note_label: "Enable AI to use feature"
+    disabled_note_text: "Contact info@demokratie.today to enable the AI feature."
     instructions_placeholder: "Enter your instructions for editing this content block. By default, the project title, subtitle, and the content of this content block are provided as context."
     submit: Submit
     cancel: Cancel

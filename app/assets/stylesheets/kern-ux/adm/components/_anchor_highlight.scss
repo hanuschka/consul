@@ -1,0 +1,25 @@
+@keyframes adm-anchor-highlight-blink {
+  0% { background-color: transparent; }
+  20% { background-color: var(--adm-anchor-highlight-tint); }
+  50% { background-color: transparent; }
+  80% { background-color: var(--adm-anchor-highlight-tint); }
+  100% { background-color: transparent; }
+}
+
+@keyframes adm-anchor-highlight-fade {
+  0% { background-color: var(--adm-anchor-highlight-tint); }
+  100% { background-color: transparent; }
+}
+
+.adm-anchor-highlight {
+  --adm-anchor-highlight-tint: hsl(210, 88%, 93%);
+
+  border-radius: 6px;
+  animation: adm-anchor-highlight-blink 1.4s ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-anchor-highlight {
+    animation: adm-anchor-highlight-fade 1.2s ease-out 1;
+  }
+}

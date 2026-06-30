@@ -204,6 +204,7 @@ de:
           title: Fragen
           create_question: Normale Frage erstellen
           create_bundle_question: Fragenbündel erstellen
+          download_individual_answers: Einzelantworten herunterladen
           intro_text_p1: >
             Hier verwalten Sie die Fragen dieser Abstimmungsphase. Es gibt zwei Fragetypen:
           intro_question_types:

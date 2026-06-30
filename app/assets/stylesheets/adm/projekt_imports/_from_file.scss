@@ -463,3 +463,64 @@ $_import-icon-bg-neutral: #f0f1f3;
     display: none;
   }
 }
+
+.projekt-import-diagnostics {
+  width: 100%;
+  max-width: $_import-section-max-width;
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: $_import-text-muted;
+  background: $_import-input-bg;
+  border: 1px solid $_import-border;
+  border-radius: $_import-radius-sm;
+  text-align: left;
+}
+
+.projekt-import-diagnostics--summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: $_import-text;
+  cursor: pointer;
+}
+
+.projekt-import-diagnostics--summary .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.projekt-import-diagnostics--list {
+  margin: 12px 0 0;
+}
+
+.projekt-import-diagnostics--row {
+  display: flex;
+  gap: 12px;
+  padding: 4px 0;
+  border-top: 1px solid color-mix(in srgb, $_import-border 70%, white);
+}
+
+.projekt-import-diagnostics--key {
+  flex: 0 0 38%;
+  font-weight: 600;
+  color: $_import-text;
+}
+
+.projekt-import-diagnostics--value {
+  flex: 1 1 auto;
+  margin: 0;
+  word-break: break-word;
+}
+
+.projekt-import-diagnostics--backtrace {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $_import-text-faint;
+  background: var(--kern-color-background-default, #fff);
+  border: 1px solid $_import-border;
+  border-radius: 8px;
+}

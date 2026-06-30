@@ -4,6 +4,10 @@ class Adm::ExternalApiKeysController < Adm::BaseController
     authorize [:adm, ExternalApiKey], :index?, policy_class: Adm::ExternalApiKeyPolicy
     @external_api_keys = policy_scope(ExternalApiKey, policy_scope_class: Adm::ExternalApiKeyPolicy::Scope).order(:name)
 
+    if !Ai::Settings.feature_enabled?
+      @external_api_keys = @external_api_keys.where.not(service: "openai")
+    end
+
     @breadcrumbs = [
       { name: t("adm.external_api_keys.index.title"), icon: "key" }
     ]

@@ -6,6 +6,11 @@
           <i class="fas fa-times"></i>
         </button>
       <% end %>
+      <% if title.present? %>
+        <div class="modern-modal--header">
+          <h3><%= title %></h3>
+        </div>
+      <% end %>
       <%= content %>
     </div>
   <% else %>

@@ -1,11 +1,16 @@
 class ImageSerializer
   include Rails.application.routes.url_helpers
 
-  attr_reader :image, :include_variants
+  VARIANT_WIDTHS = [150, 300, 450, 600, 900, 1200, 1920].freeze
+  ORIGINAL_VERSION = "original".freeze
+  ALL_VARIANT_VERSIONS = (VARIANT_WIDTHS.map(&:to_s) + [ORIGINAL_VERSION]).freeze
 
-  def initialize(image, include_variants: true)
+  attr_reader :image, :include_variants, :variant_versions
+
+  def initialize(image, include_variants: true, variant_versions: nil)
     @image = image
     @include_variants = include_variants
+    @variant_versions = filter_variant_versions(variant_versions)
   end
 
   def serialize
@@ -28,25 +33,34 @@ class ImageSerializer
   private
 
   def serialize_variants
-    {
-      "150": variant_url_by_width(150),
-      "300": variant_url_by_width(300),
-      "450": variant_url_by_width(450),
-      "600": variant_url_by_width(600),
-      "900": variant_url_by_width(900),
-      "1200": variant_url_by_width(1200),
-      "1920": variant_url_by_width(1920),
-      "original": rails_blob_url(image.attachment, **image_url_options)
-    }
+    variant_versions.each_with_object({}) do |version, variants|
+      variants[version.to_sym] = variant_url_for(version)
+    end
+  end
+
+  def variant_url_for(version)
+    if version == ORIGINAL_VERSION
+      return rails_blob_url(image.attachment, **image_url_options)
+    end
+
+    variant_url_by_width(version.to_i)
   end
 
   def variant_url_by_width(width)
-    return nil unless image.attachment.attached?
+    return nil if !image.attachment.attached?
 
     variant = image.attachment.variant(resize_to_limit: [width, nil])
     rails_representation_url(variant, **image_url_options)
   rescue StandardError
     nil
+  end
+
+  def filter_variant_versions(versions)
+    return ALL_VARIANT_VERSIONS if versions.blank?
+
+    requested = Array(versions).map(&:to_s)
+
+    ALL_VARIANT_VERSIONS.select { |version| requested.include?(version) }
   end
 
   def image_url_options

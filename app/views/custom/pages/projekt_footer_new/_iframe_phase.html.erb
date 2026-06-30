@@ -17,11 +17,13 @@
       width="<%= @iframe_width %>"
       height="<%= @iframe_height %>"
       frameborder="0"
+      allow="fullscreen"
+      allowfullscreen
     ></iframe>
   <% end %>
 
   <% if extended_feature?("gdpr.two_click_iframe_solution") %>
-    <%= sanitize process_iframe_embeds(content), tags: %w[iframe], attributes: %w[class width height frameborder src data-src title] %>
+    <%= sanitize process_iframe_embeds(content), tags: %w[iframe], attributes: %w[class width height frameborder src data-src title allow allowfullscreen] %>
   <% else %>
     <%= content %>
   <% end %>

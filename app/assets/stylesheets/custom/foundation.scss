@@ -16,9 +16,13 @@
 .accordion-title {
   color: black;
   font-size: 18px;
+
+  &::before {
+    font-size: 22px;
+  }
 }
 
-.projekt-content-block {
+.custom-content-block {
   .column:last-child:not(:first-child), .columns:last-child:not(:first-child) {
     float: left;
   }

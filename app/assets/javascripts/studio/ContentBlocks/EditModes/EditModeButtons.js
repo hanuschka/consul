@@ -7,7 +7,7 @@ App.Studio.ContentBlocks.EditModeButtons = {
 
   handleSave(e) {
     const button = e.currentTarget;
-    const contentBlockWrapper = button.closest(".projekt-content-block-wrapper");
+    const contentBlockWrapper = button.closest(".custom-content-block-wrapper");
     const editMode = contentBlockWrapper.dataset.editMode;
 
     switch(editMode) {
@@ -28,7 +28,7 @@ App.Studio.ContentBlocks.EditModeButtons = {
 
   handleCancel(e) {
     const button = e.currentTarget;
-    const contentBlockWrapper = button.closest(".projekt-content-block-wrapper");
+    const contentBlockWrapper = button.closest(".custom-content-block-wrapper");
     const editMode = contentBlockWrapper.dataset.editMode;
 
     switch(editMode) {

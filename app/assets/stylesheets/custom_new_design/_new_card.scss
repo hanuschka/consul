@@ -47,6 +47,13 @@
       font-family: $heading-font;
     }
 
+    @media(max-width: $big-tablet-viewport-start) {
+      padding: 25px 25px;
+    }
+    @media (max-width: $mobile-viewport-start) {
+      padding: 20px 25px;
+    }
+
     &.-hide-background {
       background: transparent;
       padding: 0;

@@ -3,7 +3,7 @@
   padding-bottom: 0;
   color: #fff;
   background-color: #afd24a;
-  margin-top: 220px;
+  margin-top: 220px !important;
   font-weight: bold;
 
   @media screen and (min-width: 1000px) {
@@ -29,52 +29,18 @@
   footer {
     position: relative;
     background-color: #afd24a;
-    padding-bottom: 60px;
 
     &::before {
-      content: image-url("footer.svg");
+      content: "";
       position: absolute;
-      top: 0;
-      background-position: top center;
-      background-repeat: no-repeat;
       left: 0;
       right: 0;
-      top: -100px;
-
-      @media screen and (min-width: 500px) {
-        top: -120px;
-      }
-
-      @media screen and (min-width: 750px) {
-        top: -170px;
-      }
-
-      @media screen and (min-width: 1000px) {
-        top: -220px;
-      }
-
-      @media screen and (min-width: 1500px) {
-        top: -270px;
-      }
-
-      @media screen and (min-width: 1800px) {
-        top: -390px;
-      }
-
-      @media screen and (min-width: 75rem) {
-        // left: calc(37.5rem - 50vw);
-        // right: calc(37.5rem - 50vw);
-      }
-    }
-
-    .clikus {
-      z-index: 0;
-      position: relative;
+      bottom: 100%;
+      aspect-ratio: 1917.9 / 511;
+      background: image-url("footer.svg") no-repeat bottom center / 100% 100%;
     }
   }
 }
-
-
 
 .auth-page .footer {
   footer {

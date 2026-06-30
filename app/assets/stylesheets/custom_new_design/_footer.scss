@@ -18,9 +18,9 @@
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -4px 16px -4px rgba(0, 0, 0, 0.08);
 
-    @media (max-width: $big-tablet-viewport-start) {
-      padding: 0 20px;
-    }
+    // @media (max-width: $big-tablet-viewport-start) {
+    //   padding: 0 20px;
+    // } cli
 
     // Flex layout so the *actually rendered* columns fill the available width
     // evenly — regardless of whether 2, 3 or 4 columns end up rendering. Avoids

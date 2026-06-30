@@ -23,6 +23,18 @@ module Dt
     InternalApiClient.dt_connected?
   end
 
+  def self.logo_path
+    Rails.root.join("app", "assets", "images", "logo_header.png")
+  end
+
+  def self.map_settings
+    {
+      latitude: Setting["map.latitude"],
+      longitude: Setting["map.longitude"],
+      zoom: Setting["map.zoom"]
+    }
+  end
+
   def self.platforms_overview_url
     "#{url}/platforms"
   end

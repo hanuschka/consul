@@ -29,6 +29,10 @@
           </div>
         <% end %>
 
+        <% if @projekt_import.failed? %>
+          <%= render Adm::Projekts::Imports::FailureDiagnosticsComponent.new(projekt_import: @projekt_import) %>
+        <% end %>
+
         <div class="projekt-import-detail--actions">
           <%= link_to t("adm.projekts.imports.from_files.show.upload_new"), new_adm_projekts_import_path,
                 class: "projekt-import-detail--primary-button" %>

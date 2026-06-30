@@ -6,7 +6,7 @@
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize t("custom.deficiency_reports.mailers.notify_author_about_submission.p1",
-      deficiency_report_link: link_to(t("custom.deficiency_reports.mailers.notify_author_about_submission.deficiency_report_link_text"), deficiency_report_url(@deficiency_report))) %>
+      deficiency_report_link: link_to(t("custom.deficiency_reports.mailers.notify_author_about_submission.deficiency_report_link_text"), deficiency_report_url(@deficiency_report), target: "_blank")) %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
@@ -26,7 +26,8 @@
       t("custom.deficiency_reports.mailers.notify_author_about_submission.p4",
         account_link: link_to(
           t("custom.deficiency_reports.mailers.notify_author_about_submission.account_link_text"),
-          account_url
+          account_url,
+          target: "_blank"
         ))
     ) %>
   </p>

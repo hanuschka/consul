@@ -1,6 +1,8 @@
 class ProjektImports::ProcessWithAiService < ApplicationService
   RETRY_INSTRUCTION = "Your previous response was not valid JSON matching the schema. Please respond again with ONLY a JSON object matching the schema."
 
+  MAX_INPUT_CHARS = 200_000
+
   attr_reader :text, :additional_user_instructions
 
   def initialize(text:, additional_user_instructions: nil)
@@ -18,15 +20,32 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     data = call_ai_with_retry(system_prompt: system_prompt, schema: schema, message: message)
 
     if data.blank? || data["content_blocks"].blank?
-      return ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.ai_malformed"))
+      return ServiceResult.failure(
+        error: I18n.t("adm.projekts.imports.errors.ai_malformed"),
+        error_details: malformed_details(data)
+      )
     end
 
     ensure_clarification_questions(data)
 
-    ServiceResult.success(ai_result: data)
+    ServiceResult.success(
+      ai_result: data,
+      text_truncated: @text_truncated,
+      original_text_length: @original_text_length,
+      analyzed_text_length: @analyzed_text_length
+    )
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ProcessWithAiService] failed: #{e.message}")
-    ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.ai_processing_failed", message: e.message))
+    Sentry.capture_exception(e, extra: { stage: "ai_processing", input_text_length: text.to_s.length }) if defined?(Sentry)
+    ServiceResult.failure(
+      error: I18n.t("adm.projekts.imports.errors.ai_processing_failed", message: e.message),
+      error_details: {
+        "failure_reason" => "exception",
+        "error_class" => e.class.name,
+        "error_message" => e.message,
+        "input_text_length" => text.to_s.length
+      }
+    )
   end
 
   private
@@ -43,13 +62,41 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   end
 
   def build_user_message
-    parts = ["Document text:\n#{text}"]
+    parts = ["Document text:\n#{analyzed_text}"]
 
     if additional_user_instructions.present?
       parts << "Additional context about this project:\n#{additional_user_instructions}"
     end
 
     parts.join("\n\n")
+  end
+
+  def analyzed_text
+    @analyzed_text ||= begin
+      full = text.to_s
+      @original_text_length = full.length
+      budget = MAX_INPUT_CHARS
+
+      if full.length <= budget
+        @text_truncated = false
+        @analyzed_text_length = full.length
+        full
+      else
+        @text_truncated = true
+        clipped = clip_to_boundary(full, budget)
+        @analyzed_text_length = clipped.length
+        clipped
+      end
+    end
+  end
+
+  def clip_to_boundary(full, budget)
+    clipped = full[0, budget]
+    boundary = clipped.rindex("\n\n") || clipped.rindex("\n") || clipped.rindex(" ")
+
+    return clipped if boundary.nil? || boundary <= budget / 2
+
+    clipped[0, boundary]
   end
 
   def call_ai_with_retry(system_prompt:, schema:, message:)
@@ -74,8 +121,24 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
     response.content
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ProcessWithAiService] AI call error: #{e.message}")
+    @last_ai_error = e
+    Rails.logger.error("[ProjektImports::ProcessWithAiService] AI call error: #{e.class}: #{e.message}")
+    Sentry.capture_exception(e, extra: { stage: "ai_processing", input_text_length: text.to_s.length }) if defined?(Sentry)
     nil
+  end
+
+  def malformed_details(data)
+    reason = data.blank? ? "ai_call_failed" : "schema_non_adherence"
+
+    {
+      "failure_reason" => reason,
+      "input_text_length" => @original_text_length || text.to_s.length,
+      "analyzed_text_length" => @analyzed_text_length,
+      "input_truncated" => @text_truncated,
+      "ai_error_class" => @last_ai_error&.class&.name,
+      "ai_error_message" => @last_ai_error&.message,
+      "returned_keys" => (data.is_a?(Hash) ? data.keys : nil)
+    }.compact
   end
 
   def ensure_clarification_questions(data)

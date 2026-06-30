@@ -6,12 +6,10 @@
   breadcrumbs: @breadcrumbs,
   frontend_url: projekt_path(@projekt),
   upload_endpoint: file_manager_documents_path(projekt_id: @projekt.id),
-  grid: {
-    assets: @assets,
-    endpoint: documents_adm_projekts_projekt_path(@projekt),
-    card_component: Files::DocumentCardComponent,
-    row_component: Files::DocumentRowComponent
-  }
+  assets: @assets,
+  endpoint: documents_adm_projekts_projekt_path(@projekt),
+  card_component: Files::DocumentCardComponent,
+  row_component: Files::DocumentRowComponent
 ) do |page| %>
   <% page.with_sub_header do %>
     <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>

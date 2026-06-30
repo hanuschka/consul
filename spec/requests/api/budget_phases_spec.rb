@@ -236,4 +236,90 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       unauthorized_response { let(:id) { 1 } }
     end
   end
+
+  path '/api/budgets/{budget_id}/budget_phases/bulk_update' do
+    parameter name: :budget_id, in: :path, type: :integer, description: 'Budget ID'
+
+    patch 'Bulk update budget phases' do
+      tags 'Budget Phases'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Update several budget phases of a budget in one request. Each entry is matched by its phase kind (e.g. accepting, balloting) and may set starts_at, ends_at, and/or enabled. Returns all updated phases. If any kind cannot be found, the request fails with 422 and no further phases are returned. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :budget_phases, in: :body, description: 'Array of phase updates keyed by phase kind', schema: {
+        type: :object,
+        properties: {
+          budget_phases: {
+            type: :array,
+            items: {
+              type: :object,
+              properties: {
+                kind: { type: :string, description: 'Phase kind to update (e.g. informing, accepting, balloting, finished)' },
+                starts_at: { type: :string, nullable: true, description: 'Phase start date (YYYY-MM-DD)' },
+                ends_at: { type: :string, nullable: true, description: 'Phase end date (YYYY-MM-DD)' },
+                enabled: { type: :boolean, nullable: true, description: 'Enable or disable this phase' }
+              },
+              required: ['kind']
+            }
+          }
+        },
+        required: ['budget_phases']
+      }
+
+      response '200', 'budget phases updated' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:budget_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) { budget_phase.budget }
+        let(:budget_id) { test_budget.id }
+        let(:budget_phases) do
+          {
+            budget_phases: [
+              { kind: 'accepting', starts_at: '2026-03-01', ends_at: '2026-05-31', enabled: true },
+              { kind: 'reviewing', enabled: false }
+            ]
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_phases: { type: :array, items: { type: :object } }
+                   },
+                   required: ['budget_phases']
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'unknown phase kind' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:budget_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) { budget_phase.budget }
+        let(:budget_id) { test_budget.id }
+        let(:budget_phases) do
+          { budget_phases: [{ kind: 'nonexistent', enabled: true }] }
+        end
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:budget_id) { 1 } }
+      forbidden_response { let(:budget_id) { 1 } }
+    end
+  end
 end

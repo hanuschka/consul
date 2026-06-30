@@ -45,7 +45,7 @@ App.ContentBlockEditor.AiEditMode = {
   },
 
   getPopup(contentBlockWrapper) {
-    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const innerContainer = contentBlockWrapper.querySelector('.custom-content-block-wrapper--inner');
     const searchContainer = innerContainer || contentBlockWrapper;
     return searchContainer.querySelector('.js-content-block-ai-edit-popup');
   },
@@ -196,7 +196,7 @@ App.ContentBlockEditor.AiEditMode = {
       dataType: "json",
       data: {
         instructions: instructions,
-        content_block_html: contentBlock.innerHTML,
+        content_block_html: ProjektStudio.utils.resetMapEmbeds(contentBlock.innerHTML),
         use_full_projekt_context: useFullProjektContext,
         allow_text_modification: allowTextModification
       }

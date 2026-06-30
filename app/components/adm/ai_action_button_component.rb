@@ -14,7 +14,8 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     confirm: nil,
     poll_interval: 4000,
     extra_classes: nil,
-    loading: false
+    loading: false,
+    description: nil
   )
     @url = url
     @text = text
@@ -28,13 +29,22 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     @poll_interval = poll_interval.to_i
     @extra_classes = extra_classes
     @loading = loading
+    @description = description
+  end
+
+  def ai_disabled?
+    !Ai::Settings.ai_available?
+  end
+
+  def tooltip_description
+    description.presence || I18n.t("adm.ai_action_button.feature_description")
   end
 
   private
 
     attr_reader :url, :text, :method, :icon, :style, :processing_text,
                 :status_url, :progress_mode, :confirm, :poll_interval,
-                :extra_classes, :loading
+                :extra_classes, :loading, :description
 
     def wrapper_classes
       ["adm-ai-action-button", "-#{progress_mode}", extra_classes].compact_blank.join(" ")

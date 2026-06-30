@@ -5,7 +5,8 @@
 <%= render Adm::HeaderComponent.new(
   title: "#{service_name} API Key",
   breadcrumbs: @breadcrumbs,
-  back_button_url: adm_external_api_keys_path
+  back_button_url: adm_external_api_keys_path,
+  compact: true
 ) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text">
@@ -17,14 +18,18 @@
       </p>
     <% end %>
   <% end %>
+
+  <% if @external_api_key.value.present? %>
+    <% header.with_actions do %>
+      <div class="ml-auto">
+        <%= kern_link_button edit_adm_external_api_key_path(@external_api_key), text: t("adm.shared.edit"), icon: "edit" %>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>
 
 <div class="kern-container my-5">
   <% if @external_api_key.value.present? %>
-    <div class="mb-4">
-      <%= kern_link_button edit_adm_external_api_key_path(@external_api_key), text: t("adm.shared.edit"), icon: "edit" %>
-    </div>
-
     <div class="kern-card p-4 d-inline-block">
       <strong><%= t("adm.external_api_keys.show.api_value") %></strong>
       <div class="mt-2">

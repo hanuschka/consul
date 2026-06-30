@@ -40,6 +40,7 @@
 //= require ../custom/components/shared/tabs
 //= require ../studio/modules/ContentBlockTemplateSelector
 //= require ../studio/modules/ContentBlock/Crud
+//= require ../studio/modules/ContentBlock/MapEmbed
 //= require ../studio/modules/ContentBlock/AiEditMode
 //= require ../studio/modules/ContentBlock/CodeEditMode
 //= require ../studio/modules/ContentBlock/EditModeSwitcher
@@ -53,6 +54,7 @@
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ListEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/LinkEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ImageEdit
+//= require ../studio/modules/ContentBlock/SimpleEditMode/MapEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ImageAltEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog
 //= require ../studio/modules/ContentBlock/CKEditorMode

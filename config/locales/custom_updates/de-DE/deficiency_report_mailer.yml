@@ -10,9 +10,9 @@ de:
           hi: Hallo
           p1: der Status des von Ihnen eingereichten Mangels wurde geändert.
         notify_officer:
-          subject: Neue Mangelmeldung %{identifier}
+          subject: Neue Meldung %{identifier}
           hi: Liebe/r Sachbearbeiter*in,
-          p1: Ihnen wurde ein Mangel vom Admin zugewiesen.
+          p1: Ihnen wurde eine Meldung vom Admin zugewiesen.
         send_feedback_form_link:
           subject: Feedback zu Ihrem Anliegen
           hi: Guten Tag %{username},

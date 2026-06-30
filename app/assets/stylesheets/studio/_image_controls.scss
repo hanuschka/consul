@@ -305,7 +305,7 @@
 
 // --- Legacy styles kept for non-overlay contexts ---
 
-.projekt-content-block {
+.custom-content-block {
   .orbit-image {
     object-fit: cover;
   }
@@ -335,7 +335,7 @@
   }
 }
 
-.projekt-content-block {
+.custom-content-block {
   li:hover {
     .content-block--item-button {
       display: block;
@@ -378,7 +378,7 @@
   }
 }
 
-.projekt-content-block .image-gallery-with-ligthbox {
+.custom-content-block .image-gallery-with-ligthbox {
   img {
     object-fit: contain;
   }

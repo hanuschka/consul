@@ -378,6 +378,7 @@
       }
 
       App.ContentBlockEditor.Crud.rerenderContentBlockListControls();
+      App.ContentBlockEditor.EmptyHintToggle.refreshAll();
 
       newWrapper.classList.add("-highlight-changed");
       setTimeout(() => {
@@ -386,7 +387,7 @@
 
       setTimeout(() => {
         newWrapper.scrollIntoView({ block: "center" });
-        App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newWrapper).find(".projekt-content-block"));
+        App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets($(newWrapper).find(".custom-content-block"));
         App.ImageGallery.initialize();
       }, 0);
     },

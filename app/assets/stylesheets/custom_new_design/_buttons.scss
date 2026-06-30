@@ -181,6 +181,11 @@ button {
       font-size: 20px;
       flex: 0 0 auto;
     }
+
+    .ai-feature-tooltip {
+      flex: 0 0 auto;
+      max-width: 330px;
+    }
   }
 
   .button.button-support.unvote {
@@ -225,8 +230,6 @@ button {
     color: white;
   }
 }
-
-// .close-button styles live in cross_pack/components/close_button.scss.
 
 .transparent-round-icon-button {
   padding: 0 !important;

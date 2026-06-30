@@ -54,6 +54,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
+      data-template-section="projekt_page"
       class="js-content-blocks-list content-blocks-container"
     >
       <div

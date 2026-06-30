@@ -108,15 +108,20 @@
 
           <div class="content-block-ai-edit-popup-checkboxes">
             <div class="u-margin-bottom-5">
-              <label
-                class="content-block-ai-edit-popup-checkbox-label"
-                data-hint="<%= t('ai.allow_text_modification_hint') %>"
-                data-hint-position="left"
-                tabindex="0"
-              >
-                <input type="checkbox" class="js-ai-allow-text-modification">
-                <span><%= t('ai.allow_text_modification') %></span>
-              </label>
+              <%= studio_rich_tooltip(
+                title: t('ai.allow_text_modification'),
+                text: t('ai.allow_text_modification_hint'),
+                delay: 1200,
+                placement: "right"
+              ) do %>
+                <label
+                  class="content-block-ai-edit-popup-checkbox-label"
+                  tabindex="0"
+                >
+                  <input type="checkbox" class="js-ai-allow-text-modification">
+                  <span><%= t('ai.allow_text_modification') %></span>
+                </label>
+              <% end %>
               <div class="ai-context-checkbox-hint u-margin-bottom">
                 <%= t('ai.allow_text_modification_hint_short') %>
               </div>
@@ -124,15 +129,20 @@
 
             <% if show_projekt_context_toggle? %>
               <div class="">
-                <label
-                  class="content-block-ai-edit-popup-checkbox-label"
-                  data-hint="<%= t('ai.use_full_projekt_context_hint') %>"
-                  data-hint-position="left"
-                  tabindex="0"
-                >
-                  <input type="checkbox" class="js-ai-use-full-projekt-context">
-                  <span><%= t('ai.use_full_projekt_context') %></span>
-                </label>
+                <%= studio_rich_tooltip(
+                  title: t('ai.use_full_projekt_context'),
+                  text: t('ai.use_full_projekt_context_hint'),
+                  delay: 1200,
+                  placement: "right"
+                ) do %>
+                  <label
+                    class="content-block-ai-edit-popup-checkbox-label"
+                    tabindex="0"
+                  >
+                    <input type="checkbox" class="js-ai-use-full-projekt-context">
+                    <span><%= t('ai.use_full_projekt_context') %></span>
+                  </label>
+                <% end %>
                 <div class="ai-context-checkbox-hint">
                   <%= t('ai.use_full_projekt_context_hint_short') %>
                 </div>
@@ -144,7 +154,7 @@
           <div class="d-flex u-gap-20 u-flex-align-center">
             <button
               type="button"
-              class="studio-edit-button projekt-content-block-edit--ai-submit -green -with-background js-content-block-ai-edit--submit-prompt"
+              class="studio-edit-button custom-content-block-edit--ai-submit -green -with-background js-content-block-ai-edit--submit-prompt"
             >
               <span class="js-submit-state">
                 <i class="fas fa-magic"></i>

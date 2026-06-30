@@ -1,0 +1,27 @@
+<rich-tooltip
+  class="ai-feature-tooltip<%= " #{layout_class}" if layout_class.present? %>"
+  placement="<%= placement %>"
+  delay="300"
+  trigger-only
+  <%= "focusable" if ai_disabled? %>
+  hover-only
+  shadow="heavy"
+>
+  <span class="ai-feature-tooltip--trigger<%= ' -ai-disabled' if ai_disabled? %>">
+    <%= content %>
+  </span>
+  <template>
+    <span class="rich-tooltip-content">
+      <% if feature_title.present? %>
+        <span class="rich-tooltip-content--title"><%= feature_title %></span>
+      <% end %>
+      <span class="rich-tooltip-content--text"><%= feature_text %></span>
+      <% if ai_disabled? %>
+        <span class="rich-tooltip-content--note">
+          <span class="ai-feature-tooltip--note-heading"><%= t("ai.disabled_note_label") %></span>
+          <%= t("ai.disabled_note_text") %>
+        </span>
+      <% end %>
+    </span>
+  </template>
+</rich-tooltip>

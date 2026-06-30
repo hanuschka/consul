@@ -1,4 +1,4 @@
-<div class="<%= css_classes %>">
+<%= content_tag wrapper_tag, wrapper_options do %>
   <div class="adm-system-user-info--avatar">
     <%= render Adm::TableThumbComponent.new(
       image: user.image,
@@ -24,4 +24,4 @@
       <%= t(".edit") %>
     <% end %>
   <% end %>
-</div>
+<% end %>

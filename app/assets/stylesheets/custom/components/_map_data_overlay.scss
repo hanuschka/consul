@@ -39,9 +39,9 @@
 
 .map-data-overlay--spinner {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  border: 2px solid $light-gray-1;
+  width: 23px;
+  height: 23px;
+  border: 3px solid $light-gray-1;
   border-top-color: var(--brand-color, #004a83);
   border-radius: 50%;
   animation: map-data-overlay-spin 0.7s linear infinite;
@@ -73,6 +73,6 @@
 
 .map-data-overlay--message {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--ink-default, #1f1f1f);
 }

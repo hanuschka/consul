@@ -1,0 +1,120 @@
+// Admin-only hint for inline-editable site content blocks rendered via
+// `render_custom_block` (default on). Shown when the block is empty so
+// admins/projekt-managers know the block stays hidden for end users and can
+// click to add content. Self-contained so it works for any consumer without a
+// surrounding card.
+//
+// Visibility is class-driven: the hint is hidden by default and revealed only
+// when the `.content-block-empty-hint-wrap` carries the `is-content-empty`
+// marker. The marker is set initially by ERB (`content_block_body_blank?`) and
+// kept in sync live by `App.ContentBlockEditor.EmptyHintToggle`.
+.content-block-empty-hint {
+  display: none;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+  line-height: 1.4;
+
+  @media (max-width: $mobile-viewport-start) {
+    gap: 8px;
+    padding: 10px 12px;
+  }
+}
+
+.content-block-empty-hint-wrap.is-content-empty .content-block-empty-hint {
+  display: flex;
+}
+
+// Once moved inside the studio block frame by `wrapContentBlocks`, the hint
+// drops its outer spacing (the wrapper owns block-to-block margin) and sits
+// directly under the toolbar in place of the empty content body.
+.custom-content-block-wrapper .content-block-empty-hint {
+  margin-bottom: 0;
+}
+
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) .custom-content-block {
+  min-height: 0;
+}
+
+// An empty body lets its children's vertical margins (e.g. an empty <p>'s
+// ~16px margin) escape the wrapper: downward when collapsed (rest), upward when
+// the body has min-height (edit) — shifting surrounding content differently in
+// each state, so the layout jumps on edit toggle. While the block is empty
+// there is no content whose spacing matters, so zero the descendant margins in
+// BOTH states; normal spacing returns the moment real content drops the marker.
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block,
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+// Hide the hint while any edit mode is active so the editable body is free.
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode .content-block-empty-hint {
+  display: none;
+}
+
+// With the hint hidden in edit mode, reserve its measured height on the
+// now-editable body so the block keeps the same height it had as the empty
+// placeholder — no shrink/jump when entering any edit mode. The
+// --empty-hint-height var is set live by App.ContentBlockEditor.EmptyHintToggle
+// while the hint is visible; falls back to the studio min-height.
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode .custom-content-block {
+  min-height: var(--empty-hint-height, 55px);
+}
+
+.content-block-empty-hint--icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 15px;
+}
+
+.content-block-empty-hint--title {
+  display: block;
+  margin-bottom: 1px;
+  color: rgba(0, 0, 0, 0.72);
+  font-weight: 600;
+}
+
+.content-block-empty-hint--description {
+  display: block;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+// Projekt page content blocks are studio-wrapped client-side
+// (`addStudioControlsToContentBlock`), so the marker class sits on the
+// `.custom-content-block-wrapper` itself — there is no separate
+// `.content-block-empty-hint-wrap` ancestor. These mirror the site-block rules
+// above with the wrapper as the marker. Kept here next to the site rules so the
+// two empty-state variants stay in sync.
+.custom-content-block-wrapper.is-content-empty .content-block-empty-hint {
+  display: flex;
+}
+
+.custom-content-block-wrapper.is-content-empty:not(.-in-edit-mode) .custom-content-block {
+  min-height: 0;
+}
+
+// See the site-block rule above: stop the empty body's child margins from
+// escaping (down when collapsed, up under edit-mode min-height) and shifting the
+// trailing add-content-block controls ~16px on edit toggle. Applied in both
+// states while empty; real content drops the marker and restores spacing.
+.custom-content-block-wrapper.is-content-empty .custom-content-block,
+.custom-content-block-wrapper.is-content-empty .custom-content-block * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.custom-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {
+  display: none;
+}
+
+.custom-content-block-wrapper.is-content-empty.-in-edit-mode .custom-content-block {
+  min-height: var(--empty-hint-height, 55px);
+}

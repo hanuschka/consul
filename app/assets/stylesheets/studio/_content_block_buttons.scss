@@ -9,7 +9,7 @@
 // =============================================================================
 
 // Edit-Toolbar-Container (Format-Tools-Gruppe)
-.projekt-content-block-edit {
+.custom-content-block-edit {
   display: flex;
   align-items: center;
   min-height: 32px;
@@ -19,7 +19,7 @@
 }
 
 // Save / Cancel-Wrapper (linke Seite, nur in Edit-Mode sichtbar)
-.projekt-content-block-edit--buttons-wrapper {
+.custom-content-block-edit--buttons-wrapper {
   margin-right: auto;
   display: none;
   align-items: center;
@@ -196,7 +196,7 @@
 }
 
 // Aktiver Edit-Mode (während Block bearbeitet wird) — Stift bekommt Brand-Tint
-// .projekt-content-block-wrapper.-in-edit-mode {
+// .custom-content-block-wrapper.-in-edit-mode {
 //   .js-edit-text-content-block {
 //     color: var(--brand-color);
 //     background: color-mix(in srgb, var(--brand-color) 12%, transparent);
@@ -211,17 +211,40 @@
 // =============================================================================
 // AI-Submit (separates Spezial-Element, behalten)
 // =============================================================================
-.projekt-content-block-edit--ai-submit {
+.custom-content-block-edit--ai-submit {
   min-width: 170px;
 }
 
 // =============================================================================
 // Compact-Mode-Overrides (kleinere Toolbar in schmalen Containern)
 // =============================================================================
-.projekt-content-block-wrapper.-compact-mode {
-  .projekt-content-block--toolbar {
+.custom-content-block-wrapper.-compact-mode {
+  // In a narrow sidebar/footer card the full studio toolbar would otherwise
+  // sit as a fit-content pill on the right and tip its last icon onto a second
+  // row. Instead span the toolbar across the card's full width and distribute
+  // the icons evenly on a single row — the icons (7 x 28px) fit comfortably in
+  // the ~254px card, so no wrapping is needed.
+  .custom-content-block--toolbar {
+    // width: auto !important;
+    margin-left: 0;
+    flex-wrap: nowrap;
     padding: 3px 5px;
   }
+
+  .custom-content-block-edit-main-controlls {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    // Lift the single-row cap from .custom-content-block-edit so the
+    // full-width group keeps its natural height.
+    max-height: none;
+  }
+
+  // The group dividers add ~7px each and crowd the full-width row; the even
+  // spacing of space-between already separates the icons, so drop them.
+  // .custom-content-block-edit--separator {
+  //   display: none;
+  // }
 
   .studio-icon-button {
     width: 28px;
@@ -233,13 +256,13 @@
     }
   }
 
-  .content-block-margin-input {
-    display: none !important;
-  }
+  // .content-block-margin-input {
+  //   display: none !important;
+  // }
 
-  .js-content-block-header-dropdown {
-    display: none !important;
-  }
+  // .js-content-block-header-dropdown {
+  //   display: none !important;
+  // }
 
   .content-block-edit-toolbar {
     gap: 2px;
@@ -252,13 +275,13 @@
     font-size: 12px;
   }
 
-  .projekt-content-block-edit--buttons-wrapper {
+  .custom-content-block-edit--buttons-wrapper {
     margin-right: 5px;
     gap: 2px;
   }
 
   &.-in-edit-mode {
-    .projekt-content-block-edit-main-controlls {
+    .custom-content-block-edit-main-controlls {
       display: none !important;
     }
   }

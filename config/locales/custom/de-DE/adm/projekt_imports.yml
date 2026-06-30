@@ -34,6 +34,8 @@ de:
             stalled_message: "Die Analyse dauert ungewöhnlich lange und ist möglicherweise fehlgeschlagen. Sie können diesen Import verwerfen und es erneut versuchen."
             dismiss: "Verwerfen"
             upload_new: "Neues Dokument hochladen"
+            diagnostics_title: "Technische Details"
+            diagnostics_stage: "Fehlerphase"
         list:
           sections:
             in_progress: "Laufende Importe"
@@ -56,6 +58,7 @@ de:
           created_at: "Erstellt: %{time}"
           finished_at: "Beendet: %{time}"
           projekt_created: "Projekt erstellt: %{title}"
+          image_failed_note: "Titelbild konnte nicht generiert werden"
           filters:
             aria: "Nach Status filtern"
             all: "Alle"
@@ -121,6 +124,7 @@ de:
         initial_message:
           analysis_complete: "Dokumentanalyse abgeschlossen"
           analysis_intro: "Folgendes habe ich aus Ihrem Dokument extrahiert. Bitte prüfen Sie die Felder — falls etwas nicht passt, sagen Sie es mir einfach."
+          input_truncated_notice: "Das Dokument war sehr groß und wurde für die Analyse gekürzt. Bitte prüfen Sie die extrahierten Inhalte besonders sorgfältig und ergänzen Sie fehlende Punkte im Chat."
           title: "Titel"
           subtitle: "Untertitel"
           period: "Zeitraum"
@@ -163,11 +167,25 @@ de:
           resolve_content_blocks_failed: "Inhaltsblöcke konnten nicht erstellt werden: %{message}"
           create_projekt_failed: "Projekt konnte nicht erstellt werden: %{message}"
           missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
+          extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
+        failure_stages:
+          extract: "Textextraktion"
+          extracting: "Textextraktion"
+          ai_processing: "KI-Analyse"
+          processing: "KI-Analyse"
+          finalize: "Datenfinalisierung"
+          resolve_content_blocks: "Inhaltsblöcke"
+          create_projekt: "Projekterstellung"
+          submitting: "Projekterstellung"
+          image_generation: "Titelbildgenerierung"
+          unknown: "Unbekannt"
         badge:
           imported_by_ai: "KI"
           imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."
+          imported_by_ai_description: "Eine KI hat aus einem hochgeladenen Dokument automatisch Phasen und Inhalte erzeugt. Bitte prüfen Sie die Angaben, bevor Sie das Projekt veröffentlichen."
         index:
           new_button: "Aus Dokument importieren"
+          new_button_description: "Laden Sie ein Dokument hoch und lassen Sie die KI daraus ein vollständiges Projekt mit Phasen und Inhalten erstellen, das Sie vor dem Import prüfen können."
           title: "Projektimporte"
           new_import: "Neuer Projektimport"
           empty: "Noch keine Projektimporte vorhanden."

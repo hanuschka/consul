@@ -22,12 +22,12 @@
 
         <div class="">
           <%= f.label :first_name, t("custom.verification.residence.new.first_name") %>
-          <%= f.text_field :first_name, autocomplete: "on", label: false, placeholder: t("custom.verification.residence.new.first_name") %>
+          <%= f.text_field :first_name, autocomplete: "given-name", label: false, placeholder: t("custom.verification.residence.new.first_name") %>
         </div>
 
         <div class="">
           <%= f.label :last_name, t("custom.verification.residence.new.last_name") %>
-          <%= f.text_field :last_name, autocomplete: "on", label: false, placeholder: t("custom.verification.residence.new.last_name") %>
+          <%= f.text_field :last_name, autocomplete: "family-name", label: false, placeholder: t("custom.verification.residence.new.last_name") %>
         </div>
 
         <%= render Users::RegisteredAddressFieldsComponent.new(
@@ -49,9 +49,9 @@
           <%= f.select :gender, options_for_gender_select,
             {
               prompt: t('custom.helpers.select.prompt'),
-              label: false,
-              class: "show-arrow"
-            } %>
+              label: false
+            },
+            { class: "show-arrow", autocomplete: "sex" } %>
         </div>
 
         <% if @residence.document_required? %>

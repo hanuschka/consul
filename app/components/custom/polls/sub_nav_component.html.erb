@@ -18,14 +18,14 @@
       <%= link_to t("custom.polls.show.report_menu"), report_poll_path(id: poll.id),
                   class: "#{'is-active' if report_menu?} #{'js-studio-hide-on-preview' if !poll.report_visible_for_citizens?}" %>
     <% else %>
-      <span
-        class="ai-feature-disabled <%= 'js-studio-hide-on-preview' if !poll.report_visible_for_citizens? %>"
-        data-tooltip
-        tabindex="0"
-        title="<%= t('ai.disabled_tooltip') %>"
-      >
-        <%= t("custom.polls.show.report_menu") %>
-      </span>
+      <%= render Shared::AiFeatureTooltipComponent.new(feature_text: t("custom.polls.show.report_menu")) do %>
+        <span
+          class="<%= 'js-studio-hide-on-preview' if !poll.report_visible_for_citizens? %>"
+          tabindex="0"
+        >
+          <%= t("custom.polls.show.report_menu") %>
+        </span>
+      <% end %>
     <% end %>
   <% end %>
 
@@ -34,14 +34,11 @@
       <%= link_to t("custom.polls.show.evaluation_menu"), evaluation_poll_path(id: poll.id),
                   class: "#{'is-active' if evaluation_menu?} js-studio-hide-on-preview" %>
     <% else %>
-      <span
-        class="ai-feature-disabled js-studio-hide-on-preview"
-        data-tooltip
-        tabindex="0"
-        title="<%= t('ai.disabled_tooltip') %>"
-      >
-        <%= t("custom.polls.show.evaluation_menu") %>
-      </span>
+      <%= render Shared::AiFeatureTooltipComponent.new(feature_text: t("custom.polls.show.evaluation_menu")) do %>
+        <span class="js-studio-hide-on-preview" tabindex="0">
+          <%= t("custom.polls.show.evaluation_menu") %>
+        </span>
+      <% end %>
     <% end %>
   <% end %>
 </div>

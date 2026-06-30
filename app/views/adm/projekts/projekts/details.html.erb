@@ -22,6 +22,8 @@
       <%= render 'adm/projekts/projekts/details/geo_restriction', projekt: @projekt %>
     <% end %>
 
+    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_option.general.external_participation_link"), :value, :string) %>
+
     <% if @projekt.page.present? %>
       <%= render Adm::AttributeEditorComponent.new(@projekt.page, :slug, :string) %>
     <% end %>

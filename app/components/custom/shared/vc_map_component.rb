@@ -26,7 +26,7 @@ class Shared::VCMapComponent < ApplicationComponent
 
   def map_div
     content_tag :div,
-                id: "myMapUUIDnew",
+                id: ["myMapUUIDnew", @instance_suffix].compact.join("_"),
                 data: prepare_map_settings do
       content_tag :span, "Map"
     end

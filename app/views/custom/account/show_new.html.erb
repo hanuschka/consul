@@ -190,18 +190,24 @@
         aria-label="<%= t('custom.accessibility.account.notifications.tab_label') %>"
       >
         <li
-          role="tab"
-          aria-selected="<%= params[:notifications] != "read" %>"
+          role="presentation"
           class="<%= params[:notifications] == "read" ? "" : "is-active" %>"
         >
-          <h2><%= link_to t("notifications.index.unread"), account_path %></h2>
+          <h2>
+            <%= link_to t("notifications.index.unread"), account_path,
+              role: "tab",
+              aria: { selected: params[:notifications] != "read" } %>
+          </h2>
         </li>
         <li
-          role="tab"
-          aria-selected="<%= params[:notifications] == "read" %>"
+          role="presentation"
           class="<%= params[:notifications] == "read" ? "is-active" : "" %>"
         >
-          <h2><%= link_to t("notifications.index.read"), account_path(notifications: "read") %></h2>
+          <h2>
+            <%= link_to t("notifications.index.read"), account_path(notifications: "read"),
+              role: "tab",
+              aria: { selected: params[:notifications] == "read" } %>
+          </h2>
         </li>
       </ul>
 

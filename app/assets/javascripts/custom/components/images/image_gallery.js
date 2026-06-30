@@ -89,8 +89,19 @@
             closeBtn.focus();
           }
         }, 100);
+
+        var modal = document.getElementById("glightbox-body");
+
+        if (modal) {
+          App.FocusTrap.setBackgroundInert([modal], modal);
+        }
+
+        this.bindFocusTrapKeydown();
       });
       this.lightbox.on('close', () => {
+        this.unbindFocusTrapKeydown();
+        App.FocusTrap.removeBackgroundInert();
+
         document.body.style.paddingRight = "";
 
         var fixedElement = this.getFixedElement();
@@ -108,6 +119,30 @@
       this.lightbox.on('slide_after_load', (data) => {
         this.applySlideAccessibility(data);
       });
+    },
+
+    bindFocusTrapKeydown() {
+      if (!this.focusTrapKeydownHandler) {
+        this.focusTrapKeydownHandler = this.handleFocusTrapKeydown.bind(this);
+      }
+
+      document.addEventListener("keydown", this.focusTrapKeydownHandler, true);
+    },
+
+    unbindFocusTrapKeydown() {
+      if (this.focusTrapKeydownHandler) {
+        document.removeEventListener("keydown", this.focusTrapKeydownHandler, true);
+      }
+    },
+
+    handleFocusTrapKeydown(event) {
+      if (event.key !== "Tab" && event.which !== 9) return
+
+      var modal = document.getElementById("glightbox-body");
+
+      if (modal) {
+        App.FocusTrap.handleTabKey(event, modal);
+      }
     },
 
     SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",

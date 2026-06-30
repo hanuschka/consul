@@ -1,6 +1,13 @@
 require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
 
 module ContentBlocksHelper
+  # A <p> may only contain phrasing content, so any block-level body (e.g. the
+  # {{projekt_map}} map embed div) is auto-ejected by the HTML parser and ends
+  # up rendered outside the content block. Detect such bodies and wrap them in a
+  # <div> instead, whatever tag was requested.
+  BLOCK_LEVEL_BODY_REGEXP =
+    /<(div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
+
   def render_custom_block(
     key,
     projekt: nil,
@@ -9,7 +16,7 @@ module ContentBlocksHelper
     return_path: nil,
     toolbar_position: nil,
     empty_hint: true,
-    use_p_tag: false
+    tag_name: "p"
   )
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
@@ -45,16 +52,20 @@ module ContentBlocksHelper
         default_content: sanitized_default_content,
         toolbar_position: toolbar_position,
         empty_hint: empty_hint,
-        use_p_tag: use_p_tag
+        tag_name: tag_name
       ).html_safe
     else
-      res = build_standard_block(key, block, block_body, projekt, return_path, use_p_tag: use_p_tag)
+      res = build_standard_block(key, block, block_body, projekt, return_path, tag_name: tag_name)
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? && res.include?("</iframe>")
         res = process_iframe_embeds(res)
       end
 
       res = AdminWYSIWYGSanitizer.new.sanitize(res)
+
+      if res.include?("{{projekt_map}}")
+        res = process_shortcodes(res, projekt: projekt).html_safe
+      end
     end
 
     res
@@ -76,8 +87,8 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil, empty_hint: true, use_p_tag: false)
-    block_tag = use_p_tag ? "p" : "div"
+  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil, empty_hint: true, tag_name: "p")
+    block_tag = content_block_tag_name(block_body, tag_name)
 
     res = "<#{block_tag} id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
     res << " data-content-block-id=\"#{block.id}\""
@@ -120,7 +131,7 @@ module ContentBlocksHelper
     "<div class=\"#{wrapper_classes}\">#{hint}#{block_html}</div>"
   end
 
-  def build_standard_block(key, block, block_body, projekt, return_path, use_p_tag: false)
+  def build_standard_block(key, block, block_body, projekt, return_path, tag_name: "p")
     edit_link = nil
 
     if current_user&.administrator? && block.present?
@@ -135,7 +146,7 @@ module ContentBlocksHelper
       )
     end
 
-    block_tag = use_p_tag ? "p" : "div"
+    block_tag = content_block_tag_name(block_body, tag_name)
 
     res = "<#{block_tag} id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</#{block_tag}>"
 
@@ -146,6 +157,12 @@ module ContentBlocksHelper
     end
 
     res
+  end
+
+  def content_block_tag_name(block_body, tag_name)
+    return "div" if tag_name == "p" && block_body.to_s.match?(BLOCK_LEVEL_BODY_REGEXP)
+
+    tag_name
   end
 
   def render_custom_content_block?(key)

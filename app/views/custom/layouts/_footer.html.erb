@@ -10,14 +10,14 @@
 
   footer_block_1_render = render_custom_content_block?("footer_block_1") || admin_view
   if footer_block_1_render
-    footer_block_1_rendered = capture { render_custom_block "footer_block_1", empty_hint: false, use_p_tag: true }
+    footer_block_1_rendered = capture { render_custom_block "footer_block_1", empty_hint: false }
     footer_block_1_body = Nokogiri::HTML::DocumentFragment.parse(footer_block_1_rendered).at_css(".custom-content-block-body")&.inner_html
     footer_block_1_empty = admin_view && content_block_body_blank?(footer_block_1_body)
   end
 
   footer_block_2_render = render_custom_content_block?("footer_block_2") || admin_view
   if footer_block_2_render
-    footer_block_2_rendered = capture { render_custom_block "footer_block_2", empty_hint: false, use_p_tag: true }
+    footer_block_2_rendered = capture { render_custom_block "footer_block_2", empty_hint: false }
     footer_block_2_body = Nokogiri::HTML::DocumentFragment.parse(footer_block_2_rendered).at_css(".custom-content-block-body")&.inner_html
     footer_block_2_empty = admin_view && content_block_body_blank?(footer_block_2_body)
   end

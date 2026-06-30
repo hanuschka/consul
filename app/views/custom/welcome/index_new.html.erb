@@ -69,7 +69,7 @@
     <div class="main-column">
 
       <% if render_custom_content_block?('home_page_sidebar') %>
-        <% rendered_home_page_sidebar_block_mobile = capture { render_custom_block 'home_page_sidebar', empty_hint: false, use_p_tag: true } %>
+        <% rendered_home_page_sidebar_block_mobile = capture { render_custom_block 'home_page_sidebar', empty_hint: false } %>
         <% home_page_sidebar_block_body_mobile = Nokogiri::HTML::DocumentFragment.parse(rendered_home_page_sidebar_block_mobile).at_css(".custom-content-block-body")&.inner_html %>
         <% admin_view_mobile = current_user&.administrator? %>
         <% initial_empty_mobile = admin_view_mobile && content_block_body_blank?(home_page_sidebar_block_body_mobile) %>

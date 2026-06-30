@@ -45,7 +45,7 @@
     <div class="main-column">
 
       <% if render_custom_content_block?("landing_page_#{@custom_page.id}_sidebar") %>
-        <% rendered_landing_page_sidebar_block_mobile = capture { render_custom_block "landing_page_#{@custom_page.id}_sidebar", empty_hint: false, use_p_tag: true } %>
+        <% rendered_landing_page_sidebar_block_mobile = capture { render_custom_block "landing_page_#{@custom_page.id}_sidebar", empty_hint: false } %>
         <% landing_page_sidebar_block_body_mobile = Nokogiri::HTML::DocumentFragment.parse(rendered_landing_page_sidebar_block_mobile).at_css(".custom-content-block-body")&.inner_html %>
         <% admin_view_mobile = current_user&.administrator? %>
         <% initial_empty_mobile = admin_view_mobile && content_block_body_blank?(landing_page_sidebar_block_body_mobile) %>
@@ -75,7 +75,7 @@
 
     <aside class="sidebar">
       <% if render_custom_content_block?("landing_page_sidebar_#{@custom_page.id}") %>
-        <% rendered_landing_page_sidebar_block = capture { render_custom_block "landing_page_sidebar_#{@custom_page.id}", empty_hint: false, use_p_tag: true } %>
+        <% rendered_landing_page_sidebar_block = capture { render_custom_block "landing_page_sidebar_#{@custom_page.id}", empty_hint: false } %>
         <% landing_page_sidebar_block_body = Nokogiri::HTML::DocumentFragment.parse(rendered_landing_page_sidebar_block).at_css(".custom-content-block-body")&.inner_html %>
         <% admin_view = current_user&.administrator? %>
         <% initial_empty = admin_view && content_block_body_blank?(landing_page_sidebar_block_body) %>

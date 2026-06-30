@@ -2,10 +2,23 @@ de:
   admin:
     segment_recipient:
       newsletter_subscribers: Newsletter-Abonnenten (alle Benutzer*innen + Newsletter Abonnenten)
+  adm:
+    newsletters:
+      new:
+        create_recipient_group_link: "+ Neue Empfängergruppe erstellen"
+        empty_recipient_groups:
+          title: Noch keine Empfängergruppen vorhanden
+          description: >
+            Bevor Sie einen Newsletter erstellen können, legen Sie bitte mindestens eine
+            Empfängergruppe an. Die Gruppe bestimmt, wer den Newsletter erhält – etwa alle
+            Abonnenten eines Projekts oder alle Nutzer mit Einverständniserklärung zum
+            Newsletter-Empfang.
+          cta: Empfängergruppe erstellen
   custom:
     newsletters:
       new_projekt:
         subject: "Neues Projekt: %{title}"
+        intro: "Wir freuen uns, Ihnen ein neues Beteiligungsprojekt vorstellen zu dürfen:"
         total_duration_start: Projektstart
         total_duration_end: Projektlaufzeit
         total_duration_end_till: bis
@@ -18,3 +31,4 @@ de:
         confirm_subscription_html: "Mit Klick auf diesen %{link} bestätigen Sie die Anmeldung zum Newsletter."
         successfully_subscribed: "Erfolgreich zum Newsletter angemeldet"
         successfully_unsubscribed: "Erfolgreich vom Newsletter abgemeldet"
+        invalid_token: "Der Bestätigungslink ist ungültig oder abgelaufen."

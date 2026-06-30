@@ -1,0 +1,12 @@
+<%= tag.nav class: "kern-filter-chips", aria: { label: aria_label } do %>
+  <% filters.each do |filter| %>
+    <%= link_to filter[:url],
+          class: "kern-filter-chip #{'-active' if filter[:active]}",
+          aria: { current: (filter[:active] ? "page" : nil) } do %>
+      <span class="kern-filter-chip__label"><%= filter[:label] %></span>
+      <% if filter[:count] %>
+        <span class="kern-filter-chip__count"><%= filter[:count] %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

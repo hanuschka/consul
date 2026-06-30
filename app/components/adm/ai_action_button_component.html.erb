@@ -1,0 +1,45 @@
+<%= render Shared::AiFeatureTooltipComponent.new(feature_title: text, feature_text: tooltip_description) do %>
+<div
+  class="<%= wrapper_classes %>"
+  data-controller="adm--ai-action-button"
+  data-adm--ai-action-button-progress-mode-value="<%= progress_mode %>"
+  data-adm--ai-action-button-status-url-value="<%= status_url %>"
+  data-adm--ai-action-button-poll-interval-value="<%= poll_interval %>"
+  data-adm--ai-action-button-loading-value="<%= loading %>"
+  data-adm--ai-action-button-confirm-value="<%= confirm %>"
+>
+  <%= link_to(
+    url,
+    class: button_classes,
+    hidden: loading,
+    data: {
+      turbo_method: method,
+      action: "click->adm--ai-action-button#start",
+      "adm--ai-action-button-target": "button"
+    }
+  ) do %>
+    <span class="kern-label material-symbols-outlined adm-ai-action-button--icon" aria-hidden="true">
+      <%= icon %>
+    </span>
+    <span class="kern-label adm-ai-action-button--text"><%= text %></span>
+    <span
+      class="adm-ai-action-button--inline-spinner"
+      data-adm--ai-action-button-target="inlineSpinner"
+      aria-hidden="true"
+    ></span>
+  <% end %>
+
+  <div
+    class="adm-ai-action-button--progress"
+    data-adm--ai-action-button-target="progress"
+    role="status"
+    aria-live="polite"
+    <%= "hidden" unless loading %>
+  >
+    <span class="adm-ai-action-button--progress-spinner" aria-hidden="true"></span>
+    <div class="adm-ai-action-button--progress-body">
+      <span class="adm-ai-action-button--progress-message"><%= processing_text %></span>
+    </div>
+  </div>
+</div>
+<% end %>

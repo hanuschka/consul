@@ -42,7 +42,7 @@ class Api::DeficiencyReportsController < Api::BaseController
   def create
     check_admin_access!
     deficiency_report = DeficiencyReport.new(deficiency_report_params)
-    deficiency_report.author = @current_client.user
+    deficiency_report.author = @current_client.content_author
     deficiency_report.resource_terms = true
     deficiency_report.admin_accepted = true
 

@@ -1,0 +1,6 @@
+de:
+  components:
+    adm:
+      dashboard:
+        contacts_component:
+          title: "Ansprechpartner"

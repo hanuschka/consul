@@ -1,0 +1,14 @@
+de:
+  adm:
+    system_user:
+      edit:
+        title: Systemnutzer
+        intro: Unter diesem Nutzer werden alle aus dem Masterportal importierten Vorschläge und Einreichungen veröffentlicht. Anzeigename und Profilbild werden anfänglich aus dem Organisationsnamen und dem Seitenlogo übernommen, können hier aber angepasst werden.
+        name_label: Anzeigename
+        name_hint: Dieser Name erscheint öffentlich als Autor aller importierten Vorschläge und Einreichungen (z. B. „Stadtname“). Wählen Sie eine Bezeichnung, die für Bürgerinnen und Bürger eindeutig erkennbar ist und Ihre Kommune oder Organisation klar repräsentiert.
+        avatar_label: Profilbild
+        avatar_hint: Dieses Bild wird öffentlich neben allen importierten Vorschlägen und Einreichungen angezeigt und ersetzt das aktuelle Profilbild. Verwenden Sie eine Datei im Format PNG oder JPEG, idealerweise quadratisch und in ausreichender Auflösung, damit es auch in kleiner Darstellung gut erkennbar bleibt.
+        background_label: Hintergrundbild
+        background_hint: Dieses Bild wird als breiter Hintergrund im Profil des Systemnutzers angezeigt. Verwenden Sie eine Datei im Format PNG oder JPEG im Querformat (Seitenverhältnis 3,5:1) in ausreichender Auflösung.
+      update:
+        success: Systemnutzer erfolgreich aktualisiert.

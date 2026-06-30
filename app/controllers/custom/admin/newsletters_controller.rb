@@ -63,8 +63,8 @@ class Admin::NewslettersController < Admin::BaseController
       body += "<ul style='margin-bottom:30px;'>#{open_phases_for_body}</ul>"
 
       body += "<p style='margin-bottom:30px;'>"
-      body += "<a href='#{page_url(@projekt.page.slug)}' style='background:#004a83;padding:0.75rem 1.5rem;color:#fff;border-radius:4px;margin-right:20px;display:inline-block;margin-bottom:15px;'>#{t("custom.newsletters.new_projekt.url")}</a>"
-      body += "<a href='#{page_url(@projekt.page.slug)}#filter-subnav' style='background:#004a83;padding:0.75rem 1.5rem;color:#fff;border-radius:4px;display:inline-block;'>#{t("custom.newsletters.new_projekt.url_participate")}</a>"
+      body += "<a href='#{page_url(@projekt.page.slug)}' style='background:#{Setting.newsletter_brand_color};padding:0.75rem 1.5rem;color:#fff;border-radius:4px;margin-right:20px;display:inline-block;margin-bottom:15px;'>#{t("custom.newsletters.new_projekt.url")}</a>"
+      body += "<a href='#{page_url(@projekt.page.slug)}#filter-subnav' style='background:#{Setting.newsletter_brand_color};padding:0.75rem 1.5rem;color:#fff;border-radius:4px;display:inline-block;'>#{t("custom.newsletters.new_projekt.url_participate")}</a>"
       body += "</p>"
 
       body += "<p></p>"

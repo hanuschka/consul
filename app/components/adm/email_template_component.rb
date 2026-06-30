@@ -1,9 +1,23 @@
 class Adm::EmailTemplateComponent < ApplicationComponent
   delegate :ck_editor_class, to: :helpers
 
-  def initialize(email_template, open: false)
+  def initialize(email_template, open: false, recipient_type: nil)
     @email_template = email_template
     @open = open
+    @recipient_type = recipient_type
+  end
+
+  def recipient_type_label
+    return nil if @recipient_type.blank?
+
+    I18n.t("components.adm.email_template_component.recipient_types.#{@recipient_type}", default: nil)
+  end
+
+  def recipient_type_icon
+    case @recipient_type.to_s
+    when "subscribers" then "group"
+    else "person"
+    end
   end
 
   def label
@@ -11,7 +25,13 @@ class Adm::EmailTemplateComponent < ApplicationComponent
   end
 
   def description
-    I18n.t("#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.description")
+    key = "#{@email_template.mailer_class.underscore}.#{@email_template.mailer_action}.description"
+
+    helpers.sanitize(
+      I18n.t(key, **description_interpolations),
+      tags: %w[a],
+      attributes: %w[href data-turbo-frame]
+    )
   end
 
   def recipient
@@ -47,6 +67,18 @@ class Adm::EmailTemplateComponent < ApplicationComponent
   end
 
   private
+
+    def description_interpolations
+      return {} unless @email_template.deficiency_report_template?
+
+      {
+        settings_link: helpers.link_to(
+          I18n.t("components.adm.email_template_component.settings_link_text"),
+          helpers.adm_deficiency_reports_settings_path,
+          data: { turbo_frame: "_top" }
+        )
+      }
+    end
 
     def default_template_source
       view_dir = @email_template.mailer_class.underscore

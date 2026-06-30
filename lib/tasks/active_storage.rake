@@ -3,7 +3,7 @@ namespace :active_storage do
   task remove_paperclip_compatibility_in_existing_attachments: :environment do
     ApplicationLogger.new.info "Updating Active Storage attachment records"
     ActiveStorage::Attachment.where("name ILIKE 'storage_%'")
-                             .where.not(record_type: "Ckeditor::Asset")
+                             .where.not(record_type: ["AdminAsset", "AdminImage"])
                              .update_all("name = replace(name, 'storage_', '')")
   end
 end

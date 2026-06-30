@@ -1,5 +1,7 @@
 de:
   adm:
     attribute:
+      create:
+        success: Erfolgreich erstellt.
       update:
         success: Erfolgreich aktualisiert.

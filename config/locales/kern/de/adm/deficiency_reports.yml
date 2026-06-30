@@ -3,6 +3,7 @@ de:
     deficiency_reports:
       home:
         title: Willkommen im Mängelmelder
+        welcome: Willkommen im %{feature}
         stats:
           total: Gesamt
           new_this_week: Neu diese Woche
@@ -14,25 +15,39 @@ de:
           closed: Geschlossene Meldungen
       menu:
         aria_label: Mängelmelder Navigation
+        aria_label_feature: "%{feature} Navigation"
         items:
           home: Home
           officers: Team
           deficiency_reports: Meldungen
           categories: Kategorien
           statuses: Status
-          settings: Funktionen
+          settings: Konfiguration
           official_answer_templates: Antwortvorlagen
+          email_templates: System-E-Mails
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
           ai_settings: KI-Einstellungen
+      email_templates:
+        tabs:
+          templates: Vorlagen
+          settings: Einstellungen
+        index:
+          title: System-E-Mails
+          page_hint: Passen Sie Betreff und Inhalt der E-Mails an, die für Mangelmeldungen versendet werden. Lassen Sie eine Vorlage leer, um den Standardtext beizubehalten.
+          groups:
+            external: E-Mails an Bürgerinnen und Bürger
+            internal: E-Mails an die Verwaltung
+        settings:
+          page_hint: Legen Sie die Absenderadresse und die gemeinsame Fußzeile fest, die in allen Mängelmelder-E-Mails verwendet werden.
       deficiency_reports:
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
-          columns: Spalten
-          export: Exportieren
-          no_deficiency_reports: Keine Mängelmelder vorhanden
+          new_button: Neue Meldung
+          download_csv: CSV herunterladen
+          download_geojson: GeoJSON herunterladen
           no_items_title: Keine Meldungen vorhanden
           no_items_description: Sobald Meldungen eingereicht werden, werden diese hier angezeigt.
           no_results_filtered_title: Keine Meldungen für die aktuellen Filter
@@ -73,8 +88,7 @@ de:
           download_pdf: PDF herunterladen
           view_on_site: Auf der Website anzeigen
           admin_accepted_status: Freigabe
-          accepted: Freigegeben
-          not_accepted: Nicht freigegeben
+          admin_accepted_status_hint: Sobald die Freigabe aktiviert ist, wird diese Meldung öffentlich auf der Website veröffentlicht und ist für alle regulären Nutzerinnen und Nutzer sichtbar. Ohne Freigabe bleibt sie verborgen und nur intern einsehbar.
           status: Status
           hidden_at: Ausgeblendet am
           created_at: Erstellt am
@@ -97,29 +111,35 @@ de:
             Wählen Sie eine vorgefertigte Antwortvorlage aus, um den Text automatisch in das Antwortfeld zu übernehmen. Die Vorlage kann anschließend individuell angepasst werden. Antwortvorlagen werden unter „Antwortvorlagen" in der Seitennavigation verwaltet.
           answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
-          official_answer_hint: Bitte geben Sie die offizielle Antwort für diesen Mängelmelder ein.
+          official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. <strong>Wichtiger Hinweis:</strong> Dieser Text ist öffentlich sichtbar."
         update_official_answer:
           success: Offizielle Antwort wurde erfolgreich aktualisiert.
+        new:
+          title: Neue Meldung erstellen
         edit:
           title: Mängelmelder bearbeiten
-          no_category: "-- Keine Kategorie --"
+        form_fields:
+          placeholders:
+            title: Titel der Meldung
+            video_url: https://www.youtube.com/watch?v=...
+            on_behalf_of: z. B. Maria Musterfrau
           labels:
-            title: Titel
+            title: Titel der Meldung
             description: Beschreibung
-            image: Bild
+            image: Titelbild
             documents: Dokumente
             video_url: Video-URL
             category: Kategorie
             map_location: Kartenstandort
             on_behalf_of: Im Auftrag von
           hints:
-            title: Der Titel der Meldung wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte den gemeldeten Mangel kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können. Änderungen am Titel werden sofort auf der öffentlichen Seite sichtbar.
-            description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Mangel, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird öffentlich auf der Detailseite der Meldung angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
-            image: Das Bild dokumentiert den gemeldeten Mangel visuell und wird auf der öffentlichen Detailseite der Meldung angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, den Mangel schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
-            documents: Hier können ergänzende Dokumente wie Gutachten, Pläne oder Berichte zur Meldung hinzugefügt werden. Die Dateien werden auf der Detailseite zum Download bereitgestellt und sind für alle Nutzer sichtbar. Mehrere Dokumente können gleichzeitig hochgeladen werden, um den Sachverhalt umfassend zu dokumentieren.
-            video_url: Geben Sie die URL eines Videos ein, das den gemeldeten Mangel dokumentiert. Das Video wird auf der öffentlichen Detailseite der Meldung eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
-            on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag die Meldung erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator eine Meldung stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung der Meldung.
-            category: Die Kategorie ordnet die Meldung einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
+            title: Der Titel des Beitrags wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte das gemeldete Anliegen kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können.
+            description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Anliegen, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird - je nach gewählter Voreinstellung - öffentlich auf der Detailseite des Beitrags angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
+            image: Das Titelbild dokumentiert den gemeldeten Mangel visuell und wird – bei entsprechender Einstellung – auf der öffentlichen Detailseite der Meldung angezeigt. Ein aussagekräftiges Foto hilft den Sachbearbeitern, den Mangel schneller einzuschätzen und die Bearbeitung zu priorisieren. Unterstützt werden gängige Bildformate wie JPG und PNG.
+            documents: Hier können ergänzende Dokumente wie Gutachten, Pläne oder Berichte zum Beitrag hinzugefügt werden. Die Dateien werden auf der Detailseite zum Download bereitgestellt und sind für alle Nutzer sichtbar. Mehrere Dokumente können gleichzeitig hochgeladen werden, um den Sachverhalt umfassend zu dokumentieren.
+            video_url: Geben Sie die URL eines Videos ein, das das gemeldete Anliegen dokumentiert. Das Video wird auf der öffentlichen Detailseite des Beitrags eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
+            on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag der Beitrag erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator einen Beitrag stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung des Beitrags.
+            category: Die Kategorie ordnet den Beitrag einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
         administer:
           title: Administrieren
           status: Status
@@ -140,8 +160,6 @@ de:
           title: Feedback-Formular
           created_at: Erstellt am
           for_report: Für
-        settings:
-          title: Funktionen
       categories:
         index:
           title: Kategorien
@@ -211,6 +229,8 @@ de:
         form:
           title_label: Titel
           title_hint: Der Titel des Status wird in der Meldungsübersicht und auf der Detailseite als Statusanzeige verwendet. Er sollte den Bearbeitungsstand klar beschreiben, z. B. „In Bearbeitung", „Erledigt" oder „Abgelehnt". Bürger sehen diesen Titel auf der öffentlichen Seite, daher sollte er allgemein verständlich formuliert sein.
+          description_label: Erläuterung
+          description_hint: Eine kurze Erläuterung, was dieser Status bedeutet. Sie wird Bürgern in der Meldungsübersicht als Tooltip angezeigt, wenn sie den Statushinweis ansteuern. Beschreiben Sie verständlich, was der jeweilige Bearbeitungsstand für die Meldung bedeutet, z. B. „Ihre Meldung wurde eingegangen und wird derzeit geprüft." Bleibt das Feld leer, wird kein Tooltip angezeigt.
           color_label: Farbe
           color_hint: Die Farbe wird als visuelle Kennzeichnung des Status in Listen und auf der Detailseite der Meldung verwendet. Sie hilft dabei, verschiedene Bearbeitungsstände auf einen Blick zu unterscheiden. Wählen Sie kontrastreiche Farben, die sich gut voneinander abheben, um die Übersichtlichkeit in der Listenansicht zu gewährleisten.
           icon_label: Symbol
@@ -224,7 +244,7 @@ de:
           submit: Speichern
       officers:
         index:
-          title: Team
+          title: Sachbearbeiter
           page_hint: "Hier verwalten Sie die Sachbearbeiter für den Mängelmelder. Sachbearbeiter können eingereichte Meldungen bearbeiten, den Status aktualisieren und offizielle Antworten verfassen. Suchen Sie über das Suchfeld nach registrierten Nutzern und weisen Sie ihnen die Sachbearbeiter-Rolle zu. Nur bereits registrierte Nutzer können als Sachbearbeiter hinzugefügt werden."
           search_label: Nutzer suchen
           search_description: Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können als Sachbearbeiter für Mängelmelder hinzugefügt werden. Sachbearbeiter bearbeiten eingereichte Meldungen, kommunizieren mit den Bürgern und aktualisieren den Bearbeitungsstatus.
@@ -234,7 +254,7 @@ de:
           table:
             name: Name
             email: E-Mail
-            admin: Admin
+            manage_all: Alle verwalten
         officer:
           add: Hinzufügen
         search:
@@ -322,6 +342,40 @@ de:
           officers_hint: Wählen Sie die Sachbearbeiter aus, die Mitglieder dieser Gruppe sein sollen. Alle ausgewählten Personen können Meldungen bearbeiten, die dieser Gruppe zugewiesen sind. Die Mitgliedschaft in einer Gruppe beeinflusst, welche Meldungen in der persönlichen Übersicht des Sachbearbeiters angezeigt werden und welche Benachrichtigungen erfolgen.
           no_officers_title: Keine Sachbearbeiter vorhanden
           no_officers_description: Erstellen Sie zunächst Sachbearbeiter unter „Sachbearbeiter", bevor Sie sie einer Gruppe zuweisen können.
+          submit: Speichern
+      settings:
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+          naming: Bezeichnungen
+          confirmation_popup: Bestätigungs-Popup
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext, Hinweismeldungen und Kontaktpersonen, die auf dem öffentlichen Dashboard des Mängelmelders angezeigt werden."
+      confirmation_popups:
+        edit:
+          title: Bestätigungs-Popup
+        update:
+          success: Bestätigungs-Popup gespeichert.
+        form:
+          enabled_label: Bestätigungs-Popup aktivieren
+          enabled_hint: Wenn aktiv, öffnet der gelbe "Neue Anliegen"-Button ein Popup mit der unten konfigurierten Frage und den Antworten.
+          question_label: Frage
+          question_hint: Wird dem Nutzer angezeigt, wenn er auf den "Neue Anliegen"-Button klickt.
+          answers_label: Antworten
+          answers_hint: Pro Antwort einen Button hinzufügen. "Weiterleiten"-Antworten führen zum Meldeformular. "Blockieren"-Antworten brechen den Vorgang ab und zeigen die Hinweismeldung auf der Übersichtsseite.
+          add_answer: Antwort hinzufügen
+          answer_title: Antwort
+          remove_answer: Entfernen
+          label_label: Button-Beschriftung
+          label_placeholder: z.B. "Ja, neue Meldung erstellen"
+          behavior_label: Verhalten
+          behaviors:
+            allow: Zum Meldeformular weiterleiten
+            block: Blockieren und Hinweismeldung anzeigen
+          flash_notice_label: Hinweismeldung
+          flash_notice_placeholder: z.B. "Bitte prüfen Sie zuerst bestehende Meldungen."
           submit: Speichern
       stats:
         show:

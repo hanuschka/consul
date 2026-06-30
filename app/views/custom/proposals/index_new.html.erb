@@ -20,8 +20,10 @@
 
   <%= render Shared::MapComponent.new(
     features: @proposals_coordinates,
+    features_count: @proposals_map_pin_count,
     process: 'proposals',
-    collapsible: true
+    map_data_url: proposals_path(**request.query_parameters, format: :json),
+    lazy_load_threshold: ProposalsController::MAP_PINS_LAZY_LOAD_THRESHOLD
   ) %>
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
@@ -36,13 +38,17 @@
           filters: @valid_orders,
           )) %>
       <%= paginate @proposals %>
+
+      <div id="section_help" class="margin" data-magellan-target="section_help">
+        <%= render_custom_block "proposals_help" %>
+      </div>
     </div>
 
     <div id="proposals-sidebar" class="sidebar">
       <div class="hide-on-mobile">
         <%= render Shared::SidebarCardComponent.new(title: t('custom.common.information'), icon_name: "info-circle", opened_on_mobile: true) do |c| %>
           <div class="margin-bottom-half">
-            <%= render_custom_block 'proposals_index_sidebar', default_content: t("custom.proposals.index.sidebar_information_default_text")  %>
+            <%= render_custom_block 'proposals_index_sidebar', default_content: t("custom.proposals.index.sidebar_information_default_text") %>
           </div>
           <div class="resources--info-count margin-bottom-half">
             <span>

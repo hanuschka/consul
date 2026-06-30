@@ -1,0 +1,27 @@
+de:
+  components:
+    adm:
+      masterportal_import_panel_component:
+        title: Import von Masterportal-Daten
+        endpoint_url_label: Endpunkt-URL (OGC API Features)
+        endpoint_url_hint: Die OGC API Features-Endpunkt-URL der Masterportal-Datenquelle. Von dieser Adresse werden die verfügbaren Datensätze abgerufen.
+        load_collections: Datensätze laden
+        load_collections_tooltip: Lädt die verfügbaren Datensätze von der angegebenen Endpunkt-URL
+        collections_label: Verfügbare Datensätze
+        collections_hint: Wählen Sie die Datensätze aus, die als Pins in diese Projektphase importiert werden sollen.
+        tree_hint: Auf „Datensätze laden“ klicken, um verfügbare Daten zu sehen.
+        create_resource_label: "%{resource_name} erzeugen"
+        create_resource_description: Aus jedem importierten Datensatz wird zusätzlich ein Eintrag im Modul angelegt.
+        create_resource_categories_note: Passende Kategorien werden dabei automatisch aus den Datensatz-Kategorien angelegt.
+        system_user_note: Alle erzeugten Vorschläge/Einreichungen werden unter dem folgenden Systembenutzer veröffentlicht.
+        import_button: Importieren
+        import_button_tooltip: Importiert die ausgewählten Datensätze als Pins in diese Projektphase
+        status:
+          pending: Noch nicht ausgeführt
+          running: Läuft…
+          success: "Letzter Import: %{at} — %{count} Einträge"
+          failed: Import fehlgeschlagen
+        resource_names:
+          proposals: Vorschläge
+          budget_investments: Bürgerbudget-Einreichungen
+          point_of_interest_pins: Points of Interest

@@ -1,0 +1,16 @@
+<div
+  class="adm-language-selector"
+  data-controller="adm--language-selector"
+>
+  <select
+    class="adm-language-selector__select"
+    aria-label="<%= t(".label") %>"
+    data-action="change->adm--language-selector#switch"
+  >
+    <% locales.each do |code, name| %>
+      <option value="<%= code %>" <%= "selected" if I18n.locale == code %>><%= name %></option>
+    <% end %>
+  </select>
+
+  <span class="material-symbols-outlined adm-language-selector__chevron" aria-hidden="true">expand_more</span>
+</div>

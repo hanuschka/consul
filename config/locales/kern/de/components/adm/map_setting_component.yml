@@ -9,3 +9,4 @@ de:
           Über die Symbole am rechten Kartenrand können Pins gesetzt, Linien gezogen und Polygone eingezeichnet werden.
           Diese werden im Frontend rot dargestellt.
           Es können mehrere Elemente gleichzeitig eingezeichnet werden.
+          Zusätzlich lässt sich der Mittelpunkt der Karte über das zweite Symbol von oben mit einem blauen Pin festlegen.

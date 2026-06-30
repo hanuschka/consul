@@ -12,8 +12,8 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all milestone statuses. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
 
       response '200', 'milestone statuses found' do
         before do
@@ -39,6 +39,8 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
     end
 
     post 'Create a milestone status' do
@@ -107,6 +109,9 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response
+      forbidden_response
     end
   end
 
@@ -143,6 +148,8 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a milestone status' do
@@ -227,6 +234,9 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a milestone status' do
@@ -277,6 +287,9 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 

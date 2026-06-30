@@ -1,7 +1,6 @@
 module ProjektLabelActions
   extend ActiveSupport::Concern
   include Translatable
-  include ProjektPhaseControllerUtils
 
   included do
     respond_to :js

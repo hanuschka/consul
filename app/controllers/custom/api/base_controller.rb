@@ -8,11 +8,12 @@ class Api::BaseController < ActionController::API
   DEFAULT_PER_PAGE = 500
   COMMENTS_PER_PAGE = 5000
 
-  before_action :authenticate_http_basic, if: :http_basic_auth_site?
+  before_action :authenticate_http_basic, if: :require_http_basic_auth?
   before_action :authenticate_api_client!
-  after_action :log_api_request
 
-  # rescue_from StandardError, with: :render_internal_server_error
+  BODY_PARAM_MAX_BYTES = 8192
+
+  rescue_from StandardError, with: :render_internal_server_error
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
   rescue_from UnauthorizedError, with: :render_unauthorized
@@ -29,14 +30,30 @@ class Api::BaseController < ActionController::API
       Rails.application.secrets.http_basic_auth
     end
 
+    def require_http_basic_auth?
+      http_basic_auth_site? && !bearer_token_provided?
+    end
+
+    def bearer_token_provided?
+      request.authorization.to_s.match?(/\ABearer /i)
+    end
+
     def authenticate_api_client!
       token = request.headers["Authorization"]&.split(" ")&.last
       client = ApiClient.find_by(access_token: token)
 
       if client.present?
         @current_client = client
+        @internal_api_client = false
       else
-        raise UnauthorizedError, "Invalid or missing API token."
+        internal_client = InternalApiClient.find_by(auth_token: token)
+
+        if internal_client.present?
+          @current_client = internal_client
+          @internal_api_client = true
+        else
+          raise UnauthorizedError, "Invalid or missing API token."
+        end
       end
     end
 
@@ -44,13 +61,21 @@ class Api::BaseController < ActionController::API
       @current_client
     end
 
+    def internal_api_client?
+      @internal_api_client == true
+    end
+
     def check_read_access!
+      return if internal_api_client?
+
       unless current_client&.can_read_public_data?
         raise ForbiddenError, "You do not have permission to read this resource."
       end
     end
 
     def check_admin_access!
+      return if internal_api_client?
+
       unless current_client&.admin?
         raise ForbiddenError, "You do not have permission to perform this action. Admin access required."
       end
@@ -80,24 +105,42 @@ class Api::BaseController < ActionController::API
       }, status: :not_found
     end
 
-    def log_api_request
+    def no_pagination_meta
+      {
+        message: "All matching records were returned in a single response " \
+          "without pagination. To paginate, supply the 'page' and/or " \
+          "'per_page' query parameters (for example: ?page=1&per_page=20)."
+      }
+    end
+
+    def append_info_to_payload(payload)
+      super
       return if skip_api_request_log?
 
-      ApiRequestLogs::CreateAndPushJob.perform_later(
-        request.method,
-        request.path,
-        request.url,
-        request.query_parameters.to_h,
-        request.request_parameters.to_h,
-        response.status,
-        @current_client&.id
-      )
+      payload[:api_request_log] = {
+        full_url: request.url,
+        query_params: request.query_parameters.to_h,
+        body_params: loggable_body_params,
+        api_client_id: @current_client&.id
+      }
     rescue StandardError
+    end
+
+    def loggable_body_params
+      request.request_parameters.to_h.deep_transform_values do |value|
+        if value.is_a?(String) && value.bytesize > BODY_PARAM_MAX_BYTES
+          "[truncated #{value.bytesize} bytes]"
+        else
+          value
+        end
+      end
     end
 
     SKIP_LOG_RESPONSE_STATUSES = [401, 403, 404, 405].freeze
 
     def skip_api_request_log?
+      return true if @current_client.blank?
+
       SKIP_LOG_RESPONSE_STATUSES.include?(response.status)
     end
 

@@ -3,13 +3,15 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
     authorize Budget::Investment, :index?, policy_class: Adm::Valuation::BudgetInvestmentPolicy
 
     @team_members = Valuator.includes(user: :image).order(:id)
-    @recent_items = policy_scope(Budget::Investment, policy_scope_class: Adm::Valuation::BudgetInvestmentPolicy::Scope)
-                      .includes(:budget, :translations)
-                      .order(updated_at: :desc).limit(10)
 
-    @section_setting = SectionSetting.for_section("valuation")
+    investments = policy_scope(Budget::Investment, policy_scope_class: Adm::Valuation::BudgetInvestmentPolicy::Scope)
+    @pagy, @investments = pagy(investments.includes(:budget, :valuators).order(id: :desc))
+
+    @intro_text = Setting["adm.valuation.intro_text"].presence ||
+                  I18n.t("adm.section_settings.intro_text_defaults.valuation", default: nil)
+    @notice = Setting["adm.valuation.notice_active"].present? ? Setting["adm.valuation.notice_message"] : nil
     @contact_persons = SectionContactPerson.for_section("valuation")
-    @activities = SectionActivity.for_section("valuation").limit(10)
+    @pagy_activities, @activities = pagy(SectionActivity.for_section("valuation"), limit: 10, page_param: :activity_page)
 
     @stats = [
       { value: Budget::Investment.count, label: t("adm.valuation.home.stats.total"), icon: "account_balance" },
@@ -18,12 +20,8 @@ class Adm::Valuation::HomeController < Adm::Valuation::BaseController
       { value: Budget::Investment.valuation_finished.count, label: t("adm.valuation.home.stats.valued"), icon: "check_circle" }
     ]
 
-    @quick_links = [
-      { label: t("adm.valuation.home.quick_links.all"), path: adm_valuation_investments_path }
-    ]
-
     @breadcrumbs = [
-      { name: t("adm.valuation.home.title"), icon: "home" }
+      { name: t("adm.valuation.menu.items.home"), icon: "home" }
     ]
   end
 end

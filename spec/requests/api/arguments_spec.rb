@@ -45,8 +45,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       security [bearer_auth: []]
       description "List all arguments (pro and con) for a specific projekt phase. Supports pagination for efficient loading of large argument sets. Arguments are ordered by creation date with pagination support. #{ApiAccessRequirements::GET_READ_ONLY}"
 
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Page number for pagination (default: 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (default: depends on configuration)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Page number for pagination (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** depends on configuration)'
 
       response '200', 'projekt arguments list returned successfully' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -102,6 +102,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt argument' do
@@ -211,6 +213,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           expect(response.status).to eq(422)
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -256,6 +261,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt argument' do
@@ -397,6 +404,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
           expect(response.status).to eq(422)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt argument' do
@@ -465,6 +475,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

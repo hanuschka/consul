@@ -8,18 +8,14 @@
   </head>
 
   <body class="admin">
-    <% unless embedded? %>
-      <%= render "layouts/admin_header", current_user: manager_logged_in %>
-    <% end %>
+    <%= render "layouts/admin_header", current_user: manager_logged_in %>
 
     <div class="menu-and-content">
       <%= check_box_tag :show_menu, nil, false, role: "switch" %>
 
-      <% unless embedded? %>
-        <nav class="admin-sidebar">
-          <%= render "/management/menu" %>
-        </nav>
-      <% end %>
+      <nav class="admin-sidebar">
+        <%= render "/management/menu" %>
+      </nav>
 
       <main class="admin-content">
         <%= label_tag :show_menu, t("admin.menu.admin"),

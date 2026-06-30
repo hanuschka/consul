@@ -12,7 +12,8 @@ class AiProposalFlow::ProjectSummaryBannerComponent < ApplicationComponent
   end
 
   def description_snippet
-    projekt.page.subtitle.presence || projekt.page.content.to_s.gsub(/<[^>]+>/, "").first(200)
+    text = projekt.page.subtitle.presence || helpers.strip_tags(projekt.page.content.to_s).first(200)
+    helpers.sanitize(text)
   end
 
   def projekt_page_url

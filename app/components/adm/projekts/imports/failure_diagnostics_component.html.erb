@@ -1,0 +1,26 @@
+<details class="projekt-import-diagnostics">
+  <summary class="projekt-import-diagnostics--summary">
+    <span class="material-symbols-outlined" aria-hidden="true">bug_report</span>
+    <%= t("adm.projekts.imports.from_files.show.diagnostics_title") %>
+  </summary>
+
+  <dl class="projekt-import-diagnostics--list">
+    <% if failure_stage_label.present? %>
+      <div class="projekt-import-diagnostics--row">
+        <dt class="projekt-import-diagnostics--key"><%= t("adm.projekts.imports.from_files.show.diagnostics_stage") %></dt>
+        <dd class="projekt-import-diagnostics--value"><%= failure_stage_label %></dd>
+      </div>
+    <% end %>
+
+    <% detail_rows.each do |key, value| %>
+      <div class="projekt-import-diagnostics--row">
+        <dt class="projekt-import-diagnostics--key"><%= key %></dt>
+        <dd class="projekt-import-diagnostics--value"><%= value %></dd>
+      </div>
+    <% end %>
+  </dl>
+
+  <% if backtrace.any? %>
+    <pre class="projekt-import-diagnostics--backtrace"><%= backtrace.join("\n") %></pre>
+  <% end %>
+</details>

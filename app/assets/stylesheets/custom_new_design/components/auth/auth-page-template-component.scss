@@ -129,22 +129,22 @@
     }
   }
 
-  // .auth-page-template--legend-text {
-  //   color: black;
-  //   font-size: 25px;
-  //   line-height: 1.25;
+  .auth-page-template--legend-text--default {
+    color: black;
+    font-size: 25px;
+    line-height: 1.25;
 
-  //   @media(max-width: $small-tablet-viewport-start) {
-  //     font-size: 20px;
-  //   }
+    @media(max-width: $small-tablet-viewport-start) {
+      font-size: 20px;
+    }
 
-  //   .custom-content-block-body p {
-  //     line-height: inherit;
-  //     font-size: inherit;
-  //     font-weight: inherit;
-  //     margin-bottom: inherit;
-  //   }
-  // }
+    .custom-content-block-body p {
+      line-height: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      margin-bottom: inherit;
+    }
+  }
 
   .auth-page-template--form-section {
     width: 48%;

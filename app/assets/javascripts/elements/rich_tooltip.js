@@ -142,7 +142,8 @@
 
     bindEvents() {
       this.trigger.addEventListener("mouseenter", this.scheduleShow.bind(this))
-      this.trigger.addEventListener("pointerdown", this.hide.bind(this))
+      this.trigger.addEventListener("mouseleave", this.handleTriggerMouseleave.bind(this))
+      this.trigger.addEventListener("pointerdown", this.suppressShow.bind(this))
 
       if (!this.hoverOnly) {
         this.trigger.addEventListener("focusin", this.scheduleShow.bind(this))
@@ -163,9 +164,38 @@
     }
 
     scheduleShow() {
+      if (this.showSuppressed) return
+
       clearTimeout(this.hideTimeout)
       clearTimeout(this.showTimeout)
       this.showTimeout = setTimeout(this.show.bind(this), this.showDelay)
+    }
+
+    // A click on the trigger suppresses the tooltip so it does not pop up over
+    // the action the user just took (the trigger also gains focus on click,
+    // which would otherwise re-trigger the focus show). Suppression lasts until
+    // the pointer genuinely leaves the trigger; re-hovering arms it again.
+    suppressShow() {
+      this.showSuppressed = true
+      this.hide()
+    }
+
+    // Re-arm only on a real move out of the trigger. A modal backdrop (or any
+    // overlay) opening over the trigger fires a synthetic mouseleave while the
+    // pointer is stationary — its coordinates are still inside the trigger box,
+    // so ignore it; otherwise the tooltip would re-show when that overlay closes
+    // and a matching synthetic mouseenter fires over the still-parked pointer.
+    handleTriggerMouseleave(event) {
+      if (this.pointerWithinTrigger(event)) return
+
+      this.showSuppressed = false
+    }
+
+    pointerWithinTrigger(event) {
+      const rect = this.trigger.getBoundingClientRect()
+
+      return event.clientX >= rect.left && event.clientX <= rect.right &&
+        event.clientY >= rect.top && event.clientY <= rect.bottom
     }
 
     scheduleHide() {

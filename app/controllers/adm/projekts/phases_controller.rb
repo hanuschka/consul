@@ -367,7 +367,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         ]
       end
       format.csv do
-        send_data CsvServices::FormularAnswersExporter.call(@formular),
+        send_data CsvServices::FormularAnswersExporter.call(@formular, request.base_url),
           filename: "formular_answers-#{@formular.id}-#{Time.zone.today}.csv"
       end
     end

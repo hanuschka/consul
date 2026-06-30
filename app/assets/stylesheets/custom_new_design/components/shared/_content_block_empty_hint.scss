@@ -42,6 +42,18 @@
   min-height: 0;
 }
 
+// An empty body lets its children's vertical margins (e.g. an empty <p>'s
+// ~16px margin) escape the wrapper: downward when collapsed (rest), upward when
+// the body has min-height (edit) — shifting surrounding content differently in
+// each state, so the layout jumps on edit toggle. While the block is empty
+// there is no content whose spacing matters, so zero the descendant margins in
+// BOTH states; normal spacing returns the moment real content drops the marker.
+.content-block-empty-hint-wrap.is-content-empty .projekt-content-block,
+.content-block-empty-hint-wrap.is-content-empty .projekt-content-block * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 // Hide the hint while any edit mode is active so the editable body is free.
 .content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper.-in-edit-mode .content-block-empty-hint {
   display: none;
@@ -87,6 +99,16 @@
 
 .projekt-content-block-wrapper.is-content-empty:not(.-in-edit-mode) .projekt-content-block {
   min-height: 0;
+}
+
+// See the site-block rule above: stop the empty body's child margins from
+// escaping (down when collapsed, up under edit-mode min-height) and shifting the
+// trailing add-content-block controls ~16px on edit toggle. Applied in both
+// states while empty; real content drops the marker and restores spacing.
+.projekt-content-block-wrapper.is-content-empty .projekt-content-block,
+.projekt-content-block-wrapper.is-content-empty .projekt-content-block * {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .projekt-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {

@@ -257,6 +257,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-pencil-alt"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Text-Editor",
                 text: "Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung."
               })}
@@ -270,6 +271,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                     <i class="fas fa-magic"></i>
                   </button>
                 `, {
+                  delay: 1000,
                   title: "KI-Editor",
                   text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern.",
                   note: ProjektStudio.config.aiAvailable ? null : ProjektStudio.templateFunctions.aiDisabledTooltipNote
@@ -284,6 +286,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-code"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Code-Editor",
                 text: "Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting."
               })}
@@ -307,6 +310,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-copy"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Duplizieren",
                 text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
               })}
@@ -319,6 +323,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fa fa-arrow-rotate-left fa-undo"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Versionsverlauf",
                 text: "Zeigt frühere Versionen dieses Blocks an und macht Änderungen rückgängig."
               })}
@@ -362,6 +367,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-trash-alt"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Inhaltsblock löschen",
                 text: "Entfernt diesen Inhaltsblock dauerhaft von der Seite. Diese Aktion kann nicht rückgängig gemacht werden."
               })}

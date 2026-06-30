@@ -512,6 +512,23 @@ $phase-marker-border: #cbd5e1;
   .custom-page--banner-text-section {
     // max-width: 90%;
     padding-top: 75px;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      padding-top: 55px;
+      padding-bottom: 25px;
+    }
+
+    @media(max-width: $small-tablet-viewport-start) {
+      padding-top: 25px;
+    }
+
+    @media(max-width: $mobile-viewport-start) {
+      // Bottom padding muss Description + Chips komplett umschließen, sonst rutscht
+      // der Inhalt im Studio-Edit-Modus (Edit-Pencil rechts, +44px Right-Padding
+      // auf `.projekt-banner-edit-field-container`) optisch unter den Banner-Hintergrund.
+      padding-top: 10px;
+      max-width: 100%;
+    }
   }
 
   .custom-page--banner-image {

@@ -129,7 +129,7 @@
     }
   }
 
-  .auth-page-template--legend-text {
+  .auth-page-template--legend-text--default {
     color: black;
     font-size: 25px;
     line-height: 1.25;
@@ -194,6 +194,14 @@
       display: none;
     }
 
+    label.auth-page-template--field-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+      font-weight: 400;
+      color: $main-text-color;
+    }
+
     input:not([type="checkbox"]), select {
       height: 45px !important;
       max-height: 45px;
@@ -209,6 +217,16 @@
       /* } */
     }
   }
+  .sign-up--password-field {
+    display: flex;
+    flex-direction: column;
+
+    .help-text {
+      order: 1;
+      margin-bottom: 1rem;
+    }
+  }
+
   .auth-page-template--after-card-container {
     margin-top: 20px;
     display: flex;

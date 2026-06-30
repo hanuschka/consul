@@ -1,0 +1,288 @@
+.projekt-content-block-templates-selector--tabs {
+  background-color: transparent;
+  margin-bottom: 1.1rem;
+  justify-content: flex-start;
+
+  .shared-tabs--link {
+    font-size: 15px;
+  }
+}
+
+.projekt-content-block-edit-main-controlls {
+  user-select: none;
+  justify-content: flex-end;
+  gap: 5px;
+  order: 99;
+}
+
+.js-content-block-version-managment {
+  display: none;
+}
+
+.projekt-content-block-edit--separator {
+  width: 1px;
+  height: 24px;
+  background-color: #cbd5e0;
+  margin: 0 3px;
+}
+
+.projekt-content-block-templates-selector--tab {
+  background-color: transparent !important;
+
+  a {
+    /* margin-right: 10px !important; */
+    background-color: transparent !important;
+    // color: var(--brand-color);
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+dialog.projekt-content-block-templates-selector-wrapper {
+  max-width: 1030px;
+  max-height: 93vh;
+  margin-top: 3vh;
+  overflow: hidden;
+}
+
+// Gate flex layout behind [open] — an unconditional `display` on a <dialog>
+// overrides the UA `dialog:not([open]) { display: none }`, which leaves the
+// dialog in normal flow and breaks showModal()'s top-layer + backdrop.
+dialog.projekt-content-block-templates-selector-wrapper[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+dialog.modern-modal {
+  width: 100%;
+  padding: 0;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+
+  h3 {
+    font-size: 25px;
+    margin-top: 0;
+    font-weight: 500;
+  }
+}
+
+// Shared info/fallback note used inside the studio modals. Per-modal spacing
+// (margins) stays on the consumer.
+.modern-modal--note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #555;
+  background: #f1f1f1;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.modern-modal-content {
+  padding: 20px 25px;
+  padding-bottom: 1px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.projekt-content-block-templates-selector {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 10px 15px;
+  padding-bottom: 1px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  padding-left: 25px;
+  padding-right: 0;
+}
+
+.projekt-content-block-templates-selector--inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+
+  h3 {
+    /* margin-top: 0 !important; */
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 14px;
+    margin-bottom: 0.8rem;
+  }
+
+  .shared-tabs-panels {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .shared-tabs-panel {
+    padding-right: 20px;
+  }
+
+  .shared-tabs-panel.is-active {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+.custom-content-template--item {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+
+  .is-active {
+  }
+}
+
+.custom-content-template--item-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.custom-content-template--item-inner {
+  background-color: white;
+  cursor: pointer;
+  padding: 15px 20px;
+  /* padding-top: 10px; */
+  border-radius: 8px;
+  outline: 1px solid #e0e0e0;
+  position: relative;
+  user-select: none;
+  width: 100%;
+
+  &:hover {
+    outline: 2px solid #a2d6ff;
+  }
+}
+
+
+.custom-content-template--visibility-badges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.custom-content-template--badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+
+  i {
+    font-size: 10px;
+  }
+
+  &.-hidden {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  &.-hidden-until {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+}
+
+.custom-content-template--item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 17px;
+}
+
+.content-block-template-copy-button {
+  width: 45px;
+  height: 45px;
+  background-color: #e4e4e4;
+  color: #858585;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    background-color: #d8d8d8;
+  }
+
+  &.-copied {
+  }
+}
+
+.projekt-content-block-greeting {
+  .accordion {
+    margin-bottom: 10px;
+  }
+}
+
+.content-block-template {
+  width: 100%;
+}
+
+.projekt-content-block-templates-selector {
+  .shared-tabs--link[aria-selected="true"],
+  .shared-tabs--link:hover {
+    color: var(--dt-base);
+  }
+}
+
+.content-block-templates-selector--spinner {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.content-block-templates-selector--fallback-note {
+  margin-bottom: 16px;
+  margin-right: 20px;
+}
+
+.content-block-templates-selector--error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 0;
+}
+
+.content-block-templates-selector--blank-create {
+  margin-left: 4px;
+}
+
+.content-block-templates-selector--ai-create {
+  margin-left: 4px;
+}

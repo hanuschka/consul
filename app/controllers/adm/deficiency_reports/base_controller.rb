@@ -11,14 +11,6 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
 
   private
 
-    def adm_header_title
-      I18n.t("adm.deficiency_reports.title")
-    end
-
-    def adm_menu_component
-      Adm::DeficiencyReports::MenuComponent.new
-    end
-
     def verify_deficiency_report_manager
       raise Pundit::NotAuthorizedError unless current_user&.deficiency_report_manager? ||
                                               current_user&.deficiency_report_officer? ||
@@ -40,6 +32,9 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
       return scope unless current_user.deficiency_report_officer?
 
       officer = current_user.deficiency_report_officer
+
+      return scope if officer.manage_all?
+
       officer_group_ids = DeficiencyReport::OfficerGroup.joins(:officers).where(deficiency_report_officers: { id: officer.id }).pluck(:id)
 
       scope.where(

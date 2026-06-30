@@ -1,5 +1,15 @@
 de:
   activerecord:
+    errors:
+      models:
+        map_layer:
+          attributes:
+            geojson_file:
+              blank: muss hochgeladen werden
+              invalid_content_type: muss eine GeoJSON- oder JSON-Datei sein
+              too_large: ist zu groß (maximal %{max} MB erlaubt)
+          choropleth_colors_count: Die Anzahl der Farben muss um eins größer sein als die Anzahl der Schwellenwerte.
+          choropleth_breaks_order: Die Schwellenwerte müssen in aufsteigender Reihenfolge angegeben werden.
     models:
       projekt: Projekt
     attributes:
@@ -14,6 +24,7 @@ de:
           leaflet: Leaflet
           mapbox: Mapbox
           virtualcity: Virtual City Map
+          leaflet_plus_masterportal: Masterportal
       map_layer:
         provider: URL des Kartenanbieters
         attribution: Quellenhinweis der Karte
@@ -22,9 +33,14 @@ de:
         show_by_default: Beim Laden der Karte standardmäßig anzeigen
         transparent: Ebene ist transparent
         opacity: Transparenz
+        geojson_file: GeoJSON-Datei
+        protocols:
+          regular: Kachelkarte (XYZ)
+          wms: WMS-Dienst
+          geojson: GeoJSON-Datei
       projekt:
-        show_start_date_in_frontend: Startdatum in der Seitenleiste des Projektes anzeigen
-        show_end_date_in_frontend: Enddatum in der Seitenleiste des Projektes anzeigen
+        show_start_date_in_frontend: Startdatum im Projekt anzeigen
+        show_end_date_in_frontend: Enddatum im Projekt anzeigen
       budget/investment:
         feasibility_undecided: Nicht bewertet
         feasibility_feasible: Entspricht den Kriterien
@@ -63,3 +79,5 @@ de:
         rating_scale: Bewertungsskala
       individual_group:
         visible: Sichtbar
+      newsletter:
+        respect_newsletter_optout: Newsletter-Opt-out berücksichtigen

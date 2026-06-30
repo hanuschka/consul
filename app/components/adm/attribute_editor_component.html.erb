@@ -1,5 +1,5 @@
 <%= turbo_frame_tag dom_id(@record, @attribute) do %>
-  <div class="attribute-editor-component mb-5"
+  <div class="attribute-editor-component mb-2"
        data-controller="components-adm-attribute-editor"
        role="group"
        aria-labelledby="<%= aria_options[:labelledby] %>"
@@ -7,7 +7,7 @@
        aria-disabled="<%= disabled? %>">
     <% if inline? %>
       <div class="kern-row">
-        <div class="kern-col-12 kern-col-md-5">
+        <div class="kern-col-12 kern-col-md-3">
           <div
             id="<%= "#{dom_id(@record)}_#{@attribute}_label" %>"
             class="kern-title kern-title--small mb-3 mb-md-0">
@@ -57,12 +57,20 @@
         </div>
       <% end %>
     <% end %>
+
+    <% if note.present? %>
+      <div class="kern-row">
+        <div class="kern-col-12 kern-col-md-10">
+          <p class="attribute-editor-component--note kern-body mt-2"><%= sanitize(note) %></p>
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <% if divider? %>
     <div class="kern-row">
       <div class="kern-col-12 kern-col-md-10">
-        <hr class="kern-divider mb-5" aria-hidden="true" />
+        <hr class="kern-divider mb-4" aria-hidden="true" />
       </div>
     </div>
   <% end %>

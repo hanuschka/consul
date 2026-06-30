@@ -10,10 +10,13 @@ module DeficiencyReportsHelper
   def all_deficiency_report_map_locations(deficiency_reports_for_map)
     ids = deficiency_reports_for_map.except(:limit, :offset, :order).ids.uniq
 
-    MapLocation
-      .with_deficiency_report_associations
-      .where(mappable_id: ids)
-      .map(&:features_json_data)
+    MapLocation.deficiency_report_features(ids)
+  end
+
+  def deficiency_report_map_locations_count(deficiency_reports_for_map)
+    ids = deficiency_reports_for_map.except(:limit, :offset, :order).ids.uniq
+
+    MapLocation.where(mappable_type: "DeficiencyReport", mappable_id: ids).count
   end
 
   def deficiency_reports_default_view?
@@ -35,5 +38,25 @@ module DeficiencyReportsHelper
   def deficiency_report_all_responsible_sorted
     DeficiencyReport::OfficerGroup.all.order(:name) +
       DeficiencyReport::Officer.joins(:user).order("users.username ASC")
+  end
+
+  def active_deficiency_report_confirmation_popup
+    popup = DeficiencyReport::ConfirmationPopup.current
+    popup.active? ? popup : nil
+  end
+
+  def deficiency_report_create_cta_button(css_class:, link_data: {}, style: nil)
+    label = deficiency_reports_create_cta
+    common = { class: css_class }
+    common[:style] = style if style.present?
+
+    if active_deficiency_report_confirmation_popup
+      common[:class] = "#{css_class} js-shared-modal-open"
+
+      button_tag(label, **common, type: "button",
+        data: { shared_modal_id: "deficiency-report-create-cta-modal" })
+    else
+      link_to(label, new_deficiency_report_path, **common, data: link_data)
+    end
   end
 end

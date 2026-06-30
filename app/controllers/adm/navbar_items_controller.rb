@@ -74,7 +74,7 @@ module Adm
 
       def navbar_item_params
         params.require(:navbar_item).permit(
-          :kind, :preset, :projekt_id, :custom_title, :external_url,
+          :kind, :preset, :projekt_id, :linked_page_id, :custom_title, :external_url,
           :landing_page_id, :open_in_new_tab
         )
       end
@@ -87,7 +87,7 @@ module Adm
       end
 
       def set_form_variables
-        @available_kinds = NavbarItem.kinds.keys
+        @available_kinds = %w[presets projekts landing_pages external] & NavbarItem.kinds.keys
 
         @available_presets =
           if @landing_page.present?
@@ -102,6 +102,8 @@ module Adm
           else
             Projekt.all
           end
+
+        @available_landing_pages = NavbarItem.landing_pages_for_select(@landing_page)
 
         @form_url =
           if @navbar_item.persisted?

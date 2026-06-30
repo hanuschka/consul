@@ -1,6 +1,10 @@
 de:
   custom:
     projekts:
+      banner_upload:
+        uploading: "Bild wird hochgeladen…"
+        processing: "Bild wird verarbeitet…"
+        min_image_size_hint: "Empfohlene Mindestbildgröße: %{width}×%{height} px"
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite
@@ -43,15 +47,29 @@ de:
       homepage_search_form:
         placeholder: Projekte durchsuchen...
       page:
+        studio_edit_popup:
+          save: Speichern
+          cancel: Abbrechen
         content_block_link_popup:
           link_text: Link-Text
           link_url: Link-URL
           open_in_new_tab: In neuem Tab öffnen
-          save: Speichern
-          cancel: Abbrechen
           remove_link: Link entfernen
+          attach_file: Datei anhängen
+        content_block_image_alt_popup:
+          alt_text: Alternativtext
+          description: Der Alternativtext beschreibt das Bild für Menschen, die Screenreader nutzen, und wird angezeigt, wenn das Bild nicht geladen werden kann. Er verbessert Barrierefreiheit und Suchmaschinen-Sichtbarkeit.
+          placeholder: z. B. Menschen diskutieren an einem runden Tisch
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
+        color_picker:
+          label: Projektfarbe
+          tooltip: Brand-Color für dieses Projekt
+          reset: Auf Standardfarbe zurücksetzen
+          status:
+            saving: Speichere…
+            saved: Gespeichert
+            error: Fehler beim Speichern
         convert_to_content_blocks:
           button: In Inhaltsblock-Modus umwandeln
           tooltip: Seiteninhalt in einen bearbeitbaren Inhaltsblock konvertieren und den neuen Modus aktivieren
@@ -59,6 +77,7 @@ de:
           success: Erfolgreich in den Inhaltsblock-Modus umgewandelt
           error: Umwandlung fehlgeschlagen
         topbar:
+          view_switch_label: Ansicht wechseln
           admin_view: Adminansicht
           user_view: Nutzeransicht
           preview_mode: Vorschaumodus
@@ -102,6 +121,7 @@ de:
             notify_reviewers: Prüfer benachrichtigen
           projekt_information:
             title: Projektinformation
+            admin_empty_hint: "Hier können zusätzliche Projektinfos eingegeben werden wie z.B. Kontakte. Dieser Block wird nur angezeigt, wenn er Inhalt enthält."
           map:
             title: Karte
           navigator:
@@ -109,6 +129,18 @@ de:
           phases:
             title: Phasen
             participate: Offen für Beteiligung!
+            running: Läuft
+            running_until: Läuft bis %{date}
+            starts_in:
+              one: Startet in 1 Tag
+              other: Startet in %{count} Tagen
+            ended_on: Beendet am %{date}
+          banner:
+            end_date_chip: "bis %{date}"
+            start_date_chip: "ab %{date}"
+            projekt_completed_chip: Projekt abgeschlossen
+            projekt_starts_soon_chip: Startet bald
+            go_to_phase: "Zur Phase: %{title}"
           sdgs:
             title: SDGs
           tags:
@@ -116,7 +148,7 @@ de:
           navigator:
             title: Aufbau
           projekt_start: Projektstart
-          projekt_end: Gepl. Fertigstellung
+          projekt_end: Geplante Fertigstellung
           phases_subscription:
             title: Benachrichtigungen
             description: Möchten Sie zu diesem Projekt auf dem Laufenden bleiben?

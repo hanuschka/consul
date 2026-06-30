@@ -7,13 +7,13 @@ de:
       form:
         page_description: Vielen Dank, dass Sie einen Mangel melden! Sie helfen uns damit, diesen so schnell es geht abzustellen.
           Bitte beschreiben Sie möglichst genau, was Ihnen aufgefallen ist. Typische Mängel sind zum Beispiel Straßenschäden oder beschädigte Parkbänke.
-        title_placeholder: Geben Sie dem Mangel, den Sie melden möchten, einen plakativen Titel wie zum Beispiel “Schlagloch in XY-Straße vor Hausnummer 123”.
-        description_placeholder: "Beschreiben Sie hier den Mangel, den Sie melden möchten.\n\n
-          Details helfen der Stadtverwaltung, den Mangel aufzufinden und schnell zu beseitigen.\n\n
-          Wenn Sie zum Beispiel die Hausnummer wissen, vor der sich ein Schlagloch befindet, dann geben Sie diese gerne an.\n\n
+        title_placeholder: Geben Sie einen aussagekräftigen Titel an, wie zum Beispiel “Schlagloch in XY-Straße vor Hausnummer 123”.
+        description_placeholder: "Beschreiben Sie hier Ihr Anliegen.\n\n
+          Details helfen der Verwaltung, Ihr Anliegen einzuordnen und schnell zu bearbeiten.\n\n
+          Geben Sie zum Beispiel an, worum es geht, wo es sich befindet und was für Sie wichtig ist.\n\n
           Bitte nennen Sie keine persönlichen Daten von Dritten wie zum Beispiel Adressen."
         map:
-          hint: Setzen Sie einen Pin auf der Karte, um den Mangel genau zu verorten.
+          hint: Setzen Sie einen Pin auf der Karte, um den Standort genau zu markieren.
         district:
           title: Schnellauswahl Kartenausschnitt
           description: Navigieren Sie schnell zu der gewünschten Kartenposition
@@ -36,15 +36,15 @@ de:
           description: Dieses Feld sehen nur Admin. Sie können hier einen Beitrag im Namen von jemandem erstellen.
           placeholder: Namen eingeben...
         create:
-          submit_button: Mangel melden
+          submit_button: Jetzt einreichen
         labels:
-          description: Text zum Mangel
-          summary: Zusammenfassung des Mangel
-          title: Titel des Mangels
+          description: Beschreibung
+          summary: Zusammenfassung
+          title: Titel
         new:
-          submit_button: Mangel melden
+          submit_button: Jetzt einreichen
         edit:
-          submit_button: Mangel aktualisieren
+          submit_button: Änderungen speichern
         submit_button_new_design: Jetzt einreichen
       create:
         flash_success: Ihre Meldung wurde erfolgreich übermittelt.
@@ -55,7 +55,7 @@ de:
           Sie sehen auf dieser Seite, welche Mängel bereits gemeldet wurden. Die Karte hilft Ihnen dabei, den jeweiligen Mangel zu verorten.
           Wenden auch Sie sich an uns, wenn Ihnen ein Mangel auffällt – und tragen Sie bei zu einem sauberen Stadtbild und einer funktionierenden Stadt.
         sidebar_information_default_text: Ihnen ist ein Mangel in der Stadt aufgefallen? Dann freuen wir uns über Ihre Mitteilung, damit wir uns schnellstmöglich darum kümmern können.
-        count: Mangelmeldungen
+        count: Meldungen
         deficiency_report:
           by: von
         orders:
@@ -65,12 +65,12 @@ de:
         search_form:
           button: search
           placeholder: Suchen...
-          title: Suche Mängelmeldungen
+          title: Meldungen durchsuchen
         section_footer:
-          description: Mängel können, abhängig vom eingestellten Verifizierungsverfahren, von jeder Benutzerin und jedem Benutzer eingebracht werden. Sie bieten eine einfache Möglichkeit auf Mängel in der Stadt hinzuweisen. Wir danken für Ihre Unterstützung!
-          title: Hilfe zu Mängelmeldungen
+          description: Meldungen können, abhängig vom eingestellten Verifizierungsverfahren, von jeder Benutzerin und jedem Benutzer eingebracht werden. So lassen sich Anliegen schnell und unkompliziert übermitteln. Wir danken für Ihre Unterstützung!
+          title: Hilfe
         section_header:
-          help: Hilfe zu Mängelmeldungen
+          help: Hilfe
           icon_alt: Mängelmelder
           title: Mängelmelder
         seo:
@@ -102,14 +102,14 @@ de:
         recommendation_one: Verwenden Sie bitte nicht ausschließelich Großbuchstaben für die Überschrift oder für komplette Sätze. Im Internet gilt das als Schreien und niemand möchte angeschrien werden.
         recommendation_three: Genießen Sie diesen Ort und die Stimmen, die ihn füllen. Er gehört auch Ihnen.
         recommendation_two: Diskussionen oder Kommentare, die illegale Handlungen beinhalten, werden gelöscht sowie diejenigen, die die Diskussionen absichtlich sabotieren. Alles andere ist erlaubt.
-        recommendations_title: Empfehlungen zum Erstellen eines Mangels
+        recommendations_title: Empfehlungen zum Erstellen einer Meldung
         seo:
-          title: Mangel melden
-        start_new: Mangel melden
+          title: Neue Meldung
+        start_new: Neue Meldung
       notifications:
         official_answer_updated: Antwort wurde erfolgreich gespeichert
       show:
-        title: "%{author} hat diesen Mangel gemeldet"
+        title: "Eingereicht von %{author}"
         welcome_text_default: Dieser Mangel wurde uns bereits von einer Nutzerin oder eine, Nutzer gemeldet. Hier können Sie den aktuellen Status einsehen sowie den Verlauf der Mangelmeldung verfolgen.
           Außerdem können Sie mit einem eigenen Kommentar Ihre Meinung äußern. Und nachdem der Mangel geschlossen wurde, finden Sie hier das offizielle Statement der Stadt.
         video:
@@ -122,7 +122,7 @@ de:
           title: Offizielle Antwort
         sidebar:
           category: Kategorien
-          delete: Mangel löschen
+          delete: Löschen
           officer: Sachbearbeiter*in
           select_officer: Sachbearbeiter*in auswählen
           social_share: Teilen

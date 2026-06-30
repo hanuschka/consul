@@ -12,7 +12,25 @@
   <div class="download-links">
     <%= link_to "Vorschläge herunterladen", admin_proposals_path(format: :csv), target: "_blank", class: "small" %>
     <%= link_to "Kommentare herunterladen", comments_admin_proposals_path(format: :csv), class: "small" %>
+    <%= link_to t(".download_geojson"),
+                admin_proposals_path(format: :geojson, source_filter: params[:source_filter]),
+                target: "_blank",
+                class: "small" %>
   </div>
+
+  <%= form_tag admin_proposals_path, method: :get, class: "geojson-export-filter" do %>
+    <%= label_tag :source_filter, t(".source_filter_label") %>
+    <%= select_tag :source_filter,
+                   options_for_select(
+                     [
+                       [t(".source_all"), "all"],
+                       [t(".source_masterportal"), "masterportal"],
+                       [t(".source_user"), "user"]
+                     ],
+                     params[:source_filter]
+                   ) %>
+    <%= submit_tag t(".apply_filter"), class: "button small hollow" %>
+  <% end %>
 
   <table>
     <thead>

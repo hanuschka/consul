@@ -755,145 +755,6 @@ span.projekt-backlink:before {
   display: flex;
 }
 
-.projekt-question-section {
-  #comments > h2 {
-      font-size: 24px;
-  }
-
-  #comments {
-    .callout.primary[data-alert] {
-      display: none;
-    }
-  }
-
-  .quiz-header {
-    .quiz-title,
-    .quiz-next {
-      padding: 12px;
-
-      @include breakpoint(medium) {
-        height: $line-height * 2;
-      }
-    }
-
-    .quiz-title {
-      background: $highlight;
-
-      .quiz-header-title {
-        font-size: $small-font-size;
-        font-weight: 700;
-        margin-bottom: 0;
-        text-transform: uppercase;
-      }
-    }
-
-    h4 a {
-      @include brand-text;
-
-      &:hover {
-        text-decoration: none;
-      }
-    }
-
-    .quiz-next-link {
-      display: block;
-
-      &:hover,
-      &:active {
-        text-decoration: none;
-      }
-    }
-
-    .quiz-next {
-      @include brand-text;
-      background: #ccdbe5;
-      font-size: $small-font-size;
-      font-weight: bold;
-      text-align: right;
-      text-transform: uppercase;
-      transition: background 0.25s ease-out, background 0.25s ease-out;
-
-      .icon-angle-right {
-        vertical-align: middle;
-      }
-
-      &:hover,
-      &:active {
-        @extend %brand-background;
-        text-decoration: none;
-      }
-    }
-  }
-
-  .quiz-question {
-    font-size: 32px;
-    margin-bottom: $line-height;
-  }
-
-  .project-question-list {
-    position: relative;
-    list-style: none;
-
-    .control {
-      background: #fff;
-      border: 1px solid $border;
-      border-radius: rem-calc(1);
-      border-radius: 7px;
-      color: #555;
-      cursor: pointer;
-      display: inline-block;
-      margin-bottom: 1rem;
-      margin-right: $line-height / 3;
-      padding: $line-height / 2  $line-height * 2;
-      position: relative;
-    }
-
-    .is-active {
-      background: #ccdbe6;
-      border: 0;
-    }
-
-    .control input {
-      position: absolute;
-      opacity: 0;
-      z-index: -1;
-    }
-
-    .control input:checked ~ .control-indicator {
-      background-color: var(--brand-color);
-      border: 0;
-    }
-
-    .radio .control-indicator {
-      border-radius: 50%;
-    }
-
-    .control-indicator {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      display: block;
-      width: rem-calc(16);
-      height: rem-calc(16);
-      line-height: rem-calc(16);
-      font-size: 65%;
-      text-align: center;
-      border: 2px solid #9c9c9c;
-      pointer-events: none;
-      user-select: none;
-    }
-  }
-}
-
-.projekt-next-question-button-section {
-  margin-bottom: 10px;
-  justify-content: flex-end;
-}
-
-.projekt-question--go-to-question-list-button {
-  text-align: right;
-}
-
 .projekt-list-tabs {
   @media screen and (max-width: 650px) {
     display: flex;
@@ -958,57 +819,6 @@ span.projekt-backlink:before {
     top: 11px;
     left: -27px;
   }
-}
-
-.projekt-questions-container {
-  @media screen and (max-width: 650px) {
-    margin-top: 30px;
-  }
-}
-
-.projekt-question-container {
-  display: flex;
-  flex-direction: column;
-  // margin-bottom: $line-height;
-
-  .icon-angle-left {
-    padding-left: 5px;;
-  }
-
-  .icon-angle-left::before {
-    position: relative;
-    left: -5px;
-  }
-}
-
-.projekt-question-next-question-section {
-  margin-top: 70px;
-
-  @media screen and (max-width: 650px) {
-    margin-top: $line-height;
-  }
-}
-
-.projekt-question-container-question-block {
-  margin-bottom: 10px;
-
-  @media screen and (max-width: 650px) {
-    order: 2;
-  }
-}
-
-.projekt-questions-user-not-signed-in-mesessage {
-  @media screen and (max-width: 650px) {
-    order: 1;
-  }
-}
-
-.projekt-next-question-button-section {
-  display: flex;
-}
-
-.projet-question-list-item-answers-count {
-  margin-top: -8px;
 }
 
 .projekt-text-title-block {
@@ -1394,6 +1204,7 @@ span.projekt-backlink:before {
   margin-top: 15px;
   max-width: 800px;
   padding-bottom: 22px;
+  border-radius: 10px;
 }
 
 .projekt-livestream-navigation--title {
@@ -1425,70 +1236,6 @@ span.projekt-backlink:before {
 
 .projekt-livestream--description + .projekt-questions-container {
   margin-top: 28px;
-}
-
-.projekt-question-list--item {
-  margin-bottom: 18px;
-}
-
-.projekt-question-embed {
-  .projekt-question-container,
-  .projekt-question-next-question-section {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .quiz-question {
-    font-size: 32px;
-    margin-bottom: 15px;
-  }
-
-  .projekt-question-next-question-section {
-    margin-top: 15px;
-  }
-
-  .projekt-next-question-button-section {
-    justify-content: flex-start;
-  }
-
-  .projekt-question-next-question-section {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .projekt-question-list {
-    float: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .projekt-question--go-to-question-list-button {
-    order: 1;
-    width: 200px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .projekt-next-question-button-section {
-    order: 2;
-  }
-
-  .projekt-question--comments-wrapper {
-    width: 100%;
-    margin-top: 20px;
-
-    #comments {
-      padding: 20px 20px;
-    }
-
-    .comments {
-      padding-bottom: 0;
-    }
-  }
 }
 
 .projekt-livestream--description-starts-at {
@@ -1581,39 +1328,6 @@ span.projekt-backlink:before {
   color: #004a83;
 }
 
-.projekt-new-question-notification {
-  width: 100%;
-  min-height: 50px;
-  background: #b0d7b7;
-  padding-left: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  padding: 15px 25px;
-}
-
-.projekt-new-question-notification--title {
-  text-overflow: ellipsis;
-  max-height: 99px;
-  overflow: hidden;
-  white-space: nowrap;
-  margin-bottom: 10px;
-}
-
-.projekt-livestream-livequestion {
-  margin-top: 20px;
-}
-
-.projekt-new-questions-notification-links-section {
-  display: flex;
-}
-
-.projekt-all-questions-notification-link {
-  margin-left: 15px;
-}
-
 // Resource tags: projekt labels and sentiments
 @mixin resource-tagging-link {
   color: inherit;
@@ -1674,6 +1388,14 @@ span.projekt-backlink:before {
     &.selected {
       background-color: var(--brand-color) !important;
     }
+  }
+}
+
+.resource-item--image-overlay-item {
+
+  .projekt-label {
+    margin-bottom: 0;
+    margin-left: 0;
   }
 }
 
@@ -1739,20 +1461,27 @@ span.projekt-backlink:before {
   align-items: center;
   position: absolute;
   border-radius: 50%;
-  color: #303030 !important;
-  background-color: #c7c7c7 !important;
   // width: 50px !important;
   width: 40px !important;
   height: 40px !important;
-  font-size: 22px !important;
+  font-size: 18px !important;
+  color: #000000ba !important;
+  background-color: color(srgb 1 1 1 / 0.48) !important;
+  backdrop-filter: blur(5px) saturate(1.7);
   bottom: 10px;
-  left: 20px;
+  left: 15px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.35);
 
   z-index: 11;
 
   &:hover {
-    background-color: #bcbcbc !important;
+    background-color: color(srgb 1 1 1 / 0.58) !important;
   }
+}
+
+.projekt-image-delete-button {
+  left: 65px;
 }
 
 .projekt-image-upload-preview {

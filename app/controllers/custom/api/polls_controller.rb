@@ -92,8 +92,7 @@ class Api::PollsController < Api::BaseController
       :starts_at,
       :ends_at,
       :geozone_restricted,
-      :summary,
-      :description,
+      :published,
       :budget_id,
       geozone_ids: [],
     )

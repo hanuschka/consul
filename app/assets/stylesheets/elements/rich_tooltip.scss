@@ -1,0 +1,174 @@
+rich-tooltip {
+  display: inline-block;
+}
+
+// Trigger-only tooltips bind their hover/focus events to the trigger element
+// (not to the host), so the host needs no box of its own. `display: contents`
+// makes the wrapper layout-neutral: the trigger participates in its parent's
+// flow (flex item, inline, absolute, …) exactly as if it were not wrapped.
+// Without this, the inline-block host still generates a line box and reserves
+// vertical space even when its trigger is out of flow (e.g. an absolutely
+// positioned button). Non-trigger-only tooltips keep the inline-block box,
+// which their trigger↔body hover-bridge relies on.
+rich-tooltip[trigger-only] {
+  display: contents;
+}
+
+// A focusable tooltip's body must be reachable by the mouse, so the host needs
+// a real box (the trigger↔body hover-bridge relies on it) even with trigger-only.
+rich-tooltip[trigger-only][focusable] {
+  display: inline-block;
+}
+
+rich-tooltip[hidden] {
+  display: none;
+}
+
+.rich-tooltip--body {
+  position: fixed;
+  inset: auto;
+  // Above the fixed projekt header (1005) and the studio gallery dialog (10002).
+  // The popover path already promotes the body to the top layer; this keeps the
+  // non-popover fallback above page chrome too.
+  z-index: 10010;
+  position-area: block-start;
+  position-try-fallbacks: flip-block;
+  width: max-content;
+  max-width: 320px;
+  margin: 0;
+  margin-block-end: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  color: #222222;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 1;
+  scale: 1;
+  transition: opacity 90ms ease-out, scale 90ms ease-out;
+}
+
+// Subtle, fast fade-and-rise on appear. Entry only: the popover supplies the
+// from-state via @starting-style; on close it hides immediately (no display/
+// overlay in the transition). `scale` is used instead of `transform` so it
+// composes with the inline `transform` the non-anchor fallback sets for
+// positioning. The `-instant` modifier zeroes this transition.
+@starting-style {
+  .rich-tooltip--body:popover-open {
+    opacity: 0;
+    scale: 0.99;
+  }
+}
+
+.rich-tooltip--body.-dark {
+  color: #ffffff;
+  background-color: #1c1c1e;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.rich-tooltip--body.-shadow-heavy {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.26), 0 4px 10px rgba(0, 0, 0, 0.16);
+}
+
+.rich-tooltip--body.-big {
+  padding: 16px 22px;
+}
+
+.rich-tooltip--body.-wide {
+  max-width: 480px;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.rich-tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rich-tooltip-content--title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.rich-tooltip-content--text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+// The tooltip body is a DOM descendant of its trigger's container, so loosely
+// scoped page rules (e.g. `.content-block-margin-input span { color: … }`) can
+// bleed into the content text and grey it out. These body-scoped overrides
+// (specificity 0,2,0) defend the tooltip's own colours against such single
+// class + element selectors.
+.rich-tooltip--body .rich-tooltip-content--title,
+.rich-tooltip--body .rich-tooltip-content--term {
+  color: #0f172a;
+}
+
+.rich-tooltip--body .rich-tooltip-content--text {
+  color: #475569;
+}
+
+.rich-tooltip--body .rich-tooltip-content--note {
+  color: #64748b;
+}
+
+.rich-tooltip-content--row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rich-tooltip-content--term {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.rich-tooltip-content--note {
+  margin-block-start: 2px;
+  padding-block-start: 8px;
+  border-block-start: 1px solid #e2e8f0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.rich-tooltip-content--note-label {
+  display: block;
+  margin-block-end: 2px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.rich-tooltip--body.-dark .rich-tooltip-content--note {
+  border-block-start-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.rich-tooltip--body.-dark .rich-tooltip-content--note-label {
+  color: #ffffff;
+}
+
+.rich-tooltip--body.-no-paddings {
+  padding: 0;
+}
+
+.rich-tooltip--body.-instant {
+  transition: none;
+  animation: none;
+}
+
+.rich-tooltip--body:not([popover]) {
+  display: none;
+}
+
+.rich-tooltip--body:not([popover]).-visible {
+  display: block;
+}

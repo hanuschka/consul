@@ -1,0 +1,96 @@
+<%
+  evaluation_row = @projekt_phase.projekt_phase_evaluation
+  selector = PhaseEvaluationVisibility::Selector.for_user(current_user, @projekt_phase)
+  is_admin_or_pm = current_user&.administrator? || current_user&.projekt_manager?
+
+  phase_palette = {
+    accent: "#7C3AED",
+    accent_light: "#EDE9FE",
+    shades: ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#EDE9FE"]
+  }
+
+  phase_type_partial = {
+    "ProjektPhase::ProposalPhase" => "proposal_phase_section",
+    "ProjektPhase::VotingPhase" => "voting_phase_section",
+    "ProjektPhase::BudgetPhase" => "budget_phase_section",
+    "ProjektPhase::CommentPhase" => "comment_phase_section"
+  }
+
+  partial_name = phase_type_partial[evaluation_row&.projekt_phase&.type]
+%>
+
+<% if evaluation_row.present? && partial_name.present? %>
+  <%
+    status_url = phase_evaluation_status_adm_projekts_projekt_path(
+      @projekt_phase.projekt, phase_id: @projekt_phase.id
+    )
+    regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(
+      @projekt_phase.projekt, phase_id: @projekt_phase.id
+    )
+    processing = evaluation_row.processing?
+  %>
+
+  <div
+    class="projekt-phase-evaluation-footer adm-projekt-evaluation-report js-projekt-footer-phase-regenerate"
+    data-status-url="<%= status_url %>"
+    data-phase-id="<%= @projekt_phase.id %>"
+  >
+    <div
+      class="projekt-phase-evaluation-footer__loading js-projekt-footer-phase-regenerate-loading"
+      <%= "hidden" unless processing %>
+    >
+      <div class="adm-empty-state">
+        <h3><%= t("adm.projekts.projekts.evaluation.phase_processing_title") %></h3>
+        <p><%= t("adm.projekts.projekts.evaluation.phase_processing_description") %></p>
+        <span
+          class="material-symbols-outlined adm-spinner adm-spinner--lg"
+          aria-hidden="true"
+        >progress_activity</span>
+      </div>
+    </div>
+
+    <div
+      class="projekt-phase-evaluation-footer__content js-projekt-footer-phase-regenerate-content"
+      <%= "hidden" if processing %>
+    >
+      <% if is_admin_or_pm %>
+        <div class="projekt-phase-evaluation-footer__toolbar js-studio-hide-on-preview">
+          <a
+            href="<%= evaluation_adm_projekts_projekt_path(@projekt_phase.projekt, anchor: "phase-#{@projekt_phase.id}") %>"
+            class="projekt-phase-evaluation-footer__adm-link"
+            target="_blank"
+            rel="noopener"
+            tabindex="-1"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+            <span><%= t("adm.projekts.projekts.evaluation.open_in_admin") %></span>
+          </a>
+          <a
+            href="<%= regenerate_url %>"
+            class="projekt-phase-evaluation-footer__regen-button js-projekt-footer-phase-regenerate-trigger"
+            tabindex="-1"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <span><%= t("adm.projekts.projekts.evaluation.regenerate_phase_button") %></span>
+          </a>
+        </div>
+      <% end %>
+
+      <%
+        phase_data = evaluation_row.data || {}
+        accent_color = phase_palette[:accent]
+        accent_light_color = phase_palette[:accent_light]
+        accent_shades = phase_palette[:shades]
+      %>
+
+      <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
+        locals: {
+          phase: phase_data,
+          accent_color: accent_color,
+          accent_light_color: accent_light_color,
+          accent_shades: accent_shades,
+          selection: selector
+        } %>
+    </div>
+  </div>
+<% end %>

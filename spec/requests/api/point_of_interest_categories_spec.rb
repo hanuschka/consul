@@ -14,8 +14,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all point of interest categories for a specific projekt phase. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
 
       response '200', 'projekt point of interest categories found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -45,6 +45,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a projekt point of interest category' do
@@ -129,6 +131,9 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -138,8 +143,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all point of interest categories across all projekt phases. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
 
       response '200', 'projekt point of interest categories found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
@@ -170,6 +175,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -214,6 +221,8 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt point of interest category' do
@@ -324,6 +333,9 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt point of interest category' do
@@ -390,6 +402,9 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

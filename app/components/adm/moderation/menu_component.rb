@@ -6,8 +6,11 @@ class Adm::Moderation::MenuComponent < Adm::BaseMenuComponent
   def menu_items
     [
       { label: t("adm.moderation.menu.items.home"), icon: "home", path: adm_moderation_root_path },
-      (if current_user&.administrator?
+      (if Adm::ModeratorPolicy.new(current_user, Moderator).index?
          { label: t("adm.moderation.menu.items.moderators"), icon: "badge", path: adm_moderators_path, active_prefix: "/adm/moderators" }
+       end),
+      (if Adm::Moderation::SettingPolicy.new(current_user, nil).show?
+         { label: t("adm.moderation.menu.items.settings"), icon: "settings", path: adm_moderation_settings_path }
        end),
       { label: t("adm.moderation.menu.items.comments"), icon: "comment", path: adm_moderation_comments_path },
       { label: t("adm.moderation.menu.items.proposals"), icon: "article", path: adm_moderation_proposals_path },

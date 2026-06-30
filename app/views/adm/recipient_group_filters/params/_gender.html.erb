@@ -1,0 +1,10 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.gender") %>
+  <%= select_tag "recipient_group_filter[params][gender]",
+        options_for_select(
+          RecipientGroups::FilterResolvers::Gender::ALLOWED.map { |g| [g, g] },
+          filter_params["gender"]
+        ),
+        include_blank: true,
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+</label>

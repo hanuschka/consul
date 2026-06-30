@@ -1,0 +1,204 @@
+// Admin-Topbar Color Picker
+// Lives next to the background-toggle in the dark admin topbar.
+// Specificity strategy: scoped under `.custom-new-design` (matches surrounding
+// admin topbar SCSS) so it beats the bundle's `.custom-new-design .button.hollow`
+// override (0,3,0) without `!important`.
+
+.custom-new-design {
+
+  .studio-admin-topbar-color-picker {
+    position: relative; // anchor for visually-hidden status (avoids escaping to the page root)
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    min-height: 36px;
+    transition: background-color 150ms ease, border-color 150ms ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    // Saved-state visual feedback. Uses var(--brand-color) for "ok"
+    // so the indicator follows the just-picked color.
+    &[data-saved-state="ok"] {
+      border-color: var(--brand-color);
+      box-shadow: 0 0 0 1px var(--brand-color);
+    }
+
+    &[data-saved-state="error"] {
+      border-color: #e2574c;
+      box-shadow: 0 0 0 1px rgba(226, 87, 76, 0.4);
+    }
+
+    &[data-saved-state="saving"] {
+      opacity: 0.85;
+    }
+  }
+
+  .studio-admin-topbar-color-picker--label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1;
+    cursor: pointer;
+    margin: 0;
+    padding: 0 2px;
+    user-select: none;
+  }
+
+  .studio-admin-topbar-color-picker--label-icon {
+    font-size: 12px;
+    color: inherit;
+  }
+
+  .studio-admin-topbar-color-picker--label-text {
+    white-space: nowrap;
+  }
+
+  // Native <input type="color"> — strip default chrome, keep a clean swatch.
+  // Vendor pseudo-elements need separate rules; can't be combined.
+  .studio-admin-topbar-color-picker--input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 28px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 150ms ease;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.65);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brand-color);
+      outline-offset: 2px;
+    }
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+      border: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: 0;
+      border-radius: 3px;
+    }
+
+    &::-moz-color-swatch {
+      border: 0;
+      border-radius: 3px;
+    }
+  }
+
+  // Icon-only reset button. Inherits text-color via `color: inherit` to avoid
+  // the bundle's brand-color flip on `.button.hollow`.
+  .studio-admin-topbar-color-picker--reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    line-height: 1;
+    transition: background-color 150ms ease, color 150ms ease;
+
+    i {
+      font-size: 12px;
+      color: inherit;
+    }
+
+    &:hover,
+    &:focus {
+      background: rgba(255, 255, 255, 0.10);
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brand-color);
+      outline-offset: 2px;
+    }
+  }
+
+  // Status indicator (aria-live region). Visually hidden but reserves no space
+  // — feedback is communicated via `data-saved-state` border above.
+  .studio-admin-topbar-color-picker--status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  // Tablet: drop the text label, keep icon + swatch + reset
+  @media (max-width: $small-tablet-viewport-start) {
+    .studio-admin-topbar-color-picker--label-text {
+      display: none;
+    }
+
+    .studio-admin-topbar-color-picker {
+      padding: 4px;
+      gap: 4px;
+    }
+  }
+
+  // Mobile: ensure 44x44 tap target on the input + reset (WCAG 2.1 SC 2.5.5 / iOS HIG).
+  // Topbar is a fixed 48px tall — children must fit inside that with the 1px border + 4px
+  // vertical padding, so the swatch maxes at ~38px in practice. We hit the WCAG target
+  // size requirement via the surrounding label (which forwards taps to the input) plus
+  // the 44x44 reset button. The swatch itself stays smaller for visual fit.
+  @media (max-width: $mobile-viewport-start) {
+    .studio-admin-topbar-color-picker {
+      min-height: 40px; // fits inside the 48px topbar with border + padding
+    }
+
+    .studio-admin-topbar-color-picker--label {
+      // Bigger hit area — tapping the label opens the native picker
+      min-height: 44px;
+      min-width: 44px;
+      justify-content: center;
+      padding: 0 6px;
+    }
+
+    .studio-admin-topbar-color-picker--label-icon {
+      font-size: 14px;
+    }
+
+    .studio-admin-topbar-color-picker--input {
+      width: 36px;
+      height: 32px;
+    }
+
+    .studio-admin-topbar-color-picker--reset {
+      width: 44px;
+      height: 44px;
+
+      i {
+        font-size: 14px;
+      }
+    }
+  }
+
+} // end .custom-new-design wrapper

@@ -1,5 +1,6 @@
-<% if @assets.any? %>
-  <%= render collection: @assets, partial: "ckeditor/assets/item", as: :asset %>
+<% assets = local_assigns[:assets] || @assets %>
+<% if assets.any? %>
+  <%= render collection: assets, partial: "ckeditor/assets/item", as: :asset %>
 <% else %>
   <div class="file-upload-manager-dialog--loading">Keine Bilder gefunden.</div>
 <% end %>

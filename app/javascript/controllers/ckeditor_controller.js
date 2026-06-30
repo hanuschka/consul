@@ -6,6 +6,7 @@ const CKEDITOR = CKEditorModule.default || CKEditorModule
 window.CKEDITOR = CKEDITOR
 
 const UploadFilesPlugin = createUploadFilesPlugin(CKEDITOR)
+window.UploadFilesPlugin = UploadFilesPlugin
 
 function removeWrappingParagraphs(html) {
   const tempDiv = document.createElement("div")

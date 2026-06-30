@@ -1,11 +1,41 @@
+<%
+  # Footer-Redesign (CON-2821): 4-column layout with empty-hint pattern for
+  # the two content blocks. Brand column + 2 admin-editable blocks + contact
+  # column. Subfooter with copyright and legal links, separated by a subtle
+  # neutral divider (no pipes).
+
+  # Pre-compute footer_block_1 / footer_block_2 visibility + emptiness so the
+  # markup stays readable. Mirrors `app/views/custom/welcome/_sidebar.html.erb`.
+  admin_view = current_user&.administrator?
+
+  footer_block_1_render = render_custom_content_block?("footer_block_1") || admin_view
+  if footer_block_1_render
+    footer_block_1_rendered = capture { render_custom_block "footer_block_1", empty_hint: false }
+    footer_block_1_body = Nokogiri::HTML::DocumentFragment.parse(footer_block_1_rendered).at_css(".custom-content-block-body")&.inner_html
+    footer_block_1_empty = admin_view && content_block_body_blank?(footer_block_1_body)
+  end
+
+  footer_block_2_render = render_custom_content_block?("footer_block_2") || admin_view
+  if footer_block_2_render
+    footer_block_2_rendered = capture { render_custom_block "footer_block_2", empty_hint: false }
+    footer_block_2_body = Nokogiri::HTML::DocumentFragment.parse(footer_block_2_rendered).at_css(".custom-content-block-body")&.inner_html
+    footer_block_2_empty = admin_view && content_block_body_blank?(footer_block_2_body)
+  end
+
+  social_handles_present = ["twitter_handle", "facebook_handle", "youtube_handle", "telegram_handle", "instagram_handle"]
+    .any? { |key| setting[key].present? }
+  contact_block_present = content_block("footer", I18n.locale).present?
+  contact_column_render = social_handles_present || contact_block_present
+%>
+
 <footer class="not-print">
-  <div class="row clikus">
-    <div class="small-12 large-4 column">
-      <h2 style="font-size:35px;font-weight:500;margin-top:20px;margin-bottom:30px;line-height:1.2;">
+  <div class="row footer-main">
+    <div class="footer-column footer-brand">
+      <h2 class="footer-heading">
         <%= t("layouts.header.open_gov") %>
       </h2>
 
-      <p class="info">
+      <p class="footer-description">
         <%= sanitize(t("custom.layouts.footer.description",
           open_source: link_to(t("layouts.footer.open_source"), t("layouts.footer.open_source_url"), target: "blank", rel: "nofollow"),
           consul:  link_to(t("layouts.footer.consul"), t("layouts.footer.consul_url"), target: "blank", rel: "nofollow"),
@@ -13,102 +43,140 @@
       </p>
     </div>
 
-    <div class="small-12 large-4 column">
-      <%=render_custom_block 'footer_block_1' %>
-    </div>
+    <% if footer_block_1_render %>
+      <div class="footer-column">
+        <%
+          wrapper_class = ["footer-content-block"]
+          wrapper_class << "js-toggle-empty-hint-on-content" if admin_view
+          wrapper_class << "is-content-empty" if footer_block_1_empty
+        %>
+        <div class="<%= wrapper_class.join(' ') %>">
+          <% if admin_view %>
+            <div class="footer-content-block--admin-empty-hint js-studio-hide-on-preview" role="note">
+              <i class="fas fa-eye-slash footer-content-block--admin-empty-hint-icon" aria-hidden="true"></i>
+              <span><%= t("custom.layouts.footer.block_1.admin_empty_hint") %></span>
+            </div>
+          <% end %>
+          <%= footer_block_1_rendered %>
+        </div>
+      </div>
+    <% end %>
 
-    <div class="small-12 large-4 column">
-      <%=render_custom_block 'footer_block_2' %>
-    </div>
+    <% if footer_block_2_render %>
+      <div class="footer-column">
+        <%
+          wrapper_class = ["footer-content-block"]
+          wrapper_class << "js-toggle-empty-hint-on-content" if admin_view
+          wrapper_class << "is-content-empty" if footer_block_2_empty
+        %>
+        <div class="<%= wrapper_class.join(' ') %>">
+          <% if admin_view %>
+            <div class="footer-content-block--admin-empty-hint js-studio-hide-on-preview" role="note">
+              <i class="fas fa-eye-slash footer-content-block--admin-empty-hint-icon" aria-hidden="true"></i>
+              <span><%= t("custom.layouts.footer.block_2.admin_empty_hint") %></span>
+            </div>
+          <% end %>
+          <%= footer_block_2_rendered %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if contact_column_render %>
+      <div class="footer-column footer-contact">
+        <h2 class="footer-heading">
+          <%= t("custom.layouts.footer.contact.title") %>
+        </h2>
+
+        <% if social_handles_present %>
+          <ul class="footer-social-list no-bullet">
+            <% if setting["twitter_handle"] %>
+              <li>
+                <%= link_to "https://twitter.com/#{setting["twitter_handle"]}", target: "_blank",
+                             title: t("shared.go_to_page") + t("social.twitter", org: setting["org_name"]) + t("shared.target_blank") do %>
+                  <span class="show-for-sr"><%= t("social.twitter", org: setting["org_name"]) %></span>
+                  <span class="icon-twitter" aria-hidden="true"></span>
+                <% end %>
+              </li>
+            <% end %>
+            <% if setting["facebook_handle"] %>
+              <li>
+                <%= link_to "https://www.facebook.com/#{setting["facebook_handle"]}/", target: "_blank",
+                            title: t("shared.go_to_page") + t("social.facebook", org: setting["org_name"]) + t("shared.target_blank") do %>
+                  <span class="show-for-sr"><%= t("social.facebook", org: setting["org_name"]) %></span>
+                  <span class="icon-facebook" aria-hidden="true"></span>
+                <% end %>
+              </li>
+            <% end %>
+            <% if setting["youtube_handle"] %>
+              <li>
+                <%= link_to "https://www.youtube.com/#{setting["youtube_handle"]}", target: "_blank",
+                            title: t("shared.go_to_page") + t("social.youtube", org: setting["org_name"]) + t("shared.target_blank") do %>
+                  <span class="show-for-sr"><%= t("social.youtube", org: setting["org_name"]) %></span>
+                  <span class="icon-youtube" aria-hidden="true"></span>
+                <% end %>
+              </li>
+            <% end %>
+            <% if setting["telegram_handle"] %>
+              <li>
+                <%= link_to "https://www.telegram.me/#{setting["telegram_handle"]}", target: "_blank",
+                            title: t("shared.go_to_page") + t("social.telegram", org: setting["org_name"]) + t("shared.target_blank") do %>
+                  <span class="show-for-sr"><%= t("social.telegram", org: setting["org_name"]) %></span>
+                  <span class="icon-telegram" aria-hidden="true"></span>
+                <% end %>
+              </li>
+            <% end %>
+            <% if setting["instagram_handle"] %>
+              <li>
+                <%= link_to "https://www.instagram.com/#{setting["instagram_handle"]}", target: "_blank",
+                            title: t("shared.go_to_page") + t("social.instagram", org: setting["org_name"]) + t("shared.target_blank") do %>
+                  <span class="show-for-sr"><%= t("social.instagram", org: setting["org_name"]) %></span>
+                  <span class="icon-instagram" aria-hidden="true"></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+
+        <% if contact_block_present %>
+          <div class="footer-contact-block">
+            <%= raw content_block("footer", I18n.locale) %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
-  <div class="subfooter row clikus">
-    <div class="small-12 medium-8 column">
-      <h2 class="show-for-sr"><%= t("custom.layouts.footer.navigation_heading") %></h2>
-      <p class="inline-block"><%= t("layouts.footer.copyright", year: Time.current.year) %>&nbsp;|</p>
-      <ul class="no-bullet inline-block">
-        <li class="inline-block"><%= link_to t("layouts.footer.privacy"), page_path("privacy") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("layouts.footer.conditions"), page_path("conditions") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %>&nbsp;|</li>
-        <li class="inline-block"><%= link_to t("layouts.footer.api_docs"), api_docs_path, target: "_blank" %>&nbsp;|</li>
+  <div class="subfooter row">
+    <h2 class="show-for-sr"><%= t("custom.layouts.footer.navigation_heading") %></h2>
+
+    <div class="small-12 medium-4 column subfooter-copyright">
+      <p><%= t("layouts.footer.copyright", year: Time.current.year) %></p>
+    </div>
+
+    <div class="small-12 medium-8 column subfooter-legal">
+      <ul class="no-bullet subfooter-legal-list">
+        <li><%= link_to t("layouts.footer.privacy"), page_path("privacy") %></li>
+        <li><%= link_to t("layouts.footer.conditions"), page_path("conditions") %></li>
+        <li><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %></li>
+        <li><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %></li>
+        <li><%= link_to t("layouts.footer.api_docs"), api_docs_path, target: "_blank" %></li>
         <% if SiteCustomization::Page.find_by(slug: "netiquette", status: "published") %>
-          <li class="inline-block"><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette") %>&nbsp;|</li>
+          <li><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette") %></li>
         <% end %>
         <% if SiteCustomization::Page.find_by(slug: "contact_us", status: "published") %>
-          <li class="inline-block"><%= link_to t("custom.layouts.footer.contact_us"), page_path("contact_us") %>&nbsp;|</li>
+          <li><%= link_to t("custom.layouts.footer.contact_us"), page_path("contact_us") %></li>
         <% end %>
-        <li class="inline-block"><%= link_to t("custom.layouts.footer.statistic_cookies_settings"), '#', onClick: "klaro.show();return false;"  %></li>
+        <li><%= link_to t("custom.layouts.footer.statistic_cookies_settings"), "#", onClick: "klaro.show();return false;" %></li>
 
         <% if extended_feature?("general.show_guest_login_links") %>
           <% if current_user&.guest? %>
-            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete %></li>
+            <li><%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete %></li>
           <% elsif current_user.nil? %>
-            <li class="inline-block">&nbsp;|&nbsp;<%= link_to t("custom.layouts.footer.sign_in_as_guest"), new_guest_user_registration_path %></li>
+            <li><%= link_to t("custom.layouts.footer.sign_in_as_guest"), new_guest_user_registration_path %></li>
           <% end %>
         <% end %>
       </ul>
     </div>
-
-    <% if content_block("footer", I18n.locale).present? ||
-        setting["twitter_handle"] ||
-        setting["facebook_handle"] ||
-        setting["youtube_handle"] ||
-        setting["telegram_handle"] ||
-        setting["instagram_handle"] %>
-    <div class="small-12 medium-4 column social">
-      <div class="text-right">
-        <ul>
-          <% if setting["twitter_handle"] %>
-            <li class="inline-block">
-              <%= link_to "https://twitter.com/#{setting["twitter_handle"]}", target: "_blank",
-                           title: t("shared.go_to_page") + t("social.twitter", org: setting["org_name"]) + t("shared.target_blank") do %>
-                              <span class="show-for-sr"><%= t("social.twitter", org: setting["org_name"]) %></span>
-                              <span class="icon-twitter" aria-hidden="true"></span>
-              <% end %>
-            </li>
-          <% end %>
-          <% if setting["facebook_handle"] %>
-            <li class="inline-block">
-              <%= link_to "https://www.facebook.com/#{setting["facebook_handle"]}/", target: "_blank",
-                          title: t("shared.go_to_page") + t("social.facebook", org: setting["org_name"]) + t("shared.target_blank") do %>
-                          <span class="show-for-sr"><%= t("social.facebook", org: setting["org_name"]) %></span>
-                          <span class="icon-facebook" aria-hidden="true"></span>
-              <% end %>
-            </li>
-          <% end %>
-          <% if setting["youtube_handle"] %>
-            <li class="inline-block">
-              <%= link_to "https://www.youtube.com/#{setting["youtube_handle"]}", target: "_blank",
-                          title: t("shared.go_to_page") + t("social.youtube", org: setting["org_name"]) + t("shared.target_blank") do %>
-                          <span class="show-for-sr"><%= t("social.youtube", org: setting["org_name"]) %></span>
-                          <span class="icon-youtube" aria-hidden="true"></span>
-              <% end %>
-            </li>
-          <% end %>
-          <% if setting["telegram_handle"] %>
-            <li class="inline-block">
-              <%= link_to "https://www.telegram.me/#{setting["telegram_handle"]}", target: "_blank",
-                          title: t("shared.go_to_page") + t("social.telegram", org: setting["org_name"]) + t("shared.target_blank") do %>
-                          <span class="show-for-sr"><%= t("social.telegram", org: setting["org_name"]) %></span>
-                          <span class="icon-telegram" aria-hidden="true"></span>
-              <% end %>
-            </li>
-          <% end %>
-          <% if setting["instagram_handle"] %>
-            <li class="inline-block">
-              <%= link_to "https://www.instagram.com/#{setting["instagram_handle"]}", target: "_blank",
-                          title: t("shared.go_to_page") + t("social.instagram", org: setting["org_name"]) + t("shared.target_blank") do %>
-                          <span class="show-for-sr"><%= t("social.instagram", org: setting["org_name"]) %></span>
-                          <span class="icon-instagram" aria-hidden="true"></span>
-              <% end %>
-            </li>
-          <% end %>
-          <%= raw content_block("footer", I18n.locale) %>
-        </ul>
-      </div>
-    </div>
-    <% end %>
   </div>
 
   <%= render Shared::ModalNotificationComponent.new %>

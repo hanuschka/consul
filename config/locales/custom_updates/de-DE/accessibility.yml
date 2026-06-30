@@ -23,6 +23,9 @@ de:
         edit_avatar:
           avatar_placeholder: "Avatar Platzhalter. Klicken Sie, um ein neues Bild hochzuladen."
           aria-label: "Avatar bearbeiten. Klicken Sie, um ein neues Bild hochzuladen."
+          your_avatar: "Dein Avatar"
+        remove_avatar:
+          aria-label: "Aktuelles Avatarbild entfernen."
         edit_username:
           edit_button: "Schaltfläche zum Bearbeiten des Benutzernamens. Klicken Sie, um den Benutzernamen zu ändern."
           cancel_button: "Abbrechen Schaltfläche. Klicken Sie, um die Änderungen abzubrechen."
@@ -33,6 +36,11 @@ de:
       banner-image:
         glightbox-aria-label: "Bannerbild. Klicken Sie, um das Bild zu vergrößern."
         glightbox-image-alt: "%{resource_type}: %{title}. Vergrößerte Ansicht."
+        delete-aria-label: "Bild löschen"
+        delete-confirm: "Möchten Sie dieses Bild wirklich löschen?"
+        upload-progress-label: "Bannerbild wird hochgeladen"
+      image-lightbox:
+        aria-label: "Klicken Sie, um das Bild zu vergrößern."
       share-links:
         whatsapp: "Auf WhatsApp teilen"
         facebook: "Auf Facebook teilen"
@@ -45,10 +53,16 @@ de:
         user_avatar_title: "Profil von %{name} öffnen"
       map:
         marker-label: "Kartenmarkierung"
-        toggle_label: "Karte anzeigen"
+        region_label: "Interaktive Karte. Mit den Pfeiltasten verschieben, mit Plus oder Minus zoomen."
       phases:
         scroll_left: "Phasen nach links scrollen"
         scroll_right: "Phasen nach rechts scrollen"
+      phase_subscription:
+        subscribe: "Benachrichtigungen für diese Phase abonnieren"
+        unsubscribe: "Benachrichtigungen für diese Phase abbestellen"
+      skip_links:
+        skip_to_content: "Direkt zum Inhalt"
+        skip_to_navigation: "Direkt zur Navigation"
       navigation:
         main: "Hauptnavigation"
         mobile: "Mobilnavigation"
@@ -61,7 +75,8 @@ de:
         extend: "Sitzung verlängern"
         logout: "Jetzt abmelden"
     map:
-      aria-label: "Diese Karte ist aktuell noch nicht barrierefrei."
+      not_accessible_note_listing: "Diese Karte ist aktuell noch nicht barrierefrei. Sie zeigt alle auf dieser Seite aufgeführten Projekte und Beiträge an."
+      not_accessible_note_single: "Diese Karte ist aktuell noch nicht barrierefrei. Der hier gezeigte Standort wird auch im Inhalt dieser Seite beschrieben."
     links:
       menu:
         home_icon: Startseiten Link

@@ -7,7 +7,7 @@ de:
         empty_description: "Fügen Sie über den Button oben einen neuen Administrator hinzu."
         new_link: Neuen Administrator hinzufügen
         no_administrators: Keine Administratoren vorhanden.
-        hint: Hier verwalten Sie die Plattformadministratoren. Administratoren haben vollen Zugriff auf alle Einstellungen und Verwaltungsbereiche der Plattform. Über „Neuer Administrator" können Sie registrierte Nutzer als Administratoren hinzufügen.
+        hint: Hier verwalten Sie die Plattformadministratoren. Sie haben vollen Zugriff auf Einstellungen, Inhalte und Verwaltungsbereiche dieser Plattform sowie auf alle untergeordneten Dashboards wie Projekte, Mängelmelder oder Ideenplattform. Über „Neuen Administrator hinzufügen" befördern Sie Nutzer; im Aktionsmenü entziehen Sie Rechte wieder.
       new:
         title: Neuer Administrator
         search_label: Nutzer durchsuchen

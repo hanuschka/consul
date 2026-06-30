@@ -3,6 +3,14 @@ class ProjektPhase::CommentPhase < ProjektPhase
     "comment_phase"
   end
 
+  def sidebar_cta_kind
+    :link
+  end
+
+  def sidebar_cta_anchor
+    "new_comments_component"
+  end
+
   def resources_name
     "comments"
   end

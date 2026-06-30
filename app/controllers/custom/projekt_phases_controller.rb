@@ -149,7 +149,14 @@ class ProjektPhasesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:id])
     authorize!(:refresh_stats, @projekt_phase)
 
-    return render json: { error: "AI features unavailable" }, status: :forbidden if !Ai::Settings.ai_available?
+    if !Ai::Settings.ai_available?
+      respond_to do |format|
+        format.json { render json: { error: "AI features unavailable" }, status: :forbidden }
+        format.turbo_stream { head :forbidden }
+      end
+
+      return
+    end
 
     @stat_question = @projekt_phase.stat_questions.build(
       question: params[:question],
@@ -158,14 +165,23 @@ class ProjektPhasesController < ApplicationController
 
     if @stat_question.save
       AiAnalytics::StatQuestionRefresh.perform_later(@stat_question.id)
-      render json: {
-        id: @stat_question.id,
-        status: "pending",
-        question: @stat_question.question,
-        status_url: stat_question_status_projekt_phase_path(@projekt_phase, question_id: @stat_question.id)
-      }
+
+      respond_to do |format|
+        format.json do
+          render json: {
+            id: @stat_question.id,
+            status: "pending",
+            question: @stat_question.question,
+            status_url: stat_question_status_projekt_phase_path(@projekt_phase, question_id: @stat_question.id)
+          }
+        end
+        format.turbo_stream
+      end
     else
-      render json: { error: @stat_question.errors.full_messages.join(", ") }, status: :unprocessable_entity
+      respond_to do |format|
+        format.json { render json: { error: @stat_question.errors.full_messages.join(", ") }, status: :unprocessable_entity }
+        format.turbo_stream { head :unprocessable_entity }
+      end
     end
   end
 
@@ -174,22 +190,10 @@ class ProjektPhasesController < ApplicationController
     @stat_question = @projekt_phase.stat_questions.find(params[:question_id])
     authorize!(:refresh_stats, @projekt_phase)
 
-    response_data = {
-      id: @stat_question.id,
-      status: @stat_question.status,
-      answer: @stat_question.answer,
-      created_at: @stat_question.created_at
-    }
-
-    if @stat_question.status == "completed"
-      response_data[:html] = render_to_string(
-        partial: "custom/particapation_stats/completed_question_item",
-        locals: { question: @stat_question, projekt_phase: @projekt_phase },
-        layout: false
-      )
+    respond_to do |format|
+      format.json { render json: stat_question_status_json_payload }
+      format.turbo_stream
     end
-
-    render json: response_data
   end
 
   def download_stat_answer
@@ -222,7 +226,10 @@ class ProjektPhasesController < ApplicationController
 
     @stat_question.destroy
 
-    render json: { success: true }
+    respond_to do |format|
+      format.json { render json: { success: true } }
+      format.turbo_stream
+    end
   end
 
   def download_all_stat_answers
@@ -274,6 +281,25 @@ class ProjektPhasesController < ApplicationController
   end
 
   private
+
+    def stat_question_status_json_payload
+      payload = {
+        id: @stat_question.id,
+        status: @stat_question.status,
+        answer: @stat_question.answer,
+        created_at: @stat_question.created_at
+      }
+
+      if @stat_question.status == "completed"
+        payload[:html] = render_to_string(
+          partial: "custom/particapation_stats/completed_question_item",
+          locals: { question: @stat_question, projekt_phase: @projekt_phase },
+          layout: false
+        )
+      end
+
+      payload
+    end
 
     def generate_stat_answer_filename(projekt_phase, stat_question, format)
       projekt_name = projekt_phase.projekt.title.parameterize(separator: "-")

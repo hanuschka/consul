@@ -98,14 +98,6 @@ module ProjektAdminActions
     end
   end
 
-  def frame_new_phase_selector
-    @projekt = Projekt.find(params[:id])
-
-    authorize!(:edit, @projekt)
-
-    render "admin/projekt_phases/frame_new_phase_selector"
-  end
-
   def notify_reviewers
     @projekt = Projekt.find(params[:id])
 
@@ -113,8 +105,13 @@ module ProjektAdminActions
 
     NotificationServices::NewProjektNotifier.call(@projekt)
 
-    redirect_to page_path(@projekt.page.slug),
-                notice: "Benachrichtigung erfolgreich gesendet"
+    respond_to do |format|
+      format.html do
+        redirect_to page_path(@projekt.page.slug),
+                    notice: "Benachrichtigung erfolgreich gesendet"
+      end
+      format.json { render json: { success: true, message: "Benachrichtigung erfolgreich gesendet" } }
+    end
   end
 
   def toggle_hide_content_background

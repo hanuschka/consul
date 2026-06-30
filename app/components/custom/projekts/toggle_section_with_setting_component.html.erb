@@ -4,18 +4,23 @@
     data-projekt-setting-key="<%= @setting_key %>"
     data-projekt-setting-id="<%= get_setting_id %>"
     data-projekt-setting-active="<%= @setting_active %>"
-    data-other-conditions-are-met="<%= @other_conditions_are_met %>"
   >
     <%= content %>
-    <button
-      type="button"
-      class="js-sidebar-section-toggle-visibility sidebar--section-toggle-visibility js-studio-hide-on-preview"
-      title="<%= default_title %>"
-      data-on-title="<%= on_title %>"
-      data-off-title="<%= off_title %>"
-    >
-      <i class="fas <%= icon_class %>"></i>
-    </button>
+    <%= studio_rich_tooltip(
+      title: default_title,
+      text: "Blendet diesen Bereich in der öffentlichen Seitenleiste ein oder aus. Ausgeblendete Bereiche sind nur für Administratoren sichtbar.",
+      delay: 1200
+    ) do %>
+      <button
+        type="button"
+        class="js-sidebar-section-toggle-visibility sidebar--section-toggle-visibility js-studio-hide-on-preview"
+        data-on-title="<%= on_title %>"
+        data-off-title="<%= off_title %>"
+        tabindex="-1"
+      >
+        <i class="fas <%= icon_class %>"></i>
+      </button>
+    <% end %>
   </div>
 <% else %>
   <%= content %>

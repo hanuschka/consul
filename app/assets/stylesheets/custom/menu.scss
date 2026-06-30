@@ -522,3 +522,16 @@ span.icon-account {
     margin-right: 4px;
   }
 }
+
+// Account/admin flyout dropdown icons: brand color, aligned with the label.
+// Vertical centering comes from the link's `flyout-item--link` flex row
+// (cross_pack/components/flyout_item_link); line-height keeps the glyph's
+// box from offsetting it.
+.flyout-item--icon {
+  color: var(--brand-color);
+  font-size: 1.1em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  min-width: 1.29em;
+}

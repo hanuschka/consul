@@ -2,14 +2,86 @@
   "use strict";
 
   App.FocusTrap = {
+    DISABLED: true,
+
     FOCUSABLE_SELECTORS: [
       'a[href]:not([disabled])',
       'button:not([disabled])',
-      'input:not([disabled])',
+      'input:not([disabled]):not([type="hidden"])',
       'select:not([disabled])',
       'textarea:not([disabled])',
+      'iframe',
+      'audio[controls]',
+      'video[controls]',
+      '[contenteditable]:not([contenteditable="false"])',
       '[tabindex]:not([tabindex="-1"]):not([disabled])'
     ].join(', '),
+
+    inertStack: [],
+
+    bound: false,
+    observer: null,
+    pruneScheduled: false,
+
+    initialize: function() {
+      if (this.bound) return;
+
+      this.bound = true;
+
+      var prune = this.pruneStaleTraps.bind(this);
+
+      document.addEventListener("focusin", prune, true);
+      document.addEventListener("keydown", prune, true);
+      document.addEventListener("click", prune, true);
+    },
+
+    startWatching: function() {
+      if (this.observer) return;
+
+      this.observer = new MutationObserver(this.schedulePrune.bind(this));
+      this.observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style", "class", "hidden", "open"]
+      });
+    },
+
+    stopWatching: function() {
+      if (!this.observer) return;
+
+      this.observer.disconnect();
+      this.observer = null;
+    },
+
+    schedulePrune: function() {
+      if (this.pruneScheduled) return;
+
+      this.pruneScheduled = true;
+
+      window.requestAnimationFrame(function() {
+        App.FocusTrap.pruneScheduled = false;
+        App.FocusTrap.pruneStaleTraps();
+      });
+    },
+
+    pruneStaleTraps: function() {
+      while (this.inertStack.length > 0 && this.isTopTrapStale()) {
+        this.removeBackgroundInert();
+      }
+    },
+
+    isTopTrapStale: function() {
+      var entry = this.inertStack[this.inertStack.length - 1];
+
+      if (!entry || !entry.owner) return true;
+
+      return !this.isVisible(entry.owner);
+    },
+
+    isVisible: function(el) {
+      return !!el && el.isConnected && el.getClientRects().length > 0;
+    },
 
     getFocusableElements: function(container) {
       if (!container) return [];
@@ -29,6 +101,8 @@
     },
 
     handleTabKey: function(event, container, extraFocusableElements) {
+      if (this.DISABLED) return;
+
       var focusable = this.getFocusableElements(container);
 
       if (extraFocusableElements) {
@@ -53,7 +127,43 @@
       }
     },
 
-    setBackgroundInert: function(excludeElements) {
+    setBackgroundInert: function(excludeElements, ownerElement) {
+      if (this.DISABLED) return;
+
+      var exclude = (excludeElements || []).filter(Boolean);
+      var owner = ownerElement || exclude[0] || null;
+
+      this.inertStack.push({ exclude: exclude, owner: owner });
+      this.applyInert(exclude);
+      this.startWatching();
+    },
+
+    removeBackgroundInert: function() {
+      if (this.inertStack.length === 0) {
+        this.clearInert();
+        this.stopWatching();
+        return;
+      }
+
+      this.inertStack.pop();
+      this.clearInert();
+
+      var previous = this.inertStack[this.inertStack.length - 1];
+
+      if (previous) {
+        this.applyInert(previous.exclude);
+      } else {
+        this.stopWatching();
+      }
+    },
+
+    resetInert: function() {
+      this.inertStack = [];
+      this.clearInert();
+      this.stopWatching();
+    },
+
+    applyInert: function(excludeElements) {
       var bodyChildren = document.body.children;
 
       for (var i = 0; i < bodyChildren.length; i++) {
@@ -70,14 +180,19 @@
           }
         }
 
-        if (!shouldExclude) {
+        if (shouldExclude) {
+          if (child.hasAttribute('data-focus-trap-inert')) {
+            child.removeAttribute('inert');
+            child.removeAttribute('data-focus-trap-inert');
+          }
+        } else {
           child.setAttribute('inert', '');
           child.setAttribute('data-focus-trap-inert', '');
         }
       }
     },
 
-    removeBackgroundInert: function() {
+    clearInert: function() {
       var inertElements = document.querySelectorAll('[data-focus-trap-inert]');
 
       for (var i = 0; i < inertElements.length; i++) {

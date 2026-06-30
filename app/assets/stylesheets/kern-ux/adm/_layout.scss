@@ -5,6 +5,12 @@ html {
   overflow-y: scroll;
 }
 
+:root {
+  --adm-sidebar-width: 250px;
+  --adm-icon-rail-width: 56px;
+  --adm-nav-total-width: calc(var(--adm-sidebar-width) + var(--adm-icon-rail-width));
+}
+
 header {
   height: var(--kern-adm-header-height);
   background-color: var(--adm-color-primary);
@@ -26,12 +32,12 @@ header {
   }
 }
 
-aside {
+#adm-sidebar {
   position: fixed;
   top: 0;
   height: 100vh;
   z-index: 1000;
-  min-width: 290px;
+  min-width: var(--adm-sidebar-width);
   border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
 }
 

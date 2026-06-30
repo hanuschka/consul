@@ -92,7 +92,7 @@
     height: 180px;
     width: 100%;
     // margin-bottom: 17px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     display: flex;
     justify-content: center;
     position: relative;
@@ -148,7 +148,7 @@
     margin-bottom: 10px;
     width: 200px;
     line-height: 1.2;
-    margin-top: -2px;
+    margin-top: 2px;
     color: inherit;
 
     &:nth-child(n+3) {
@@ -156,7 +156,7 @@
     }
   }
 
-  .resource-item--title-link {
+  a.resource-item--title {
     text-decoration: none;
     color: inherit;
 
@@ -583,7 +583,7 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     text-transform: uppercase;
     position: relative;
     z-index: 1;

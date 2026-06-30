@@ -43,7 +43,7 @@ App.Studio.ContentBlocks.CodeEditMode = {
   },
 
   getEditorContainer(contentBlockWrapper) {
-    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const innerContainer = contentBlockWrapper.querySelector('.custom-content-block-wrapper--inner');
     const searchContainer = innerContainer || contentBlockWrapper;
     return searchContainer.querySelector('.js-code-editor-container');
   },
@@ -72,7 +72,7 @@ App.Studio.ContentBlocks.CodeEditMode = {
     textarea.className = 'code-editor-textarea';
     editorContainer.appendChild(textarea);
 
-    const innerContainer = contentBlockWrapper.querySelector('.projekt-content-block-wrapper--inner');
+    const innerContainer = contentBlockWrapper.querySelector('.custom-content-block-wrapper--inner');
     const insertionContainer = innerContainer || contentBlockWrapper;
 
     const toolbarAnchor = insertionContainer.querySelector('.js-content-block--toolbar-anchor');

@@ -387,7 +387,7 @@
 
       setTimeout(() => {
         newWrapper.scrollIntoView({ block: "center" });
-        App.Studio.ContentBlocks.DomHelpers.reinitFoundationWidgets($(newWrapper).find(".projekt-content-block"));
+        App.Studio.ContentBlocks.DomHelpers.reinitFoundationWidgets($(newWrapper).find(".custom-content-block"));
         App.ImageGallery.initialize();
       }, 0);
     },

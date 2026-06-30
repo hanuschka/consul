@@ -1,5 +1,5 @@
 body.custom-new-design {
-  .projekt-content-block, .content-block-template  {
+  .custom-content-block, .content-block-template  {
     h3 {
       margin-top: 0;
     }
@@ -15,7 +15,7 @@ body.custom-new-design {
   font-style: italic;
 }
 
-.projekt-content-block--mode-controlls {
+.custom-content-block--mode-controlls {
   /* margin-left: -8px; */
   display: none;
   justify-content: flex-start;

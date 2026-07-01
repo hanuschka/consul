@@ -40,6 +40,11 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    background: #575757;
+
+    &:hover {
+      background: #575757;
+    }
   }
 }
 
@@ -82,4 +87,30 @@ body.gscrollbar-fixer {
   background: #000000;
   color: white;
   font-size: 20px;
+}
+
+
+// Lightbox control focus indicator.
+// GLightbox toggles a `.focused` class on every focus (mouse + keyboard) and
+// ships a 2px #0f3d81 ring that is nearly invisible on the dark overlay. Drop
+// it so the ring only shows for keyboard users (matches the app-wide
+// focus-visible convention), then draw a high-contrast ring on :focus-visible:
+// the project focus outline plus a white inner ring so it stays legible on the
+// dark lightbox chrome. This neutralizer must stay BEFORE the :focus-visible
+// rule below — equal specificity, source order decides the keyboard case.
+
+.glightbox-clean .gclose.focused,
+.glightbox-clean .gprev.focused,
+.glightbox-clean .gnext.focused {
+  outline: none;
+}
+
+.glightbox-clean .gclose,
+.glightbox-clean .gprev,
+.glightbox-clean .gnext {
+  &:focus-visible {
+    outline: $outline-focus;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px #fff;
+  }
 }

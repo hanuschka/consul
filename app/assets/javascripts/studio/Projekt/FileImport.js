@@ -1,5 +1,5 @@
 App.Studio.Projekt.FileImport = {
-  maxFileSize: 10485760,
+  maxFileSize: 524288000,
   allowedExtensions: ['pdf', 'docx', 'odt'],
   statusCheckTimeout: 7000,
   statusCheckActive: false,
@@ -126,7 +126,7 @@ App.Studio.Projekt.FileImport = {
     if (file.size > this.maxFileSize) {
       return {
         valid: false,
-        error: "Datei ist zu groß (max. 10MB)"
+        error: "Datei ist zu groß (max. 500MB)"
       };
     }
 

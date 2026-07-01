@@ -51,7 +51,7 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   private
 
   def load_base_prompt
-    response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(:admin_projekt_import)
+    response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(prompt_key)
     prompt = response.parsed_response&.dig("consul_ai_prompt", "prompt")
 
     if prompt.blank?
@@ -59,6 +59,12 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     end
 
     prompt
+  end
+
+  def prompt_key
+    return :admin_projekt_import_staging if Rails.env.staging?
+
+    :admin_projekt_import
   end
 
   def build_user_message

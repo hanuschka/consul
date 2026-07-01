@@ -93,7 +93,7 @@ User.class_eval do
   validates :terms_data_storage, acceptance: { allow_nil: false }, on: :create, unless: :guest?
   validates :terms_data_protection, acceptance: { allow_nil: false }, on: :create
   validates :terms_general, acceptance: { allow_nil: false }, on: :create
-  validates :terms_older_than_14, acceptance: { allow_nil: false }, on: :create
+  validates :terms_older_than_14, acceptance: { allow_nil: false }, on: :create, unless: :guest?
 
   validate :only_one_system_user, if: :system_user?
 

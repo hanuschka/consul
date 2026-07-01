@@ -181,6 +181,11 @@ button {
       font-size: 20px;
       flex: 0 0 auto;
     }
+
+    .ai-feature-tooltip {
+      flex: 0 0 auto;
+      max-width: 330px;
+    }
   }
 
   .button.button-support.unvote {
@@ -223,37 +228,6 @@ button {
   &:hover {
     text-decoration: none;
     color: white;
-  }
-}
-
-.button.close-button {
-  width: 35px;
-  height: 35px;
-  font-size: 20px;
-}
-
-.round-icon-button {
-  padding: 0 !important;
-  border-radius: 50%;
-  color: $blue-gray-1;
-  transition: 50ms ease background-color;
-  background-color: $light-gray-2;
-  margin-bottom: 0;
-  margin-top: 0;
-  width: 35px;
-  height: 35px;
-  font-size: 20px;
-
-  i {
-    width: 1.3em;
-  }
-
-  &:hover {
-    background-color: darken($light-gray-2, 2);
-  }
-
-  &:active {
-    background-color: #edebeb;
   }
 }
 

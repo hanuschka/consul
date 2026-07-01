@@ -16,7 +16,7 @@
 </div>
 
 <% if investment.masterportal_pin.present? %>
-  <%= render Shared::MasterportalPinInfoComponent.new(masterportal_pin: investment.masterportal_pin) %>
+  <%= render Shared::MasterportalPinPropertiesComponent.new(masterportal_pin: investment.masterportal_pin) %>
 <% end %>
 
 <%= render_image(investment.image, :large, true) if investment.image.present? %>

@@ -1,23 +1,22 @@
 <% body_html = capture do %>
   <div class="masterportal-import-panel--body">
-    <div class="masterportal-import-panel--field">
-      <label class="masterportal-import-panel--label" for="masterportal-endpoint-url-<%= @projekt_phase.id %>">
-        <span class="material-symbols-outlined" aria-hidden="true">link</span>
-        <%= t(".endpoint_url_label") %>
-      </label>
+    <input
+      type="hidden"
+      data-adm--masterportal-import-panel-target="endpointUrl"
+      value="<%= default_endpoint_url %>"
+    >
 
-      <div class="masterportal-import-panel--endpoint-row">
-        <input
-          id="masterportal-endpoint-url-<%= @projekt_phase.id %>"
-          type="url"
-          class="masterportal-import-panel--url-input"
-          data-adm--masterportal-import-panel-target="endpointUrl"
-          value="<%= default_endpoint_url %>"
-          placeholder="https://..."
-        >
+    <div class="masterportal-import-panel--field">
+      <div class="masterportal-import-panel--tree-header">
+        <div class="masterportal-import-panel--tree-label">
+          <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
+          <%= t(".collections_label") %>
+        </div>
+
         <button
           type="button"
           class="masterportal-import-panel--load-button"
+          title="<%= t(".load_collections_tooltip") %>"
           data-adm--masterportal-import-panel-target="loadCollectionsButton"
           data-action="click->adm--masterportal-import-panel#loadCollections"
         >
@@ -25,13 +24,8 @@
           <span><%= t(".load_collections") %></span>
         </button>
       </div>
-    </div>
 
-    <div class="masterportal-import-panel--field">
-      <div class="masterportal-import-panel--tree-label">
-        <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
-        <%= t(".collections_label") %>
-      </div>
+      <p class="masterportal-import-panel--hint"><%= t(".collections_hint") %></p>
 
       <div
         class="masterportal-import-panel--tree"
@@ -49,29 +43,25 @@
       data-adm--masterportal-import-panel-target="actions"
     >
       <% if supports_domain_records? %>
-        <label class="kern-switch">
-          <input
-            type="checkbox"
-            class="kern-switch__input"
-            data-adm--masterportal-import-panel-target="createResourceCheckbox"
-          >
-          <span class="kern-switch__track">
-            <span class="kern-switch__thumb"></span>
-          </span>
-          <span class="kern-switch__text">
-            <span class="kern-switch__label">
-              <%= t(".create_resource_label", resource_name: resource_name) %>
-            </span>
-            <span class="kern-switch__description">
-              <%= t(".create_resource_description") %>
-            </span>
-          </span>
-        </label>
+        <%= render Kern::SwitchComponent.new(
+          label: t(".create_resource_label", resource_name: resource_name),
+          description: create_resource_switch_description,
+          input_data: { "adm--masterportal-import-panel-target" => "createResourceCheckbox" }
+        ) %>
+
+        <div class="masterportal-import-panel--system-user">
+          <p class="masterportal-import-panel--system-user-note">
+            <%= t(".system_user_note", resource_name: resource_name, name: system_user.name) %>
+          </p>
+
+          <%= render Adm::SystemUserInfoComponent.new(user: system_user) %>
+        </div>
       <% end %>
 
       <button
         type="button"
         class="masterportal-import-panel--import-button"
+        title="<%= t(".import_button_tooltip") %>"
         data-adm--masterportal-import-panel-target="importButton"
         data-action="click->adm--masterportal-import-panel#startImport"
         disabled

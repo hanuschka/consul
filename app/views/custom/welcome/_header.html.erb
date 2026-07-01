@@ -122,7 +122,7 @@
           <% end %>
           <br>
           <% if @custom_page&.landing? %>
-           <%= @custom_page.subtitle %>
+           <b><%= @custom_page.subtitle %></b>
           <% else %>
             <b><%= Setting["extended_option.general.subtitle"] %></b>
           <% end %>
@@ -143,6 +143,11 @@
 
     <% unless @custom_page&.landing? %>
       <%= header_button_html %>
+      <%= homepage_deficiency_report_cta_html %>
     <% end %>
   </div>
 </div>
+
+<% if Setting["process.deficiency_reports"].present? && Setting["deficiency_reports.show_homepage_cta"].present? %>
+  <%= render "deficiency_reports/create_cta_modal" %>
+<% end %>

@@ -94,7 +94,11 @@ class IdeaManagement::IdeasController < IdeaManagement::BaseController
       return unless Setting["ideas.admins_must_assign_officer"].present?
       raise CanCan::AccessDenied unless current_user.idea_officer?
 
-      @ideas = @ideas.where(officer: current_user.idea_officer)
+      officer = current_user.idea_officer
+
+      return if officer.manage_all?
+
+      @ideas = @ideas.where(officer: officer)
     end
 
     def notify_new_officer(idea)

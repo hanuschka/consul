@@ -14,8 +14,8 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all texts/legislation documents for a projekt phase. Texts support multi-phase review processes: draft publication, debate period, and allegations/amendments period.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of texts per page (default: 100, max: 500)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of texts per page (**default:** 100, max: 500)'
 
       response '200', 'texts found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -41,31 +41,7 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:projekt) { Projekt.create!(name: 'Projekt') }
-        let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
-        let(:projekt_phase_id) { legislation_phase.id }
-
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 end

@@ -16,17 +16,18 @@
       border-radius: 0;
     }
 
-    @media(max-width: $medium-tablet-viewport-start) {
-      min-width: 0;
-      max-width: 250px;
-    }
+    // @media(max-width: $medium-tablet-viewport-start) {
+    //   min-width: 0;
+    //   max-width: 250px;
+    // }
 
-    @media(max-width: $small-tablet-viewport-start) {
+    @media(max-width: $medium-tablet-viewport-start) {
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       width: 100%;
+      min-width: 0;
       max-width: none;
       margin: auto;
       margin-bottom: 20px;
@@ -112,6 +113,15 @@
       overflow-y: scroll;
       max-height: calc(100vh - 60px);
       overflow-x: hidden;
+    }
+
+    // The subnavigation stacks its rows in a flex column. Foundation's
+    // `.column` carries `flex: 0 0 100%` for full-width rows, but here that
+    // 100% resolves against the main (vertical) axis and inflates an often
+    // empty column (the `top_links` wrapper) into a full-height void, adding
+    // dead scroll space. Size these columns to their content instead.
+    .subnavigation > .column {
+      flex: 0 0 auto;
     }
   }
 

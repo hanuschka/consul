@@ -1,15 +1,13 @@
 <ul class="main-menu">
   <li class="content-items">
-    <ul class="content-items-list">
-      <% landing_page_for_nav = @ui_landing_page %>
-      <% has_navbar_items = landing_page_for_nav.present? ? NavbarItem.for_landing_page(landing_page_for_nav.id).any? : NavbarItem.global.any? %>
+    <% landing_page_for_nav = @ui_landing_page %>
+    <% has_navbar_items = landing_page_for_nav.present? ? NavbarItem.for_landing_page(landing_page_for_nav.id).any? : NavbarItem.global.any? %>
+    <ul class="content-items-list"<%= " data-navbar data-navbar-more-label=\"#{t('shared.navbar_more')}\"".html_safe if has_navbar_items %>>
       <% if has_navbar_items %>
         <%= render partial: "shared/navbar_items", locals: { placement: placement, landing_page: landing_page_for_nav } %>
-      <% else %>
+      <% elsif landing_page_for_nav.blank? %>
 
-        <% if (Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page) ||
-              @custom_page&.landing? ||
-              @ui_landing_page.present? %>
+        <% if Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? && !launch_page %>
           <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement }  %>
         <% end %>
         <%= raw content_block("subnavigation_left_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
@@ -20,16 +18,6 @@
         <%= raw content_block("subnavigation_right_desktop", I18n.locale) if placement == 'desktop' && !launch_page %>
         <%= raw content_block("subnavigation_right_mobile", I18n.locale) if placement == 'mobile' && !launch_page %>
         <%= render partial: 'shared/subnavigation_projekt_events', locals: { placement: placement } if Setting['extended_feature.general.enable_projekt_events_page'].present? && !launch_page %>
-
-        <% if @ui_landing_page %>
-          <% @ui_landing_page.landing_projekts.top_level.includes([page: :translations]).for_navigation(current_user).each do |active_projekt| %>
-            <li class='nav-element top-level-item js-access-top-level-menu js-prevent-key-scroll'>
-              <div class='flyout-item-name projekt-name'>
-                <%= prepare_projekt_name(active_projekt, placement) %>
-              </div>
-            </li>
-          <% end %>
-        <% end %>
 
       <% end %>
     </ul>

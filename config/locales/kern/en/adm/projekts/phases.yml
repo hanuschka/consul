@@ -189,6 +189,7 @@ en:
             actions: Actions
         map:
           title: Map
+          masterportal_import_success: Import completed successfully.
         masterportal_pins:
           title: Imported Masterportal pins
         officing_managers:
@@ -203,6 +204,7 @@ en:
           title: Questions
           create_question: Create normal question
           create_bundle_question: Create question bundle
+          download_individual_answers: Download individual answers
           intro_text_p1: >
             Here you manage the questions of this voting phase. There are two question types:
           intro_question_types:
@@ -250,6 +252,7 @@ en:
             edit_answers: Answer list
             edit_questions: Question list
             edit_question: Edit question
+            edit_bundle_question: Edit question bundle
             actions: Actions
         officing_manager_audits:
           title: Polling officer change log
@@ -283,6 +286,7 @@ en:
             author: Author
             category: Category
             created_at: Created on
+            actions: Actions
         map_resources_overview:
           title: Map overview
           not_yet_implemented: This feature will be implemented soon.

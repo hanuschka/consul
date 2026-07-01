@@ -360,10 +360,6 @@ button,
   @include logo;
 }
 
-.close-button {
-  top: $line-height / 2;
-}
-
 .back,
 .icon-angle-left {
   clear: both;
@@ -434,6 +430,10 @@ button,
 
 .pagination li {
   display: inline-block;
+
+  a {
+    background-color: #e7e7e7;
+  }
 }
 
 .truncate-horizontal-text {

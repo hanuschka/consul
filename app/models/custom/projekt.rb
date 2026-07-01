@@ -32,6 +32,7 @@ class Projekt < ApplicationRecord
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
+  has_one :projekt_evaluation_visibility, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -103,7 +104,7 @@ class Projekt < ApplicationRecord
   delegate :url, to: :page, allow_nil: true
 
   after_create :create_corresponding_page, :set_order, :create_default_settings,
-    :copy_map_settings, :ensure_other_projekts_order_integrity
+    :copy_map_settings, :ensure_other_projekts_order_integrity, :assign_author_as_manager
 
   after_save do
     if parent_id_previously_changed?
@@ -188,26 +189,22 @@ class Projekt < ApplicationRecord
       .order("projekts.created_at DESC")
   }
 
-  scope :index_order_underway, ->() {
-    current
+  scope :index_order_underway, ->(timestamp = Time.zone.today) {
+    current(timestamp)
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases, :projekt_settings)
+      .where(current_regular_phase_exists(timestamp).or(consider_underway_setting_exists))
       .order("projekts.created_at DESC")
-      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
   }
 
-  scope :index_order_ongoing, ->() {
-    current
+  scope :index_order_ongoing, ->(timestamp = Time.zone.today) {
+    current(timestamp)
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases)
+      .where(Arel::Nodes::Not.new(current_regular_phase_exists(timestamp)))
       .order("projekts.created_at DESC")
-      .select do |p|
-        p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
-      end
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
@@ -239,6 +236,26 @@ class Projekt < ApplicationRecord
     not_activated
       .order("projekts.created_at DESC")
   }
+
+  def self.current_regular_phase_exists(timestamp = Time.zone.today)
+    ProjektPhase
+      .regular_phases
+      .current(timestamp)
+      .where(ProjektPhase.arel_table[:projekt_id].eq(arel_table[:id]))
+      .unscope(:order)
+      .arel
+      .exists
+  end
+
+  def self.consider_underway_setting_exists
+    ProjektSetting
+      .where(ProjektSetting.arel_table[:projekt_id].eq(arel_table[:id]))
+      .where(key: "projekt_feature.general.consider_underway")
+      .where.not(value: [nil, ""])
+      .unscope(:order)
+      .arel
+      .exists
+  end
 
   scope :not_in_individual_list, -> {
     joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
@@ -347,6 +364,7 @@ class Projekt < ApplicationRecord
   def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
     return Projekt.none if permissions.blank?
+    return all if projekt_manager.manage_all_projekts?
 
     joins(:projekt_manager_assignments).where(
       "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
@@ -745,6 +763,14 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def content_blocks_body
+    content_blocks
+      .sort_by(&:position)
+      .map(&:body)
+      .compact_blank
+      .join("\n")
+  end
+
   def perform_sync_update_for_global_overview
     if should_be_exported_for_global_overview?
       if hidden_at.present?
@@ -832,7 +858,7 @@ class Projekt < ApplicationRecord
           siblings.with_order_number.pluck(:order_number).each_cons(2).all? { |a, b| b == a + 1 }
         new_order = 1
         siblings.with_order_number.each do |projekt|
-          projekt.update!(order_number: new_order)
+          projekt.update_column(:order_number, new_order)
           new_order += 1
         end
       end
@@ -850,6 +876,16 @@ class Projekt < ApplicationRecord
 
     def touch_updated_at(geozone)
       touch if persisted?
+    end
+
+    def assign_author_as_manager
+      projekt_manager = author&.projekt_manager
+      return if projekt_manager.blank?
+      return if projekt_manager.manage_all_projekts?
+
+      assignment = projekt_manager_assignments.find_or_initialize_by(projekt_manager: projekt_manager)
+      assignment.permissions |= ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS
+      assignment.save!
     end
 
     def assign_top_level_projekt_from_parent

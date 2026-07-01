@@ -1,7 +1,9 @@
-@import "outlined";
+@use "outlined";
 
-.material-symbols-outlined {
-  // Reserve a stable 1em box so font-load doesn't reflow surrounding layout.
+// Pin a 1em box on icons inside the public flyout so the Material Symbols
+// font load doesn't snap neighboring labels sideways. Scoped — chip/badge
+// wrappers elsewhere must keep their natural padded size.
+.nav-flyout-block .material-symbols-outlined {
   display: inline-block;
   width: 1em;
   min-width: 1em;

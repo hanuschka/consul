@@ -11,7 +11,8 @@ class Shared::MapBaseComponent < ApplicationComponent
     projekt: nil,
     projekt_phase: nil,
     show_admin_shape: true,
-    saturated_admin_shape: false
+    saturated_admin_shape: false,
+    instance_suffix: nil
   )
     @mappable = mappable
     @map_location = map_location || MapLocation.new
@@ -22,6 +23,7 @@ class Shared::MapBaseComponent < ApplicationComponent
     @projekt_phase = projekt_phase
     @show_admin_shape = show_admin_shape
     @saturated_admin_shape = saturated_admin_shape
+    @instance_suffix = instance_suffix
   end
 
   private

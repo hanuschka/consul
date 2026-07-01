@@ -16,7 +16,9 @@ module Reportable
 
   Report::KINDS.each do |kind|
     define_method "#{kind}_enabled?" do
-      report.send(kind)
+      loaded_report = association(:report).reader
+
+      loaded_report.present? && loaded_report[kind]
     end
     alias_method "#{kind}_enabled", "#{kind}_enabled?"
 

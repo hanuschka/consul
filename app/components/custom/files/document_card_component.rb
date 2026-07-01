@@ -1,4 +1,4 @@
-class Files::DocumentCardComponent < ApplicationComponent
+class Files::DocumentCardComponent < Files::ResourceAssetComponent
   with_collection_parameter :document
 
   def initialize(document:, type:)
@@ -9,6 +9,10 @@ class Files::DocumentCardComponent < ApplicationComponent
   private
 
     attr_reader :document, :type
+
+    def uploaded_by
+      document.user
+    end
 
     def filename
       attachment_filename.presence || document.title.presence || "Untitled"
@@ -56,29 +60,12 @@ class Files::DocumentCardComponent < ApplicationComponent
       type_string.safe_constantize&.model_name&.human || type_string
     end
 
-    def documentable_record
-      document.documentable
-    end
-
     def documentable_name
-      record = documentable_record
-      return nil if record.blank?
-
-      candidate =
-        record.try(:title).presence ||
-        record.try(:name).presence ||
-        record.try(:page).try(:title).presence
-
-      candidate.to_s
+      resource_name(document.documentable)
     end
 
     def documentable_url
-      record = documentable_record
-      return nil if record.blank?
-
-      helpers.polymorphic_path(record)
-    rescue NoMethodError, ActionController::UrlGenerationError
-      nil
+      resource_url(document.documentable)
     end
 
     def admin_upload?
@@ -89,10 +76,20 @@ class Files::DocumentCardComponent < ApplicationComponent
       FileTypeIcons.for(attachment_content_type)
     end
 
+    def file_extension
+      File.extname(filename).delete(".").upcase.presence
+    end
+
+    def filetype_label
+      return I18n.t("files.card.file_type", type: file_extension) if file_extension.present?
+
+      I18n.t("files.card.file_type_generic")
+    end
+
     def attachment_url
       return "" if !document.attachment.attached?
 
-      helpers.url_for(document.attachment)
+      helpers.rails_blob_url(document.attachment, **UrlOptions.default)
     end
 
     def previewable?

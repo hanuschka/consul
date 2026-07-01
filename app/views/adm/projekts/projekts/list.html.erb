@@ -3,6 +3,21 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.projekts.home.title")) %>
 
 <div class="kern-container my-5">
+  <% if policy([:adm, :projekts, Projekt]).create? %>
+    <div class="d-flex justify-content-end mb-3">
+      <%= render Shared::AiFeatureTooltipComponent.new(
+        feature_title: t("adm.projekts.imports.index.new_button"),
+        feature_text: t("adm.projekts.imports.index.new_button_description")
+      ) do %>
+        <%= kern_link_button new_adm_projekts_import_path,
+              text: t("adm.projekts.imports.index.new_button"),
+              icon: "upload_file",
+              style: :primary,
+              data: { turbo_frame: "_top" } %>
+      <% end %>
+    </div>
+  <% end %>
+
   <%
     headers = {
       name:       Kern::Table::HeaderComponent.new(:name, Projekt.model_name.human, **@name_header_options.merge(data_field: "name")),

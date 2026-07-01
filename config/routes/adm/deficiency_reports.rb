@@ -9,11 +9,11 @@ namespace :adm do
     end
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_categories, on: :collection
+      patch :order_categories, on: :collection
     end
 
     resources :statuses, only: [:index, :new, :create, :edit, :update, :destroy] do
-      post :order_statuses, on: :collection
+      patch :order_statuses, on: :collection
     end
 
     resources :official_answer_templates, except: :show
@@ -22,6 +22,10 @@ namespace :adm do
 
     resources :areas, except: :show do
       post :order_areas, on: :collection
+    end
+
+    resources :email_templates, only: [:index] do
+      get :settings, on: :collection
     end
 
     resource :stats, only: :show
@@ -41,7 +45,7 @@ namespace :adm do
       post :search, on: :collection
     end
 
-    resources :deficiency_reports, only: [:show, :edit, :update, :destroy], path: "" do
+    resources :deficiency_reports, only: [:new, :create, :show, :edit, :update, :destroy], path: "" do
       resources :audits, only: :show, controller: "deficiency_report_audits"
       resources :milestones, controller: "deficiency_report_milestones"
       resources :progress_bars, except: :show, controller: "deficiency_report_progress_bars"

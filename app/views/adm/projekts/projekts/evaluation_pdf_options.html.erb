@@ -1,9 +1,10 @@
-<% content_for :title, [@projekt.page.title, t(".title")].join(" | ") %>
+<% content_for :title, [(@projekt.page&.title || @projekt.name), t(".title")].join(" | ") %>
 
 <%= render Adm::HeaderComponent.new(
-  title: @projekt.page.title,
+  title: (@projekt.page&.title || @projekt.name),
   breadcrumbs: @breadcrumbs,
-  frontend_url: projekt_path(@projekt)
+  frontend_url: projekt_path(@projekt),
+  compact: true
 ) %>
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
@@ -51,13 +52,14 @@
           phase_id = phase["phase_id"].to_i
           available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase["phase_type"])
         %>
-        <div class="pdf-options-phase">
+        <div class="pdf-options-phase" data-controller="check-all">
           <label class="pdf-options-phase__toggle">
             <%= check_box_tag(
               "pdf_options[phase_ids][]",
               phase_id,
               @selection_defaults.include_phase?(phase_id),
-              id: "pdf_options_phase_#{phase_id}"
+              id: "pdf_options_phase_#{phase_id}",
+              data: { check_all_target: "selectAll", action: "check-all#toggle" }
             ) %>
             <strong><%= phase["phase_title"] %></strong>
             <span class="pdf-options-phase__type">
@@ -73,7 +75,8 @@
                   "pdf_options[sections][#{phase_id}][]",
                   section_key,
                   @selection_defaults.include_section?(phase_id, section_key),
-                  id: "pdf_options_section_#{phase_id}_#{section_key}"
+                  id: "pdf_options_section_#{phase_id}_#{section_key}",
+                  data: { check_all_target: "checkbox" }
                 ) %>
                 <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
               </label>
@@ -82,21 +85,7 @@
         </div>
       <% end %>
 
-      <%
-        cancel_url =
-          if @originating_phase_id.present?
-            evaluation_adm_projekts_projekt_path(@projekt, anchor: "phase-#{@originating_phase_id}")
-          else
-            evaluation_adm_projekts_projekt_path(@projekt)
-          end
-      %>
-      <div class="d-flex gap-2 mt-4 align-items-center justify-content-between">
-        <%= kern_link_button(
-          cancel_url,
-          text: t(".cancel"),
-          icon: "arrow_back",
-          style: :secondary
-        ) %>
+      <div class="d-flex gap-2 mt-4 align-items-center justify-content-end">
         <%= render Adm::ButtonWithProgressComponent.new(
           label: t(".download"),
           loading_label: t(".downloading"),

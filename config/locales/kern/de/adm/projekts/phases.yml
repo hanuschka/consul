@@ -189,6 +189,7 @@ de:
             actions: Aktionen
         map:
           title: Karte
+          masterportal_import_success: Import erfolgreich abgeschlossen.
         masterportal_pins:
           title: Importierte Masterportal-Pins
         officing_managers:
@@ -203,6 +204,7 @@ de:
           title: Fragen
           create_question: Normale Frage erstellen
           create_bundle_question: Fragenbündel erstellen
+          download_individual_answers: Einzelantworten herunterladen
           intro_text_p1: >
             Hier verwalten Sie die Fragen dieser Abstimmungsphase. Es gibt zwei Fragetypen:
           intro_question_types:
@@ -250,6 +252,7 @@ de:
             edit_answers: Antwortliste
             edit_questions: Fragenliste
             edit_question: Frage bearbeiten
+            edit_bundle_question: Fragenbündel bearbeiten
             actions: Aktionen
         officing_manager_audits:
           title: Änderungslog Abstimmungshelfer
@@ -283,6 +286,7 @@ de:
             author: Autor
             category: Kategorie
             created_at: Erstellt am
+            actions: Aktionen
         map_resources_overview:
           title: Kartenübersicht
           not_yet_implemented: Diese Funktion wird in Kürze implementiert.

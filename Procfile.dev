@@ -1,3 +1,4 @@
 web: bin/rails server
-js: npx esbuild app/javascript/application-kern.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --watch
-css: npx sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --load-path=app/assets/stylesheets --style=compressed --source-map --watch --poll
+worker: bin/delayed_job run
+js: npx esbuild app/javascript/application-kern.js --bundle --format=esm --outdir=app/assets/builds --public-path=/assets --watch
+css: npx sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --load-path=app/assets/stylesheets --style=compressed --no-source-map --watch --poll

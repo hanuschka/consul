@@ -10,6 +10,21 @@
   }
 %>
 
+<% if local_assigns[:regenerate_url].present? %>
+  <div class="d-flex flex-column align-items-end gap-2 mb-3">
+    <a href="<%= poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+      <span class="material-symbols-outlined" aria-hidden="true">download</span>
+      <%= t("adm.projekts.phases.poll_questions.download_individual_answers") %>
+    </a>
+    <% polls.each do |poll| %>
+      <a href="<%= poll_csv_answers_votes_path(poll["id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <%= t("custom.polls.show.results.download_csv_answers_votes") %>
+      </a>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="phase-block">
   <% if show_section.call("kpis") %>
   <section
@@ -27,6 +42,10 @@
         <div class="phase-title"><%= phase["phase_title"] %></div>
         <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.voting_phase") %></div>
       </div>
+      <% if local_assigns[:regenerate_url].present? %>
+        <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
+          regenerate_url: regenerate_url %>
+      <% end %>
     </div>
     <div class="phase-meta">
       <div class="meta-item">
@@ -92,12 +111,12 @@
             </div>
 
             <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
-              locals: { questions: group_questions, accent: accent, accent_light: accent_light } %>
+              locals: { questions: group_questions, accent: accent, accent_light: accent_light, exportable: local_assigns[:regenerate_url].present? } %>
           </div>
         <% end %>
       <% else %>
         <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
-          locals: { questions: questions, accent: accent, accent_light: accent_light } %>
+          locals: { questions: questions, accent: accent, accent_light: accent_light, exportable: local_assigns[:regenerate_url].present? } %>
       <% end %>
 
       <% entries = poll["open_text_entries"] || [] %>

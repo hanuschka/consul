@@ -20,6 +20,7 @@ namespace :adm do
 
     resources :landing_pages, only: [:new, :create, :edit, :update], path: "" do
       patch :toggle_active, on: :member
+      patch :update_navigation_link_color, on: :member
       patch :reorder, on: :collection
 
       resources :navbar_items, only: [:new, :create, :edit, :update, :destroy],

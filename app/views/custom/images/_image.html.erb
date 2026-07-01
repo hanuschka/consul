@@ -3,7 +3,7 @@
     <figure>
       <%= image_tag image.variant(version),
         class: image_class(image),
-        alt: image.title.unicode_normalize,
+        alt: local_assigns[:alt].presence || image.title.unicode_normalize,
         title: image.title.unicode_normalize %>
       <% if show_caption %>
         <figcaption class="text-center">

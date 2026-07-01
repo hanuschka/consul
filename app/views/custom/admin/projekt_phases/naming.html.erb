@@ -1,22 +1,16 @@
 <%= render "custom/admin/projekt_phases/heading" %>
 
-<% unless embedded? %>
-  <%= render "custom/admin/projekt_phases/nav_bar" %>
-<% end %>
+<%= render "custom/admin/projekt_phases/nav_bar" %>
 
 <div class="row">
   <div class="column">
     <h2>
       <%= t("custom.admin.projekt_phases.naming.page_title") %>
-
-      <% if embedded? %>
-        <%= render Shared::ExplainButtonComponent.new(explain: "") %>
-      <% end %>
     </h2>
   </div>
 </div>
 
-<% naming_column_class = embedded? ? "" : "large-8" %>
+<% naming_column_class = "large-8" %>
 
 <%= translatable_form_for(@projekt_phase, url: namespace_projekt_phase_path, as: :projekt_phase, html: { id: "phase-edit-form"}) do |f| %>
   <%= hidden_field_tag :action_name, action_name %>
@@ -24,9 +18,7 @@
   <div class="row">
     <div class="column">
       <%= render "shared/errors", resource: @projekt_phase %>
-      <% unless embedded? %>
-        <%= render "shared/globalize_locales", resource: @projekt_phase %>
-      <% end %>
+      <%= render "shared/globalize_locales", resource: @projekt_phase %>
     </div>
   </div>
 

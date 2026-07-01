@@ -29,9 +29,11 @@ p {
   padding-top: 0;
 }
 
-.material-symbols-outlined {
-  font-size: inherit;
-  // Reserve a stable 1em box so font-load doesn't reflow surrounding layout.
+// Pin a 1em box on icons that sit inline with text in nav menus, so the
+// Material Symbols font load doesn't snap neighbors sideways. Scoped on
+// purpose — chip/badge wrappers must keep their natural padded size.
+.adm-menu .material-symbols-outlined,
+.nav-flyout-block .material-symbols-outlined {
   display: inline-block;
   width: 1em;
   min-width: 1em;

@@ -123,7 +123,7 @@
 }
 
 .projekt-content-start-buttons {
-  .projekt-content-start-button:nth-child(1) {
+  .projekt-content-start-button.-file-import {
     background-color: color-mix(in srgb, var(--content-start-btn-file-import-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-file-import-color) 24%, transparent);
 
@@ -145,7 +145,7 @@
     }
   }
 
-  .projekt-content-start-button:nth-child(2) {
+  .projekt-content-start-button.-prompt {
     background-color: color-mix(in srgb, var(--content-start-btn-prompt-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-prompt-color) 24%, transparent);
 
@@ -167,7 +167,7 @@
     }
   }
 
-  .projekt-content-start-button:nth-child(3) {
+  .projekt-content-start-button.-template {
     background-color: color-mix(in srgb, var(--content-start-btn-template-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-template-color) 24%, transparent);
 
@@ -189,7 +189,7 @@
     }
   }
 
-  .projekt-content-start-button:nth-child(4) {
+  .projekt-content-start-button.-empty-block {
     background-color: color-mix(in srgb, var(--content-start-btn-empty-block-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-empty-block-color) 24%, transparent);
 
@@ -403,7 +403,7 @@
   }
 }
 
-.projekt-content-blocks-delete-section {
+.custom-content-blocks-delete-section {
   display: flex;
   justify-content: center;
   padding: 20px;

@@ -4,6 +4,8 @@ de:
       model_not_configured: "Fehler: KI-Modell nicht konfiguriert"
       generation_failed: "Fehler: Inhaltsblock konnte nicht mit KI generiert werden"
     disabled_tooltip: "KI-Funktionen nicht verfügbar. Wenden Sie sich an einen Administrator."
+    disabled_note_label: "KI aktivieren, um die Funktion zu nutzen"
+    disabled_note_text: "Wenden Sie sich an info@demokratie.today, um die KI-Funktion zu aktivieren."
     instructions_placeholder: "Geben Sie Ihre Anweisungen zur Bearbeitung dieses Inhaltsblockes ein. Standardmäßig werden der Projekttitel, der Untertitel sowie der Inhalt dieses Inhaltsblockes als Kontext mitgegeben."
     submit: Absenden
     cancel: Abbrechen

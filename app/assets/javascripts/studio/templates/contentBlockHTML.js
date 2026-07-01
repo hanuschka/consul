@@ -13,9 +13,10 @@ ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { t
   const titleHtml = title ? `<span class="rich-tooltip-content--title">${title}</span>` : "";
   const textHtml = text ? `<span class="rich-tooltip-content--text">${text}</span>` : "";
   const noteHtml = note ? `<span class="rich-tooltip-content--note">${note}</span>` : "";
+  const focusableAttribute = note ? " focusable" : "";
 
   return `
-    <rich-tooltip${delayAttribute}${placementAttribute} trigger-only>
+    <rich-tooltip${delayAttribute}${placementAttribute} trigger-only${focusableAttribute}>
       ${triggerHtml}
       <template>
         <div class="rich-tooltip-content">
@@ -27,6 +28,10 @@ ProjektStudio.templateFunctions.studioControlTooltip = function(triggerHtml, { t
     </rich-tooltip>
   `;
 };
+
+// Tooltip note shown when AI is not enabled — mirrors Shared::AiFeatureTooltipComponent.
+ProjektStudio.templateFunctions.aiDisabledTooltipNote =
+  '<span class="ai-feature-tooltip--note-heading">KI aktivieren, um die Funktion zu nutzen</span> Wenden Sie sich an info@demokratie.today, um die KI-Funktion zu aktivieren.';
 
 // Admin-only placeholder shown inside an empty projekt content block (studio
 // only, hidden in preview-as-user). Mirrors the site-block hint rendered by
@@ -49,6 +54,7 @@ ProjektStudio.templateFunctions.wrapWithContentBlockListHtml = function(contentB
   return `
     <div
       data-sort-url="/projekts/${projektId}/content_blocks/sort"
+      data-template-section="projekt_page"
       class="js-content-blocks-list content-blocks-container"
     >
       <div
@@ -98,7 +104,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
   return `
     <div
-      class="js-content-block-wrapper projekt-content-block-wrapper${emptyHintClasses} ${draftContentBlockIndex ? ' -draft' : ''}"
+      class="js-content-block-wrapper custom-content-block-wrapper${emptyHintClasses} ${draftContentBlockIndex ? ' -draft' : ''}"
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
@@ -110,11 +116,11 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
       ${toolbarPosition ? `data-toolbar-position="${toolbarPosition}"` : ''}
       data-context="${context || 'projekt'}"
       >
-      <div class="projekt-content-block-wrapper--inner">
-        <div class="projekt-content-block--toolbar-zone js-studio-hide-on-preview">
-        <div class="projekt-content-block--toolbar">
+      <div class="custom-content-block-wrapper--inner">
+        <div class="custom-content-block--toolbar-zone js-studio-hide-on-preview">
+        <div class="custom-content-block--toolbar">
 
-            <div class="projekt-content-block-edit--buttons-wrapper">
+            <div class="custom-content-block-edit--buttons-wrapper">
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -145,7 +151,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               })}
             </div>
             <div
-              class="projekt-content-block-edit projekt-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
+              class="custom-content-block-edit custom-content-block--mode-controlls js-simple-edit-mode-controlls d-flex-justify-space-between">
               <div class="content-block-edit-toolbar">
                 <div
                   class="content-block-margin-input d-flex align-items-center u-gap-5"
@@ -241,7 +247,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 })}
               </div>
             </div>
-            <div class="projekt-content-block-edit projekt-content-block-edit-main-controlls js-content-block-edit-main-controlls">
+            <div class="custom-content-block-edit custom-content-block-edit-main-controlls js-content-block-edit-main-controlls">
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -251,6 +257,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-pencil-alt"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Text-Editor",
                 text: "Öffnet den einfachen Editor zur direkten und intuitiven Bearbeitung des Textinhalts mit Grundformatierung."
               })}
@@ -259,13 +266,15 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <button
                     type="button"
                     tabindex="-1"
-                    class="js-content-block-enter-ai-edit-mode studio-icon-button"
+                    class="js-content-block-enter-ai-edit-mode studio-icon-button ${ProjektStudio.config.aiAvailable ? "" : "ai-feature-disabled"}"
                   >
                     <i class="fas fa-magic"></i>
                   </button>
                 `, {
+                  delay: 1000,
                   title: "KI-Editor",
-                  text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern."
+                  text: "Nutzen Sie künstliche Intelligenz mit individuellen Anweisungen, um diesen Block zu modifizieren, umzugestalten oder zu verbessern.",
+                  note: ProjektStudio.config.aiAvailable ? null : ProjektStudio.templateFunctions.aiDisabledTooltipNote
                 })}
               </div>
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
@@ -277,6 +286,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-code"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Code-Editor",
                 text: "Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting."
               })}
@@ -290,7 +300,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
               <!--   <i class="fas fa-edit"> -->
               <!--   </i> -->
               <!-- </button> -->
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -300,6 +310,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-copy"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Duplizieren",
                 text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
               })}
@@ -312,11 +323,12 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fa fa-arrow-rotate-left fa-undo"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Versionsverlauf",
                 text: "Zeigt frühere Versionen dieses Blocks an und macht Änderungen rückgängig."
               })}
               ${isSiteContext ? `
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               <button
                 type="button"
                 tabindex="-1"
@@ -326,7 +338,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 <i class="fas fa-exchange-alt">
                 </i>
               </button>
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               <button
                 type="button"
                 tabindex="-1"
@@ -337,15 +349,15 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                 </i>
               </button>
               ` : `
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               <button
-                class="studio-icon-button projekt-content-block--move-button js-dnd-handle"
+                class="studio-icon-button custom-content-block--move-button js-dnd-handle"
                 title="Inhaltsbock verschieben"
                 tabindex="-1"
               >
                 <i class="fas fa-up-down-left-right"></i>
               </button>
-              <div class="projekt-content-block-edit--separator"></div>
+              <div class="custom-content-block-edit--separator"></div>
               ${ProjektStudio.templateFunctions.studioControlTooltip(`
                 <button
                   type="button"
@@ -355,6 +367,7 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
                   <i class="fas fa-trash-alt"></i>
                 </button>
               `, {
+                delay: 1000,
                 title: "Inhaltsblock löschen",
                 text: "Entfernt diesen Inhaltsblock dauerhaft von der Seite. Diese Aktion kann nicht rückgängig gemacht werden."
               })}
@@ -362,23 +375,23 @@ ProjektStudio.templateFunctions.addStudioControlsToContentBlock = function(conte
 
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-html-edit-mode-controlls">
+            <div class="custom-content-block-edit custom-content-block--mode-controlls js-html-edit-mode-controlls">
             </div>
 
-            <div class="projekt-content-block-edit projekt-content-block--mode-controlls js-code-edit-mode-controlls">
+            <div class="custom-content-block-edit custom-content-block--mode-controlls js-code-edit-mode-controlls">
             </div>
         </div>
         </div>
 
-        <div class="projekt-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
+        <div class="custom-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
 
         ${showEmptyHint ? ProjektStudio.templateFunctions.contentBlockEmptyHintHtml() : ''}
 
-        <div class="projekt-content-block js-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
+        <div class="custom-content-block js-content-block" data-id="${contentBlockId ? contentBlockId : ''}">
           ${contentBlockHTML}
         </div>
 
-        <div class="projekt-content-block--overlay">
+        <div class="custom-content-block--overlay">
         </div>
       </div>
 

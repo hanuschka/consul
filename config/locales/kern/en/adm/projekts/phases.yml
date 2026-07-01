@@ -252,6 +252,7 @@ en:
             edit_answers: Answer list
             edit_questions: Question list
             edit_question: Edit question
+            edit_bundle_question: Edit question bundle
             actions: Actions
         officing_manager_audits:
           title: Polling officer change log

@@ -381,6 +381,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     page = @projekt.page
     image = page.image || ::Image.new(imageable: page)
+    image.accepted_content_types_override = AdminImage::ALLOWED_CONTENT_TYPES
     image.attachment = params.require(:file)
     image.user = current_user
 

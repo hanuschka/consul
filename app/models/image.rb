@@ -72,8 +72,10 @@ class Image < ApplicationRecord
     self.class.max_file_size
   end
 
+  attr_writer :accepted_content_types_override
+
   def accepted_content_types
-    self.class.accepted_content_types
+    @accepted_content_types_override.presence || self.class.accepted_content_types
   end
 
   def variant(style)

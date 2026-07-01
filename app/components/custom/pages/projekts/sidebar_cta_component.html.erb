@@ -1,12 +1,10 @@
 <%= render Shared::SidebarCardComponent.new(title: I18n.t("custom.projekt_phases.cta.title"), icon_name: "pen-fancy", opened_on_mobile: true) do |c| %>
-  <% if @projekt_phase.is_a?(ProjektPhase::VotingPhase) %>
-    <%= link_to button_text, poll_path(@projekt_phase.poll), class: "button -orange" %>
-
-  <% elsif @projekt_phase.type.in?(phase_types_with_new_button) %>
+  <% case @projekt_phase.sidebar_cta_kind %>
+  <% when :poll %>
+    <%= link_to @projekt_phase.sidebar_cta_label, poll_path(@projekt_phase.poll), class: "button -orange" %>
+  <% when :new_button %>
     <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
-
-  <% elsif @projekt_phase.type.in?(phase_types_with_link) %>
-    <a class="button -orange" href="#filter-subnav"><%= button_text %></a>
-
+  <% when :link, :budget_vote, :budget_ballot %>
+    <a class="button -orange" href="#<%= @projekt_phase.sidebar_cta_anchor %>"><%= @projekt_phase.sidebar_cta_label %></a>
   <% end %>
 <% end %>

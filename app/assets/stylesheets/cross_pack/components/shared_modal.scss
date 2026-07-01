@@ -1,0 +1,65 @@
+// Shared native-<dialog> modal primitive (rendered by Shared::ModalComponent).
+// Lives in cross_pack so it renders identically in both stylesheet packs: the
+// main user-facing app (Foundation/Sprockets) and the /adm content-block
+// editor (kern/esbuild). Self-contained — no Foundation/pack tokens.
+// JS behavior: App.SharedModal (custom/components/shared/modal.js).
+
+html.is-shared-modal-open.shared-modal-has-scroll {
+  overflow-y: scroll;
+}
+
+html.is-shared-modal-open {
+  position: fixed;
+  width: 100%;
+  overflow-y: hidden;
+}
+
+.shared-modal {
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &.-blur-backdrop::backdrop {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
+
+  h3 {
+    font-size: 25px;
+  }
+}
+
+.shared-modal--content {
+  position: relative;
+  padding: 20px 25px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.shared-modal--content .modern-modal--header {
+  padding-right: 40px;
+}
+
+.shared-modal--close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+
+  &:hover {
+    color: #333;
+  }
+}

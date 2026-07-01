@@ -15,6 +15,11 @@ class BudgetSerializer < BaseSerializer
         :voting_style,
         :published,
         :slug,
+        :hide_money,
+        :max_number_of_winners,
+        :show_results_after_first_vote,
+        :show_percentage_values_only,
+        :max_preselected,
         :projekt_phase_id,
         :created_at,
         :updated_at
@@ -67,7 +72,9 @@ class BudgetSerializer < BaseSerializer
         id: heading.id,
         name: heading.name,
         slug: heading.slug,
-        price: heading.price
+        price: heading.price,
+        population: heading.population,
+        max_ballot_lines: heading.max_ballot_lines
       }
     end
 

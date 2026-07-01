@@ -1,0 +1,102 @@
+<% content_for :title, [(@projekt.page&.title || @projekt.name), t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: (@projekt.page&.title || @projekt.name),
+  breadcrumbs: @breadcrumbs,
+  frontend_url: projekt_path(@projekt),
+  compact: true
+) %>
+
+<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
+
+<div
+  class="kern-container mb-5"
+  data-controller="adm--evaluation-pdf-download"
+>
+  <div class="pdf-options-form-region">
+    <h2 class="h3 mb-4"><%= t(".heading") %></h2>
+    <p class="text-muted mb-4"><%= t(".description") %></p>
+
+    <%= form_with(
+      url: evaluation_pdf_adm_projekts_projekt_path(@projekt),
+      method: :get,
+      local: true,
+      html: {
+        data: {
+          turbolinks: false,
+          turbo: false,
+          "adm--evaluation-pdf-download-target": "form"
+        }
+      },
+      class: "pdf-options-form"
+    ) do |form| %>
+
+      <div class="pdf-options-phase">
+        <label class="pdf-options-phase__toggle">
+          <%= check_box_tag(
+            "pdf_options[include_report]",
+            "1",
+            @selection_defaults.include_report?,
+            id: "pdf_options_include_report"
+          ) %>
+          <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
+          <span class="pdf-options-phase__type">
+            <%= t("adm.projekts.projekts.evaluation.pdf_options.include_report") %>
+          </span>
+        </label>
+      </div>
+
+      <% phases = @evaluation.phases_data %>
+      <% phases.each do |phase| %>
+        <%
+          phase_id = phase["phase_id"].to_i
+          available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase["phase_type"])
+        %>
+        <div class="pdf-options-phase" data-controller="check-all">
+          <label class="pdf-options-phase__toggle">
+            <%= check_box_tag(
+              "pdf_options[phase_ids][]",
+              phase_id,
+              @selection_defaults.include_phase?(phase_id),
+              id: "pdf_options_phase_#{phase_id}",
+              data: { check_all_target: "selectAll", action: "check-all#toggle" }
+            ) %>
+            <strong><%= phase["phase_title"] %></strong>
+            <span class="pdf-options-phase__type">
+              <%= t("adm.projekts.projekts.evaluation.#{phase["phase_type"].to_s.split("::").last.underscore}",
+                default: phase["phase_type"].to_s.split("::").last) %>
+            </span>
+          </label>
+
+          <div class="pdf-options-sections">
+            <% available_sections.each do |section_key| %>
+              <label class="pdf-options-section">
+                <%= check_box_tag(
+                  "pdf_options[sections][#{phase_id}][]",
+                  section_key,
+                  @selection_defaults.include_section?(phase_id, section_key),
+                  id: "pdf_options_section_#{phase_id}_#{section_key}",
+                  data: { check_all_target: "checkbox" }
+                ) %>
+                <%= t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}") %>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="d-flex gap-2 mt-4 align-items-center justify-content-end">
+        <%= render Adm::ButtonWithProgressComponent.new(
+          label: t(".download"),
+          loading_label: t(".downloading"),
+          success_label: t(".ready"),
+          icon: "picture_as_pdf",
+          success_icon: "check_circle",
+          style: :primary,
+          button_type: "submit",
+          extra_root_data: { "adm--evaluation-pdf-download-target": "buttonWrapper" }
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</div>

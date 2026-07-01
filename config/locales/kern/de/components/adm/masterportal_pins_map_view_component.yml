@@ -1,0 +1,8 @@
+de:
+  components:
+    adm:
+      masterportal_pins_map_view_component:
+        title: Pins auf der Karte
+        total:
+          one: "%{count} Pin angezeigt"
+          other: "%{count} Pins angezeigt"

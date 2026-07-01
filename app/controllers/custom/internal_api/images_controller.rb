@@ -1,7 +1,7 @@
 class InternalApi::ImagesController < InternalApi::BaseController
   def create
     pictures = params[:images].map do |image|
-      picture = Ckeditor::Picture.new
+      picture = AdminImage.new
       picture.attach_uploaded_file(image)
       picture
     end

@@ -1,0 +1,29 @@
+// Close button used by the shared modals and studio dialogs (markup:
+// "close-button round-icon-button"). Values mirror the main app's effective
+// Foundation foundation-close-button output (+ the layout.scss top override),
+// so the main-app cascade is unchanged; needed standalone for /adm pages,
+// where Foundation is not loaded. Self-contained — no pack tokens.
+
+.close-button {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  z-index: 10;
+  right: 1rem;
+  top: 0.75rem;
+  font-size: 2em;
+  line-height: 1;
+  color: #222;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    color: #222;
+  }
+}
+
+.button.close-button {
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+}

@@ -101,11 +101,15 @@
     }
   }
 
-  body:has(.projekt-page--admin-topbar) & .proposal-navigation {
+  body:has(.studio-admin-topbar) & .proposal-navigation {
     top: $topbar-height + $admin-topbar-height;
 
+    // Below the small-tablet breakpoint the admin topbar is hidden
+    // (_admin_topbar.scss), so drop its height from this fixed offset — the
+    // Sass var is compile-time and can't follow the runtime
+    // --admin-topbar-height: 0 override.
     @media(max-width: $small-tablet-viewport-start) {
-      top: $topbar-height-mobile + $mobile-custom-fixed-tabs-height + $admin-topbar-height;
+      top: $topbar-height-mobile + $mobile-custom-fixed-tabs-height;
     }
   }
 

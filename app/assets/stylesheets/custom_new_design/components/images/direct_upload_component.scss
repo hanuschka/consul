@@ -18,6 +18,7 @@
     right: 0;
     padding: 0;
     overflow: hidden;
+    pointer-events: none;
   }
 
   img {
@@ -44,11 +45,16 @@
   width: 100%;
   height: 100%;
   display: none;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
-  backdrop-filter: saturate(1.2) brightness(0.96);
+  pointer-events: none;
+  background: var(--generating-overlay-color, #faf6ea);
 
   svg {
     width: 50px;
@@ -60,14 +66,25 @@
   }
 }
 
+.direct-image-upload--generating-animation--title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.direct-image-upload--generating-animation--subtitle {
+  font-size: 14px;
+  color: #5a5a5a;
+  text-align: center;
+  max-width: 280px;
+  line-height: 1.4;
+}
+
 .direct-image-upload {
   &.-generating-image {
     .direct-image-upload--generating-animation {
       display: flex;
-    }
-
-    .direct-image-upload--file-attach-area {
-      opacity: 0;
     }
   }
 }
@@ -118,6 +135,36 @@
   width: 100%;
   height: 100%;
   cursor: pointer;
+}
+
+.direct-image-upload--confirmation-step {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.direct-image-upload {
+  &.-confirmation-pending {
+    .direct-image-upload--file-attach-area {
+      // Hide without removing the layout box so the container keeps its
+      // content height. On mobile the container is `height: auto`, so using
+      // `display: none` here would collapse it to 0 and the absolutely
+      // positioned confirmation step (anchored to the container edges) would
+      // have no height to fill. `visibility: hidden` also disables pointer
+      // events on the placeholder, and is a no-op on desktop (fixed height).
+      visibility: hidden;
+    }
+
+    .direct-image-upload--confirmation-step {
+      display: block;
+    }
+  }
 }
 
 .direct-image-upload--file-field {
@@ -184,7 +231,7 @@
   &.-preview-set {
     display: block;
 
-    .direct-image-upload--image-preview {
+    .direct-image-upload--image-preview:not([src=""]) {
       display: block;
       z-index: 2;
     }
@@ -193,6 +240,10 @@
       background-color: white;
     }
   }
+}
+
+.direct-image-upload--image-preview {
+  display: none;
 }
 
 .direct-image-upload--file-title {

@@ -7,7 +7,7 @@
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("custom.deficiency_reports.mailers.send_feedback_form_link.p1",
-        deficiency_report_link: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report)),
+        deficiency_report_link: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank"),
         status: @deficiency_report.status.name)
     ) %>
   </p>
@@ -33,10 +33,12 @@
     <%= t("custom.deficiency_reports.mailers.send_feedback_form_link.p4") %>
   </p>
 
-  <% if Setting["mailer_from_deficiency_report_address"].present? %>
-    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <em><%= sanitize t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"]) %></em>
-    </p>
+  <% unless custom_email_footer_present? %>
+    <% if Setting["mailer_from_deficiency_report_address"].present? %>
+      <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+        <em><%= sanitize t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"]) %></em>
+      </p>
+    <% end %>
   <% end %>
 
 </td>

@@ -67,7 +67,7 @@ de:
             users_can_create_proposals: Vorschläge einreichen
             users_can_create_proposals_description: Nutzer können Vorschläge erstellen
             create_proposal_with_ai: Vorschlag mit KI erstellen
-            create_proposal_with_ai_description: Zeigt die Schaltfläche "Vorschlag mit KI erstellen" an
+            create_proposal_with_ai_description: Aktiviert die Schaltfläche "Vorschlag mit KI erstellen" im Frontend. Nutzer können dann mithilfe eines KI-Assistenten Vorschläge formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der entstandene Entwurf bleibt vor dem Einreichen vollständig editierbar.
             allow_voting: Unterstützung
             allow_voting_description: Aktivieren Sie die Unterstützung für Vorschläge
             enable_proposal_support_withdrawal: Vorschlagsunterstützung zurückziehen
@@ -151,7 +151,7 @@ de:
             public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           resource:
             create_investment_with_ai: Investitionsvorschlag mit KI erstellen
-            create_investment_with_ai_description: Zeigt die Schaltfläche "Investitionsvorschlag mit KI erstellen" an
+            create_investment_with_ai_description: Aktiviert die Schaltfläche "Investitionsvorschlag mit KI erstellen" im Frontend. Nutzer können mithilfe eines KI-Assistenten einen Investitionsvorschlag formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der Entwurf bleibt vor dem Einreichen vollständig editierbar.
           form:
             allow_attached_image: Titelbild hinzufügen
             allow_attached_image_description: Ermöglicht es den Teilnehmenden ein Titelbild hinzuzufügen.

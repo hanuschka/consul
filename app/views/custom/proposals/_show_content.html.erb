@@ -56,15 +56,21 @@
         <% end %>
         <%= render ResourcePage::BannerComponent.new(resource: proposal) %>
 
-        <div class="resource-page--description new-card main-content-card">
-          <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
-        </div>
+        <% if proposal.masterportal_pin.present? %>
+          <%= render Shared::MasterportalPinPropertiesComponent.new(
+            masterportal_pin: proposal.masterportal_pin
+          ) %>
+        <% else %>
+          <div class="resource-page--description new-card main-content-card">
+            <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
+          </div>
+        <% end %>
 
         <% if projekt_phase_feature?(proposal.projekt_phase, "form.show_map") && proposal.map_location.present? %>
           <div class="margin-bottom not-print">
             <%= render Shared::MapComponent.new(
               mappable: proposal,
-              features: proposal.map_location&.features_json_data
+              masterportal_focus_view: true
             ) %>
           </div>
         <% end %>
@@ -272,13 +278,15 @@
           <% end %>
         <% end %>
 
-        <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
-          <%= render "shared/social_share",
-            share_title: t("proposals.show.share"),
-            title: proposal.title,
-            url: proposal_url(proposal),
-            description: proposal.title,
-            mobile: proposal.title %>
+        <% if projekt_phase_feature?(proposal.projekt_phase, "resource.show_social_share_buttons") %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
+            <%= render "shared/social_share",
+              share_title: t("proposals.show.share"),
+              title: proposal.title,
+              url: proposal_url(proposal),
+              description: proposal.title,
+              mobile: proposal.title %>
+          <% end %>
         <% end %>
 
         <% if current_user.present? && current_user.administrator? %>

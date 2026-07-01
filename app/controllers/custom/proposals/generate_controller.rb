@@ -1,6 +1,6 @@
 class Proposals::GenerateController < AiProposalFlowBaseController
   def new_flow
-    @generate_draft_url = generate_proposal_draft_path
+    @generate_draft_url = generate_proposal_draft_path(projekt_phase_id: @projekt_phase.id)
     render "ai_proposal_flow/new_flow"
   end
 
@@ -32,8 +32,7 @@ idea_text: @draft_resource.ai_idea_text)
     @draft_resource.update!(params_with_image_user)
 
     if @draft_resource.projekt_phase.user_resource_criteria.exists?
-      evaluation = ProposalAiDraft::EvaluateCriteriaService.call(resource: @draft_resource)
-      @draft_resource.update!(ai_evaluation_result: evaluation)
+      ProposalAiDraft::EvaluateTwoTierService.call(resource: @draft_resource)
 
       redirect_to generate_proposal_evaluation_path(@draft_resource)
     else
@@ -105,6 +104,7 @@ idea_text: @draft_resource.ai_idea_text)
         description: draft_data["description"]
       )
       proposal.tag_list = draft_data["tag_list"]
+      assign_generated_taxonomy(proposal, draft_data, @projekt_phase)
       proposal.save!(validate: false)
 
       if draft_data["location"].present?
@@ -120,6 +120,8 @@ idea_text: @draft_resource.ai_idea_text)
     def draft_resource_params
       params.require(:proposal).permit(
         :title, :description, :tag_list, :video_url, :on_behalf_of, :responsible_name,
+        :sentiment_id,
+        projekt_label_ids: [],
         image_attributes: [:attachment, :title, :credits, :cached_attachment, :_destroy, :user_id]
       )
     end

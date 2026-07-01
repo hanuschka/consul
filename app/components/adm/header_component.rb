@@ -1,16 +1,21 @@
 class Adm::HeaderComponent < ApplicationComponent
   renders_one :hint, Adm::HintComponent
+  renders_one :actions
+  renders_one :after_title
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, frontend_url: nil)
+  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, ultracompact: false, frontend_url: nil)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url
     @narrow = narrow
+    @compact = compact
+    @ultracompact = ultracompact
     @frontend_url = frontend_url
   end
 
   def before_render
     @frontend_url, @frontend_label = resolve_frontend_url_and_label
+    @back_button_url ||= controller.instance_variable_get(:@back_button_url)
   end
 
   def breadcrumb_item(breadcrumb, is_last)
@@ -56,7 +61,7 @@ class Adm::HeaderComponent < ApplicationComponent
       projekt_phase = controller.instance_variable_get(:@projekt_phase)
       projekt = controller.instance_variable_get(:@projekt) || projekt_phase&.projekt
 
-      if projekt
+      if projekt && projekt.page&.slug.present?
         base = "/#{projekt.page.slug}"
         url = projekt_phase ? "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer" : base
         return [url, t.call(:projekt)]
@@ -66,11 +71,15 @@ class Adm::HeaderComponent < ApplicationComponent
       return ["/#{landing_page.slug}", t.call(:landing_page)] if landing_page&.slug.present?
 
       if controller.class.module_parent_name == "Adm::DeficiencyReports"
-        return [helpers.deficiency_reports_path, t.call(:deficiency_reports)]
+        feature = Setting["deficiency_reports.feature_name"].presence
+        label = feature ? I18n.t("components.adm.header_component.frontend_labels.feature", feature: feature) : t.call(:deficiency_reports)
+        return [helpers.deficiency_reports_path, label]
       end
 
       if controller.class.module_parent_name == "Adm::Ideas"
-        return [helpers.ideas_path, t.call(:ideas)]
+        feature = Setting["ideas.feature_name"].presence
+        label = feature ? I18n.t("components.adm.header_component.frontend_labels.feature", feature: feature) : t.call(:ideas)
+        return [helpers.ideas_path, label]
       end
 
       [helpers.root_path, t.call(:default)]

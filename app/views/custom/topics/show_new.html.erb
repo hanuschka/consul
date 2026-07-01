@@ -17,7 +17,7 @@
 
       <%= render ResourcePage::BannerComponent.new(resource: @communitable_resource, compact: true) %>
       <div class="new-card main-content-card margin-bottom">
-        <h3><%= @topic.title %></h1>
+        <h3><%= @topic.title %></h3>
         <p><%= @topic.description %></p>
       </div>
       <%= render Shared::NewCommentsComponent.new(@topic, @comment_tree) %>

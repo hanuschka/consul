@@ -16,24 +16,16 @@
 .accordion-title {
   color: black;
   font-size: 18px;
-}
 
-.projekt-content-block {
-  .column:last-child:not(:first-child), .columns:last-child:not(:first-child) {
-    float: left;
+  &::before {
+    font-size: 22px;
   }
 }
 
-.has-tip {
-  border-bottom: unset;
-  cursor: pointer;
-}
-
-.tooltip {
-  max-width: 30rem;
-  padding: 0.75rem 0.95rem;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+.custom-content-block {
+  .column:last-child:not(:first-child), .columns:last-child:not(:first-child) {
+    float: left;
+  }
 }
 
 .orbit-wrapper {

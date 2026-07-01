@@ -1,0 +1,45 @@
+// Cross-pack accordion built on native <details>/<summary>. Self-contained
+// — no dependency on kern-ux or Foundation base styles. Use the same
+// disclosure pattern in both the main app pack and the /adm pack.
+//
+// Usage: render Shared::AccordionComponent.
+
+.shared-accordion {
+  > .shared-accordion--head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      content: "";
+      display: none;
+    }
+  }
+}
+
+.shared-accordion--head-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.shared-accordion--chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: #1A3DA5;
+  transition: transform 0.2s ease;
+}
+
+.shared-accordion[open] > .shared-accordion--head .shared-accordion--chevron {
+  transform: rotate(180deg);
+}

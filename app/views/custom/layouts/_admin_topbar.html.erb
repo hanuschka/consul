@@ -1,27 +1,48 @@
-<div class="projekt-page--admin-topbar">
-  <div class="projekt-page--admin-topbar--inner">
-    <div class="projekt-page--admin-topbar-left hide-on-medium-tablet">
+<div class="studio-admin-topbar">
+  <div class="studio-admin-topbar--inner">
+    <div
+      class="studio-admin-topbar-left"
+      role="radiogroup"
+      aria-label="<%= t('custom.projekts.page.topbar.view_switch_label') %>"
+    >
       <button
-        class="button hollow -selected js-admin-view-button js-view-mode-button"
+        class="button hollow -selected js-admin-view-button js-studio-preview-mode-button"
         data-view-mode="admin"
         type="button"
+        tabindex="-1"
+        role="radio"
+        title="<%= t('custom.projekts.page.topbar.admin_view') %>"
+        aria-checked="true"
       >
-        <i class="fas fa-user-shield"></i>
+        <i class="fas fa-user-shield" aria-hidden="true"></i>
         <span><%= t('custom.projekts.page.topbar.admin_view') %></span>
       </button>
 
       <button
-        class="button hollow js-user-view-button js-view-mode-button"
+        class="button hollow js-user-view-button js-studio-preview-mode-button"
         data-view-mode="user"
         type="button"
+        tabindex="-1"
+        role="radio"
+        title="<%= t('custom.projekts.page.topbar.user_view') %>"
+        aria-checked="false"
       >
-        <i class="fas fa-user"></i>
+        <i class="fas fa-user" aria-hidden="true"></i>
         <span><%= t('custom.projekts.page.topbar.user_view') %></span>
       </button>
     </div>
 
-    <div class="projekt-page--admin-topbar-right">
-      <%= content_for :admin_topbar_actions %>
-    </div>
+    <% if content_for?(:admin_topbar_display_settings) %>
+      <span class="studio-admin-topbar-divider" aria-hidden="true"></span>
+      <div class="studio-admin-topbar-settings">
+        <%= content_for :admin_topbar_display_settings %>
+      </div>
+    <% end %>
+
+    <% if content_for?(:admin_topbar_actions) %>
+      <div class="studio-admin-topbar-right">
+        <%= content_for :admin_topbar_actions %>
+      </div>
+    <% end %>
   </div>
 </div>

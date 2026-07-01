@@ -31,6 +31,8 @@ class Projekt < ApplicationRecord
   belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
+  has_one :projekt_evaluation, dependent: :destroy
+  has_one :projekt_evaluation_visibility, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -101,7 +103,6 @@ class Projekt < ApplicationRecord
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
-  # before_validation :set_default_color - should projekt still have a color?
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity
 
@@ -126,11 +127,11 @@ class Projekt < ApplicationRecord
     end
 
     InternalApiClient.active_dt? && (
-      on_global_overview? || acceptable_to_be_exported_for_global_overview?
+      on_dt_global_overview? || acceptable_to_be_exported_for_global_overview?
     )
   end
 
-  # validates :color, format: { with: /\A#[\da-f]{6}\z/i } - still color?
+  validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
 
   attribute :order_number, :integer, default: 0
@@ -185,26 +186,25 @@ class Projekt < ApplicationRecord
     activated
       .with_published_custom_page
       .show_in_overview_page
+      .order("projekts.created_at DESC")
   }
 
-  scope :index_order_underway, ->() {
-    current
+  scope :index_order_underway, ->(timestamp = Time.zone.today) {
+    current(timestamp)
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases, :projekt_settings)
-      .select { |p| p.projekt_phases.regular_phases.any?(&:current?) || p.projekt_settings.find_by(key: "projekt_feature.general.consider_underway").enabled? }
+      .where(current_regular_phase_exists(timestamp).or(consider_underway_setting_exists))
+      .order("projekts.created_at DESC")
   }
 
-  scope :index_order_ongoing, ->() {
-    current
+  scope :index_order_ongoing, ->(timestamp = Time.zone.today) {
+    current(timestamp)
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
-      .includes(:projekt_phases)
-      .select do |p|
-        p.projekt_phases.regular_phases.all? { |phase| !phase.current? }
-      end
+      .where(Arel::Nodes::Not.new(current_regular_phase_exists(timestamp)))
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
@@ -213,6 +213,7 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
@@ -220,6 +221,7 @@ class Projekt < ApplicationRecord
       .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_individual_list, -> {
@@ -227,11 +229,33 @@ class Projekt < ApplicationRecord
       .show_in_overview_page
       .joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
       .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
+      .order("projekts.created_at DESC")
   }
 
   scope :index_order_drafts, -> {
     not_activated
+      .order("projekts.created_at DESC")
   }
+
+  def self.current_regular_phase_exists(timestamp = Time.zone.today)
+    ProjektPhase
+      .regular_phases
+      .current(timestamp)
+      .where(ProjektPhase.arel_table[:projekt_id].eq(arel_table[:id]))
+      .unscope(:order)
+      .arel
+      .exists
+  end
+
+  def self.consider_underway_setting_exists
+    ProjektSetting
+      .where(ProjektSetting.arel_table[:projekt_id].eq(arel_table[:id]))
+      .where(key: "projekt_feature.general.consider_underway")
+      .where.not(value: [nil, ""])
+      .unscope(:order)
+      .arel
+      .exists
+  end
 
   scope :not_in_individual_list, -> {
     joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
@@ -340,6 +364,7 @@ class Projekt < ApplicationRecord
   def self.with_pm_permission_to(permissions, projekt_manager)
     return Projekt.none unless projekt_manager.present?
     return Projekt.none if permissions.blank?
+    return all if projekt_manager.manage_all_projekts?
 
     joins(:projekt_manager_assignments).where(
       "projekt_manager_assignments.projekt_manager_id = ? AND projekt_manager_assignments.permissions && ARRAY[?]::text[]",
@@ -738,14 +763,20 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def content_blocks_body
+    content_blocks
+      .sort_by(&:position)
+      .map(&:body)
+      .compact_blank
+      .join("\n")
+  end
+
   def perform_sync_update_for_global_overview
     if should_be_exported_for_global_overview?
       if hidden_at.present?
         sync_destroy_for_global_overview
       else
-        Projekts::OverviewProjektUpdatedJob.perform_later(
-          self
-        )
+        Projekts::OverviewProjektUpdatedJob.perform_later(self)
       end
     end
   end
@@ -827,7 +858,7 @@ class Projekt < ApplicationRecord
           siblings.with_order_number.pluck(:order_number).each_cons(2).all? { |a, b| b == a + 1 }
         new_order = 1
         siblings.with_order_number.each do |projekt|
-          projekt.update!(order_number: new_order)
+          projekt.update_column(:order_number, new_order)
           new_order += 1
         end
       end
@@ -841,10 +872,6 @@ class Projekt < ApplicationRecord
       (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
         map_layers << map_layer.dup
       end
-    end
-
-    def set_default_color
-      self.color ||= "#004a83"
     end
 
     def touch_updated_at(geozone)
@@ -871,8 +898,9 @@ class Projekt < ApplicationRecord
     end
 
     def sync_destroy_for_global_overview
-      if should_be_exported_for_global_overview?
-        Projekts::OverviewProjektDestroyedJob.perform_later(id)
-      end
+      return unless on_dt_global_overview?
+
+      Projekts::OverviewProjektDestroyedJob.perform_later(id)
+      update_column(:on_dt_global_overview, false) unless destroyed?
     end
 end

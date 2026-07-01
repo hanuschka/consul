@@ -6,16 +6,21 @@ module PdfServices
     end
 
     def call
-      Prawn::Document.new(page_size: "A4", margin: [0, 30, 50, 30]) do |pdf|
+      Prawn::Document.new(page_size: "A4", margin: [0, 18, 15, 18]) do |pdf|
         setup_fonts(pdf)
-        render_header_banner(pdf, title_text: "#{@deficiency_report.title} (#{@deficiency_report.id})", qr_url: record_url)
-        pdf.bounding_box([40, pdf.cursor], width: pdf.bounds.width - 80, height: pdf.cursor - 30) do
-          render_meta_card(pdf, meta_rows)
+        render_header_banner(pdf, title_text: "#{@deficiency_report.title} (#{@deficiency_report.id})")
+        pdf.indent(24, 24) do
+          render_meta_card(pdf, meta_rows, qr_url: record_url, timestamp: I18n.l(Time.current, format: :long))
           render_description(pdf, @deficiency_report.description)
-          render_image_and_map_side_by_side(pdf, @deficiency_report.image, @deficiency_report.map_location)
+
+          render_image_and_map_stacked(
+            pdf,
+            @deficiency_report.image,
+            @deficiency_report.map_location,
+            image_max_height: [520, pdf.cursor].min
+          )
           render_official_answer(pdf)
         end
-        render_footer(pdf)
       end
     end
 

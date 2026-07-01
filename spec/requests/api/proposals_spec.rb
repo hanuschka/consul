@@ -21,9 +21,9 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all proposals submitted for a specific projekt phase. Proposals are citizen-initiated action items or projects proposed within a participation phase. Access filtering: public_data users automatically see only published (non-draft) and non-archived proposals. The for_public_render parameter is independent and can be used to apply additional filtering. Returns paginated results. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :sort, in: :query, type: :string, required: false, description: "Sort proposals by. Valid values: 'created_at' (default, oldest first), 'hot_score' (trending/most activity), 'confidence_score' (highest confidence first), 'relevance' (most voted first), 'archival_date' (most recently archived first)"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (default: 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of proposals per page (default: 100, max: 500)'
+      parameter name: :sort, in: :query, type: :string, required: false, description: "Sort proposals by. Valid values: 'created_at' (**default**, oldest first), 'hot_score' (trending/most activity), 'confidence_score' (highest confidence first), 'relevance' (most voted first), 'archival_date' (most recently archived first)"
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of proposals per page (**default:** 100, max: 500)'
       parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, returns only proposals that are publicly visible and ready for rendering on frontend (published, non-archived, non-retired). This filter is independent: public_data users will have discard_draft and discard_archived applied automatically, and can additionally use for_public_render to apply stricter filtering.'
 
       response '200', 'proposals found and returned' do
@@ -215,6 +215,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a proposal' do
@@ -358,6 +360,44 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           expect(response.status).to eq(201)
         end
       end
+
+      response '201', 'proposal created as draft (published: false)' do
+        let!(:context) { create_phase_with_context }
+        let(:projekt_phase_id) { context[2].id }
+        let(:geozone_id) { context[1].id }
+        let(:proposal) do
+          {
+            proposal: {
+              responsible_name: 'Jane Smith',
+              geozone_id: geozone_id,
+              resource_terms: true,
+              title: 'Draft Proposal',
+              description: 'A proposal that should remain unpublished',
+              published: false
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(Proposal.unscoped.find(data['data']['proposal']['id']).published?).to eq(false)
+        end
+      end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -367,8 +407,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all proposals across all projekt phases. Access filtering: public_data users automatically see only published (non-draft) and non-archived proposals. The for_public_render parameter is independent and can be used to apply additional filtering. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (default: 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
       parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, returns only proposals that are publicly visible and ready for rendering on frontend (published, non-archived, non-retired). This filter is independent: public_data users will have discard_draft and discard_archived applied automatically, and can additionally use for_public_render to apply stricter filtering.'
 
       response '200', 'proposals found' do
@@ -422,6 +462,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -586,6 +628,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a proposal' do
@@ -775,6 +819,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           expect(response.status).to eq(200)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a proposal' do
@@ -891,6 +937,102 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
+    end
+  end
+
+  path '/api/proposals/{id}/publish' do
+    parameter name: :id, in: :path, type: :integer, description: 'Proposal ID'
+
+    patch 'Publish a proposal' do
+      tags 'Proposals'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Publish a previously created proposal, setting its published_at timestamp and making it visible in the frontend. Idempotent: publishing an already-published proposal returns it unchanged without re-sending notifications. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      response '200', 'proposal published' do
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            title: 'Draft Proposal',
+            description: 'Draft Description'
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['data']['proposal']).to be_present
+          expect(record.reload.published?).to eq(true)
+        end
+      end
+
+      response '404', 'proposal not found' do
+        let(:id) { 999_999 }
+        run_test!
+      end
+
+      response '403', 'forbidden - admin access required' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          proposal = Proposal.new(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            title: 'Draft Proposal',
+            description: 'Draft Description'
+          )
+          proposal.save!
+          proposal
+        end
+        let(:id) { record.id }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     type: { type: :string },
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['error']['type']).to eq('forbidden')
+        end
+      end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

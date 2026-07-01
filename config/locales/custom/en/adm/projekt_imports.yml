@@ -1,0 +1,191 @@
+en:
+  adm:
+    projekts:
+      imports:
+        title: "Projekt import"
+        from_files:
+          new:
+            title: "Import projekt from document"
+            intro: "Upload one or more documents. The AI extracts a projekt structure that you can review and refine in chat before importing."
+            dropzone_label: "Drop files here or click to browse"
+            dropzone_hint: "Allowed: %{types}. Max %{size} total."
+            select_file: "Choose files"
+            drop_hint: "You can also drag & drop files here"
+            choose_other_file: "Choose another file"
+            processing_title: "Analysis in progress…"
+            processing_message: "Your files are being analyzed. This can take a moment."
+            progress_preparing: "Preparing…"
+            instructions_label: "Additional context (optional)"
+            instructions_placeholder: "Anything the document doesn't make clear — audience, scope, goals…"
+            generate_image_label: "Generate a title image with AI"
+            submit_label: "Start analysis"
+            progress:
+              extracting: "Extracting text from your documents…"
+              processing: "Analyzing the document with AI…"
+              chatting: "Almost ready — opening the chat…"
+            errors:
+              no_files: "Please select at least one file."
+              too_large: "The selected files exceed the 45 MB limit."
+              unsupported_type: "The file %{filename} is not a supported format."
+          show:
+            title: "Import progress"
+            failed_title: "Import failed"
+            stalled_title: "Analysis stuck"
+            stalled_message: "The analysis is taking unusually long and may have failed. You can discard this import and try again."
+            dismiss: "Discard"
+            upload_new: "Upload a new document"
+            diagnostics_title: "Technical details"
+            diagnostics_stage: "Failure stage"
+        list:
+          sections:
+            in_progress: "In progress"
+            failed: "Failed imports"
+            completed: "Completed imports"
+          states:
+            analyzing: "Analyzing"
+            stalled: "Stuck"
+            chatting: "In chat"
+            submitting: "Creating"
+            failed: "Failed"
+            completed: "Completed"
+          actions:
+            continue: "Continue"
+            open_chat: "Open chat"
+            open_details: "View details"
+            delete: "Delete"
+          no_files: "No files"
+          files_summary: "%{first} +%{count}"
+          created_at: "Created: %{time}"
+          finished_at: "Finished: %{time}"
+          projekt_created: "Projekt created: %{title}"
+          image_failed_note: "Title image could not be generated"
+          filters:
+            aria: "Filter by status"
+            all: "All"
+            in_progress: "In progress"
+            failed: "Failed"
+            completed: "Completed"
+          delete_dialog:
+            title: "Delete import?"
+            message: "This import will be permanently deleted:"
+            note: "The projekt created from it will be kept."
+            confirm: "Delete"
+            cancel: "Cancel"
+        chats:
+          show:
+            title: "Refine projekt import"
+            input_placeholder: "Reply to the AI — ask to change a field, add a phase, fix a date…"
+            send: "Send"
+            attach: "Attach document"
+            assistant_label: "AI"
+            user_label: "You"
+            confirm_import: "Import the projekt now? This creates a new projekt with all phases and content blocks."
+            import_dialog:
+              title: "Import projekt?"
+              confirm: "Import now"
+              cancel: "Cancel"
+            confirm_start_over: "Discard this import and start over?"
+            generate_image_toggle: "Generate title image"
+            created_banner_title: "This import created the following projekts:"
+            tooltips:
+              start_over:
+                title: "Start over"
+                text: "Discards this import entirely and returns to uploading a new document."
+              regenerate:
+                title: "Regenerate"
+                text: "Re-analyzes the original document and rebuilds the entire projekt structure from scratch."
+              summarize:
+                title: "Summarize"
+                text: "Creates a short, readable summary of the uploaded document in the chat."
+              generate_image:
+                title: "Generate cover image"
+                text: "When enabled, the AI automatically creates a matching cover image for the projekt during import."
+              import:
+                title: "Import projekt"
+                text: "Creates the projekt with all phases, content blocks, and settings. It stays deactivated and hidden from visitors until you activate it."
+              attach:
+                title: "Attach document"
+                text: "Adds another document to the conversation so the AI can take extra information into account."
+            commands:
+              regenerate: "Regenerate"
+              summarize: "Summarize document"
+              import: "Import projekt"
+              import_again: "Import as new projekt"
+              start_over: "Start over"
+            progress:
+              finalizing_data: "Finalizing your changes…"
+              resolving_content_blocks: "Building content blocks…"
+              creating_projekt: "Creating projekt, phases, and resources…"
+              generating_image: "Generating title image…"
+            errors:
+              extract_failed: "We could not read one or more of the attached files."
+              import_failed: "The import could not be completed."
+              dismiss: "Dismiss"
+        initial_message:
+          analysis_complete: "Document analysis complete"
+          analysis_intro: "Here is what I extracted from your document. Review the fields below — anything that doesn't look right, just tell me."
+          input_truncated_notice: "The document was very large and was shortened for analysis. Please review the extracted content carefully and add anything missing in the chat."
+          title: "Title"
+          subtitle: "Subtitle"
+          period: "Period"
+          categories: "Categories"
+          sdg_goals: "SDG goals"
+          phases: "Phases"
+          content_blocks: "Content blocks"
+          created: "created"
+          questions_intro: "A few questions to confirm:"
+          questions_outro: "Once everything looks right, click \"Import projekt\" above."
+          review_outro: "Click \"Import projekt\" above when you're ready."
+        default_questions:
+          title_correct: 'Is the project title "%{title}" correct?'
+          phases_missing: "What participation phases should this projekt include?"
+          phases_correct: "Are the extracted phases and their dates correct?"
+          dates_missing: "What are the planned start and end dates for this projekt?"
+        command_prompts:
+          regenerate: "Please re-analyze the original document and regenerate the projekt structure from scratch."
+          summarize: "Please provide a concise summary of the uploaded document."
+        changelog:
+          none: "No changes were made during the chat."
+          with_count:
+            one: "1 refinement applied during chat."
+            other: "%{count} refinements applied during chat."
+        errors:
+          empty_message: "Type a message or attach a document."
+          unknown_command: "Unknown command."
+          no_chat: "No chat session found for this import."
+          no_files: "No files provided."
+          too_large: "The selected files exceed the 45 MB limit."
+          unsupported_type: "The file %{filename} is not a supported format."
+          message_failed: "This response could not be generated. Try sending the message again."
+          ai_processing_failed: "AI processing failed: %{message}"
+          ai_chat_failed: "AI chat failed: %{message}"
+          ai_empty_response: "AI returned an empty response."
+          ai_malformed: "AI returned an invalid response. Please try again."
+          dt_prompt_missing: "Configuration error: the AI prompt could not be loaded from DT."
+          no_ai_result: "No AI result is available yet."
+          finalize_failed: "Failed to finalize data: %{message}"
+          resolve_content_blocks_failed: "Failed to resolve content blocks: %{message}"
+          create_projekt_failed: "Failed to create the projekt: %{message}"
+          missing_title: "AI did not return a projekt title."
+          extract_file_failed: "Could not read file %{filename}: %{message}"
+        failure_stages:
+          extract: "Text extraction"
+          extracting: "Text extraction"
+          ai_processing: "AI analysis"
+          processing: "AI analysis"
+          finalize: "Data finalization"
+          resolve_content_blocks: "Content blocks"
+          create_projekt: "Projekt creation"
+          submitting: "Projekt creation"
+          image_generation: "Title image generation"
+          unknown: "Unknown"
+        badge:
+          imported_by_ai: "AI"
+          imported_by_ai_title: "This projekt was imported from a document with AI."
+          imported_by_ai_description: "An AI automatically generated the phases and content from an uploaded document. Please review the details before publishing the projekt."
+        index:
+          new_button: "Import from document"
+          new_button_description: "Upload a document and let the AI build a complete projekt from it — phases and content included — which you can review before importing."
+          title: "Projekt imports"
+          new_import: "New projekt import"
+          empty: "No projekt imports yet."

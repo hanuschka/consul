@@ -1,11 +1,16 @@
 <input type="file" class="js-content-block-image-change-input content-block-image-change-input" accept="image/*">
 
-<!-- Image Management Dialog -->
-<dialog class="file-upload-manager-dialog js-file-upload-manager-dialog">
+<!-- File Management Dialog -->
+<dialog
+  class="file-upload-manager-dialog js-file-upload-manager-dialog"
+  data-type="<%= type %>"
+>
   <div class="file-upload-manager-dialog--overlay js-file-upload-manager-dialog-close"></div>
   <div class="file-upload-manager-dialog--content">
     <div class="file-upload-manager-dialog--header">
-      <h3>Bildergalerie</h3>
+      <h3 class="file-upload-manager-dialog--title">
+        <%= mode_config[:title_text] %>
+      </h3>
       <button class="close-button round-icon-button js-file-upload-manager-dialog-close" data-close="" aria-label="Close Accessible Modal" type="button">
         <i class="fa fa-xmark">
         </i>
@@ -15,26 +20,50 @@
     <!-- Controls Bar -->
     <div class="file-upload-manager-dialog--toolbar">
       <div class="file-upload-manager-dialog--toolbar-left">
-        <div class="file-upload-manager-dialog--search-wrapper">
-          <input type="text" class="file-upload-manager-dialog--search-input js-file-upload-manager-search" placeholder="Suchen...">
-          <button type="button" class="file-upload-manager-dialog--search-clear js-file-upload-manager-search-clear" style="display: none;">×</button>
-          <span class="file-upload-manager-dialog--search-icon"></span>
+        <div class="file-upload-manager-dialog--search-wrapper js-fm-filter-bar">
+          <%= render Shared::TextSearchFormComponent.new(
+            i18n_namespace: "files.search_form",
+            standalone: true,
+            disable_reset_button_submit: true,
+            input_extra_class: "js-fm-filter-search",
+            input_id: "file_manager_search_text_#{type}"
+          ) %>
         </div>
-
-        <%# <div class="file-upload-manager-dialog--filter-wrapper"> %>
-          <%#   <span>Filter:</span> %>
-          <%#   <button type="button" class="button js-file-upload-manager-filter active" data-type="picture"> %>
-            <%#     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> %>
-              <%#       <path d="M21.75 3.75H2.25C1.83516 3.75 1.5 4.08516 1.5 4.5V19.5C1.5 19.9148 1.83516 20.25 2.25 20.25H21.75C22.1648 20.25 22.5 19.9148 22.5 19.5V4.5C22.5 4.08516 22.1648 3.75 21.75 3.75Z" fill="currentColor"/> %>
-              <%#     </svg> %>
-            <%#     Bilder %>
-            <%#   </button> %>
-          <%# </div> %>
       </div>
 
       <div class="file-upload-manager-dialog--toolbar-right">
-        <button type="button" class="button js-file-upload-manager-edit" style="display: none;">Bild editieren</button>
-        <button type="button" class="button js-file-upload-manager-upload">Neues Bild hochladen</button>
+        <% if type == "picture" %>
+          <button type="button" class="studio-edit-button js-file-upload-manager-fullsize" style="display: none;">
+            <i class="fa fa-expand"></i>
+            <%= t("files.fullsize_preview.button") %>
+          </button>
+        <% end %>
+        <button type="button" class="studio-edit-button js-file-upload-manager-info" style="display: none;">
+          <i class="fa fa-info-circle"></i>
+          <%= t("files.info_modal.button") %>
+        </button>
+        <button type="button" class="studio-edit-button js-file-upload-manager-edit" style="display: none;">
+          <i class="fa fa-pen"></i>
+          Datei editieren
+        </button>
+        <% if type == "picture" %>
+          <rich-tooltip placement="top" delay="1000" trigger-only hover-only shadow="heavy">
+            <button type="button" class="studio-edit-button file-upload-manager-dialog--upload-button js-file-upload-manager-upload-crop">
+              <i class="fa fa-crop"></i>
+              <%= t("files.card.upload_with_crop") %>
+            </button>
+            <template>
+              <span class="rich-tooltip-content">
+                <span class="rich-tooltip-content--title"><%= t("files.card.upload_with_crop_tooltip_title") %></span>
+                <span class="rich-tooltip-content--text"><%= t("files.card.upload_with_crop_tooltip_text") %></span>
+              </span>
+            </template>
+          </rich-tooltip>
+        <% end %>
+        <button type="button" class="studio-edit-button -green file-upload-manager-dialog--upload-button js-file-upload-manager-upload">
+          <i class="fa fa-upload"></i>
+          <%= mode_config[:upload_text] %>
+        </button>
       </div>
     </div>
 
@@ -52,7 +81,7 @@
     </div>
 
     <!-- Template for temporary uploading images -->
-    <template id="file-upload-manager-uploading-template">
+    <template class="js-file-upload-manager-uploading-template">
       <div class="file-upload-manager-dialog--item -uploading" data-id="">
         <div class="file-upload-manager-dialog--item-thumb">
           <div class="file-upload-manager-dialog--item-uploading">
@@ -61,28 +90,35 @@
             <div class="loading-spinner-inline"></div>
           </div>
          <img class="js-file-upload-manager-dialog_item-image" src="" alt="">
+         <i class="fa fa-file file-upload-manager-dialog--item-icon js-file-upload-manager-dialog_item-icon" style="display: none;"></i>
+         <span class="file-upload-manager-dialog--item-badge -dimensions js-file-manager-badge-dimensions" style="display: none;"></span>
+         <span class="file-upload-manager-dialog--item-badge -size js-file-manager-badge-size" style="display: none;"></span>
         </div>
         <div class="file-upload-manager-dialog--item-meta">
-          <p class="file-upload-manager-dialog--item-title" title=""></p>
+          <p
+            class="file-upload-manager-dialog--item-title"
+            title=""
+          ></p>
           <div class="file-upload-manager-dialog--item-alt">Wird hochgeladen...</div>
         </div>
       </div>
     </template>
 
     <div class="file-upload-manager-dialog--footer">
-      <button type="button" class="button image-upload-gallery--select-image-btn js-file-upload-manager-select">
+      <button type="button" class="studio-edit-button -green image-upload-gallery--select-image-btn js-file-upload-manager-select">
+        <i class="fa fa-check"></i>
         Wählen
       </button>
     </div>
 
     <!-- Hidden file input for uploads -->
-    <input type="file" class="js-file-upload-manager-file-input" accept="image/*" style="display: none;">
+    <input type="file" class="js-file-upload-manager-file-input" style="display: none;">
   </div>
 
   <!-- Edit Modal -->
   <div class="file-upload-manager-edit-modal js-file-upload-manager-edit-modal">
     <div class="file-upload-manager-edit-modal__overlay js-file-upload-manager-edit-close"></div>
-    <div class="file-upload-manager-edit-modal__content">
+    <div class="file-upload-manager-edit-modal__content file-manager-modal-panel">
       <div class="file-upload-manager-edit-modal__header">
         <span>Einstellungen zum Bild</span>
         <button class="close-button round-icon-button js-file-upload-manager-edit-close" data-close="" aria-label="Close Accessible Modal" type="button">
@@ -95,25 +131,49 @@
           <label>Titel</label>
           <input type="text" class="js-file-upload-manager-edit-title" placeholder="Titel">
         </div>
-        <div class="file-upload-manager-edit-modal__field">
-          <label>Beschreibung</label>
-          <textarea class="js-file-upload-manager-edit-description" placeholder="Beschreibung"></textarea>
-        </div>
-        <div class="file-upload-manager-edit-modal__field">
-          <label>Alternativer Text</label>
-          <input type="text" class="js-file-upload-manager-edit-alt" placeholder="Alternativer Text (empfohlen)">
-        </div>
       </div>
       <div class="file-upload-manager-edit-modal__footer">
-        <button type="button" class="file-upload-manager-dialog--btn-danger js-file-upload-manager-delete">
+        <button type="button" class="studio-edit-button -red js-file-upload-manager-delete">
           <i class="fa fa-trash"></i>
           Löschen
         </button>
-        <button type="button" class="file-upload-manager-dialog--btn-primary js-file-upload-manager-update">
+        <button type="button" class="studio-edit-button -green js-file-upload-manager-update">
           <i class="fa fa-save"></i>
           Aktualisieren
         </button>
       </div>
     </div>
   </div>
+
+  <!-- Info Modal -->
+  <div class="file-upload-manager-info-modal js-file-upload-manager-info-modal">
+    <div class="file-upload-manager-info-modal--overlay js-file-upload-manager-info-close"></div>
+    <div class="file-manager-modal-panel -wide">
+      <div class="file-upload-manager-info-modal--loading">
+        <div class="loading-spinner-inline"></div>
+      </div>
+      <div class="file-upload-manager-info-modal--content js-file-upload-manager-info-content"></div>
+    </div>
+  </div>
+
+  <!-- Fullsize Image Preview -->
+  <div class="file-upload-manager-fullsize-preview js-file-upload-manager-fullsize-preview">
+    <div class="file-upload-manager-fullsize-preview--overlay js-file-upload-manager-fullsize-close"></div>
+    <img
+      class="file-upload-manager-fullsize-preview--image js-file-upload-manager-fullsize-image"
+      src=""
+      alt=""
+    >
+    <button
+      class="close-button round-icon-button file-upload-manager-fullsize-preview--close js-file-upload-manager-fullsize-close"
+      aria-label="<%= t("files.fullsize_preview.close") %>"
+      type="button"
+    >
+      <i class="fa fa-xmark"></i>
+    </button>
+  </div>
 </dialog>
+
+<% if type == "picture" %>
+  <%= render Shared::ImageCropperModalComponent.new %>
+<% end %>

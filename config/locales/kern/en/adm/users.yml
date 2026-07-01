@@ -3,9 +3,12 @@ en:
     users:
       index:
         title: Manage users
-        columns: Columns
-        csv_export_button: CSV export
+        download_csv: Download CSV
         csv_export_notice: The export is being prepared. You will receive an email with a download link.
+        total_label:
+          one: user
+          other: users
+        total_hint: Users in the current view (including active filters).
         table:
           email: Email
           first_name: First name
@@ -22,12 +25,17 @@ en:
           created_at: Created on
           last_sign_in: Last login
           verified_at: Verified on
+        no_users_title: No users yet
+        no_users_description: As soon as users register, they will appear here.
+        no_results_filtered_title: No users match the current filters
+        no_results_filtered_description: Adjust or remove the filters to see more users.
       user:
         table:
           actions:
             verify: Verify
             unverify: Remove verification
             edit: Edit
+            audits: Change log
       csv_download:
         not_found: The requested file was not found or has expired.
       edit:
@@ -35,6 +43,17 @@ en:
       form:
         submit_with_reverify: Save & run residents' registry reverification
         reverify_confirm: Are you sure?
+        hints:
+          email: The email address is used by the user to sign in to the platform and is the central channel for notifications. System messages such as confirmations, reminders and replies to contributions are sent to this address. Make sure it is spelled correctly, otherwise the user cannot sign in or receive any messages.
+          first_name: The first name is used together with the last name to clearly identify the user and may be shown on their contributions. Enter the first name exactly as it appears on the official ID document. Correct spelling is important so that a later identity verification can be carried out smoothly.
+          last_name: The last name is used together with the first name to clearly identify the user and may be shown on their contributions. Enter the last name exactly as it appears on the official ID document. Correct spelling is important so that a later identity verification can be carried out smoothly.
+          date_of_birth: The date of birth is used to check the minimum age required to take part and to clearly identify the user. Select the date from the picker or enter it in the DD.MM.YYYY format. Make sure it is accurate, as the date of birth may be used to verify the user's identity.
+          gender: Providing the gender is optional and supports the anonymous statistical evaluation of participation. This information is not shown publicly on the profile or on contributions. Leave the field empty if no entry is desired or if no suitable option is available.
+          city_name: The city indicates the town or municipality where the user is registered and can be used for location-based participation and evaluations. Enter the place exactly as it appears in the official address. A correct entry ensures that the user is assigned to the right districts and procedures.
+          plz: The postal code completes the user's address and supports the assignment to districts, constituencies or regional procedures. Enter the five-digit postal code of the place of residence. A correct entry is important so that location-based participation and evaluations are assigned to the right area.
+          street_name: The street name is part of the user's address and is used together with the house number and postal code to clearly determine the place of residence. Enter only the street name, without the house number. A correct entry is important so that the address can be assigned to a district or procedure.
+          street_number: The house number specifies the user's address within the given street. Enter only the house number, without additions such as letters or ranges; such details belong in the separate field. A correct entry ensures that the address can be assigned completely and unambiguously.
+          street_number_extension: 'The house number suffix adds extra details to the address, such as a letter or a range, for example "a" or "1-3". Enter only the suffix here, not the house number itself. The field can be left empty if the address has no such suffix.'
       flash:
         updated: User updated
         verified: User verified

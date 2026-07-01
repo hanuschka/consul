@@ -1,0 +1,116 @@
+.files-edit-modal {
+  width: 480px;
+}
+
+.files-edit-modal--form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.files-edit-modal--title {
+  margin: 0;
+  padding-right: 36px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #222222;
+}
+
+.files-edit-modal--body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.files-edit-modal--field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.files-edit-modal--label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #222222;
+}
+
+.files-edit-modal--input,
+.files-edit-modal--textarea {
+  width: 100%;
+  padding: 8px 12px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #222222;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+    border-color: #005fcc;
+  }
+}
+
+.files-edit-modal--textarea {
+  min-height: 96px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.files-edit-modal--footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid #ededed;
+}
+
+.files-edit-modal--cancel-button,
+.files-edit-modal--save-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 6px 16px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
+
+  &:focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 1px;
+  }
+}
+
+.files-edit-modal--cancel-button {
+  color: #222222;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+
+  &:hover {
+    background: #ededed;
+    border-color: #828282;
+  }
+}
+
+.files-edit-modal--save-button {
+  color: #ffffff;
+  background: #005fcc;
+  border: 1px solid #005fcc;
+
+  &:hover {
+    background: #00478f;
+    border-color: #00478f;
+  }
+}

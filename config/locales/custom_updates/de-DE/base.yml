@@ -8,6 +8,9 @@ de:
         content: Inhalt
         comments: Kommentare
         author: Autor
+    content_blocks:
+      admin_empty_hint_title: "Leerer Inhaltsblock"
+      admin_empty_hint: "Nur Sie (Admins & Manager*innen) sehen diesen Hinweis. Bewegen Sie den Mauszeiger über den Block und klicken Sie auf die Symbolleiste, um Inhalte hinzuzufügen — der Block bleibt für Besucher*innen verborgen, bis er Inhalt enthält."
     account:
       settings:
         email_digest: E-Mail-Erinnerung bei ungelesenen Benachrichtigungen
@@ -122,6 +125,14 @@ de:
         netiquette: Netiquette
         statistic_cookies_settings: Cookie Einstellungen
         contact_us: Kontaktieren Sie uns
+        sign_in_as_guest: Melden Sie sich als Gast an
+        sign_out_as_guest: Melden Sie sich als Gast ab
+        contact:
+          title: Kontakt
+        block_1:
+          admin_empty_hint: Hier können zusätzliche Footer-Informationen eingegeben werden. Dieser Block wird nur angezeigt, wenn er Inhalt enthält.
+        block_2:
+          admin_empty_hint: Hier können zusätzliche Footer-Informationen eingegeben werden. Dieser Block wird nur angezeigt, wenn er Inhalt enthält.
       header:
         account_link: Konto
         admin_link: Administration
@@ -218,6 +229,15 @@ de:
       pass_label: Reisepass Vorderseite
       pass_help: "Letzte vier Ziffern auf Reisepass Vorderseite:"
     welcome:
+      topbar:
+        nav_link_color_picker:
+          label: "Nav-Farbe"
+          tooltip: "Farbe der Links in der Top-Navigation der Startseite"
+          reset: "Auf Standardfarbe zurücksetzen"
+          status:
+            saving: "Wird gespeichert…"
+            saved: "Gespeichert"
+            error: "Fehler beim Speichern"
       active_projekt_cards:
         title: Aktive Beteiligung
       all_debates: Alle Diskussionen
@@ -247,6 +267,7 @@ de:
       sidebar:
         information:
           title: Information
+          admin_empty_hint: "Hier können zusätzliche Informationen oder Hinweise eingegeben werden. Dieser Block wird nur angezeigt, wenn er Inhalt enthält."
         users:
           title: Nutzer*innen
           sign_in: Jetzt anmelden

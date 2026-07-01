@@ -84,6 +84,12 @@ de:
           supports:
             one: "%{count} Einwand"
             other: "%{count} Einwände"
+        supports:
+          one: "%{count} Unterstützer*in"
+          other: "%{count} Unterstützer*innen"
+        votes_cast:
+          one: "%{count} Stimmabgabe"
+          other: "%{count} Stimmabgaben"
       dashboard:
         default_welcome_text_html: Wollen Sie als Autor oder Autorin eines Vorschlages ein konkretes Meinungsbild zu einer Sachfrage einholen? Dann nutzen Sie hierfür die Abstimmungsfunktion. Sie können eine oder mehrere Abstimmungen initiieren.
         polls:

@@ -12,8 +12,18 @@ class VoiceAssistantController < ApplicationController
     render json: response.parsed_response, status: response.code
   end
 
+  def create_session_v2
+    response =
+      VoiceAssistant::CreateSessionServiceV2.call(
+        codename: params[:codename],
+        consul_projekt_phase_id: params[:consul_projekt_phase_id]
+      )
+
+    render json: response.parsed_response, status: response.code
+  end
+
   def geocode_location_coordinates
-    geo_result = Geocoder.search(params[:location_name]).first
+    geo_result = Geocoding::LocalSearchService.call(query: params[:location_name]).first
 
     if geo_result.present?
       render json: {

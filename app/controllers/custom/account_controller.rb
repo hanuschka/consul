@@ -4,8 +4,6 @@ class AccountController < ApplicationController
   include ImageAttributes
   include HasRegisteredAddress
 
-  respond_to :js, only: [:edit_username]
-
   def show
     @account_individial_groups_hard = IndividualGroup.hard
     @account_individial_groups_soft = IndividualGroup.soft
@@ -26,11 +24,11 @@ class AccountController < ApplicationController
 
   def refresh_activities; end
 
-  def edit_username; end
-
   def update_username
-    unless params["user"]["cancel_changes"] == "true"
-      @account.update(username: params["user"]["username"])
+    if @account.update(username: params.dig("user", "username"))
+      render json: { name: @account.name, username: @account.username }
+    else
+      render json: { errors: @account.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

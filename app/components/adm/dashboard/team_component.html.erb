@@ -1,0 +1,35 @@
+<div class="adm-dashboard__section adm-dashboard__people-col">
+  <div class="adm-dashboard__section-header">
+    <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+    <h3><%= t(".title") %></h3>
+  </div>
+
+  <% if members.any? %>
+    <div class="adm-team-grid">
+      <% members.each do |member| %>
+        <div class="adm-team-member" title="<%= member.user.name %>">
+          <% if member.user.image.present? %>
+            <%= image_tag(member.user.image.variant(:thumb2), class: "adm-team-member__avatar", alt: member.user.name) %>
+          <% else %>
+            <div class="adm-team-member__avatar adm-team-member__avatar--placeholder">
+              <%= member.user.first_letter_of_name %>
+            </div>
+          <% end %>
+          <span class="adm-team-member__name"><%= member.user.name %></span>
+        </div>
+      <% end %>
+
+      <% if add_url.present? %>
+        <%= link_to add_url, class: "adm-team-member adm-team-add", title: t(".add") do %>
+          <div class="adm-team-member__avatar adm-team-member__avatar--add">
+            <span class="material-symbols-outlined" aria-hidden="true">add</span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% elsif add_url.present? %>
+    <%= empty_state(title: t(".empty"), icon: "group", link_url: add_url, link_text: t(".manage")) %>
+  <% else %>
+    <%= empty_state(title: t(".empty"), icon: "group") %>
+  <% end %>
+</div>

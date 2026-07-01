@@ -21,14 +21,40 @@
         imagePreview.addEventListener("load", App.DirectUploadComponent.handleImagePreviewLoded)
       })
 
+      $(".js-direct-image-upload--confirm-button").each(function(_index, button) {
+        button.addEventListener("click", App.DirectUploadComponent.confirmationConfirmClick);
+      });
+
+      $(".js-direct-image-upload--cancel-confirmation").each(function(_index, link) {
+        link.addEventListener("click", App.DirectUploadComponent.confirmationCancelClick);
+      });
+
       App.DirectUploadComponent.initializeRemoveCachedImageLinks();
     },
 
     fileAttachAreaClick: function(e) {
-      e.currentTarget
-        .closest(".js-direct-image-upload")
-        .querySelector(".js-direct-image-upload--input")
-        .click();
+      var wrapper = e.currentTarget.closest(".js-direct-image-upload");
+      var confirmationStep = wrapper.querySelector(".js-direct-image-upload--confirmation-step");
+
+      if (confirmationStep) {
+        wrapper.classList.add("-confirmation-pending");
+        return;
+      }
+
+      wrapper.querySelector(".js-direct-image-upload--input").click();
+    },
+
+    confirmationConfirmClick: function(e) {
+      e.preventDefault();
+      var wrapper = e.currentTarget.closest(".js-direct-image-upload");
+      wrapper.classList.remove("-confirmation-pending");
+      wrapper.querySelector(".js-direct-image-upload--input").click();
+    },
+
+    confirmationCancelClick: function(e) {
+      e.preventDefault();
+      var wrapper = e.currentTarget.closest(".js-direct-image-upload");
+      wrapper.classList.remove("-confirmation-pending");
     },
 
     initForOneComponent: function(component) {
@@ -39,12 +65,15 @@
         paramName: "attachment",
         formData: null,
         add: function(e, data) {
-          var upload_data = App.DirectUploadComponent.buildData(data, e.target);
+          var target = e.target;
+          var wrapper = $(target).closest(".js-direct-image-upload")[0];
 
-          App.DirectUploadComponent.clearProgressBar(upload_data);
-          App.DirectUploadComponent.setProgressBar(upload_data, "uploading");
+          if (App.DirectUploadComponent.shouldCrop(wrapper, data.files[0])) {
+            App.DirectUploadComponent.openCropper(wrapper, target, data);
+            return;
+          }
 
-          upload_data.submit();
+          App.DirectUploadComponent.startUpload(target, data);
         },
 
         change: function(e, data) {
@@ -99,6 +128,35 @@
           $(data.progressBar).find(".direct-image-upload--loading-bar").css("width", progress + "%");
         }
       });
+    },
+
+    shouldCrop: function(wrapper, file) {
+      if (!wrapper) return false;
+      if (wrapper.dataset.crop !== "true") return false;
+
+      return App.ImageCropper.isCroppableImage(file);
+    },
+
+    openCropper: function(wrapper, target, data) {
+      App.ImageCropper.open(data.files[0], {
+        aspectRatio: parseFloat(wrapper.dataset.cropAspectRatio),
+        onConfirm: function(croppedFile) {
+          data.files = [croppedFile];
+          App.DirectUploadComponent.startUpload(target, data);
+        },
+        onCancel: function() {
+          target.value = "";
+        }
+      });
+    },
+
+    startUpload: function(target, data) {
+      var upload_data = App.DirectUploadComponent.buildData(data, target);
+
+      App.DirectUploadComponent.clearProgressBar(upload_data);
+      App.DirectUploadComponent.setProgressBar(upload_data, "uploading");
+
+      upload_data.submit();
     },
 
     buildData: function(data, input) {

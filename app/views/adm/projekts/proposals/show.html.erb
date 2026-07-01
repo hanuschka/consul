@@ -1,6 +1,6 @@
 <%= content_for :title, @proposal.title %>
 
-<%= render Adm::HeaderComponent.new(title: @proposal.title, breadcrumbs: @breadcrumbs) %>
+<%= render Adm::HeaderComponent.new(title: @proposal.title, breadcrumbs: @breadcrumbs, back_button_url: proposals_adm_projekts_phase_path(@projekt_phase)) %>
 
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase, current_action: "proposals")) %>
 

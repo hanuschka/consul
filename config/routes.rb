@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   # mount Rswag::Ui::Engine => '/api-docs'
   # mount Rswag::Api::Engine => '/api-docs'
 
+  get "up", to: "healthcheck#show"
+
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   draw :adm
   draw "adm/ideas"
@@ -59,6 +61,9 @@ Rails.application.routes.draw do
   # Deficiency reports
   resources :deficiency_reports, only: [:index, :show, :new, :create, :destroy] do
     resource :feedback_form, only: [:new, :create], controller: "deficiency_reports/feedback_form"
+    collection do
+      get :blocked
+    end
     member do
       get     :json_data
       post    :vote

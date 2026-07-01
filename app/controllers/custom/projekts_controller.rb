@@ -10,20 +10,7 @@ class ProjektsController < ApplicationController
   include ProjektControllerHelper
 
   def index
-    landing_page_slug = params[:landing_page_slug] || params[:landing_page]
-    if landing_page_slug.present?
-      @landing_page =
-        SiteCustomization::Page
-          .published
-          .landing
-          .find_by(slug: landing_page_slug)
-
-      if @landing_page.nil?
-        raise ActionController::RoutingError.new('Not Found')
-      end
-
-      set_landing_page_topbar_ui_variables(@landing_page)
-    end
+    resolve_landing_page_from_slug
 
     base_projekts =
       if @landing_page.present?
@@ -45,11 +32,12 @@ class ProjektsController < ApplicationController
     @active_projekts_filters = valid_filters.select { |filter| @projekts.send(filter).count > 0 }.presence || ["index_order_all"]
     @current_projekts_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
     @projekts = @projekts.send(@current_projekts_filter)
-    convert_back_to_relation if @projekts.is_a?(Array)
 
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
+    @geozones = @districts.empty? ? Geozone.order(:name).to_a : []
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
+    @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
 
     @categories = @projekts.flat_map { |p| p.tags.category.to_a }.uniq.compact.sort
@@ -78,8 +66,8 @@ class ProjektsController < ApplicationController
     end
 
     @projekts = @projekts.visible_for(current_user).sort_by_order_number
-    @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id))
-    @projekts = Kaminari.paginate_array(@projekts).page(params[:page]).per(24)
+    @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id).uniq)
+    @projekts = @projekts.distinct.page(params[:page]).per(24)
 
     respond_to do |format|
       format.html do
@@ -168,10 +156,18 @@ class ProjektsController < ApplicationController
       @projekts = @projekts.where(geozone_affiliated: 'entire_city')
     when 'only_geozones'
       @projekts = @projekts.where(geozone_affiliated: 'only_geozones')
-      if @affiliated_districts.present?
-        @projekts = @projekts.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
+      if @districts.any?
+        if @affiliated_districts.present?
+          @projekts = @projekts.joins(:registered_address_district_affiliations).where(registered_address_districts: { id: @affiliated_districts })
+        else
+          @projekts = @projekts.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
+        end
       else
-        @projekts = @projekts.joins(:registered_address_district_affiliations).where.not(registered_address_districts: { id: nil })
+        if @affiliated_geozones.present?
+          @projekts = @projekts.joins(:geozone_affiliations).where(geozones: { id: @affiliated_geozones })
+        else
+          @projekts = @projekts.joins(:geozone_affiliations).where.not(geozones: { id: nil })
+        end
       end
     end
   end
@@ -196,11 +192,13 @@ class ProjektsController < ApplicationController
     @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
     @commentable = Projekt.unscoped.find_by(special: true, special_name: "projekt_overview_page")
+
+    if @commentable.blank?
+      @show_comments = false
+      return
+    end
+
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
     set_comment_flags(@comment_tree.comments)
-  end
-
-  def convert_back_to_relation
-    @projekts = Projekt.where(id: @projekts.pluck(:id))
   end
 end

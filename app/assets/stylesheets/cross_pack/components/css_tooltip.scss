@@ -1,0 +1,60 @@
+// CSS-only tooltip primitive shared by both stylesheet packs (main app and
+// /adm). Usage: data-hint="text" on any element; optional
+// data-hint-position="left". No JavaScript involved.
+
+[data-hint] {
+  position: relative;
+
+  &::after {
+    content: attr(data-hint);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -6px);
+    z-index: 1200;
+    width: max-content;
+    // Hidden state must take zero layout space: a visibility:hidden box
+    // still extends the page's scrollable overflow, causing horizontal
+    // scroll when a hint sits near the viewport edge (e.g. studio toolbar
+    // delete buttons on mobile).
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    text-align: left;
+    white-space: pre-line;
+    color: #222222;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 150ms ease-out, visibility 150ms;
+    pointer-events: none;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    max-width: 320px;
+    max-height: none;
+    overflow: visible;
+    padding: 10px 14px;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 600ms;
+  }
+}
+
+[data-hint][data-hint-position="left"] {
+  &::after {
+    bottom: auto;
+    top: 50%;
+    left: auto;
+    right: 100%;
+    transform: translate(-6px, -50%);
+  }
+}

@@ -1,0 +1,8 @@
+en:
+  components:
+    kern:
+      image_cropper_dialog_component:
+        title: Crop image
+        instructions: Drag and resize the selection to choose the visible area.
+        cancel: Cancel
+        confirm: Apply

@@ -84,7 +84,6 @@ class Adm::Projekts::ProjektQuestionsController < Adm::Projekts::BaseController
       livestream = @projekt_question&.projekt_livestream
       if livestream.present?
         [
-          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
           { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t("adm.projekts.phases.projekt_livestreams.title"), url: projekt_livestreams_adm_projekts_phase_path(@projekt_phase) },
@@ -93,7 +92,6 @@ class Adm::Projekts::ProjektQuestionsController < Adm::Projekts::BaseController
         ]
       else
         [
-          { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
           { name: @projekt_phase.projekt.page.title, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t("adm.projekts.phases.projekt_questions.title"), url: projekt_questions_adm_projekts_phase_path(@projekt_phase) },

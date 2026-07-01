@@ -14,9 +14,15 @@
       </div>
     </div>
     <div class="custom-content-template--item-actions">
-      <button class="content-block-template-copy-button js-copy-content-block-template" type="button" title="Template in Zwischenablage kopieren">
-        <i class="fa fas fa-copy"></i>
-      </button>
+      <%= studio_rich_tooltip(
+        title: "Vorlage kopieren",
+        text: "Kopiert den HTML-Code dieser Vorlage in die Zwischenablage, um ihn an anderer Stelle einzufügen.",
+        delay: 1200
+      ) do %>
+        <button class="content-block-template-copy-button js-copy-content-block-template" type="button">
+          <i class="fa fas fa-copy"></i>
+        </button>
+      <% end %>
     </div>
   </div>
 
@@ -30,22 +36,22 @@
   </div>
 
   <div class="saved-content-block-item--controlls saved-content-block-form--base-controlls">
-    <button title="Inhaltsblock bearbeiten" class="projekt-frame-icon-button js-edit-saved-content-block">
+    <button title="Inhaltsblock bearbeiten" class="studio-icon-button js-edit-saved-content-block">
       <i class="fas fa-edit">
       </i>
     </button>
-    <button type="button" title="Inhaltsblock löschen" class="projekt-frame-icon-button -delete js-delete-saved-content-block">
+    <button type="button" title="Inhaltsblock löschen" class="studio-icon-button -delete js-delete-saved-content-block">
       <i class="fas fa-trash-alt">
       </i>
     </button>
   </div>
 
   <div class="saved-content-block-form--controlls saved-content-block-form--edit-controlls d-flex u-gap-10">
-    <button type="button" class="projekt-content-block-edit--button -green js-update-saved-content-block">
+    <button type="button" class="studio-edit-button -green js-update-saved-content-block">
       <i class="fas fa-save"></i>
       Speichern
     </button>
-    <button type="button" class="projekt-content-block-edit--button js-cancel-update-saved-content-block">
+    <button type="button" class="studio-edit-button js-cancel-update-saved-content-block">
       <i class="fas fa-xmark"></i>
       Abbrechen
     </button>

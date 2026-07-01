@@ -13,9 +13,19 @@ class ProjektManager < ApplicationRecord
     return false unless projekt.present? && permission.present?
     return false unless projekt.is_a?(Projekt)
 
-    assignment = projekt_manager_assignments.find_by(projekt_id: projekt.id)
+    assignment = assignments_by_projekt_id[projekt.id]
     return false if assignment.nil?
 
     assignment.permissions.include?(permission.to_s)
   end
+
+  private
+
+  def assignments_by_projekt_id
+    @assignments_by_projekt_id ||=
+      projekt_manager_assignments.each_with_object({}) do |assignment, map|
+        map[assignment.projekt_id] ||= assignment
+      end
+  end
+
 end

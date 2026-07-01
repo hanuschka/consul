@@ -76,6 +76,8 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
           expect(data['data']['projekt_phases'][0]['phase_tab_name']).to eq('Comments')
         end
       end
+
+      unauthorized_response { let(:projekt_id) { 1 } }
     end
 
     post 'Create a projekt phase' do
@@ -283,6 +285,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_id) { 1 } }
+      forbidden_response { let(:projekt_id) { 1 } }
     end
   end
 
@@ -354,8 +359,83 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
+
+  path '/api/projekt_phases/{id}/update_settings' do
+    parameter name: :id, in: :path, type: :integer, description: 'Projekt Phase ID'
+
+    patch 'Update multiple projekt phase settings' do
+      tags 'Projekt Phases'
+      consumes 'application/json'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "Bulk-update several projekt phase settings in a single request. Provide a settings object mapping each setting key to its new value; missing keys are created. Returns the list of updated keys and a per-key errors map for any that failed. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :settings, in: :body, description: 'Object whose keys are projekt phase setting keys and whose values are the new setting values', schema: {
+        type: :object,
+        properties: {
+          settings: {
+            type: :object,
+            description: 'Map of setting key => value (e.g. feature.general.newest_first).',
+            additionalProperties: { type: :string },
+            example: { 'feature.general.newest_first' => 'active' }
+          }
+        },
+        required: ['settings']
+      }
+
+      response '200', 'settings processed' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Settings Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:id) { phase.id }
+        let(:settings) do
+          { settings: { 'feature.general.newest_first' => 'active' } }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     updated: { type: :array, items: { type: :string } },
+                     errors: { type: :object }
+                   },
+                   required: %w[updated errors]
+                 }
+               },
+               required: ['data']
+
+        run_test!
+      end
+
+      response '422', 'settings parameter missing' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Settings Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:id) { phase.id }
+        let(:settings) { {} }
+
+        schema type: :object,
+               properties: {
+                 error: {
+                   type: :object,
+                   properties: {
+                     messages: { type: :array, items: { type: :string } }
+                   }
+                 }
+               }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
+    end
+  end
+
   path '/api/projekt_phases/{id}' do
     parameter name: :id, in: :path, type: :integer, description: 'Projekt Phase ID'
 
@@ -390,6 +470,8 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a projekt phase' do
@@ -581,6 +663,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
 
     delete 'Delete a projekt phase' do
@@ -633,6 +718,9 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
 
         run_test!
       end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { 1 } }
     end
   end
 end

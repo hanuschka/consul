@@ -59,7 +59,7 @@ class Adm::Ideas::CategoriesController < Adm::Ideas::BaseController
 
   def order_categories
     authorize Idea::Category, :update?, policy_class: Adm::Ideas::CategoryPolicy
-    Idea::Category.order_categories(params[:ordered_list])
+    Idea::Category.order_categories(params[:tree].map { |item| item[:id] })
     head :ok
   end
 

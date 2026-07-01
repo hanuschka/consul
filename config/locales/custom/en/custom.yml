@@ -36,13 +36,50 @@ en:
       generate_from_prompt:
         success: Content has been successfully generated
         no_prompt: Please enter a prompt
+      ai_create:
+        modal_title: Create content block with AI
+        description: "Briefly describe the content block you need. The AI uses existing templates as inspiration and can optionally consider the full projekt context to create a new block."
+        prompt_label: "Describe the content block you want to create:"
+        prompt_placeholder: "E.g. A notice banner about citizen participation dates with date and location..."
+        category_label: Category (optional)
+        category_any: All categories
+        category_hint: "Pick a category to limit which existing content block templates the AI uses as inspiration (e.g. headers, banners, CTAs). Leave on \"All categories\" to let the AI choose any template type that fits your prompt."
+        use_context_label: Include full projekt context
+        use_context_hint: "When enabled, the AI receives your projekt's title, description, phases and other key fields so the generated block can reference real projekt content. Leave off for a generic, projekt-independent block."
+        submit: Create with AI
+        submit_shortcut_hint_html: "Tip: press %{shortcut} to submit"
+        cancel: Cancel generation
+        processing_message: Content block is being created...
+        fallback_note: "Templates from demokratie.today are unavailable. AI will use only local template names as inspiration."
+        cancel_acknowledged: Generation is being cancelled
+        errors:
+          no_prompt: Please enter a prompt
+          generation_failed: Error generating content block
+          cancelled: Generation was cancelled
       destroy_all:
         success: All content blocks deleted
     projekt:
       content_block_templates_selector:
         loading: "Loading content block templates..."
         fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
+        load_error: "Content block templates could not be loaded."
+        retry: "Try again"
+        blank_create_button:
+          label: Add blank block
+          title: Add an empty content block to design yourself
+        ai_create_button:
+          label: Create with AI
+          title: Let AI create a content block
+          tooltip_description: "Describe what you want and the AI builds a ready-made content block for you — tailored to the projekt — which you can then edit freely."
+        visibility:
+          hidden: Hidden
+          hidden_until: "Hidden until %{date}"
         tabs:
+          basic_content: Basic content
+          status_and_notes: Status & notes
+          teasers_and_promotions: Teasers and promotions
+          media_and_resources: Media & resources
+          messages: Messages
           internal_content_blocks: Internal content blocks
           own_content_blocks: Own content blocks
         saved_content_blocks:
@@ -108,6 +145,11 @@ en:
       sidebar_section:
         show: 'Show section'
         hide: 'Hide section'
+    shared:
+      map_component:
+        loading_pins: "Loading map pins…"
+        error_loading_pins: "Could not load map pins."
+        retry: "Retry"
     layouts:
       footer:
         navigation_heading: Footer navigation

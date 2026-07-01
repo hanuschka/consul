@@ -39,6 +39,7 @@ de:
       ai_question:
         title: "Individuelle Auswertung per Frage"
         subtitle: "Stellen Sie eigene Fragen zu den eingereichten Vorschlägen und erhalten Sie eine zusammenfassende Auswertung."
+        question_label: "Frage"
         placeholder: "Geben Sie Ihre Frage zu den Vorschlägen ein..."
         submit: "Frage stellen"
         submitting: "Wird gesendet..."
@@ -55,6 +56,10 @@ de:
         retention_hint: "Laden Sie Antworten für Offline-Zugriff oder Archivierung herunter."
         no_resources: "Keine Vorschläge gefunden, die analysiert werden können."
         error: "Bei der Generierung der Antwort ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        status_failed: "Fehlgeschlagen"
+        actions: "Aktionen"
+        delete: "Frage löschen"
+        choose_format: "Anderes Format wählen"
         pdf_title: "Fragenanalyse"
         pdf_all_questions_title: "Fragenanalyse - Alle Fragen"
         pdf_projekt: "Projekt"

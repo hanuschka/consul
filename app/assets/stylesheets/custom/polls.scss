@@ -121,6 +121,31 @@ td.answers-column  {
   animation-fill-mode: forwards;
 }
 
+.poll-open-answer-form.js-poll-open-answer-autosave {
+  flex-direction: column;
+
+  textarea {
+    min-height: 120px;
+  }
+}
+
+.poll-open-answer-status {
+  display: block;
+  width: 100%;
+  min-height: 1.2em;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b6b6b;
+
+  &.-saved {
+    color: #2c7a3a;
+  }
+
+  &.-error {
+    color: #a94442;
+  }
+}
+
 @keyframes fadeOut {
   from {opacity:1;}
   to {opacity:0;}

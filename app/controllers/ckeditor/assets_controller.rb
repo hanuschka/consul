@@ -1,20 +1,9 @@
 # frozen_string_literal: true
 
 class Ckeditor::AssetsController < ApplicationController
-  include Search
-
   def index
-    authorize! :index, Ckeditor::Asset
-    @assets = Ckeditor::Asset.joins(:storage_data_attachment)
-    filter_by_type
-
-    @assets = if @search_terms.present?
-                @assets.search(@search_terms)
-              else
-                @assets.order(id: :desc)
-              end
-
-    @assets = @assets.page(params[:page]).per(15)
+    authorize! :index, AdminAsset
+    @assets = AdminAssetsQuery.new(params).call.page(params[:page]).per(15)
 
     respond_to do |format|
       format.html { render layout: false }
@@ -23,13 +12,6 @@ class Ckeditor::AssetsController < ApplicationController
   end
 
   private
-
-    def filter_by_type
-      return unless params[:type].present?
-
-      type = params[:type] == "document" ? "Ckeditor::Document" : "Ckeditor::Picture"
-      @assets = @assets.where(type: type)
-    end
 
     def assets_json
       allowed_attributes = %i[

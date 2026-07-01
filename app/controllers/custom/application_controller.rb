@@ -1,7 +1,6 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
-  include EmbeddedAuth
   before_action :sanitize_pagination_params
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
@@ -65,8 +64,6 @@ class ApplicationController < ActionController::Base
     end
 
     def set_projekts_for_overview_page_navigation
-      return if embedded?
-
       @projekts_for_overview_page_navigation = Projekt.for_overview_page_navigation(current_user)
                                                       .includes([page: :translations])
       @draft_projekts_for_navigation = Projekt.not_activated.visible_for(current_user).includes([page: :translations])
@@ -130,34 +127,50 @@ class ApplicationController < ActionController::Base
       session[:back_path] = SessionUrlTruncator.truncate(back_path)
     end
 
+    BOT_USER_AGENT_REGEX = /
+      bot|crawl|spider|slurp|fetch|preview|monitor|
+      google|bing|yandex|baidu|duckduckbot|
+      facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|telegram|discordbot|
+      curl|wget|python|java\/|go-http-client|httpclient|ruby|okhttp|
+      pingdom|uptimerobot|statuscake|newrelic|datadog
+    /ix.freeze
+
+    def bot_request?
+      return true if request.head?
+
+      ua = request.user_agent.to_s
+      ua.blank? || ua.match?(BOT_USER_AGENT_REGEX)
+    end
+
+    # Establishes a guest identity for a guest-status phase on GET show pages.
+    # Only assigns the session key (a cheap signed cookie) — the User row is
+    # built in memory by GuestUsers#guest_user and persisted on the first write
+    # (GuestUsers#persist_guest_user_on_write). No database write happens here,
+    # so a bot flood of GETs cannot create rows.
+    #
+    # Previously this persisted a User on every GET; the UA-based bot_request?
+    # guard is bypassed by spoofed browser UAs, so a flood inserted one row per
+    # request and saturated the DB and Puma.
     def auto_sign_in_guest_for(projekt_phase)
-      return if current_user.present?
+      return if current_user.present? && !current_user.guest?
       return if projekt_phase.blank?
       return unless projekt_phase.user_status == "guest"
-      # return unless projekt_phase.current?
+      return if bot_request?
 
-      guest_key = "guest_#{SecureRandom.uuid}"
-      params[:user] = {}
-      params[:user][:username] = guest_key
-      params[:user][:terms_data_protection] = true
-      params[:user][:terms_general] = true
-
-      @guest_user = initialize_guest_user(guest_key)
-      @guest_user.save!
-      session[:guest_user_id] = guest_key
-
-      @current_ability = Ability.new(current_user)
+      session[:guest_user_id] ||= "guest_#{SecureRandom.uuid}"
+      @current_ability = Ability.new(guest_user)
     rescue StandardError => e
       Sentry.capture_exception(e)
     end
 
     def initialize_guest_user(guest_key)
       User.new(
-        username: params[:user][:username],
-        terms_data_protection: params[:user][:terms_data_protection],
-        terms_general: params[:user][:terms_general],
+        username: guest_key,
+        terms_data_protection: true,
+        terms_general: true,
         email: "#{guest_key}@example.com",
         guest: true,
+        guest_user_agent: request.user_agent.to_s.first(500),
         confirmed_at: Time.now.utc,
         skip_password_validation: true
       )

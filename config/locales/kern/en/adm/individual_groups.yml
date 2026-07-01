@@ -78,7 +78,8 @@ en:
           The column name must be "Email".
           You can first look at the <a href="%{sample_url}">sample file</a>.
         import_button: Import CSV
-        search_user_label: Search users (email)
+        search_label: Search users
+        search_description: Search by username or email to add individual users to the group.
         related_users_heading:
           one: "%{count} assigned user"
           other: "%{count} assigned users"
@@ -96,7 +97,7 @@ en:
       search_user:
         add_user: Add
         already_assigned: Already assigned
-        not_found: No user found with this email address.
+        not_found: No users found.
       new:
         title: Create new value
       edit:

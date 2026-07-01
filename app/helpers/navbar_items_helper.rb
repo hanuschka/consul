@@ -9,6 +9,8 @@ module NavbarItemsHelper
       end
     when "projekts"
       item.projekt&.url
+    when "landing_pages"
+      item.linked_page&.url
     when "external"
       item.external_url
     end
@@ -22,7 +24,7 @@ module NavbarItemsHelper
 
   def navbar_item_link_attrs(item)
     attrs = []
-    attrs << ' target="_blank" rel="noopener noreferrer"' if item.external?
+    attrs << ' target="_blank" rel="noopener noreferrer"' if item.open_in_new_tab?
     attrs << ' aria-current="page"' if navbar_item_current?(item)
     attrs.join
   end
@@ -34,7 +36,48 @@ module NavbarItemsHelper
     navbar_item_url(item) == request.path
   end
 
+  def navbar_item_visible?(item, user = current_user)
+    return false if item.resource_missing?
+
+    if item.kind == "landing_pages" && !item.linked_page.published?
+      return draft_landing_page_visible_in_nav?(item.linked_page, user)
+    end
+
+    return true unless item.kind == "projekts"
+    return true if user&.administrator?
+
+    visible_projekt_ids_for_navbar(user).include?(item.projekt_id)
+  end
+
+  def landing_pages_for_top_nav
+    pages = SiteCustomization::Page.landing.landing_show_in_top_nav
+
+    scope =
+      if current_user&.administrator? ||
+          current_user&.landing_page_manager&.manage_all_landing_pages?
+        pages
+      elsif current_user&.landing_page_manager.present?
+        pages.published.or(
+          pages.where(id: current_user.landing_page_manager.landing_page_manager_assignments.select(:page_id))
+        )
+      else
+        pages.published
+      end
+
+    scope.order(:landing_nav_position)
+  end
+
   private
+
+  def draft_landing_page_visible_in_nav?(page, user)
+    return false if user.blank?
+
+    user.administrator? || user.landing_page_manager?(page)
+  end
+
+  def visible_projekt_ids_for_navbar(user)
+    @visible_projekt_ids_for_navbar ||= Projekt.visible_for(user).pluck(:id).to_set
+  end
 
   def global_preset_url(item)
     case item.preset

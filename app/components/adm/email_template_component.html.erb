@@ -6,6 +6,12 @@
         <%= label %>
       </div>
       <div class="adm-admin-phase__chips">
+        <% if recipient_type_label.present? %>
+          <span class="adm-admin-chip adm-admin-chip--info">
+            <span class="material-symbols-outlined" aria-hidden="true"><%= recipient_type_icon %></span>
+            <%= recipient_type_label %>
+          </span>
+        <% end %>
         <% if @email_template.customized? %>
           <span class="adm-admin-chip adm-admin-chip--success">
             <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
@@ -85,7 +91,7 @@
               <%= form.text_area :body,
                 value: sanitized_body,
                 label: false,
-                data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+                data: { controller: "ckeditor", ckeditor_toolbar_value: "email" } %>
             </div>
           </div>
         </div>

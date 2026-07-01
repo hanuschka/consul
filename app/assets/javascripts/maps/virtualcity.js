@@ -1,6 +1,10 @@
 (function() {
   "use strict";
 
+  // VC-side toggle for masterportal pins is intentionally NOT implemented in this iteration.
+  // VC layers are configured via the VCS module config and don't share the layer-control surface
+  // used by Leaflet/Mapbox. See C_PLANS/masterportal-pins-toggle-on-user-maps.md (C_STEP 7) for
+  // the deferred follow-up.
   class VirtualcityMapController {
     constructor(element) {
       this.element = element;
@@ -31,6 +35,7 @@
       /// this.baseLayers = {};
       /// this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
+      this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
 
       // Features configuration
       this.features = $element.data("features");
@@ -266,6 +271,8 @@
     }
 
     renderFeatures() {
+      if (!this.app || !this.map) return;
+
       if (this.features && Object.keys(this.features).length > 0) {
         const instance = this;
         const layerName = instance.editable ? '_editorLayer' : '_predefinedFeaturesLayer';

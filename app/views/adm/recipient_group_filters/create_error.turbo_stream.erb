@@ -1,0 +1,3 @@
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render Kern::FlashComponent.new(flash: flash) %>
+<% end %>

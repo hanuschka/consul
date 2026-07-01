@@ -1,12 +1,40 @@
 .klaro .cookie-modal .cm-list-input:checked+.cm-list-label .slider {
-  background-color: #096ebd !important;
+  background-color: #005a9f !important;
 }
 
 .klaro {
   .cookie-modal {
     z-index: 4999 !important;
 
+     .cookie-modal-notice {
+      padding: 1.5rem;
+      padding-top: 0.8em;
+      max-width: 520px;
+      border-radius: 10px;
+    }
+
+    .cn-buttons {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .cm-btn {
+      flex-grow: 1;
+    }
+
+    button {
+      font-size: 16px !important;
+    }
+
     .cn-ok {
+      margin-top: 1.2rem !important;
+      flex-wrap: wrap !important;
+      gap: 5px;
+
+      .cm-btn {
+        margin-right: 0 !important;
+      }
+
       .cm-btn.cm-btn-info {
         padding: 10px;
         background-color: #0c70bd;
@@ -15,7 +43,7 @@
       }
 
       .cm-btn.cm-btn-success {
-        padding: 10px;
+        padding: 10px 15px;
         background-color: #005a9f;
         min-height: 3rem;
       }
@@ -37,14 +65,37 @@
   }
 }
 
+// Toggle knob: white circle carrying a state glyph centered inside it, so the
+// on/off state is conveyed by an icon (✓ / ✕) in addition to colour and knob
+// position — not by colour alone (WCAG 1.4.1) and not by a hard-to-see small
+// shift. `content`/`transform` need `!important` to beat Klaro's runtime CSS.
 .klaro .cookie-modal .cm-list-label .slider::before,
 .klaro .context-notice .cm-list-label .slider::before,
 .klaro .cookie-notice .cm-list-label .slider::before {
   background-color: #fff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: "\2715" !important;
+  color: #767676;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
 }
 
+// Off track
 .klaro .cookie-modal .cm-list-label .slider,
 .klaro .context-notice .cm-list-label .slider,
 .klaro .cookie-notice .cm-list-label .slider {
   background-color: #767676 !important;
+}
+
+// On state: knob slides fully to the right (clear position change) and the
+// glyph switches to a checkmark in the active blue.
+.klaro .cookie-modal .cm-list-input:checked+.cm-list-label .slider::before,
+.klaro .context-notice .cm-list-input:checked+.cm-list-label .slider::before,
+.klaro .cookie-notice .cm-list-input:checked+.cm-list-label .slider::before {
+  transform: translateX(20px) !important;
+  content: "\2713" !important;
+  color: #005a9f;
 }

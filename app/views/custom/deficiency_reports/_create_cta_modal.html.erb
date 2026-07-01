@@ -1,0 +1,22 @@
+<% popup = active_deficiency_report_confirmation_popup %>
+<% return if popup.blank? %>
+
+<%= render Shared::ModalComponent.new(
+  id: "deficiency-report-create-cta-modal",
+  title: popup.question,
+  modal_class: "deficiency-report-create-cta-modal"
+) do %>
+  <div class="deficiency-report-create-cta-modal--answers">
+    <% popup.answers.each do |answer| %>
+      <% if answer.allow? %>
+        <%= link_to answer.label, new_deficiency_report_path,
+              class: "button -orange",
+              data: { turbolinks: false } %>
+      <% else %>
+        <%= link_to answer.label, blocked_deficiency_reports_path(answer_id: answer.id),
+              class: "button -orange",
+              data: { turbolinks: false } %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

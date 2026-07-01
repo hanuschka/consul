@@ -14,7 +14,7 @@ class DeficiencyReports::ListItemComponent < ApplicationComponent
       description: deficiency_report.description,
       tags: deficiency_report.tags.first(3),
       url: helpers.deficiency_report_path(deficiency_report),
-      image_url: deficiency_report.image&.variant(:card_thumb),
+      image: deficiency_report.image,
       image_placeholder_icon_class: "fa-lightbulb",
       subline: subline
     }

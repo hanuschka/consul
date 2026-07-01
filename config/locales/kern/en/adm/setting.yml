@@ -1,5 +1,9 @@
 en:
   setting:
+    projekt_option:
+      general:
+        external_participation_link: "Use an alternative link in the project resources"
+        external_participation_link_description: "Enter a full (external) URL if the project tiles and lists should link to another page instead of the project's own page. Leave empty to keep the normal link to the project."
     org_name: "Application name"
     org_name_description: "This name is shown in many places across the platform, e.g. in the browser tab, in emails, and in the footer. It serves as the official display name of your participation platform and should be unique and recognizable. A good name helps citizens identify the platform at a glance."
     url: "Main URL of the application"
@@ -8,6 +12,8 @@ en:
     mailer_from_address_description: "This email address appears as the sender on all automatically sent emails from the platform (e.g. notifications, confirmations). The address must match the one configured on the mail server. Changes cannot be made independently — please contact demokratie.today support."
     mailer_from_name: "Sender display name"
     mailer_from_name_description: "This name is shown to recipients as the sender of emails. Choose a meaningful name that clearly identifies your municipality, e.g. 'Participation Platform City of Exampletown'. The display name can be set independently of the technical sender address and helps with recognition."
+    mailer_from_deficiency_report_address: "Sender address for deficiency report emails"
+    mailer_from_deficiency_report_address_description: "This email address is used as the sender for all automatically sent deficiency-report emails and is shown to citizens as the contact address in those emails. Use a valid, sending-enabled address of your municipality."
     meta_title: "Page title (SEO)"
     meta_title_description: "This title is used by search engines as the main heading in search results and also appears in the browser tab. A clearly formulated title improves your platform's visibility on Google. Ideally it contains the name of the municipality and a reference to citizen participation. Recommended length: 50–60 characters."
     meta_description: "Page description (SEO)"
@@ -32,6 +38,24 @@ en:
     youtube_handle_description: "YouTube username or channel ID of your municipality. If filled in, a YouTube logo with a link to the channel automatically appears in the footer. You can use either the custom channel name or the technical channel ID. Leave the field empty if no YouTube channel should be linked."
     advanced_newsletter: "Advanced newsletter"
     advanced_newsletter_description: "Enables advanced newsletter features. Disabled by default — only enable this option if you need the advanced features."
+    uploads:
+      images:
+        max_size: "Maximum image size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded images. Larger files are rejected on upload. A moderate value keeps load times short and saves storage space."
+        content_types: "Allowed image formats"
+        content_types_description: "Determines which file formats are allowed when uploading images. Enable only the formats you actually want to permit. JPEG suits photos, PNG suits graphics with a transparent background."
+        title:
+          min_length: "Minimum image title length"
+          min_length_description: "Sets the minimum number of characters an uploaded image's title must contain. The title is used as alternative text (alt attribute) for accessibility. A sensible minimum encourages meaningful image descriptions."
+          max_length: "Maximum image title length"
+          max_length_description: "Sets the maximum number of characters an uploaded image's title may contain. The title is used as alternative text (alt attribute) for accessibility. A sensible limit keeps image titles short and readable."
+      documents:
+        max_amount: "Maximum number of documents"
+        max_amount_description: "Sets how many documents may be attached to a single contribution (e.g. proposal or investment) at most. This keeps the number of uploaded attachments under control."
+        max_size: "Maximum document size"
+        max_size_description: "Sets the maximum allowed file size (in megabytes, MB) for uploaded documents. Larger files are rejected on upload. A moderate value saves storage space and keeps load times short."
+        content_types: "Allowed document formats"
+        content_types_description: "Determines which file formats are allowed when uploading documents. Enable only the formats you actually want to permit, e.g. PDF for fixed-layout documents."
     welcomepage:
       usage_stats: User overview
       usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."
@@ -122,6 +146,12 @@ en:
         two_click_iframe_solution: "Two-click solution for iframes"
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
+        enable_google_translate: Enable Google Translate
+        enable_google_translate_description: "Before enabling Google Translate, please agree to the terms of use at the following link: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        show_guest_login_links: Show guest login
+        show_guest_login_links_description: Shows the guest-login link in the footer
+        users_overview_page: Overview of all users
+        users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
         enable_projekt_events_page: Events calendar
         enable_projekt_events_page_description: >
           Enables a central overview page for all public events from the participation projects. Citizens can view upcoming workshops, town-hall meetings, and information events there. The page can be made reachable via the navigation.
@@ -140,6 +170,8 @@ en:
         homepage_button_text_description: "Text shown on the button in the hero area of the homepage. The button serves as the central call-to-action for visitors. Choose a short, action-oriented label (e.g. 'Get involved now' or 'Discover projects'). If the field is empty, no button is shown."
         homepage_button_link: Homepage button link
         homepage_button_link_description: "Target URL opened when the homepage button is clicked. You can enter an internal path (e.g. /projekts) or a full external URL (e.g. https://example.com). The link only takes effect if a button text is also entered. Without button text, the link remains invisible."
+        homepage_navigation_link_color: Top navigation link color
+        homepage_navigation_link_color_description: "Sets the text color of the links in the top navigation bar of the homepage. This matters because the header background image can be dark and readability must be ensured."
       gdpr:
         devise_timeout_min: "Duration of user sessions in minutes"
         devise_timeout_min_description: >
@@ -179,16 +211,12 @@ en:
         allow_indexing_description: Allows search engines like Google to index the project page and show it in search results. If this option is disabled, a "noindex" tag is set, so the page remains reachable via the platform but cannot be found through external search engines.
         consider_underway: List project as active participation
         consider_underway_description: Ensures the project is always listed as active participation on the overview — even when no regular participation phase is currently running. Useful for permanently featured projects or for projects between phases that should remain visible to users as an active participation option.
+        show_related_projekt_link: Related project link on resource pages
+        show_related_projekt_link_description: Shows a link back to this project in the header of its resources (proposals, polls, debates, etc.). Lets users navigate from an individual contribution to the project it belongs to.
     ideas:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new idea to a responsible officer. Without assignment, the idea cannot be processed. This ensures that every idea has a responsible person and no submission remains without clear ownership.
-      officers_can_administer_assigned_reports: Officer administration for ideas
-      officers_can_administer_assigned_reports_description: >
-        Gives officers full administrative control over the ideas assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view ideas, not manage them or make structural adjustments.
-      officers_can_edit_assigned_reports: Officer editing for ideas
-      officers_can_edit_assigned_reports_description: >
-        Lets officers edit the content of assigned ideas directly — e.g. correct the title, description, or location. This is useful when submitted ideas are incomplete or contain errors and need to be adjusted editorially before further processing.
       enable_comments: Comments
       enable_comments_description: >
         When enabled, users can write comments below an idea. This enables public exchange between citizens and administration, e.g. for follow-up questions, additional suggestions, or supplementary notes on the submitted idea. Comments can be moderated by administrators.
@@ -208,18 +236,21 @@ en:
       external_video_description: >
         Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
     deficiency_reports:
-      show_in_main_menu: Deficiency reports in navigation
-      show_in_main_menu_description: >
-        When enabled, the deficiency reporter is shown as a standalone menu item in the platform's main navigation. Users can access the deficiency overview directly from the main menu without first opening a project. Disable this option if the deficiency reporter should only be visible inside specific projects.
+      feature_name: Feature name
+      feature_name_description: >
+        Custom name for the deficiency reporter, e.g. "Mängelmelder", "Hinweisportal", or "Bürgermelder". This name is shown on the list page heading, the main-menu link, and in browser tabs. Leave empty to use the default ("Mängelmelder").
+      create_cta: Primary create-report button label
+      create_cta_description: >
+        Label of the prominent button citizens click to start a new report on the list page (e.g. "Mangel melden", "Hinweis geben"). Leave empty to use the default ("Mangel melden").
+      new_form_title: New-report form heading
+      new_form_title_description: >
+        Heading shown at the top of the new-report form page (e.g. "Neue Meldung", "Mangel melden"). Leave empty to use the platform default.
+      new_form_title_placeholder: New-report title placeholder
+      new_form_title_placeholder_description: >
+        Placeholder text shown inside the report-title field on the new-report form. Use it to guide citizens with a good example (e.g. "Schlagloch in XY-Straße vor Hausnummer 123"). Leave empty to use the platform default.
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new deficiency report to a responsible officer. Without assignment, the report cannot be processed. This ensures that every report has a responsible person and no report remains without ownership.
-      officers_can_administer_assigned_reports: Officer administration for deficiencies
-      officers_can_administer_assigned_reports_description: >
-        Gives officers full administrative control over the deficiency reports assigned to them. They can change status, adjust categories, set priorities, and add internal notes. Without this permission, officers can only view reports, not manage them.
-      officers_can_edit_assigned_reports: Officer editing for deficiencies
-      officers_can_edit_assigned_reports_description: >
-        Lets officers edit the content of assigned deficiency reports directly — e.g. correct the title, description, or location. This is useful when submitted reports are incomplete or incorrect and need to be adjusted before processing.
       allow_voting: User rating per deficiency
       allow_voting_description: >
         Enables a rating feature letting users support or prioritize individual deficiency reports. The number of ratings is shown publicly and helps administration identify frequently reported or especially urgent deficiencies sooner and prioritize accordingly.
@@ -232,12 +263,21 @@ en:
       enable_my_posts_filter: My posts
       enable_my_posts_filter_description: >
         Shows a filter on the deficiency overview page letting logged-in users view only their own submitted deficiency reports. This makes it easier to track the status of their own reports without searching through all entries.
+      show_map: Show map
+      show_map_description: >
+        Shows the map in the report form where users can select the location of their report. Disable this option if no map should be offered in the form.
       enable_geoman_controls_in_maps: Enable drawing tools on maps
       enable_geoman_controls_in_maps_description: >
         Lets users draw geometric shapes like rectangles, circles, or polygons on the map. This is useful when a deficiency affects not just a single point but an area — e.g. a damaged road or a contaminated area. The drawing is saved together with the report.
+      map_location_required: Require map location
+      map_location_required_description: >
+        When enabled, a location must be selected on the map before a report can be submitted. This guarantees every report is geographically located, which is essential for assigning it to the right area and officer. Disable it if reports may be created without a precise location.
       admin_acceptance_required: Administrator approval
       admin_acceptance_required_description: >
         When enabled, administrators must review and approve new deficiency reports before they become publicly visible. Unconfirmed reports are visible only to administrators. This prevents inappropriate or duplicate reports from being published directly.
+      image_upload: Image upload
+      image_upload_description: >
+        Allows users to attach an image to their deficiency report. Disable this option if no image upload should be offered in the report form.
       document_upload: Additional documents
       document_upload_description: >
         Allows users to upload documents like PDFs, text files, or other attachments to their deficiency reports. This is helpful when supplementary materials are needed — e.g. expert reports, correspondence with authorities, or detailed descriptions beyond a simple text field.
@@ -253,14 +293,17 @@ en:
       show_create_report_button: Submit button for deficiency reports
       show_create_report_button_description: >
         Shows a clearly visible button for submitting new deficiency reports in the sidebar of the deficiency overview page. The button makes it easier for users to report a new deficiency. Disable this option if submission should happen through other channels or if no new reports should be accepted temporarily.
+      show_homepage_cta: Report button on the homepage
+      show_homepage_cta_description: >
+        Shows an additional button in the homepage hero, below the main call-to-action, that takes users straight to the new deficiency report form. The button label is taken from the "Label of the report button" naming setting. Requires the deficiency reports feature to be enabled.
 
     process:
-      proposals: Proposals
+      proposals: Proposals overview
       proposals_description: >
-        Allows citizens to submit their own improvement proposals, which can be supported and commented on by other users. Proposals can be tagged with locations, labels, and sentiment indicators. With enough support, they can be advanced to voting.
-      polls: Votes
+        Enables a central overview page for all submitted proposals from the participation projects. Citizens can browse, comment on, rate, and support proposals there. The page can be made reachable via the navigation.
+      polls: Polls overview
       polls_description: >
-        Enables the voting module, with which citizens can make direct decisions on concrete questions. Votes support various question types like single- and multiple-choice. Both online and offline voting are possible.
+        Enables a central overview page for all active and completed polls from the participation projects. Citizens can open active polls, cast their vote, and view results of completed polls there. The page can be made reachable via the navigation.
       budgets: Participatory budget
       budgets_description: >
         Enables the participatory budget, in which citizens submit investment proposals and vote on the allocation of a set budget. The process covers multiple phases: submission, feasibility review by the administration, and final citizen vote.

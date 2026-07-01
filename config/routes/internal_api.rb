@@ -3,10 +3,6 @@ post "/connect_dt_service", to: "internal_api_clients#connect", as: :connect_api
 namespace :internal_api do
   patch "/internal_api_clients_registration/mark_as_registered"
 
-  post "/auth/generate_frame_sign_in_token", to: "auth#generate_frame_sign_in_token"
-  get "/auth/validate_iframe_token", to: "auth#validate_iframe_token"
-  post "/auth/generate_iframe_token", to: "auth#generate_iframe_token"
-
   resources :projekts, only: [:index, :create, :update] do
     collection do
       get :overview
@@ -68,5 +64,9 @@ namespace :internal_api do
 
   get "dashboard/api_works", to: "dashboard#api_works"
 
-  get "monitoring", to: "monitoring#show"
+  get "connection/dt_status", to: "connection#dt_status"
+
+  get "connection/update_client_info", to: "connection#update_client_info"
+
+  get "stats", to: "stats#show"
 end

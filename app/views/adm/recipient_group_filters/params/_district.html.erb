@@ -1,0 +1,11 @@
+<label class="rg-filter-card__param-label">
+  <%= t("adm.recipient_groups.filters.params_labels.district_ids") %>
+  <%= select_tag "recipient_group_filter[params][district_ids][]",
+        options_for_select(
+          RegisteredAddress::District.order(:name).map { |d| [d.name_for_display, d.id] },
+          Array(filter_params["district_ids"]).map(&:to_i)
+        ),
+        multiple: true,
+        size: [RegisteredAddress::District.count, 6].min,
+        data: { action: "change->adm-newsletters--filter-stack#updateFilter" } %>
+</label>

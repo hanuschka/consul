@@ -4,6 +4,8 @@ de:
       show:
         title: "DT API Verbindungsstatus"
         connection_error_label: "Fehler:"
+        reconnect: "Erneut mit DemokratieToday verbinden"
+        reconnect_confirm: "Möchten Sie die Verbindung zur DemokratieToday App wirklich neu herstellen?"
         errors:
           no_client: "Kein registrierter DT-API-Client gefunden (InternalApiClient mit Name 'DT')."
           no_token: "DT-API-Client gefunden, aber service_api_token fehlt."

@@ -7,10 +7,12 @@ class NotificationServiceMailer < ApplicationMailer
     @officer = DeficiencyReport::Officer.find(officer_id)
     @overdue_reports = DeficiencyReport.where(id: overdue_reports_ids)
 
-    subject = t("custom.notification_service_mailers.overdue_deficiency_reports.subject")
-
     with_user(@officer.user) do
-      mail(to: @officer.email, subject: subject)
+      mail_with_custom_template(nil, {
+        "officer_name" => @officer.name,
+        "overdue_count" => @overdue_reports.count
+      }, to: @officer.email,
+        default_subject: t("custom.notification_service_mailers.overdue_deficiency_reports.subject"))
     end
   end
 
@@ -20,13 +22,16 @@ class NotificationServiceMailer < ApplicationMailer
     @new_comments = @deficiency_report.comments.where("created_at > ?", last_notified_time)
     @initial = initial
 
-    subject = t(
-      "custom.notification_service_mailers.new_comments_for_deficiency_report.subject",
-      deficiency_report_title: @deficiency_report.title.truncate(30)
-    )
-
     with_user(@officer.user) do
-      mail(to: @officer.email, subject: subject)
+      mail_with_custom_template(nil, {
+        "deficiency_report_title" => @deficiency_report.title,
+        "deficiency_report_url" => deficiency_report_url(@deficiency_report),
+        "comment_count" => @new_comments.count
+      }, to: @officer.email,
+        default_subject: t(
+          "custom.notification_service_mailers.new_comments_for_deficiency_report.subject",
+          deficiency_report_title: @deficiency_report.title.truncate(30)
+        ))
     end
   end
 
@@ -34,10 +39,12 @@ class NotificationServiceMailer < ApplicationMailer
     @admin = Administrator.find(admin_id)
     @not_assigned_reports = DeficiencyReport.where(id: not_assigned_reports_ids)
 
-    subject = t("custom.notification_service_mailers.not_assigned_deficiency_reports.subject")
-
     with_user(@admin.user) do
-      mail(to: @admin.email, subject: subject)
+      mail_with_custom_template(nil, {
+        "admin_name" => @admin.name,
+        "not_assigned_count" => @not_assigned_reports.count
+      }, to: @admin.email,
+        default_subject: t("custom.notification_service_mailers.not_assigned_deficiency_reports.subject"))
     end
   end
 
@@ -99,11 +106,15 @@ class NotificationServiceMailer < ApplicationMailer
     @user = User.find(user_id)
     @deficiency_report = DeficiencyReport.find(deficiency_report_id)
 
-    subject = t("custom.notification_service_mailers.new_deficiency_report.subject",
-                identifier: "#{@deficiency_report.id}: #{@deficiency_report.title.first(50)}")
-
     with_user(@user) do
-      mail(to: @user.email, subject: subject)
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "deficiency_report_id" => @deficiency_report.id,
+        "deficiency_report_title" => @deficiency_report.title,
+        "deficiency_report_url" => deficiency_report_url(@deficiency_report)
+      }, to: @user.email,
+        default_subject: t("custom.notification_service_mailers.new_deficiency_report.subject",
+                           identifier: "#{@deficiency_report.id}: #{@deficiency_report.title.first(50)}"))
     end
   end
 

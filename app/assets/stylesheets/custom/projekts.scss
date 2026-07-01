@@ -1391,6 +1391,14 @@ span.projekt-backlink:before {
   }
 }
 
+.resource-item--image-overlay-item {
+
+  .projekt-label {
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+}
+
 .sentiments {
   clear: left;
 
@@ -1463,6 +1471,7 @@ span.projekt-backlink:before {
   bottom: 10px;
   left: 15px;
   cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.35);
 
   z-index: 11;
 

@@ -5,6 +5,7 @@ de:
   adm:
     ai_action_button:
       processing: KI arbeitet…
+      feature_description: "Erstellt mit KI eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts."
 
     projekts:
       projekts:
@@ -26,7 +27,27 @@ de:
           failed_description: >
             Bei der Erstellung der Auswertung ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
-          regenerate_button: Neu generieren
+          regenerate_button: Gesamte Auswertung neu generieren
+          regenerate_confirm: >
+            Möchten Sie die Auswertung wirklich neu generieren? Die bestehende
+            Auswertung wird überschrieben.
+          regenerate_phase_button: Phase neu generieren
+          regenerate_phase_confirm: >
+            Möchten Sie diese Phase wirklich neu generieren? Die bestehende
+            Auswertung dieser Phase wird überschrieben.
+          phase_download_pdf_button: PDF exportieren…
+          open_in_admin: Im Admin öffnen
+          configure_visibility_button: Sichtbarkeit konfigurieren
+          toolbar_title_view_link: Zur Phase im Projekt-Footer
+          toolbar_title_edit_link: Phase bearbeiten
+          phase_processing_title: Phase wird neu generiert
+          phase_processing_description: >
+            Diese Phase wird neu generiert. Dies kann einige Minuten dauern.
+          phase_failed_title: Phasen-Generierung fehlgeschlagen
+          phase_failed_description: >
+            Bei der Generierung dieser Phase ist ein Fehler aufgetreten.
+            Bitte versuchen Sie es erneut.
+          phase_retry_button: Erneut versuchen
           download_pdf: PDF herunterladen
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.
@@ -41,6 +62,7 @@ de:
           comments: Kommentare
           commenters: Kommentierende
           questions: Fragen
+          other_questions_group: Weitere Fragen
           polls: Abstimmungen
           poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
           scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"
@@ -51,6 +73,14 @@ de:
           ranking_subtitle: "%{proposals} Vorschläge · %{supports} Unterstützungen gesamt"
           rank_first: Platz 1
           ai_summary: KI-Bewertung
+          timeline_title: Zeitverlauf
+          timeline_submissions: Einreichungen im Zeitverlauf
+          timeline_comments: Kommentare im Zeitverlauf
+          label_sentiment_title: Label und Sentiment
+          labels_distribution: Labels-Verteilung
+          sentiments_distribution: Sentiment-Verteilung
+          user_segments_title: Nutzersegmente
+          geozone_distribution: Stadtteile / Bezirke
           key_findings: Zentrale Erkenntnisse
           ai_questions_heading: KI-Fragen an diese Phase
           sources_label:
@@ -65,13 +95,38 @@ de:
             include_report: Bericht einbeziehen (Projektzusammenfassung, Einstellungen, Phasen-Zusammenfassungen)
             sections:
               kpis: Kennzahlen
+              key_metrics: Detailkennzahlen
               ranking: Ranking-Diagramm
               proposals: Vorschlagskarten
               questions: Fragen und Diagramme
               open_responses: Offene Beiträge
               ai_summary: KI-Zusammenfassung
+              phase_summary: Zusammenfassung der Phase
+              tone: Tonanalyse
+              timeline: Zeitverlauf
+              label_sentiment: Label- und Sentiment-Verteilung
+              user_segments: Nutzersegmente
               key_findings: Zentrale Erkenntnisse
+              topic_clustering: Themengruppen
+              semantic_clustering: Sentimentanalyse
               ai_questions: KI-Fragen
+            section_descriptions:
+              kpis: Wichtigste Kennzahlen der Phase — Teilnehmende, Vorschläge, Stimmen, Unterstützungen.
+              key_metrics: Detaillierte Aufschlüsselung der Teilnahmewerte je Metrik.
+              ranking: Balkendiagramm mit den am stärksten unterstützten Vorschlägen.
+              proposals: Karten mit den Top-Vorschlägen und deren Unterstützungszahlen.
+              questions: Abstimmungsfragen mit Antwortverteilungen und Ergebnis-Diagrammen.
+              open_responses: Frei formulierte Beiträge der Teilnehmenden.
+              ai_summary: KI-generierte Zusammenfassung der Phase als Fließtext.
+              phase_summary: Kompakter Überblick über Verlauf und Ergebnisse der Phase.
+              tone: KI-Analyse des emotionalen Tons in Beiträgen und Kommentaren.
+              timeline: Tägliche Aktivitätsübersicht mit Verlauf der Teilnahme.
+              label_sentiment: Verteilung der Beiträge nach Themenlabel und Stimmungslage.
+              user_segments: Aufteilung der Teilnehmenden nach demografischen oder Interessensgruppen.
+              key_findings: Wichtigste Erkenntnisse aus der KI-Auswertung.
+              topic_clustering: Beiträge gruppiert nach inhaltlichen Themenclustern.
+              semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.
+              ai_questions: Auf Basis der Beiträge KI-generierte Anschlussfragen.
           votes_label: Stimmen
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen
@@ -89,6 +144,9 @@ de:
           report_tab:
             title: Bericht
             kpi_label: Übersicht
+          phase_tab:
+            generated_at: "Stand %{date}"
+            generated_at_unknown: Noch nicht generiert
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel
@@ -113,6 +171,27 @@ de:
             phases_empty: Es liegen noch keine KI-Phasen-Zusammenfassungen vor.
             phase_short_summary_empty: Für diese Phase liegen noch keine Daten vor.
             qr_code_label: Projektseite öffnen
+        evaluation_visibility:
+          title: Sichtbarkeit
+          heading: Sichtbarkeit der Auswertungsabschnitte
+          description: >
+            Steuern Sie, welche Abschnitte des Berichts und der einzelnen Phasen
+            in der Auswertung sowie im PDF-Export angezeigt werden.
+          report_group_title: Bericht (Übersicht)
+          report_sections:
+            project_summary: Projektzusammenfassung
+            settings: Projekteinstellungen
+            phase_summaries: Phasen-Zusammenfassungen
+          report_section_descriptions:
+            project_summary: Snapshot der Projektseite mit Untertitel, Bild und KI-Zusammenfassung des Projektinhalts.
+            settings: Überblick über die Projektkonfiguration — offene Phasen, Abstimmungen, Schlagwörter und Nachhaltigkeitsziele.
+            phase_summaries: Kurze KI-generierte Zusammenfassung für jede Projektphase.
+          bulk_all_on: Alle aus
+          bulk_all_off: Alle ein
+          cancel: Zurück
+          save: Speichern
+        update_evaluation_visibility:
+          success: Sichtbarkeit der Auswertung wurde aktualisiert.
         generate_evaluation:
           started: Die Auswertung wird generiert. Bitte laden Sie die Seite in einigen Minuten neu.
         evaluation_pdf_options:
@@ -121,3 +200,5 @@ de:
           description: Wählen Sie, welche Phasen und Abschnitte im PDF enthalten sein sollen.
           cancel: Abbrechen
           download: PDF herunterladen
+          downloading: PDF wird vorbereitet…
+          ready: Bereit

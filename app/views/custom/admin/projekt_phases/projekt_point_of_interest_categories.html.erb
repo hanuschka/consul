@@ -1,17 +1,12 @@
 <%= render "custom/admin/projekt_phases/heading" %>
 
-<% unless embedded? %>
-  <%= render "custom/admin/projekt_phases/nav_bar" %>
-<% end %>
+<%= render "custom/admin/projekt_phases/nav_bar" %>
 
 <div class="row">
   <div class="column">
     <h2>
       <%= t("custom.admin.projekt_phases.projekt_point_of_interest_categories.page_title") %>
 
-      <% if embedded? %>
-        <%= render Shared::ExplainButtonComponent.new(explain: "") %>
-      <% end %>
     </h2>
   </div>
 </div>

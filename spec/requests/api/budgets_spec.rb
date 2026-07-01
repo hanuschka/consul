@@ -13,8 +13,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all participatory budgets across all projects. Includes budget details (name, currency, slug) and associated investment information. Useful for overview pages and budget selection. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (default: 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (**default:** 100, max: 500)', required: false
 
       response '200', 'budgets found and returned' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
@@ -45,6 +45,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response
     end
   end
 
@@ -56,8 +58,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all budgets associated with a specific projekt phase. Each budget within a phase represents a separate participatory budgeting instance with its own investments and voting. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (default: 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (default: 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (**default:** 100, max: 500)', required: false
 
       response '200', 'budgets found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -87,6 +89,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
         run_test!
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
     post 'Create a budget' do
@@ -313,6 +317,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(response.status).to eq(201)
         end
       end
+
+      unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
   end
 
@@ -352,32 +358,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         run_test!
       end
 
-      response '403', 'forbidden - insufficient access' do
-        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
-        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { Budget.create!(name_en: 'Test Budget', projekt_phase_id: projekt_phase.id, currency_symbol: '$', slug: 'test-budget') }
-        let(:id) { test_budget.id }
-
-        before do
-          api_client.update_column(:access_level, nil)
-        end
-
-        schema type: :object,
-               properties: {
-                 error: {
-                   type: :object,
-                   properties: {
-                     type: { type: :string },
-                     messages: { type: :array, items: { type: :string } }
-                   }
-                 }
-               }
-
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data['error']['type']).to eq('forbidden')
-        end
-      end
+      unauthorized_response { let(:id) { 1 } }
     end
 
     patch 'Update a budget' do
@@ -611,6 +592,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(response.status).to eq(200)
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
 
     delete 'Delete a budget' do
@@ -693,6 +676,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           expect(data['error']['type']).to eq('forbidden')
         end
       end
+
+      unauthorized_response { let(:id) { 1 } }
     end
   end
 end

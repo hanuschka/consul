@@ -1,6 +1,8 @@
 module Adm
   module LandingPages
     class LandingPagesController < Adm::LandingPages::BaseController
+      HEX_COLOR_REGEX = /\A#[0-9a-fA-F]{6}\z/
+      DEFAULT_NAVIGATION_LINK_COLOR = "#000000".freeze
 
       def new
         @landing_page = ::SiteCustomization::Page.new(landing: true, status: "draft")
@@ -64,10 +66,28 @@ module Adm
         @landing_page.update!(status: landing_page_params[:status])
       end
 
+      def update_navigation_link_color
+        @landing_page = ::SiteCustomization::Page.find(params[:id])
+        authorize [:adm, :landing_pages, @landing_page], :update?, policy_class: Adm::LandingPages::LandingPagePolicy
+
+        raw_color = params[:color].to_s.strip
+        new_color = raw_color.presence || DEFAULT_NAVIGATION_LINK_COLOR
+
+        unless new_color.match?(HEX_COLOR_REGEX)
+          render json: { ok: false, errors: ["Invalid color format"] },
+                 status: :unprocessable_entity
+          return
+        end
+
+        @landing_page.update!(landing_navigation_link_color: new_color)
+
+        render json: { ok: true, color: new_color }
+      end
+
       def reorder
         authorize [:adm, :landing_pages, :landing_page], :index?
 
-        ::SiteCustomization::Page.order_landing_pages(params[:ordered_list])
+        ::SiteCustomization::Page.order_landing_pages(params[:tree].map { |item| item[:id] })
         head :ok
       end
 
@@ -81,7 +101,7 @@ module Adm
 
         def landing_page_params
           params.require(:site_customization_page).permit(
-            :title, :subtitle, :status, :slug,
+            :title, :header_title, :subtitle, :status, :slug,
             :landing_hide_title_and_subtitle,
             :landing_site_logo_follow_to_landing_page, :landing_navigation_link_color,
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,

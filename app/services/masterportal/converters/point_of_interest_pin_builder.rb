@@ -6,7 +6,7 @@ class Masterportal::Converters::PointOfInterestPinBuilder < ApplicationService
   def call
     poi_pin = ProjektPointOfInterestPin.new(
       projekt_phase: @pin.projekt_phase,
-      author: User.masterportal,
+      author: User.system,
       description: description_with_title,
       masterportal_pin_id: @pin.id
     )

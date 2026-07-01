@@ -1,0 +1,124 @@
+<%= render Shared::ModalComponent.new(
+  id: "contentBlockAiModal",
+  modal_class: "modern-modal custom-content-block-ai-create js-content-block-ai-modal",
+  closeable: false,
+  content_wrapper: false,
+  blur_backdrop: false,
+  close_on_backdrop: false,
+  close_on_esc: false,
+  data: { state: "idle" }
+) do %>
+  <div class="content-block-ai-create--header">
+    <div class="modern-modal--header">
+      <h3>
+        <%= t("custom.projekt_content_blocks.ai_create.modal_title") %>
+      </h3>
+      <button
+        class="close-button round-icon-button js-content-block-ai-modal-close"
+        aria-label="<%= t('application.close') %>"
+        type="button"
+      >
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+    <p class="content-block-ai-create--description">
+      <%= t("custom.projekt_content_blocks.ai_create.description") %>
+    </p>
+  </div>
+
+  <form class="content-block-ai-create--form js-content-block-ai-form" onsubmit="return false;">
+    <div class="content-block-ai-create--field">
+      <label for="contentBlockAiPrompt">
+        <%= t("custom.projekt_content_blocks.ai_create.prompt_label") %>
+      </label>
+      <textarea
+        id="contentBlockAiPrompt"
+        name="prompt"
+        rows="5"
+        required
+        placeholder="<%= t('custom.projekt_content_blocks.ai_create.prompt_placeholder') %>"
+        class="js-content-block-ai-prompt"
+      ></textarea>
+    </div>
+
+    <div class="content-block-ai-create--field">
+      <label for="contentBlockAiCategory">
+        <%= t("custom.projekt_content_blocks.ai_create.category_label") %>
+      </label>
+      <select
+        id="contentBlockAiCategory"
+        name="category_hint"
+        class="content-block-ai-create--select js-content-block-ai-category"
+      >
+        <option value=""><%= t("custom.projekt_content_blocks.ai_create.category_any") %></option>
+      </select>
+      <p class="content-block-ai-create--hint">
+        <%= t("custom.projekt_content_blocks.ai_create.category_hint") %>
+      </p>
+    </div>
+
+    <% if show_projekt_context_toggle? %>
+      <div class="content-block-ai-create--field content-block-ai-create--checkbox-row">
+        <label>
+          <input
+            type="checkbox"
+            name="use_projekt_context"
+            class="js-content-block-ai-context"
+          >
+          <span class="content-block-ai-create--checkbox-text">
+            <span class="content-block-ai-create--checkbox-label">
+              <%= t("custom.projekt_content_blocks.ai_create.use_context_label") %>
+            </span>
+            <span class="content-block-ai-create--checkbox-hint">
+              <%= t("custom.projekt_content_blocks.ai_create.use_context_hint") %>
+            </span>
+          </span>
+        </label>
+      </div>
+    <% end %>
+
+    <div
+      class="modern-modal--note js-content-block-ai-fallback-note"
+      style="display: none;"
+    >
+      <i class="fas fa-circle-exclamation"></i>
+      <%= t("custom.projekt_content_blocks.ai_create.fallback_note") %>
+    </div>
+
+    <div
+      class="content-block-ai-create--error js-content-block-ai-error"
+      style="display: none;"
+    ></div>
+
+    <div class="content-block-ai-create--loader js-content-block-ai-loader" style="display: none;">
+      <%= render Shared::LoadingSpinnerComponent.new(
+        message: t("custom.projekt_content_blocks.ai_create.processing_message"),
+        size: "large",
+        vertical: true
+      ) %>
+      <button
+        type="button"
+        class="button -grey js-content-block-ai-cancel"
+      >
+        <i class="fas fa-xmark"></i>
+        <%= t("custom.projekt_content_blocks.ai_create.cancel") %>
+      </button>
+    </div>
+
+    <div class="content-block-ai-create--actions">
+      <p class="content-block-ai-create--shortcut-note">
+        <%= t(
+          "custom.projekt_content_blocks.ai_create.submit_shortcut_hint_html",
+          shortcut: tag.kbd("Ctrl + Enter", class: "content-block-ai-create--kbd js-content-block-ai-shortcut")
+        ) %>
+      </p>
+      <button
+        type="button"
+        class="button js-content-block-ai-submit"
+      >
+        <i class="fas fa-magic"></i>
+        <%= t("custom.projekt_content_blocks.ai_create.submit") %>
+      </button>
+    </div>
+  </form>
+<% end %>

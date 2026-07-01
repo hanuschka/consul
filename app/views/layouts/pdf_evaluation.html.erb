@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= yield(:title).presence || "Evaluation" %></title>
-  <%= stylesheet_link_tag "application.adm", media: "all" %>
+  <style><%= PdfServices::InlineCss.call.html_safe %></style>
 </head>
 <body class="evaluation-pdf-body">
   <%= yield %>
+  <script><%= PdfServices::InlineJs.call.html_safe %></script>
 </body>
 </html>

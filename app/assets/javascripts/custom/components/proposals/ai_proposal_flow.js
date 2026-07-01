@@ -125,8 +125,17 @@
     },
 
     showLoader() {
-      $(".js-ai-flow-body-content").hide();
+      const $body = $(".js-ai-flow-body");
+
+      $body.addClass("-loading");
       $(".js-ai-proposal-loader").removeAttr("hidden");
+      this.scrollStepToMiddle($body.get(0));
+    },
+
+    scrollStepToMiddle(stepElement) {
+      if (!stepElement) return;
+
+      stepElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 }).call(this);

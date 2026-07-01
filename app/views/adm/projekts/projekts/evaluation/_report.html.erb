@@ -1,31 +1,32 @@
 <%
   data = evaluation.data || {}
   totals = data["totals"] || {}
-  phases = data["phases"] || []
+  phases = evaluation.phases_data
   ai_project_summary = data["ai_project_summary"]
 
-  phase_palette = [
-    {
-      accent: "#7C3AED",
-      accent_light: "#EDE9FE",
-      shades: ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#EDE9FE"]
-    },
-    {
+  phase_palette = {
+    "ProjektPhase::ProposalPhase" => {
       accent: "#059669",
       accent_light: "#D1FAE5",
       shades: ["#059669", "#10B981", "#34D399", "#6EE7B7", "#A7F3D0", "#D1FAE5"]
     },
-    {
+    "ProjektPhase::VotingPhase" => {
       accent: "#1E40AF",
       accent_light: "#DBEAFE",
       shades: ["#1E40AF", "#1E3A8A", "#3B82F6", "#60A5FA", "#93C5FD", "#DBEAFE"]
     },
-    {
+    "ProjektPhase::BudgetPhase" => {
       accent: "#D97706",
       accent_light: "#FEF3C7",
       shades: ["#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#FDE68A", "#FEF3C7"]
+    },
+    "ProjektPhase::CommentPhase" => {
+      accent: "#7C3AED",
+      accent_light: "#EDE9FE",
+      shades: ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#EDE9FE"]
     }
-  ]
+  }
+  phase_palette.default = phase_palette["ProjektPhase::ProposalPhase"]
 
   phase_type_partial = {
     "ProjektPhase::ProposalPhase" => "proposal_phase_section",
@@ -36,22 +37,18 @@
 
   phase_tab_config = {
     "ProjektPhase::ProposalPhase" => {
-      material_icon: "lightbulb",
       kpi_key: "proposals_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
     },
     "ProjektPhase::VotingPhase" => {
-      material_icon: "how_to_vote",
       kpi_key: "participants_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.participants"
     },
     "ProjektPhase::BudgetPhase" => {
-      material_icon: "euro_symbol",
       kpi_key: "investments_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.investments"
     },
     "ProjektPhase::CommentPhase" => {
-      material_icon: "chat_bubble",
       kpi_key: "comments_count",
       kpi_label_key: "adm.projekts.projekts.evaluation.comments"
     }
@@ -59,6 +56,10 @@
 
   pdf_mode = local_assigns.fetch(:pdf_mode, false)
   selection = local_assigns.fetch(:selection, nil)
+  live_selection =
+    if !pdf_mode && selection.nil?
+      PdfServices::EvaluationPdfSelection.from_saved_visibilities(evaluation)
+    end
 
   include_report_section = selection.nil? || selection.include_report?
 
@@ -113,7 +114,6 @@
       evaluation: evaluation,
       projekt: projekt,
       phase_palette: phase_palette,
-      phase_tab_config: phase_tab_config,
       pdf_mode: true %>
   <% end %>
 
@@ -121,7 +121,7 @@
     <% if pdf_mode %>
       <% renderable_phases.each_with_index do |phase, idx| %>
         <%
-          color = phase_palette[idx % phase_palette.size]
+          color = phase_palette[phase["phase_type"]]
           partial = phase_type_partial[phase["phase_type"]]
         %>
         <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
@@ -140,6 +140,14 @@
         report_input_id = "evaluation-phase-radio-#{evaluation.id}-report"
         report_accent = "#7C3AED"
         report_accent_light = "#EDE9FE"
+
+        renderable_rows = evaluation.phase_rows.select do |row|
+          data = row.data || {}
+          next false unless phase_type_partial.key?(data["phase_type"])
+          next true if selection.nil?
+
+          selection.include_phase?(data["phase_id"])
+        end
       %>
 
       <div
@@ -155,8 +163,9 @@
           data-phase-id="report"
           checked
         >
-        <% renderable_phases.each do |phase| %>
+        <% renderable_rows.each do |row| %>
           <%
+            phase = row.data || {}
             input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
           %>
           <input
@@ -170,6 +179,15 @@
         <% end %>
 
         <div class="evaluation-phase-tabs__nav" role="tablist">
+          <%
+            report_generated_at_text =
+              if evaluation.generated_at.present?
+                t("adm.projekts.projekts.evaluation.phase_tab.generated_at",
+                  date: l(evaluation.generated_at, format: :long))
+              else
+                t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
+              end
+          %>
           <label
             for="<%= report_input_id %>"
             role="tab"
@@ -186,16 +204,27 @@
               <span class="evaluation-phase-tab__meta">
                 <span><%= t("adm.projekts.projekts.evaluation.report_tab.kpi_label") %></span>
               </span>
+              <span class="evaluation-phase-tab__generated-at">
+                <%= report_generated_at_text %>
+              </span>
             </span>
           </label>
 
-          <% renderable_phases.each_with_index do |phase, idx| %>
+          <% renderable_rows.each_with_index do |row, idx| %>
             <%
-              color = phase_palette[idx % phase_palette.size]
+              phase = row.data || {}
+              color = phase_palette[phase["phase_type"]]
               config = phase_tab_config[phase["phase_type"]]
               kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
               kpi_label = t(config[:kpi_label_key])
               input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
+              generated_at_text =
+                if row.generated_at.present?
+                  t("adm.projekts.projekts.evaluation.phase_tab.generated_at",
+                    date: l(row.generated_at, format: :long))
+                else
+                  t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
+                end
             %>
             <label
               for="<%= input_id %>"
@@ -204,13 +233,16 @@
               style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
             >
               <span class="evaluation-phase-tab__icon">
-                <span class="material-symbols-outlined" aria-hidden="true"><%= config[:material_icon] %></span>
+                <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
               </span>
               <span class="evaluation-phase-tab__body">
                 <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
                 <span class="evaluation-phase-tab__meta">
                   <strong><%= kpi_value %></strong>
                   <span><%= kpi_label %></span>
+                </span>
+                <span class="evaluation-phase-tab__generated-at">
+                  <%= generated_at_text %>
                 </span>
               </span>
             </label>
@@ -223,24 +255,24 @@
               evaluation: evaluation,
               projekt: projekt,
               phase_palette: phase_palette,
-              phase_tab_config: phase_tab_config,
               pdf_mode: false %>
           </div>
 
-          <% renderable_phases.each_with_index do |phase, idx| %>
+          <% renderable_rows.each_with_index do |row, idx| %>
             <%
-              color = phase_palette[idx % phase_palette.size]
+              phase = row.data || {}
+              color = phase_palette[phase["phase_type"]]
               partial = phase_type_partial[phase["phase_type"]]
             %>
-            <div role="tabpanel" class="evaluation-phase-panel">
-              <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
-                locals: {
-                  phase: phase,
-                  accent_color: color[:accent],
-                  accent_light_color: color[:accent_light],
-                  accent_shades: color[:shades]
-                } %>
-            </div>
+            <%= render "adm/projekts/projekts/evaluation/phase_panel",
+              projekt: projekt,
+              row: row,
+              phase: phase,
+              partial_name: partial,
+              accent_color: color[:accent],
+              accent_light_color: color[:accent_light],
+              accent_shades: color[:shades],
+              selection: live_selection %>
           <% end %>
         </div>
       </div>
@@ -250,7 +282,6 @@
       evaluation: evaluation,
       projekt: projekt,
       phase_palette: phase_palette,
-      phase_tab_config: phase_tab_config,
       pdf_mode: false %>
   <% end %>
 

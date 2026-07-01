@@ -90,17 +90,10 @@
           }
         }, 100);
 
-        var modal = document.getElementById("glightbox-body");
-
-        if (modal) {
-          App.FocusTrap.setBackgroundInert([modal], modal);
-        }
-
         this.bindFocusTrapKeydown();
       });
       this.lightbox.on('close', () => {
         this.unbindFocusTrapKeydown();
-        App.FocusTrap.removeBackgroundInert();
 
         document.body.style.paddingRight = "";
 
@@ -138,11 +131,35 @@
     handleFocusTrapKeydown(event) {
       if (event.key !== "Tab" && event.which !== 9) return
 
-      var modal = document.getElementById("glightbox-body");
+      var modal = this.getLightboxContainer();
 
-      if (modal) {
-        App.FocusTrap.handleTabKey(event, modal);
+      if (!modal) return
+
+      var focusable = App.FocusTrap.getFocusableElements(modal);
+
+      if (focusable.length === 0) return
+
+      // Take full control of Tab: stop GLightbox's own keydown handler (which
+      // only cycles `.gbtn[data-taborder]` buttons and lets focus escape with
+      // the tabindex-based markup used here) and cycle within the lightbox.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      var currentIndex = focusable.indexOf(document.activeElement);
+      var lastIndex = focusable.length - 1;
+      var nextIndex;
+
+      if (event.shiftKey) {
+        nextIndex = currentIndex <= 0 ? lastIndex : currentIndex - 1;
+      } else {
+        nextIndex = currentIndex === lastIndex ? 0 : currentIndex + 1;
       }
+
+      focusable[nextIndex].focus();
+    },
+
+    getLightboxContainer() {
+      return document.querySelector(".glightbox-container.glightbox-clean");
     },
 
     SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",

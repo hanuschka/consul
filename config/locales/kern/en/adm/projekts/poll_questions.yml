@@ -8,6 +8,8 @@ en:
           nested_title: Create new sub-question
         edit:
           title: Edit question
+          bundle_title: Edit question bundle
+          nested_title: Edit sub-question
         show:
           edit_question: Edit question
           edit_bundle: Edit question bundle

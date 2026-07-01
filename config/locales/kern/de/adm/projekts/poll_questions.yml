@@ -8,6 +8,8 @@ de:
           nested_title: Neue Unterfrage erstellen
         edit:
           title: Frage bearbeiten
+          bundle_title: Fragenbündel bearbeiten
+          nested_title: Unterfrage bearbeiten
         show:
           edit_question: Frage bearbeiten
           edit_bundle: Fragenbündel bearbeiten

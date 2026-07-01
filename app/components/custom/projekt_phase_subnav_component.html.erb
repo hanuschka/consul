@@ -2,14 +2,14 @@
   <div class='projekt-phase-subnav--items'>
     <% projekt_phase_subnav_items.each do |item| %>
       <% if item[:disabled] %>
-        <span
-          class="projekt-phase-subnav-item ai-feature-disabled <%= 'js-studio-hide-on-preview' if item[:hide_on_preview] %>"
-          data-tooltip
-          tabindex="-1"
-          title="<%= t('ai.disabled_tooltip') %>"
-        >
-          <%= item[:text] %>
-        </span>
+        <%= render Shared::AiFeatureTooltipComponent.new(feature_text: item[:text]) do %>
+          <span
+            class="projekt-phase-subnav-item <%= 'js-studio-hide-on-preview' if item[:hide_on_preview] %>"
+            tabindex="-1"
+          >
+            <%= item[:text] %>
+          </span>
+        <% end %>
       <% else %>
         <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item projekt-phase-subnav-item #{"is-active" if item[:active]} #{'js-studio-hide-on-preview' if item[:hide_on_preview]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")', data: { section: item[:section] } %>
       <% end %>

@@ -11,7 +11,7 @@ class DtApi::Resources::Clients
       multipart: true,
       body: {
         **params,
-        logo: File.open(Rails.root.join("app", "assets", "images", "logo_header.png").to_s)
+        logo: File.open(Dt.logo_path.to_s)
       }
     )
   end

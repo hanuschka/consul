@@ -52,6 +52,7 @@ de:
         ai_create_button:
           label: Mit KI erstellen
           title: Inhaltsblock von KI erstellen lassen
+          tooltip_description: "Beschreiben Sie, was Sie möchten, und die KI erstellt daraus einen fertig gestalteten Inhaltsblock — passend zum Projekt — den Sie anschließend frei bearbeiten können."
         visibility:
           hidden: Versteckt
           hidden_until: "Versteckt bis %{date}"

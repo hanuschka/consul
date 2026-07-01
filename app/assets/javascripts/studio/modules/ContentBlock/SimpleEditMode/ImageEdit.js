@@ -17,7 +17,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
     $document.on(
       "mouseenter",
-      ".-simple-edit-mode .projekt-content-block img",
+      ".-simple-edit-mode .custom-content-block img",
       this.handleImageMouseEnter.bind(this)
     )
 

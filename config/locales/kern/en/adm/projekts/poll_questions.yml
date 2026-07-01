@@ -37,6 +37,12 @@ en:
           bundle_title: Topic bundle
           title_placeholder: "e.g. Which measure do you support?"
           no_contextualization: No contextualization
+          contextualize_hint: >
+            Repeats this question for each answer option the user previously selected in the chosen
+            multiple-choice question. This lets the same question be asked in the context of each
+            individual selection – e.g. a rating for each previously selected proposal. Only questions
+            with the "Multiple choice" voting mode are available here. Select "No contextualization" if
+            the question should be asked independently.
           intro_hint: Shown on the frontend as introductory text above the question. Use this field to explain the context of the question, provide background information, or give orientation to participants. The text supports rich-text formatting and can contain links or highlights.
           title_hint: >
             Enter the question shown to users on the frontend. Formulate

@@ -112,6 +112,8 @@ de:
               import: "Projekt importieren"
               import_again: "Als neues Projekt importieren"
               start_over: "Neu starten"
+            import_overlay_title: "Import läuft…"
+            import_overlay_message: "Das Projekt wird angelegt. Dies kann einen Moment dauern."
             progress:
               finalizing_data: "Änderungen werden finalisiert…"
               resolving_content_blocks: "Inhaltsblöcke werden erstellt…"

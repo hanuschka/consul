@@ -22,7 +22,7 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
     resolved_by_index = resolve_all(input_blocks).index_by { |b| b["index"] }
 
     data["content_blocks"] = blocks.each_with_index.map do |block, i|
-      html = resolved_by_index[i]&.dig("html")
+      html = strip_html_comments(resolved_by_index[i]&.dig("html"))
       { "html" => html.presence || wrap_plain(block["content_data"]) }
     end
 
@@ -68,8 +68,11 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
     message = <<~PROMPT
       Fill each HTML template with its provided content.
       Replace ALL placeholder text with the actual content.
-      Keep HTML structure, CSS classes, and attributes exactly as they are.
-      Only replace text content — never modify tags, classes, or attributes.
+      Keep the template's HTML structure, CSS classes, and attributes exactly as they are — do not add, remove, or restyle the template's own tags.
+      Within the text you insert, convert every URL and email address into an anchor tag:
+      - Web links: <a href="URL" target="_blank" rel="noopener noreferrer">visible text</a>. If the URL has no scheme (e.g. "www.example.com"), prefix the href with "https://". Use the provided link label as the visible text when one is given, otherwise the URL itself.
+      - Email addresses: <a href="mailto:ADDRESS">ADDRESS</a>.
+      These anchor tags are the only tags you may introduce; otherwise replace text content only.
 
       Input blocks:
       #{JSON.generate(input_blocks)}
@@ -107,5 +110,9 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
 
   def wrap_plain(text)
     "<div><p>#{ERB::Util.html_escape(text.to_s)}</p></div>"
+  end
+
+  def strip_html_comments(html)
+    html.to_s.gsub(/<!--.*?-->/m, "").presence
   end
 end

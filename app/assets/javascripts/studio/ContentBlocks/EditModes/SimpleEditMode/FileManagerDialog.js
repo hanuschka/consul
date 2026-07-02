@@ -617,8 +617,12 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
       method: 'GET',
       headers: {
         'Accept': 'text/html',
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog.js
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
         'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+=======
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog.js
       }
     });
   },
@@ -653,8 +657,12 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
     fetch(this.uploadEndpoints[this.state.type], {
       method: 'POST',
       headers: {
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog.js
         'X-CSRF-TOKEN': csrfToken,
         'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+=======
+        'X-CSRF-TOKEN': csrfToken
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog.js
       },
       body: formData
     })
@@ -772,8 +780,12 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
         method: 'GET',
         headers: {
           'Accept': 'text/html',
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog.js
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
           'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+=======
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog.js
         }
       });
 
@@ -825,8 +837,12 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
       const response = await fetch(`${this.uploadEndpoints[this.state.type]}/${this.state.selectedImage.dataset.id}`, {
         method: 'PATCH',
         headers: {
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog.js
           'X-CSRF-TOKEN': csrfToken,
           'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+=======
+          'X-CSRF-TOKEN': csrfToken
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog.js
         },
         body: formData
       });
@@ -857,8 +873,12 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
       const response = await fetch(`${this.uploadEndpoints[this.state.type]}/${chosenId}`, {
         method: 'DELETE',
         headers: {
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog.js
           'X-CSRF-TOKEN': csrfToken,
           'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+=======
+          'X-CSRF-TOKEN': csrfToken
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog.js
         }
       });
 

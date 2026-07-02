@@ -104,11 +104,14 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
     this.turnOffEditModeForItem(container)
 
     App.Ajax.request({
-      url: `/admin/saved_content_blocks/${savedContentBlockId}`,
+      url: `/adm/saved_content_blocks/${savedContentBlockId}`,
       type: "PATCH",
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/SavedContentBlocks.js
       headers: {
         'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
       },
+=======
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/SavedContentBlocks.js
       data: { saved_content_block: { content }}
     })
      .then((response) => {
@@ -163,11 +166,14 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
     editor.setValue("")
 
     App.Ajax.request({
-      url: `/admin/saved_content_blocks`,
+      url: `/adm/saved_content_blocks`,
       type: "POST",
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/SavedContentBlocks.js
       headers: {
         'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
       },
+=======
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/SavedContentBlocks.js
       data: { saved_content_block: { content, user_specific: userSpecific, context: this.getContext() }}
     })
     .then((response) => {
@@ -210,11 +216,16 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
       const savedContentBlockId = container.dataset.savedContentBlockId
 
       App.Ajax.request({
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/SavedContentBlocks.js
         url: `/admin/saved_content_blocks/${savedContentBlockId}`,
         type: "DELETE",
         headers: {
           'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
         }
+=======
+        url: `/adm/saved_content_blocks/${savedContentBlockId}`,
+        type: "DELETE"
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/SavedContentBlocks.js
       })
       .then(() => {
         container.remove()

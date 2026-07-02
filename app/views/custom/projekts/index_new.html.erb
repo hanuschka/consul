@@ -32,8 +32,9 @@
   <div class="flex-layout padding-on-mobile flex-layout-reverse-on-mobile">
     <div class="main-column">
       <div class="projekts-overview-page--projekts-list">
-        <%= render Resources::List::BaseComponent.new(
-          empty_text: t("custom.projekts.empty_list_text")
+        <%= render Resources::ListComponent.new(
+          empty_text: t("custom.projekts.empty_list_text"),
+          aria_label: t("custom.accessibility.regions.projekts_list")
         ) do |c| %>
           <% c.with_toolbar(
             i18n_namespace: "custom.projekts",
@@ -67,7 +68,7 @@
       <% end %>
     </div>
 
-    <div class="sidebar">
+    <aside class="sidebar" aria-label="<%= t('custom.accessibility.complementary.projekts') %>">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do |c| %>
         <%= render_custom_block "projekt_overview_page_sidebar", default_content: t("custom.projekts.index.information_default_text") %>
 
@@ -87,7 +88,7 @@
         <%= render Sidebar::SdgsCardComponent.new(sdgs: @sdgs, sdg_targets: @sdg_targets) %>
         <%= render Sidebar::Filters::PhasesCardComponent.new(phases: @phases, selected_phase_type: @selected_phase_type) if @phases.any? %>
       <%# <% end %>
-    </div>
+    </aside>
   </div>
 
   <div class="row">

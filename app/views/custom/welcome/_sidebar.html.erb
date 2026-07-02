@@ -1,4 +1,4 @@
-<aside class="sidebar">
+<aside class="sidebar" aria-label="<%= t('custom.accessibility.complementary.homepage') %>">
   <div class="hide-on-small-tablet">
     <% if render_custom_content_block?('home_page_sidebar') %>
       <% rendered_home_page_sidebar_block = capture { render_custom_block "home_page_sidebar", empty_hint: false } %>

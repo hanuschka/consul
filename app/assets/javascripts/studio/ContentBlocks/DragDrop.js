@@ -35,9 +35,12 @@ App.Studio.ContentBlocks.DragDrop = {
       url: this.getUpdatePositionUrl(e.item),
       type: "PATCH",
       dataType: "json",
+<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/DragDrop.js
       headers: {
         'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
       },
+=======
+>>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/DragDrop.js
       data: {
         position: newPosition
       }

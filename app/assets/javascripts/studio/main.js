@@ -42,10 +42,6 @@ window.App.Studio.Projekt = {
     this.initialized = true;
   },
 
-  get isEmbedded() {
-    return window.self !== window.top;
-  },
-
   loadConfig() {
     const projektPage = document.querySelector(".js-projekt-page");
     this.config.defaultMarginBottom = parseInt(projektPage.dataset.defaultMarginBottom);

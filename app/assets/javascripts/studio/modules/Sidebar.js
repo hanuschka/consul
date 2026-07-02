@@ -51,15 +51,11 @@ ProjektStudio.Sidebar = {
     // const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;
     const settingValue = sectionDeactivatedNew  ? "" : "active"
-    const projektId = ProjektStudio.getCurrentProjektId();
 
     $.ajax({
-      url: `/admin/projekts/${settingId}/settings/${projektId}`,
+      url: `/adm/projekts/projekt_settings/${settingId}`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: {
         "projekt_setting[value]": settingValue
       }

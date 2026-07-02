@@ -7,28 +7,18 @@ ProjektStudio.ToggleBackground = {
     }
 
     const $document = $(document);
-    $document.on("click", ".js-toggle-content-background", this.handleToggleClick.bind(this));
+    $document.on("change", ".js-toggle-content-background", this.handleToggleChange.bind(this));
 
     this.initialized = true;
   },
 
-  handleToggleClick(e) {
-    const button = e.currentTarget;
-    const url = button.dataset.url;
-    const currentState = button.dataset.showBackground === "true";
-    const newState = !currentState;
-
-    button.dataset.showBackground = newState;
-    button.setAttribute("aria-checked", newState);
+  handleToggleChange(e) {
+    const checkbox = e.currentTarget;
+    const url = checkbox.dataset.url;
+    const newState = checkbox.checked;
 
     const mainContentCard = document.querySelector(".main-content-card");
     mainContentCard.classList.toggle("-hide-background", !newState);
-
-    const tooltipInstance = $(button).data("zf.tooltip");
-    if (tooltipInstance && typeof tooltipInstance.hide === "function") {
-      tooltipInstance.hide();
-    }
-    button.blur();
 
     App.Ajax.request({
       url: url,

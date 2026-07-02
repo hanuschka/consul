@@ -1,6 +1,5 @@
 App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
-  PAN_ALLOW_DIRECT_DRAG: true,
-  PAN_STEP_PERCENT: 5,
+  PAN_MIN_OVERFLOW: 1,
 
   contentBlockImageLoadingState: {},
   activeImg: null,
@@ -10,8 +9,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   isActive: false,
   isPanning: false,
   panState: null,
-  isFocalDragging: false,
-  moveModeActive: false,
 
   initialize() {
     this.buildOverlay()
@@ -57,18 +54,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       this.handleImageDoubleClick.bind(this)
     )
 
-    $document.on(
-      "click",
-      ".js-img-overlay-pan-up, .js-img-overlay-pan-down, " +
-        ".js-img-overlay-pan-left, .js-img-overlay-pan-right",
-      this.handlePanButtonClick.bind(this)
-    )
-
-    $document.on("mousedown", ".js-img-overlay-focal", this.handleFocalStart.bind(this))
-    document.addEventListener("mousemove", this.handleFocalMove.bind(this))
-    document.addEventListener("mouseup", this.handleFocalEnd.bind(this))
-
-    $document.on("click", ".js-img-overlay-move", this.handleMoveToggleClick.bind(this))
     $document.on("click", ".js-img-overlay-recenter", this.handleRecenterClick.bind(this))
   },
 
@@ -96,23 +81,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       <div class="image-edit-overlay--handle -bottom-left js-img-resize-handle" data-corner="bottom-left"></div>
       <div class="image-edit-overlay--handle -bottom-right js-img-resize-handle" data-corner="bottom-right"></div>
 
-      <div class="js-img-overlay-focal image-edit-overlay--focal-dot"></div>
-
-      <div class="image-edit-overlay--pan-pad">
-        <button type="button" class="image-edit-overlay--pan-button -up js-img-overlay-pan-up" data-pan-direction="up" tabindex="-1">
-          <i class="fa fas fa-chevron-up"></i>
-        </button>
-        <button type="button" class="image-edit-overlay--pan-button -left js-img-overlay-pan-left" data-pan-direction="left" tabindex="-1">
-          <i class="fa fas fa-chevron-left"></i>
-        </button>
-        <button type="button" class="image-edit-overlay--pan-button -right js-img-overlay-pan-right" data-pan-direction="right" tabindex="-1">
-          <i class="fa fas fa-chevron-right"></i>
-        </button>
-        <button type="button" class="image-edit-overlay--pan-button -down js-img-overlay-pan-down" data-pan-direction="down" tabindex="-1">
-          <i class="fa fas fa-chevron-down"></i>
-        </button>
-      </div>
-
       <div class="image-edit-overlay--actions">
         ${ProjektStudio.templateFunctions.studioControlTooltip(`
           <button type="button" class="image-edit-overlay--action-button js-img-overlay-change" tabindex="-1">
@@ -134,22 +102,13 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
           delay: 600
         })}
         ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button type="button" class="image-edit-overlay--action-button -crop-only js-img-overlay-move" tabindex="-1">
-            <i class="fa fas fa-arrows-alt"></i>
-          </button>
-        `, {
-          title: "Bildausschnitt verschieben",
-          text: "Aktiviert den Verschiebe-Modus: Ziehe das Bild, um den sichtbaren Ausschnitt zu wählen.",
-          note: "Nur verfügbar, wenn der formatfüllende Zuschnitt aktiv ist.",
-          delay: 600
-        })}
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button type="button" class="image-edit-overlay--action-button -crop-only js-img-overlay-recenter" tabindex="-1">
+          <button type="button" class="image-edit-overlay--action-button -pan-only js-img-overlay-recenter" tabindex="-1">
             <i class="fa fas fa-crosshairs"></i>
           </button>
         `, {
           title: "Ausschnitt zentrieren",
           text: "Setzt die Bildposition wieder in die Mitte zurück.",
+          note: "Verfügbar, wenn das zugeschnittene Bild verschoben werden kann.",
           delay: 600
         })}
         <rich-tooltip>
@@ -199,14 +158,21 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.loadingOverlayEl = loading
   },
 
-  toggleImageControls(_contentBlock, enabled) {
+  toggleImageControls(contentBlock, enabled) {
     this.isActive = enabled
 
     if (enabled) {
       this.ensureOverlaysAttached()
     } else {
+      this.clearImageCursors(contentBlock)
       this.deactivate()
     }
+  },
+
+  clearImageCursors(contentBlock) {
+    contentBlock.querySelectorAll("img").forEach((img) => {
+      img.style.cursor = ""
+    })
   },
 
   ensureOverlaysAttached() {
@@ -229,14 +195,14 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   },
 
   handleImageMouseEnter(e) {
-    if (!this.isActive || this.isDragging || this.isPanning || this.isFocalDragging) return
+    if (!this.isActive || this.isDragging || this.isPanning) return
     if (e.currentTarget.closest(".js-content-block-element-not-editable")) return
 
     this.showOverlayForImage(e.currentTarget)
   },
 
   handleOverlayMouseLeave(_e) {
-    if (this.isDragging || this.isPanning || this.isFocalDragging) return
+    if (this.isDragging || this.isPanning) return
 
     this.hideOverlay()
   },
@@ -259,7 +225,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
     this.updateCropButtonState(img)
     this.updateMoveControlsState(img)
-    this.updateFocalDotPosition(img)
     App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
   },
 
@@ -277,8 +242,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.dragState = null
     this.isPanning = false
     this.panState = null
-    this.isFocalDragging = false
-    this.moveModeActive = false
   },
 
   updateCropButtonState(img) {
@@ -332,36 +295,28 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
     this.updateCropButtonState(img)
     this.updateMoveControlsState(img)
-    this.updateFocalDotPosition(img)
   },
 
   // --- Move inside crop ---
 
   updateMoveControlsState(img) {
-    const cropped = this.isImageCropped(img)
+    const pannable = this.canPanImage(img)
 
-    this.overlayEl.classList.toggle("-croppable", cropped)
+    this.overlayEl.classList.toggle("-pannable", pannable)
+    img.style.cursor = pannable ? "grab" : "default"
+  },
 
-    if (!cropped) {
-      this.moveModeActive = false
-      this.overlayEl.classList.remove("-move-mode")
-      img.style.cursor = ""
+  canPanImage(img) {
+    if (!this.isImageCropped(img)) return false
 
-      return
-    }
+    const overflow = this.getCoverOverflow(img)
 
-    const moveButton = this.overlayEl.querySelector(".js-img-overlay-move")
-    moveButton.classList.toggle("-active", this.moveModeActive)
-    this.overlayEl.classList.toggle("-move-mode", this.moveModeActive)
-
-    const draggable = this.PAN_ALLOW_DIRECT_DRAG || this.moveModeActive
-    img.style.cursor = draggable ? "grab" : ""
+    return overflow.x >= this.PAN_MIN_OVERFLOW || overflow.y >= this.PAN_MIN_OVERFLOW
   },
 
   handlePanStart(e) {
     if (!this.activeImg) return
-    if (!this.isImageCropped(this.activeImg)) return
-    if (!this.PAN_ALLOW_DIRECT_DRAG && !this.moveModeActive) return
+    if (!this.canPanImage(this.activeImg)) return
 
     e.preventDefault()
 
@@ -390,7 +345,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     const deltaYPercent = this.pixelDeltaToPercent(e.clientY - startY, overflow.y)
 
     this.setObjectPosition(this.activeImg, originalX - deltaXPercent, originalY - deltaYPercent)
-    this.updateFocalDotPosition(this.activeImg)
   },
 
   handlePanEnd(_e) {
@@ -400,65 +354,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.panState = null
     document.body.style.cursor = ""
     document.body.style.userSelect = ""
-  },
-
-  handlePanButtonClick(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    if (!this.activeImg) return
-
-    const direction = e.currentTarget.dataset.panDirection
-    const position = this.getObjectPosition(this.activeImg)
-    const step = this.PAN_STEP_PERCENT
-
-    if (direction === "up") position.y -= step
-    if (direction === "down") position.y += step
-    if (direction === "left") position.x -= step
-    if (direction === "right") position.x += step
-
-    this.setObjectPosition(this.activeImg, position.x, position.y)
-    this.updateFocalDotPosition(this.activeImg)
-  },
-
-  handleFocalStart(e) {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (!this.activeImg) return
-
-    this.isFocalDragging = true
-    document.body.style.userSelect = "none"
-  },
-
-  handleFocalMove(e) {
-    if (!this.isFocalDragging || !this.activeImg) return
-
-    const rect = this.activeImg.getBoundingClientRect()
-    const xPercent = ((e.clientX - rect.left) / rect.width) * 100
-    const yPercent = ((e.clientY - rect.top) / rect.height) * 100
-
-    this.setObjectPosition(this.activeImg, xPercent, yPercent)
-    this.updateFocalDotPosition(this.activeImg)
-  },
-
-  handleFocalEnd(_e) {
-    if (!this.isFocalDragging) return
-
-    this.isFocalDragging = false
-    document.body.style.userSelect = ""
-  },
-
-  handleMoveToggleClick(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    if (!this.activeImg) return
-
-    this.moveModeActive = !this.moveModeActive
-    this.updateMoveControlsState(this.activeImg)
   },
 
   handleRecenterClick(e) {
@@ -473,14 +368,13 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
   handleImageDoubleClick(e) {
     if (!this.activeImg) return
-    if (!this.isImageCropped(e.currentTarget)) return
+    if (!this.canPanImage(e.currentTarget)) return
 
     this.recenterImage(e.currentTarget)
   },
 
   recenterImage(img) {
     this.setObjectPosition(img, 50, 50)
-    this.updateFocalDotPosition(img)
   },
 
   getObjectPosition(img) {
@@ -535,14 +429,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       x: Math.max(0, scaledWidth - rect.width),
       y: Math.max(0, scaledHeight - rect.height),
     }
-  },
-
-  updateFocalDotPosition(img) {
-    const focalDot = this.overlayEl.querySelector(".js-img-overlay-focal")
-    const position = this.getObjectPosition(img)
-
-    focalDot.style.left = `${position.x}%`
-    focalDot.style.top = `${position.y}%`
   },
 
   // --- Drag resize ---

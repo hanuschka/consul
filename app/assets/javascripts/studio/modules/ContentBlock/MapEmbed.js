@@ -2,11 +2,12 @@
 //
 // A map content-block template marks its map region with
 // `<div class="projekt-map-embed js-projekt-map-embed ...">{{projekt_map}}</div>`.
-// On a published projekt page the server expands {{projekt_map}} via
-// process_shortcodes, so the map is already real and this module is a no-op
-// there. In the studio a freshly inserted block still holds the raw token, so
-// we fetch the server-rendered map markup (identical to the published output)
-// and inject it for display.
+// On a published page the server expands {{projekt_map}} via process_shortcodes,
+// so the map is already real and this module is a no-op there. In the studio a
+// freshly inserted block still holds the raw token, so we fetch the
+// server-rendered map markup (identical to the published output) and inject it
+// for display. On a projekt page that markup is the projekt's own map; off a
+// projekt page (e.g. the homepage) it is the city map with all projekts.
 //
 // Invariant: the SAVED content-block body must always keep the placeholder
 // token, never a hydrated map. Crud.updateContentBlock normalizes the saved
@@ -25,13 +26,12 @@ App.ContentBlockEditor.MapEmbed = {
   hydrateIn(container) {
     if (!container || !container.querySelectorAll) return;
 
-    const projektId = this.currentProjektId();
-    if (!projektId) return;
+    const url = this.mapEmbedUrl();
 
     container.querySelectorAll(this.selector).forEach((embed) => {
       if (!this.needsHydration(embed)) return;
 
-      this.fetchMapHtml(projektId)
+      this.fetchMapHtml(url)
         .then((html) => {
           if (!html || !this.needsHydration(embed)) return;
 
@@ -45,6 +45,16 @@ App.ContentBlockEditor.MapEmbed = {
     return embed.innerHTML.indexOf(this.TOKEN) !== -1;
   },
 
+  // On a projekt page the embed renders that projekt's map; off a projekt page
+  // (e.g. the homepage) it renders the city map with all projekts.
+  mapEmbedUrl() {
+    const projektId = this.currentProjektId();
+
+    if (projektId) return `/projekts/${projektId}/map_embed`;
+
+    return "/projekts_map_embed";
+  },
+
   currentProjektId() {
     if (typeof ProjektStudio === "undefined") return null
     if (!ProjektStudio.isProjektPage()) return null
@@ -52,13 +62,10 @@ App.ContentBlockEditor.MapEmbed = {
     return ProjektStudio.getCurrentProjektId();
   },
 
-  // Per-projekt promise cache: every embed of the same projekt renders the
-  // same map, so one request serves them all and re-hydration after save is
-  // instant.
-  fetchMapHtml(projektId) {
-    if (this.fetchCache[projektId]) return this.fetchCache[projektId];
-
-    const url = `/projekts/${projektId}/map_embed`;
+  // Per-URL promise cache: every embed sharing a URL renders the same map, so
+  // one request serves them all and re-hydration after save is instant.
+  fetchMapHtml(url) {
+    if (this.fetchCache[url]) return this.fetchCache[url];
 
     const request = fetch(url, {
       credentials: "same-origin",
@@ -69,8 +76,8 @@ App.ContentBlockEditor.MapEmbed = {
       return response.text();
     });
 
-    this.fetchCache[projektId] = request;
-    request.catch(() => { delete this.fetchCache[projektId]; });
+    this.fetchCache[url] = request;
+    request.catch(() => { delete this.fetchCache[url]; });
 
     return request;
   },

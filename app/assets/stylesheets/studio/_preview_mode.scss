@@ -11,13 +11,13 @@ body.-preview-mode {
     pointer-events: none;
   }
 
-  .projekt-content-block-wrapper.-code-edit-mode {
-    .projekt-content-block {
+  .custom-content-block-wrapper.-code-edit-mode {
+    .custom-content-block {
       display: block !important;
     }
   }
 
-  .projekt-content-block-wrapper.-html-edit-mode {
+  .custom-content-block-wrapper.-html-edit-mode {
     .js-html-edit-mode-original-content {
       display: block !important;
     }
@@ -33,7 +33,7 @@ body.-preview-mode {
 }
 
 .custom-page.-preview-mode {
-  .projekt-content-block {
+  .custom-content-block {
     // margin-bottom: 35px;
   }
 }

@@ -40,7 +40,7 @@ App.ContentBlockEditor.Render = {
     let parser = new DOMParser();
     let doc = parser.parseFromString(html, 'text/html');
 
-    const contentBlocks = Array.from(doc.querySelectorAll('.projekt-content-block'));
+    const contentBlocks = Array.from(doc.querySelectorAll('.custom-content-block'));
     let wrappedContentBlocksHtml = '';
 
     const projektId = ProjektStudio.getCurrentProjektId()
@@ -53,7 +53,7 @@ App.ContentBlockEditor.Render = {
         if (marginBottom) {
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = wrappedHtml;
-          const wrapper = tempDiv.querySelector('.projekt-content-block-wrapper');
+          const wrapper = tempDiv.querySelector('.custom-content-block-wrapper');
           if (wrapper) {
             wrapper.style.marginBottom = marginBottom;
           }

@@ -129,7 +129,7 @@
     }
   }
 
-  .auth-page-template--legend-text {
+  .auth-page-template--legend-text--default {
     color: black;
     font-size: 25px;
     line-height: 1.25;
@@ -138,6 +138,7 @@
       font-size: 20px;
     }
 
+    .custom-content-block-body,
     .custom-content-block-body p {
       line-height: inherit;
       font-size: inherit;
@@ -198,8 +199,13 @@
       display: block;
       margin-bottom: 6px;
       font-size: 16px;
-      font-weight: 400;
+      font-weight: bold;
       color: $main-text-color;
+      color: #181818;
+
+      &:has(+ .help-text) {
+        margin-bottom: 0;
+      }
     }
 
     input:not([type="checkbox"]), select {

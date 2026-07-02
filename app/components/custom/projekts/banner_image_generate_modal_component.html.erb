@@ -1,0 +1,60 @@
+<%= render Shared::ModalComponent.new(
+  id: "projektBannerImageGenerateModal",
+  modal_class: "modern-modal projekt-banner-generate-modal js-projekt-banner-generate-modal",
+  content_wrapper: false
+) do %>
+  <div class="projekt-banner-generate-modal--header">
+    <div class="modern-modal--header">
+      <h3><%= t("custom.projekts.banner_generate_modal.title") %></h3>
+      <button
+        class="close-button round-icon-button js-shared-modal-close"
+        aria-label="<%= t('application.close') %>"
+        type="button"
+      >
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+    <p class="projekt-banner-generate-modal--description">
+      <%= t("custom.projekts.banner_generate_modal.description") %>
+    </p>
+  </div>
+
+  <form class="projekt-banner-generate-modal--form" onsubmit="return false;">
+    <% if !content_blocks_present? %>
+      <div class="modern-modal--note projekt-banner-generate-modal--warning">
+        <i class="fas fa-circle-exclamation"></i>
+        <%= t("custom.projekts.banner_generate_modal.empty_content_warning") %>
+      </div>
+    <% end %>
+
+    <% if content_blocks_present? %>
+      <custom-switch
+        row
+        checked
+        input-class="js-projekt-banner-generate-use-content"
+        label="<%= t('custom.projekts.banner_generate_modal.use_content_label') %>"
+        description="<%= t('custom.projekts.banner_generate_modal.use_content_hint') %>"
+      ></custom-switch>
+    <% end %>
+
+    <div class="projekt-banner-generate-modal--field">
+      <label for="projektBannerGeneratePrompt">
+        <%= t("custom.projekts.banner_generate_modal.prompt_label") %>
+      </label>
+      <textarea
+        id="projektBannerGeneratePrompt"
+        name="prompt"
+        rows="4"
+        placeholder="<%= t('custom.projekts.banner_generate_modal.prompt_placeholder') %>"
+        class="js-projekt-banner-generate-prompt"
+      ></textarea>
+    </div>
+
+    <div class="projekt-banner-generate-modal--actions">
+      <button type="button" class="button js-projekt-banner-generate-submit">
+        <i class="fas fa-magic"></i>
+        <%= t("custom.projekts.banner_generate_modal.submit") %>
+      </button>
+    </div>
+  </form>
+<% end %>

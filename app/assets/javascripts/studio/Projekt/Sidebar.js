@@ -23,21 +23,10 @@ App.Studio.Projekt.Sidebar = {
     const form = e.currentTarget.form;
 
       $.ajax({
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/Sidebar.js
-        url: `/admin/projekts/${App.Studio.Projekt.getCurrentProjektId()}`,
-=======
         url: form.action,
->>>>>>> new-connection:app/assets/javascripts/studio/modules/Sidebar.js
         type: "PATCH",
         dataType: "json",
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        },
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/Sidebar.js
-        data: App.Studio.utils.formElementToUrlParams(e.currentTarget.form)
-=======
-        data: ProjektStudio.utils.formElementToUrlParams(form)
->>>>>>> new-connection:app/assets/javascripts/studio/modules/Sidebar.js
+        data: App.Studio.utils.formElementToUrlParams(form)
       })
   },
 
@@ -59,21 +48,11 @@ App.Studio.Projekt.Sidebar = {
     // const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;
     const settingValue = sectionDeactivatedNew  ? "" : "active"
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/Sidebar.js
-    const projektId = App.Studio.Projekt.getCurrentProjektId();
-=======
->>>>>>> new-connection:app/assets/javascripts/studio/modules/Sidebar.js
 
     $.ajax({
       url: `/adm/projekts/projekt_settings/${settingId}`,
       type: "PATCH",
       dataType: "json",
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/Sidebar.js
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
-=======
->>>>>>> new-connection:app/assets/javascripts/studio/modules/Sidebar.js
       data: {
         "projekt_setting[value]": settingValue
       }

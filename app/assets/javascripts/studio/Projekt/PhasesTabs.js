@@ -44,19 +44,10 @@ App.Studio.Projekt.PhasesTabs = {
       url: `/adm/projekts/${projektId}/phases/reorder`,
       type: "PATCH",
       dataType: "json",
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/PhasesTabs.js
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
-      data: {
-        ordered_list
-      }
-=======
       contentType: "application/json",
       data: JSON.stringify({
         tree: ordered_list.map((id) => ({ id }))
       })
->>>>>>> new-connection:app/assets/javascripts/studio/modules/PhasesTabs.js
     })
   },
 
@@ -67,10 +58,6 @@ App.Studio.Projekt.PhasesTabs = {
 
     const active = !tab.classList.contains("-deactivated")
     const icon = e.currentTarget.querySelector("i")
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/PhasesTabs.js
-    const projektId = App.Studio.Projekt.getCurrentProjektId();
-=======
->>>>>>> new-connection:app/assets/javascripts/studio/modules/PhasesTabs.js
     const projektPhaseId = tab.dataset.projektPhaseId
 
     icon.classList.toggle("fa-eye", !active)
@@ -81,21 +68,7 @@ App.Studio.Projekt.PhasesTabs = {
     $.ajax({
       url: `/adm/projekts/phases/${projektPhaseId}/toggle_active`,
       type: "PATCH",
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/PhasesTabs.js
-      dataType: "json",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
-      data: {
-        projekt:  {
-          phase_attributes: {
-            active: active
-          }
-        }
-      }
-=======
       dataType: "json"
->>>>>>> new-connection:app/assets/javascripts/studio/modules/PhasesTabs.js
     })
   },
 
@@ -125,12 +98,6 @@ App.Studio.Projekt.PhasesTabs = {
       url: `/adm/projekts/${projektId}/update_default_phase`,
       type: "PATCH",
       dataType: "json",
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/PhasesTabs.js
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
-=======
->>>>>>> new-connection:app/assets/javascripts/studio/modules/PhasesTabs.js
       data: {
         projekt_phase_id: phaseId,
         projekt_phase: {
@@ -152,12 +119,6 @@ App.Studio.Projekt.PhasesTabs = {
       $.ajax({
         url: `/adm/projekts/phases/${phaseId}`,
         type: "DELETE",
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/PhasesTabs.js
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        },
-=======
->>>>>>> new-connection:app/assets/javascripts/studio/modules/PhasesTabs.js
         dataType: "json"
       })
     }
@@ -176,12 +137,6 @@ App.Studio.Projekt.PhasesTabs = {
       $.ajax({
         url: `/adm/projekts/phases/${phaseId}/send_notifications`,
         type: "POST",
-<<<<<<< HEAD:app/assets/javascripts/studio/Projekt/PhasesTabs.js
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        },
-=======
->>>>>>> new-connection:app/assets/javascripts/studio/modules/PhasesTabs.js
         dataType: "json"
       })
     }

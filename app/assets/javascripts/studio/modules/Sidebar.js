@@ -20,14 +20,16 @@ ProjektStudio.Sidebar = {
   handleUpdateProjekt(e) {
     e.preventDefault()
 
+    const form = e.currentTarget.form;
+
       $.ajax({
-        url: `/admin/projekts/${ProjektStudio.getCurrentProjektId()}`,
+        url: form.action,
         type: "PATCH",
         dataType: "json",
         headers: {
           'X-Embedded-Frame': ProjektStudio.isEmbedded
         },
-        data: ProjektStudio.utils.formElementToUrlParams(e.currentTarget.form)
+        data: ProjektStudio.utils.formElementToUrlParams(form)
       })
   },
 

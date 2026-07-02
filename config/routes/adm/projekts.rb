@@ -251,6 +251,7 @@ namespace :adm do
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
       patch :update_color, on: :member
+      patch :update_taxonomy, on: :member
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
       patch :update_image, on: :member

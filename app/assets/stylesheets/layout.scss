@@ -430,6 +430,10 @@ button,
 
 .pagination li {
   display: inline-block;
+
+  a {
+    background-color: #e7e7e7;
+  }
 }
 
 .truncate-horizontal-text {

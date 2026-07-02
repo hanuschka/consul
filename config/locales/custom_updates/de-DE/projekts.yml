@@ -4,7 +4,23 @@ de:
       banner_upload:
         uploading: "Bild wird hochgeladen…"
         processing: "Bild wird verarbeitet…"
+        generating: "Titelbild wird mit KI generiert…"
         min_image_size_hint: "Empfohlene Mindestbildgröße: %{width}×%{height} px"
+        upload_failed: "Das Bild konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut."
+        generate_failed: "Das Bild konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+        generate_tooltip_title: "Titelbild mit KI generieren"
+        generate_tooltip_text: "Erstellt automatisch ein passendes Titelbild auf Basis der Projektinhalte."
+        generate_disabled_tooltip_title: "KI-Bildgenerierung nicht verfügbar"
+        generate_disabled_tooltip_text: "DT AI ist nicht aktiviert. Aktivieren Sie die KI-Funktionen in den Einstellungen, um Titelbilder generieren zu lassen."
+      banner_generate_modal:
+        title: "Titelbild mit KI generieren"
+        description: "Erstellt ein Titelbild auf Basis von Projekttitel, Untertitel und optional den Projektinhalten. Mit einem eigenen Prompt können Sie das gewünschte Motiv genauer beschreiben."
+        prompt_label: "Eigener Prompt (optional)"
+        prompt_placeholder: "z. B. Ein sonniger Stadtplatz mit Sitzbänken und Bäumen …"
+        use_content_label: "Projektinhalte verwenden"
+        use_content_hint: "Bezieht die Inhaltsblöcke der Projektseite in die Bildgenerierung ein."
+        empty_content_warning: "Die Projektseite hat noch keine Inhalte. Beschreiben Sie das gewünschte Bild möglichst genau im Prompt oder pflegen Sie zuerst Projektinhalte ein."
+        submit: "Generieren"
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite

@@ -1,4 +1,6 @@
 App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
+  PAN_MIN_OVERFLOW: 1,
+
   contentBlockImageLoadingState: {},
   activeImg: null,
   overlayEl: null,
@@ -156,14 +158,21 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.loadingOverlayEl = loading
   },
 
-  toggleImageControls(_contentBlock, enabled) {
+  toggleImageControls(contentBlock, enabled) {
     this.isActive = enabled
 
     if (enabled) {
       this.ensureOverlaysAttached()
     } else {
+      this.clearImageCursors(contentBlock)
       this.deactivate()
     }
+  },
+
+  clearImageCursors(contentBlock) {
+    contentBlock.querySelectorAll("img").forEach((img) => {
+      img.style.cursor = ""
+    })
   },
 
   ensureOverlaysAttached() {
@@ -294,7 +303,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     const pannable = this.canPanImage(img)
 
     this.overlayEl.classList.toggle("-pannable", pannable)
-    img.style.cursor = pannable ? "grab" : ""
+    img.style.cursor = pannable ? "grab" : "default"
   },
 
   canPanImage(img) {
@@ -302,7 +311,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
     const overflow = this.getCoverOverflow(img)
 
-    return overflow.x > 0 || overflow.y > 0
+    return overflow.x >= this.PAN_MIN_OVERFLOW || overflow.y >= this.PAN_MIN_OVERFLOW
   },
 
   handlePanStart(e) {

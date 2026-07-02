@@ -1,11 +1,7 @@
-<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/ImageEdit.js
 App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
   PAN_ALLOW_DIRECT_DRAG: true,
   PAN_STEP_PERCENT: 5,
 
-=======
-App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
->>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/ImageEdit.js
   contentBlockImageLoadingState: {},
   activeImg: null,
   overlayEl: null,
@@ -234,12 +230,8 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
     this.updateCropButtonState(img)
     this.updateMoveControlsState(img)
-<<<<<<< HEAD:app/assets/javascripts/studio/ContentBlocks/EditModes/SimpleEditMode/ImageEdit.js
     this.updateFocalDotPosition(img)
     App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
-=======
-    App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
->>>>>>> new-connection:app/assets/javascripts/studio/modules/ContentBlock/SimpleEditMode/ImageEdit.js
   },
 
   hideOverlay() {

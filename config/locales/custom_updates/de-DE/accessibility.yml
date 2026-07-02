@@ -14,6 +14,7 @@ de:
           aria-label: "Suchbutton. Klicken Sie, um die Suche zu starten."
         reset_button:
           aria-label: "Suchfeld zurücksetzen"
+        region_label: "Suche"
       google-translate:
         widget-toggler:
           aria-label: "Google Übersetzer. Klicken Sie, um die Seite zu übersetzen."
@@ -67,6 +68,14 @@ de:
       navigation:
         main: "Hauptnavigation"
         mobile: "Mobilnavigation"
+        projekt_phases: "Projektphasen"
+      complementary:
+        homepage: "Weitere Informationen"
+        homepage_mobile: "Weitere Informationen (mobil)"
+        projekts: "Filter und Informationen"
+        projekt_page: "Projektinformationen"
+      regions:
+        projekts_list: "Projektliste"
       events:
         projekt-aria-label: "Projekt: %{projekt_name}"
       session_timeout:

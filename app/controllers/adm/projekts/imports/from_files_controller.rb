@@ -1,5 +1,5 @@
 class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseController
-  MAX_AGGREGATE_BYTES = 45.megabytes
+  MAX_AGGREGATE_BYTES = 500.megabytes
   ALLOWED_EXTENSIONS = %w[pdf docx odt txt md].freeze
 
   STATUS_FILTERS = %w[in_progress failed completed].freeze

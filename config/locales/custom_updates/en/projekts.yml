@@ -5,6 +5,7 @@ en:
         uploading: "Uploading image…"
         processing: "Processing image…"
         min_image_size_hint: "Recommended minimum image size: %{width}×%{height} px"
+        upload_failed: "The image could not be uploaded. Please try again."
       overview_page:
         projekt_name: Overview page
         projekt_name_for_proposal: New projekt proposal

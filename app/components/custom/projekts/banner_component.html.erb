@@ -124,6 +124,18 @@
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
             data-delete-confirm="<%= t('custom.accessibility.banner-image.delete-confirm') %>"
             class="projekt-image-upload-wrapper js-projekt-image-uploader">
+            <div
+              class="projekt-banner-upload-error js-projekt-banner-upload-error"
+              role="alert"
+              aria-label="<%= t('custom.accessibility.banner-image.upload-error-label') %>"
+              hidden
+            >
+              <i class="fas fa-exclamation-circle projekt-banner-upload-error--icon" aria-hidden="true"></i>
+              <span
+                class="projekt-banner-upload-error--message js-projekt-banner-upload-error-message"
+                data-fallback-text="<%= t('custom.projekts.banner_upload.upload_failed') %>"
+              ></span>
+            </div>
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
             <div

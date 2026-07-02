@@ -89,8 +89,12 @@
             closeBtn.focus();
           }
         }, 100);
+
+        this.bindFocusTrapKeydown();
       });
       this.lightbox.on('close', () => {
+        this.unbindFocusTrapKeydown();
+
         document.body.style.paddingRight = "";
 
         var fixedElement = this.getFixedElement();
@@ -108,6 +112,54 @@
       this.lightbox.on('slide_after_load', (data) => {
         this.applySlideAccessibility(data);
       });
+    },
+
+    bindFocusTrapKeydown() {
+      if (!this.focusTrapKeydownHandler) {
+        this.focusTrapKeydownHandler = this.handleFocusTrapKeydown.bind(this);
+      }
+
+      document.addEventListener("keydown", this.focusTrapKeydownHandler, true);
+    },
+
+    unbindFocusTrapKeydown() {
+      if (this.focusTrapKeydownHandler) {
+        document.removeEventListener("keydown", this.focusTrapKeydownHandler, true);
+      }
+    },
+
+    handleFocusTrapKeydown(event) {
+      if (event.key !== "Tab" && event.which !== 9) return
+
+      var modal = this.getLightboxContainer();
+
+      if (!modal) return
+
+      var focusable = App.FocusTrap.getFocusableElements(modal);
+
+      if (focusable.length === 0) return
+
+      // Take full control of Tab: stop GLightbox's own keydown handler (which
+      // only cycles `.gbtn[data-taborder]` buttons and lets focus escape with
+      // the tabindex-based markup used here) and cycle within the lightbox.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      var currentIndex = focusable.indexOf(document.activeElement);
+      var lastIndex = focusable.length - 1;
+      var nextIndex;
+
+      if (event.shiftKey) {
+        nextIndex = currentIndex <= 0 ? lastIndex : currentIndex - 1;
+      } else {
+        nextIndex = currentIndex === lastIndex ? 0 : currentIndex + 1;
+      }
+
+      focusable[nextIndex].focus();
+    },
+
+    getLightboxContainer() {
+      return document.querySelector(".glightbox-container.glightbox-clean");
     },
 
     SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",

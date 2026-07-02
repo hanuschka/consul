@@ -7,7 +7,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   isActive: false,
   isPanning: false,
   panState: null,
-  moveModeActive: false,
 
   initialize() {
     this.buildOverlay()
@@ -53,7 +52,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
       this.handleImageDoubleClick.bind(this)
     )
 
-    $document.on("click", ".js-img-overlay-move", this.handleMoveToggleClick.bind(this))
     $document.on("click", ".js-img-overlay-recenter", this.handleRecenterClick.bind(this))
   },
 
@@ -102,22 +100,13 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
           delay: 600
         })}
         ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button type="button" class="image-edit-overlay--action-button -crop-only js-img-overlay-move" tabindex="-1">
-            <i class="fa fas fa-arrows-alt"></i>
-          </button>
-        `, {
-          title: "Bildausschnitt verschieben",
-          text: "Aktiviert den Verschiebe-Modus: Ziehe das Bild, um den sichtbaren Ausschnitt zu wählen.",
-          note: "Nur verfügbar, wenn der formatfüllende Zuschnitt aktiv ist.",
-          delay: 600
-        })}
-        ${ProjektStudio.templateFunctions.studioControlTooltip(`
-          <button type="button" class="image-edit-overlay--action-button -crop-only js-img-overlay-recenter" tabindex="-1">
+          <button type="button" class="image-edit-overlay--action-button -pan-only js-img-overlay-recenter" tabindex="-1">
             <i class="fa fas fa-crosshairs"></i>
           </button>
         `, {
           title: "Ausschnitt zentrieren",
           text: "Setzt die Bildposition wieder in die Mitte zurück.",
+          note: "Verfügbar, wenn das zugeschnittene Bild verschoben werden kann.",
           delay: 600
         })}
         <rich-tooltip>
@@ -244,7 +233,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.dragState = null
     this.isPanning = false
     this.panState = null
-    this.moveModeActive = false
   },
 
   updateCropButtonState(img) {
@@ -303,29 +291,23 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   // --- Move inside crop ---
 
   updateMoveControlsState(img) {
-    const cropped = this.isImageCropped(img)
+    const pannable = this.canPanImage(img)
 
-    this.overlayEl.classList.toggle("-croppable", cropped)
+    this.overlayEl.classList.toggle("-pannable", pannable)
+    img.style.cursor = pannable ? "grab" : ""
+  },
 
-    if (!cropped) {
-      this.moveModeActive = false
-      this.overlayEl.classList.remove("-move-mode")
-      img.style.cursor = ""
+  canPanImage(img) {
+    if (!this.isImageCropped(img)) return false
 
-      return
-    }
+    const overflow = this.getCoverOverflow(img)
 
-    const moveButton = this.overlayEl.querySelector(".js-img-overlay-move")
-    moveButton.classList.toggle("-active", this.moveModeActive)
-    this.overlayEl.classList.toggle("-move-mode", this.moveModeActive)
-
-    img.style.cursor = this.moveModeActive ? "grab" : ""
+    return overflow.x > 0 || overflow.y > 0
   },
 
   handlePanStart(e) {
     if (!this.activeImg) return
-    if (!this.isImageCropped(this.activeImg)) return
-    if (!this.moveModeActive) return
+    if (!this.canPanImage(this.activeImg)) return
 
     e.preventDefault()
 
@@ -365,17 +347,6 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     document.body.style.userSelect = ""
   },
 
-  handleMoveToggleClick(e) {
-    e.stopImmediatePropagation()
-    e.stopPropagation()
-    e.preventDefault()
-
-    if (!this.activeImg) return
-
-    this.moveModeActive = !this.moveModeActive
-    this.updateMoveControlsState(this.activeImg)
-  },
-
   handleRecenterClick(e) {
     e.stopImmediatePropagation()
     e.stopPropagation()
@@ -388,7 +359,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
   handleImageDoubleClick(e) {
     if (!this.activeImg) return
-    if (!this.isImageCropped(e.currentTarget)) return
+    if (!this.canPanImage(e.currentTarget)) return
 
     this.recenterImage(e.currentTarget)
   },

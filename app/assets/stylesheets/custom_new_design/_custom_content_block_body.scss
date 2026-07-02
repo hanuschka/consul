@@ -29,6 +29,15 @@
       }
 
 
+      // Keyboard focus ring for inline text links: keep the app-wide focus
+      // color/width but add breathing room and rounded corners so it reads as
+      // deliberate on inline text instead of hugging the glyphs.
+      a:focus-visible {
+        outline: 3px solid var(--focus-outline-color);
+        outline-offset: 3px;
+        border-radius: 3px;
+      }
+
       // Image height
       img {
         height: auto;

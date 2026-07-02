@@ -223,8 +223,21 @@
     <div class="projekt-import-chat--overlay -hidden"
          data-projekt-imports--chat-target="overlay">
       <div class="projekt-import-chat--overlay-content">
-        <div class="projekt-import-chat--overlay-spinner" aria-hidden="true"></div>
-        <p data-projekt-imports--chat-target="overlayLabel"></p>
+        <h3 class="projekt-import-chat--overlay-title">
+          <%= t("adm.projekts.imports.chats.show.import_overlay_title") %>
+        </h3>
+
+        <div class="projekt-import-chat--overlay-progress">
+          <div class="projekt-import-chat--overlay-progress-bar" role="progressbar" aria-label="<%= t('adm.projekts.imports.chats.show.import_overlay_title') %>">
+            <div class="projekt-import-chat--overlay-progress-fill"></div>
+          </div>
+          <span class="projekt-import-chat--overlay-label"
+                data-projekt-imports--chat-target="overlayLabel"></span>
+        </div>
+
+        <p class="projekt-import-chat--overlay-message">
+          <%= t("adm.projekts.imports.chats.show.import_overlay_message") %>
+        </p>
       </div>
     </div>
   </div>

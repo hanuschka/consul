@@ -14,12 +14,14 @@ class ProjektImports::FromFileJob < ApplicationJob
 
     projekt_import.update!(
       status: "processing",
-      extracted_text: extract_result.data[:text]
+      extracted_text: extract_result.data[:text],
+      content_locale: ProjektImport.default_content_locale
     )
 
     ai_result = ProjektImports::ProcessWithAiService.call(
       text: extract_result.data[:text],
-      additional_user_instructions: projekt_import.additional_user_instructions
+      additional_user_instructions: projekt_import.additional_user_instructions,
+      response_language: projekt_import.import_response_language
     )
 
     if !ai_result.success?

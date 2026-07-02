@@ -226,6 +226,8 @@ ProjektStudio.Banner = {
     const imagePreview = container.querySelector(".js-projekt-image-upload-preview")
     const previewUrl = URL.createObjectURL(file)
 
+    this.clearUploadError(container)
+
     imagePreview.src = previewUrl
     imagePreview.classList.add("-image-set")
 
@@ -245,6 +247,9 @@ ProjektStudio.Banner = {
       .then(() => {
         this.setUploadProgressMessage(container, "processing")
         this.handleUploadSuccess(container, imagePreview, previewUrl)
+      })
+      .catch((xhr) => {
+        this.handleUploadError(container, imagePreview, previewUrl, xhr)
       })
       .always(() => {
         this.hideUploadProgress(container)
@@ -294,6 +299,41 @@ ProjektStudio.Banner = {
     if (deleteButton) deleteButton.classList.remove("d-none");
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
+  },
+
+  handleUploadError(container, imagePreview, previewUrl, xhr) {
+    imagePreview.classList.remove("-image-set")
+    imagePreview.src = ""
+    URL.revokeObjectURL(previewUrl)
+
+    this.showUploadError(container, this.extractUploadErrorMessage(container, xhr))
+  },
+
+  extractUploadErrorMessage(container, xhr) {
+    const response = xhr && xhr.responseJSON
+
+    if (response && response.errors && response.errors.length > 0) return response.errors.join(" ")
+
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message")
+    return messageElement ? messageElement.dataset.fallbackText : ""
+  },
+
+  showUploadError(container, message) {
+    const errorElement = container.querySelector(".js-projekt-banner-upload-error")
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message")
+
+    if (!errorElement || !messageElement) return
+
+    messageElement.textContent = message
+    errorElement.hidden = false
+  },
+
+  clearUploadError(container) {
+    const errorElement = container.querySelector(".js-projekt-banner-upload-error")
+
+    if (!errorElement) return
+
+    errorElement.hidden = true
   },
 
   resolveResourceImageEls(container) {

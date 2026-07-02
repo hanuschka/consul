@@ -96,11 +96,11 @@
   }
 }
 
-.image-edit-overlay--action-button.-crop-only {
+.image-edit-overlay--action-button.-pan-only {
   display: none;
 }
 
-.image-edit-overlay.-croppable .image-edit-overlay--action-button.-crop-only {
+.image-edit-overlay.-pannable .image-edit-overlay--action-button.-pan-only {
   display: flex;
 }
 

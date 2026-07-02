@@ -689,7 +689,7 @@ $_chat-error-text: #7f1d1d;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, white 85%, transparent);
+  background: color-mix(in srgb, white 90%, transparent);
   z-index: 10;
 
   &.-hidden {

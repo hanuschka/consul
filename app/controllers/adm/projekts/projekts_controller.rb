@@ -1,4 +1,6 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
+  PROJEKT_IMAGE_MAX_FILE_SIZE_MB = 40
+
   before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
 
@@ -381,6 +383,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     page = @projekt.page
     image = page.image || ::Image.new(imageable: page)
+    image.accepted_content_types_override = AdminImage::ALLOWED_CONTENT_TYPES
+    image.max_file_size_override = PROJEKT_IMAGE_MAX_FILE_SIZE_MB
     image.attachment = params.require(:file)
     image.user = current_user
 

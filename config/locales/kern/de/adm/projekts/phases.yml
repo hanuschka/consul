@@ -252,6 +252,7 @@ de:
             edit_answers: Antwortliste
             edit_questions: Fragenliste
             edit_question: Frage bearbeiten
+            edit_bundle_question: Fragenbündel bearbeiten
             actions: Aktionen
         officing_manager_audits:
           title: Änderungslog Abstimmungshelfer

@@ -23,6 +23,7 @@
 //= require ../html_editor
 //= require ../custom/lib/Ajax
 //= require ../custom/components/shared/modal
+//= require ../custom/components/shared/image_cropper
 //= require ../custom/components/shared/dropdown_select_menu_component
 //= require ../studio/image_gallery_fallback
 //= require ../studio/main

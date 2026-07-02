@@ -5,9 +5,10 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
   attr_reader :text, :additional_user_instructions
 
-  def initialize(text:, additional_user_instructions: nil)
+  def initialize(text:, additional_user_instructions: nil, response_language: nil)
     @text = text
     @additional_user_instructions = additional_user_instructions
+    @response_language = response_language
   end
 
   def call
@@ -18,7 +19,7 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     system_prompt = ProjektImports::PromptBuilder.new(
       base_prompt: base_prompt,
       refs: refs,
-      response_language: detected_response_language
+      response_language: @response_language
     ).call
 
     schema = ProjektImports::OutputSchemaBuilder.build(refs)
@@ -82,14 +83,6 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     end
 
     parts.join("\n\n")
-  end
-
-  def detected_response_language
-    case LanguageDetector.detect(analyzed_text)
-    when :de then "German"
-    when :en then "English"
-    else I18n.locale.to_s.start_with?("de") ? "German" : "English"
-    end
   end
 
   def analyzed_text

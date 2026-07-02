@@ -689,7 +689,7 @@ $_chat-error-text: #7f1d1d;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, white 85%, transparent);
+  background: color-mix(in srgb, white 90%, transparent);
   z-index: 10;
 
   &.-hidden {
@@ -755,14 +755,14 @@ $_chat-error-text: #7f1d1d;
   margin-top: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: $_chat-text-muted;
+  color: black;
 }
 
 .projekt-import-chat--overlay-message {
   margin: 20px 0 0;
   font-size: 14px;
   line-height: 1.5;
-  color: $_chat-text-muted;
+  color: black;
 }
 
 .projekt-import-chat--created-banner {

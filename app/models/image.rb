@@ -68,8 +68,10 @@ class Image < ApplicationRecord
     destination_path
   end
 
+  attr_writer :max_file_size_override
+
   def max_file_size
-    self.class.max_file_size
+    @max_file_size_override || self.class.max_file_size
   end
 
   attr_writer :accepted_content_types_override

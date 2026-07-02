@@ -617,8 +617,7 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
       method: 'GET',
       headers: {
         'Accept': 'text/html',
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
   },
@@ -653,8 +652,7 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
     fetch(this.uploadEndpoints[this.state.type], {
       method: 'POST',
       headers: {
-        'X-CSRF-TOKEN': csrfToken,
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+        'X-CSRF-TOKEN': csrfToken
       },
       body: formData
     })
@@ -772,8 +770,7 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
         method: 'GET',
         headers: {
           'Accept': 'text/html',
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
 
@@ -825,8 +822,7 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
       const response = await fetch(`${this.uploadEndpoints[this.state.type]}/${this.state.selectedImage.dataset.id}`, {
         method: 'PATCH',
         headers: {
-          'X-CSRF-TOKEN': csrfToken,
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+          'X-CSRF-TOKEN': csrfToken
         },
         body: formData
       });
@@ -857,8 +853,7 @@ App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog = {
       const response = await fetch(`${this.uploadEndpoints[this.state.type]}/${chosenId}`, {
         method: 'DELETE',
         headers: {
-          'X-CSRF-TOKEN': csrfToken,
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
+          'X-CSRF-TOKEN': csrfToken
         }
       });
 

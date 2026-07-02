@@ -26,9 +26,6 @@ App.Studio.Projekt.Sidebar = {
         url: form.action,
         type: "PATCH",
         dataType: "json",
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        },
         data: App.Studio.utils.formElementToUrlParams(form)
       })
   },
@@ -56,9 +53,6 @@ App.Studio.Projekt.Sidebar = {
       url: `/adm/projekts/projekt_settings/${settingId}`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
       data: {
         "projekt_setting[value]": settingValue
       }

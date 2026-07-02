@@ -106,9 +106,6 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
     App.Ajax.request({
       url: `/adm/saved_content_blocks/${savedContentBlockId}`,
       type: "PATCH",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
       data: { saved_content_block: { content }}
     })
      .then((response) => {
@@ -165,9 +162,6 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
     App.Ajax.request({
       url: `/adm/saved_content_blocks`,
       type: "POST",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
       data: { saved_content_block: { content, user_specific: userSpecific, context: this.getContext() }}
     })
     .then((response) => {
@@ -211,10 +205,7 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
 
       App.Ajax.request({
         url: `/adm/saved_content_blocks/${savedContentBlockId}`,
-        type: "DELETE",
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        }
+        type: "DELETE"
       })
       .then(() => {
         container.remove()

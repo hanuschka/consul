@@ -44,9 +44,6 @@ App.Studio.Projekt.PhasesTabs = {
       url: `/adm/projekts/${projektId}/phases/reorder`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
       contentType: "application/json",
       data: JSON.stringify({
         tree: ordered_list.map((id) => ({ id }))
@@ -71,10 +68,7 @@ App.Studio.Projekt.PhasesTabs = {
     $.ajax({
       url: `/adm/projekts/phases/${projektPhaseId}/toggle_active`,
       type: "PATCH",
-      dataType: "json",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      }
+      dataType: "json"
     })
   },
 
@@ -104,9 +98,6 @@ App.Studio.Projekt.PhasesTabs = {
       url: `/adm/projekts/${projektId}/update_default_phase`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-      },
       data: {
         projekt_phase_id: phaseId,
         projekt_phase: {
@@ -128,9 +119,6 @@ App.Studio.Projekt.PhasesTabs = {
       $.ajax({
         url: `/adm/projekts/phases/${phaseId}`,
         type: "DELETE",
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        },
         dataType: "json"
       })
     }
@@ -149,9 +137,6 @@ App.Studio.Projekt.PhasesTabs = {
       $.ajax({
         url: `/adm/projekts/phases/${phaseId}/send_notifications`,
         type: "POST",
-        headers: {
-          'X-Embedded-Frame': App.Studio.Projekt.isEmbedded
-        },
         dataType: "json"
       })
     }

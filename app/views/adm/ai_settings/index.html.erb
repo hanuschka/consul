@@ -14,10 +14,26 @@
           icon: "power_settings_new"
         ) %>
   <% else %>
+    <% if default_llm_model_in_use? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.ai_settings.index.default_model_info.title"), style: :info) do %>
+          <p class="kern-body"><%= t("adm.ai_settings.index.default_model_info.body_html", model: content_tag(:strong, effective_llm_model)) %></p>
+        <% end %>
+      </div>
+    <% end %>
+
     <% if endpoint_without_custom_model? %>
       <div class="mb-3">
         <%= kern_alert(title: t("adm.ai_settings.warnings.custom_model_required.title"), style: :warning) do %>
           <p class="kern-body"><%= t("adm.ai_settings.warnings.custom_model_required.body") %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if highlight_api_key? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.ai_settings.warnings.api_key_required.title"), style: :warning) do %>
+          <p class="kern-body"><%= t("adm.ai_settings.warnings.api_key_required.body") %></p>
         <% end %>
       </div>
     <% end %>
@@ -29,8 +45,9 @@
         <% next if setting.key == "ai.llm_custom_model" && !show_custom_model_field? %>
 
         <% highlight_custom_model = setting.key == "ai.llm_custom_model" && endpoint_without_custom_model? %>
+        <% highlight_model = setting.key == "ai.llm_model" && highlight_llm_model? %>
 
-        <div class="mb-2 <%= "kern-ai-setting--highlight" if highlight_custom_model %>">
+        <div class="mb-2 <%= "kern-ai-setting--highlight" if highlight_custom_model || highlight_model %>">
           <div class="kern-title kern-title--small mb-3">
             <%= t("custom.settings.#{setting.key}") %>
           </div>
@@ -48,6 +65,11 @@
                   <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
                   <%= t("adm.ai_settings.warnings.custom_model_required.inline") %>
                 </p>
+              <% elsif highlight_model %>
+                <p class="kern-ai-setting--inline-warning" role="alert">
+                  <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
+                  <%= t("adm.ai_settings.warnings.model_required.inline") %>
+                </p>
               <% end %>
             </div>
           </div>
@@ -60,7 +82,7 @@
         </div>
       <% end %>
 
-      <div class="mb-2">
+      <div class="mb-2 <%= "kern-ai-setting--highlight" if highlight_api_key? %>">
         <div class="kern-title kern-title--small mb-3">
           <%= t("custom.settings.ai.llm_api_key") %>
         </div>
@@ -72,6 +94,18 @@
           </div>
           <div class="kern-col-12 kern-col-md-5">
             <%= render Adm::AiSettings::ApiKeyComponent.new("api_key", Ai::Settings.current_llm_provider) %>
+
+            <% if highlight_api_key? %>
+              <p class="kern-ai-setting--inline-warning" role="alert">
+                <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
+                <%= t("adm.ai_settings.warnings.api_key_required.inline") %>
+              </p>
+            <% elsif default_api_key_in_use? %>
+              <p class="kern-ai-setting--inline-info">
+                <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+                <%= t("adm.ai_settings.index.default_api_key_info") %>
+              </p>
+            <% end %>
           </div>
         </div>
       </div>

@@ -1,10 +1,14 @@
 App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
+  PAN_MIN_OVERFLOW: 1,
+
   contentBlockImageLoadingState: {},
   activeImg: null,
   overlayEl: null,
   isDragging: false,
   dragState: null,
   isActive: false,
+  isPanning: false,
+  panState: null,
 
   initialize() {
     this.buildOverlay()
@@ -17,7 +21,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
 
     $document.on(
       "mouseenter",
-      ".-simple-edit-mode .projekt-content-block img",
+      ".-simple-edit-mode .custom-content-block img",
       this.handleImageMouseEnter.bind(this)
     )
 
@@ -35,6 +39,22 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     $document.on("input", ".js-img-overlay-height-input", this.handleHeightInput.bind(this))
     $document.on("click", ".js-img-overlay-height-decrease", this.handleHeightDecrease.bind(this))
     $document.on("click", ".js-img-overlay-height-increase", this.handleHeightIncrease.bind(this))
+
+    $document.on(
+      "mousedown",
+      ".-simple-edit-mode .custom-content-block img",
+      this.handlePanStart.bind(this)
+    )
+    document.addEventListener("mousemove", this.handlePanMove.bind(this))
+    document.addEventListener("mouseup", this.handlePanEnd.bind(this))
+
+    $document.on(
+      "dblclick",
+      ".-simple-edit-mode .custom-content-block img",
+      this.handleImageDoubleClick.bind(this)
+    )
+
+    $document.on("click", ".js-img-overlay-recenter", this.handleRecenterClick.bind(this))
   },
 
   buildOverlay() {
@@ -79,6 +99,16 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
           title: "Zuschnitt umschalten",
           text: "Wechselt zwischen formatfüllendem Zuschnitt und vollständig sichtbarem Bild.",
           note: "Betrifft nur die Darstellung, nicht die Originaldatei.",
+          delay: 600
+        })}
+        ${ProjektStudio.templateFunctions.studioControlTooltip(`
+          <button type="button" class="image-edit-overlay--action-button -pan-only js-img-overlay-recenter" tabindex="-1">
+            <i class="fa fas fa-crosshairs"></i>
+          </button>
+        `, {
+          title: "Ausschnitt zentrieren",
+          text: "Setzt die Bildposition wieder in die Mitte zurück.",
+          note: "Verfügbar, wenn das zugeschnittene Bild verschoben werden kann.",
           delay: 600
         })}
         <rich-tooltip>
@@ -128,14 +158,21 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.loadingOverlayEl = loading
   },
 
-  toggleImageControls(_contentBlock, enabled) {
+  toggleImageControls(contentBlock, enabled) {
     this.isActive = enabled
 
     if (enabled) {
       this.ensureOverlaysAttached()
     } else {
+      this.clearImageCursors(contentBlock)
       this.deactivate()
     }
+  },
+
+  clearImageCursors(contentBlock) {
+    contentBlock.querySelectorAll("img").forEach((img) => {
+      img.style.cursor = ""
+    })
   },
 
   ensureOverlaysAttached() {
@@ -158,14 +195,14 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
   },
 
   handleImageMouseEnter(e) {
-    if (!this.isActive || this.isDragging) return
+    if (!this.isActive || this.isDragging || this.isPanning) return
     if (e.currentTarget.closest(".js-content-block-element-not-editable")) return
 
     this.showOverlayForImage(e.currentTarget)
   },
 
   handleOverlayMouseLeave(_e) {
-    if (this.isDragging) return
+    if (this.isDragging || this.isPanning) return
 
     this.hideOverlay()
   },
@@ -187,6 +224,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     heightInput.max = img.naturalHeight || Math.round(rect.height)
 
     this.updateCropButtonState(img)
+    this.updateMoveControlsState(img)
     App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
   },
 
@@ -202,17 +240,18 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.hideTooltip()
     this.isDragging = false
     this.dragState = null
+    this.isPanning = false
+    this.panState = null
   },
 
   updateCropButtonState(img) {
     const cropButton = this.overlayEl.querySelector(".js-img-overlay-crop")
-    const isCropped = getComputedStyle(img).objectFit === "cover"
 
-    if (isCropped) {
-      cropButton.classList.add("-active")
-    } else {
-      cropButton.classList.remove("-active")
-    }
+    cropButton.classList.toggle("-active", this.isImageCropped(img))
+  },
+
+  isImageCropped(img) {
+    return getComputedStyle(img).objectFit === "cover"
   },
 
   // --- Action buttons ---
@@ -245,9 +284,8 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     if (!this.activeImg) return
 
     const img = this.activeImg
-    const isCropped = getComputedStyle(img).objectFit === "cover"
 
-    if (isCropped) {
+    if (this.isImageCropped(img)) {
       img.style.objectFit = "contain"
       img.style.margin = "auto"
     } else {
@@ -256,6 +294,141 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     }
 
     this.updateCropButtonState(img)
+    this.updateMoveControlsState(img)
+  },
+
+  // --- Move inside crop ---
+
+  updateMoveControlsState(img) {
+    const pannable = this.canPanImage(img)
+
+    this.overlayEl.classList.toggle("-pannable", pannable)
+    img.style.cursor = pannable ? "grab" : "default"
+  },
+
+  canPanImage(img) {
+    if (!this.isImageCropped(img)) return false
+
+    const overflow = this.getCoverOverflow(img)
+
+    return overflow.x >= this.PAN_MIN_OVERFLOW || overflow.y >= this.PAN_MIN_OVERFLOW
+  },
+
+  handlePanStart(e) {
+    if (!this.activeImg) return
+    if (!this.canPanImage(this.activeImg)) return
+
+    e.preventDefault()
+
+    this.isPanning = true
+
+    const position = this.getObjectPosition(this.activeImg)
+
+    this.panState = {
+      startX: e.clientX,
+      startY: e.clientY,
+      originalX: position.x,
+      originalY: position.y,
+    }
+
+    document.body.style.cursor = "grabbing"
+    document.body.style.userSelect = "none"
+  },
+
+  handlePanMove(e) {
+    if (!this.isPanning || !this.panState || !this.activeImg) return
+
+    const { startX, startY, originalX, originalY } = this.panState
+    const overflow = this.getCoverOverflow(this.activeImg)
+
+    const deltaXPercent = this.pixelDeltaToPercent(e.clientX - startX, overflow.x)
+    const deltaYPercent = this.pixelDeltaToPercent(e.clientY - startY, overflow.y)
+
+    this.setObjectPosition(this.activeImg, originalX - deltaXPercent, originalY - deltaYPercent)
+  },
+
+  handlePanEnd(_e) {
+    if (!this.isPanning) return
+
+    this.isPanning = false
+    this.panState = null
+    document.body.style.cursor = ""
+    document.body.style.userSelect = ""
+  },
+
+  handleRecenterClick(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (!this.activeImg) return
+
+    this.recenterImage(this.activeImg)
+  },
+
+  handleImageDoubleClick(e) {
+    if (!this.activeImg) return
+    if (!this.canPanImage(e.currentTarget)) return
+
+    this.recenterImage(e.currentTarget)
+  },
+
+  recenterImage(img) {
+    this.setObjectPosition(img, 50, 50)
+  },
+
+  getObjectPosition(img) {
+    const raw = img.style.objectPosition || getComputedStyle(img).objectPosition
+    const parts = raw.split(" ")
+
+    return {
+      x: this.parsePositionValue(parts[0]),
+      y: this.parsePositionValue(parts[1]),
+    }
+  },
+
+  parsePositionValue(value) {
+    const parsed = parseFloat(value)
+
+    if (isNaN(parsed)) return 50
+
+    return parsed
+  },
+
+  setObjectPosition(img, xPercent, yPercent) {
+    const x = Math.round(this.clampPercent(xPercent) * 10) / 10
+    const y = Math.round(this.clampPercent(yPercent) * 10) / 10
+
+    img.style.objectPosition = `${x}% ${y}%`
+  },
+
+  clampPercent(value) {
+    return Math.min(100, Math.max(0, value))
+  },
+
+  pixelDeltaToPercent(deltaPx, overflowPx) {
+    if (overflowPx <= 0) return 0
+
+    return (deltaPx / overflowPx) * 100
+  },
+
+  getCoverOverflow(img) {
+    const rect = img.getBoundingClientRect()
+    const naturalWidth = img.naturalWidth
+    const naturalHeight = img.naturalHeight
+
+    if (!naturalWidth || !naturalHeight) {
+      return { x: 0, y: 0 }
+    }
+
+    const scale = Math.max(rect.width / naturalWidth, rect.height / naturalHeight)
+    const scaledWidth = naturalWidth * scale
+    const scaledHeight = naturalHeight * scale
+
+    return {
+      x: Math.max(0, scaledWidth - rect.width),
+      y: Math.max(0, scaledHeight - rect.height),
+    }
   },
 
   // --- Drag resize ---
@@ -438,6 +611,7 @@ App.ContentBlockEditor.SimpleEditMode.ImageEdit = {
     this.decrementImageLoadingCount(contentBlockId)
 
     img.style.objectFit = "cover"
+    img.style.objectPosition = ""
 
     img.style.height = ""
     img.removeAttribute("height")

@@ -1,6 +1,6 @@
-<%= content_for :title, t(".title") %>
+<%= content_for :title, @title %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: poll_questions_adm_projekts_phase_path(@projekt_phase), narrow: true) do |header| %>
+<%= render Adm::HeaderComponent.new(title: @title, breadcrumbs: @breadcrumbs, back_button_url: poll_questions_adm_projekts_phase_path(@projekt_phase), narrow: true) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t("adm.projekts.phases.poll_questions.intro_text_p1") %></p>
 
@@ -16,6 +16,6 @@
   <% end %>
 <% end %>
 
-<div class="kern-container kern-container--form mb-5">
+<div class="kern-container mb-5">
   <%= render "form", question: @question, url: adm_projekts_phase_poll_question_path(@projekt_phase, @question) %>
 </div>

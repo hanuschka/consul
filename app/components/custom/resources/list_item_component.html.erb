@@ -61,8 +61,8 @@
 
       <div class="resource-item--body-and-author">
         <div class="resource-item--body">
-          <% if show_body_heading? %>
           <div class="resource-item--body-heading">
+            <% if show_body_heading? %>
             <% if @subline.present? %>
               <%= @subline %>
             <% elsif @projekt.present? %>
@@ -91,8 +91,8 @@
             <% if date.present? %>
               <div class="resource-item--date"><%= date %></div>
             <% end %>
+            <% end %>
           </div>
-          <% end %>
 
           <% if @url.present? %>
             <%= content_tag(title_heading_tag, class: "resource-item--title") do %>

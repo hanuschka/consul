@@ -1,4 +1,10 @@
-<div class="resources-list js-resources-list <%= class_names %>">
+<div
+  class="resources-list js-resources-list <%= class_names %>"
+  <% if @aria_label.present? %>
+    role="region"
+    aria-label="<%= @aria_label %>"
+  <% end %>
+>
   <% if @title.present? %>
     <h2 class="resources-list--title">
       <%= @title %>

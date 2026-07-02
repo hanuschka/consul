@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-class Resources::List::BaseComponent < ApplicationComponent
+class Resources::ListComponent < ApplicationComponent
   renders_one :toolbar, Resources::List::ToolbarComponent
   renders_one :items
   renders_one :footer
 
-  def initialize(title: nil, empty_text: nil)
+  def initialize(title: nil, empty_text: nil, aria_label: nil)
     @title = title
     @empty_text = empty_text
+    @aria_label = aria_label
   end
 
   def wide?

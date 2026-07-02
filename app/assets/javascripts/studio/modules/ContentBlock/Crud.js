@@ -318,9 +318,6 @@ App.ContentBlockEditor.Crud = {
       url: this.getUpdateUrl(contentBlockWrapper),
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: {
         html: updatedContentBlock.innerHTML
       }
@@ -426,9 +423,6 @@ App.ContentBlockEditor.Crud = {
     App.Ajax.request({
       url: destroyUrl,
       type: "DELETE",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       dataType: "json"
     })
       .catch((response) => {

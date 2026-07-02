@@ -32,13 +32,15 @@
 
     <div class="resources-list--actions">
       <% if @text_search_enabled && i18n_namespace.present? %>
-        <%= render(
-          Shared::TextSearchFormComponent.new(
-            url: @remote_url,
-            remote: @remote_url.present?,
-            i18n_namespace: "#{i18n_namespace}.search_form",
-          )
-        ) %>
+        <div role="search" aria-label="<%= t('custom.accessibility.search.region_label') %>">
+          <%= render(
+            Shared::TextSearchFormComponent.new(
+              url: @remote_url,
+              remote: @remote_url.present?,
+              i18n_namespace: "#{i18n_namespace}.search_form",
+            )
+          ) %>
+        </div>
       <% end %>
 
       <div class="items-list-line-divider">

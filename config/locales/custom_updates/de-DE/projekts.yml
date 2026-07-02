@@ -5,6 +5,7 @@ de:
         uploading: "Bild wird hochgeladen…"
         processing: "Bild wird verarbeitet…"
         min_image_size_hint: "Empfohlene Mindestbildgröße: %{width}×%{height} px"
+        upload_failed: "Das Bild konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut."
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite

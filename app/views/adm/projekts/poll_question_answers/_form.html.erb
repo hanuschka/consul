@@ -12,7 +12,7 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(
-    label: Poll::Question::Answer.human_attribute_name(:title),
+    label: t(".title_label"),
     hint: t(".hints.title"),
     stacked: true) do %>
     <%= f.text_field :title, label: false, placeholder: t(".hints.title_placeholder") %>

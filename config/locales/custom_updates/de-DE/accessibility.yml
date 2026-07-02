@@ -39,6 +39,7 @@ de:
         delete-aria-label: "Bild löschen"
         delete-confirm: "Möchten Sie dieses Bild wirklich löschen?"
         upload-progress-label: "Bannerbild wird hochgeladen"
+        upload-error-label: "Fehler beim Hochladen des Bannerbilds"
       image-lightbox:
         aria-label: "Klicken Sie, um das Bild zu vergrößern."
       share-links:

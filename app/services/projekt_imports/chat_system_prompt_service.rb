@@ -51,7 +51,7 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
   end
 
   def response_language
-    I18n.locale.to_s.start_with?("de") ? "German" : "English"
+    projekt_import.import_response_language
   end
 
   def compact_ai_result_summary

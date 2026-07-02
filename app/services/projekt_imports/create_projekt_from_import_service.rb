@@ -144,7 +144,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
         name: "custom",
         key: "projekt_content_block_#{projekt.id}_#{position + 1}_#{DateTime.now.to_i}",
         body: body,
-        locale: I18n.locale.to_s,
+        locale: projekt_import.import_locale,
         position: position + 1
       )
     rescue ActiveRecord::RecordInvalid => e

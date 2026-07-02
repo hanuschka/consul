@@ -133,7 +133,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
               `, {
                 title: "Speichern",
                 text: "Speichert alle Änderungen an diesem Inhaltsblock und beendet den Bearbeitungsmodus.",
-                delay: 2500
+                delay: 3500
               })}
               ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
@@ -147,7 +147,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
               `, {
                 title: "Abbrechen",
                 text: "Verwirft alle nicht gespeicherten Änderungen und setzt den Block auf den zuletzt gespeicherten Stand zurück.",
-                delay: 2500
+                delay: 3500
               })}
             </div>
             <div
@@ -161,7 +161,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
                   `, {
                     title: "Abstand nach unten",
                     text: "Bestimmt den vertikalen Außenabstand unterhalb dieses Inhaltsblocks und damit, wie viel Platz bis zum nächsten Block frei bleibt. Über die Felder − und + in Schritten verändern oder den Wert direkt eintippen.",
-                    note: "Wertebereich 20–85 px · Schrittweite 5 px · Standard 30 px",
+                    note: "Wertebereich 15–85 px · Schrittweite 5 px · Standard 30 px",
                     delay: 200
                   })}
                   <button
@@ -177,7 +177,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
                     class="js-content-block-margin-bottom-input"
                     value="30"
                     step="5"
-                    min="20"
+                    min="15"
                     max="85"
                   >
                   <button

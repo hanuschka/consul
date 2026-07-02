@@ -13,10 +13,7 @@
   .image-edit-overlay--actions .rich-tooltip--body,
   .image-edit-overlay--height-control,
   .image-edit-overlay--height-control button,
-  .image-edit-overlay--height-control input,
-  .image-edit-overlay--focal-dot,
-  .image-edit-overlay--pan-pad,
-  .image-edit-overlay--pan-button {
+  .image-edit-overlay--height-control input {
     pointer-events: all;
   }
 }
@@ -99,85 +96,12 @@
   }
 }
 
-.image-edit-overlay--action-button.-crop-only {
+.image-edit-overlay--action-button.-pan-only {
   display: none;
 }
 
-.image-edit-overlay.-croppable .image-edit-overlay--action-button.-crop-only {
+.image-edit-overlay.-pannable .image-edit-overlay--action-button.-pan-only {
   display: flex;
-}
-
-.image-edit-overlay--focal-dot {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 22px;
-  height: 22px;
-  margin-top: -11px;
-  margin-left: -11px;
-  background: rgba(0, 120, 212, 0.65);
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 1px 4px rgba(0, 0, 0, 0.4);
-  cursor: move;
-}
-
-.image-edit-overlay.-croppable .image-edit-overlay--focal-dot {
-  display: block;
-}
-
-.image-edit-overlay--pan-pad {
-  display: none;
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  grid-template-columns: repeat(3, 26px);
-  grid-template-rows: repeat(3, 26px);
-  gap: 2px;
-}
-
-.image-edit-overlay.-croppable .image-edit-overlay--pan-pad {
-  display: grid;
-}
-
-.image-edit-overlay--pan-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  font-size: 13px;
-  color: #434343;
-  background: rgba(255, 255, 255, 0.85);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  transition: background-color 100ms;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.95);
-  }
-}
-
-.image-edit-overlay--pan-button.-up {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.image-edit-overlay--pan-button.-left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.image-edit-overlay--pan-button.-right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.image-edit-overlay--pan-button.-down {
-  grid-column: 2;
-  grid-row: 3;
 }
 
 .image-edit-overlay--actions .rich-tooltip--body {

@@ -103,6 +103,7 @@ en:
               import:
                 title: "Import projekt"
                 text: "Creates the projekt with all phases, content blocks, and settings. It stays deactivated and hidden from visitors until you activate it."
+                busy_text: "The assistant is still responding. You can start the import once the current message is finished."
               attach:
                 title: "Attach document"
                 text: "Adds another document to the conversation so the AI can take extra information into account."

@@ -34,7 +34,6 @@
 @use "components/map";
 @use "components/shared_admin_iframe";
 @use "components/subnavigation_konto_component";
-@use "adm/components/admin_projekt_import";
 @use "adm/components/kern_ai_setting";
 @use "adm/components/files";
 @use "adm/components/evaluation_report";
@@ -67,6 +66,7 @@
 @use "cross_pack/components/flyout_item_link";
 @use "cross_pack/components/image_cropper";
 @use "cross_pack/components/ai_feature_tooltip";
+@use "cross_pack/components/custom_switch";
 
 @use "adm/components/newsletter_email_preview";
 @use "adm/components/image_cropper_dialog";

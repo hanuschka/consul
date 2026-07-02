@@ -103,6 +103,7 @@ de:
               import:
                 title: "Projekt importieren"
                 text: "Erstellt das Projekt mit allen Phasen, Inhaltsblöcken und Einstellungen. Es bleibt zunächst deaktiviert und für Besucher unsichtbar, bis Sie es aktivieren."
+                busy_text: "Die KI antwortet noch. Sie können den Import starten, sobald die aktuelle Nachricht abgeschlossen ist."
               attach:
                 title: "Dokument anhängen"
                 text: "Fügt ein weiteres Dokument zum Gespräch hinzu, damit die KI zusätzliche Informationen berücksichtigen kann."

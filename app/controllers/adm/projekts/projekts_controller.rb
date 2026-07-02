@@ -1,8 +1,9 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   PROJEKT_IMAGE_MAX_FILE_SIZE_MB = 40
 
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
+  before_action :process_tags, only: [:update]
 
   def list
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
@@ -286,11 +287,16 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       flash.now[:success] = t("adm.attribute.update.success")
     end
 
-    render turbo_stream: turbo_stream.replace(
-      turbo_frame_request_id,
-      partial: "adm/projekts/projekts/#{frame_partial_path}",
-      locals: { projekt: @projekt }
-    )
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          turbo_frame_request_id,
+          partial: "adm/projekts/projekts/#{frame_partial_path}",
+          locals: { projekt: @projekt }
+        )
+      end
+      format.json { render json: { projekt: @projekt.serialize } }
+    end
   end
 
   def destroy
@@ -303,16 +309,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.destroy!
 
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
-  end
-
-  def import_projekt
-    authorize [:adm, :projekts, Projekt], :create?
-
-    @breadcrumbs = [
-      { name: t(".title") }
-    ]
-
-    @dt_import_url = build_dt_import_url
   end
 
   def notify_reviewers
@@ -383,8 +379,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     @projekt_phase = @projekt.projekt_phases.find(params[:projekt_phase_id])
     param_key = @projekt_phase.model_name.param_key
-    @projekt_phase.default_phase = params[param_key][:default_phase]
+    phase_params = params[param_key] || params[:projekt_phase]
+    @projekt_phase.default_phase = phase_params[:default_phase]
     @projekt_phases = @projekt.projekt_phases
+
+    respond_to do |format|
+      format.turbo_stream
+      format.json { head :ok }
+    end
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
@@ -418,10 +420,51 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     render json: { ok: true, message: t(".success") }
   end
 
+  def generate_image
+    authorize [:adm, :projekts, @projekt], :update?
+
+    if !Ai::Settings.ai_available?
+      render json: { ok: false }, status: :forbidden
+      return
+    end
+
+    use_projekt_content = ActiveModel::Type::Boolean.new.cast(params[:use_projekt_content]) == true
+
+    @projekt.update_column(:banner_image_generation_status, "processing")
+    Projekts::GenerateBannerImageJob.perform_later(
+      @projekt.id,
+      current_user.id,
+      params[:prompt].to_s,
+      use_projekt_content
+    )
+
+    render json: { status: "processing" }
+  end
+
+  def generate_image_status
+    authorize [:adm, :projekts, @projekt], :show?
+
+    status = @projekt.banner_image_generation_status || "pending"
+    payload = { status: status }
+
+    if status == "completed"
+      payload[:image_url] = generated_banner_image_url
+    end
+
+    render json: payload
+  end
+
   private
 
     def find_projekt
       @projekt = Projekt.find(params[:id])
+    end
+
+    def generated_banner_image_url
+      attachment = @projekt.page&.image&.attachment
+      return nil if attachment.blank?
+
+      Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true)
     end
 
     def images_query_params
@@ -482,10 +525,20 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated,
         :landing_page_id,
+        :tag_list,
         geozone_affiliation_ids: [],
         registered_address_district_affiliation_ids: [],
-        individual_group_value_ids: []
+        individual_group_value_ids: [],
+        sdg_goal_ids: []
       )
+    end
+
+    def process_tags
+      return if params[:projekt].blank?
+      return if params[:projekt][:tag_list_predefined].nil?
+
+      params[:projekt][:tag_list] = params[:projekt][:tag_list_predefined]
+      params[:projekt].delete(:tag_list_predefined)
     end
 
     def create_params

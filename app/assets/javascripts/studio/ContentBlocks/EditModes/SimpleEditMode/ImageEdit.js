@@ -225,7 +225,6 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
 
     this.updateCropButtonState(img)
     this.updateMoveControlsState(img)
-    this.updateFocalDotPosition(img)
     App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
   },
 

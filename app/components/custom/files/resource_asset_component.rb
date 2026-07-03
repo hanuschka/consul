@@ -23,6 +23,44 @@ class Files::ResourceAssetComponent < ApplicationComponent
       name.presence
     end
 
+    def owning_resource(record)
+      return nil if record.blank?
+
+      case record
+      when Milestone
+        record.milestoneable
+      when Widget::Card
+        record.cardable
+      else
+        record
+      end
+    end
+
+    def owning_resource_type_label(record)
+      resource = owning_resource(record)
+      return nil if resource.blank?
+
+      resource.model_name.human
+    end
+
+    def resource_projekt(record)
+      resource = owning_resource(record)
+      return nil if resource.blank?
+
+      case resource
+      when Projekt
+        resource
+      when ProjektPhase
+        resource.projekt
+      when ProjektArgument
+        resource.projekt_phase&.projekt
+      when Proposal, Debate, Poll, Budget::Investment
+        resource.projekt
+      else
+        nil
+      end
+    end
+
     def resource_url(record)
       return nil if record.blank?
 

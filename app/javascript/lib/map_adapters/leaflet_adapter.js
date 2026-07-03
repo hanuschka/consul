@@ -594,15 +594,14 @@ export default class LeafletAdapter extends BaseAdapter {
   createMarkerIcon(color, iconName, title, feature) {
     const L = window.L
 
-    // Temporarily disabled — masterportal pin icon set will be reimplemented.
-    // if (feature && feature.properties && feature.properties.feature_icon_url) {
-    //   return L.icon({
-    //     iconUrl: feature.properties.feature_icon_url,
-    //     iconSize: [36, 36],
-    //     iconAnchor: [18, 36],
-    //     popupAnchor: [0, -32]
-    //   })
-    // }
+    if (feature && feature.properties && feature.properties.feature_icon_url) {
+      return L.icon({
+        iconUrl: encodeURI(feature.properties.feature_icon_url),
+        iconSize: [36, 36],
+        iconAnchor: [18, 18],
+        popupAnchor: [0, -18]
+      })
+    }
 
     if (this.isMasterportalFeature(feature)) {
       return this.masterportalMarkerIcon()

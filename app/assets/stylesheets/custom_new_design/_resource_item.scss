@@ -514,7 +514,7 @@
       padding-left: 25px;
 
       &:hover {
-        color: #28313b;
+        color: color-mix(in srgb, var(--brand-color), black 15%);
       }
 
       &:focus-visible {

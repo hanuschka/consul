@@ -22,9 +22,6 @@
 
     <% if @projekt_phase.is_a?(ProjektPhase::BudgetPhase) %>
       <%= render ParticapationStats::LabelSentimentComponent.new(projekt_phase: @projekt_phase) %>
-      <h2 class="participation-stats--section-title"><%= t("custom.participation_stats.sections.distributions") %></h2>
-      <%= render ParticapationStats::TimelineComponent.new(projekt_phase: @projekt_phase) %>
-      <%= render ParticapationStats::UserSegmentsComponent.new(stats: @stats) %>
       <%= render ParticapationStats::HeatmapComponent.new(projekt_phase: @projekt_phase) %>
 
     <% else %>

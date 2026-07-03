@@ -40,17 +40,17 @@ end
 
 namespace :adm do
   namespace :files do
-    resources :images, only: [:index]
-    resources :documents, only: [:index, :update, :destroy] do
+    resources :images, only: [:index, :show]
+    resources :documents, only: [:index, :show, :update, :destroy] do
       get :documentable_type_filter, on: :collection
     end
   end
 
   namespace :maintenance do
-    resources :resource_images, only: [:index, :update, :destroy] do
+    resources :resource_images, only: [:index, :show, :update, :destroy] do
       get :imageable_type_filter, on: :collection
     end
-    resources :resource_documents, only: [:index] do
+    resources :resource_documents, only: [:index, :show] do
       get :documentable_type_filter, on: :collection
     end
   end

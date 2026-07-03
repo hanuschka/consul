@@ -146,7 +146,7 @@
       this.trigger.addEventListener("pointerdown", this.suppressShow.bind(this))
 
       if (!this.hoverOnly) {
-        this.trigger.addEventListener("focusin", this.scheduleShow.bind(this))
+        this.trigger.addEventListener("focusin", this.handleFocusin.bind(this))
         this.trigger.addEventListener("focusout", this.scheduleHide.bind(this))
       }
 
@@ -160,6 +160,25 @@
       } else {
         this.tooltipBody.addEventListener("mouseenter", this.cancelHide.bind(this))
         this.addEventListener("mouseleave", this.scheduleHide.bind(this))
+      }
+    }
+
+    // Focus re-shows the tooltip only for keyboard-originated focus
+    // (:focus-visible). A pointer click that focuses the trigger — or focus
+    // restored to it after a modal/dialog it opened closes — must not pop the
+    // tooltip back up over the action the user just took;
+    // matches(":focus-visible") is false in both those pointer-driven cases.
+    handleFocusin() {
+      if (!this.focusIsVisible()) return
+
+      this.scheduleShow()
+    }
+
+    focusIsVisible() {
+      try {
+        return this.trigger.matches(":focus-visible")
+      } catch (error) {
+        return true
       }
     }
 

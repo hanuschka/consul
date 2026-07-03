@@ -27,7 +27,7 @@
       gradient.addColorStop(0, color + "80");
       gradient.addColorStop(1, color + "10");
 
-      new Chart(ctx, {
+      var chartConfig = {
         type: "line",
         data: {
           labels: labels,
@@ -109,8 +109,11 @@
             mode: "index"
           }
         }
-      });
+      };
 
+      App.ChartLoadingPlaceholder.markWhenRendered(chartConfig, container);
+
+      new Chart(ctx, chartConfig);
       container.dataset.chartInitialized = "true";
     }
   };

@@ -1,0 +1,24 @@
+.chart-loading-placeholder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background-color: $gray-1;
+}
+
+.chart-loading-placeholder .shared-spinner {
+  width: 72px;
+  height: 72px;
+  border-width: 6px;
+  border-top-color: $medium-gray-3;
+}
+
+[data-chart-rendered="true"] > .chart-loading-placeholder {
+  display: none;
+}

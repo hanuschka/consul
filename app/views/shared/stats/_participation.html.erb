@@ -35,7 +35,7 @@
         </div>
 
         <% accepting_segment = stats.segment_stats("accepting") %>
-        <%= render Shared::CollapseComponent.new(opened_by_default: stats.budget&.current_phase&.kind == "accepting", head_hover_background: true) do |c| %>
+        <%= render Shared::CollapseComponent.new(head_background: true) do |c| %>
           <% c.with_head do %>
             <h3 class="budget-phase-stats-segments--title"><%= t("custom.participation_stats.sections.distributions") %></h3>
           <% end %>
@@ -110,7 +110,7 @@
         </div>
 
         <% selecting_segment = stats.segment_stats("selecting") %>
-        <%= render Shared::CollapseComponent.new(opened_by_default: stats.budget&.current_phase&.kind == "selecting", head_hover_background: true) do |c| %>
+        <%= render Shared::CollapseComponent.new(head_background: true) do |c| %>
           <% c.with_head do %>
             <h3 class="budget-phase-stats-segments--title"><%= t("custom.participation_stats.sections.distributions") %></h3>
           <% end %>
@@ -184,7 +184,7 @@
         </div>
 
         <% balloting_segment = stats.segment_stats("balloting") %>
-        <%= render Shared::CollapseComponent.new(opened_by_default: stats.budget&.current_phase&.kind == "balloting", head_hover_background: true) do |c| %>
+        <%= render Shared::CollapseComponent.new(head_background: true) do |c| %>
           <% c.with_head do %>
             <h3 class="budget-phase-stats-segments--title"><%= t("custom.participation_stats.sections.distributions") %></h3>
           <% end %>

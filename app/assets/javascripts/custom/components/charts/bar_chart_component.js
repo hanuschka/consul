@@ -23,6 +23,8 @@
       const ctx = canvas.getContext("2d");
       const chartConfig = this.createChartConfig(chartData);
 
+      App.ChartLoadingPlaceholder.markWhenRendered(chartConfig, container);
+
       new Chart(ctx, chartConfig);
       container.dataset.chartInitialized = "true";
     },

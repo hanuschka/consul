@@ -175,6 +175,8 @@
         </div>
       </div>
     <% end %>
+
+    <%= render "shared/stats/demographic_charts", stats: stats %>
   <% elsif stats.is_a?(ProjektPhase::ProposalPhase) %>
     <div class="number-stats-cards margin-bottom">
       <%= render(AiStats::StatCardComponent.new(
@@ -234,33 +236,9 @@
       <% end %>
     </div>
 
-    <div class="kpi-stats-pie-grid margin-bottom">
-      <% stats.participations.each do |participation| %>
-        <% if participation == "gender" %>
-          <%= render Stats::GenderStatsComponent.new(stats: stats) %>
-        <% elsif participation == "age" %>
-          <%= render Stats::AgeStatsComponent.new(stats: stats) %>
-        <% elsif participation == "geozone" %>
-          <%= render Stats::GeozoneStatsComponent.new(stats: stats) %>
-        <% else %>
-          <%= render "shared/stats/#{participation}", stats: stats %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render "shared/stats/demographic_charts", stats: stats %>
   <% elsif stats.is_a?(Poll::Stats) %>
-    <div class="kpi-stats-pie-grid margin-bottom">
-      <% stats.participations.each do |participation| %>
-        <% if participation == "gender" %>
-          <%= render Stats::GenderStatsComponent.new(stats: stats) %>
-        <% elsif participation == "age" %>
-          <%= render Stats::AgeStatsComponent.new(stats: stats) %>
-        <% elsif participation == "geozone" %>
-          <%= render Stats::GeozoneStatsComponent.new(stats: stats) %>
-        <% else %>
-          <%= render "shared/stats/#{participation}", stats: stats %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render "shared/stats/demographic_charts", stats: stats %>
   <% end %>
 
 </div>

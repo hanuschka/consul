@@ -65,7 +65,8 @@
             alt: page_title %>
         <% else %>
           <div class="report-summary--project-image-fallback">
-            <span class="material-symbols-outlined" aria-hidden="true">image</span>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">image</span>
+            <i class="fas fa-image projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <span><%= t("adm.projekts.projekts.evaluation.report.project_summary_no_image") %></span>
           </div>
         <% end %>
@@ -84,7 +85,8 @@
 
         <div class="report-summary--ai-block">
           <div class="report-summary--ai-label">
-            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">auto_awesome</span>
+            <i class="fas fa-magic projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <%= t("adm.projekts.projekts.evaluation.report.project_summary_ai_label") %>
           </div>
           <% if project_content_summary.present? %>
@@ -114,7 +116,8 @@
           <strong class="report-summary--stat-card-number"><%= open_phases.size %></strong>
           <div class="report-summary--stat-card-label">
             <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">play_circle</span>
+              <i class="fas fa-play-circle projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_open_phases", count: [open_phases.size, 1].max) %>
           </div>
@@ -137,7 +140,8 @@
           <strong class="report-summary--stat-card-number"><%= tags.size %></strong>
           <div class="report-summary--stat-card-label">
             <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sell</span>
+              <i class="fas fa-tag projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_tags") %>
           </div>
@@ -160,7 +164,8 @@
           <strong class="report-summary--stat-card-number"><%= sdg_goals.size %></strong>
           <div class="report-summary--stat-card-label">
             <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">eco</span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">eco</span>
+              <i class="fas fa-leaf projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_sdgs") %>
           </div>
@@ -208,9 +213,10 @@
           >
             <div class="report-summary--phase-head">
               <span class="report-summary--phase-icon">
-                <span class="material-symbols-outlined" aria-hidden="true">
+                <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">
                   <%= ProjektPhase.material_icon_for(phase["phase_type"]) %>
                 </span>
+                <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
               </span>
               <div class="report-summary--phase-meta">
                 <div class="report-summary--phase-title"><%= phase["phase_title"] %></div>

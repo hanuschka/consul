@@ -63,6 +63,27 @@ class ProjektPhase < ApplicationRecord
 
   DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
 
+  PHASE_FA_ICONS = {
+    "ProjektPhase::CommentPhase" => "fa-comment",
+    "ProjektPhase::ProposalPhase" => "fa-lightbulb",
+    "ProjektPhase::PointOfInterestPhase" => "fa-map-marker-alt",
+    "ProjektPhase::QuestionPhase" => "fa-question-circle",
+    "ProjektPhase::VotingPhase" => "fa-vote-yea",
+    "ProjektPhase::IframePhase" => "fa-globe",
+    "ProjektPhase::BudgetPhase" => "fa-euro-sign",
+    "ProjektPhase::LegislationPhase" => "fa-gavel",
+    "ProjektPhase::FormularPhase" => "fa-file-alt",
+    "ProjektPhase::EventPhase" => "fa-calendar-alt",
+    "ProjektPhase::MilestonePhase" => "fa-flag",
+    "ProjektPhase::ProjektNotificationPhase" => "fa-bell",
+    "ProjektPhase::LivestreamPhase" => "fa-tv",
+    "ProjektPhase::ArgumentPhase" => "fa-comments",
+    "ProjektPhase::NewsfeedPhase" => "fa-rss",
+    "ProjektPhase::DebatePhase" => "fa-comments"
+  }.freeze
+
+  DEFAULT_PHASE_FA_ICON = "fa-flag".freeze
+
   delegate :icon, :author, :author_id, to: :projekt
 
   translates :phase_tab_name, touch: true
@@ -176,6 +197,14 @@ class ProjektPhase < ApplicationRecord
 
   def material_icon
     self.class.material_icon_for(type)
+  end
+
+  def self.fa_icon_for(type)
+    PHASE_FA_ICONS[type.to_s] || DEFAULT_PHASE_FA_ICON
+  end
+
+  def fa_icon
+    self.class.fa_icon_for(type)
   end
 
   default_scope { order(:given_order, :id) }

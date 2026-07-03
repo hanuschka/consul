@@ -14,6 +14,7 @@ en:
           aria-label: "Search button"
         reset_button:
           aria-label: "Clear search field"
+        region_label: "Search"
       google-translate:
         widget-toggler:
           aria-label: "Click to toggle the Google Translate widget."
@@ -38,7 +39,9 @@ en:
         glightbox-image-alt: "%{resource_type}: %{title}. Enlarged view."
         delete-aria-label: "Delete image"
         delete-confirm: "Are you sure you want to delete this image?"
+        generate-aria-label: "Generate banner image with AI"
         upload-progress-label: "Uploading banner image"
+        upload-error-label: "Banner image upload error"
       image-lightbox:
         aria-label: "Click to enlarge the image."
       share-links:
@@ -66,6 +69,14 @@ en:
       navigation:
         main: "Main navigation"
         mobile: "Mobile navigation"
+        projekt_phases: "Project phases"
+      complementary:
+        homepage: "Additional information"
+        homepage_mobile: "Additional information (mobile)"
+        projekts: "Filters and information"
+        projekt_page: "Project information"
+      regions:
+        projekts_list: "Project list"
       events:
         projekt-aria-label: "Project: %{projekt_name}"
       session_timeout:

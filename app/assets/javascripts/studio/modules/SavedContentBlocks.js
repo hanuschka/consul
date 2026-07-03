@@ -104,11 +104,8 @@ App.ContentBlockEditor.SavedContentBlocks = {
     this.turnOffEditModeForItem(container)
 
     App.Ajax.request({
-      url: `/admin/saved_content_blocks/${savedContentBlockId}`,
+      url: `/adm/saved_content_blocks/${savedContentBlockId}`,
       type: "PATCH",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: { saved_content_block: { content }}
     })
      .then((response) => {
@@ -163,11 +160,8 @@ App.ContentBlockEditor.SavedContentBlocks = {
     editor.setValue("")
 
     App.Ajax.request({
-      url: `/admin/saved_content_blocks`,
+      url: `/adm/saved_content_blocks`,
       type: "POST",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: { saved_content_block: { content, user_specific: userSpecific, context: this.getContext() }}
     })
     .then((response) => {
@@ -210,11 +204,8 @@ App.ContentBlockEditor.SavedContentBlocks = {
       const savedContentBlockId = container.dataset.savedContentBlockId
 
       App.Ajax.request({
-        url: `/admin/saved_content_blocks/${savedContentBlockId}`,
-        type: "DELETE",
-        headers: {
-          'X-Embedded-Frame': ProjektStudio.isEmbedded
-        }
+        url: `/adm/saved_content_blocks/${savedContentBlockId}`,
+        type: "DELETE"
       })
       .then(() => {
         container.remove()

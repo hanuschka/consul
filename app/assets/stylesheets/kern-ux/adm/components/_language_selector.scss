@@ -1,8 +1,12 @@
 .adm-language-selector {
   position: relative;
-  display: flex;
+  display: none;
   align-items: center;
   margin-right: 25px !important;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
 }
 
 .adm-language-selector__select {

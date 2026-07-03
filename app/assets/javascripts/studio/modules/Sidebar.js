@@ -20,14 +20,16 @@ ProjektStudio.Sidebar = {
   handleUpdateProjekt(e) {
     e.preventDefault()
 
+    const form = e.currentTarget.form;
+
       $.ajax({
-        url: `/admin/projekts/${ProjektStudio.getCurrentProjektId()}`,
+        url: form.action,
         type: "PATCH",
         dataType: "json",
         headers: {
           'X-Embedded-Frame': ProjektStudio.isEmbedded
         },
-        data: ProjektStudio.utils.formElementToUrlParams(e.currentTarget.form)
+        data: ProjektStudio.utils.formElementToUrlParams(form)
       })
   },
 
@@ -49,15 +51,11 @@ ProjektStudio.Sidebar = {
     // const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;
     const settingValue = sectionDeactivatedNew  ? "" : "active"
-    const projektId = ProjektStudio.getCurrentProjektId();
 
     $.ajax({
-      url: `/admin/projekts/${settingId}/settings/${projektId}`,
+      url: `/adm/projekts/projekt_settings/${settingId}`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: {
         "projekt_setting[value]": settingValue
       }

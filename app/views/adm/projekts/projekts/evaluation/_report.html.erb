@@ -71,6 +71,7 @@
   end
 
   report_tab_material_icon = "summarize"
+  report_tab_fa_icon = "fa-file-alt"
 %>
 
 
@@ -80,7 +81,7 @@
     <div class="er-header">
       <div>
         <div class="er-header-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
           <%= t("adm.projekts.projekts.evaluation.header_badge") %>
         </div>
         <h1><%= projekt.name %></h1>
@@ -195,7 +196,8 @@
             style="--tab-accent:<%= report_accent %>;--tab-accent-light:<%= report_accent_light %>"
           >
             <span class="evaluation-phase-tab__icon">
-              <span class="material-symbols-outlined" aria-hidden="true"><%= report_tab_material_icon %></span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= report_tab_material_icon %></span>
+              <i class="fas <%= report_tab_fa_icon %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <span class="evaluation-phase-tab__body">
               <span class="evaluation-phase-tab__name">
@@ -233,7 +235,8 @@
               style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
             >
               <span class="evaluation-phase-tab__icon">
-                <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+                <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+                <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
               </span>
               <span class="evaluation-phase-tab__body">
                 <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>

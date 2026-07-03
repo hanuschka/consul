@@ -10,7 +10,7 @@
        <% if show_labels_in_bars? %>data-chart-show-labels-in-bars="true"<% end %>
        <% if show_legend? %>data-chart-show-legend="true"<% end %>>
     <div class="chart-loading-placeholder">
-      <%= render Shared::SpinnerComponent.new(size: :medium) %>
+      <%= render Shared::SkeletonPlaceholderComponent.new %>
     </div>
     <canvas></canvas>
   </div>

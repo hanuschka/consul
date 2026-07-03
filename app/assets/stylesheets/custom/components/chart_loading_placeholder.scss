@@ -5,18 +5,8 @@
   bottom: 0;
   left: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 12px;
-  background-color: $gray-1;
-}
-
-.chart-loading-placeholder .shared-spinner {
-  width: 72px;
-  height: 72px;
-  border-width: 6px;
-  border-top-color: $medium-gray-3;
+  background-color: #f0f0f0;
 }
 
 [data-chart-rendered="true"] > .chart-loading-placeholder {

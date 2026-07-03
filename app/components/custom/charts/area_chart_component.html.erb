@@ -9,7 +9,7 @@
        data-chart-values="<%= values_json %>"
        data-chart-color="<%= @color %>">
     <div class="chart-loading-placeholder">
-      <%= render Shared::SpinnerComponent.new(size: :medium) %>
+      <%= render Shared::SkeletonPlaceholderComponent.new %>
     </div>
     <canvas></canvas>
   </div>

@@ -195,6 +195,9 @@ application.register("files--filter-bar", FilesFilterBarController)
 import FilesUploadController from "./files/upload_controller"
 application.register("files--upload", FilesUploadController)
 
+import FilesAssetModalController from "./files/asset_modal_controller"
+application.register("files--asset-modal", FilesAssetModalController)
+
 import AdmAiActionButtonController from "./adm/ai_action_button_controller"
 application.register("adm--ai-action-button", AdmAiActionButtonController)
 

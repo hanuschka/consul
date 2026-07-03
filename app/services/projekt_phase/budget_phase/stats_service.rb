@@ -8,10 +8,16 @@ class ProjektPhase::BudgetPhase::StatsService
   end
 
   def call
-    demographics = ProjektPhase::DemographicsCalculator.new(participant_ids)
-
     @projekt_phase.update!(
-      stats: {
+      stats: counts.merge(demographics),
+      stats_refreshed_at: Time.current
+    )
+  end
+
+  private
+
+    def counts
+      {
         accepting_visible_proposals_count:    investments.count,
         accepting_proposal_authors_count:     investments.select(:author_id).distinct.count,
         accepting_comments_count:             accepting_comments_count,
@@ -35,18 +41,33 @@ class ProjektPhase::BudgetPhase::StatsService
         balloting_weighted_votes_online:    balloting_lines.merge(Budget::Ballot.where(physical: false)).sum(:line_weight),
         balloting_weighted_votes_offline:   balloting_lines.merge(Budget::Ballot.where(physical: true)).sum(:line_weight),
 
-        finished_winners_count: investments.winners.count,
+        finished_winners_count: investments.winners.count
+      }
+    end
 
-        participants_by_age:            demographics.age_data,
-        participants_by_geozone:        demographics.geozone_data,
-        individual_group_value_counts:  individual_group_value_counts,
-        **demographics.gender_data
-      },
-      stats_refreshed_at: Time.current
-    )
-  end
+    def demographics
+      combined = ProjektPhase::DemographicsCalculator.new(participant_ids)
 
-  private
+      {
+        participants_by_age:            combined.age_data,
+        participants_by_geozone:        combined.geozone_data,
+        individual_group_value_counts:  individual_group_value_counts_for(participant_ids),
+        **combined.gender_data
+      }
+        .merge(segment_demographics("accepting", accepting_participant_ids))
+        .merge(segment_demographics("selecting", selecting_participant_ids))
+        .merge(segment_demographics("balloting", balloting_participant_ids))
+    end
+
+    def segment_demographics(prefix, ids)
+      calculator = ProjektPhase::DemographicsCalculator.new(ids)
+
+      {
+        "#{prefix}_participants_by_age"           => calculator.age_data,
+        "#{prefix}_participants_by_geozone"       => calculator.geozone_data,
+        "#{prefix}_individual_group_value_counts" => individual_group_value_counts_for(ids)
+      }.merge(calculator.gender_data.transform_keys { |key| "#{prefix}_#{key}" })
+    end
 
     def budget
       @budget ||= @projekt_phase.budget
@@ -89,23 +110,36 @@ class ProjektPhase::BudgetPhase::StatsService
       investment_comments.count
     end
 
-    def participant_ids
-      @participant_ids ||= begin
+    def accepting_participant_ids
+      @accepting_participant_ids ||= begin
         author_ids = investments.select(:author_id).distinct.pluck(:author_id)
-        voter_ids = supports.select(:voter_id).distinct.pluck(:voter_id)
-        ballot_voter_ids = budget.ballots.where(conditional: false).select(:user_id).distinct.pluck(:user_id)
         commenter_ids = investment_comments.select(:user_id).distinct.pluck(:user_id)
 
-        (author_ids + voter_ids + ballot_voter_ids + commenter_ids).uniq.compact
+        (author_ids + commenter_ids).uniq.compact
       end
     end
 
-    def individual_group_value_counts
-      return {} if participant_ids.empty?
+    def selecting_participant_ids
+      @selecting_participant_ids ||=
+        supports.select(:voter_id).distinct.pluck(:voter_id).uniq.compact
+    end
+
+    def balloting_participant_ids
+      @balloting_participant_ids ||=
+        budget.ballots.where(conditional: false).select(:user_id).distinct.pluck(:user_id).uniq.compact
+    end
+
+    def participant_ids
+      @participant_ids ||=
+        (accepting_participant_ids + selecting_participant_ids + balloting_participant_ids).uniq.compact
+    end
+
+    def individual_group_value_counts_for(ids)
+      return {} if ids.empty?
 
       UserIndividualGroupValue
         .joins(individual_group_value: :individual_group)
-        .where(user_id: participant_ids, individual_groups: { kind: "soft" })
+        .where(user_id: ids, individual_groups: { kind: "soft" })
         .group(:individual_group_value_id)
         .count
     end

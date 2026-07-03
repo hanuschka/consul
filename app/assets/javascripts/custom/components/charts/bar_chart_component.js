@@ -34,6 +34,7 @@
       const colors = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : null;
       const usePercentage = container.dataset.chartUsePercentage === "true";
       const showLabelsInBars = container.dataset.chartShowLabelsInBars === "true";
+      const showLegend = container.dataset.chartShowLegend === "true";
 
       return {
         labels: labels,
@@ -43,8 +44,56 @@
         borderColor: colors || "#6BA3D6",
         usePercentage: usePercentage,
         showLabelsInBars: showLabelsInBars,
+        showLegend: showLegend,
         maxValue: Math.max.apply(null, values)
       };
+    },
+
+    createLegendConfig: function(chartData) {
+      if (!chartData.showLegend) {
+        return { display: false };
+      }
+
+      return {
+        display: true,
+        position: "bottom",
+        labels: {
+          padding: 12,
+          font: {
+            size: 14
+          },
+          color: "#333",
+          usePointStyle: true,
+          pointStyle: "circle",
+          generateLabels: this.generateLegendLabels
+        },
+        onClick: this.handleLegendClick
+      };
+    },
+
+    generateLegendLabels: function(chart) {
+      const dataset = chart.data.datasets[0];
+
+      return chart.data.labels.map((label, index) => {
+        const color = Array.isArray(dataset.backgroundColor)
+          ? dataset.backgroundColor[index]
+          : dataset.backgroundColor;
+
+        return {
+          text: label,
+          fillStyle: color,
+          strokeStyle: color,
+          lineWidth: 0,
+          pointStyle: "circle",
+          hidden: !chart.getDataVisibility(index),
+          index: index
+        };
+      });
+    },
+
+    handleLegendClick: function(event, legendItem, legend) {
+      legend.chart.toggleDataVisibility(legendItem.index);
+      legend.chart.update();
     },
 
     createValueAxisConfig: function(chartData) {
@@ -175,9 +224,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              display: false
-            },
+            legend: this.createLegendConfig(chartData),
             tooltip: this.createTooltipConfig(chartData),
             datalabels: datalabelsConfig
           },

@@ -108,6 +108,10 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     (stats["participants_by_geozone"] || {}).transform_values(&:with_indifferent_access)
   end
 
+  def segment_stats(segment_key)
+    ProjektPhase::BudgetPhase::SegmentStats.new(self, segment_key)
+  end
+
   has_one :budget, foreign_key: :projekt_phase_id,
     dependent: :destroy, inverse_of: :projekt_phase
 

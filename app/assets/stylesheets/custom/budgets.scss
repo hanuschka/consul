@@ -42,6 +42,18 @@
     background: initial;
   }
 
+  // The full-width-border/full-width-cover mixins offset the pseudo-elements
+  // by calc($global-width / 2 - 50vw), which assumes a centered 1200px layout.
+  // Inside the projekt footer the container is wider and off-center, so the
+  // full-bleed pseudo overshoots the viewport and causes horizontal scroll.
+  .jumbo-budget {
+    &::before,
+    &::after {
+      left: 0;
+      right: 0;
+    }
+  }
+
   .sticky-ballot-progress-bar {
     position: sticky;
     top: 90px;

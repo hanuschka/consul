@@ -18,6 +18,24 @@
   data-adm--masterportal-collection-initial-import-status-value="<%= collection.import_status %>"
   data-adm--masterportal-collection-initial-destroy-status-value="<%= collection.destroy_status %>"
 >
+  <% if icon_src.present? %>
+    <img
+      class="adm-masterportal-collection-card--icon"
+      src="<%= icon_src %>"
+      alt=""
+      loading="lazy"
+      referrerpolicy="no-referrer"
+    >
+  <% else %>
+    <span
+      class="adm-masterportal-collection-card--icon -placeholder"
+      title="<%= t(".icon_missing") %>"
+      aria-hidden="true"
+    >
+      <span class="material-symbols-outlined">image_not_supported</span>
+    </span>
+  <% end %>
+
   <div class="adm-masterportal-collection-card--info">
     <h4 class="adm-masterportal-collection-card--name"><%= collection.display_name %> (<%= collection.pins_count %>)</h4>
 

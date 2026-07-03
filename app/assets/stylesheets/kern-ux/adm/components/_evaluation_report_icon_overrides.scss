@@ -1,7 +1,10 @@
 .projekt-evaluation-icon-material {
-  display: inline-block;
+  display: none;
 }
 
 .projekt-evaluation-icon-fa {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }

@@ -84,14 +84,7 @@ class MasterportalPin < ApplicationRecord
   end
 
   def feature_icon_url
-    remote_icon = properties.to_h["IMAGE_URL"].to_s.strip
-    return remote_icon if remote_icon.present?
-
-    asset_name = "masterportal/pins/#{collection_id}.png"
-    path = Rails.root.join("app/assets/images/#{asset_name}")
-    return nil if !path.exist?
-
-    ActionController::Base.helpers.asset_path(asset_name)
+    properties.to_h["IMAGE_URL"].to_s.strip.presence
   end
 
   def associated_resource_url

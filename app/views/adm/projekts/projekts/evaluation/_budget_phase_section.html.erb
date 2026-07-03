@@ -20,7 +20,8 @@
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
       </div>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>

@@ -396,6 +396,16 @@ $er-max-tabs: 8;
   border-radius: var(--er-radius-lg);
   background: var(--card-link-bg);
   color: var(--er-text);
+  transition: border-color 180ms ease-out, box-shadow 180ms ease-out;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--card-link-ink) 40%, var(--er-border));
+    box-shadow: var(--er-shadow-md);
+  }
+}
+
+.adm-evaluation-card:hover .adm-evaluation-card__cta.kern-btn {
+  background: color-mix(in srgb, var(--card-link-ink) 8%, var(--card-link-bg));
 }
 
 .adm-evaluation-card__head {
@@ -431,8 +441,10 @@ $er-max-tabs: 8;
 
 .adm-evaluation-card__cta {
   margin-top: auto;
-  align-self: flex-start;
+  align-self: stretch;
   width: 100%;
+  justify-content: center;
+  transition: background 150ms ease-out;
 }
 
 .adm-evaluation-card__cta.kern-btn {
@@ -440,11 +452,11 @@ $er-max-tabs: 8;
   border: 1px solid var(--card-link-ink) !important;
 
   &:hover {
-    background: color-mix(in srgb, var(--card-link-ink) 8%, var(--card-link-bg));
+    background: color-mix(in srgb, var(--card-link-ink) 14%, var(--card-link-bg)) !important;
   }
 
   &:active {
-    background: color-mix(in srgb, var(--card-link-ink) 15%, var(--card-link-bg));
+    background: color-mix(in srgb, var(--card-link-ink) 20%, var(--card-link-bg)) !important;
   }
 
   &:focus-visible {
@@ -772,6 +784,10 @@ $er-max-tabs: 8;
     --card-tint: #fff1f2;
     --card-border: #ffe4e6;
   }
+
+  &.-wide {
+    column-span: all;
+  }
 }
 
 .report-summary--stat-card-head {
@@ -824,9 +840,16 @@ $er-max-tabs: 8;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.45rem 0.85rem;
+  columns: 1;
+  column-gap: 0.85rem;
+}
+
+.report-summary--stat-card-list.-cols-2 {
+  columns: 2 30ch;
+}
+
+.report-summary--stat-card-list.-cols-3 {
+  columns: 3 30ch;
 }
 
 .report-summary--stat-card-list li {
@@ -836,9 +859,15 @@ $er-max-tabs: 8;
   color: var(--er-text);
   line-height: 1.4;
   padding-left: 0.85rem;
+  margin-bottom: 0.45rem;
   border-left: 2px solid var(--card-accent, #cbd5e1);
   overflow-wrap: break-word;
   hyphens: auto;
+  break-inside: avoid;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .report-summary--stat-card-empty {

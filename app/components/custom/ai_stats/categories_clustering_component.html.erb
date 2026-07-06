@@ -26,8 +26,8 @@
               <%= render Shared::CollapseComponent.new do |c| %>
                 <% c.with_head do %>
                   <div class="ai-clustering--subitem-header-content">
-                    <span class="ai-clustering--subitem-name"><%= subcategory["name"] %></span>
                     <span class="ai-clustering--subitem-count"><%= subcategory_resource_count(subcategory) %></span>
+                    <span class="ai-clustering--subitem-name"><%= subcategory["name"] %></span>
                   </div>
                 <% end %>
                 <% c.with_body do %>

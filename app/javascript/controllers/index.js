@@ -25,8 +25,6 @@ application.register("adm--ai-question-row", AdmAiQuestionRowController)
 import AdmMenuPopoverController from "./adm/menu_popover_controller"
 application.register("adm--menu-popover", AdmMenuPopoverController)
 
-import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
-application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)

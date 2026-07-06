@@ -473,6 +473,14 @@ $er-max-tabs: 8;
   margin-left: auto;
 }
 
+.adm-evaluation-regenerate-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .kern-container.adm-evaluation-phase-container {
   max-width: min(1280px, 80%);
 }

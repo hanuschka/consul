@@ -32,6 +32,8 @@ en:
             Are you sure you want to regenerate the evaluation? The existing
             evaluation will be overwritten.
           regenerate_phase_button: Regenerate phase stats
+          regenerate_regular_stats_button: Regenerate statistics
+          regenerate_ai_stats_button: Regenerate AI analysis
           regenerate_phase_confirm: >
             Are you sure you want to regenerate this phase? The existing
             evaluation of this phase will be overwritten.
@@ -153,6 +155,10 @@ en:
             stats_badge: Key figures
             ai_badge: AI analysis
             view_stats: View stats
+          view_tabs:
+            aria_label: Switch evaluation view
+            stats: Statistics
+            ai: AI analysis
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle

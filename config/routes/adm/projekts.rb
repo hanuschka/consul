@@ -249,6 +249,8 @@ namespace :adm do
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member
+      post :regenerate_phase_regular_stats, on: :member
+      post :regenerate_phase_ai_stats, on: :member
       get :phase_evaluation_status, on: :member
       get :evaluation_pdf_options, on: :member
       get :evaluation_pdf, on: :member

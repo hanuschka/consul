@@ -96,6 +96,16 @@ $er-max-tabs: 8;
   .custom-collapse--head .icon-chevron-down {
     display: none;
   }
+
+  .phase-budget-segment__distributions-summary {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .phase-budget-segment__distributions-chevron {
+    display: none;
+  }
 }
 
 .phase-ai-questions {

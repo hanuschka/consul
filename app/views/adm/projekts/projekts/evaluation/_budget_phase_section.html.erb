@@ -115,6 +115,23 @@
     </section>
   <% end %>
 
+  <% if show_section.call("budget_segments") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:budget_segments"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="budget_segments"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/budget_segments",
+        locals: {
+          phase: phase,
+          accent: accent,
+          accent_light: accent_light,
+          pdf_mode: local_assigns.fetch(:pdf_mode, false)
+        } %>
+    </section>
+  <% end %>
+
   <% if show_section.call("key_findings") %>
     <section
       class="phase-evaluation-section"

@@ -1,0 +1,26 @@
+<div class="adm-evaluation-regenerate-buttons">
+  <a
+    href="<%= regular_stats_url %>"
+    class="kern-btn kern-btn--secondary kern-btn--compact"
+    data-action="click->adm--phase-regenerate#start"
+  >
+    <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">monitoring</span>
+    <i class="kern-label fas fa-chart-bar projekt-evaluation-icon-fa" aria-hidden="true"></i>
+    <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button") %></span>
+  </a>
+
+  <%= render Shared::AiFeatureTooltipComponent.new(
+    feature_title: t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button"),
+    feature_text: t("adm.ai_action_button.feature_description")
+  ) do %>
+    <a
+      href="<%= ai_stats_url %>"
+      class="kern-btn kern-btn--secondary kern-btn--compact"
+      data-action="click->adm--phase-regenerate#start"
+    >
+      <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">auto_awesome</span>
+      <i class="kern-label fas fa-magic projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button") %></span>
+    </a>
+  <% end %>
+</div>

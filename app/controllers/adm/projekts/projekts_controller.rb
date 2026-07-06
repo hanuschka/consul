@@ -220,20 +220,15 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   end
 
   def regenerate_phase_evaluation
-    authorize [:adm, :projekts, @projekt], :update?
+    enqueue_phase_regeneration(ProjektEvaluations::GeneratePhaseEvaluationJob)
+  end
 
-    evaluation = @projekt.projekt_evaluation || @projekt.create_projekt_evaluation!(status: :pending)
-    projekt_phase = @projekt.projekt_phases.find(params[:phase_id])
+  def regenerate_phase_regular_stats
+    enqueue_phase_regeneration(ProjektEvaluations::RegeneratePhaseRegularStatsJob)
+  end
 
-    row = evaluation.projekt_phase_evaluations.find_or_initialize_by(projekt_phase_id: projekt_phase.id)
-    row.update!(status: :processing)
-
-    ProjektEvaluations::GeneratePhaseEvaluationJob.perform_later(row.id)
-
-    render json: {
-      status: row.status,
-      projekt_phase_evaluation_id: row.id
-    }
+  def regenerate_phase_ai_stats
+    enqueue_phase_regeneration(ProjektEvaluations::RegeneratePhaseAiStatsJob)
   end
 
   def phase_evaluation_status
@@ -480,6 +475,23 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   end
 
   private
+
+    def enqueue_phase_regeneration(job_class)
+      authorize [:adm, :projekts, @projekt], :update?
+
+      evaluation = @projekt.projekt_evaluation || @projekt.create_projekt_evaluation!(status: :pending)
+      projekt_phase = @projekt.projekt_phases.find(params[:phase_id])
+
+      row = evaluation.projekt_phase_evaluations.find_or_initialize_by(projekt_phase_id: projekt_phase.id)
+      row.update!(status: :processing)
+
+      job_class.perform_later(row.id)
+
+      render json: {
+        status: row.status,
+        projekt_phase_evaluation_id: row.id
+      }
+    end
 
     def find_projekt
       @projekt = Projekt.find(params[:id])

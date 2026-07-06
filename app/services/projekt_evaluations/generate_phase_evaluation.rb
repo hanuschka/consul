@@ -4,7 +4,41 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     @projekt_phase = projekt_phase_evaluation.projekt_phase
   end
 
+  def self.regenerate_regular_stats(projekt_phase_evaluation)
+    new(projekt_phase_evaluation).regenerate_regular_stats
+  end
+
+  def self.regenerate_ai_stats(projekt_phase_evaluation)
+    new(projekt_phase_evaluation).regenerate_ai_stats
+  end
+
   def call
+    run do |base|
+      next {} if base.blank?
+
+      build_regular_data(base).merge(build_ai_data(base))
+    end
+  end
+
+  def regenerate_regular_stats
+    run do |base|
+      next existing_data if base.blank?
+
+      existing_data.merge(build_regular_data(base))
+    end
+  end
+
+  def regenerate_ai_stats
+    run do |base|
+      next existing_data if base.blank?
+
+      existing_data.merge(build_ai_data(base))
+    end
+  end
+
+  private
+
+  def run
     if !supported_phase_type?
       @row.destroy
       return nil
@@ -12,9 +46,7 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
 
     @row.update!(status: :processing)
 
-    refresh_ai_stats
-
-    phase_data = build_phase_data
+    phase_data = yield(aggregate_phase_stats)
 
     @row.update!(
       status: :completed,
@@ -32,25 +64,30 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     raise
   end
 
-  def build_phase_data
-    base = aggregate_phase_stats
-    return {} if base.blank?
-
-    ai_data = collect_ai_data
-    full_stats = ProjektPhaseStats::FullStatsCollector.call(@projekt_phase)
-
+  def build_regular_data(base)
     base.merge(
       stats: enrich_phase_stats(base),
-      ai_stats: ai_data[:ai_stats],
-      ai_stats_refreshed_at: ai_data[:ai_stats_refreshed_at],
-      full_stats: full_stats,
-      evaluation_summary: generate_phase_evaluation_summary(base),
-      short_summary: generate_phase_short_summary(base),
-      key_findings: generate_phase_key_findings(base)
+      full_stats: ProjektPhaseStats::FullStatsCollector.call(@projekt_phase)
     )
   end
 
-  private
+  def build_ai_data(base)
+    refresh_ai_stats
+
+    ai_data = collect_ai_data
+
+    {
+      ai_stats: ai_data[:ai_stats],
+      ai_stats_refreshed_at: ai_data[:ai_stats_refreshed_at],
+      evaluation_summary: generate_phase_evaluation_summary(base),
+      short_summary: generate_phase_short_summary(base),
+      key_findings: generate_phase_key_findings(base)
+    }
+  end
+
+  def existing_data
+    (@row.data || {}).deep_symbolize_keys
+  end
 
   def supported_phase_type?
     ProjektEvaluations::AggregateStatistics::PHASE_COLLECTORS.key?(@projekt_phase.type)

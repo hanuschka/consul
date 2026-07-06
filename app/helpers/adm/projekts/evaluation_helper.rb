@@ -4,6 +4,27 @@ module Adm::Projekts::EvaluationHelper
     #DB2777 #0891B2 #DC2626 #65A30D
   ].freeze
 
+  EVALUATION_AI_SECTIONS = %w[
+    phase_summary
+    tone
+    label_sentiment
+    ai_summary
+    key_findings
+    topic_clustering
+    semantic_clustering
+    ai_questions
+  ].freeze
+
+  EVALUATION_SHARED_SECTIONS = %w[kpis].freeze
+
+  def evaluation_ai_section_keys
+    EVALUATION_AI_SECTIONS
+  end
+
+  def evaluation_shared_section_keys
+    EVALUATION_SHARED_SECTIONS
+  end
+
   def evaluation_chart_colors(values, base_colors = nil)
     source = base_colors.presence || CHART_PALETTE
 

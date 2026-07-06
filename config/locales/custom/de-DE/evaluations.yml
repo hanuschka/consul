@@ -32,6 +32,8 @@ de:
             Möchten Sie die Auswertung wirklich neu generieren? Die bestehende
             Auswertung wird überschrieben.
           regenerate_phase_button: Phasenstatistiken neu generieren
+          regenerate_regular_stats_button: Statistiken neu generieren
+          regenerate_ai_stats_button: KI-Analyse neu generieren
           regenerate_phase_confirm: >
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
@@ -153,6 +155,10 @@ de:
             stats_badge: Kennzahlen
             ai_badge: KI-Analyse
             view_stats: Statistiken ansehen
+          view_tabs:
+            aria_label: Ansicht der Auswertung wechseln
+            stats: Statistiken
+            ai: KI-Analyse
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

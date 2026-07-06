@@ -33,6 +33,7 @@
     App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.ImageEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.MapEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.MapSourceEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.initialize();
     App.Studio.ContentBlocks.AiEditMode.initialize();
     App.Studio.ContentBlocks.CodeEditMode.initialize();

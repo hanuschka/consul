@@ -26,19 +26,33 @@ App.Studio.ContentBlocks.MapEmbed = {
   hydrateIn(container) {
     if (!container || !container.querySelectorAll) return;
 
-    const url = this.mapEmbedUrl();
-
     container.querySelectorAll(this.selector).forEach((embed) => {
-      if (!this.needsHydration(embed)) return;
-
-      this.fetchMapHtml(url)
-        .then((html) => {
-          if (!html || !this.needsHydration(embed)) return;
-
-          this.injectMap(embed, html);
-        })
-        .catch(() => {});
+      this.hydrateEmbed(embed);
     });
+  },
+
+  hydrateEmbed(embed) {
+    if (!this.needsHydration(embed)) return;
+
+    this.fetchMapHtml(this.mapEmbedUrl(embed))
+      .then((html) => {
+        if (!html || !this.needsHydration(embed)) return;
+
+        this.injectMap(embed, html);
+      })
+      .catch(() => {});
+  },
+
+  // Strips the hydrated map, restores the placeholder token and re-hydrates —
+  // used by the map source control to preview a resource/phase change.
+  rehydrate(embed) {
+    embed.querySelectorAll(".projekt-map-shortcode").forEach((map) => map.remove());
+
+    if (embed.innerHTML.indexOf(this.TOKEN) === -1) {
+      embed.appendChild(document.createTextNode(this.TOKEN));
+    }
+
+    this.hydrateEmbed(embed);
   },
 
   needsHydration(embed) {
@@ -46,13 +60,20 @@ App.Studio.ContentBlocks.MapEmbed = {
   },
 
   // On a projekt page the embed renders that projekt's map; off a projekt page
-  // (e.g. the homepage) it renders the city map with all projekts.
-  mapEmbedUrl() {
+  // (e.g. the homepage) it renders the city map with all projekts. The embed's
+  // persisted resource/phase choice travels along so the preview matches the
+  // published output.
+  mapEmbedUrl(embed) {
     const projektId = this.currentProjektId();
+    const baseUrl = projektId ? `/projekts/${projektId}/map_embed` : "/projekts_map_embed";
+    const params = new URLSearchParams();
 
-    if (projektId) return `/projekts/${projektId}/map_embed`;
+    if (embed.dataset.mapResource) params.set("resource", embed.dataset.mapResource);
+    if (embed.dataset.mapPhaseId) params.set("phase_id", embed.dataset.mapPhaseId);
 
-    return "/projekts_map_embed";
+    const query = params.toString();
+
+    return query ? `${baseUrl}?${query}` : baseUrl;
   },
 
   currentProjektId() {

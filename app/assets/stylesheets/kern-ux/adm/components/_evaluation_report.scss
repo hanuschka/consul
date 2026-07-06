@@ -96,6 +96,16 @@ $er-max-tabs: 8;
   .custom-collapse--head .icon-chevron-down {
     display: none;
   }
+
+  .phase-budget-segment__distributions-summary {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .phase-budget-segment__distributions-chevron {
+    display: none;
+  }
 }
 
 .phase-ai-questions {
@@ -420,6 +430,10 @@ $er-max-tabs: 8;
   transition: background 150ms ease, color 150ms ease;
 }
 
+.evaluation-phase-tab__icon .projekt-evaluation-icon-fa {
+  font-size: 24px;
+}
+
 .evaluation-phase-tab__body {
   display: flex;
   flex-direction: column;
@@ -630,6 +644,10 @@ $er-max-tabs: 8;
   .material-symbols-outlined {
     font-size: 2.25rem;
   }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 2rem;
+  }
 }
 
 .report-summary--project-body {
@@ -682,6 +700,10 @@ $er-max-tabs: 8;
 
   .material-symbols-outlined {
     font-size: 1rem;
+  }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 0.9rem;
   }
 }
 
@@ -793,6 +815,10 @@ $er-max-tabs: 8;
   font-size: 18px;
 }
 
+.report-summary--stat-card-icon .projekt-evaluation-icon-fa {
+  font-size: 14px;
+}
+
 .report-summary--stat-card-list {
   list-style: none;
   margin: 0;
@@ -895,6 +921,10 @@ $er-max-tabs: 8;
 
 .report-summary--phase-icon .material-symbols-outlined {
   font-size: 22px;
+}
+
+.report-summary--phase-icon .projekt-evaluation-icon-fa {
+  font-size: 19px;
 }
 
 .report-summary--phase-content {
@@ -1138,4 +1168,5 @@ $er-max-tabs: 8;
   gap: 0.25rem;
   padding: 1rem 1.25rem;
 }
+
 

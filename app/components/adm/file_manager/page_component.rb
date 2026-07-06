@@ -29,7 +29,8 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     upload_endpoint: nil,
     upload_accept: nil,
     imageable_type_frame_src: nil,
-    documentable_type_frame_src: nil
+    documentable_type_frame_src: nil,
+    detail_path: nil
   )
     @type = type
     @title = title
@@ -43,6 +44,7 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     @upload_accept = upload_accept
     @imageable_type_frame_src = imageable_type_frame_src
     @documentable_type_frame_src = documentable_type_frame_src
+    @detail_path = detail_path
   end
 
   private
@@ -50,7 +52,7 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     attr_reader :type, :title, :breadcrumbs, :assets, :endpoint,
                 :card_component, :row_component, :frontend_url,
                 :upload_endpoint, :upload_accept, :imageable_type_frame_src,
-                :documentable_type_frame_src
+                :documentable_type_frame_src, :detail_path
 
     def after_title?
       description? || types_note? || upload?

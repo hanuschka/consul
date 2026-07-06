@@ -149,3 +149,10 @@ en:
     fullsize_preview:
       button: Preview
       close: Close
+    show:
+      untitled: Untitled
+      view_details: View details
+      close: Close
+      loading: Loading…
+      open_file: Open file
+      download: Download

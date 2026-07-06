@@ -1,0 +1,13 @@
+<% if !turbo_frame_request? %>
+  <%= render Adm::HeaderComponent.new(
+    title: title,
+    breadcrumbs: breadcrumbs,
+    compact: true
+  ) %>
+<% end %>
+
+<div class="kern-container my-3">
+  <%= turbo_frame_tag "files-asset-detail", class: "files-detail-page-frame" do %>
+    <%= render detail %>
+  <% end %>
+</div>

@@ -825,23 +825,8 @@ $er-max-tabs: 8;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 0.45rem 0.85rem;
-}
-
-.report-summary--stat-card-list.-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.report-summary--stat-card-list.-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-@media (max-width: 768px) {
-  .report-summary--stat-card-list.-cols-2,
-  .report-summary--stat-card-list.-cols-3 {
-    grid-template-columns: 1fr;
-  }
 }
 
 .report-summary--stat-card-list li {

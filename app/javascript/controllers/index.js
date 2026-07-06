@@ -156,9 +156,6 @@ application.register("shared--auto-submit-form", SharedAutoSubmitFormController)
 import SharedCollapseController from "./shared/collapse_controller"
 application.register("shared--collapse", SharedCollapseController)
 
-import AdmProjektImportController from "./adm/projekt_import_controller"
-application.register("adm-projekt-import", AdmProjektImportController)
-
 import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
 application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
 
@@ -197,6 +194,9 @@ application.register("files--filter-bar", FilesFilterBarController)
 
 import FilesUploadController from "./files/upload_controller"
 application.register("files--upload", FilesUploadController)
+
+import FilesAssetModalController from "./files/asset_modal_controller"
+application.register("files--asset-modal", FilesAssetModalController)
 
 import AdmAiActionButtonController from "./adm/ai_action_button_controller"
 application.register("adm--ai-action-button", AdmAiActionButtonController)

@@ -18,11 +18,14 @@
   font-size: 18px;
 
   &::before {
+    top: 50%;
+    margin-top: 0;
     font-size: 22px;
+    transform: translateY(-50%);
   }
 }
 
-.projekt-content-block {
+.custom-content-block {
   .column:last-child:not(:first-child), .columns:last-child:not(:first-child) {
     float: left;
   }

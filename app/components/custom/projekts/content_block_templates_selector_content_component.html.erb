@@ -1,9 +1,9 @@
 <% if fallback? %>
   <div class="js-content-block-templates-fallback-marker" hidden></div>
 <% end %>
-<ul id="contentBlockSelectorTabs" class="shared-tabs projekt-content-block-templates-selector--tabs js-tabs">
+<ul id="contentBlockSelectorTabs" class="shared-tabs custom-content-block-templates-selector--tabs js-tabs">
   <% if newsletter_context? %>
-    <li class="projekt-content-block-templates-selector--tab shared-tabs--item is-active">
+    <li class="custom-content-block-templates-selector--tab shared-tabs--item is-active">
       <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--emailDefaults" aria-selected="true">
         <%= t('custom.newsletters.content_block_templates_selector.tabs.email_defaults') %>
       </a>
@@ -12,7 +12,7 @@
   <% dt_templates_by_category.each_with_index do |category_data, index| %>
     <% category = category_data["category"] %>
     <% is_first = index == 0 && !newsletter_context? %>
-    <li class="projekt-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
+    <li class="custom-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
       <a
         class="shared-tabs--link js-tab"
         href="#contentBlockSelectorTab--<%= category_id(category) %>"
@@ -24,7 +24,7 @@
   <% end %>
   <% local_template_categories.each_with_index do |category, index| %>
     <% is_first = index == 0 && !newsletter_context? %>
-    <li class="projekt-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
+    <li class="custom-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
       <a
         class="shared-tabs--link js-tab"
         href="#contentBlockSelectorTab--<%= category[:id] %>"
@@ -34,12 +34,12 @@
       </a>
     </li>
   <% end %>
-  <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+  <li class="shared-tabs--item custom-content-block-templates-selector--tab">
     <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--globalContentBlocks">
       <%= t('custom.projekt.content_block_templates_selector.tabs.internal_content_blocks') %>
     </a>
   </li>
-  <li class="shared-tabs--item projekt-content-block-templates-selector--tab">
+  <li class="shared-tabs--item custom-content-block-templates-selector--tab">
     <a class="shared-tabs--link js-tab" href="#contentBlockSelectorTab--userContentBlocks">
       <%= t('custom.projekt.content_block_templates_selector.tabs.own_content_blocks') %>
     </a>

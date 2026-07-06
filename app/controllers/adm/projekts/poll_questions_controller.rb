@@ -52,7 +52,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
   def edit
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
     set_context_sources
-    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+    @title = edit_title
+    @breadcrumbs = breadcrumbs_for_action(@title)
   end
 
   def update
@@ -67,7 +68,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
       redirect_to redirect_path, notice: t("adm.attribute.update.success")
     else
       set_context_sources
-      @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.poll_questions.edit.title"))
+      @title = edit_title
+      @breadcrumbs = breadcrumbs_for_action(@title)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -133,6 +135,16 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
           :show_hint_callout, :min_rating_scale_label, :max_rating_scale_label
         ]
       )
+    end
+
+    def edit_title
+      if @question.parent_question.present?
+        t("adm.projekts.poll_questions.edit.nested_title")
+      elsif @question.bundle_question?
+        t("adm.projekts.poll_questions.edit.bundle_title")
+      else
+        t("adm.projekts.poll_questions.edit.title")
+      end
     end
 
     def breadcrumbs_for_action(action_title)

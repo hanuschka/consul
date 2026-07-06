@@ -634,6 +634,8 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
     img.src = imageUrl
     img.dataset.fullImageUrl = response.url
     img.dataset.pictureId = response.id
+    // Only a hint to the source image; may be stale/wrong, never trust as exact.
+    img.dataset.imageIdHint = response.id
 
     if (response.alt_text) {
       img.alt = response.alt_text

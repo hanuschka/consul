@@ -6,6 +6,27 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     "ProjektPhase::CommentPhase" => :collect_comment_stats
   }.freeze
 
+  BUDGET_SEGMENTS = [
+    { key: "accepting",
+      metrics: %w[visible_proposals_count proposal_authors_count comments_count reported_proposals_count],
+      demographics: true },
+    { key: "reviewing",
+      metrics: %w[pending_proposals_count approved_proposals_count rejected_proposals_count],
+      demographics: false },
+    { key: "selecting",
+      metrics: %w[unique_supporters_count total_votes_count online_votes_count offline_votes_count],
+      demographics: true },
+    { key: "publishing_prices",
+      metrics: %w[selected_proposals_count not_selected_proposals_count],
+      demographics: false },
+    { key: "balloting",
+      metrics: %w[unique_voters_count total_votes_count weighted_votes_total weighted_votes_online weighted_votes_offline],
+      demographics: true },
+    { key: "finished",
+      metrics: %w[winners_count],
+      demographics: false }
+  ].freeze
+
   def initialize(projekt)
     @projekt = projekt
   end
@@ -112,8 +133,28 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       supports_count: supports.count,
       unique_participants: supports.select(:voter_id).distinct.count,
       heading_price: phase.budget.heading&.price,
-      currency_symbol: phase.budget.currency_symbol
+      currency_symbol: phase.budget.currency_symbol,
+      budget_segments: collect_budget_segments(phase)
     }
+  end
+
+  def collect_budget_segments(phase)
+    BUDGET_SEGMENTS.map do |segment|
+      metrics = segment[:metrics].map do |metric_key|
+        { key: metric_key, value: phase.stats["#{segment[:key]}_#{metric_key}"].to_i }
+      end
+
+      next nil if metrics.all? { |metric| metric[:value].zero? }
+
+      data = { key: segment[:key], metrics: metrics }
+
+      if segment[:demographics]
+        data[:user_segments] =
+          ProjektPhaseStats::UserSegmentsQuery.call(phase.segment_stats(segment[:key]))
+      end
+
+      data
+    end.compact
   end
 
   def collect_voting_stats(phase)

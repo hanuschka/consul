@@ -2,6 +2,17 @@
   display: none;
 }
 
+.projekt-evaluation-icon-material {
+  display: none;
+}
+
+.projekt-evaluation-icon-fa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .projekt-phase-evaluation-footer__toolbar {
   display: flex;
   justify-content: flex-start;
@@ -25,7 +36,7 @@
   text-decoration: none;
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
 
-  .material-symbols-outlined {
+  .fas {
     font-size: 18px;
     line-height: 1;
   }
@@ -59,7 +70,7 @@
   text-decoration: none;
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
 
-  .material-symbols-outlined {
+  .fas {
     font-size: 20px;
     line-height: 1;
   }
@@ -113,6 +124,11 @@
 
   .material-symbols-outlined {
     font-size: 26px;
+    line-height: 1;
+  }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 22px;
     line-height: 1;
   }
 }
@@ -469,18 +485,30 @@
   color: var(--er-text);
   letter-spacing: -0.01em;
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  .projekt-evaluation-icon-fa {
     font-size: 1.375rem;
     color: var(--er-text-secondary);
   }
 }
 
 .phase-timeline-card__grid,
-.phase-distribution-card__grid,
-.phase-segments-card__grid {
+.phase-distribution-card__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+.phase-segments-card__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .phase-segments-card__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .phase-timeline-card__panel-label,
@@ -519,6 +547,83 @@
   }
 }
 
+.phase-budget-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.phase-budget-segment {
+  padding: 1.5rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+  box-shadow: var(--er-shadow-md);
+}
+
+.phase-budget-segment__title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--er-text);
+}
+
+.phase-budget-segment__distributions {
+  margin-top: 1.25rem;
+}
+
+.phase-budget-segment__distributions-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6875rem 0.875rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  background: var(--er-bg);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius);
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::marker {
+    content: "";
+  }
+
+  &:hover {
+    background: var(--er-border-light);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--er-primary);
+    outline-offset: 2px;
+  }
+}
+
+.phase-budget-segment__distributions-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-text);
+}
+
+.phase-budget-segment__distributions-chevron {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: var(--er-text-secondary);
+  transition: transform 150ms ease-out;
+}
+
+.phase-budget-segment__distributions[open] .phase-budget-segment__distributions-chevron {
+  transform: rotate(180deg);
+}
+
+.phase-budget-segment__distributions-body {
+  padding-top: 1.25rem;
+}
+
 .phase-summary-card {
   display: flex;
   gap: 1rem;
@@ -538,7 +643,8 @@
   height: 40px;
   border-radius: 50%;
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  .projekt-evaluation-icon-fa {
     font-size: 1.25rem;
   }
 }
@@ -589,7 +695,8 @@
   height: 40px;
   border-radius: 50%;
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  .projekt-evaluation-icon-fa {
     font-size: 1.25rem;
   }
 }
@@ -643,6 +750,11 @@
   flex-shrink: 0;
   background: #ede9fe;
   color: #7c3aed;
+}
+
+.er-section-icon .fas {
+  font-size: 16px;
+  line-height: 1;
 }
 
 .er-section-title {
@@ -745,9 +857,12 @@
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--ic, var(--er-text-secondary));
-    padding: 0.25rem 0;
+    padding: 0.25rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 6px;
     list-style: none;
     user-select: none;
+    transition: background 150ms ease;
 
     &::-webkit-details-marker {
       display: none;
@@ -758,6 +873,10 @@
       display: inline-block;
       margin-right: 6px;
       transition: transform 150ms ease;
+    }
+
+    &:hover {
+      background: var(--er-bg, #f8fafc);
     }
   }
 
@@ -1043,7 +1162,8 @@
   flex-shrink: 0;
 }
 
-.open-responses-summary-icon .material-symbols-outlined {
+.open-responses-summary-icon .material-symbols-outlined,
+.open-responses-summary-icon .projekt-evaluation-icon-fa {
   font-size: 20px;
 }
 

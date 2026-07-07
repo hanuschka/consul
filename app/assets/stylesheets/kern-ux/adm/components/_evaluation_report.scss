@@ -537,6 +537,13 @@ $er-max-tabs: 8;
   font-variant-numeric: tabular-nums;
 }
 
+.adm-evaluation-card__summary-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--er-text-secondary);
+}
+
 @media (max-width: 768px) {
   .adm-projekt-evaluation-report .grid-2,
   .poll-question-flow-grid {

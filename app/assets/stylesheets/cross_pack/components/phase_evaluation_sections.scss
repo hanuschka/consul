@@ -146,6 +146,21 @@
   font-weight: 500;
 }
 
+.phase-header-poll-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-primary, #1e40af);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .phase-meta {
   display: flex;
   gap: 1.5rem;

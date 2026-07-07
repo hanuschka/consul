@@ -159,6 +159,11 @@ de:
             aria_label: Ansicht der Auswertung wechseln
             stats: Statistiken
             ai: KI-Analyse
+          report_summary_card:
+            title: Bericht-Zusammenfassung
+            description: Projektübersicht, Einstellungen und Phasen-Zusammenfassungen.
+            phases: Phasen
+            view: Zusammenfassung öffnen
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

@@ -13,6 +13,7 @@ module Adm::Projekts::EvaluationHelper
     topic_clustering
     semantic_clustering
     ai_questions
+    regenerate_ai
   ].freeze
 
   EVALUATION_SHARED_SECTIONS = %w[kpis].freeze

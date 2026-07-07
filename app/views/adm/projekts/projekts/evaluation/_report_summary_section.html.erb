@@ -111,7 +111,7 @@
     </div>
 
     <div class="report-summary--settings-grid">
-      <div class="report-summary--stat-card -emerald">
+      <div class="report-summary--stat-card -emerald <%= "-wide" if open_phases.size > 4 %>">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= open_phases.size %></strong>
           <div class="report-summary--stat-card-label">
@@ -123,7 +123,7 @@
           </div>
         </div>
         <% if open_phases.any? %>
-          <ul class="report-summary--stat-card-list">
+          <ul class="report-summary--stat-card-list <%= open_phases.size > 4 ? "-cols-3" : "-cols-2" %>">
             <% open_phases.each do |title| %>
               <li><%= title %></li>
             <% end %>
@@ -135,7 +135,7 @@
         <% end %>
       </div>
 
-      <div class="report-summary--stat-card -amber">
+      <div class="report-summary--stat-card -amber <%= "-wide" if tags.size > 4 %>">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= tags.size %></strong>
           <div class="report-summary--stat-card-label">
@@ -147,7 +147,7 @@
           </div>
         </div>
         <% if tags.any? %>
-          <ul class="report-summary--stat-card-list">
+          <ul class="report-summary--stat-card-list <%= tags.size > 4 ? "-cols-3" : "-cols-2" %>">
             <% tags.each do |name| %>
               <li><%= name %></li>
             <% end %>

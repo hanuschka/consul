@@ -23,12 +23,19 @@ class PdfServices::EvaluationPdfSelection
   def self.from_saved_visibilities(evaluation)
     phases = evaluation.phases_data
     phase_ids = phases.map { |p| p["phase_id"].to_i }
+    visibilities = visibilities_by_phase_id(phase_ids)
     sections_by_phase = phases.each_with_object({}) do |phase, hash|
       available = available_sections(phase["phase_type"])
-      hash[phase["phase_id"].to_i] = visible_section_keys_for(phase["phase_id"], available)
+      hash[phase["phase_id"].to_i] = visible_section_keys_for(phase["phase_id"], available, visibilities)
     end
 
     new(phase_ids: phase_ids, sections_by_phase: sections_by_phase, include_report: true)
+  end
+
+  def self.visibilities_by_phase_id(phase_ids)
+    ProjektPhaseEvaluationVisibility
+      .where(projekt_phase_id: phase_ids)
+      .index_by(&:projekt_phase_id)
   end
 
   def self.defaults_for(evaluation:, phase_id:)
@@ -47,8 +54,14 @@ class PdfServices::EvaluationPdfSelection
     )
   end
 
-  def self.visible_section_keys_for(phase_id, available_keys)
-    visibility = ProjektPhaseEvaluationVisibility.find_by(projekt_phase_id: phase_id)
+  def self.visible_section_keys_for(phase_id, available_keys, visibilities = nil)
+    visibility =
+      if visibilities
+        visibilities[phase_id.to_i]
+      else
+        ProjektPhaseEvaluationVisibility.find_by(projekt_phase_id: phase_id)
+      end
+
     return available_keys if visibility.nil?
 
     available_keys & visibility.visible_sections

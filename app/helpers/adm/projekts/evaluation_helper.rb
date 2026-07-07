@@ -1,0 +1,91 @@
+module Adm::Projekts::EvaluationHelper
+  CHART_PALETTE = %w[
+    #1E40AF #059669 #D97706 #7C3AED
+    #DB2777 #0891B2 #DC2626 #65A30D
+  ].freeze
+
+  EVALUATION_AI_SECTIONS = %w[
+    phase_summary
+    tone
+    label_sentiment
+    ai_summary
+    key_findings
+    topic_clustering
+    semantic_clustering
+    ai_questions
+  ].freeze
+
+  EVALUATION_SHARED_SECTIONS = %w[kpis].freeze
+
+  def evaluation_ai_section_keys
+    EVALUATION_AI_SECTIONS
+  end
+
+  def evaluation_shared_section_keys
+    EVALUATION_SHARED_SECTIONS
+  end
+
+  def evaluation_chart_colors(values, base_colors = nil)
+    source = base_colors.presence || CHART_PALETTE
+
+    values.each_index.map { |index| source[index % source.size] }
+  end
+
+  def evaluation_phase_palette
+    palette = {
+      "ProjektPhase::ProposalPhase" => {
+        accent: "#059669",
+        accent_light: "#D1FAE5",
+        shades: ["#059669", "#10B981", "#34D399", "#6EE7B7", "#A7F3D0", "#D1FAE5"]
+      },
+      "ProjektPhase::VotingPhase" => {
+        accent: "#1E40AF",
+        accent_light: "#DBEAFE",
+        shades: ["#1E40AF", "#1E3A8A", "#3B82F6", "#60A5FA", "#93C5FD", "#DBEAFE"]
+      },
+      "ProjektPhase::BudgetPhase" => {
+        accent: "#D97706",
+        accent_light: "#FEF3C7",
+        shades: ["#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#FDE68A", "#FEF3C7"]
+      },
+      "ProjektPhase::CommentPhase" => {
+        accent: "#7C3AED",
+        accent_light: "#EDE9FE",
+        shades: ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#EDE9FE"]
+      }
+    }
+    palette.default = palette["ProjektPhase::ProposalPhase"]
+
+    palette
+  end
+
+  def evaluation_phase_kpi_config
+    {
+      "ProjektPhase::ProposalPhase" => {
+        kpi_key: "proposals_count",
+        kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
+      },
+      "ProjektPhase::VotingPhase" => {
+        kpi_key: "participants_count",
+        kpi_label_key: "adm.projekts.projekts.evaluation.participants"
+      },
+      "ProjektPhase::BudgetPhase" => {
+        kpi_key: "investments_count",
+        kpi_label_key: "adm.projekts.projekts.evaluation.investments"
+      },
+      "ProjektPhase::CommentPhase" => {
+        kpi_key: "comments_count",
+        kpi_label_key: "adm.projekts.projekts.evaluation.comments"
+      }
+    }
+  end
+
+  def evaluation_phase_section_partial
+    {
+      "ProjektPhase::ProposalPhase" => "proposal_phase_section",
+      "ProjektPhase::VotingPhase" => "voting_phase_section",
+      "ProjektPhase::BudgetPhase" => "budget_phase_section",
+      "ProjektPhase::CommentPhase" => "comment_phase_section"
+    }
+  end
+end

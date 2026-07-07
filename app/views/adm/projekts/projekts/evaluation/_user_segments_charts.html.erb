@@ -20,7 +20,7 @@
         data-bar-chart
         data-chart-labels="<%= (gender["labels"] || []).to_json %>"
         data-chart-values="<%= (gender["values"] || []).to_json %>"
-        data-chart-color="<%= accent %>"
+        data-chart-colors="<%= evaluation_chart_colors(gender["values"] || [], gender["colors"]).to_json %>"
       >
         <canvas></canvas>
       </div>
@@ -28,7 +28,7 @@
   <% end %>
 
   <% if has_age %>
-    <div class="phase-segments-card__panel">
+    <div class="phase-segments-card__panel -full-width">
       <div class="phase-segments-card__panel-label">
         <%= t("stats.by_age") %>
       </div>
@@ -37,7 +37,7 @@
         data-bar-chart
         data-chart-labels="<%= (age["labels"] || []).to_json %>"
         data-chart-values="<%= (age["values"] || []).to_json %>"
-        data-chart-color="<%= accent %>"
+        data-chart-colors="<%= evaluation_chart_colors(age["values"] || []).to_json %>"
       >
         <canvas></canvas>
       </div>
@@ -54,7 +54,7 @@
         data-bar-chart
         data-chart-labels="<%= (geozone["labels"] || []).to_json %>"
         data-chart-values="<%= (geozone["values"] || []).to_json %>"
-        data-chart-color="<%= accent %>"
+        data-chart-colors="<%= evaluation_chart_colors(geozone["values"] || []).to_json %>"
       >
         <canvas></canvas>
       </div>
@@ -70,7 +70,7 @@
         data-bar-chart
         data-chart-labels="<%= (group["labels"] || []).to_json %>"
         data-chart-values="<%= (group["values"] || []).to_json %>"
-        data-chart-color="<%= accent %>"
+        data-chart-colors="<%= evaluation_chart_colors(group["values"] || []).to_json %>"
       >
         <canvas></canvas>
       </div>

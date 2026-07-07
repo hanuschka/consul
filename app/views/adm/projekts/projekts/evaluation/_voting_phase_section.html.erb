@@ -41,48 +41,51 @@
             <span><%= first_poll["name"] %></span>
           </a>
         <% end %>
-        <% if local_assigns.fetch(:exportable, false) %>
-          <div class="phase-header-downloads">
-            <a href="<%= poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
-              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
-              <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
-              <%= t("adm.projekts.phases.poll_questions.download_individual_answers") %>
-            </a>
-            <% if first_poll %>
-              <a href="<%= poll_csv_answers_votes_path(first_poll["id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
-                <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
-                <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
-                <%= t("custom.polls.show.results.download_csv_answers_votes") %>
-              </a>
-            <% end %>
-          </div>
-        <% end %>
       </div>
       <% if local_assigns[:regenerate_url].present? %>
         <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
           regenerate_url: regenerate_url %>
       <% end %>
     </div>
-    <div class="phase-meta">
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["polls_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.polls") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["participants_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["questions_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.questions") %></div>
-      </div>
-      <% if stats["open_text_count"].to_i > 0 %>
+    <div class="phase-header-aside">
+      <div class="phase-meta">
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["polls_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.polls") %></div>
+        </div>
         <div class="meta-divider"></div>
         <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>"><%= stats["open_text_count"].to_i %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.open_contributions") %></div>
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["participants_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["questions_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.questions") %></div>
+        </div>
+        <% if stats["open_text_count"].to_i > 0 %>
+          <div class="meta-divider"></div>
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>"><%= stats["open_text_count"].to_i %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.open_contributions") %></div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if local_assigns.fetch(:exportable, false) %>
+        <div class="phase-header-downloads">
+          <a href="<%= poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+            <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.phases.poll_questions.download_individual_answers") %>
+          </a>
+          <% if first_poll %>
+            <a href="<%= poll_csv_answers_votes_path(first_poll["id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+              <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("custom.polls.show.results.download_csv_answers_votes") %>
+            </a>
+          <% end %>
         </div>
       <% end %>
     </div>

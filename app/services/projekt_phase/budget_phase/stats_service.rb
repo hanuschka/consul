@@ -19,7 +19,7 @@ class ProjektPhase::BudgetPhase::StatsService
     def counts
       {
         accepting_visible_proposals_count:    investments.count,
-        accepting_proposal_authors_count:     investments.select(:author_id).distinct.count,
+        accepting_proposal_authors_count:     accepting_author_ids.size,
         accepting_comments_count:             accepting_comments_count,
         accepting_reported_proposals_count:   investments.where("flags_count > 0").count,
 
@@ -86,7 +86,7 @@ class ProjektPhase::BudgetPhase::StatsService
     end
 
     def unique_supporters
-      supports.select(:voter_id).distinct.count
+      selecting_participant_ids.size
     end
 
     def online_votes
@@ -110,12 +110,16 @@ class ProjektPhase::BudgetPhase::StatsService
       investment_comments.count
     end
 
+    def accepting_author_ids
+      @accepting_author_ids ||=
+        investments.select(:author_id).distinct.pluck(:author_id).compact
+    end
+
     def accepting_participant_ids
       @accepting_participant_ids ||= begin
-        author_ids = investments.select(:author_id).distinct.pluck(:author_id)
         commenter_ids = investment_comments.select(:user_id).distinct.pluck(:user_id)
 
-        (author_ids + commenter_ids).uniq.compact
+        (accepting_author_ids + commenter_ids).uniq.compact
       end
     end
 
@@ -152,6 +156,6 @@ class ProjektPhase::BudgetPhase::StatsService
     end
 
     def balloting_unique_voters
-      budget.ballots.where(conditional: false).select(:user_id).distinct.count
+      balloting_participant_ids.size
     end
 end

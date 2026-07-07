@@ -185,7 +185,9 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @evaluation = @projekt.projekt_evaluation
     @report_visibility = @projekt.projekt_evaluation_visibility ||
       @projekt.build_projekt_evaluation_visibility
-    @phase_visibilities = build_phase_visibility_map(@projekt)
+    @projekt_phases = @projekt.projekt_phases.sorted
+      .includes(:projekt_phase_evaluation_visibility)
+    @phase_visibilities = build_phase_visibility_map(@projekt_phases)
 
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
 
@@ -546,11 +548,11 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       match ? candidate : nil
     end
 
-    def build_phase_visibility_map(projekt)
+    def build_phase_visibility_map(phases)
       defaults = ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
         .each_with_object({}) { |col, memo| memo[col] = false }
 
-      projekt.projekt_phases.each_with_object({}) do |phase, memo|
+      phases.each_with_object({}) do |phase, memo|
         memo[phase.id] = phase.projekt_phase_evaluation_visibility ||
           phase.build_projekt_phase_evaluation_visibility(defaults)
       end

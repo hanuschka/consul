@@ -1,10 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tab", "bar"]
+  static targets = ["tab", "bar", "regenerateButton", "regenerateLabel"]
   static values = {
     aiSections: Array,
-    sharedSections: Array
+    sharedSections: Array,
+    regularUrl: String,
+    aiUrl: String,
+    regularLabel: String,
+    aiLabel: String
   }
 
   connect() {
@@ -48,6 +52,20 @@ export default class extends Controller {
     this.sections().forEach((section) => {
       section.hidden = !this.sectionVisible(section.dataset.section)
     })
+
+    this.updateRegenerateButton()
+  }
+
+  updateRegenerateButton() {
+    if (!this.hasRegenerateButtonTarget) return
+
+    const isAi = this.activeTab === "ai"
+
+    this.regenerateButtonTarget.href = isAi ? this.aiUrlValue : this.regularUrlValue
+
+    if (this.hasRegenerateLabelTarget) {
+      this.regenerateLabelTarget.textContent = isAi ? this.aiLabelValue : this.regularLabelValue
+    }
   }
 
   sectionVisible(key) {

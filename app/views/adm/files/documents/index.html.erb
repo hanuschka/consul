@@ -9,7 +9,8 @@
   card_component: Files::DocumentCardComponent,
   row_component: Files::DocumentRowComponent,
   documentable_type_frame_src: documentable_type_filter_adm_files_documents_path(documentable_type: params[:documentable_type]),
-  upload_endpoint: file_manager_documents_path
+  upload_endpoint: file_manager_documents_path,
+  detail_path: ->(document) { adm_files_document_path(document) }
 ) do |page| %>
   <% page.with_description do %>
     <%= t("files.documents.index.description") %>

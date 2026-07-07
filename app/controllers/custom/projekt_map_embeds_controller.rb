@@ -15,6 +15,20 @@ class ProjektMapEmbedsController < ApplicationController
       return head :forbidden
     end
 
-    render html: process_shortcodes("{{projekt_map}}", projekt: projekt).html_safe, layout: false
+    render html: render_map_embed_shortcode(
+      resource: params[:resource],
+      phase_id: params[:phase_id],
+      projekt: projekt
+    ), layout: false
+  end
+
+  # No-projekt context (e.g. the homepage): renders the city-wide map with all
+  # visible projekts as pins, identical to the published homepage output.
+  def index
+    render html: render_map_embed_shortcode(
+      resource: params[:resource],
+      phase_id: params[:phase_id],
+      projekt: nil
+    ), layout: false
   end
 end

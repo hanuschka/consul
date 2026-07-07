@@ -27,6 +27,8 @@ Four German-language documents accompany this repository: the
 [Betriebshandbuch](BETRIEBSHANDBUCH.md) (hosting, deployment, backups, monitoring), the
 [Third-Party Notices](THIRD_PARTY_NOTICES.md) (major open-source components and licenses)
 and the [Security Policy](SECURITY.md) (responsible disclosure of vulnerabilities).
+Machine-readable software-directory metadata (openCoDE) lives in
+[publiccode.yml](publiccode.yml).
 
 ## Development setup
 

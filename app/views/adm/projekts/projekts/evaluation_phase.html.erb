@@ -36,15 +36,7 @@
     breadcrumbs: @breadcrumbs,
     frontend_url: projekt_path(@projekt),
     compact: true
-  ) do |header| %>
-    <% header.with_actions do %>
-      <div class="adm-evaluation-phase-actions">
-        <%= render "adm/projekts/projekts/evaluation/regenerate_phase_stats_buttons",
-          regular_stats_url: regular_stats_url,
-          ai_stats_url: ai_stats_url %>
-      </div>
-    <% end %>
-  <% end %>
+  ) %>
 
   <div
     class="kern-container adm-evaluation-phase-container mb-5"
@@ -53,6 +45,7 @@
     data-adm--evaluation-tabs-shared-sections-value="<%= evaluation_shared_section_keys.to_json %>"
   >
     <% if !@phase_row.processing? && !@phase_row.failed? %>
+      <div class="adm-evaluation-view-tabs-wrap" data-adm--evaluation-tabs-target="bar">
       <div
         class="adm-evaluation-view-tabs"
         role="tablist"
@@ -110,6 +103,45 @@
             <%= ai_generated_at_text %>
           </span>
         </button>
+      </div>
+
+      <div
+        class="adm-evaluation-view-tabs__actions"
+        data-tab="stats"
+        data-adm--evaluation-tabs-target="tabActions"
+      >
+        <a
+          href="<%= regular_stats_url %>"
+          class="kern-btn kern-btn--secondary kern-btn--compact"
+          data-action="click->adm--phase-regenerate#start"
+        >
+          <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">monitoring</span>
+          <i class="kern-label fas fa-chart-bar projekt-evaluation-icon-fa" aria-hidden="true"></i>
+          <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button") %></span>
+        </a>
+      </div>
+
+      <div
+        class="adm-evaluation-view-tabs__actions"
+        data-tab="ai"
+        data-adm--evaluation-tabs-target="tabActions"
+        hidden
+      >
+        <%= render Shared::AiFeatureTooltipComponent.new(
+          feature_title: t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button"),
+          feature_text: t("adm.ai_action_button.feature_description")
+        ) do %>
+          <a
+            href="<%= ai_stats_url %>"
+            class="kern-btn kern-btn--secondary kern-btn--compact"
+            data-action="click->adm--phase-regenerate#start"
+          >
+            <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">auto_awesome</span>
+            <i class="kern-label fas fa-magic projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button") %></span>
+          </a>
+        <% end %>
+      </div>
       </div>
     <% end %>
 

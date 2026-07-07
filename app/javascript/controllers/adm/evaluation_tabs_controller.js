@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tab"]
+  static targets = ["tab", "bar", "tabActions"]
   static values = {
     aiSections: Array,
     sharedSections: Array
@@ -17,13 +17,13 @@ export default class extends Controller {
   }
 
   moveTabsBelowPhaseHeader() {
-    const tabBar = this.element.querySelector(".adm-evaluation-view-tabs")
+    const bar = this.hasBarTarget ? this.barTarget : this.element.querySelector(".adm-evaluation-view-tabs")
     const phaseHeaderSection = this.element.querySelector('.phase-evaluation-section[data-section="kpis"]')
 
-    if (!tabBar) return
+    if (!bar) return
     if (!phaseHeaderSection) return
 
-    phaseHeaderSection.after(tabBar)
+    phaseHeaderSection.after(bar)
   }
 
   select(event) {
@@ -47,6 +47,10 @@ export default class extends Controller {
 
     this.sections().forEach((section) => {
       section.hidden = !this.sectionVisible(section.dataset.section)
+    })
+
+    this.tabActionsTargets.forEach((actions) => {
+      actions.hidden = actions.dataset.tab !== this.activeTab
     })
   }
 

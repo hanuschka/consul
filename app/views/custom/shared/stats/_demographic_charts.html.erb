@@ -1,0 +1,13 @@
+<div class="kpi-stats-pie-grid margin-bottom">
+  <% stats.participations.each do |participation| %>
+    <% if participation == "gender" %>
+      <%= render Stats::GenderStatsComponent.new(stats: stats) %>
+    <% elsif participation == "age" %>
+      <%= render Stats::AgeStatsComponent.new(stats: stats) %>
+    <% elsif participation == "geozone" %>
+      <%= render Stats::GeozoneStatsComponent.new(stats: stats) %>
+    <% else %>
+      <%= render "shared/stats/#{participation}", stats: stats %>
+    <% end %>
+  <% end %>
+</div>

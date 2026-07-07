@@ -241,6 +241,8 @@ namespace :adm do
       get :images, on: :member
       get :documents, on: :member
       get :evaluation, on: :member
+      get "evaluation/:phase_id", on: :member, action: :evaluation_phase,
+          as: :evaluation_phase, constraints: { phase_id: /\d+/ }
       get :evaluation_visibility, on: :member
       patch :update_evaluation_visibility, on: :member
       post :generate_evaluation, on: :member

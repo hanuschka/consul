@@ -25,8 +25,6 @@ application.register("adm--ai-question-row", AdmAiQuestionRowController)
 import AdmMenuPopoverController from "./adm/menu_popover_controller"
 application.register("adm--menu-popover", AdmMenuPopoverController)
 
-import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
-application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
@@ -194,6 +192,9 @@ application.register("files--filter-bar", FilesFilterBarController)
 
 import FilesUploadController from "./files/upload_controller"
 application.register("files--upload", FilesUploadController)
+
+import FilesAssetModalController from "./files/asset_modal_controller"
+application.register("files--asset-modal", FilesAssetModalController)
 
 import AdmAiActionButtonController from "./adm/ai_action_button_controller"
 application.register("adm--ai-action-button", AdmAiActionButtonController)

@@ -1,0 +1,47 @@
+<%
+  phase = @phase_row.data || {}
+  color = evaluation_phase_palette[phase["phase_type"]]
+  partial = evaluation_phase_section_partial[phase["phase_type"]]
+  status_url = phase_evaluation_status_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
+  regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
+%>
+
+<%= content_for :title, [
+  (@projekt.page&.title || @projekt.name),
+  t("adm.projekts.projekts.evaluation.title"),
+  phase["phase_title"]
+].compact.join(" | ") %>
+
+<div
+  data-controller="adm--phase-regenerate"
+  data-adm--phase-regenerate-status-url-value="<%= status_url %>"
+  data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
+>
+  <%= render Adm::HeaderComponent.new(
+    title: (@projekt.page&.title || @projekt.name),
+    breadcrumbs: @breadcrumbs,
+    frontend_url: projekt_path(@projekt),
+    compact: true
+  ) do |header| %>
+    <% header.with_actions do %>
+      <div class="adm-evaluation-phase-actions">
+        <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
+          regenerate_url: regenerate_url %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="kern-container adm-evaluation-phase-container mb-5">
+    <div class="adm-projekt-evaluation-report">
+      <%= render "adm/projekts/projekts/evaluation/phase_panel",
+        projekt: @projekt,
+        row: @phase_row,
+        phase: phase,
+        partial_name: partial,
+        accent_color: color[:accent],
+        accent_light_color: color[:accent_light],
+        accent_shades: color[:shades],
+        selection: @selection %>
+    </div>
+  </div>
+</div>

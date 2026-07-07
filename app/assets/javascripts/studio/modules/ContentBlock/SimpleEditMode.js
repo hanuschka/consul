@@ -108,6 +108,9 @@ App.ContentBlockEditor.SimpleEditMode = {
         App.ContentBlockEditor.SimpleEditMode.MapEdit.toggleMapControls(
           contentBlock, enabled
         )
+        App.ContentBlockEditor.SimpleEditMode.MapSourceEdit.toggleMapControls(
+          contentBlock, enabled
+        )
         App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(
           contentBlock, enabled
         )
@@ -127,6 +130,9 @@ App.ContentBlockEditor.SimpleEditMode = {
         contentBlock, enabled
       )
       App.ContentBlockEditor.SimpleEditMode.MapEdit.toggleMapControls(
+        contentBlock, enabled
+      )
+      App.ContentBlockEditor.SimpleEditMode.MapSourceEdit.toggleMapControls(
         contentBlock, enabled
       )
       App.ContentBlockEditor.SimpleEditMode.LinkEdit.toggleLinkControls(

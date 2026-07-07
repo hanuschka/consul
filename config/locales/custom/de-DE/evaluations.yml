@@ -31,7 +31,7 @@ de:
           regenerate_confirm: >
             Möchten Sie die Auswertung wirklich neu generieren? Die bestehende
             Auswertung wird überschrieben.
-          regenerate_phase_button: Phase neu generieren
+          regenerate_phase_button: Phasenstatistiken neu generieren
           regenerate_phase_confirm: >
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
@@ -106,6 +106,7 @@ de:
               timeline: Zeitverlauf
               label_sentiment: Label- und Sentiment-Verteilung
               user_segments: Nutzersegmente
+              budget_segments: Kennzahlen nach Phase
               key_findings: Zentrale Erkenntnisse
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
@@ -123,6 +124,7 @@ de:
               timeline: Tägliche Aktivitätsübersicht mit Verlauf der Teilnahme.
               label_sentiment: Verteilung der Beiträge nach Themenlabel und Stimmungslage.
               user_segments: Aufteilung der Teilnehmenden nach demografischen oder Interessensgruppen.
+              budget_segments: Detaillierte Kennzahlen und Verteilungen je Bürgerhaushalts-Phase (Einreichung, Prüfung, Unterstützung, Abstimmung, Abschluss).
               key_findings: Wichtigste Erkenntnisse aus der KI-Auswertung.
               topic_clustering: Beiträge gruppiert nach inhaltlichen Themenclustern.
               semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.
@@ -147,6 +149,10 @@ de:
           phase_tab:
             generated_at: "Stand %{date}"
             generated_at_unknown: Noch nicht generiert
+          card:
+            stats_badge: Kennzahlen
+            ai_badge: KI-Analyse
+            view_stats: Statistiken ansehen
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

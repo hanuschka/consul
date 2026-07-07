@@ -1,8 +1,14 @@
 .adm-evaluation-view-tabs {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border-bottom: 1px solid var(--kern-grey-350);
+}
+
+.adm-evaluation-view-tabs__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
 }
 
 .adm-evaluation-view-tabs--tab {

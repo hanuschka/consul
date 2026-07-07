@@ -3,6 +3,7 @@
   polls = stats["polls"] || []
   accent = accent_color
   accent_light = accent_light_color
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
 
   section_selection = local_assigns.fetch(:selection, nil)
   show_section = ->(key) {
@@ -44,6 +45,20 @@
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
         <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.voting_phase") %></div>
+        <% if !pdf_mode %>
+          <% polls.each do |poll| %>
+            <a
+              href="<%= poll_path(poll["id"]) %>"
+              class="phase-header-poll-link"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">open_in_new</span>
+              <i class="fas fa-external-link-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <span><%= poll["name"] %></span>
+            </a>
+          <% end %>
+        <% end %>
       </div>
       <% if local_assigns[:regenerate_url].present? %>
         <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",

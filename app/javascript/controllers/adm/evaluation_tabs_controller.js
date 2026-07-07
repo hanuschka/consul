@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tab", "bar", "tabActions"]
+  static targets = ["tab", "bar"]
   static values = {
     aiSections: Array,
     sharedSections: Array
@@ -47,10 +47,6 @@ export default class extends Controller {
 
     this.sections().forEach((section) => {
       section.hidden = !this.sectionVisible(section.dataset.section)
-    })
-
-    this.tabActionsTargets.forEach((actions) => {
-      actions.hidden = actions.dataset.tab !== this.activeTab
     })
   }
 

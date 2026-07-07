@@ -159,6 +159,11 @@ en:
             aria_label: Switch evaluation view
             stats: Statistics
             ai: AI analysis
+          report_summary_card:
+            title: Report summary
+            description: Project overview, settings and phase summaries.
+            phases: Phases
+            view: Open summary
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle

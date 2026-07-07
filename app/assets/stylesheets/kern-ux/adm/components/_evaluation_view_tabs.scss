@@ -5,12 +5,6 @@
   border-bottom: 1px solid var(--kern-grey-350);
 }
 
-.adm-evaluation-view-tabs__actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
-}
-
 .adm-evaluation-view-tabs--tab {
   display: inline-flex;
   flex-direction: column;
@@ -71,4 +65,10 @@
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--kern-color-layout-text-subtle);
+}
+
+.adm-evaluation-view-tabs__actions.phase-evaluation-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
 }

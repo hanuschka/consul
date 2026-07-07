@@ -1,17 +1,17 @@
 .adm-evaluation-view-tabs {
   display: flex;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--kern-grey-350);
 }
 
 .adm-evaluation-view-tabs--tab {
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
   padding: 0.65rem 1.55rem;
   margin-bottom: -1px;
-  font-size: 1rem;
-  font-weight: 500;
   line-height: 1.2;
   color: var(--kern-color-layout-text-subtle);
   background: transparent;
@@ -32,7 +32,6 @@
 }
 
 .adm-evaluation-view-tabs--tab.-active {
-  font-weight: 600;
   color: var(--kern-color-action-default);
   border-bottom-color: var(--kern-color-action-default);
 
@@ -40,6 +39,18 @@
     color: var(--kern-color-action-default);
     border-bottom-color: var(--kern-color-action-default);
   }
+}
+
+.adm-evaluation-view-tabs--tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.adm-evaluation-view-tabs--tab.-active .adm-evaluation-view-tabs--tab-label {
+  font-weight: 600;
 }
 
 .adm-evaluation-view-tabs--icon {
@@ -51,9 +62,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  margin-left: auto;
-  padding-bottom: 0.65rem;
-  align-self: flex-end;
   font-size: 0.875rem;
+  font-weight: 400;
   color: var(--kern-color-layout-text-subtle);
 }

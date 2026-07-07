@@ -511,6 +511,10 @@
   }
 }
 
+.phase-segments-card__panel.-full-width {
+  grid-column: 1 / -1;
+}
+
 .phase-timeline-card__panel-label,
 .phase-distribution-card__panel-label,
 .phase-segments-card__panel-label {

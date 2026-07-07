@@ -67,7 +67,8 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
   def build_regular_data(base)
     base.merge(
       stats: enrich_phase_stats(base),
-      full_stats: ProjektPhaseStats::FullStatsCollector.call(@projekt_phase)
+      full_stats: ProjektPhaseStats::FullStatsCollector.call(@projekt_phase),
+      regular_generated_at: Time.current.iso8601
     )
   end
 
@@ -81,7 +82,8 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
       ai_stats_refreshed_at: ai_data[:ai_stats_refreshed_at],
       evaluation_summary: generate_phase_evaluation_summary(base),
       short_summary: generate_phase_short_summary(base),
-      key_findings: generate_phase_key_findings(base)
+      key_findings: generate_phase_key_findings(base),
+      ai_generated_at: Time.current.iso8601
     }
   end
 

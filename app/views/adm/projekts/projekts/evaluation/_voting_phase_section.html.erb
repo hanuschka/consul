@@ -105,7 +105,9 @@
 
     <div class="poll-block">
       <div class="poll-header">
-        <div class="poll-name"><%= poll["name"] %></div>
+        <% if polls.size > 1 %>
+          <div class="poll-name"><%= poll["name"] %></div>
+        <% end %>
         <div class="poll-meta">
           <%= t("adm.projekts.projekts.evaluation.poll_meta",
             voters: poll["voters_count"].to_i,

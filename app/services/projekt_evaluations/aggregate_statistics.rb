@@ -24,7 +24,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       demographics: true },
     { key: "finished",
       metrics: %w[winners_count],
-      demographics: false }
+      demographics: true }
   ].freeze
 
   def initialize(projekt)

@@ -1,6 +1,6 @@
 <section class="sidebar-card js-sidebar-card <%= class_name %>" >
   <% if @title.present? %>
-    <%= content_tag heading_tag, class: "sidebar-card--title-heading" do %>
+    <%= content_tag heading_tag, class: "sidebar-card--title-heading no-narrative-line" do %>
       <span class="sidebar-card--title js-sidebar-card--title" aria-controls="<%= content_id %>">
         <span class="sidebar-card--title-inner">
           <i class="fas sidebar--icon fa-<%= @icon_name %>"></i>

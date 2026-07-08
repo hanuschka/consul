@@ -43,28 +43,33 @@
         </div>
         <div>
           <div class="phase-title"><%= phase["phase_title"] %></div>
-          <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.proposal_phase") %></div>
         </div>
         <% if local_assigns[:regenerate_url].present? %>
           <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
             regenerate_url: regenerate_url %>
         <% end %>
       </div>
-      <div class="phase-meta">
-        <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
+      <div class="phase-header-aside">
+        <div class="phase-meta">
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
+          </div>
+          <div class="meta-divider"></div>
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+          </div>
+          <div class="meta-divider"></div>
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
+          </div>
         </div>
-        <div class="meta-divider"></div>
-        <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
-        </div>
-        <div class="meta-divider"></div>
-        <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
-        </div>
+
+        <% if local_assigns.fetch(:exportable, false) %>
+          <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
+        <% end %>
       </div>
     </div>
     </section>

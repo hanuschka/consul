@@ -28,7 +28,6 @@
       <% first_poll = polls.first %>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
-        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.voting_phase") %></div>
         <% if !pdf_mode && first_poll %>
           <a
             href="<%= poll_path(first_poll["id"]) %>"
@@ -73,6 +72,7 @@
       </div>
 
       <% if local_assigns.fetch(:exportable, false) %>
+        <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
         <div class="phase-header-downloads">
           <a href="<%= poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
             <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>

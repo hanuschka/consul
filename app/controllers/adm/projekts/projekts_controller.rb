@@ -1,7 +1,7 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   PROJEKT_IMAGE_MAX_FILE_SIZE_MB = 40
 
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :evaluation_phase, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
   before_action :process_tags, only: [:update]
 
@@ -140,6 +140,20 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     ]
   end
 
+  def report_summary
+    authorize [:adm, :projekts, @projekt], :show?
+
+    @evaluation = @projekt.projekt_evaluation
+
+    return redirect_to(evaluation_adm_projekts_projekt_path(@projekt)) if @evaluation.blank? || !@evaluation.completed?
+
+    @breadcrumbs = [
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t("adm.projekts.projekts.evaluation.title"), url: evaluation_adm_projekts_projekt_path(@projekt) },
+      { name: t("adm.projekts.projekts.evaluation.report_summary_card.title") }
+    ]
+  end
+
   def evaluation_phase
     authorize [:adm, :projekts, @projekt], :show?
 
@@ -171,7 +185,9 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @evaluation = @projekt.projekt_evaluation
     @report_visibility = @projekt.projekt_evaluation_visibility ||
       @projekt.build_projekt_evaluation_visibility
-    @phase_visibilities = build_phase_visibility_map(@projekt)
+    @projekt_phases = @projekt.projekt_phases.sorted
+      .includes(:projekt_phase_evaluation_visibility)
+    @phase_visibilities = build_phase_visibility_map(@projekt_phases)
 
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
 
@@ -255,7 +271,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @originating_phase_id = resolve_originating_phase_id(@evaluation, params[:phase_id])
     @selection_defaults = PdfServices::EvaluationPdfSelection.defaults_for(
       evaluation: @evaluation,
-      phase_id: @originating_phase_id
+      phase_id: @originating_phase_id,
+      section_group: params[:section_group].presence
     )
 
     @back_button_url =
@@ -532,11 +549,11 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       match ? candidate : nil
     end
 
-    def build_phase_visibility_map(projekt)
+    def build_phase_visibility_map(phases)
       defaults = ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
         .each_with_object({}) { |col, memo| memo[col] = false }
 
-      projekt.projekt_phases.each_with_object({}) do |phase, memo|
+      phases.each_with_object({}) do |phase, memo|
         memo[phase.id] = phase.projekt_phase_evaluation_visibility ||
           phase.build_projekt_phase_evaluation_visibility(defaults)
       end

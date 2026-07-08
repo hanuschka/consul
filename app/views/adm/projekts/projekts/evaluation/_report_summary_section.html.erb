@@ -171,9 +171,10 @@
           </div>
         </div>
         <% if sdg_goals.any? %>
+          <% sdg_records_by_code = SDG::Goal.where(code: sdg_goals.map { |g| g["code"] }).index_by { |g| g.code.to_s } %>
           <ul class="report-summary--sdg-list">
             <% sdg_goals.each do |goal| %>
-              <% sdg_record = SDG::Goal.find_by(code: goal["code"]) %>
+              <% sdg_record = sdg_records_by_code[goal["code"].to_s] %>
               <% if sdg_record %>
                 <li class="report-summary--sdg-list-item">
                   <span class="report-summary--sdg-list-icon">

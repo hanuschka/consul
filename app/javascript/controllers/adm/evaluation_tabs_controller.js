@@ -1,10 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tab"]
+  static targets = ["tab", "bar", "regenerateButton", "regenerateLabel", "statsAction", "aiAction"]
   static values = {
     aiSections: Array,
-    sharedSections: Array
+    sharedSections: Array,
+    regularUrl: String,
+    aiUrl: String,
+    regularLabel: String,
+    aiLabel: String
   }
 
   connect() {
@@ -17,13 +21,13 @@ export default class extends Controller {
   }
 
   moveTabsBelowPhaseHeader() {
-    const tabBar = this.element.querySelector(".adm-evaluation-view-tabs")
+    const bar = this.hasBarTarget ? this.barTarget : this.element.querySelector(".adm-evaluation-view-tabs")
     const phaseHeaderSection = this.element.querySelector('.phase-evaluation-section[data-section="kpis"]')
 
-    if (!tabBar) return
+    if (!bar) return
     if (!phaseHeaderSection) return
 
-    phaseHeaderSection.after(tabBar)
+    phaseHeaderSection.after(bar)
   }
 
   select(event) {
@@ -48,6 +52,28 @@ export default class extends Controller {
     this.sections().forEach((section) => {
       section.hidden = !this.sectionVisible(section.dataset.section)
     })
+
+    this.updateRegenerateButton()
+    this.updateTabActions()
+  }
+
+  updateTabActions() {
+    const isAi = this.activeTab === "ai"
+
+    if (this.hasStatsActionTarget) this.statsActionTarget.hidden = isAi
+    if (this.hasAiActionTarget) this.aiActionTarget.hidden = !isAi
+  }
+
+  updateRegenerateButton() {
+    if (!this.hasRegenerateButtonTarget) return
+
+    const isAi = this.activeTab === "ai"
+
+    this.regenerateButtonTarget.href = isAi ? this.aiUrlValue : this.regularUrlValue
+
+    if (this.hasRegenerateLabelTarget) {
+      this.regenerateLabelTarget.textContent = isAi ? this.aiLabelValue : this.regularLabelValue
+    }
   }
 
   sectionVisible(key) {

@@ -57,6 +57,7 @@ class ProjektPhase::BudgetPhase::StatsService
         .merge(segment_demographics("accepting", accepting_participant_ids))
         .merge(segment_demographics("selecting", selecting_participant_ids))
         .merge(segment_demographics("balloting", balloting_participant_ids))
+        .merge(segment_demographics("finished", finished_participant_ids))
     end
 
     def segment_demographics(prefix, ids)
@@ -131,6 +132,15 @@ class ProjektPhase::BudgetPhase::StatsService
     def balloting_participant_ids
       @balloting_participant_ids ||=
         budget.ballots.where(conditional: false).select(:user_id).distinct.pluck(:user_id).uniq.compact
+    end
+
+    def finished_participant_ids
+      @finished_participant_ids ||=
+        balloting_lines
+          .where(investment_id: investments.winners.select(:id))
+          .distinct
+          .pluck("budget_ballots.user_id")
+          .uniq.compact
     end
 
     def participant_ids

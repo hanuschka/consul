@@ -527,6 +527,10 @@
   gap: 1.5rem;
 }
 
+.phase-timeline-card__grid.-stacked {
+  grid-template-columns: 1fr;
+}
+
 .phase-segments-card__grid {
   display: grid;
   grid-template-columns: 1fr;

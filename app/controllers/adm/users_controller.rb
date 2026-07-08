@@ -93,6 +93,17 @@ module Adm
       @breadcrumbs = audits_breadcrumbs
     end
 
+    def destroy
+      @user = User.find(params[:id])
+      authorize [:adm, @user]
+
+      @user.erase(
+        "Gelöscht von #{current_user.username} (id: #{current_user.id})"
+      )
+
+      redirect_to adm_users_path, notice: t("adm.users.flash.deleted")
+    end
+
     def verify
       @user = User.find(params[:id])
       authorize [:adm, @user]

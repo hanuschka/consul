@@ -112,6 +112,64 @@ namespace :demo do
       "Insgesamt ein guter Prozess, aber die Rückmeldungen an die Bürger:innen könnten schneller sein."
     ]
 
+    # Proposal-phase content (kept separate from the budget investments above so
+    # the proposal phase can hold many more items).
+    proposal_defs = [
+      { title: "Sichere Fahrradstraße entlang des Flusses",
+        description: "Eine durchgehende, sichere Fahrradstraße vom Zentrum bis zum Stadtrand." },
+      { title: "Neue Spielplätze im Stadtpark",
+        description: "Sanierung bestehender und Bau neuer, barrierefreier Spielbereiche." },
+      { title: "Mehr Straßenbäume in der Innenstadt",
+        description: "Pflanzung klimaresistenter Straßenbäume gegen die sommerliche Hitze." },
+      { title: "Ausbau des Nachtbusnetzes",
+        description: "Dichtere Taktung und neue Linien für sichere Heimwege am Wochenende." },
+      { title: "Öffentliche Trinkwasserbrunnen",
+        description: "Kostenlose Trinkwasserbrunnen an zentralen Plätzen und in Parks." },
+      { title: "Sanierung der Schulturnhallen",
+        description: "Grundsanierung maroder Turnhallen an den städtischen Schulen." },
+      { title: "Erweiterung der Stadtbibliothek",
+        description: "Längere Öffnungszeiten und mehr Lern- und Arbeitsplätze." },
+      { title: "Lastenräder zum kostenlosen Ausleihen",
+        description: "Ein Verleihsystem für Lastenräder in allen Stadtteilen." },
+      { title: "Begrünung von Bushaltestellen",
+        description: "Dachbegrünung der Wartehäuschen für besseres Kleinklima." },
+      { title: "Barrierefreie Umgestaltung des Marktplatzes",
+        description: "Ebene Wege, Leitsysteme und Sitzgelegenheiten für alle." },
+      { title: "Jugendzentrum im Stadtteil Süd",
+        description: "Ein offener Treffpunkt mit Angeboten für Jugendliche." },
+      { title: "Mehr Sitzbänke und Schattenplätze",
+        description: "Zusätzliche Bänke und Beschattung entlang der Hauptwege." },
+      { title: "Ausbau der Ladeinfrastruktur für E-Autos",
+        description: "Mehr öffentliche Ladepunkte in Wohnquartieren." },
+      { title: "Urban-Gardening-Flächen für Anwohner:innen",
+        description: "Gemeinschaftsbeete auf brachliegenden städtischen Flächen." },
+      { title: "Verkehrsberuhigung vor Kindergärten",
+        description: "Tempo-30-Zonen und sichere Querungen im Umfeld von Kitas." },
+      { title: "Digitale Bürgersprechstunde einführen",
+        description: "Regelmäßige Online-Sprechstunden mit der Verwaltung." },
+      { title: "Renaturierung des Stadtbachs",
+        description: "Öffnung und naturnahe Gestaltung des verrohrten Stadtbachs." },
+      { title: "Mehr öffentliche Toiletten in der Innenstadt",
+        description: "Ausbau barrierefreier, gepflegter öffentlicher Toiletten." },
+      { title: "Kulturprogramm im Stadtpark im Sommer",
+        description: "Kostenlose Konzerte und Lesungen an Sommerwochenenden." },
+      { title: "Photovoltaik auf städtischen Dächern",
+        description: "Solaranlagen auf Verwaltungsgebäuden und Schulen." },
+      { title: "Reparaturcafé in jedem Stadtteil",
+        description: "Offene Werkstätten zum gemeinsamen Reparieren statt Wegwerfen." },
+      { title: "Sichere Schulwege mit Zebrastreifen",
+        description: "Neue Fußgängerüberwege und Beleuchtung auf Schulwegen." }
+    ]
+
+    proposal_comment_pool = [
+      "Eine sehr sinnvolle Idee, die ich voll unterstütze.",
+      "Wichtig ist, dass die Umsetzung gut geplant und finanziert wird.",
+      "Bitte auch die Anwohner:innen frühzeitig einbeziehen.",
+      "Das würde die Lebensqualität im Viertel deutlich verbessern.",
+      "Guter Vorschlag – bitte auf Barrierefreiheit achten.",
+      "Ich hätte gern mehr Details zu den Kosten und dem Zeitplan."
+    ]
+
     ActiveRecord::Base.transaction do
       puts "== Projekt Evaluation seed =="
 
@@ -239,17 +297,19 @@ namespace :demo do
       proposal_phase.settings.find_or_initialize_by(key: "feature.general.public_kpi_stats").update!(value: "active")
       proposal_phase.settings.find_or_initialize_by(key: "feature.resource.show_comments").update!(value: "active")
 
-      proposals = specs.each_with_index.map do |spec, i|
-        author = users[i]
-        proposal = proposal_phase.proposals.find_or_initialize_by(title: spec[:title])
+      proposals = proposal_defs.each_with_index.map do |pdef, i|
+        author = users[i % users.size]
+        proposal = proposal_phase.proposals.find_or_initialize_by(title: pdef[:title])
         proposal.assign_attributes(
-          projekt_phase: proposal_phase, author: author, description: spec[:description],
-          responsible_name: "Demo Bürger:in #{i + 1}", officing_bulk_votes: spec[:votes],
+          projekt_phase: proposal_phase, author: author, description: pdef[:description],
+          responsible_name: "Eval Demo Bürger:in #{(i % users.size) + 1}",
+          officing_bulk_votes: (3 + (i * 7) % 45),
           draft: false, published_at: Time.current, admin_accepted: true
         )
         proposal.save(validate: false)
 
-        spec[:comments].each_with_index do |body, ci|
+        2.times do |ci|
+          body = proposal_comment_pool[(i + ci) % proposal_comment_pool.size]
           commenter = users[(i + ci + 3) % users.size]
           next if Comment.exists?(commentable: proposal, user: commenter, body: body)
 

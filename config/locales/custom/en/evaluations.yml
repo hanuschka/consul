@@ -40,6 +40,10 @@ en:
           phase_download_pdf_button: Export PDF…
           download_stats_pdf_button: Export statistics PDF…
           download_ai_pdf_button: Export AI analysis PDF…
+          phase_download_pdf_tooltip: Export the entire phase as a PDF.
+          download_stats_pdf_tooltip: Export only this phase's statistics as a PDF.
+          download_ai_pdf_tooltip: Export only this phase's AI analysis as a PDF.
+          regenerate_tooltip: Regenerate this phase's evaluation. The existing evaluation will be overwritten.
           open_in_admin: Open in admin
           configure_visibility_button: Configure visibility
           toolbar_title_view_link: Go to phase in projekt footer

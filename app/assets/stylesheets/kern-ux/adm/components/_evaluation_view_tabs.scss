@@ -1,7 +1,7 @@
 .adm-evaluation-view-tabs {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border-bottom: 1px solid var(--kern-grey-350);
 }
 
@@ -65,4 +65,12 @@
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--kern-color-layout-text-subtle);
+}
+
+.adm-evaluation-view-tabs__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }

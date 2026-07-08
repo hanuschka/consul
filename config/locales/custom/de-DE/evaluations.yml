@@ -38,6 +38,8 @@ de:
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
           phase_download_pdf_button: PDF exportieren…
+          download_stats_pdf_button: Statistik-PDF exportieren…
+          download_ai_pdf_button: KI-Analyse-PDF exportieren…
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit konfigurieren
           toolbar_title_view_link: Zur Phase im Projekt-Footer
@@ -159,6 +161,11 @@ de:
             aria_label: Ansicht der Auswertung wechseln
             stats: Statistiken
             ai: KI-Analyse
+          report_summary_card:
+            title: Bericht-Zusammenfassung
+            description: Projektübersicht, Einstellungen und Phasen-Zusammenfassungen.
+            phases: Phasen
+            view: Zusammenfassung öffnen
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

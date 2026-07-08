@@ -104,8 +104,10 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
 
     top_proposals = assign_ranks(top_proposals)
 
+    proposals_count = proposals.count
+
     {
-      proposals_count: proposals.count,
+      proposals_count: proposals_count,
       proposal_authors_count: proposals.select(:author_id).distinct.count,
       supports_count: total_votes,
       online_votes_count: online_votes,
@@ -113,7 +115,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       unique_supporters_count: supports.select(:voter_id).distinct.count,
       comments_count: comments.count,
       unique_participants: count_proposal_participants(proposals, supports, comments),
-      avg_supports_per_proposal: safe_average(total_votes, proposals.count),
+      avg_supports_per_proposal: safe_average(total_votes, proposals_count),
       top_proposals: top_proposals
     }
   end
@@ -176,9 +178,10 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     voters_count = poll.voters.count
     visible_comments = poll.comments.where(hidden_at: nil)
 
-    questions_data = poll.questions.order(:given_order).map do |question|
-      build_question_data(question, voters_count)
-    end
+    questions_data = poll.questions
+      .includes(:votation_type, :question_answers)
+      .order(:given_order)
+      .map { |question| build_question_data(question, voters_count) }
 
     comment_entries = visible_comments
       .order(created_at: :asc)
@@ -189,15 +192,15 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       id: poll.id,
       name: poll.name,
       voters_count: voters_count,
-      questions_count: poll.questions.count,
-      open_text_count: visible_comments.count,
+      questions_count: questions_data.size,
+      open_text_count: comment_entries.size,
       open_text_entries: comment_entries,
       questions: questions_data
     }
   end
 
   def build_question_data(question, voters_count)
-    answers_data = question.question_answers.order(:given_order).map do |answer|
+    answers_data = question.question_answers.map do |answer|
       answer_count = answer.total_votes
 
       {

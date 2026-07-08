@@ -20,14 +20,14 @@ class ProjektEvaluation < ApplicationRecord
   end
 
   def phases_data
-    phase_rows.pluck(:data)
+    phase_rows.map(&:data)
   end
 
   def phase_rows
-    projekt_phase_evaluations
+    @phase_rows ||= projekt_phase_evaluations
       .joins(:projekt_phase)
-      .includes(:projekt_phase)
       .where("data->>'phase_type' IS NOT NULL")
       .order(Arel.sql("projekt_phases.given_order ASC NULLS LAST, projekt_phases.id ASC"))
+      .to_a
   end
 end

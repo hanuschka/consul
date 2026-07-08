@@ -31,6 +31,7 @@
       <% c.with_action label: t(".table.actions.unverify"), url: unverify_adm_user_path(user), method: :patch, show: user.verified? %>
       <% c.with_action label: t(".table.actions.edit"), url: edit_adm_user_path(user), data: { turbo_frame: "_top" } %>
       <% c.with_action label: t(".table.actions.audits"), url: audits_adm_user_path(user), icon: "history", data: { turbo_frame: "_top" } %>
+      <% c.with_action label: t(".table.actions.delete"), url: adm_user_path(user), style: :delete, icon: "delete", data: { turbo_method: :delete, turbo_confirm: t(".table.actions.delete_confirm"), turbo_frame: "_top" }, show: !user.erased? && user != current_user && !user.administrator? %>
     <% end %>
   </td>
 </tr>

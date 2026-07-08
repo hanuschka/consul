@@ -86,6 +86,8 @@ en:
           success: The participation phase was updated successfully.
         destroy:
           success: The participation phase and all its content have been deleted.
+        go_live:
+          success: The poll is now live. All test data has been deleted.
         duration:
           title: Duration
           dates_label: Phase duration
@@ -205,6 +207,11 @@ en:
           create_question: Create normal question
           create_bundle_question: Create question bundle
           download_individual_answers: Download individual answers
+          test_mode:
+            banner_title: Test mode
+            banner_text: This poll is in test mode. You can freely edit answers and questions and cast test votes. All test votes will be permanently deleted when you go live.
+            go_live: Publish poll
+            go_live_confirm: Publish this poll? All test votes will be permanently deleted and the poll becomes publicly available. This cannot be undone.
           intro_text_p1: >
             Here you manage the questions of this voting phase. There are two question types:
           intro_question_types:

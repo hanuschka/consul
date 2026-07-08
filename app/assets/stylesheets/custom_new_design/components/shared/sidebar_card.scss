@@ -159,6 +159,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
 .sidebar-card--title-heading {
   margin: 0;
+  margin-bottom: 0 !important;
 }
 
 .sidebar-card--title {

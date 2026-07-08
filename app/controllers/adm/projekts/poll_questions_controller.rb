@@ -1,4 +1,6 @@
 class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
+  include Adm::ContextedClonesRegeneration
+
   before_action :set_projekt_phase
   before_action :set_poll
   before_action :set_question, only: %i[show edit update destroy]
@@ -31,6 +33,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     @question.given_order = @poll.questions.maximum(:given_order).to_i + 1
 
     if @question.save
+      regenerate_contexted_clones_for(@question)
+
       redirect_path = if @question.parent_question.present?
                         adm_projekts_phase_poll_question_path(@projekt_phase, @question.parent_question)
                       else
@@ -60,6 +64,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     if @question.update(question_params)
+      regenerate_contexted_clones_for(@question)
+
       redirect_path = if @question.parent_question.present?
                         adm_projekts_phase_poll_question_path(@projekt_phase, @question.parent_question)
                       else

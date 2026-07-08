@@ -84,8 +84,16 @@
       </div>
     </div>
 
-    <%= render "adm/projekts/projekts/evaluation/report",
-      evaluation: @evaluation,
-      projekt: @projekt %>
+    <div class="adm-projekt-evaluation-report">
+      <%= render "adm/projekts/projekts/evaluation/phase_cards",
+        evaluation: @evaluation,
+        projekt: @projekt %>
+
+      <%= render "adm/projekts/projekts/evaluation/report_summary_section",
+        evaluation: @evaluation,
+        projekt: @projekt,
+        phase_palette: evaluation_phase_palette,
+        pdf_mode: false %>
+    </div>
   <% end %>
 </div>

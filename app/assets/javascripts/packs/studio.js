@@ -56,6 +56,7 @@
 //= require ../studio/modules/ContentBlock/SimpleEditMode/LinkEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ImageEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/MapEdit
+//= require ../studio/modules/ContentBlock/SimpleEditMode/MapSourceEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/ImageAltEdit
 //= require ../studio/modules/ContentBlock/SimpleEditMode/FileManagerDialog
 //= require ../studio/modules/ContentBlock/CKEditorMode

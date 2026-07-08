@@ -1,11 +1,11 @@
-namespace :demo do
+namespace :generate_data do
   desc "Seed the 'Projekt Evaluation' projekt with all four evaluatable phases " \
        "(proposal, voting/poll, budget, comment), each filled with rich test " \
        "data and demographically varied participants (gender/age/geozone/" \
        "individual-group clusters), so the whole /adm evaluation flow can be " \
        "generated and tested end-to-end. Seeds data only — trigger the report " \
        "from the /adm 'Generate evaluation' button. Idempotent / re-runnable. " \
-       "Run: bin/rails demo:evaluation_stats"
+       "Run: bin/rails generate_data:evaluation_stats"
   task evaluation_stats: :environment do
     projekt_name = "Projekt Evaluation"
     slug = "projekt-evaluation"
@@ -16,64 +16,60 @@ namespace :demo do
     # Shared content for proposal + budget phases. Proposal reads title/
     # description/comments/votes; budget additionally reads price/feasibility/
     # selected/winner.
-    specs = [
-      {
-        title: "Fahrradstraße entlang des Flusses",
-        description: "Eine durchgehende, sichere Fahrradstraße entlang des Flusses vom " \
-                     "Zentrum bis zum Stadtrand. Sie verbindet Wohnviertel mit der " \
-                     "Innenstadt und entlastet die Hauptverkehrsachsen.",
-        price: 850_000, feasibility: "feasible", selected: true, winner: true, votes: 40,
-        comments: [
-          "Endlich! Ich fahre täglich mit dem Rad in die Arbeit und die aktuelle Route ist gefährlich.",
-          "Bitte auch an Beleuchtung und Winterdienst denken, sonst ist die Straße im Winter nutzlos.",
-          "Super Idee, aber wie wird das mit den Fußgängern am Flussufer geregelt?"
-        ]
-      },
-      {
-        title: "Neue Spielplätze im Stadtpark",
-        description: "Sanierung der bestehenden Spielplätze und Bau von zwei neuen, " \
-                     "barrierefreien Spielbereichen im Stadtpark – inklusive Schattenplätzen " \
-                     "und Sitzgelegenheiten für Eltern.",
-        price: 320_000, feasibility: "feasible", selected: true, winner: false, votes: 18,
-        comments: [
-          "Als Mutter von zwei Kindern finde ich das großartig. Die alten Geräte sind marode.",
-          "Barrierefreiheit ist wichtig – danke, dass daran gedacht wird!",
-          "Könnte man auch einen Wasserspielbereich für den Sommer ergänzen?"
-        ]
-      },
-      {
-        title: "Baumpflanzungen in der Innenstadt",
-        description: "Pflanzung von 150 klimaresistenten Straßenbäumen in der Innenstadt " \
-                     "zur Verbesserung des Stadtklimas und zur Reduktion der sommerlichen Hitze.",
-        price: 210_000, feasibility: "feasible", selected: false, winner: false, votes: 9,
-        comments: [
-          "Die Innenstadt braucht dringend mehr Grün, im Sommer staut sich die Hitze extrem.",
-          "Bitte heimische Arten wählen, die auch Insekten nützen."
-        ]
-      },
-      {
-        title: "Kostenloses WLAN in der Innenstadt",
-        description: "Flächendeckendes kostenloses öffentliches WLAN in der gesamten Innenstadt " \
-                     "für Anwohner:innen, Besucher:innen und lokale Betriebe.",
-        price: 480_000, feasibility: "unfeasible", selected: false, winner: false, votes: 4,
+    budget_defs = [
+      { title: "Neugestaltung des Stadtparks", price: 750_000,
+        description: "Umfassende Aufwertung des Stadtparks mit neuen Wegen, Beeten und Ruhezonen.",
+        feasibility: "feasible", selected: true, winner: true, votes: 52 },
+      { title: "Sanierung des Freibads", price: 1_200_000,
+        description: "Grundsanierung der Becken, Umkleiden und der Technik des Freibads.",
+        feasibility: "feasible", selected: true, winner: true, votes: 47 },
+      { title: "Fahrradbrücke über den Fluss", price: 980_000,
+        description: "Eine neue Rad- und Fußgängerbrücke, die zwei Stadtteile direkt verbindet.",
+        feasibility: "feasible", selected: true, winner: true, votes: 41 },
+      { title: "Barrierefreier Umbau des Bahnhofs", price: 640_000,
+        description: "Aufzüge, taktile Leitsysteme und stufenlose Zugänge am Bahnhof.",
+        feasibility: "feasible", selected: true, winner: true, votes: 38 },
+      { title: "Neue Quartiers-Sporthalle", price: 1_500_000,
+        description: "Eine Mehrzweck-Sporthalle für Vereine, Schulen und Nachbarschaft.",
+        feasibility: "feasible", selected: true, winner: false, votes: 33 },
+      { title: "Ausbau der Kita-Plätze", price: 820_000,
+        description: "Erweiterung bestehender Kitas um zusätzliche Gruppenräume.",
+        feasibility: "feasible", selected: true, winner: false, votes: 30 },
+      { title: "Grüner Schulhof für die Grundschule", price: 280_000,
+        description: "Entsiegelung und naturnahe Umgestaltung des Schulhofs.",
+        feasibility: "feasible", selected: true, winner: false, votes: 27 },
+      { title: "Öffentliche Bücherschränke", price: 45_000,
+        description: "Wetterfeste Bücherschränke zum Tauschen an belebten Plätzen.",
+        feasibility: "feasible", selected: true, winner: false, votes: 24 },
+      { title: "Beleuchtung der Radwege", price: 310_000,
+        description: "Sichere, energieeffiziente Beleuchtung entlang der Hauptradwege.",
+        feasibility: "feasible", selected: false, winner: false, votes: 19 },
+      { title: "Mehrgenerationen-Treffpunkt", price: 520_000,
+        description: "Ein offener Treffpunkt für Jung und Alt mit Café und Werkstatt.",
+        feasibility: "feasible", selected: false, winner: false, votes: 16 },
+      { title: "Wasserspielplatz im Zentrum", price: 190_000,
+        description: "Ein Wasserspielplatz als Abkühlung für heiße Sommertage.",
+        feasibility: "feasible", selected: false, winner: false, votes: 12 },
+      { title: "Urbaner Gemeinschaftsgarten", price: 130_000,
+        description: "Gemeinschaftsbeete und Obstbäume auf einer städtischen Brachfläche.",
+        feasibility: "feasible", selected: false, winner: false, votes: 10 },
+      { title: "Ausbau der E-Ladesäulen", price: 360_000,
+        description: "Zusätzliche öffentliche Ladepunkte für Elektrofahrzeuge.",
+        feasibility: "undecided", selected: false, winner: false, votes: 14 },
+      { title: "Kostenloses Stadt-WLAN", price: 480_000,
+        description: "Flächendeckendes kostenloses WLAN in der gesamten Innenstadt.",
+        feasibility: "unfeasible", selected: false, winner: false, votes: 8,
         unfeasibility_explanation: "Laufende Betriebs- und Wartungskosten übersteigen das " \
-                                   "verfügbare Budget; Datenschutzanforderungen nicht erfüllbar.",
-        comments: [
-          "Fände ich praktisch, aber der Datenschutz muss wirklich sauber gelöst sein.",
-          "Schade, dass es nicht machbar ist – die Begründung ist aber nachvollziehbar."
-        ]
-      },
-      {
-        title: "Solarpaneele auf Schuldächern",
-        description: "Ausstattung von zehn örtlichen Schulen mit Photovoltaikanlagen zur " \
-                     "Eigenstromerzeugung und als Bildungsprojekt für nachhaltige Energie.",
-        price: 640_000, feasibility: "undecided", selected: false, winner: false, votes: 12,
-        comments: [
-          "Klimaschutz und Bildung verbinden – perfekt.",
-          "Wie sieht es mit der Statik älterer Schuldächer aus?",
-          "Bitte die eingesparten Stromkosten transparent dokumentieren."
-        ]
-      }
+                                   "verfügbare Budget; Datenschutzanforderungen nicht erfüllbar." }
+    ]
+
+    budget_comment_pool = [
+      "Ein wichtiges Vorhaben – das kommt vielen Menschen zugute.",
+      "Bitte bei der Umsetzung auf Nachhaltigkeit und Folgekosten achten.",
+      "Endlich! Darauf warten wir im Viertel schon lange.",
+      "Gut investiertes Geld, wenn die Qualität stimmt.",
+      "Könnte man das barrierefrei und familienfreundlich gestalten?",
+      "Ich unterstütze das, wünsche mir aber mehr Transparenz beim Zeitplan."
     ]
 
     poll_specs = [
@@ -232,14 +228,25 @@ namespace :demo do
       # Participants with full demographic data
       # [gender, age, geozone_index, membership_index(nil ok), interest_index(nil ok)]
       # -----------------------------------------------------------------------
-      people = [
-        ["female",    18, 0, 0, 0], ["male",      22, 1, nil, 1], ["female",    24, 2, 1, 0],
-        ["male",      27, 3, 2, 2], ["other_gen", 29, 0, 0, 1], ["female",    31, 1, nil, 0],
-        ["male",      34, 2, 1, 1], ["female",    37, 3, 0, 2], ["male",      41, 0, 2, nil],
-        ["female",    44, 1, 1, 0], ["other_gen", 48, 2, nil, 1], ["male",      52, 3, 0, 2],
-        ["female",    57, 0, 1, 0], ["male",      61, 1, 2, 1], ["female",    66, 2, 0, nil],
-        ["male",      71, 3, 1, 2], ["other_gen", 76, 0, nil, 0], ["female",    83, 1, 0, 1]
-      ]
+      # Weighted demographic pools produce realistic distributions so every chart
+      # (gender/age/geozone/clusters) — including the Conclusion segment — has
+      # meaningful counts, not one participant per bucket.
+      age_weights = {
+        19 => 4, 24 => 7, 29 => 9, 34 => 11, 39 => 11, 44 => 10,
+        49 => 9, 54 => 8, 59 => 7, 64 => 6, 69 => 4, 74 => 3, 79 => 2, 86 => 1
+      }
+      ages = age_weights.flat_map { |age, count| Array.new(count, age) }
+      gender_cycle = %w[female male female male other_gen female male male female male]
+
+      people = ages.each_with_index.map do |age, i|
+        [
+          gender_cycle[i % gender_cycle.size],
+          age,
+          i % districts.size,
+          [0, 1, 2, nil][i % 4],
+          [2, nil, 0, 1][i % 4]
+        ]
+      end
 
       users = people.each_with_index.map do |(gender, age, gz, mi, ii), idx|
         email = "eval_demo_#{idx + 1}@consul.dev"
@@ -427,8 +434,8 @@ namespace :demo do
       budget.phases.finished.update_columns(starts_at: today - 3.days, ends_at: today + 3.days)
       budget.reload
 
-      investments = specs.each_with_index.map do |spec, i|
-        author = users[i]
+      investments = budget_defs.each_with_index.map do |spec, i|
+        author = users[i % users.size]
         inv = budget.investments.find_or_initialize_by(title: spec[:title])
         inv.assign_attributes(
           heading: heading, group: group, budget: budget, author: author,
@@ -439,7 +446,8 @@ namespace :demo do
         )
         inv.save(validate: false)
 
-        spec[:comments].each_with_index do |body, ci|
+        2.times do |ci|
+          body = budget_comment_pool[(i + ci) % budget_comment_pool.size]
           commenter = users[(i + ci + 3) % users.size]
           next if Comment.exists?(commentable: inv, user: commenter, body: body)
 
@@ -458,15 +466,18 @@ namespace :demo do
         end
       end
 
-      ballot_users = users.first(12)
+      # Every participant casts a ballot that includes winning investments, so
+      # the "Conclusion" (finished) segment gets a demographically rich cohort.
+      winner_investments = investments.select(&:winner?)
       selected_investments = investments.select(&:selected?)
-      ballot_users.each_with_index do |user, i|
+      users.each_with_index do |user, i|
         ballot = Budget::Ballot.find_or_create_by!(budget: budget, user: user) do |b|
           b.physical = i.odd?
           b.conditional = false
         end
 
-        selected_investments.rotate(i).first(1 + (i % selected_investments.size)).each do |inv|
+        targets = (winner_investments.rotate(i).first(2) + selected_investments.rotate(i).first(1)).uniq
+        targets.each do |inv|
           line = Budget::Ballot::Line.find_or_initialize_by(ballot: ballot, investment: inv)
           next if line.persisted?
 

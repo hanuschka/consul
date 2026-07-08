@@ -46,6 +46,7 @@ namespace :adm do
         get :budget_edit
         get :budget_investments
         get :poll_questions
+        patch :go_live
         get :formular
         get :formular_answers
         get :formular_follow_up_emails

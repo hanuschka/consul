@@ -36,20 +36,22 @@
     breadcrumbs: @breadcrumbs,
     frontend_url: projekt_path(@projekt),
     compact: true
-  ) %>
-
-  <% if !@phase_row.processing? && !@phase_row.failed? %>
-    <div class="kern-container d-flex justify-content-end mb-3">
-      <%= render Adm::ButtonWithProgressComponent.new(
-        label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
-        loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
-        success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
-        icon: "picture_as_pdf",
-        success_icon: "check_circle",
-        style: :secondary,
-        url: evaluation_pdf_options_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id)
-      ) %>
-    </div>
+  ) do |header| %>
+    <% if !@phase_row.processing? && !@phase_row.failed? %>
+      <% header.with_actions do %>
+        <div class="ml-auto">
+          <%= render Adm::ButtonWithProgressComponent.new(
+            label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
+            loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+            success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
+            icon: "picture_as_pdf",
+            success_icon: "check_circle",
+            style: :secondary,
+            url: evaluation_pdf_options_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id)
+          ) %>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
 
   <div

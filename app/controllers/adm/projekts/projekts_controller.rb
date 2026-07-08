@@ -271,7 +271,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @originating_phase_id = resolve_originating_phase_id(@evaluation, params[:phase_id])
     @selection_defaults = PdfServices::EvaluationPdfSelection.defaults_for(
       evaluation: @evaluation,
-      phase_id: @originating_phase_id
+      phase_id: @originating_phase_id,
+      section_group: params[:section_group].presence
     )
 
     @back_button_url =

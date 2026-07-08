@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["tab", "bar", "regenerateButton", "regenerateLabel"]
+  static targets = ["tab", "bar", "regenerateButton", "regenerateLabel", "statsAction", "aiAction"]
   static values = {
     aiSections: Array,
     sharedSections: Array,
@@ -54,6 +54,14 @@ export default class extends Controller {
     })
 
     this.updateRegenerateButton()
+    this.updateTabActions()
+  }
+
+  updateTabActions() {
+    const isAi = this.activeTab === "ai"
+
+    if (this.hasStatsActionTarget) this.statsActionTarget.hidden = isAi
+    if (this.hasAiActionTarget) this.aiActionTarget.hidden = !isAi
   }
 
   updateRegenerateButton() {

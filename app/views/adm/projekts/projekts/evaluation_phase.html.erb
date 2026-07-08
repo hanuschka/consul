@@ -38,6 +38,20 @@
     compact: true
   ) %>
 
+  <% if !@phase_row.processing? && !@phase_row.failed? %>
+    <div class="kern-container d-flex justify-content-end mb-3">
+      <%= render Adm::ButtonWithProgressComponent.new(
+        label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
+        loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+        success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
+        icon: "picture_as_pdf",
+        success_icon: "check_circle",
+        style: :secondary,
+        url: evaluation_pdf_options_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id)
+      ) %>
+    </div>
+  <% end %>
+
   <div
     class="kern-container adm-evaluation-phase-container mb-5"
     data-controller="adm--evaluation-tabs"
@@ -120,7 +134,32 @@
           <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
           <span class="kern-label" data-adm--evaluation-tabs-target="regenerateLabel"><%= t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button") %></span>
         </a>
-      </div>
+
+        <div data-adm--evaluation-tabs-target="statsAction">
+          <%= render Adm::ButtonWithProgressComponent.new(
+            label: t("adm.projekts.projekts.evaluation.download_stats_pdf_button"),
+            loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+            success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
+            icon: "picture_as_pdf",
+            success_icon: "check_circle",
+            style: :secondary,
+            compact: true,
+            url: evaluation_pdf_options_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id, section_group: "stats")
+          ) %>
+        </div>
+
+        <div data-adm--evaluation-tabs-target="aiAction" hidden>
+          <%= render Adm::ButtonWithProgressComponent.new(
+            label: t("adm.projekts.projekts.evaluation.download_ai_pdf_button"),
+            loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+            success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
+            icon: "picture_as_pdf",
+            success_icon: "check_circle",
+            style: :secondary,
+            compact: true,
+            url: evaluation_pdf_options_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id, section_group: "ai")
+          ) %>
+        </div>
       </div>
     <% end %>
 

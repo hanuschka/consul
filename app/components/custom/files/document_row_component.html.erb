@@ -21,7 +21,15 @@
   </span>
 
   <div class="files-asset-row--name">
-    <% if title_truncated? %>
+    <% if detail_url.present? %>
+      <a
+        href="<%= detail_url %>"
+        class="files-asset-row--name-link"
+        data-turbo-frame="files-asset-detail"
+        data-action="click->files--asset-modal#open"
+        title="<%= display_title %>"
+      ><%= title_truncated? ? truncated_title : display_title %></a>
+    <% elsif title_truncated? %>
       <button
         type="button"
         class="files-asset-row--title-trigger"
@@ -48,17 +56,35 @@
     </div>
 
     <div class="files-asset-row--field -assigned">
-      <span class="files-asset-row--field-label"><%= t("files.list.assigned_to") %></span>
+      <span class="files-asset-row--field-label"><%= owning_resource_label.presence || t("files.list.assigned_to") %></span>
       <span class="files-asset-row--field-value">
-        <% if documentable_name.present? && documentable_url.present? %>
-          <%= link_to documentable_name,
-                documentable_url,
+        <% if owning_resource_name.present? && owning_resource_url.present? %>
+          <%= link_to owning_resource_name,
+                owning_resource_url,
                 target: "_blank",
                 rel: "noopener",
-                title: documentable_name,
+                title: owning_resource_name,
                 class: "files-asset-card--resource-link" %>
-        <% elsif documentable_name.present? %>
-          <%= documentable_name %>
+        <% elsif owning_resource_name.present? %>
+          <%= owning_resource_name %>
+        <% else %>
+          —
+        <% end %>
+      </span>
+    </div>
+
+    <div class="files-asset-row--field -projekt">
+      <span class="files-asset-row--field-label"><%= t("files.card.projekt") %></span>
+      <span class="files-asset-row--field-value">
+        <% if projekt_name.present? && projekt_url.present? %>
+          <%= link_to projekt_name,
+                projekt_url,
+                target: "_blank",
+                rel: "noopener",
+                title: projekt_name,
+                class: "files-asset-card--resource-link" %>
+        <% elsif projekt_name.present? %>
+          <%= projekt_name %>
         <% else %>
           —
         <% end %>

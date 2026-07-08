@@ -8,7 +8,7 @@ App.ContentBlockEditor.DomHelpers = {
 
     if (!contentBlockWrapper) return {}
 
-    const contentBlock = contentBlockWrapper.querySelector(".projekt-content-block")
+    const contentBlock = contentBlockWrapper.querySelector(".custom-content-block")
 
     return { contentBlockWrapper, contentBlock};
   },
@@ -81,7 +81,7 @@ App.ContentBlockEditor.DomHelpers = {
     if (!contentBlockWrapper) return
 
     const config = this.blockStatusConfig()[type];
-    const zone = contentBlockWrapper.querySelector(".projekt-content-block--toolbar-zone");
+    const zone = contentBlockWrapper.querySelector(".custom-content-block--toolbar-zone");
 
     if (!config || !zone) return
 
@@ -90,7 +90,7 @@ App.ContentBlockEditor.DomHelpers = {
     if (existing) existing.remove();
 
     const status = document.createElement("div");
-    status.className = `projekt-content-block--status js-content-block-status ${config.modifier}`;
+    status.className = `custom-content-block--status js-content-block-status ${config.modifier}`;
 
     const icon = document.createElement("i");
     icon.className = `fas ${config.icon}`;

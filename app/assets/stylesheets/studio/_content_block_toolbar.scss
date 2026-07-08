@@ -4,8 +4,8 @@
 // context that can sit above the fixed map depending on the page/admin-topbar
 // nesting, so it would float over the fullscreen map. Hide it while the map is
 // expanded; it returns when the map is collapsed (button or ESC).
-.projekt-content-block-wrapper:has(.map_location.expanded) .projekt-content-block--toolbar-zone,
-.projekt-content-block-wrapper:has(.map_location.expanded) .add-new-content-block-section {
+.custom-content-block-wrapper:has(.map_location.expanded) .custom-content-block--toolbar-zone,
+.custom-content-block-wrapper:has(.map_location.expanded) .add-new-content-block-section {
   display: none;
 }
 
@@ -14,36 +14,36 @@
 // -----------------------------------------------------------------------------
 // Floating toolbar above the block. Hover-reveal with invisible bridge.
 // Four groups with 8px gap and a vertical 1px divider between them:
-//   1. Save / Cancel                    (.projekt-content-block-edit--buttons-wrapper)
+//   1. Save / Cancel                    (.custom-content-block-edit--buttons-wrapper)
 //   2. Format tools                     (.js-simple-edit-mode-controlls)
-//   3. Mode switch (Edit/AI/Code)       (.projekt-content-block-edit-main-controlls — first 3 buttons)
+//   3. Mode switch (Edit/AI/Code)       (.custom-content-block-edit-main-controlls — first 3 buttons)
 //   4. Block actions (Copy/Move/Delete) (same wrapper, separated by internal separator)
 // =============================================================================
 
-.projekt-content-block--toolbar-border {
+.custom-content-block--toolbar-border {
   display: none;
 }
 
 // Toolbar floats above the block (out-of-flow) — no layout shift.
-// "absolute + sticky" pattern: outer .projekt-content-block--toolbar-zone is
+// "absolute + sticky" pattern: outer .custom-content-block--toolbar-zone is
 // position:absolute (takes no flow space, so toggling `display` on the inner
-// toolbar causes no vertical layout shift). Inner .projekt-content-block--toolbar
+// toolbar causes no vertical layout shift). Inner .custom-content-block--toolbar
 // is position:sticky (sticks below the topbar while the wrapper is in view).
 // The zone's top:-48px lifts the toolbar's at-rest position visually above
 // the wrapper's top edge, replacing the old margin-top:-48px hoist.
-.projekt-content-block-wrapper--inner {
+.custom-content-block-wrapper--inner {
   position: relative;
 
-  &:hover .projekt-content-block--toolbar,
-  &:focus-within .projekt-content-block--toolbar {
+  &:hover .custom-content-block--toolbar,
+  &:focus-within .custom-content-block--toolbar {
     display: flex;
   }
 }
 
-.projekt-content-block-wrapper {
+.custom-content-block-wrapper {
   position: relative;
 
-  .projekt-content-block--toolbar-zone {
+  .custom-content-block--toolbar-zone {
     position: absolute;
     top: -48px;
     right: 0;
@@ -57,7 +57,7 @@
     }
   }
 
-  .projekt-content-block--toolbar {
+  .custom-content-block--toolbar {
     position: sticky;
     top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
     margin-left: auto;
@@ -94,7 +94,7 @@
     // excluded via :first-child — it sits on the left and needs no divider
     // before it).
     > .js-simple-edit-mode-controlls,
-    > .projekt-content-block-edit-main-controlls {
+    > .custom-content-block-edit-main-controlls {
       position: relative;
       margin-left: 8px;
       padding-left: 8px;
@@ -129,7 +129,7 @@
   // via :first-child on DOM order, not on visibility — so explicitly hide it
   // here when no edit-mode class is active.
   &:not(.-in-edit-mode) {
-    .projekt-content-block--toolbar > .projekt-content-block-edit-main-controlls {
+    .custom-content-block--toolbar > .custom-content-block-edit-main-controlls {
       margin-left: 0;
       padding-left: 0;
 
@@ -146,13 +146,13 @@
       overflow: visible;
     }
 
-    .projekt-content-block--toolbar {
+    .custom-content-block--toolbar {
       display: flex;
       outline: 1px solid #c9dced;
     }
 
     &:not(.-compact-mode) {
-      .projekt-content-block--toolbar {
+      .custom-content-block--toolbar {
         width: 100%;
       }
     }
@@ -165,7 +165,7 @@
   // `data-toolbar-position="left"` on the .js-site-content-block, which
   // App.Studio.SiteContentBlockEditor copies onto the wrapper at wrap time.
   &[data-toolbar-position="left"] {
-    .projekt-content-block--toolbar {
+    .custom-content-block--toolbar {
       margin-left: 0;
       margin-right: auto;
       justify-content: flex-start;
@@ -174,8 +174,8 @@
 }
 
 // Internal separator (mode-switch ↔ block-actions within the same group).
-// Rendered by the template as <div class="projekt-content-block-edit--separator">.
-.projekt-content-block-edit--separator {
+// Rendered by the template as <div class="custom-content-block-edit--separator">.
+.custom-content-block-edit--separator {
   width: 1px;
   height: 20px;
   margin: 0 6px;
@@ -186,8 +186,8 @@
 // =============================================================================
 // Sidebar override: toolbar flush below the card title
 // =============================================================================
-.sidebar-card .projekt-content-block-wrapper {
-  .projekt-content-block--toolbar {
+.sidebar-card .custom-content-block-wrapper {
+  .custom-content-block--toolbar {
     margin-bottom: 0;
     max-height: none;
     overflow: visible;
@@ -198,7 +198,7 @@
 // Mobile: toolbar always visible (no hover)
 // =============================================================================
 @media (max-width: $small-tablet-viewport-start) {
-  .projekt-content-block-wrapper .projekt-content-block--toolbar {
+  .custom-content-block-wrapper .custom-content-block--toolbar {
     display: flex;
   }
 }
@@ -364,7 +364,7 @@
 // regardless of the toolbar's left/right position. Informational only, so it
 // ignores pointer events. JS auto-removes it after a short delay.
 // =============================================================================
-.projekt-content-block--status {
+.custom-content-block--status {
   position: sticky;
   top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
   z-index: 201;
@@ -386,26 +386,26 @@
   transition: opacity 180ms ease-out;
 }
 
-.projekt-content-block--status .fas {
+.custom-content-block--status .fas {
   font-size: 15px;
 }
 
-.projekt-content-block--status.-leaving {
+.custom-content-block--status.-leaving {
   opacity: 0;
 }
 
-.projekt-content-block--status.-saved {
+.custom-content-block--status.-saved {
   background: $green-success-soft-color;
 }
 
-.projekt-content-block--status.-error {
+.custom-content-block--status.-error {
   background: $red-button-color;
 }
 
 // =============================================================================
 // Default notification (left of toolbar, e.g. "Standard content")
 // =============================================================================
-.projekt-content-block--default-notification {
+.custom-content-block--default-notification {
   display: flex;
   align-items: center;
   margin-right: auto;
@@ -413,7 +413,7 @@
   color: $green-success-soft-color;
 }
 
-.projekt-content-block-wrapper.-in-edit-mode .projekt-content-block--default-notification {
+.custom-content-block-wrapper.-in-edit-mode .custom-content-block--default-notification {
   display: none;
 }
 

@@ -23,6 +23,10 @@ class Adm::UserPolicy < ApplicationPolicy
     edit?
   end
 
+  def destroy?
+    edit?
+  end
+
   class Scope < Scope
     def resolve
       scope.actual

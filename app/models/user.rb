@@ -264,7 +264,8 @@ class User < ApplicationRecord
     end
   end
 
-  def erase(erase_reason = nil)
+  def erase(erase_reason = nil, destroy_votes: false)
+    destroy_votes! if destroy_votes #custom
     update!(
       erased_at: Time.current,
       erase_reason: erase_reason,
@@ -284,6 +285,29 @@ class User < ApplicationRecord
     remove_roles
     remove_audits #custom
     remove_subscriptions #custom
+  end
+
+  # custom: irreversibly removes the user's votes and refreshes the denormalized
+  # counters on the affected votables. Unlike #take_votes_from this discards the
+  # votes entirely, so it is meant for abusive/duplicate accounts, not GDPR
+  # erasure (which deliberately preserves votes for tally integrity).
+  #
+  # Budget stores are excluded on purpose: Budget::Ballot lines drive winner
+  # calculation, so removing ballots after winners are computed corrupts results.
+  # Budget::Investment supports are likewise left untouched.
+  def destroy_votes!
+    transaction do
+      votes_scope = Vote.where(voter_id: id, voter_type: "User")
+                        .where.not(votable_type: "Budget::Investment")
+      affected_votables = votes_scope.pluck(:votable_type, :votable_id).uniq
+      votes_scope.delete_all
+      refresh_cached_votes(affected_votables)
+
+      # Poll::Answer holds the tallied choices; Poll::Voter is the has-voted
+      # guard. Remove both so results and re-vote checks stay consistent.
+      Poll::Answer.where(author_id: id).find_each(&:destroy!)
+      Poll::Voter.where(user_id: id).find_each(&:destroy!)
+    end
   end
 
   def erased?
@@ -433,6 +457,17 @@ class User < ApplicationRecord
   end
 
   private
+
+    # custom: recomputes cached_votes_* on votables whose votes were removed.
+    # acts_as_votable's update_cached_votes recounts from the votes table
+    # (count_votes_up(true) skips the cache), so it is correct post-deletion.
+    def refresh_cached_votes(votables)
+      votables.group_by(&:first).each do |votable_type, pairs|
+        klass = votable_type.constantize
+        scope = klass.respond_to?(:with_hidden) ? klass.with_hidden : klass
+        scope.where(id: pairs.map(&:last)).find_each(&:update_cached_votes)
+      end
+    end
 
     def clean_document_number
       return unless document_number.present?

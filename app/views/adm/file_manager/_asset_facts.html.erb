@@ -1,0 +1,75 @@
+<dl class="files-detail--facts">
+  <% if detail.resource_type_label.present? %>
+    <div class="files-detail--fact">
+      <dt class="files-detail--fact-label"><%= t("files.card.resource_type") %></dt>
+      <dd class="files-detail--fact-value"><%= detail.resource_type_label %></dd>
+    </div>
+  <% end %>
+
+  <% if detail.owning_resource_name.present? %>
+    <div class="files-detail--fact">
+      <dt class="files-detail--fact-label"><%= detail.owning_resource_label %></dt>
+      <dd class="files-detail--fact-value">
+        <% if detail.owning_resource_url.present? %>
+          <%= link_to detail.owning_resource_name,
+                detail.owning_resource_url,
+                target: "_blank",
+                rel: "noopener",
+                class: "files-asset-card--resource-link" %>
+        <% else %>
+          <%= detail.owning_resource_name %>
+        <% end %>
+      </dd>
+    </div>
+  <% end %>
+
+  <% if detail.projekt_name.present? %>
+    <div class="files-detail--fact">
+      <dt class="files-detail--fact-label"><%= t("files.card.projekt") %></dt>
+      <dd class="files-detail--fact-value">
+        <% if detail.projekt_url.present? %>
+          <%= link_to detail.projekt_name,
+                detail.projekt_url,
+                target: "_blank",
+                rel: "noopener",
+                class: "files-asset-card--resource-link" %>
+        <% else %>
+          <%= detail.projekt_name %>
+        <% end %>
+      </dd>
+    </div>
+  <% end %>
+
+  <% if detail.humanized_size.present? %>
+    <div class="files-detail--fact">
+      <dt class="files-detail--fact-label"><%= t("files.card.file_size") %></dt>
+      <dd class="files-detail--fact-value"><%= detail.humanized_size %></dd>
+    </div>
+  <% end %>
+
+  <% if detail.dimensions.present? %>
+    <div class="files-detail--fact">
+      <dt class="files-detail--fact-label"><%= t("files.card.dimensions") %></dt>
+      <dd class="files-detail--fact-value"><%= detail.dimensions %></dd>
+    </div>
+  <% end %>
+
+  <div class="files-detail--fact">
+    <dt class="files-detail--fact-label"><%= t("files.card.uploaded") %></dt>
+    <dd class="files-detail--fact-value"><%= detail.created_at_long %></dd>
+  </div>
+
+  <div class="files-detail--fact">
+    <dt class="files-detail--fact-label"><%= t("files.card.last_edited") %></dt>
+    <dd class="files-detail--fact-value"><%= detail.updated_at_long %></dd>
+  </div>
+
+  <% if detail.uploaded_by.present? %>
+    <div class="files-detail--fact">
+      <dt class="files-detail--fact-label"><%= t("files.card.uploaded_by") %></dt>
+      <dd class="files-detail--fact-value">
+        <%= render Files::UploaderLinkComponent.new(user: detail.uploaded_by) %>
+      </dd>
+    </div>
+  <% end %>
+</dl>

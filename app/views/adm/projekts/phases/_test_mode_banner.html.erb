@@ -1,0 +1,7 @@
+<% if poll.present? && !poll.live? %>
+  <div class="mb-4">
+    <%= kern_alert(title: t("adm.projekts.phases.poll_questions.test_mode.banner_title"), style: :warning) do %>
+      <p><%= t("adm.projekts.phases.poll_questions.test_mode.banner_text") %></p>
+    <% end %>
+  </div>
+<% end %>

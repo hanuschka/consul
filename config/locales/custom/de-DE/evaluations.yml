@@ -40,6 +40,10 @@ de:
           phase_download_pdf_button: PDF exportieren…
           download_stats_pdf_button: Statistik-PDF exportieren…
           download_ai_pdf_button: KI-Analyse-PDF exportieren…
+          phase_download_pdf_tooltip: Die gesamte Phase als PDF exportieren.
+          download_stats_pdf_tooltip: Nur die Statistiken dieser Phase als PDF exportieren.
+          download_ai_pdf_tooltip: Nur die KI-Analyse dieser Phase als PDF exportieren.
+          regenerate_tooltip: Die Auswertung dieser Phase neu generieren. Die bestehende Auswertung wird überschrieben.
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit konfigurieren
           toolbar_title_view_link: Zur Phase im Projekt-Footer

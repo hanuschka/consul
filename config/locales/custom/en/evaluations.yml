@@ -31,7 +31,7 @@ en:
           regenerate_confirm: >
             Are you sure you want to regenerate the evaluation? The existing
             evaluation will be overwritten.
-          regenerate_phase_button: Regenerate phase
+          regenerate_phase_button: Regenerate phase stats
           regenerate_phase_confirm: >
             Are you sure you want to regenerate this phase? The existing
             evaluation of this phase will be overwritten.
@@ -106,6 +106,7 @@ en:
               timeline: Timeline
               label_sentiment: Label and sentiment
               user_segments: User segments
+              budget_segments: Metrics by phase
               key_findings: Key findings
               topic_clustering: Topic groups
               semantic_clustering: Sentiment analysis
@@ -123,6 +124,7 @@ en:
               timeline: Day-by-day chart showing when participation happened.
               label_sentiment: Distribution of contributions by topic label and sentiment.
               user_segments: Breakdown of participants by demographic or interest segment.
+              budget_segments: Detailed metrics and distributions for each participatory-budget phase (submission, review, support, voting, results).
               key_findings: Highlights of the most important insights surfaced by the AI.
               topic_clustering: Contributions grouped into thematic clusters.
               semantic_clustering: Sentiment-based grouping of contributions.
@@ -147,6 +149,10 @@ en:
           phase_tab:
             generated_at: "As of %{date}"
             generated_at_unknown: Not generated yet
+          card:
+            stats_badge: Key figures
+            ai_badge: AI analysis
+            view_stats: View stats
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle

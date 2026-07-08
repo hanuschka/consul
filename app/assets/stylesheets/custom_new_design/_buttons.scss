@@ -29,6 +29,11 @@ button {
       color: white;
     }
 
+    &:focus-visible {
+      outline: 3px solid var(--focus-outline-color);
+      outline-offset: 2px;
+    }
+
     i {
       width: 1.35em;
     }

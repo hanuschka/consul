@@ -61,6 +61,7 @@
       if (window.newsletterContentBlockEditorModulesInitialized) return
 
       App.SharedModal.initialize();
+      App.ImageCropper.initialize();
       App.DropdownSelectMenuComponent.initialize();
       App.ContentBlockEditor.CreateWithAi.initialize();
       App.ContentBlockEditor.DragDrop.initialize();

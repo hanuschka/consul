@@ -1,6 +1,8 @@
 @import "custom/1_colors";
 @import "custom/1_variables";
 
+@import "cropperjs/dist/cropper";
+
 @import "studio/standalone_base";
 @import "cross_pack/1_colors";
 @import "studio/2_animations";
@@ -10,6 +12,7 @@
 @import "studio/image_upload_gallery_dialog";
 @import "cross_pack/components/adm_filter_bar";
 @import "cross_pack/components/modern_modal_header";
+@import "cross_pack/components/custom_switch";
 @import "studio/content_block_buttons";
 @import "studio/content_block_wrapper";
 @import "studio/content_block_templates";
@@ -25,6 +28,7 @@
 @import "studio/preview_mode";
 @import "studio/phase_management";
 @import "studio/banner_editing";
+@import "studio/banner_image_generate_modal";
 @import "studio/toggle_projekt_background";
 @import "studio/convert_to_blocks_button";
 @import "studio/newsletter_content_block_editor";

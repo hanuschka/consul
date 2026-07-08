@@ -43,4 +43,11 @@ class Adm::MasterportalCollectionCardComponent < ApplicationComponent
       projekt_phase, masterportal_collection_id: collection.id
     )
   end
+
+  def icon_src
+    raw = collection.icon_url
+    return if raw.blank?
+
+    Addressable::URI.encode(raw)
+  end
 end

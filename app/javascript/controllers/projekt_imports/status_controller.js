@@ -1,6 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 import AjaxFetch from "../../shared/ajax_fetch"
 
+const INITIAL_PROGRESS_DELAY = 1200
+const INITIAL_PROGRESS_PERCENT = 20
+
 // Polls a projekt-import's status endpoint and advances the analysis progress UI,
 // redirecting to the chat once analysis is ready. Drives the dedicated loading
 // screen used both right after upload and when resuming an in-flight import, so a
@@ -20,12 +23,31 @@ export default class extends Controller {
 
   connect() {
     this.pollTimer = null
+    this.initialTimer = null
 
-    if (this.hasStatusUrlValue) this.pollStatus()
+    this.startInitialProgress()
   }
 
   disconnect() {
     this.clearPollTimer()
+    this.clearInitialTimer()
+  }
+
+  startInitialProgress() {
+    this.setProgress(0)
+
+    this.initialTimer = setTimeout(() => {
+      this.setProgress(INITIAL_PROGRESS_PERCENT)
+
+      if (this.hasStatusUrlValue) this.pollStatus()
+    }, INITIAL_PROGRESS_DELAY)
+  }
+
+  clearInitialTimer() {
+    if (this.initialTimer) {
+      clearTimeout(this.initialTimer)
+      this.initialTimer = null
+    }
   }
 
   pollStatus() {
@@ -73,6 +95,10 @@ export default class extends Controller {
   advance(label, percent) {
     if (this.hasProgressLabelTarget) this.progressLabelTarget.textContent = label
 
+    this.setProgress(percent)
+  }
+
+  setProgress(percent) {
     if (this.hasProgressFillTarget) {
       this.progressFillTarget.style.width = `${Math.max(0, Math.min(100, percent))}%`
     }

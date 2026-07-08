@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_25_124215) do
+ActiveRecord::Schema.define(version: 2026_07_06_102933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2238,6 +2238,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.integer "created_projekt_ids", default: [], null: false, array: true
     t.string "failure_stage"
     t.jsonb "error_details", default: {}, null: false
+    t.string "content_locale"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
     t.index ["status"], name: "index_projekt_imports_on_status"
@@ -2340,6 +2341,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.boolean "show_open_responses", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "show_budget_segments", default: true, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
   end
 
@@ -2610,6 +2612,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.bigint "landing_page_id"
     t.datetime "published_at"
     t.boolean "imported_by_ai", default: false, null: false
+    t.string "banner_image_generation_status"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"

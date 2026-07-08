@@ -8,6 +8,16 @@
   data-filename="<%= filename %>"
 >
   <div class="files-asset-card--thumb">
+    <% if detail_url.present? %>
+      <a
+        href="<%= detail_url %>"
+        class="files-asset-card--thumb-link"
+        data-turbo-frame="files-asset-detail"
+        data-action="click->files--asset-modal#open"
+        aria-label="<%= t("files.show.view_details") %>"
+      ></a>
+    <% end %>
+
     <% if previewable? %>
       <img
         src="<%= preview_url %>"
@@ -122,14 +132,27 @@
         </div>
       <% end %>
 
-      <% if documentable_name.present? %>
+      <% if owning_resource_name.present? %>
+        <div class="files-asset-card--detail-row">
+          <dt><%= owning_resource_label %></dt>
+          <dd>
+            <% if owning_resource_url.present? %>
+              <%= link_to owning_resource_name, owning_resource_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
+            <% else %>
+              <%= owning_resource_name %>
+            <% end %>
+          </dd>
+        </div>
+      <% end %>
+
+      <% if projekt_name.present? %>
         <div class="files-asset-card--detail-row">
           <dt><%= t("files.card.projekt") %></dt>
           <dd>
-            <% if documentable_url.present? %>
-              <%= link_to documentable_name, documentable_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
+            <% if projekt_url.present? %>
+              <%= link_to projekt_name, projekt_url, target: "_blank", rel: "noopener", class: "files-asset-card--resource-link" %>
             <% else %>
-              <%= documentable_name %>
+              <%= projekt_name %>
             <% end %>
           </dd>
         </div>

@@ -34,11 +34,11 @@
 // Once moved inside the studio block frame by `wrapContentBlocks`, the hint
 // drops its outer spacing (the wrapper owns block-to-block margin) and sits
 // directly under the toolbar in place of the empty content body.
-.projekt-content-block-wrapper .content-block-empty-hint {
-  margin-bottom: 0;
+.custom-content-block-wrapper .content-block-empty-hint {
+  margin-bottom: 20px;
 }
 
-.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper:not(.-in-edit-mode) .projekt-content-block {
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) .custom-content-block {
   min-height: 0;
 }
 
@@ -48,14 +48,14 @@
 // each state, so the layout jumps on edit toggle. While the block is empty
 // there is no content whose spacing matters, so zero the descendant margins in
 // BOTH states; normal spacing returns the moment real content drops the marker.
-.content-block-empty-hint-wrap.is-content-empty .projekt-content-block,
-.content-block-empty-hint-wrap.is-content-empty .projekt-content-block * {
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block,
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block * {
   margin-top: 0;
   margin-bottom: 0;
 }
 
 // Hide the hint while any edit mode is active so the editable body is free.
-.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper.-in-edit-mode .content-block-empty-hint {
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode .content-block-empty-hint {
   display: none;
 }
 
@@ -64,7 +64,7 @@
 // placeholder — no shrink/jump when entering any edit mode. The
 // --empty-hint-height var is set live by App.ContentBlockEditor.EmptyHintToggle
 // while the hint is visible; falls back to the studio min-height.
-.content-block-empty-hint-wrap.is-content-empty .projekt-content-block-wrapper.-in-edit-mode .projekt-content-block {
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode .custom-content-block {
   min-height: var(--empty-hint-height, 55px);
 }
 
@@ -89,15 +89,15 @@
 
 // Projekt page content blocks are studio-wrapped client-side
 // (`addStudioControlsToContentBlock`), so the marker class sits on the
-// `.projekt-content-block-wrapper` itself — there is no separate
+// `.custom-content-block-wrapper` itself — there is no separate
 // `.content-block-empty-hint-wrap` ancestor. These mirror the site-block rules
 // above with the wrapper as the marker. Kept here next to the site rules so the
 // two empty-state variants stay in sync.
-.projekt-content-block-wrapper.is-content-empty .content-block-empty-hint {
+.custom-content-block-wrapper.is-content-empty .content-block-empty-hint {
   display: flex;
 }
 
-.projekt-content-block-wrapper.is-content-empty:not(.-in-edit-mode) .projekt-content-block {
+.custom-content-block-wrapper.is-content-empty:not(.-in-edit-mode) .custom-content-block {
   min-height: 0;
 }
 
@@ -105,16 +105,16 @@
 // escaping (down when collapsed, up under edit-mode min-height) and shifting the
 // trailing add-content-block controls ~16px on edit toggle. Applied in both
 // states while empty; real content drops the marker and restores spacing.
-.projekt-content-block-wrapper.is-content-empty .projekt-content-block,
-.projekt-content-block-wrapper.is-content-empty .projekt-content-block * {
+.custom-content-block-wrapper.is-content-empty .custom-content-block,
+.custom-content-block-wrapper.is-content-empty .custom-content-block * {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.projekt-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {
+.custom-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {
   display: none;
 }
 
-.projekt-content-block-wrapper.is-content-empty.-in-edit-mode .projekt-content-block {
+.custom-content-block-wrapper.is-content-empty.-in-edit-mode .custom-content-block {
   min-height: var(--empty-hint-height, 55px);
 }

@@ -68,7 +68,7 @@ namespace :adm do
   resources :officing_managers, only: [:index, :new, :destroy] do
     post :search, on: :collection
   end
-  resources :users, only: [:index, :edit, :update] do
+  resources :users, only: [:index, :edit, :update, :destroy] do
     patch :verify, on: :member
     patch :unverify, on: :member
     get :audits, on: :member

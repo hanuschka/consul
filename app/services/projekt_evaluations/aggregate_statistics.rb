@@ -130,12 +130,27 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       voter_type: "User"
     )
 
+    top_investments = investments
+      .order(cached_votes_up: :desc)
+      .limit(20)
+      .map do |investment|
+        {
+          id: investment.id,
+          title: investment.title,
+          description: investment.description.to_s.truncate(300),
+          supports: investment.cached_votes_up.to_i + investment.physical_votes.to_i,
+          winner: investment.winner?,
+          selected: investment.selected?
+        }
+      end
+
     {
       investments_count: investments.count,
       supports_count: supports.count,
       unique_participants: supports.select(:voter_id).distinct.count,
       heading_price: phase.budget.heading&.price,
       currency_symbol: phase.budget.currency_symbol,
+      top_investments: top_investments,
       budget_segments: collect_budget_segments(phase)
     }
   end
@@ -298,9 +313,16 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
   def collect_comment_stats(phase)
     comments = phase.comments.where(hidden_at: nil)
 
+    top_comments = comments
+      .order(:created_at)
+      .limit(30)
+      .includes(:translations)
+      .map { |comment| { id: comment.id, body: comment.body.to_s.truncate(400) } }
+
     {
       comments_count: comments.count,
-      unique_commenters: comments.select(:user_id).distinct.count
+      unique_commenters: comments.select(:user_id).distinct.count,
+      top_comments: top_comments
     }
   end
 

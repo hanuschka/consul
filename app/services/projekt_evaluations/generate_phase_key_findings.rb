@@ -58,6 +58,14 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
     stat_value(:top_proposals) || []
   end
 
+  def top_investments
+    stat_value(:top_investments) || []
+  end
+
+  def top_comments
+    stat_value(:top_comments) || []
+  end
+
   def polls
     stat_value(:polls) || []
   end
@@ -166,17 +174,37 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
   end
 
   def serialize_budget_phase
+    investments_text = top_investments.first(15).map do |i|
+      id = i[:id] || i["id"]
+      title = i[:title] || i["title"]
+      supports = i[:supports] || i["supports"]
+      winner = i[:winner] || i["winner"]
+      "  - investment id=#{id}: \"#{title}\" (#{supports} supports)#{winner ? " [winner]" : ""}"
+    end.join("\n")
+
     <<~TEXT
       Investments: #{stat_value(:investments_count)}
       Supports: #{stat_value(:supports_count)}
       Participants: #{stat_value(:unique_participants)}
+
+      Investments:
+      #{investments_text}
     TEXT
   end
 
   def serialize_comment_phase
+    comments_text = top_comments.first(MAX_COMMENTS_IN_PROMPT).map do |c|
+      id = c[:id] || c["id"]
+      body = (c[:body] || c["body"]).to_s.gsub(/\s+/, " ").truncate(300)
+      "  - comment id=#{id}: \"#{body}\""
+    end.join("\n")
+
     <<~TEXT
       Comments: #{stat_value(:comments_count)}
       Unique commenters: #{stat_value(:unique_commenters)}
+
+      Comments:
+      #{comments_text}
     TEXT
   end
 
@@ -319,14 +347,36 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
 
       poll_path(poll_id, anchor: "question-#{id}")
     when "comment"
-      return nil if poll_id.nil? || poll_id.zero?
-
-      poll_path(poll_id, anchor: "comment_#{id}")
+      if poll_id.present? && !poll_id.zero?
+        poll_path(poll_id, anchor: "comment_#{id}")
+      else
+        comment_phase_comment_path(id)
+      end
     when "investment"
-      nil
+      budget_id = Budget::Investment.where(id: id).pick(:budget_id)
+      return nil if budget_id.nil?
+
+      budget_investment_path(budget_id, id)
     end
   rescue StandardError => e
     Rails.logger.warn("[Evaluation] URL resolution failed for #{type}##{id}: #{e.message}")
     nil
+  end
+
+  def comment_phase_comment_path(comment_id)
+    return nil if phase_page_slug.blank?
+
+    page_path(phase_page_slug, projekt_phase_id: phase_id_value, anchor: "comment_#{comment_id}")
+  end
+
+  def phase_id_value
+    @phase[:phase_id] || @phase["phase_id"]
+  end
+
+  def phase_page_slug
+    return @phase_page_slug if defined?(@phase_page_slug)
+
+    projekt_phase = ProjektPhase.find_by(id: phase_id_value)
+    @phase_page_slug = projekt_phase&.projekt&.page&.slug
   end
 end

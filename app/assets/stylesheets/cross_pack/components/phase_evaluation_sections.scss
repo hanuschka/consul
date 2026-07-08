@@ -617,7 +617,7 @@
   cursor: pointer;
   list-style: none;
   user-select: none;
-  background: var(--er-bg);
+  background: white;
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius);
 
@@ -912,7 +912,7 @@
     }
 
     &:hover {
-      background: var(--er-bg, #f8fafc);
+      background: color-mix(in srgb, var(--ic, var(--er-primary)) 12%, transparent);
     }
   }
 

@@ -63,19 +63,23 @@ module Adm::Projekts::EvaluationHelper
     {
       "ProjektPhase::ProposalPhase" => {
         kpi_key: "proposals_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
+        kpi_label_key: "adm.projekts.projekts.evaluation.proposals",
+        subtitle_key: "adm.projekts.projekts.evaluation.proposal_phase"
       },
       "ProjektPhase::VotingPhase" => {
         kpi_key: "participants_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.participants"
+        kpi_label_key: "adm.projekts.projekts.evaluation.participants",
+        subtitle_key: "adm.projekts.projekts.evaluation.voting_phase"
       },
       "ProjektPhase::BudgetPhase" => {
         kpi_key: "investments_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.investments"
+        kpi_label_key: "adm.projekts.projekts.evaluation.investments",
+        subtitle_key: "adm.projekts.projekts.evaluation.budget_phase"
       },
       "ProjektPhase::CommentPhase" => {
         kpi_key: "comments_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.comments"
+        kpi_label_key: "adm.projekts.projekts.evaluation.comments",
+        subtitle_key: "adm.projekts.projekts.evaluation.comment_phase"
       }
     }
   end

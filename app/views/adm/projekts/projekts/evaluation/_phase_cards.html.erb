@@ -147,7 +147,7 @@
           </div>
         <% end %>
 
-        <p class="adm-evaluation-row__summary"><%= phase["short_summary"] %></p>
+        <p class="adm-evaluation-row__summary"><%= phase_summary_plain_text(phase["short_summary"]) %></p>
 
         <div class="adm-evaluation-row__actions" data-adm--phase-regenerate-target="content">
           <div class="adm-evaluation-row__action-line">

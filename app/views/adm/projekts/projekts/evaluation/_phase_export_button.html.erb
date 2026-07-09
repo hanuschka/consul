@@ -1,0 +1,13 @@
+<rich-tooltip delay="500" trigger-only shadow="heavy">
+  <%= render Adm::ButtonWithProgressComponent.new(
+    label: t("adm.projekts.projekts.evaluation.phase_download_pdf_button"),
+    loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+    success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
+    icon: "picture_as_pdf",
+    success_icon: "check_circle",
+    style: :secondary,
+    compact: true,
+    url: evaluation_pdf_options_adm_projekts_projekt_path(projekt, phase_id: phase["phase_id"])
+  ) %>
+  <template><%= t("adm.projekts.projekts.evaluation.phase_download_pdf_tooltip") %></template>
+</rich-tooltip>

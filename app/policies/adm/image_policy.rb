@@ -5,6 +5,10 @@ class Adm::ImagePolicy < ApplicationPolicy
       @user&.projekt_manager?
   end
 
+  def show?
+    index?
+  end
+
   def create?
     return true if full_access?
 

@@ -20,32 +20,39 @@
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
       </div>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
-        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.budget_phase") %></div>
       </div>
       <% if local_assigns[:regenerate_url].present? %>
         <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
           regenerate_url: regenerate_url %>
       <% end %>
     </div>
-    <div class="phase-meta">
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["investments_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.investments") %></div>
+    <div class="phase-header-aside">
+      <div class="phase-meta">
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["investments_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.investments") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["supports_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_participants"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
+        </div>
+        <div class="meta-divider"></div>
       </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["supports_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
-      </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_participants"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.participants") %></div>
-      </div>
+
+      <% if local_assigns.fetch(:exportable, false) %>
+        <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
+      <% end %>
     </div>
   </div>
   </section>
@@ -111,6 +118,23 @@
     >
       <%= render partial: "adm/projekts/projekts/evaluation/phase_user_segments",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+  <% end %>
+
+  <% if show_section.call("budget_segments") %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:budget_segments"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="budget_segments"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/budget_segments",
+        locals: {
+          phase: phase,
+          accent: accent,
+          accent_light: accent_light,
+          pdf_mode: local_assigns.fetch(:pdf_mode, false)
+        } %>
     </section>
   <% end %>
 

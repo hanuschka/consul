@@ -3,6 +3,10 @@ class Adm::AdminAssetPolicy < ApplicationPolicy
     @user&.administrator? || @user&.projekt_manager?
   end
 
+  def show?
+    index?
+  end
+
   def create?
     return true if @user&.administrator?
 

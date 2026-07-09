@@ -45,7 +45,7 @@ $er-max-tabs: 8;
 
   .phase-header {
     gap: 1rem;
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
   }
 
   .adm-projekt-evaluation-report .card,
@@ -94,6 +94,16 @@ $er-max-tabs: 8;
   }
 
   .custom-collapse--head .icon-chevron-down {
+    display: none;
+  }
+
+  .phase-budget-segment__distributions-summary {
+    background: white;
+    border: none;
+    padding: 0;
+  }
+
+  .phase-budget-segment__distributions-chevron {
     display: none;
   }
 }
@@ -225,7 +235,7 @@ $er-max-tabs: 8;
   --er-positive: #059669;
   --er-positive-light: #d1fae5;
   --er-bg: #f8fafc;
-  --er-surface: #ffffff;
+  --er-surface: #f8fafc;
   --er-text: #0f172a;
   --er-text-secondary: #475569;
   --er-text-muted: #94a3b8;
@@ -238,8 +248,8 @@ $er-max-tabs: 8;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   color: var(--er-text);
   line-height: 1.6;
-  background: var(--er-bg);
-  padding: 1rem 1rem;
+  // background: var(--er-bg);
+  padding: 0 1rem;
   border-radius: var(--er-radius-lg);
 
   * {
@@ -350,10 +360,10 @@ $er-max-tabs: 8;
 }
 
 .adm-projekt-evaluation-report .phase-block {
-  background: var(--er-surface);
-  border: 1px solid var(--er-border);
-  border-radius: var(--er-radius-lg);
-  padding: 1.5rem;
+  // background: var(--er-surface);
+  // border: 1px solid var(--er-border);
+  // border-radius: var(--er-radius-lg);
+  // padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -363,136 +373,174 @@ $er-max-tabs: 8;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
 }
 
 
-.evaluation-phase-tabs {
-  margin-bottom: 1.5rem;
+.adm-evaluation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.evaluation-phase-tabs__radio {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-  height: 0;
-}
+.adm-evaluation-card {
+  --card-link-bg: #f6f8ff;
+  --card-link-ink: #3450b4;
 
-.evaluation-phase-tabs__nav {
   display: flex;
-  gap: 0;
-  flex-wrap: wrap;
-  border-bottom: 2px solid var(--er-border);
-  margin-bottom: 1.5rem;
-  padding: 0;
-}
-
-.evaluation-phase-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.75rem 0.95rem;
-  cursor: pointer;
-  color: var(--er-text-secondary);
-  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
-  position: relative;
-  margin-bottom: -2px;
-  border-bottom: 3px solid transparent;
-  user-select: none;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--card-link-ink) 15%, var(--er-border));
+  border-radius: var(--er-radius-lg);
+  background: var(--card-link-bg);
+  color: var(--er-text);
+  transition: border-color 180ms ease-out, box-shadow 180ms ease-out;
 
   &:hover {
-    color: var(--er-text);
+    border-color: color-mix(in srgb, var(--card-link-ink) 40%, var(--er-border));
+    box-shadow: var(--er-shadow-md);
   }
 }
 
-.evaluation-phase-tab__icon {
+.adm-evaluation-card:hover .adm-evaluation-card__cta.kern-btn {
+  background: color-mix(in srgb, var(--card-link-ink) 8%, var(--card-link-bg));
+}
+
+.adm-evaluation-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.adm-evaluation-card__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
-  font-size: 30px;
-  border-radius: var(--er-radius);
-  background: var(--er-border-light);
-  color: var(--er-text-muted);
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-  transition: background 150ms ease, color 150ms ease;
+  border-radius: var(--er-radius);
+  background: var(--card-accent-light);
+  color: var(--card-accent);
+  font-size: 22px;
 }
 
-.evaluation-phase-tab__body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
+.adm-evaluation-card__icon .projekt-evaluation-icon-fa {
+  font-size: 18px;
 }
 
-.evaluation-phase-tab__name {
+.adm-evaluation-card__title {
+  font-size: 1rem;
   font-weight: 600;
-  color: inherit;
-  line-height: 1.2;
-  letter-spacing: -0.1px;
+  line-height: 1.25;
+  color: var(--er-text);
+  transition: color 150ms ease-out;
 }
 
-.evaluation-phase-tab__meta {
-  font-size: 0.65rem;
-  color: var(--er-text-muted);
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  font-weight: 600;
+.adm-evaluation-card__cta {
+  margin-top: auto;
+  align-self: stretch;
+  width: 100%;
+  justify-content: center;
+  transition: background 150ms ease-out;
+}
 
-  strong {
-    font-size: 0.85rem;
-    color: inherit;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
+.adm-evaluation-card__cta.kern-btn {
+  color: var(--card-link-ink);
+  border: 1px solid var(--card-link-ink) !important;
+
+  &:hover {
+    background: color-mix(in srgb, var(--card-link-ink) 14%, var(--card-link-bg)) !important;
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--card-link-ink) 20%, var(--card-link-bg)) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--card-link-ink);
+    outline-offset: 2px;
   }
 }
 
-.evaluation-phase-tab__generated-at {
-  margin-top: 2px;
-  font-size: 0.7rem;
+.adm-evaluation-card__cta.kern-btn .kern-label {
+  color: var(--card-link-ink);
+}
+
+.adm-evaluation-phase-actions {
+  margin-left: auto;
+}
+
+.adm-evaluation-regenerate-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.kern-container.adm-evaluation-phase-container {
+  max-width: min(1280px, 80%);
+}
+
+.adm-evaluation-card__kpi {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.adm-evaluation-card__kpi-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--er-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.adm-evaluation-card__kpi-label {
+  font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.3;
+  color: var(--er-text-secondary);
+}
+
+.adm-evaluation-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.adm-evaluation-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.adm-evaluation-card__badge.-on {
+  color: var(--er-positive);
+  background: var(--er-positive-light);
+}
+
+.adm-evaluation-card__badge.-off {
+  color: var(--er-text-muted);
+  background: var(--er-border-light);
+}
+
+.adm-evaluation-card__date {
+  font-size: 0.875rem;
   color: var(--er-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.evaluation-phase-panel {
-  display: none;
-}
-
-@for $i from 1 through $er-max-tabs {
-  .evaluation-phase-tabs
-    > .evaluation-phase-tabs__radio:nth-of-type(#{$i}):checked
-    ~ .evaluation-phase-tabs__panels
-    > .evaluation-phase-panel:nth-child(#{$i}) {
-    display: block;
-  }
-
-  .evaluation-phase-tabs
-    > .evaluation-phase-tabs__radio:nth-of-type(#{$i}):checked
-    ~ .evaluation-phase-tabs__nav
-    > .evaluation-phase-tab:nth-child(#{$i}) {
-    color: var(--tab-accent);
-    border-bottom-color: var(--tab-accent);
-
-    .evaluation-phase-tab__name {
-      font-weight: 700;
-    }
-
-    .evaluation-phase-tab__icon {
-      background: var(--tab-accent-light);
-      color: var(--tab-accent);
-    }
-
-    .evaluation-phase-tab__meta {
-      color: var(--tab-accent);
-    }
-  }
+.adm-evaluation-card__summary-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--er-text-secondary);
 }
 
 @media (max-width: 768px) {
@@ -511,13 +559,6 @@ $er-max-tabs: 8;
   }
   .response-grid {
     columns: 1;
-  }
-  .evaluation-phase-tab {
-    flex: 1 1 calc(50% - 0.25rem);
-    padding: 0.5rem 0.75rem;
-  }
-  .evaluation-phase-tab__meta {
-    font-size: 0.62rem;
   }
 }
 
@@ -630,6 +671,10 @@ $er-max-tabs: 8;
   .material-symbols-outlined {
     font-size: 2.25rem;
   }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 2rem;
+  }
 }
 
 .report-summary--project-body {
@@ -682,6 +727,10 @@ $er-max-tabs: 8;
 
   .material-symbols-outlined {
     font-size: 1rem;
+  }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 0.9rem;
   }
 }
 
@@ -749,6 +798,10 @@ $er-max-tabs: 8;
     --card-tint: #fff1f2;
     --card-border: #ffe4e6;
   }
+
+  &.-wide {
+    column-span: all;
+  }
 }
 
 .report-summary--stat-card-head {
@@ -793,22 +846,42 @@ $er-max-tabs: 8;
   font-size: 18px;
 }
 
+.report-summary--stat-card-icon .projekt-evaluation-icon-fa {
+  font-size: 14px;
+}
+
 .report-summary--stat-card-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+  columns: 1;
+  column-gap: 0.85rem;
+}
+
+.report-summary--stat-card-list.-cols-2 {
+  columns: 2 30ch;
+}
+
+.report-summary--stat-card-list.-cols-3 {
+  columns: 3 30ch;
 }
 
 .report-summary--stat-card-list li {
+  min-width: 0;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--er-text);
   line-height: 1.4;
   padding-left: 0.85rem;
+  margin-bottom: 0.45rem;
   border-left: 2px solid var(--card-accent, #cbd5e1);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  break-inside: avoid;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .report-summary--stat-card-empty {
@@ -895,6 +968,10 @@ $er-max-tabs: 8;
 
 .report-summary--phase-icon .material-symbols-outlined {
   font-size: 22px;
+}
+
+.report-summary--phase-icon .projekt-evaluation-icon-fa {
+  font-size: 19px;
 }
 
 .report-summary--phase-content {
@@ -1138,4 +1215,5 @@ $er-max-tabs: 8;
   gap: 0.25rem;
   padding: 1rem 1.25rem;
 }
+
 

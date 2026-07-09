@@ -7,6 +7,8 @@ class MapDataController < ApplicationController
     "proposal_phase" => MapData::ProposalPhase
   }.freeze
 
+  MAX_REQUESTED_PHASES = 50
+
   def show
     service_class = SOURCE_SERVICES[params[:source].to_s]
 
@@ -14,18 +16,54 @@ class MapDataController < ApplicationController
       head :bad_request and return
     end
 
-    projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+    projekt_phases = requested_projekt_phases
 
-    if projekt_phase.blank?
+    if projekt_phases.nil?
       head :not_found and return
     end
 
-    feature_collection = service_class.call(**service_params(service_class, projekt_phase))
+    feature_collections = projekt_phases.map do |projekt_phase|
+      service_class.call(**service_params(service_class, projekt_phase))
+    end
 
-    render json: feature_collection
+    render json: aggregate_feature_collections(feature_collections)
   end
 
   private
+
+    def requested_projekt_phases
+      if params[:projekt_phase_ids].present?
+        ProjektPhase
+          .where(id: params[:projekt_phase_ids].to_s.split(",").first(MAX_REQUESTED_PHASES))
+          .includes(:settings, :projekt)
+          .select { |phase| phase.name == params[:source].to_s }
+          .select { |phase| map_data_visible?(phase) }
+      else
+        projekt_phase = ProjektPhase.find_by(id: params[:projekt_phase_id])
+
+        return nil if projekt_phase.blank?
+
+        map_data_visible?(projekt_phase) ? [projekt_phase] : []
+      end
+    end
+
+    # Same gate the projekt page applies when rendering phase maps: the phase's
+    # own map feature must be on for everyone, and hidden/inactive phases are
+    # only served to admins/PMs (mirroring the footer phase tabs).
+    def map_data_visible?(projekt_phase)
+      return false if !projekt_phase.resource_map_enabled?
+      return true if projekt_phase.publicly_visible?
+
+      helpers.show_admin_controls_for_projekt?(projekt_phase.projekt)
+    end
+
+    def aggregate_feature_collections(feature_collections)
+      features = feature_collections.flat_map do |collection|
+        collection[:features] || collection["features"] || []
+      end
+
+      { type: "FeatureCollection", features: features }
+    end
 
     def service_params(service_class, projekt_phase)
       case service_class.name

@@ -1,5 +1,5 @@
-<div class="custom-collapse <%= "-opened" if @opened_by_default %> ">
-  <button class="custom-collapse--head js-collapse-head" aria-expanded="<%= @opened_by_default ? "true" : "false" %>">
+<div class="custom-collapse <%= "-opened" if @opened_by_default %> <%= "-with-head-background" if @head_background %>">
+  <button class="custom-collapse--head js-collapse-head <%= "-with-hover-background" if @head_hover_background %>" aria-expanded="<%= @opened_by_default ? "true" : "false" %>">
     <%= head %>
     <div class="icon-chevron-down">
     </div>

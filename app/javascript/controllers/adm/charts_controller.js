@@ -14,14 +14,35 @@ if (isPdfMode()) {
 
 export default class extends Controller {
   connect() {
-    this.element.querySelectorAll("[data-area-chart]").forEach(el => this.initAreaChart(el))
-    this.element.querySelectorAll("[data-bar-chart]").forEach(el => this.initBarChart(el))
+    this.charts = []
+    this.element.querySelectorAll("[data-area-chart]").forEach(el => this.registerChart(this.initAreaChart(el)))
+    this.element.querySelectorAll("[data-bar-chart]").forEach(el => this.registerChart(this.initBarChart(el)))
+
+    this.parentDetails = this.element.closest("details")
+    if (this.parentDetails) this.parentDetails.addEventListener("toggle", this.handleDetailsToggle)
+
+    document.addEventListener("adm-charts:resize", this.resizeCharts)
   }
 
   disconnect() {
+    document.removeEventListener("adm-charts:resize", this.resizeCharts)
+
+    if (this.parentDetails) this.parentDetails.removeEventListener("toggle", this.handleDetailsToggle)
     this.element.querySelectorAll("canvas").forEach(canvas => {
       Chart.getChart(canvas)?.destroy()
     })
+  }
+
+  registerChart(chart) {
+    if (chart) this.charts.push(chart)
+  }
+
+  handleDetailsToggle = () => {
+    if (this.parentDetails.open) this.resizeCharts()
+  }
+
+  resizeCharts = () => {
+    this.charts.forEach(chart => chart.resize())
   }
 
   initAreaChart(container) {
@@ -84,6 +105,8 @@ export default class extends Controller {
         interaction: { intersect: false, mode: "index" }
       }
     })
+
+    return chart
   }
 
   initBarChart(container) {
@@ -105,7 +128,7 @@ export default class extends Controller {
       container.style.height = (labels.length * (barHeight + barSpacing) + 40) + "px"
     }
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: "bar",
       data: {
         labels,
@@ -138,5 +161,6 @@ export default class extends Controller {
       }
     })
 
+    return chart
   }
 }

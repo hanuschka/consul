@@ -38,32 +38,39 @@
     <div class="phase-header">
       <div class="phase-icon-title">
         <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-          <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+          <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+          <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
         </div>
         <div>
           <div class="phase-title"><%= phase["phase_title"] %></div>
-          <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.proposal_phase") %></div>
         </div>
         <% if local_assigns[:regenerate_url].present? %>
           <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
             regenerate_url: regenerate_url %>
         <% end %>
       </div>
-      <div class="phase-meta">
-        <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
+      <div class="phase-header-aside">
+        <div class="phase-meta">
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>"><%= stats["proposals_count"].to_i %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.proposals") %></div>
+          </div>
+          <div class="meta-divider"></div>
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
+          </div>
+          <div class="meta-divider"></div>
+          <div class="meta-item">
+            <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
+            <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
+          </div>
+          <div class="meta-divider"></div>
         </div>
-        <div class="meta-divider"></div>
-        <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>"><%= total_supports %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.supports") %></div>
-        </div>
-        <div class="meta-divider"></div>
-        <div class="meta-item">
-          <div class="meta-value" style="color:<%= accent %>;font-size:1.25rem"><%= stats["avg_supports_per_proposal"].to_f.round(1) %></div>
-          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.avg_per_proposal") %></div>
-        </div>
+
+        <% if local_assigns.fetch(:exportable, false) %>
+          <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
+        <% end %>
       </div>
     </div>
     </section>
@@ -200,7 +207,7 @@
           <div class="proposal-header">
             <span class="proposal-name"><%= proposal["title"] %></span>
             <span class="proposal-votes">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 9V5a3 3 0 00-6 0v4"/><path d="M18.8 10A2 2 0 0017 9H7a2 2 0 00-2 1.8L4 19.6A2 2 0 006 22h12a2 2 0 002-2.4L18.8 10z"/></svg>
+              <i class="fas fa-thumbs-up" aria-hidden="true"></i>
               <%= proposal["supports"] %>
             </span>
           </div>

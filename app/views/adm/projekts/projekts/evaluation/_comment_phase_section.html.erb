@@ -20,27 +20,34 @@
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-        <span class="material-symbols-outlined" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+        <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
       </div>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
-        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.comment_phase") %></div>
       </div>
       <% if local_assigns[:regenerate_url].present? %>
         <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
           regenerate_url: regenerate_url %>
       <% end %>
     </div>
-    <div class="phase-meta">
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["comments_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.comments") %></div>
+    <div class="phase-header-aside">
+      <div class="phase-meta">
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["comments_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.comments") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_commenters"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.commenters") %></div>
+        </div>
+        <div class="meta-divider"></div>
       </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_commenters"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.commenters") %></div>
-      </div>
+
+      <% if local_assigns.fetch(:exportable, false) %>
+        <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
+      <% end %>
     </div>
   </div>
   </section>

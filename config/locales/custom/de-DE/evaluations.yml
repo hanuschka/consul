@@ -1,4 +1,7 @@
 de:
+  time:
+    formats:
+      evaluation_header: "%d. %B %Y, %H:%M Uhr"
   public:
     evaluations:
       generated_at: "Erstellt am %{time}"
@@ -105,7 +108,6 @@ de:
               kpis: Kennzahlen
               key_metrics: Detailkennzahlen
               ranking: Ranking-Diagramm
-              proposals: Vorschlagskarten
               questions: Fragen und Diagramme
               open_responses: Offene Beiträge
               ai_summary: KI-Zusammenfassung
@@ -123,7 +125,6 @@ de:
               kpis: Wichtigste Kennzahlen der Phase — Teilnehmende, Vorschläge, Stimmen, Unterstützungen.
               key_metrics: Detaillierte Aufschlüsselung der Teilnahmewerte je Metrik.
               ranking: Balkendiagramm mit den am stärksten unterstützten Vorschlägen.
-              proposals: Karten mit den Top-Vorschlägen und deren Unterstützungszahlen.
               questions: Abstimmungsfragen mit Antwortverteilungen und Ergebnis-Diagrammen.
               open_responses: Frei formulierte Beiträge der Teilnehmenden.
               ai_summary: KI-generierte Zusammenfassung der Phase als Fließtext.
@@ -170,6 +171,24 @@ de:
             description: Projektübersicht, Einstellungen und Phasen-Zusammenfassungen.
             phases: Phasen
             view: Zusammenfassung öffnen
+          overview:
+            title: Projektauswertung
+            subtitle_html: "Gesamtbericht über %{modules} · zuletzt aktualisiert %{updated}"
+            modules_count:
+              one: "1 Beteiligungsmodul"
+              other: "%{count} Beteiligungsmodule"
+            section_report: Übersicht
+            section_modules: Module im Bericht
+            entries_count:
+              one: "1 Eintrag"
+              other: "%{count} Einträge"
+            action_visibility: Sichtbarkeit
+            action_regenerate: Neu generieren
+            refresh: Aktualisieren
+            open: Öffnen
+            summary_fallback: >
+              Dieser Gesamtbericht bündelt die Kennzahlen und KI-Analysen aller
+              Beteiligungsmodule dieses Projekts.
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

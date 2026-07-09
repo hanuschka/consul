@@ -4,20 +4,9 @@
   total_supports = stats["supports_count"].to_i
   max_supports = top_proposals.map { |p| p["supports"].to_i }.max.to_i
   max_supports = 1 if max_supports.zero?
-  total_count = top_proposals.size
   accent = accent_color
   accent_light = accent_light_color
   shades = accent_shades || [accent] * 5
-
-  palette_size = shades.size
-  max_shade = palette_size - 1
-
-  shade_for = ->(rank) {
-    return 0 if total_count <= 1
-
-    ratio = (rank.to_i - 1).to_f / (total_count - 1)
-    (ratio * max_shade).round.clamp(0, max_shade)
-  }
 
   section_selection = local_assigns.fetch(:selection, nil)
   show_section = ->(key) {
@@ -168,55 +157,16 @@
         <%
           rank = proposal["rank"].to_i
           width = (proposal["supports"].to_f / max_supports * 100).round(1)
-          bucket = shade_for.call(rank)
-          shade_bg = shades[bucket]
-          shade_next = shades[[bucket + 2, max_shade].min]
-          text_color = bucket >= 3 ? accent : "white"
         %>
         <div class="pref-row">
-          <div class="pref-rank" style="background:<%= shade_bg %>;color:<%= text_color %>"><%= rank %></div>
+          <div class="pref-rank" style="background:<%= accent %>;color:white"><%= rank %></div>
           <span class="pref-label"><%= proposal["title"] %></span>
           <div class="pref-bar-track">
-            <div class="pref-bar-fill" style="width:<%= width %>%;background:linear-gradient(90deg,<%= shade_bg %>,<%= shade_next %>)">
+            <div class="pref-bar-fill" style="width:<%= width %>%;background:<%= accent %>">
               <%= proposal["supports"] %>
             </div>
           </div>
           <span class="pref-count"><%= proposal["supports"] %></span>
-        </div>
-      <% end %>
-    </div>
-    </section>
-  <% end %>
-
-  <% if top_proposals.any? && show_section.call("proposals") %>
-    <section
-      class="phase-evaluation-section"
-      data-pdf-chunk="phase:<%= phase["phase_id"] %>:proposals"
-      data-phase-id="<%= phase["phase_id"] %>"
-      data-section="proposals"
-    >
-    <div class="proposal-grid">
-      <% top_proposals.each do |proposal| %>
-        <%
-          rank = proposal["rank"].to_i
-          bucket = shade_for.call(rank)
-          stripe_color = shades[bucket]
-        %>
-        <div class="proposal-card">
-          <div class="stripe" style="background:<%= stripe_color %>"></div>
-          <div class="proposal-header">
-            <span class="proposal-name"><%= proposal["title"] %></span>
-            <span class="proposal-votes">
-              <i class="fas fa-thumbs-up" aria-hidden="true"></i>
-              <%= proposal["supports"] %>
-            </span>
-          </div>
-          <div class="proposal-desc"><%= sanitize(proposal["description"].to_s).truncate(300) %></div>
-          <% if rank == 1 %>
-            <span class="proposal-tag" style="background:<%= accent_light %>;color:<%= accent %>">
-              <%= t("adm.projekts.projekts.evaluation.rank_first") %>
-            </span>
-          <% end %>
         </div>
       <% end %>
     </div>

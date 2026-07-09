@@ -1,4 +1,7 @@
 en:
+  time:
+    formats:
+      evaluation_header: "%d %B %Y, %H:%M"
   public:
     evaluations:
       generated_at: "Generated at %{time}"
@@ -105,7 +108,6 @@ en:
               kpis: KPIs
               key_metrics: Detailed metrics
               ranking: Ranking chart
-              proposals: Proposal cards
               questions: Questions and charts
               open_responses: Open contributions
               ai_summary: AI summary
@@ -123,7 +125,6 @@ en:
               kpis: Headline figures for the phase — participation count, proposals, votes, supports.
               key_metrics: Detailed breakdown of participation numbers per metric.
               ranking: Bar chart ranking the top-supported proposals.
-              proposals: Cards listing the top proposals with their support counts.
               questions: Voting questions with answer distributions and result charts.
               open_responses: Free-text contributions submitted by participants.
               ai_summary: AI-generated narrative summary of the phase.
@@ -170,6 +171,24 @@ en:
             description: Project overview, settings and phase summaries.
             phases: Phases
             view: Open summary
+          overview:
+            title: Project evaluation
+            subtitle_html: "Overall report across %{modules} · last updated %{updated}"
+            modules_count:
+              one: "1 participation module"
+              other: "%{count} participation modules"
+            section_report: Overview
+            section_modules: Modules in report
+            entries_count:
+              one: "1 entry"
+              other: "%{count} entries"
+            action_visibility: Visibility
+            action_regenerate: Regenerate
+            refresh: Update
+            open: Open
+            summary_fallback: >
+              This overall report bundles the key figures and AI analyses of all
+              participation modules in this project.
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle

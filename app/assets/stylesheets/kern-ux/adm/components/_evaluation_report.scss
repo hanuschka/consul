@@ -943,7 +943,8 @@ $er-max-tabs: 8;
   flex-direction: column;
   gap: 1.05rem;
   padding: 1.2rem 1.55rem;
-  background: var(--er-surface);
+  // background: var(--er-surface);
+  background: white;
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius-lg);
 }

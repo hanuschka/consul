@@ -86,10 +86,16 @@ class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
     def system_instructions
       <<~TEXT
         You are summarizing one phase of a citizen participation project for an executive overview.
-        Write 2 to 3 sentences in #{target_language} that capture what happened in this phase
-        based on the stats: cover participation level, the main quantitative outcome, and a brief
-        qualitative observation or contextual note. Each sentence should add new information; do
-        not pad. No bullet points, no lists, no markdown, no headings. Output only the prose summary.
+        Write a thorough, descriptive summary of 7 to 10 sentences in #{target_language} that
+        captures what happened in this phase based on the stats. Cover: what this phase was about
+        and its role within the participation process; the overall level and breadth of
+        participation; each of the main quantitative outcomes present in the stats and what they
+        indicate; the relationships between the metrics (for example how actively participants
+        engaged relative to their number); and a closing qualitative observation about the phase's
+        significance or contribution to the project. Each sentence must add new information; do not
+        pad or repeat. Stay strictly grounded in the provided stats and do not invent numbers,
+        names, or facts that are not given. No bullet points, no lists, no markdown, no headings.
+        Output only the prose summary.
       TEXT
     end
 end

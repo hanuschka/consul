@@ -33,6 +33,18 @@
             <div class="number"><%= stats.accepting_reported_proposals_count %></div>
           <% end %>
         </div>
+
+        <% accepting_segment = stats.segment_stats("accepting") %>
+        <%= render Shared::CollapseComponent.new(head_background: true) do |c| %>
+          <% c.with_head do %>
+            <h3 class="budget-phase-stats-segments--title"><%= t("custom.participation_stats.sections.distributions") %></h3>
+          <% end %>
+          <% c.with_body do %>
+            <%= render "shared/stats/demographic_charts", stats: accepting_segment %>
+            <%= render ParticapationStats::TimelineComponent.new(projekt_phase: stats) %>
+            <%= render ParticapationStats::UserSegmentsComponent.new(stats: accepting_segment) %>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
 
@@ -96,6 +108,17 @@
             <div class="number"><%= stats.selecting_offline_votes_count %></div>
           <% end %>
         </div>
+
+        <% selecting_segment = stats.segment_stats("selecting") %>
+        <%= render Shared::CollapseComponent.new(head_background: true) do |c| %>
+          <% c.with_head do %>
+            <h3 class="budget-phase-stats-segments--title"><%= t("custom.participation_stats.sections.distributions") %></h3>
+          <% end %>
+          <% c.with_body do %>
+            <%= render "shared/stats/demographic_charts", stats: selecting_segment %>
+            <%= render ParticapationStats::UserSegmentsComponent.new(stats: selecting_segment) %>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
 
@@ -159,6 +182,17 @@
             <div class="number"><%= stats.balloting_weighted_votes_offline %></div>
           <% end %>
         </div>
+
+        <% balloting_segment = stats.segment_stats("balloting") %>
+        <%= render Shared::CollapseComponent.new(head_background: true) do |c| %>
+          <% c.with_head do %>
+            <h3 class="budget-phase-stats-segments--title"><%= t("custom.participation_stats.sections.distributions") %></h3>
+          <% end %>
+          <% c.with_body do %>
+            <%= render "shared/stats/demographic_charts", stats: balloting_segment %>
+            <%= render ParticapationStats::UserSegmentsComponent.new(stats: balloting_segment) %>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
 
@@ -234,33 +268,9 @@
       <% end %>
     </div>
 
-    <div class="kpi-stats-pie-grid margin-bottom">
-      <% stats.participations.each do |participation| %>
-        <% if participation == "gender" %>
-          <%= render Stats::GenderStatsComponent.new(stats: stats) %>
-        <% elsif participation == "age" %>
-          <%= render Stats::AgeStatsComponent.new(stats: stats) %>
-        <% elsif participation == "geozone" %>
-          <%= render Stats::GeozoneStatsComponent.new(stats: stats) %>
-        <% else %>
-          <%= render "shared/stats/#{participation}", stats: stats %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render "shared/stats/demographic_charts", stats: stats %>
   <% elsif stats.is_a?(Poll::Stats) %>
-    <div class="kpi-stats-pie-grid margin-bottom">
-      <% stats.participations.each do |participation| %>
-        <% if participation == "gender" %>
-          <%= render Stats::GenderStatsComponent.new(stats: stats) %>
-        <% elsif participation == "age" %>
-          <%= render Stats::AgeStatsComponent.new(stats: stats) %>
-        <% elsif participation == "geozone" %>
-          <%= render Stats::GeozoneStatsComponent.new(stats: stats) %>
-        <% else %>
-          <%= render "shared/stats/#{participation}", stats: stats %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render "shared/stats/demographic_charts", stats: stats %>
   <% end %>
 
 </div>

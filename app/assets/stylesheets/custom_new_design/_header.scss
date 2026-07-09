@@ -634,7 +634,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     flex-grow: initial;
     user-select: none;
 
-    a img {
+    img {
       max-height: 52px;
       max-width: 200px;
     }
@@ -1343,6 +1343,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       margin-bottom: -7px;
     }
   }
+}
+
+#responsive-menu .header--responsive-menu--user-admin-button.button {
+  color: white;
 }
 
 // -- NavbarItem-driven navbar (scoped to [data-navbar]) -------------------

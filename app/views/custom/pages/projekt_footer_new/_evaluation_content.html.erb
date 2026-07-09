@@ -42,10 +42,10 @@
       <div class="adm-empty-state">
         <h3><%= t("adm.projekts.projekts.evaluation.phase_processing_title") %></h3>
         <p><%= t("adm.projekts.projekts.evaluation.phase_processing_description") %></p>
-        <span
-          class="material-symbols-outlined adm-spinner adm-spinner--lg"
+        <i
+          class="fas fa-circle-notch adm-spinner adm-spinner--lg"
           aria-hidden="true"
-        >progress_activity</span>
+        ></i>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
             rel="noopener"
             tabindex="-1"
           >
-            <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
             <span><%= t("adm.projekts.projekts.evaluation.open_in_admin") %></span>
           </a>
           <a
@@ -70,7 +70,7 @@
             class="projekt-phase-evaluation-footer__regen-button js-projekt-footer-phase-regenerate-trigger"
             tabindex="-1"
           >
-            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <i class="fas fa-magic" aria-hidden="true"></i>
             <span><%= t("adm.projekts.projekts.evaluation.regenerate_phase_button") %></span>
           </a>
         </div>

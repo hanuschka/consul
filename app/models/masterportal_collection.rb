@@ -25,6 +25,10 @@ class MasterportalCollection < ApplicationRecord
     masterportal_pins.with_associated_record.distinct.count
   end
 
+  def icon_url
+    masterportal_pins.order(id: :desc).first&.feature_icon_url
+  end
+
   def import_running?
     import_status == "running"
   end

@@ -1,5 +1,13 @@
 class Adm::Projekts::ProjektManagerAssignmentPolicy < ApplicationPolicy
+  include Adm::Projekts::PermissionCheck
+
   def update?
-    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+    manage_permitted?
+  end
+
+  private
+
+  def projekt_from_record
+    @record.projekt
   end
 end

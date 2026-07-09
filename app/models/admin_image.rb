@@ -7,8 +7,8 @@ class AdminImage < ApplicationRecord
   UNPROCESSED_CONTENT_TYPES = %w[image/gif].freeze
   MAX_FILE_SIZE = 10.megabytes
 
-  CONTENT_BLOCK_THUMB_WIDTH = 925
-  CONTENT_BLOCK_THUMB_HEIGHT = 2000
+  CONTENT_BLOCK_THUMB_WIDTH = 1200
+  CONTENT_BLOCK_THUMB_HEIGHT = 1000
 
   validates :storage_data, file_content_type: { allow: ALLOWED_CONTENT_TYPES },
                            file_size: { less_than: MAX_FILE_SIZE }

@@ -96,6 +96,14 @@
   }
 }
 
+.image-edit-overlay--action-button.-pan-only {
+  display: none;
+}
+
+.image-edit-overlay.-pannable .image-edit-overlay--action-button.-pan-only {
+  display: flex;
+}
+
 .image-edit-overlay--actions .rich-tooltip--body {
   max-width: 360px;
   padding: 12px 14px;

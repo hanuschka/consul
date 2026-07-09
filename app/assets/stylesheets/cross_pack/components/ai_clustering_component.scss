@@ -210,12 +210,11 @@
   display: flex;
   flex-grow: 1;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
 }
 
 .ai-clustering--subitem-name {
-  flex-grow: 1;
+  // flex-grow: 1;
   padding-right: 1rem;
   overflow: hidden;
   font-size: 1rem;

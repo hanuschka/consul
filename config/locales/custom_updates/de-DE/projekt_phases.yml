@@ -175,6 +175,7 @@ de:
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           poll_expired: Diese Abstimmung ist bereits abgelaufen
           poll_not_current: Diese Abstimmung wurde noch nicht gestartet
+          poll_not_live: Diese Abstimmung ist noch nicht verfügbar.
           only_admins: Die Beteiligung ist auf Admins beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."

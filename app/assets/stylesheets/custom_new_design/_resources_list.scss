@@ -88,6 +88,7 @@
     justify-content: space-between;
     margin-bottom: 20px;
     align-items: center;
+    position: relative;
 
     .text-search-form {
       margin-right: 20px;
@@ -139,9 +140,11 @@
   }
 
   .resources-list--switch-view-button {
+    position: absolute;
+    right: 0;
+    bottom: 4px;
     width: 30px;
     height: 30px;
-    margin-left: 20px;
     background: white;
     border: 1px solid $border-color;
     border-radius: 8px;

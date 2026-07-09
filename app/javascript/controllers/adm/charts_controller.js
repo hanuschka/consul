@@ -20,9 +20,13 @@ export default class extends Controller {
 
     this.parentDetails = this.element.closest("details")
     if (this.parentDetails) this.parentDetails.addEventListener("toggle", this.handleDetailsToggle)
+
+    document.addEventListener("adm-charts:resize", this.resizeCharts)
   }
 
   disconnect() {
+    document.removeEventListener("adm-charts:resize", this.resizeCharts)
+
     if (this.parentDetails) this.parentDetails.removeEventListener("toggle", this.handleDetailsToggle)
     this.element.querySelectorAll("canvas").forEach(canvas => {
       Chart.getChart(canvas)?.destroy()

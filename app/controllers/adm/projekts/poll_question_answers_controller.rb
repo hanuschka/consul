@@ -1,6 +1,7 @@
 class Adm::Projekts::PollQuestionAnswersController < Adm::Projekts::BaseController
   include ImageAttributes
   include DocumentAttributes
+  include Adm::ContextedClonesRegeneration
 
   before_action :set_projekt_phase
   before_action :set_question
@@ -22,6 +23,8 @@ class Adm::Projekts::PollQuestionAnswersController < Adm::Projekts::BaseControll
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     if @answer.save
+      regenerate_contexted_clones_for(@question, *@question.contextualized_dependents)
+
       redirect_to adm_projekts_phase_poll_question_path(@projekt_phase, @question),
         notice: t(".success")
     else
@@ -41,6 +44,8 @@ class Adm::Projekts::PollQuestionAnswersController < Adm::Projekts::BaseControll
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     if @answer.update(answer_params)
+      regenerate_contexted_clones_for(@question, *@question.contextualized_dependents)
+
       redirect_to adm_projekts_phase_poll_question_path(@projekt_phase, @question),
         notice: t("adm.attribute.update.success")
     else
@@ -53,7 +58,15 @@ class Adm::Projekts::PollQuestionAnswersController < Adm::Projekts::BaseControll
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     if @question.poll.safe_to_delete_answer?
+      # Clones of questions contextualised by this one reference this answer via
+      # context_id, so drop them before deleting the answer, then rebuild.
+      dependents = @question.contextualized_dependents.to_a
+      dependents.each { |dependent| dependent.contexted_clones.each(&:really_destroy!) }
       @answer.destroy!
+      # Reload so regeneration doesn't re-destroy the now-stale clone objects
+      # already removed above.
+      regenerate_contexted_clones_for(@question, *dependents.map(&:reload))
+
       redirect_to adm_projekts_phase_poll_question_path(@projekt_phase, @question),
         notice: t(".success")
     else

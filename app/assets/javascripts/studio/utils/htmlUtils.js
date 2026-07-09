@@ -188,6 +188,7 @@ ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
     "data-map", "data-map-center-latitude", "data-map-center-longitude",
     "data-map-zoom", "data-admin-editor", "data-show-admin-shape",
     "data-admin-shape", "data-parent-class", "data-map-layers",
+    "data-map-resource", "data-map-phase-id",
     "data-show-more-text", "data-show-less-text",
     "data-pswp-width", "data-pswp-height",
     "data-turbolinks", "data-box-shadow", "data-glightbox",
@@ -211,6 +212,7 @@ ProjektStudio.utils.resetMapEmbeds = function(html) {
   container.querySelectorAll(".js-projekt-map-embed").forEach((embed) => {
     embed.querySelectorAll(".projekt-map-shortcode").forEach((map) => map.remove());
     embed.querySelectorAll(".js-map-height-control").forEach((control) => control.remove());
+    embed.querySelectorAll(".js-map-source-control").forEach((control) => control.remove());
 
     if (embed.innerHTML.indexOf("{{projekt_map}}") === -1) {
       embed.appendChild(document.createTextNode("{{projekt_map}}"));

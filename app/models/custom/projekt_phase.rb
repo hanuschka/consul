@@ -402,6 +402,21 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  # Mirrors the footer partials' map gate: proposal/budget phases render their
+  # resource map only when "form.show_map" is enabled; phase types without the
+  # setting (e.g. point of interest) always show it.
+  def resource_map_enabled?
+    setting = settings.find { |s| s.key == "feature.form.show_map" }
+
+    return true if setting.blank?
+
+    setting.value.present?
+  end
+
+  def publicly_visible?
+    active? && frontend_visibility?
+  end
+
   def max_submissions_per_user
     option("resource.max_submissions_per_user").to_i
   end

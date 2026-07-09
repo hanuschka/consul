@@ -1,18 +1,10 @@
 <%
-  phase_id = phase["phase_id"]
   processing = row.processing?
   failed = row.failed?
-  status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt, phase_id: phase_id)
-  regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+  regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase["phase_id"])
 %>
 
-<div
-  role="tabpanel"
-  class="evaluation-phase-panel"
-  data-controller="adm--phase-regenerate"
-  data-adm--phase-regenerate-status-url-value="<%= status_url %>"
-  data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
->
+<div class="evaluation-phase-panel">
   <div
     class="evaluation-phase-panel__loading"
     data-adm--phase-regenerate-target="loading"
@@ -61,7 +53,7 @@
           accent_light_color: accent_light_color,
           accent_shades: accent_shades,
           selection: local_assigns.fetch(:selection, nil),
-          regenerate_url: regenerate_url
+          exportable: true
         } %>
     <% end %>
   </div>

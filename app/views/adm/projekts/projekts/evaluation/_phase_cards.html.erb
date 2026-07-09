@@ -1,0 +1,106 @@
+<%
+  palette = evaluation_phase_palette
+  kpi_config = evaluation_phase_kpi_config
+  section_partial = evaluation_phase_section_partial
+
+  rows = evaluation.phase_rows.select do |row|
+    section_partial.key?((row.data || {})["phase_type"])
+  end
+
+  generated_at_text = ->(time) do
+    if time.present?
+      t("adm.projekts.projekts.evaluation.phase_tab.generated_at", date: l(time, format: :long))
+    else
+      t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
+    end
+  end
+%>
+
+<div class="adm-evaluation-cards">
+  <article
+    class="adm-evaluation-card adm-evaluation-card--summary"
+    style="--card-accent:#1E40AF;--card-accent-light:#DBEAFE"
+  >
+    <div class="adm-evaluation-card__head">
+      <span class="adm-evaluation-card__icon">
+        <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">summarize</span>
+        <i class="fas fa-clipboard-list projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      </span>
+      <span class="adm-evaluation-card__title"><%= t("adm.projekts.projekts.evaluation.report_summary_card.title") %></span>
+    </div>
+
+    <div class="adm-evaluation-card__kpi">
+      <span class="adm-evaluation-card__kpi-value"><%= rows.size %></span>
+      <span class="adm-evaluation-card__kpi-label"><%= t("adm.projekts.projekts.evaluation.report_summary_card.phases") %></span>
+    </div>
+
+    <p class="adm-evaluation-card__summary-text">
+      <%= t("adm.projekts.projekts.evaluation.report_summary_card.description") %>
+    </p>
+
+    <%= link_to report_summary_adm_projekts_projekt_path(projekt),
+      class: "kern-btn kern-btn--secondary adm-evaluation-card__cta",
+      data: { turbo: false } do %>
+      <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">visibility</span>
+      <i class="kern-label fas fa-eye projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.report_summary_card.view") %></span>
+    <% end %>
+  </article>
+
+  <% if rows.any? %>
+    <% rows.each do |row| %>
+      <%
+        phase = row.data || {}
+        color = palette[phase["phase_type"]]
+        config = kpi_config[phase["phase_type"]]
+        stats = phase["stats"] || {}
+        ai = phase["ai_stats"] || {}
+        kpi_value = stats[config[:kpi_key]].to_i
+        has_stats = stats.present?
+        has_ai = ai["summary"].present? || ai["topic_clustering"].present? || ai["semantic_clustering"].present?
+      %>
+      <article
+        class="adm-evaluation-card"
+        style="--card-accent:<%= color[:accent] %>;--card-accent-light:<%= color[:accent_light] %>"
+      >
+        <div class="adm-evaluation-card__head">
+          <span class="adm-evaluation-card__icon">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
+            <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
+          </span>
+          <span class="adm-evaluation-card__title"><%= phase["phase_title"] %></span>
+        </div>
+
+        <div class="adm-evaluation-card__kpi">
+          <span class="adm-evaluation-card__kpi-value"><%= kpi_value %></span>
+          <span class="adm-evaluation-card__kpi-label"><%= t(config[:kpi_label_key]) %></span>
+        </div>
+
+        <div class="adm-evaluation-card__badges">
+          <span class="adm-evaluation-card__badge <%= has_stats ? "-on" : "-off" %>">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= has_stats ? "check_circle" : "cancel" %></span>
+            <i class="fas <%= has_stats ? "fa-check-circle" : "fa-times-circle" %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.card.stats_badge") %>
+          </span>
+          <span class="adm-evaluation-card__badge <%= has_ai ? "-on" : "-off" %>">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= has_ai ? "check_circle" : "cancel" %></span>
+            <i class="fas <%= has_ai ? "fa-check-circle" : "fa-times-circle" %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.card.ai_badge") %>
+          </span>
+        </div>
+
+        <div class="adm-evaluation-card__date">
+          <%= generated_at_text.call(row.generated_at) %>
+        </div>
+
+        <%= link_to evaluation_phase_adm_projekts_projekt_path(projekt, phase["phase_id"]),
+          class: "kern-btn kern-btn--secondary adm-evaluation-card__cta",
+          data: { turbo: false } do %>
+          <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">monitoring</span>
+          <i class="kern-label fas fa-chart-bar projekt-evaluation-icon-fa" aria-hidden="true"></i>
+          <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.card.view_stats") %></span>
+        <% end %>
+      </article>
+    <% end %>
+  <% end %>
+</div>

@@ -109,7 +109,7 @@
 
 .phase-icon-title {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
 }
 
@@ -146,10 +146,37 @@
   font-weight: 500;
 }
 
+.phase-header-poll-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-primary, #1e40af);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.phase-header-aside {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
 .phase-meta {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+}
+
+.phase-header-downloads {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 :is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .card {
@@ -445,7 +472,8 @@
 }
 
 .phase-evaluation-section {
-  margin-bottom: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 
 .adm-spinner {
@@ -493,11 +521,30 @@
 }
 
 .phase-timeline-card__grid,
-.phase-distribution-card__grid,
-.phase-segments-card__grid {
+.phase-distribution-card__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+.phase-timeline-card__grid.-stacked {
+  grid-template-columns: 1fr;
+}
+
+.phase-segments-card__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .phase-segments-card__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.phase-segments-card__panel.-full-width {
+  grid-column: 1 / -1;
 }
 
 .phase-timeline-card__panel-label,
@@ -534,6 +581,83 @@
     width: 100% !important;
     height: 100% !important;
   }
+}
+
+.phase-budget-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.phase-budget-segment {
+  padding: 1.5rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+  box-shadow: var(--er-shadow-md);
+}
+
+.phase-budget-segment__title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--er-text);
+}
+
+.phase-budget-segment__distributions {
+  margin-top: 1.25rem;
+}
+
+.phase-budget-segment__distributions-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6875rem 0.875rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  background: white;
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius);
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::marker {
+    content: "";
+  }
+
+  &:hover {
+    background: var(--er-border-light);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--er-primary);
+    outline-offset: 2px;
+  }
+}
+
+.phase-budget-segment__distributions-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-text);
+}
+
+.phase-budget-segment__distributions-chevron {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: var(--er-text-secondary);
+  transition: transform 150ms ease-out;
+}
+
+.phase-budget-segment__distributions[open] .phase-budget-segment__distributions-chevron {
+  transform: rotate(180deg);
+}
+
+.phase-budget-segment__distributions-body {
+  padding: 1.75rem 1.5rem;
 }
 
 .phase-summary-card {
@@ -788,7 +912,7 @@
     }
 
     &:hover {
-      background: var(--er-bg, #f8fafc);
+      background: color-mix(in srgb, var(--ic, var(--er-primary)) 12%, transparent);
     }
   }
 
@@ -1156,8 +1280,8 @@
 }
 
 .poll-block {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px dashed var(--er-border);
 
   &:last-child {

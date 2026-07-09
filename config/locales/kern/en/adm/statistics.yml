@@ -127,3 +127,8 @@ en:
           users_new: New registrations
           comments: Comments
           proposals: New proposals
+          granularity_label: Time granularity
+          granularity_daily: Daily
+          granularity_weekly: Weekly
+          granularity_monthly: Monthly
+          granularity_yearly: Yearly

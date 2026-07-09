@@ -85,7 +85,12 @@ module Adm
       end
 
       def load_charts
-        @chart_users     = monthly_chart_data(User.actual, "users.created_at")
+        @chart_users = {
+          daily: chart_data(User.actual, "users.created_at", :day),
+          weekly: chart_data(User.actual, "users.created_at", :week),
+          monthly: chart_data(User.actual, "users.created_at", :month),
+          yearly: chart_data(User.actual, "users.created_at", :year)
+        }
         @chart_comments  = monthly_chart_data(Comment.where(hidden_at: nil), "comments.created_at")
         @chart_proposals = monthly_chart_data(
           Proposal.not_archived.not_retired.where(draft: false).where.not(published_at: nil),
@@ -106,19 +111,38 @@ module Adm
       end
 
       def monthly_chart_data(scope, column)
-        start_date = 11.months.ago.beginning_of_month.utc
-        months     = (0..11).map { |i| (start_date + i.months).beginning_of_month }
+        chart_data(scope, column, :month)
+      end
+
+      def chart_data(scope, column, unit)
+        today = Time.current.utc.to_date
+
+        case unit
+        when :day
+          periods = ((today - 29)..today).to_a
+          label   = ->(date) { date.strftime("%d.%m.") }
+        when :week
+          periods = (0..25).map { |i| (today - (25 - i).weeks).beginning_of_week }
+          label   = ->(date) { date.strftime("%d.%m.") }
+        when :month
+          periods = (0..11).map { |i| (today << (11 - i)).beginning_of_month }
+          label   = ->(date) { date.strftime("%b %Y") }
+        when :year
+          first_year = [scope.minimum(column)&.year || today.year, today.year - 9].max
+          periods    = (first_year..today.year).map { |year| Date.new(year) }
+          label      = ->(date) { date.strftime("%Y") }
+        end
 
         raw = scope
-          .where("#{column} >= ?", start_date)
-          .group(Arel.sql("DATE_TRUNC('month', #{column})"))
+          .where("#{column} >= ?", periods.first)
+          .group(Arel.sql("DATE_TRUNC('#{unit}', #{column})"))
           .count
 
         raw_by_date = raw.transform_keys(&:to_date)
 
         {
-          labels: months.map { |m| m.to_date.strftime("%b %Y") },
-          values: months.map { |m| raw_by_date[m.to_date] || 0 }
+          labels: periods.map(&label),
+          values: periods.map { |period| raw_by_date[period] || 0 }
         }
       end
   end

@@ -63,19 +63,23 @@ module Adm::Projekts::EvaluationHelper
     {
       "ProjektPhase::ProposalPhase" => {
         kpi_key: "proposals_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
+        kpi_label_key: "adm.projekts.projekts.evaluation.proposals",
+        subtitle_key: "adm.projekts.projekts.evaluation.proposal_phase"
       },
       "ProjektPhase::VotingPhase" => {
         kpi_key: "participants_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.participants"
+        kpi_label_key: "adm.projekts.projekts.evaluation.participants",
+        subtitle_key: "adm.projekts.projekts.evaluation.voting_phase"
       },
       "ProjektPhase::BudgetPhase" => {
         kpi_key: "investments_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.investments"
+        kpi_label_key: "adm.projekts.projekts.evaluation.investments",
+        subtitle_key: "adm.projekts.projekts.evaluation.budget_phase"
       },
       "ProjektPhase::CommentPhase" => {
         kpi_key: "comments_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.comments"
+        kpi_label_key: "adm.projekts.projekts.evaluation.comments",
+        subtitle_key: "adm.projekts.projekts.evaluation.comment_phase"
       }
     }
   end
@@ -87,5 +91,33 @@ module Adm::Projekts::EvaluationHelper
       "ProjektPhase::BudgetPhase" => "budget_phase_section",
       "ProjektPhase::CommentPhase" => "comment_phase_section"
     }
+  end
+
+  def phase_summary_sections(short_summary)
+    case short_summary
+    when Array
+      short_summary.filter_map do |section|
+        next if !section.is_a?(Hash)
+
+        body = (section["body"] || section[:body]).to_s.strip
+        next if body.blank?
+
+        heading = (section["heading"] || section[:heading]).to_s.strip
+
+        { "heading" => heading.presence, "body" => body }
+      end
+    when String
+      text = short_summary.strip
+      text.present? ? [{ "heading" => nil, "body" => text }] : []
+    else
+      []
+    end
+  end
+
+  def phase_summary_plain_text(short_summary)
+    sections = phase_summary_sections(short_summary)
+    return nil if sections.empty?
+
+    sections.map { |section| section["body"] }.join(" ")
   end
 end

@@ -1,6 +1,6 @@
 class PdfServices::EvaluationPdfSelection
   PHASE_SECTIONS = {
-    "ProjektPhase::ProposalPhase" => %w[kpis key_metrics phase_summary tone ranking proposals ai_summary timeline label_sentiment user_segments key_findings topic_clustering semantic_clustering ai_questions],
+    "ProjektPhase::ProposalPhase" => %w[kpis key_metrics phase_summary tone ranking ai_summary timeline label_sentiment user_segments key_findings topic_clustering semantic_clustering ai_questions],
     "ProjektPhase::VotingPhase" => %w[kpis questions open_responses key_findings ai_questions],
     "ProjektPhase::BudgetPhase" => %w[kpis phase_summary tone timeline label_sentiment user_segments budget_segments key_findings topic_clustering semantic_clustering ai_questions],
     "ProjektPhase::CommentPhase" => %w[kpis phase_summary tone timeline user_segments key_findings ai_questions]

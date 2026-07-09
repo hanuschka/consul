@@ -10,7 +10,8 @@ end
 
 set :default_env, {
   http_proxy:  ENV["phttp"],
-  https_proxy: ENV["phttps"]
+  https_proxy: ENV["phttps"],
+  UV_USE_IO_URING: "0"
 }
 
 set :rails_env, fetch(:stage)

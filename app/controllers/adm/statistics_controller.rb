@@ -122,7 +122,8 @@ module Adm
           periods = ((today - 29)..today).to_a
           label   = ->(date) { date.strftime("%d.%m.") }
         when :week
-          periods = (0..25).map { |i| (today - (25 - i).weeks).beginning_of_week }
+          # DATE_TRUNC('week') is always ISO/Monday, regardless of Date.beginning_of_week
+          periods = (0..25).map { |i| (today - (25 - i).weeks).beginning_of_week(:monday) }
           label   = ->(date) { date.strftime("%d.%m.") }
         when :month
           periods = (0..11).map { |i| (today << (11 - i)).beginning_of_month }

@@ -206,7 +206,7 @@
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
             color = phase_palette[phase["phase_type"]]
-            short_summary = phase["short_summary"]
+            summary_sections = phase_summary_sections(phase["short_summary"])
           %>
           <div
             class="report-summary--phase-card"
@@ -230,9 +230,14 @@
               </div>
             </div>
 
-            <% if short_summary.present? %>
+            <% if summary_sections.any? %>
               <div class="report-summary--phase-body">
-                <%= sanitize(short_summary) %>
+                <% summary_sections.each do |section| %>
+                  <% if section["heading"].present? %>
+                    <h3 class="report-summary--phase-section-heading"><%= section["heading"] %></h3>
+                  <% end %>
+                  <%= simple_format(section["body"], class: "report-summary--phase-paragraph") %>
+                <% end %>
               </div>
             <% else %>
               <div class="report-summary--phase-body-empty">

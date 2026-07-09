@@ -92,4 +92,32 @@ module Adm::Projekts::EvaluationHelper
       "ProjektPhase::CommentPhase" => "comment_phase_section"
     }
   end
+
+  def phase_summary_sections(short_summary)
+    case short_summary
+    when Array
+      short_summary.filter_map do |section|
+        next if !section.is_a?(Hash)
+
+        body = (section["body"] || section[:body]).to_s.strip
+        next if body.blank?
+
+        heading = (section["heading"] || section[:heading]).to_s.strip
+
+        { "heading" => heading.presence, "body" => body }
+      end
+    when String
+      text = short_summary.strip
+      text.present? ? [{ "heading" => nil, "body" => text }] : []
+    else
+      []
+    end
+  end
+
+  def phase_summary_plain_text(short_summary)
+    sections = phase_summary_sections(short_summary)
+    return nil if sections.empty?
+
+    sections.map { |section| section["body"] }.join(" ")
+  end
 end

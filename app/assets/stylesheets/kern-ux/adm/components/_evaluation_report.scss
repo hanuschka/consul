@@ -45,7 +45,7 @@ $er-max-tabs: 8;
 
   .phase-header {
     gap: 1rem;
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
   }
 
   .adm-projekt-evaluation-report .card,
@@ -98,7 +98,7 @@ $er-max-tabs: 8;
   }
 
   .phase-budget-segment__distributions-summary {
-    background: transparent;
+    background: white;
     border: none;
     padding: 0;
   }
@@ -235,7 +235,7 @@ $er-max-tabs: 8;
   --er-positive: #059669;
   --er-positive-light: #d1fae5;
   --er-bg: #f8fafc;
-  --er-surface: #ffffff;
+  --er-surface: #f8fafc;
   --er-text: #0f172a;
   --er-text-secondary: #475569;
   --er-text-muted: #94a3b8;
@@ -373,7 +373,6 @@ $er-max-tabs: 8;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
 }
 
 
@@ -473,6 +472,14 @@ $er-max-tabs: 8;
   margin-left: auto;
 }
 
+.adm-evaluation-regenerate-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .kern-container.adm-evaluation-phase-container {
   max-width: min(1280px, 80%);
 }
@@ -527,6 +534,13 @@ $er-max-tabs: 8;
   font-size: 0.875rem;
   color: var(--er-text-muted);
   font-variant-numeric: tabular-nums;
+}
+
+.adm-evaluation-card__summary-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--er-text-secondary);
 }
 
 @media (max-width: 768px) {

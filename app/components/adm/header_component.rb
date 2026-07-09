@@ -3,7 +3,7 @@ class Adm::HeaderComponent < ApplicationComponent
   renders_one :actions
   renders_one :after_title
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, ultracompact: false, frontend_url: nil)
+  def initialize(title: nil, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, ultracompact: false, frontend_url: nil)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url

@@ -59,7 +59,7 @@
       </div>
     </details>
 
-    <% @projekt.projekt_phases.sorted.each do |phase| %>
+    <% @projekt_phases.each do |phase| %>
       <%
         available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase.type)
         next if available_sections.blank?

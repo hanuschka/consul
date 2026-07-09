@@ -7,7 +7,8 @@
     data-chart-values="<%= values_json %>"
     <% if colors_json %>data-chart-colors="<%= colors_json %>"<% end %>
     <% unless show_legend? %>data-chart-hide-legend="true"<% end %>
-    <% if labels_at_edges? %>data-chart-labels-at-edges="true"<% end %>>
+    <% if labels_at_edges? %>data-chart-labels-at-edges="true"<% end %>
+    <% if height_style %>style="<%= height_style %>"<% end %>>
     <div class="chart-loading-placeholder">
       <%= render Shared::SkeletonPlaceholderComponent.new %>
     </div>

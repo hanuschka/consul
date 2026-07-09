@@ -1,2 +1,2 @@
-$("#latest-activity").replaceWith("<%= j render Users::LatestActivityComponent.new %>");
+$("#latest-activity").replaceWith("<%= j render Users::LatestActivityComponent.new(title: @content_card&.title) %>");
 $(".main-column.show-loader").removeClass("show-loader");

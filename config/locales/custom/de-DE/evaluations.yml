@@ -5,6 +5,7 @@ de:
   adm:
     ai_action_button:
       processing: KI arbeitet…
+      feature_description: "Erstellt mit KI eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts."
 
     projekts:
       projekts:
@@ -30,11 +31,19 @@ de:
           regenerate_confirm: >
             Möchten Sie die Auswertung wirklich neu generieren? Die bestehende
             Auswertung wird überschrieben.
-          regenerate_phase_button: Phase neu generieren
+          regenerate_phase_button: Phasenstatistiken neu generieren
+          regenerate_regular_stats_button: Statistiken neu generieren
+          regenerate_ai_stats_button: KI-Analyse neu generieren
           regenerate_phase_confirm: >
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
-          phase_download_pdf_button: PDF exportieren…
+          phase_download_pdf_button: PDF-Report erstellen
+          download_stats_pdf_button: Statistik-PDF exportieren…
+          download_ai_pdf_button: KI-Analyse-PDF exportieren…
+          phase_download_pdf_tooltip: Die gesamte Phase als PDF exportieren.
+          download_stats_pdf_tooltip: Nur die Statistiken dieser Phase als PDF exportieren.
+          download_ai_pdf_tooltip: Nur die KI-Analyse dieser Phase als PDF exportieren.
+          regenerate_tooltip: Die Auswertung dieser Phase neu generieren. Die bestehende Auswertung wird überschrieben.
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit konfigurieren
           toolbar_title_view_link: Zur Phase im Projekt-Footer
@@ -105,6 +114,7 @@ de:
               timeline: Zeitverlauf
               label_sentiment: Label- und Sentiment-Verteilung
               user_segments: Nutzersegmente
+              budget_segments: Kennzahlen nach Phase
               key_findings: Zentrale Erkenntnisse
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
@@ -122,6 +132,7 @@ de:
               timeline: Tägliche Aktivitätsübersicht mit Verlauf der Teilnahme.
               label_sentiment: Verteilung der Beiträge nach Themenlabel und Stimmungslage.
               user_segments: Aufteilung der Teilnehmenden nach demografischen oder Interessensgruppen.
+              budget_segments: Detaillierte Kennzahlen und Verteilungen je Bürgerhaushalts-Phase (Einreichung, Prüfung, Unterstützung, Abstimmung, Abschluss).
               key_findings: Wichtigste Erkenntnisse aus der KI-Auswertung.
               topic_clustering: Beiträge gruppiert nach inhaltlichen Themenclustern.
               semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.
@@ -146,6 +157,19 @@ de:
           phase_tab:
             generated_at: "Stand %{date}"
             generated_at_unknown: Noch nicht generiert
+          card:
+            stats_badge: Kennzahlen
+            ai_badge: KI-Analyse
+            view_stats: Statistiken ansehen
+          view_tabs:
+            aria_label: Ansicht der Auswertung wechseln
+            stats: Statistiken
+            ai: KI-Analyse
+          report_summary_card:
+            title: Bericht-Zusammenfassung
+            description: Projektübersicht, Einstellungen und Phasen-Zusammenfassungen.
+            phases: Phasen
+            view: Zusammenfassung öffnen
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel

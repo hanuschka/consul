@@ -10,6 +10,7 @@ class ProjektPhaseEvaluationVisibility < ApplicationRecord
     timeline
     label_sentiment
     user_segments
+    budget_segments
     key_findings
     topic_clustering
     semantic_clustering

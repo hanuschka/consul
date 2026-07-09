@@ -30,6 +30,10 @@
   }
 }
 
+button.kern-filter-chip {
+  font-family: inherit;
+}
+
 .kern-filter-chip.-active {
   color: #fff;
   background: var(--kern-color-action-default);

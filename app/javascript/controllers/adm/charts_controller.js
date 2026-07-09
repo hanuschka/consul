@@ -14,13 +14,66 @@ if (isPdfMode()) {
 
 export default class extends Controller {
   connect() {
-    this.element.querySelectorAll("[data-area-chart]").forEach(el => this.initAreaChart(el))
-    this.element.querySelectorAll("[data-bar-chart]").forEach(el => this.initBarChart(el))
+    this.charts = []
+    this.element.querySelectorAll("[data-area-chart]").forEach(el => this.registerChart(this.initAreaChart(el)))
+    this.element.querySelectorAll("[data-bar-chart]").forEach(el => this.registerChart(this.initBarChart(el)))
+
+    this.parentDetails = this.element.closest("details")
+    if (this.parentDetails) this.parentDetails.addEventListener("toggle", this.handleDetailsToggle)
+
+    document.addEventListener("adm-charts:resize", this.resizeCharts)
   }
 
   disconnect() {
+    document.removeEventListener("adm-charts:resize", this.resizeCharts)
+
+    if (this.parentDetails) this.parentDetails.removeEventListener("toggle", this.handleDetailsToggle)
     this.element.querySelectorAll("canvas").forEach(canvas => {
       Chart.getChart(canvas)?.destroy()
+    })
+  }
+
+  registerChart(chart) {
+    if (chart) this.charts.push(chart)
+  }
+
+  handleDetailsToggle = () => {
+    if (this.parentDetails.open) this.resizeCharts()
+  }
+
+  resizeCharts = () => {
+    this.charts.forEach(chart => chart.resize())
+  }
+
+  setGranularity(event) {
+    const button = event.currentTarget
+    const granularity = button.dataset.granularity
+    const card = button.closest(".adm-chart-card")
+    if (!card) return
+
+    const wrapper = card.querySelector("[data-chart-datasets]")
+    const canvas = wrapper?.querySelector("canvas")
+    const chart = canvas ? Chart.getChart(canvas) : null
+    if (!chart) return
+
+    const datasets = JSON.parse(wrapper.dataset.chartDatasets || "{}")
+    const series = datasets[granularity]
+    if (!series) return
+
+    chart.data.labels = series.labels
+    chart.data.datasets[0].data = series.values
+    chart.update()
+
+    const total = card.querySelector(".adm-chart-card__total")
+    if (total) {
+      const sum = series.values.reduce((acc, value) => acc + value, 0)
+      total.textContent = sum.toLocaleString(document.documentElement.lang || "de-DE")
+    }
+
+    card.querySelectorAll("[data-granularity]").forEach(btn => {
+      const active = btn === button
+      btn.classList.toggle("-active", active)
+      btn.setAttribute("aria-pressed", active)
     })
   }
 
@@ -84,6 +137,8 @@ export default class extends Controller {
         interaction: { intersect: false, mode: "index" }
       }
     })
+
+    return chart
   }
 
   initBarChart(container) {
@@ -105,7 +160,7 @@ export default class extends Controller {
       container.style.height = (labels.length * (barHeight + barSpacing) + 40) + "px"
     }
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: "bar",
       data: {
         labels,
@@ -138,5 +193,6 @@ export default class extends Controller {
       }
     })
 
+    return chart
   }
 }

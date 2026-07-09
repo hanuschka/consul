@@ -1,6 +1,12 @@
 // Unset customization for custum html
 
 .custom-new-design {
+  // Default spacing under any content block. An inline `margin-bottom` set
+  // via the studio editor is an inline style, so it overrides this default.
+  .custom-content-block-body {
+    margin-bottom: 20px;
+  }
+
   .welcome-page .main-column, .projekt-page .main-column {
     .custom-content-block-body, #page-content {
 
@@ -28,6 +34,15 @@
         }
       }
 
+
+      // Keyboard focus ring for inline text links: keep the app-wide focus
+      // color/width but add breathing room and rounded corners so it reads as
+      // deliberate on inline text instead of hugging the glyphs.
+      a:focus-visible {
+        outline: 3px solid var(--focus-outline-color);
+        outline-offset: 3px;
+        border-radius: 3px;
+      }
 
       // Image height
       img {

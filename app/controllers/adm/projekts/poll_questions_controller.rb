@@ -1,4 +1,6 @@
 class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
+  include Adm::ContextedClonesRegeneration
+
   before_action :set_projekt_phase
   before_action :set_poll
   before_action :set_question, only: %i[show edit update destroy]
@@ -31,6 +33,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
     @question.given_order = @poll.questions.maximum(:given_order).to_i + 1
 
     if @question.save
+      regenerate_contexted_clones_for(@question)
+
       redirect_path = if @question.parent_question.present?
                         adm_projekts_phase_poll_question_path(@projekt_phase, @question.parent_question)
                       else
@@ -52,13 +56,16 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
   def edit
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
     set_context_sources
-    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+    @title = edit_title
+    @breadcrumbs = breadcrumbs_for_action(@title)
   end
 
   def update
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
     if @question.update(question_params)
+      regenerate_contexted_clones_for(@question)
+
       redirect_path = if @question.parent_question.present?
                         adm_projekts_phase_poll_question_path(@projekt_phase, @question.parent_question)
                       else
@@ -67,7 +74,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
       redirect_to redirect_path, notice: t("adm.attribute.update.success")
     else
       set_context_sources
-      @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.poll_questions.edit.title"))
+      @title = edit_title
+      @breadcrumbs = breadcrumbs_for_action(@title)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -133,6 +141,16 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
           :show_hint_callout, :min_rating_scale_label, :max_rating_scale_label
         ]
       )
+    end
+
+    def edit_title
+      if @question.parent_question.present?
+        t("adm.projekts.poll_questions.edit.nested_title")
+      elsif @question.bundle_question?
+        t("adm.projekts.poll_questions.edit.bundle_title")
+      else
+        t("adm.projekts.poll_questions.edit.title")
+      end
     end
 
     def breadcrumbs_for_action(action_title)

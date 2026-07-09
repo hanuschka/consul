@@ -84,8 +84,10 @@
       </div>
     </div>
 
-    <%= render "adm/projekts/projekts/evaluation/report",
-      evaluation: @evaluation,
-      projekt: @projekt %>
+    <div class="adm-projekt-evaluation-report">
+      <%= render "adm/projekts/projekts/evaluation/phase_cards",
+        evaluation: @evaluation,
+        projekt: @projekt %>
+    </div>
   <% end %>
 </div>

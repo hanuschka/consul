@@ -9,6 +9,7 @@
       <div class="small-12 column">
         <%= f.email_field :email,
           label: t("devise_views.users.registrations.edit.email_label"),
+          label_options: { class: "auth-page-template--field-label" },
           placeholder: t("devise_views.users.registrations.edit.email_label"),
           autocomplete: "email",
           autofocus: true %>
@@ -23,6 +24,7 @@
       <div class="small-12 column">
         <%= f.password_field :current_password,
           label: t("devise_views.users.registrations.edit.current_password_label"),
+          label_options: { class: "auth-page-template--field-label" },
           placeholder: t("devise_views.users.registrations.edit.current_password_label"),
           autocomplete: "current-password",
           hint: t("devise_views.users.registrations.edit.need_current") %>
@@ -31,6 +33,7 @@
       <div class="small-12 column">
         <%= f.password_field :password,
           label: t("devise_views.users.registrations.edit.password_label"),
+          label_options: { class: "auth-page-template--field-label" },
           placeholder: t("devise_views.users.registrations.edit.password_label"),
           autocomplete: "new-password",
           hint: t("devise_views.users.registrations.edit.leave_blank") %>
@@ -39,6 +42,7 @@
       <div class="small-12 column">
         <%= f.password_field :password_confirmation,
           label: t("devise_views.users.registrations.edit.password_confirmation_label"),
+          label_options: { class: "auth-page-template--field-label" },
           placeholder: t("devise_views.users.registrations.edit.password_confirmation_label"),
           autocomplete: "new-password" %>
       </div>

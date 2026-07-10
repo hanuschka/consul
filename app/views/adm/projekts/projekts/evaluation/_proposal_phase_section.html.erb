@@ -58,8 +58,9 @@
         </div>
 
         <% if local_assigns.fetch(:exportable, false) %>
-          <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown",
-            locals: { projekt: projekt, phase: phase } do %>
+          <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown" do %>
+            <%= render "adm/projekts/projekts/evaluation/export_pdf_item", projekt: projekt, phase: phase %>
+
             <%= link_to projekt_phase_footer_tab_page_path(projekt.page, phase["phase_id"], format: :csv),
               target: "_blank",
               rel: "noopener" do %>

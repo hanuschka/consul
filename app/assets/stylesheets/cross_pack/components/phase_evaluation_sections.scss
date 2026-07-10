@@ -174,49 +174,25 @@
   align-items: center;
 }
 
-.phase-header-export .dropdown-select-container .dropdown-select-menu-toggle {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 40px 12px 16px;
-  border: 1px solid var(--er-border, #e2e8f0);
-  border-radius: var(--er-radius, 8px);
-  background: var(--er-border-light, #f1f5f9);
-  color: var(--er-text-secondary, #475569);
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
-
-  &:hover {
-    background: var(--er-border, #e2e8f0);
-    border-color: var(--er-text-muted, #94a3b8);
-    color: var(--er-text, #0f172a);
-  }
+.evaluation-export-menu {
+  --dropdown-toggle-bg: var(--er-border-light, #f1f5f9);
+  --dropdown-toggle-bg-hover: var(--er-border, #e2e8f0);
+  --dropdown-toggle-bg-active: var(--er-border, #e2e8f0);
+  --dropdown-toggle-color: var(--er-text-secondary, #475569);
+  --dropdown-toggle-color-hover: var(--er-text, #0f172a);
+  --dropdown-toggle-border: 1px solid var(--er-border, #e2e8f0);
+  --dropdown-toggle-border-color-hover: var(--er-text-muted, #94a3b8);
+  --dropdown-toggle-radius: var(--er-radius, 8px);
+  --dropdown-toggle-padding: 12px 40px 12px 16px;
+  --dropdown-item-padding: 12px 20px;
+  --dropdown-item-gap: 0.5rem;
+  --dropdown-item-color: var(--er-text, #0f172a);
 }
 
-.phase-header-export .dropdown-select-container.dropdown-open .dropdown-select-menu-toggle {
-  background: var(--er-border, #e2e8f0);
-  border-color: var(--er-text-muted, #94a3b8);
-  color: var(--er-text, #0f172a);
-}
-
-.phase-header-export .dropdown-select-container:hover {
-  background-color: transparent;
-}
-
-.phase-header-export .dropdown-select-container .dropdown-select-menu--list .dropdown-select-menu-item > * {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 12px 20px;
-  font-size: 0.95rem;
-  color: var(--er-text, #0f172a);
-  text-decoration: none;
-
-  &:hover,
-  &:focus,
-  &:active {
-    text-decoration: none;
-  }
+.poll-question-card--full .evaluation-export-menu {
+  --dropdown-toggle-bg: #{darken(#f1f5f9, 10%)};
+  --dropdown-toggle-bg-hover: #{darken(#f1f5f9, 15%)};
+  --dropdown-toggle-bg-active: #{darken(#f1f5f9, 20%)};
 }
 
 :is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .card {
@@ -260,10 +236,23 @@
 }
 
 .poll-question-card--full {
+  position: relative;
   margin-bottom: 1rem;
 
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+.poll-question-card--export {
+  position: absolute;
+  top: 0.7rem;
+  right: 1.5rem;
+
+  .dropdown-select-container {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 

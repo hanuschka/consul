@@ -19,6 +19,7 @@ en:
         evaluation:
           title: Evaluation
           export: Export
+          download_csv: Download CSV
           not_generated_title: Evaluation not yet generated
           not_generated_description: >
             No evaluation has been created for this project yet.

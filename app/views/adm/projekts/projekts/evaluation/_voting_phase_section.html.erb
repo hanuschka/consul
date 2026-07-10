@@ -73,8 +73,9 @@
       </div>
 
       <% if local_assigns.fetch(:exportable, false) %>
-        <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown",
-          locals: { projekt: projekt, phase: phase } do %>
+        <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown" do %>
+          <%= render "adm/projekts/projekts/evaluation/export_pdf_item", projekt: projekt, phase: phase %>
+
           <%= link_to poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv),
             data: { turbo: false } do %>
             <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>

@@ -19,6 +19,7 @@ de:
         evaluation:
           title: Auswertung
           export: Export
+          download_csv: CSV herunterladen
           not_generated_title: Auswertung noch nicht generiert
           not_generated_description: >
             Es wurde noch keine Auswertung für dieses Projekt erstellt.

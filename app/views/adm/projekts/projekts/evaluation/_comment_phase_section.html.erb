@@ -46,7 +46,16 @@
       </div>
 
       <% if local_assigns.fetch(:exportable, false) %>
-        <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
+        <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown" do %>
+          <%= render "adm/projekts/projekts/evaluation/export_pdf_item", projekt: projekt, phase: phase %>
+
+          <%= link_to comments_adm_projekts_phase_path(phase["phase_id"], format: :csv),
+            data: { turbo: false } do %>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+            <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.download_csv") %>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
   </div>

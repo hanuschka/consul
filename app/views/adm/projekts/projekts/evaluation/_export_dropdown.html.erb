@@ -1,14 +1,8 @@
-<div class="phase-header-export" data-controller="shared--dropdown-select-menu">
+<div class="evaluation-export-menu <%= local_assigns[:wrapper_class] %>" data-controller="shared--dropdown-select-menu">
   <dropdown-select-menu
     title="<%= t("adm.projekts.projekts.evaluation.export") %>"
     selected="<%= t("adm.projekts.projekts.evaluation.export") %>"
   >
-    <%= link_to evaluation_pdf_options_adm_projekts_projekt_path(projekt, phase_id: phase["phase_id"]) do %>
-      <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">picture_as_pdf</span>
-      <i class="fas fa-file-pdf projekt-evaluation-icon-fa" aria-hidden="true"></i>
-      <%= t("adm.projekts.projekts.evaluation.phase_download_pdf_button") %>
-    <% end %>
-
     <%= yield %>
   </dropdown-select-menu>
 </div>

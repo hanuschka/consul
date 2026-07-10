@@ -168,6 +168,7 @@ en:
             ai: AI analysis
           report_summary_card:
             title: Report summary
+            page_title: Projekt evaluation report summary
             description: Project overview, settings and phase summaries.
             phases: Phases
             view: Open summary

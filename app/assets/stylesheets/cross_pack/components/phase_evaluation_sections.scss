@@ -454,6 +454,7 @@
 .phase-evaluation-section {
   margin-top: 2rem;
   margin-bottom: 1rem;
+  background: var(--er-surface);
 }
 
 .adm-spinner {
@@ -597,7 +598,7 @@
   cursor: pointer;
   list-style: none;
   user-select: none;
-  background: white;
+  background: var(--er-bg);
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius);
 

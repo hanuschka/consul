@@ -18,7 +18,19 @@
 
     .budget-subnav-item {
       margin-right: 10px;
+      padding: 4px 10px;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background-color 150ms ease-out;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      &:hover {
+        background-color: $dt-base-transparent-background-hover;
+      }
 
       &.-active {
         font-weight: bold;
@@ -28,6 +40,10 @@
       &.-disabled {
         cursor: default;
         opacity: 0.6;
+
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
   }

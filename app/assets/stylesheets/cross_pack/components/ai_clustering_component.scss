@@ -9,7 +9,6 @@
 .ai-stats-card.ai-clustering {
   --er-primary: #1e40af;
   --er-primary-lighter: #dbeafe;
-  --er-bg: #f8fafc;
   --er-surface: #ffffff;
   --er-text: #0f172a;
   --er-text-secondary: #475569;
@@ -88,7 +87,7 @@
 .ai-clustering--item-card {
   position: relative;
   padding: 1.125rem 1.375rem 1.25rem;
-  background: var(--er-surface);
+  background: var(--er-bg, #f8fafc);
   border: 1px solid var(--er-border);
   border-top: 4px solid var(--item-color, var(--er-primary));
   border-radius: var(--er-radius-lg);

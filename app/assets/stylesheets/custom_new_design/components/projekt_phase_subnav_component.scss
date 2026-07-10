@@ -1,22 +1,36 @@
 .custom-new-design {
   .projekt-phase-subnav {
     margin-top: 0px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
 
     .projekt-phase-subnav--items {
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      gap: 4px;
+      padding: 5px;
+      background: $projekt-subnav-track-bg;
+      border-radius: 12px;
     }
 
     .projekt-phase-subnav-item {
-      margin-right: 10px;
-      padding: 4px 10px;
-      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      margin: 0;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+      color: $medium-gray-1;
+      white-space: nowrap;
       cursor: pointer;
-      transition: background-color 150ms ease-out;
+      transition: background-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
 
       a {
         color: inherit;
@@ -24,19 +38,35 @@
       }
 
       &:hover {
-        background-color: $dt-base-transparent-background-hover;
+        color: $main-text-color;
+        background-color: rgba(255, 255, 255, 0.5);
       }
 
       &.-active {
-        font-weight: bold;
-        text-decoration: underline;
+        color: $dt-base;
+        background-color: #ffffff;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 5px rgba(0, 0, 0, 0.08);
+      }
+
+      &.-active:hover {
+        color: $dt-base;
+        background-color: #ffffff;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $focus-outline-color;
+        outline-offset: 2px;
       }
 
       &.-disabled {
+        color: $blue-gray-1;
         cursor: default;
-        opacity: 0.6;
 
         &:hover {
+          color: $blue-gray-1;
           background-color: transparent;
         }
       }

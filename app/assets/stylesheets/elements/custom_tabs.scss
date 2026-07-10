@@ -28,11 +28,21 @@ custom-tab {
     color: var(--custom-tabs-text-strong, #27272a);
     border-bottom-color: var(--custom-tabs-border, #d4d4d8);
   }
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--custom-tabs-accent, #1e40af);
-    outline-offset: 2px;
-  }
+// KERN-UX (loaded in the /adm pack) draws a box-shadow focus ring on every
+// [tabindex] element on :focus — mouse clicks included — and zeroes the
+// outline. Opt <custom-tab> out of that ring and use a keyboard-only outline
+// instead. These selectors mirror KERN global.scss specificity so the override
+// wins where KERN is present, and are inert in packs without it.
+custom-tab[tabindex]:not([tabindex="-1"]):focus {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+custom-tab[tabindex]:not([tabindex="-1"]):focus:focus-visible {
+  outline: 2px solid var(--custom-tabs-accent, #1e40af);
+  outline-offset: 2px;
 }
 
 custom-tab.-active {

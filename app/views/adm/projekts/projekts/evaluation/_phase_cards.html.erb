@@ -9,7 +9,7 @@
 
   data = evaluation.data || {}
   summary_text = data["ai_project_summary"].presence ||
-    data["project_content_summary"].presence ||
+    evaluation_plain_text(data["project_content_summary"]).presence ||
     t("adm.projekts.projekts.evaluation.overview.summary_fallback")
 
   row_date_text = ->(time) do
@@ -105,10 +105,9 @@
         color = palette[phase["phase_type"]]
         config = kpi_config[phase["phase_type"]]
         stats = phase["stats"] || {}
-        ai = phase["ai_stats"] || {}
         kpi_value = stats[config[:kpi_key]].to_i
         has_stats = stats.present?
-        has_ai = ai["summary"].present? || ai["topic_clustering"].present? || ai["semantic_clustering"].present?
+        has_ai = phase_has_ai_content?(phase)
 
         stats_url = evaluation_phase_adm_projekts_projekt_path(projekt, phase_id)
         ai_open_url = evaluation_phase_adm_projekts_projekt_path(projekt, phase_id, tab: "ai")

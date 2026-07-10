@@ -45,6 +45,38 @@ export default class extends Controller {
     this.charts.forEach(chart => chart.resize())
   }
 
+  setGranularity(event) {
+    const button = event.currentTarget
+    const granularity = button.dataset.granularity
+    const card = button.closest(".adm-chart-card")
+    if (!card) return
+
+    const wrapper = card.querySelector("[data-chart-datasets]")
+    const canvas = wrapper?.querySelector("canvas")
+    const chart = canvas ? Chart.getChart(canvas) : null
+    if (!chart) return
+
+    const datasets = JSON.parse(wrapper.dataset.chartDatasets || "{}")
+    const series = datasets[granularity]
+    if (!series) return
+
+    chart.data.labels = series.labels
+    chart.data.datasets[0].data = series.values
+    chart.update()
+
+    const total = card.querySelector(".adm-chart-card__total")
+    if (total) {
+      const sum = series.values.reduce((acc, value) => acc + value, 0)
+      total.textContent = sum.toLocaleString(document.documentElement.lang || "de-DE")
+    }
+
+    card.querySelectorAll("[data-granularity]").forEach(btn => {
+      const active = btn === button
+      btn.classList.toggle("-active", active)
+      btn.setAttribute("aria-pressed", active)
+    })
+  }
+
   initAreaChart(container) {
     const canvas = container.querySelector("canvas")
     if (!canvas) return

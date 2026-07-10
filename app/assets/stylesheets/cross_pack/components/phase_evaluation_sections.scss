@@ -109,7 +109,7 @@
 
 .phase-icon-title {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
 }
 
@@ -150,7 +150,6 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  margin-top: 0.4rem;
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--er-primary, #1e40af);
@@ -163,6 +162,7 @@
 
 .phase-header-aside {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1.25rem;
 }
@@ -173,10 +173,16 @@
   align-items: center;
 }
 
-.phase-header-downloads {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.evaluation-export-menu {
+  --dropdown-toggle-radius: var(--er-radius, 8px);
+  --dropdown-toggle-padding: 12px 40px 12px 16px;
+  --dropdown-item-padding: 12px 20px;
+  --dropdown-item-gap: 0.5rem;
+  --dropdown-item-color: var(--er-text, #0f172a);
+}
+
+.poll-question-card--full .evaluation-export-menu {
+  --dropdown-toggle-bg: #{darken(#f1f5f9, 10%)};
 }
 
 :is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .card {
@@ -219,11 +225,28 @@
   }
 }
 
+.card:has(> .poll-question-card--export) {
+  position: relative;
+}
+
 .poll-question-card--full {
+  position: relative;
   margin-bottom: 1rem;
 
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+.poll-question-card--export {
+  position: absolute;
+  top: 0.7rem;
+  right: 1.5rem;
+
+  .dropdown-select-container {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 
@@ -262,6 +285,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.pref-label-link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 }
 
 .pref-bar-track {

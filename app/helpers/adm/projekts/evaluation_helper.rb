@@ -120,4 +120,22 @@ module Adm::Projekts::EvaluationHelper
 
     sections.map { |section| section["body"] }.join(" ")
   end
+
+  def evaluation_plain_text(html_or_text)
+    return "" if html_or_text.blank?
+
+    with_spaces = html_or_text.to_s.gsub(%r{</(?:h3|p)>}i, " ")
+
+    strip_tags(with_spaces).squish
+  end
+
+  def phase_has_ai_content?(phase)
+    ai_stats = phase["ai_stats"] || {}
+
+    ai_stats["summary"].present? ||
+      ai_stats["topic_clustering"].present? ||
+      ai_stats["semantic_clustering"].present? ||
+      phase["key_findings"].present? ||
+      phase["evaluation_summary"].present?
+  end
 end

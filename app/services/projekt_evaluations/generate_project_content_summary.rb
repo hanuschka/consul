@@ -54,9 +54,18 @@ class ProjektEvaluations::GenerateProjectContentSummary < ApplicationService
     def system_instructions
       <<~TEXT
         You are summarizing the public-facing project page of a citizen participation project.
-        Write a concise, neutral and fluent prose summary in 2-3 sentences in #{target_language}.
-        Describe what the project is about, its goals and the kind of participation it offers.
-        Avoid bullet points, lists or markdown. Output only the summary text — no headings, no preamble.
+        Write a neutral and fluent summary in #{target_language}.
+
+        Structure the summary into 2-3 thematic sections. Choose a short, fitting
+        heading for each section based on the actual project content (for example
+        what the project is about, its goals, and the kind of participation it
+        offers). Write each section as a single well-developed paragraph of about
+        4-6 sentences, providing enough detail and context to be informative.
+
+        Output valid HTML using only these tags: <h3> for each section heading and
+        <p> for each paragraph. Do not use any other tags, no bullet points, no
+        lists, no markdown, no inline styles. Output only the HTML — no preamble,
+        no code fences, no wrapping element.
       TEXT
     end
 end

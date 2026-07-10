@@ -143,15 +143,29 @@
 
     </div>
 
-    <% if @chart_users[:values].any?(&:positive?) %>
+    <% if @chart_users.values.any? { |series| series[:values].any?(&:positive?) } %>
       <div class="adm-stats-charts adm-stats-charts--single">
         <div class="adm-chart-card">
-          <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
-          <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:values].sum) %></div>
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
+            <div class="kern-filter-chips" role="group" aria-label="<%= t("adm.statistics.show.charts.granularity_label") %>">
+              <% %w[daily weekly monthly yearly].each do |granularity| %>
+                <button type="button"
+                        class="kern-filter-chip <%= "-active" if granularity == "monthly" %>"
+                        data-action="adm-charts#setGranularity"
+                        data-granularity="<%= granularity %>"
+                        aria-pressed="<%= granularity == "monthly" %>">
+                  <%= t("adm.statistics.show.charts.granularity_#{granularity}") %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+          <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:monthly][:values].sum) %></div>
           <div class="adm-chart-card__canvas-wrapper"
                data-area-chart
-               data-chart-labels="<%= @chart_users[:labels].to_json %>"
-               data-chart-values="<%= @chart_users[:values].to_json %>"
+               data-chart-labels="<%= @chart_users[:monthly][:labels].to_json %>"
+               data-chart-values="<%= @chart_users[:monthly][:values].to_json %>"
+               data-chart-datasets="<%= @chart_users.to_json %>"
                data-chart-color="#6BA3D6">
             <canvas></canvas>
           </div>

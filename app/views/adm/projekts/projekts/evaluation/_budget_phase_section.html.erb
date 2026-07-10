@@ -51,7 +51,17 @@
       </div>
 
       <% if local_assigns.fetch(:exportable, false) %>
-        <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
+        <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown" do %>
+          <%= render "adm/projekts/projekts/evaluation/export_pdf_item", projekt: projekt, phase: phase %>
+
+          <%= link_to projekt_phase_footer_tab_page_path(projekt.page, phase["phase_id"], format: :csv),
+            target: "_blank",
+            rel: "noopener" do %>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+            <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("custom.admin.common.download_current_selection") %>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
   </div>

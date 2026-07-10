@@ -32,10 +32,11 @@ custom-tab {
 
 // KERN-UX (loaded in the /adm pack) draws a box-shadow focus ring on every
 // [tabindex] element on :focus — mouse clicks included — and zeroes the
-// outline. Opt <custom-tab> out of that ring and use a keyboard-only outline
+// outline. Opt <custom-tab> out of that ring (via :focus-within so it is also
+// suppressed when a descendant is focused) and use a keyboard-only outline
 // instead. These selectors mirror KERN global.scss specificity so the override
 // wins where KERN is present, and are inert in packs without it.
-custom-tab[tabindex]:not([tabindex="-1"]):focus {
+custom-tab[tabindex]:not([tabindex="-1"]):focus-within {
   border-radius: 0;
   box-shadow: none;
 }

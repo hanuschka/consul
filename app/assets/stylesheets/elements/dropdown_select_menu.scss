@@ -26,7 +26,6 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 .dropdown-select-menu--list {
   z-index: 1000;
   position: relative;
-  width: 107%;
   border: 1px solid #d9d9d9b3;
   overflow: hidden;
 
@@ -158,8 +157,8 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 }
 
 .dropdown-select-container.dropdown-open {
-  .dropdown-toggle {
-    &:before {
+  .dropdown-select-menu-toggle {
+    &::before {
       transform: rotate(-135deg);
     }
   }

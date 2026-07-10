@@ -12,10 +12,10 @@ $dropdown-select-menu-active-color: darken($dropdown-select-menu-hover-color, 4%
 $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 
 .dropdown-select-container {
-  --dropdown-toggle-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 3%);
-  --dropdown-toggle-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 5%);
-  --dropdown-item-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), white 2%);
-  --dropdown-item-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 14%);
+  --dropdown-toggle-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 2%);
+  --dropdown-toggle-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 4%);
+  --dropdown-item-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 2%);
+  --dropdown-item-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 4%);
   margin: 0 auto;
   color: var(--dropdown-toggle-color, #292929);
   border-radius: var(--dropdown-toggle-radius, 8px);

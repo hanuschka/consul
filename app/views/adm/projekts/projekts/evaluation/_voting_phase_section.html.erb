@@ -4,6 +4,7 @@
   accent = accent_color
   accent_light = accent_light_color
   pdf_mode = local_assigns.fetch(:pdf_mode, false)
+  tabbed = local_assigns.fetch(:tabbed, false)
 
   section_selection = local_assigns.fetch(:selection, nil)
   show_section = ->(key) {
@@ -13,6 +14,7 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
+  <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("kpis") %>"><% end %>
   <section
     class="phase-evaluation-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
@@ -96,9 +98,11 @@
     </div>
   </div>
   </section>
+  <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% if show_section.call("questions") %>
+  <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("questions") %>"><% end %>
   <section
     class="phase-evaluation-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:questions"
@@ -195,6 +199,7 @@
     </div>
   <% end %>
   </section>
+  <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% eval_summary = phase["evaluation_summary"] || {} %>
@@ -207,6 +212,7 @@
   <% end %>
 
   <% if show_section.call("key_findings") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("key_findings") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
@@ -221,10 +227,12 @@
         pdf_mode: local_assigns.fetch(:pdf_mode, false)
       } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
   <% if !pdf_mode_local || show_section.call("ai_questions") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("ai_questions") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
@@ -239,5 +247,6 @@
         pdf_mode: pdf_mode_local
       } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 </div>

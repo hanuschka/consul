@@ -37,11 +37,12 @@
     compact: true
   ) %>
 
-  <div
+  <custom-tabs
     class="kern-container adm-evaluation-phase-container mb-5"
+    param="tab"
+    default="stats"
     data-controller="adm--evaluation-tabs"
-    data-adm--evaluation-tabs-ai-sections-value="<%= evaluation_ai_section_keys.to_json %>"
-    data-adm--evaluation-tabs-shared-sections-value="<%= evaluation_shared_section_keys.to_json %>"
+    data-action="custom-tabs:change->adm--evaluation-tabs#change"
     data-adm--evaluation-tabs-regular-url-value="<%= regular_stats_url %>"
     data-adm--evaluation-tabs-ai-url-value="<%= ai_stats_url %>"
     data-adm--evaluation-tabs-regular-label-value="<%= t('adm.projekts.projekts.evaluation.regenerate_regular_stats_button') %>"
@@ -50,18 +51,13 @@
     <% if !@phase_row.processing? && !@phase_row.failed? %>
       <div class="adm-evaluation-view-tabs-wrap" data-adm--evaluation-tabs-target="bar">
       <div
-        class="adm-evaluation-view-tabs"
+        class="custom-tabs--list adm-evaluation-view-tabs"
         role="tablist"
         aria-label="<%= t("adm.projekts.projekts.evaluation.view_tabs.aria_label") %>"
       >
-        <button
-          type="button"
+        <custom-tab
+          for="stats"
           class="adm-evaluation-view-tabs--tab -active"
-          role="tab"
-          aria-selected="true"
-          data-tab="stats"
-          data-adm--evaluation-tabs-target="tab"
-          data-action="click->adm--evaluation-tabs#select"
         >
           <span class="adm-evaluation-view-tabs--tab-label">
             <span
@@ -79,15 +75,10 @@
             <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <%= regular_generated_at_text %>
           </span>
-        </button>
-        <button
-          type="button"
+        </custom-tab>
+        <custom-tab
+          for="ai"
           class="adm-evaluation-view-tabs--tab"
-          role="tab"
-          aria-selected="false"
-          data-tab="ai"
-          data-adm--evaluation-tabs-target="tab"
-          data-action="click->adm--evaluation-tabs#select"
         >
           <span class="adm-evaluation-view-tabs--tab-label">
             <span
@@ -105,7 +96,7 @@
             <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <%= ai_generated_at_text %>
           </span>
-        </button>
+        </custom-tab>
       </div>
 
       <div class="adm-evaluation-view-tabs__actions">
@@ -135,7 +126,8 @@
         accent_color: color[:accent],
         accent_light_color: color[:accent_light],
         accent_shades: color[:shades],
-        selection: @selection %>
+        selection: @selection,
+        tabbed: !@phase_row.processing? && !@phase_row.failed? %>
     </div>
-  </div>
+  </custom-tabs>
 </div>

@@ -18,6 +18,8 @@ de:
           evaluation: Auswertung
         evaluation:
           title: Auswertung
+          export: Export
+          download_csv: CSV herunterladen
           not_generated_title: Auswertung noch nicht generiert
           not_generated_description: >
             Es wurde noch keine Auswertung für dieses Projekt erstellt.
@@ -168,6 +170,7 @@ de:
             ai: KI-Analyse
           report_summary_card:
             title: Bericht-Zusammenfassung
+            page_title: Projektauswertung Bericht-Zusammenfassung
             description: Projektübersicht, Einstellungen und Phasen-Zusammenfassungen.
             phases: Phasen
             view: Zusammenfassung öffnen
@@ -194,7 +197,7 @@ de:
             project_summary_subtitle: Untertitel
             project_summary_no_subtitle: Kein Untertitel
             project_summary_no_image: Kein Projektbild
-            project_summary_ai_label: KI-Zusammenfassung des Projektinhalts
+            project_summary_ai_label: KI-Zusammenfassung
             project_summary_ai_empty: Keine Inhalte für die KI-Zusammenfassung verfügbar.
             settings_label: Projekteinstellungen
             settings_open_phases:
@@ -228,8 +231,8 @@ de:
             project_summary: Snapshot der Projektseite mit Untertitel, Bild und KI-Zusammenfassung des Projektinhalts.
             settings: Überblick über die Projektkonfiguration — offene Phasen, Abstimmungen, Schlagwörter und Nachhaltigkeitsziele.
             phase_summaries: Kurze KI-generierte Zusammenfassung für jede Projektphase.
-          bulk_all_on: Alle aus
-          bulk_all_off: Alle ein
+          bulk_all_on: Alle ein
+          bulk_all_off: Alle aus
           cancel: Zurück
           save: Speichern
         update_evaluation_visibility:

@@ -18,6 +18,8 @@ en:
           evaluation: Evaluation
         evaluation:
           title: Evaluation
+          export: Export
+          download_csv: Download CSV
           not_generated_title: Evaluation not yet generated
           not_generated_description: >
             No evaluation has been created for this project yet.
@@ -168,6 +170,7 @@ en:
             ai: AI analysis
           report_summary_card:
             title: Report summary
+            page_title: Projekt evaluation report summary
             description: Project overview, settings and phase summaries.
             phases: Phases
             view: Open summary
@@ -194,7 +197,7 @@ en:
             project_summary_subtitle: Subtitle
             project_summary_no_subtitle: No subtitle
             project_summary_no_image: No project image
-            project_summary_ai_label: AI summary of project content
+            project_summary_ai_label: AI summary
             project_summary_ai_empty: No content available for AI summary.
             settings_label: Project settings
             settings_open_phases:
@@ -228,8 +231,8 @@ en:
             project_summary: Project page snapshot with subtitle, image, and AI summary of the project content.
             settings: Project configuration overview — open phases, polls, tags, and sustainable development goals.
             phase_summaries: Short AI-generated summary for every projekt phase.
-          bulk_all_on: Turn all off
-          bulk_all_off: Turn all on
+          bulk_all_on: Turn all on
+          bulk_all_off: Turn all off
           cancel: Back
           save: Save
         update_evaluation_visibility:

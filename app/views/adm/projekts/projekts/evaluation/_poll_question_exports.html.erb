@@ -1,15 +1,18 @@
 <% if local_assigns.fetch(:exportable, false) %>
-  <hr class="kern-divider mt-3 mb-2" aria-hidden="true">
-  <div class="d-flex flex-column gap-1">
-    <a href="<%= polls_question_csv_answers_streets_path(question["id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+  <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown",
+    locals: { wrapper_class: "poll-question-card--export" } do %>
+    <%= link_to polls_question_csv_answers_streets_path(question["id"], format: :csv),
+      data: { turbo: false } do %>
       <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
       <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
       <%= t("custom.polls.results.question_street_details_csv_link") %>
-    </a>
-    <a href="<%= polls_question_csv_answers_votes_path(question["id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+    <% end %>
+
+    <%= link_to polls_question_csv_answers_votes_path(question["id"], format: :csv),
+      data: { turbo: false } do %>
       <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
       <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
       <%= t("custom.polls.results.question_answer_details_csv_link") %>
-    </a>
-  </div>
+    <% end %>
+  <% end %>
 <% end %>

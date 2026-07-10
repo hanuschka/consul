@@ -91,7 +91,7 @@
           </div>
           <% if project_content_summary.present? %>
             <div class="report-summary--ai-body">
-              <%= sanitize(project_content_summary) %>
+              <%= sanitize(project_content_summary, tags: %w[h3 p]) %>
             </div>
           <% else %>
             <div class="report-summary--ai-body -muted">

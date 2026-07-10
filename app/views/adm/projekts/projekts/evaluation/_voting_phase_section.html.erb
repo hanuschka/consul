@@ -73,21 +73,24 @@
       </div>
 
       <% if local_assigns.fetch(:exportable, false) %>
-        <%= render "adm/projekts/projekts/evaluation/phase_export_button", projekt: projekt, phase: phase %>
-        <div class="phase-header-downloads">
-          <a href="<%= poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+        <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown",
+          locals: { projekt: projekt, phase: phase } do %>
+          <%= link_to poll_questions_adm_projekts_phase_path(phase["phase_id"], format: :csv),
+            data: { turbo: false } do %>
             <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
             <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <%= t("adm.projekts.phases.poll_questions.download_individual_answers") %>
-          </a>
+          <% end %>
+
           <% if first_poll %>
-            <a href="<%= poll_csv_answers_votes_path(first_poll["id"], format: :csv) %>" class="adm-text-link" data-turbo="false">
+            <%= link_to poll_csv_answers_votes_path(first_poll["id"], format: :csv),
+              data: { turbo: false } do %>
               <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
               <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
               <%= t("custom.polls.show.results.download_csv_answers_votes") %>
-            </a>
+            <% end %>
           <% end %>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </div>

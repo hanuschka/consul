@@ -26,9 +26,6 @@
 
   <% elsif @evaluation.processing? %>
     <div class="adm-empty-state">
-      <h3><%= t(".not_generated_title") %></h3>
-      <p><%= t(".not_generated_description") %></p>
-
       <%= render Adm::AiActionButtonComponent.new(
         url: generate_evaluation_adm_projekts_projekt_path(@projekt),
         text: t(".generate_button"),
@@ -38,6 +35,8 @@
         status_url: evaluation_status_adm_projekts_projekt_path(@projekt),
         loading: true
       ) %>
+
+      <p class="adm-evaluation-processing-note"><%= t(".processing_description") %></p>
     </div>
 
   <% elsif @evaluation.failed? %>

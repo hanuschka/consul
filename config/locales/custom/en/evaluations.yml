@@ -18,6 +18,7 @@ en:
           evaluation: Evaluation
         evaluation:
           title: Evaluation
+          export: Export
           not_generated_title: Evaluation not yet generated
           not_generated_description: >
             No evaluation has been created for this project yet.
@@ -195,7 +196,7 @@ en:
             project_summary_subtitle: Subtitle
             project_summary_no_subtitle: No subtitle
             project_summary_no_image: No project image
-            project_summary_ai_label: AI summary of project content
+            project_summary_ai_label: AI summary
             project_summary_ai_empty: No content available for AI summary.
             settings_label: Project settings
             settings_open_phases:

@@ -12,6 +12,10 @@ $dropdown-select-menu-active-color: darken($dropdown-select-menu-hover-color, 4%
 $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 
 .dropdown-select-container {
+  --dropdown-toggle-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 3%);
+  --dropdown-toggle-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 5%);
+  --dropdown-item-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), white 2%);
+  --dropdown-item-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 14%);
   margin: 0 auto;
   color: var(--dropdown-toggle-color, #292929);
   border-radius: var(--dropdown-toggle-radius, 8px);
@@ -53,7 +57,7 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
     padding: var(--dropdown-toggle-padding, 10px 28px 10px 12px);
 
     &:hover {
-      background: var(--dropdown-toggle-bg-hover, #e2e2e2);
+      background: var(--dropdown-toggle-bg-hover, var(--dropdown-toggle-bg-hover-derived));
       border-color: var(--dropdown-toggle-border-color-hover, transparent);
       color: var(--dropdown-toggle-color-hover, var(--dropdown-toggle-color, #292929));
     }
@@ -96,11 +100,11 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
       cursor: pointer;
 
       &:hover {
-        background-color: var(--dropdown-item-bg-hover, #ededed);
+        background-color: var(--dropdown-item-bg-hover, var(--dropdown-item-bg-hover-derived));
       }
 
       &:active, &:focus {
-        background-color: $dropdown-select-menu-active-color;
+        background-color: var(--dropdown-item-bg-active, var(--dropdown-item-bg-active-derived));
       }
 
       & > * {
@@ -114,7 +118,7 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
     }
 
     .dropdown-select-menu-item--focused {
-      background-color: var(--dropdown-item-bg-hover, #ededed);
+      background-color: var(--dropdown-item-bg-hover, var(--dropdown-item-bg-hover-derived));
       outline: none;
     }
 
@@ -154,7 +158,7 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 }
 
 .dropdown-select-container.dropdown-open .dropdown-select-menu-toggle {
-  background: var(--dropdown-toggle-bg-active, #dcdcdc);
+  background: var(--dropdown-toggle-bg-active, var(--dropdown-toggle-bg-active-derived));
 }
 
 .dropdown-select-container.dropdown-open {

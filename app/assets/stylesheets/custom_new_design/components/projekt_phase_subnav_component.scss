@@ -13,10 +13,16 @@
 
     .projekt-phase-subnav-item {
       margin-right: 10px;
+      cursor: pointer;
 
-      &.is-active {
+      &.-active {
         font-weight: bold;
         text-decoration: underline;
+      }
+
+      &.-disabled {
+        cursor: default;
+        opacity: 0.6;
       }
     }
   }

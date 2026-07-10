@@ -1,5 +1,7 @@
 class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
-  delegate :current_user, :can?, to: :helpers
+  delegate :current_user, :can?,
+    :footer_evaluation_tab_visible?, :footer_evaluation_tab_public_visible?,
+    :footer_evaluation_tab_disabled?, to: :helpers
   attr_reader :budget, :projekt_phase
 
   def initialize(budget, projekt_phase)
@@ -24,24 +26,24 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
         }
       end
 
-      if can?(:read_stats, budget) && show_kpi_stats_tab?
+      if can?(:read_stats, budget) && footer_evaluation_tab_visible?(projekt_phase, "stats")
         items << {
-          text: t("custom.projekt_phases.subnav.key_metrics"),
-          url: url_to_footer_tab(section: "key_metrics", remote: true),
-          active: params[:section] == "key_metrics",
-          section: "key_metrics",
-          hide_on_preview: !projekt_phase.feature?("general.public_kpi_stats")
+          text: t("custom.projekt_phases.subnav.evaluation"),
+          url: url_to_footer_tab(section: "evaluation", remote: true),
+          active: params[:section] == "evaluation",
+          section: "evaluation",
+          hide_on_preview: !footer_evaluation_tab_public_visible?(projekt_phase, "stats")
         }
       end
 
-      if can?(:read_stats, budget) && show_ai_analysis_tab?
+      if can?(:read_stats, budget) && footer_evaluation_tab_visible?(projekt_phase, "ai")
         items << {
-          text: t("custom.projekt_phases.subnav.analysis"),
-          url: url_to_footer_tab(section: "analysis", remote: true),
-          active: params[:section] == "analysis",
-          disabled: !Ai::Settings.ai_available?,
-          section: "analysis",
-          hide_on_preview: !projekt_phase.feature?("general.public_ai_stats")
+          text: t("custom.projekt_phases.subnav.ai_evaluation"),
+          url: url_to_footer_tab(section: "ai_evaluation", remote: true),
+          active: params[:section] == "ai_evaluation",
+          disabled: footer_evaluation_tab_disabled?(projekt_phase, "ai"),
+          section: "ai_evaluation",
+          hide_on_preview: !footer_evaluation_tab_public_visible?(projekt_phase, "ai")
         }
       end
 
@@ -59,13 +61,5 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
 
     def admin_or_projekt_manager?
       current_user&.administrator? || current_user&.projekt_manager?
-    end
-
-    def show_kpi_stats_tab?
-      admin_or_projekt_manager? || projekt_phase.feature?("general.public_kpi_stats")
-    end
-
-    def show_ai_analysis_tab?
-      admin_or_projekt_manager? || projekt_phase.feature?("general.public_ai_stats")
     end
 end

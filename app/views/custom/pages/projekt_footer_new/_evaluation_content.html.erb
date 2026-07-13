@@ -11,6 +11,9 @@
     palette = evaluation_phase_palette[projekt_phase.type]
     selection = PhaseEvaluationVisibility::Selector.for_phase(projekt_phase)
     is_admin_or_pm = footer_admin_or_projekt_manager?
+    can_manage_visibility = can?(:edit, projekt_phase.projekt)
+    section_visibility = projekt_phase.projekt_phase_evaluation_visibility
+    visibility_toggle_url = toggle_evaluation_section_visibility_adm_projekts_projekt_path(projekt_phase.projekt, format: :json)
     processing = evaluation_row.processing?
     failed = evaluation_row.failed?
 
@@ -103,9 +106,13 @@
               accent_color: palette[:accent],
               accent_light_color: palette[:accent_light],
               accent_shades: palette[:shades],
-              selection: selection,
+              selection: can_manage_visibility ? nil : selection,
               only_tab: only_tab,
-              tabbed: false
+              tabbed: false,
+              hidden_sections: ["kpis"],
+              visibility_toggle: can_manage_visibility,
+              visibility: section_visibility,
+              visibility_toggle_url: visibility_toggle_url
             } %>
         <% end %>
       <% end %>

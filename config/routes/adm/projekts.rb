@@ -247,6 +247,7 @@ namespace :adm do
           as: :evaluation_phase, constraints: { phase_id: /\d+/ }
       get :evaluation_visibility, on: :member
       patch :update_evaluation_visibility, on: :member
+      patch :toggle_evaluation_section_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member

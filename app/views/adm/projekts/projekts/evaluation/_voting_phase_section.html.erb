@@ -8,7 +8,10 @@
 
   section_selection = local_assigns.fetch(:selection, nil)
   only_tab = local_assigns.fetch(:only_tab, nil)
+  hidden_sections = local_assigns.fetch(:hidden_sections, [])
   show_section = ->(key) {
+    next false if hidden_sections.include?(key)
+
     next false if only_tab.present? && !evaluation_section_tabs(key).split.include?(only_tab)
 
     section_selection.nil? || section_selection.include_section?(phase["phase_id"], key)

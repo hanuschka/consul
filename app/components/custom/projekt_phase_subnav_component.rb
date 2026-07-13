@@ -16,7 +16,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
   def projekt_phase_subnav_items
     items = [
       {
-        text: t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
+        text: @projekt_phase.title.presence || t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
         icon: phase_icon_class(@projekt_phase) || "fa-list",
         url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview",

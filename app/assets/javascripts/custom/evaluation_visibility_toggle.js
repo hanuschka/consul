@@ -23,36 +23,21 @@
         visible: visible
       };
 
-      this.setStatus(wrapper, "saving");
-
       App.Ajax
         .patch(url, payload)
-        .then(() => this.onSuccess(wrapper, checkbox, visible))
-        .catch(() => this.onError(wrapper, checkbox, visible));
+        .then(() => this.onSuccess(checkbox, visible))
+        .catch(() => this.onError(checkbox, visible));
     },
 
-    onSuccess(wrapper, checkbox, visible) {
+    onSuccess(checkbox, visible) {
       const section = checkbox.closest(".phase-evaluation-section");
 
       section.classList.toggle("-hidden-from-public", !visible);
       section.classList.toggle("js-studio-hide-on-preview", !visible);
-
-      this.clearStatus(wrapper);
     },
 
-    onError(wrapper, checkbox, visible) {
+    onError(checkbox, visible) {
       checkbox.checked = !visible;
-
-      this.setStatus(wrapper, "error");
-    },
-
-    setStatus(wrapper, state) {
-      this.clearStatus(wrapper);
-      wrapper.classList.add(`-${state}`);
-    },
-
-    clearStatus(wrapper) {
-      wrapper.classList.remove("-saving", "-saved", "-error");
     }
   };
 }).call(this);

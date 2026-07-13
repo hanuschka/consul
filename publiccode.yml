@@ -2,7 +2,7 @@ publiccodeYmlVersion: '0.4'
 
 name: Mitmachportal
 applicationSuite: demokratie.today
-url: 'https://gitlab.opencode.de/wuerzburg/mitmachportal'
+url: 'https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal'
 landingURL: 'https://mitmachportal.wuerzburg.de'
 softwareVersion: '2026-06-29'
 releaseDate: '2026-06-29'

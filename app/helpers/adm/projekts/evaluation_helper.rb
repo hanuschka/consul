@@ -25,6 +25,18 @@ module Adm::Projekts::EvaluationHelper
     EVALUATION_SHARED_SECTIONS
   end
 
+  def evaluation_section_tabs(section_key)
+    key = section_key.to_s
+
+    if EVALUATION_SHARED_SECTIONS.include?(key)
+      "stats ai"
+    elsif EVALUATION_AI_SECTIONS.include?(key)
+      "ai"
+    else
+      "stats"
+    end
+  end
+
   def evaluation_chart_colors(values, base_colors = nil)
     source = base_colors.presence || CHART_PALETTE
 
@@ -63,19 +75,23 @@ module Adm::Projekts::EvaluationHelper
     {
       "ProjektPhase::ProposalPhase" => {
         kpi_key: "proposals_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
+        kpi_label_key: "adm.projekts.projekts.evaluation.proposals",
+        subtitle_key: "adm.projekts.projekts.evaluation.proposal_phase"
       },
       "ProjektPhase::VotingPhase" => {
         kpi_key: "participants_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.participants"
+        kpi_label_key: "adm.projekts.projekts.evaluation.participants",
+        subtitle_key: "adm.projekts.projekts.evaluation.voting_phase"
       },
       "ProjektPhase::BudgetPhase" => {
         kpi_key: "investments_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.investments"
+        kpi_label_key: "adm.projekts.projekts.evaluation.investments",
+        subtitle_key: "adm.projekts.projekts.evaluation.budget_phase"
       },
       "ProjektPhase::CommentPhase" => {
         kpi_key: "comments_count",
-        kpi_label_key: "adm.projekts.projekts.evaluation.comments"
+        kpi_label_key: "adm.projekts.projekts.evaluation.comments",
+        subtitle_key: "adm.projekts.projekts.evaluation.comment_phase"
       }
     }
   end
@@ -87,5 +103,51 @@ module Adm::Projekts::EvaluationHelper
       "ProjektPhase::BudgetPhase" => "budget_phase_section",
       "ProjektPhase::CommentPhase" => "comment_phase_section"
     }
+  end
+
+  def phase_summary_sections(short_summary)
+    case short_summary
+    when Array
+      short_summary.filter_map do |section|
+        next if !section.is_a?(Hash)
+
+        body = (section["body"] || section[:body]).to_s.strip
+        next if body.blank?
+
+        heading = (section["heading"] || section[:heading]).to_s.strip
+
+        { "heading" => heading.presence, "body" => body }
+      end
+    when String
+      text = short_summary.strip
+      text.present? ? [{ "heading" => nil, "body" => text }] : []
+    else
+      []
+    end
+  end
+
+  def phase_summary_plain_text(short_summary)
+    sections = phase_summary_sections(short_summary)
+    return nil if sections.empty?
+
+    sections.map { |section| section["body"] }.join(" ")
+  end
+
+  def evaluation_plain_text(html_or_text)
+    return "" if html_or_text.blank?
+
+    with_spaces = html_or_text.to_s.gsub(%r{</(?:h3|p)>}i, " ")
+
+    strip_tags(with_spaces).squish
+  end
+
+  def phase_has_ai_content?(phase)
+    ai_stats = phase["ai_stats"] || {}
+
+    ai_stats["summary"].present? ||
+      ai_stats["topic_clustering"].present? ||
+      ai_stats["semantic_clustering"].present? ||
+      phase["key_findings"].present? ||
+      phase["evaluation_summary"].present?
   end
 end

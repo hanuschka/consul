@@ -22,10 +22,12 @@ export default class extends Controller {
     if (this.parentDetails) this.parentDetails.addEventListener("toggle", this.handleDetailsToggle)
 
     document.addEventListener("adm-charts:resize", this.resizeCharts)
+    this.element.addEventListener("adm-charts:datasets-changed", this.handleDatasetsChanged)
   }
 
   disconnect() {
     document.removeEventListener("adm-charts:resize", this.resizeCharts)
+    this.element.removeEventListener("adm-charts:datasets-changed", this.handleDatasetsChanged)
 
     if (this.parentDetails) this.parentDetails.removeEventListener("toggle", this.handleDetailsToggle)
     this.element.querySelectorAll("canvas").forEach(canvas => {
@@ -43,6 +45,54 @@ export default class extends Controller {
 
   resizeCharts = () => {
     this.charts.forEach(chart => chart.resize())
+  }
+
+  handleDatasetsChanged = (event) => {
+    const card = event.target.closest(".adm-chart-card")
+    if (!card) return
+
+    const activeButton = card.querySelector("[data-granularity].-active")
+    if (!activeButton) return
+
+    this.applyGranularity(card, activeButton.dataset.granularity)
+  }
+
+  setGranularity(event) {
+    const button = event.currentTarget
+    const card = button.closest(".adm-chart-card")
+    if (!card) return
+
+    this.applyGranularity(card, button.dataset.granularity)
+  }
+
+  applyGranularity(card, granularity) {
+    const wrapper = card.querySelector("[data-chart-datasets]")
+    const canvas = wrapper?.querySelector("canvas")
+    const chart = canvas ? Chart.getChart(canvas) : null
+    if (!chart) return
+
+    const datasets = JSON.parse(wrapper.dataset.chartDatasets || "{}")
+    const series = datasets[granularity]
+    if (!series) return
+
+    chart.data.labels = series.labels
+    chart.data.datasets[0].data = series.values
+    chart.update()
+
+    wrapper.dataset.chartLabels = JSON.stringify(series.labels)
+    wrapper.dataset.chartValues = JSON.stringify(series.values)
+
+    const total = card.querySelector(".adm-chart-card__total")
+    if (total) {
+      const sum = series.values.reduce((acc, value) => acc + value, 0)
+      total.textContent = sum.toLocaleString(document.documentElement.lang || "de-DE")
+    }
+
+    card.querySelectorAll("[data-granularity]").forEach(btn => {
+      const active = btn.dataset.granularity === granularity
+      btn.classList.toggle("-active", active)
+      btn.setAttribute("aria-pressed", active)
+    })
   }
 
   initAreaChart(container) {

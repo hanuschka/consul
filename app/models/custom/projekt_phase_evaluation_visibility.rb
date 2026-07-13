@@ -5,7 +5,6 @@ class ProjektPhaseEvaluationVisibility < ApplicationRecord
     phase_summary
     tone
     ranking
-    proposals
     ai_summary
     timeline
     label_sentiment

@@ -108,6 +108,9 @@ application.register("adm-nested-fields", AdmNestedFieldsController)
 import AdmChartsController from "./adm/charts_controller"
 application.register("adm-charts", AdmChartsController)
 
+import AdmChartRangeController from "./adm/chart_range_controller"
+application.register("adm-chart-range", AdmChartRangeController)
+
 
 import CheckAllController from "./check_all_controller"
 application.register("check-all", CheckAllController)
@@ -231,3 +234,6 @@ application.register("shared--image-cropper", SharedImageCropperController)
 
 import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
 application.register("shared--anchor-highlight", SharedAnchorHighlightController)
+
+import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
+application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)

@@ -17,7 +17,7 @@ module PdfServices
             pdf,
             @deficiency_report.image,
             @deficiency_report.map_location,
-            image_max_height: [520, pdf.cursor].min
+            image_max_height: 520
           )
           render_official_answer(pdf)
         end

@@ -4,13 +4,12 @@ class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
   end
 
   def call
-    return nil if phase_data_blank?
+    return [] if phase_data_blank?
 
-    response_text = get_ai_response(build_user_prompt)
-    response_text.to_s.strip.presence
+    parse_response(get_ai_response(build_user_prompt))
   rescue StandardError => e
     Rails.logger.error("[Evaluation] GeneratePhaseShortSummary failed: #{e.message}")
-    nil
+    []
   end
 
   private
@@ -77,19 +76,82 @@ class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
     def get_ai_response(user_prompt)
       response = Ai::RubyLlmFactory
         .chat
+        .with_schema(output_schema)
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-      response.content.to_s
+      response.content
+    end
+
+    def output_schema
+      {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          sections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                heading: { type: "string", description: "2-5 word section subheading in the target language" },
+                body: { type: "string", description: "2-3 sentences of plain prose in the target language" }
+              },
+              required: %w[heading body]
+            }
+          }
+        },
+        required: %w[sections]
+      }
     end
 
     def system_instructions
       <<~TEXT
         You are summarizing one phase of a citizen participation project for an executive overview.
-        Write 2 to 3 sentences in #{target_language} that capture what happened in this phase
-        based on the stats: cover participation level, the main quantitative outcome, and a brief
-        qualitative observation or contextual note. Each sentence should add new information; do
-        not pad. No bullet points, no lists, no markdown, no headings. Output only the prose summary.
+        Produce a thorough, descriptive summary in #{target_language}, organized into 3 to 4
+        sections. Across all sections combined, write 7 to 10 sentences in total (about 2 to 3
+        sentences per section).
+
+        Each section has two parts:
+        - heading: a short 2 to 5 word subheading in #{target_language} naming what the section
+          covers (for example: participation, main outcomes, significance).
+        - body: 2 to 3 sentences of plain prose in #{target_language}.
+
+        Together the sections should cover: what this phase was about and its role within the
+        participation process; the overall level and breadth of participation; each of the main
+        quantitative outcomes present in the stats and what they indicate; the relationships
+        between the metrics (for example how actively participants engaged relative to their
+        number); and a closing observation about the phase's significance or contribution to the
+        project.
+
+        Each sentence must add new information; do not pad or repeat. Stay strictly grounded in
+        the provided stats and do not invent numbers, names, or facts that are not given. Body
+        text must be plain prose only: no bullet points, no lists, no markdown, no headings, and
+        no HTML tags.
       TEXT
+    end
+
+    def parse_response(content)
+      data = content.is_a?(String) ? JSON.parse(content) : content
+      return [] unless data.is_a?(Hash)
+
+      sections = data["sections"] || data[:sections]
+      return [] unless sections.is_a?(Array)
+
+      sections.filter_map { |section| build_section(section) }
+    rescue JSON::ParserError => e
+      Rails.logger.error("[Evaluation] Failed to parse phase short summary: #{e.message}")
+      []
+    end
+
+    def build_section(section)
+      return nil unless section.is_a?(Hash)
+
+      body = (section["body"] || section[:body]).to_s.strip
+      return nil if body.blank?
+
+      heading = (section["heading"] || section[:heading]).to_s.strip
+
+      { heading: heading, body: body }
     end
 end

@@ -5,6 +5,7 @@ de:
         key_metrics: Kennzahlen
         analysis: Analyse
         evaluation: Auswertung
+        ai_evaluation: KI-Auswertung
         full_stats: Auswertung auf separater Seite anzeigen
         overview:
           proposal_phase: Vorschläge

@@ -1,6 +1,7 @@
 :root {
   --kern-font-size-14: 0.875rem;
   --theme-metric-border-radius-default: 0.25rem;
+  --dropdown-toggle-bg: color-mix(in srgb, #ebebeb, white 25%);
 }
 
 [class^=kern-col], [class*=kern-col] {

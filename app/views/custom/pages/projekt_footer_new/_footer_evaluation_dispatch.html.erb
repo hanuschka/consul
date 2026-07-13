@@ -1,0 +1,19 @@
+<% eval_tab = params[:section] == "ai_evaluation" ? "ai" : "stats" %>
+
+<% if footer_render_frozen_evaluation?(@projekt_phase) %>
+  <%= render "custom/pages/projekt_footer_new/evaluation_content", only_tab: eval_tab %>
+
+<% elsif eval_tab == "ai" %>
+  <% if footer_evaluation_tab_visible?(@projekt_phase, "ai") && Ai::Settings.ai_available? %>
+    <div class="<%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'ai') %>">
+      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
+    </div>
+  <% end %>
+
+<% else %>
+  <% if footer_evaluation_tab_visible?(@projekt_phase, "stats") %>
+    <div class="<%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'stats') %>">
+      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+    </div>
+  <% end %>
+<% end %>

@@ -10,6 +10,7 @@
             class="projekt-phase-subnav-item -disabled <%= "js-studio-hide-on-preview" if item[:hide_on_preview] %>"
             tabindex="-1"
           >
+            <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
             <%= item[:text] %>
           </span>
         <% end %>
@@ -19,6 +20,7 @@
           class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "js-studio-hide-on-preview" if item[:hide_on_preview] %>"
           data-url="<%= item[:url] %>"
         >
+          <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
           <%= item[:text] %>
         </custom-tab>
       <% end %>

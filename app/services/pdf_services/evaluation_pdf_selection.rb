@@ -57,13 +57,12 @@ class PdfServices::EvaluationPdfSelection
 
   def self.filter_by_section_group(section_keys, section_group)
     ai_keys = Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
-    shared_keys = Adm::Projekts::EvaluationHelper::EVALUATION_SHARED_SECTIONS
 
     case section_group.to_s
     when "stats"
       section_keys - ai_keys
     when "ai"
-      section_keys & (ai_keys + shared_keys)
+      section_keys & ai_keys
     else
       section_keys
     end

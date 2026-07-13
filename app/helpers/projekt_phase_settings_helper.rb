@@ -87,7 +87,7 @@ module ProjektPhaseSettingsHelper
 
     tabs = []
     tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
-    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) || key == "kpis" }
+    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
 
     tabs
   end

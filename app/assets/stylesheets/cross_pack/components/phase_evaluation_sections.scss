@@ -507,6 +507,65 @@
   margin-bottom: 1rem;
 }
 
+.phase-evaluation-section.-hidden-from-public {
+  opacity: 0.5;
+}
+
+.phase-evaluation-section:has(.footer-evaluation-section-toggle:hover) {
+  outline: 2px dashed var(--er-primary, #1e40af);
+  outline-offset: 6px;
+  border-radius: var(--er-radius-lg, 12px);
+}
+
+.footer-evaluation-section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.footer-evaluation-section-toggle .custom-switch {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-text-secondary, #475569);
+}
+
+.footer-evaluation-section-toggle--status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.footer-evaluation-section-toggle--spinner {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--er-border, #e2e8f0);
+  border-top-color: var(--er-primary, #1e40af);
+  border-radius: 50%;
+  animation: adm-spinner-rotate 1s linear infinite;
+}
+
+.footer-evaluation-section-toggle--icon {
+  display: none;
+  font-size: 1rem;
+}
+
+.footer-evaluation-section-toggle--icon.-error {
+  color: var(--er-danger, #dc2626);
+}
+
+.footer-evaluation-section-toggle.-saving .footer-evaluation-section-toggle--spinner {
+  display: inline-block;
+}
+
+.footer-evaluation-section-toggle.-error .footer-evaluation-section-toggle--icon.-error {
+  display: inline-flex;
+}
+
 .adm-spinner {
   display: inline-block;
   color: var(--er-primary, #1e40af);

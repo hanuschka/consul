@@ -107,16 +107,16 @@ button,
 [type="button"],
 [type="submit"] {
   &:focus {
-    outline: $outline-focus;
+    outline: none !important;
+    text-decoration: none !important;
+  }
+
+  &:active {
+    outline: none;
   }
 
   &:focus-visible {
-    outline: $outline-focus;
-  }
-
-  &:active,
-  &:focus:active {
-    outline: $outline-focus;
+    outline: $outline-focus !important;
   }
 }
 

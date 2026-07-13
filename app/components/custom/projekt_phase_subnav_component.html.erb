@@ -1,18 +1,27 @@
-<div class='projekt-phase-subnav <%= "js-studio-hide-on-preview" if hide_subnav_on_preview? %>'>
-  <div class='projekt-phase-subnav--items'>
+<custom-tabs
+  class="projekt-phase-subnav js-projekt-footer-tabs <%= "js-studio-hide-on-preview" if hide_subnav_on_preview? %>"
+  default="<%= params[:section].presence || "overview" %>"
+>
+  <div class="projekt-phase-subnav--items">
     <% projekt_phase_subnav_items.each do |item| %>
       <% if item[:disabled] %>
         <%= render Shared::AiFeatureTooltipComponent.new(feature_text: item[:text]) do %>
           <span
-            class="projekt-phase-subnav-item <%= 'js-studio-hide-on-preview' if item[:hide_on_preview] %>"
+            class="projekt-phase-subnav-item -disabled <%= "js-studio-hide-on-preview" if item[:hide_on_preview] %>"
             tabindex="-1"
           >
             <%= item[:text] %>
           </span>
         <% end %>
       <% else %>
-        <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item projekt-phase-subnav-item #{"is-active" if item[:active]} #{'js-studio-hide-on-preview' if item[:hide_on_preview]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")', data: { section: item[:section] } %>
+        <custom-tab
+          for="<%= item[:section] %>"
+          class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "js-studio-hide-on-preview" if item[:hide_on_preview] %>"
+          data-url="<%= item[:url] %>"
+        >
+          <%= item[:text] %>
+        </custom-tab>
       <% end %>
     <% end %>
   </div>
-</div>
+</custom-tabs>

@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "../../abstracts/breakpoints" as bp;
+
 // ── Statistics page ────────────────────────────────────────────────────────
 
 // Demographics grid
@@ -51,6 +54,12 @@
     line-height: 1;
     color: var(--kern-typography-color-default, #111);
     margin-bottom: 1rem;
+  }
+
+  &__controls {
+    @media (max-width: #{map.get(bp.$grid-breakpoints, md) - 1px}) {
+      width: 100%;
+    }
   }
 
   &__canvas-wrapper {

@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "../../abstracts/breakpoints" as bp;
+
 // Reusable filter chip bar for /adm: a row of pill links, one active, each with
 // an optional count. Rendered by Kern::FilterChipsComponent.
 .kern-filter-chips {
@@ -28,16 +31,70 @@
     outline: 2px solid var(--kern-color-action-default);
     outline-offset: 2px;
   }
+
+  &[hidden] {
+    display: none;
+  }
 }
 
-button.kern-filter-chip {
+button.kern-filter-chip,
+input.kern-filter-chip {
   font-family: inherit;
+}
+
+.kern-filter-chips.-small {
+  gap: 6px;
+
+  .kern-filter-chip {
+    padding: 4px 12px;
+    font-size: 14px;
+  }
+}
+
+.kern-filter-chips.-stack-mobile {
+  @media (max-width: #{map.get(bp.$grid-breakpoints, md) - 1px}) {
+    width: 100%;
+
+    .kern-filter-chip {
+      justify-content: center;
+      min-height: 36px;
+      padding: 6px 10px;
+    }
+
+    button.kern-filter-chip {
+      flex: 1 1 calc(50% - 3px);
+    }
+
+    input.kern-filter-chip {
+      flex: 1 1 0;
+      min-width: 0;
+      font-size: 14px;
+
+      @supports (-webkit-touch-callout: none) {
+        font-size: 16px;
+      }
+    }
+
+    a.kern-filter-chip {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+form.kern-filter-chips.-stack-mobile {
+  @media (max-width: #{map.get(bp.$grid-breakpoints, md) - 1px}) {
+    margin-top: 6px;
+  }
 }
 
 .kern-filter-chip.-active {
   color: #fff;
   background: var(--kern-color-action-default);
   border-color: var(--kern-color-action-default);
+}
+
+.kern-filter-chips__divider {
+  color: #dbdfe4;
 }
 
 .kern-filter-chip__count {

@@ -6,6 +6,8 @@
 // so the styling works whether or not a wrapper (.adm-projekt-evaluation-report,
 // .projekt-phase-evaluation-footer) sets them.
 
+@import "cross_pack/1_colors";
+
 .ai-stats-card.ai-clustering {
   --er-primary: #1e40af;
   --er-primary-lighter: #dbeafe;
@@ -13,7 +15,7 @@
   --er-text: #0f172a;
   --er-text-secondary: #475569;
   --er-text-muted: #94a3b8;
-  --er-border: #e2e8f0;
+  --er-border: #{$soft-border};
   --er-border-light: #f1f5f9;
   --er-radius: 8px;
   --er-radius-lg: 12px;

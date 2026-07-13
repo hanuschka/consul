@@ -168,7 +168,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     return redirect_to(evaluation_adm_projekts_projekt_path(@projekt)) if @phase_row.nil?
 
     @active_phase_id = params[:phase_id].to_i
-    @selection = PdfServices::EvaluationPdfSelection.from_saved_visibilities(@evaluation)
+    @selection = PdfServices::EvaluationPdfSelection.all(@evaluation)
 
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
 
@@ -183,8 +183,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :update?
 
     @evaluation = @projekt.projekt_evaluation
-    @report_visibility = @projekt.projekt_evaluation_visibility ||
-      @projekt.build_projekt_evaluation_visibility
     @projekt_phases = @projekt.projekt_phases.sorted
       .includes(:projekt_phase_evaluation_visibility)
     @phase_visibilities = build_phase_visibility_map(@projekt_phases)
@@ -207,9 +205,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       phase_params: phase_visibility_params
     )
 
-    flash[:notice] = t(".success")
+    respond_to do |format|
+      format.json { head :no_content }
+      format.html do
+        flash[:notice] = t(".success")
 
-    redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt)
+        redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt)
+      end
+    end
   end
 
   def generate_evaluation

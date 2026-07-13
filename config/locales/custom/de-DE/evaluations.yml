@@ -39,6 +39,17 @@ de:
           regenerate_phase_button: Phasenstatistiken neu generieren
           regenerate_regular_stats_button: Statistiken neu generieren
           regenerate_ai_stats_button: KI-Analyse neu generieren
+          regenerate_ai_stats_tooltip: >
+            Erstellt die KI-Analyse dieser Phase neu — Zusammenfassung,
+            Tonalität, zentrale Erkenntnisse und Themen-Clustering werden aus
+            den aktuellen Beiträgen der Phase neu generiert. Dabei wird das
+            Sprachmodell aufgerufen, was einen Moment dauern kann; die bisherige
+            KI-Analyse wird überschrieben.
+          regenerate_regular_stats_tooltip: >
+            Berechnet die Statistiken dieser Phase — Teilnahmezahlen,
+            Zeitverläufe und demografische Auswertungen — aus den aktuellen
+            Daten neu. Es wird keine KI verwendet und die bisherigen Statistiken
+            werden überschrieben.
           regenerate_phase_confirm: >
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
@@ -218,10 +229,11 @@ de:
             qr_code_label: Projektseite öffnen
         evaluation_visibility:
           title: Sichtbarkeit
-          heading: Sichtbarkeit der Auswertungsabschnitte
+          heading: Sichtbarkeit der Auswertung konfigurieren
           description: >
-            Steuern Sie, welche Abschnitte des Berichts und der einzelnen Phasen
-            in der Auswertung sowie im PDF-Export angezeigt werden.
+            Wählen Sie je Phase aus, welche Auswertungsabschnitte im
+            Projekt-Footer angezeigt werden. Ausgeblendete Abschnitte werden
+            niemandem angezeigt – auch nicht Admins und Projektmanager:innen.
           report_group_title: Bericht (Übersicht)
           report_sections:
             project_summary: Projektzusammenfassung

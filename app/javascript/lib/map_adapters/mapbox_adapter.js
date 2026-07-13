@@ -128,7 +128,7 @@ export default class MapboxAdapter extends BaseAdapter {
 
     this.initialCenter = [options.longitude, options.latitude]
     this.initialZoom = options.zoom
-    this.initialPitch = 53
+    this.initialPitch = 10
 
     this.map = new mapboxgl.Map({
       container: container,

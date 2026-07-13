@@ -92,11 +92,11 @@ de:
           evaluation_visibility: Auswertungs-Sichtbarkeit
         evaluation_visibility:
           title: Auswertungs-Sichtbarkeit
-          heading: Sichtbarkeit für reguläre Nutzer:innen konfigurieren
+          heading: Sichtbarkeit der Auswertung konfigurieren
           description: >
-            Wählen Sie aus, welche Auswertungsabschnitte reguläre Nutzer:innen
-            im Projekt-Footer für diese Phase sehen können. Admins und
-            Projektmanager:innen sehen immer alle Abschnitte.
+            Wählen Sie aus, welche Auswertungsabschnitte für diese Phase im
+            Projekt-Footer angezeigt werden. Ausgeblendete Abschnitte werden
+            niemandem angezeigt – auch nicht Admins und Projektmanager:innen.
           save: Speichern
           cancel: Abbrechen
         update_evaluation_visibility:

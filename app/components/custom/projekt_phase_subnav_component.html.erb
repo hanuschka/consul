@@ -1,6 +1,7 @@
 <custom-tabs
   class="projekt-phase-subnav js-projekt-footer-tabs <%= "js-studio-hide-on-preview" if hide_subnav_on_preview? %>"
   default="<%= params[:section].presence || "overview" %>"
+  all-tabbable
 >
   <div class="projekt-phase-subnav--items">
     <% projekt_phase_subnav_items.each do |item| %>

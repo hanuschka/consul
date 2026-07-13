@@ -234,3 +234,6 @@ application.register("shared--image-cropper", SharedImageCropperController)
 
 import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
 application.register("shared--anchor-highlight", SharedAnchorHighlightController)
+
+import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
+application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)

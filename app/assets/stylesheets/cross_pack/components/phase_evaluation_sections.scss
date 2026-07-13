@@ -511,10 +511,11 @@
   opacity: 0.5;
 }
 
-.phase-evaluation-section:has(.footer-evaluation-section-toggle:hover) {
-  outline: 2px dashed var(--er-primary, #1e40af);
-  outline-offset: 6px;
-  border-radius: var(--er-radius-lg, 12px);
+.phase-evaluation-section:has(.footer-evaluation-section-toggle .custom-switch:hover) {
+  border-radius: 12px;
+  background-color: rgba(131, 205, 234, 0.11);
+  box-shadow: 0 0 0 10px rgba(131, 205, 234, 0.11);
+  transition: background-color 100ms ease, box-shadow 100ms ease;
 }
 
 .footer-evaluation-section-toggle {

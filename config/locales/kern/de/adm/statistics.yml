@@ -132,3 +132,6 @@ de:
           granularity_weekly: Wöchentlich
           granularity_monthly: Monatlich
           granularity_yearly: Jährlich
+          range_from: Von Datum
+          range_to: Bis Datum
+          range_reset: Zurücksetzen

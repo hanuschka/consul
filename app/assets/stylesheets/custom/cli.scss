@@ -18,6 +18,10 @@ h3.card-title {
   }
 }
 
+.items-list-line-divider {
+  bottom: 0 !important;
+}
+
 h3.card-title {
   margin-bottom: 1rem !important;
 }
@@ -88,9 +92,9 @@ h1.no-narrative-line {
         color: #0ab4ff;
       }
 
-      .top-bar--title-logo-top { 
-        display: block;	
-      } 
+      .top-bar--title-logo-top {
+        display: block;
+      }
 
       .top-bar--title-logo-stikcy {
         display: none;
@@ -103,12 +107,12 @@ h1.no-narrative-line {
         color: #fff;
       }
 
-      .top-bar--title-logo-top { 
+      .top-bar--title-logo-top {
         display: none;
-      } 
+      }
 
       .top-bar--title-logo-stikcy {
-        display: block;	
+        display: block;
       }
     }
   }

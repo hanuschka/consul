@@ -5,6 +5,7 @@ en:
         key_metrics: Key Metrics
         analysis: Analysis
         evaluation: Evaluation
+        ai_evaluation: AI Evaluation
         full_stats: Full Evaluation
         overview:
           proposal_phase: Proposals

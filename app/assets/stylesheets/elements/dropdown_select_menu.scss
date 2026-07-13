@@ -6,14 +6,12 @@ dropdown-select-menu.-rendered {
   display: contents;
 }
 
-$dropdown-select-menu-container-hover-color: #e2e2e2;
-$dropdown-select-menu-hover-color: #ededed;
-$dropdown-select-menu-active-color: darken($dropdown-select-menu-hover-color, 4%);
 $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 
 .dropdown-select-container {
   --dropdown-toggle-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 2%);
   --dropdown-toggle-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 4%);
+  --dropdown-toggle-border-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 20%);
   --dropdown-item-bg-hover-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 2%);
   --dropdown-item-bg-active-derived: color-mix(in srgb, var(--dropdown-toggle-bg, #ebebeb), #000 4%);
   margin: 0 auto;
@@ -28,7 +26,6 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 .dropdown-select-menu--list {
   z-index: 1000;
   position: relative;
-  width: 107%;
   border: 1px solid #d9d9d9b3;
   overflow: hidden;
 
@@ -48,7 +45,7 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
     transition: background-color ease-in-out 0.1s, border-color ease-in-out 0.1s, color ease-in-out 0.1s;
     user-select: none;
     background: var(--dropdown-toggle-bg, #ebebeb);
-    border: var(--dropdown-toggle-border, none);
+    border: var(--dropdown-toggle-border, 1px solid var(--dropdown-toggle-border-derived));
     border-radius: var(--dropdown-toggle-radius, 8px);
     font-size: inherit;
     font-family: inherit;
@@ -58,8 +55,6 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 
     &:hover {
       background: var(--dropdown-toggle-bg-hover, var(--dropdown-toggle-bg-hover-derived));
-      border-color: var(--dropdown-toggle-border-color-hover, transparent);
-      color: var(--dropdown-toggle-color-hover, var(--dropdown-toggle-color, #292929));
     }
 
     &:focus {
@@ -162,8 +157,8 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
 }
 
 .dropdown-select-container.dropdown-open {
-  .dropdown-toggle {
-    &:before {
+  .dropdown-select-menu-toggle {
+    &::before {
       transform: rotate(-135deg);
     }
   }

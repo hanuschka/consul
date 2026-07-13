@@ -25,6 +25,18 @@ module Adm::Projekts::EvaluationHelper
     EVALUATION_SHARED_SECTIONS
   end
 
+  def evaluation_section_tabs(section_key)
+    key = section_key.to_s
+
+    if EVALUATION_SHARED_SECTIONS.include?(key)
+      "stats ai"
+    elsif EVALUATION_AI_SECTIONS.include?(key)
+      "ai"
+    else
+      "stats"
+    end
+  end
+
   def evaluation_chart_colors(values, base_colors = nil)
     source = base_colors.presence || CHART_PALETTE
 

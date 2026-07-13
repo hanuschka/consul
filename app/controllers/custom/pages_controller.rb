@@ -136,11 +136,12 @@ class PagesController < ApplicationController
       @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
       @commentable = @projekt_phase
-      @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
-      set_comment_flags(@comment_tree.comments)
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
+      else
+        @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+        set_comment_flags(@comment_tree.comments)
       end
     end
 
@@ -191,7 +192,7 @@ class PagesController < ApplicationController
                                  .base_selection
                                  .with_min_supports(min_supports)
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
       else
         if params[:search].present?
@@ -325,7 +326,7 @@ class PagesController < ApplicationController
 
       if params[:section] == "results" && can?(:read_results, @budget)
         @investments = Budget::Result.new(@budget, @budget.heading).investments
-      elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget) && can_view_stats_section?(params[:section], @projekt_phase)
+      elsif params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @budget) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
         @investments = @budget.investments
       else
@@ -489,10 +490,15 @@ class PagesController < ApplicationController
     def can_view_stats_section?(section, phase)
       return true if current_user&.administrator? || current_user&.projekt_manager?
 
-      if section == "key_metrics"
+      case section
+      when "key_metrics"
         phase.feature?("general.public_kpi_stats")
-      elsif section == "analysis"
+      when "analysis"
         phase.feature?("general.public_ai_stats")
+      when "evaluation"
+        helpers.footer_evaluation_tab_public_visible?(phase, "stats")
+      when "ai_evaluation"
+        helpers.footer_evaluation_tab_public_visible?(phase, "ai")
       else
         false
       end

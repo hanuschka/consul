@@ -508,7 +508,8 @@
 }
 
 .phase-evaluation-section.-hidden-from-public {
-  opacity: 0.5;
+  opacity: 0.45;
+  filter: grayscale(1);
 }
 
 .phase-evaluation-section:has(.footer-evaluation-section-toggle .custom-switch:hover) {

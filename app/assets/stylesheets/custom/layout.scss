@@ -75,7 +75,7 @@ body>header, .wrapper>header, .top-bar {
 }
 
 .top-bar {
-  background: #32837d !important;
+  background: white !important;
 }
 
 .header-right-group {
@@ -94,7 +94,7 @@ body>header, .wrapper>header, .top-bar {
     line-height: 1em;
     text-transform: uppercase;
     font-size: 28px;
-    color: $white;
+    color: $dark;
     margin-bottom: 1em;
     margin-top: 1em;
 
@@ -196,7 +196,7 @@ ul.tabs li.tabs-title {
 
   .sign-up-button {
     margin-right: 1rem;
-    background-color: $accent;
+    background-color: var(--brand-color);
     color: $white !important;
   }
 }
@@ -205,7 +205,7 @@ ul.tabs li.tabs-title {
   .account-buttons {
     display: flex;
     flex-direction: column;
-    margin-right: 50px;
+    margin-right: 15px;
   }
 
   .sign-in-button, .sign-up-button {

@@ -108,6 +108,9 @@ application.register("adm-nested-fields", AdmNestedFieldsController)
 import AdmChartsController from "./adm/charts_controller"
 application.register("adm-charts", AdmChartsController)
 
+import AdmChartRangeController from "./adm/chart_range_controller"
+application.register("adm-chart-range", AdmChartRangeController)
+
 
 import CheckAllController from "./check_all_controller"
 application.register("check-all", CheckAllController)

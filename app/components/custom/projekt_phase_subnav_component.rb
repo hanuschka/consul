@@ -1,6 +1,6 @@
 class ProjektPhaseSubnavComponent < ApplicationComponent
   delegate :current_user, :can?, :phase_icon_class,
-    :footer_evaluation_tab_visible?, :footer_evaluation_tab_public_visible?,
+    :footer_evaluation_tab_public_visible?, :footer_evaluation_tab_has_content?,
     :footer_evaluation_tab_disabled?, to: :helpers
 
   def initialize(projekt_phase)
@@ -10,7 +10,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
   def render?
     return false if !can?(:read_stats, @projekt_phase)
 
-    admin_or_projekt_manager? || any_tab_public_visible?
+    projekt_phase_subnav_items.size > 1
   end
 
   def projekt_phase_subnav_items
@@ -24,18 +24,18 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       }
     ]
 
-    if footer_evaluation_tab_visible?(@projekt_phase, "stats")
+    if show_evaluation_tab?("stats")
       items << {
         text: t("custom.projekt_phases.subnav.evaluation"),
         icon: "fa-chart-bar",
         url: url_to_footer_tab(section: "evaluation", remote: true),
         active: params[:section] == "evaluation",
         section: "evaluation",
-        hide_on_preview: !footer_evaluation_tab_public_visible?(@projekt_phase, "stats")
+        hidden_from_public: evaluation_tab_hidden_from_public?("stats")
       }
     end
 
-    if footer_evaluation_tab_visible?(@projekt_phase, "ai")
+    if show_evaluation_tab?("ai")
       items << {
         text: t("custom.projekt_phases.subnav.ai_evaluation"),
         icon: "fa-magic",
@@ -43,7 +43,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         active: params[:section] == "ai_evaluation",
         disabled: footer_evaluation_tab_disabled?(@projekt_phase, "ai"),
         section: "ai_evaluation",
-        hide_on_preview: !footer_evaluation_tab_public_visible?(@projekt_phase, "ai")
+        hidden_from_public: evaluation_tab_hidden_from_public?("ai")
       }
     end
 
@@ -52,8 +52,18 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
   private
 
-    def admin_or_projekt_manager?
-      current_user&.administrator? || current_user&.projekt_manager?
+    def can_manage_projekt?
+      can?(:edit, @projekt_phase.projekt)
+    end
+
+    def show_evaluation_tab?(tab)
+      return false if !footer_evaluation_tab_has_content?(@projekt_phase, tab)
+
+      footer_evaluation_tab_public_visible?(@projekt_phase, tab) || can_manage_projekt?
+    end
+
+    def evaluation_tab_hidden_from_public?(tab)
+      !footer_evaluation_tab_public_visible?(@projekt_phase, tab)
     end
 
     def any_tab_public_visible?

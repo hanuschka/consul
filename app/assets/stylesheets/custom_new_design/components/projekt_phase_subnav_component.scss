@@ -35,5 +35,9 @@
       white-space: nowrap;
       cursor: default;
     }
+
+    .projekt-phase-subnav-item.-hidden-from-public {
+      opacity: 0.5;
+    }
   }
 }

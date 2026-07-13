@@ -1,15 +1,17 @@
 <section class="sidebar-card js-sidebar-card <%= class_name %>" >
   <% if @title.present? %>
-    <button class="sidebar-card--title js-sidebar-card--title" aria-expanded="false">
-      <div class="d-flex sidebar-card--title-inner">
-        <i class="fas sidebar--icon fa-<%= @icon_name %>"></i>
-        <%= content_tag heading_tag, @title, class: "sidebar-card--title-text" %>
-      </div>
-      <div class="icon-chevron-down sidebar-collapse-icon"></div>
-    </button>
+    <%= content_tag heading_tag, class: "sidebar-card--title-heading" do %>
+      <span class="sidebar-card--title js-sidebar-card--title" aria-controls="<%= content_id %>">
+        <span class="sidebar-card--title-inner">
+          <i class="fas sidebar--icon fa-<%= @icon_name %>"></i>
+          <span class="sidebar-card--title-text"><%= @title %></span>
+        </span>
+        <span class="icon-chevron-down sidebar-collapse-icon"></span>
+      </span>
+    <% end %>
   <% end %>
 
-  <div class="sidebar-card--content">
+  <div class="sidebar-card--content" id="<%= content_id %>">
     <% if @description.present? %>
       <div class="sidebar-card--description">
         <%= @description %>

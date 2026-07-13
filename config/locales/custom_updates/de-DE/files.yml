@@ -149,3 +149,10 @@ de:
     fullsize_preview:
       button: Vorschau
       close: Schließen
+    show:
+      untitled: Ohne Titel
+      view_details: Details anzeigen
+      close: Schließen
+      loading: Wird geladen …
+      open_file: Datei öffnen
+      download: Herunterladen

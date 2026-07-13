@@ -16,8 +16,23 @@ en:
             An API endpoint is set but no custom model. The AI will not work until you set a custom model.
           inline: >
             Required because an API endpoint is set. The AI will not work until you set a custom model.
+        model_required:
+          inline: >
+            Required because a provider other than the default is selected. Please choose a model for this provider.
+        api_key_required:
+          title: API key required
+          body: >
+            No custom API key is stored. The default API key from demokratie.today does not work with a custom API endpoint or a provider other than the default. Please store your own API key.
+          inline: >
+            Required because a custom API endpoint or a provider other than the default is used. Please store your own API key.
       index:
         title: AI settings
+        default_model_info:
+          title: Default model in use
+          body_html: >
+            No model is configured for the selected AI provider. The default model %{model} is used automatically.
+        default_api_key_info: >
+          No custom API key is stored. The default API key from demokratie.today is used.
         intro: >
           Here you configure the connection to an AI provider. The platform uses AI features for, among other things, proposal generation, vote analysis, automatic content generation, and semantic analysis. Choose a provider and a model, and enter your API key to enable these features. Caution: changes to these settings require technical knowledge. Incorrect configurations can cause AI features to stop working correctly. When in doubt, contact demokratie.today.
         setting_name: Setting

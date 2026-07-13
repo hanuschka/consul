@@ -1,0 +1,24 @@
+<div class="files-detail files-detail--image">
+  <div class="files-detail--media">
+    <% if detail.image_display_url.present? %>
+      <img
+        src="<%= detail.image_display_url %>"
+        alt="<%= detail.display_title %>"
+        class="files-detail--media-image"
+      >
+    <% else %>
+      <div class="files-detail--media-placeholder">
+        <i class="fa fa-image"></i>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="files-detail--info">
+    <h2 class="files-detail--title"><%= detail.display_title %></h2>
+    <p class="files-detail--filename"><%= detail.filename %></p>
+
+    <%= render "adm/file_manager/asset_facts", detail: detail %>
+
+    <%= render "adm/file_manager/asset_actions", detail: detail %>
+  </div>
+</div>

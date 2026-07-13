@@ -109,7 +109,7 @@
               ),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page,
-              placeholder_hint: show_admin_controls? ? t("custom.projekts.banner_upload.min_image_size_hint", width: 590, height: 355) : nil
+              placeholder_hint: show_admin_controls? ? banner_image_size_hint : nil
             )
           ) %>
         <% end %>
@@ -120,10 +120,26 @@
           <div
             data-update-url="<%= update_image_adm_projekts_projekt_path(@projekt) %>"
             data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"
+            data-generate-url="<%= generate_image_adm_projekts_projekt_path(@projekt) %>"
+            data-generate-status-url="<%= generate_image_status_adm_projekts_projekt_path(@projekt) %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
+            data-placeholder-hint="<%= banner_image_size_hint %>"
             data-delete-confirm="<%= t('custom.accessibility.banner-image.delete-confirm') %>"
             class="projekt-image-upload-wrapper js-projekt-image-uploader">
+            <div
+              class="projekt-banner-upload-error js-projekt-banner-upload-error"
+              role="alert"
+              aria-label="<%= t('custom.accessibility.banner-image.upload-error-label') %>"
+              hidden
+            >
+              <i class="fas fa-exclamation-circle projekt-banner-upload-error--icon" aria-hidden="true"></i>
+              <span
+                class="projekt-banner-upload-error--message js-projekt-banner-upload-error-message"
+                data-fallback-text="<%= t('custom.projekts.banner_upload.upload_failed') %>"
+                data-generate-failed-text="<%= t('custom.projekts.banner_upload.generate_failed') %>"
+              ></span>
+            </div>
             <%= banner_image %>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
             <div
@@ -139,6 +155,7 @@
                 class="projekt-banner-upload-progress--message js-projekt-banner-upload-progress-message"
                 data-uploading-text="<%= t('custom.projekts.banner_upload.uploading') %>"
                 data-processing-text="<%= t('custom.projekts.banner_upload.processing') %>"
+                data-generating-text="<%= t('custom.projekts.banner_upload.generating') %>"
               >
                 <%= t('custom.projekts.banner_upload.uploading') %>
               </div>
@@ -151,6 +168,22 @@
               <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
                 <i class="fas fa-pencil-alt"></i>
               </label>
+            <% end %>
+            <%= studio_rich_tooltip(
+              title: generate_image_tooltip_title,
+              text: generate_image_tooltip_text,
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-generate-button js-projekt-banner--image-generate-button js-studio-hide-on-preview"
+                      aria-label="<%= t('custom.accessibility.banner-image.generate-aria-label') %>"
+                      <%= "disabled" if !ai_available? %>
+                      tabindex="-1">
+                <i class="fas fa-magic"></i>
+              </button>
+            <% end %>
+            <% if ai_available? %>
+              <%= render Projekts::BannerImageGenerateModalComponent.new(custom_page: @custom_page) %>
             <% end %>
             <input
               id="projektImageUploadInput"

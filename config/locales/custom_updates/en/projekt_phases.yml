@@ -5,6 +5,7 @@ en:
         key_metrics: Key Metrics
         analysis: Analysis
         evaluation: Evaluation
+        ai_evaluation: AI Evaluation
         full_stats: Full Evaluation
         overview:
           proposal_phase: Proposals
@@ -170,6 +171,7 @@ en:
           phase_not_current: This project phase has not yet started
           poll_expired: This poll has already expired
           poll_not_current: This poll has not yet started
+          poll_not_live: This poll is not yet available.
           only_admins: Participation is limited to admin users.
           no_registered_address: A registered address could not be assigned to your account. Please update your account.
           only_specific_registered_address_groupings: Participation is limited to another area.

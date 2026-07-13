@@ -13,43 +13,32 @@ class ProjektPhaseStats::LabelSentimentQuery < ApplicationService
   end
 
   def labels_data
-    labels = @projekt_phase.projekt_labels.includes(:translations)
+    labels = @projekt_phase.projekt_labels.includes(:translations).to_a
     resource_ids = resources.select(:id)
 
-    label_names = []
-    label_counts = []
+    counts_by_label_id = ProjektLabeling.where(
+      labelable_type: labelable_type,
+      labelable_id: resource_ids
+    ).group(:projekt_label_id).count
 
-    labels.each do |label|
-      count = ProjektLabeling.where(
-        projekt_label_id: label.id,
-        labelable_type: labelable_type,
-        labelable_id: resource_ids
-      ).count
-
-      label_names << label.name
-      label_counts << count
-    end
-
-    { labels: label_names, values: label_counts }
+    {
+      labels: labels.map(&:name),
+      values: labels.map { |label| counts_by_label_id[label.id] || 0 }
+    }
   end
 
   def sentiments_data
-    sentiments = @projekt_phase.sentiments.includes(:translations)
+    sentiments = @projekt_phase.sentiments.includes(:translations).to_a
     resource_ids = resources.select(:id)
 
-    sentiment_names = []
-    sentiment_counts = []
-    sentiment_colors = []
+    counts_by_sentiment_id =
+      resource_class.where(id: resource_ids).group(:sentiment_id).count
 
-    sentiments.each do |sentiment|
-      count = resource_class.where(id: resource_ids, sentiment_id: sentiment.id).count
-
-      sentiment_names << sentiment.name
-      sentiment_counts << count
-      sentiment_colors << sentiment.color
-    end
-
-    { labels: sentiment_names, values: sentiment_counts, colors: sentiment_colors }
+    {
+      labels: sentiments.map(&:name),
+      values: sentiments.map { |sentiment| counts_by_sentiment_id[sentiment.id] || 0 },
+      colors: sentiments.map(&:color)
+    }
   end
 
   def labels_title

@@ -25,8 +25,6 @@ application.register("adm--ai-question-row", AdmAiQuestionRowController)
 import AdmMenuPopoverController from "./adm/menu_popover_controller"
 application.register("adm--menu-popover", AdmMenuPopoverController)
 
-import AdmEvaluationPhaseTabsController from "./adm/evaluation_phase_tabs_controller"
-application.register("adm--evaluation-phase-tabs", AdmEvaluationPhaseTabsController)
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
@@ -110,6 +108,9 @@ application.register("adm-nested-fields", AdmNestedFieldsController)
 import AdmChartsController from "./adm/charts_controller"
 application.register("adm-charts", AdmChartsController)
 
+import AdmChartRangeController from "./adm/chart_range_controller"
+application.register("adm-chart-range", AdmChartRangeController)
+
 
 import CheckAllController from "./check_all_controller"
 application.register("check-all", CheckAllController)
@@ -156,9 +157,6 @@ application.register("shared--auto-submit-form", SharedAutoSubmitFormController)
 import SharedCollapseController from "./shared/collapse_controller"
 application.register("shared--collapse", SharedCollapseController)
 
-import AdmProjektImportController from "./adm/projekt_import_controller"
-application.register("adm-projekt-import", AdmProjektImportController)
-
 import AdmMasterportalImportPanelController from "./adm/masterportal_import_panel_controller"
 application.register("adm--masterportal-import-panel", AdmMasterportalImportPanelController)
 
@@ -198,6 +196,9 @@ application.register("files--filter-bar", FilesFilterBarController)
 import FilesUploadController from "./files/upload_controller"
 application.register("files--upload", FilesUploadController)
 
+import FilesAssetModalController from "./files/asset_modal_controller"
+application.register("files--asset-modal", FilesAssetModalController)
+
 import AdmAiActionButtonController from "./adm/ai_action_button_controller"
 application.register("adm--ai-action-button", AdmAiActionButtonController)
 
@@ -209,6 +210,9 @@ application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
 import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
 application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)
+
+import AdmEvaluationTabsController from "./adm/evaluation_tabs_controller"
+application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 
 import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
 application.register("projekt-imports--from-file", ProjektImportsFromFileController)
@@ -230,3 +234,6 @@ application.register("shared--image-cropper", SharedImageCropperController)
 
 import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
 application.register("shared--anchor-highlight", SharedAnchorHighlightController)
+
+import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
+application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)

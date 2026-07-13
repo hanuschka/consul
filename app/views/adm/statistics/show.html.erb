@@ -10,7 +10,7 @@
       <span class="material-symbols-outlined" aria-hidden="true">group</span>
       <h3><%= t("adm.statistics.show.sections.users") %></h3>
     </div>
-    <div class="adm-dashboard__stats">
+    <div class="adm-dashboard__stats mb-4">
 
       <div class="adm-stat-card">
         <div class="adm-stat-card__header">
@@ -143,15 +143,53 @@
 
     </div>
 
-    <% if @chart_users[:values].any?(&:positive?) %>
+    <% if @chart_users_range || @chart_users.values.any? { |series| series[:values].any?(&:positive?) } %>
       <div class="adm-stats-charts adm-stats-charts--single">
-        <div class="adm-chart-card">
-          <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
-          <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:values].sum) %></div>
+        <div class="adm-chart-card" data-controller="adm-chart-range">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div class="adm-chart-card__title"><%= t("adm.statistics.show.charts.users_new") %></div>
+            <div class="adm-chart-card__controls d-md-flex align-items-md-center justify-content-md-end flex-md-wrap gap-2 ml-auto">
+              <div class="kern-filter-chips -small -stack-mobile" role="group" aria-label="<%= t("adm.statistics.show.charts.granularity_label") %>">
+                <% %w[daily weekly monthly yearly].each do |granularity| %>
+                  <button type="button"
+                          class="kern-filter-chip <%= "-active" if granularity == "monthly" %>"
+                          data-action="adm-charts#setGranularity"
+                          data-granularity="<%= granularity %>"
+                          aria-pressed="<%= granularity == "monthly" %>">
+                    <%= t("adm.statistics.show.charts.granularity_#{granularity}") %>
+                  </button>
+                <% end %>
+              </div>
+              <span class="kern-filter-chips__divider d-none d-md-inline" aria-hidden="true">|</span>
+              <%= form_tag adm_statistics_path, method: :get,
+                    class: "kern-filter-chips -small -stack-mobile d-flex align-items-center",
+                    data: { "adm-chart-range-target": "form",
+                            action: "change->adm-chart-range#rangeChanged" } do %>
+                <%= date_field_tag :start_date,
+                      @chart_users_range ? @chart_users_range.first.iso8601 : params[:start_date],
+                      max: Date.current.iso8601, class: "kern-filter-chip",
+                      "aria-label": t("adm.statistics.show.charts.range_from"),
+                      data: { "adm-chart-range-target": "startInput" } %>
+                <span aria-hidden="true">&ndash;</span>
+                <%= date_field_tag :end_date,
+                      @chart_users_range ? @chart_users_range.last.iso8601 : params[:end_date],
+                      max: Date.current.iso8601, class: "kern-filter-chip",
+                      "aria-label": t("adm.statistics.show.charts.range_to"),
+                      data: { "adm-chart-range-target": "endInput" } %>
+                <%= link_to t("adm.statistics.show.charts.range_reset"), adm_statistics_path,
+                      class: "kern-filter-chip", hidden: @chart_users_range.nil?,
+                      data: { "adm-chart-range-target": "resetLink",
+                              action: "adm-chart-range#reset" } %>
+              <% end %>
+            </div>
+          </div>
+          <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_users[:monthly][:values].sum) %></div>
           <div class="adm-chart-card__canvas-wrapper"
                data-area-chart
-               data-chart-labels="<%= @chart_users[:labels].to_json %>"
-               data-chart-values="<%= @chart_users[:values].to_json %>"
+               data-adm-chart-range-target="wrapper"
+               data-chart-labels="<%= @chart_users[:monthly][:labels].to_json %>"
+               data-chart-values="<%= @chart_users[:monthly][:values].to_json %>"
+               data-chart-datasets="<%= @chart_users.to_json %>"
                data-chart-color="#6BA3D6">
             <canvas></canvas>
           </div>

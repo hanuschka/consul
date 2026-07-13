@@ -6,6 +6,27 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     "ProjektPhase::CommentPhase" => :collect_comment_stats
   }.freeze
 
+  BUDGET_SEGMENTS = [
+    { key: "accepting",
+      metrics: %w[visible_proposals_count proposal_authors_count comments_count reported_proposals_count],
+      demographics: true },
+    { key: "reviewing",
+      metrics: %w[pending_proposals_count approved_proposals_count rejected_proposals_count],
+      demographics: false },
+    { key: "selecting",
+      metrics: %w[unique_supporters_count total_votes_count online_votes_count offline_votes_count],
+      demographics: true },
+    { key: "publishing_prices",
+      metrics: %w[selected_proposals_count not_selected_proposals_count],
+      demographics: false },
+    { key: "balloting",
+      metrics: %w[unique_voters_count total_votes_count weighted_votes_total weighted_votes_online weighted_votes_offline],
+      demographics: true },
+    { key: "finished",
+      metrics: %w[winners_count],
+      demographics: true }
+  ].freeze
+
   def initialize(projekt)
     @projekt = projekt
   end
@@ -83,8 +104,10 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
 
     top_proposals = assign_ranks(top_proposals)
 
+    proposals_count = proposals.count
+
     {
-      proposals_count: proposals.count,
+      proposals_count: proposals_count,
       proposal_authors_count: proposals.select(:author_id).distinct.count,
       supports_count: total_votes,
       online_votes_count: online_votes,
@@ -92,7 +115,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       unique_supporters_count: supports.select(:voter_id).distinct.count,
       comments_count: comments.count,
       unique_participants: count_proposal_participants(proposals, supports, comments),
-      avg_supports_per_proposal: safe_average(total_votes, proposals.count),
+      avg_supports_per_proposal: safe_average(total_votes, proposals_count),
       top_proposals: top_proposals
     }
   end
@@ -107,13 +130,48 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       voter_type: "User"
     )
 
+    top_investments = investments
+      .order(cached_votes_up: :desc)
+      .limit(20)
+      .map do |investment|
+        {
+          id: investment.id,
+          title: investment.title,
+          description: investment.description.to_s.truncate(300),
+          supports: investment.cached_votes_up.to_i + investment.physical_votes.to_i,
+          winner: investment.winner?,
+          selected: investment.selected?
+        }
+      end
+
     {
       investments_count: investments.count,
       supports_count: supports.count,
       unique_participants: supports.select(:voter_id).distinct.count,
       heading_price: phase.budget.heading&.price,
-      currency_symbol: phase.budget.currency_symbol
+      currency_symbol: phase.budget.currency_symbol,
+      top_investments: top_investments,
+      budget_segments: collect_budget_segments(phase)
     }
+  end
+
+  def collect_budget_segments(phase)
+    BUDGET_SEGMENTS.map do |segment|
+      metrics = segment[:metrics].map do |metric_key|
+        { key: metric_key, value: phase.stats["#{segment[:key]}_#{metric_key}"].to_i }
+      end
+
+      next nil if metrics.all? { |metric| metric[:value].zero? }
+
+      data = { key: segment[:key], metrics: metrics }
+
+      if segment[:demographics]
+        data[:user_segments] =
+          ProjektPhaseStats::UserSegmentsQuery.call(phase.segment_stats(segment[:key]))
+      end
+
+      data
+    end.compact
   end
 
   def collect_voting_stats(phase)
@@ -135,9 +193,10 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     voters_count = poll.voters.count
     visible_comments = poll.comments.where(hidden_at: nil)
 
-    questions_data = poll.questions.order(:given_order).map do |question|
-      build_question_data(question, voters_count)
-    end
+    questions_data = poll.questions
+      .includes(:votation_type, :question_answers)
+      .order(:given_order)
+      .map { |question| build_question_data(question, voters_count) }
 
     comment_entries = visible_comments
       .order(created_at: :asc)
@@ -148,15 +207,15 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       id: poll.id,
       name: poll.name,
       voters_count: voters_count,
-      questions_count: poll.questions.count,
-      open_text_count: visible_comments.count,
+      questions_count: questions_data.size,
+      open_text_count: comment_entries.size,
       open_text_entries: comment_entries,
       questions: questions_data
     }
   end
 
   def build_question_data(question, voters_count)
-    answers_data = question.question_answers.order(:given_order).map do |answer|
+    answers_data = question.question_answers.map do |answer|
       answer_count = answer.total_votes
 
       {
@@ -254,9 +313,16 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
   def collect_comment_stats(phase)
     comments = phase.comments.where(hidden_at: nil)
 
+    top_comments = comments
+      .order(:created_at)
+      .limit(30)
+      .includes(:translations)
+      .map { |comment| { id: comment.id, body: comment.body.to_s.truncate(400) } }
+
     {
       comments_count: comments.count,
-      unique_commenters: comments.select(:user_id).distinct.count
+      unique_commenters: comments.select(:user_id).distinct.count,
+      top_comments: top_comments
     }
   end
 

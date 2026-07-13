@@ -1,6 +1,8 @@
 ProjektStudio.Banner = {
   initialized: false,
   COUNTER_VISIBILITY_THRESHOLD: 55,
+  GENERATION_POLL_INTERVAL: 3000,
+  GENERATION_POLL_MAX_ATTEMPTS: 100,
 
   // Mirror of MultilineSubtitleNormalizer regexes (lib/multiline_subtitle_normalizer.rb).
   // Kept in sync as a defense-in-depth pre-clean for pasted text before it hits the backend.
@@ -22,6 +24,8 @@ ProjektStudio.Banner = {
     $document.on("input", ".js-projekt-banner--edit-field-content [contenteditable]", this.handleInput.bind(this));
     $document.on("change", ".js-projekt-banner--image-upload-input", this.updateTitleImage.bind(this));
     $document.on("click", ".js-projekt-banner--image-delete-button", this.deleteTitleImage.bind(this));
+    $document.on("click", ".js-projekt-banner--image-generate-button", this.openGenerateImageModal.bind(this));
+    $document.on("click", ".js-projekt-banner-generate-submit", this.submitGenerateImage.bind(this));
   },
 
   turnOnTextEdit(e) {
@@ -226,6 +230,8 @@ ProjektStudio.Banner = {
     const imagePreview = container.querySelector(".js-projekt-image-upload-preview")
     const previewUrl = URL.createObjectURL(file)
 
+    this.clearUploadError(container)
+
     imagePreview.src = previewUrl
     imagePreview.classList.add("-image-set")
 
@@ -245,6 +251,9 @@ ProjektStudio.Banner = {
       .then(() => {
         this.setUploadProgressMessage(container, "processing")
         this.handleUploadSuccess(container, imagePreview, previewUrl)
+      })
+      .catch((xhr) => {
+        this.handleUploadError(container, imagePreview, previewUrl, xhr)
       })
       .always(() => {
         this.hideUploadProgress(container)
@@ -273,9 +282,12 @@ ProjektStudio.Banner = {
 
     if (!message) return
 
-    const text = state === "processing"
-      ? message.dataset.processingText
-      : message.dataset.uploadingText
+    const texts = {
+      uploading: message.dataset.uploadingText,
+      processing: message.dataset.processingText,
+      generating: message.dataset.generatingText
+    }
+    const text = texts[state] || message.dataset.uploadingText
 
     if (text) message.textContent = text
   },
@@ -290,10 +302,52 @@ ProjektStudio.Banner = {
     const glightbox = container.querySelector("a.glightbox");
     if (glightbox) glightbox.setAttribute("href", previewUrl);
 
-    const deleteButton = container.querySelector(".js-projekt-banner--image-delete-button");
-    if (deleteButton) deleteButton.classList.remove("d-none");
+    this.toggleImageActionButtons(container, true);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
+  },
+
+  toggleImageActionButtons(container, imagePresent) {
+    const deleteButton = container.querySelector(".js-projekt-banner--image-delete-button");
+
+    // The generate button stays visible whether or not an image is set, so an
+    // existing banner can be regenerated; only the delete button toggles.
+    if (deleteButton) deleteButton.classList.toggle("d-none", !imagePresent);
+  },
+
+  handleUploadError(container, imagePreview, previewUrl, xhr) {
+    imagePreview.classList.remove("-image-set")
+    imagePreview.src = ""
+    URL.revokeObjectURL(previewUrl)
+
+    this.showUploadError(container, this.extractUploadErrorMessage(container, xhr))
+  },
+
+  extractUploadErrorMessage(container, xhr) {
+    const response = xhr && xhr.responseJSON
+
+    if (response && response.errors && response.errors.length > 0) return response.errors.join(" ")
+
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message")
+    return messageElement ? messageElement.dataset.fallbackText : ""
+  },
+
+  showUploadError(container, message) {
+    const errorElement = container.querySelector(".js-projekt-banner-upload-error")
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message")
+
+    if (!errorElement || !messageElement) return
+
+    messageElement.textContent = message
+    errorElement.hidden = false
+  },
+
+  clearUploadError(container) {
+    const errorElement = container.querySelector(".js-projekt-banner-upload-error")
+
+    if (!errorElement) return
+
+    errorElement.hidden = true
   },
 
   resolveResourceImageEls(container) {
@@ -321,6 +375,10 @@ ProjektStudio.Banner = {
       imagePreview.src = "";
     }, { once: true });
 
+    this.applyResourceImageSrc(mainImage, blurImage, previewUrl);
+  },
+
+  applyResourceImageSrc(mainImage, blurImage, imageUrl) {
     mainImage.style.width = "100%";
     mainImage.style.height = "100%";
     mainImage.style.objectFit = "cover";
@@ -330,8 +388,8 @@ ProjektStudio.Banner = {
     blurImage.removeAttribute("srcset");
     blurImage.removeAttribute("sizes");
 
-    mainImage.src = previewUrl;
-    blurImage.src = previewUrl;
+    mainImage.src = imageUrl;
+    blurImage.src = imageUrl;
   },
 
   async deleteTitleImage(e) {
@@ -353,17 +411,144 @@ ProjektStudio.Banner = {
     if (resourceImage) {
       const iconClass = container.dataset.placeholderIconClass || "fa-image";
       const ariaLabel = container.dataset.placeholderAriaLabel || "";
+      const hint = container.dataset.placeholderHint || "";
+      const hintHtml = hint
+        ? `<div class="resource-image--missing-image-placeholder-hint">${hint}</div>`
+        : "";
       resourceImage.innerHTML =
         `<div class="resource-image--missing-image-placeholder" role="img" aria-label="${ariaLabel}">` +
           `<i class="resource-image--missing-image-placeholder-icon fa ${iconClass}" aria-hidden="true"></i>` +
+          hintHtml +
         `</div>`;
     }
 
     const glightbox = container.querySelector("a.glightbox");
     if (glightbox) glightbox.removeAttribute("href");
 
-    button.classList.add("d-none");
+    this.toggleImageActionButtons(container, false);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
+  },
+
+  openGenerateImageModal(e) {
+    e.preventDefault();
+
+    App.SharedModal.open("projektBannerImageGenerateModal");
+    setTimeout(() => {
+      $(".js-projekt-banner-generate-prompt").trigger("focus");
+    }, 200);
+  },
+
+  submitGenerateImage(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const container = button.closest(".js-projekt-image-uploader");
+    if (!container) return;
+
+    const prompt = container.querySelector(".js-projekt-banner-generate-prompt").value.trim();
+    const useContentCheckbox = container.querySelector(".js-projekt-banner-generate-use-content");
+    const useContent = useContentCheckbox ? useContentCheckbox.checked : false;
+
+    App.SharedModal.closeById("projektBannerImageGenerateModal");
+
+    this.startImageGeneration(container, { prompt: prompt, use_projekt_content: useContent });
+  },
+
+  startImageGeneration(container, payload) {
+    const generateButton = container.querySelector(".js-projekt-banner--image-generate-button");
+    if (generateButton) generateButton.disabled = true;
+
+    this.clearUploadError(container);
+    this.showGenerationProgress(container);
+
+    App.Ajax
+      .request({
+        url: container.dataset.generateUrl,
+        method: "POST",
+        dataType: "json",
+        data: payload
+      })
+      .then(() => {
+        this.pollGenerationStatus(container, 0);
+      })
+      .catch(() => {
+        this.handleGenerationError(container);
+      });
+  },
+
+  showGenerationProgress(container) {
+    const overlay = container.querySelector(".js-projekt-banner-upload-progress");
+
+    if (!overlay) return
+
+    this.setUploadProgressMessage(container, "generating");
+    overlay.hidden = false;
+  },
+
+  pollGenerationStatus(container, attempts) {
+    if (attempts >= this.GENERATION_POLL_MAX_ATTEMPTS) {
+      this.handleGenerationError(container);
+      return
+    }
+
+    App.Ajax
+      .request({
+        url: container.dataset.generateStatusUrl,
+        method: "GET",
+        dataType: "json"
+      })
+      .then((response) => this.handleGenerationStatus(container, response, attempts))
+      .catch(() => this.scheduleNextGenerationPoll(container, attempts));
+  },
+
+  scheduleNextGenerationPoll(container, attempts) {
+    setTimeout(() => this.pollGenerationStatus(container, attempts + 1), this.GENERATION_POLL_INTERVAL);
+  },
+
+  handleGenerationStatus(container, response, attempts) {
+    if (response.status === "completed" && response.image_url) {
+      this.handleGenerationSuccess(container, response.image_url);
+    }
+    else if (response.status === "failed") {
+      this.handleGenerationError(container);
+    }
+    else {
+      this.scheduleNextGenerationPoll(container, attempts);
+    }
+  },
+
+  handleGenerationSuccess(container, imageUrl) {
+    const { mainImage, blurImage } = this.resolveResourceImageEls(container);
+
+    if (mainImage && blurImage) {
+      this.applyResourceImageSrc(mainImage, blurImage, imageUrl);
+    }
+
+    const glightbox = container.querySelector("a.glightbox");
+    if (glightbox) glightbox.setAttribute("href", imageUrl);
+
+    this.hideUploadProgress(container);
+    this.resetGenerateButton(container);
+    this.toggleImageActionButtons(container, true);
+
+    if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
+  },
+
+  handleGenerationError(container) {
+    this.hideUploadProgress(container);
+    this.resetGenerateButton(container);
+    this.showUploadError(container, this.generationErrorMessage(container));
+  },
+
+  resetGenerateButton(container) {
+    const generateButton = container.querySelector(".js-projekt-banner--image-generate-button");
+
+    if (generateButton) generateButton.disabled = false;
+  },
+
+  generationErrorMessage(container) {
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message");
+    return messageElement ? messageElement.dataset.generateFailedText : "";
   }
 };

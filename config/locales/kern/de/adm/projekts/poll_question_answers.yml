@@ -12,6 +12,7 @@ de:
           success: Antwort wurde erfolgreich gelöscht.
           error: Antworten können nicht gelöscht werden, da bereits Stimmen abgegeben wurden.
         form:
+          title_label: Antwort
           image_label: Bilder
           documents_label: Dokumente
           video_label: Videos

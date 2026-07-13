@@ -11,23 +11,24 @@
     .projekt-phase-subnav--items {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 5px;
+      gap: 0;
       background: $projekt-subnav-track-bg;
-      border-radius: 12px;
+      border: 1px solid $medium-gray-2;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .projekt-phase-subnav-item {
       display: inline-flex;
       align-items: center;
       margin: 0;
-      padding: 8px 16px;
+      padding: 8px 45px;
       border: none;
-      border-radius: 8px;
       font-size: 15px;
       font-weight: 500;
       line-height: 1;
       color: $medium-gray-1;
+      background-color: $light-gray-2;
       white-space: nowrap;
       cursor: pointer;
       transition: background-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
@@ -43,17 +44,15 @@
       }
 
       &.-active {
-        color: $dt-base;
-        background-color: #ffffff;
+        color: black;
+        background-color: $medium-gray-2;
         font-weight: 600;
         border: none;
-        border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 5px rgba(0, 0, 0, 0.08);
       }
 
       &.-active:hover {
-        color: $dt-base;
-        background-color: #ffffff;
+        color: black;
+        background-color: color-mix(in srgb, #{$medium-gray-2} 88%, black);
       }
 
       &:focus-visible {

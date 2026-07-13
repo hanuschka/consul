@@ -9,7 +9,7 @@
   <%
     phase_data = evaluation_row.data || {}
     palette = evaluation_phase_palette[projekt_phase.type]
-    selection = PhaseEvaluationVisibility::Selector.for_user(current_user, projekt_phase)
+    selection = PhaseEvaluationVisibility::Selector.for_phase(projekt_phase)
     is_admin_or_pm = footer_admin_or_projekt_manager?
     processing = evaluation_row.processing?
     failed = evaluation_row.failed?
@@ -17,10 +17,12 @@
     if only_tab == "ai"
       regenerate_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
       regenerate_label = t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button")
+      regenerate_tooltip = t("adm.projekts.projekts.evaluation.regenerate_ai_stats_tooltip")
       generated_at_iso = phase_data["ai_generated_at"]
     else
       regenerate_url = regenerate_phase_regular_stats_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
       regenerate_label = t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button")
+      regenerate_tooltip = t("adm.projekts.projekts.evaluation.regenerate_regular_stats_tooltip")
       generated_at_iso = phase_data["regular_generated_at"]
     end
 
@@ -78,14 +80,17 @@
               </span>
             <% end %>
 
-            <a
-              href="<%= regenerate_url %>"
-              class="button hollow projekt-footer-evaluation__regen-button js-projekt-footer-phase-regenerate-trigger"
-              tabindex="-1"
-            >
-              <i class="fas fa-sync-alt" aria-hidden="true"></i>
-              <span><%= regenerate_label %></span>
-            </a>
+            <rich-tooltip delay="300" trigger-only shadow="heavy" size="big">
+              <a
+                href="<%= regenerate_url %>"
+                class="button hollow projekt-footer-evaluation__regen-button js-projekt-footer-phase-regenerate-trigger"
+                tabindex="-1"
+              >
+                <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                <span><%= regenerate_label %></span>
+              </a>
+              <template><%= regenerate_tooltip %></template>
+            </rich-tooltip>
           </div>
         <% end %>
 

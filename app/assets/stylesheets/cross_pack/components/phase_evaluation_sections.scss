@@ -1,5 +1,19 @@
-.projekt-footer-evaluation .phase-header {
+@import "cross_pack/1_colors";
+
+.projekt-footer-evaluation .phase-icon-title {
   display: none;
+}
+
+.projekt-footer-evaluation .phase-header {
+  padding: 1.5rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+  box-shadow: var(--er-shadow-md);
+}
+
+.projekt-footer-evaluation .card {
+  background-color: var(--er-surface) !important;
 }
 
 .projekt-evaluation-icon-material {
@@ -20,6 +34,11 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1rem;
+
+  .button {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
 }
 
 .projekt-footer-evaluation__generated-at {
@@ -114,7 +133,7 @@
   --er-text: #0f172a;
   --er-text-secondary: #475569;
   --er-text-muted: #94a3b8;
-  --er-border: #e2e8f0;
+  --er-border: #{$soft-border};
   --er-border-light: #f1f5f9;
   --er-radius: 8px;
   --er-radius-lg: 12px;
@@ -189,12 +208,44 @@
   align-items: center;
 }
 
+.meta-item {
+  text-align: center;
+  padding: 0.5rem 0;
+
+  .meta-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--er-primary);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta-label {
+    font-size: 0.68rem;
+    color: var(--er-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+}
+
+.meta-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--er-border);
+}
+
 .evaluation-export-menu {
   --dropdown-toggle-radius: var(--er-radius, 8px);
   --dropdown-toggle-padding: 12px 40px 12px 16px;
   --dropdown-item-padding: 12px 20px;
   --dropdown-item-gap: 0.5rem;
   --dropdown-item-color: var(--er-text, #0f172a);
+}
+
+.evaluation-export-menu .dropdown-select-menu-toggle {
+  border: 1px solid $soft-border;
 }
 
 :is(.adm-projekt-evaluation-report, .projekt-footer-evaluation) .card {

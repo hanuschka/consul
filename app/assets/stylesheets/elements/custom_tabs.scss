@@ -7,6 +7,10 @@ custom-tabs {
   display: block;
 }
 
+custom-tabs.-single-tab [role="tablist"] {
+  display: none;
+}
+
 .custom-tabs--list {
   display: flex;
   gap: 0.5rem;

@@ -37,6 +37,23 @@ module Adm::Projekts::EvaluationHelper
     end
   end
 
+  def evaluation_visibility_subgroups(available_sections)
+    [
+      {
+        key: "stats",
+        icon: "monitoring",
+        label_key: "adm.projekts.projekts.evaluation.view_tabs.stats",
+        sections: available_sections - EVALUATION_AI_SECTIONS
+      },
+      {
+        key: "ai",
+        icon: "auto_awesome",
+        label_key: "adm.projekts.projekts.evaluation.view_tabs.ai",
+        sections: available_sections & EVALUATION_AI_SECTIONS
+      }
+    ]
+  end
+
   def evaluation_chart_colors(values, base_colors = nil)
     source = base_colors.presence || CHART_PALETTE
 

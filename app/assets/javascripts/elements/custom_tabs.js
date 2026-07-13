@@ -52,8 +52,45 @@
       this.activeTab = this.initialTab();
       this.bindEvents();
       this.applyActiveTab();
+      this.updateTabBarVisibility();
+      this.observePreviewMode();
 
       this.initialized = true;
+    }
+
+    disconnectedCallback() {
+      if (this.previewObserver) this.previewObserver.disconnect();
+    }
+
+    // A lone tab is pointless chrome: when only one tab is visible (the others
+    // are absent or hidden, e.g. studio preview mode strips public-only tabs),
+    // collapse the tablist so its single content panel shows straight away.
+    updateTabBarVisibility() {
+      const tabs = this.tabs();
+
+      if (!tabs.length) return
+
+      this.classList.remove("-single-tab");
+      const visibleCount = tabs.filter((tab) => tab.getClientRects().length > 0).length;
+      this.classList.toggle("-single-tab", visibleCount <= 1);
+    }
+
+    // Preview mode toggles a body class that hides js-studio-hide-on-preview
+    // tabs via CSS, so the visible-tab count changes without any DOM mutation
+    // inside this element — recompute only when that state actually flips.
+    observePreviewMode() {
+      this.previewActive = document.body.classList.contains("-preview-mode");
+      this.previewObserver = new MutationObserver(this.handleBodyMutation.bind(this));
+      this.previewObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    handleBodyMutation() {
+      const previewActive = document.body.classList.contains("-preview-mode");
+
+      if (previewActive === this.previewActive) return
+
+      this.previewActive = previewActive;
+      this.updateTabBarVisibility();
     }
 
     bindEvents() {

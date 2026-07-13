@@ -17,6 +17,9 @@
   //             [active], else the first tab)
   //   param     URL query-string key the active tab is synced into; on load a
   //             matching ?param=value overrides `default`
+  //   all-tabbable  keep every tab a Tab key stop (tabindex=0) instead of the
+  //             default roving-tabindex (only the active tab is a Tab stop,
+  //             arrow keys move between the rest)
   //
   // It fires "custom-tabs:change" (bubbling) with detail { tab, previousTab }
   // on every activation, so consumers react to tab changes without the element
@@ -29,6 +32,7 @@
   const PANEL_TAG = "custom-tab-panel";
   const CHANGE_EVENT = "custom-tabs:change";
   const NAV_KEYS = ["ArrowRight", "ArrowLeft", "Home", "End"];
+  const ACTIVATE_KEYS = ["Enter", " "];
 
   let instanceCounter = 0;
 
@@ -52,8 +56,45 @@
       this.activeTab = this.initialTab();
       this.bindEvents();
       this.applyActiveTab();
+      this.updateTabBarVisibility();
+      this.observePreviewMode();
 
       this.initialized = true;
+    }
+
+    disconnectedCallback() {
+      if (this.previewObserver) this.previewObserver.disconnect();
+    }
+
+    // A lone tab is pointless chrome: when only one tab is visible (the others
+    // are absent or hidden, e.g. studio preview mode strips public-only tabs),
+    // collapse the tablist so its single content panel shows straight away.
+    updateTabBarVisibility() {
+      const tabs = this.tabs();
+
+      if (!tabs.length) return
+
+      this.classList.remove("-single-tab");
+      const visibleCount = tabs.filter((tab) => tab.getClientRects().length > 0).length;
+      this.classList.toggle("-single-tab", visibleCount <= 1);
+    }
+
+    // Preview mode toggles a body class that hides js-studio-hide-on-preview
+    // tabs via CSS, so the visible-tab count changes without any DOM mutation
+    // inside this element — recompute only when that state actually flips.
+    observePreviewMode() {
+      this.previewActive = document.body.classList.contains("-preview-mode");
+      this.previewObserver = new MutationObserver(this.handleBodyMutation.bind(this));
+      this.previewObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    handleBodyMutation() {
+      const previewActive = document.body.classList.contains("-preview-mode");
+
+      if (previewActive === this.previewActive) return
+
+      this.previewActive = previewActive;
+      this.updateTabBarVisibility();
     }
 
     bindEvents() {
@@ -151,6 +192,14 @@
       const tab = event.target.closest(TAB_TAG);
 
       if (!tab || !this.contains(tab)) return
+
+      if (ACTIVATE_KEYS.includes(event.key)) {
+        event.preventDefault();
+        this.activate(this.tabId(tab));
+
+        return
+      }
+
       if (!NAV_KEYS.includes(event.key)) return
 
       event.preventDefault();
@@ -183,12 +232,14 @@
     }
 
     applyActiveTab() {
+      const allTabbable = this.hasAttribute("all-tabbable");
+
       this.tabs().forEach((tab) => {
         const active = this.tabId(tab) === this.activeTab;
 
         tab.classList.toggle("-active", active);
         tab.setAttribute("aria-selected", active ? "true" : "false");
-        tab.setAttribute("tabindex", active ? "0" : "-1");
+        tab.setAttribute("tabindex", active || allTabbable ? "0" : "-1");
       });
 
       this.panels().forEach((panel) => {

@@ -29,6 +29,9 @@ application.register("adm--menu-popover", AdmMenuPopoverController)
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
 
+import AdmVisibilityAutosaveController from "./adm/visibility_autosave_controller"
+application.register("adm--visibility-autosave", AdmVisibilityAutosaveController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 

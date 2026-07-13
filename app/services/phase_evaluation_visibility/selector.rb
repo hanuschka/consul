@@ -1,9 +1,5 @@
 class PhaseEvaluationVisibility::Selector
-  def self.for_user(user, projekt_phase)
-    if user && (user.administrator? || user.projekt_manager?)
-      return PhaseEvaluationVisibility::AdminSelector.new
-    end
-
+  def self.for_phase(projekt_phase)
     visibility = projekt_phase.projekt_phase_evaluation_visibility
     return PhaseEvaluationVisibility::EmptySelector.new if visibility.blank?
 

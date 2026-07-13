@@ -206,12 +206,21 @@
   <% end %>
 
   <% eval_summary = phase["evaluation_summary"] || {} %>
-  <% if eval_summary["body"].present? %>
+  <% if eval_summary["body"].present? && show_section.call("ai_summary") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("ai_summary") %>"><% end %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_summary"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="ai_summary"
+    >
     <div class="ai-summary" style="background:<%= accent_light %>;border:1px solid <%= accent %>">
       <div class="ai-summary-stripe" style="background:<%= accent %>"></div>
       <div class="ai-summary-title"><%= eval_summary["title"] %></div>
       <div class="ai-summary-body"><%= sanitize(eval_summary["body"], tags: %w[strong em b i]) %></div>
     </div>
+    </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% if show_section.call("key_findings") %>

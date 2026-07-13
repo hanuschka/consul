@@ -9,29 +9,27 @@
     gap: 12px;
 
     .projekt-phase-subnav--items {
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      background: $projekt-subnav-track-bg;
-      border: 1px solid $medium-gray-2;
-      border-radius: 8px;
-      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      border-bottom: 1px solid $border-color;
     }
 
     .projekt-phase-subnav-item {
       display: inline-flex;
       align-items: center;
-      margin: 0;
-      padding: 8px 45px;
+      margin: 0 0 -1px;
+      padding: 12px 25px;
       border: none;
+      border-bottom: 2px solid transparent;
       font-size: 15px;
       font-weight: 500;
       line-height: 1;
       color: $medium-gray-1;
-      background-color: $light-gray-2;
+      background-color: transparent;
       white-space: nowrap;
       cursor: pointer;
-      transition: background-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+      transition: color 150ms ease-out, border-color 150ms ease-out;
 
       a {
         color: inherit;
@@ -40,23 +38,22 @@
 
       &:hover {
         color: $main-text-color;
-        background-color: rgba(255, 255, 255, 0.5);
+        border-bottom-color: $medium-gray-2;
       }
 
       &.-active {
-        color: black;
-        background-color: $medium-gray-2;
+        color: var(--effective-brand-color, #{$dt-base});
+        border-bottom-color: var(--effective-brand-color, #{$dt-base});
         font-weight: 600;
-        border: none;
       }
 
       &.-active:hover {
-        color: black;
-        background-color: color-mix(in srgb, #{$medium-gray-2} 88%, black);
+        color: var(--effective-brand-color, #{$dt-base});
+        border-bottom-color: var(--effective-brand-color, #{$dt-base});
       }
 
       &:focus-visible {
-        outline: 2px solid $focus-outline-color;
+        outline: 3px solid var(--focus-outline-color);
         outline-offset: 2px;
       }
 
@@ -66,7 +63,7 @@
 
         &:hover {
           color: $blue-gray-1;
-          background-color: transparent;
+          border-bottom-color: transparent;
         }
       }
     }

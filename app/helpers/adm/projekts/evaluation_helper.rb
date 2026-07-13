@@ -38,6 +38,8 @@ module Adm::Projekts::EvaluationHelper
   end
 
   def evaluation_visibility_subgroups(available_sections)
+    ai_sections = Ai::Settings.ai_available? ? (available_sections & EVALUATION_AI_SECTIONS) : []
+
     [
       {
         key: "stats",
@@ -49,7 +51,7 @@ module Adm::Projekts::EvaluationHelper
         key: "ai",
         icon: "auto_awesome",
         label_key: "adm.projekts.projekts.evaluation.view_tabs.ai",
-        sections: available_sections & EVALUATION_AI_SECTIONS
+        sections: ai_sections
       }
     ]
   end

@@ -20,7 +20,7 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
-  <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("kpis") %>"><% end %>
+  <% if tabbed %><custom-tab-panel for="stats ai"><% end %>
   <section
     class="phase-evaluation-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
@@ -120,16 +120,20 @@
     <% next if questions.empty? && (poll["open_text_entries"] || []).empty? %>
 
     <div class="poll-block">
-      <div class="poll-header">
-        <% if polls.size > 1 %>
-          <div class="poll-name"><%= poll["name"] %></div>
-        <% end %>
-        <div class="poll-meta">
-          <%= t("adm.projekts.projekts.evaluation.poll_meta",
-            voters: poll["voters_count"].to_i,
-            questions: poll["questions_count"].to_i) %>
+      <% if polls.size > 1 || !tabbed %>
+        <div class="poll-header">
+          <% if polls.size > 1 %>
+            <div class="poll-name"><%= poll["name"] %></div>
+          <% end %>
+          <% if !tabbed %>
+            <div class="poll-meta">
+              <%= t("adm.projekts.projekts.evaluation.poll_meta",
+                voters: poll["voters_count"].to_i,
+                questions: poll["questions_count"].to_i) %>
+            </div>
+          <% end %>
         </div>
-      </div>
+      <% end %>
 
       <% groupings = poll["groupings"] || [] %>
       <% if groupings.any? %>

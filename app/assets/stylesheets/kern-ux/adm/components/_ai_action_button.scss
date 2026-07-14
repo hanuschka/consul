@@ -4,6 +4,22 @@
   gap: 0.75rem;
 }
 
+.adm-ai-action-button.-swap {
+  position: relative;
+}
+
+.adm-ai-action-button.-swap .adm-ai-action-button--button[hidden] {
+  display: inline-flex;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.adm-ai-action-button.-swap .adm-ai-action-button--progress {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+}
+
 .adm-ai-action-button--button {
   display: inline-flex;
   align-items: center;

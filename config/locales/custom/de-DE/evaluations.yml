@@ -91,6 +91,10 @@ de:
           poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
           scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"
           multiple_subtitle: "Mehrfachantworten · %{mentions} Nennungen"
+          question_participation_title: "Teilnahmedaten"
+          question_crossectional_title: "Querschnitt der Abstimmung"
+          answer_no_data: "Keine Daten verfügbar"
+          bundle_question_caption: "Gebündelte Frage"
           open_contributions: Offene Beiträge
           avg_per_proposal: "Ø pro Vorschlag"
           ranking_by_supports: Ranking nach Unterstützungen

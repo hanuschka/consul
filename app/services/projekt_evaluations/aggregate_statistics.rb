@@ -194,7 +194,8 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     visible_comments = poll.comments.where(hidden_at: nil)
 
     questions_data = poll.questions
-      .includes(:votation_type, :question_answers)
+      .root_questions
+      .includes(:votation_type, :question_answers, nested_questions: [:votation_type, :question_answers])
       .order(:given_order)
       .map { |question| build_question_data(question, voters_count) }
 
@@ -207,7 +208,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       id: poll.id,
       name: poll.name,
       voters_count: voters_count,
-      questions_count: questions_data.size,
+      questions_count: questions_data.sum { |q| q[:nested_questions].present? ? q[:nested_questions].size : 1 },
       open_text_count: comment_entries.size,
       open_text_entries: comment_entries,
       questions: questions_data
@@ -228,7 +229,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     total_mentions = answers_data.sum { |a| a[:count] }
     vote_type = question.votation_type&.vote_type
 
-    {
+    data = {
       id: question.id,
       title: question.title,
       vote_type: vote_type,
@@ -240,6 +241,14 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       chart_type: detect_chart_type(vote_type, answers_data),
       verdict: detect_verdict(vote_type, answers_data)
     }
+
+    if question.nested_questions.any?
+      data[:nested_questions] = question.nested_questions.map do |nested_question|
+        build_question_data(nested_question, voters_count)
+      end
+    end
+
+    data
   end
 
   def rating_average(vote_type, answers)

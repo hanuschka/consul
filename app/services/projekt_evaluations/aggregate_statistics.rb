@@ -220,6 +220,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       answer_count = answer.total_votes
 
       {
+        id: answer.id,
         title: answer.title,
         count: answer_count,
         percentage: safe_percentage(answer_count, voters_count)

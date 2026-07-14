@@ -8,9 +8,11 @@ class PollQuestionDetailsQuery < ApplicationQuery
   end
 
   def crossectional
-    answers.map do |answer|
-      { answer: answer.title, groups: crossectional_groups(voter_ids_by_answer[answer.title] || []) }
-    end
+    answers.map { |answer| crossectional_for_answer(answer) }
+  end
+
+  def crossectional_for_answer(answer)
+    { answer: answer.title, groups: crossectional_groups(voter_ids_by_answer[answer.title] || []) }
   end
 
   private

@@ -32,7 +32,6 @@ class Projekt < ApplicationRecord
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
-  has_one :projekt_evaluation_visibility, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy

@@ -22,13 +22,12 @@
       <% color = idx.zero? ? "#059669" : "#DC2626" %>
       <div class="stacked-legend-item">
         <span class="legend-dot" style="background:<%= color %>"></span>
-        <%= answer["title"] %>: <%= answer["count"].to_i %>
+        <span class="stacked-legend-item--text"><%= answer["title"] %>: <%= answer["count"].to_i %></span>
+        <%= render "adm/projekts/projekts/evaluation/poll_answer_detail_actions",
+          answer: answer, exportable: local_assigns.fetch(:exportable, false) %>
       </div>
     <% end %>
   </div>
-
-  <%= render "adm/projekts/projekts/evaluation/poll_question_disclosures",
-    question: question, interactive: local_assigns.fetch(:exportable, false) %>
 
   <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>
 </div>

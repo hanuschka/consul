@@ -3,20 +3,19 @@ class PollQuestionDetailsQuery < ApplicationQuery
     @question = question
   end
 
-  def call
-    {
-      participation: participation,
-      crossectional: crossectional
-    }
+  def participation
+    ProjektPhaseStats::UserSegmentsQuery.call(Poll::Question::Stats.new(question))
+  end
+
+  def crossectional
+    answers.map do |answer|
+      { answer: answer.title, groups: crossectional_groups(voter_ids_by_answer[answer.title] || []) }
+    end
   end
 
   private
 
     attr_reader :question
-
-    def participation
-      ProjektPhaseStats::UserSegmentsQuery.call(Poll::Question::Stats.new(question))
-    end
 
     def answers
       @answers ||= question.question_answers.sort_by(&:given_order)
@@ -35,12 +34,6 @@ class PollQuestionDetailsQuery < ApplicationQuery
         .pluck(:author_id, :answer)
         .group_by { |(_author_id, answer)| answer }
         .transform_values { |pairs| pairs.map(&:first).uniq }
-    end
-
-    def crossectional
-      answers.map do |answer|
-        { answer: answer.title, groups: crossectional_groups(voter_ids_by_answer[answer.title] || []) }
-      end
     end
 
     def crossectional_groups(voter_ids)

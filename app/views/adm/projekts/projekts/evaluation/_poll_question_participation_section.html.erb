@@ -1,7 +1,4 @@
 <%
-  participation = details[:participation] || {}
-  crossectional = details[:crossectional] || []
-
   gender = participation[:gender] || {}
   age = participation[:age] || {}
   geozone = participation[:geozone] || {}
@@ -39,12 +36,9 @@
       colors: evaluation_chart_colors(group[:values] || [])
     }
   end
-
-  accent = evaluation_phase_palette["ProjektPhase::VotingPhase"][:accent]
-  crossectional_present = crossectional.any? { |entry| entry[:groups].any? }
 %>
 
-<div data-section="participation">
+<%= turbo_frame_tag "poll-question-participation-#{question_id}" do %>
   <% if participation_charts.any? %>
     <div class="answer-charts" data-controller="adm-charts">
       <% participation_charts.each do |chart| %>
@@ -65,36 +59,4 @@
   <% else %>
     <div class="answer-detail-empty"><%= t("adm.projekts.projekts.evaluation.answer_no_data") %></div>
   <% end %>
-</div>
-
-<div data-section="crossectional">
-  <% if crossectional_present %>
-    <% crossectional.each do |entry| %>
-      <% next if entry[:groups].none? %>
-      <div class="crossectional-answer">
-        <div class="crossectional-answer--title"><%= entry[:answer] %></div>
-        <% entry[:groups].each do |group| %>
-          <div class="answer-detail-crosstab">
-            <div class="answer-detail-crosstab--question"><%= group[:question] %></div>
-            <% group[:answers].each do |row| %>
-              <div class="answer-detail-bar">
-                <div class="answer-detail-bar--top">
-                  <span class="answer-detail-bar--label"><%= row[:title] %></span>
-                  <span class="answer-detail-bar--value"><%= row[:count] %> &middot; <%= row[:share] %>%</span>
-                </div>
-                <div class="answer-detail-bar--track">
-                  <div
-                    class="answer-detail-bar--fill"
-                    style="width:<%= row[:share] %>%;background:<%= accent %>"
-                  ></div>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  <% else %>
-    <div class="answer-detail-empty"><%= t("adm.projekts.projekts.evaluation.answer_no_data") %></div>
-  <% end %>
-</div>
+<% end %>

@@ -1,27 +1,29 @@
 <% if local_assigns.fetch(:interactive, false) %>
-  <div
-    class="question-disclosures"
-    data-controller="adm--poll-question-details"
-    data-adm--poll-question-details-url-value="<%= poll_question_details_adm_projekts_projekt_path(@projekt, question_id: question["id"]) %>"
-  >
-    <details class="question-disclosure" data-action="toggle->adm--poll-question-details#load">
+  <div class="question-disclosures">
+    <details class="question-disclosure">
       <summary class="question-disclosure--summary">
         <i class="fas fa-chart-pie" aria-hidden="true"></i>
         <span><%= t("adm.projekts.projekts.evaluation.question_participation_title") %></span>
       </summary>
-      <div class="question-disclosure--body" data-adm--poll-question-details-target="participation">
-        <div class="answer-detail-loading"><span class="answer-detail-spinner"></span></div>
-      </div>
+      <%= turbo_frame_tag "poll-question-participation-#{question["id"]}",
+            src: poll_question_participation_adm_projekts_projekt_path(@projekt, question_id: question["id"]),
+            loading: "lazy",
+            class: "question-disclosure--body" do %>
+        <%= render Shared::LoadingSpinnerComponent.new(size: "small") %>
+      <% end %>
     </details>
 
-    <details class="question-disclosure" data-action="toggle->adm--poll-question-details#load">
+    <details class="question-disclosure">
       <summary class="question-disclosure--summary">
         <i class="fas fa-clipboard-list" aria-hidden="true"></i>
         <span><%= t("adm.projekts.projekts.evaluation.question_crossectional_title") %></span>
       </summary>
-      <div class="question-disclosure--body" data-adm--poll-question-details-target="crossectional">
-        <div class="answer-detail-loading"><span class="answer-detail-spinner"></span></div>
-      </div>
+      <%= turbo_frame_tag "poll-question-crossectional-#{question["id"]}",
+            src: poll_question_crossectional_adm_projekts_projekt_path(@projekt, question_id: question["id"]),
+            loading: "lazy",
+            class: "question-disclosure--body" do %>
+        <%= render Shared::LoadingSpinnerComponent.new(size: "small") %>
+      <% end %>
     </details>
   </div>
 <% end %>

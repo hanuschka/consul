@@ -59,7 +59,7 @@
       <% phases.each do |phase| %>
         <%
           phase_id = phase["phase_id"].to_i
-          available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase["phase_type"])
+          available_sections = PdfServices::EvaluationPdfSelection.pdf_available_sections(phase["phase_type"])
         %>
         <div class="pdf-options-phase" data-controller="check-all">
           <label class="pdf-options-phase__toggle">

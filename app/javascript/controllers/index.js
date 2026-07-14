@@ -75,6 +75,9 @@ application.register("table-actions", TableActionsController)
 import MapController from "./map_controller"
 application.register("map", MapController)
 
+import AdmEvaluationHeatmapController from "./adm/evaluation_heatmap_controller"
+application.register("adm--evaluation-heatmap", AdmEvaluationHeatmapController)
+
 import RelatedContentController from "./related_content_controller"
 application.register("related-content", RelatedContentController)
 

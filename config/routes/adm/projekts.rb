@@ -245,8 +245,8 @@ namespace :adm do
       get :report_summary, on: :member
       get "evaluation/:phase_id", on: :member, action: :evaluation_phase,
           as: :evaluation_phase, constraints: { phase_id: /\d+/ }
-      get :poll_question_participation, on: :member
-      get :poll_question_crossectional, on: :member
+      get :poll_answer_participation, on: :member
+      get :poll_answer_crossectional, on: :member
       get :evaluation_visibility, on: :member
       patch :update_evaluation_visibility, on: :member
       patch :toggle_evaluation_section_visibility, on: :member

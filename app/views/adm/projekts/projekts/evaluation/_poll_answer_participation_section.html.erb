@@ -38,7 +38,7 @@
   end
 %>
 
-<%= turbo_frame_tag "poll-question-participation-#{question_id}" do %>
+<%= turbo_frame_tag "poll-answer-participation-#{answer_id}" do %>
   <% if participation_charts.any? %>
     <div class="answer-charts" data-controller="adm-charts">
       <% participation_charts.each do |chart| %>

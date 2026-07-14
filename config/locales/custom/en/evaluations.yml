@@ -89,6 +89,9 @@ en:
           poll_meta: "%{voters} voters · %{questions} questions"
           scale_subtitle: "Scale %{min} to %{max} · n = %{n}"
           multiple_subtitle: "Multiple answers · %{mentions} mentions"
+          question_participation_title: "Participants data"
+          question_crossectional_title: "Crossectional voting"
+          answer_no_data: "No data available"
           open_contributions: Open contributions
           avg_per_proposal: "Avg per proposal"
           ranking_by_supports: Ranking by supports

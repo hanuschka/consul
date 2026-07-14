@@ -33,7 +33,7 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
-    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("kpis") %>"><% end %>
+    <% if tabbed %><custom-tab-panel for="stats ai"><% end %>
     <section
       class="<%= section_klass.call("kpis") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
@@ -271,7 +271,7 @@
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
-  <% if show_section.call("topic_clustering") %>
+  <% if show_section.call("topic_clustering") && evaluation_section_has_data?(phase, "topic_clustering") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("topic_clustering") %>"><% end %>
     <section
       class="<%= section_klass.call("topic_clustering") %>"
@@ -292,7 +292,7 @@
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
-  <% if show_section.call("semantic_clustering") %>
+  <% if show_section.call("semantic_clustering") && evaluation_section_has_data?(phase, "semantic_clustering") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("semantic_clustering") %>"><% end %>
     <section
       class="<%= section_klass.call("semantic_clustering") %>"

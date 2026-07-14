@@ -17,6 +17,7 @@ export default class extends Controller {
     this.charts = []
     this.element.querySelectorAll("[data-area-chart]").forEach(el => this.registerChart(this.initAreaChart(el)))
     this.element.querySelectorAll("[data-bar-chart]").forEach(el => this.registerChart(this.initBarChart(el)))
+    this.element.querySelectorAll("[data-pie-chart]").forEach(el => this.registerChart(this.initPieChart(el)))
 
     this.parentDetails = this.element.closest("details")
     if (this.parentDetails) this.parentDetails.addEventListener("toggle", this.handleDetailsToggle)
@@ -157,6 +158,42 @@ export default class extends Controller {
     })
 
     return chart
+  }
+
+  initPieChart(container) {
+    const canvas = container.querySelector("canvas")
+    if (!canvas) return
+
+    Chart.getChart(canvas)?.destroy()
+
+    const labels = JSON.parse(container.dataset.chartLabels || "[]")
+    const values = JSON.parse(container.dataset.chartValues || "[]")
+    const colors = container.dataset.chartColors
+      ? JSON.parse(container.dataset.chartColors)
+      : ["#6BA3D6", "#E8A87C", "#C9CBCF"]
+    const ctx = canvas.getContext("2d")
+
+    return new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels,
+        datasets: [{ data: values, backgroundColor: colors, borderColor: "#fff", borderWidth: 2 }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom", labels: { color: "#333", boxWidth: 12, padding: 12 } },
+          tooltip: {
+            backgroundColor: "#333",
+            titleColor: "#fff",
+            bodyColor: "#fff",
+            cornerRadius: 4,
+            padding: 10
+          }
+        }
+      }
+    })
   }
 
   initBarChart(container) {

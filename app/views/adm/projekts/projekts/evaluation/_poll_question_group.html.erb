@@ -14,7 +14,12 @@
 %>
 
 <% questions.each do |question| %>
-  <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
-  <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
-    locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
+  <% if (question["nested_questions"] || []).any? %>
+    <%= render partial: "adm/projekts/projekts/evaluation/poll_question_bundle",
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
+  <% else %>
+    <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
+    <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
+  <% end %>
 <% end %>

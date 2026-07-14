@@ -126,6 +126,28 @@ namespace :generate_data do
       ]
     }
 
+    # A bundled question: one DB-level Poll::Question with bundle_question: true
+    # grouping several nested (parent_question_id-linked) sub-questions, exactly
+    # like real bundles created via the poll editor. Exercises the evaluation
+    # report's bundle-grouping path (nested questions rendered under their
+    # parent instead of as flat, unrelated cards).
+    bundle_spec = {
+      title: "Fragenbündel: Naherholung im Stadtpark",
+      questions: [
+        { title: "Wie oft nutzen Sie den Stadtpark aktuell?",
+          type: "unique", options: ["Täglich", "Wöchentlich", "Selten", "Nie"],
+          weights: [3, 5, 4, 2] },
+        { title: "Welche Angebote im Park nutzen Sie am meisten?",
+          type: "multiple", max_votes: 2,
+          options: ["Spielplatz", "Liegewiese", "Sportgeräte", "Gastronomie"],
+          weights: [5, 6, 3, 2] },
+        { title: "Wie bewerten Sie die Aufenthaltsqualität aktuell?",
+          type: "rating_scale", options: ["1", "2", "3", "4", "5"],
+          min_rating_scale_label: "Sehr schlecht", max_rating_scale_label: "Sehr gut",
+          weights: [2, 3, 6, 5, 2] }
+      ]
+    }
+
     comment_phase_bodies = [
       "Die Idee mit den Fahrradstraßen finde ich hervorragend – bitte zügig umsetzen!",
       "Mehr Grünflächen würden dem Stadtklima spürbar helfen.",
@@ -407,26 +429,32 @@ namespace :generate_data do
         6 => [[4, 2], [3, 3], [4, 1, 1], [3, 2, 1], [2, 2, 1, 1]]
       }
 
-      total_answers = 0
-      poll_spec[:questions].each_with_index do |qspec, qi|
+      find_or_create_question = lambda do |qspec, parent_question: nil|
         question = poll.questions.find_by(title: qspec[:title])
 
-        unless question
-          question = Poll::Question.new(poll: poll, author: users.first, title: qspec[:title])
-          question.votation_type = VotationType.new(
-            vote_type: qspec[:type],
-            max_votes: qspec[:max_votes],
-            max_votes_per_answer: qspec[:max_votes_per_answer],
-            min_rating_scale_label: qspec[:min_rating_scale_label],
-            max_rating_scale_label: qspec[:max_rating_scale_label]
-          )
-          question.save!
+        return question if question
 
-          qspec[:options].each_with_index do |option_title, oi|
-            Poll::Question::Answer.create!(question: question, title: option_title, given_order: oi + 1)
-          end
+        question = Poll::Question.new(
+          poll: poll, author: users.first, title: qspec[:title], parent_question_id: parent_question&.id
+        )
+        question.votation_type = VotationType.new(
+          vote_type: qspec[:type],
+          max_votes: qspec[:max_votes],
+          max_votes_per_answer: qspec[:max_votes_per_answer],
+          min_rating_scale_label: qspec[:min_rating_scale_label],
+          max_rating_scale_label: qspec[:max_rating_scale_label]
+        )
+        question.save!
+
+        qspec[:options].each_with_index do |option_title, oi|
+          Poll::Question::Answer.create!(question: question, title: option_title, given_order: oi + 1)
         end
 
+        question
+      end
+
+      total_answers = 0
+      cast_votes = lambda do |question, qspec, qi|
         options = qspec[:options]
         bag = weighted_bag.call(qspec[:weights] || [], options.size)
         voters = users.rotate(qi * 3).first(40)
@@ -467,6 +495,24 @@ namespace :generate_data do
             end
           end
         end
+      end
+
+      poll_spec[:questions].each_with_index do |qspec, qi|
+        question = find_or_create_question.call(qspec)
+        cast_votes.call(question, qspec, qi)
+      end
+
+      bundle_question = poll.questions.find_by(title: bundle_spec[:title])
+      unless bundle_question
+        bundle_question = Poll::Question.create!(
+          poll: poll, author: users.first, title: bundle_spec[:title], bundle_question: true,
+          votation_type: VotationType.new(vote_type: nil)
+        )
+      end
+
+      bundle_spec[:questions].each_with_index do |qspec, qi|
+        question = find_or_create_question.call(qspec, parent_question: bundle_question)
+        cast_votes.call(question, qspec, poll_spec[:questions].size + qi)
       end
 
       poll.questions.flat_map(&:answers).map(&:author).uniq.each do |voter|

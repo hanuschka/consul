@@ -45,6 +45,11 @@ module Adm::Projekts::EvaluationHelper
         any_positive.call(segments["age"]) ||
         any_positive.call(segments["geozone"]) ||
         (segments["individual_groups"] || []).any? { |group| any_positive.call(group) }
+    when "topic_clustering", "semantic_clustering"
+      clustering = (phase["ai_stats"] || {})[section_key.to_s] || {}
+      categories = clustering.is_a?(Array) ? clustering : clustering.values
+
+      categories.any?
     else
       true
     end

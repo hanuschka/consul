@@ -43,6 +43,7 @@ $er-max-tabs: 8;
 
   .measure-grid {
     gap: 0.5rem;
+    position: relative;
   }
 
   .phase-header {
@@ -455,7 +456,7 @@ $er-max-tabs: 8;
 }
 
 .kern-container.adm-evaluation-phase-container {
-  max-width: min(1280px, 80%);
+  max-width: 1050px;
 }
 
 .adm-evaluation-card__kpi {

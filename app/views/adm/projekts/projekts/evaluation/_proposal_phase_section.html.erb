@@ -333,4 +333,19 @@
     </section>
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
+
+  <% if only_tab.blank? && !pdf_mode_local && show_section.call("heatmap") && evaluation_section_has_data?(phase, "heatmap") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("heatmap") %>"><% end %>
+    <section
+      class="<%= section_klass.call("heatmap") %>"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:heatmap"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="heatmap"
+    >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "heatmap", phase_id: phase["phase_id"], checked: !section_hidden.call("heatmap"), toggle_url: visibility_toggle_url if visibility_toggle %>
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_heatmap",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+    <% if tabbed %></custom-tab-panel><% end %>
+  <% end %>
 </div>

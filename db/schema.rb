@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_14_131016) do
+ActiveRecord::Schema.define(version: 2026_07_14_152236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2152,16 +2152,6 @@ ActiveRecord::Schema.define(version: 2026_07_14_131016) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
-  create_table "projekt_evaluation_visibilities", force: :cascade do |t|
-    t.bigint "projekt_id", null: false
-    t.boolean "show_project_summary", default: false, null: false
-    t.boolean "show_settings", default: false, null: false
-    t.boolean "show_phase_summaries", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["projekt_id"], name: "index_projekt_evaluation_visibilities_on_projekt_id", unique: true
-  end
-
   create_table "projekt_evaluations", force: :cascade do |t|
     t.bigint "projekt_id", null: false
     t.jsonb "data", default: {}
@@ -2341,6 +2331,7 @@ ActiveRecord::Schema.define(version: 2026_07_14_131016) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "show_budget_segments", default: true, null: false
+    t.boolean "show_heatmap", default: false, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
   end
 

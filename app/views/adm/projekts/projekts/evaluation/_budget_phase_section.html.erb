@@ -247,4 +247,18 @@
     </section>
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
+
+  <% if only_tab.blank? && !pdf_mode_local && show_section.call("heatmap") && evaluation_section_has_data?(phase, "heatmap") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("heatmap") %>"><% end %>
+    <section
+      class="phase-evaluation-section"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:heatmap"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="heatmap"
+    >
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_heatmap",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
+    </section>
+    <% if tabbed %></custom-tab-panel><% end %>
+  <% end %>
 </div>

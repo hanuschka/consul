@@ -82,17 +82,17 @@ de:
           contributions: Beiträge
           supports: Unterstützungen
           proposals: Vorschläge
-          investments: Investitionen
+          investments: Vorschläge
           comments: Kommentare
           commenters: Kommentierende
           questions: Fragen
-          other_questions_group: Weitere Fragen
           polls: Abstimmungen
           poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
           scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"
           multiple_subtitle: "Mehrfachantworten · %{mentions} Nennungen"
           question_participation_title: "Teilnahmedaten"
           question_crossectional_title: "Querschnitt der Abstimmung"
+          answer_detail_close: "Schließen"
           answer_no_data: "Keine Daten verfügbar"
           bundle_question_caption: "Gebündelte Frage"
           open_contributions: Offene Beiträge
@@ -109,6 +109,9 @@ de:
           sentiments_distribution: Sentiment-Verteilung
           user_segments_title: Nutzersegmente
           geozone_distribution: Stadtteile / Bezirke
+          heatmap_title: Geografische Verteilung
+          heatmap_subtitle: Wo sich die Beiträge auf der Karte befinden
+          heatmap_empty: Keine Standortdaten verfügbar
           key_findings: Zentrale Erkenntnisse
           ai_questions_heading: KI-Fragen an diese Phase
           sources_label:
@@ -134,6 +137,7 @@ de:
               label_sentiment: Label- und Sentiment-Verteilung
               user_segments: Nutzersegmente
               budget_segments: Kennzahlen nach Phase
+              heatmap: Heatmap
               key_findings: Zentrale Erkenntnisse
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
@@ -151,6 +155,7 @@ de:
               label_sentiment: Verteilung der Beiträge nach Themenlabel und Stimmungslage.
               user_segments: Aufteilung der Teilnehmenden nach demografischen oder Interessensgruppen.
               budget_segments: Detaillierte Kennzahlen und Verteilungen je Bürgerhaushalts-Phase (Einreichung, Prüfung, Unterstützung, Abstimmung, Abschluss).
+              heatmap: Karte mit der geografischen Verteilung der Beiträge.
               key_findings: Wichtigste Erkenntnisse aus der KI-Auswertung.
               topic_clustering: Beiträge gruppiert nach inhaltlichen Themenclustern.
               semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.

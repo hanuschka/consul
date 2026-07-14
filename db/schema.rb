@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_08_120000) do
+ActiveRecord::Schema.define(version: 2026_07_14_090000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3424,6 +3424,8 @@ ActiveRecord::Schema.define(version: 2026_07_08_120000) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "signature_id"
+    t.boolean "conditional", default: false, null: false
+    t.index ["conditional"], name: "index_votes_on_conditional", where: "conditional"
     t.index ["signature_id"], name: "index_votes_on_signature_id"
     t.index ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope"
     t.index ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope"

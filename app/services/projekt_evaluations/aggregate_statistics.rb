@@ -78,7 +78,8 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     supports = ActsAsVotable::Vote.where(
       votable_type: "Proposal",
       votable_id: proposals.select(:id),
-      voter_type: "User"
+      voter_type: "User",
+      conditional: false
     )
     comments = Comment.where(
       commentable_type: "Proposal",
@@ -127,7 +128,8 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     supports = ActsAsVotable::Vote.where(
       votable_type: "Budget::Investment",
       votable_id: investments.select(:id),
-      voter_type: "User"
+      voter_type: "User",
+      conditional: false
     )
 
     top_investments = investments

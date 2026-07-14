@@ -9,7 +9,9 @@
             src: poll_question_participation_adm_projekts_projekt_path(@projekt, question_id: question["id"]),
             loading: "lazy",
             class: "question-disclosure--body" do %>
-        <%= render Shared::LoadingSpinnerComponent.new(size: "small") %>
+        <div class="question-disclosure--loading">
+          <%= render Shared::SpinnerComponent.new(size: :large) %>
+        </div>
       <% end %>
     </details>
 
@@ -22,7 +24,9 @@
             src: poll_question_crossectional_adm_projekts_projekt_path(@projekt, question_id: question["id"]),
             loading: "lazy",
             class: "question-disclosure--body" do %>
-        <%= render Shared::LoadingSpinnerComponent.new(size: "small") %>
+        <div class="question-disclosure--loading">
+          <%= render Shared::SpinnerComponent.new(size: :large) %>
+        </div>
       <% end %>
     </details>
   </div>

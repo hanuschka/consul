@@ -135,29 +135,8 @@
         </div>
       <% end %>
 
-      <% groupings = poll["groupings"] || [] %>
-      <% if groupings.any? %>
-        <% groupings.each do |group| %>
-          <% group_question_ids = Array(group["question_ids"]).map(&:to_i) %>
-          <% group_questions = questions.select { |q| group_question_ids.include?(q["id"].to_i) } %>
-          <% next if group_questions.empty? %>
-
-          <div class="poll-question-group">
-            <div class="er-section-header">
-              <div class="er-section-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-                <i class="fas fa-layer-group" aria-hidden="true"></i>
-              </div>
-              <span class="er-section-title"><%= group["label"] %></span>
-            </div>
-
-            <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
-              locals: { questions: group_questions, accent: accent, accent_light: accent_light, exportable: local_assigns.fetch(:exportable, false) } %>
-          </div>
-        <% end %>
-      <% else %>
-        <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
-          locals: { questions: questions, accent: accent, accent_light: accent_light, exportable: local_assigns.fetch(:exportable, false) } %>
-      <% end %>
+      <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
+        locals: { questions: questions, accent: accent, accent_light: accent_light, exportable: local_assigns.fetch(:exportable, false) } %>
 
       <% entries = poll["open_text_entries"] || [] %>
       <% if entries.any? && show_section.call("open_responses") %>

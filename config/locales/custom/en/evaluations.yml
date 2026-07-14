@@ -80,17 +80,17 @@ en:
           contributions: Contributions
           supports: Supports
           proposals: Proposals
-          investments: Investments
+          investments: Proposals
           comments: Comments
           commenters: Commenters
           questions: Questions
-          other_questions_group: Other questions
           polls: Polls
           poll_meta: "%{voters} voters · %{questions} questions"
           scale_subtitle: "Scale %{min} to %{max} · n = %{n}"
           multiple_subtitle: "Multiple answers · %{mentions} mentions"
           question_participation_title: "Participants data"
           question_crossectional_title: "Crossectional voting"
+          answer_detail_close: "Close"
           answer_no_data: "No data available"
           bundle_question_caption: "Bundled question"
           open_contributions: Open contributions
@@ -107,6 +107,9 @@ en:
           sentiments_distribution: Sentiment distribution
           user_segments_title: User segments
           geozone_distribution: City districts / zones
+          heatmap_title: Geographic distribution
+          heatmap_subtitle: Where contributions are located on the map
+          heatmap_empty: No location data available
           key_findings: Key findings
           ai_questions_heading: Ask AI about this phase
           sources_label:
@@ -132,6 +135,7 @@ en:
               label_sentiment: Label and sentiment
               user_segments: User segments
               budget_segments: Metrics by phase
+              heatmap: Heatmap
               key_findings: Key findings
               topic_clustering: Topic groups
               semantic_clustering: Sentiment analysis
@@ -149,6 +153,7 @@ en:
               label_sentiment: Distribution of contributions by topic label and sentiment.
               user_segments: Breakdown of participants by demographic or interest segment.
               budget_segments: Detailed metrics and distributions for each participatory-budget phase (submission, review, support, voting, results).
+              heatmap: Map showing the geographic distribution of contributions.
               key_findings: Highlights of the most important insights surfaced by the AI.
               topic_clustering: Contributions grouped into thematic clusters.
               semantic_clustering: Sentiment-based grouping of contributions.

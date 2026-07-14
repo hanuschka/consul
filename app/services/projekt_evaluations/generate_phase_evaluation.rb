@@ -66,7 +66,6 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
 
   def build_regular_data(base)
     base.merge(
-      stats: enrich_phase_stats(base),
       full_stats: ProjektPhaseStats::FullStatsCollector.call(@projekt_phase),
       regular_generated_at: Time.current.iso8601
     )
@@ -115,23 +114,6 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
       ai_stats: @projekt_phase.ai_stats,
       ai_stats_refreshed_at: @projekt_phase.ai_stats_refreshed_at&.iso8601
     }
-  end
-
-  def enrich_phase_stats(phase)
-    stats = phase[:stats] || {}
-    return stats if phase[:phase_type] != "ProjektPhase::VotingPhase"
-
-    stats.merge(
-      polls: (stats[:polls] || []).map { |poll| enrich_poll_with_groupings(poll) }
-    )
-  end
-
-  def enrich_poll_with_groupings(poll)
-    questions = poll[:questions] || []
-    return poll if questions.empty?
-
-    groupings = ProjektEvaluations::GroupPollQuestions.call(questions)
-    poll.merge(groupings: groupings)
   end
 
   def generate_phase_evaluation_summary(phase)

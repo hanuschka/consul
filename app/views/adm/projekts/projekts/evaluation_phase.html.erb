@@ -1,5 +1,7 @@
 <%
   phase = @phase_row.data || {}
+  stats = phase["stats"] || {}
+  poll_based = (stats["polls"] || []).any?
   color = evaluation_phase_palette[phase["phase_type"]]
   partial = evaluation_phase_section_partial[phase["phase_type"]]
   status_url = phase_evaluation_status_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
@@ -100,27 +102,37 @@
       </div>
 
       <div class="adm-evaluation-view-tabs__actions">
-        <%= kern_link_button(
-          evaluation_visibility_adm_projekts_projekt_path(@projekt),
-          text: t("adm.projekts.projekts.evaluation.overview.action_visibility"),
-          icon: "visibility",
-          style: :secondary,
-          class: "kern-btn--compact"
-        ) %>
+        <% if poll_based %>
+          <div class="poll-meta">
+            <%= t("adm.projekts.projekts.evaluation.poll_meta",
+              voters: stats["participants_count"].to_i,
+              questions: stats["questions_count"].to_i) %>
+          </div>
+        <% end %>
 
-        <rich-tooltip delay="500" trigger-only shadow="heavy">
-          <a
-            href="<%= regular_stats_url %>"
-            class="kern-btn kern-btn--secondary kern-btn--compact"
-            data-adm--evaluation-tabs-target="regenerateButton"
-            data-action="click->adm--phase-regenerate#start"
-          >
-            <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">autorenew</span>
-            <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            <span class="kern-label" data-adm--evaluation-tabs-target="regenerateLabel"><%= t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button") %></span>
-          </a>
-          <template><%= t("adm.projekts.projekts.evaluation.regenerate_tooltip") %></template>
-        </rich-tooltip>
+        <div class="adm-evaluation-view-tabs__actions-buttons">
+          <%= kern_link_button(
+            evaluation_visibility_adm_projekts_projekt_path(@projekt),
+            text: t("adm.projekts.projekts.evaluation.overview.action_visibility"),
+            icon: "visibility",
+            style: :secondary,
+            class: "kern-btn--compact"
+          ) %>
+
+          <rich-tooltip delay="500" trigger-only shadow="heavy">
+            <a
+              href="<%= regular_stats_url %>"
+              class="kern-btn kern-btn--secondary kern-btn--compact"
+              data-adm--evaluation-tabs-target="regenerateButton"
+              data-action="click->adm--phase-regenerate#start"
+            >
+              <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">autorenew</span>
+              <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <span class="kern-label" data-adm--evaluation-tabs-target="regenerateLabel"><%= t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button") %></span>
+            </a>
+            <template><%= t("adm.projekts.projekts.evaluation.regenerate_tooltip") %></template>
+          </rich-tooltip>
+        </div>
       </div>
       </div>
     <% end %>

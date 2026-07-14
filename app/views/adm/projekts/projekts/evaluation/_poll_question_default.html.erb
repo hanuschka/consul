@@ -7,7 +7,7 @@
   max_answer_count = 1 if max_answer_count.zero?
 %>
 
-<div class="card">
+<div class="card poll-question-card--full">
   <div class="card-title"><%= question["title"] %></div>
   <div class="card-subtitle">
     <% if is_scale && answers.any? %>
@@ -52,6 +52,9 @@
       </div>
     <% end %>
   <% end %>
+
+  <%= render "adm/projekts/projekts/evaluation/poll_question_disclosures",
+    question: question, interactive: local_assigns.fetch(:exportable, false) %>
 
   <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>
 </div>

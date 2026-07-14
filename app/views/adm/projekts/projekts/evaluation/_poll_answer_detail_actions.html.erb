@@ -39,11 +39,13 @@
         >
           <i class="fas fa-times" aria-hidden="true"></i>
         </button>
-        <%= turbo_frame_tag "poll-answer-participation-#{answer_id}" do %>
-          <div class="answer-detail-loading">
-            <%= render Shared::SpinnerComponent.new(size: :large) %>
-          </div>
-        <% end %>
+        <div class="adm-poll-answer-modal--body">
+          <%= turbo_frame_tag "poll-answer-participation-#{answer_id}" do %>
+            <div class="answer-detail-loading">
+              <%= render Shared::SpinnerComponent.new(size: :large) %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
     </span>
 
@@ -78,11 +80,13 @@
         >
           <i class="fas fa-times" aria-hidden="true"></i>
         </button>
-        <%= turbo_frame_tag "poll-answer-crossectional-#{answer_id}" do %>
-          <div class="answer-detail-loading">
-            <%= render Shared::SpinnerComponent.new(size: :large) %>
-          </div>
-        <% end %>
+        <div class="adm-poll-answer-modal--body">
+          <%= turbo_frame_tag "poll-answer-crossectional-#{answer_id}" do %>
+            <div class="answer-detail-loading">
+              <%= render Shared::SpinnerComponent.new(size: :large) %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
     </span>
   </span>

@@ -54,6 +54,7 @@
       App.SessionTimeoutWarning.initialize();
       App.MobileFixedBottomActionComponentCustom.initialize();
       App.NotifyReviewers.initialize();
+      App.EvaluationVisibilityToggle.initialize();
       App.LoaderSpinner.initialize();
       App.AccountUsernameEditComponent.initialize();
     }

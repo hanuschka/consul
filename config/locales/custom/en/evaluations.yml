@@ -39,6 +39,15 @@ en:
           regenerate_phase_button: Regenerate phase stats
           regenerate_regular_stats_button: Regenerate statistics
           regenerate_ai_stats_button: Regenerate AI analysis
+          regenerate_ai_stats_tooltip: >
+            Re-runs the AI analysis for this phase — the summary, tone, key
+            findings and topic clustering are generated afresh from the phase's
+            current contributions. This calls the language model and can take a
+            moment; the previous AI analysis is overwritten.
+          regenerate_regular_stats_tooltip: >
+            Recalculates this phase's statistics — participation counts,
+            timelines and demographic breakdowns — from the current data. No AI
+            is involved and the previous statistics are overwritten.
           regenerate_phase_confirm: >
             Are you sure you want to regenerate this phase? The existing
             evaluation of this phase will be overwritten.
@@ -218,10 +227,11 @@ en:
             qr_code_label: Open project page
         evaluation_visibility:
           title: Visibility
-          heading: Evaluation section visibility
+          heading: Configure evaluation visibility
           description: >
-            Control which report sections and per-phase sections are shown in
-            the evaluation view and the PDF export.
+            Choose per phase which evaluation sections are shown in the project
+            footer. Hidden sections are not shown to anyone — including admins
+            and project managers.
           report_group_title: Report overview
           report_sections:
             project_summary: Project summary

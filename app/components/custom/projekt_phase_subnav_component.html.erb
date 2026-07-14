@@ -7,18 +7,20 @@
       <% if item[:disabled] %>
         <%= render Shared::AiFeatureTooltipComponent.new(feature_text: item[:text]) do %>
           <span
-            class="projekt-phase-subnav-item -disabled <%= "js-studio-hide-on-preview" if item[:hide_on_preview] %>"
+            class="projekt-phase-subnav-item -disabled <%= "js-studio-hide-on-preview" if item[:hidden_from_public] %>"
             tabindex="-1"
           >
+            <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
             <%= item[:text] %>
           </span>
         <% end %>
       <% else %>
         <custom-tab
           for="<%= item[:section] %>"
-          class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "js-studio-hide-on-preview" if item[:hide_on_preview] %>"
+          class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "-hidden-from-public js-studio-hide-on-preview" if item[:hidden_from_public] %>"
           data-url="<%= item[:url] %>"
         >
+          <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
           <%= item[:text] %>
         </custom-tab>
       <% end %>

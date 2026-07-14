@@ -31,7 +31,6 @@ module ProjektPhaseSettingsHelper
   def footer_evaluation_tab_visible?(projekt_phase, tab)
     return false if !can?(:read_stats, projekt_phase)
     return false if !footer_evaluation_tab_has_content?(projekt_phase, tab)
-    return true if footer_admin_or_projekt_manager?
 
     footer_evaluation_tab_public_visible?(projekt_phase, tab)
   end
@@ -88,7 +87,7 @@ module ProjektPhaseSettingsHelper
 
     tabs = []
     tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
-    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) || key == "kpis" }
+    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
 
     tabs
   end

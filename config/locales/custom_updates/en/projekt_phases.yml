@@ -12,6 +12,8 @@ en:
           budget_phase: Investments
           comment_phase: Comments
           voting_phase: Polls
+      footer_evaluation:
+        section_visibility_toggle_title: Show or hide in the public evaluation
       stats:
         title: Statistics
         banner_title: "Evaluation of %{phase_title}"

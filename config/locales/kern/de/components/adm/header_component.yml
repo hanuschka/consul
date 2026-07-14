@@ -5,6 +5,7 @@ de:
         frontend_link: "Zurück zur Webseite"
         frontend_labels:
           projekt: "Zur Projektseite"
+          projekt_phase: "Zur Projektphase"
           landing_page: "Zur Themenseite"
           deficiency_reports: "Zum Mängelmelder"
           ideas: "Zum Ideenmanagement"

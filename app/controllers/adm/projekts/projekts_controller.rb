@@ -1,7 +1,7 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   PROJEKT_IMAGE_MAX_FILE_SIZE_MB = 40
 
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_question_details, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
   before_action :process_tags, only: [:update]
 
@@ -168,6 +168,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     return redirect_to(evaluation_adm_projekts_projekt_path(@projekt)) if @phase_row.nil?
 
     @active_phase_id = params[:phase_id].to_i
+    @projekt_phase = @projekt.projekt_phases.find_by(id: @active_phase_id)
     @selection = PdfServices::EvaluationPdfSelection.all(@evaluation)
 
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
@@ -177,6 +178,20 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       { name: t("adm.projekts.projekts.evaluation.title"), url: evaluation_adm_projekts_projekt_path(@projekt) },
       { name: (@phase_row.data || {})["phase_title"] }
     ]
+  end
+
+  def poll_question_details
+    authorize [:adm, :projekts, @projekt], :show?
+
+    question = projekt_poll_questions.find_by(id: params[:question_id])
+
+    return head(:not_found) if question.nil?
+
+    details = PollQuestionDetailsQuery.call(question)
+
+    render partial: "adm/projekts/projekts/evaluation/poll_question_detail_sections",
+           locals: { details: details },
+           layout: false
   end
 
   def evaluation_visibility
@@ -529,6 +544,13 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def find_projekt
       @projekt = Projekt.find(params[:id])
+    end
+
+    def projekt_poll_questions
+      Poll::Question
+        .includes(:question_answers, :poll)
+        .joins(poll: :projekt_phase)
+        .where(projekt_phases: { projekt_id: @projekt.id })
     end
 
     def generated_banner_image_url

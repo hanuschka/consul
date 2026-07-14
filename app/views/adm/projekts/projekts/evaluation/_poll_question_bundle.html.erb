@@ -1,9 +1,14 @@
-<div class="poll-question-group">
-  <div class="er-section-header">
-    <div class="er-section-icon" style="background:<%= accent_light %>;color:<%= accent %>">
-      <i class="fas fa-layer-group" aria-hidden="true"></i>
+<div class="poll-question-card--full poll-question-bundle">
+  <div class="poll-question-bundle--header">
+    <div class="poll-question-bundle--icon">
+      <i class="fas fa-object-group" aria-hidden="true"></i>
     </div>
-    <span class="er-section-title"><%= question["title"] %></span>
+    <div class="poll-question-bundle--heading">
+      <div class="poll-question-bundle--caption">
+        <%= t("adm.projekts.projekts.evaluation.bundle_question_caption") %>
+      </div>
+      <div class="poll-question-bundle--title"><%= question["title"] %></div>
+    </div>
   </div>
 
   <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",

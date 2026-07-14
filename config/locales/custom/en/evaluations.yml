@@ -92,6 +92,7 @@ en:
           question_participation_title: "Participants data"
           question_crossectional_title: "Crossectional voting"
           answer_no_data: "No data available"
+          bundle_question_caption: "Bundled question"
           open_contributions: Open contributions
           avg_per_proposal: "Avg per proposal"
           ranking_by_supports: Ranking by supports

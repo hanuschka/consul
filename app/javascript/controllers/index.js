@@ -217,9 +217,6 @@ application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadCon
 import AdmEvaluationTabsController from "./adm/evaluation_tabs_controller"
 application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 
-import AdmPollQuestionDetailsController from "./adm/poll_question_details_controller"
-application.register("adm--poll-question-details", AdmPollQuestionDetailsController)
-
 import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
 application.register("projekt-imports--from-file", ProjektImportsFromFileController)
 

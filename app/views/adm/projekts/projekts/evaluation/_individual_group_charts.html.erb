@@ -1,0 +1,17 @@
+<div class="adm-poll-stats--groups">
+  <% groups.each do |group| %>
+    <div class="phase-segments-card__panel">
+      <div class="phase-segments-card__panel-label"><%= group[:name] %></div>
+      <div
+        class="phase-segments-card__chart"
+        data-bar-chart
+        data-chart-orientation="horizontal"
+        data-chart-labels="<%= group[:values].map { |value| value[:name] }.to_json %>"
+        data-chart-values="<%= group[:values].map { |value| value[:count] }.to_json %>"
+        data-chart-colors="<%= evaluation_chart_colors(group[:values]).to_json %>"
+      >
+        <canvas></canvas>
+      </div>
+    </div>
+  <% end %>
+</div>

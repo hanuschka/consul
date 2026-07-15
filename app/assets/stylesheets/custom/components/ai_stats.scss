@@ -182,6 +182,14 @@
   }
 }
 
+.kpi-stats-pie-grid .participation-stats--individual-groups {
+  grid-column: 1 / -1;
+}
+
+.participation-stats--individual-groups .adm-poll-stats--groups {
+  margin-top: 0;
+}
+
 .budget-phase-stats-section-card {
   background: #fff;
   border-radius: 12px;

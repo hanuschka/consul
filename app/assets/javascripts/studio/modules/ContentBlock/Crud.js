@@ -246,7 +246,9 @@ App.ContentBlockEditor.Crud = {
     newContentBlockContainer.dataset.draft = false
     newContentBlockContainer.classList.remove('-draft')
     this.applyUrlsToWrapper(newContentBlockContainer, params.urls)
-    $(newContentBlockContainer).find(".js-show-content-block-templates").prop("disabled", false)
+    $(newContentBlockContainer)
+      .find(".js-show-content-block-templates, .js-add-blank-content-block")
+      .prop("disabled", false)
   },
 
   applyUrlsToWrapper(contentBlockWrapper, urls) {

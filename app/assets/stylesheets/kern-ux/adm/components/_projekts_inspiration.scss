@@ -1,0 +1,14 @@
+.adm-projekts-inspiration {
+  .kern-container {
+    max-width: none;
+  }
+}
+
+.adm-projekts-inspiration-frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 160px);
+  min-height: 480px;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
+}

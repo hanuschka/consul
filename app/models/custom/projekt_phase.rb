@@ -262,7 +262,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank?
+    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+  end
+
+  def conditional_vote_possible_for?(user)
+    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)

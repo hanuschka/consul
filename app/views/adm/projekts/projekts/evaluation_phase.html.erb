@@ -57,6 +57,29 @@
         role="tablist"
         aria-label="<%= t("adm.projekts.projekts.evaluation.view_tabs.aria_label") %>"
       >
+        <% if @poll_stats_entries.present? %>
+          <custom-tab
+            for="poll_stats"
+            class="adm-evaluation-view-tabs--tab"
+          >
+            <span class="adm-evaluation-view-tabs--tab-label">
+              <span
+                class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+                aria-hidden="true"
+              >insert_chart</span>
+              <i
+                class="adm-evaluation-view-tabs--icon fas fa-chart-pie projekt-evaluation-icon-fa"
+                aria-hidden="true"
+              ></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats") %>
+            </span>
+            <span class="adm-evaluation-view-tabs--date">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">bolt</span>
+              <i class="fas fa-bolt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
+            </span>
+          </custom-tab>
+        <% end %>
         <custom-tab
           for="stats"
           class="adm-evaluation-view-tabs--tab -active"
@@ -125,6 +148,7 @@
               class="kern-btn kern-btn--secondary kern-btn--compact"
               data-adm--evaluation-tabs-target="regenerateButton"
               data-action="click->adm--phase-regenerate#start"
+              data-turbo-prefetch="false"
             >
               <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">autorenew</span>
               <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
@@ -149,5 +173,13 @@
         selection: @selection,
         tabbed: !@phase_row.processing? && !@phase_row.failed? %>
     </div>
+
+    <% if @poll_stats_entries.present? && !@phase_row.processing? && !@phase_row.failed? %>
+      <custom-tab-panel for="poll_stats">
+        <div class="adm-projekt-evaluation-report">
+          <%= render "adm/projekts/projekts/evaluation/poll_stats_tab", entries: @poll_stats_entries %>
+        </div>
+      </custom-tab-panel>
+    <% end %>
   </custom-tabs>
 </div>

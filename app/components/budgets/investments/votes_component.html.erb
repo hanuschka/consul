@@ -50,5 +50,11 @@
     <% end %>
   </div>
 
+  <% if current_user && investment.should_show_votes? && investment.conditional_vote_cast_by?(current_user) %>
+    <div class="callout warning">
+      <%= t("custom.shared.conditional_vote_note") %>
+    </div>
+  <% end %>
+
   <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
 </div>

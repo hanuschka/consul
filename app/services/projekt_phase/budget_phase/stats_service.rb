@@ -82,7 +82,8 @@ class ProjektPhase::BudgetPhase::StatsService
       @supports ||= ActsAsVotable::Vote.where(
         votable_type: "Budget::Investment",
         votable_id:   investments.select(:id),
-        voter_type:   "User"
+        voter_type:   "User",
+        conditional:  false
       )
     end
 

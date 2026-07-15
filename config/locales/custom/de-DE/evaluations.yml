@@ -188,6 +188,11 @@ de:
             aria_label: Ansicht der Auswertung wechseln
             stats: Statistiken
             ai: KI-Analyse
+            poll_stats: Statistik
+            poll_stats_live: Live-Daten
+          poll_stats_tab:
+            empty: Für diese Umfrage liegen noch keine Statistiken vor.
+            channel: Kanal
           report_summary_card:
             title: Bericht-Zusammenfassung
             page_title: Projektauswertung Bericht-Zusammenfassung

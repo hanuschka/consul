@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
 
     BOT_USER_AGENT_REGEX = /
       bot|crawl|spider|slurp|fetch|preview|monitor|
-      google|bing|yandex|baidu|duckduckbot|
+      bing|yandex|baidu|duckduckbot|
       facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|telegram|discordbot|
       curl|wget|python|java\/|go-http-client|httpclient|ruby|okhttp|
       pingdom|uptimerobot|statuscake|newrelic|datadog

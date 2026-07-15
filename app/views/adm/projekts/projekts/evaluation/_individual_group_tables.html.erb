@@ -1,0 +1,31 @@
+<div class="adm-poll-stats--groups">
+  <% groups.each do |group| %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table kern-table--small">
+        <caption class="kern-title"><%= group[:name] %></caption>
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= group[:name] %></th>
+            <th scope="col" class="kern-table__header kern-table__header--numeric">
+              <%= t("stats.individual_group_value_count") %>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="kern-table__body">
+          <% group[:values].each do |value| %>
+            <tr class="kern-table__row">
+              <th scope="row" class="kern-table__header"><%= value[:name] %></th>
+              <td class="kern-table__cell kern-table__cell--numeric">
+                <%= value[:count] %>
+                (<%= number_to_percentage(
+                  value[:percentage],
+                  strip_insignificant_zeros: true, precision: 2
+                ) %>)
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,242 @@
+<%
+  entries = local_assigns.fetch(:entries, [])
+  channel_label = ->(channel) { t("polls.show.stats.#{channel == "letter" ? "mail" : channel}") }
+%>
+
+<div class="adm-poll-stats" data-controller="adm-charts">
+  <% entries.each do |entry| %>
+    <%
+      poll = entry[:poll]
+      stats = entry[:stats]
+      gender = Stats::GenderStatsComponent.new(stats: stats)
+      age = Stats::AgeStatsComponent.new(stats: stats)
+      geozone = Stats::GeozoneStatsComponent.new(stats: stats)
+      individual_groups = stats.individual_group_breakdown
+      has_charts = gender.render? || age.render? || geozone.render?
+      has_individual = individual_groups.any?
+      channels = stats.channels
+      has_demographics = has_charts || has_individual
+    %>
+
+    <div class="adm-poll-stats--poll">
+      <% if entries.size > 1 %>
+        <div class="adm-poll-stats--poll-title"><%= poll.name %></div>
+      <% end %>
+
+      <% if has_demographics %>
+        <div class="phase-segments-card">
+          <div class="phase-segments-card__header">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">groups_3</span>
+            <i class="fas fa-user-friends projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <span class="phase-segments-card__title">
+              <%= t("adm.projekts.projekts.evaluation.user_segments_title") %>
+            </span>
+          </div>
+
+          <% if has_charts %>
+            <div class="phase-segments-card__grid">
+              <% if age.render? %>
+                <div class="phase-segments-card__panel -full-width">
+                  <div class="phase-segments-card__panel-label"><%= t("stats.by_age") %></div>
+                  <div
+                    class="phase-segments-card__chart"
+                    data-bar-chart
+                    data-chart-orientation="vertical"
+                    data-chart-labels="<%= age.labels.to_json %>"
+                    data-chart-values="<%= age.values.to_json %>"
+                    data-chart-colors="<%= age.colors.to_json %>"
+                  >
+                    <canvas></canvas>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if geozone.render? %>
+                <div class="phase-segments-card__panel -full-width">
+                  <div class="phase-segments-card__panel-label"><%= t("stats.by_geozone") %></div>
+                  <div
+                    class="phase-segments-card__chart"
+                    data-pie-chart
+                    data-chart-labels="<%= geozone.labels.to_json %>"
+                    data-chart-values="<%= geozone.values.to_json %>"
+                    data-chart-colors="<%= evaluation_chart_colors(geozone.values).to_json %>"
+                  >
+                    <canvas></canvas>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if gender.render? %>
+                <div class="phase-segments-card__panel">
+                  <div class="phase-segments-card__panel-label"><%= t("stats.by_gender") %></div>
+                  <div
+                    class="phase-segments-card__chart"
+                    data-pie-chart
+                    data-chart-labels="<%= gender.labels.to_json %>"
+                    data-chart-values="<%= gender.values.to_json %>"
+                    data-chart-colors="<%= gender.colors.to_json %>"
+                  >
+                    <canvas></canvas>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if has_individual %>
+            <div class="adm-poll-stats--groups">
+              <% individual_groups.each do |group| %>
+                <div class="kern-table-responsive" tabindex="0">
+                  <table class="kern-table kern-table--small">
+                    <caption class="kern-title"><%= group[:name] %></caption>
+                    <thead class="kern-table__head">
+                      <tr class="kern-table__row">
+                        <th scope="col" class="kern-table__header"><%= group[:name] %></th>
+                        <th scope="col" class="kern-table__header kern-table__header--numeric">
+                          <%= t("stats.individual_group_value_count") %>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="kern-table__body">
+                      <% group[:values].each do |value| %>
+                        <tr class="kern-table__row">
+                          <th scope="row" class="kern-table__header"><%= value[:name] %></th>
+                          <td class="kern-table__cell kern-table__cell--numeric">
+                            <%= value[:count] %>
+                            (<%= number_to_percentage(
+                              value[:percentage],
+                              strip_insignificant_zeros: true, precision: 2
+                            ) %>)
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if channels.any? %>
+        <% breakdown = stats.channel_breakdown %>
+        <div class="phase-segments-card adm-poll-stats--advanced">
+          <div class="phase-segments-card__header">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">insights</span>
+            <i class="fas fa-chart-line projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <span class="phase-segments-card__title"><%= t("stats.advanced") %></span>
+          </div>
+
+          <div class="adm-poll-stats--tables">
+            <div class="kern-table-responsive" tabindex="0">
+              <table class="kern-table kern-table--small">
+                <caption class="kern-title"><%= t("stats.polls.by_channel") %></caption>
+                <thead class="kern-table__head">
+                  <tr class="kern-table__row">
+                    <th scope="col" class="kern-table__header">
+                      <%= t("adm.projekts.projekts.evaluation.poll_stats_tab.channel") %>
+                    </th>
+                    <th scope="col" class="kern-table__header kern-table__header--numeric">
+                      <%= t("adm.projekts.projekts.evaluation.participants") %>
+                    </th>
+                    <th scope="col" class="kern-table__header kern-table__header--numeric">%</th>
+                  </tr>
+                </thead>
+                <tbody class="kern-table__body">
+                  <% channels.each do |channel| %>
+                    <tr class="kern-table__row">
+                      <th scope="row" class="kern-table__header"><%= channel_label.call(channel) %></th>
+                      <td class="kern-table__cell kern-table__cell--numeric">
+                        <%= breakdown[channel][:participants] %>
+                      </td>
+                      <td class="kern-table__cell kern-table__cell--numeric">
+                        <%= number_to_stats_percentage(breakdown[channel][:participants_percentage]) %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="kern-table-responsive" tabindex="0">
+              <table class="kern-table kern-table--small">
+                <caption class="kern-title"><%= t("stats.polls.vote_by_channel") %></caption>
+                <thead class="kern-table__head">
+                  <tr class="kern-table__row">
+                    <th scope="col" class="kern-table__header"><%= t("polls.show.stats.votes") %></th>
+                    <% channels.each do |channel| %>
+                      <th scope="col" class="kern-table__header kern-table__header--numeric">
+                        <%= channel_label.call(channel) %>
+                      </th>
+                    <% end %>
+                    <th scope="col" class="kern-table__header kern-table__header--numeric">
+                      <%= t("polls.show.stats.total") %>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="kern-table__body">
+                  <tr class="kern-table__row">
+                    <th scope="row" class="kern-table__header"><%= t("polls.show.stats.valid") %></th>
+                    <% channels.each do |channel| %>
+                      <td class="kern-table__cell kern-table__cell--numeric">
+                        <%= breakdown[channel][:valid] %>
+                        <small>(<%= number_to_stats_percentage(breakdown[channel][:valid_percentage]) %>)</small>
+                      </td>
+                    <% end %>
+                    <td class="kern-table__cell kern-table__cell--numeric">
+                      <%= stats.total_valid_votes %>
+                      <small>(<%= number_to_stats_percentage(stats.total_valid_percentage) %>)</small>
+                    </td>
+                  </tr>
+                  <tr class="kern-table__row">
+                    <th scope="row" class="kern-table__header"><%= t("polls.show.stats.white") %></th>
+                    <% channels.each do |channel| %>
+                      <td class="kern-table__cell kern-table__cell--numeric">
+                        <%= breakdown[channel][:white] %>
+                        <small>(<%= number_to_stats_percentage(breakdown[channel][:white_percentage]) %>)</small>
+                      </td>
+                    <% end %>
+                    <td class="kern-table__cell kern-table__cell--numeric">
+                      <%= stats.total_white_votes %>
+                      <small>(<%= number_to_stats_percentage(stats.total_white_percentage) %>)</small>
+                    </td>
+                  </tr>
+                  <tr class="kern-table__row">
+                    <th scope="row" class="kern-table__header"><%= t("polls.show.stats.null_votes") %></th>
+                    <% channels.each do |channel| %>
+                      <td class="kern-table__cell kern-table__cell--numeric">
+                        <%= breakdown[channel][:null_votes] %>
+                        <small>(<%= number_to_stats_percentage(breakdown[channel][:null_percentage]) %>)</small>
+                      </td>
+                    <% end %>
+                    <td class="kern-table__cell kern-table__cell--numeric">
+                      <%= stats.total_null_votes %>
+                      <small>(<%= number_to_stats_percentage(stats.total_null_percentage) %>)</small>
+                    </td>
+                  </tr>
+                  <tr class="kern-table__row">
+                    <th scope="row" class="kern-table__header"><%= t("polls.show.stats.total") %></th>
+                    <% channels.each do |channel| %>
+                      <td class="kern-table__cell kern-table__cell--numeric">
+                        <%= breakdown[channel][:participants] %>
+                        <small>(<%= number_to_stats_percentage(breakdown[channel][:participants_percentage]) %>)</small>
+                      </td>
+                    <% end %>
+                    <td class="kern-table__cell kern-table__cell--numeric"><%= stats.total_participants %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% unless has_demographics || channels.any? %>
+        <div class="adm-poll-stats--empty">
+          <%= t("adm.projekts.projekts.evaluation.poll_stats_tab.empty") %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

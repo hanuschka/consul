@@ -186,6 +186,11 @@ en:
             aria_label: Switch evaluation view
             stats: Statistics
             ai: AI analysis
+            poll_stats: Stats
+            poll_stats_live: Live data
+          poll_stats_tab:
+            empty: No statistics are available for this poll yet.
+            channel: Channel
           report_summary_card:
             title: Report summary
             page_title: Projekt evaluation report summary

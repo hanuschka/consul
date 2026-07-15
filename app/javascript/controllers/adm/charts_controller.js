@@ -204,8 +204,10 @@ export default class extends Controller {
 
     const labels      = JSON.parse(container.dataset.chartLabels || "[]")
     const values      = JSON.parse(container.dataset.chartValues || "[]")
+    const series      = container.dataset.chartSeries ? JSON.parse(container.dataset.chartSeries) : null
     const orientation = container.dataset.chartOrientation || "vertical"
     const color       = container.dataset.chartColors ? JSON.parse(container.dataset.chartColors) : "#6BA3D6"
+    const stacked     = container.dataset.chartStacked === "true"
     const isHorizontal = orientation === "horizontal"
     const ctx         = canvas.getContext("2d")
 
@@ -215,24 +217,41 @@ export default class extends Controller {
       container.style.height = (labels.length * (barHeight + barSpacing) + 40) + "px"
     }
 
-    const chart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels,
-        datasets: [{
+    const barThickness = isHorizontal ? 35 : 40
+    const datasets = series
+      ? series.map(entry => ({
+          label: entry.label,
+          data: entry.values,
+          backgroundColor: entry.color,
+          borderWidth: 0,
+          borderRadius: 4,
+          barThickness
+        }))
+      : [{
           data: values,
           backgroundColor: color,
           borderWidth: 0,
           borderRadius: 4,
-          barThickness: isHorizontal ? 35 : 40
+          barThickness
         }]
+    const showLegend = series !== null && series.length > 1
+
+    const chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets
       },
       options: {
         indexAxis: isHorizontal ? "y" : "x",
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
+          legend: {
+            display: showLegend,
+            position: "bottom",
+            labels: { color: "#333", boxWidth: 12, padding: 12 }
+          },
           tooltip: {
             backgroundColor: "#333",
             titleColor: "#fff",
@@ -242,8 +261,8 @@ export default class extends Controller {
           }
         },
         scales: {
-          x: { grid: { display: isHorizontal }, ticks: { color: "#333" }, border: { display: false } },
-          y: { grid: { display: !isHorizontal }, ticks: { color: "#333" }, border: { display: false } }
+          x: { stacked, grid: { display: isHorizontal }, ticks: { color: "#333" }, border: { display: false } },
+          y: { stacked, grid: { display: !isHorizontal }, ticks: { color: "#333" }, border: { display: false } }
         }
       }
     })

@@ -83,14 +83,14 @@
           <% end %>
 
           <% if has_individual %>
-            <%= render "adm/projekts/projekts/evaluation/individual_group_tables",
+            <%= render "adm/projekts/projekts/evaluation/individual_group_charts",
               groups: individual_groups %>
           <% end %>
         </div>
       <% end %>
 
       <% if channels.any? %>
-        <%= render "adm/projekts/projekts/evaluation/poll_channel_tables", stats: stats %>
+        <%= render "adm/projekts/projekts/evaluation/poll_channel_charts", stats: stats %>
       <% end %>
 
       <% unless has_demographics || channels.any? %>

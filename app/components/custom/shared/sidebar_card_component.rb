@@ -24,6 +24,10 @@ class Shared::SidebarCardComponent < ApplicationComponent
     "h#{@heading_level}"
   end
 
+  def content_id
+    @content_id ||= "sidebar-card-content-#{SecureRandom.hex(4)}"
+  end
+
   def class_name
     base_class = @class_name || ""
 

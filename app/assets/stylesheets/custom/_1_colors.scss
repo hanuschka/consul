@@ -34,6 +34,7 @@ $dt-base: #004a83;
 $dt-base-hover: lighten($dt-base, 10%);
 $dt-base-secondary: lighten($dt-base, 70%);
 $dt-base-transparent-background-hover: #dfebf5;
+$projekt-subnav-track-bg: color-mix(in srgb, var(--effective-brand-color, #{$dt-base}) 5%, #{mix(#ffffff, $gray-1, 50%)});
 
 // Projekt page theme palette lives in cross_pack/1_colors.scss (shared with /adm).
 

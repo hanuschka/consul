@@ -63,6 +63,27 @@ class ProjektPhase < ApplicationRecord
 
   DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
 
+  PHASE_FA_ICONS = {
+    "ProjektPhase::CommentPhase" => "fa-comment",
+    "ProjektPhase::ProposalPhase" => "fa-lightbulb",
+    "ProjektPhase::PointOfInterestPhase" => "fa-map-marker-alt",
+    "ProjektPhase::QuestionPhase" => "fa-question-circle",
+    "ProjektPhase::VotingPhase" => "fa-vote-yea",
+    "ProjektPhase::IframePhase" => "fa-globe",
+    "ProjektPhase::BudgetPhase" => "fa-euro-sign",
+    "ProjektPhase::LegislationPhase" => "fa-gavel",
+    "ProjektPhase::FormularPhase" => "fa-file-alt",
+    "ProjektPhase::EventPhase" => "fa-calendar-alt",
+    "ProjektPhase::MilestonePhase" => "fa-flag",
+    "ProjektPhase::ProjektNotificationPhase" => "fa-bell",
+    "ProjektPhase::LivestreamPhase" => "fa-tv",
+    "ProjektPhase::ArgumentPhase" => "fa-comments",
+    "ProjektPhase::NewsfeedPhase" => "fa-rss",
+    "ProjektPhase::DebatePhase" => "fa-comments"
+  }.freeze
+
+  DEFAULT_PHASE_FA_ICON = "fa-flag".freeze
+
   delegate :icon, :author, :author_id, to: :projekt
 
   translates :phase_tab_name, touch: true
@@ -178,6 +199,14 @@ class ProjektPhase < ApplicationRecord
     self.class.material_icon_for(type)
   end
 
+  def self.fa_icon_for(type)
+    PHASE_FA_ICONS[type.to_s] || DEFAULT_PHASE_FA_ICON
+  end
+
+  def fa_icon
+    self.class.fa_icon_for(type)
+  end
+
   default_scope { order(:given_order, :id) }
 
   scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
@@ -233,7 +262,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank?
+    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+  end
+
+  def conditional_vote_possible_for?(user)
+    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -371,6 +404,21 @@ class ProjektPhase < ApplicationRecord
     else
       false
     end
+  end
+
+  # Mirrors the footer partials' map gate: proposal/budget phases render their
+  # resource map only when "form.show_map" is enabled; phase types without the
+  # setting (e.g. point of interest) always show it.
+  def resource_map_enabled?
+    setting = settings.find { |s| s.key == "feature.form.show_map" }
+
+    return true if setting.blank?
+
+    setting.value.present?
+  end
+
+  def publicly_visible?
+    active? && frontend_visibility?
   end
 
   def max_submissions_per_user

@@ -1,6 +1,5 @@
 button {
   cursor: pointer;
-
 }
 
 .link-button {
@@ -22,6 +21,16 @@ button {
     &:hover, &:focus {
       background-color: color-mix(in srgb, var(--brand-color), white 6%);
       color: white;
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, var(--brand-color), black 8%);
+      color: white;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--focus-outline-color);
+      outline-offset: 2px;
     }
 
     i {
@@ -180,6 +189,11 @@ button {
       max-width: 330px;
       font-size: 20px;
       flex: 0 0 auto;
+    }
+
+    .ai-feature-tooltip {
+      flex: 0 0 auto;
+      max-width: 330px;
     }
   }
 

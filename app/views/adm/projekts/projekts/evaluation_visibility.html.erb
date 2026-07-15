@@ -1,14 +1,13 @@
 <%= content_for :title, [(@projekt.page&.title || @projekt.name), t(".title")].join(" | ") %>
 
 <%= render Adm::HeaderComponent.new(
-  title: (@projekt.page&.title || @projekt.name),
+  title: t(".heading"),
   breadcrumbs: @breadcrumbs,
   compact: true
 ) %>
 
 <div class="kern-container mb-5">
   <div class="evaluation-visibility-screen__intro">
-    <h2 class="h3"><%= t(".heading") %></h2>
     <p class="text-muted"><%= t(".description") %></p>
   </div>
 
@@ -16,50 +15,11 @@
     url: update_evaluation_visibility_adm_projekts_projekt_path(@projekt),
     method: :patch,
     local: true,
-    class: "evaluation-visibility-screen__form"
+    class: "evaluation-visibility-screen__form",
+    data: { controller: "adm--visibility-autosave" }
   ) do %>
 
-    <details
-      class="evaluation-visibility-group"
-      data-controller="adm--visibility-group"
-      open
-    >
-      <summary class="evaluation-visibility-group__header">
-        <span class="evaluation-visibility-group__title">
-          <span class="material-symbols-outlined" aria-hidden="true">summarize</span>
-          <span><%= t(".report_group_title") %></span>
-        </span>
-        <button
-          type="button"
-          class="evaluation-visibility-group__bulk"
-          data-action="click->adm--visibility-group#toggleAll"
-          data-adm--visibility-group-target="bulk"
-          data-on-label="<%= t('.bulk_all_off') %>"
-          data-off-label="<%= t('.bulk_all_on') %>"
-        ></button>
-      </summary>
-
-      <div class="evaluation-visibility-group__body">
-        <% ProjektEvaluationVisibility::REPORT_SECTION_KEYS.each do |section_key| %>
-          <%
-            field_name = "projekt_evaluation_visibility[show_#{section_key}]"
-            field_id = "projekt_evaluation_visibility_show_#{section_key}"
-            checked = @report_visibility["show_#{section_key}"]
-          %>
-          <%= render Kern::SwitchComponent.new(
-            name: field_name,
-            id: field_id,
-            checked: checked,
-            row: true,
-            label: t(".report_sections.#{section_key}"),
-            description: t(".report_section_descriptions.#{section_key}"),
-            input_data: { "adm--visibility-group-target" => "checkbox" }
-          ) %>
-        <% end %>
-      </div>
-    </details>
-
-    <% @projekt.projekt_phases.sorted.each do |phase| %>
+    <% @projekt_phases.each do |phase| %>
       <%
         available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase.type)
         next if available_sections.blank?
@@ -94,37 +54,37 @@
         </summary>
 
         <div class="evaluation-visibility-group__body">
-          <% available_sections.each do |section_key| %>
-            <%
-              field_name = "projekt_phase_evaluation_visibilities[#{phase.id}][show_#{section_key}]"
-              field_id = "projekt_phase_evaluation_visibilities_#{phase.id}_show_#{section_key}"
-              checked = visibility["show_#{section_key}"]
-            %>
-            <%= render Kern::SwitchComponent.new(
-              name: field_name,
-              id: field_id,
-              checked: checked,
-              row: true,
-              label: t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}"),
-              description: t("adm.projekts.projekts.evaluation.pdf_options.section_descriptions.#{section_key}"),
-              input_data: { "adm--visibility-group-target" => "checkbox" }
-            ) %>
+          <% evaluation_visibility_subgroups(available_sections).each do |subgroup| %>
+            <% next if subgroup[:sections].blank? %>
+            <div class="evaluation-visibility-subgroup">
+              <div class="evaluation-visibility-subgroup__header">
+                <span class="evaluation-visibility-subgroup__title">
+                  <span class="material-symbols-outlined" aria-hidden="true">
+                    <%= subgroup[:icon] %>
+                  </span>
+                  <span><%= t(subgroup[:label_key]) %></span>
+                </span>
+                <button
+                  type="button"
+                  class="evaluation-visibility-group__bulk"
+                  data-action="click->adm--visibility-group#toggleGroup"
+                  data-adm--visibility-group-target="groupBulk"
+                  data-on-label="<%= t('.bulk_all_off') %>"
+                  data-off-label="<%= t('.bulk_all_on') %>"
+                ></button>
+              </div>
+              <div class="evaluation-visibility-subgroup__body">
+                <%= render(
+                  partial: "adm/projekts/projekts/evaluation_visibility_row",
+                  collection: subgroup[:sections],
+                  as: :section_key,
+                  locals: { phase: phase, visibility: visibility }
+                ) %>
+              </div>
+            </div>
           <% end %>
         </div>
       </details>
     <% end %>
-
-    <div class="evaluation-visibility-screen__actions">
-      <%= kern_link_button(
-        evaluation_adm_projekts_projekt_path(@projekt),
-        text: t(".cancel"),
-        icon: "arrow_back",
-        style: :secondary
-      ) %>
-      <%= button_tag type: "submit", class: "kern-btn kern-btn--primary" do %>
-        <span class="kern-label material-symbols-outlined" aria-hidden="true">save</span>
-        <span class="kern-label"><%= t(".save") %></span>
-      <% end %>
-    </div>
   <% end %>
 </div>

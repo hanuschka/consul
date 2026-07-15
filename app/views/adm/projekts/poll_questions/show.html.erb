@@ -37,7 +37,7 @@
                 </td>
                 <td class="kern-table__cell"><%= answer.title %></td>
                 <% if @question.votation_type.unique? || @question.votation_type.multiple? %>
-                  <td class="kern-table__cell"><%= strip_tags(answer.description).truncate(30) %></td>
+                  <td class="kern-table__cell"><%= strip_tags(answer.description.to_s).truncate(30) %></td>
                 <% end %>
                 <td class="kern-table__cell"><%= answer.images.count %></td>
                 <td class="kern-table__cell"><%= answer.documents.count rescue 0 %></td>

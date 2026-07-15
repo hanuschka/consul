@@ -35,9 +35,6 @@ App.ContentBlockEditor.DragDrop = {
       url: this.getUpdatePositionUrl(e.item),
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: {
         position: newPosition
       }

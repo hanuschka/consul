@@ -45,6 +45,8 @@ en:
           show_comments_description: Enables the comment feature for proposals in the budget phase. A comment area with reply function is displayed below each proposal on the frontend. Enable this feature to enable dialogue between users and administration. Disable it when no public discussion is desired.
           conditional_balloting: Simplified voting
           conditional_balloting_description: "Allows users to cast votes before completing verification. Votes are recorded but only counted after successful verification. The voting button is immediately visible on the frontend. Enable this option to lower the entry barrier and enable more participation, even when verification is pending."
+          conditional_voting: Simplified support voting
+          conditional_voting_description: "Allows users to support investment proposals in the selection phase before completing verification. Supports are recorded but only counted after successful verification. The support button is immediately visible on the frontend. Enable this option to lower the entry barrier and enable more participation, even when verification is pending."
           show_video_as_link: Videos as link
           show_video_as_link_description: Displays added videos not as an embedded player but as a clickable link. Instead of the video player, a text link to the external provider appears on the frontend. Enable this option to reduce page load time or when embedded videos should be avoided for data-protection reasons.
           hide_ballots_count: Hide vote count during proposal voting
@@ -159,6 +161,8 @@ en:
           users_can_create_proposals_description: "Allows registered users to create and submit their own proposals in the proposal phase. A Create button is shown on the frontend opening the form. Disable this option when only proposals created by the administration should be shown and no submissions by users are planned."
           allow_voting: Support
           allow_voting_description: "Enables the support function, with which users can support proposals with a positive vote. A Support button is shown on each proposal on the frontend. Enable this feature to let the community evaluate the relevance of proposals."
+          conditional_voting: Simplified support voting
+          conditional_voting_description: "Allows users to support proposals before completing verification. Supports are recorded but only counted after successful verification. The support button is immediately visible on the frontend. Enable this option to lower the entry barrier and enable more participation, even when verification is pending."
           quorum_for_proposals: Quorum
           quorum_for_proposals_description: "Enables a minimum quorum for proposals that must be reached for a proposal to be considered successful. A progress bar on the frontend visualizes the current status relative to the quorum. Enable this feature for projects where a minimum participation is required."
           enable_up_and_down_voting: Thumbs up and down

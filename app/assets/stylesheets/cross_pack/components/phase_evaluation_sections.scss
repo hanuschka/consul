@@ -1,16 +1,62 @@
-.projekt-phase-evaluation-footer .phase-header {
+@import "cross_pack/1_colors";
+
+.projekt-footer-evaluation .phase-icon-title {
   display: none;
 }
 
-.projekt-phase-evaluation-footer__toolbar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+.projekt-footer-evaluation .phase-header {
+  padding: 1.5rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+  box-shadow: var(--er-shadow-md);
 }
 
-.projekt-phase-evaluation-footer__adm-link {
+.projekt-footer-evaluation .card {
+  background-color: var(--er-surface) !important;
+}
+
+.projekt-evaluation-icon-material {
+  display: none;
+}
+
+.projekt-evaluation-icon-fa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.projekt-footer-evaluation__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  .button {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.projekt-footer-evaluation__generated-at {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--er-text-muted, #94a3b8);
+  font-variant-numeric: tabular-nums;
+
+  .fas {
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+}
+
+.projekt-footer-evaluation__adm-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -25,7 +71,7 @@
   text-decoration: none;
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
 
-  .material-symbols-outlined {
+  .fas {
     font-size: 18px;
     line-height: 1;
   }
@@ -43,7 +89,7 @@
   }
 }
 
-.projekt-phase-evaluation-footer__regen-button {
+.projekt-footer-evaluation__regen-button {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -59,7 +105,7 @@
   text-decoration: none;
   transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
 
-  .material-symbols-outlined {
+  .fas {
     font-size: 20px;
     line-height: 1;
   }
@@ -76,18 +122,18 @@
   }
 }
 
-.projekt-phase-evaluation-footer {
+.projekt-footer-evaluation {
   --er-primary: #1e40af;
   --er-primary-light: #3b82f6;
   --er-primary-lighter: #dbeafe;
   --er-positive: #059669;
   --er-positive-light: #d1fae5;
-  --er-bg: #f8fafc;
+  --er-bg: #ffffff;
   --er-surface: #ffffff;
   --er-text: #0f172a;
   --er-text-secondary: #475569;
   --er-text-muted: #94a3b8;
-  --er-border: #e2e8f0;
+  --er-border: #{$soft-border};
   --er-border-light: #f1f5f9;
   --er-radius: 8px;
   --er-radius-lg: 12px;
@@ -115,6 +161,11 @@
     font-size: 26px;
     line-height: 1;
   }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 22px;
+    line-height: 1;
+  }
 }
 
 .phase-title {
@@ -130,20 +181,81 @@
   font-weight: 500;
 }
 
+.phase-header-poll-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-primary, #1e40af);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.phase-header-aside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+}
+
 .phase-meta {
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
 
-:is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .card {
+.meta-item {
+  text-align: center;
+  padding: 0.5rem 0;
+
+  .meta-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--er-primary);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta-label {
+    font-size: 0.68rem;
+    color: var(--er-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+}
+
+.meta-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--er-border);
+}
+
+.evaluation-export-menu {
+  --dropdown-toggle-radius: var(--er-radius, 8px);
+  --dropdown-toggle-padding: 12px 40px 12px 16px;
+  --dropdown-item-padding: 12px 20px;
+  --dropdown-item-gap: 0.5rem;
+  --dropdown-item-color: var(--er-text, #0f172a);
+}
+
+.evaluation-export-menu .dropdown-select-menu-toggle {
+  border: 1px solid $soft-border;
+}
+
+:is(.adm-projekt-evaluation-report, .projekt-footer-evaluation) .card {
   background: var(--er-surface);
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius-lg);
   padding: 1.25rem 1.5rem;
 }
 
-:is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .card-title {
+:is(.adm-projekt-evaluation-report, .projekt-footer-evaluation) .card-title {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--er-text);
@@ -151,7 +263,7 @@
   line-height: 1.3;
 }
 
-:is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .card-subtitle {
+:is(.adm-projekt-evaluation-report, .projekt-footer-evaluation) .card-subtitle {
   font-size: 0.875rem;
   color: var(--er-text-muted);
   font-weight: 500;
@@ -159,7 +271,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-:is(.adm-projekt-evaluation-report, .projekt-phase-evaluation-footer) .grid-2 {
+:is(.adm-projekt-evaluation-report, .projekt-footer-evaluation) .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
@@ -176,11 +288,28 @@
   }
 }
 
+.card:has(> .poll-question-card--export) {
+  position: relative;
+}
+
 .poll-question-card--full {
+  position: relative;
   margin-bottom: 1rem;
 
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+.poll-question-card--export {
+  position: absolute;
+  top: 0.7rem;
+  right: 1.5rem;
+
+  .dropdown-select-container {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 
@@ -221,6 +350,20 @@
   white-space: nowrap;
 }
 
+.pref-label-link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
 .pref-bar-track {
   flex: 1;
   height: 28px;
@@ -247,75 +390,6 @@
   font-variant-numeric: tabular-nums;
   flex: 0 0 42px;
   text-align: right;
-}
-
-.proposal-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-.proposal-card {
-  background: var(--er-surface);
-  border: 1px solid var(--er-border);
-  border-radius: var(--er-radius-lg);
-  padding: 1rem 1.25rem;
-  position: relative;
-  overflow: hidden;
-
-  .stripe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-  }
-}
-
-.proposal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.proposal-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--er-text);
-  line-height: 1.3;
-  flex: 1;
-}
-
-.proposal-votes {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: var(--er-border-light);
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--er-text-secondary);
-  flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.proposal-desc {
-  font-size: 0.875rem;
-  color: var(--er-text-secondary);
-  line-height: 1.5;
-}
-
-.proposal-tag {
-  display: inline-flex;
-  font-size: 0.875rem;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 999px;
-  margin-top: 0.5rem;
 }
 
 .hbar {
@@ -429,7 +503,38 @@
 }
 
 .phase-evaluation-section {
-  margin-bottom: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.phase-evaluation-section.-hidden-from-public {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.phase-evaluation-section:has(.footer-evaluation-section-toggle .custom-switch:hover) {
+  border-radius: 12px;
+  background-color: rgba(131, 205, 234, 0.11);
+  box-shadow: 0 0 0 10px rgba(131, 205, 234, 0.11);
+  transition: background-color 100ms ease, box-shadow 100ms ease;
+}
+
+.footer-evaluation-section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.footer-evaluation-section-toggle--trigger {
+  display: inline-flex;
+}
+
+.footer-evaluation-section-toggle .custom-switch {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-text-secondary, #475569);
 }
 
 .adm-spinner {
@@ -469,18 +574,38 @@
   color: var(--er-text);
   letter-spacing: -0.01em;
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  .projekt-evaluation-icon-fa {
     font-size: 1.375rem;
     color: var(--er-text-secondary);
   }
 }
 
 .phase-timeline-card__grid,
-.phase-distribution-card__grid,
-.phase-segments-card__grid {
+.phase-distribution-card__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+}
+
+.phase-timeline-card__grid.-stacked {
+  grid-template-columns: 1fr;
+}
+
+.phase-segments-card__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .phase-segments-card__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.phase-segments-card__panel.-full-width {
+  grid-column: 1 / -1;
 }
 
 .phase-timeline-card__panel-label,
@@ -519,6 +644,83 @@
   }
 }
 
+.phase-budget-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.phase-budget-segment {
+  padding: 1.5rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+  box-shadow: var(--er-shadow-md);
+}
+
+.phase-budget-segment__title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--er-text);
+}
+
+.phase-budget-segment__distributions {
+  margin-top: 1.25rem;
+}
+
+.phase-budget-segment__distributions-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6875rem 0.875rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  background: var(--er-bg);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius);
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::marker {
+    content: "";
+  }
+
+  &:hover {
+    background: var(--er-border-light);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--er-primary);
+    outline-offset: 2px;
+  }
+}
+
+.phase-budget-segment__distributions-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-text);
+}
+
+.phase-budget-segment__distributions-chevron {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: var(--er-text-secondary);
+  transition: transform 150ms ease-out;
+}
+
+.phase-budget-segment__distributions[open] .phase-budget-segment__distributions-chevron {
+  transform: rotate(180deg);
+}
+
+.phase-budget-segment__distributions-body {
+  padding: 1.75rem 1.5rem;
+}
+
 .phase-summary-card {
   display: flex;
   gap: 1rem;
@@ -538,7 +740,8 @@
   height: 40px;
   border-radius: 50%;
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  .projekt-evaluation-icon-fa {
     font-size: 1.25rem;
   }
 }
@@ -589,7 +792,8 @@
   height: 40px;
   border-radius: 50%;
 
-  .material-symbols-outlined {
+  .material-symbols-outlined,
+  .projekt-evaluation-icon-fa {
     font-size: 1.25rem;
   }
 }
@@ -643,6 +847,11 @@
   flex-shrink: 0;
   background: #ede9fe;
   color: #7c3aed;
+}
+
+.er-section-icon .fas {
+  font-size: 16px;
+  line-height: 1;
 }
 
 .er-section-title {
@@ -745,9 +954,12 @@
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--ic, var(--er-text-secondary));
-    padding: 0.25rem 0;
+    padding: 0.25rem 0.5rem;
+    margin: 0 -0.5rem;
+    border-radius: 6px;
     list-style: none;
     user-select: none;
+    transition: background 150ms ease;
 
     &::-webkit-details-marker {
       display: none;
@@ -758,6 +970,10 @@
       display: inline-block;
       margin-right: 6px;
       transition: transform 150ms ease;
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--ic, var(--er-primary)) 12%, transparent);
     }
   }
 
@@ -1043,7 +1259,8 @@
   flex-shrink: 0;
 }
 
-.open-responses-summary-icon .material-symbols-outlined {
+.open-responses-summary-icon .material-symbols-outlined,
+.open-responses-summary-icon .projekt-evaluation-icon-fa {
   font-size: 20px;
 }
 
@@ -1124,8 +1341,8 @@
 }
 
 .poll-block {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px dashed var(--er-border);
 
   &:last-child {

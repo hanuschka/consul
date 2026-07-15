@@ -12,14 +12,10 @@
 
 <% if can_ask_questions %>
   <div
-    class="participation-stats-ai-question <%= 'ai-feature-disabled' if ai_disabled %>"
+    class="participation-stats-ai-question"
     data-controller="adm--ai-question-form"
     data-adm--ai-question-form-pending-list-selector-value="#<%= pending_list_dom_id %>"
     data-adm--ai-question-form-history-list-selector-value="#<%= history_list_dom_id %>"
-    <% if ai_disabled %>
-    data-tooltip
-    title="<%= t('ai.disabled_tooltip') %>"
-    <% end %>
   >
     <%= render Shared::AccordionComponent.new(opened_by_default: true, root_class: "ai-stats-card") do |c| %>
       <% c.with_head do %>
@@ -41,7 +37,7 @@
             data: { turbo: "true", adm__ai_question_form_target: "form" },
             class: "ai-question-form" do |f| %>
             <%= f.text_area :question,
-              label: t("custom.participation_stats.ai_question.question_label"),
+              label: false,
               placeholder: t("custom.participation_stats.ai_question.placeholder"),
               class: "ai-question-form--input",
               required: true,
@@ -57,15 +53,20 @@
                 <span><%= t("custom.participation_stats.ai_question.submitting") %></span>
               </span>
 
-              <button
-                type="submit"
-                class="ai-question-form--submit"
-                <%= "disabled" if ai_disabled %>
-                data-adm--ai-question-form-target="submit"
-              >
-                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                <%= t("custom.participation_stats.ai_question.submit") %>
-              </button>
+              <%= render Shared::AiFeatureTooltipComponent.new(
+                feature_title: t("custom.participation_stats.ai_question.title"),
+                feature_text: t("custom.participation_stats.ai_question.subtitle")
+              ) do %>
+                <button
+                  type="submit"
+                  class="ai-question-form--submit"
+                  <%= "disabled" if ai_disabled %>
+                  data-adm--ai-question-form-target="submit"
+                >
+                  <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                  <%= t("custom.participation_stats.ai_question.submit") %>
+                </button>
+              <% end %>
             </div>
           <% end %>
         </div>

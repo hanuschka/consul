@@ -13,18 +13,18 @@
   data-i18n-saved="<%= t('custom.projekts.page.color_picker.status.saved') %>"
   data-i18n-error="<%= t('custom.projekts.page.color_picker.status.error') %>"
 >
-  <label
-    class="studio-admin-topbar-color-picker--label"
-    for="admin-topbar-color-picker-<%= projekt.id %>"
-    title="<%= t('custom.projekts.page.color_picker.tooltip') %>"
-    data-tooltip
-    data-hover-delay="500"
-  >
-    <i class="fas fa-palette studio-admin-topbar-color-picker--label-icon" aria-hidden="true"></i>
-    <span class="studio-admin-topbar-color-picker--label-text">
-      <%= t('custom.projekts.page.color_picker.label') %>
-    </span>
-  </label>
+  <rich-tooltip delay="500" trigger-only shadow="heavy">
+    <label
+      class="studio-admin-topbar-color-picker--label"
+      for="admin-topbar-color-picker-<%= projekt.id %>"
+    >
+      <i class="fas fa-palette studio-admin-topbar-color-picker--label-icon" aria-hidden="true"></i>
+      <span class="studio-admin-topbar-color-picker--label-text">
+        <%= t('custom.projekts.page.color_picker.label') %>
+      </span>
+    </label>
+    <template><%= t('custom.projekts.page.color_picker.tooltip') %></template>
+  </rich-tooltip>
 
   <input
     type="color"

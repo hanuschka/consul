@@ -27,6 +27,7 @@
       App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.initialize();
       App.ContentBlockEditor.SimpleEditMode.ImageEdit.initialize();
       App.ContentBlockEditor.SimpleEditMode.MapEdit.initialize();
+      App.ContentBlockEditor.SimpleEditMode.MapSourceEdit.initialize();
       App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.initialize();
       App.ContentBlockEditor.AiEditMode.initialize();
       App.ContentBlockEditor.CodeEditMode.initialize();

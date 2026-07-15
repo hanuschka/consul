@@ -127,3 +127,11 @@ de:
           users_new: Neue Registrierungen
           comments: Kommentare
           proposals: Neue Vorschläge
+          granularity_label: Zeitliche Auflösung
+          granularity_daily: Täglich
+          granularity_weekly: Wöchentlich
+          granularity_monthly: Monatlich
+          granularity_yearly: Jährlich
+          range_from: Von Datum
+          range_to: Bis Datum
+          range_reset: Zurücksetzen

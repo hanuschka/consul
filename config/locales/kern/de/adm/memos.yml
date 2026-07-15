@@ -13,3 +13,4 @@ de:
         last_notification: "Letzte Benachrichtigung gesendet am %{datetime}"
         delete: Löschen
         delete_confirm: Möchten Sie diese Notiz wirklich löschen?
+        user_deleted: Benutzer gelöscht

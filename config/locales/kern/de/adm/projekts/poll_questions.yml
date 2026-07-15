@@ -8,6 +8,8 @@ de:
           nested_title: Neue Unterfrage erstellen
         edit:
           title: Frage bearbeiten
+          bundle_title: Fragenbündel bearbeiten
+          nested_title: Unterfrage bearbeiten
         show:
           edit_question: Frage bearbeiten
           edit_bundle: Fragenbündel bearbeiten
@@ -31,10 +33,21 @@ de:
             actions: Aktionen
         destroy:
           success: Frage wurde erfolgreich gelöscht.
+        contexted_clones:
+          skipped: >
+            Die kontextbezogenen Kopien wurden nicht automatisch aktualisiert, da für diese Umfrage
+            bereits Stimmen abgegeben wurden. Solange echte Stimmen vorliegen, können die
+            kontextbezogenen Fragen nicht mehr automatisch angepasst werden.
         form:
           bundle_title: Themenkomplex
           title_placeholder: "z. B. Welche Maßnahme befürworten Sie?"
           no_contextualization: Keine Kontextualisierung
+          contextualize_hint: >
+            Wiederholt diese Frage für jede Antwortoption, die der Nutzer zuvor in der ausgewählten
+            Mehrfachauswahl-Frage gewählt hat. So lässt sich dieselbe Frage kontextbezogen zu jeder
+            einzelnen Auswahl stellen – z. B. eine Bewertung je zuvor ausgewähltem Vorschlag. Zur Auswahl
+            stehen nur Fragen mit dem Abstimmungsmodus „Mehrfachauswahl". Wählen Sie „Keine
+            Kontextualisierung", wenn die Frage unabhängig gestellt werden soll.
           intro_hint: Wird im Frontend oberhalb der Frage als einleitender Text angezeigt. Nutzen Sie dieses Feld, um den Kontext der Frage zu erläutern, Hintergrundinformationen zu liefern oder den Teilnehmern Orientierung zu geben. Der Text unterstützt Rich-Text-Formatierung und kann Links oder Hervorhebungen enthalten.
           title_hint: >
             Geben Sie die Fragestellung ein, die den Nutzern im Frontend angezeigt wird. Formulieren Sie

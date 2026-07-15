@@ -28,6 +28,7 @@
 
     loadConfig(contentBlocksList) {
       ProjektStudio.config.defaultMarginBottom = parseInt(contentBlocksList.dataset.defaultMarginBottom);
+      ProjektStudio.config.aiAvailable = contentBlocksList.dataset.aiAvailable === "true";
     },
 
     wrapContentBlocks(contentBlocksList) {
@@ -60,6 +61,7 @@
       if (window.newsletterContentBlockEditorModulesInitialized) return
 
       App.SharedModal.initialize();
+      App.ImageCropper.initialize();
       App.DropdownSelectMenuComponent.initialize();
       App.ContentBlockEditor.CreateWithAi.initialize();
       App.ContentBlockEditor.DragDrop.initialize();

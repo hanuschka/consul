@@ -41,15 +41,13 @@ ProjektStudio.PhasesTabs = {
     const projektId = ProjektStudio.getCurrentProjektId();
 
     $.ajax({
-      url: `/admin/projekts/${projektId}/projekt_phases/order_phases`,
-      type: "POST",
+      url: `/adm/projekts/${projektId}/phases/reorder`,
+      type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
-      data: {
-        ordered_list
-      }
+      contentType: "application/json",
+      data: JSON.stringify({
+        tree: ordered_list.map((id) => ({ id }))
+      })
     })
   },
 
@@ -60,7 +58,6 @@ ProjektStudio.PhasesTabs = {
 
     const active = !tab.classList.contains("-deactivated")
     const icon = e.currentTarget.querySelector("i")
-    const projektId = ProjektStudio.getCurrentProjektId();
     const projektPhaseId = tab.dataset.projektPhaseId
 
     icon.classList.toggle("fa-eye", !active)
@@ -69,19 +66,9 @@ ProjektStudio.PhasesTabs = {
     ProjektStudio.utils.updateRichTooltipTitle(e.currentTarget, active ? dataset.hideTitle : dataset.showTitle);
 
     $.ajax({
-      url: `/admin/projekts/${projektId}/projekt_phases/${projektPhaseId}/toggle_active_status`,
+      url: `/adm/projekts/phases/${projektPhaseId}/toggle_active`,
       type: "PATCH",
-      dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
-      data: {
-        projekt:  {
-          phase_attributes: {
-            active: active
-          }
-        }
-      }
+      dataType: "json"
     })
   },
 
@@ -108,15 +95,13 @@ ProjektStudio.PhasesTabs = {
     ProjektStudio.utils.updateRichTooltipTitle(e.currentTarget, isDefault ? dataset.makeDefaultTitle : dataset.unsetDefaultTitle);
 
     $.ajax({
-      url: `/admin/projekts/${projektId}/update_standard_phase`,
+      url: `/adm/projekts/${projektId}/update_default_phase`,
       type: "PATCH",
       dataType: "json",
-      headers: {
-        'X-Embedded-Frame': ProjektStudio.isEmbedded
-      },
       data: {
-        default_footer_tab: {
-          id: phaseId
+        projekt_phase_id: phaseId,
+        projekt_phase: {
+          default_phase: isDefault
         }
       }
     })
@@ -132,11 +117,8 @@ ProjektStudio.PhasesTabs = {
       tab.remove()
 
       $.ajax({
-        url: `/admin/projekt_phases/${phaseId}`,
+        url: `/adm/projekts/phases/${phaseId}`,
         type: "DELETE",
-        headers: {
-          'X-Embedded-Frame': ProjektStudio.isEmbedded
-        },
         dataType: "json"
       })
     }
@@ -153,11 +135,8 @@ ProjektStudio.PhasesTabs = {
       // const resource_id = e.currentTarget.dataset.resourceId
 
       $.ajax({
-        url: `/admin/projekt_phases/${phaseId}/send_notifications`,
+        url: `/adm/projekts/phases/${phaseId}/send_notifications`,
         type: "POST",
-        headers: {
-          'X-Embedded-Frame': ProjektStudio.isEmbedded
-        },
         dataType: "json"
       })
     }

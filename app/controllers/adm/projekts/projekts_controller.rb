@@ -1,6 +1,9 @@
 class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :evaluation_visibility, :update_evaluation_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_image, :delete_image]
+  PROJEKT_IMAGE_MAX_FILE_SIZE_MB = 40
+
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
+  before_action :process_tags, only: [:update]
 
   def list
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
@@ -137,13 +140,52 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     ]
   end
 
+  def report_summary
+    authorize [:adm, :projekts, @projekt], :show?
+
+    @evaluation = @projekt.projekt_evaluation
+
+    return redirect_to(evaluation_adm_projekts_projekt_path(@projekt)) if @evaluation.blank? || !@evaluation.completed?
+
+    @breadcrumbs = [
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t("adm.projekts.projekts.evaluation.title"), url: evaluation_adm_projekts_projekt_path(@projekt) },
+      { name: t("adm.projekts.projekts.evaluation.report_summary_card.title") }
+    ]
+  end
+
+  def evaluation_phase
+    authorize [:adm, :projekts, @projekt], :show?
+
+    @evaluation = @projekt.projekt_evaluation
+
+    return redirect_to(evaluation_adm_projekts_projekt_path(@projekt)) if @evaluation.blank? || !@evaluation.completed?
+
+    @phase_row = @evaluation.phase_rows.find do |row|
+      (row.data || {})["phase_id"].to_i == params[:phase_id].to_i
+    end
+
+    return redirect_to(evaluation_adm_projekts_projekt_path(@projekt)) if @phase_row.nil?
+
+    @active_phase_id = params[:phase_id].to_i
+    @selection = PdfServices::EvaluationPdfSelection.all(@evaluation)
+
+    @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
+
+    @breadcrumbs = [
+      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
+      { name: t("adm.projekts.projekts.evaluation.title"), url: evaluation_adm_projekts_projekt_path(@projekt) },
+      { name: (@phase_row.data || {})["phase_title"] }
+    ]
+  end
+
   def evaluation_visibility
     authorize [:adm, :projekts, @projekt], :update?
 
     @evaluation = @projekt.projekt_evaluation
-    @report_visibility = @projekt.projekt_evaluation_visibility ||
-      @projekt.build_projekt_evaluation_visibility
-    @phase_visibilities = build_phase_visibility_map(@projekt)
+    @projekt_phases = @projekt.projekt_phases.sorted
+      .includes(:projekt_phase_evaluation_visibility)
+    @phase_visibilities = build_phase_visibility_map(@projekt_phases)
 
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
 
@@ -163,9 +205,28 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       phase_params: phase_visibility_params
     )
 
-    flash[:notice] = t(".success")
+    respond_to do |format|
+      format.json { head :no_content }
+      format.html do
+        flash[:notice] = t(".success")
 
-    redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt)
+        redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt)
+      end
+    end
+  end
+
+  def toggle_evaluation_section_visibility
+    authorize [:adm, :projekts, @projekt], :update?
+
+    projekt_phase = @projekt.projekt_phases.find(params[:phase_id])
+
+    ProjektEvaluations::ToggleSectionVisibilityService.call(
+      projekt_phase: projekt_phase,
+      section_key: params[:section_key],
+      visible: params[:visible]
+    )
+
+    head :no_content
   end
 
   def generate_evaluation
@@ -192,20 +253,15 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   end
 
   def regenerate_phase_evaluation
-    authorize [:adm, :projekts, @projekt], :update?
+    enqueue_phase_regeneration(ProjektEvaluations::GeneratePhaseEvaluationJob)
+  end
 
-    evaluation = @projekt.projekt_evaluation || @projekt.create_projekt_evaluation!(status: :pending)
-    projekt_phase = @projekt.projekt_phases.find(params[:phase_id])
+  def regenerate_phase_regular_stats
+    enqueue_phase_regeneration(ProjektEvaluations::RegeneratePhaseRegularStatsJob)
+  end
 
-    row = evaluation.projekt_phase_evaluations.find_or_initialize_by(projekt_phase_id: projekt_phase.id)
-    row.update!(status: :processing)
-
-    ProjektEvaluations::GeneratePhaseEvaluationJob.perform_later(row.id)
-
-    render json: {
-      status: row.status,
-      projekt_phase_evaluation_id: row.id
-    }
+  def regenerate_phase_ai_stats
+    enqueue_phase_regeneration(ProjektEvaluations::RegeneratePhaseAiStatsJob)
   end
 
   def phase_evaluation_status
@@ -232,7 +288,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @originating_phase_id = resolve_originating_phase_id(@evaluation, params[:phase_id])
     @selection_defaults = PdfServices::EvaluationPdfSelection.defaults_for(
       evaluation: @evaluation,
-      phase_id: @originating_phase_id
+      phase_id: @originating_phase_id,
+      section_group: params[:section_group].presence
     )
 
     @back_button_url =
@@ -284,11 +341,16 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       flash.now[:success] = t("adm.attribute.update.success")
     end
 
-    render turbo_stream: turbo_stream.replace(
-      turbo_frame_request_id,
-      partial: "adm/projekts/projekts/#{frame_partial_path}",
-      locals: { projekt: @projekt }
-    )
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          turbo_frame_request_id,
+          partial: "adm/projekts/projekts/#{frame_partial_path}",
+          locals: { projekt: @projekt }
+        )
+      end
+      format.json { render json: { projekt: @projekt.serialize } }
+    end
   end
 
   def destroy
@@ -301,16 +363,6 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @projekt.destroy!
 
     redirect_to adm_projekts_root_path, notice: t("adm.projekts.projekts.destroy.success")
-  end
-
-  def import_projekt
-    authorize [:adm, :projekts, Projekt], :create?
-
-    @breadcrumbs = [
-      { name: t(".title") }
-    ]
-
-    @dt_import_url = build_dt_import_url
   end
 
   def notify_reviewers
@@ -337,6 +389,17 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     if @projekt.update(color: params[:color].presence)
       render json: { ok: true, color: @projekt.color }
+    else
+      render json: { ok: false, errors: @projekt.errors.full_messages },
+             status: :unprocessable_entity
+    end
+  end
+
+  def update_taxonomy
+    authorize [:adm, :projekts, @projekt], :update?
+
+    if @projekt.update(taxonomy_params)
+      render json: { ok: true }
     else
       render json: { ok: false, errors: @projekt.errors.full_messages },
              status: :unprocessable_entity
@@ -370,8 +433,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     @projekt_phase = @projekt.projekt_phases.find(params[:projekt_phase_id])
     param_key = @projekt_phase.model_name.param_key
-    @projekt_phase.default_phase = params[param_key][:default_phase]
+    phase_params = params[param_key] || params[:projekt_phase]
+    @projekt_phase.default_phase = phase_params[:default_phase]
     @projekt_phases = @projekt.projekt_phases
+
+    respond_to do |format|
+      format.turbo_stream
+      format.json { head :ok }
+    end
   rescue ActiveRecord::RecordInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
   end
@@ -381,6 +450,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     page = @projekt.page
     image = page.image || ::Image.new(imageable: page)
+    image.accepted_content_types_override = AdminImage::ALLOWED_CONTENT_TYPES
+    image.max_file_size_override = PROJEKT_IMAGE_MAX_FILE_SIZE_MB
     image.attachment = params.require(:file)
     image.user = current_user
 
@@ -403,10 +474,68 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     render json: { ok: true, message: t(".success") }
   end
 
+  def generate_image
+    authorize [:adm, :projekts, @projekt], :update?
+
+    if !Ai::Settings.ai_available?
+      render json: { ok: false }, status: :forbidden
+      return
+    end
+
+    use_projekt_content = ActiveModel::Type::Boolean.new.cast(params[:use_projekt_content]) == true
+
+    @projekt.update_column(:banner_image_generation_status, "processing")
+    Projekts::GenerateBannerImageJob.perform_later(
+      @projekt.id,
+      current_user.id,
+      params[:prompt].to_s,
+      use_projekt_content
+    )
+
+    render json: { status: "processing" }
+  end
+
+  def generate_image_status
+    authorize [:adm, :projekts, @projekt], :show?
+
+    status = @projekt.banner_image_generation_status || "pending"
+    payload = { status: status }
+
+    if status == "completed"
+      payload[:image_url] = generated_banner_image_url
+    end
+
+    render json: payload
+  end
+
   private
+
+    def enqueue_phase_regeneration(job_class)
+      authorize [:adm, :projekts, @projekt], :update?
+
+      evaluation = @projekt.projekt_evaluation || @projekt.create_projekt_evaluation!(status: :pending)
+      projekt_phase = @projekt.projekt_phases.find(params[:phase_id])
+
+      row = evaluation.projekt_phase_evaluations.find_or_initialize_by(projekt_phase_id: projekt_phase.id)
+      row.update!(status: :processing)
+
+      job_class.perform_later(row.id)
+
+      render json: {
+        status: row.status,
+        projekt_phase_evaluation_id: row.id
+      }
+    end
 
     def find_projekt
       @projekt = Projekt.find(params[:id])
+    end
+
+    def generated_banner_image_url
+      attachment = @projekt.page&.image&.attachment
+      return nil if attachment.blank?
+
+      Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true)
     end
 
     def images_query_params
@@ -437,11 +566,11 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       match ? candidate : nil
     end
 
-    def build_phase_visibility_map(projekt)
+    def build_phase_visibility_map(phases)
       defaults = ProjektPhaseEvaluationVisibility::SECTION_COLUMNS
         .each_with_object({}) { |col, memo| memo[col] = false }
 
-      projekt.projekt_phases.each_with_object({}) do |phase, memo|
+      phases.each_with_object({}) do |phase, memo|
         memo[phase.id] = phase.projekt_phase_evaluation_visibility ||
           phase.build_projekt_phase_evaluation_visibility(defaults)
       end
@@ -467,14 +596,35 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated,
         :landing_page_id,
+        :tag_list,
         geozone_affiliation_ids: [],
         registered_address_district_affiliation_ids: [],
-        individual_group_value_ids: []
+        individual_group_value_ids: [],
+        sdg_goal_ids: []
       )
+    end
+
+    def process_tags
+      return if params[:projekt].blank?
+      return if params[:projekt][:tag_list_predefined].nil?
+
+      params[:projekt][:tag_list] = params[:projekt][:tag_list_predefined]
+      params[:projekt].delete(:tag_list_predefined)
     end
 
     def create_params
       params.require(:projekt).permit(:name)
+    end
+
+    # Inline sidebar editors (SDG goals + category tags) on the projekt page.
+    # The category selector submits its value in :tag_list_predefined, which
+    # maps onto the taggable :tag_list attribute.
+    def taxonomy_params
+      if params[:projekt].key?(:tag_list_predefined)
+        params[:projekt][:tag_list] = params[:projekt].delete(:tag_list_predefined)
+      end
+
+      params.require(:projekt).permit(:tag_list, sdg_goal_ids: [])
     end
 
     def build_dt_import_url

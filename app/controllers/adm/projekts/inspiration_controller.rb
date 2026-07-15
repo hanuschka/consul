@@ -2,7 +2,7 @@ class Adm::Projekts::InspirationController < Adm::Projekts::BaseController
   before_action :authorize_inspiration, :load_breadcrumbs
 
   def show
-    @embed_url = "#{Dt.url}/?embedded=true" if Dt.url.present?
+    @embed_url = "#{Dt.url}/?embedded_full=true" if Dt.url.present?
   end
 
   private

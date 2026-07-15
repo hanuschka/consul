@@ -8,6 +8,9 @@
   regular_stats_url = regenerate_phase_regular_stats_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
   ai_stats_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
 
+  poll_stats_available = @poll_stats_entries.present?
+  default_tab = poll_stats_available ? "poll_stats" : "stats"
+
   format_generated_at = ->(iso_value) do
     time = iso_value.present? ? Time.zone.parse(iso_value.to_s) : @phase_row.generated_at
 
@@ -42,7 +45,7 @@
   <custom-tabs
     class="kern-container adm-evaluation-phase-container mb-5"
     param="tab"
-    default="stats"
+    default="<%= default_tab %>"
     data-controller="adm--evaluation-tabs"
     data-action="custom-tabs:change->adm--evaluation-tabs#change"
     data-adm--evaluation-tabs-regular-url-value="<%= regular_stats_url %>"
@@ -60,7 +63,7 @@
         <% if @poll_stats_entries.present? %>
           <custom-tab
             for="poll_stats"
-            class="adm-evaluation-view-tabs--tab"
+            class="adm-evaluation-view-tabs--tab -active"
           >
             <span class="adm-evaluation-view-tabs--tab-label">
               <span
@@ -82,7 +85,7 @@
         <% end %>
         <custom-tab
           for="stats"
-          class="adm-evaluation-view-tabs--tab -active"
+          class="adm-evaluation-view-tabs--tab<%= " -active" unless poll_stats_available %>"
         >
           <span class="adm-evaluation-view-tabs--tab-label">
             <span

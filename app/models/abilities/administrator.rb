@@ -93,7 +93,7 @@ module Abilities
 
       can [:index, :create, :update, :destroy], Geozone
 
-      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications, :report, :evaluation, :refresh_ai_stats, :ai_stats_status, :download_report_section, :download_all_report_sections],
+      can [:read, :create, :update, :destroy, :add_question, :search_booths, :search_officers, :booth_assignments, :send_notifications, :report, :evaluation, :ai_analysis, :refresh_ai_stats, :ai_stats_status, :download_report_section, :download_all_report_sections],
 Poll
       can [:read, :create, :update, :destroy, :available], Poll::Booth
       can [:search, :create, :index, :destroy], ::Poll::Officer

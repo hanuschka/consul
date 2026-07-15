@@ -2,14 +2,16 @@
 
 class Polls::SubNavComponent < ApplicationComponent
   attr_reader :poll
-  delegate :can?, :results_menu?, :stats_menu?, :info_menu?, :evaluation_menu?, :report_menu?, to: :helpers
+  delegate :can?, :results_menu?, :stats_menu?, :info_menu?, :evaluation_menu?, :report_menu?,
+           :ai_analysis_menu?, :poll_ai_analysis_visible?, to: :helpers
 
   def initialize(poll:)
     @poll = poll
   end
 
   def render?
-    can?(:stats, poll) || can?(:results, poll) || can?(:report, poll) || report_visible?
+    can?(:stats, poll) || can?(:results, poll) || can?(:report, poll) ||
+      report_visible? || poll_ai_analysis_visible?(poll)
   end
 
   private

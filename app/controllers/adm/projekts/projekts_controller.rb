@@ -180,6 +180,15 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         []
       end
 
+    @live_phase_stats =
+      if @projekt_phase.is_a?(ProjektPhase::VotingPhase)
+        ProjektEvaluations::AggregateStatistics
+          .new(@projekt)
+          .call_for_phase(@projekt_phase)
+          &.dig(:stats)
+          &.deep_stringify_keys
+      end
+
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
 
     @breadcrumbs = [

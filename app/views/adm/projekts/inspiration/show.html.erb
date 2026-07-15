@@ -1,19 +1,21 @@
 <%= content_for :title, t(".title") %>
 
-<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, compact: true) %>
+<div class="adm-projekts-inspiration">
+  <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, compact: true) %>
 
-<div class="kern-container">
-  <% if @embed_url.present? %>
-    <iframe
-      src="<%= @embed_url %>"
-      class="adm-projekts-inspiration-frame"
-      title="<%= t(".title") %>"
-      loading="lazy"
-      referrerpolicy="origin"
-    ></iframe>
-  <% else %>
-    <%= kern_alert(title: t(".not_configured"), style: :warning) do %>
-      <%= t(".not_configured_hint") %>
+  <div class="kern-container-fluid">
+    <% if @embed_url.present? %>
+      <iframe
+        src="<%= @embed_url %>"
+        class="adm-projekts-inspiration-frame"
+        title="<%= t(".title") %>"
+        loading="lazy"
+        referrerpolicy="origin"
+      ></iframe>
+    <% else %>
+      <%= kern_alert(title: t(".not_configured"), style: :warning) do %>
+        <%= t(".not_configured_hint") %>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </div>

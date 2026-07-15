@@ -20,8 +20,13 @@
   &::before {
     top: 50%;
     margin-top: 0;
-    font-size: 22px;
+    font-size: 30px;
     transform: translateY(-50%);
+    line-height: 1rem;
+    height: 1rem;
+    width: 1rem;
+    margin-top: -0.8rem;
+    color: #434343;
   }
 }
 

@@ -289,6 +289,16 @@
   }
 }
 
+.poll-question-flow-grid > .poll-question-card--full {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .poll-question-flow-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .card:has(> .poll-question-card--export) {
   position: relative;
 }
@@ -640,6 +650,7 @@
   display: flex;
   gap: 6px;
   align-items: flex-end;
+  justify-content: center;
   padding-top: 10px;
 }
 
@@ -649,6 +660,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  max-width: 90px;
 }
 
 .scale-count {
@@ -659,7 +671,7 @@
 }
 
 .scale-bar {
-  width: 100%;
+  width: 80%;
   border-radius: 4px 4px 0 0;
   min-width: 24px;
   min-height: 2px;

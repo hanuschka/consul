@@ -35,7 +35,7 @@
           <% if has_charts %>
             <div class="phase-segments-card__grid">
               <% if age.render? %>
-                <div class="phase-segments-card__panel -full-width">
+                <div class="phase-segments-card__panel">
                   <div class="phase-segments-card__panel-label"><%= t("stats.by_age") %></div>
                   <div
                     class="phase-segments-card__chart"
@@ -51,7 +51,7 @@
               <% end %>
 
               <% if geozone.render? %>
-                <div class="phase-segments-card__panel -full-width">
+                <div class="phase-segments-card__panel">
                   <div class="phase-segments-card__panel-label"><%= t("stats.by_geozone") %></div>
                   <div
                     class="phase-segments-card__chart"

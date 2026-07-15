@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class extends Controller {
+export default class PhaseRegenerateController extends Controller {
   static targets = ["content", "loading"]
   static values = {
     statusUrl: String,
@@ -30,12 +30,11 @@ export default class extends Controller {
       if (!window.confirm(this.confirmValue)) return
     }
 
-    this.regenerating = true
-
     const triggerEl = event.currentTarget
     const url = triggerEl.getAttribute("href") || triggerEl.dataset.url
     if (!url) return
 
+    this.regenerating = true
     this.showLoading()
 
     fetch(url, {
@@ -46,9 +45,32 @@ export default class extends Controller {
       },
       credentials: "same-origin"
     })
-      .then((response) => response.json())
-      .then(() => this.schedulePoll())
-      .catch(() => this.schedulePoll())
+      .then((response) => this.handleStartResponse(response))
+      .catch(() => this.abortRegeneration())
+  }
+
+  handleStartResponse(response) {
+    if (!response.ok) {
+      this.abortRegeneration()
+      return
+    }
+
+    this.schedulePoll()
+  }
+
+  abortRegeneration() {
+    this.regenerating = false
+    this.hideLoading()
+    console.error("Phase evaluation regeneration request failed")
+  }
+
+  hideLoading() {
+    if (this.hasContentTarget) {
+      this.contentTarget.hidden = false
+    }
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.hidden = true
+    }
   }
 
   schedulePoll() {

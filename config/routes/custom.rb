@@ -103,6 +103,12 @@ resources :masterportal_pins, only: [] do
   end
 end
 
+resources :polls, only: [] do
+  member do
+    get :ai_analysis
+  end
+end
+
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 get "/:landing_page_slug/events", to: "projekt_events#index", as: :landing_page_events
 get "/:landing_page_slug/proposals", to: "proposals#index", as: :landing_page_proposals

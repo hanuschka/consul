@@ -1,3 +1,6 @@
+<% if @frontend_answer_poll.present? %>
+  <%= render "adm/projekts/projekts/evaluation/poll_answer_frontend_actions", answer: answer %>
+<% else %>
 <%
   answer_id = answer["id"]
   answer_title = answer["title"]
@@ -90,4 +93,5 @@
       <% end %>
     </span>
   </span>
+<% end %>
 <% end %>

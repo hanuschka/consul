@@ -1,3 +1,5 @@
+@import "cross_pack/1_colors";
+
 .adm-poll-stats {
   display: flex;
   flex-direction: column;
@@ -52,4 +54,43 @@
   background: var(--er-surface);
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius-lg);
+}
+
+.adm-poll-stats .kern-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.adm-poll-stats .kern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  color: var(--er-text);
+}
+
+.adm-poll-stats .kern-title {
+  caption-side: top;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--er-text);
+  text-align: left;
+}
+
+.adm-poll-stats .kern-table__header,
+.adm-poll-stats .kern-table__cell {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--er-border);
+}
+
+.adm-poll-stats .kern-table__header--numeric,
+.adm-poll-stats .kern-table__cell--numeric {
+  text-align: right;
+}
+
+.adm-poll-stats .kern-table__head .kern-table__header {
+  font-weight: 600;
+  color: var(--er-text-secondary);
+  border-bottom: 2px solid var(--er-border);
 }

@@ -13,6 +13,9 @@ module Abilities
       can :stats, Poll,
           budget_id: nil,
           projekt_phase: { settings: { key: "feature.resource.stats_enabled", value: "active" } }
+      can :ai_analysis, Poll,
+          budget_id: nil,
+          projekt_phase: { settings: { key: "feature.general.public_ai_stats", value: "active" } }
       can :read, Poll::Question
       can [:read, :refresh_activities], User
       can [:read, :welcome], Budget

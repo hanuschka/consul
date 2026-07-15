@@ -113,6 +113,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.stats_enabled": "",
           "feature.resource.report_visible_for_citizens": "",
           "feature.resource.evaluation_enabled": "",
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": "",
           "feature.resource.show_comments": "",
           "feature.resource.show_open_answer_author_name": ""
         },

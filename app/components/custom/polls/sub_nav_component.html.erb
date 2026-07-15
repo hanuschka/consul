@@ -13,32 +13,20 @@
                 data: { turbolinks: false } %>
   <% end %>
 
-  <% if poll.report_visible_for_citizens? || can?(:edit, poll.projekt) || current_user&.administrator? %>
+  <% if poll_ai_analysis_visible?(poll) %>
     <% if Ai::Settings.ai_available? %>
-      <%= link_to t("custom.polls.show.report_menu"), report_poll_path(id: poll.id),
-                  class: "#{'is-active' if report_menu?} #{'js-studio-hide-on-preview' if !poll.report_visible_for_citizens?}" %>
+      <%= link_to t("custom.polls.show.ai_analysis_menu"), ai_analysis_poll_path(id: poll.id),
+                  class: "#{'is-active' if ai_analysis_menu?} #{'js-studio-hide-on-preview' if !poll.projekt_phase.feature?('general.public_ai_stats')}" %>
     <% else %>
-      <%= render Shared::AiFeatureTooltipComponent.new(feature_text: t("custom.polls.show.report_menu")) do %>
+      <%= render Shared::AiFeatureTooltipComponent.new(feature_text: t("custom.polls.show.ai_analysis_menu")) do %>
         <span
-          class="<%= 'js-studio-hide-on-preview' if !poll.report_visible_for_citizens? %>"
+          class="<%= 'js-studio-hide-on-preview' if !poll.projekt_phase.feature?('general.public_ai_stats') %>"
           tabindex="0"
         >
-          <%= t("custom.polls.show.report_menu") %>
+          <%= t("custom.polls.show.ai_analysis_menu") %>
         </span>
       <% end %>
     <% end %>
   <% end %>
 
-  <% if can?(:edit, poll.projekt) || current_user&.administrator? %>
-    <% if Ai::Settings.ai_available? %>
-      <%= link_to t("custom.polls.show.evaluation_menu"), evaluation_poll_path(id: poll.id),
-                  class: "#{'is-active' if evaluation_menu?} js-studio-hide-on-preview" %>
-    <% else %>
-      <%= render Shared::AiFeatureTooltipComponent.new(feature_text: t("custom.polls.show.evaluation_menu")) do %>
-        <span class="js-studio-hide-on-preview" tabindex="0">
-          <%= t("custom.polls.show.evaluation_menu") %>
-        </span>
-      <% end %>
-    <% end %>
-  <% end %>
 </div>

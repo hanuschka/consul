@@ -1,5 +1,10 @@
 <%
   phase = @phase_row.data || {}
+
+  if @live_phase_stats.present?
+    phase = phase.merge("stats" => @live_phase_stats)
+  end
+
   stats = phase["stats"] || {}
   poll_based = (stats["polls"] || []).any?
   color = evaluation_phase_palette[phase["phase_type"]]
@@ -21,7 +26,6 @@
     end
   end
 
-  regular_generated_at_text = format_generated_at.call(phase["regular_generated_at"])
   ai_generated_at_text = format_generated_at.call(phase["ai_generated_at"])
 %>
 
@@ -99,9 +103,9 @@
             <%= t("adm.projekts.projekts.evaluation.view_tabs.stats") %>
           </span>
           <span class="adm-evaluation-view-tabs--date">
-            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
-            <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            <%= regular_generated_at_text %>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">bolt</span>
+            <i class="fas fa-bolt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
           </span>
         </custom-tab>
         <custom-tab

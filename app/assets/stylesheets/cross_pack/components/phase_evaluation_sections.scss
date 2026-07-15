@@ -122,7 +122,8 @@
   }
 }
 
-.projekt-footer-evaluation {
+.projekt-footer-evaluation,
+.adm-poll-stats {
   --er-primary: #1e40af;
   --er-primary-light: #3b82f6;
   --er-primary-lighter: #dbeafe;
@@ -484,6 +485,7 @@
   &:hover {
     background: var(--er-border-light);
     color: var(--er-primary);
+    text-decoration: none;
   }
 
   &:active {

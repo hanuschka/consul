@@ -183,7 +183,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     polls_data = polls.map { |poll| collect_single_poll(poll) }
 
     {
-      polls_count: polls.count,
+      polls_count: polls_data.size,
       participants_count: polls_data.sum { |p| p[:voters_count] },
       questions_count: polls_data.sum { |p| p[:questions_count] },
       open_text_count: polls_data.sum { |p| p[:open_text_count] },
@@ -195,11 +195,24 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     voters_count = poll.voters.count
     visible_comments = poll.comments.where(hidden_at: nil)
 
-    questions_data = poll.questions
+    root_questions = poll.questions
       .root_questions
-      .includes(:votation_type, :question_answers, nested_questions: [:votation_type, :question_answers])
+      .includes(
+        :translations, :votation_type, :question_answers,
+        nested_questions: [:translations, :votation_type, :question_answers]
+      )
       .order(:given_order)
-      .map { |question| build_question_data(question, voters_count) }
+      .to_a
+
+    question_ids = root_questions.flat_map do |question|
+      [question.id] + question.nested_questions.map(&:id)
+    end
+
+    vote_totals = build_answer_vote_totals(question_ids)
+
+    questions_data = root_questions.map do |question|
+      build_question_data(question, voters_count, vote_totals)
+    end
 
     comment_entries = visible_comments
       .order(created_at: :asc)
@@ -217,9 +230,9 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     }
   end
 
-  def build_question_data(question, voters_count)
+  def build_question_data(question, voters_count, vote_totals)
     answers_data = question.question_answers.map do |answer|
-      answer_count = answer.total_votes
+      answer_count = answer_total_votes(answer, vote_totals)
 
       {
         id: answer.id,
@@ -247,11 +260,49 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
 
     if question.nested_questions.any?
       data[:nested_questions] = question.nested_questions.map do |nested_question|
-        build_question_data(nested_question, voters_count)
+        build_question_data(nested_question, voters_count, vote_totals)
       end
     end
 
     data
+  end
+
+  def build_answer_vote_totals(question_ids)
+    return empty_answer_vote_totals if question_ids.empty?
+
+    {
+      weighted: Poll::Answer
+        .where(question_id: question_ids)
+        .group(:question_id, :answer)
+        .sum(:answer_weight),
+      open_counts: Poll::Answer
+        .where(question_id: question_ids)
+        .where.not(open_answer_text: [nil, ""])
+        .group(:question_id, :answer)
+        .count,
+      partial_amount: ::Poll::PartialResult
+        .where(question_id: question_ids)
+        .group(:question_id, :answer)
+        .sum(:amount),
+      partial_counts: ::Poll::PartialResult
+        .where(question_id: question_ids)
+        .group(:question_id, :answer)
+        .count
+    }
+  end
+
+  def empty_answer_vote_totals
+    { weighted: {}, open_counts: {}, partial_amount: {}, partial_counts: {} }
+  end
+
+  def answer_total_votes(answer, vote_totals)
+    key = [answer.question_id, answer.title]
+
+    if answer.open_answer?
+      (vote_totals[:open_counts][key] || 0) + (vote_totals[:partial_counts][key] || 0)
+    else
+      (vote_totals[:weighted][key] || 0) + (vote_totals[:partial_amount][key] || 0)
+    end
   end
 
   def rating_average(vote_type, answers)

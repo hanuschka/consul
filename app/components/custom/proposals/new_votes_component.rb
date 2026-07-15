@@ -42,6 +42,7 @@ class Proposals::NewVotesComponent < ApplicationComponent
 
     def cannot_vote_text
       return nil if permission_problem_key.blank?
+      return nil if @proposal_phase&.conditional_vote_possible_for?(current_user)
 
       t(path_to_key,
             sign_in: link_to_signin, sign_up: link_to_signup,

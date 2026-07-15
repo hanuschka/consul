@@ -272,7 +272,12 @@ class Budget
     end
 
     def reason_for_not_being_selectable_by(user)
-      return permission_problem(user) if permission_problem?(user)
+      problem = permission_problem(user)
+
+      if problem.present?
+        return problem unless problem == :not_verified && conditional_vote_for?(user)
+      end
+
       return :different_heading_assigned unless valid_heading?(user)
 
       return :no_selecting_allowed unless budget.selecting?

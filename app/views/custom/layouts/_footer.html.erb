@@ -170,7 +170,7 @@
 
         <% if extended_feature?("general.show_guest_login_links") %>
           <% if current_user&.guest? %>
-            <li><%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete %></li>
+            <li><%= link_to t("custom.layouts.footer.sign_out_as_guest"), destroy_guest_user_session_path, method: :delete, data: { turbo_method: :delete } %></li>
           <% elsif current_user.nil? %>
             <li><%= link_to t("custom.layouts.footer.sign_in_as_guest"), new_guest_user_registration_path %></li>
           <% end %>

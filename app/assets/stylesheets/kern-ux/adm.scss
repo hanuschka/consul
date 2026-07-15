@@ -59,6 +59,7 @@
 @use "cross_pack/components/shared_spinner";
 @use "adm/components/evaluation_report_icon_overrides";
 @use "adm/components/evaluation_view_tabs";
+@use "adm/components/evaluation_poll_stats";
 @use "cross_pack/components/shared_accordion";
 @use "cross_pack/components/shared_tabs";
 @use "cross_pack/components/ai_question_section";
@@ -74,6 +75,7 @@
 
 @use "adm/components/newsletter_email_preview";
 @use "adm/components/image_cropper_dialog";
+@use "adm/components/projekts_inspiration";
 
 @use "adm/partials/navbar_items";
 

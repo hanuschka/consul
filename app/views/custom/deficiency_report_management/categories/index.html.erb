@@ -26,7 +26,7 @@
         <td><%= category.color %></td>
         <td><%= category.name %></td>
         <td><%= category.default_responsible&.name %></td>
-        <td><%= strip_tags(category.warning_text)[0..200] %></td>
+        <td><%= strip_tags(category.warning_text.to_s)[0..200] %></td>
         <td>
           <%= render Admin::TableActionsComponent.new(category,
                                                       actions: [:edit, :destroy],

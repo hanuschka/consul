@@ -186,9 +186,9 @@ de:
             view_stats: Statistiken ansehen
           view_tabs:
             aria_label: Ansicht der Auswertung wechseln
-            stats: Statistiken
+            stats: Ergebnis
             ai: KI-Analyse
-            poll_stats: Statistik
+            poll_stats: Statistiken
             poll_stats_live: Live-Daten
           poll_stats_tab:
             empty: Für diese Umfrage liegen noch keine Statistiken vor.

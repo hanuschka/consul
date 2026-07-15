@@ -184,9 +184,9 @@ en:
             view_stats: View stats
           view_tabs:
             aria_label: Switch evaluation view
-            stats: Statistics
+            stats: Results
             ai: AI analysis
-            poll_stats: Stats
+            poll_stats: Statistics
             poll_stats_live: Live data
           poll_stats_tab:
             empty: No statistics are available for this poll yet.

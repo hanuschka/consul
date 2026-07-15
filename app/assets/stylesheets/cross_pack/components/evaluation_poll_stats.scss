@@ -42,7 +42,9 @@
 
 .adm-poll-stats--tables .kern-table__cell small {
   display: block;
-  font-size: 0.8125rem;
+  margin-top: 0.125rem;
+  font-size: 0.875rem;
+  font-weight: 400;
   color: var(--er-text-secondary);
 }
 
@@ -70,27 +72,54 @@
 
 .adm-poll-stats .kern-title {
   caption-side: top;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
   font-size: 1rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--er-text);
   text-align: left;
 }
 
 .adm-poll-stats .kern-table__header,
 .adm-poll-stats .kern-table__cell {
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 0.875rem;
   text-align: left;
-  border-bottom: 1px solid var(--er-border);
+  vertical-align: middle;
+  border-bottom: 1px solid var(--er-border-light);
 }
 
 .adm-poll-stats .kern-table__header--numeric,
 .adm-poll-stats .kern-table__cell--numeric {
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .adm-poll-stats .kern-table__head .kern-table__header {
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--er-text-secondary);
-  border-bottom: 2px solid var(--er-border);
+  background: var(--er-border-light);
+  border-bottom: 1px solid var(--er-border);
+
+  &:first-child {
+    border-top-left-radius: var(--er-radius);
+  }
+
+  &:last-child {
+    border-top-right-radius: var(--er-radius);
+  }
+}
+
+.adm-poll-stats .kern-table__body .kern-table__header {
+  font-weight: 600;
+  color: var(--er-text);
+  background: #{$page-bg-light};
+}
+
+.adm-poll-stats .kern-table__row--total .kern-table__header,
+.adm-poll-stats .kern-table__row--total .kern-table__cell {
+  font-weight: 600;
+  background: #{$page-bg-light};
+  border-top: 2px solid var(--er-border);
+  border-bottom: 0;
 }

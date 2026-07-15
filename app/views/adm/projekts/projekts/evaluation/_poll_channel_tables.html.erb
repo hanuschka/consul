@@ -98,7 +98,7 @@
               <small>(<%= number_to_stats_percentage(stats.total_null_percentage) %>)</small>
             </td>
           </tr>
-          <tr class="kern-table__row">
+          <tr class="kern-table__row kern-table__row--total">
             <th scope="row" class="kern-table__header"><%= t("polls.show.stats.total") %></th>
             <% channels.each do |channel| %>
               <td class="kern-table__cell kern-table__cell--numeric">

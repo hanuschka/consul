@@ -17,7 +17,7 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
       { name: t("adm.menu.items.files_subitems.images") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def show

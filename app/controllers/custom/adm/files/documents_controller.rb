@@ -19,7 +19,7 @@ class Adm::Files::DocumentsController < Adm::Files::BaseController
       { name: t("adm.menu.items.files_subitems.documents") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def show

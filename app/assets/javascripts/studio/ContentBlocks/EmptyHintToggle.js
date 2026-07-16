@@ -7,13 +7,20 @@
 // `App.Studio.ContentBlocks.Crud.updateContentBlock` mutates the DOM directly
 // (`contentBlock.innerHTML = ...`) without a page reload.
 //
-// We use a MutationObserver per container so that any mutation inside — text
-// edits, full innerHTML replacement after save (Crud.syncDomFromServer), or
-// rewrap by `App.Studio.SiteContentBlockEditor.wrapContentBlocks` — re-runs
-// the emptiness check. The check delegates to
+// We use a MutationObserver per container so that any mutation inside — full
+// innerHTML replacement after save (Crud.syncDomFromServer), content restore on
+// cancel, or rewrap by `App.Studio.SiteContentBlockEditor.wrapContentBlocks` —
+// re-runs the emptiness check. The check delegates to
 // `App.Studio.ContentBlocks.Crud.isContentEmpty(html)` so the JS state stays
 // consistent with the Ruby `content_block_body_blank?` rule (strip <br>, <p>,
 // <div>, <span>, whitespace, then check for any remaining characters).
+//
+// The marker is NOT re-evaluated while the block is being edited: keystrokes in
+// the contentEditable body would otherwise flip the hint on/off mid-typing.
+// `evaluate` runs on a microtask (see `attach`), i.e. after the current
+// synchronous handler finishes — so on save/cancel, which clear the wrapper's
+// edit-mode state within that same handler (whether before or after they mutate
+// the body), the check sees edit mode already off and settles the marker then.
 App.Studio.ContentBlocks.EmptyHintToggle = {
   markerClass: "is-content-empty",
   containerSelector: ".js-toggle-empty-hint-on-content",
@@ -60,6 +67,8 @@ App.Studio.ContentBlocks.EmptyHintToggle = {
   },
 
   evaluate(container) {
+    if (this.isEditing(container)) return
+
     const body = this.findBody(container);
 
     // No editable body present: treat as empty so the hint stays visible.
@@ -70,6 +79,20 @@ App.Studio.ContentBlocks.EmptyHintToggle = {
     if (isEmpty) {
       this.reserveHintHeight(container);
     }
+  },
+
+  // True while any edit mode (simple/ai/code/html) is active on the wrapped
+  // content block, so typing doesn't toggle the marker. The container is either
+  // the wrapper itself (projekt-page block) or an ancestor of it (site block /
+  // sidebar card).
+  isEditing(container) {
+    const wrapper = container.classList.contains("custom-content-block-wrapper")
+      ? container
+      : container.querySelector(".custom-content-block-wrapper");
+
+    if (!wrapper) return false
+
+    return wrapper.classList.contains("-in-edit-mode") || !!wrapper.dataset.editMode;
   },
 
   // Stash the visible hint's height as --empty-hint-height so the CSS can give

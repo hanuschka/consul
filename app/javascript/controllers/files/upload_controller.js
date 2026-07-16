@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { addFlashMessage, queueFlashMessage } from "../../utils/adm_flash"
+import { addFlashMessage } from "../../utils/adm_flash"
 
 export default class extends Controller {
   static values = {
@@ -65,12 +65,22 @@ export default class extends Controller {
       }
 
       this.dispatchProgress("complete")
-      queueFlashMessage(this.successMessage(file.name), "success")
-      window.location.reload()
+      addFlashMessage(this.successMessage(file.name), "success")
+      this.reloadResults()
     } catch (error) {
       console.error("Files upload failed", error)
       this.dispatchProgress("restore")
       addFlashMessage(this.failedMessage(file.name), "danger")
+    }
+  }
+
+  reloadResults() {
+    const frame = document.getElementById("files-index-results")
+
+    if (frame.src) {
+      frame.reload()
+    } else {
+      frame.src = window.location.href
     }
   }
 

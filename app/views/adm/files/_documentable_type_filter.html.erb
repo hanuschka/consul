@@ -1,6 +1,7 @@
 <%= turbo_frame_tag "files-documentable-type-filter" do %>
   <div class="adm-filter-bar--field">
     <select
+      name="documentable_type"
       class="adm-filter-bar--input js-fm-filter-documentable-type"
       aria-label="<%= t("files.filter_bar.aria.filter_documentable_type") %>"
       data-action="change->files--filter-bar#filterChanged"

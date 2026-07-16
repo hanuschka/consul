@@ -241,6 +241,49 @@ class PagesController < ApplicationController
       # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
       @resources = @projekt_phase.polls.for_public_render.all
       @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+
+      set_voting_phase_evaluation_variables
+    end
+
+    def set_voting_phase_evaluation_variables
+      if params[:section] == "poll_stats" &&
+          helpers.footer_evaluation_tab_available?(@projekt_phase, "stats")
+        @poll_stats_entries = @projekt_phase.polls.order(id: :desc).map do |poll|
+          { poll: poll, stats: Poll::Stats.new(poll) }
+        end
+      end
+
+      if params[:section] == "evaluation" &&
+          helpers.footer_render_frozen_evaluation?(@projekt_phase)
+        @live_phase_stats = voting_phase_live_stats
+
+        phase_polls = @projekt_phase.polls
+        @frontend_answer_poll = phase_polls.first if phase_polls.one?
+      end
+    end
+
+    def voting_phase_live_stats
+      return compute_voting_phase_live_stats if helpers.footer_admin_or_projekt_manager?
+
+      cache_key = "footer_live_phase_stats/#{@projekt_phase.id}"
+      cached_stats = Rails.cache.read(cache_key)
+      return cached_stats if cached_stats.present?
+
+      stats = compute_voting_phase_live_stats
+
+      if stats.present?
+        Rails.cache.write(cache_key, stats, expires_in: 5.minutes)
+      end
+
+      stats
+    end
+
+    def compute_voting_phase_live_stats
+      ProjektEvaluations::AggregateStatistics
+        .new(@projekt)
+        .call_for_phase(@projekt_phase)
+        &.dig(:stats)
+        &.deep_stringify_keys
     end
 
     def set_legislation_phase_footer_tab_variables

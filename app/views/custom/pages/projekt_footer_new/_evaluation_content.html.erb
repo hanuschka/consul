@@ -8,6 +8,11 @@
 <% if evaluation_row.present? && partial_name.present? %>
   <%
     phase_data = evaluation_row.data || {}
+
+    if @live_phase_stats.present?
+      phase_data = phase_data.merge("stats" => @live_phase_stats)
+    end
+
     palette = evaluation_phase_palette[projekt_phase.type]
     selection = PhaseEvaluationVisibility::Selector.for_phase(projekt_phase)
     is_admin_or_pm = footer_admin_or_projekt_manager?
@@ -98,7 +103,8 @@
         <% end %>
 
         <% visibility_token = projekt_phase.projekt_phase_evaluation_visibility&.cache_key_with_version || "none" %>
-        <% cache_if(!is_admin_or_pm, [evaluation_row, only_tab, visibility_token]) do %>
+        <% cacheable = !is_admin_or_pm && @live_phase_stats.blank? && @frontend_answer_poll.blank? %>
+        <% cache_if(cacheable, [evaluation_row, only_tab, visibility_token]) do %>
           <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
             locals: {
               projekt: projekt_phase.projekt,

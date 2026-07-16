@@ -19,7 +19,7 @@ class Adm::Maintenance::ResourceDocumentsController < Adm::Maintenance::BaseCont
       { name: t("adm.menu.items.files_subitems.resource_documents") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def show

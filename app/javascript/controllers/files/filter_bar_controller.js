@@ -5,15 +5,12 @@ const SEARCH_DEBOUNCE_MS = 400
 
 export default class extends Controller {
   static values = {
-    type: String,
-    endpoint: String
+    type: String
   }
 
   static targets = [
     "form",
-    "grid",
-    "list",
-    "pagination",
+    "resultsFrame",
     "viewModeCardsButton",
     "viewModeListButton",
     "editModal",
@@ -25,18 +22,17 @@ export default class extends Controller {
   ]
 
   connect() {
-    this.currentPage = 1
     this.searchTimer = null
     this.editingAsset = null
 
-    this.onPaginationClick = this.onPaginationClick.bind(this)
-    this.onPopState = this.onPopState.bind(this)
-
-    this.hydrateFromUrl()
     this.restoreViewMode()
+  }
 
-    this.paginationTarget.addEventListener("click", this.onPaginationClick)
-    window.addEventListener("popstate", this.onPopState)
+  disconnect() {
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer)
+      this.searchTimer = null
+    }
   }
 
   viewModeCardsClicked() {
@@ -85,40 +81,44 @@ export default class extends Controller {
     return `files-${this.typeValue}-view-mode`
   }
 
-  disconnect() {
-    if (this.searchTimer) {
-      clearTimeout(this.searchTimer)
-      this.searchTimer = null
-    }
-
-    this.paginationTarget.removeEventListener("click", this.onPaginationClick)
-    window.removeEventListener("popstate", this.onPopState)
-  }
-
   inputChanged() {
     if (this.searchTimer) clearTimeout(this.searchTimer)
 
     this.searchTimer = setTimeout(() => {
       this.searchTimer = null
-      this.currentPage = 1
-      this.refresh()
+      this.submitFilters()
     }, SEARCH_DEBOUNCE_MS)
   }
 
   filterChanged() {
-    this.currentPage = 1
-    this.refresh()
-  }
-
-  sortChanged() {
-    this.currentPage = 1
-    this.refresh()
+    this.submitFilters()
   }
 
   resetClicked() {
     this.clearFormInputs()
-    this.currentPage = 1
-    this.refresh()
+    this.submitFilters()
+  }
+
+  submitFilters() {
+    this.formTarget.requestSubmit()
+  }
+
+  stripBlankEntries(event) {
+    const formData = event.formData
+
+    Array.from(formData.entries()).forEach(([key, value]) => {
+      if (value === "") formData.delete(key)
+    })
+  }
+
+  reloadResults() {
+    const frame = this.resultsFrameTarget
+
+    if (frame.src) {
+      frame.reload()
+    } else {
+      frame.src = window.location.href
+    }
   }
 
   async deleteClicked(event) {
@@ -149,7 +149,7 @@ export default class extends Controller {
 
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-      card.remove()
+      this.reloadResults()
       addFlashMessage(this.deleteSuccessMessage(filename), "success")
     } catch (error) {
       console.error("Files delete failed", error)
@@ -360,114 +360,13 @@ export default class extends Controller {
     return el ? el.getAttribute("data-files-edit-failed-message") : "Update failed"
   }
 
-  onPaginationClick(event) {
-    const link = event.target.closest("a")
-
-    if (!link) return
-    if (!this.paginationTarget.contains(link)) return
-
-    event.preventDefault()
-
-    this.currentPage = this.extractPageFromHref(link.getAttribute("href"))
-    this.refresh()
-  }
-
-  onPopState() {
-    this.hydrateFromUrl()
-    this.refresh({ pushState: false })
-  }
-
-  async refresh({ pushState = true } = {}) {
-    const url = this.buildUrl()
-
-    if (pushState) history.pushState(null, "", url)
-
-    const response = await fetch(url, {
-      headers: {
-        "Accept": "text/html",
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    })
-    const html = await response.text()
-
-    this.replaceContent(html)
-  }
-
-  hydrateFromUrl() {
-    const serializer = window.FilesFilterSerializer
-    const params = serializer.parseUrlParams(window.location.search)
-
-    serializer.applyToForm(this.formTarget, params)
-
-    const pageParam = params.page
-    const parsedPage = parseInt(pageParam || "1", 10)
-
-    this.currentPage = isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
-  }
-
-  buildUrl() {
-    const serializer = window.FilesFilterSerializer
-    const params = serializer.serializeForm(this.formTarget)
-
-    params.type = this.typeValue
-
-    if (this.currentPage > 1) {
-      params.page = String(this.currentPage)
-    }
-
-    return serializer.urlForParams(this.endpointValue, params)
-  }
-
-  replaceContent(html) {
-    const doc = new DOMParser().parseFromString(html, "text/html")
-    const newGrid = doc.querySelector(".files-index--grid")
-    const newListItems = doc.querySelector(".files-index--list-items")
-    const newPagination = doc.querySelector(".files-index--pagination")
-
-    if (newGrid) this.gridTarget.innerHTML = newGrid.innerHTML
-    if (newListItems && this.hasListTarget) this.listTarget.innerHTML = newListItems.innerHTML
-    if (newPagination) this.paginationTarget.innerHTML = newPagination.innerHTML
-  }
-
   clearFormInputs() {
-    const selectors = [
-      ".js-fm-filter-search",
-      ".js-fm-filter-extension",
-      ".js-fm-filter-size-min",
-      ".js-fm-filter-size-max",
-      ".js-fm-filter-created-from",
-      ".js-fm-filter-created-to",
-      ".js-fm-filter-updated-from",
-      ".js-fm-filter-updated-to",
-      ".js-fm-filter-imageable-type",
-      ".js-fm-filter-documentable-type",
-      ".js-fm-filter-sort"
-    ]
-
-    selectors.forEach((selector) => {
-      const input = this.formTarget.querySelector(selector)
-
-      if (!input) return
-
+    this.formTarget.querySelectorAll("input, select").forEach((input) => {
       if (input.tagName === "SELECT") {
         input.selectedIndex = 0
       } else {
         input.value = ""
       }
     })
-  }
-
-  extractPageFromHref(href) {
-    if (!href) return 1
-
-    try {
-      const parsed = new URL(href, window.location.origin)
-      const pageParam = parsed.searchParams.get("page")
-      const parsedPage = parseInt(pageParam || "1", 10)
-
-      return isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
-    } catch (_error) {
-      return 1
-    }
   }
 }

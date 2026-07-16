@@ -13,7 +13,7 @@ Open-Source-Beteiligungssoftware
 [Consul Democracy](https://github.com/consuldemocracy/consuldemocracy),
 die unter der **GNU Affero General Public License v3 (AGPL-3.0)** steht.
 Entsprechend wird auch dieses Projekt unter der AGPL v3 veröffentlicht
-(siehe [LICENSE-AGPLv3.txt](LICENSE-AGPLv3.txt)).
+(siehe [LICENSE](LICENSE)).
 
 ## Wesentliche Komponenten
 

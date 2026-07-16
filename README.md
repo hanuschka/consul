@@ -283,7 +283,7 @@ RAILS_ENV=production bin/rails runner 'puts Delayed::Job.last&.last_error'
 
 ## License
 
-Code published under AFFERO GPL v3 (see [LICENSE-AGPLv3.txt](LICENSE-AGPLv3.txt)).
+Code published under AFFERO GPL v3 (see [LICENSE](LICENSE)).
 
 ## Contributions
 

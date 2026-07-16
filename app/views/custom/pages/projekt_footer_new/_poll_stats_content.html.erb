@@ -1,7 +1,7 @@
 <% cache_if(
   !footer_admin_or_projekt_manager?,
   [@projekt_phase, "footer_poll_stats"],
-  expires_in: 5.minutes
+  expires_in: ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_TTL
 ) do %>
   <div class="adm-projekt-evaluation-report projekt-footer-evaluation">
     <%= render "adm/projekts/projekts/evaluation/poll_stats_tab", entries: @poll_stats_entries %>

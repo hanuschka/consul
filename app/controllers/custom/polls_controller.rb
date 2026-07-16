@@ -407,6 +407,17 @@ class PollsController < ApplicationController
     end
   end
 
+  def csv_individual_answers
+    authorize! :csv_individual_answers, @poll
+
+    respond_to do |format|
+      format.csv do
+        send_data CsvServices::PollIndividualAnswersExporter.new(@poll).call,
+          filename: "poll_#{@poll.id}_individual_answers_#{Time.zone.today.strftime("%d/%m/%Y")}.csv"
+      end
+    end
+  end
+
   private
 
     def generate_report_section_filename(poll, section_index, format)

@@ -80,9 +80,9 @@
               ></i>
               <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats") %>
             </span>
-            <span class="adm-evaluation-view-tabs--date">
-              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">bolt</span>
-              <i class="fas fa-bolt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <span class="adm-evaluation-view-tabs--date -live">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+              <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
               <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
             </span>
           </custom-tab>
@@ -102,9 +102,9 @@
             ></i>
             <%= t("adm.projekts.projekts.evaluation.view_tabs.stats") %>
           </span>
-          <span class="adm-evaluation-view-tabs--date">
-            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">bolt</span>
-            <i class="fas fa-bolt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+          <span class="adm-evaluation-view-tabs--date -live">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+            <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
           </span>
         </custom-tab>
@@ -142,7 +142,7 @@
 
         <div class="adm-evaluation-view-tabs__actions-buttons">
           <%= kern_link_button(
-            evaluation_visibility_adm_projekts_projekt_path(@projekt),
+            evaluation_visibility_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id),
             text: t("adm.projekts.projekts.evaluation.overview.action_visibility"),
             icon: "visibility",
             style: :secondary,

@@ -1,0 +1,26 @@
+<div class="evaluation-export-menu polls-results-export-menu js-studio-hide-on-preview">
+  <dropdown-select-menu
+    title="<%= t("custom.polls.show.results.export") %>"
+    selected="<%= t("custom.polls.show.results.export") %>"
+  >
+    <% if @poll.projekt&.projekt_evaluation&.completed? %>
+      <%= link_to evaluation_pdf_options_adm_projekts_projekt_path(@poll.projekt, phase_id: @poll.projekt_phase_id) do %>
+        <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">picture_as_pdf</span>
+        <i class="fas fa-file-pdf projekt-evaluation-icon-fa" aria-hidden="true"></i>
+        <%= t("custom.polls.show.results.create_pdf_report") %>
+      <% end %>
+    <% end %>
+
+    <%= link_to csv_individual_answers_poll_path(@poll, format: :csv), data: { turbo: false } do %>
+      <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+      <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      <%= t("custom.polls.show.results.download_individual_answers") %>
+    <% end %>
+
+    <%= link_to poll_csv_answers_votes_path(@poll, format: :csv), data: { turbo: false } do %>
+      <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+      <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      <%= t("custom.polls.show.results.download_csv_answers_votes") %>
+    <% end %>
+  </dropdown-select-menu>
+</div>

@@ -40,7 +40,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       [
         { label: t("adm.menu.items.files_subitems.images"),             path: adm_files_images_path },
         { label: t("adm.menu.items.files_subitems.documents"),          path: adm_files_documents_path },
-        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path }
+        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path },
+        { label: t("adm.menu.items.files_subitems.file_settings"),      path: file_settings_adm_settings_path }
       ]
     end
 

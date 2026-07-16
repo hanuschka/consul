@@ -14,7 +14,7 @@ class Adm::Maintenance::ResourceImagesController < Adm::Maintenance::BaseControl
         .page(params[:page])
         .per(24)
 
-    Files::ResourcePreloader.call(@assets.map(&:imageable))
+    ::Files::ResourcePreloader.call(@assets.map(&:imageable))
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },
@@ -28,7 +28,7 @@ class Adm::Maintenance::ResourceImagesController < Adm::Maintenance::BaseControl
     image = Image.find(params[:id])
     authorize [:adm, image]
 
-    @detail = Files::ImageShowComponent.new(record: image)
+    @detail = ::Files::ImageShowComponent.new(record: image)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },

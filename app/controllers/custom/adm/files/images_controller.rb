@@ -24,7 +24,7 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
     admin_image = AdminImage.find(params[:id])
     authorize [:adm, admin_image]
 
-    @detail = Files::AdminImageShowComponent.new(record: admin_image)
+    @detail = ::Files::AdminImageShowComponent.new(record: admin_image)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },

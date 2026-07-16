@@ -33,11 +33,11 @@ class Adm::Newsletters::ContentBlockEditorComponent < ApplicationComponent
     end
 
     def effective_margin(content_block)
-      content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
+      content_block.margin_bottom || ::SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
     end
 
     def default_margin_bottom
-      SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
+      ::SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM
     end
 
     def email_origin

@@ -46,6 +46,32 @@
   color: var(--kern-color-layout-text-subtle);
 }
 
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-material,
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-fa {
+  color: var(--kern-color-action-default);
+  animation: adm-evaluation-live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes adm-evaluation-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.35;
+    transform: scale(0.88);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-material,
+  .adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-fa {
+    animation: none;
+  }
+}
+
 .adm-evaluation-view-tabs__actions {
   display: flex;
   align-items: center;

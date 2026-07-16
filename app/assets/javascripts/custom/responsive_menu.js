@@ -132,6 +132,8 @@
       var $navbar = $('[data-navbar]').not('#responsive-menu [data-navbar]').first();
       if (!$navbar.length) return;
 
+      this.removeExistingMoreItem($navbar);
+
       var moreLabel = $navbar.attr('data-navbar-more-label') || 'More';
       var moreSubmenuId = 'navbar-submenu-more';
       var $moreItem = $(
@@ -186,7 +188,7 @@
 
           var $last = $remaining.last();
           $last.removeClass('top-level-item').addClass('flyout-item');
-          $moreFlyout.append($last);
+          $moreFlyout.prepend($last);
         }
       }
 
@@ -194,6 +196,29 @@
 
       App.ResponsiveMenu.latestRedistribute = redistribute;
       App.ResponsiveMenu.bindResizeOnce();
+      App.ResponsiveMenu.bindLateLayoutShiftsOnce();
+      App.ResponsiveMenu.observeNavbarWidth($navbar[0]);
+    },
+
+    removeExistingMoreItem: function($navbar) {
+      var $existingMore = $navbar.children('li.navbar-more-item');
+      if (!$existingMore.length) return;
+
+      $existingMore.children('ul').children('li').each(function() {
+        $(this).removeClass('flyout-item').addClass('top-level-item');
+        $existingMore.before(this);
+      });
+
+      $existingMore.remove();
+    },
+
+    scheduleRedistribute: function() {
+      clearTimeout(this.redistributeTimer);
+      this.redistributeTimer = setTimeout(function() {
+        if (App.ResponsiveMenu.latestRedistribute) {
+          App.ResponsiveMenu.latestRedistribute();
+        }
+      }, 100);
     },
 
     bindResizeOnce: function() {
@@ -201,21 +226,73 @@
 
       this.resizeBound = true;
 
-      var resizeTimer;
       $(window).on('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-          if (App.ResponsiveMenu.latestRedistribute) {
-            App.ResponsiveMenu.latestRedistribute();
-          }
-        }, 100);
+        App.ResponsiveMenu.scheduleRedistribute();
       });
+    },
+
+    bindLateLayoutShiftsOnce: function() {
+      if (this.lateLayoutShiftsBound) return;
+
+      this.lateLayoutShiftsBound = true;
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function() {
+          App.ResponsiveMenu.scheduleRedistribute();
+        });
+      }
+
+      $(window).on('load', function() {
+        App.ResponsiveMenu.scheduleRedistribute();
+      });
+    },
+
+    observeNavbarWidth: function(navbar) {
+      if (typeof ResizeObserver === 'undefined') return;
+
+      if (this.navbarWidthObserver) {
+        this.navbarWidthObserver.disconnect();
+      }
+
+      var observedElement = navbar;
+      while (observedElement && window.getComputedStyle(observedElement).display === 'contents') {
+        observedElement = observedElement.parentElement;
+      }
+
+      if (!observedElement) return;
+
+      var lastWidth = Math.round(observedElement.getBoundingClientRect().width);
+      this.navbarWidthObserver = new ResizeObserver(function(entries) {
+        var newWidth = Math.round(entries[0].contentRect.width);
+
+        if (newWidth === lastWidth) return;
+
+        lastWidth = newWidth;
+        App.ResponsiveMenu.scheduleRedistribute();
+      });
+
+      this.navbarWidthObserver.observe(observedElement);
     },
 
     initialize: function() {
       this.bindBodyEvents();
       this.bindGlobalEvents();
       this.initPriorityPlus();
+    },
+
+    destroy: function() {
+      var $navbar = $('[data-navbar]').not('#responsive-menu [data-navbar]').first();
+
+      if ($navbar.length) {
+        this.removeExistingMoreItem($navbar);
+      }
+
+      if (this.navbarWidthObserver) {
+        this.navbarWidthObserver.disconnect();
+        this.navbarWidthObserver = null;
+      }
+
+      this.latestRedistribute = null;
     },
 
     bindBodyEvents: function() {

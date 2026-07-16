@@ -14,8 +14,10 @@ de:
           Suchmaschinen zur Indexierung Ihrer Plattform genutzt werden. Zudem können Sie Social-Media-Profile
           verknüpfen: Für jedes ausgefüllte Feld erscheint automatisch ein entsprechendes Icon mit Link
           in der Fußzeile der Plattform.
-        uploads_title: Bilder und Dokumente
-        uploads_intro: >
+      file_settings:
+        title: Datei-Einstellungen
+        intro_title: Hinweis zu Datei-Einstellungen
+        intro_text: >
           Legen Sie fest, welche Bilder und Dokumente Nutzer hochladen dürfen: die maximale Dateigröße,
           die erlaubten Dateiformate und Titellängen von Bildern sowie die maximale Anzahl und Größe von
           Dokumenten. Diese Vorgaben gelten plattformweit für alle Beiträge mit Datei-Uploads.

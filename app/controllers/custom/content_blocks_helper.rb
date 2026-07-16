@@ -6,7 +6,7 @@ module ContentBlocksHelper
   # up rendered outside the content block. Detect such bodies and wrap them in a
   # <div> instead, whatever tag was requested.
   BLOCK_LEVEL_BODY_REGEXP =
-    /<(div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
+    /<(p|div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
 
   def render_custom_block(
     key,
@@ -231,6 +231,10 @@ module ContentBlocksHelper
 
   def convert_br_to_paragraphs(html)
     return html if html.blank?
+
+    if html.match?(/<br\s*\/?>/) && !html.match?(BLOCK_LEVEL_BODY_REGEXP)
+      html = "<p>#{html}</p>"
+    end
 
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")

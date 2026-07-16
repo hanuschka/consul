@@ -108,7 +108,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def documents
@@ -127,7 +127,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       { name: t(".title") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def evaluation

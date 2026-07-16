@@ -8,8 +8,12 @@ class Adm::FilterBarComponent < ApplicationComponent
 
   DOCUMENT_EXTENSIONS = %w[pdf doc docx xls xlsx ppt pptx odt ods txt csv rtf].freeze
 
-  def initialize(type: nil, imageable_type_frame_src: nil, documentable_type_frame_src: nil, show_view_modes: false)
+  def initialize(
+    type: nil, endpoint: nil, imageable_type_frame_src: nil,
+    documentable_type_frame_src: nil, show_view_modes: false
+  )
     @type = type
+    @endpoint = endpoint
     @imageable_type_frame_src = imageable_type_frame_src
     @documentable_type_frame_src = documentable_type_frame_src
     @show_view_modes = show_view_modes
@@ -17,7 +21,8 @@ class Adm::FilterBarComponent < ApplicationComponent
 
   private
 
-    attr_reader :type, :imageable_type_frame_src, :documentable_type_frame_src, :show_view_modes
+    attr_reader :type, :endpoint, :imageable_type_frame_src,
+                :documentable_type_frame_src, :show_view_modes
 
     def show_view_modes?
       show_view_modes

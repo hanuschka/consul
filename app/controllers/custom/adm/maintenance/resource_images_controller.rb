@@ -21,7 +21,7 @@ class Adm::Maintenance::ResourceImagesController < Adm::Maintenance::BaseControl
       { name: t("adm.menu.items.files_subitems.resource_images") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def show

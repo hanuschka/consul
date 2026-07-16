@@ -27,6 +27,8 @@
   end
 
   ai_generated_at_text = format_generated_at.call(phase["ai_generated_at"])
+  regular_generated_at_text = format_generated_at.call(phase["regular_generated_at"])
+  stats_live = @live_phase_stats.present?
 %>
 
 <%= content_for :title, [
@@ -102,11 +104,19 @@
             ></i>
             <%= t("adm.projekts.projekts.evaluation.view_tabs.stats") %>
           </span>
-          <span class="adm-evaluation-view-tabs--date -live">
-            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
-            <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
-          </span>
+          <% if stats_live %>
+            <span class="adm-evaluation-view-tabs--date -live">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+              <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
+            </span>
+          <% else %>
+            <span class="adm-evaluation-view-tabs--date">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
+              <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= regular_generated_at_text %>
+            </span>
+          <% end %>
         </custom-tab>
         <custom-tab
           for="ai"

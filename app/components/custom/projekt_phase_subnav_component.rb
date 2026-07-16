@@ -1,6 +1,6 @@
 class ProjektPhaseSubnavComponent < ApplicationComponent
   delegate :current_user, :can?, :phase_icon_class,
-    :footer_evaluation_tab_public_visible?, :footer_evaluation_tab_has_content?,
+    :footer_evaluation_tab_public_visible?, :footer_evaluation_tab_available?,
     :footer_evaluation_tab_disabled?, to: :helpers
 
   def initialize(projekt_phase)
@@ -24,9 +24,20 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       }
     ]
 
+    if voting_phase? && show_evaluation_tab?("stats")
+      items << {
+        text: t("adm.projekts.projekts.evaluation.view_tabs.poll_stats"),
+        icon: "fa-chart-pie",
+        url: url_to_footer_tab(section: "poll_stats", remote: true),
+        active: params[:section] == "poll_stats",
+        section: "poll_stats",
+        hidden_from_public: evaluation_tab_hidden_from_public?("stats")
+      }
+    end
+
     if show_evaluation_tab?("stats")
       items << {
-        text: t("custom.projekt_phases.subnav.evaluation"),
+        text: stats_tab_text,
         icon: "fa-chart-bar",
         url: url_to_footer_tab(section: "evaluation", remote: true),
         active: params[:section] == "evaluation",
@@ -37,7 +48,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
     if show_evaluation_tab?("ai")
       items << {
-        text: t("custom.projekt_phases.subnav.ai_evaluation"),
+        text: ai_tab_text,
         icon: "fa-magic",
         url: url_to_footer_tab(section: "ai_evaluation", remote: true),
         active: params[:section] == "ai_evaluation",
@@ -52,14 +63,28 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
   private
 
-    def can_manage_projekt?
-      can?(:edit, @projekt_phase.projekt)
+    def voting_phase?
+      @projekt_phase.is_a?(ProjektPhase::VotingPhase)
+    end
+
+    def stats_tab_text
+      if voting_phase?
+        t("adm.projekts.projekts.evaluation.view_tabs.stats")
+      else
+        t("custom.projekt_phases.subnav.evaluation")
+      end
+    end
+
+    def ai_tab_text
+      if voting_phase?
+        t("adm.projekts.projekts.evaluation.view_tabs.ai")
+      else
+        t("custom.projekt_phases.subnav.ai_evaluation")
+      end
     end
 
     def show_evaluation_tab?(tab)
-      return false if !footer_evaluation_tab_has_content?(@projekt_phase, tab)
-
-      footer_evaluation_tab_public_visible?(@projekt_phase, tab) || can_manage_projekt?
+      footer_evaluation_tab_available?(@projekt_phase, tab)
     end
 
     def evaluation_tab_hidden_from_public?(tab)

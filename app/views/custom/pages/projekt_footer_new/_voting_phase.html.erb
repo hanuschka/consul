@@ -3,7 +3,7 @@
 
 <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
-<% if params[:section].in?(%w[evaluation ai_evaluation]) %>
+<% if params[:section].in?(%w[evaluation ai_evaluation poll_stats]) %>
   <%= render "custom/pages/projekt_footer_new/footer_evaluation_dispatch" %>
 <% else %>
   <div class="flex-layout flex-layout-reverse-on-mobile">

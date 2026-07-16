@@ -41,6 +41,14 @@ module ProjektPhaseSettingsHelper
     footer_evaluation_tab_public_visible?(projekt_phase, tab)
   end
 
+  def footer_evaluation_tab_available?(projekt_phase, tab)
+    return false if !can?(:read_stats, projekt_phase)
+    return false if !footer_evaluation_tab_has_content?(projekt_phase, tab)
+
+    footer_evaluation_tab_public_visible?(projekt_phase, tab) ||
+      can?(:edit, projekt_phase.projekt)
+  end
+
   def footer_evaluation_tab_public_visible?(projekt_phase, tab)
     return false if !footer_evaluation_tab_has_content?(projekt_phase, tab)
 

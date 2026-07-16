@@ -106,6 +106,7 @@ end
 resources :polls, only: [] do
   member do
     get :ai_analysis
+    get :csv_individual_answers
   end
 end
 

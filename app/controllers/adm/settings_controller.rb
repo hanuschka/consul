@@ -23,5 +23,13 @@ module Adm
         { name: t(".title") }
       ]
     end
+
+    def file_settings
+      authorize [:adm, Setting], :update?
+      @breadcrumbs = [
+        { name: t("adm.menu.items.files"), icon: "folder" },
+        { name: t(".title") }
+      ]
+    end
   end
 end

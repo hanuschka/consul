@@ -155,7 +155,7 @@ Poll
       can [:manage], ::Idea::Category
       can [:manage], Idea
 
-      can [:csv_answers_votes, :regenerate_contexted_clones], Poll
+      can [:csv_answers_votes, :csv_individual_answers, :regenerate_contexted_clones], Poll
       can [:order_questions, :csv_answers_streets, :csv_answers_votes, :edit_votation_type, :update_votation_type],
 Poll::Question
       can [:update, :verify, :unverify, :reverify, :destroy], User

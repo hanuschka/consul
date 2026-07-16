@@ -5,12 +5,11 @@
 }
 
 .adm-projekts-inspiration-frame {
-  display: block;
-  width: 100%;
   height: calc(100vh - 160px);
   min-height: 480px;
-  border: none;
-  padding-top: 5px;
+  margin-top: 5px;
+  background-color: #e9ebee;
+  background-size: 64px 64px;
 
   // Desktop: fit within the viewport so the page itself never scrolls.
   // Offset = adm header + breadcrumb nav (~55px) + dividers.

@@ -66,9 +66,6 @@ de:
         vote_counted: Ihre Stimme wurde gezählt!
         vote_uncounted: Ihre Stimme wurde entfernt
         results:
-          export: Export
-          create_pdf_report: PDF-Report erstellen
-          download_individual_answers: Einzelantworten herunterladen
           download_csv_answers_votes: Abstimmungsergebnisse herunterladen
         welcome_default_text: Ihre Meinung ist gefragt! Auf dieser Seite können Sie sich an der oder den Abstimmung/en zum Projekt beteiligen. Klicken Sie auf die jeweilige Schaltfläche – und schon wird Ihre Stimme gezählt. Außerdem finden Sie hier statistische Angaben sowie das Ergebnis der Abstimmung, sobald diese abgeschlossen ist.
         closing_note_default_text_html:

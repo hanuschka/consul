@@ -395,15 +395,6 @@ App.ContentBlockEditor.Crud = {
     return stripped.length === 0;
   },
 
-  convertBrToParagraphs(html) {
-    if (!html) return html;
-
-    let result = html.replace(/<br\s*\/?>/gi, "</p><p>");
-    result = result.replace(/<p>\s*<\/p>/g, "");
-
-    return result;
-  },
-
   deleteContentBlock(contentBlockWrapper) {
     const deleteConfirmed = confirm("Soll dieser Inhaltsblock wirklich gelöscht werden?")
 

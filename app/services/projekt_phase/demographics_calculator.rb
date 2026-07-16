@@ -57,6 +57,16 @@ class ProjektPhase::DemographicsCalculator
     end.to_h
   end
 
+  def individual_group_value_counts
+    return {} if @participant_ids.empty?
+
+    UserIndividualGroupValue
+      .joins(individual_group_value: :individual_group)
+      .where(user_id: @participant_ids, individual_groups: { kind: "soft" })
+      .group(:individual_group_value_id)
+      .count
+  end
+
   private
 
     def participants

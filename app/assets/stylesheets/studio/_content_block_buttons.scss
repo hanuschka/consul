@@ -219,6 +219,16 @@
 // Compact-Mode-Overrides (kleinere Toolbar in schmalen Containern)
 // =============================================================================
 .custom-content-block-wrapper.-compact-mode {
+  // The card owns the spacing between compact blocks; the persisted
+  // margin-bottom arrives as an INLINE style (on the block server-side,
+  // moved onto the wrapper by moveMarginToWrapper), so only !important
+  // can neutralize it.
+  margin-bottom: 0 !important;
+
+  .custom-content-block {
+    margin-bottom: 0 !important;
+  }
+
   // In a narrow sidebar/footer card the full studio toolbar would otherwise
   // sit as a fit-content pill on the right and tip its last icon onto a second
   // row. Instead span the toolbar across the card's full width and distribute
@@ -256,9 +266,11 @@
     }
   }
 
-  // .content-block-margin-input {
-  //   display: none !important;
-  // }
+  // Margin-bottom is forced to 0 in compact mode (see top of this block),
+  // so the stepper would silently do nothing — hide it.
+  .content-block-margin-input {
+    display: none !important;
+  }
 
   // .js-content-block-header-dropdown {
   //   display: none !important;

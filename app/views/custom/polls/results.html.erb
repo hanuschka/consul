@@ -10,8 +10,8 @@
   <%= render "poll_subnav" %>
 
   <% if can? :csv_answers_votes, @poll %>
-    <div class="polls-results-export">
-      <%= render "polls/results_export_dropdown" %>
+    <div class="js-studio-hide-on-preview">
+      <%= link_to t("custom.polls.show.results.download_csv_answers_votes"), poll_csv_answers_votes_path(@poll, format: :csv), class: "button small float-right" %>
     </div>
   <% end %>
 

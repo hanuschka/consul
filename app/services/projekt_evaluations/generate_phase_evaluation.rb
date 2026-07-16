@@ -65,9 +65,23 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
   end
 
   def build_regular_data(base)
+    refresh_precomputed_phase_stats
+
     base.merge(
       full_stats: ProjektPhaseStats::FullStatsCollector.call(@projekt_phase),
       regular_generated_at: Time.current.iso8601
+    )
+  end
+
+  def refresh_precomputed_phase_stats
+    service_class = ProjektPhase::StatsRefreshService::STATS_SERVICES[@projekt_phase.class]
+    return if service_class.blank?
+
+    service_class.new(@projekt_phase).call
+    @projekt_phase.reload
+  rescue StandardError => e
+    Rails.logger.warn(
+      "[Evaluation] precomputed stats refresh failed for phase ##{@projekt_phase.id}: #{e.message}"
     )
   end
 

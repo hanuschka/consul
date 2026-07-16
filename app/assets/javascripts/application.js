@@ -243,6 +243,7 @@ var destroy_non_idempotent_modules = function() {
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();
+  App.ResponsiveMenu.destroy();
   App.FocusTrap.resetInert();
   App.SharedModal.reset();
 };

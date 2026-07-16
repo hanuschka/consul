@@ -1,4 +1,10 @@
 module ProjektPhaseSettingsHelper
+  FOOTER_LIVE_STATS_TTL = 5.minutes
+
+  def footer_live_stats_cache_bucket
+    Time.current.to_i / FOOTER_LIVE_STATS_TTL.to_i
+  end
+
   def projekt_phase_feature?(projekt_phase, feature_key)
     return false unless projekt_phase
 

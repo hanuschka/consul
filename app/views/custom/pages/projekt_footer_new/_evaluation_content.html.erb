@@ -103,8 +103,9 @@
         <% end %>
 
         <% visibility_token = projekt_phase.projekt_phase_evaluation_visibility&.cache_key_with_version || "none" %>
-        <% cacheable = !is_admin_or_pm && @live_phase_stats.blank? && @frontend_answer_poll.blank? %>
-        <% cache_if(cacheable, [evaluation_row, only_tab, visibility_token]) do %>
+        <% live_stats_bucket = @live_phase_stats.present? ? footer_live_stats_cache_bucket : "none" %>
+        <% cache_key = [evaluation_row, only_tab, visibility_token, live_stats_bucket, @frontend_answer_poll&.id] %>
+        <% cache_if(!is_admin_or_pm, cache_key) do %>
           <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
             locals: {
               projekt: projekt_phase.projekt,

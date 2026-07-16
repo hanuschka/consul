@@ -1,6 +1,6 @@
 <%
   stats = phase["stats"] || {}
-  polls = stats["polls"] || []
+  polls = (stats["polls"] || []).sort_by { |poll| -poll["id"].to_i }
   accent = accent_color
   accent_light = accent_light_color
   pdf_mode = local_assigns.fetch(:pdf_mode, false)

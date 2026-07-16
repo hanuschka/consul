@@ -21,8 +21,8 @@
        types: Document.humanized_accepted_content_types,
        note_key: "files.allowed_types_note_users_html",
        settings_link: true,
-       settings_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_content_types_setting, :value)),
+       settings_edit_path: file_settings_adm_settings_path(anchor: dom_id(documents_content_types_setting, :value)),
        max_file_size: Document.max_file_size,
-       max_size_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_max_size_setting, :value))
+       max_size_edit_path: file_settings_adm_settings_path(anchor: dom_id(documents_max_size_setting, :value))
      ) %>
 <% end %>

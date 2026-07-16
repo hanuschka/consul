@@ -22,6 +22,16 @@
   }
 }
 
+.polls-results-export {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.polls-results-export .dropdown-select-container {
+  margin: 0;
+}
+
 
 // Open answers in results
 

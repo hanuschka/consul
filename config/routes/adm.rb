@@ -20,6 +20,7 @@ namespace :adm do
     get :metadata, on: :collection
     get :gdpr, on: :collection
     get :registration, on: :collection
+    get :file_settings, on: :collection
   end
   resource :features, controller: "features", only: [:show]
   resources :registered_addresses, only: [:index]

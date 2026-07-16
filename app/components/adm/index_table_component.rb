@@ -7,7 +7,8 @@ class Adm::IndexTableComponent < ApplicationComponent
   renders_one :body
 
   attr_reader :turbo_frame_id, :records, :pagy, :headers, :column_count,
-              :column_selector, :empty_state_config, :empty_state_filtered_config
+              :column_selector, :empty_state_config, :empty_state_filtered_config,
+              :body_html_options
 
   def initialize(
     turbo_frame_id:,
@@ -17,7 +18,8 @@ class Adm::IndexTableComponent < ApplicationComponent
     pagy: nil,
     column_selector: nil,
     empty_state:,
-    empty_state_filtered: nil
+    empty_state_filtered: nil,
+    body_html_options: {}
   )
     @turbo_frame_id = turbo_frame_id
     @records = records
@@ -27,6 +29,7 @@ class Adm::IndexTableComponent < ApplicationComponent
     @column_selector = column_selector
     @empty_state_config = empty_state
     @empty_state_filtered_config = empty_state_filtered
+    @body_html_options = body_html_options
   end
 
   def pills_component

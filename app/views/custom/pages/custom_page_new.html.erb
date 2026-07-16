@@ -59,8 +59,8 @@
     <% elsif @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
       <%= render "pages/topbar/admin_topbar_projekt_actions" %>
     <% else %>
-      <% if current_user&.administrator? %>
-        <%= link_to adm_site_customization_edit_page_by_slug_path(@custom_page.slug),
+      <% if current_user&.administrator? && @custom_page.footer_key.present? %>
+        <%= link_to edit_adm_site_customization_page_path(@custom_page),
               class: "button hollow studio-admin-topbar-button",
               target: "_blank",
               tabindex: "-1" do %>

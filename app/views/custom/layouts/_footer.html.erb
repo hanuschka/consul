@@ -22,6 +22,8 @@
     footer_block_2_empty = admin_view && content_block_body_blank?(footer_block_2_body)
   end
 
+  footer_pages = SiteCustomization::Page.footer_pages.where(status: "published")
+
   social_handles_present = ["twitter_handle", "facebook_handle", "youtube_handle", "telegram_handle", "instagram_handle"]
     .any? { |key| setting[key].present? }
   contact_block_present = content_block("footer", I18n.locale).present?
@@ -155,17 +157,10 @@
 
     <div class="small-12 medium-8 column subfooter-legal">
       <ul class="no-bullet subfooter-legal-list">
-        <li><%= link_to t("layouts.footer.privacy"), page_path("privacy") %></li>
-        <li><%= link_to t("layouts.footer.conditions"), page_path("conditions") %></li>
-        <li><%= link_to t("layouts.footer.accessibility"), page_path("accessibility") %></li>
-        <li><%= link_to t("custom.layouts.footer.impressum"), page_path("impressum") %></li>
+        <% footer_pages.each do |footer_page| %>
+          <li><%= link_to footer_page.title, page_path(footer_page.slug) %></li>
+        <% end %>
         <li><%= link_to t("layouts.footer.api_docs"), api_docs_path, target: "_blank" %></li>
-        <% if SiteCustomization::Page.find_by(slug: "netiquette", status: "published") %>
-          <li><%= link_to t("custom.layouts.footer.netiquette"), page_path("netiquette") %></li>
-        <% end %>
-        <% if SiteCustomization::Page.find_by(slug: "contact_us", status: "published") %>
-          <li><%= link_to t("custom.layouts.footer.contact_us"), page_path("contact_us") %></li>
-        <% end %>
         <li><%= link_to t("custom.layouts.footer.statistic_cookies_settings"), "#", onClick: "klaro.show();return false;" %></li>
 
         <% if extended_feature?("general.show_guest_login_links") %>

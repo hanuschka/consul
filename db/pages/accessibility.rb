@@ -102,8 +102,9 @@ def generate_content(page)
   page.save!
 end
 
-if SiteCustomization::Page.find_by(slug: "accessibility").nil?
-  page = SiteCustomization::Page.new(slug: "accessibility", status: "published")
+unless SiteCustomization::Page.exists?(footer_key: "accessibility")
+  page = SiteCustomization::Page.new(slug: "accessibility", footer_key: "accessibility", footer_position: 4,
+                                     status: "published")
   I18n.available_locales.each do |locale|
     I18n.with_locale(locale) { generate_content(page) }
   end

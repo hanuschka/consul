@@ -368,8 +368,9 @@ def generate_content(page)
   page.save!
 end
 
-if SiteCustomization::Page.find_by(slug: "privacy").nil?
-  page = SiteCustomization::Page.new(slug: "privacy", status: "draft")
+unless SiteCustomization::Page.exists?(footer_key: "privacy")
+  page = SiteCustomization::Page.new(slug: "privacy", footer_key: "privacy", footer_position: 1,
+                                     status: "published")
   page.print_content_flag = true
   I18n.with_locale(:de) { generate_content(page) }
 end

@@ -1,0 +1,41 @@
+<%= content_for :title, t("adm.menu.items.application_subitems.pages") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.menu.items.application_subitems.pages"), breadcrumbs: @breadcrumbs) %>
+
+<% headers = {
+    title:  Kern::Table::HeaderComponent.new(:title, t(".headers.title"), data_field: "title"),
+    slug:   Kern::Table::HeaderComponent.new(:slug, t(".headers.slug"), data_field: "slug"),
+    status: Kern::Table::HeaderComponent.new(:status, t(".headers.status"), data_field: "status")
+  } %>
+
+<div class="kern-container my-5">
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "pages_table",
+        records: @pages,
+        headers: headers,
+        column_count: 5,
+        body_html_options: {
+          data: {
+            controller: "sortable",
+            sortable_url_value: reorder_adm_site_customization_pages_path
+          }
+        },
+        empty_state: {
+          title: t(".empty_state.title"),
+          description: t(".empty_state.description"),
+          icon: "description"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <th scope="col" class="kern-table__header"></th>
+      <%= render headers[:title] %>
+      <%= render headers[:slug] %>
+      <%= render headers[:status] %>
+      <th scope="col" class="kern-table__header"><%= t(".headers.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <%= render partial: "page", collection: @pages %>
+    <% end %>
+  <% end %>
+</div>

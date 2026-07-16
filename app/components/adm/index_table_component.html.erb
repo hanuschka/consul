@@ -44,7 +44,7 @@
         </tr>
       </thead>
 
-      <tbody class="kern-table__body">
+      <%= tag.tbody(class: "kern-table__body", **body_html_options.symbolize_keys) do %>
         <% if records.any? %>
           <%= body %>
         <% else %>
@@ -55,7 +55,7 @@
             </td>
           </tr>
         <% end %>
-      </tbody>
+      <% end %>
     </table>
   </div>
 

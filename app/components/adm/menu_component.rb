@@ -31,7 +31,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.age_ranges"),            path: adm_age_ranges_path },
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
-        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" },
+        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_pages_path, active_prefix: "/adm/site_customization/pages" },
         { label: t("adm.menu.items.application_subitems.features"),              path: adm_features_path,                                              active_prefix: "/adm/features" }
       ]
     end

@@ -5,17 +5,32 @@ de:
         default_titles:
           privacy: Datenschutzbestimmungen
           conditions: Allgemeine Nutzungsbedingungen
+          accessibility: Barrierefreiheit
           impressum: Impressum
           contact_us: Kontakt
-        tabs:
-          privacy: Datenschutzbestimmungen
-          conditions: Nutzungsbedingungen
-          impressum: Impressum
-          contact_us: Kontakt
+          netiquette: Netiquette
+          additional_privacy: Zusätzliche Datenschutzvereinbarung
+          open_source: Open Source
+        index:
+          headers:
+            title: Titel
+            slug: URL
+            status: Veröffentlicht
+            actions: Aktionen
+          edit: Bearbeiten
+          open_page: Seite öffnen
+          empty_state:
+            title: Keine Seiten vorhanden
+            description: Die Standardseiten werden automatisch angelegt, sobald diese Übersicht geöffnet wird.
         edit:
+          title_label: Titel
+          title_hint: Wird als Überschrift auf der Seite angezeigt und dient im Footer als Bezeichnung des Links.
+          slug_label: URL-Kürzel
+          slug_hint: Bestimmt die öffentliche Adresse der Seite. Nach einer Änderung funktionieren Links auf die alte Adresse nicht mehr.
           status_legend: Status
+          status_hint: Bestimmt, ob die Seite öffentlich erreichbar ist. Nicht veröffentlichte Seiten werden im Footer nicht verlinkt.
           status_options:
-            draft: Entwurf
+            draft: Nicht veröffentlicht
             published: Veröffentlicht
           content_label: Inhalt
           save: Speichern

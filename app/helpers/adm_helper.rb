@@ -170,18 +170,6 @@ module AdmHelper
     ]
   end
 
-  def pages_tabs(current_slug: nil)
-    current_slug ||= params[:slug]
-
-    %w[privacy conditions impressum contact_us].map do |slug|
-      {
-        label: I18n.t("adm.site_customization.pages.tabs.#{slug}"),
-        url: adm_site_customization_edit_page_by_slug_path(slug: slug),
-        current: current_slug == slug
-      }
-    end
-  end
-
   def overview_pages_tabs(current_action: nil)
     current_action ||= action_name
 

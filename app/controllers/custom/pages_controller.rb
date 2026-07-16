@@ -238,9 +238,11 @@ class PagesController < ApplicationController
 
       @valid_orders = nil
 
-      # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
-      @resources = @projekt_phase.polls.for_public_render.all
-      @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+      if !params[:section].in?(%w[evaluation ai_evaluation poll_stats])
+        # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
+        @resources = @projekt_phase.polls.for_public_render.all
+        @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+      end
 
       set_voting_phase_evaluation_variables
     end
@@ -248,7 +250,7 @@ class PagesController < ApplicationController
     def set_voting_phase_evaluation_variables
       if params[:section] == "poll_stats" &&
           helpers.footer_evaluation_tab_available?(@projekt_phase, "stats")
-        @poll_stats_entries = @projekt_phase.polls.order(id: :desc).map do |poll|
+        @poll_stats_entries = @projekt_phase.polls.for_public_render.order(id: :desc).map do |poll|
           { poll: poll, stats: Poll::Stats.new(poll) }
         end
       end
@@ -257,7 +259,7 @@ class PagesController < ApplicationController
           helpers.footer_render_frozen_evaluation?(@projekt_phase)
         @live_phase_stats = voting_phase_live_stats
 
-        phase_polls = @projekt_phase.polls
+        phase_polls = @projekt_phase.polls.for_public_render.limit(2).to_a
         @frontend_answer_poll = phase_polls.first if phase_polls.one?
       end
     end
@@ -272,7 +274,7 @@ class PagesController < ApplicationController
       stats = compute_voting_phase_live_stats
 
       if stats.present?
-        Rails.cache.write(cache_key, stats, expires_in: 5.minutes)
+        Rails.cache.write(cache_key, stats, expires_in: ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_TTL)
       end
 
       stats

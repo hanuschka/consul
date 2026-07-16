@@ -12,7 +12,7 @@ class Adm::Maintenance::ResourceDocumentsController < Adm::Maintenance::BaseCont
         .page(params[:page])
         .per(24)
 
-    Files::ResourcePreloader.call(@assets.map(&:documentable))
+    ::Files::ResourcePreloader.call(@assets.map(&:documentable))
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },
@@ -26,7 +26,7 @@ class Adm::Maintenance::ResourceDocumentsController < Adm::Maintenance::BaseCont
     document = Document.find(params[:id])
     authorize [:adm, document]
 
-    @detail = Files::DocumentShowComponent.new(record: document)
+    @detail = ::Files::DocumentShowComponent.new(record: document)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },

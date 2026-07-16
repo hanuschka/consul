@@ -467,7 +467,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def convert_to_new_content_block_mode
     authorize [:adm, :projekts, @projekt], :update?
 
-    result = Projekts::ConvertToNewContentBlockMode.call(projekt: @projekt)
+    result = ::Projekts::ConvertToNewContentBlockMode.call(projekt: @projekt)
 
     if result.success?
       flash[:notice] = t("custom.projekts.page.convert_to_content_blocks.success")
@@ -543,7 +543,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     use_projekt_content = ActiveModel::Type::Boolean.new.cast(params[:use_projekt_content]) == true
 
     @projekt.update_column(:banner_image_generation_status, "processing")
-    Projekts::GenerateBannerImageJob.perform_later(
+    ::Projekts::GenerateBannerImageJob.perform_later(
       @projekt.id,
       current_user.id,
       params[:prompt].to_s,

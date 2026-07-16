@@ -22,9 +22,7 @@
         <%= render "poll_header", projekt_phase: @projekt_phase %>
 
         <% if can? :csv_answers_votes, @poll %>
-          <div class="js-studio-hide-on-preview">
-            <%= link_to t("custom.polls.show.results.download_csv_answers_votes"), poll_csv_answers_votes_path(@poll, format: :csv), class: "button small float-right" %>
-          </div>
+          <%= render "polls/results_export_dropdown" %>
         <% end %>
 
         <% if @results_phase.present? %>

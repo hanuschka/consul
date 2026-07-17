@@ -38,7 +38,7 @@
           <% (segment["metrics"] || []).each do |metric| %>
             <% metric_key = metric["key"] %>
             <% icon = metric_icons[metric_key] || default_icon %>
-            <div class="phase-key-metrics-card">
+            <div class="phase-key-metrics-card phase-segments-card">
               <div
                 class="phase-key-metrics-card__icon"
                 style="color:<%= accent %>;background:<%= accent_light %>"

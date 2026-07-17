@@ -117,6 +117,7 @@ class PollsController < ApplicationController
   end
 
   def stats
+    @projekt_phase = @poll.projekt_phase
     @stats = Poll::Stats.new(@poll)
 
     if !@poll.projekt.visible_for?(current_user)
@@ -130,6 +131,8 @@ class PollsController < ApplicationController
   end
 
   def results
+    @projekt_phase = @poll.projekt_phase
+
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
 

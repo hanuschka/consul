@@ -1,5 +1,9 @@
 @import "cross_pack/1_colors";
 
+.projekt-footer-evaluation {
+  --er-surface: #ffffff;
+}
+
 .projekt-footer-evaluation .phase-icon-title {
   display: none;
 }
@@ -299,6 +303,21 @@
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.projekt-footer-evaluation .phase-segments-card {
+  background: #ffffff;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+:is(.poll-question-card--full, .phase-tone-pill, .phase-key-metrics-card).phase-segments-card {
+  margin-top: 0;
+}
+
+.phase-key-metrics-card.phase-segments-card {
+  padding: 1rem 1.125rem;
 }
 
 .answer-charts {

@@ -28,9 +28,7 @@ module ProjektPhaseSettingsHelper
   end
 
   def footer_phase_evaluation_completed?(projekt_phase)
-    evaluation = projekt_phase.projekt_phase_evaluation
-
-    evaluation.present? && evaluation.completed?
+    projekt_phase.evaluation_completed?
   end
 
   def footer_render_frozen_evaluation?(projekt_phase)
@@ -59,13 +57,7 @@ module ProjektPhaseSettingsHelper
   def footer_evaluation_tab_public_visible?(projekt_phase, tab)
     return false if !footer_evaluation_tab_has_content?(projekt_phase, tab)
 
-    if footer_phase_evaluation_completed?(projekt_phase)
-      footer_visible_evaluation_tabs(projekt_phase).include?(tab)
-    elsif tab == "ai"
-      projekt_phase.feature?("general.public_ai_stats")
-    else
-      projekt_phase.feature?("general.public_kpi_stats")
-    end
+    projekt_phase.evaluation_tab_publicly_visible?(tab)
   end
 
   def footer_evaluation_tab_has_content?(projekt_phase, tab)
@@ -100,18 +92,6 @@ module ProjektPhaseSettingsHelper
   end
 
   def footer_visible_evaluation_tabs(projekt_phase)
-    visibility = projekt_phase.projekt_phase_evaluation_visibility
-    return [] if visibility.blank?
-
-    available = PdfServices::EvaluationPdfSelection.available_sections(projekt_phase.type)
-    visible = visibility.visible_sections & available
-    ai_keys = Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
-
-    tabs = []
-    tabs << "poll_stats" if visibility.show_poll_stats
-    tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
-    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
-
-    tabs
+    projekt_phase.publicly_visible_evaluation_tabs
   end
 end

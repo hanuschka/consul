@@ -3,9 +3,9 @@
 
   App.Studio.Evaluation = {
     initialize() {
-      // Window-level flag: App.Studio.Projekt re-runs initialize() on every
-      // turbolinks navigation (reinitializeUI), but the document-level
-      // delegated bindings below must only be attached once.
+      // Window-level flag: this module self-initializes at pack evaluation
+      // below (its toggles also exist on poll pages, which are not projekt
+      // pages), so it must not double-bind if the pack is evaluated again.
       if (window.studioEvaluationInitialized) return
 
       window.studioEvaluationInitialized = true;
@@ -124,7 +124,8 @@
 
     groupSubnavTabs(tab) {
       return Array.from(document.querySelectorAll(
-        '.js-projekt-footer-tabs custom-tab[data-visibility-group="' + tab + '"]'
+        '.js-projekt-footer-tabs custom-tab[data-visibility-group="' + tab + '"], ' +
+        '.js-poll-subnav [data-visibility-group="' + tab + '"]'
       ));
     },
 
@@ -146,4 +147,6 @@
         .filter((section) => section.querySelector(".footer-evaluation-section-toggle"));
     }
   };
+
+  App.Studio.Evaluation.initialize();
 }).call(this);

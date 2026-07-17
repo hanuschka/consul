@@ -19,4 +19,12 @@ class Polls::SubNavComponent < ApplicationComponent
   def report_visible?
     poll.report_visible_for_citizens? || can?(:edit, poll.projekt) || helpers.current_user&.administrator?
   end
+
+  def stats_hidden_from_public?
+    !poll.projekt_phase.evaluation_tab_publicly_visible?("poll_stats")
+  end
+
+  def results_hidden_from_public?
+    !poll.projekt_phase.evaluation_tab_publicly_visible?("stats")
+  end
 end

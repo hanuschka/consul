@@ -1,6 +1,6 @@
 <%
   toggle_tab = local_assigns.fetch(:tab)
-  checked = footer_evaluation_tab_public_visible?(@projekt_phase, toggle_tab)
+  checked = local_assigns.fetch(:checked) { footer_evaluation_tab_public_visible?(@projekt_phase, toggle_tab) }
   toggle_url = toggle_evaluation_tab_visibility_adm_projekts_projekt_path(@projekt_phase.projekt, format: :json)
 %>
 <% if can?(:edit, @projekt_phase.projekt) %>

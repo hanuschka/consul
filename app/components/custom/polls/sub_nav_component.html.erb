@@ -1,16 +1,17 @@
-<nav class="chip-nav sub-nav-items">
+<nav class="chip-nav sub-nav-items js-poll-subnav">
   <%= link_to t("custom.polls.show.info_menu"), poll_path(id: poll.id),
                 class: "chip-nav--chip #{'is-active' if info_menu?}" %>
 
   <% if can?(:stats, poll) %>
     <%= link_to t("custom.polls.show.stats_menu"), stats_poll_path(id: poll.id),
-                class: "chip-nav--chip #{'is-active' if stats_menu?} #{'js-studio-hide-on-preview' if !poll.projekt_phase.feature?('resource.stats_enabled')}" %>
+                class: "chip-nav--chip #{'is-active' if stats_menu?} #{'-hidden-from-public js-studio-hide-on-preview' if stats_hidden_from_public?}",
+                data: { visibility_group: "poll_stats" } %>
   <% end %>
 
   <% if can?(:results, poll) %>
     <%= link_to t("custom.polls.show.results_menu"), results_poll_path(id: poll.id),
-                class: "chip-nav--chip #{'is-active' if results_menu?} #{'js-studio-hide-on-preview' if !poll.projekt_phase.feature?('resource.results_enabled')}",
-                data: { turbolinks: false } %>
+                class: "chip-nav--chip #{'is-active' if results_menu?} #{'-hidden-from-public js-studio-hide-on-preview' if results_hidden_from_public?}",
+                data: { turbolinks: false, visibility_group: "stats" } %>
   <% end %>
 
   <% if poll_ai_analysis_visible?(poll) %>

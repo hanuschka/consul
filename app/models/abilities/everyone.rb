@@ -7,12 +7,16 @@ module Abilities
       can [:read, :map, :summary, :share, :json_data], Proposal
       can :read, Comment
       can :read, Poll
-      can :results, Poll,
-          budget_id: nil,
-          projekt_phase: { settings: { key: "feature.resource.results_enabled", value: "active" } }
-      can :stats, Poll,
-          budget_id: nil,
-          projekt_phase: { settings: { key: "feature.resource.stats_enabled", value: "active" } }
+      can :results, Poll do |poll|
+        poll.budget_id.nil? &&
+          poll.projekt_phase.present? &&
+          poll.projekt_phase.evaluation_tab_publicly_visible?("stats")
+      end
+      can :stats, Poll do |poll|
+        poll.budget_id.nil? &&
+          poll.projekt_phase.present? &&
+          poll.projekt_phase.evaluation_tab_publicly_visible?("poll_stats")
+      end
       can :ai_analysis, Poll,
           budget_id: nil,
           projekt_phase: { settings: { key: "feature.general.public_ai_stats", value: "active" } }

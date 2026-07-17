@@ -103,7 +103,8 @@ module ProjektPhaseSettingsHelper
     visibility = projekt_phase.projekt_phase_evaluation_visibility
     return [] if visibility.blank?
 
-    visible = visibility.visible_sections
+    available = PdfServices::EvaluationPdfSelection.available_sections(projekt_phase.type)
+    visible = visibility.visible_sections & available
     ai_keys = Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
 
     tabs = []

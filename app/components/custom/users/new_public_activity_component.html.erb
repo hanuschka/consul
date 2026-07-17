@@ -1,7 +1,7 @@
 <div class="new-public-activity">
   <% if valid_access? %>
     <% if valid_filters.any? %>
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         title: title,
         empty_text: (comments? ? nil : t("empty_list_text"))
       ) do |c| %>

@@ -15,7 +15,7 @@
     <div class="main-column">
       <%= render ResourcePage::BannerComponent.new(resource: @resource, compact: true) %>
 
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.topics.list.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(

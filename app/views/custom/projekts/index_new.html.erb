@@ -31,10 +31,13 @@
 
   <div class="flex-layout padding-on-mobile flex-layout-reverse-on-mobile">
     <div class="main-column">
-      <div class="projekts-overview-page--projekts-list">
-        <%= render Resources::ListComponent.new(
-          empty_text: t("custom.projekts.empty_list_text"),
-          aria_label: t("custom.accessibility.regions.projekts_list")
+      <div
+        class="projekts-overview-page--projekts-list"
+        role="region"
+        aria-label="<%= t('custom.accessibility.regions.projekts_list') %>"
+      >
+        <%= render Resources::List::BaseComponent.new(
+          empty_text: t("custom.projekts.empty_list_text")
         ) do |c| %>
           <% c.with_toolbar(
             i18n_namespace: "custom.projekts",
@@ -50,7 +53,7 @@
           <% if @projekts.present? %>
             <% c.with_items do %>
               <% @projekts.each do |projekt| %>
-                <%= render Projekts::ListItemComponent.new(projekt: projekt) %>
+                <%= render Projekts::ListItemComponent.new(projekt: projekt, title_heading_level: 2) %>
               <% end %>
             <% end %>
           <% end %>

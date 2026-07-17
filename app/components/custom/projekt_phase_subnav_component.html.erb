@@ -20,6 +20,7 @@
           for="<%= item[:section] %>"
           class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "-hidden-from-public js-studio-hide-on-preview" if item[:hidden_from_public] %>"
           data-url="<%= item[:url] %>"
+          <% if item[:visibility_group] %>data-visibility-group="<%= item[:visibility_group] %>"<% end %>
         >
           <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
           <%= item[:text] %>

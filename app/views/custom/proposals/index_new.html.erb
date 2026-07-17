@@ -28,7 +28,7 @@
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.proposals.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(

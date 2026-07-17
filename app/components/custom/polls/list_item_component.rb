@@ -4,15 +4,16 @@ class Polls::ListItemComponent < ApplicationComponent
   delegate :link_to_poll, to: :helpers
   attr_reader :poll, :projekt_phase
 
-  def initialize(poll:)
+  def initialize(poll:, hide_projekt_breadcrumb: false)
     @poll = poll
+    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
     @projekt_phase = poll.projekt_phase
   end
 
   def component_attributes
     {
       resource: @poll,
-      projekt: poll.projekt,
+      projekt: @hide_projekt_breadcrumb ? nil : poll.projekt,
       title: poll.title,
       description: projekt_phase.description,
       url: poll_path

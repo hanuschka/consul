@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_14_152236) do
+ActiveRecord::Schema.define(version: 2026_07_16_130000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3112,6 +3112,9 @@ ActiveRecord::Schema.define(version: 2026_07_14_152236) do
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"
     t.datetime "published_at"
+    t.string "footer_key"
+    t.integer "footer_position"
+    t.index ["footer_key"], name: "index_site_customization_pages_on_footer_key", unique: true
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end

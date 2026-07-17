@@ -23,26 +23,28 @@
       <div class="resource-item--body-and-author">
         <div class="resource-item--body">
           <div class="resource-item--body-heading">
-            <% if subheading? %>
-              <%= subheading %>
-            <% elsif @projekt.present? %>
-              <div class="resource-item--head-title-projekt-breadcrumbs">
-                <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
-              </div>
-            <% end %>
+            <% if show_body_heading? %>
+              <% if subheading? %>
+                <%= subheading %>
+              <% elsif show_projekt_breadcrumb? %>
+                <div class="resource-item--head-title-projekt-breadcrumbs">
+                  <%= helpers.breadcrumbs_links(@projekt, ">", false) %>
+                </div>
+              <% end %>
 
-            <% if date.present? %>
-              <div class="resource-item--date"><%= date %></div>
+              <% if date.present? %>
+                <div class="resource-item--date"><%= date %></div>
+              <% end %>
             <% end %>
           </div>
 
-          <h3 class="resource-item--title-heading">
+          <%= content_tag(title_heading_tag, class: "resource-item--title-heading") do %>
             <% if @url.present? %>
               <%= link_to title_text, @url, class: "resource-item--title", target: @url_target, data: { turbolinks: false } %>
             <% else %>
               <span class="resource-item--title"><%= title_text %></span>
             <% end %>
-          </h3>
+          <% end %>
 
           <div class="resource-item--description">
             <%= description_text %>

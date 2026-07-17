@@ -5,8 +5,9 @@ class Projekts::ListItemComponent < ApplicationComponent
 
   delegate :projekt_option, to: :helpers
 
-  def initialize(projekt:)
+  def initialize(projekt:, title_heading_level: 3)
     @projekt = projekt
+    @title_heading_level = title_heading_level
   end
 
   def component_attributes
@@ -15,7 +16,8 @@ class Projekts::ListItemComponent < ApplicationComponent
       title: projekt.page.title,
       description: strip_tags(projekt.page.subtitle),
       url: projekt_url,
-      url_target: url_target
+      url_target: url_target,
+      title_heading_level: @title_heading_level
     }
   end
 

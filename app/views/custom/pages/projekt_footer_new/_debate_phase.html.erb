@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <%= render Resources::ListComponent.new(
+    <%= render Resources::List::BaseComponent.new(
       empty_text: t("custom.debates.index.empty_list_text")
     ) do |c| %>
       <% c.with_toolbar(

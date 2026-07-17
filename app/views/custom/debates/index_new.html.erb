@@ -18,11 +18,7 @@
     <div class="main-column">
       <%= render 'shared/loader_spinner' %>
 
-      <% if extended_feature?('modulewide.custom_help_text_in_modules') %>
-        <%= link_to t('debates.index.section_header.help'), '#section_help' %>
-      <% end %>
-
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.debates.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(
@@ -42,6 +38,10 @@
         <% end %>
       <% end %>
     <%= paginate @debates %>
+
+      <div id="section_help" class="margin" data-magellan-target="section_help">
+        <%= render_custom_block "debates_help" %>
+      </div>
     </div>
 
     <div id="debates-sidebar" class="sidebar">

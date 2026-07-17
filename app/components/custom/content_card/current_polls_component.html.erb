@@ -1,4 +1,4 @@
-<%= render Resources::ListComponent.new(
+<%= render Resources::List::BaseComponent.new(
   title: @content_card.title || t("custom.content_cards.current_polls.title"),
   empty_text: t("custom.polls.index.empty_list_text")
 ) do |c| %>

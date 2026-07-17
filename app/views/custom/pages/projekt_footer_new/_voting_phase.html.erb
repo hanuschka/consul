@@ -12,7 +12,7 @@
         <%= render_custom_block "polls_welcome" %>
       <% end %>
 
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.polls.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(
@@ -27,7 +27,7 @@
         <% if @polls.present? %>
           <% c.with_items do %>
             <% @polls.each do |poll| %>
-              <%= render Polls::ListItemComponent.new(poll: poll) %>
+              <%= render Polls::ListItemComponent.new(poll: poll, hide_projekt_breadcrumb: true) %>
             <% end %>
           <% end %>
         <% end %>

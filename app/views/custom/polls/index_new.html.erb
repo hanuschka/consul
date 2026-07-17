@@ -24,7 +24,7 @@
     <div class="main-column">
       <%= render "shared/loader_spinner" %>
 
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.polls.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(

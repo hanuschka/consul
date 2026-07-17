@@ -556,6 +556,11 @@
   padding: 1.5rem 0;
 }
 
+.question-disclosure--loading {
+  display: flex;
+  justify-content: center;
+}
+
 .crossectional-answer {
   margin-bottom: 0.9rem;
 
@@ -736,6 +741,22 @@
   justify-content: flex-end;
   gap: 0.5rem;
   margin-bottom: 0.25rem;
+}
+
+.footer-evaluation-tab-toggle {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.footer-evaluation-tab-toggle--trigger {
+  display: inline-flex;
+}
+
+.footer-evaluation-tab-toggle .custom-switch {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--er-text-secondary, #475569);
 }
 
 .footer-evaluation-section-toggle--trigger {

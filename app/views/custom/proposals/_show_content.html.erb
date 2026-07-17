@@ -116,7 +116,7 @@
                                   create_topic_link(proposal.community),
                                   class: "button" %>
                     <% end %>
-                    <%= render Resources::ListComponent.new(
+                    <%= render Resources::List::BaseComponent.new(
                       empty_text: t("custom.topics.list.empty_list_text")
                     ) do |c| %>
                       <% if proposal.community.topics.present? %>

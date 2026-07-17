@@ -17,12 +17,16 @@
         ) %>
       </div>
 
-      <% unless local_assigns[:hide_stats_link] %>
-        <%= link_to stats_projekt_phase_path(@projekt_phase), data: { turbolinks: false }, class: "button with-icon", tabindex: "-1" do %>
-          <i class="fas fa-chart-bar"></i>
-          <%= t("custom.projekt_phases.subnav.full_stats") %>
+      <div class="u-flex u-gap-15 u-align-center">
+        <%= render "pages/projekt_footer_new/tab_visibility_toggle", tab: "ai" %>
+
+        <% unless local_assigns[:hide_stats_link] %>
+          <%= link_to stats_projekt_phase_path(@projekt_phase), data: { turbolinks: false }, class: "button with-icon", tabindex: "-1" do %>
+            <i class="fas fa-chart-bar"></i>
+            <%= t("custom.projekt_phases.subnav.full_stats") %>
+          <% end %>
         <% end %>
-      <% end %>
+      </div>
     </div>
   <% end %>
 

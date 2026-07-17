@@ -265,16 +265,27 @@ class PagesController < ApplicationController
     end
 
     def voting_phase_live_stats
-      return compute_voting_phase_live_stats if helpers.footer_admin_or_projekt_manager?
+      if helpers.footer_admin_or_projekt_manager?
+        cached_voting_phase_live_stats(
+          "footer_live_phase_stats/admin/#{@projekt_phase.id}",
+          ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_ADMIN_TTL
+        )
+      else
+        cached_voting_phase_live_stats(
+          "footer_live_phase_stats/#{@projekt_phase.id}",
+          ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_TTL
+        )
+      end
+    end
 
-      cache_key = "footer_live_phase_stats/#{@projekt_phase.id}"
+    def cached_voting_phase_live_stats(cache_key, ttl)
       cached_stats = Rails.cache.read(cache_key)
       return cached_stats if cached_stats.present?
 
       stats = compute_voting_phase_live_stats
 
       if stats.present?
-        Rails.cache.write(cache_key, stats, expires_in: ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_TTL)
+        Rails.cache.write(cache_key, stats, expires_in: ttl)
       end
 
       stats

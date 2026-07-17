@@ -27,9 +27,11 @@ class Resources::ListItemComponent < ApplicationComponent
     url: nil,
     url_target: nil,
     header_style: nil,
-    date: nil
+    date: nil,
+    title_heading_level: 3
   )
     @title = title
+    @title_heading_level = title_heading_level
     @projekt = projekt
     @description = description
     @resource = resource
@@ -56,6 +58,14 @@ class Resources::ListItemComponent < ApplicationComponent
     l(@date, format: :date_only)
   end
 
+  def show_projekt_breadcrumb?
+    @projekt.present?
+  end
+
+  def show_body_heading?
+    subheading? || show_projekt_breadcrumb? || date.present?
+  end
+
   def title_text
     truncate(sanitize(@title), length: 72, escape: false)
   end
@@ -64,6 +74,10 @@ class Resources::ListItemComponent < ApplicationComponent
     formatted_description = @description&.gsub("</p><p>", "</p> <p>")
 
     truncate(sanitize(strip_tags(formatted_description)), length: 160, escape: false)
+  end
+
+  def title_heading_tag
+    "h#{@title_heading_level}"
   end
 
   private

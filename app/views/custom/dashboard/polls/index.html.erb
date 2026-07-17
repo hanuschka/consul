@@ -21,7 +21,7 @@
           <%= render ResourcePage::BannerComponent.new(resource: @proposal, heading_level: :h2) %>
         </div>
 
-        <%= render Resources::ListComponent.new(
+        <%= render Resources::List::BaseComponent.new(
           title: "#{t("polls.index.title")} (#{@polls.size})",
           empty_text: t("custom.polls.index.empty_list_text")
         ) do |c| %>

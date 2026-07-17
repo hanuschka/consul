@@ -1,5 +1,5 @@
 <div id="latest-activity">
-  <%= render Resources::ListComponent.new(
+  <%= render Resources::List::BaseComponent.new(
     title: title,
     empty_text: (comments? ? nil : t("empty_list_text"))
   ) do |c| %>

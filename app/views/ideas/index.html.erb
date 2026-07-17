@@ -20,7 +20,7 @@
 
   <div class="flex-layout">
     <div class="main-column">
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.ideas.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(

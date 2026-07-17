@@ -35,7 +35,7 @@
         </div>
       <% end %>
 
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.deficiency_reports.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(

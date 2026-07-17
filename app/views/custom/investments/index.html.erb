@@ -18,7 +18,7 @@
       <%= render "shared/loader_spinner" %>
 
       <% investment_ids = @investments.pluck(:id) %>
-      <%= render Resources::ListComponent.new(
+      <%= render Resources::List::BaseComponent.new(
         empty_text: t("custom.budgets.investments.index.empty_list_text")
       ) do |c| %>
         <% c.with_toolbar(

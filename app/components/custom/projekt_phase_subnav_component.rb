@@ -31,6 +31,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         url: url_to_footer_tab(section: "poll_stats", remote: true),
         active: params[:section] == "poll_stats",
         section: "poll_stats",
+        visibility_group: "stats",
         hidden_from_public: evaluation_tab_hidden_from_public?("stats")
       }
     end
@@ -42,6 +43,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         url: url_to_footer_tab(section: "evaluation", remote: true),
         active: params[:section] == "evaluation",
         section: "evaluation",
+        visibility_group: "stats",
         hidden_from_public: evaluation_tab_hidden_from_public?("stats")
       }
     end
@@ -54,6 +56,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
         active: params[:section] == "ai_evaluation",
         disabled: footer_evaluation_tab_disabled?(@projekt_phase, "ai"),
         section: "ai_evaluation",
+        visibility_group: "ai",
         hidden_from_public: evaluation_tab_hidden_from_public?("ai")
       }
     end

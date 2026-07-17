@@ -1,5 +1,6 @@
 module ProjektPhaseSettingsHelper
   FOOTER_LIVE_STATS_TTL = 5.minutes
+  FOOTER_LIVE_STATS_ADMIN_TTL = 1.minute
 
   def footer_live_stats_cache_bucket
     Time.current.to_i / FOOTER_LIVE_STATS_TTL.to_i

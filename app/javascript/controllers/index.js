@@ -220,6 +220,9 @@ application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadCon
 import AdmEvaluationTabsController from "./adm/evaluation_tabs_controller"
 application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 
+import AdmBudgetResultsController from "./adm/budget_results_controller"
+application.register("adm--budget-results", AdmBudgetResultsController)
+
 import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
 application.register("projekt-imports--from-file", ProjektImportsFromFileController)
 

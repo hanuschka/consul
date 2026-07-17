@@ -29,7 +29,7 @@
   <div class="phase-budget-segments">
     <% segments.each do |segment| %>
       <% seg_key = segment["key"] %>
-      <div class="phase-budget-segment">
+      <div class="evaluation-stat-card">
         <div class="phase-budget-segment__title">
           <%= t("custom.projekt_phases.stats.budget_phase.#{seg_key}.title") %>
         </div>
@@ -38,7 +38,7 @@
           <% (segment["metrics"] || []).each do |metric| %>
             <% metric_key = metric["key"] %>
             <% icon = metric_icons[metric_key] || default_icon %>
-            <div class="phase-key-metrics-card phase-segments-card">
+            <div class="phase-key-metrics-card">
               <div
                 class="phase-key-metrics-card__icon"
                 style="color:<%= accent %>;background:<%= accent_light %>"

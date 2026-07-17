@@ -1,7 +1,7 @@
 class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
   delegate :current_user, :can?, :phase_icon_class,
     :footer_evaluation_tab_visible?, :footer_evaluation_tab_public_visible?,
-    :footer_evaluation_tab_disabled?, to: :helpers
+    :footer_evaluation_tab_disabled?, :hidden_from_public_tooltip, to: :helpers
   attr_reader :budget, :projekt_phase
 
   def initialize(budget, projekt_phase)
@@ -65,5 +65,12 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
 
     def admin_or_projekt_manager?
       current_user&.administrator? || current_user&.projekt_manager?
+    end
+
+    def tab_tooltip_hidden_state(item)
+      return nil if !item.key?(:hidden_from_public)
+      return nil if !can?(:edit, projekt_phase.projekt)
+
+      item[:hidden_from_public]
     end
 end

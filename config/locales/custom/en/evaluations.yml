@@ -189,6 +189,7 @@ en:
             ai: AI analysis
             poll_stats: Statistics
             poll_stats_live: Live data
+            budget_results: Voting results
           poll_stats_tab:
             empty: No statistics are available for this poll yet.
             channel: Channel

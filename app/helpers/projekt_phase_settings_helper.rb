@@ -94,4 +94,19 @@ module ProjektPhaseSettingsHelper
   def footer_visible_evaluation_tabs(projekt_phase)
     projekt_phase.publicly_visible_evaluation_tabs
   end
+
+  # hidden: true/false wraps the content in an explanatory rich-tooltip that
+  # is active only while hidden; nil renders the content bare (viewer cannot
+  # toggle the tab, so no tooltip belongs on it).
+  def hidden_from_public_tooltip(hidden, content)
+    return content if hidden.nil?
+
+    attributes = { instant: "", "trigger-only": "", shadow: "heavy" }
+    attributes[:disabled] = "" if !hidden
+
+    content_tag("rich-tooltip", attributes) do
+      content +
+        content_tag(:template, t("custom.projekt_phases.footer_evaluation.tab_hidden_from_public_tooltip"))
+    end
+  end
 end

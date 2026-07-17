@@ -1,7 +1,7 @@
 class ProjektPhaseSubnavComponent < ApplicationComponent
   delegate :current_user, :can?, :phase_icon_class,
     :footer_evaluation_tab_public_visible?, :footer_evaluation_tab_available?,
-    :footer_evaluation_tab_disabled?, to: :helpers
+    :footer_evaluation_tab_disabled?, :hidden_from_public_tooltip, to: :helpers
 
   def initialize(projekt_phase)
     @projekt_phase = projekt_phase
@@ -92,6 +92,13 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
     def evaluation_tab_hidden_from_public?(tab)
       !footer_evaluation_tab_public_visible?(@projekt_phase, tab)
+    end
+
+    def tab_tooltip_hidden_state(item)
+      return nil if item[:visibility_group].blank?
+      return nil if !can?(:edit, @projekt_phase.projekt)
+
+      item[:hidden_from_public]
     end
 
     def any_tab_public_visible?

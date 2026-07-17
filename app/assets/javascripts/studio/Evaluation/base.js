@@ -75,6 +75,9 @@
       this.groupSubnavTabs(tab).forEach((subnavTab) => {
         subnavTab.classList.toggle("-hidden-from-public", !visible);
         subnavTab.classList.toggle("js-studio-hide-on-preview", !visible);
+
+        const tooltip = subnavTab.closest("rich-tooltip");
+        if (tooltip) tooltip.toggleAttribute("disabled", visible);
       });
 
       this.groupContentWrappers(tab).forEach((contentWrapper) => {

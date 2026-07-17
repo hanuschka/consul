@@ -16,6 +16,21 @@ App.Studio.utils.removeFoundationIds = function(element) {
   });
 }
 
+App.Studio.utils.resetFoundationAccordionStateFor = function(accordionRoot) {
+  accordionRoot.querySelectorAll(".accordion-item.is-active").forEach((element) => {
+    element.classList.remove("is-active");
+  });
+
+  accordionRoot.querySelectorAll(".accordion-content").forEach((element) => {
+    element.style.display = "none";
+    element.ariaHidden = "true";
+  });
+
+  accordionRoot.querySelectorAll(".accordion-title").forEach((element) => {
+    element.ariaSelected = "false";
+  });
+}
+
 // Aggressive cleanup for content that LEAVES the document via the clipboard.
 // The paste target is unknown and may already hold the same Foundation/author
 // ids, so EVERY id is stripped to avoid duplicate-id collisions (invalid DOM,

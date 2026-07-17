@@ -27,6 +27,9 @@
 //= require ../custom/components/shared/dropdown_select_menu_component
 //= require ../studio/image_gallery_fallback
 //= require ../studio/main
+//= require ../studio/Evaluation/base
+//= require ../studio/PreviewMode/base
+//= require ../studio/Projekt/PageBrandColorPicker
 //= require_tree ../studio/utils
 //= require_tree ../studio/templates
 
@@ -62,9 +65,9 @@
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog
 //= require ../studio/ContentBlocks/EditModes/CKEditorMode
 //= require ../studio/ContentBlocks/SavedContentBlocks
-//= require ../studio/Projekt/FileImport
+//= require ../studio/Projekt/AiFileImport
 //= require ../studio/Projekt/ProjektStart
-//= require ../studio/Projekt/BuildWithPrompt
+//= require ../studio/Projekt/AiBuildWithPrompt
 //= require ../studio/ContentBlocks/CreateContentBlockWithAi
 //= require ../studio/Projekt/ToggleBackground
 //= require ../custom/components/studio

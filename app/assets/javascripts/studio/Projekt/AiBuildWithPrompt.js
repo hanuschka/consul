@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  App.Studio.Projekt.BuildWithPrompt = {
+  App.Studio.Projekt.AiBuildWithPrompt = {
     initialize() {
       const $document = $(document);
 
@@ -36,7 +36,7 @@
     },
 
     generateContentFromPrompt(prompt) {
-      App.Studio.Projekt.FileImport.showLoader("Inhalte werden generiert...");
+      App.Studio.Projekt.AiFileImport.showLoader("Inhalte werden generiert...");
 
       const projektId = App.Studio.Projekt.getCurrentProjektId();
 

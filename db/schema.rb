@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_16_130000) do
+ActiveRecord::Schema.define(version: 2026_07_17_072646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2332,6 +2332,7 @@ ActiveRecord::Schema.define(version: 2026_07_16_130000) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "show_budget_segments", default: true, null: false
     t.boolean "show_heatmap", default: false, null: false
+    t.boolean "show_poll_stats", default: false, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
   end
 

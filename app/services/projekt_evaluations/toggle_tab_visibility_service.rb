@@ -1,5 +1,6 @@
 class ProjektEvaluations::ToggleTabVisibilityService < ApplicationService
   TAB_SETTING_KEYS = {
+    "poll_stats" => "feature.general.public_kpi_stats",
     "stats" => "feature.general.public_kpi_stats",
     "ai" => "feature.general.public_ai_stats"
   }.freeze
@@ -29,14 +30,21 @@ class ProjektEvaluations::ToggleTabVisibilityService < ApplicationService
     end
 
     def bulk_update_sections
-      sections = tab_sections
-      return false if sections.blank?
+      changes = visibility_changes
+      return false if changes.blank?
 
       record = @projekt_phase.projekt_phase_evaluation_visibility ||
         @projekt_phase.build_projekt_phase_evaluation_visibility
-      changes = sections.index_with { @visible }.transform_keys { |key| "show_#{key}" }
 
       record.update!(changes)
+    end
+
+    def visibility_changes
+      if @tab == "poll_stats"
+        { "show_poll_stats" => @visible }
+      else
+        tab_sections.index_with { @visible }.transform_keys { |key| "show_#{key}" }
+      end
     end
 
     def tab_sections

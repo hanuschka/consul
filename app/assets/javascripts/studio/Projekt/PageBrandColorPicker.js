@@ -1,6 +1,7 @@
 (function() {
   "use strict";
 
+
   // Admin-Topbar Color Picker — sets a color setting via PATCH endpoint.
   // Generic: each picker decides which CSS custom property to drive and which
   // (optional) server-rendered <style> element to remove on reset, via the
@@ -12,7 +13,7 @@
   // Defaults preserve the original brand-color behavior when no data attrs are
   // set (cssVariable defaults to "--brand-color", styleElementId defaults to
   // "js-brand-color-styles").
-  App.AdminTopbarColorPicker = {
+  App.Studio.Projekt.PageBrandColorPicker = {
     DEBOUNCE_MS: 500,
     SAVED_FEEDBACK_MS: 1000,
     HEX_RE: /^#[0-9a-f]{6}$/i,
@@ -22,7 +23,7 @@
       if (!pickers.length) return;
 
       pickers.forEach(function(picker) {
-        App.AdminTopbarColorPicker.bindPicker(picker);
+        App.Studio.Projekt.PageBrandColorPicker.bindPicker(picker);
       });
     },
 
@@ -34,16 +35,16 @@
       var resetBtn = picker.querySelector(".js-admin-topbar-color-picker-reset");
       if (!input) return;
 
-      var debouncedSave = App.AdminTopbarColorPicker.debounce(function(value) {
-        App.AdminTopbarColorPicker.saveColor(picker, value);
-      }, App.AdminTopbarColorPicker.DEBOUNCE_MS);
+      var debouncedSave = App.Studio.Projekt.PageBrandColorPicker.debounce(function(value) {
+        App.Studio.Projekt.PageBrandColorPicker.saveColor(picker, value);
+      }, App.Studio.Projekt.PageBrandColorPicker.DEBOUNCE_MS);
 
       // Single `input` listener: live preview is immediate, save is debounced.
       // Firefox emits `change` like `input` while dragging, so we don't bind
       // a separate `change` handler — avoids a flood of PATCH requests.
       input.addEventListener("input", function(event) {
         var value = event.target.value;
-        App.AdminTopbarColorPicker.applyLivePreview(picker, value);
+        App.Studio.Projekt.PageBrandColorPicker.applyLivePreview(picker, value);
         debouncedSave(value);
       });
 
@@ -53,7 +54,7 @@
           if (resetBtn.disabled) return;
           resetBtn.disabled = true;
 
-          App.AdminTopbarColorPicker.handleReset(picker).finally(function() {
+          App.Studio.Projekt.PageBrandColorPicker.handleReset(picker).finally(function() {
             resetBtn.disabled = false;
           });
         });
@@ -86,11 +87,11 @@
       // hex, no need to read computed style (which would return the still-
       // present project-color from the server <style> block at this point).
       var fallback = picker.dataset.fallbackColor;
-      if (fallback && App.AdminTopbarColorPicker.HEX_RE.test(fallback)) {
+      if (fallback && App.Studio.Projekt.PageBrandColorPicker.HEX_RE.test(fallback)) {
         input.value = fallback;
       }
 
-      return App.AdminTopbarColorPicker.saveColor(picker, "");
+      return App.Studio.Projekt.PageBrandColorPicker.saveColor(picker, "");
     },
 
     saveColor: function(picker, value) {
@@ -100,7 +101,7 @@
       var csrfMeta = document.querySelector("meta[name=csrf-token]");
       var csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
 
-      App.AdminTopbarColorPicker.setStatus(picker, "saving");
+      App.Studio.Projekt.PageBrandColorPicker.setStatus(picker, "saving");
 
       return fetch(url, {
         method: "PATCH",
@@ -140,10 +141,10 @@
             }
           }
 
-          App.AdminTopbarColorPicker.setStatus(picker, "ok");
+          App.Studio.Projekt.PageBrandColorPicker.setStatus(picker, "ok");
           window.setTimeout(function() {
-            App.AdminTopbarColorPicker.setStatus(picker, "");
-          }, App.AdminTopbarColorPicker.SAVED_FEEDBACK_MS);
+            App.Studio.Projekt.PageBrandColorPicker.setStatus(picker, "");
+          }, App.Studio.Projekt.PageBrandColorPicker.SAVED_FEEDBACK_MS);
         })
         .catch(function() {
           // Revert live preview to last known saved color
@@ -156,10 +157,10 @@
           } else {
             document.documentElement.style.removeProperty(cssVariable);
           }
-          App.AdminTopbarColorPicker.setStatus(picker, "error");
+          App.Studio.Projekt.PageBrandColorPicker.setStatus(picker, "error");
           window.setTimeout(function() {
-            App.AdminTopbarColorPicker.setStatus(picker, "");
-          }, App.AdminTopbarColorPicker.SAVED_FEEDBACK_MS * 2);
+            App.Studio.Projekt.PageBrandColorPicker.setStatus(picker, "");
+          }, App.Studio.Projekt.PageBrandColorPicker.SAVED_FEEDBACK_MS * 2);
         });
     },
 
@@ -196,4 +197,24 @@
       };
     }
   };
+
+  // Self-init: the pickers render on welcome/custom pages (non-projekt), so
+  // initialization can't ride on App.Studio.Projekt.initialize(). Re-running
+  // on turbolinks:load is safe — bindPicker guards per element.
+  if (
+    document.readyState === "complete"
+    || document.readyState === "loaded"
+    || document.readyState === "interactive"
+  ) {
+    App.Studio.Projekt.PageBrandColorPicker.initialize();
+  }
+  else {
+    document.addEventListener("DOMContentLoaded", function() {
+      App.Studio.Projekt.PageBrandColorPicker.initialize();
+    });
+  }
+
+  document.addEventListener("turbolinks:load", function() {
+    App.Studio.Projekt.PageBrandColorPicker.initialize();
+  });
 }).call(this);

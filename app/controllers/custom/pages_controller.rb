@@ -249,7 +249,7 @@ class PagesController < ApplicationController
 
     def set_voting_phase_evaluation_variables
       if params[:section] == "poll_stats" &&
-          helpers.footer_evaluation_tab_available?(@projekt_phase, "stats")
+          helpers.footer_evaluation_tab_available?(@projekt_phase, "poll_stats")
         @poll_stats_entries = @projekt_phase.polls.for_public_render.order(id: :desc).map do |poll|
           { poll: poll, stats: Poll::Stats.new(poll) }
         end

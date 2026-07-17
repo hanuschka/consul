@@ -44,6 +44,7 @@
 >
   <%= render Adm::HeaderComponent.new(
     breadcrumbs: @breadcrumbs,
+    back_button_url: evaluation_adm_projekts_projekt_path(@projekt),
     frontend_url: projekt_path(@projekt),
     compact: true
   ) %>

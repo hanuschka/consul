@@ -15,6 +15,8 @@ en:
           voting_phase: Polls
       footer_evaluation:
         section_visibility_toggle_title: Show or hide in the public evaluation
+        tab_visibility_toggle_label: Publicly visible
+        tab_visibility_toggle_title: Show or hide this tab for visitors
       stats:
         title: Statistics
         banner_title: "Evaluation of %{phase_title}"

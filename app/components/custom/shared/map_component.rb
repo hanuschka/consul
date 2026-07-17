@@ -61,6 +61,10 @@ class Shared::MapComponent < ApplicationComponent
 
   private
 
+    def extended_sidebar_map?
+      @placement == "extended_sidebar_map"
+    end
+
     def features_count
       data = resolved_features
 

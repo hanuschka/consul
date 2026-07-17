@@ -24,7 +24,6 @@ class Resources::ListItemComponent < ApplicationComponent
     description:,
     resource: nil,
     projekt: nil,
-    hide_projekt_breadcrumb: false,
     url: nil,
     url_target: nil,
     header_style: nil,
@@ -34,7 +33,6 @@ class Resources::ListItemComponent < ApplicationComponent
     @title = title
     @title_heading_level = title_heading_level
     @projekt = projekt
-    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
     @description = description
     @resource = resource
     @url = url
@@ -61,7 +59,7 @@ class Resources::ListItemComponent < ApplicationComponent
   end
 
   def show_projekt_breadcrumb?
-    @projekt.present? && !@hide_projekt_breadcrumb
+    @projekt.present?
   end
 
   def show_body_heading?

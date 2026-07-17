@@ -72,7 +72,7 @@
 
     initMap(callback) {
       const instance = this;
-      this.initialPitch = 53;
+      this.initialPitch = 10;
 
       function initMapInstance() {
         mapboxgl.accessToken = instance.element.dataset.mapboxPublicToken;

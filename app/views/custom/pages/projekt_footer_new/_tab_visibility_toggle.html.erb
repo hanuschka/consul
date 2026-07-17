@@ -1,0 +1,24 @@
+<%
+  toggle_tab = local_assigns.fetch(:tab)
+  checked = local_assigns.fetch(:checked) { footer_evaluation_tab_public_visible?(@projekt_phase, toggle_tab) }
+  toggle_url = toggle_evaluation_tab_visibility_adm_projekts_projekt_path(@projekt_phase.projekt, format: :json)
+%>
+<% if can?(:edit, @projekt_phase.projekt) %>
+  <div
+    class="footer-evaluation-tab-toggle js-studio-hide-on-preview"
+    data-phase-id="<%= @projekt_phase.id %>"
+    data-tab="<%= toggle_tab %>"
+    data-toggle-url="<%= toggle_url %>"
+  >
+    <rich-tooltip delay="2500" trigger-only shadow="heavy">
+      <span class="footer-evaluation-tab-toggle--trigger">
+        <custom-switch
+          <%= "checked" if checked %>
+          label="<%= t("custom.projekt_phases.footer_evaluation.tab_visibility_toggle_label") %>"
+          input-class="js-footer-evaluation-tab-toggle-input"
+        ></custom-switch>
+      </span>
+      <template><%= t("custom.projekt_phases.footer_evaluation.tab_visibility_toggle_title") %></template>
+    </rich-tooltip>
+  </div>
+<% end %>

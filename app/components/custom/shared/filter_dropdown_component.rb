@@ -74,6 +74,7 @@ class Shared::FilterDropdownComponent < ApplicationComponent
     if remote?
       data["nonblock-remote"] = "true"
       data["remote"] = "true"
+      data["loader-target"] = loader_target
     end
 
     if @in_projekt_footer_tab
@@ -86,16 +87,13 @@ class Shared::FilterDropdownComponent < ApplicationComponent
   def link_class
     return unless remote?
 
-    "js-remote-link-push-state" if @in_projekt_footer_tab
+    classes = ["js-filter-dropdown-link"]
+    classes << "js-remote-link-push-state" if @in_projekt_footer_tab
+
+    classes.join(" ")
   end
 
-  def onclick
-    return unless remote?
-
-    if @in_projekt_footer_tab
-      "$('#footer-content').addClass('show-loader');"
-    else
-      "$('.main-column').addClass('show-loader');"
-    end
+  def loader_target
+    @in_projekt_footer_tab ? "#footer-content" : ".main-column"
   end
 end

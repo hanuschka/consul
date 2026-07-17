@@ -1,7 +1,6 @@
 module PdfServices
   class BaseService < ApplicationService
     include Rails.application.routes.url_helpers
-    include TextWithLinksHelper
 
     COLORS = {
       header_bg: "e8ecf4",
@@ -13,6 +12,13 @@ module PdfServices
       border: "d0d5dd",
       white: "ffffff"
     }.freeze
+
+    # Below this remaining page height an image is moved to the next page
+    # instead of being shrunk into the leftover space.
+    MIN_INLINE_IMAGE_HEIGHT = 200
+
+    # HTML elements treated as text blocks when flattening rich text for Prawn.
+    BLOCK_ELEMENTS = %w[p div blockquote ul ol h1 h2 h3 h4 h5 h6].freeze
 
     private
 
@@ -145,6 +151,51 @@ module PdfServices
         pdf.move_down 6
       end
 
+      def html_to_paragraphs(html)
+        fragment = Nokogiri::HTML.fragment(html.to_s)
+        fragment.css("br").each { |br| br.replace("\n") }
+
+        blocks_to_text(fragment.children)
+      end
+
+      def blocks_to_text(nodes)
+        nodes.map { |node| block_to_text(node) }.select(&:present?).join("\n\n")
+      end
+
+      def block_to_text(node)
+        case node.name
+        when "ul"
+          list_to_text(node) { "•  " }
+        when "ol"
+          list_to_text(node) { |index| "#{index}.  " }
+        else
+          if node.element_children.any? { |child| BLOCK_ELEMENTS.include?(child.name) }
+            blocks_to_text(node.children)
+          else
+            plain_block_text(node)
+          end
+        end
+      end
+
+      def list_to_text(list)
+        lines = list.xpath("./li").map.with_index(1) do |li, index|
+          nested_lists = li.xpath("./ul | ./ol")
+          nested_lists.each(&:unlink)
+
+          item_text = plain_block_text(li)
+          nested_texts = nested_lists.map { |nested| block_to_text(nested) }.select(&:present?)
+          next if item_text.blank? && nested_texts.empty?
+
+          ["#{yield(index)}#{item_text}", *nested_texts.map { |text| text.gsub(/^/, "   ") }].join("\n")
+        end
+
+        lines.select(&:present?).join("\n")
+      end
+
+      def plain_block_text(node)
+        node.text.tr("\u00A0", " ").split("\n").map(&:strip).select(&:present?).join("\n")
+      end
+
       def render_labeled_rows(pdf, rows, size: 9)
         return if rows.empty?
 
@@ -198,7 +249,14 @@ module PdfServices
         return if image_bytes.blank? && map_bytes.blank?
 
         if image_bytes.present?
-          render_single_image_row(pdf, image_bytes, image_max_height)
+          image_scaled_height = scaled_image_height(image_bytes, pdf.bounds.width, image_max_height)
+
+          if image_scaled_height > pdf.cursor && pdf.cursor < MIN_INLINE_IMAGE_HEIGHT
+            pdf.start_new_page
+            pdf.move_down page_break_top_padding
+          end
+
+          render_single_image_row(pdf, image_bytes, [image_max_height, pdf.cursor].min)
         end
 
         if image_bytes.present? && map_bytes.present?

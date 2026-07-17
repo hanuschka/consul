@@ -1,0 +1,67 @@
+// Evaluation-specific styling for the <custom-tabs> element used on the phase
+// evaluation page. The generic tab chrome lives with the element in
+// elements/custom_tabs.scss; here we (1) map the element's --custom-tabs-*
+// theming hooks onto kern tokens and (2) lay out the evaluation tab's stacked
+// label + "generated at" date, which the generic tab does not assume.
+
+.adm-evaluation-view-tabs {
+  --custom-tabs-border: var(--kern-grey-350);
+  --custom-tabs-text: var(--kern-color-layout-text-subtle);
+  --custom-tabs-text-strong: var(--kern-color-layout-text-default);
+  --custom-tabs-accent: var(--kern-color-action-default);
+  margin-bottom: 1rem;
+}
+
+.adm-evaluation-view-tabs--tab {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  padding: 0.65rem 1.55rem;
+  line-height: 1.2;
+}
+
+.adm-evaluation-view-tabs--tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.adm-evaluation-view-tabs--tab.-active .adm-evaluation-view-tabs--tab-label {
+  font-weight: 600;
+}
+
+.adm-evaluation-view-tabs--icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.adm-evaluation-view-tabs--date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--kern-color-layout-text-subtle);
+}
+
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-material,
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-fa {
+  color: var(--kern-color-action-default);
+}
+
+
+.adm-evaluation-view-tabs__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.adm-evaluation-view-tabs__actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}

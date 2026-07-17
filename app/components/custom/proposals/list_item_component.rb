@@ -4,26 +4,20 @@ class Proposals::ListItemComponent < ApplicationComponent
   delegate :projekt_phase_feature?, to: :helpers
   attr_reader :proposal
 
-  def initialize(proposal:, voted: nil, hide_projekt_breadcrumb: false)
+  def initialize(proposal:, voted: nil)
     @proposal = proposal
     @sentiment = proposal.sentiment
     @voted = voted
-    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
   end
 
   def component_attributes
     {
       resource: @proposal,
       projekt: proposal.projekt,
-      hide_projekt_breadcrumb: @hide_projekt_breadcrumb,
       title: proposal.title,
       description: proposal.description,
       header_style: header_style,
-      tags: proposal.tags.first(3),
-      url: proposal_path,
-      image: proposal.image,
-      image_placeholder_icon_class: "fa-lightbulb",
-      no_footer_bottom_padding: true
+      url: proposal_path
     }
   end
 

@@ -2,15 +2,23 @@
   stats = phase["stats"] || {}
   accent = accent_color
   accent_light = accent_light_color
+  tabbed = local_assigns.fetch(:tabbed, false)
 
   section_selection = local_assigns.fetch(:selection, nil)
+  only_tab = local_assigns.fetch(:only_tab, nil)
+  hidden_sections = local_assigns.fetch(:hidden_sections, [])
   show_section = ->(key) {
+    next false if hidden_sections.include?(key)
+
+    next false if only_tab.present? && !evaluation_section_tabs(key).split.include?(only_tab)
+
     section_selection.nil? || section_selection.include_section?(phase["phase_id"], key)
   }
 %>
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
+  <% if tabbed %><custom-tab-panel for="stats ai"><% end %>
   <section
     class="phase-evaluation-section"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
@@ -25,31 +33,48 @@
       </div>
       <div>
         <div class="phase-title"><%= phase["phase_title"] %></div>
-        <div class="phase-subtitle"><%= t("adm.projekts.projekts.evaluation.comment_phase") %></div>
       </div>
       <% if local_assigns[:regenerate_url].present? %>
         <%= render "adm/projekts/projekts/evaluation/regenerate_phase_button",
           regenerate_url: regenerate_url %>
       <% end %>
     </div>
-    <div class="phase-meta">
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["comments_count"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.comments") %></div>
+    <div class="phase-header-aside">
+      <div class="phase-meta">
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["comments_count"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.comments") %></div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_commenters"].to_i %></div>
+          <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.commenters") %></div>
+        </div>
+        <div class="meta-divider"></div>
       </div>
-      <div class="meta-divider"></div>
-      <div class="meta-item">
-        <div class="meta-value" style="color:<%= accent %>"><%= stats["unique_commenters"].to_i %></div>
-        <div class="meta-label"><%= t("adm.projekts.projekts.evaluation.commenters") %></div>
-      </div>
+
+      <% if local_assigns.fetch(:exportable, false) %>
+        <%= render layout: "adm/projekts/projekts/evaluation/export_dropdown" do %>
+          <%= render "adm/projekts/projekts/evaluation/export_pdf_item", projekt: projekt, phase: phase %>
+
+          <%= link_to comments_adm_projekts_phase_path(phase["phase_id"], format: :csv),
+            data: { turbo: false } do %>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
+            <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.download_csv") %>
+          <% end %>
+        <% end %>
+      <% end %>
     </div>
   </div>
   </section>
+  <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% phase_ai_stats = phase["ai_stats"] || {} %>
 
   <% if phase_ai_stats["summary"].present? && show_section.call("phase_summary") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("phase_summary") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:phase_summary"
@@ -59,10 +84,12 @@
       <%= render partial: "adm/projekts/projekts/evaluation/phase_summary",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% has_tone = phase_ai_stats["tone_of_participation"].present? %>
   <% if has_tone && show_section.call("tone") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("tone") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:tone"
@@ -72,9 +99,11 @@
       <%= render partial: "adm/projekts/projekts/evaluation/phase_tone",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
-  <% if show_section.call("timeline") %>
+  <% if show_section.call("timeline") && evaluation_section_has_data?(phase, "timeline") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("timeline") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:timeline"
@@ -84,9 +113,11 @@
       <%= render partial: "adm/projekts/projekts/evaluation/phase_timeline",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
-  <% if show_section.call("user_segments") %>
+  <% if show_section.call("user_segments") && evaluation_section_has_data?(phase, "user_segments") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("user_segments") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:user_segments"
@@ -96,9 +127,11 @@
       <%= render partial: "adm/projekts/projekts/evaluation/phase_user_segments",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% if show_section.call("key_findings") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("key_findings") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
@@ -113,10 +146,12 @@
         pdf_mode: local_assigns.fetch(:pdf_mode, false)
       } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
   <% pdf_mode_local = local_assigns.fetch(:pdf_mode, false) %>
-  <% if !pdf_mode_local || show_section.call("ai_questions") %>
+  <% if (only_tab.blank? && !pdf_mode_local) || show_section.call("ai_questions") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("ai_questions") %>"><% end %>
     <section
       class="phase-evaluation-section"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
@@ -131,5 +166,6 @@
         pdf_mode: pdf_mode_local
       } %>
     </section>
+    <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 </div>

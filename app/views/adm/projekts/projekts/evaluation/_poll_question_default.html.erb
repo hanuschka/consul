@@ -5,9 +5,10 @@
   is_multi = chart_type == "multi"
   max_answer_count = answers.map { |a| a["count"].to_i }.max.to_i
   max_answer_count = 1 if max_answer_count.zero?
+  max_bar_height = 90
 %>
 
-<div class="card">
+<div class="card poll-question-card--full evaluation-stat-card">
   <div class="card-title"><%= question["title"] %></div>
   <div class="card-subtitle">
     <% if is_scale && answers.any? %>
@@ -29,11 +30,13 @@
   <% if is_scale %>
     <div class="scale-grid">
       <% answers.each do |answer| %>
-        <% height_pct = (answer["count"].to_f / max_answer_count * 100).round(1) %>
+        <% bar_height = (answer["count"].to_f / max_answer_count * max_bar_height).round %>
         <div class="scale-col">
           <span class="scale-count"><%= answer["count"].to_i %></span>
-          <div class="scale-bar" style="height:<%= height_pct %>%;background:<%= accent %>"></div>
+          <div class="scale-bar" style="height:<%= bar_height %>px;background:<%= accent %>"></div>
           <span class="scale-num"><%= answer["title"] %></span>
+          <%= render "adm/projekts/projekts/evaluation/poll_answer_detail_actions",
+            answer: answer, exportable: local_assigns.fetch(:exportable, false) %>
         </div>
       <% end %>
     </div>
@@ -42,8 +45,12 @@
       <div class="hbar">
         <div class="hbar-top">
           <span class="hbar-label"><%= answer["title"] %></span>
-          <span class="hbar-value">
-            <%= answer["count"].to_i %> &middot; <%= answer["percentage"] %>%
+          <span class="hbar-top--aside">
+            <span class="hbar-value">
+              <%= answer["count"].to_i %> &middot; <%= answer["percentage"] %>%
+            </span>
+            <%= render "adm/projekts/projekts/evaluation/poll_answer_detail_actions",
+              answer: answer, exportable: local_assigns.fetch(:exportable, false) %>
           </span>
         </div>
         <div class="hbar-track">

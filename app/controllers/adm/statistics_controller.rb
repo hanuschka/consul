@@ -1,18 +1,36 @@
 module Adm
   class StatisticsController < Adm::BaseController
+    MAX_CHART_RANGE_YEARS = 10
+
     def show
       authorize [:adm, :statistics]
-      @breadcrumbs = [
-        { name: t("adm.menu.items.stats"), icon: "bar_chart_4_bars" },
-        { name: t("adm.menu.items.stats_subitems.overview") }
-      ]
+      @chart_users_range = users_chart_range
+      load_users_chart
 
-      load_user_stats
-      load_projekt_stats
-      load_phase_stats
-      load_deficiency_report_stats
-      load_demographics
-      load_charts
+      respond_to do |format|
+        format.html do
+          @breadcrumbs = [
+            { name: t("adm.menu.items.stats"), icon: "bar_chart_4_bars" },
+            { name: t("adm.menu.items.stats_subitems.overview") }
+          ]
+
+          load_user_stats
+          load_projekt_stats
+          load_phase_stats
+          load_deficiency_report_stats
+          load_demographics
+          load_charts
+        end
+        format.json do
+          render json: {
+            datasets: @chart_users,
+            range: {
+              start_date: @chart_users_range&.first&.iso8601,
+              end_date: @chart_users_range&.last&.iso8601
+            }
+          }
+        end
+      end
     end
 
     private
@@ -84,8 +102,16 @@ module Adm
                              .count
       end
 
+      def load_users_chart
+        @chart_users = {
+          daily: chart_data(User.actual, "users.created_at", :day, range: @chart_users_range),
+          weekly: chart_data(User.actual, "users.created_at", :week, range: @chart_users_range),
+          monthly: chart_data(User.actual, "users.created_at", :month, range: @chart_users_range),
+          yearly: chart_data(User.actual, "users.created_at", :year, range: @chart_users_range)
+        }
+      end
+
       def load_charts
-        @chart_users     = monthly_chart_data(User.actual, "users.created_at")
         @chart_comments  = monthly_chart_data(Comment.where(hidden_at: nil), "comments.created_at")
         @chart_proposals = monthly_chart_data(
           Proposal.not_archived.not_retired.where(draft: false).where.not(published_at: nil),
@@ -106,19 +132,84 @@ module Adm
       end
 
       def monthly_chart_data(scope, column)
-        start_date = 11.months.ago.beginning_of_month.utc
-        months     = (0..11).map { |i| (start_date + i.months).beginning_of_month }
+        chart_data(scope, column, :month)
+      end
 
-        raw = scope
-          .where("#{column} >= ?", start_date)
-          .group(Arel.sql("DATE_TRUNC('month', #{column})"))
+      def users_chart_range
+        from = parse_chart_date(params[:start_date])
+        to   = parse_chart_date(params[:end_date])
+        return nil unless from || to
+
+        today = Time.current.utc.to_date
+        to ||= today
+        if from.nil?
+          earliest = User.actual.minimum(:created_at)&.to_date || to
+          from = [earliest, to].min
+        end
+        from, to = to, from if from > to
+        to   = today if to > today
+        from = today if from > today
+        from = [from, to - MAX_CHART_RANGE_YEARS.years].max
+        from..to
+      end
+
+      def parse_chart_date(value)
+        return if value.blank?
+
+        Date.iso8601(value.to_s)
+      rescue ArgumentError, TypeError
+        nil
+      end
+
+      def chart_data(scope, column, unit, range: nil)
+        today = Time.current.utc.to_date
+        day_format = range && range.first.year != range.last.year ? "%d.%m.%Y" : "%d.%m."
+
+        case unit
+        when :day
+          periods = range ? range.to_a : ((today - 29)..today).to_a
+          label   = ->(date) { date.strftime(day_format) }
+        when :week
+          # DATE_TRUNC('week') is always ISO/Monday, regardless of Date.beginning_of_week
+          periods = if range
+                      (range.first.beginning_of_week(:monday)..range.last).step(7).to_a
+                    else
+                      (0..25).map { |i| (today - (25 - i).weeks).beginning_of_week(:monday) }
+                    end
+          label   = ->(date) { date.strftime(day_format) }
+        when :month
+          periods = if range
+                      first = range.first.beginning_of_month
+                      count = (range.last.year * 12 + range.last.month) - (first.year * 12 + first.month)
+                      (0..count).map { |i| first >> i }
+                    else
+                      (0..11).map { |i| (today << (11 - i)).beginning_of_month }
+                    end
+          label   = ->(date) { date.strftime("%b %Y") }
+        when :year
+          periods = if range
+                      (range.first.year..range.last.year).map { |year| Date.new(year) }
+                    else
+                      first_year = [scope.minimum(column)&.year || today.year, today.year - 9].max
+                      (first_year..today.year).map { |year| Date.new(year) }
+                    end
+          label   = ->(date) { date.strftime("%Y") }
+        end
+
+        # In range mode both bounds use the raw range (not truncated periods),
+        # so totals are identical across granularities; first/last buckets may be partial.
+        scoped = scope.where("#{column} >= ?", range ? range.first : periods.first)
+        scoped = scoped.where("#{column} < ?", range.last + 1) if range
+
+        raw = scoped
+          .group(Arel.sql("DATE_TRUNC('#{unit}', #{column})"))
           .count
 
         raw_by_date = raw.transform_keys(&:to_date)
 
         {
-          labels: months.map { |m| m.to_date.strftime("%b %Y") },
-          values: months.map { |m| raw_by_date[m.to_date] || 0 }
+          labels: periods.map(&label),
+          values: periods.map { |period| raw_by_date[period] || 0 }
         }
       end
   end

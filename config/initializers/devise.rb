@@ -260,6 +260,17 @@ Devise.setup do |config|
                   Rails.application.secrets.wordpress_oauth2_secret,
                   strategy_class: OmniAuth::Strategies::Wordpress,
                   client_options: { site: Rails.application.secrets.wordpress_oauth2_site }
+  config.omniauth :kobil,
+                  issuer: Rails.application.secrets.kobil_issuer,
+                  discovery: true,
+                  scope: [:openid, :email, :profile, :address],
+                  strategy_class: OmniAuth::Strategies::OpenIDConnect,
+                  post_logout_redirect_uri: Rails.application.secrets.kobil_post_logout_redirect_uri,
+                  client_options: {
+                    identifier: Rails.application.secrets.kobil_client_id,
+                    secret: Rails.application.secrets.kobil_client_secret,
+                    redirect_uri: Rails.application.secrets.kobil_redirect_uri
+                  }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

@@ -5,12 +5,19 @@ de:
         key_metrics: Kennzahlen
         analysis: Analyse
         evaluation: Auswertung
+        ai_evaluation: KI-Auswertung
         full_stats: Auswertung auf separater Seite anzeigen
         overview:
           proposal_phase: Vorschläge
           budget_phase: Investitionsvorschläge
           comment_phase: Kommentare
+          debate_phase: Diskussionen
           voting_phase: Abstimmungen
+      footer_evaluation:
+        section_visibility_toggle_title: In der öffentlichen Auswertung anzeigen oder ausblenden
+        tab_visibility_toggle_label: Öffentlich sichtbar
+        tab_visibility_toggle_title: Diesen Tab für Besucher*innen anzeigen oder ausblenden
+        tab_hidden_from_public_tooltip: Dieser Tab ist aktuell für Besucher*innen ausgeblendet
       stats:
         title: Statistiken
         banner_title: "Auswertung der %{phase_title}"
@@ -175,6 +182,7 @@ de:
           phase_not_current: Diese Projektphase wurde noch nicht gestartet
           poll_expired: Diese Abstimmung ist bereits abgelaufen
           poll_not_current: Diese Abstimmung wurde noch nicht gestartet
+          poll_not_live: Diese Abstimmung ist noch nicht verfügbar.
           only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
           no_registered_address: Ihrem Account konnte keine registrierte Adresse zugeordnet werden. Bitte aktualisieren Sie Ihr Konto.
           only_specific_registered_address_groupings: "Die Beteiligung ist auf folgendes individuelle Gebiet beschränkt: %{registered_address_groupings}."

@@ -10,50 +10,96 @@ class ProjektPhase::DemographicsCalculator
   end
 
   def gender_data
-    participants_with_gender = participants.where.not(gender: nil)
-    total_with_gender = participants_with_gender.count
+    counts = participants.group(:gender).count
+    male = counts["male"].to_i
+    female = counts["female"].to_i
+    other = counts["other_gen"].to_i
+    total_with_gender = counts.reject { |gender, _| gender.nil? }.values.sum
 
     {
-      total_male_participants: participants.male.count,
-      total_female_participants: participants.female.count,
-      total_other_gen_participants: participants.other_gen.count,
-      male_percentage: PercentageCalculator.calculate(participants.male.count, total_with_gender),
-      female_percentage: PercentageCalculator.calculate(participants.female.count, total_with_gender),
-      other_gen_percentage: PercentageCalculator.calculate(participants.other_gen.count, total_with_gender)
+      total_male_participants: male,
+      total_female_participants: female,
+      total_other_gen_participants: other,
+      male_percentage: PercentageCalculator.calculate(male, total_with_gender),
+      female_percentage: PercentageCalculator.calculate(female, total_with_gender),
+      other_gen_percentage: PercentageCalculator.calculate(other, total_with_gender)
     }
   end
 
   def age_data
+    counts = age_bucket_counts
+
     AGE_GROUPS.map do |from, to|
-      count = participants.between_ages(from, to).count
+      count = counts["#{from} - #{to}"].to_i
       [
         "#{from} - #{to}",
         {
           range: range_description(from, to),
           count: count,
-          percentage: PercentageCalculator.calculate(count, participants.count)
+          percentage: PercentageCalculator.calculate(count, participants_count)
         }
       ]
     end.to_h
   end
 
   def geozone_data
+    counts = geozone_counts
+
     geozones.map do |geozone|
-      stats = GeozoneStats.new(geozone, participants)
+      count = counts[geozone.id].to_i
       [
-        stats.name,
+        geozone.name,
         {
-          count: stats.count,
-          percentage: stats.percentage
+          count: count,
+          percentage: PercentageCalculator.calculate(count, participants_count)
         }
       ]
     end.to_h
+  end
+
+  def individual_group_value_counts
+    return {} if @participant_ids.empty?
+
+    UserIndividualGroupValue
+      .joins(individual_group_value: :individual_group)
+      .where(user_id: @participant_ids, individual_groups: { kind: "soft" })
+      .group(:individual_group_value_id)
+      .count
   end
 
   private
 
     def participants
       @participants ||= User.unscoped.where(id: @participant_ids)
+    end
+
+    def participants_count
+      @participants_count ||= participants.count
+    end
+
+    def age_bucket_counts
+      buckets = AGE_GROUPS.map do |from, to|
+        "WHEN extract(year from age(date_of_birth)) BETWEEN #{from} AND #{to} THEN '#{from} - #{to}'"
+      end
+
+      participants
+        .where.not(date_of_birth: nil)
+        .group(Arel.sql("CASE #{buckets.join(' ')} END"))
+        .count
+    end
+
+    def geozone_counts
+      if districts_enabled?
+        participants.joins(registered_address: :district).group("registered_address_districts.id").count
+      else
+        participants.group(:geozone_id).count
+      end
+    end
+
+    def districts_enabled?
+      return @districts_enabled if defined?(@districts_enabled)
+
+      @districts_enabled = RegisteredAddress::District.present?
     end
 
     def range_description(from, to)
@@ -65,7 +111,7 @@ class ProjektPhase::DemographicsCalculator
     end
 
     def geozones
-      if RegisteredAddress::District.present?
+      if districts_enabled?
         RegisteredAddress::District.all.order("name")
       else
         Geozone.all.order("name")

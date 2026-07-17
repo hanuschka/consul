@@ -33,6 +33,11 @@ en:
             actions: Actions
         destroy:
           success: Question deleted successfully.
+        contexted_clones:
+          skipped: >
+            The contextualized copies were not updated automatically because this poll already has
+            votes. While real votes exist, the contextualized questions can no longer be updated
+            automatically.
         form:
           bundle_title: Topic bundle
           title_placeholder: "e.g. Which measure do you support?"

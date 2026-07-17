@@ -262,7 +262,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank?
+    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+  end
+
+  def conditional_vote_possible_for?(user)
+    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -399,6 +403,51 @@ class ProjektPhase < ApplicationRecord
       setting.value.present?
     else
       false
+    end
+  end
+
+  # Mirrors the footer partials' map gate: proposal/budget phases render their
+  # resource map only when "form.show_map" is enabled; phase types without the
+  # setting (e.g. point of interest) always show it.
+  def resource_map_enabled?
+    setting = settings.find { |s| s.key == "feature.form.show_map" }
+
+    return true if setting.blank?
+
+    setting.value.present?
+  end
+
+  def publicly_visible?
+    active? && frontend_visibility?
+  end
+
+  def evaluation_completed?
+    projekt_phase_evaluation.present? && projekt_phase_evaluation.completed?
+  end
+
+  def publicly_visible_evaluation_tabs
+    visibility = projekt_phase_evaluation_visibility
+    return [] if visibility.blank?
+
+    available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
+    visible = visibility.visible_sections & available
+    ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
+
+    tabs = []
+    tabs << "poll_stats" if visibility.show_poll_stats
+    tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
+
+    tabs
+  end
+
+  def evaluation_tab_publicly_visible?(tab)
+    if evaluation_completed?
+      publicly_visible_evaluation_tabs.include?(tab)
+    elsif tab == "ai"
+      feature?("general.public_ai_stats")
+    else
+      feature?("general.public_kpi_stats")
     end
   end
 

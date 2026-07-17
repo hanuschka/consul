@@ -356,6 +356,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
   end
 
+  def go_live
+    authorize_phase(:update?)
+    @projekt_phase.poll.go_live!
+
+    redirect_to poll_questions_adm_projekts_phase_path(@projekt_phase),
+      notice: t(".success")
+  end
+
   def formular
     authorize_phase(:update?)
     @formular = @projekt_phase.formular

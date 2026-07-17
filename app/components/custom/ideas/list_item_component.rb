@@ -12,10 +12,7 @@ class Ideas::ListItemComponent < ApplicationComponent
       resource: idea,
       title: idea.title,
       description: idea.description,
-      url: helpers.idea_path(idea),
-      image: idea.image,
-      image_placeholder_icon_class: "fa-lightbulb",
-      subline: idea.category&.name
+      url: helpers.idea_path(idea)
     }
   end
 end

@@ -54,6 +54,7 @@ de:
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
           phase_download_pdf_button: PDF-Report erstellen
+          download_csv_file: CSV-Datei herunterladen
           download_stats_pdf_button: Statistik-PDF exportieren…
           download_ai_pdf_button: KI-Analyse-PDF exportieren…
           phase_download_pdf_tooltip: Die gesamte Phase als PDF exportieren.
@@ -220,7 +221,6 @@ de:
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel
-            project_summary_no_subtitle: Kein Untertitel
             project_summary_no_image: Kein Projektbild
             project_summary_ai_label: KI-Zusammenfassung
             project_summary_ai_empty: Keine Inhalte für die KI-Zusammenfassung verfügbar.

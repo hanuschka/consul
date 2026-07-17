@@ -24,15 +24,15 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       }
     ]
 
-    if voting_phase? && show_evaluation_tab?("stats")
+    if voting_phase? && show_evaluation_tab?("poll_stats")
       items << {
         text: t("adm.projekts.projekts.evaluation.view_tabs.poll_stats"),
         icon: "fa-chart-pie",
         url: url_to_footer_tab(section: "poll_stats", remote: true),
         active: params[:section] == "poll_stats",
         section: "poll_stats",
-        visibility_group: "stats",
-        hidden_from_public: evaluation_tab_hidden_from_public?("stats")
+        visibility_group: "poll_stats",
+        hidden_from_public: evaluation_tab_hidden_from_public?("poll_stats")
       }
     end
 
@@ -96,7 +96,8 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
     def any_tab_public_visible?
       footer_evaluation_tab_public_visible?(@projekt_phase, "stats") ||
-        footer_evaluation_tab_public_visible?(@projekt_phase, "ai")
+        footer_evaluation_tab_public_visible?(@projekt_phase, "ai") ||
+        (voting_phase? && footer_evaluation_tab_public_visible?(@projekt_phase, "poll_stats"))
     end
 
     def hide_subnav_on_preview?

@@ -1,4 +1,4 @@
-App.Studio.Projekt.FileImport = {
+App.Studio.Projekt.AiFileImport = {
   maxFileSize: 524288000,
   allowedExtensions: ['pdf', 'docx', 'odt'],
   statusCheckTimeout: 7000,

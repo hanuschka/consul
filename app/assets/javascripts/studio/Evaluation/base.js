@@ -1,8 +1,15 @@
 (function() {
   "use strict";
 
-  App.EvaluationVisibilityToggle = {
+  App.Studio.Evaluation = {
     initialize() {
+      // Window-level flag: App.Studio.Projekt re-runs initialize() on every
+      // turbolinks navigation (reinitializeUI), but the document-level
+      // delegated bindings below must only be attached once.
+      if (window.studioEvaluationInitialized) return
+
+      window.studioEvaluationInitialized = true;
+
       const $document = $(document);
 
       $document.on(

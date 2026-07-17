@@ -43,8 +43,6 @@
       App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
-      App.StudioPreviewMode.initialize();
-      App.AdminTopbarColorPicker.initialize();
       App.ProjektFooterTabs.initialize();
       App.ProjektFooterPhaseRegenerate.initialize();
       App.HashScroll.initialize();
@@ -55,7 +53,6 @@
       App.SessionTimeoutWarning.initialize();
       App.MobileFixedBottomActionComponentCustom.initialize();
       App.NotifyReviewers.initialize();
-      App.EvaluationVisibilityToggle.initialize();
       App.LoaderSpinner.initialize();
       App.AccountUsernameEditComponent.initialize();
     }

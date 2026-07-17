@@ -1,7 +1,15 @@
 (function() {
   "use strict";
-  App.StudioPreviewMode = {
+  App.Studio.PreviewMode = {
     initialize() {
+      // Window-level flag: the admin topbar (and this module's button) exists
+      // on non-projekt pages too, so this module self-initializes at pack
+      // evaluation below instead of via App.Studio.Projekt.initialize() and
+      // must not double-bind if the pack is evaluated again.
+      if (window.studioPreviewModeInitialized) return
+
+      window.studioPreviewModeInitialized = true;
+
       const $document = $(document);
       $document.on("click", ".js-studio-preview-mode-button", this.handleViewModeToggle.bind(this));
     },
@@ -93,4 +101,6 @@
       $(targetElement).hide();
     },
   };
+
+  App.Studio.PreviewMode.initialize();
 }).call(this);

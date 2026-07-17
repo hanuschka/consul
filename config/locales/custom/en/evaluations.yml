@@ -52,6 +52,7 @@ en:
             Are you sure you want to regenerate this phase? The existing
             evaluation of this phase will be overwritten.
           phase_download_pdf_button: Create PDF report
+          download_csv_file: Download CSV file
           download_stats_pdf_button: Export statistics PDF…
           download_ai_pdf_button: Export AI analysis PDF…
           phase_download_pdf_tooltip: Export the entire phase as a PDF.
@@ -218,7 +219,6 @@ en:
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle
-            project_summary_no_subtitle: No subtitle
             project_summary_no_image: No project image
             project_summary_ai_label: AI summary
             project_summary_ai_empty: No content available for AI summary.

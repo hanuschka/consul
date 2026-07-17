@@ -108,6 +108,7 @@ module ProjektPhaseSettingsHelper
     ai_keys = Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
 
     tabs = []
+    tabs << "poll_stats" if visibility.show_poll_stats
     tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
     tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
 

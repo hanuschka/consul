@@ -32,6 +32,14 @@
   font-weight: 600;
 }
 
+.adm-evaluation-view-tabs--tab.-disabled {
+  cursor: not-allowed;
+}
+
+.adm-evaluation-view-tabs--tab.-disabled .adm-evaluation-view-tabs--tab-label {
+  color: var(--kern-color-layout-text-subtle);
+}
+
 .adm-evaluation-view-tabs--icon {
   font-size: 1.25rem;
   line-height: 1;

@@ -82,9 +82,15 @@ module ProjektPhaseSettingsHelper
 
   def footer_evaluation_tab_disabled?(projekt_phase, tab)
     return false if tab != "ai"
-    return false if footer_phase_evaluation_completed?(projekt_phase)
+    return false if Ai::Settings.ai_available?
 
-    !Ai::Settings.ai_available?
+    !footer_frozen_ai_content?(projekt_phase)
+  end
+
+  def footer_frozen_ai_content?(projekt_phase)
+    return false if !footer_phase_evaluation_completed?(projekt_phase)
+
+    projekt_phase.projekt_phase_evaluation&.ai_content? || false
   end
 
   def footer_admin_or_projekt_manager?

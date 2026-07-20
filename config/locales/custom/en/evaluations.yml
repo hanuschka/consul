@@ -8,7 +8,7 @@ en:
   adm:
     ai_action_button:
       processing: AI is working…
-      feature_description: "Uses AI to generate an evaluation from this project's participation data."
+      feature_description: "Generates an evaluation from this project's participation data. AI analyses are added once the AI feature is enabled."
 
     projekts:
       projekts:
@@ -187,6 +187,7 @@ en:
             aria_label: Switch evaluation view
             stats: Results
             ai: AI analysis
+            ai_tab_disabled_hint: "AI-based evaluation of this project's participation data."
             poll_stats: Statistics
             poll_stats_live: Live data
             budget_results: Voting results

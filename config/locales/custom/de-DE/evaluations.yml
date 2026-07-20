@@ -8,7 +8,7 @@ de:
   adm:
     ai_action_button:
       processing: KI arbeitet…
-      feature_description: "Erstellt mit KI eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts."
+      feature_description: "Erstellt eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts. KI-Analysen werden ergänzt, sobald die KI-Funktion aktiviert ist."
 
     projekts:
       projekts:
@@ -189,6 +189,7 @@ de:
             aria_label: Ansicht der Auswertung wechseln
             stats: Ergebnis
             ai: KI-Analyse
+            ai_tab_disabled_hint: "KI-gestützte Auswertung der Beteiligungsdaten dieses Projekts."
             poll_stats: Statistiken
             poll_stats_live: Live-Daten
             budget_results: Abstimmungsergebnisse

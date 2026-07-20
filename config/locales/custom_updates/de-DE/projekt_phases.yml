@@ -14,9 +14,10 @@ de:
           debate_phase: Diskussionen
           voting_phase: Abstimmungen
       footer_evaluation:
-        section_visibility_toggle_title: In der öffentlichen Auswertung anzeigen oder ausblenden
+        section_visibility_toggle_title: "Abschnitt „%{section}“ für Besucher*innen anzeigen oder ausblenden"
         tab_visibility_toggle_label: Öffentlich sichtbar
-        tab_visibility_toggle_title: Diesen Tab für Besucher*innen anzeigen oder ausblenden
+        tab_visibility_toggle_title: "Tab „%{tab}“ für Besucher*innen anzeigen oder ausblenden"
+        tab_visibility_toggle_bulk_hint: Beim Umschalten werden alle Abschnitte dieses Tabs entsprechend ein- oder ausgeblendet.
         tab_hidden_from_public_tooltip: Dieser Tab ist aktuell für Besucher*innen ausgeblendet
       stats:
         title: Statistiken

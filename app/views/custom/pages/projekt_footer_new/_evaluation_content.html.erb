@@ -118,7 +118,7 @@
               selection: can_manage_visibility ? nil : selection,
               only_tab: only_tab,
               tabbed: false,
-              hidden_sections: ["kpis"],
+              hidden_sections: ProjektPhase::FOOTER_HIDDEN_EVALUATION_SECTIONS,
               visibility_toggle: can_manage_visibility,
               visibility: section_visibility,
               visibility_toggle_url: visibility_toggle_url

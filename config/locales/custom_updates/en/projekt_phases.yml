@@ -14,9 +14,10 @@ en:
           debate_phase: Debates
           voting_phase: Polls
       footer_evaluation:
-        section_visibility_toggle_title: Show or hide in the public evaluation
+        section_visibility_toggle_title: "Show or hide the “%{section}” section for visitors"
         tab_visibility_toggle_label: Publicly visible
-        tab_visibility_toggle_title: Show or hide this tab for visitors
+        tab_visibility_toggle_title: "Show or hide the “%{tab}” tab for visitors"
+        tab_visibility_toggle_bulk_hint: Switching also shows or hides all sections of this tab.
         tab_hidden_from_public_tooltip: This tab is currently hidden from visitors
       stats:
         title: Statistics

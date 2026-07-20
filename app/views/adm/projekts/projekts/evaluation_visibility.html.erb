@@ -12,7 +12,7 @@
   </div>
 
   <%= form_with(
-    url: update_evaluation_visibility_adm_projekts_projekt_path(@projekt),
+    url: update_evaluation_visibility_adm_projekts_projekt_path(@projekt, phase_id: params[:phase_id].presence),
     method: :patch,
     local: true,
     class: "evaluation-visibility-screen__form",

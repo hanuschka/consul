@@ -191,6 +191,7 @@ de:
             ai: KI-Analyse
             poll_stats: Statistiken
             poll_stats_live: Live-Daten
+            budget_results: Abstimmungsergebnisse
           poll_stats_tab:
             empty: Für diese Umfrage liegen noch keine Statistiken vor.
             channel: Kanal

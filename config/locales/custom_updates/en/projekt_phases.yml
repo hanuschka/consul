@@ -17,6 +17,7 @@ en:
         section_visibility_toggle_title: Show or hide in the public evaluation
         tab_visibility_toggle_label: Publicly visible
         tab_visibility_toggle_title: Show or hide this tab for visitors
+        tab_hidden_from_public_tooltip: This tab is currently hidden from visitors
       stats:
         title: Statistics
         banner_title: "Evaluation of %{phase_title}"

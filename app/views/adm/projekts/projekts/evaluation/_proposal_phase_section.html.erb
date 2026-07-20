@@ -193,7 +193,7 @@
       data-section="ranking"
     >
     <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "ranking", phase_id: phase["phase_id"], checked: !section_hidden.call("ranking"), toggle_url: visibility_toggle_url if visibility_toggle %>
-    <div class="card" style="margin-bottom:1rem">
+    <div class="card evaluation-stat-card" style="margin-bottom:1rem">
       <div class="card-title"><%= t("adm.projekts.projekts.evaluation.ranking_by_supports") %></div>
       <div class="card-subtitle">
         <%= t("adm.projekts.projekts.evaluation.ranking_subtitle",

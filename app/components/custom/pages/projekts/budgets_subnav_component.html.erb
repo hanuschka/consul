@@ -15,14 +15,17 @@
           </span>
         <% end %>
       <% else %>
-        <custom-tab
-          for="<%= item[:section] %>"
-          class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "-hidden-from-public js-studio-hide-on-preview" if item[:hidden_from_public] %>"
-          data-url="<%= item[:url] %>"
-        >
-          <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
-          <%= item[:text] %>
-        </custom-tab>
+        <% tab_markup = capture do %>
+          <custom-tab
+            for="<%= item[:section] %>"
+            class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "-hidden-from-public js-studio-hide-on-preview" if item[:hidden_from_public] %>"
+            data-url="<%= item[:url] %>"
+          >
+            <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
+            <%= item[:text] %>
+          </custom-tab>
+        <% end %>
+        <%= hidden_from_public_tooltip(tab_tooltip_hidden_state(item), tab_markup) %>
       <% end %>
     <% end %>
   </div>

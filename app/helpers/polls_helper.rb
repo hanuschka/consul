@@ -49,7 +49,7 @@ module PollsHelper
   def poll_evaluation_stats_visible?(poll)
     return true if poll_evaluation_admin?(poll)
 
-    poll.projekt_phase.feature?("general.public_kpi_stats")
+    poll.projekt_phase.evaluation_tab_publicly_visible?("poll_stats")
   end
 
   def poll_ai_analysis_visible?(poll)

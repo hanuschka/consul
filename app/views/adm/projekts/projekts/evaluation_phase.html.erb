@@ -14,7 +14,16 @@
   ai_stats_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
 
   poll_stats_available = @poll_stats_entries.present?
-  default_tab = poll_stats_available ? "poll_stats" : "stats"
+  budget_results_available = @budget_results_investments.present?
+
+  default_tab =
+    if budget_results_available
+      "budget_results"
+    elsif poll_stats_available
+      "poll_stats"
+    else
+      "stats"
+    end
 
   format_generated_at = ->(iso_value) do
     time = iso_value.present? ? Time.zone.parse(iso_value.to_s) : @phase_row.generated_at
@@ -67,6 +76,29 @@
         role="tablist"
         aria-label="<%= t("adm.projekts.projekts.evaluation.view_tabs.aria_label") %>"
       >
+        <% if budget_results_available %>
+          <custom-tab
+            for="budget_results"
+            class="adm-evaluation-view-tabs--tab -active"
+          >
+            <span class="adm-evaluation-view-tabs--tab-label">
+              <span
+                class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+                aria-hidden="true"
+              >emoji_events</span>
+              <i
+                class="adm-evaluation-view-tabs--icon fas fa-trophy projekt-evaluation-icon-fa"
+                aria-hidden="true"
+              ></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.budget_results") %>
+            </span>
+            <span class="adm-evaluation-view-tabs--date -live">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+              <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
+            </span>
+          </custom-tab>
+        <% end %>
         <% if @poll_stats_entries.present? %>
           <custom-tab
             for="poll_stats"
@@ -92,7 +124,7 @@
         <% end %>
         <custom-tab
           for="stats"
-          class="adm-evaluation-view-tabs--tab<%= " -active" unless poll_stats_available %>"
+          class="adm-evaluation-view-tabs--tab<%= " -active" if default_tab == "stats" %>"
         >
           <span class="adm-evaluation-view-tabs--tab-label">
             <span
@@ -196,6 +228,14 @@
       <custom-tab-panel for="poll_stats">
         <div class="adm-projekt-evaluation-report">
           <%= render "adm/projekts/projekts/evaluation/poll_stats_tab", entries: @poll_stats_entries %>
+        </div>
+      </custom-tab-panel>
+    <% end %>
+
+    <% if budget_results_available && !@phase_row.processing? && !@phase_row.failed? %>
+      <custom-tab-panel for="budget_results">
+        <div class="adm-projekt-evaluation-report">
+          <%= render "adm/projekts/projekts/evaluation/budget_results_tab" %>
         </div>
       </custom-tab-panel>
     <% end %>

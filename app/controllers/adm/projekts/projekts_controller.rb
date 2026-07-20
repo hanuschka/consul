@@ -189,6 +189,16 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
           &.deep_stringify_keys
       end
 
+    if @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+      budget = @projekt_phase.budget
+
+      if budget.present? && budget.finished? && budget.results_enabled?
+        @budget = budget
+        @heading = budget.heading
+        @budget_results_investments = ::Budget::Result.new(budget, budget.heading).investments
+      end
+    end
+
     @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
 
     @breadcrumbs = [

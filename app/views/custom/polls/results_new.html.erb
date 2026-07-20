@@ -25,21 +25,35 @@
           <%= render "polls/results_export_dropdown" %>
         <% end %>
 
+        <% results_public = @projekt_phase.evaluation_tab_publicly_visible?("stats") %>
+
+        <% if poll_evaluation_admin?(@poll) %>
+          <div class="projekt-footer-evaluation__toolbar js-studio-hide-on-preview">
+            <%= render "pages/projekt_footer_new/tab_visibility_toggle",
+              tab: "stats", checked: results_public %>
+          </div>
+        <% end %>
+
         <% if @results_phase.present? %>
           <% palette = evaluation_phase_palette[@poll.projekt_phase.type] %>
-          <div class="projekt-footer-evaluation">
-            <%= render partial: "adm/projekts/projekts/evaluation/voting_phase_section",
-              locals: {
-                projekt: @poll.projekt,
-                phase: @results_phase,
-                accent_color: palette[:accent],
-                accent_light_color: palette[:accent_light],
-                accent_shades: palette[:shades],
-                only_tab: "stats",
-                tabbed: false,
-                hidden_sections: ["kpis"],
-                pdf_mode: false
-              } %>
+          <div
+            class="js-footer-tab-content <%= "js-studio-hide-on-preview" if !results_public %>"
+            data-visibility-group="stats"
+          >
+            <div class="projekt-footer-evaluation">
+              <%= render partial: "adm/projekts/projekts/evaluation/voting_phase_section",
+                locals: {
+                  projekt: @poll.projekt,
+                  phase: @results_phase,
+                  accent_color: palette[:accent],
+                  accent_light_color: palette[:accent_light],
+                  accent_shades: palette[:shades],
+                  only_tab: "stats",
+                  tabbed: false,
+                  hidden_sections: ["kpis"],
+                  pdf_mode: false
+                } %>
+            </div>
           </div>
         <% end %>
 

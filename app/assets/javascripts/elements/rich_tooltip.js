@@ -26,6 +26,8 @@
   //                 animation
   //   template-id   use an external <template> by id instead of an inline one
   //   body-class    extra css class(es) added to the tooltip body element
+  //   disabled      never show while present; checked at show time, so it can
+  //                 be toggled live from JS
   class RichTooltip extends HTMLElement {
     connectedCallback() {
       if (this.tooltipBody) return
@@ -184,6 +186,7 @@
 
     scheduleShow() {
       if (this.showSuppressed) return
+      if (this.hasAttribute("disabled")) return
 
       clearTimeout(this.hideTimeout)
       clearTimeout(this.showTimeout)

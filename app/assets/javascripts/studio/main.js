@@ -37,7 +37,6 @@ window.App.Studio.Projekt = {
     App.Studio.ContentBlocks.SavedContentBlocks.initialize()
     App.Studio.Projekt.AiFileImport.initialize()
     App.Studio.Projekt.ToggleBackground.initialize()
-    App.Studio.Evaluation.initialize()
     // ExplainWithAi.initialize()
 
     this.initialized = true;

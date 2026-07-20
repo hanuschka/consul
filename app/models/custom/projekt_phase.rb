@@ -421,6 +421,36 @@ class ProjektPhase < ApplicationRecord
     active? && frontend_visibility?
   end
 
+  def evaluation_completed?
+    projekt_phase_evaluation.present? && projekt_phase_evaluation.completed?
+  end
+
+  def publicly_visible_evaluation_tabs
+    visibility = projekt_phase_evaluation_visibility
+    return [] if visibility.blank?
+
+    available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
+    visible = visibility.visible_sections & available
+    ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
+
+    tabs = []
+    tabs << "poll_stats" if visibility.show_poll_stats
+    tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
+
+    tabs
+  end
+
+  def evaluation_tab_publicly_visible?(tab)
+    if evaluation_completed?
+      publicly_visible_evaluation_tabs.include?(tab)
+    elsif tab == "ai"
+      feature?("general.public_ai_stats")
+    else
+      feature?("general.public_kpi_stats")
+    end
+  end
+
   def max_submissions_per_user
     option("resource.max_submissions_per_user").to_i
   end

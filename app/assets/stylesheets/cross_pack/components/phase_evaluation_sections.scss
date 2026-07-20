@@ -1,5 +1,21 @@
 @import "cross_pack/1_colors";
 
+.projekt-footer-evaluation {
+  --er-surface: #ffffff;
+  --er-border: #{$soft-border};
+  --er-radius: 8px;
+  --er-radius-lg: 12px;
+  --er-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.evaluation-stat-card {
+  padding: 1.5rem;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+  box-shadow: var(--er-shadow-md);
+}
+
 .projekt-footer-evaluation .phase-icon-title {
   display: none;
 }
@@ -124,8 +140,17 @@
 
 .projekt-footer-evaluation,
 .adm-poll-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   color: var(--er-text);
   line-height: 1.6;
+}
+
+.adm-poll-stats--poll {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .phase-icon-title {
@@ -299,9 +324,7 @@
   &:last-child {
     margin-bottom: 0;
   }
-}
-
-.answer-charts {
+}.answer-charts {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -769,8 +792,7 @@
 }
 
 .phase-timeline-card,
-.phase-distribution-card,
-.phase-segments-card {
+.phase-distribution-card {
   margin-top: 1.5rem;
   padding: 1.5rem;
   background: var(--er-surface);
@@ -891,14 +913,6 @@
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 1.5rem;
-}
-
-.phase-budget-segment {
-  padding: 1.5rem;
-  background: var(--er-surface);
-  border: 1px solid var(--er-border);
-  border-radius: var(--er-radius-lg);
-  box-shadow: var(--er-shadow-md);
 }
 
 .phase-budget-segment__title {

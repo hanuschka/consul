@@ -17,6 +17,7 @@ de:
         section_visibility_toggle_title: In der öffentlichen Auswertung anzeigen oder ausblenden
         tab_visibility_toggle_label: Öffentlich sichtbar
         tab_visibility_toggle_title: Diesen Tab für Besucher*innen anzeigen oder ausblenden
+        tab_hidden_from_public_tooltip: Dieser Tab ist aktuell für Besucher*innen ausgeblendet
       stats:
         title: Statistiken
         banner_title: "Auswertung der %{phase_title}"

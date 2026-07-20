@@ -14,17 +14,26 @@
 
     section_selection.nil? || section_selection.include_section?(phase["phase_id"], key)
   }
+
+  visibility_toggle = local_assigns.fetch(:visibility_toggle, false)
+  section_visibility = local_assigns.fetch(:visibility, nil)
+  visibility_toggle_url = local_assigns.fetch(:visibility_toggle_url, nil)
+  section_hidden = ->(key) { visibility_toggle && !section_visibility&.include_section?(key) }
+  section_klass = ->(key) {
+    section_hidden.call(key) ? "phase-evaluation-section -hidden-from-public js-studio-hide-on-preview" : "phase-evaluation-section"
+  }
 %>
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
   <% if tabbed %><custom-tab-panel for="stats ai budget_results"><% end %>
   <section
-    class="phase-evaluation-section"
+    class="<%= section_klass.call("kpis") %>"
     data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
     data-phase-id="<%= phase["phase_id"] %>"
     data-section="kpis"
   >
+  <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "kpis", phase_id: phase["phase_id"], checked: !section_hidden.call("kpis"), toggle_url: visibility_toggle_url if visibility_toggle %>
   <div class="phase-header">
     <div class="phase-icon-title">
       <div class="phase-icon" style="background:<%= accent_light %>;color:<%= accent %>">
@@ -82,11 +91,12 @@
   <% if phase_ai_stats["summary"].present? && show_section.call("phase_summary") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("phase_summary") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("phase_summary") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:phase_summary"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="phase_summary"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "phase_summary", phase_id: phase["phase_id"], checked: !section_hidden.call("phase_summary"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/phase_summary",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
@@ -97,11 +107,12 @@
   <% if has_tone && show_section.call("tone") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("tone") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("tone") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:tone"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="tone"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "tone", phase_id: phase["phase_id"], checked: !section_hidden.call("tone"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/phase_tone",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
@@ -111,11 +122,12 @@
   <% if show_section.call("timeline") && evaluation_section_has_data?(phase, "timeline") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("timeline") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("timeline") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:timeline"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="timeline"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "timeline", phase_id: phase["phase_id"], checked: !section_hidden.call("timeline"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/phase_timeline",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
@@ -125,11 +137,12 @@
   <% if show_section.call("label_sentiment") && evaluation_section_has_data?(phase, "label_sentiment") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("label_sentiment") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("label_sentiment") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:label_sentiment"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="label_sentiment"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "label_sentiment", phase_id: phase["phase_id"], checked: !section_hidden.call("label_sentiment"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/phase_label_sentiment",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
@@ -139,11 +152,12 @@
   <% if show_section.call("user_segments") && evaluation_section_has_data?(phase, "user_segments") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("user_segments") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("user_segments") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:user_segments"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="user_segments"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "user_segments", phase_id: phase["phase_id"], checked: !section_hidden.call("user_segments"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/phase_user_segments",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
@@ -153,11 +167,12 @@
   <% if show_section.call("budget_segments") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("budget_segments") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("budget_segments") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:budget_segments"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="budget_segments"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "budget_segments", phase_id: phase["phase_id"], checked: !section_hidden.call("budget_segments"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/budget_segments",
         locals: {
           phase: phase,
@@ -172,11 +187,12 @@
   <% if show_section.call("key_findings") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("key_findings") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("key_findings") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:key_findings"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="key_findings"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "key_findings", phase_id: phase["phase_id"], checked: !section_hidden.call("key_findings"), toggle_url: visibility_toggle_url if visibility_toggle %>
     <%= render partial: "adm/projekts/projekts/evaluation/phase_key_findings",
       locals: {
         phase: phase,
@@ -191,12 +207,13 @@
   <% if show_section.call("topic_clustering") && evaluation_section_has_data?(phase, "topic_clustering") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("topic_clustering") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("topic_clustering") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:topic_clustering"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="topic_clustering"
       style="--cluster-accent:<%= accent %>;--cluster-accent-light:<%= accent_light %>"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "topic_clustering", phase_id: phase["phase_id"], checked: !section_hidden.call("topic_clustering"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <div data-controller="shared--collapse">
         <%= render AiStats::CategoriesClusteringComponent.new(
           clustering_data: phase_ai_stats["topic_clustering"] || {},
@@ -211,12 +228,13 @@
   <% if show_section.call("semantic_clustering") && evaluation_section_has_data?(phase, "semantic_clustering") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("semantic_clustering") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("semantic_clustering") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:semantic_clustering"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="semantic_clustering"
       style="--cluster-accent:<%= accent %>;--cluster-accent-light:<%= accent_light %>"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "semantic_clustering", phase_id: phase["phase_id"], checked: !section_hidden.call("semantic_clustering"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <div data-controller="shared--collapse">
         <%= render AiStats::CategoriesClusteringComponent.new(
           clustering_data: phase_ai_stats["semantic_clustering"] || {},
@@ -232,11 +250,12 @@
   <% if (only_tab.blank? && !pdf_mode_local) || show_section.call("ai_questions") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("ai_questions") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("ai_questions") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:ai_questions"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="ai_questions"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "ai_questions", phase_id: phase["phase_id"], checked: !section_hidden.call("ai_questions"), toggle_url: visibility_toggle_url if visibility_toggle %>
     <%= render partial: "adm/projekts/projekts/evaluation/phase_ai_questions",
       locals: {
         phase: phase,
@@ -251,11 +270,12 @@
   <% if only_tab.blank? && !pdf_mode_local && show_section.call("heatmap") && evaluation_section_has_data?(phase, "heatmap") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("heatmap") %>"><% end %>
     <section
-      class="phase-evaluation-section"
+      class="<%= section_klass.call("heatmap") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:heatmap"
       data-phase-id="<%= phase["phase_id"] %>"
       data-section="heatmap"
     >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "heatmap", phase_id: phase["phase_id"], checked: !section_hidden.call("heatmap"), toggle_url: visibility_toggle_url if visibility_toggle %>
       <%= render partial: "adm/projekts/projekts/evaluation/phase_heatmap",
         locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>

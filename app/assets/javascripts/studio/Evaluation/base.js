@@ -37,17 +37,29 @@
 
       App.Ajax
         .patch(url, payload)
-        .then(() => this.onSuccess(checkbox, visible))
+        .then((response) => this.onSuccess(wrapper.dataset.sectionKey, visible, response))
         .catch(() => this.onError(checkbox, visible));
     },
 
-    onSuccess(checkbox, visible) {
-      const section = checkbox.closest(".phase-evaluation-section");
+    onSuccess(sectionKey, visible, response) {
+      this.syncSectionToggleGroup(sectionKey, visible);
+      this.applyTabsPublicState(response && response.tabs);
+    },
 
-      section.classList.toggle("-hidden-from-public", !visible);
-      section.classList.toggle("js-studio-hide-on-preview", !visible);
+    syncSectionToggleGroup(sectionKey, visible) {
+      const wrappers = document.querySelectorAll(
+        '.footer-evaluation-section-toggle[data-section-key="' + sectionKey + '"]'
+      );
 
-      this.updateActiveTabVisibility();
+      wrappers.forEach((wrapper) => {
+        wrapper.querySelector(".js-footer-evaluation-section-toggle-input").checked = visible;
+
+        const section = wrapper.closest(".phase-evaluation-section");
+        if (!section) return
+
+        section.classList.toggle("-hidden-from-public", !visible);
+        section.classList.toggle("js-studio-hide-on-preview", !visible);
+      });
     },
 
     onError(checkbox, visible) {
@@ -67,11 +79,23 @@
 
       App.Ajax
         .patch(url, payload)
-        .then(() => this.onTabSuccess(checkbox, wrapper.dataset.tab, visible))
+        .then((response) => this.onTabSuccess(checkbox, visible, response))
         .catch(() => this.onError(checkbox, visible));
     },
 
-    onTabSuccess(checkbox, tab, visible) {
+    onTabSuccess(checkbox, visible, response) {
+      this.syncSectionToggles(checkbox, visible);
+      this.applyTabsPublicState(response && response.tabs);
+    },
+
+    applyTabsPublicState(tabs) {
+      if (!tabs) return
+
+      Object.keys(tabs).forEach((tab) => this.applyTabPublicState(tab, tabs[tab]));
+      this.syncTabToggleInputs(tabs);
+    },
+
+    applyTabPublicState(tab, visible) {
       this.groupSubnavTabs(tab).forEach((subnavTab) => {
         subnavTab.classList.toggle("-hidden-from-public", !visible);
         subnavTab.classList.toggle("js-studio-hide-on-preview", !visible);
@@ -83,8 +107,17 @@
       this.groupContentWrappers(tab).forEach((contentWrapper) => {
         contentWrapper.classList.toggle("js-studio-hide-on-preview", !visible);
       });
+    },
 
-      this.syncSectionToggles(checkbox, visible);
+    syncTabToggleInputs(tabs) {
+      const wrappers = document.querySelectorAll(".footer-evaluation-tab-toggle");
+
+      wrappers.forEach((wrapper) => {
+        const tab = wrapper.dataset.tab;
+        if (!(tab in tabs)) return
+
+        wrapper.querySelector(".js-footer-evaluation-tab-toggle-input").checked = tabs[tab];
+      });
     },
 
     syncSectionToggles(checkbox, visible) {
@@ -104,27 +137,6 @@
       });
     },
 
-    updateActiveTabVisibility() {
-      const activeTab = this.activeEvaluationTab();
-      if (!activeTab) return
-
-      const anyEnabled = this.toggleableSections().some(
-        (section) => !section.classList.contains("-hidden-from-public")
-      );
-
-      activeTab.classList.toggle("-hidden-from-public", !anyEnabled);
-      activeTab.classList.toggle("js-studio-hide-on-preview", !anyEnabled);
-
-      this.syncTabToggleInput(anyEnabled);
-    },
-
-    syncTabToggleInput(anyEnabled) {
-      const input = document.querySelector(".js-footer-evaluation-tab-toggle-input");
-      if (!input) return
-
-      input.checked = anyEnabled;
-    },
-
     groupSubnavTabs(tab) {
       return Array.from(document.querySelectorAll(
         '.js-projekt-footer-tabs custom-tab[data-visibility-group="' + tab + '"], ' +
@@ -136,18 +148,6 @@
       return Array.from(document.querySelectorAll(
         '.js-footer-tab-content[data-visibility-group="' + tab + '"]'
       ));
-    },
-
-    activeEvaluationTab() {
-      return document.querySelector(
-        '.js-projekt-footer-tabs custom-tab[for="evaluation"].-active, ' +
-        '.js-projekt-footer-tabs custom-tab[for="ai_evaluation"].-active'
-      );
-    },
-
-    toggleableSections() {
-      return Array.from(document.querySelectorAll(".phase-evaluation-section"))
-        .filter((section) => section.querySelector(".footer-evaluation-section-toggle"));
     }
   };
 

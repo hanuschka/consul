@@ -777,6 +777,17 @@
   color: var(--er-text-secondary, #475569);
 }
 
+.footer-evaluation-toggle-tooltip--title {
+  display: block;
+  font-weight: 600;
+}
+
+.footer-evaluation-toggle-tooltip--description {
+  display: block;
+  margin-top: 0.375rem;
+  opacity: 0.85;
+}
+
 .adm-spinner {
   display: inline-block;
   color: var(--er-primary, #1e40af);
@@ -982,9 +993,8 @@
   gap: 1rem;
   margin-top: 1.5rem;
   padding: 1.5rem;
-  background: var(--er-bg);
-  border: 1px solid var(--er-border);
-  border-radius: var(--er-radius-lg);
+  // border: 1px solid var(--er-border);
+  // border-radius: var(--er-radius-lg);
 }
 
 .phase-summary-card__icon {
@@ -1684,6 +1694,13 @@
   gap: 1rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+}
+
+.poll-header__extra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
 .poll-name {

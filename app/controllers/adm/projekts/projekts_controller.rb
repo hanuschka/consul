@@ -294,7 +294,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       visible: params[:visible]
     )
 
-    head :no_content
+    render json: { tabs: footer_evaluation_tab_visibility(projekt_phase) }
   end
 
   def toggle_evaluation_tab_visibility
@@ -308,7 +308,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       visible: params[:visible]
     )
 
-    head :no_content
+    render json: { tabs: footer_evaluation_tab_visibility(projekt_phase) }
   end
 
   def generate_evaluation
@@ -591,6 +591,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   end
 
   private
+
+    def footer_evaluation_tab_visibility(projekt_phase)
+      {
+        poll_stats: projekt_phase.evaluation_tab_publicly_visible?("poll_stats"),
+        stats: projekt_phase.evaluation_tab_publicly_visible?("stats"),
+        ai: projekt_phase.evaluation_tab_publicly_visible?("ai")
+      }
+    end
 
     def enqueue_phase_regeneration(job_class)
       authorize [:adm, :projekts, @projekt], :update?

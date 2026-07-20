@@ -91,6 +91,27 @@ module ProjektPhaseSettingsHelper
     current_user&.administrator? || current_user&.projekt_manager?
   end
 
+  def footer_evaluation_tab_label(projekt_phase, tab)
+    voting_phase = projekt_phase.is_a?(ProjektPhase::VotingPhase)
+
+    case tab.to_s
+    when "poll_stats"
+      t("adm.projekts.projekts.evaluation.view_tabs.poll_stats")
+    when "ai"
+      if voting_phase
+        t("adm.projekts.projekts.evaluation.view_tabs.ai")
+      else
+        t("custom.projekt_phases.subnav.ai_evaluation")
+      end
+    else
+      if voting_phase
+        t("adm.projekts.projekts.evaluation.view_tabs.stats")
+      else
+        t("custom.projekt_phases.subnav.evaluation")
+      end
+    end
+  end
+
   def footer_visible_evaluation_tabs(projekt_phase)
     projekt_phase.publicly_visible_evaluation_tabs
   end

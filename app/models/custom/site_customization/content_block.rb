@@ -21,6 +21,10 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   before_validation :repair_html_body, :sanitize_body
 
+  after_create :touch_projekt_content_updated_at
+  after_destroy :touch_projekt_content_updated_at
+  after_update :touch_projekt_content_updated_at, if: :saved_change_to_body?
+
   def ai_generation_status
     return nil if ai_generation_data.blank?
 
@@ -56,6 +60,12 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   end
 
   private
+
+  def touch_projekt_content_updated_at
+    return if destroyed_by_association.present?
+
+    projekt&.touch(:content_updated_at)
+  end
 
   def single_parent
     if projekt_id.present? && newsletter_id.present?

@@ -114,6 +114,9 @@ class Projekt < ApplicationRecord
   before_save :assign_top_level_projekt_from_parent
   before_save :sync_published_at
 
+  before_create :initialize_content_updated_at
+  before_update :bump_content_updated_at
+
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
   after_destroy :sync_destroy_for_global_overview
@@ -893,6 +896,18 @@ class Projekt < ApplicationRecord
       if parent&.parent_id.present?
         self.top_level_projekt_id = parent.parent_id
       end
+    end
+
+    def initialize_content_updated_at
+      self.content_updated_at = Time.current
+    end
+
+    def bump_content_updated_at
+      relevant_changes =
+        changes_to_save.except("order_number", "updated_at", "content_updated_at")
+      return if relevant_changes.blank?
+
+      self.content_updated_at = Time.current
     end
 
     def sync_for_global_overview_if_changed

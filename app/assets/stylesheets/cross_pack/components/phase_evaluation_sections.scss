@@ -1696,6 +1696,13 @@
   flex-wrap: wrap;
 }
 
+.poll-header__extra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
 .poll-name {
   font-size: 1.1rem;
   font-weight: 700;

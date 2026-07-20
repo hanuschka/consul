@@ -24,6 +24,8 @@
   section_klass = ->(key) {
     section_hidden.call(key) ? "phase-evaluation-section -hidden-from-public js-studio-hide-on-preview" : "phase-evaluation-section"
   }
+
+  header_extra = local_assigns.fetch(:header_extra, nil)
 %>
 
 <div class="phase-block">
@@ -141,6 +143,10 @@
                 voters: poll["voters_count"].to_i,
                 questions: poll["questions_count"].to_i) %>
             </div>
+          <% end %>
+          <% if header_extra %>
+            <div class="poll-header__extra"><%= header_extra %></div>
+            <% header_extra = nil %>
           <% end %>
         </div>
       <% end %>

@@ -18,7 +18,25 @@ class Adm::MasterportalImportsController < Adm::BaseController
 
   def create
     authorize @projekt_phase, :update?, policy_class: policy_class_for(@projekt_phase)
-    MasterportalImportJob.perform_later(**import_job_args)
+
+    uploaded_files = Array(params[:files])
+    geoserver_collection_ids = Array(params[:collection_ids])
+
+    if uploaded_files.blank? && geoserver_collection_ids.blank?
+      return render json: { error: "nothing_selected" }, status: :unprocessable_entity
+    end
+
+    file_errors = validate_uploaded_files(uploaded_files)
+
+    if file_errors.any?
+      return render json: { errors: file_errors }, status: :unprocessable_entity
+    end
+
+    uploaded_collection_ids = create_file_collections(uploaded_files)
+
+    MasterportalImportJob.perform_later(
+      **import_job_args(geoserver_collection_ids, uploaded_collection_ids)
+    )
 
     render json: status_payload, status: :accepted
   end
@@ -72,14 +90,58 @@ class Adm::MasterportalImportsController < Adm::BaseController
       }
     end
 
-    def import_job_args
+    def import_job_args(geoserver_collection_ids, uploaded_collection_ids)
       {
         projekt_phase_id: @projekt_phase.id,
-        endpoint_url: params.require(:endpoint_url),
-        collection_ids: Array(params[:collection_ids]),
-        create_domain_records: ActiveModel::Type::Boolean.new.cast(params[:create_domain_records]),
+        endpoint_url: params[:endpoint_url].presence,
+        collection_ids: geoserver_collection_ids,
+        uploaded_collection_ids: uploaded_collection_ids,
+        create_domain_records: create_domain_records?,
         triggered_by_user_id: current_user.id
       }
+    end
+
+    def create_domain_records?
+      ActiveModel::Type::Boolean.new.cast(params[:create_domain_records])
+    end
+
+    def validate_uploaded_files(files)
+      files.each_with_index.filter_map do |file, index|
+        Masterportal::GeojsonFileFeatures.validate_upload!(file)
+        nil
+      rescue Masterportal::GeojsonFileFeatures::InvalidFile => e
+        { index: index, filename: file.original_filename, reason: e.reason }
+      end
+    end
+
+    def create_file_collections(files)
+      requested_names = Array(params[:file_names])
+
+      files.each_with_index.map do |file, index|
+        build_file_collection(file, requested_names[index]).id
+      end
+    end
+
+    def build_file_collection(file, requested_name)
+      base_name = File.basename(file.original_filename.to_s, ".*")
+      display_name = requested_name.to_s.strip.presence || base_name
+      collection_id = display_name.parameterize.presence || base_name.parameterize.presence || "datei"
+
+      collection =
+        @projekt_phase.masterportal_collections.find_or_initialize_by(collection_id: collection_id)
+      collection.name = display_name
+      collection.source = "file"
+      collection.endpoint_url = "file://#{file.original_filename}"
+      collection.create_domain_records = create_domain_records?
+      collection.save!
+
+      collection.geojson_file.attach(
+        io: file.tempfile,
+        filename: file.original_filename,
+        content_type: "application/geo+json"
+      )
+
+      collection
     end
 
     def status_payload

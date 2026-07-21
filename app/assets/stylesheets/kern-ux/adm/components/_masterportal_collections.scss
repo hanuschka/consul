@@ -178,6 +178,30 @@
   white-space: nowrap;
 }
 
+.adm-masterportal-collection-card--source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  font-size: 13px;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  cursor: help;
+
+  .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
+}
+
 .adm-masterportal-collection-card--meta {
   display: flex;
   flex-wrap: wrap;

@@ -46,6 +46,20 @@
       >
         <span class="material-symbols-outlined" aria-hidden="true">link</span>
       </a>
+    <% elsif collection.file_source? %>
+      <rich-tooltip delay="400" trigger-only shadow="heavy">
+        <span class="adm-masterportal-collection-card--source-chip" tabindex="0">
+          <span class="material-symbols-outlined" aria-hidden="true">description</span>
+          <%= t(".source_file_label") %>
+        </span>
+
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= t(".source_file_tooltip_title") %></span>
+            <span class="rich-tooltip-content--text"><%= t(".source_file_tooltip_text") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
     <% end %>
 
     <dl class="adm-masterportal-collection-card--meta">

@@ -548,13 +548,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
     collection.update!(import_status: "running", import_error: nil)
 
-    MasterportalImportJob.perform_later(
-      projekt_phase_id: @projekt_phase.id,
-      endpoint_url: collection.endpoint_url,
-      collection_ids: [collection.collection_id],
-      create_domain_records: collection.create_domain_records,
-      triggered_by_user_id: current_user.id
-    )
+    MasterportalImportJob.perform_later(**masterportal_resync_job_args(collection))
 
     render json: masterportal_collection_status_payload(collection), status: :accepted
   end
@@ -928,6 +922,23 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         destroy_status: collection.destroy_status,
         destroy_error: collection.destroy_error
       }
+    end
+
+    def masterportal_resync_job_args(collection)
+      args = {
+        projekt_phase_id: @projekt_phase.id,
+        create_domain_records: collection.create_domain_records,
+        triggered_by_user_id: current_user.id
+      }
+
+      if collection.file_source?
+        args[:uploaded_collection_ids] = [collection.id]
+      else
+        args[:endpoint_url] = collection.endpoint_url
+        args[:collection_ids] = [collection.collection_id]
+      end
+
+      args
     end
 
     def find_projekt

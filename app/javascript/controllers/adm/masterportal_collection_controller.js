@@ -206,8 +206,15 @@ export default class extends Controller {
       if (!response.ok) return
 
       Turbo.renderStreamMessage(await response.text())
+      this.reloadPinsSummary()
     } catch (error) {
     }
+  }
+
+  reloadPinsSummary() {
+    const frame = document.querySelector("turbo-frame[id^='masterportal_pins_summary_']")
+
+    if (frame && typeof frame.reload === "function") frame.reload()
   }
 
   showChecking() {

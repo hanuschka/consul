@@ -38,6 +38,14 @@
       </div>
     </div>
 
+    <div class="masterportal-import-panel--or-divider" aria-hidden="true">
+      <span class="masterportal-import-panel--or-divider-line"></span>
+      <span class="masterportal-import-panel--or-divider-text"><%= t(".or_divider") %></span>
+      <span class="masterportal-import-panel--or-divider-line"></span>
+    </div>
+
+    <%= render Adm::MasterportalFileUploadAreaComponent.new %>
+
     <div
       class="masterportal-import-panel--actions"
       data-adm--masterportal-import-panel-target="actions"

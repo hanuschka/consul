@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_20_132531) do
+ActiveRecord::Schema.define(version: 2026_07_21_112814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1636,6 +1636,7 @@ ActiveRecord::Schema.define(version: 2026_07_20_132531) do
     t.text "destroy_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source", default: "geoserver", null: false
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end

@@ -128,7 +128,7 @@ module ProjektPhaseSettingsHelper
   def hidden_from_public_tooltip(hidden, content)
     return content if hidden.nil?
 
-    attributes = { instant: "", "trigger-only": "", shadow: "heavy" }
+    attributes = { instant: "", delay: 1500, "trigger-only": "", shadow: "heavy" }
     attributes[:disabled] = "" if !hidden
 
     content_tag("rich-tooltip", attributes) do

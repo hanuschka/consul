@@ -204,6 +204,24 @@ info:
 
     Notable changes to the Consul Projekt API, most recent first.
 
+    ## 2026-07-20
+
+    ### Poll questions and answers are now paginated
+
+    `GET /api/polls/{poll_id}/questions` and
+    `GET /api/poll_questions/{poll_question_id}/answers` now paginate their
+    results by default (previously they returned the full list). Each response
+    gains a `pagination` block with `current_page`, `total_pages`, `total_count`
+    and `per_page`.
+
+    Pass `page` and `per_page` to page through the results. The default page size
+    is **100**; the first page is returned when `page` is omitted.
+
+    ```
+    GET /api/polls/42/questions?page=2&per_page=50
+    GET /api/poll_questions/17/answers?per_page=25
+    ```
+
     ## 2026-06-29
 
     ### Projekt list — faster, with pagination, sorting and selective images
@@ -8531,8 +8549,22 @@ paths:
       - Poll Question Answers
       security:
       - bearer_auth: []
-      description: "List all answers for a specific poll question. \n\n*Authorization:
-        Available to both `admin` and `public_data` access levels.*"
+      description: "List all answers for a specific poll question, paginated with
+        pagination metadata. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
+      parameters:
+      - name: page
+        in: query
+        description: Page number (**default:** 1)
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Items per page (**default:** 100)
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: answers found
@@ -8550,6 +8582,17 @@ paths:
                           "$ref": "#/components/schemas/PollQuestionAnswer"
                     required:
                     - answers
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
                 required:
                 - data
         '404':
@@ -9067,8 +9110,21 @@ paths:
       security:
       - bearer_auth: []
       description: "List all questions within a specific poll. Returns questions with
-        their answers. \n\n*Authorization: Available to both `admin` and `public_data`
-        access levels.*"
+        their answers, paginated with pagination metadata. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
+      parameters:
+      - name: page
+        in: query
+        description: Page number (**default:** 1)
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: Items per page (**default:** 100)
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: questions found
@@ -9086,6 +9142,17 @@ paths:
                           "$ref": "#/components/schemas/PollQuestion"
                     required:
                     - questions
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
                 required:
                 - data
         '404':

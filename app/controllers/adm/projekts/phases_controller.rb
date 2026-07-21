@@ -589,9 +589,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     result = Masterportal::CollectionDiffService.call(masterportal_collection: collection)
 
-    render json: result
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff: result
+      )
+    )
   rescue OgcApiFeatures::Error => e
-    render json: { error: e.message }, status: :bad_gateway
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff_error: e.message
+      )
+    )
   end
 
   def masterportal_collection_card

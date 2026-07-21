@@ -16,6 +16,7 @@ softwareType: standalone/web
 description:
   de:
     localisedName: Mitmachportal
+    genericName: Bürgerbeteiligungsplattform
     shortDescription: >-
       Digitale Beteiligungsplattform der Stadt Würzburg für Bürgerhaushalt,
       Vorschläge und weitere Beteiligungsformate.

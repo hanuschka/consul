@@ -5,6 +5,9 @@ export default class extends Controller {
     "endpointUrl",
     "loadCollectionsButton",
     "tree",
+    "treeEmpty",
+    "treeEmptyText",
+    "treeNodes",
     "createResourceCheckbox",
     "importButton",
     "statusBadge",
@@ -30,6 +33,7 @@ export default class extends Controller {
     this.selectedCollectionIds = new Set()
     this.attachedFiles = []
     this.fileSequence = 0
+    this.defaultEmptyText = this.hasTreeEmptyTextTarget ? this.treeEmptyTextTarget.textContent : ""
     this.lastStatus = this.initialStatusValue.status
 
     if (this.initialStatusValue.status === "running") {
@@ -47,7 +51,6 @@ export default class extends Controller {
     if (!url) return
 
     this.loadCollectionsButtonTarget.disabled = true
-    this.treeTarget.innerHTML = ""
 
     try {
       const requestUrl =
@@ -65,25 +68,31 @@ export default class extends Controller {
   }
 
   renderHint(message) {
-    const p = document.createElement("p")
-    p.className = "masterportal-import-panel--hint"
-    p.textContent = String(message)
-    this.treeTarget.innerHTML = ""
-    this.treeTarget.appendChild(p)
+    this.treeNodesTarget.innerHTML = ""
+    this.treeEmptyTextTarget.textContent = String(message || "") || this.defaultEmptyText
+    this.showEmptyState()
   }
 
   renderTree(root) {
     this.selectedCollectionIds.clear()
     this.updateImportButton()
-    this.treeTarget.innerHTML = ""
+    this.treeNodesTarget.innerHTML = ""
 
     if (!root) {
       this.renderHint("")
       return
     }
 
-    const rootNode = this.buildNode(root, true)
-    this.treeTarget.appendChild(rootNode)
+    this.treeNodesTarget.appendChild(this.buildNode(root, true))
+    this.hideEmptyState()
+  }
+
+  showEmptyState() {
+    this.treeEmptyTarget.hidden = false
+  }
+
+  hideEmptyState() {
+    this.treeEmptyTarget.hidden = true
   }
 
   buildNode(node, isRoot) {

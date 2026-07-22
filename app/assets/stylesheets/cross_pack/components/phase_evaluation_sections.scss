@@ -1614,6 +1614,44 @@
   border-bottom: none;
 }
 
+.open-answer-response {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: var(--er-bg, #f8fafc);
+}
+
+.open-answer-response--meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.open-answer-response--author {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--er-text);
+}
+
+.open-answer-response--date {
+  font-size: 0.875rem;
+  color: var(--er-text-muted, #94a3b8);
+  font-variant-numeric: tabular-nums;
+}
+
+.open-answer-response--text {
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.open-answer-response--note {
+  margin: 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--er-text-muted, #94a3b8);
+}
+
 .poll-question-group {
   margin-bottom: 1.5rem;
 }

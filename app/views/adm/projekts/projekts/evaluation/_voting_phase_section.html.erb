@@ -167,31 +167,18 @@
           data-section="open_responses"
         >
         <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "open_responses", phase_id: phase["phase_id"], checked: !section_hidden.call("open_responses"), toggle_url: visibility_toggle_url if visibility_toggle %>
-        <details
-          class="open-responses"
-          style="--or-accent:<%= accent %>;--or-accent-light:<%= accent_light %>"
-          <%= ' open' if open_by_default %>
-        >
-          <summary class="open-responses-summary">
-            <span class="open-responses-summary-icon">
-              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">chat_bubble</span>
-              <i class="fas fa-comment-dots projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            </span>
-            <span class="open-responses-summary-title">
-              <%= t("adm.projekts.projekts.evaluation.open_responses_title", count: entries.size) %>
-            </span>
-            <span class="open-responses-summary-count"><%= entries.size %></span>
-            <span class="open-responses-toggle">
-              <span class="open-responses-toggle-label-show">
-                <%= t("adm.projekts.projekts.evaluation.open_responses_show") %>
-              </span>
-              <span class="open-responses-toggle-label-hide">
-                <%= t("adm.projekts.projekts.evaluation.open_responses_hide") %>
-              </span>
-              <span class="material-symbols-outlined open-responses-toggle-icon projekt-evaluation-icon-material" aria-hidden="true">expand_more</span>
-              <i class="fas fa-chevron-down open-responses-toggle-icon projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            </span>
-          </summary>
+        <%= render layout: "adm/projekts/projekts/evaluation/open_responses_disclosure",
+          locals: {
+            accent: accent,
+            accent_light: accent_light,
+            title: t("adm.projekts.projekts.evaluation.open_responses_title", count: entries.size),
+            count: entries.size,
+            show_label: t("adm.projekts.projekts.evaluation.open_responses_show"),
+            hide_label: t("adm.projekts.projekts.evaluation.open_responses_hide"),
+            icon_material: "chat_bubble",
+            icon_fa: "fa-comment-dots",
+            open_by_default: open_by_default
+          } do %>
           <div class="response-grid">
             <% entries.each do |entry| %>
               <% text = (entry.is_a?(Hash) ? entry["body"] : entry).to_s.strip %>
@@ -199,7 +186,7 @@
               <div class="response-item"><%= text %></div>
             <% end %>
           </div>
-        </details>
+        <% end %>
         </section>
       <% end %>
     </div>

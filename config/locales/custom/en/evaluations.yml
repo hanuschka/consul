@@ -164,6 +164,10 @@ en:
           open_answers_show: Show answers
           open_answers_hide: Hide answers
           open_answers_anonymized: anonymized
+          open_answers_prev: Previous
+          open_answers_next: Next
+          open_answers_page_status: "Page {current} of {total}"
+          open_answers_csv_hint: "%{count} open answers — full list in the CSV export."
           verdict:
             clear_yes: Clearly in favor
             majority_yes: Majority in favor

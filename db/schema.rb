@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_21_143340) do
+ActiveRecord::Schema.define(version: 2026_07_22_150135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1637,6 +1637,7 @@ ActiveRecord::Schema.define(version: 2026_07_21_143340) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "source", default: "geoserver", null: false
+    t.string "icon_url"
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
@@ -2260,7 +2261,9 @@ ActiveRecord::Schema.define(version: 2026_07_21_143340) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "projekt_phase_id"
+    t.integer "masterportal_collection_id"
     t.index ["projekt_id"], name: "index_projekt_labels_on_projekt_id"
+    t.index ["projekt_phase_id", "masterportal_collection_id"], name: "index_projekt_labels_on_phase_and_masterportal_collection", unique: true, where: "(masterportal_collection_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_labels_on_projekt_phase_id"
   end
 
@@ -2452,6 +2455,8 @@ ActiveRecord::Schema.define(version: 2026_07_21_143340) do
     t.integer "position", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "masterportal_collection_id"
+    t.index ["projekt_phase_id", "masterportal_collection_id"], name: "index_poi_categories_on_phase_and_masterportal_collection", unique: true, where: "(masterportal_collection_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_categories_on_projekt_phase_id"
   end
 

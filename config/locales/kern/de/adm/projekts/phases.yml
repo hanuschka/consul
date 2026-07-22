@@ -176,6 +176,9 @@ de:
           create_button: Neues Label erstellen
           no_labels_title: Keine Labels vorhanden
           no_labels_description: Erstellen Sie Labels, um Vorschläge thematisch zu kategorisieren und die Übersichtlichkeit im Frontend zu erhöhen. Labels werden als Icons an den Vorschlägen angezeigt und ermöglichen es Nutzern, gezielt nach bestimmten Themen zu filtern. Jedes Label kann mit einem eigenen Icon versehen werden, das die visuelle Zuordnung erleichtert.
+          tabs:
+            labels: Labels
+            collections: Masterportal-Sammlungen
           table:
             icon: Icon
             name: Name
@@ -276,6 +279,9 @@ de:
           no_categories: Keine Kategorien vorhanden.
           no_categories_title: Keine Kategorien vorhanden
           no_categories_description: Erstellen Sie Kategorien, um die Orte von Interesse thematisch zu gruppieren und im Frontend als Filteroption bereitzustellen. Jede Kategorie kann mit einem eigenen Icon und einer Farbe versehen werden, um die visuelle Unterscheidung auf der Karte zu erleichtern. Kategorien helfen Nutzern, gezielt nach bestimmten Themen zu suchen.
+          tabs:
+            categories: Kategorien
+            collections: Masterportal-Sammlungen
           table:
             name: Name
             icon: Icon

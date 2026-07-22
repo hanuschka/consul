@@ -47,10 +47,7 @@ class Adm::MasterportalCollectionCardComponent < ApplicationComponent
   end
 
   def icon_src
-    raw = collection.icon_url
-    return if raw.blank?
-
-    Addressable::URI.encode(raw)
+    collection.encoded_icon_url
   end
 
   def diff_badge_hidden?

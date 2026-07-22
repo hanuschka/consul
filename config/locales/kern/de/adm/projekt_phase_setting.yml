@@ -12,6 +12,8 @@ de:
           allow_attached_image_description: Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Dieses Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht angezeigt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder die Moderation reduziert werden soll.
           labels: Labels
           labels_description: Aktiviert die Label-Funktion für Vorschläge, mit der Administratoren thematische Kategorien oder Schlagwörter vergeben können. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die Filterung. Nutzen Sie diese Funktion, um Projekte mit vielen Vorschlägen besser zu strukturieren.
+          use_masterportal_collections_as_labels: Masterportal-Sammlungen statt Labels verwenden
+          use_masterportal_collections_as_labels_description: Wenn aktiviert, wählen Nutzer:innen beim Erstellen eines Beitrags die importierten Masterportal-Sammlungen dieser Phase statt der manuell angelegten Labels.
           sentiments: Sentiments
           sentiments_description: Aktiviert die Sentiment-Funktion, mit der Nutzer ihre Gefühle oder Stimmungen zu einem Vorschlag ausdrücken können. Im Frontend werden farbige Markierungen angezeigt, die eine schnelle emotionale Einordnung ermöglichen. Nutzen Sie diese Funktion bei Projekten, in denen die Stimmungslage der Teilnehmer zusätzlich erfasst werden soll.
           show_map: Karte
@@ -96,6 +98,9 @@ de:
         general:
           users_can_create_pins: Pins setzen
           users_can_create_pins_description: "Erlaubt es registrierten Nutzern, eigene Pins auf der Karte der Phase zu setzen und damit ortsbezogene Hinweise oder Vorschläge einzureichen. Im Frontend wird ein Erstellen-Button auf der Kartenansicht angezeigt. Deaktivieren Sie diese Option, wenn Pins ausschliesslich von der Verwaltung gesetzt werden sollen und keine Nutzereingaben auf der Karte."
+        form:
+          use_masterportal_collections_as_labels: Masterportal-Sammlungen statt Kategorien verwenden
+          use_masterportal_collections_as_labels_description: Wenn aktiviert, wählen Nutzer:innen beim Erstellen eines Pins die importierten Masterportal-Sammlungen dieser Phase statt der manuell angelegten Kategorien.
       option:
         form:
           map_features_limit: Maximale Kartenmarkierungen
@@ -136,6 +141,8 @@ de:
           allow_attached_image_description: "Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Das Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht dargestellt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder wenn der Moderationsaufwand für Bildprüfungen reduziert werden soll."
           labels: Labels
           labels_description: "Aktiviert die Label-Funktion für Vorschläge, mit der Administratoren thematische Kategorien oder Schlagwörter vergeben können. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die thematische Filterung. Nutzen Sie diese Funktion, um Projekte mit vielen Vorschlägen besser zu strukturieren."
+          use_masterportal_collections_as_labels: Masterportal-Sammlungen statt Labels verwenden
+          use_masterportal_collections_as_labels_description: Wenn aktiviert, wählen Nutzer:innen beim Erstellen eines Beitrags die importierten Masterportal-Sammlungen dieser Phase statt der manuell angelegten Labels.
           sentiments: Sentiments
           sentiments_description: "Aktiviert die Sentiment-Funktion, mit der Nutzer ihre Stimmung oder Haltung zu einem Vorschlag ausdrücken können. Im Frontend werden farbige Markierungen angezeigt, die eine schnelle emotionale Einordnung ermöglichen. Nutzen Sie diese Funktion bei Projekten, in denen neben inhaltlichem Feedback auch die Stimmungslage der Teilnehmer erfasst werden."
           show_map: Karte

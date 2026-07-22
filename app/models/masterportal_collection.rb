@@ -1,6 +1,8 @@
 class MasterportalCollection < ApplicationRecord
   belongs_to :projekt_phase
   has_many :masterportal_pins, dependent: :nullify
+  has_many :projekt_labels, dependent: :destroy
+  has_many :projekt_point_of_interest_categories, dependent: :destroy
   has_one_attached :geojson_file
 
   enum source: {
@@ -36,8 +38,13 @@ class MasterportalCollection < ApplicationRecord
     masterportal_pins.with_associated_record.distinct.count
   end
 
-  def icon_url
-    masterportal_pins.order(id: :desc).first&.feature_icon_url
+  def encoded_icon_url
+    raw = icon_url
+    return if raw.blank?
+
+    Addressable::URI.parse(raw).normalize.to_s
+  rescue Addressable::URI::InvalidURIError
+    nil
   end
 
   def import_running?

@@ -160,6 +160,10 @@ en:
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           open_responses_show: Show responses
           open_responses_hide: Hide responses
+          open_answers_title: "Open answers — %{answer}"
+          open_answers_show: Show answers
+          open_answers_hide: Hide answers
+          open_answers_anonymized: anonymized
           verdict:
             clear_yes: Clearly in favor
             majority_yes: Majority in favor

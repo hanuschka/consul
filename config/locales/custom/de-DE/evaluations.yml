@@ -162,6 +162,10 @@ de:
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen
           open_responses_hide: Beiträge ausblenden
+          open_answers_title: "Offene Antworten — %{answer}"
+          open_answers_show: Antworten anzeigen
+          open_answers_hide: Antworten ausblenden
+          open_answers_anonymized: anonymisiert
           verdict:
             clear_yes: Klar dafür
             majority_yes: Mehrheit dafür

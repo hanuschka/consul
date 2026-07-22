@@ -1,0 +1,54 @@
+<%
+  answers = question["answers"] || []
+  open_answers = answers.select { |answer| (answer["open_texts"] || []).any? }
+  pdf_mode_local = local_assigns.fetch(:pdf_mode, false)
+%>
+
+<% open_answers.each do |answer| %>
+  <% entries = answer["open_texts"] || [] %>
+  <details
+    class="open-responses open-responses--answers"
+    style="--or-accent:<%= accent %>;--or-accent-light:<%= accent_light %>"
+    <%= "open" if pdf_mode_local %>
+  >
+    <summary class="open-responses-summary">
+      <span class="open-responses-summary-icon">
+        <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">edit_note</span>
+        <i class="fas fa-pen projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      </span>
+      <span class="open-responses-summary-title">
+        <%= t("adm.projekts.projekts.evaluation.open_answers_title", answer: answer["title"]) %>
+      </span>
+      <span class="open-responses-summary-count"><%= entries.size %></span>
+      <span class="open-responses-toggle">
+        <span class="open-responses-toggle-label-show">
+          <%= t("adm.projekts.projekts.evaluation.open_answers_show") %>
+        </span>
+        <span class="open-responses-toggle-label-hide">
+          <%= t("adm.projekts.projekts.evaluation.open_answers_hide") %>
+        </span>
+        <span class="material-symbols-outlined open-responses-toggle-icon projekt-evaluation-icon-material" aria-hidden="true">expand_more</span>
+        <i class="fas fa-chevron-down open-responses-toggle-icon projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      </span>
+    </summary>
+    <div class="response-grid">
+      <% entries.each do |entry| %>
+        <% text = entry["text"].to_s.strip %>
+        <% next if text.blank? %>
+        <div class="response-item open-answer-response">
+          <div class="open-answer-response--meta">
+            <span class="open-answer-response--author">
+              <%= entry["author_name"].presence || t("adm.projekts.projekts.evaluation.open_answers_anonymized") %>
+            </span>
+            <% if entry["created_at"].present? %>
+              <span class="open-answer-response--date">
+                <%= l(Time.zone.parse(entry["created_at"]), format: :short) %>
+              </span>
+            <% end %>
+          </div>
+          <div class="open-answer-response--text"><%= text %></div>
+        </div>
+      <% end %>
+    </div>
+  </details>
+<% end %>

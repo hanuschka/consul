@@ -13,7 +13,9 @@ export default class extends Controller {
     "progressCount",
     "progressResource",
     "progressResourceIcon",
-    "progressResourceText"
+    "progressResourceText",
+    "fileInput",
+    "fileRows"
   ]
 
   static values = {
@@ -26,6 +28,8 @@ export default class extends Controller {
   connect() {
     this.pollIntervalId = null
     this.selectedCollectionIds = new Set()
+    this.attachedFiles = []
+    this.fileSequence = 0
     this.lastStatus = this.initialStatusValue.status
 
     if (this.initialStatusValue.status === "running") {
@@ -150,11 +154,207 @@ export default class extends Controller {
   }
 
   updateImportButton() {
-    this.importButtonTarget.disabled = this.selectedCollectionIds.size === 0
+    this.importButtonTarget.disabled = !this.hasSelection() && !this.hasValidFiles()
+  }
+
+  hasSelection() {
+    return this.selectedCollectionIds.size > 0
+  }
+
+  hasValidFiles() {
+    return this.attachedFiles.some((entry) => entry.valid)
+  }
+
+  get fileConfig() {
+    if (!this._fileConfig) {
+      this._fileConfig = JSON.parse(this.fileInputTarget.dataset.config)
+    }
+
+    return this._fileConfig
+  }
+
+  openFileDialog() {
+    this.fileInputTarget.click()
+  }
+
+  addFiles(event) {
+    const files = Array.from(event.target.files || [])
+    files.forEach((file) => this.addFile(file))
+
+    event.target.value = ""
+    this.updateImportButton()
+  }
+
+  addFile(file) {
+    const entry = { id: `mp-file-${this.fileSequence++}`, file, valid: false }
+    this.attachedFiles.push(entry)
+
+    const row = this.buildFileRow(entry)
+    this.fileRowsTarget.appendChild(row)
+    this.fileRowsTarget.hidden = false
+
+    this.validateFile(entry, row)
+  }
+
+  validateFile(entry, row) {
+    const config = this.fileConfig
+
+    if (entry.file.size > config.maxFileSize) {
+      this.markRowInvalid(entry, row, config.errors.too_large)
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => this.handleFileParsed(entry, row, reader.result)
+    reader.onerror = () => this.markRowInvalid(entry, row, config.errors.generic)
+    reader.readAsText(entry.file)
+  }
+
+  handleFileParsed(entry, row, text) {
+    const config = this.fileConfig
+    const reason = this.geojsonError(text)
+
+    if (reason) {
+      this.markRowInvalid(entry, row, config.errors[reason] || config.errors.generic)
+      return
+    }
+
+    this.markRowValid(entry, row)
+    this.updateImportButton()
+  }
+
+  geojsonError(text) {
+    if (!text || !text.trim()) return "empty"
+
+    let body
+
+    try {
+      body = JSON.parse(text)
+    } catch (error) {
+      return "invalid_json"
+    }
+
+    if (!body || body.type !== "FeatureCollection") return "not_feature_collection"
+
+    return null
+  }
+
+  markRowInvalid(entry, row, message) {
+    entry.valid = false
+    row.classList.add("-invalid")
+
+    const errorElement = row.querySelector(".masterportal-file-upload--row-error")
+    errorElement.textContent = message
+    errorElement.hidden = false
+
+    this.updateImportButton()
+  }
+
+  markRowValid(entry, row) {
+    entry.valid = true
+    row.classList.remove("-invalid")
+
+    const errorElement = row.querySelector(".masterportal-file-upload--row-error")
+    errorElement.textContent = ""
+    errorElement.hidden = true
+  }
+
+  removeFile(event) {
+    const row = event.currentTarget.closest("[data-file-id]")
+    if (!row) return
+
+    const id = row.dataset.fileId
+    this.attachedFiles = this.attachedFiles.filter((entry) => entry.id !== id)
+    row.remove()
+
+    if (this.attachedFiles.length === 0) this.fileRowsTarget.hidden = true
+
+    this.updateImportButton()
+  }
+
+  buildFileRow(entry) {
+    const config = this.fileConfig
+    const row = document.createElement("li")
+    row.className = "masterportal-file-upload--row"
+    row.dataset.fileId = entry.id
+
+    row.appendChild(this.buildRowIcon())
+    row.appendChild(this.buildRowMain(entry, config))
+    row.appendChild(this.buildRowRemoveButton(config))
+
+    return row
+  }
+
+  buildRowIcon() {
+    const icon = document.createElement("span")
+    icon.className = "masterportal-file-upload--row-icon material-symbols-outlined"
+    icon.setAttribute("aria-hidden", "true")
+    icon.textContent = "description"
+
+    return icon
+  }
+
+  buildRowMain(entry, config) {
+    const main = document.createElement("div")
+    main.className = "masterportal-file-upload--row-main"
+
+    const filename = document.createElement("span")
+    filename.className = "masterportal-file-upload--row-filename"
+    filename.textContent = `${config.labels.fromFile} ${entry.file.name}`
+    main.appendChild(filename)
+
+    const inputId = `masterportal-file-name-${entry.id}`
+
+    const label = document.createElement("label")
+    label.className = "masterportal-file-upload--row-name-label"
+    label.setAttribute("for", inputId)
+    label.textContent = config.labels.nameLabel
+    main.appendChild(label)
+
+    const nameInput = document.createElement("input")
+    nameInput.type = "text"
+    nameInput.id = inputId
+    nameInput.className = "masterportal-file-upload--row-name-input"
+    nameInput.value = this.defaultName(entry.file.name)
+    nameInput.placeholder = config.labels.namePlaceholder
+    main.appendChild(nameInput)
+
+    const hint = document.createElement("span")
+    hint.className = "masterportal-file-upload--row-name-hint"
+    hint.textContent = config.labels.nameHint
+    main.appendChild(hint)
+
+    const error = document.createElement("span")
+    error.className = "masterportal-file-upload--row-error"
+    error.hidden = true
+    main.appendChild(error)
+
+    return main
+  }
+
+  buildRowRemoveButton(config) {
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "masterportal-file-upload--row-remove"
+    button.title = config.labels.remove
+    button.setAttribute("data-action", "adm--masterportal-import-panel#removeFile")
+
+    const icon = document.createElement("span")
+    icon.className = "material-symbols-outlined"
+    icon.setAttribute("aria-hidden", "true")
+    icon.textContent = "close"
+    button.appendChild(icon)
+
+    return button
+  }
+
+  defaultName(filename) {
+    return filename.replace(/\.[^./\\]+$/, "")
   }
 
   async startImport() {
-    if (this.selectedCollectionIds.size === 0) return
+    const validFiles = this.attachedFiles.filter((entry) => entry.valid)
+    if (!this.hasSelection() && validFiles.length === 0) return
 
     const createRecords =
       this.hasCreateResourceCheckboxTarget && this.createResourceCheckboxTarget.checked
@@ -170,7 +370,7 @@ export default class extends Controller {
     formData.append("endpoint_url", this.endpointUrlTarget.value.trim())
     formData.append("create_domain_records", createRecords ? "1" : "0")
     this.selectedCollectionIds.forEach((id) => formData.append("collection_ids[]", id))
-
+    this.appendFilesTo(formData, validFiles)
 
     try {
       const response = await fetch(this.endpointsValue.create_url, {
@@ -184,6 +384,16 @@ export default class extends Controller {
     } catch (error) {
       this.applyStatus({ status: "failed", error: error.message })
     }
+  }
+
+  appendFilesTo(formData, entries) {
+    entries.forEach((entry) => {
+      const row = this.fileRowsTarget.querySelector(`[data-file-id="${entry.id}"]`)
+      const nameInput = row && row.querySelector(".masterportal-file-upload--row-name-input")
+
+      formData.append("files[]", entry.file)
+      formData.append("file_names[]", nameInput ? nameInput.value : "")
+    })
   }
 
   startStatusPolling() {

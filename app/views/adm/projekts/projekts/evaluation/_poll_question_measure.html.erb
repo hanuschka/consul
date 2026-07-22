@@ -17,7 +17,7 @@
   abstain_pct = abstain ? abstain["percentage"].to_f : 0
 %>
 
-<div class="measure-card">
+<div class="measure-card poll-question-card--full evaluation-stat-card">
   <div class="measure-title"><%= question["title"] %></div>
   <div class="measure-pct" style="color:<%= verdict_color %>">
     <%= ja_pct.round %>%
@@ -39,9 +39,13 @@
     <% end %>
   </div>
   <div class="measure-labels">
-    <% if ja %><span><%= ja["title"] %>: <%= ja["count"].to_i %></span><% end %>
-    <% if nein %><span><%= nein["title"] %>: <%= nein["count"].to_i %></span><% end %>
-    <% if abstain %><span><%= abstain["title"] %>: <%= abstain["count"].to_i %></span><% end %>
+    <% [ja, nein, abstain].compact.each do |answer| %>
+      <span class="measure-label">
+        <span class="measure-label--text"><%= answer["title"] %>: <%= answer["count"].to_i %></span>
+        <%= render "adm/projekts/projekts/evaluation/poll_answer_detail_actions",
+          answer: answer, exportable: local_assigns.fetch(:exportable, false) %>
+      </span>
+    <% end %>
   </div>
 
   <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>

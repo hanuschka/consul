@@ -36,6 +36,8 @@ en:
             unverify: Remove verification
             edit: Edit
             audits: Change log
+            delete: Delete permanently
+            delete_confirm: Permanently delete this user and all personal data? This cannot be undone.
       csv_download:
         not_found: The requested file was not found or has expired.
       edit:
@@ -59,3 +61,4 @@ en:
         verified: User verified
         verify_failed: User could not be verified
         unverified: User verification removed
+        deleted: User deleted

@@ -4,7 +4,23 @@ en:
       banner_upload:
         uploading: "Uploading image…"
         processing: "Processing image…"
+        generating: "Generating banner image with AI…"
         min_image_size_hint: "Recommended minimum image size: %{width}×%{height} px"
+        upload_failed: "The image could not be uploaded. Please try again."
+        generate_failed: "The image could not be generated. Please try again."
+        generate_tooltip_title: "Generate banner image with AI"
+        generate_tooltip_text: "Automatically creates a matching banner image based on the projekt content."
+        generate_disabled_tooltip_title: "AI image generation not available"
+        generate_disabled_tooltip_text: "DT AI is not enabled. Enable the AI features in the settings to generate banner images."
+      banner_generate_modal:
+        title: "Generate banner image with AI"
+        description: "Creates a banner image based on the projekt title, subtitle and optionally the projekt content. Use a custom prompt to describe the desired image more precisely."
+        prompt_label: "Custom prompt (optional)"
+        prompt_placeholder: "e.g. A sunny city square with benches and trees…"
+        use_content_label: "Use projekt content"
+        use_content_hint: "Includes the projekt page content blocks in the image generation."
+        empty_content_warning: "The projekt page has no content yet. Describe the desired image in the prompt as precisely as possible, or add projekt content first."
+        submit: "Generate"
       overview_page:
         projekt_name: Overview page
         projekt_name_for_proposal: New projekt proposal

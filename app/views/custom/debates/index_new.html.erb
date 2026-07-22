@@ -18,16 +18,25 @@
     <div class="main-column">
       <%= render 'shared/loader_spinner' %>
 
-      <%= render(
-        Shared::ResourcesListComponent.new(
-          resources: @debates,
-          resource_type: Debate,
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: t("custom.debates.index.empty_list_text")
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.debates.index",
+          filters: @valid_orders,
           current_filter: @current_order,
-          filter_param: "order",
-          text_search_enabled: true,
-          filters: @valid_orders
-        ))
-      %>
+          param: "order",
+          text_search_enabled: true
+        ) %>
+
+        <% if @debates.present? %>
+          <% c.with_items do %>
+            <% @debates.each do |debate| %>
+              <%= render Debates::ListItemComponent.new(debate: debate) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
     <%= paginate @debates %>
 
       <div id="section_help" class="margin" data-magellan-target="section_help">

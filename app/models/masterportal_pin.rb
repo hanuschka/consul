@@ -83,12 +83,12 @@ class MasterportalPin < ApplicationRecord
     Masterportal::PopupDataBuilder.call(pin: self)
   end
 
-  def feature_icon_url
-    asset_name = "masterportal/pins/#{collection_id}.png"
-    path = Rails.root.join("app/assets/images/#{asset_name}")
-    return nil if !path.exist?
+  def self.icon_url_from_properties(pin_properties)
+    pin_properties.to_h["IMAGE_URL"].to_s.strip.presence
+  end
 
-    ActionController::Base.helpers.asset_path(asset_name)
+  def feature_icon_url
+    self.class.icon_url_from_properties(properties)
   end
 
   def associated_resource_url

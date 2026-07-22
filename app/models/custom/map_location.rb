@@ -8,14 +8,14 @@ class MapLocation < ApplicationRecord
       .joins("INNER JOIN proposals ON proposals.id = map_locations.mappable_id")
       .joins("LEFT JOIN masterportal_pins ON masterportal_pins.id = proposals.masterportal_pin_id")
       .order("map_locations.id")
-      .pluck("map_locations.id", "map_locations.features", "masterportal_pins.id")
+      .pluck("map_locations.id", "map_locations.features", "masterportal_pins.id", "masterportal_pins.properties")
 
-    regular_ids = rows.reject { |_id, _features, masterportal_pin_id| masterportal_pin_id.present? }.map(&:first)
+    regular_ids = rows.reject { |_id, _features, masterportal_pin_id, _pin_properties| masterportal_pin_id.present? }.map(&:first)
     regular_features = regular_proposal_features(regular_ids)
 
-    rows.map do |map_location_id, features, masterportal_pin_id|
+    rows.map do |map_location_id, features, masterportal_pin_id, pin_properties|
       if masterportal_pin_id.present?
-        masterportal_pin_feature_collection(features, masterportal_pin_id)
+        masterportal_pin_feature_collection(features, masterportal_pin_id, pin_properties)
       else
         regular_features[map_location_id]
       end
@@ -73,9 +73,12 @@ class MapLocation < ApplicationRecord
       .transform_values(&:features_json_data)
   end
 
-  def self.masterportal_pin_feature_collection(features, masterportal_pin_id)
+  def self.masterportal_pin_feature_collection(features, masterportal_pin_id, pin_properties)
     feature_collection = normalize_feature_collection(features)
     properties = { "resource_type" => "masterportal_pin", "id" => masterportal_pin_id }
+
+    icon_url = MasterportalPin.icon_url_from_properties(pin_properties)
+    properties["feature_icon_url"] = icon_url if icon_url.present?
 
     feature_collection["features"].each do |feature|
       feature["properties"].merge!(properties)

@@ -16,8 +16,23 @@ de:
             Ein API-Endpunkt ist gesetzt, aber kein benutzerdefiniertes Modell. Die KI funktioniert nicht, bis Sie ein benutzerdefiniertes Modell angeben.
           inline: >
             Erforderlich, da ein API-Endpunkt gesetzt ist. Die KI funktioniert nicht, bis Sie ein benutzerdefiniertes Modell angeben.
+        model_required:
+          inline: >
+            Erforderlich, da ein anderer Anbieter als der Standard gewählt ist. Bitte wählen Sie ein Modell für diesen Anbieter.
+        api_key_required:
+          title: API-Schlüssel erforderlich
+          body: >
+            Es ist kein eigener API-Schlüssel hinterlegt. Der Standard-API-Schlüssel von demokratie.today funktioniert nicht mit einem benutzerdefinierten API-Endpunkt oder einem anderen Anbieter als dem Standard. Bitte hinterlegen Sie Ihren eigenen API-Schlüssel.
+          inline: >
+            Erforderlich, da ein benutzerdefinierter API-Endpunkt oder ein anderer Anbieter als der Standard verwendet wird. Bitte hinterlegen Sie Ihren eigenen API-Schlüssel.
       index:
         title: KI-Einstellungen
+        default_model_info:
+          title: Standardmodell wird verwendet
+          body_html: >
+            Für den gewählten KI-Anbieter ist kein Modell konfiguriert. Es wird automatisch das Standardmodell %{model} verwendet.
+        default_api_key_info: >
+          Es ist kein eigener API-Schlüssel hinterlegt. Es wird der Standard-API-Schlüssel von demokratie.today verwendet.
         intro: >
           Hier konfigurieren Sie die Verbindung zu einem KI-Anbieter. Die Plattform nutzt KI-Funktionen unter anderem für die Erstellung von Vorschlägen, die Analyse von Abstimmungen, die automatische Inhaltsgenerierung und semantische Auswertungen. Wählen Sie einen Anbieter, ein Modell und hinterlegen Sie Ihren API-Schlüssel, um diese Funktionen zu aktivieren. Achtung: Änderungen an diesen Einstellungen erfordern technisches Verständnis. Fehlerhafte Konfigurationen können dazu führen, dass KI-Funktionen nicht mehr korrekt arbeiten. Wenden Sie sich im Zweifel an demokratie.today.
         setting_name: Einstellung

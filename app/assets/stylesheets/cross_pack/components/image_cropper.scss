@@ -6,8 +6,8 @@
 // imported separately by each pack.
 
 .image-cropper-modal {
-  width: 640px;
-  max-width: 90vw;
+  width: 880px;
+  max-width: 92vw;
 }
 
 .image-cropper {
@@ -31,21 +31,22 @@
   color: #555;
 }
 
-// Cropper.js measures the <img> to build its crop box, so the image needs a
-// block container with a bounded height; overflow is hidden because the plugin
-// renders its own absolutely-positioned canvas inside.
+// Cropper.js measures the <img> to build its crop box, then renders its own
+// absolutely-positioned canvas inside. Do NOT clip this wrapper with
+// `overflow: hidden`: the crop box fills the whole canvas (autoCropArea: 1),
+// so its resize handles sit right on the wrapper's edges — clipping hides the
+// bottom/right handles and makes the crop area impossible to resize.
 .image-cropper--canvas-wrapper {
   width: 100%;
-  max-height: 60vh;
+  max-height: 72vh;
   background-color: #f3f3f3;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .image-cropper--image {
   display: block;
   max-width: 100%;
-  max-height: 60vh;
+  max-height: 72vh;
 }
 
 .image-cropper--actions {

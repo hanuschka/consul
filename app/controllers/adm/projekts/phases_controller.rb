@@ -1,7 +1,7 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
-  before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
+  before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats, :send_notifications]
 
   def new
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
@@ -82,6 +82,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def toggle_active
     authorize_phase(:update?)
     @projekt_phase.update(active: !@projekt_phase.active)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.json { head :ok }
+    end
   end
 
   def toggle_frontend_visibility
@@ -92,8 +97,27 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def destroy
     authorize_phase(:destroy?)
     @projekt_phase.hide
-    redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
-      notice: t(".success")
+
+    respond_to do |format|
+      format.html do
+        redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+          notice: t(".success")
+      end
+      format.json { head :ok }
+    end
+  end
+
+  def send_notifications
+    authorize_phase(:update?)
+
+    case params[:resource_type]
+    when "projekt_arguments"
+      NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
+    when "projekt_questions"
+      NotificationServices::ProjektQuestionsNotifier.call(@projekt_phase.id)
+    end
+
+    head :ok
   end
 
   def general_settings
@@ -332,6 +356,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
   end
 
+  def go_live
+    authorize_phase(:update?)
+    @projekt_phase.poll.go_live!
+
+    redirect_to poll_questions_adm_projekts_phase_path(@projekt_phase),
+      notice: t(".success")
+  end
+
   def formular
     authorize_phase(:update?)
     @formular = @projekt_phase.formular
@@ -349,10 +381,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @formular = @projekt_phase.formular
     @formular_fields = @formular.formular_fields
-    @formular_answers = @formular.formular_answers
 
     respond_to do |format|
       format.html do
+        @pagy, @formular_answers = pagy(
+          @formular.formular_answers
+            .order(:id)
+            .preload(
+              formular_answer_images: { attachment_attachment: :blob },
+              formular_answer_documents: { attachment_attachment: :blob }
+            )
+        )
         @breadcrumbs = [
           { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
@@ -360,7 +399,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         ]
       end
       format.csv do
-        send_data CsvServices::FormularAnswersExporter.call(@formular),
+        send_data CsvServices::FormularAnswersExporter.call(@formular, request.base_url),
           filename: "formular_answers-#{@formular.id}-#{Time.zone.today}.csv"
       end
     end
@@ -509,13 +548,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
     collection.update!(import_status: "running", import_error: nil)
 
-    MasterportalImportJob.perform_later(
-      projekt_phase_id: @projekt_phase.id,
-      endpoint_url: collection.endpoint_url,
-      collection_ids: [collection.collection_id],
-      create_domain_records: collection.create_domain_records,
-      triggered_by_user_id: current_user.id
-    )
+    MasterportalImportJob.perform_later(**masterportal_resync_job_args(collection))
 
     render json: masterportal_collection_status_payload(collection), status: :accepted
   end
@@ -550,9 +583,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     result = Masterportal::CollectionDiffService.call(masterportal_collection: collection)
 
-    render json: result
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff: result
+      )
+    )
   rescue OgcApiFeatures::Error => e
-    render json: { error: e.message }, status: :bad_gateway
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff_error: e.message
+      )
+    )
   end
 
   def masterportal_collection_card
@@ -879,6 +922,23 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         destroy_status: collection.destroy_status,
         destroy_error: collection.destroy_error
       }
+    end
+
+    def masterportal_resync_job_args(collection)
+      args = {
+        projekt_phase_id: @projekt_phase.id,
+        create_domain_records: collection.create_domain_records,
+        triggered_by_user_id: current_user.id
+      }
+
+      if collection.file_source?
+        args[:uploaded_collection_ids] = [collection.id]
+      else
+        args[:endpoint_url] = collection.endpoint_url
+        args[:collection_ids] = [collection.collection_id]
+      end
+
+      args
     end
 
     def find_projekt

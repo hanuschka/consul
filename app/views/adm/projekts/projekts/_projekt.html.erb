@@ -7,9 +7,17 @@
       <div>
         <%= link_to projekt.title, landing_path, class: "link strong", data: { turbo_frame: "_top" } %>
         <% if projekt.imported_by_ai %>
-          <span class="kern-badge kern-badge--info kern-badge--small ml-2" title="<%= t("adm.projekts.imports.badge.imported_by_ai_title") %>">
-            <%= t("adm.projekts.imports.badge.imported_by_ai") %>
-          </span>
+          <rich-tooltip delay="2200" body-class="-wide" class="ml-2">
+            <span class="kern-badge kern-badge--info kern-badge--small">
+              <%= t("adm.projekts.imports.badge.imported_by_ai") %>
+            </span>
+            <template>
+              <span class="rich-tooltip-content">
+                <span class="rich-tooltip-content--title"><%= t("adm.projekts.imports.badge.imported_by_ai_title") %></span>
+                <span class="rich-tooltip-content--text"><%= t("adm.projekts.imports.badge.imported_by_ai_description") %></span>
+              </span>
+            </template>
+          </rich-tooltip>
         <% end %>
         <br>
         <span class="small">

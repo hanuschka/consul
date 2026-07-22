@@ -1,12 +1,8 @@
 <% if can_ask_questions? %>
   <div
-    class="participation-stats-ai-question <%= 'ai-feature-disabled' if ai_disabled? %>"
+    class="participation-stats-ai-question"
     data-processing-message="<%= t('custom.participation_stats.ai_question.processing_message') %>"
     data-in-progress-title="<%= t('custom.participation_stats.ai_question.in_progress') %>"
-    <% if ai_disabled? %>
-    data-tooltip
-    title="<%= t('ai.disabled_tooltip') %>"
-    <% end %>
   >
     <%= render Shared::AccordionComponent.new(opened_by_default: false, root_class: "ai-stats-card") do |c| %>
       <% c.with_head do %>
@@ -33,11 +29,16 @@
                               required: true,
                               disabled: ai_disabled? %>
             <div class="ai-question-form--actions">
-              <%= button_tag type: "submit",
-                             class: "ai-question-form--submit js-ai-question-submit",
-                             disabled: ai_disabled? do %>
-                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                <%= t("custom.participation_stats.ai_question.submit") %>
+              <%= render Shared::AiFeatureTooltipComponent.new(
+                feature_title: t("custom.participation_stats.ai_question.title"),
+                feature_text: t("custom.participation_stats.ai_question.subtitle")
+              ) do %>
+                <%= button_tag type: "submit",
+                               class: "ai-question-form--submit js-ai-question-submit",
+                               disabled: ai_disabled? do %>
+                  <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                  <%= t("custom.participation_stats.ai_question.submit") %>
+                <% end %>
               <% end %>
               <div class="ai-question-form--loading hidden js-ai-question-loading">
                 <%= render Shared::SpinnerComponent.new(size: :small) %>

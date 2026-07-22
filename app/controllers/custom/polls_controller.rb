@@ -8,7 +8,7 @@ class PollsController < ApplicationController
   include GuestUsers
   include LandingPageResolvable
 
-  before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation]
+  before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation, :ai_analysis]
 
   helper_method :resource_model, :resource_name
   has_filters %w[all current expired]
@@ -117,6 +117,7 @@ class PollsController < ApplicationController
   end
 
   def stats
+    @projekt_phase = @poll.projekt_phase
     @stats = Poll::Stats.new(@poll)
 
     if !@poll.projekt.visible_for?(current_user)
@@ -130,10 +131,21 @@ class PollsController < ApplicationController
   end
 
   def results
+    @projekt_phase = @poll.projekt_phase
+
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+
       render "custom/pages/forbidden", layout: false
     elsif Setting.new_design_enabled?
+      @results_phase =
+        ProjektEvaluations::AggregateStatistics
+          .new(@poll.projekt)
+          .call_for_phase(@poll.projekt_phase)
+          &.deep_stringify_keys
+
+      @frontend_answer_poll = @poll
+
       render :results_new
     else
       render :results
@@ -161,6 +173,16 @@ class PollsController < ApplicationController
     if !can_view_evaluation
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "pages/forbidden", layout: false
+    end
+  end
+
+  def ai_analysis
+    @projekt_phase = @poll.projekt_phase
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+
+      render "custom/pages/forbidden", layout: false
     end
   end
 

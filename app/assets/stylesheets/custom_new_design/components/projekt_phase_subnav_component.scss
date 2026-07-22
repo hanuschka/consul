@@ -1,23 +1,43 @@
 .custom-new-design {
   .projekt-phase-subnav {
+    --custom-tabs-text: #{$medium-gray-1};
+    --custom-tabs-text-strong: #{$main-text-color};
+    --custom-tabs-border: #{$border-color};
+    --custom-tabs-border-hover: #{$medium-gray-2};
+    --custom-tabs-accent: var(--effective-brand-color, #{$dt-base});
+    --custom-tabs-focus: var(--focus-outline-color);
     margin-top: 0px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
 
     .projekt-phase-subnav--items {
       display: flex;
-      align-items: center;
+      align-items: stretch;
+      width: 100%;
+      border-bottom: 1px solid var(--custom-tabs-border);
     }
 
-    .projekt-phase-subnav-item {
-      margin-right: 10px;
+    .projekt-phase-subnav-item.-disabled {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 0 -1px;
+      padding: 12px 25px;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+      color: $blue-gray-1;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      cursor: default;
+    }
 
-      &.is-active {
-        font-weight: bold;
-        text-decoration: underline;
-      }
+    .projekt-phase-subnav-item.-hidden-from-public {
+      opacity: 0.5;
     }
   }
 }

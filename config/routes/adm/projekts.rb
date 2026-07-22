@@ -12,6 +12,8 @@ namespace :adm do
       get :contact_persons, on: :member
     end
 
+    resource :inspiration, only: [:show], controller: "inspiration"
+
     resources :contact_persons, controller: "/adm/section_contact_people",
               only: [:new, :create, :edit, :update, :destroy],
               path: "settings/contact_persons",
@@ -20,6 +22,8 @@ namespace :adm do
     end
 
     resources :milestone_statuses, except: %i[show]
+
+    resources :projekt_settings, only: [:update]
 
     resources :phases, only: [:update, :destroy] do
       resource :map_location, controller: "/adm/map_locations", only: [:update]
@@ -44,6 +48,7 @@ namespace :adm do
         get :budget_edit
         get :budget_investments
         get :poll_questions
+        patch :go_live
         get :formular
         get :formular_answers
         get :formular_follow_up_emails
@@ -107,6 +112,9 @@ namespace :adm do
         patch :toggle_active
         patch :toggle_frontend_visibility
         patch :update_age_ranges_for_stats
+
+        # Notifications
+        post :send_notifications
       end
 
       resources :labels, except: %i[index show]
@@ -228,9 +236,6 @@ namespace :adm do
     end
 
     resources :projekts, only: [:new, :create, :update, :destroy], path: "" do
-      collection do
-        get :import_projekt
-      end
       get :details, on: :member
       get :visibility, on: :member
       get :projekt_managers, on: :member
@@ -239,11 +244,20 @@ namespace :adm do
       get :images, on: :member
       get :documents, on: :member
       get :evaluation, on: :member
+      get :report_summary, on: :member
+      get "evaluation/:phase_id", on: :member, action: :evaluation_phase,
+          as: :evaluation_phase, constraints: { phase_id: /\d+/ }
+      get :poll_answer_participation, on: :member
+      get :poll_answer_crossectional, on: :member
       get :evaluation_visibility, on: :member
       patch :update_evaluation_visibility, on: :member
+      patch :toggle_evaluation_section_visibility, on: :member
+      patch :toggle_evaluation_tab_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member
+      post :regenerate_phase_regular_stats, on: :member
+      post :regenerate_phase_ai_stats, on: :member
       get :phase_evaluation_status, on: :member
       get :evaluation_pdf_options, on: :member
       get :evaluation_pdf, on: :member
@@ -251,10 +265,13 @@ namespace :adm do
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
       patch :update_color, on: :member
+      patch :update_taxonomy, on: :member
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
       patch :update_image, on: :member
       delete :delete_image, on: :member
+      post :generate_image, on: :member
+      get :generate_image_status, on: :member
       resource :map_location, controller: "/adm/map_locations", only: [:update]
       resources :map_layers, controller: "/adm/map_layers", only: [:new, :create, :edit, :update, :destroy]
       resources :phases, only: [:new, :create] do

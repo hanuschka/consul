@@ -7,6 +7,13 @@ de:
         resources_count: "Erstellte Einträge"
         last_imported_at: "Letzte Aktualisierung"
         never: "Nie"
+        icon_missing: "Kein Symbol vorhanden"
+        source_file_label: "Datei"
+        source_file_tooltip_title: "Quelle: Hochgeladene Datei"
+        source_file_tooltip_text: >-
+          Dieser Datensatz wurde aus einer hochgeladenen GeoJSON-Datei importiert, nicht von einer
+          Live-Endpunkt-URL. „Neue importieren, alte bereinigen" liest die gespeicherte Datei erneut
+          ein; laden Sie eine Datei mit demselben Datensatznamen hoch, um sie zu ersetzen.
         working: "Wird verarbeitet…"
         delete: "Löschen"
         clean: "Neue importieren, alte bereinigen"

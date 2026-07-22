@@ -18,9 +18,9 @@ module ProjektImports::ReferencesBuilder
   end
 
   def self.fetch_sdg_goals
-    return [] unless defined?(SDG::Goal)
-
     SDG::Goal.all.map { |goal| { "code" => goal.code.to_s, "title" => goal.title } }
+  rescue NameError
+    []
   rescue StandardError => e
     Rails.logger.warn("[ProjektImports::ReferencesBuilder] sdg fetch failed: #{e.message}")
     []
@@ -35,7 +35,11 @@ module ProjektImports::ReferencesBuilder
 
   def self.fetch_phase_settings_defaults
     defaults = ProjektPhaseSetting.defaults || {}
-    defaults.transform_values { |settings| settings.transform_values(&:to_s) }
+    allowed_types = ProjektPhase::PROJEKT_PHASES_TYPES
+
+    defaults
+      .select { |phase_type, _settings| allowed_types.include?(phase_type.to_s) }
+      .transform_values { |settings| settings.transform_values(&:to_s) }
   rescue StandardError => e
     Rails.logger.warn("[ProjektImports::ReferencesBuilder] phase settings fetch failed: #{e.message}")
     {}

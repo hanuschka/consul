@@ -42,6 +42,11 @@
       this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
       this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
+      this.masterportalDefaultIconUrl = $element.data("masterportal-default-icon-url");
+      this.masterportalImageIcons = {};
+      this.masterportalPinsClusterGroup = null;
+      this.hasMasterportalPins = false;
+      this.layerControl = null;
 
       // Features configuration
       this.features = $element.data("features");
@@ -326,10 +331,8 @@
     }
 
     setupMasterportalPinsOverlay() {
-      this.masterportalPinsClusterGroup = null;
-      this.hasMasterportalPins = false;
-
       if (this.editable) return;
+      if (this.masterportalPinsClusterGroup) return;
 
       const split = App.Map.splitMasterportalFeatures(this.features);
       if (split.masterportal.features.length === 0) return;
@@ -339,6 +342,10 @@
       this.masterportalPinsClusterGroup.options.show_by_default = true;
       this.masterportalPinsClusterGroup.addTo(this.map);
       this.overlayLayers[this.masterportalPinsLayerLabel] = this.masterportalPinsClusterGroup;
+
+      if (this.layerControl) {
+        this.layerControl.addOverlay(this.masterportalPinsClusterGroup, this.masterportalPinsLayerLabel);
+      }
     }
 
     createLayer(item) {
@@ -496,6 +503,8 @@
       } else if (this.showAdminShape && !this.adminEditor) {
         layerControl = L.control.layers({}, {}).addTo(this.map);
       }
+
+      this.layerControl = layerControl;
     }
 
     addAdminFeaturesAsLayer() {
@@ -609,6 +618,8 @@
 
     renderFeatures() {
       if (this.features && Object.keys(this.features).length > 0) {
+        this.setupMasterportalPinsOverlay();
+
         const split = App.Map.splitMasterportalFeatures(this.features);
 
         this.renderFeatureCollection(split.regular, this.clusterGroup);
@@ -622,6 +633,18 @@
       }
     }
 
+    createMasterportalImageIcon(iconUrl) {
+      if (!this.masterportalImageIcons[iconUrl]) {
+        this.masterportalImageIcons[iconUrl] = L.icon({
+          iconUrl: encodeURI(iconUrl),
+          iconSize: [36, 36],
+          iconAnchor: [18, 18]
+        });
+      }
+
+      return this.masterportalImageIcons[iconUrl];
+    }
+
     renderFeatureCollection(featureCollection, pointCluster) {
       if (!featureCollection || featureCollection.features.length === 0) return;
       const self = this;
@@ -631,14 +654,14 @@
           var markerTitle = feature.properties.feature_category_name || feature.properties.title || "Kartenmarkierung";
           var icon;
 
-          if (feature.properties.resource_type === "masterportal_pin") {
-            icon = App.Utils.getMasterportalSquareMarker();
-          } else if (feature.properties.feature_icon_url) {
-            icon = L.icon({
-              iconUrl: feature.properties.feature_icon_url,
-              iconSize: [36, 36],
-              iconAnchor: [18, 36]
-            });
+          if (feature.properties.feature_icon_url) {
+            icon = self.createMasterportalImageIcon(feature.properties.feature_icon_url);
+          } else if (feature.properties.resource_type === "masterportal_pin") {
+            if (self.masterportalDefaultIconUrl) {
+              icon = self.createMasterportalImageIcon(self.masterportalDefaultIconUrl);
+            } else {
+              icon = App.Utils.getMasterportalSquareMarker();
+            }
           } else {
             icon = App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle);
           }

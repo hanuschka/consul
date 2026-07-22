@@ -25,7 +25,7 @@ de:
               chatting: "Fast fertig — Chat wird geöffnet…"
             errors:
               no_files: "Bitte wählen Sie mindestens eine Datei aus."
-              too_large: "Die ausgewählten Dateien überschreiten das Limit von 45 MB."
+              too_large: "Die ausgewählten Dateien überschreiten das Limit von 500 MB."
               unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
           show:
             title: "Importfortschritt"
@@ -103,6 +103,7 @@ de:
               import:
                 title: "Projekt importieren"
                 text: "Erstellt das Projekt mit allen Phasen, Inhaltsblöcken und Einstellungen. Es bleibt zunächst deaktiviert und für Besucher unsichtbar, bis Sie es aktivieren."
+                busy_text: "Die KI antwortet noch. Sie können den Import starten, sobald die aktuelle Nachricht abgeschlossen ist."
               attach:
                 title: "Dokument anhängen"
                 text: "Fügt ein weiteres Dokument zum Gespräch hinzu, damit die KI zusätzliche Informationen berücksichtigen kann."
@@ -112,6 +113,8 @@ de:
               import: "Projekt importieren"
               import_again: "Als neues Projekt importieren"
               start_over: "Neu starten"
+            import_overlay_title: "Import läuft…"
+            import_overlay_message: "Das Projekt wird angelegt. Dies kann einen Moment dauern."
             progress:
               finalizing_data: "Änderungen werden finalisiert…"
               resolving_content_blocks: "Inhaltsblöcke werden erstellt…"
@@ -154,7 +157,7 @@ de:
           unknown_command: "Unbekannter Befehl."
           no_chat: "Für diesen Import wurde keine Chat-Sitzung gefunden."
           no_files: "Keine Dateien übermittelt."
-          too_large: "Die ausgewählten Dateien überschreiten das Limit von 45 MB."
+          too_large: "Die ausgewählten Dateien überschreiten das Limit von 500 MB."
           unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
           message_failed: "Diese Antwort konnte nicht generiert werden. Bitte senden Sie die Nachricht erneut."
           ai_processing_failed: "KI-Verarbeitung fehlgeschlagen: %{message}"
@@ -182,8 +185,10 @@ de:
         badge:
           imported_by_ai: "KI"
           imported_by_ai_title: "Dieses Projekt wurde mit KI aus einem Dokument importiert."
+          imported_by_ai_description: "Eine KI hat aus einem hochgeladenen Dokument automatisch Phasen und Inhalte erzeugt. Bitte prüfen Sie die Angaben, bevor Sie das Projekt veröffentlichen."
         index:
           new_button: "Aus Dokument importieren"
+          new_button_description: "Laden Sie ein Dokument hoch und lassen Sie die KI daraus ein vollständiges Projekt mit Phasen und Inhalten erstellen, das Sie vor dem Import prüfen können."
           title: "Projektimporte"
           new_import: "Neuer Projektimport"
           empty: "Noch keine Projektimporte vorhanden."

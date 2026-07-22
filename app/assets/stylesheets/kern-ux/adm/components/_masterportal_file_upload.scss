@@ -1,0 +1,184 @@
+.masterportal-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+}
+
+.masterportal-file-upload--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.masterportal-file-upload--label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+
+  .material-symbols-outlined {
+    font-size: 16px;
+    color: var(--adm-color-primary, #1b5fd6);
+  }
+}
+
+.masterportal-file-upload--attach-button {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--adm-color-primary, #1b5fd6);
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    color: #fff;
+    background: var(--adm-color-primary, #1b5fd6);
+    border-color: var(--adm-color-primary, #1b5fd6);
+    box-shadow: 0 2px 6px rgba(27, 95, 214, 0.2);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.masterportal-file-upload--hint {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.masterportal-file-upload--rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  margin: 4px 0 0;
+  list-style: none;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.masterportal-file-upload--row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+
+  &.-invalid {
+    border-color: #fca5a5;
+    background: #fef2f2;
+  }
+}
+
+.masterportal-file-upload--row-icon {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--adm-color-primary, #1b5fd6);
+}
+
+.masterportal-file-upload--row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.masterportal-file-upload--row-filename {
+  font-size: 13px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.masterportal-file-upload--row-name-label {
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.masterportal-file-upload--row-name-hint {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.masterportal-file-upload--row-name-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--adm-color-primary, #1b5fd6);
+    box-shadow: 0 0 0 3px rgba(27, 95, 214, 0.18);
+  }
+}
+
+.masterportal-file-upload--row-error {
+  font-size: 13px;
+  color: #991b1b;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.masterportal-file-upload--row-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+
+  &:hover {
+    color: #991b1b;
+    background: #fef2f2;
+  }
+}

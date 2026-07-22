@@ -66,5 +66,7 @@ namespace :internal_api do
 
   get "connection/dt_status", to: "connection#dt_status"
 
+  get "connection/update_client_info", to: "connection#update_client_info"
+
   get "stats", to: "stats#show"
 end

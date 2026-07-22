@@ -12,12 +12,29 @@ class Adm::Files::DocumentsController < Adm::Files::BaseController
         .page(params[:page])
         .per(24)
 
+    ::Files::ResourcePreloader.call(@assets.map(&:documentable))
+
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },
       { name: t("adm.menu.items.files_subitems.documents") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
+  end
+
+  def show
+    document = Document.find(params[:id])
+    authorize [:adm, document]
+
+    @detail = ::Files::DocumentShowComponent.new(record: document)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.files"), icon: "folder" },
+      { name: t("adm.menu.items.files_subitems.documents"), url: adm_files_documents_path },
+      { name: @detail.display_title }
+    ]
+
+    render layout: !turbo_frame_request?
   end
 
   def update

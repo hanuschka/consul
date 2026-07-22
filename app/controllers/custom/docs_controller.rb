@@ -18,6 +18,12 @@ class DocsController < ApplicationController
   private
 
   def set_spec_url
-    @spec_url = '/api_docs/v1/swagger.yaml'
+    @spec_url = "/api_docs/v1/swagger.yaml?v=#{spec_version}"
+  end
+
+  def spec_version
+    spec_path = Rails.root.join("public/api_docs/v1/swagger.yaml")
+
+    File.exist?(spec_path) ? File.mtime(spec_path).to_i : 0
   end
 end

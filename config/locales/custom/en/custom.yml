@@ -70,6 +70,7 @@ en:
         ai_create_button:
           label: Create with AI
           title: Let AI create a content block
+          tooltip_description: "Describe what you want and the AI builds a ready-made content block for you — tailored to the projekt — which you can then edit freely."
         visibility:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"

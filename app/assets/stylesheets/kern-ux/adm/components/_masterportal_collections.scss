@@ -116,6 +116,29 @@
   border-radius: 10px;
 }
 
+.adm-masterportal-collection-card--icon {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  padding: 4px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.adm-masterportal-collection-card--icon.-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+.adm-masterportal-collection-card--icon.-placeholder .material-symbols-outlined {
+  font-size: 30px;
+}
+
 .adm-masterportal-collection-card--info {
   flex: 1;
   min-width: 220px;
@@ -153,6 +176,30 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.adm-masterportal-collection-card--source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  font-size: 13px;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  cursor: help;
+
+  .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
 }
 
 .adm-masterportal-collection-card--meta {

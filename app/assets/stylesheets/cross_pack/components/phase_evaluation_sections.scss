@@ -1644,6 +1644,13 @@
   word-break: break-word;
 }
 
+.open-answer-response--note {
+  margin: 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--er-text-muted, #94a3b8);
+}
+
 .poll-question-group {
   margin-bottom: 1.5rem;
 }

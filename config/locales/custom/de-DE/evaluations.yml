@@ -166,6 +166,10 @@ de:
           open_answers_show: Antworten anzeigen
           open_answers_hide: Antworten ausblenden
           open_answers_anonymized: anonymisiert
+          open_answers_prev: Zurück
+          open_answers_next: Weiter
+          open_answers_page_status: "Seite {current} von {total}"
+          open_answers_csv_hint: "%{count} offene Antworten — vollständige Liste im CSV-Export."
           verdict:
             clear_yes: Klar dafür
             majority_yes: Mehrheit dafür

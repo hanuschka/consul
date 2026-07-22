@@ -281,17 +281,22 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       .where(question_id: question_ids)
       .where.not(open_answer_text: [nil, ""])
       .order(created_at: :asc)
-    scope = scope.includes(:author) if show_author_name
+
+    if show_author_name
+      scope = scope.includes(:author)
+    end
 
     scope.group_by { |answer| [answer.question_id, answer.answer] }
       .transform_values do |records|
-        records.map do |record|
-          {
-            text: record.open_answer_text,
-            author_name: show_author_name ? record.author&.username : nil,
-            created_at: record.created_at&.iso8601
-          }
-        end
+        records
+          .reject { |record| record.open_answer_text.to_s.strip.blank? }
+          .map do |record|
+            {
+              text: record.open_answer_text,
+              author_name: show_author_name ? record.author&.username : nil,
+              created_at: record.created_at&.iso8601
+            }
+          end
       end
   end
 

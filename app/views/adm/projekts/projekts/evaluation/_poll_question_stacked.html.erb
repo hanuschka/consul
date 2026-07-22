@@ -30,4 +30,7 @@
   </div>
 
   <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>
+
+  <%= render partial: "adm/projekts/projekts/evaluation/poll_open_answers",
+    locals: { question: question, accent: accent, accent_light: accent_light, pdf_mode: local_assigns.fetch(:pdf_mode, false) } %>
 </div>

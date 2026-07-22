@@ -21,9 +21,6 @@
   <% else %>
     <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
     <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
-      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
-
-    <%= render partial: "adm/projekts/projekts/evaluation/poll_open_answers",
-      locals: { question: question, accent: accent, accent_light: accent_light, pdf_mode: pdf_mode } %>
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable, pdf_mode: pdf_mode } %>
   <% end %>
 <% end %>

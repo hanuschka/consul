@@ -130,6 +130,8 @@ en:
           success: The pin has been deleted.
         masterportal_pins_summary:
           loading: Loading map…
+        update_masterportal_collection:
+          missing_file: The uploaded file for this dataset is no longer available. Upload it again to re-import.
   projekt_phase_setting:
     proposal_phase:
       feature:

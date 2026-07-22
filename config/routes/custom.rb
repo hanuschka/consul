@@ -1,5 +1,3 @@
-get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
-
 delete "account/disconnect_identity", to: "account#disconnect_identity", as: :disconnect_identity_account
 
 get "/map_data", to: "map_data#show", as: :map_data

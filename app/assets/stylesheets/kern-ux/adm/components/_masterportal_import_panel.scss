@@ -251,13 +251,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   padding: 25px 16px;
   text-align: center;
+
+  &[hidden] {
+    display: none;
+  }
 
   .material-symbols-outlined {
     font-size: 32px;
     color: #94a3b8;
+  }
+
+  .masterportal-import-panel--load-button {
+    margin-top: 4px;
   }
 }
 

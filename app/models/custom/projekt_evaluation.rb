@@ -13,12 +13,6 @@ class ProjektEvaluation < ApplicationRecord
 
   scope :by_newest, -> { order(generated_at: :desc) }
 
-  def generate_share_token!
-    return if share_token.present?
-
-    update!(share_token: SecureRandom.urlsafe_base64(16))
-  end
-
   def phases_data
     phase_rows.map(&:data)
   end

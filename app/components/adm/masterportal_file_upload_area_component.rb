@@ -23,9 +23,12 @@ class Adm::MasterportalFileUploadAreaComponent < ApplicationComponent
       },
       errors: {
         too_large: t(".errors.too_large", size: max_file_size_mb),
+        invalid_type: t(".errors.invalid_type"),
         invalid_json: t(".errors.invalid_json"),
         not_feature_collection: t(".errors.not_feature_collection"),
         empty: t(".errors.empty"),
+        duplicate_name: t(".errors.duplicate_name"),
+        name_taken: t(".errors.name_taken"),
         generic: t(".errors.generic")
       }
     }

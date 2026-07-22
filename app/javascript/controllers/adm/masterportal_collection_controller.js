@@ -118,12 +118,22 @@ export default class extends Controller {
   async sendRequest(method, url) {
     try {
       const response = await this.request(method, url)
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      if (!response.ok) throw new Error(await this.errorMessage(response))
 
       this.startPolling()
     } catch (error) {
       this.showError(error.message)
     }
+  }
+
+  async errorMessage(response) {
+    try {
+      const body = await response.json()
+      if (body && body.message) return body.message
+    } catch (error) {
+    }
+
+    return `HTTP ${response.status}`
   }
 
   request(method, url) {

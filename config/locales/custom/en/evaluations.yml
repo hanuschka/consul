@@ -2,9 +2,6 @@ en:
   time:
     formats:
       evaluation_header: "%d %B %Y, %H:%M"
-  public:
-    evaluations:
-      generated_at: "Generated at %{time}"
   adm:
     ai_action_button:
       processing: AI is working…

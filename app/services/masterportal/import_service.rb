@@ -81,6 +81,10 @@ class Masterportal::ImportService < ApplicationService
     end
 
     def process_geoserver_collection(collection_id)
+      if @endpoint_url.blank?
+        raise ArgumentError, "endpoint_url is required to import geoserver collection #{collection_id}"
+      end
+
       collection = find_or_create_collection(collection_id)
       features = OgcApiFeatures::Client.fetch_features(@endpoint_url, collection_id)
 

@@ -20,7 +20,10 @@ en:
         remove: Remove
         errors:
           too_large: "File is too large (max. %{size} MB)."
+          invalid_type: File must be a .json or .geojson file.
           invalid_json: File is not valid JSON.
           not_feature_collection: File is not a GeoJSON FeatureCollection.
           empty: File is empty.
+          duplicate_name: Another file in this upload uses the same dataset name.
+          name_taken: A live dataset already uses this name — choose a different one.
           generic: File could not be processed.

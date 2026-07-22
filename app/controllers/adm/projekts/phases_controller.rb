@@ -546,6 +546,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def update_masterportal_collection
     authorize_phase(:update?)
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+
+    if collection.file_source? && !collection.geojson_file.attached?
+      return render json: {
+        message: t("adm.projekts.phases.update_masterportal_collection.missing_file")
+      }, status: :unprocessable_entity
+    end
+
     collection.update!(import_status: "running", import_error: nil)
 
     MasterportalImportJob.perform_later(**masterportal_resync_job_args(collection))

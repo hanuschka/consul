@@ -54,6 +54,12 @@ class Masterportal::GeojsonFileFeatures
   private
 
     def features
+      if !@masterportal_collection.geojson_file.attached?
+        raise InvalidFile.new(:missing_file)
+      end
+
       @features ||= self.class.parse!(@masterportal_collection.geojson_file.download)
+    rescue ActiveStorage::FileNotFoundError
+      raise InvalidFile.new(:missing_file)
     end
 end

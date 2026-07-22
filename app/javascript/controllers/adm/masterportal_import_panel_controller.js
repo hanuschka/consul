@@ -1,5 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Server-side rejection reasons that a name edit can resolve (as opposed to
+// content problems, which require replacing the file).
+const IDENTITY_SERVER_ERRORS = ["duplicate_name", "name_taken"]
+
 export default class extends Controller {
   static targets = [
     "endpointUrl",
@@ -191,81 +195,110 @@ export default class extends Controller {
     files.forEach((file) => this.addFile(file))
 
     event.target.value = ""
-    this.updateImportButton()
+    this.recomputeValidity()
   }
 
   addFile(file) {
-    const entry = { id: `mp-file-${this.fileSequence++}`, file, valid: false }
+    const entry = { id: `mp-file-${this.fileSequence++}`, file, valid: false, serverError: null }
+    this.computeBaseValidity(entry)
     this.attachedFiles.push(entry)
 
-    const row = this.buildFileRow(entry)
-    this.fileRowsTarget.appendChild(row)
+    this.fileRowsTarget.appendChild(this.buildFileRow(entry))
     this.fileRowsTarget.hidden = false
-
-    this.validateFile(entry, row)
   }
 
-  validateFile(entry, row) {
+  computeBaseValidity(entry) {
     const config = this.fileConfig
 
-    if (entry.file.size > config.maxFileSize) {
-      this.markRowInvalid(entry, row, config.errors.too_large)
-      return
+    if (!this.hasAllowedExtension(entry.file.name)) {
+      entry.baseValid = false
+      entry.baseReason = "invalid_type"
+    } else if (entry.file.size === 0) {
+      entry.baseValid = false
+      entry.baseReason = "empty"
+    } else if (entry.file.size > config.maxFileSize) {
+      entry.baseValid = false
+      entry.baseReason = "too_large"
+    } else {
+      entry.baseValid = true
+      entry.baseReason = null
     }
-
-    const reader = new FileReader()
-    reader.onload = () => this.handleFileParsed(entry, row, reader.result)
-    reader.onerror = () => this.markRowInvalid(entry, row, config.errors.generic)
-    reader.readAsText(entry.file)
   }
 
-  handleFileParsed(entry, row, text) {
-    const config = this.fileConfig
-    const reason = this.geojsonError(text)
+  hasAllowedExtension(filename) {
+    return /\.(json|geojson)$/i.test(filename || "")
+  }
 
-    if (reason) {
-      this.markRowInvalid(entry, row, config.errors[reason] || config.errors.generic)
-      return
-    }
+  // Effective validity is derived here from base checks (size/extension),
+  // client-side duplicate-name detection, and any per-file error the server
+  // returned on a previous submit. The server stays authoritative for content.
+  recomputeValidity() {
+    const slugCounts = {}
+    const slugByEntry = new Map()
 
-    this.markRowValid(entry, row)
+    this.attachedFiles.forEach((entry) => {
+      const slug = this.derivedSlug(this.entryNameValue(entry))
+      slugByEntry.set(entry, slug)
+
+      if (slug) slugCounts[slug] = (slugCounts[slug] || 0) + 1
+    })
+
+    this.attachedFiles.forEach((entry) => {
+      const row = this.rowFor(entry)
+      if (!row) return
+
+      const config = this.fileConfig
+      const isDuplicate = slugByEntry.get(entry) && slugCounts[slugByEntry.get(entry)] > 1
+
+      if (!entry.baseValid) {
+        this.applyRowValidity(entry, row, false, config.errors[entry.baseReason] || config.errors.generic)
+      } else if (isDuplicate) {
+        this.applyRowValidity(entry, row, false, config.errors.duplicate_name)
+      } else if (entry.serverError) {
+        this.applyRowValidity(entry, row, false, config.errors[entry.serverError] || config.errors.generic)
+      } else {
+        this.applyRowValidity(entry, row, true, "")
+      }
+    })
+
     this.updateImportButton()
   }
 
-  geojsonError(text) {
-    if (!text || !text.trim()) return "empty"
-
-    let body
-
-    try {
-      body = JSON.parse(text)
-    } catch (error) {
-      return "invalid_json"
-    }
-
-    if (!body || body.type !== "FeatureCollection") return "not_feature_collection"
-
-    return null
-  }
-
-  markRowInvalid(entry, row, message) {
-    entry.valid = false
-    row.classList.add("-invalid")
+  applyRowValidity(entry, row, valid, message) {
+    entry.valid = valid
+    row.classList.toggle("-invalid", !valid)
 
     const errorElement = row.querySelector(".masterportal-file-upload--row-error")
     errorElement.textContent = message
-    errorElement.hidden = false
-
-    this.updateImportButton()
+    errorElement.hidden = valid
   }
 
-  markRowValid(entry, row) {
-    entry.valid = true
-    row.classList.remove("-invalid")
+  derivedSlug(name) {
+    return (name || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
+  }
 
-    const errorElement = row.querySelector(".masterportal-file-upload--row-error")
-    errorElement.textContent = ""
-    errorElement.hidden = true
+  entryNameValue(entry) {
+    const row = this.rowFor(entry)
+    const input = row && row.querySelector(".masterportal-file-upload--row-name-input")
+
+    return input ? input.value : this.defaultName(entry.file.name)
+  }
+
+  rowFor(entry) {
+    return this.fileRowsTarget.querySelector(`[data-file-id="${entry.id}"]`)
+  }
+
+  onNameInput(event) {
+    const row = event.currentTarget.closest("[data-file-id]")
+    if (!row) return
+
+    const entry = this.attachedFiles.find((candidate) => candidate.id === row.dataset.fileId)
+
+    // A name edit can resolve an identity conflict the server flagged; drop it
+    // so the row can become valid again. Content errors persist until removed.
+    if (entry && IDENTITY_SERVER_ERRORS.includes(entry.serverError)) entry.serverError = null
+
+    this.recomputeValidity()
   }
 
   removeFile(event) {
@@ -278,7 +311,7 @@ export default class extends Controller {
 
     if (this.attachedFiles.length === 0) this.fileRowsTarget.hidden = true
 
-    this.updateImportButton()
+    this.recomputeValidity()
   }
 
   buildFileRow(entry) {
@@ -326,6 +359,7 @@ export default class extends Controller {
     nameInput.className = "masterportal-file-upload--row-name-input"
     nameInput.value = this.defaultName(entry.file.name)
     nameInput.placeholder = config.labels.namePlaceholder
+    nameInput.setAttribute("data-action", "input->adm--masterportal-import-panel#onNameInput")
     main.appendChild(nameInput)
 
     const hint = document.createElement("span")
@@ -368,6 +402,8 @@ export default class extends Controller {
     const createRecords =
       this.hasCreateResourceCheckboxTarget && this.createResourceCheckboxTarget.checked
 
+    const previousStatus = this.lastStatus
+
     this.applyStatus({
       status: "running",
       last_imported_count: 0,
@@ -387,12 +423,42 @@ export default class extends Controller {
         headers: { Accept: "application/json", "X-CSRF-Token": this.csrfToken() },
         body: formData
       })
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+      if (!response.ok) {
+        await this.handleImportRejection(response, validFiles, previousStatus)
+        return
+      }
 
       this.startStatusPolling()
     } catch (error) {
       this.applyStatus({ status: "failed", error: error.message })
     }
+  }
+
+  async handleImportRejection(response, submittedFiles, previousStatus) {
+    let body = null
+
+    try {
+      body = await response.json()
+    } catch (error) {
+    }
+
+    this.revertRunningUi(previousStatus)
+
+    if (body && Array.isArray(body.errors)) {
+      body.errors.forEach((serverError) => {
+        const entry = submittedFiles[serverError.index]
+        if (entry) entry.serverError = serverError.reason
+      })
+
+      this.recomputeValidity()
+    }
+  }
+
+  revertRunningUi(previousStatus) {
+    this.lastStatus = previousStatus
+    this.setStatusBadge({ status: previousStatus })
+    this.setRunningUi({ status: previousStatus })
   }
 
   appendFilesTo(formData, entries) {

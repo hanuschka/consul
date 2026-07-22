@@ -26,13 +26,18 @@ class Adm::MasterportalImportsController < Adm::BaseController
       return render json: { error: "nothing_selected" }, status: :unprocessable_entity
     end
 
-    file_errors = validate_uploaded_files(uploaded_files)
+    if geoserver_collection_ids.present? && params[:endpoint_url].blank?
+      return render json: { error: "endpoint_required" }, status: :unprocessable_entity
+    end
+
+    file_descriptors = build_file_descriptors(uploaded_files)
+    file_errors = file_content_errors(file_descriptors) + file_identity_errors(file_descriptors)
 
     if file_errors.any?
       return render json: { errors: file_errors }, status: :unprocessable_entity
     end
 
-    uploaded_collection_ids = create_file_collections(uploaded_files)
+    uploaded_collection_ids = persist_file_collections(file_descriptors)
 
     MasterportalImportJob.perform_later(
       **import_job_args(geoserver_collection_ids, uploaded_collection_ids)
@@ -105,43 +110,93 @@ class Adm::MasterportalImportsController < Adm::BaseController
       ActiveModel::Type::Boolean.new.cast(params[:create_domain_records])
     end
 
-    def validate_uploaded_files(files)
-      files.each_with_index.filter_map do |file, index|
-        Masterportal::GeojsonFileFeatures.validate_upload!(file)
-        nil
-      rescue Masterportal::GeojsonFileFeatures::InvalidFile => e
-        { index: index, filename: file.original_filename, reason: e.reason }
-      end
-    end
-
-    def create_file_collections(files)
+    def build_file_descriptors(files)
       requested_names = Array(params[:file_names])
 
       files.each_with_index.map do |file, index|
-        build_file_collection(file, requested_names[index]).id
+        base_name = File.basename(file.original_filename.to_s, ".*")
+        display_name = requested_names[index].to_s.strip.presence || base_name
+        collection_id = display_name.parameterize.presence || base_name.parameterize.presence || "datei"
+
+        { index: index, file: file, display_name: display_name, collection_id: collection_id }
       end
     end
 
-    def build_file_collection(file, requested_name)
-      base_name = File.basename(file.original_filename.to_s, ".*")
-      display_name = requested_name.to_s.strip.presence || base_name
-      collection_id = display_name.parameterize.presence || base_name.parameterize.presence || "datei"
+    def file_content_errors(descriptors)
+      descriptors.filter_map do |descriptor|
+        Masterportal::GeojsonFileFeatures.validate_upload!(descriptor[:file])
+        nil
+      rescue Masterportal::GeojsonFileFeatures::InvalidFile => e
+        file_error(descriptor, e.reason)
+      end
+    end
 
-      collection =
-        @projekt_phase.masterportal_collections.find_or_initialize_by(collection_id: collection_id)
-      collection.name = display_name
-      collection.source = "file"
-      collection.endpoint_url = "file://#{file.original_filename}"
-      collection.create_domain_records = create_domain_records?
-      collection.save!
+    def file_identity_errors(descriptors)
+      errors = []
+      seen_collection_ids = {}
 
+      descriptors.each do |descriptor|
+        collection_id = descriptor[:collection_id]
+
+        if seen_collection_ids[collection_id]
+          errors << file_error(descriptor, :duplicate_name)
+          next
+        end
+
+        seen_collection_ids[collection_id] = true
+
+        existing = @projekt_phase.masterportal_collections.find_by(collection_id: collection_id)
+
+        if existing.present? && !existing.source_file?
+          errors << file_error(descriptor, :name_taken)
+        end
+      end
+
+      errors
+    end
+
+    def file_error(descriptor, reason)
+      { index: descriptor[:index], filename: descriptor[:file].original_filename, reason: reason }
+    end
+
+    def persist_file_collections(descriptors)
+      descriptors.map { |descriptor| build_file_collection(descriptor).id }
+    end
+
+    def build_file_collection(descriptor)
+      attempts = 0
+
+      begin
+        collection = @projekt_phase.masterportal_collections
+          .find_or_initialize_by(collection_id: descriptor[:collection_id])
+
+        if collection.persisted? && !collection.source_file?
+          raise ActiveRecord::RecordNotUnique, "collection_id taken by a non-file source"
+        end
+
+        collection.name = descriptor[:display_name]
+        collection.source = "file"
+        collection.endpoint_url = "file://#{descriptor[:file].original_filename}"
+        collection.create_domain_records = create_domain_records?
+        collection.save!
+
+        attach_geojson_file(collection, descriptor[:file])
+
+        collection
+      rescue ActiveRecord::RecordNotUnique
+        attempts += 1
+        retry if attempts < 2
+
+        raise
+      end
+    end
+
+    def attach_geojson_file(collection, file)
       collection.geojson_file.attach(
         io: file.tempfile,
         filename: file.original_filename,
         content_type: "application/geo+json"
       )
-
-      collection
     end
 
     def status_payload

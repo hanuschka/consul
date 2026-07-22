@@ -209,9 +209,10 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     end
 
     vote_totals = build_answer_vote_totals(question_ids)
+    open_answer_texts = build_open_answer_texts(question_ids, poll.show_open_answer_author_name?)
 
     questions_data = root_questions.map do |question|
-      build_question_data(question, voters_count, vote_totals)
+      build_question_data(question, voters_count, vote_totals, open_answer_texts)
     end
 
     comment_entries = visible_comments
@@ -230,16 +231,22 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     }
   end
 
-  def build_question_data(question, voters_count, vote_totals)
+  def build_question_data(question, voters_count, vote_totals, open_answer_texts)
     answers_data = question.question_answers.map do |answer|
       answer_count = answer_total_votes(answer, vote_totals)
 
-      {
+      data = {
         id: answer.id,
         title: answer.title,
         count: answer_count,
         percentage: safe_percentage(answer_count, voters_count)
       }
+
+      if answer.open_answer?
+        data[:open_texts] = open_answer_texts[[question.id, answer.title]] || []
+      end
+
+      data
     end
 
     total_mentions = answers_data.sum { |a| a[:count] }
@@ -260,11 +267,32 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
 
     if question.nested_questions.any?
       data[:nested_questions] = question.nested_questions.map do |nested_question|
-        build_question_data(nested_question, voters_count, vote_totals)
+        build_question_data(nested_question, voters_count, vote_totals, open_answer_texts)
       end
     end
 
     data
+  end
+
+  def build_open_answer_texts(question_ids, show_author_name)
+    return {} if question_ids.empty?
+
+    scope = Poll::Answer
+      .where(question_id: question_ids)
+      .where.not(open_answer_text: [nil, ""])
+      .order(created_at: :asc)
+    scope = scope.includes(:author) if show_author_name
+
+    scope.group_by { |answer| [answer.question_id, answer.answer] }
+      .transform_values do |records|
+        records.map do |record|
+          {
+            text: record.open_answer_text,
+            author_name: show_author_name ? record.author&.username : nil,
+            created_at: record.created_at&.iso8601
+          }
+        end
+      end
   end
 
   def build_answer_vote_totals(question_ids)

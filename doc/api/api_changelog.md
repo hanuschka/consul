@@ -2,6 +2,24 @@
 
 Notable changes to the Consul Projekt API, most recent first.
 
+## 2026-07-20
+
+### Poll questions and answers are now paginated
+
+`GET /api/polls/{poll_id}/questions` and
+`GET /api/poll_questions/{poll_question_id}/answers` now paginate their
+results by default (previously they returned the full list). Each response
+gains a `pagination` block with `current_page`, `total_pages`, `total_count`
+and `per_page`.
+
+Pass `page` and `per_page` to page through the results. The default page size
+is **100**; the first page is returned when `page` is omitted.
+
+```
+GET /api/polls/42/questions?page=2&per_page=50
+GET /api/poll_questions/17/answers?per_page=25
+```
+
 ## 2026-06-29
 
 ### Projekt list — faster, with pagination, sorting and selective images

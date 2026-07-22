@@ -1,4 +1,9 @@
 class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
+  AI_DATA_KEYS = %i[
+    ai_stats ai_stats_refreshed_at evaluation_summary
+    short_summary key_findings ai_generated_at
+  ].freeze
+
   def initialize(projekt_phase_evaluation)
     @row = projekt_phase_evaluation
     @projekt_phase = projekt_phase_evaluation.projekt_phase
@@ -16,7 +21,7 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     run do |base|
       next {} if base.blank?
 
-      build_regular_data(base).merge(build_ai_data(base))
+      build_regular_data(base).merge(ai_data(base))
     end
   end
 
@@ -30,7 +35,7 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
 
   def regenerate_ai_stats
     run do |base|
-      next existing_data if base.blank?
+      next existing_data if base.blank? || !Ai::Settings.ai_available?
 
       existing_data.merge(build_ai_data(base))
     end
@@ -83,6 +88,12 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     Rails.logger.warn(
       "[Evaluation] precomputed stats refresh failed for phase ##{@projekt_phase.id}: #{e.message}"
     )
+  end
+
+  def ai_data(base)
+    return build_ai_data(base) if Ai::Settings.ai_available?
+
+    existing_data.slice(*AI_DATA_KEYS)
   end
 
   def build_ai_data(base)

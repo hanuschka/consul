@@ -152,7 +152,7 @@
       <% end %>
 
       <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
-        locals: { questions: questions, accent: accent, accent_light: accent_light, exportable: local_assigns.fetch(:exportable, false) } %>
+        locals: { questions: questions, accent: accent, accent_light: accent_light, exportable: local_assigns.fetch(:exportable, false), pdf_mode: pdf_mode } %>
 
       <% entries = poll["open_text_entries"] || [] %>
       <% if entries.any? && show_section.call("open_responses") %>

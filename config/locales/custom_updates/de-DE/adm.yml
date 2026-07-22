@@ -130,6 +130,8 @@ de:
           success: Der Pin wurde gelöscht.
         masterportal_pins_summary:
           loading: Karte wird geladen…
+        update_masterportal_collection:
+          missing_file: Die hochgeladene Datei dieses Datensatzes ist nicht mehr verfügbar. Laden Sie sie erneut hoch, um neu zu importieren.
   projekt_phase_setting:
     proposal_phase:
       feature:

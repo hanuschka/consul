@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_20_132531) do
+ActiveRecord::Schema.define(version: 2026_07_21_143340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1636,6 +1636,7 @@ ActiveRecord::Schema.define(version: 2026_07_20_132531) do
     t.text "destroy_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source", default: "geoserver", null: false
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
@@ -2157,12 +2158,10 @@ ActiveRecord::Schema.define(version: 2026_07_20_132531) do
     t.jsonb "data", default: {}
     t.jsonb "selected_question_ids", default: []
     t.datetime "generated_at"
-    t.string "share_token"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
-    t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
     t.index ["status"], name: "index_projekt_evaluations_on_status"
   end
 

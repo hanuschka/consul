@@ -1,6 +1,7 @@
 <%= render Shared::AiFeatureTooltipComponent.new(
   feature_title: t("adm.projekts.projekts.evaluation.regenerate_phase_button"),
-  feature_text: t("adm.ai_action_button.feature_description")
+  feature_text: t("adm.ai_action_button.feature_description"),
+  requires_ai: false
 ) do %>
   <a
     href="<%= regenerate_url %>"

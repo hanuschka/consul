@@ -15,6 +15,7 @@ class ProjektPhase::CommentPhase::StatsService
         participants_by_age: demographics.age_data,
         participants_by_geozone: demographics.geozone_data,
         individual_group_value_counts: demographics.individual_group_value_counts,
+        participants_count: participant_ids.size,
         **demographics.gender_data
       },
       stats_refreshed_at: Time.current

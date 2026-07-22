@@ -6,7 +6,8 @@ class ProjektPhase::CommentPhase < ProjektPhase
     :male_percentage,
     :female_percentage,
     :other_gen_percentage,
-    :individual_group_value_counts
+    :individual_group_value_counts,
+    :participants_count
 
   def gender?
     total_male_participants.to_i > 0 ||

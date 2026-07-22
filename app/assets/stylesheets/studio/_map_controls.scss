@@ -144,3 +144,100 @@
   font-weight: 600;
   color: #6b7682;
 }
+
+// Frosted-glass resource/phase source control for map content blocks in
+// simple edit mode. Injected by
+// App.ContentBlockEditor.SimpleEditMode.MapSourceEdit into the bottom-center
+// of a .projekt-map-embed (the height control sits top-center, so the two
+// never overlap). Same surface treatment as the height control above.
+.studio-content-block-map-source-control {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 45px;
+  padding: 0 15px;
+  color: #1f2a37;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
+// In fullscreen ("Vollbild") the map fills the viewport — hide the source
+// control while the map is expanded, same as the height control.
+.projekt-map-embed:has(.map_location.expanded) .studio-content-block-map-source-control {
+  display: none;
+}
+
+.studio-content-block-map-source-control--field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.studio-content-block-map-source-control--field.-hidden {
+  display: none;
+}
+
+.studio-content-block-map-source-control--field + .studio-content-block-map-source-control--field {
+  padding-left: 14px;
+  border-left: 1px solid rgba(31, 42, 55, 0.13);
+}
+
+.studio-content-block-map-source-control--label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #44505f;
+  white-space: nowrap;
+}
+
+.studio-content-block-map-source-control--icon {
+  font-size: 14px;
+  color: #6b7682;
+}
+
+// Scoped under .custom-new-design to outrank the global Foundation select
+// styling (margins, height, border). 16px keeps iOS Safari from auto-zooming
+// focused form controls.
+.custom-new-design .studio-content-block-map-source-control .studio-content-block-map-source-control--select {
+  width: auto;
+  max-width: 220px;
+  height: 32px;
+  margin: 0;
+  padding: 0 28px 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2a37;
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(31, 42, 55, 0.13);
+  border-radius: 9px;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, box-shadow 150ms ease-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.72);
+  }
+
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.72);
+    border-color: rgba(31, 42, 55, 0.13);
+    box-shadow: inset 0 0 0 1px rgba(23, 121, 186, 0.5);
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1779ba;
+    outline-offset: 1px;
+  }
+}

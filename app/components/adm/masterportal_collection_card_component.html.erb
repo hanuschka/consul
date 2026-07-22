@@ -11,9 +11,6 @@
   data-adm--masterportal-collection-card-url-value="<%= card_url %>"
   data-adm--masterportal-collection-confirm-value="<%= t(".delete_confirm", name: collection.display_name) %>"
   data-adm--masterportal-collection-clean-confirm-value="<%= t(".clean_confirm", name: collection.display_name) %>"
-  data-adm--masterportal-collection-new-label-value="<%= t(".diff.new_label") %>"
-  data-adm--masterportal-collection-stale-label-value="<%= t(".diff.stale_label") %>"
-  data-adm--masterportal-collection-current-label-value="<%= t(".diff.current_label") %>"
   data-adm--masterportal-collection-checking-label-value="<%= t(".diff.checking_label") %>"
   data-adm--masterportal-collection-initial-import-status-value="<%= collection.import_status %>"
   data-adm--masterportal-collection-initial-destroy-status-value="<%= collection.destroy_status %>"
@@ -49,6 +46,20 @@
       >
         <span class="material-symbols-outlined" aria-hidden="true">link</span>
       </a>
+    <% elsif collection.file_source? %>
+      <rich-tooltip delay="400" trigger-only shadow="heavy">
+        <span class="adm-masterportal-collection-card--source-chip" tabindex="0">
+          <span class="material-symbols-outlined" aria-hidden="true">description</span>
+          <%= t(".source_file_label") %>
+        </span>
+
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= t(".source_file_tooltip_title") %></span>
+            <span class="rich-tooltip-content--text"><%= t(".source_file_tooltip_text") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
     <% end %>
 
     <dl class="adm-masterportal-collection-card--meta">
@@ -79,12 +90,17 @@
     <div
       class="adm-masterportal-collection-card--diff"
       data-adm--masterportal-collection-target="diff"
+      data-state="<%= diff_badge_state %>"
       role="status"
       aria-live="polite"
-      hidden
+      <%= "hidden" if diff_badge_hidden? %>
     >
-      <span class="material-symbols-outlined" aria-hidden="true">difference</span>
-      <span data-adm--masterportal-collection-target="diffText"></span>
+      <span
+        class="material-symbols-outlined"
+        aria-hidden="true"
+        data-adm--masterportal-collection-target="diffIcon"
+      ><%= diff_badge_icon %></span>
+      <span data-adm--masterportal-collection-target="diffText"><%= diff_badge_text %></span>
     </div>
   </div>
 

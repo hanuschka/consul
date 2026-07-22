@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_02_113425) do
+ActiveRecord::Schema.define(version: 2026_07_21_143340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1594,6 +1594,7 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.bigint "mappable_id"
     t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
     t.jsonb "config", default: {}, null: false
+    t.string "layer_defs"
     t.index ["mappable_type", "mappable_id"], name: "index_map_layers_on_mappable_type_and_mappable_id"
     t.index ["projekt_id"], name: "index_map_layers_on_projekt_id"
   end
@@ -1635,6 +1636,7 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.text "destroy_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source", default: "geoserver", null: false
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
@@ -2005,6 +2007,7 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
     t.index ["contextualize_by_poll_question_id"], name: "index_poll_questions_on_contextualize_by_poll_question_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
+    t.index ["parent_question_id"], name: "index_poll_questions_on_parent_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
     t.index ["tsv"], name: "index_poll_questions_on_tsv", using: :gin
@@ -2108,6 +2111,7 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.jsonb "ai_stats", default: {}
     t.string "ai_stats_refresh_status"
     t.datetime "ai_stats_refreshed_at"
+    t.boolean "live", default: true, null: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -2149,27 +2153,15 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
-  create_table "projekt_evaluation_visibilities", force: :cascade do |t|
-    t.bigint "projekt_id", null: false
-    t.boolean "show_project_summary", default: false, null: false
-    t.boolean "show_settings", default: false, null: false
-    t.boolean "show_phase_summaries", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["projekt_id"], name: "index_projekt_evaluation_visibilities_on_projekt_id", unique: true
-  end
-
   create_table "projekt_evaluations", force: :cascade do |t|
     t.bigint "projekt_id", null: false
     t.jsonb "data", default: {}
     t.jsonb "selected_question_ids", default: []
     t.datetime "generated_at"
-    t.string "share_token"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
-    t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
     t.index ["status"], name: "index_projekt_evaluations_on_status"
   end
 
@@ -2337,6 +2329,9 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.boolean "show_open_responses", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "show_budget_segments", default: true, null: false
+    t.boolean "show_heatmap", default: false, null: false
+    t.boolean "show_poll_stats", default: false, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
   end
 
@@ -2615,6 +2610,7 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.datetime "published_at"
     t.boolean "imported_by_ai", default: false, null: false
     t.string "banner_image_generation_status"
+    t.datetime "content_updated_at"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
@@ -3117,6 +3113,9 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"
     t.datetime "published_at"
+    t.string "footer_key"
+    t.integer "footer_position"
+    t.index ["footer_key"], name: "index_site_customization_pages_on_footer_key", unique: true
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -3423,6 +3422,8 @@ ActiveRecord::Schema.define(version: 2026_07_02_113425) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "signature_id"
+    t.boolean "conditional", default: false, null: false
+    t.index ["conditional"], name: "index_votes_on_conditional", where: "conditional"
     t.index ["signature_id"], name: "index_votes_on_signature_id"
     t.index ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope"
     t.index ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope"

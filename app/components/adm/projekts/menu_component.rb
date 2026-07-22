@@ -9,6 +9,9 @@ class Adm::Projekts::MenuComponent < Adm::BaseMenuComponent
       (if Adm::Projekts::ProjektManagerPolicy.new(current_user, nil).index?
          { label: t("adm.projekts.menu.items.managers"), icon: "badge", path: adm_projekts_managers_path }
        end),
+      (if Adm::Projekts::InspirationPolicy.new(current_user, nil).show?
+         { label: t("adm.projekts.menu.items.inspiration"), icon: "travel_explore", path: adm_projekts_inspiration_path, active_prefix: "/adm/projekts/inspiration" }
+       end),
       (if Adm::Projekts::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.projekts.menu.items.settings"), icon: "settings", path: adm_projekts_settings_path }
        end)

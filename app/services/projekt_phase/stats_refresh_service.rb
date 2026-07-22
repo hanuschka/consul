@@ -1,7 +1,8 @@
 class ProjektPhase::StatsRefreshService
   STATS_SERVICES = {
     ProjektPhase::ProposalPhase => ProjektPhase::ProposalPhase::StatsService,
-    ProjektPhase::BudgetPhase   => ProjektPhase::BudgetPhase::StatsService
+    ProjektPhase::BudgetPhase   => ProjektPhase::BudgetPhase::StatsService,
+    ProjektPhase::CommentPhase  => ProjektPhase::CommentPhase::StatsService
   }.freeze
 
   def call
@@ -35,6 +36,13 @@ class ProjektPhase::StatsRefreshService
         phase.proposals.where("updated_at > ?", cutoff).exists?
       when ProjektPhase::BudgetPhase
         phase.budget&.investments&.where("updated_at > ?", cutoff)&.exists? || false
+      when ProjektPhase::CommentPhase
+        phase.comments.where("updated_at > ?", cutoff).exists? ||
+          comment_participants_count(phase) != phase.stats["participants_count"].to_i
       end
+    end
+
+    def comment_participants_count(phase)
+      phase.comments.where(hidden_at: nil).select(:user_id).distinct.count
     end
 end

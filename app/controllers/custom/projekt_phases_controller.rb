@@ -35,6 +35,9 @@ class ProjektPhasesController < ApplicationController
     elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
       ProjektPhase::BudgetPhase::StatsService.new(@projekt_phase).call
       @projekt_phase.reload
+    elsif @projekt_phase.is_a?(ProjektPhase::CommentPhase)
+      ProjektPhase::CommentPhase::StatsService.new(@projekt_phase).call
+      @projekt_phase.reload
     else
       @projekt_phase.update(stats_refreshed_at: Time.current)
     end

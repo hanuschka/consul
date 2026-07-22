@@ -3,7 +3,7 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs,
   back_button_url: adm_projekts_phase_poll_question_path(@projekt_phase, @question)) %>
 
-<div class="kern-container kern-container--form mb-5">
+<div class="kern-container mb-5">
   <%= render "form", answer: @answer,
     url: adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question, @answer) %>
 </div>

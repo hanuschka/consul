@@ -1,0 +1,62 @@
+<%
+  gender = participation[:gender] || {}
+  age = participation[:age] || {}
+  geozone = participation[:geozone] || {}
+
+  has_values = ->(data) { (data[:values] || []).any? { |value| value.to_i > 0 } }
+
+  participation_charts = []
+  if has_values.call(gender)
+    participation_charts << {
+      title: t("stats.by_gender"), type: "pie",
+      labels: gender[:labels], values: gender[:values],
+      colors: gender[:colors] || evaluation_chart_colors(gender[:values] || [])
+    }
+  end
+  if has_values.call(age)
+    participation_charts << {
+      title: t("stats.by_age"), type: "bar",
+      labels: age[:labels], values: age[:values],
+      colors: evaluation_chart_colors(age[:values] || [])
+    }
+  end
+  if has_values.call(geozone)
+    participation_charts << {
+      title: t("adm.projekts.projekts.evaluation.geozone_distribution"), type: "bar",
+      labels: geozone[:labels], values: geozone[:values],
+      colors: evaluation_chart_colors(geozone[:values] || [])
+    }
+  end
+  (participation[:individual_groups] || []).each do |group|
+    next if !has_values.call(group)
+
+    participation_charts << {
+      title: group[:name], type: "bar",
+      labels: group[:labels], values: group[:values],
+      colors: evaluation_chart_colors(group[:values] || [])
+    }
+  end
+%>
+
+<%= turbo_frame_tag "poll-answer-participation-#{answer_id}" do %>
+  <% if participation_charts.any? %>
+    <div class="answer-charts" data-controller="adm-charts">
+      <% participation_charts.each do |chart| %>
+        <div class="answer-chart">
+          <div class="answer-chart--label"><%= chart[:title] %></div>
+          <div
+            class="answer-chart--canvas"
+            data-<%= chart[:type] %>-chart
+            data-chart-labels="<%= (chart[:labels] || []).to_json %>"
+            data-chart-values="<%= (chart[:values] || []).to_json %>"
+            data-chart-colors="<%= (chart[:colors] || []).to_json %>"
+          >
+            <canvas></canvas>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="answer-detail-empty"><%= t("adm.projekts.projekts.evaluation.answer_no_data") %></div>
+  <% end %>
+<% end %>

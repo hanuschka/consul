@@ -1,5 +1,12 @@
 en:
   setting:
+    feature:
+      kobil_login: "Enable KOBIL login"
+      kobil_login_description: "Shows a “Sign in with KOBIL” button on the sign-in and registration pages. Users can then sign in and register with their KOBIL account (OpenID Connect). Requires the KOBIL credentials to be configured on the server."
+      kobil_single_logout: "KOBIL single logout"
+      kobil_single_logout_description: "When the user logs out, they are also signed out of their KOBIL account (single logout). Only effective when KOBIL login is enabled."
+      kobil_address_verification: "KOBIL address verification"
+      kobil_address_verification_description: "Imports the address (street, postal code, city) supplied by the KOBIL account into the user profile. Only effective when KOBIL login is enabled."
     projekt_option:
       general:
         external_participation_link: "Use an alternative link in the project resources"

@@ -83,8 +83,12 @@ class MasterportalPin < ApplicationRecord
     Masterportal::PopupDataBuilder.call(pin: self)
   end
 
+  def self.icon_url_from_properties(pin_properties)
+    pin_properties.to_h["IMAGE_URL"].to_s.strip.presence
+  end
+
   def feature_icon_url
-    properties.to_h["IMAGE_URL"].to_s.strip.presence
+    self.class.icon_url_from_properties(properties)
   end
 
   def associated_resource_url

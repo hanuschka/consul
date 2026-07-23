@@ -89,11 +89,11 @@
 }
 
 .map-popup--source-caption {
-  margin: 8px 0 0;
+  margin: -2px 0 8px;
+  padding: 0 10px;
   font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-style: italic;
+  text-transform: lowercase;
   color: $medium-gray-3;
 }
 

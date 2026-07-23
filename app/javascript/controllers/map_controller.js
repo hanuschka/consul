@@ -32,6 +32,7 @@ export default class extends Controller {
     layers: { type: Array, default: [] },
     mapboxPublicToken: { type: String, default: "" },
     mapboxStyleId: { type: String, default: "" },
+    masterportalDefaultIconUrl: { type: String, default: "" },
     vcMapModuleUrl: { type: String, default: "" }
   }
 
@@ -104,6 +105,7 @@ export default class extends Controller {
       adminEditor: this.adminEditorValue,
       enableSetCenter: this.enableSetCenterValue,
       masterportalEnabled: this.renderingLibraryValue === "leaflet_plus_masterportal",
+      masterportalDefaultIconUrl: this.masterportalDefaultIconUrlValue,
       mapboxPublicToken: this.mapboxPublicTokenValue,
       mapboxStyleId: this.mapboxStyleIdValue,
       vcMapModuleUrl: this.vcMapModuleUrlValue

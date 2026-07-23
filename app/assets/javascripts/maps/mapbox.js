@@ -579,6 +579,7 @@
       const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
 
       this.hasMasterportalPins = masterportalPointFeatures.features.length > 0;
+      this.map.hasMasterportalPins = this.hasMasterportalPins;
 
       if (this.features && Object.keys(this.features).length > 0) {
         this.map.addSource('user-features-points', {
@@ -617,7 +618,9 @@
           paint: {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 16, 16 ],
             'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
-            'circle-opacity': 0.75
+            'circle-opacity': 0.75,
+            'circle-stroke-width': this.hasMasterportalPins ? 3 : 0,
+            'circle-stroke-color': App.Utils.getBrandColor()
           }
         });
 
@@ -944,6 +947,7 @@
 
       const properties = e.features[0].properties;
       const resourceType = properties["resource_type"]
+      const hasMasterportalPins = this.hasMasterportalPins;
 
       // Show empty popup immediately
       var popup = new mapboxgl.Popup({
@@ -964,7 +968,7 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties));
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties, hasMasterportalPins));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');

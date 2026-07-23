@@ -87,3 +87,54 @@
     /* margin-bottom: 0; */
   }
 }
+
+.map-popup--source-caption {
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $medium-gray-3;
+}
+
+.leaflet-div-icon.map-user-pin {
+  background: transparent;
+  border: 0;
+}
+
+.map-user-pin--teardrop {
+  position: relative;
+  display: block;
+  width: 46px;
+  height: 60px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+.map-user-pin--shape {
+  position: absolute;
+  inset: 0;
+  width: 46px;
+  height: 60px;
+  fill: var(--brand-color);
+}
+
+.map-user-pin--icon {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.map-user-pin--icon img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}

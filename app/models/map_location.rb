@@ -43,12 +43,12 @@ class MapLocation < ApplicationRecord
   }
 
   scope :with_proposal_associations, -> {
-    includes(mappable: [:projekt_labels, :sentiment, :masterportal_pin])
+    includes(mappable: [{ projekt_labels: :masterportal_collection }, :sentiment, :masterportal_pin])
       .where(mappable_type: "Proposal")
   }
 
   scope :with_investment_associations, -> {
-    includes(mappable: [:sentiment, :projekt_labels, :masterportal_pin])
+    includes(mappable: [:sentiment, { projekt_labels: :masterportal_collection }, :masterportal_pin])
       .where(mappable_type: "Budget::Investment")
   }
 
@@ -127,7 +127,8 @@ class MapLocation < ApplicationRecord
       "id" => mappable_id,
       "feature_color" => get_feature_color,
       "feature_icon_name" => get_feature_icon_name,
-      "feature_icon_unicode" => get_feature_icon_unicode
+      "feature_icon_unicode" => get_feature_icon_unicode,
+      "feature_icon_url" => get_feature_icon_url
     }.reject { |_k, v| v.in?([nil, ""]) }
 
     extra_properties.merge!(masterportal_feature_properties) if mark_masterportal_pin
@@ -269,6 +270,15 @@ class MapLocation < ApplicationRecord
       return unless icon_name.present?
 
       self.class.awesome_icon_unicode_cache[icon_name]
+    end
+
+    def get_feature_icon_url
+      return if !(mappable.is_a?(Proposal) || mappable.is_a?(Budget::Investment))
+
+      labels = mappable.projekt_labels
+      return if labels.blank? || labels.size != 1
+
+      labels.first.image_icon_url
     end
 
     def update_geocoder_data

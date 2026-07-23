@@ -637,7 +637,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
-    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+    @categories = @projekt_phase.projekt_point_of_interest_categories.manual.ordered
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -693,7 +695,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_labels
     authorize_phase(:update?)
-    @projekt_labels = @projekt_phase.projekt_labels
+    @projekt_labels = @projekt_phase.projekt_labels.manual
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -929,6 +933,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         destroy_status: collection.destroy_status,
         destroy_error: collection.destroy_error
       }
+    end
+
+    def enqueue_collection_taxonomy_sync
+      return if !Masterportal::CollectionTaxonomySyncService.out_of_sync?(projekt_phase: @projekt_phase)
+
+      MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
     end
 
     def masterportal_resync_job_args(collection)

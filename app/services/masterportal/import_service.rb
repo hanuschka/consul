@@ -47,6 +47,11 @@ class Masterportal::ImportService < ApplicationService
     end
 
     finalize_success!
+
+    if @projekt_phase.use_masterportal_collections_as_labels?
+      MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
+    end
+
     @stats
   rescue => e
     Sentry.capture_exception(e) if defined?(Sentry)
@@ -169,8 +174,13 @@ class Masterportal::ImportService < ApplicationService
         import_status: "success",
         import_error: nil,
         last_imported_at: Time.current,
-        last_imported_count: collection.masterportal_pins.count
+        last_imported_count: collection.masterportal_pins.count,
+        icon_url: latest_pin_icon_url(collection)
       )
+    end
+
+    def latest_pin_icon_url(collection)
+      collection.masterportal_pins.order(id: :desc).first&.feature_icon_url
     end
 
     def process_feature(feature:, collection_id:, collection:, collection_title:, endpoint_url:)

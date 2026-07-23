@@ -508,6 +508,26 @@ class ProjektPhase < ApplicationRecord
     labels_name.presence || I18n.t("custom.projekts.page.footer.sidebar.projekt_labels.title")
   end
 
+  def use_masterportal_collections_as_labels?
+    feature?("form.use_masterportal_collections_as_labels") && masterportal_collections.exists?
+  end
+
+  def active_projekt_labels
+    active_masterportal_taxonomy(projekt_labels)
+  end
+
+  def active_projekt_point_of_interest_categories
+    active_masterportal_taxonomy(projekt_point_of_interest_categories)
+  end
+
+  def active_masterportal_taxonomy(scope)
+    use_masterportal_collections_as_labels? ? scope.collection_backed : scope.manual
+  end
+
+  def labels_selector_available?
+    (use_masterportal_collections_as_labels? || feature?("form.labels")) && active_projekt_labels.exists?
+  end
+
   def sentiment_label_text
     sentiments_name.presence || I18n.t("custom.projekts.page.footer.sidebar.sentiments.title")
   end

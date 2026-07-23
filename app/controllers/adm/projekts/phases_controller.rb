@@ -1,4 +1,6 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
+  include Adm::Projekts::MitmachboxPhaseActions
+
   before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
   before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats, :send_notifications]
@@ -6,6 +8,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def new
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
+    @phase_types -= ["ProjektPhase::MitmachboxPhase"] unless Mitmachbox.configured?
 
     @breadcrumbs = [
       { name: @projekt.page.title },
@@ -16,9 +19,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def create
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
+
     @projekt_phase = ProjektPhase.new(create_params.merge(active: true))
 
     if @projekt_phase.save
+      create_mitmachbox_remote_survey if @projekt_phase.is_a?(ProjektPhase::MitmachboxPhase)
       redirect_to phases_adm_projekts_projekt_path(@projekt), notice: t(".success")
     else
       redirect_to new_adm_projekts_projekt_phase_path(@projekt), alert: @projekt_phase.errors.full_messages.join(", ")

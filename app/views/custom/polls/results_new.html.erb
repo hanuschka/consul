@@ -21,16 +21,28 @@
 
         <%= render "poll_header", projekt_phase: @projekt_phase %>
 
-        <% if can? :csv_answers_votes, @poll %>
-          <%= render "polls/results_export_dropdown" %>
-        <% end %>
-
         <% results_public = @projekt_phase.evaluation_tab_publicly_visible?("stats") %>
 
-        <% if poll_evaluation_admin?(@poll) %>
-          <div class="projekt-footer-evaluation__toolbar js-studio-hide-on-preview">
-            <%= render "pages/projekt_footer_new/tab_visibility_toggle",
-              tab: "stats", checked: results_public %>
+        <%
+          results_toolbar = nil
+
+          if can?(:csv_answers_votes, @poll) || poll_evaluation_admin?(@poll)
+            results_toolbar = capture do %>
+              <% if can? :csv_answers_votes, @poll %>
+                <%= render "polls/results_export_dropdown" %>
+              <% end %>
+
+              <% if poll_evaluation_admin?(@poll) %>
+                <%= render "pages/projekt_footer_new/tab_visibility_toggle",
+                  tab: "stats", checked: results_public %>
+              <% end %>
+            <% end
+          end
+        %>
+
+        <% if @results_phase.blank? && results_toolbar.present? %>
+          <div class="projekt-footer-evaluation__toolbar polls-results-toolbar js-studio-hide-on-preview">
+            <%= results_toolbar %>
           </div>
         <% end %>
 
@@ -51,7 +63,8 @@
                   only_tab: "stats",
                   tabbed: false,
                   hidden_sections: ["kpis"],
-                  pdf_mode: false
+                  pdf_mode: false,
+                  header_extra: results_toolbar
                 } %>
             </div>
           </div>

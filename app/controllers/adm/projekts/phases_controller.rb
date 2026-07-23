@@ -546,15 +546,16 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def update_masterportal_collection
     authorize_phase(:update?)
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+
+    if collection.file_source? && !collection.geojson_file.attached?
+      return render json: {
+        message: t("adm.projekts.phases.update_masterportal_collection.missing_file")
+      }, status: :unprocessable_entity
+    end
+
     collection.update!(import_status: "running", import_error: nil)
 
-    MasterportalImportJob.perform_later(
-      projekt_phase_id: @projekt_phase.id,
-      endpoint_url: collection.endpoint_url,
-      collection_ids: [collection.collection_id],
-      create_domain_records: collection.create_domain_records,
-      triggered_by_user_id: current_user.id
-    )
+    MasterportalImportJob.perform_later(**masterportal_resync_job_args(collection))
 
     render json: masterportal_collection_status_payload(collection), status: :accepted
   end
@@ -589,9 +590,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     result = Masterportal::CollectionDiffService.call(masterportal_collection: collection)
 
-    render json: result
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff: result
+      )
+    )
   rescue OgcApiFeatures::Error => e
-    render json: { error: e.message }, status: :bad_gateway
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff_error: e.message
+      )
+    )
   end
 
   def masterportal_collection_card
@@ -626,7 +637,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
-    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+    @categories = @projekt_phase.projekt_point_of_interest_categories.manual.ordered
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -682,7 +695,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_labels
     authorize_phase(:update?)
-    @projekt_labels = @projekt_phase.projekt_labels
+    @projekt_labels = @projekt_phase.projekt_labels.manual
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -918,6 +933,29 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         destroy_status: collection.destroy_status,
         destroy_error: collection.destroy_error
       }
+    end
+
+    def enqueue_collection_taxonomy_sync
+      return if !Masterportal::CollectionTaxonomySyncService.out_of_sync?(projekt_phase: @projekt_phase)
+
+      MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
+    end
+
+    def masterportal_resync_job_args(collection)
+      args = {
+        projekt_phase_id: @projekt_phase.id,
+        create_domain_records: collection.create_domain_records,
+        triggered_by_user_id: current_user.id
+      }
+
+      if collection.file_source?
+        args[:uploaded_collection_ids] = [collection.id]
+      else
+        args[:endpoint_url] = collection.endpoint_url
+        args[:collection_ids] = [collection.collection_id]
+      end
+
+      args
     end
 
     def find_projekt

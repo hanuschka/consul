@@ -37,7 +37,12 @@ class ProjektPhase::StatsRefreshService
       when ProjektPhase::BudgetPhase
         phase.budget&.investments&.where("updated_at > ?", cutoff)&.exists? || false
       when ProjektPhase::CommentPhase
-        phase.comments.where("updated_at > ?", cutoff).exists?
+        phase.comments.where("updated_at > ?", cutoff).exists? ||
+          comment_participants_count(phase) != phase.stats["participants_count"].to_i
       end
+    end
+
+    def comment_participants_count(phase)
+      phase.comments.where(hidden_at: nil).select(:user_id).distinct.count
     end
 end

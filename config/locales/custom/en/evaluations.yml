@@ -2,13 +2,10 @@ en:
   time:
     formats:
       evaluation_header: "%d %B %Y, %H:%M"
-  public:
-    evaluations:
-      generated_at: "Generated at %{time}"
   adm:
     ai_action_button:
       processing: AI is working…
-      feature_description: "Uses AI to generate an evaluation from this project's participation data."
+      feature_description: "Generates an evaluation from this project's participation data. AI analyses are added once the AI feature is enabled."
 
     projekts:
       projekts:
@@ -163,6 +160,14 @@ en:
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           open_responses_show: Show responses
           open_responses_hide: Hide responses
+          open_answers_title: "Open answers — %{answer}"
+          open_answers_show: Show answers
+          open_answers_hide: Hide answers
+          open_answers_anonymized: anonymized
+          open_answers_prev: Previous
+          open_answers_next: Next
+          open_answers_page_status: "Page {current} of {total}"
+          open_answers_csv_hint: "%{count} open answers — full list in the CSV export."
           verdict:
             clear_yes: Clearly in favor
             majority_yes: Majority in favor
@@ -187,6 +192,7 @@ en:
             aria_label: Switch evaluation view
             stats: Results
             ai: AI analysis
+            ai_tab_disabled_hint: "AI-based evaluation of this project's participation data."
             poll_stats: Statistics
             poll_stats_live: Live data
             budget_results: Voting results

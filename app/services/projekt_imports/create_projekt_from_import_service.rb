@@ -12,15 +12,10 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     "budget" => ProjektImports::Builders::BudgetBuilder
   }.freeze
 
-  RESTRICTED_PROJEKT_SETTINGS = %w[
-    projekt_feature.main.activate
-    projekt_feature.general.show_in_navigation
-    projekt_feature.general.show_in_overview_page
-    projekt_feature.general.show_in_overview_page_navigation
-    projekt_feature.general.show_in_homepage
-    projekt_feature.general.show_in_individual_list
-    projekt_feature.general.allow_indexing
-    projekt_option.general.external_participation_link
+  ALLOWED_PROJEKT_SETTINGS = %w[
+    projekt_feature.general.allow_downvoting_comments
+    projekt_feature.general.consider_underway
+    projekt_custom_feature.default_footer_tab
   ].freeze
 
   HIDDEN_DRAFT_SETTINGS = %w[
@@ -157,7 +152,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
     settings.each do |key, value|
       next if value.nil?
-      next if RESTRICTED_PROJEKT_SETTINGS.include?(key)
+      next if ALLOWED_PROJEKT_SETTINGS.exclude?(key)
 
       setting = projekt.projekt_settings.find_by(key: key)
       next if setting.blank?

@@ -7,6 +7,8 @@
     section_partial.key?((row.data || {})["phase_type"])
   end
 
+  ai_available = Ai::Settings.ai_available?
+
   data = evaluation.data || {}
   summary_text = data["ai_project_summary"].presence ||
     evaluation_plain_text(data["project_content_summary"]).presence ||
@@ -182,15 +184,27 @@
             </span>
 
             <% if has_ai %>
-              <a
-                href="<%= ai_regenerate_url %>"
-                class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn"
-                data-action="click->adm--phase-regenerate#start"
-                data-turbo-prefetch="false"
-              >
-                <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
-                <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
-              </a>
+              <% if ai_available %>
+                <a
+                  href="<%= ai_regenerate_url %>"
+                  class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn"
+                  data-action="click->adm--phase-regenerate#start"
+                  data-turbo-prefetch="false"
+                >
+                  <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
+                  <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
+                </a>
+              <% else %>
+                <%= render Shared::AiFeatureTooltipComponent.new(
+                  feature_title: t("adm.projekts.projekts.evaluation.card.ai_badge"),
+                  feature_text: t("adm.projekts.projekts.evaluation.view_tabs.ai_tab_disabled_hint")
+                ) do %>
+                  <span class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn" aria-disabled="true">
+                    <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
+                    <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
+                  </span>
+                <% end %>
+              <% end %>
 
               <%= link_to ai_open_url,
                 class: "kern-btn kern-btn--compact adm-evaluation-row__open",
@@ -198,7 +212,7 @@
                 <span class="kern-label material-symbols-outlined" aria-hidden="true">arrow_forward</span>
                 <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.open") %></span>
               <% end %>
-            <% else %>
+            <% elsif ai_available %>
               <span class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn -disabled" aria-disabled="true">
                 <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
                 <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>

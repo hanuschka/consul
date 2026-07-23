@@ -11,15 +11,16 @@
   }
 
   exportable = local_assigns.fetch(:exportable, false)
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
 %>
 
 <% questions.each do |question| %>
   <% if (question["nested_questions"] || []).any? %>
     <%= render partial: "adm/projekts/projekts/evaluation/poll_question_bundle",
-      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable, pdf_mode: pdf_mode } %>
   <% else %>
     <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
     <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
-      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable, pdf_mode: pdf_mode } %>
   <% end %>
 <% end %>

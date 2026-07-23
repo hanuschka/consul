@@ -38,6 +38,8 @@
   ai_generated_at_text = format_generated_at.call(phase["ai_generated_at"])
   regular_generated_at_text = format_generated_at.call(phase["regular_generated_at"])
   stats_live = @live_phase_stats.present?
+  ai_tab_disabled = !Ai::Settings.ai_available? && !phase_has_ai_content?(phase)
+  ai_regen_blocked = !Ai::Settings.ai_available? && phase_has_ai_content?(phase)
 %>
 
 <%= content_for :title, [
@@ -68,6 +70,7 @@
     data-adm--evaluation-tabs-ai-url-value="<%= ai_stats_url %>"
     data-adm--evaluation-tabs-regular-label-value="<%= t('adm.projekts.projekts.evaluation.regenerate_regular_stats_button') %>"
     data-adm--evaluation-tabs-ai-label-value="<%= t('adm.projekts.projekts.evaluation.regenerate_ai_stats_button') %>"
+    data-adm--evaluation-tabs-ai-regen-blocked-value="<%= ai_regen_blocked %>"
   >
     <% if !@phase_row.processing? && !@phase_row.failed? %>
       <div class="adm-evaluation-view-tabs-wrap" data-adm--evaluation-tabs-target="bar">
@@ -153,24 +156,37 @@
         </custom-tab>
         <custom-tab
           for="ai"
-          class="adm-evaluation-view-tabs--tab"
+          class="adm-evaluation-view-tabs--tab<%= " -disabled" if ai_tab_disabled %>"
+          <%= "disabled" if ai_tab_disabled %>
         >
-          <span class="adm-evaluation-view-tabs--tab-label">
-            <span
-              class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
-              aria-hidden="true"
-            >auto_awesome</span>
-            <i
-              class="adm-evaluation-view-tabs--icon fas fa-magic projekt-evaluation-icon-fa"
-              aria-hidden="true"
-            ></i>
-            <%= t("adm.projekts.projekts.evaluation.view_tabs.ai") %>
-          </span>
-          <span class="adm-evaluation-view-tabs--date">
-            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
-            <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            <%= ai_generated_at_text %>
-          </span>
+          <% ai_tab_label = capture do %>
+            <span class="adm-evaluation-view-tabs--tab-label">
+              <span
+                class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+                aria-hidden="true"
+              >auto_awesome</span>
+              <i
+                class="adm-evaluation-view-tabs--icon fas fa-magic projekt-evaluation-icon-fa"
+                aria-hidden="true"
+              ></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.ai") %>
+            </span>
+          <% end %>
+          <% if ai_tab_disabled %>
+            <%= render Shared::AiFeatureTooltipComponent.new(
+              feature_title: t("adm.projekts.projekts.evaluation.view_tabs.ai"),
+              feature_text: t("adm.projekts.projekts.evaluation.view_tabs.ai_tab_disabled_hint")
+            ) do %>
+              <%= ai_tab_label %>
+            <% end %>
+          <% else %>
+            <%= ai_tab_label %>
+            <span class="adm-evaluation-view-tabs--date">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
+              <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= ai_generated_at_text %>
+            </span>
+          <% end %>
         </custom-tab>
       </div>
 
@@ -206,6 +222,21 @@
             </a>
             <template><%= t("adm.projekts.projekts.evaluation.regenerate_tooltip") %></template>
           </rich-tooltip>
+
+          <% if ai_regen_blocked %>
+            <span data-adm--evaluation-tabs-target="regenerateAiDisabled" hidden>
+              <%= render Shared::AiFeatureTooltipComponent.new(
+                feature_title: t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button"),
+                feature_text: t("adm.projekts.projekts.evaluation.view_tabs.ai_tab_disabled_hint")
+              ) do %>
+                <span class="kern-btn kern-btn--secondary kern-btn--compact" aria-disabled="true">
+                  <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">autorenew</span>
+                  <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+                  <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button") %></span>
+                </span>
+              <% end %>
+            </span>
+          <% end %>
         </div>
       </div>
       </div>

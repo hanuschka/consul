@@ -113,6 +113,10 @@ class Proposal < ApplicationRecord
       .not_retired
   }
 
+  def sentiment_required?
+    super && masterportal_pin_id.blank?
+  end
+
   def self.proposals_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_up random]
     # orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals

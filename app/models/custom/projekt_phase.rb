@@ -63,6 +63,8 @@ class ProjektPhase < ApplicationRecord
 
   DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
 
+  FOOTER_HIDDEN_EVALUATION_SECTIONS = %w[kpis heatmap].freeze
+
   PHASE_FA_ICONS = {
     "ProjektPhase::CommentPhase" => "fa-comment",
     "ProjektPhase::ProposalPhase" => "fa-lightbulb",
@@ -431,12 +433,13 @@ class ProjektPhase < ApplicationRecord
 
     available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
     visible = visibility.visible_sections & available
+    footer_visible = visible - FOOTER_HIDDEN_EVALUATION_SECTIONS
     ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
 
     tabs = []
     tabs << "poll_stats" if visibility.show_poll_stats
-    tabs << "stats" if visible.any? { |key| !ai_keys.include?(key) }
-    tabs << "ai" if visible.any? { |key| ai_keys.include?(key) }
+    tabs << "stats" if footer_visible.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if footer_visible.any? { |key| ai_keys.include?(key) }
 
     tabs
   end
@@ -503,6 +506,26 @@ class ProjektPhase < ApplicationRecord
 
   def projekt_labels_label_text
     labels_name.presence || I18n.t("custom.projekts.page.footer.sidebar.projekt_labels.title")
+  end
+
+  def use_masterportal_collections_as_labels?
+    feature?("form.use_masterportal_collections_as_labels") && masterportal_collections.exists?
+  end
+
+  def active_projekt_labels
+    active_masterportal_taxonomy(projekt_labels)
+  end
+
+  def active_projekt_point_of_interest_categories
+    active_masterportal_taxonomy(projekt_point_of_interest_categories)
+  end
+
+  def active_masterportal_taxonomy(scope)
+    use_masterportal_collections_as_labels? ? scope.collection_backed : scope.manual
+  end
+
+  def labels_selector_available?
+    (use_masterportal_collections_as_labels? || feature?("form.labels")) && active_projekt_labels.exists?
   end
 
   def sentiment_label_text

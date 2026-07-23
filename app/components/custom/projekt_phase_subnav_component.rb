@@ -1,7 +1,8 @@
 class ProjektPhaseSubnavComponent < ApplicationComponent
   delegate :current_user, :can?, :phase_icon_class,
     :footer_evaluation_tab_public_visible?, :footer_evaluation_tab_available?,
-    :footer_evaluation_tab_disabled?, :hidden_from_public_tooltip, to: :helpers
+    :footer_evaluation_tab_disabled?, :hidden_from_public_tooltip,
+    :footer_evaluation_tab_label, to: :helpers
 
   def initialize(projekt_phase)
     @projekt_phase = projekt_phase
@@ -26,7 +27,7 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
     if voting_phase? && show_evaluation_tab?("poll_stats")
       items << {
-        text: t("adm.projekts.projekts.evaluation.view_tabs.poll_stats"),
+        text: footer_evaluation_tab_label(@projekt_phase, "poll_stats"),
         icon: "fa-chart-pie",
         url: url_to_footer_tab(section: "poll_stats", remote: true),
         active: params[:section] == "poll_stats",
@@ -71,19 +72,11 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
     end
 
     def stats_tab_text
-      if voting_phase?
-        t("adm.projekts.projekts.evaluation.view_tabs.stats")
-      else
-        t("custom.projekt_phases.subnav.evaluation")
-      end
+      footer_evaluation_tab_label(@projekt_phase, "stats")
     end
 
     def ai_tab_text
-      if voting_phase?
-        t("adm.projekts.projekts.evaluation.view_tabs.ai")
-      else
-        t("custom.projekt_phases.subnav.ai_evaluation")
-      end
+      footer_evaluation_tab_label(@projekt_phase, "ai")
     end
 
     def show_evaluation_tab?(tab)

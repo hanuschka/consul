@@ -2,13 +2,10 @@ de:
   time:
     formats:
       evaluation_header: "%d. %B %Y, %H:%M Uhr"
-  public:
-    evaluations:
-      generated_at: "Erstellt am %{time}"
   adm:
     ai_action_button:
       processing: KI arbeitet…
-      feature_description: "Erstellt mit KI eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts."
+      feature_description: "Erstellt eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts. KI-Analysen werden ergänzt, sobald die KI-Funktion aktiviert ist."
 
     projekts:
       projekts:
@@ -165,6 +162,14 @@ de:
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen
           open_responses_hide: Beiträge ausblenden
+          open_answers_title: "Offene Antworten — %{answer}"
+          open_answers_show: Antworten anzeigen
+          open_answers_hide: Antworten ausblenden
+          open_answers_anonymized: anonymisiert
+          open_answers_prev: Zurück
+          open_answers_next: Weiter
+          open_answers_page_status: "Seite {current} von {total}"
+          open_answers_csv_hint: "%{count} offene Antworten — vollständige Liste im CSV-Export."
           verdict:
             clear_yes: Klar dafür
             majority_yes: Mehrheit dafür
@@ -189,6 +194,7 @@ de:
             aria_label: Ansicht der Auswertung wechseln
             stats: Ergebnis
             ai: KI-Analyse
+            ai_tab_disabled_hint: "KI-gestützte Auswertung der Beteiligungsdaten dieses Projekts."
             poll_stats: Statistiken
             poll_stats_live: Live-Daten
             budget_results: Abstimmungsergebnisse

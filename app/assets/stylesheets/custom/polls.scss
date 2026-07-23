@@ -32,6 +32,15 @@
   margin: 0;
 }
 
+.polls-results-toolbar {
+  justify-content: flex-end;
+}
+
+.polls-results-toolbar .polls-results-export,
+.poll-header__extra .polls-results-export {
+  margin-bottom: 0;
+}
+
 
 // Open answers in results
 

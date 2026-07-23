@@ -8,7 +8,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def list
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
 
-    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(updated_at: :desc), params)
+    default_order = Arel.sql("projekts.content_updated_at DESC NULLS LAST, projekts.created_at DESC")
+    base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(default_order), params)
     @pagy, @projekts = pagy(base_scope, limit: 10)
 
     @name_header_options = { sort: true, search: true }
@@ -248,15 +249,18 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     @evaluation = @projekt.projekt_evaluation
     @projekt_phases = @projekt.projekt_phases.sorted
       .includes(:projekt_phase_evaluation_visibility)
-    @phase_visibilities = build_phase_visibility_map(@projekt_phases)
 
-    back_phase_id = params[:phase_id].to_i
-    @back_button_url =
-      if back_phase_id.positive? && @projekt_phases.any? { |phase| phase.id == back_phase_id }
-        evaluation_phase_adm_projekts_projekt_path(@projekt, phase_id: back_phase_id)
-      else
-        evaluation_adm_projekts_projekt_path(@projekt)
-      end
+    requested_phase_id = params[:phase_id].to_i
+    requested_phase = @projekt_phases.find { |phase| phase.id == requested_phase_id }
+
+    if requested_phase
+      @projekt_phases = [requested_phase]
+      @back_button_url = evaluation_phase_adm_projekts_projekt_path(@projekt, phase_id: requested_phase.id)
+    else
+      @back_button_url = evaluation_adm_projekts_projekt_path(@projekt)
+    end
+
+    @phase_visibilities = build_phase_visibility_map(@projekt_phases)
 
     @breadcrumbs = [
       { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
@@ -278,7 +282,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       format.html do
         flash[:notice] = t(".success")
 
-        redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt)
+        redirect_to evaluation_visibility_adm_projekts_projekt_path(@projekt, phase_id: params[:phase_id].presence)
       end
     end
   end
@@ -294,7 +298,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       visible: params[:visible]
     )
 
-    head :no_content
+    render json: { tabs: footer_evaluation_tab_visibility(projekt_phase) }
   end
 
   def toggle_evaluation_tab_visibility
@@ -308,7 +312,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       visible: params[:visible]
     )
 
-    head :no_content
+    render json: { tabs: footer_evaluation_tab_visibility(projekt_phase) }
   end
 
   def generate_evaluation
@@ -591,6 +595,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   end
 
   private
+
+    def footer_evaluation_tab_visibility(projekt_phase)
+      {
+        poll_stats: projekt_phase.evaluation_tab_publicly_visible?("poll_stats"),
+        stats: projekt_phase.evaluation_tab_publicly_visible?("stats"),
+        ai: projekt_phase.evaluation_tab_publicly_visible?("ai")
+      }
+    end
 
     def enqueue_phase_regeneration(job_class)
       authorize [:adm, :projekts, @projekt], :update?

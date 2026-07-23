@@ -176,6 +176,9 @@ en:
           create_button: Create new label
           no_labels_title: No labels available
           no_labels_description: Create labels to thematically categorize proposals and improve clarity on the frontend. Labels are shown as icons on proposals and let users filter by specific topics. Each label can be given its own icon to make visual attribution easier.
+          tabs:
+            labels: Labels
+            collections: Masterportal collections
           table:
             icon: Icon
             name: Name
@@ -276,6 +279,9 @@ en:
           no_categories: No categories available.
           no_categories_title: No categories available
           no_categories_description: Create categories to thematically group points of interest and provide them as filter options on the frontend. Each category can be given its own icon and a color to make visual distinction on the map easier. Categories help users search specifically for particular topics.
+          tabs:
+            categories: Categories
+            collections: Masterportal collections
           table:
             name: Name
             icon: Icon

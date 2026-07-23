@@ -26,6 +26,7 @@
       this.overlayLayers = {};
       this.adminFeatures = $element.data("admin-features");
       this.masterportalPinsLayerLabel = $element.data("masterportal-pins-layer-label") || "Masterportal-Pins";
+      this.masterportalDefaultIconUrl = $element.data("masterportal-default-icon-url");
 
       // Features configuration
       this.features = $element.data("features");
@@ -578,6 +579,7 @@
       const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
 
       this.hasMasterportalPins = masterportalPointFeatures.features.length > 0;
+      this.map.hasMasterportalPins = this.hasMasterportalPins;
 
       if (this.features && Object.keys(this.features).length > 0) {
         this.map.addSource('user-features-points', {
@@ -616,7 +618,9 @@
           paint: {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 16, 16 ],
             'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
-            'circle-opacity': 0.75
+            'circle-opacity': 0.75,
+            'circle-stroke-width': this.hasMasterportalPins ? 3 : 0,
+            'circle-stroke-color': App.Utils.getBrandColor()
           }
         });
 
@@ -692,7 +696,7 @@
           })
 
           if (this.hasMasterportalPins) {
-            ['masterportal-pins-circles'].forEach(function(layerId) {
+            ['masterportal-pins-circles', 'masterportal-pins-icons'].forEach(function(layerId) {
               instance.map.on('mouseenter', layerId, () => {
                 instance.map.getCanvas().style.cursor = 'pointer';
               });
@@ -741,7 +745,7 @@
         id: 'masterportal-pins-circles',
         type: 'circle',
         source: 'masterportal-pins-points',
-        filter: ['!', ['has', 'point_count']],
+        filter: ['all', ['!', ['has', 'point_count']], ['!', ['has', 'feature_icon_id']]],
         paint: {
           'circle-radius': 16,
           'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
@@ -762,6 +766,141 @@
           });
         });
       });
+
+      this.addMasterportalPinIcons(featureCollection);
+    }
+
+    addMasterportalPinIcons(featureCollection) {
+      const iconIdsByUrl = this.collectMasterportalIconIds(featureCollection);
+
+      if (this.masterportalDefaultIconUrl && !iconIdsByUrl[this.masterportalDefaultIconUrl]) {
+        iconIdsByUrl[this.masterportalDefaultIconUrl] = 'masterportal-pin-icon-default';
+      }
+
+      const iconUrls = Object.keys(iconIdsByUrl);
+
+      if (iconUrls.length === 0) return;
+
+      const loadState = {
+        featureCollection: featureCollection,
+        iconIdsByUrl: iconIdsByUrl,
+        loadedIconsByUrl: {},
+        pendingLoads: iconUrls.length
+      };
+
+      iconUrls.forEach((iconUrl) => {
+        this.loadMasterportalIconImage(iconUrl, (error, image) => {
+          this.handleMasterportalPinIconLoad(loadState, iconUrl, error, image);
+        });
+      });
+    }
+
+    loadMasterportalIconImage(iconUrl, callback) {
+      const image = new Image();
+
+      image.crossOrigin = 'anonymous';
+      image.onload = function() { callback(null, image); };
+      image.onerror = function() { callback(new Error('Masterportal icon load failed: ' + iconUrl)); };
+      image.src = encodeURI(iconUrl);
+    }
+
+    collectMasterportalIconIds(featureCollection) {
+      const iconIdsByUrl = {};
+
+      featureCollection.features.forEach(function(feature) {
+        const iconUrl = feature.properties && feature.properties.feature_icon_url;
+
+        if (iconUrl && !iconIdsByUrl[iconUrl]) {
+          iconIdsByUrl[iconUrl] = 'masterportal-pin-icon-' + Object.keys(iconIdsByUrl).length;
+        }
+      });
+
+      return iconIdsByUrl;
+    }
+
+    handleMasterportalPinIconLoad(loadState, iconUrl, error, image) {
+      if (!error && image) {
+        const iconId = loadState.iconIdsByUrl[iconUrl];
+
+        try {
+          if (!this.map.hasImage(iconId)) {
+            this.map.addImage(iconId, this.rasterizeMasterportalIcon(image), { pixelRatio: 2 });
+          }
+
+          loadState.loadedIconsByUrl[iconUrl] = iconId;
+        } catch (rasterizationError) {
+          console.warn('Masterportal icon rasterization failed', iconUrl, rasterizationError);
+        }
+      }
+
+      loadState.pendingLoads -= 1;
+
+      if (loadState.pendingLoads === 0) {
+        this.applyMasterportalPinIcons(loadState.featureCollection, loadState.loadedIconsByUrl);
+      }
+    }
+
+    rasterizeMasterportalIcon(image) {
+      const size = 72;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+
+      const context = canvas.getContext('2d');
+      const naturalWidth = image.naturalWidth || size;
+      const naturalHeight = image.naturalHeight || size;
+      const scale = Math.min(size / naturalWidth, size / naturalHeight);
+      const drawWidth = naturalWidth * scale;
+      const drawHeight = naturalHeight * scale;
+
+      context.drawImage(image, (size - drawWidth) / 2, (size - drawHeight) / 2, drawWidth, drawHeight);
+
+      return context.getImageData(0, 0, size, size);
+    }
+
+    applyMasterportalPinIcons(featureCollection, loadedIconsByUrl) {
+      if (Object.keys(loadedIconsByUrl).length === 0) return;
+
+      const source = this.map.getSource('masterportal-pins-points');
+
+      if (!source) return;
+
+      const defaultIconId = this.masterportalDefaultIconUrl ?
+        loadedIconsByUrl[this.masterportalDefaultIconUrl] : null;
+
+      featureCollection.features.forEach(function(feature) {
+        if (!feature.properties) return;
+
+        const iconId = loadedIconsByUrl[feature.properties.feature_icon_url] || defaultIconId;
+
+        if (iconId) {
+          feature.properties.feature_icon_id = iconId;
+        }
+      });
+
+      source.setData(featureCollection);
+      this.addMasterportalPinsIconsLayer();
+    }
+
+    addMasterportalPinsIconsLayer() {
+      if (this.map.getLayer('masterportal-pins-icons')) return;
+
+      const layout = {
+        'icon-image': ['get', 'feature_icon_id'],
+        'icon-allow-overlap': true
+      };
+
+      if (this.map.getLayoutProperty('masterportal-pins-circles', 'visibility') === 'none') {
+        layout.visibility = 'none';
+      }
+
+      this.map.addLayer({
+        id: 'masterportal-pins-icons',
+        type: 'symbol',
+        source: 'masterportal-pins-points',
+        filter: ['all', ['!', ['has', 'point_count']], ['has', 'feature_icon_id']],
+        layout: layout
+      });
     }
 
     addMasterportalPinsCheckbox() {
@@ -771,7 +910,8 @@
       const layerIds = [
         'masterportal-pins-circles-clusters',
         'masterportal-pins-circles-cluster-count',
-        'masterportal-pins-circles'
+        'masterportal-pins-circles',
+        'masterportal-pins-icons'
       ];
 
       const label = document.createElement('label');
@@ -807,6 +947,7 @@
 
       const properties = e.features[0].properties;
       const resourceType = properties["resource_type"]
+      const hasMasterportalPins = this.hasMasterportalPins;
 
       // Show empty popup immediately
       var popup = new mapboxgl.Popup({
@@ -827,7 +968,7 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties));
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties, hasMasterportalPins));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_17_072646) do
+ActiveRecord::Schema.define(version: 2026_07_23_123941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1636,6 +1636,8 @@ ActiveRecord::Schema.define(version: 2026_07_17_072646) do
     t.text "destroy_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source", default: "geoserver", null: false
+    t.string "icon_url"
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
@@ -2157,12 +2159,10 @@ ActiveRecord::Schema.define(version: 2026_07_17_072646) do
     t.jsonb "data", default: {}
     t.jsonb "selected_question_ids", default: []
     t.datetime "generated_at"
-    t.string "share_token"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
-    t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
     t.index ["status"], name: "index_projekt_evaluations_on_status"
   end
 
@@ -2261,7 +2261,9 @@ ActiveRecord::Schema.define(version: 2026_07_17_072646) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "projekt_phase_id"
+    t.integer "masterportal_collection_id"
     t.index ["projekt_id"], name: "index_projekt_labels_on_projekt_id"
+    t.index ["projekt_phase_id", "masterportal_collection_id"], name: "index_projekt_labels_on_phase_and_masterportal_collection", unique: true, where: "(masterportal_collection_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_labels_on_projekt_phase_id"
   end
 
@@ -2453,6 +2455,8 @@ ActiveRecord::Schema.define(version: 2026_07_17_072646) do
     t.integer "position", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "masterportal_collection_id"
+    t.index ["projekt_phase_id", "masterportal_collection_id"], name: "index_poi_categories_on_phase_and_masterportal_collection", unique: true, where: "(masterportal_collection_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_categories_on_projekt_phase_id"
   end
 
@@ -2611,6 +2615,7 @@ ActiveRecord::Schema.define(version: 2026_07_17_072646) do
     t.datetime "published_at"
     t.boolean "imported_by_ai", default: false, null: false
     t.string "banner_image_generation_status"
+    t.datetime "content_updated_at"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
@@ -3472,7 +3477,7 @@ ActiveRecord::Schema.define(version: 2026_07_17_072646) do
   add_foreign_key "administrators", "users"
   add_foreign_key "age_range_projekt_phases", "age_ranges"
   add_foreign_key "age_range_projekt_phases", "projekt_phases"
-  add_foreign_key "ai_chat_messages", "ai_chat_messages", column: "user_message_id"
+  add_foreign_key "ai_chat_messages", "ai_chat_messages", column: "user_message_id", on_delete: :nullify
   add_foreign_key "ai_chat_messages", "ai_chats"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"

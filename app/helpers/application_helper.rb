@@ -94,14 +94,6 @@ module ApplicationHelper
     count
   end
 
-  def use_mapbox?(projekt = nil)
-    if projekt.present?
-      Setting["feature.mapbox"].present? || projekt_feature?(projekt, "general.mapbox")
-    else
-      Setting["feature.mapbox"].present?
-    end
-  end
-
   def show_admin_controls_for_projekt?(projekt)
     Pundit.policy(current_user, [:adm, :projekts, projekt])&.update? || false
   end

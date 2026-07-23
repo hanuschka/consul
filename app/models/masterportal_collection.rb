@@ -1,6 +1,14 @@
 class MasterportalCollection < ApplicationRecord
   belongs_to :projekt_phase
   has_many :masterportal_pins, dependent: :nullify
+  has_many :projekt_labels, dependent: :destroy
+  has_many :projekt_point_of_interest_categories, dependent: :destroy
+  has_one_attached :geojson_file
+
+  enum source: {
+    geoserver: "geoserver",
+    file: "file"
+  }, _prefix: true
 
   validates :collection_id, presence: true
   validates :collection_id, uniqueness: { scope: :projekt_phase_id }
@@ -11,7 +19,12 @@ class MasterportalCollection < ApplicationRecord
     name.presence || collection_id
   end
 
+  def file_source?
+    source_file?
+  end
+
   def source_url
+    return if file_source?
     return if endpoint_url.blank? || collection_id.blank?
 
     OgcApiFeatures::Client.items_url(endpoint_url, collection_id)
@@ -25,8 +38,13 @@ class MasterportalCollection < ApplicationRecord
     masterportal_pins.with_associated_record.distinct.count
   end
 
-  def icon_url
-    masterportal_pins.order(id: :desc).first&.feature_icon_url
+  def encoded_icon_url
+    raw = icon_url
+    return if raw.blank?
+
+    Addressable::URI.parse(raw).normalize.to_s
+  rescue Addressable::URI::InvalidURIError
+    nil
   end
 
   def import_running?

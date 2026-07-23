@@ -1,22 +1,28 @@
 App.MapPopup = {
   excludedProcesses: ["proposal", "deficiency_report", "idea", "projekt", "projekt_point_of_interest_pin"],
 
-  generatePopupContent: function(data, resourceType, properties) {
+  generatePopupContent: function(data, resourceType, properties, hasMasterportalContext) {
     if (resourceType == "proposal") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, hasMasterportalContext);
     } else if (resourceType == "deficiency_report") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, hasMasterportalContext);
     } else if (resourceType == "idea") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, hasMasterportalContext);
     } else if (resourceType == "projekt") {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, hasMasterportalContext);
     } else if (resourceType == "projekt_point_of_interest_pin") {
       return this.pointOfInterestPopupContent(data, properties);
     } else if (resourceType == "masterportal_pin") {
-      return this.masterportalPinPopupContent(data);
+      return this.masterportalPinPopupContent(data, hasMasterportalContext);
     } else {
-      return this.standardResourcePopupContent(data, resourceType);
+      return this.standardResourcePopupContent(data, resourceType, hasMasterportalContext);
     }
+  },
+
+  sourceCaption: function(isMasterportal) {
+    var text = isMasterportal ? "Masterportal-Eintrag" : "Nutzerbeitrag";
+
+    return "<div class='map-popup--source-caption'>" + text + "</div>";
   },
 
   getPopupDataUrl: function(resourceType, properties) {
@@ -52,7 +58,7 @@ App.MapPopup = {
     }
   },
 
-  standardResourcePopupContent: function(data, resourceType) {
+  standardResourcePopupContent: function(data, resourceType, hasMasterportalContext) {
     var url = this.getResourceUrl(data, resourceType)
 
     if (data.projekt_phase_id) {
@@ -66,6 +72,10 @@ App.MapPopup = {
     }
     else {
       popupHtml = "<h5>" + data.title + "</h5>"; //title
+    }
+
+    if (hasMasterportalContext) {
+      popupHtml += this.sourceCaption(false);
     }
 
     if (data.image_url) {
@@ -96,6 +106,7 @@ App.MapPopup = {
 
       popupHtml += "</div>";
     }
+
     popupHtml = "<div class='proposal-map-popup-content'>" + popupHtml + "</div>"
 
     return popupHtml;
@@ -110,7 +121,7 @@ App.MapPopup = {
     return popupHtml;
   },
 
-  masterportalPinPopupContent: function(data) {
+  masterportalPinPopupContent: function(data, hasMasterportalContext) {
     var headerHtml = this.masterportalPinHeader(data);
     var rowsHtml = (data.popup_data || []).map(this.masterportalPinRow.bind(this)).join("");
 
@@ -119,6 +130,10 @@ App.MapPopup = {
 
     if (rowsHtml) {
       html += "<dl class='masterportal-popup--rows'>" + rowsHtml + "</dl>";
+    }
+
+    if (hasMasterportalContext) {
+      html += this.sourceCaption(true);
     }
 
     html += "</div>";

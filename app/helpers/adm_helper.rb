@@ -69,7 +69,10 @@ module AdmHelper
     "map_resources_overview" => "layers",
     "legislation_process_draft_versions" => "description",
     "age_ranges_for_stats" => "pie_chart",
-    "email_templates" => "mail"
+    "email_templates" => "mail",
+    "mitmachbox_survey" => "ballot",
+    "mitmachbox_deployments" => "devices",
+    "mitmachbox_results" => "bar_chart"
   }.freeze
 
   PHASE_MODERATION_ACTIONS = %w[proposals comments budget_investments].freeze

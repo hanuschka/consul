@@ -78,6 +78,9 @@ de:
             newsfeed:
               name: Newsfeed
               description: "Anzeige von Projektneuigkeiten und Statusmeldungen in chronologischer Reihenfolge. Funktioniert wie ein Nachrichtenfeed, über den Administratoren laufend über Entwicklungen und Entscheidungen berichten können. Geeignet für längerfristige Projekte, bei denen die Teilnehmer regelmäßig über den aktuellen Stand informiert werden sollen."
+            mitmachbox:
+              name: Mitmachbox
+              description: "Offline-Beteiligung über Mitmachbox-Geräte: batteriebetriebene Umfrageterminals mit E-Paper-Display, die an öffentlichen Orten aufgestellt werden. Die Umfrage wird hier erstellt, auf ausgeliehene Geräte ausgespielt und die vor Ort gesammelten Antworten werden gebündelt übertragen. Ergebnisse sind für Administratoren einsehbar und exportierbar. Geeignet, um Menschen ohne Online-Zugang einzubeziehen."
           select_phase_type: Bitte wählen...
           create_phase: Phase erstellen
         create:
@@ -583,3 +586,6 @@ de:
           user_resource_criteria: KI Bewertungskriterien
           comments: Kommentare
           email_templates: System-E-Mails
+          mitmachbox_survey: Umfrage
+          mitmachbox_deployments: Geräte
+          mitmachbox_results: Ergebnisse

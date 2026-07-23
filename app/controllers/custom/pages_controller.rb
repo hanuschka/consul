@@ -483,6 +483,9 @@ class PagesController < ApplicationController
       @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
     end
 
+    def set_mitmachbox_phase_footer_tab_variables
+    end
+
     def set_iframe_phase_footer_tab_variables
       @iframe_url = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_url" }.value
       @iframe_width = @projekt_phase.settings.find { |s| s.key == "option.general.iframe_width" }.value

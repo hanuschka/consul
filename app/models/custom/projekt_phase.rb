@@ -24,7 +24,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   DEPRECATED_PHASE_TYPES = [
@@ -58,6 +59,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "live_tv",
     "ProjektPhase::ArgumentPhase" => "forum",
     "ProjektPhase::NewsfeedPhase" => "feed",
+    "ProjektPhase::MitmachboxPhase" => "markunread_mailbox",
     "ProjektPhase::DebatePhase" => "forum"
   }.freeze
 
@@ -81,6 +83,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "fa-tv",
     "ProjektPhase::ArgumentPhase" => "fa-comments",
     "ProjektPhase::NewsfeedPhase" => "fa-rss",
+    "ProjektPhase::MitmachboxPhase" => "fa-box-open",
     "ProjektPhase::DebatePhase" => "fa-comments"
   }.freeze
 

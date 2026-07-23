@@ -70,6 +70,7 @@ class Kern::MapComponent < ApplicationComponent
       map_layers_value: layers_json,
       map_mapbox_public_token_value: mapbox_public_token,
       map_mapbox_style_id_value: mapbox_style_id,
+      map_masterportal_default_icon_url_value: masterportal_default_icon_url,
       map_vc_map_module_url_value: vc_map_module_url
     }
   end
@@ -172,6 +173,10 @@ class Kern::MapComponent < ApplicationComponent
         "show_by_default" => true,
         "base" => false
       }]
+    end
+
+    def masterportal_default_icon_url
+      helpers.image_path("masterportal/pins/default_pin.svg")
     end
 
     def mapbox_public_token

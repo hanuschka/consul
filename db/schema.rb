@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_22_150135) do
+ActiveRecord::Schema.define(version: 2026_07_23_123941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3477,7 +3477,7 @@ ActiveRecord::Schema.define(version: 2026_07_22_150135) do
   add_foreign_key "administrators", "users"
   add_foreign_key "age_range_projekt_phases", "age_ranges"
   add_foreign_key "age_range_projekt_phases", "projekt_phases"
-  add_foreign_key "ai_chat_messages", "ai_chat_messages", column: "user_message_id"
+  add_foreign_key "ai_chat_messages", "ai_chat_messages", column: "user_message_id", on_delete: :nullify
   add_foreign_key "ai_chat_messages", "ai_chats"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"

@@ -128,12 +128,12 @@ App.MapPopup = {
     var html = "<div class='masterportal-popup'>";
     html += headerHtml;
 
-    if (rowsHtml) {
-      html += "<dl class='masterportal-popup--rows'>" + rowsHtml + "</dl>";
-    }
-
     if (hasMasterportalContext) {
       html += this.sourceCaption(true);
+    }
+
+    if (rowsHtml) {
+      html += "<dl class='masterportal-popup--rows'>" + rowsHtml + "</dl>";
     }
 
     html += "</div>";

@@ -194,10 +194,16 @@ span.sidebar-projekt-phases-title {
 // alone does NOT clip Leaflet — its tile panes are transformed and escape an
 // ancestor's overflow/border-radius clip. The .map_location (.leaflet-container)
 // already sets overflow: hidden, so giving IT the radius clips the panes.
+//
+// The .map_location selector carries the extra .map class so it outranks the
+// global .custom-new-design .map.map_location rule (border-radius: 12px, meant
+// for the resources-list map) which otherwise ties on specificity and wins on
+// source order — forcing 12px on every corner and rounding the top of embeds
+// that sit below a sibling section (per-template radius e.g. 0 0 14px 14px).
 .projekt-map-embed .projekt-map-shortcode,
 .projekt-map-embed .projekt-map-shortcode > div,
 .projekt-map-embed .projekt-map-shortcode .map-data-wrapper,
-.projekt-map-embed .projekt-map-shortcode .map_location {
+.projekt-map-embed .projekt-map-shortcode .map_location.map {
   border-radius: inherit;
 }
 
@@ -214,7 +220,7 @@ span.sidebar-projekt-phases-title {
 // Fullscreen ("Vollbild-Modus") puts the Leaflet container at position:fixed
 // with z-index:5000. Inside a content block the map is nested under two low
 // stacking contexts — .projekt-map-shortcode (z-index:1, all viewers) and
-// .projekt-content-block (z-index:2, only in the studio editor) — that trap the
+// .custom-content-block (z-index:2, only in the studio editor) — that trap the
 // fixed map below the page header and chrome. While a descendant map is
 // expanded, drop those stacking contexts so the fullscreen map rises above
 // everything. The embed's overflow is opened too, in case a browser treats it
@@ -227,7 +233,7 @@ span.sidebar-projekt-phases-title {
   z-index: auto;
 }
 
-.projekt-content-block:has(.map_location.map.expanded) {
+.custom-content-block:has(.map_location.map.expanded) {
   z-index: auto;
 }
 

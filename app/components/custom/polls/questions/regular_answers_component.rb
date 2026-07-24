@@ -2,7 +2,7 @@
 
 class Polls::Questions::RegularAnswersComponent < Polls::Questions::AnswersComponent
   def question_answers
-    question.question_answers.where.not(open_answer: true).includes(:translations, :images, :documents, :videos)
+    question.question_answers.reject(&:open_answer)
   end
 
   def answer_form_class(question_answer)

@@ -157,6 +157,11 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 }
 
+.sidebar-card--title-heading {
+  margin: 0;
+  margin-bottom: 0 !important;
+}
+
 .sidebar-card--title {
   display: flex;
   align-items: center;
@@ -172,6 +177,16 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   padding: 15px $sidebar-card-horizontal-padding 16px;
   padding-bottom: 14px;
   user-select: none;
+  cursor: default;
+
+  &[role="button"] {
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--brand-color);
+      outline-offset: -2px;
+    }
+  }
 
   @media(max-width: $mobile-viewport-start) {
     padding: 16px $sidebar-card-horizontal-padding;
@@ -270,7 +285,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 // below the hint, splitting the hint and the block apart. Mirrors the studio
 // content-block empty state in _content_block_empty_hint.scss. The body
 // regains its height in edit mode so admins can type.
-.sidebar-card.is-content-empty .projekt-content-block-wrapper:not(.-in-edit-mode) .projekt-content-block {
+.sidebar-card.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) .custom-content-block {
   min-height: 0;
 }
 
@@ -402,8 +417,8 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
 // Hover-Reveal für die Content-Block-Toolbar (Edit/KI/Code/Kopieren/Undo/Tauschen/Löschen)
 .sidebar-card {
-  .projekt-content-block--toolbar,
-  .projekt-content-block--toolbar-border {
+  .custom-content-block--toolbar,
+  .custom-content-block--toolbar-border {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -415,8 +430,8 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
   &:hover,
   &:focus-within {
-    .projekt-content-block--toolbar {
-      // `display: flex` here, not only via `.projekt-content-block-wrapper--inner:hover`
+    .custom-content-block--toolbar {
+      // `display: flex` here, not only via `.custom-content-block-wrapper--inner:hover`
       // (_content_block_toolbar.scss): when the block is empty the body collapses
       // to min-height:0, so the inner wrapper has no hoverable area and that rule
       // never fires — the card-level reveal must set display itself.
@@ -430,7 +445,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
       pointer-events: auto;
     }
 
-    .projekt-content-block--toolbar-border {
+    .custom-content-block--toolbar-border {
       max-height: 1px;
       opacity: 1;
       margin-bottom: 12px;
@@ -438,15 +453,15 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 
   // Im aktiven Edit-Mode immer sichtbar
-  .projekt-content-block-wrapper.-in-edit-mode {
-    .projekt-content-block--toolbar,
-    .projekt-content-block--toolbar-border {
+  .custom-content-block-wrapper.-in-edit-mode {
+    .custom-content-block--toolbar,
+    .custom-content-block--toolbar-border {
       max-height: none;
       opacity: 1;
       pointer-events: auto;
     }
 
-    .projekt-content-block--toolbar-border {
+    .custom-content-block--toolbar-border {
       margin-bottom: 12px;
     }
   }
@@ -459,14 +474,14 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
   }
 
   .sidebar-card {
-    .projekt-content-block--toolbar,
-    .projekt-content-block--toolbar-border {
+    .custom-content-block--toolbar,
+    .custom-content-block--toolbar-border {
       max-height: none;
       opacity: 1;
       pointer-events: auto;
     }
 
-    .projekt-content-block--toolbar-border {
+    .custom-content-block--toolbar-border {
       margin-bottom: 12px;
     }
   }

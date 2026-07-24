@@ -10,7 +10,7 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
   end
 
   def create?
-    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+    @user&.administrator? || @user&.projekt_manager?
   end
 
   def update?

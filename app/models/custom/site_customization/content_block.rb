@@ -2,8 +2,8 @@ require_dependency Rails.root.join("app", "models", "site_customization", "conte
 
 class SiteCustomization::ContentBlock < ApplicationRecord
   VALID_BLOCKS = %w[top_links footer subnavigation_left subnavigation_left_desktop subnavigation_left_mobile subnavigation_right_desktop subnavigation_right_mobile custom].freeze
-  DEFAULT_MARGIN_BOTTOM = 30
-  MIN_MARGIN_BOTTOM = 20
+  DEFAULT_MARGIN_BOTTOM = 20
+  MIN_MARGIN_BOTTOM = 15
 
   attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
@@ -20,6 +20,10 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   }
 
   before_validation :repair_html_body, :sanitize_body
+
+  after_create :touch_projekt_content_updated_at
+  after_destroy :touch_projekt_content_updated_at
+  after_update :touch_projekt_content_updated_at, if: :saved_change_to_body?
 
   def ai_generation_status
     return nil if ai_generation_data.blank?
@@ -56,6 +60,12 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   end
 
   private
+
+  def touch_projekt_content_updated_at
+    return if destroyed_by_association.present?
+
+    projekt&.touch(:content_updated_at)
+  end
 
   def single_parent
     if projekt_id.present? && newsletter_id.present?

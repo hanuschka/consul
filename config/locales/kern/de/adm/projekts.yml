@@ -20,8 +20,16 @@ de:
           home: Home
           projekts: Projekte
           managers: Team
+          inspiration: Projektinspirationen
           landing_pages: Themenseiten
           settings: Konfiguration
+      inspiration:
+        show:
+          title: Projektinspirationen
+          not_configured: DemokratieToday ist nicht konfiguriert
+          not_configured_hint: >-
+            Es ist keine DemokratieToday-Adresse hinterlegt. Bitte konfigurieren
+            Sie die Verbindung, um die Projektübersicht hier einzubetten.
       settings:
         tabs:
           dashboard: Dashboard-Einstellungen
@@ -54,7 +62,6 @@ de:
             Projekte sind im Frontend nicht sichtbar. Ein Klick auf den Projekttitel öffnet die
             Einstellungen, ein Klick auf das Vorschaubild führt zur öffentlichen Projektseite.
           new_projekt: Neues Projekt erstellen
-          import_projekt: Projekt aus Datei importieren
           no_projekts_title: Keine Projekte vorhanden
           no_projekts_description: Erstellen Sie ein neues Projekt, um mit der Konfiguration von Beteiligungsphasen und Einstellungen zu beginnen.
           no_results_filtered_title: Keine Projekte für die aktuelle Suche
@@ -62,11 +69,6 @@ de:
           table:
             status: Status
             actions: Aktionen
-        import_projekt:
-          title: Projekt aus Datei importieren
-          dt_not_connected: "Der DemokratieToday-Dienst ist nicht verbunden. Bitte richten Sie zuerst die Verbindung ein."
-          error_title: "Import fehlgeschlagen"
-          try_again: "Erneut versuchen"
         new:
           title: Neues Projekt erstellen
           intro_title: Neues Beteiligungsprojekt anlegen

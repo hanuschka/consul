@@ -25,14 +25,8 @@ module ProjektImports::OutputSchemaBuilder
           type: %w[string null],
           description: "ISO 8601 date (YYYY-MM-DD)"
         },
-        categories: {
-          type: "array",
-          items: { type: "string" }
-        },
-        sdg_codes: {
-          type: "array",
-          items: { type: "string" }
-        },
+        categories: categories_schema(refs),
+        sdg_codes: sdg_codes_schema(refs),
         phases: {
           type: "array",
           items: phase_item_schema(phase_types)
@@ -62,6 +56,22 @@ module ProjektImports::OutputSchemaBuilder
       ],
       additionalProperties: false
     }
+  end
+
+  def self.categories_schema(refs)
+    tags = Array(refs["tags"]).compact.uniq
+    items = { type: "string" }
+    items[:enum] = tags if tags.present?
+
+    { type: "array", items: items }
+  end
+
+  def self.sdg_codes_schema(refs)
+    codes = Array(refs["sdg_goals"]).map { |goal| goal["code"].to_s }.compact_blank.uniq
+    items = { type: "string" }
+    items[:enum] = codes if codes.present?
+
+    { type: "array", items: items }
   end
 
   def self.content_block_item_schema

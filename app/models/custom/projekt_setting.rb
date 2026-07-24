@@ -1,4 +1,15 @@
 class ProjektSetting < ApplicationRecord
+  CONTENT_TIMESTAMP_KEYS = %w[
+    projekt_feature.main.activate
+    projekt_feature.general.show_in_navigation
+    projekt_feature.general.show_in_overview_page
+    projekt_feature.general.show_in_overview_page_navigation
+    projekt_feature.general.show_in_homepage
+    projekt_feature.general.show_in_individual_list
+    projekt_feature.general.show_in_sidebar_filter
+    projekt_feature.general.consider_underway
+  ].freeze
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
   belongs_to :projekt, touch: true
 
@@ -7,6 +18,8 @@ class ProjektSetting < ApplicationRecord
   default_scope { order(id: :asc) }
 
   after_update :sync_related_projekt_children_active_setting, if: Proc.new { |setting| setting.key == "projekt_feature.main.activate" }
+  after_update :touch_projekt_content_updated_at,
+    if: Proc.new { |setting| setting.key.in?(CONTENT_TIMESTAMP_KEYS) && setting.saved_change_to_value? }
   after_update :trigger_sync_for_global_overview_related_projekt
 
   def prefix
@@ -94,6 +107,10 @@ class ProjektSetting < ApplicationRecord
       child_projekt.projekt_settings.find_by( key: 'projekt_feature.main.activate' ).
         update(value: self.value)
     end
+  end
+
+  def touch_projekt_content_updated_at
+    projekt.touch(:content_updated_at)
   end
 
   def trigger_sync_for_global_overview_related_projekt

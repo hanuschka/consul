@@ -1,5 +1,5 @@
 class Charts::BarChartComponent < ApplicationComponent
-  def initialize(title:, labels:, values:, orientation: "vertical", colors: nil, use_percentage: false, show_labels_in_bars: false)
+  def initialize(title:, labels:, values:, orientation: "vertical", colors: nil, use_percentage: false, show_labels_in_bars: false, show_legend: false)
     @title = title
     @labels = labels
     @values = values
@@ -7,6 +7,7 @@ class Charts::BarChartComponent < ApplicationComponent
     @colors = colors
     @use_percentage = use_percentage
     @show_labels_in_bars = show_labels_in_bars
+    @show_legend = show_legend
   end
 
   def render?
@@ -31,6 +32,10 @@ class Charts::BarChartComponent < ApplicationComponent
 
   def show_labels_in_bars?
     @show_labels_in_bars
+  end
+
+  def show_legend?
+    @show_legend
   end
 
   private

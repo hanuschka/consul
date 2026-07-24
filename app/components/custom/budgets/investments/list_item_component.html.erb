@@ -1,4 +1,10 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_author(resource: budget_investment) %>
+
+  <% if helpers.form_attached_image_visible?(budget_investment) %>
+    <% c.with_image(image: budget_investment.image, image_placeholder_icon_class: "fa-euro-sign", resource: budget_investment) %>
+  <% end %>
+
   <% c.with_header do %>
     <div></div>
     <div>

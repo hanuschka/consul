@@ -15,8 +15,10 @@ de:
           Live-Endpunkt-URL. „Neue importieren, alte bereinigen" liest die gespeicherte Datei erneut
           ein; laden Sie eine Datei mit demselben Datensatznamen hoch, um sie zu ersetzen.
         working: "Wird verarbeitet…"
+        shape_badge: "Flächen"
         feature_color_label: "Flächenfarbe"
         feature_color_hint: "Füllfarbe für Flächen (Polygone) dieses Datensatzes auf der Karte"
+        feature_color_save: "Farbe speichern"
         delete: "Löschen"
         clean: "Neue importieren, alte bereinigen"
         clean_tooltip: "Importiert neue und geänderte Pins aus der Quelle und entfernt anschließend Pins (samt erstellter Vorschläge/Einreichungen), die es dort nicht mehr gibt"

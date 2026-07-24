@@ -1,4 +1,6 @@
 class MasterportalCollection < ApplicationRecord
+  SHAPE_GEOMETRY_TYPES = %w[Polygon MultiPolygon].freeze
+
   belongs_to :projekt_phase
   has_many :masterportal_pins, dependent: :nullify
   has_many :projekt_labels, dependent: :destroy
@@ -33,6 +35,10 @@ class MasterportalCollection < ApplicationRecord
 
   def pins_count
     masterportal_pins.count
+  end
+
+  def shape_pins?
+    masterportal_pins.where("geometry ->> 'type' IN (?)", SHAPE_GEOMETRY_TYPES).exists?
   end
 
   def resources_count

@@ -181,7 +181,8 @@ class Masterportal::ImportService < ApplicationService
         import_error: nil,
         last_imported_at: Time.current,
         last_imported_count: collection.masterportal_pins.count,
-        icon_url: latest_pin_icon_url(collection)
+        icon_url: latest_pin_icon_url(collection),
+        contains_shapes: collection.shape_pins?
       )
     end
 

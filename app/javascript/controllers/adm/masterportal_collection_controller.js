@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
-  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText", "color"]
+  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText", "color", "colorSave", "colorSaveIcon"]
 
   static values = {
     updateUrl: String,
@@ -53,6 +53,9 @@ export default class extends Controller {
 
   async updateColor() {
     this.colorTarget.disabled = true
+    this.colorSaveTarget.disabled = true
+    this.colorSaveTarget.classList.add("-saving")
+    this.setColorSaveIcon("progress_activity")
 
     try {
       const response = await fetch(this.updateColorUrlValue, {
@@ -66,11 +69,25 @@ export default class extends Controller {
         body: JSON.stringify({ feature_color: this.colorTarget.value })
       })
       if (!response.ok) throw new Error(await this.errorMessage(response))
+
+      this.flashColorSaved()
     } catch (error) {
+      this.setColorSaveIcon("save")
       this.showError(error.message)
     } finally {
       this.colorTarget.disabled = false
+      this.colorSaveTarget.disabled = false
+      this.colorSaveTarget.classList.remove("-saving")
     }
+  }
+
+  setColorSaveIcon(name) {
+    if (this.hasColorSaveIconTarget) this.colorSaveIconTarget.textContent = name
+  }
+
+  flashColorSaved() {
+    this.setColorSaveIcon("check")
+    window.setTimeout(() => this.setColorSaveIcon("save"), 1500)
   }
 
   remove(event) {

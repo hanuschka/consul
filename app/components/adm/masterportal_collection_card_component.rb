@@ -28,6 +28,10 @@ class Adm::MasterportalCollectionCardComponent < ApplicationComponent
     collection.feature_color.presence || DEFAULT_FEATURE_COLOR
   end
 
+  def shapes?
+    collection.contains_shapes?
+  end
+
   def delete_url
     helpers.destroy_masterportal_collection_adm_projekts_phase_path(
       projekt_phase, masterportal_collection_id: collection.id

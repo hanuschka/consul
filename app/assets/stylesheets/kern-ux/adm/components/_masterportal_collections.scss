@@ -151,6 +151,25 @@
   color: #0f172a;
 }
 
+.adm-masterportal-collection-card--shape-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 1px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #15803d;
+  vertical-align: middle;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+
+  .material-symbols-outlined {
+    font-size: 14px;
+  }
+}
+
 .adm-masterportal-collection-card--source {
   display: inline-flex;
   align-items: center;
@@ -376,6 +395,12 @@
   letter-spacing: 0.02em;
 }
 
+.adm-masterportal-collection-card--color-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .adm-masterportal-collection-card--color-input {
   width: 44px;
   height: 32px;
@@ -393,6 +418,46 @@
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+}
+
+.adm-masterportal-collection-card--color-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 32px;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:not(:disabled):hover {
+    background: #dcfce7;
+  }
+
+  &:not(:disabled):active {
+    background: #bbf7d0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.-saving .material-symbols-outlined {
+    animation: adm-masterportal-collection-spin 1s linear infinite;
   }
 }
 

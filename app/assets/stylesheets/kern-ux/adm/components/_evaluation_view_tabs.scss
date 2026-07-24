@@ -69,7 +69,18 @@
 
 .adm-evaluation-view-tabs__actions-buttons {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
   margin-left: auto;
+}
+
+.adm-evaluation-view-tabs__auto-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--kern-color-layout-text-subtle);
 }

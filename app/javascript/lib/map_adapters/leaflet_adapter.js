@@ -21,6 +21,7 @@ export default class LeafletAdapter extends BaseAdapter {
     this.options = options
     this.adminEditor = options.adminEditor || false
     this.masterportalEnabled = options.masterportalEnabled || false
+    this.masterportalDefaultIconUrl = options.masterportalDefaultIconUrl || null
     this.defaultFeatureColor = this.getDefaultFeatureColor(this.adminEditor)
     this.featuresLimit = options.featuresLimit || 1
     this.clusterGroup = null
@@ -595,16 +596,13 @@ export default class LeafletAdapter extends BaseAdapter {
     const L = window.L
 
     if (feature && feature.properties && feature.properties.feature_icon_url) {
-      return L.icon({
-        iconUrl: encodeURI(feature.properties.feature_icon_url),
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
-        popupAnchor: [0, -18]
-      })
+      return this.masterportalImageIcon(feature.properties.feature_icon_url)
     }
 
     if (this.isMasterportalFeature(feature)) {
-      return this.masterportalMarkerIcon()
+      const dotColor = (feature && feature.properties && feature.properties.feature_color) ||
+                       this.defaultFeatureColor
+      return this.masterportalDotIcon(dotColor)
     }
 
     color = color || getBrandColor()
@@ -625,20 +623,31 @@ export default class LeafletAdapter extends BaseAdapter {
     return this.masterportalEnabled || feature.properties.resource_type === "masterportal_pin"
   }
 
-  // Temporary: fully replaces the default marker for masterportal pins with a
-  // half-transparent green square whose top-center sits on the pin location.
-  masterportalMarkerIcon() {
+  masterportalImageIcon(iconUrl) {
+    const L = window.L
+
+    return L.icon({
+      iconUrl: encodeURI(iconUrl),
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor: [0, -18]
+    })
+  }
+
+  // Masterportal pins without a custom image render as a colored dot (pins are
+  // reserved for user resources); the color comes from the collection color.
+  masterportalDotIcon(color) {
     const L = window.L
     const title = "Masterportal-Pin"
-    const size = 42
+    const size = 20
     const half = size / 2
 
     return L.divIcon({
-      className: "masterportal-square-marker",
+      className: "masterportal-dot-marker",
       iconSize: [size, size],
       iconAnchor: [half, half],
-      popupAnchor: [0, 0],
-      html: `<div role="img" aria-label="${title}" title="${title}"></div>`
+      popupAnchor: [0, -half],
+      html: `<span role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></span>`
     })
   }
 

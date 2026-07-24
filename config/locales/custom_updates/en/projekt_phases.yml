@@ -76,6 +76,9 @@ en:
         legislation_phase: Participate now
         comment_phase: Participate now
         livestream_phase: Participate now
+        mitmachbox_phase: Participate on site
+      mitmachbox_phase:
+        public_info: During this phase you can take part in a survey on site. You will find the Mitmachbox devices at the designated locations.
       permission_problem:
         new_button_component:
           shared:

@@ -773,10 +773,6 @@
     addMasterportalPinIcons(featureCollection) {
       const iconIdsByUrl = this.collectMasterportalIconIds(featureCollection);
 
-      if (this.masterportalDefaultIconUrl && !iconIdsByUrl[this.masterportalDefaultIconUrl]) {
-        iconIdsByUrl[this.masterportalDefaultIconUrl] = 'masterportal-pin-icon-default';
-      }
-
       const iconUrls = Object.keys(iconIdsByUrl);
 
       if (iconUrls.length === 0) return;
@@ -865,13 +861,10 @@
 
       if (!source) return;
 
-      const defaultIconId = this.masterportalDefaultIconUrl ?
-        loadedIconsByUrl[this.masterportalDefaultIconUrl] : null;
-
       featureCollection.features.forEach(function(feature) {
         if (!feature.properties) return;
 
-        const iconId = loadedIconsByUrl[feature.properties.feature_icon_url] || defaultIconId;
+        const iconId = loadedIconsByUrl[feature.properties.feature_icon_url];
 
         if (iconId) {
           feature.properties.feature_icon_id = iconId;

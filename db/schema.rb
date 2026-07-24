@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_23_123941) do
+ActiveRecord::Schema.define(version: 2026_07_24_133731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1638,6 +1638,9 @@ ActiveRecord::Schema.define(version: 2026_07_23_123941) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "source", default: "geoserver", null: false
     t.string "icon_url"
+    t.string "feature_color"
+    t.boolean "contains_shapes", default: false, null: false
+    t.boolean "has_default_icon_pins", default: false, null: false
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
@@ -1658,6 +1661,7 @@ ActiveRecord::Schema.define(version: 2026_07_23_123941) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "collection_title"
     t.bigint "masterportal_collection_id"
+    t.jsonb "geometry"
     t.index "((properties)::text) gin_trgm_ops", name: "index_masterportal_pins_on_properties_text_trgm", using: :gin
     t.index ["collection_id"], name: "index_masterportal_pins_on_collection_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["description"], name: "index_masterportal_pins_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
@@ -2442,6 +2446,7 @@ ActiveRecord::Schema.define(version: 2026_07_23_123941) do
     t.string "masterportal_last_collection_ids"
     t.string "masterportal_destroy_status"
     t.text "masterportal_destroy_error"
+    t.string "mitmachbox_survey_id"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin

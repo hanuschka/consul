@@ -132,6 +132,8 @@ en:
           loading: Loading map…
         update_masterportal_collection:
           missing_file: The uploaded file for this dataset is no longer available. Upload it again to re-import.
+        update_masterportal_collection_color:
+          invalid_color: "Invalid color. Please provide a hex color value like #2e7d32."
   projekt_phase_setting:
     proposal_phase:
       feature:

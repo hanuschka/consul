@@ -94,6 +94,17 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
       item[:hidden_from_public]
     end
 
+    def subnav_item_leading_icon(item)
+      phase_icon = tag.i(class: "fas #{item[:icon]} projekt-phase-subnav-item--phase-icon", "aria-hidden": "true")
+
+      return phase_icon if %w[stats ai].exclude?(item[:visibility_group])
+      return phase_icon if !can?(:edit, @projekt_phase.projekt)
+
+      eye_icon = tag.i(class: "fas fa-eye-slash projekt-phase-subnav-item--visibility-icon", "aria-hidden": "true")
+
+      safe_join([phase_icon, eye_icon])
+    end
+
     def any_tab_public_visible?
       footer_evaluation_tab_public_visible?(@projekt_phase, "stats") ||
         footer_evaluation_tab_public_visible?(@projekt_phase, "ai") ||

@@ -52,6 +52,16 @@ namespace :adm do
         get :formular
         get :formular_answers
         get :formular_follow_up_emails
+
+        # Mitmachbox
+        get :mitmachbox_survey
+        post :mitmachbox_create_survey
+        patch :mitmachbox_survey_state
+        post :mitmachbox_create_draft
+        post :mitmachbox_publish_draft
+        get :mitmachbox_deployments
+        get :mitmachbox_results
+        get :mitmachbox_results_export
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions
@@ -66,6 +76,9 @@ namespace :adm do
                as: :destroy_masterportal_pin
         patch "masterportal_collections/:masterportal_collection_id" =>
               "phases#update_masterportal_collection", as: :update_masterportal_collection
+        patch "masterportal_collections/:masterportal_collection_id/color" =>
+              "phases#update_masterportal_collection_color",
+              as: :update_masterportal_collection_color
         delete "masterportal_collections/:masterportal_collection_id" =>
                "phases#destroy_masterportal_collection", as: :destroy_masterportal_collection
         get "masterportal_collections/:masterportal_collection_id/status" =>
@@ -133,6 +146,14 @@ namespace :adm do
           patch :reorder
         end
       end
+      resources :mitmachbox_questions, only: %i[new create edit update destroy] do
+        member do
+          patch :move_up
+          patch :move_down
+        end
+        resources :mitmachbox_options, only: %i[new create edit update destroy]
+      end
+      resources :mitmachbox_deployments, only: %i[new create edit update destroy]
       resources :projekt_events, except: %i[index] do
         member do
           post :send_notifications

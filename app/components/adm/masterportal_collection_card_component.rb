@@ -1,4 +1,6 @@
 class Adm::MasterportalCollectionCardComponent < ApplicationComponent
+  DEFAULT_FEATURE_COLOR = "#2e7d32".freeze
+
   with_collection_parameter :collection
 
   attr_reader :collection, :projekt_phase, :diff, :diff_error
@@ -14,6 +16,20 @@ class Adm::MasterportalCollectionCardComponent < ApplicationComponent
     helpers.update_masterportal_collection_adm_projekts_phase_path(
       projekt_phase, masterportal_collection_id: collection.id
     )
+  end
+
+  def update_color_url
+    helpers.update_masterportal_collection_color_adm_projekts_phase_path(
+      projekt_phase, masterportal_collection_id: collection.id
+    )
+  end
+
+  def feature_color
+    collection.feature_color.presence || DEFAULT_FEATURE_COLOR
+  end
+
+  def shapes?
+    collection.contains_shapes?
   end
 
   def delete_url

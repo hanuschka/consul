@@ -10,26 +10,13 @@
     </div>
   <% end %>
 
-<% elsif footer_render_frozen_evaluation?(@projekt_phase) %>
-  <%= render "custom/pages/projekt_footer_new/evaluation_content", only_tab: eval_tab %>
-
-<% elsif eval_tab == "ai" %>
-  <% if footer_evaluation_tab_available?(@projekt_phase, "ai") && Ai::Settings.ai_available? %>
-    <div
-      class="js-footer-tab-content <%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'ai') %>"
-      data-visibility-group="ai"
-    >
-      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
-    </div>
-  <% end %>
-
 <% else %>
-  <% if footer_evaluation_tab_available?(@projekt_phase, "stats") %>
+  <% if footer_evaluation_tab_available?(@projekt_phase, eval_tab) %>
     <div
-      class="js-footer-tab-content <%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'stats') %>"
-      data-visibility-group="stats"
+      class="js-footer-tab-content <%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, eval_tab) %>"
+      data-visibility-group="<%= eval_tab %>"
     >
-      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+      <%= render "custom/pages/projekt_footer_new/evaluation_content", only_tab: eval_tab %>
     </div>
   <% end %>
 <% end %>

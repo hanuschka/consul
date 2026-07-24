@@ -2,6 +2,8 @@ class Masterportal::ImportService < ApplicationService
   MAX_FEATURES_PER_RUN = 20_000
   PROGRESS_FLUSH_EVERY = 5
 
+  SUPPORTED_GEOMETRY_TYPES = %w[Point Polygon MultiPolygon].freeze
+
   PHASE_TO_BUILDER = {
     "ProjektPhase::ProposalPhase" => Masterportal::Converters::ProposalBuilder,
     "ProjektPhase::BudgetPhase" => Masterportal::Converters::BudgetInvestmentBuilder,
@@ -27,7 +29,10 @@ class Masterportal::ImportService < ApplicationService
     @uploaded_collection_ids = Array(uploaded_collection_ids)
     @create_domain_records = create_domain_records
     @triggered_by_user = triggered_by_user
-    @stats = { imported: 0, updated: 0, skipped: 0, failed: 0, errors: [] }
+    @stats = {
+      imported: 0, updated: 0, skipped: 0, failed: 0,
+      errors: [], skipped_geometry_types: Hash.new(0)
+    }
     @projekt_labels_by_name = {}
   end
 
@@ -47,6 +52,7 @@ class Masterportal::ImportService < ApplicationService
     end
 
     finalize_success!
+    report_skipped_geometry_types
 
     if @projekt_phase.use_masterportal_collections_as_labels?
       MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
@@ -175,7 +181,8 @@ class Masterportal::ImportService < ApplicationService
         import_error: nil,
         last_imported_at: Time.current,
         last_imported_count: collection.masterportal_pins.count,
-        icon_url: latest_pin_icon_url(collection)
+        icon_url: latest_pin_icon_url(collection),
+        contains_shapes: collection.shape_pins?
       )
     end
 
@@ -184,8 +191,10 @@ class Masterportal::ImportService < ApplicationService
     end
 
     def process_feature(feature:, collection_id:, collection:, collection_title:, endpoint_url:)
-      if !point_geometry?(feature)
+      if !supported_geometry?(feature)
         @stats[:skipped] += 1
+        @stats[:skipped_geometry_types][geometry_type(feature)] += 1
+
         return
       end
 
@@ -270,8 +279,27 @@ class Masterportal::ImportService < ApplicationService
       {}
     end
 
-    def point_geometry?(feature)
-      feature.dig("geometry", "type") == "Point"
+    def supported_geometry?(feature)
+      SUPPORTED_GEOMETRY_TYPES.include?(geometry_type(feature))
+    end
+
+    def geometry_type(feature)
+      feature.dig("geometry", "type").presence || "unknown"
+    end
+
+    def report_skipped_geometry_types
+      return if @stats[:skipped_geometry_types].blank?
+      return if !defined?(Sentry)
+
+      Sentry.capture_message(
+        "Masterportal features skipped: unsupported geometry types",
+        level: :warning,
+        extra: {
+          projekt_phase_id: @projekt_phase.id,
+          endpoint_url: @endpoint_url,
+          skipped_geometry_types: @stats[:skipped_geometry_types].to_h
+        }
+      )
     end
 
     def report_out_of_bbox(feature)

@@ -76,6 +76,9 @@ de:
         legislation_phase: Jetzt mitmachen
         comment_phase: Jetzt mitmachen
         livestream_phase: Jetzt mitmachen
+        mitmachbox_phase: Vor Ort mitmachen
+      mitmachbox_phase:
+        public_info: In dieser Phase können Sie vor Ort an einer Umfrage teilnehmen. Die Mitmachboxen finden Sie an den ausgewiesenen Standorten.
       permission_problem:
         new_button_component:
           shared:

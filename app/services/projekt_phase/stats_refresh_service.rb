@@ -6,17 +6,29 @@ class ProjektPhase::StatsRefreshService
   }.freeze
 
   def call
-    ProjektPhase.where(type: STATS_SERVICES.keys.map(&:name)).find_each do |phase|
+    ProjektPhase.where(type: STATS_SERVICES.keys.map(&:name))
+      .includes(:projekt_phase_evaluation)
+      .find_each do |phase|
       service_class = STATS_SERVICES[phase.class]
-      next unless service_class
-      next unless refreshable?(phase)
-      next unless stale?(phase)
+      next if service_class.blank?
+      next if !refreshable?(phase)
+      next if !stale?(phase)
 
-      service_class.new(phase).call
+      refresh_phase(phase, service_class)
     end
   end
 
   private
+
+    def refresh_phase(phase, service_class)
+      evaluation_row = phase.projekt_phase_evaluation
+
+      if evaluation_row&.completed?
+        ProjektEvaluations::GeneratePhaseEvaluation.refresh_regular_stats(evaluation_row)
+      else
+        service_class.new(phase).call
+      end
+    end
 
     def refreshable?(phase)
       case phase

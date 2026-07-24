@@ -70,7 +70,7 @@
 }
 
 .ai-stats-card {
-  background: #f0f0f0;
+  background: var(--er-surface, #f8fafc);
   border-radius: 12px;
   padding: 10px 25px 15px;
   padding-right: 15px;

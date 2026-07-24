@@ -55,7 +55,7 @@ module ProjektPhaseSettingsHelper
   end
 
   def footer_evaluation_tab_public_visible?(projekt_phase, tab)
-    return false if !footer_evaluation_tab_has_content?(projekt_phase, tab)
+    return false if !footer_phase_evaluation_completed?(projekt_phase)
 
     projekt_phase.evaluation_tab_publicly_visible?(tab)
   end

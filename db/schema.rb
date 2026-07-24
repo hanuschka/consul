@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_24_124201) do
+ActiveRecord::Schema.define(version: 2026_07_24_133731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1640,6 +1640,7 @@ ActiveRecord::Schema.define(version: 2026_07_24_124201) do
     t.string "icon_url"
     t.string "feature_color"
     t.boolean "contains_shapes", default: false, null: false
+    t.boolean "has_default_icon_pins", default: false, null: false
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end

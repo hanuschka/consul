@@ -676,11 +676,7 @@
               icon = self.createMasterportalImageIcon(feature.properties.feature_icon_url);
             }
           } else if (feature.properties.resource_type === "masterportal_pin") {
-            if (self.masterportalDefaultIconUrl) {
-              icon = self.createMasterportalImageIcon(self.masterportalDefaultIconUrl);
-            } else {
-              icon = App.Utils.getMasterportalSquareMarker();
-            }
+            icon = App.Utils.getMasterportalDotMarker(feature.properties.feature_color || self.defaultFeatureColor);
           } else {
             icon = App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle);
           }

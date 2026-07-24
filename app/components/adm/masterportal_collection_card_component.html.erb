@@ -56,7 +56,7 @@
         <span class="material-symbols-outlined" aria-hidden="true">link</span>
       </a>
     <% elsif collection.file_source? %>
-      <rich-tooltip delay="400" trigger-only shadow="heavy">
+      <rich-tooltip trigger-only shadow="heavy">
         <span class="adm-masterportal-collection-card--source-chip" tabindex="0">
           <span class="material-symbols-outlined" aria-hidden="true">description</span>
           <%= t(".source_file_label") %>
@@ -134,7 +134,7 @@
     <span data-adm--masterportal-collection-target="errorText"></span>
   </div>
 
-  <% if shapes? %>
+  <% if colorable? %>
     <div class="adm-masterportal-collection-card--color">
       <label
         class="adm-masterportal-collection-card--color-label"
@@ -142,29 +142,43 @@
       >
         <%= t(".feature_color_label") %>
       </label>
-      <div class="adm-masterportal-collection-card--color-controls">
-        <input
-          id="<%= dom_id(collection, :feature_color) %>"
-          class="adm-masterportal-collection-card--color-input"
-          type="color"
-          value="<%= feature_color %>"
-          title="<%= t(".feature_color_hint") %>"
-          data-adm--masterportal-collection-target="color"
-        >
-        <button
-          type="button"
-          class="adm-masterportal-collection-card--color-save"
-          title="<%= t(".feature_color_save") %>"
-          data-adm--masterportal-collection-target="colorSave"
-          data-action="adm--masterportal-collection#updateColor"
-        >
-          <span
-            class="material-symbols-outlined"
-            aria-hidden="true"
-            data-adm--masterportal-collection-target="colorSaveIcon"
-          >save</span>
-          <span class="kern-sr-only"><%= t(".feature_color_save") %></span>
-        </button>
+      <div class="adm-masterportal-collection-card--color-group">
+        <rich-tooltip trigger-only shadow="heavy">
+          <input
+            id="<%= dom_id(collection, :feature_color) %>"
+            class="adm-masterportal-collection-card--color-input"
+            type="color"
+            value="<%= feature_color %>"
+            data-adm--masterportal-collection-target="color"
+          >
+
+          <template>
+            <span class="rich-tooltip-content">
+              <span class="rich-tooltip-content--text"><%= t(".feature_color_hint") %></span>
+            </span>
+          </template>
+        </rich-tooltip>
+        <rich-tooltip trigger-only shadow="heavy">
+          <button
+            type="button"
+            class="adm-masterportal-collection-card--color-save"
+            data-adm--masterportal-collection-target="colorSave"
+            data-action="adm--masterportal-collection#updateColor"
+          >
+            <span
+              class="material-symbols-outlined"
+              aria-hidden="true"
+              data-adm--masterportal-collection-target="colorSaveIcon"
+            >save</span>
+            <span class="kern-sr-only"><%= t(".feature_color_save") %></span>
+          </button>
+
+          <template>
+            <span class="rich-tooltip-content">
+              <span class="rich-tooltip-content--text"><%= t(".feature_color_save") %></span>
+            </span>
+          </template>
+        </rich-tooltip>
       </div>
     </div>
   <% end %>
@@ -173,23 +187,37 @@
     class="adm-masterportal-collection-card--actions"
     data-adm--masterportal-collection-target="actions"
   >
-    <button
-      type="button"
-      class="adm-masterportal-collection-card--button -resync"
-      title="<%= t(".clean_tooltip") %>"
-      data-action="adm--masterportal-collection#importAndClean"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
-      <%= t(".clean") %>
-    </button>
-    <button
-      type="button"
-      class="adm-masterportal-collection-card--button -delete"
-      title="<%= t(".delete_tooltip") %>"
-      data-action="adm--masterportal-collection#remove"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-      <%= t(".delete") %>
-    </button>
+    <rich-tooltip trigger-only shadow="heavy">
+      <button
+        type="button"
+        class="adm-masterportal-collection-card--button -resync"
+        data-action="adm--masterportal-collection#importAndClean"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
+        <%= t(".clean") %>
+      </button>
+
+      <template>
+        <span class="rich-tooltip-content">
+          <span class="rich-tooltip-content--text"><%= t(".clean_tooltip") %></span>
+        </span>
+      </template>
+    </rich-tooltip>
+    <rich-tooltip trigger-only shadow="heavy">
+      <button
+        type="button"
+        class="adm-masterportal-collection-card--button -delete"
+        data-action="adm--masterportal-collection#remove"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+        <%= t(".delete") %>
+      </button>
+
+      <template>
+        <span class="rich-tooltip-content">
+          <span class="rich-tooltip-content--text"><%= t(".delete_tooltip") %></span>
+        </span>
+      </template>
+    </rich-tooltip>
   </div>
 </article>

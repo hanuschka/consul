@@ -600,11 +600,9 @@ export default class LeafletAdapter extends BaseAdapter {
     }
 
     if (this.isMasterportalFeature(feature)) {
-      if (this.masterportalDefaultIconUrl) {
-        return this.masterportalImageIcon(this.masterportalDefaultIconUrl)
-      }
-
-      return this.masterportalMarkerIcon()
+      const dotColor = (feature && feature.properties && feature.properties.feature_color) ||
+                       this.defaultFeatureColor
+      return this.masterportalDotIcon(dotColor)
     }
 
     color = color || getBrandColor()
@@ -636,20 +634,20 @@ export default class LeafletAdapter extends BaseAdapter {
     })
   }
 
-  // Temporary: fully replaces the default marker for masterportal pins with a
-  // half-transparent green square whose top-center sits on the pin location.
-  masterportalMarkerIcon() {
+  // Masterportal pins without a custom image render as a colored dot (pins are
+  // reserved for user resources); the color comes from the collection color.
+  masterportalDotIcon(color) {
     const L = window.L
     const title = "Masterportal-Pin"
-    const size = 42
+    const size = 20
     const half = size / 2
 
     return L.divIcon({
-      className: "masterportal-square-marker",
+      className: "masterportal-dot-marker",
       iconSize: [size, size],
       iconAnchor: [half, half],
-      popupAnchor: [0, 0],
-      html: `<div role="img" aria-label="${title}" title="${title}"></div>`
+      popupAnchor: [0, -half],
+      html: `<span role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></span>`
     })
   }
 

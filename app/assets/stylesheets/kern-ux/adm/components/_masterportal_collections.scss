@@ -382,32 +382,40 @@
 }
 
 .adm-masterportal-collection-card--color {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
 }
 
 .adm-masterportal-collection-card--color-label {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 2px;
   font-size: 12px;
   font-weight: 600;
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
-.adm-masterportal-collection-card--color-controls {
-  display: flex;
+.adm-masterportal-collection-card--color-group {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-}
-
-.adm-masterportal-collection-card--color-input {
-  width: 44px;
-  height: 32px;
-  padding: 2px;
+  gap: 6px;
+  padding: 3px 5px;
   background: #fff;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
+}
+
+.adm-masterportal-collection-card--color-input {
+  width: 40px;
+  height: 28px;
+  padding: 2px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
   cursor: pointer;
 
   &:focus-visible {
@@ -425,12 +433,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 32px;
+  width: 30px;
+  height: 28px;
   color: #15803d;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 8px;
+  border-radius: 7px;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 

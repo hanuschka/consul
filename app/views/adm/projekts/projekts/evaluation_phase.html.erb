@@ -223,6 +223,16 @@
             <template><%= t("adm.projekts.projekts.evaluation.regenerate_tooltip") %></template>
           </rich-tooltip>
 
+          <span
+            class="adm-evaluation-view-tabs__auto-note"
+            data-adm--evaluation-tabs-target="statsAction"
+            <%= "hidden" if default_tab == "ai" %>
+          >
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
+            <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.regenerate_auto_hourly_note") %>
+          </span>
+
           <% if ai_regen_blocked %>
             <span data-adm--evaluation-tabs-target="regenerateAiDisabled" hidden>
               <%= render Shared::AiFeatureTooltipComponent.new(

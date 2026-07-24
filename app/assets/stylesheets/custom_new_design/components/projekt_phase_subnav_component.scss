@@ -39,5 +39,17 @@
     .projekt-phase-subnav-item.-hidden-from-public {
       opacity: 0.5;
     }
+
+    .projekt-phase-subnav-item--visibility-icon {
+      display: none;
+    }
+
+    .projekt-phase-subnav-item.-hidden-from-public .projekt-phase-subnav-item--visibility-icon {
+      display: inline-block;
+    }
+
+    .projekt-phase-subnav-item.-hidden-from-public:has(.projekt-phase-subnav-item--visibility-icon) .projekt-phase-subnav-item--phase-icon {
+      display: none;
+    }
   }
 }

@@ -13,6 +13,10 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     new(projekt_phase_evaluation).regenerate_regular_stats
   end
 
+  def self.refresh_regular_stats(projekt_phase_evaluation)
+    new(projekt_phase_evaluation).refresh_regular_stats
+  end
+
   def self.regenerate_ai_stats(projekt_phase_evaluation)
     new(projekt_phase_evaluation).regenerate_ai_stats
   end
@@ -31,6 +35,27 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
 
       existing_data.merge(build_regular_data(base))
     end
+  end
+
+  def refresh_regular_stats
+    return if !supported_phase_type?
+
+    base = aggregate_phase_stats
+    return if base.blank?
+
+    @row.update!(
+      status: :completed,
+      generated_at: Time.current,
+      data: existing_data.merge(build_regular_data(base)).deep_stringify_keys
+    )
+
+    @row
+  rescue StandardError => e
+    Rails.logger.error(
+      "[Evaluation] Background regular-stats refresh failed for row ##{@row.id} (phase ##{@projekt_phase.id}): #{e.message}"
+    )
+
+    nil
   end
 
   def regenerate_ai_stats

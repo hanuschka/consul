@@ -434,15 +434,19 @@ class ProjektPhase < ApplicationRecord
     visibility = projekt_phase_evaluation_visibility
     return [] if visibility.blank?
 
+    evaluation_data = projekt_phase_evaluation&.data || {}
     available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
     visible = visibility.visible_sections & available
     footer_visible = visible - FOOTER_HIDDEN_EVALUATION_SECTIONS
+    present = footer_visible.select do |key|
+      ::ProjektEvaluations::SectionDataPresence.has_data?(evaluation_data, key)
+    end
     ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
 
     tabs = []
     tabs << "poll_stats" if visibility.show_poll_stats
-    tabs << "stats" if footer_visible.any? { |key| !ai_keys.include?(key) }
-    tabs << "ai" if footer_visible.any? { |key| ai_keys.include?(key) }
+    tabs << "stats" if present.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if present.any? { |key| ai_keys.include?(key) }
 
     tabs
   end

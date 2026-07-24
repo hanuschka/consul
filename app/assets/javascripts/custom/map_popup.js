@@ -20,7 +20,7 @@ App.MapPopup = {
   },
 
   sourceCaption: function(isMasterportal) {
-    var text = isMasterportal ? "Masterportal-Eintrag" : "Nutzerbeitrag";
+    var text = isMasterportal ? "Masterportal-Pin" : "Nutzerbeitrag";
 
     return "<div class='map-popup--source-caption'>" + text + "</div>";
   },

@@ -40,7 +40,6 @@
       App.PieChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
-      App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
       App.ProjektFooterTabs.initialize();

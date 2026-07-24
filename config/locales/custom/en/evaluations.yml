@@ -35,6 +35,7 @@ en:
             evaluation will be overwritten.
           regenerate_phase_button: Regenerate phase stats
           regenerate_regular_stats_button: Regenerate statistics
+          regenerate_auto_hourly_note: Statistics update automatically every hour
           regenerate_ai_stats_button: Regenerate AI analysis
           regenerate_ai_stats_tooltip: >
             Re-runs the AI analysis for this phase — the summary, tone, key
@@ -68,6 +69,17 @@ en:
             An error occurred while generating this phase.
             Please try again.
           phase_retry_button: Retry
+          phase_generate_stats_title: No statistics generated yet
+          phase_generate_stats_description: >
+            No statistics have been generated for this phase yet. Generate the
+            evaluation to show participation figures, timelines and demographic
+            breakdowns.
+          phase_generate_stats_button: Generate statistics
+          phase_generate_ai_title: No AI analysis generated yet
+          phase_generate_ai_description: >
+            No AI analysis has been generated for this phase yet. Generate the
+            analysis to show the summary, key findings and topic clustering.
+          phase_generate_ai_button: Generate AI analysis
           download_pdf: Download PDF
           generated_at: "Generated at %{time}"
           report_placeholder: Evaluation report will be displayed here.

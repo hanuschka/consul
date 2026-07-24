@@ -32,6 +32,10 @@ class Adm::MasterportalCollectionCardComponent < ApplicationComponent
     collection.contains_shapes?
   end
 
+  def colorable?
+    collection.contains_shapes? || collection.has_default_icon_pins?
+  end
+
   def delete_url
     helpers.destroy_masterportal_collection_adm_projekts_phase_path(
       projekt_phase, masterportal_collection_id: collection.id

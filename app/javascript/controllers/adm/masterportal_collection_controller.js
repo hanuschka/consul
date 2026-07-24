@@ -87,7 +87,8 @@ export default class extends Controller {
 
   flashColorSaved() {
     this.setColorSaveIcon("check")
-    window.setTimeout(() => this.setColorSaveIcon("save"), 1500)
+
+    window.setTimeout(() => this.setColorSaveIcon("save"), 1200)
   }
 
   remove(event) {

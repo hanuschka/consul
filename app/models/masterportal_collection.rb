@@ -41,6 +41,13 @@ class MasterportalCollection < ApplicationRecord
     masterportal_pins.where("geometry ->> 'type' IN (?)", SHAPE_GEOMETRY_TYPES).exists?
   end
 
+  def default_icon_pins?
+    masterportal_pins
+      .where("geometry ->> 'type' = 'Point'")
+      .where("NULLIF(properties ->> 'IMAGE_URL', '') IS NULL")
+      .exists?
+  end
+
   def resources_count
     masterportal_pins.with_associated_record.distinct.count
   end

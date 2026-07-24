@@ -76,6 +76,9 @@ namespace :adm do
                as: :destroy_masterportal_pin
         patch "masterportal_collections/:masterportal_collection_id" =>
               "phases#update_masterportal_collection", as: :update_masterportal_collection
+        patch "masterportal_collections/:masterportal_collection_id/color" =>
+              "phases#update_masterportal_collection_color",
+              as: :update_masterportal_collection_color
         delete "masterportal_collections/:masterportal_collection_id" =>
                "phases#destroy_masterportal_collection", as: :destroy_masterportal_collection
         get "masterportal_collections/:masterportal_collection_id/status" =>

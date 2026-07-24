@@ -4,6 +4,7 @@
   data-controller="adm--masterportal-collection"
   data-adm--masterportal-collections-resync-target="card"
   data-adm--masterportal-collection-update-url-value="<%= update_url %>"
+  data-adm--masterportal-collection-update-color-url-value="<%= update_color_url %>"
   data-adm--masterportal-collection-delete-url-value="<%= delete_url %>"
   data-adm--masterportal-collection-status-url-value="<%= status_url %>"
   data-adm--masterportal-collection-diff-url-value="<%= diff_url %>"
@@ -123,6 +124,24 @@
   >
     <span class="material-symbols-outlined" aria-hidden="true">error</span>
     <span data-adm--masterportal-collection-target="errorText"></span>
+  </div>
+
+  <div class="adm-masterportal-collection-card--color">
+    <label
+      class="adm-masterportal-collection-card--color-label"
+      for="<%= dom_id(collection, :feature_color) %>"
+    >
+      <%= t(".feature_color_label") %>
+    </label>
+    <input
+      id="<%= dom_id(collection, :feature_color) %>"
+      class="adm-masterportal-collection-card--color-input"
+      type="color"
+      value="<%= feature_color %>"
+      title="<%= t(".feature_color_hint") %>"
+      data-adm--masterportal-collection-target="color"
+      data-action="change->adm--masterportal-collection#updateColor"
+    >
   </div>
 
   <div

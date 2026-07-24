@@ -2,10 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
-  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText"]
+  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText", "color"]
 
   static values = {
     updateUrl: String,
+    updateColorUrl: String,
     deleteUrl: String,
     statusUrl: String,
     diffUrl: String,
@@ -48,6 +49,28 @@ export default class extends Controller {
     this.mode = "import"
     this.showProgress()
     this.sendRequest("PATCH", this.updateUrlValue)
+  }
+
+  async updateColor() {
+    this.colorTarget.disabled = true
+
+    try {
+      const response = await fetch(this.updateColorUrlValue, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRF-Token": this.csrfToken()
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({ feature_color: this.colorTarget.value })
+      })
+      if (!response.ok) throw new Error(await this.errorMessage(response))
+    } catch (error) {
+      this.showError(error.message)
+    } finally {
+      this.colorTarget.disabled = false
+    }
   }
 
   remove(event) {

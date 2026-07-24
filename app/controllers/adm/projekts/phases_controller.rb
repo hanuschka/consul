@@ -565,6 +565,22 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     render json: masterportal_collection_status_payload(collection), status: :accepted
   end
 
+  def update_masterportal_collection_color
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+    color = masterportal_feature_color_param
+
+    if color.nil?
+      return render json: {
+        message: t("adm.projekts.phases.update_masterportal_collection_color.invalid_color")
+      }, status: :unprocessable_entity
+    end
+
+    collection.update!(feature_color: color)
+
+    render json: { feature_color: collection.feature_color }
+  end
+
   def destroy_masterportal_collection
     authorize_phase(:update?)
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
@@ -944,6 +960,13 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       return if !Masterportal::CollectionTaxonomySyncService.out_of_sync?(projekt_phase: @projekt_phase)
 
       MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
+    end
+
+    def masterportal_feature_color_param
+      color = params[:feature_color].to_s.strip
+      return nil if color.blank?
+
+      color.match?(/\A#[0-9a-fA-F]{6}\z/) ? color : nil
     end
 
     def masterportal_resync_job_args(collection)

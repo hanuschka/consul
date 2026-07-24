@@ -132,6 +132,8 @@ de:
           loading: Karte wird geladen…
         update_masterportal_collection:
           missing_file: Die hochgeladene Datei dieses Datensatzes ist nicht mehr verfügbar. Laden Sie sie erneut hoch, um neu zu importieren.
+        update_masterportal_collection_color:
+          invalid_color: "Ungültige Farbe. Bitte einen Hex-Farbwert wie #2e7d32 angeben."
   projekt_phase_setting:
     proposal_phase:
       feature:

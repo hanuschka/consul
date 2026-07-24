@@ -15,6 +15,8 @@ en:
           "Import new and clean old" re-reads the stored file; upload a file under the same
           dataset name to replace it.
         working: "Working…"
+        feature_color_label: "Area color"
+        feature_color_hint: "Fill color for this dataset's areas (polygons) on the map"
         delete: "Delete"
         clean: "Import new and clean old"
         clean_tooltip: "Imports new and changed pins from the source, then removes pins (and their created proposals/investments) that no longer exist there"

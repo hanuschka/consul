@@ -47,6 +47,7 @@ class MasterportalPin < ApplicationRecord
 
     where(projekt_phase_id: projekt_phase.id)
       .standalone
+      .includes(:masterportal_collection)
       .map(&:to_map_feature)
   end
 
@@ -55,6 +56,8 @@ class MasterportalPin < ApplicationRecord
   end
 
   def to_map_feature(include_search_text: true, include_icon_url: true)
+    feature_geometry = map_geometry
+
     properties = {
       "resource_type" => "masterportal_pin",
       "id" => id
@@ -62,12 +65,14 @@ class MasterportalPin < ApplicationRecord
     properties["feature_icon_url"] = feature_icon_url if include_icon_url
     properties["search_text"] = searchable_text if include_search_text
 
+    if feature_geometry["type"] != "Point"
+      color = fill_color
+      properties["feature_color"] = color if color.present?
+    end
+
     {
       "type" => "Feature",
-      "geometry" => {
-        "type" => "Point",
-        "coordinates" => [longitude.to_f, latitude.to_f]
-      },
+      "geometry" => feature_geometry,
       "properties" => properties
     }
   end
@@ -108,6 +113,19 @@ class MasterportalPin < ApplicationRecord
   end
 
   private
+
+    def map_geometry
+      return geometry if geometry.is_a?(Hash) && geometry["type"].present?
+
+      {
+        "type" => "Point",
+        "coordinates" => [longitude.to_f, latitude.to_f]
+      }
+    end
+
+    def fill_color
+      masterportal_collection&.feature_color
+    end
 
     def flatten_property_values(value)
       case value

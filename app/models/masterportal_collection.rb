@@ -12,6 +12,7 @@ class MasterportalCollection < ApplicationRecord
 
   validates :collection_id, presence: true
   validates :collection_id, uniqueness: { scope: :projekt_phase_id }
+  validates :feature_color, format: { with: /\A#[0-9a-fA-F]{6}\z/ }, allow_blank: true
 
   scope :ordered, -> { order(:name) }
 

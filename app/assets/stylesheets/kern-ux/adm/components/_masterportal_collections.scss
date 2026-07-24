@@ -362,6 +362,40 @@
   }
 }
 
+.adm-masterportal-collection-card--color {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.adm-masterportal-collection-card--color-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.adm-masterportal-collection-card--color-input {
+  width: 44px;
+  height: 32px;
+  padding: 2px;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
 @keyframes adm-masterportal-collection-spin {
   to {
     transform: rotate(360deg);

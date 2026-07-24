@@ -85,8 +85,12 @@ class PollsController < ApplicationController
     auto_sign_in_guest_for(@poll.projekt_phase)
 
     @projekt_phase = @poll.projekt_phase
+
+    answer_includes = [:translations, :images, :documents, :videos]
+
     @questions = @poll.questions.root_questions
-                                .includes(:context, :translations, :votation_type, :question_answers, nested_questions: [:poll, :votation_type, :translations, :question_answers])
+                                .includes(:context, :poll, :translations, :votation_type, question_answers: answer_includes,
+                                          nested_questions: [:poll, :votation_type, :translations, { question_answers: answer_includes }])
                                 .order(given_order: :asc, id: :asc)
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 

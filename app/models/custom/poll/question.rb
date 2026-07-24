@@ -42,7 +42,9 @@ class Poll::Question < ApplicationRecord
   end
 
   def open_question_answer
-    question_answers.where(open_answer: true).last
+    return @open_question_answer if defined?(@open_question_answer)
+
+    @open_question_answer = question_answers.select(&:open_answer).last
   end
 
   def allows_multiple_answers?

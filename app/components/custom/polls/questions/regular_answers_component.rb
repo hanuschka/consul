@@ -2,7 +2,10 @@
 
 class Polls::Questions::RegularAnswersComponent < Polls::Questions::AnswersComponent
   def question_answers
-    question.question_answers.reject(&:open_answer)
+    answers = question.question_answers
+    answers = answers.includes(:translations, :images, :documents, :videos) unless answers.loaded?
+
+    answers.reject(&:open_answer)
   end
 
   def answer_form_class(question_answer)

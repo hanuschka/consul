@@ -1,8 +1,4 @@
 class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
-  CONTENT_BLOCK_LOCALE = "de".freeze
-
-  FAILURE_MESSAGE = "KI konnte keine Struktur erstellen".freeze
-
   TASK_INSTRUCTIONS = <<~TEXT.freeze
     Generate structured HTML content blocks based on the user's description.
     Create appropriate HTML content blocks that represent the project described by the user.
@@ -52,8 +48,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
 
     content_blocks = ProjektContentBlocks::Services::CreateFromImportData.call(
       projekt: projekt,
-      blocks: blocks,
-      locale: CONTENT_BLOCK_LOCALE
+      blocks: blocks
     )
 
     projekt.update_columns(
@@ -65,12 +60,14 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
   end
 
   def mark_failed
+    message = I18n.t("custom.projekt_content_blocks.ai_generate_with_prompt.generation_failed")
+
     projekt.update_columns(
       import_file_status: "failed",
-      import_file_data: { error: { message: FAILURE_MESSAGE } }
+      import_file_data: { error: { message: message } }
     )
 
-    ServiceResult.failure(error: FAILURE_MESSAGE)
+    ServiceResult.failure(error: message)
   end
 
   def fetch_base_prompt
@@ -86,14 +83,14 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
     response.dig('consul_ai_prompt', "prompt")
   end
 
-  def target_language
+  def response_language
     Rails.env.development? ? "English" : "German"
   end
 
   def build_system_instructions(base_prompt, dt_templates_by_category)
     <<~INSTRUCTIONS
       #{base_prompt}
-      Output response in #{target_language} language.
+      Output response in #{response_language} language.
 
       #{TASK_INSTRUCTIONS}
 

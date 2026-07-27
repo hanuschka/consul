@@ -1,7 +1,9 @@
 class ProjektContentBlocks::Services::CreateFromImportData < ApplicationService
+  DEFAULT_LOCALE = "de".freeze
+
   attr_reader :projekt, :blocks, :locale
 
-  def initialize(projekt:, blocks:, locale:)
+  def initialize(projekt:, blocks:, locale: DEFAULT_LOCALE)
     @projekt = projekt
     @blocks = Array(blocks)
     @locale = locale

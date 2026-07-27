@@ -34,6 +34,7 @@ en:
           "Rearrange the content logically if the order in the document is unclear."
       ai_generate_with_prompt:
         no_prompt: Please enter a prompt
+        generation_failed: AI could not create a structure
       ai_create:
         modal_title: Create content block with AI
         description: "Briefly describe the content block you need. The AI uses existing templates as inspiration and can optionally consider the full projekt context to create a new block."

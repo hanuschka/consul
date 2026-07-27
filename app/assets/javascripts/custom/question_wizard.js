@@ -11,6 +11,11 @@
 
     initialize() {
       const $wizard = $(".js-question-wizard");
+      const $body = $("body");
+
+      $body.off("click.questionWizard");
+      $body.on("click.questionWizard", ".js-poll-closing-note", this.showClosingNote.bind(this));
+
       if ($wizard.length === 0) return;
 
       this.parseMap();
@@ -19,11 +24,9 @@
       this.visited = [];
 
       $wizard.off(".questionWizard");
-      $("body").off("click.questionWizard");
       $wizard.on("click.questionWizard", ".js-question-wizard-prev", this.navigateToPrevQuestion.bind(this));
       $wizard.on("click.questionWizard", ".js-question-wizard-next", this.navigateToNextQuestion.bind(this));
       $wizard.on("click.questionWizard", ".js-question-wizard-go-to-start", this.goToStart.bind(this));
-      $("body").on("click.questionWizard", ".js-poll-closing-note", this.showClosingNote.bind(this));
 
       const first = this.currentQuestion();
       if (!first) return;

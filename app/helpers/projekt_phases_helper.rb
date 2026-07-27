@@ -37,8 +37,10 @@ class: "resources-link" do
       end
 
     when ProjektPhase::VotingPhase
-      link_to poll_questions_adm_projekts_phase_path(projekt_phase), target: "_blank", class: "resources-link" do
-        t("custom.admin.projekts.edit.projekt_phases_tab.link.voting_phase")
+      if Adm::Projekts::ProjektPhasePolicy.new(current_user, projekt_phase).update?
+        link_to poll_questions_adm_projekts_phase_path(projekt_phase), target: "_blank", class: "resources-link" do
+          t("custom.admin.projekts.edit.projekt_phases_tab.link.voting_phase")
+        end
       end
 
     when ProjektPhase::BudgetPhase

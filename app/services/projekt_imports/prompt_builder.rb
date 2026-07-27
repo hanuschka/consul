@@ -1,9 +1,10 @@
 class ProjektImports::PromptBuilder
   attr_reader :base_prompt, :refs
 
-  def initialize(base_prompt:, refs:)
+  def initialize(base_prompt:, refs:, response_language: nil)
     @base_prompt = base_prompt
     @refs = refs
+    @response_language = response_language.presence || default_response_language
   end
 
   def call
@@ -14,11 +15,7 @@ class ProjektImports::PromptBuilder
 
       #{build_templates_section}
 
-      ## Reference data
-
-      Available categories: #{(refs["tags"] || []).map { |t| %("#{t}") }.join(", ")}
-      Available SDG goals: #{(refs["sdg_goals"] || []).map { |g| "#{g['code']} = #{g['title']}" }.join(", ")}
-      Available phase types: #{(refs["phase_types"] || []).join(", ")}
+      #{build_reference_data_section}
 
       #{build_projekt_settings_section}
       #{build_phase_settings_section}
@@ -30,7 +27,32 @@ class ProjektImports::PromptBuilder
   private
 
   def response_language
+    @response_language
+  end
+
+  def default_response_language
     I18n.locale.to_s.start_with?("de") ? "German" : "English"
+  end
+
+  def build_reference_data_section
+    lines = ["## Reference data", ""]
+
+    tags = Array(refs["tags"]).compact
+    if tags.present?
+      lines << "Available categories: #{tags.map { |tag| %("#{tag}") }.join(', ')}"
+    end
+
+    goals = Array(refs["sdg_goals"])
+    if goals.present?
+      lines << "Available SDG goals: #{goals.map { |goal| "#{goal['code']} = #{goal['title']}" }.join(', ')}"
+    end
+
+    phase_types = Array(refs["phase_types"])
+    if phase_types.present?
+      lines << "Available phase types: #{phase_types.join(', ')}"
+    end
+
+    lines.join("\n")
   end
 
   def build_templates_section

@@ -97,22 +97,7 @@ class Users::LatestActivityComponent < ApplicationComponent
       ].flatten.compact
     end
 
-    def list_params
-      params = {
-        title: @title || t("custom.welcome.latest_activity.title"),
-        current_filter: current_filter,
-        filters: valid_filters,
-        remote_url: "latest_activity",
-        filter_param: "filter",
-        filter_i18n_namespace: "custom.welcome.latest_activity"
-      }
-
-      if current_filter == "comments"
-        params[:hide_view_mode_button] = true
-      else
-        params[:resources] = resources
-      end
-
-      params
+    def title
+      @title || t("custom.welcome.latest_activity.title")
     end
 end

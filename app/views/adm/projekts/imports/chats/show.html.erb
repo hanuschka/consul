@@ -126,17 +126,6 @@
           <%= render "adm/projekts/imports/chats/action_tooltip", key: "summarize" %>
         </rich-tooltip>
       </div>
-
-      <div class="projekt-import-chat--topbar-import-group">
-        <rich-tooltip delay="700">
-          <%= render Kern::SwitchComponent.new(
-                label: t(".generate_image_toggle"),
-                checked: @projekt_import.generate_image,
-                input_data: { "projekt-imports--chat-target" => "generateImage" }
-              ) %>
-          <%= render "adm/projekts/imports/chats/action_tooltip", key: "generate_image" %>
-        </rich-tooltip>
-      </div>
     </div>
 
     <%# Input area %>
@@ -180,15 +169,34 @@
 
     <%# Import action %>
     <div class="projekt-import-chat--import-action">
+      <rich-tooltip delay="700">
+        <%= render Kern::SwitchComponent.new(
+              label: t(".generate_image_toggle"),
+              checked: @projekt_import.generate_image,
+              input_data: { "projekt-imports--chat-target" => "generateImage" }
+            ) %>
+        <%= render "adm/projekts/imports/chats/action_tooltip", key: "generate_image" %>
+      </rich-tooltip>
+
       <div class="projekt-import-chat--import-confirm"
            data-controller="shared--confirm-dialog"
            data-action="shared--confirm-dialog:confirmed->projekt-imports--chat#startImport">
-        <button type="button"
-                class="projekt-import-chat--topbar-button -primary"
-                data-action="click->shared--confirm-dialog#open">
-          <span class="material-symbols-outlined" aria-hidden="true">upload</span>
-          <%= @created_projekts.any? ? t(".commands.import_again") : t(".commands.import") %>
-        </button>
+        <rich-tooltip delay="700">
+          <button type="button"
+                  class="projekt-import-chat--topbar-button -primary"
+                  data-projekt-imports--chat-target="importButton"
+                  data-action="click->projekt-imports--chat#guardImport click->shared--confirm-dialog#open">
+            <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+            <%= @created_projekts.any? ? t(".commands.import_again") : t(".commands.import") %>
+          </button>
+          <template>
+            <span class="projekt-import-chat--tooltip">
+              <span class="projekt-import-chat--tooltip-title"><%= t(".tooltips.import.title") %></span>
+              <span class="projekt-import-chat--tooltip-text projekt-import-chat--tooltip-text-default"><%= t(".tooltips.import.text") %></span>
+              <span class="projekt-import-chat--tooltip-text projekt-import-chat--tooltip-text-busy"><%= t(".tooltips.import.busy_text") %></span>
+            </span>
+          </template>
+        </rich-tooltip>
 
         <%= render Shared::ModalComponent.new(
               id: "projekt-import-confirm-modal",
@@ -223,8 +231,22 @@
     <div class="projekt-import-chat--overlay -hidden"
          data-projekt-imports--chat-target="overlay">
       <div class="projekt-import-chat--overlay-content">
-        <div class="projekt-import-chat--overlay-spinner" aria-hidden="true"></div>
-        <p data-projekt-imports--chat-target="overlayLabel"></p>
+        <h3 class="projekt-import-chat--overlay-title">
+          <%= t("adm.projekts.imports.chats.show.import_overlay_title") %>
+        </h3>
+
+        <div class="projekt-import-chat--overlay-progress">
+          <div class="projekt-import-chat--overlay-progress-bar" role="progressbar" aria-label="<%= t('adm.projekts.imports.chats.show.import_overlay_title') %>">
+            <div class="projekt-import-chat--overlay-progress-fill"
+                 data-projekt-imports--chat-target="overlayFill"></div>
+          </div>
+          <span class="projekt-import-chat--overlay-label"
+                data-projekt-imports--chat-target="overlayLabel"></span>
+        </div>
+
+        <p class="projekt-import-chat--overlay-message">
+          <%= t("adm.projekts.imports.chats.show.import_overlay_message") %>
+        </p>
       </div>
     </div>
   </div>

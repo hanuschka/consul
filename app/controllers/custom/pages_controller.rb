@@ -59,13 +59,16 @@ class PagesController < ApplicationController
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
       end
 
-      if @projekt.projekt_phases.active.any?
+      if @projekt.projekt_phases.active.any? || helpers.show_admin_controls_for_projekt?(@projekt)
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
-        @projekt_phase = @default_projekt_phase
 
-        params[:projekt_phase_id] = @default_projekt_phase.id
-        params[:projekt_id] ||= @projekt.id
-        send("set_#{@default_projekt_phase.name}_footer_tab_variables")
+        if @default_projekt_phase.present?
+          @projekt_phase = @default_projekt_phase
+
+          params[:projekt_phase_id] = @default_projekt_phase.id
+          params[:projekt_id] ||= @projekt.id
+          send("set_#{@default_projekt_phase.name}_footer_tab_variables")
+        end
       end
 
       @cards = @custom_page.cards
@@ -89,8 +92,10 @@ class PagesController < ApplicationController
       @cards = @custom_page.cards
       render action: custom_page_name
 
-    else
+    elsif params[:id].to_s.match?(%r{\A[a-z0-9]+(?:[_\-/][a-z0-9]+)*\z}i)
       render action: params[:id]
+    else
+      head :not_found, content_type: "text/html"
     end
   rescue ActionView::MissingTemplate
     head :not_found, content_type: "text/html"
@@ -134,11 +139,12 @@ class PagesController < ApplicationController
       @current_order = @valid_orders.include?(params[:order]) ? params[:order] : @valid_orders.first
 
       @commentable = @projekt_phase
-      @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
-      set_comment_flags(@comment_tree.comments)
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
+      else
+        @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
+        set_comment_flags(@comment_tree.comments)
       end
     end
 
@@ -188,9 +194,8 @@ class PagesController < ApplicationController
       @resources = @projekt_phase.proposals
                                  .base_selection
                                  .with_min_supports(min_supports)
-                                 .includes([:image, :projekt_labels, :translations, author: [:image, :organization], sentiment: [:translations]])
 
-      if params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
+      if params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @projekt_phase) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
       else
         if params[:search].present?
@@ -214,6 +219,7 @@ class PagesController < ApplicationController
           @resources
             .perform_sort_by(@current_order, session[:random_seed])
             .page(params[:page])
+            .includes([:image, :projekt_labels, :translations, :community, author: [:image, :organization], sentiment: [:translations], projekt_phase: [:settings, :projekt_labels, :geozone_restrictions, { projekt: [:translations, { page: :translations }] }]])
 
         if helpers.browse_mode_in_projekt_footer_tab?(@projekt_phase)
           @proposals = @proposals.page(params[:resource_browse_mode_page]).per(1)
@@ -235,9 +241,65 @@ class PagesController < ApplicationController
 
       @valid_orders = nil
 
-      # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
-      @resources = @projekt_phase.polls.for_public_render.all
-      @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+      if !params[:section].in?(%w[evaluation ai_evaluation poll_stats])
+        # @resources = @projekt_phase.polls.for_public_render.send(@current_filter)
+        @resources = @projekt_phase.polls.for_public_render.all
+        @polls = Kaminari.paginate_array(@resources.sort_for_list).page(params[:page])
+      end
+
+      set_voting_phase_evaluation_variables
+    end
+
+    def set_voting_phase_evaluation_variables
+      if params[:section] == "poll_stats" &&
+          helpers.footer_evaluation_tab_available?(@projekt_phase, "poll_stats")
+        @poll_stats_entries = @projekt_phase.polls.for_public_render.order(id: :desc).map do |poll|
+          { poll: poll, stats: Poll::Stats.new(poll) }
+        end
+      end
+
+      if params[:section] == "evaluation" &&
+          helpers.footer_render_frozen_evaluation?(@projekt_phase)
+        @live_phase_stats = voting_phase_live_stats
+
+        phase_polls = @projekt_phase.polls.for_public_render.limit(2).to_a
+        @frontend_answer_poll = phase_polls.first if phase_polls.one?
+      end
+    end
+
+    def voting_phase_live_stats
+      if helpers.footer_admin_or_projekt_manager?
+        cached_voting_phase_live_stats(
+          "footer_live_phase_stats/admin/#{@projekt_phase.id}",
+          ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_ADMIN_TTL
+        )
+      else
+        cached_voting_phase_live_stats(
+          "footer_live_phase_stats/#{@projekt_phase.id}",
+          ProjektPhaseSettingsHelper::FOOTER_LIVE_STATS_TTL
+        )
+      end
+    end
+
+    def cached_voting_phase_live_stats(cache_key, ttl)
+      cached_stats = Rails.cache.read(cache_key)
+      return cached_stats if cached_stats.present?
+
+      stats = compute_voting_phase_live_stats
+
+      if stats.present?
+        Rails.cache.write(cache_key, stats, expires_in: ttl)
+      end
+
+      stats
+    end
+
+    def compute_voting_phase_live_stats
+      ProjektEvaluations::AggregateStatistics
+        .new(@projekt)
+        .call_for_phase(@projekt_phase)
+        &.dig(:stats)
+        &.deep_stringify_keys
     end
 
     def set_legislation_phase_footer_tab_variables
@@ -323,7 +385,7 @@ class PagesController < ApplicationController
 
       if params[:section] == "results" && can?(:read_results, @budget)
         @investments = Budget::Result.new(@budget, @budget.heading).investments
-      elsif params[:section].in?(["key_metrics", "analysis"]) && can?(:read_stats, @budget) && can_view_stats_section?(params[:section], @projekt_phase)
+      elsif params[:section].in?(["key_metrics", "analysis", "evaluation", "ai_evaluation"]) && can?(:read_stats, @budget) && can_view_stats_section?(params[:section], @projekt_phase)
         @stats = @projekt_phase
         @investments = @budget.investments
       else
@@ -398,6 +460,8 @@ class PagesController < ApplicationController
     end
 
     def set_question_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
+
       projekt_questions = @projekt_phase.questions.root_questions
 
       if @projekt_phase.question_list_enabled?
@@ -422,6 +486,9 @@ class PagesController < ApplicationController
     def set_argument_phase_footer_tab_variables
       @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro.order(created_at: :desc)
       @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
+    end
+
+    def set_mitmachbox_phase_footer_tab_variables
     end
 
     def set_iframe_phase_footer_tab_variables
@@ -457,7 +524,9 @@ class PagesController < ApplicationController
     def get_default_projekt_phase(default_phase_id = nil)
       default_phase_id ||= ProjektSetting.find_by(projekt: @projekt,
   key: "projekt_custom_feature.default_footer_tab").value
-      @default_projekt_phase = ProjektPhase.find_by(id: default_phase_id) || @projekt.projekt_phases.active.first
+      @default_projekt_phase = ProjektPhase.find_by(id: default_phase_id) ||
+        @projekt.projekt_phases.active.first ||
+        @projekt.projekt_phases.first
     end
 
     def set_resources(resource_model)
@@ -487,10 +556,15 @@ class PagesController < ApplicationController
     def can_view_stats_section?(section, phase)
       return true if current_user&.administrator? || current_user&.projekt_manager?
 
-      if section == "key_metrics"
+      case section
+      when "key_metrics"
         phase.feature?("general.public_kpi_stats")
-      elsif section == "analysis"
+      when "analysis"
         phase.feature?("general.public_ai_stats")
+      when "evaluation"
+        helpers.footer_evaluation_tab_public_visible?(phase, "stats")
+      when "ai_evaluation"
+        helpers.footer_evaluation_tab_public_visible?(phase, "ai")
       else
         false
       end

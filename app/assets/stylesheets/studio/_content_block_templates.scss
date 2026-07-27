@@ -1,4 +1,4 @@
-.projekt-content-block-templates-selector--tabs {
+.custom-content-block-templates-selector--tabs {
   background-color: transparent;
   margin-bottom: 1.1rem;
   justify-content: flex-start;
@@ -8,7 +8,7 @@
   }
 }
 
-.projekt-content-block-edit-main-controlls {
+.custom-content-block-edit-main-controlls {
   user-select: none;
   justify-content: flex-end;
   gap: 5px;
@@ -19,14 +19,14 @@
   display: none;
 }
 
-.projekt-content-block-edit--separator {
+.custom-content-block-edit--separator {
   width: 1px;
   height: 24px;
   background-color: #cbd5e0;
   margin: 0 3px;
 }
 
-.projekt-content-block-templates-selector--tab {
+.custom-content-block-templates-selector--tab {
   background-color: transparent !important;
 
   a {
@@ -38,7 +38,7 @@
   }
 }
 
-dialog.projekt-content-block-templates-selector-wrapper {
+dialog.custom-content-block-templates-selector-wrapper {
   max-width: 1030px;
   max-height: 93vh;
   margin-top: 3vh;
@@ -48,7 +48,7 @@ dialog.projekt-content-block-templates-selector-wrapper {
 // Gate flex layout behind [open] — an unconditional `display` on a <dialog>
 // overrides the UA `dialog:not([open]) { display: none }`, which leaves the
 // dialog in normal flow and breaks showModal()'s top-layer + backdrop.
-dialog.projekt-content-block-templates-selector-wrapper[open] {
+dialog.custom-content-block-templates-selector-wrapper[open] {
   display: flex;
   flex-direction: column;
 }
@@ -87,7 +87,7 @@ dialog.modern-modal {
   margin-bottom: 20px;
 }
 
-.projekt-content-block-templates-selector {
+.custom-content-block-templates-selector {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -102,7 +102,7 @@ dialog.modern-modal {
   padding-right: 0;
 }
 
-.projekt-content-block-templates-selector--inner {
+.custom-content-block-templates-selector--inner {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -239,11 +239,12 @@ dialog.modern-modal {
     background-color: #d8d8d8;
   }
 
-  &.-copied {
+  &.-copied i {
+    color: $green-success-color;
   }
 }
 
-.projekt-content-block-greeting {
+.custom-content-block-greeting {
   .accordion {
     margin-bottom: 10px;
   }
@@ -253,7 +254,7 @@ dialog.modern-modal {
   width: 100%;
 }
 
-.projekt-content-block-templates-selector {
+.custom-content-block-templates-selector {
   .shared-tabs--link[aria-selected="true"],
   .shared-tabs--link:hover {
     color: var(--dt-base);

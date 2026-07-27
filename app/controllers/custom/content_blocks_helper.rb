@@ -1,6 +1,13 @@
 require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
 
 module ContentBlocksHelper
+  # A <p> may only contain phrasing content, so any block-level body (e.g. the
+  # {{projekt_map}} map embed div) is auto-ejected by the HTML parser and ends
+  # up rendered outside the content block. Detect such bodies and wrap them in a
+  # <div> instead, whatever tag was requested.
+  BLOCK_LEVEL_BODY_REGEXP =
+    /<(p|div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
+
   def render_custom_block(
     key,
     projekt: nil,
@@ -8,7 +15,8 @@ module ContentBlocksHelper
     default_content: nil,
     return_path: nil,
     toolbar_position: nil,
-    empty_hint: true
+    empty_hint: true,
+    tag_name: "p"
   )
     locale = current_user&.locale || I18n.default_locale
     block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
@@ -43,16 +51,21 @@ module ContentBlocksHelper
         inline_urls,
         default_content: sanitized_default_content,
         toolbar_position: toolbar_position,
-        empty_hint: empty_hint
+        empty_hint: empty_hint,
+        tag_name: tag_name
       ).html_safe
     else
-      res = build_standard_block(key, block, block_body, projekt, return_path)
+      res = build_standard_block(key, block, block_body, projekt, return_path, tag_name: tag_name)
 
       if Setting["extended_feature.gdpr.two_click_iframe_solution"].present? && res.include?("</iframe>")
         res = process_iframe_embeds(res)
       end
 
       res = AdminWYSIWYGSanitizer.new.sanitize(res)
+
+      if res.include?("{{projekt_map}}")
+        res = process_shortcodes(res, projekt: projekt).html_safe
+      end
     end
 
     res
@@ -74,8 +87,10 @@ module ContentBlocksHelper
     end
   end
 
-  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil, empty_hint: true)
-    res = "<div id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
+  def build_inline_editable_block(key, block, block_body, inline_urls, default_content: nil, toolbar_position: nil, empty_hint: true, tag_name: "p")
+    block_tag = content_block_tag_name(block_body, tag_name)
+
+    res = "<#{block_tag} id=\"#{key}\" class=\"js-site-content-block custom-content-block-body\" data-turbolinks=\"false\""
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
@@ -93,7 +108,7 @@ module ContentBlocksHelper
       res << " style=\"margin-bottom: #{persisted_margin.to_i}px\""
     end
 
-    res << ">#{block_body}</div>"
+    res << ">#{block_body}</#{block_tag}>"
 
     if empty_hint && content_block_body_blank?(block_body)
       res = wrap_with_admin_empty_hint(res)
@@ -116,7 +131,7 @@ module ContentBlocksHelper
     "<div class=\"#{wrapper_classes}\">#{hint}#{block_html}</div>"
   end
 
-  def build_standard_block(key, block, block_body, projekt, return_path)
+  def build_standard_block(key, block, block_body, projekt, return_path, tag_name: "p")
     edit_link = nil
 
     if current_user&.administrator? && block.present?
@@ -131,7 +146,9 @@ module ContentBlocksHelper
       )
     end
 
-    res = "<div id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</div>"
+    block_tag = content_block_tag_name(block_body, tag_name)
+
+    res = "<#{block_tag} id=#{key} class=#{'custom-content-block-body' if block_body.present?} data-turbolinks=\"false\">#{block_body}</#{block_tag}>"
 
     if edit_link
       res << "<div class='custom-content-block-controls js-studio-hide-on-preview'>"
@@ -140,6 +157,12 @@ module ContentBlocksHelper
     end
 
     res
+  end
+
+  def content_block_tag_name(block_body, tag_name)
+    return "div" if tag_name == "p" && block_body.to_s.match?(BLOCK_LEVEL_BODY_REGEXP)
+
+    tag_name
   end
 
   def render_custom_content_block?(key)
@@ -208,6 +231,10 @@ module ContentBlocksHelper
 
   def convert_br_to_paragraphs(html)
     return html if html.blank?
+
+    if html.match?(/<br\s*\/?>/) && !html.match?(BLOCK_LEVEL_BODY_REGEXP)
+      html = "<p>#{html}</p>"
+    end
 
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")

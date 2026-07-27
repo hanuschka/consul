@@ -32,7 +32,6 @@ class Projekt < ApplicationRecord
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
-  has_one :projekt_evaluation_visibility, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
 
   has_many :projekt_settings, dependent: :destroy
@@ -104,7 +103,7 @@ class Projekt < ApplicationRecord
   delegate :url, to: :page, allow_nil: true
 
   after_create :create_corresponding_page, :set_order, :create_default_settings,
-    :copy_map_settings, :ensure_other_projekts_order_integrity
+    :copy_map_settings, :ensure_other_projekts_order_integrity, :assign_author_as_manager
 
   after_save do
     if parent_id_previously_changed?
@@ -114,6 +113,9 @@ class Projekt < ApplicationRecord
 
   before_save :assign_top_level_projekt_from_parent
   before_save :sync_published_at
+
+  before_create :initialize_content_updated_at
+  before_update :bump_content_updated_at
 
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
@@ -878,12 +880,34 @@ class Projekt < ApplicationRecord
       touch if persisted?
     end
 
+    def assign_author_as_manager
+      projekt_manager = author&.projekt_manager
+      return if projekt_manager.blank?
+      return if projekt_manager.manage_all_projekts?
+
+      assignment = projekt_manager_assignments.find_or_initialize_by(projekt_manager: projekt_manager)
+      assignment.permissions |= ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS
+      assignment.save!
+    end
+
     def assign_top_level_projekt_from_parent
       return unless parent_id_changed?
 
       if parent&.parent_id.present?
         self.top_level_projekt_id = parent.parent_id
       end
+    end
+
+    def initialize_content_updated_at
+      self.content_updated_at = Time.current
+    end
+
+    def bump_content_updated_at
+      relevant_changes =
+        changes_to_save.except("order_number", "updated_at", "content_updated_at")
+      return if relevant_changes.blank?
+
+      self.content_updated_at = Time.current
     end
 
     def sync_for_global_overview_if_changed

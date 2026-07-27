@@ -12,7 +12,7 @@
           <% content_blocks.each do |content_block| %>
             <% next if !show_admin_controls && content_block_body_blank?(content_block.body) %>
             <div
-              class="projekt-content-block js-content-block"
+              class="custom-content-block js-content-block"
               data-id="<%= content_block.id %>"
               data-turbolinks="false"
               <% effective_margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>
@@ -29,7 +29,7 @@
 
     <% if show_admin_controls %>
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
-      <div class="js-delete-all-content-blocks projekt-content-blocks-delete-section js-studio-hide-on-preview">
+      <div class="js-delete-all-content-blocks custom-content-blocks-delete-section js-studio-hide-on-preview">
         <%= studio_rich_tooltip(
           title: "Alle Inhaltsblöcke löschen",
           text: "Entfernt sämtliche Inhaltsblöcke dieser Seite auf einmal. Diese Aktion kann nicht rückgängig gemacht werden — die Inhalte müssen anschließend neu erstellt werden.",

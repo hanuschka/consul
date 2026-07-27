@@ -1,0 +1,8 @@
+de:
+  components:
+    adm:
+      masterportal_collections_taxonomy_component:
+        table:
+          icon: Symbol
+          name: Sammlung
+          pins: Pins

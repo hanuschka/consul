@@ -13,7 +13,9 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
       tags 'Poll Question Answers'
       produces 'application/json'
       security [bearer_auth: []]
-      description "List all answers for a specific poll question. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "List all answers for a specific poll question, paginated with pagination metadata. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
 
       response '200', 'answers found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -45,7 +47,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
                      }
                    },
                    required: ['answers']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
                },
                required: ['data']
 

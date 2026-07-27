@@ -54,7 +54,8 @@
 
   <% if @context_sources.any? && question.parent_question.blank? %>
     <%= render Kern::FormFieldComponent.new(
-      label: Poll::Question.human_attribute_name(:contextualize_by_poll_question_id)) do %>
+      label: Poll::Question.human_attribute_name(:contextualize_by_poll_question_id),
+      hint: t(".contextualize_hint")) do %>
       <%= f.collection_radio_buttons :contextualize_by_poll_question_id,
             [["", t(".no_contextualization")]] + @context_sources.map { |q| [q.id, q.title] },
             :first, :last %>

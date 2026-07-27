@@ -59,7 +59,6 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.show_in_individual_list": "",
         "projekt_feature.general.allow_downvoting_comments": "active",
         "projekt_feature.general.show_in_sidebar_filter": 'active',
-        "projekt_feature.general.vc_map_enabled": '',
         "projekt_feature.general.consider_underway": "",
         "projekt_feature.general.allow_indexing": "active",
         "projekt_feature.general.show_related_projekt_link": "active",

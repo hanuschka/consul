@@ -1,9 +1,3 @@
-<% if projekt_feature?(@proposal.projekt_phase.projekt, "general.vc_map_enabled") %>
-  <% provide :vc_maps do %>
-    <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
-  <% end %>
-<% end %>
-
 <% if @landing_page.present? %>
   <%= render "pages/brand_color_styles", page: @landing_page %>
 <% end %>

@@ -36,6 +36,20 @@ class Polls::QuestionsController < ApplicationController
     end
   end
 
+  def wizard_step
+    @question = Poll::Question.with_wizard_associations.find(@question.id)
+
+    if !wizard_navigable?(@question)
+      return head(:not_found)
+    end
+
+    if !@question.poll.projekt.visible_for?(current_user)
+      return head(:forbidden)
+    end
+
+    render partial: "polls/wizard_item", layout: false, locals: { question: @question }
+  end
+
   def csv_answers_streets
     question = Poll::Question.find(params[:id])
 
@@ -65,5 +79,9 @@ class Polls::QuestionsController < ApplicationController
 
     def providing_an_open_answer?(answer)
       @question.open_question_answer.present? && @question.open_question_answer.title == answer.answer
+    end
+
+    def wizard_navigable?(question)
+      question.parent_question_id.nil? && question.contextualize_by_poll_question_id.nil?
     end
 end

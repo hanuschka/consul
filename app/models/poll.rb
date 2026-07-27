@@ -136,7 +136,10 @@ class Poll < ApplicationRecord
   end
 
   def voted_in_booth?(user)
-    Poll::Voter.where(poll: self, user: user, origin: "booth").exists?
+    @voted_in_booth ||= {}
+    return @voted_in_booth[user&.id] if @voted_in_booth.key?(user&.id)
+
+    @voted_in_booth[user&.id] = Poll::Voter.where(poll: self, user: user, origin: "booth").exists?
   end
 
   def voted_in_web?(user)

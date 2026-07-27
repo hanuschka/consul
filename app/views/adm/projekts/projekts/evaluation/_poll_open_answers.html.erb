@@ -1,0 +1,54 @@
+<%
+  answers = question["answers"] || []
+  open_answers = answers.select { |answer| (answer["open_texts"] || []).any? }
+  pdf_mode_local = local_assigns.fetch(:pdf_mode, false)
+%>
+
+<% open_answers.each do |answer| %>
+  <% entries = answer["open_texts"] || [] %>
+  <%= render layout: "adm/projekts/projekts/evaluation/open_responses_disclosure",
+    locals: {
+      accent: accent,
+      accent_light: accent_light,
+      extra_class: "open-responses--answers",
+      title: t("adm.projekts.projekts.evaluation.open_answers_title", answer: answer["title"]),
+      count: entries.size,
+      show_label: t("adm.projekts.projekts.evaluation.open_answers_show"),
+      hide_label: t("adm.projekts.projekts.evaluation.open_answers_hide"),
+      icon_material: "edit_note",
+      icon_fa: "fa-pen",
+      open_by_default: pdf_mode_local || entries.size <= 6
+    } do %>
+    <% if pdf_mode_local %>
+      <p class="open-answer-response--note">
+        <%= t("adm.projekts.projekts.evaluation.open_answers_csv_hint", count: entries.size) %>
+      </p>
+    <% else %>
+      <paginated-list
+        class="paginated-list"
+        per="10"
+        previous-label="<%= t("adm.projekts.projekts.evaluation.open_answers_prev") %>"
+        next-label="<%= t("adm.projekts.projekts.evaluation.open_answers_next") %>"
+        status-label="<%= t("adm.projekts.projekts.evaluation.open_answers_page_status") %>"
+      >
+        <div class="response-grid" data-paginated-list-items>
+          <% entries.each do |entry| %>
+            <div class="response-item open-answer-response">
+              <div class="open-answer-response--meta">
+                <span class="open-answer-response--author">
+                  <%= entry["author_name"].presence || t("adm.projekts.projekts.evaluation.open_answers_anonymized") %>
+                </span>
+                <% if entry["created_at"].present? %>
+                  <span class="open-answer-response--date">
+                    <%= l(Time.zone.parse(entry["created_at"]), format: :short) %>
+                  </span>
+                <% end %>
+              </div>
+              <div class="open-answer-response--text"><%= entry["text"] %></div>
+            </div>
+          <% end %>
+        </div>
+      </paginated-list>
+    <% end %>
+  <% end %>
+<% end %>

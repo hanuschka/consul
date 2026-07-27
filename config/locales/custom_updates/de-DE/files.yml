@@ -8,6 +8,7 @@ de:
           documents: Admin-Dokumente
           resource_images: Ressourcen-Bilder
           resource_documents: Ressourcen-Dokumente
+          file_settings: Datei-Einstellungen
   files:
     allowed_types_note_html: "Erlaubte Dateitypen: %{types}"
     allowed_types_note_admin_html: "Erlaubte Admin-Dateitypen: %{types}"
@@ -149,3 +150,10 @@ de:
     fullsize_preview:
       button: Vorschau
       close: Schließen
+    show:
+      untitled: Ohne Titel
+      view_details: Details anzeigen
+      close: Schließen
+      loading: Wird geladen …
+      open_file: Datei öffnen
+      download: Herunterladen

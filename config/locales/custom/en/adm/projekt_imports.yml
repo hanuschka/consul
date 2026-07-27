@@ -25,7 +25,7 @@ en:
               chatting: "Almost ready — opening the chat…"
             errors:
               no_files: "Please select at least one file."
-              too_large: "The selected files exceed the 45 MB limit."
+              too_large: "The selected files exceed the 500 MB limit."
               unsupported_type: "The file %{filename} is not a supported format."
           show:
             title: "Import progress"
@@ -103,6 +103,7 @@ en:
               import:
                 title: "Import projekt"
                 text: "Creates the projekt with all phases, content blocks, and settings. It stays deactivated and hidden from visitors until you activate it."
+                busy_text: "The assistant is still responding. You can start the import once the current message is finished."
               attach:
                 title: "Attach document"
                 text: "Adds another document to the conversation so the AI can take extra information into account."
@@ -112,6 +113,8 @@ en:
               import: "Import projekt"
               import_again: "Import as new projekt"
               start_over: "Start over"
+            import_overlay_title: "Import in progress…"
+            import_overlay_message: "The projekt is being created. This can take a moment."
             progress:
               finalizing_data: "Finalizing your changes…"
               resolving_content_blocks: "Building content blocks…"
@@ -154,7 +157,7 @@ en:
           unknown_command: "Unknown command."
           no_chat: "No chat session found for this import."
           no_files: "No files provided."
-          too_large: "The selected files exceed the 45 MB limit."
+          too_large: "The selected files exceed the 500 MB limit."
           unsupported_type: "The file %{filename} is not a supported format."
           message_failed: "This response could not be generated. Try sending the message again."
           ai_processing_failed: "AI processing failed: %{message}"
@@ -182,8 +185,10 @@ en:
         badge:
           imported_by_ai: "AI"
           imported_by_ai_title: "This projekt was imported from a document with AI."
+          imported_by_ai_description: "An AI automatically generated the phases and content from an uploaded document. Please review the details before publishing the projekt."
         index:
           new_button: "Import from document"
+          new_button_description: "Upload a document and let the AI build a complete projekt from it — phases and content included — which you can review before importing."
           title: "Projekt imports"
           new_import: "New projekt import"
           empty: "No projekt imports yet."

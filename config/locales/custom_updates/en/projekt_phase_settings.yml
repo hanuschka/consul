@@ -1,6 +1,13 @@
 en:
   custom:
     projekt_phase_settings:
+      polls:
+        feature:
+          general:
+            public_kpi_stats: Show KPIs for public
+            public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
+            public_ai_stats: Show AI analysis for public
+            public_ai_stats_description: Shows AI analysis to non-administrative users
       comments:
         feature:
           general:

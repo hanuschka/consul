@@ -1,4 +1,6 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_image(image: projekt_event.image, image_placeholder_icon_class: "fa-comments", resource: projekt_event) %>
+
   <% c.with_header do %>
     <div>
       <%= ProjektEvent.model_name.human %>

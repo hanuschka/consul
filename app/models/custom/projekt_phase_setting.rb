@@ -74,6 +74,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
+          "feature.form.use_masterportal_collections_as_labels": "",
           "feature.form.sentiments": "",
           "feature.form.show_map": "active",
           "feature.form.enable_geoman_controls_in_maps": "active",
@@ -90,6 +91,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.users_can_create_proposals": "active",
           "feature.resource.create_proposal_with_ai": "",
           "feature.resource.allow_voting": "active",
+          "feature.resource.conditional_voting": "",
           "feature.resource.quorum_for_proposals": "",
           "feature.resource.enable_up_and_down_voting": "",
           "feature.resource.show_report_button_in_sidebar": "active",
@@ -112,6 +114,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.stats_enabled": "",
           "feature.resource.report_visible_for_citizens": "",
           "feature.resource.evaluation_enabled": "",
+          "feature.general.public_kpi_stats": "",
+          "feature.general.public_ai_stats": "",
           "feature.resource.show_comments": "",
           "feature.resource.show_open_answer_author_name": ""
         },
@@ -125,6 +129,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
+          "feature.form.use_masterportal_collections_as_labels": "",
           "feature.form.sentiments": "",
           "feature.form.show_map": "active",
           "feature.form.enable_geoman_controls_in_maps": "active",
@@ -145,6 +150,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_related_content": "",
           "feature.resource.show_comments": "active",
           "feature.resource.conditional_balloting": "",
+          "feature.resource.conditional_voting": "",
           "feature.resource.show_video_as_link": "",
           "feature.resource.hide_ballots_count": "",
           "option.resource.max_submissions_per_user": ""
@@ -189,6 +195,7 @@ class ProjektPhaseSetting < ApplicationRecord
         },
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
+          "feature.form.use_masterportal_collections_as_labels": "",
           "option.general.max_number_of_pins_per_user": "",
           "option.form.map_features_limit": "1"
         }

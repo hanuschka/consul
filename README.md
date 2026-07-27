@@ -22,6 +22,12 @@ GDPR-by-default configuration and the KERN UX standard for the administration ba
 > **Note:** This is an independent product. It is **not** kept in sync with the upstream
 > Consul Democracy repository; treat upstream documentation as background only.
 
+Four German-language documents accompany this repository: the
+[Architektur](ARCHITEKTUR.md) overview (components and how they interact), the
+[Betriebshandbuch](BETRIEBSHANDBUCH.md) (hosting, deployment, backups, monitoring), the
+[Third-Party Notices](THIRD_PARTY_NOTICES.md) (major open-source components and licenses)
+and the [Security Policy](SECURITY.md) (responsible disclosure of vulnerabilities).
+
 ## Development setup
 
 Prerequisites: `git`, **Ruby 3.1.4**, **Node.js 20.11.0**, PostgreSQL, CMake,

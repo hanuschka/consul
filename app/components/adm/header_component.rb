@@ -3,7 +3,7 @@ class Adm::HeaderComponent < ApplicationComponent
   renders_one :actions
   renders_one :after_title
 
-  def initialize(title:, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, ultracompact: false, frontend_url: nil)
+  def initialize(title: nil, breadcrumbs: [], back_button_url: nil, narrow: false, compact: false, ultracompact: false, frontend_url: nil)
     @title = title
     @breadcrumbs = breadcrumbs
     @back_button_url = back_button_url
@@ -63,8 +63,13 @@ class Adm::HeaderComponent < ApplicationComponent
 
       if projekt && projekt.page&.slug.present?
         base = "/#{projekt.page.slug}"
-        url = projekt_phase ? "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer" : base
-        return [url, t.call(:projekt)]
+
+        if projekt_phase
+          url = "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer"
+          return [url, t.call(:projekt_phase)]
+        end
+
+        return [base, t.call(:projekt)]
       end
 
       landing_page = controller.instance_variable_get(:@landing_page)

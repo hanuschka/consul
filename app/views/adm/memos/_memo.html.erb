@@ -1,13 +1,21 @@
 <div class="adm-memo" id="<%= dom_id(memo) %>">
-  <div class="adm-memo__avatar" title="<%= memo.user.name %>">
-    <%= memo.user.name.first.upcase %>
-  </div>
+  <% if memo.user.hidden? || memo.user.erased? %>
+    <div class="adm-memo__avatar">?</div>
+  <% else %>
+    <div class="adm-memo__avatar" title="<%= memo.user.name %>">
+      <%= memo.user.name.first.upcase %>
+    </div>
+  <% end %>
   <div class="adm-memo__content">
     <div class="adm-memo__header">
-      <strong><%= link_to memo.user.name, user_path(memo.user) %></strong>
-      <% if memo.user.display_official_position_badge? %>
-        <span class="adm-memo__separator">&bull;</span>
-        <%= render Shared::OfficialPositionBadgeComponent.new(user: memo.user) %>
+      <% if memo.user.hidden? || memo.user.erased? %>
+        <strong><%= t("adm.memos.memo.user_deleted") %></strong>
+      <% else %>
+        <strong><%= link_to memo.user.name, user_path(memo.user) %></strong>
+        <% if memo.user.display_official_position_badge? %>
+          <span class="adm-memo__separator">&bull;</span>
+          <%= render Shared::OfficialPositionBadgeComponent.new(user: memo.user) %>
+        <% end %>
       <% end %>
       <span class="adm-memo__separator">&bull;</span>
       <span class="adm-memo__timestamp" title="<%= l memo.created_at.to_datetime, format: :datetime %>"><%= relative_time(memo.created_at) %></span>

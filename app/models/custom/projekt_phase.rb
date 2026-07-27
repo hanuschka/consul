@@ -24,7 +24,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   DEPRECATED_PHASE_TYPES = [
@@ -58,10 +59,35 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "live_tv",
     "ProjektPhase::ArgumentPhase" => "forum",
     "ProjektPhase::NewsfeedPhase" => "feed",
+    "ProjektPhase::MitmachboxPhase" => "markunread_mailbox",
     "ProjektPhase::DebatePhase" => "forum"
   }.freeze
 
   DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
+
+  FOOTER_HIDDEN_EVALUATION_SECTIONS = %w[kpis heatmap].freeze
+
+  PHASE_FA_ICONS = {
+    "ProjektPhase::CommentPhase" => "fa-comment",
+    "ProjektPhase::ProposalPhase" => "fa-lightbulb",
+    "ProjektPhase::PointOfInterestPhase" => "fa-map-marker-alt",
+    "ProjektPhase::QuestionPhase" => "fa-question-circle",
+    "ProjektPhase::VotingPhase" => "fa-vote-yea",
+    "ProjektPhase::IframePhase" => "fa-globe",
+    "ProjektPhase::BudgetPhase" => "fa-euro-sign",
+    "ProjektPhase::LegislationPhase" => "fa-gavel",
+    "ProjektPhase::FormularPhase" => "fa-file-alt",
+    "ProjektPhase::EventPhase" => "fa-calendar-alt",
+    "ProjektPhase::MilestonePhase" => "fa-flag",
+    "ProjektPhase::ProjektNotificationPhase" => "fa-bell",
+    "ProjektPhase::LivestreamPhase" => "fa-tv",
+    "ProjektPhase::ArgumentPhase" => "fa-comments",
+    "ProjektPhase::NewsfeedPhase" => "fa-rss",
+    "ProjektPhase::MitmachboxPhase" => "fa-box-open",
+    "ProjektPhase::DebatePhase" => "fa-comments"
+  }.freeze
+
+  DEFAULT_PHASE_FA_ICON = "fa-flag".freeze
 
   delegate :icon, :author, :author_id, to: :projekt
 
@@ -178,6 +204,14 @@ class ProjektPhase < ApplicationRecord
     self.class.material_icon_for(type)
   end
 
+  def self.fa_icon_for(type)
+    PHASE_FA_ICONS[type.to_s] || DEFAULT_PHASE_FA_ICON
+  end
+
+  def fa_icon
+    self.class.fa_icon_for(type)
+  end
+
   default_scope { order(:given_order, :id) }
 
   scope :regular_phases, -> { where.not(type: SPECIAL_PROJEKT_PHASES) }
@@ -233,7 +267,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank?
+    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+  end
+
+  def conditional_vote_possible_for?(user)
+    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -373,6 +411,56 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  # Mirrors the footer partials' map gate: proposal/budget phases render their
+  # resource map only when "form.show_map" is enabled; phase types without the
+  # setting (e.g. point of interest) always show it.
+  def resource_map_enabled?
+    setting = settings.find { |s| s.key == "feature.form.show_map" }
+
+    return true if setting.blank?
+
+    setting.value.present?
+  end
+
+  def publicly_visible?
+    active? && frontend_visibility?
+  end
+
+  def evaluation_completed?
+    projekt_phase_evaluation.present? && projekt_phase_evaluation.completed?
+  end
+
+  def publicly_visible_evaluation_tabs
+    visibility = projekt_phase_evaluation_visibility
+    return [] if visibility.blank?
+
+    evaluation_data = projekt_phase_evaluation&.data || {}
+    available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
+    visible = visibility.visible_sections & available
+    footer_visible = visible - FOOTER_HIDDEN_EVALUATION_SECTIONS
+    present = footer_visible.select do |key|
+      ::ProjektEvaluations::SectionDataPresence.has_data?(evaluation_data, key)
+    end
+    ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
+
+    tabs = []
+    tabs << "poll_stats" if visibility.show_poll_stats
+    tabs << "stats" if present.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if present.any? { |key| ai_keys.include?(key) }
+
+    tabs
+  end
+
+  def evaluation_tab_publicly_visible?(tab)
+    if evaluation_completed?
+      publicly_visible_evaluation_tabs.include?(tab)
+    elsif tab == "ai"
+      feature?("general.public_ai_stats")
+    else
+      feature?("general.public_kpi_stats")
+    end
+  end
+
   def max_submissions_per_user
     option("resource.max_submissions_per_user").to_i
   end
@@ -425,6 +513,26 @@ class ProjektPhase < ApplicationRecord
 
   def projekt_labels_label_text
     labels_name.presence || I18n.t("custom.projekts.page.footer.sidebar.projekt_labels.title")
+  end
+
+  def use_masterportal_collections_as_labels?
+    feature?("form.use_masterportal_collections_as_labels") && masterportal_collections.exists?
+  end
+
+  def active_projekt_labels
+    active_masterportal_taxonomy(projekt_labels)
+  end
+
+  def active_projekt_point_of_interest_categories
+    active_masterportal_taxonomy(projekt_point_of_interest_categories)
+  end
+
+  def active_masterportal_taxonomy(scope)
+    use_masterportal_collections_as_labels? ? scope.collection_backed : scope.manual
+  end
+
+  def labels_selector_available?
+    (use_masterportal_collections_as_labels? || feature?("form.labels")) && active_projekt_labels.exists?
   end
 
   def sentiment_label_text

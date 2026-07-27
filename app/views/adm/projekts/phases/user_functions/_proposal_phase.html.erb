@@ -1,5 +1,6 @@
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.users_can_create_proposals"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.allow_voting"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.conditional_voting"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.quorum_for_proposals"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.enable_up_and_down_voting"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_comments"), :value, :boolean) %>

@@ -1,10 +1,11 @@
 de:
-  public:
-    evaluations:
-      generated_at: "Erstellt am %{time}"
+  time:
+    formats:
+      evaluation_header: "%d. %B %Y, %H:%M Uhr"
   adm:
     ai_action_button:
       processing: KI arbeitet…
+      feature_description: "Erstellt eine Auswertung auf Basis der Beteiligungsdaten dieses Projekts. KI-Analysen werden ergänzt, sobald die KI-Funktion aktiviert ist."
 
     projekts:
       projekts:
@@ -14,6 +15,8 @@ de:
           evaluation: Auswertung
         evaluation:
           title: Auswertung
+          export: Export
+          download_csv: CSV herunterladen
           not_generated_title: Auswertung noch nicht generiert
           not_generated_description: >
             Es wurde noch keine Auswertung für dieses Projekt erstellt.
@@ -30,11 +33,32 @@ de:
           regenerate_confirm: >
             Möchten Sie die Auswertung wirklich neu generieren? Die bestehende
             Auswertung wird überschrieben.
-          regenerate_phase_button: Phase neu generieren
+          regenerate_phase_button: Phasenstatistiken neu generieren
+          regenerate_regular_stats_button: Statistiken neu generieren
+          regenerate_auto_hourly_note: Statistiken werden stündlich automatisch aktualisiert
+          regenerate_ai_stats_button: KI-Analyse neu generieren
+          regenerate_ai_stats_tooltip: >
+            Erstellt die KI-Analyse dieser Phase neu — Zusammenfassung,
+            Tonalität, zentrale Erkenntnisse und Themen-Clustering werden aus
+            den aktuellen Beiträgen der Phase neu generiert. Dabei wird das
+            Sprachmodell aufgerufen, was einen Moment dauern kann; die bisherige
+            KI-Analyse wird überschrieben.
+          regenerate_regular_stats_tooltip: >
+            Berechnet die Statistiken dieser Phase — Teilnahmezahlen,
+            Zeitverläufe und demografische Auswertungen — aus den aktuellen
+            Daten neu. Es wird keine KI verwendet und die bisherigen Statistiken
+            werden überschrieben.
           regenerate_phase_confirm: >
             Möchten Sie diese Phase wirklich neu generieren? Die bestehende
             Auswertung dieser Phase wird überschrieben.
-          phase_download_pdf_button: PDF exportieren…
+          phase_download_pdf_button: PDF-Report erstellen
+          download_csv_file: CSV-Datei herunterladen
+          download_stats_pdf_button: Statistik-PDF exportieren…
+          download_ai_pdf_button: KI-Analyse-PDF exportieren…
+          phase_download_pdf_tooltip: Die gesamte Phase als PDF exportieren.
+          download_stats_pdf_tooltip: Nur die Statistiken dieser Phase als PDF exportieren.
+          download_ai_pdf_tooltip: Nur die KI-Analyse dieser Phase als PDF exportieren.
+          regenerate_tooltip: Die Auswertung dieser Phase neu generieren. Die bestehende Auswertung wird überschrieben.
           open_in_admin: Im Admin öffnen
           configure_visibility_button: Sichtbarkeit konfigurieren
           toolbar_title_view_link: Zur Phase im Projekt-Footer
@@ -47,6 +71,18 @@ de:
             Bei der Generierung dieser Phase ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
           phase_retry_button: Erneut versuchen
+          phase_generate_stats_title: Noch keine Statistiken erstellt
+          phase_generate_stats_description: >
+            Für diese Phase wurden noch keine Statistiken generiert. Erstellen
+            Sie die Auswertung, um Teilnahmezahlen, Zeitverläufe und
+            demografische Auswertungen anzuzeigen.
+          phase_generate_stats_button: Statistiken generieren
+          phase_generate_ai_title: Noch keine KI-Analyse erstellt
+          phase_generate_ai_description: >
+            Für diese Phase wurde noch keine KI-Analyse generiert. Erstellen Sie
+            die Analyse, um Zusammenfassung, zentrale Erkenntnisse und
+            Themen-Clustering anzuzeigen.
+          phase_generate_ai_button: KI-Analyse generieren
           download_pdf: PDF herunterladen
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.
@@ -57,15 +93,19 @@ de:
           contributions: Beiträge
           supports: Unterstützungen
           proposals: Vorschläge
-          investments: Investitionen
+          investments: Vorschläge
           comments: Kommentare
           commenters: Kommentierende
           questions: Fragen
-          other_questions_group: Weitere Fragen
           polls: Abstimmungen
           poll_meta: "%{voters} Teilnehmende · %{questions} Fragen"
           scale_subtitle: "Skala %{min} bis %{max} · n = %{n}"
           multiple_subtitle: "Mehrfachantworten · %{mentions} Nennungen"
+          question_participation_title: "Teilnahmedaten"
+          question_crossectional_title: "Querschnitt der Abstimmung"
+          answer_detail_close: "Schließen"
+          answer_no_data: "Keine Daten verfügbar"
+          bundle_question_caption: "Gebündelte Frage"
           open_contributions: Offene Beiträge
           avg_per_proposal: "Ø pro Vorschlag"
           ranking_by_supports: Ranking nach Unterstützungen
@@ -80,6 +120,9 @@ de:
           sentiments_distribution: Sentiment-Verteilung
           user_segments_title: Nutzersegmente
           geozone_distribution: Stadtteile / Bezirke
+          heatmap_title: Geografische Verteilung
+          heatmap_subtitle: Wo sich die Beiträge auf der Karte befinden
+          heatmap_empty: Keine Standortdaten verfügbar
           key_findings: Zentrale Erkenntnisse
           ai_questions_heading: KI-Fragen an diese Phase
           sources_label:
@@ -96,7 +139,6 @@ de:
               kpis: Kennzahlen
               key_metrics: Detailkennzahlen
               ranking: Ranking-Diagramm
-              proposals: Vorschlagskarten
               questions: Fragen und Diagramme
               open_responses: Offene Beiträge
               ai_summary: KI-Zusammenfassung
@@ -105,6 +147,8 @@ de:
               timeline: Zeitverlauf
               label_sentiment: Label- und Sentiment-Verteilung
               user_segments: Nutzersegmente
+              budget_segments: Kennzahlen nach Phase
+              heatmap: Heatmap
               key_findings: Zentrale Erkenntnisse
               topic_clustering: Themengruppen
               semantic_clustering: Sentimentanalyse
@@ -113,7 +157,6 @@ de:
               kpis: Wichtigste Kennzahlen der Phase — Teilnehmende, Vorschläge, Stimmen, Unterstützungen.
               key_metrics: Detaillierte Aufschlüsselung der Teilnahmewerte je Metrik.
               ranking: Balkendiagramm mit den am stärksten unterstützten Vorschlägen.
-              proposals: Karten mit den Top-Vorschlägen und deren Unterstützungszahlen.
               questions: Abstimmungsfragen mit Antwortverteilungen und Ergebnis-Diagrammen.
               open_responses: Frei formulierte Beiträge der Teilnehmenden.
               ai_summary: KI-generierte Zusammenfassung der Phase als Fließtext.
@@ -122,6 +165,8 @@ de:
               timeline: Tägliche Aktivitätsübersicht mit Verlauf der Teilnahme.
               label_sentiment: Verteilung der Beiträge nach Themenlabel und Stimmungslage.
               user_segments: Aufteilung der Teilnehmenden nach demografischen oder Interessensgruppen.
+              budget_segments: Detaillierte Kennzahlen und Verteilungen je Bürgerhaushalts-Phase (Einreichung, Prüfung, Unterstützung, Abstimmung, Abschluss).
+              heatmap: Karte mit der geografischen Verteilung der Beiträge.
               key_findings: Wichtigste Erkenntnisse aus der KI-Auswertung.
               topic_clustering: Beiträge gruppiert nach inhaltlichen Themenclustern.
               semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.
@@ -130,6 +175,14 @@ de:
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen
           open_responses_hide: Beiträge ausblenden
+          open_answers_title: "Offene Antworten — %{answer}"
+          open_answers_show: Antworten anzeigen
+          open_answers_hide: Antworten ausblenden
+          open_answers_anonymized: anonymisiert
+          open_answers_prev: Zurück
+          open_answers_next: Weiter
+          open_answers_page_status: "Seite {current} von {total}"
+          open_answers_csv_hint: "%{count} offene Antworten — vollständige Liste im CSV-Export."
           verdict:
             clear_yes: Klar dafür
             majority_yes: Mehrheit dafür
@@ -146,12 +199,50 @@ de:
           phase_tab:
             generated_at: "Stand %{date}"
             generated_at_unknown: Noch nicht generiert
+          card:
+            stats_badge: Kennzahlen
+            ai_badge: KI-Analyse
+            view_stats: Statistiken ansehen
+          view_tabs:
+            aria_label: Ansicht der Auswertung wechseln
+            stats: Ergebnis
+            ai: KI-Analyse
+            ai_tab_disabled_hint: "KI-gestützte Auswertung der Beteiligungsdaten dieses Projekts."
+            poll_stats: Statistiken
+            poll_stats_live: Live-Daten
+            budget_results: Abstimmungsergebnisse
+          poll_stats_tab:
+            empty: Für diese Umfrage liegen noch keine Statistiken vor.
+            channel: Kanal
+          report_summary_card:
+            title: Bericht-Zusammenfassung
+            page_title: Projektauswertung Bericht-Zusammenfassung
+            description: Projektübersicht, Einstellungen und Phasen-Zusammenfassungen.
+            phases: Phasen
+            view: Zusammenfassung öffnen
+          overview:
+            title: Projektauswertung
+            subtitle_html: "Gesamtbericht über %{modules} · zuletzt aktualisiert %{updated}"
+            modules_count:
+              one: "1 Beteiligungsmodul"
+              other: "%{count} Beteiligungsmodule"
+            section_report: Übersicht
+            section_modules: Module im Bericht
+            entries_count:
+              one: "1 Eintrag"
+              other: "%{count} Einträge"
+            action_visibility: Sichtbarkeit
+            action_regenerate: Neu generieren
+            refresh: Aktualisieren
+            open: Öffnen
+            summary_fallback: >
+              Dieser Gesamtbericht bündelt die Kennzahlen und KI-Analysen aller
+              Beteiligungsmodule dieses Projekts.
           report:
             project_summary_label: Projektseite
             project_summary_subtitle: Untertitel
-            project_summary_no_subtitle: Kein Untertitel
             project_summary_no_image: Kein Projektbild
-            project_summary_ai_label: KI-Zusammenfassung des Projektinhalts
+            project_summary_ai_label: KI-Zusammenfassung
             project_summary_ai_empty: Keine Inhalte für die KI-Zusammenfassung verfügbar.
             settings_label: Projekteinstellungen
             settings_open_phases:
@@ -172,10 +263,11 @@ de:
             qr_code_label: Projektseite öffnen
         evaluation_visibility:
           title: Sichtbarkeit
-          heading: Sichtbarkeit der Auswertungsabschnitte
+          heading: Sichtbarkeit der Auswertung konfigurieren
           description: >
-            Steuern Sie, welche Abschnitte des Berichts und der einzelnen Phasen
-            in der Auswertung sowie im PDF-Export angezeigt werden.
+            Wählen Sie je Phase aus, welche Auswertungsabschnitte im
+            Projekt-Footer angezeigt werden. Ausgeblendete Abschnitte werden
+            niemandem angezeigt – auch nicht Admins und Projektmanager:innen.
           report_group_title: Bericht (Übersicht)
           report_sections:
             project_summary: Projektzusammenfassung
@@ -185,8 +277,8 @@ de:
             project_summary: Snapshot der Projektseite mit Untertitel, Bild und KI-Zusammenfassung des Projektinhalts.
             settings: Überblick über die Projektkonfiguration — offene Phasen, Abstimmungen, Schlagwörter und Nachhaltigkeitsziele.
             phase_summaries: Kurze KI-generierte Zusammenfassung für jede Projektphase.
-          bulk_all_on: Alle aus
-          bulk_all_off: Alle ein
+          bulk_all_on: Alle ein
+          bulk_all_off: Alle aus
           cancel: Zurück
           save: Speichern
         update_evaluation_visibility:

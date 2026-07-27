@@ -639,10 +639,6 @@ class Projekt < ApplicationRecord
     author
   end
 
-  def vc_map_enabled?
-    projekt_settings.find_by(key: "projekt_feature.general.vc_map_enabled")&.enabled?
-  end
-
   def self.available_filters(all_projekts)
     return [] if all_projekts.blank?
 

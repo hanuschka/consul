@@ -341,7 +341,16 @@
 // homepage main column; sidebar, footer, and projekt-footer blocks are left out
 // (compact-mode blocks live in a sidebar/footer, projekt-footer is its own
 // container) so short blocks there aren't forced tall.
-body:not(.-preview-mode) #projekt-body .custom-content-block-wrapper:not(.-compact-mode) .custom-content-block,
-body:not(.-preview-mode) .welcome-page .custom-content-block-wrapper:not(.-compact-mode) .custom-content-block {
+//
+// Excluded while the block is empty, i.e. while the admin empty-block hint is
+// the visible placeholder — the hint already gives the block its height, and
+// stacking 55px under it leaves a large dead gap. The `is-content-empty` marker
+// sits either on the wrapper itself (projekt-page blocks, wrapped client-side
+// by contentBlockHTML) or on a `.content-block-empty-hint-wrap` ancestor (site
+// blocks wrapped server-side), hence both the direct and the descendant
+// exclusion. The empty-state heights are owned by
+// custom_new_design/components/shared/_content_block_empty_hint.scss.
+body:not(.-preview-mode) #projekt-body .custom-content-block-wrapper:not(.-compact-mode):not(.is-content-empty):not(.is-content-empty *) .custom-content-block,
+body:not(.-preview-mode) .welcome-page .custom-content-block-wrapper:not(.-compact-mode):not(.is-content-empty):not(.is-content-empty *) .custom-content-block {
   min-height: 55px;
 }

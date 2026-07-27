@@ -24,8 +24,7 @@ en:
         success: Content block updated
       import:
         success: Document has been successfully imported
-        categories: Categories
-        sdg_goals: SDG Goals
+      ai_generate_with_file:
         no_file: No file uploaded
         user_prompt_placeholder: |
           "Formulate section XY in a more comprehensible way for the public."
@@ -33,8 +32,7 @@ en:
           "Shorten the introduction and make the beginning more understandable."
           "Summarize long sections in bullet points."
           "Rearrange the content logically if the order in the document is unclear."
-      generate_from_prompt:
-        success: Content has been successfully generated
+      ai_generate_with_prompt:
         no_prompt: Please enter a prompt
       ai_create:
         modal_title: Create content block with AI

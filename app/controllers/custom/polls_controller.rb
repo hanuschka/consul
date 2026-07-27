@@ -98,7 +98,7 @@ class PollsController < ApplicationController
       all_wizard_questions = loaded_questions.select { |question| question.contextualize_by_poll_question_id.nil? }
       @wizard_map = Polls::WizardMap.call(all_wizard_questions, context_source_ids)
                                     .map { |entry| entry.merge(url: wizard_step_question_path(entry[:id])) }
-      @wizard_questions = params[:full].present? ? all_wizard_questions : all_wizard_questions.first(1)
+      @wizard_questions = all_wizard_questions.first(1)
     end
 
     @answers_by_question_id = {}

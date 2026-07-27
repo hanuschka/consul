@@ -86,13 +86,20 @@ class PollsController < ApplicationController
 
     @projekt_phase = @poll.projekt_phase
 
-    answer_includes = [:translations, :images, :documents, :videos]
-
     @questions = @poll.questions.root_questions
-                                .includes(:context, :poll, :translations, :votation_type, question_answers: answer_includes,
-                                          nested_questions: [:poll, :votation_type, :translations, { question_answers: answer_includes }])
+                                .with_wizard_associations
                                 .order(given_order: :asc, id: :asc)
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
+
+    if @poll.in_wizard_mode?
+      loaded_questions = @questions.to_a
+      context_source_ids = @poll.questions.where.not(contextualize_by_poll_question_id: nil)
+                                .reorder(nil).distinct.pluck(:contextualize_by_poll_question_id)
+      all_wizard_questions = loaded_questions.select { |question| question.contextualize_by_poll_question_id.nil? }
+      @wizard_map = Polls::WizardMap.call(all_wizard_questions, context_source_ids)
+                                    .map { |entry| entry.merge(url: wizard_step_question_path(entry[:id])) }
+      @wizard_questions = params[:full].present? ? all_wizard_questions : all_wizard_questions.first(1)
+    end
 
     @answers_by_question_id = {}
 

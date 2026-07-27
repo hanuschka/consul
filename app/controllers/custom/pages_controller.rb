@@ -460,6 +460,8 @@ class PagesController < ApplicationController
     end
 
     def set_question_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
+
       projekt_questions = @projekt_phase.questions.root_questions
 
       if @projekt_phase.question_list_enabled?

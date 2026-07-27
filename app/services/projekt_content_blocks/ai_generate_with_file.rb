@@ -1,6 +1,4 @@
 class ProjektContentBlocks::AiGenerateWithFile < ApplicationService
-  CONTENT_BLOCK_LOCALE = "de".freeze
-
   attr_reader :projekt
 
   def initialize(projekt:)
@@ -33,8 +31,7 @@ class ProjektContentBlocks::AiGenerateWithFile < ApplicationService
 
     content_blocks = ProjektContentBlocks::Services::CreateFromImportData.call(
       projekt: projekt,
-      blocks: resolve_result.data[:blocks],
-      locale: CONTENT_BLOCK_LOCALE
+      blocks: resolve_result.data[:blocks]
     )
 
     projekt.update_columns(

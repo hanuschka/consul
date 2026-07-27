@@ -43,7 +43,9 @@ class Polls::QuestionsController < ApplicationController
       return head(:not_found)
     end
 
-    if !@question.poll.projekt.visible_for?(current_user)
+    projekt = @question.poll.projekt
+
+    if projekt.blank? || !projekt.visible_for?(current_user)
       return head(:forbidden)
     end
 

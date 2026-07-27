@@ -36,7 +36,13 @@
     parseMap() {
       const wizard = document.querySelector(".js-question-wizard");
       const serializedMap = wizard ? wizard.dataset.wizardMap : null;
-      this.map = serializedMap ? JSON.parse(serializedMap) : [];
+
+      try {
+        this.map = serializedMap ? JSON.parse(serializedMap) : [];
+      } catch (error) {
+        this.map = [];
+      }
+
       this.byId = {};
       this.indexById = {};
 
@@ -71,7 +77,11 @@
       this.applyContextHiding(currentId, current);
 
       const nextId = this.resolveNextId(currentId, current);
-      if (!nextId) return;
+
+      if (!nextId) {
+        this.updateNavButtons();
+        return;
+      }
 
       this.ensureLoaded(nextId, (node) => this.advanceTo(currentId, node));
     },
@@ -179,6 +189,7 @@
     },
 
     onFetchFailed(callback) {
+      alert("Die nächste Frage konnte nicht geladen werden. Bitte versuchen Sie es erneut.");
       callback(null);
     },
 

@@ -36,8 +36,7 @@ de:
         success: Inhaltsblock aktualisiert
       import:
         success: Dokument wurde erfolgreich importiert
-        categories: Kategorien
-        sdg_goals: SDG-Ziele
+      ai_generate_with_file:
         no_file: Keine Datei hochgeladen
         user_prompt_placeholder: |
           „Formuliere die Sektion XY verständlicher für die Öffentlichkeit."
@@ -45,8 +44,7 @@ de:
           „Kürze die Einleitung und mache den Einstieg verständlicher."
           „Fasse lange Abschnitte in Stichpunkten zusammen."
           „Ordne die Inhalte logisch neu, falls die Reihenfolge im Dokument unklar ist."
-      generate_from_prompt:
-        success: Inhalte wurden erfolgreich generiert
+      ai_generate_with_prompt:
         no_prompt: Bitte geben Sie einen Prompt ein
       ai_create:
         modal_title: Inhaltsblock mit KI erstellen

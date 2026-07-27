@@ -3,10 +3,7 @@
     <div class="margin-bottom not-print">
       <%= render Shared::MapComponent.new(
         mappable: @proposal,
-        map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
-        parent_class: "proposal",
-        projekt_phase: @proposal.projekt_phase,
-        show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
+        masterportal_focus_view: true
       ) %>
     </div>
   <% end %>

@@ -140,7 +140,7 @@ $phase-marker-border: #cbd5e1;
       font-size: 14px;
       font-weight: 500;
       line-height: 1.35;
-      color: inherit;
+      // color: inherit;
 
       i {
         opacity: 0;
@@ -355,7 +355,7 @@ $phase-marker-border: #cbd5e1;
     overflow: visible;
 
     @media(max-width: $big-tablet-viewport-start) {
-      padding: 0 30px;
+      padding: 25px 30px;
 
       h1 {
         margin-bottom: 10px;
@@ -363,7 +363,7 @@ $phase-marker-border: #cbd5e1;
     }
 
     @media(max-width: $small-tablet-viewport-start) {
-      padding: 0 30px;
+      padding: 25px 30px;
     }
 
     @media(max-width: $mobile-viewport-start) {
@@ -490,9 +490,11 @@ $phase-marker-border: #cbd5e1;
     justify-content: flex-start;
     max-width: 50%;
     flex-grow: 1;
+    padding-top: 50px;
+    padding-bottom: 50px;
 
     @media(max-width: $big-tablet-viewport-start) {
-      padding-top: 25px;
+      padding-top: 45px;
       padding-bottom: 25px;
     }
 
@@ -512,6 +514,24 @@ $phase-marker-border: #cbd5e1;
   .custom-page--banner-text-section {
     // max-width: 90%;
     padding-top: 75px;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      padding-top: 55px;
+      padding-bottom: 25px;
+    }
+
+    @media(max-width: $small-tablet-viewport-start) {
+      padding-top: 25px;
+    }
+
+    @media(max-width: $mobile-viewport-start) {
+      // Bottom padding muss Description + Chips komplett umschließen, sonst rutscht
+      // der Inhalt im Studio-Edit-Modus (Edit-Pencil rechts, +44px Right-Padding
+      // auf `.projekt-banner-edit-field-container`) optisch unter den Banner-Hintergrund.
+      padding-top: 10px;
+      padding-bottom: 0;
+      max-width: 100%;
+    }
   }
 
   .custom-page--banner-image {
@@ -519,7 +539,6 @@ $phase-marker-border: #cbd5e1;
     max-width: 590px;
     width: 100%;
     height: 355px !important;
-    align-self: center;
     cursor: zoom-in;
     overflow: hidden;
     border-radius: 10px;
@@ -841,7 +860,7 @@ $phase-marker-border: #cbd5e1;
   }
 
   .content-blocks-container {
-    .projekt-content-block:first-child  {
+    .custom-content-block:first-child  {
       h1:first-child, h2:first-child, h3:first-child {
         margin-top: 0;
       }

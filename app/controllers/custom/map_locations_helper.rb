@@ -1,3 +1,5 @@
+require_dependency Rails.root.join("app", "helpers", "map_locations_helper").to_s
+
 module MapLocationsHelper
   # def map_location_available?(resource)
   #   return false unless resource.respond_to?(:map_location)

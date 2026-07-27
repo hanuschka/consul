@@ -1,0 +1,41 @@
+@import "cross_pack/1_colors";
+
+.adm-poll-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.adm-poll-stats--poll {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.adm-poll-stats--poll-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--er-text);
+  letter-spacing: -0.01em;
+}
+
+.adm-poll-stats--groups {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.adm-poll-stats--empty {
+  padding: 2.5rem 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--er-text-secondary);
+  text-align: center;
+  background: var(--er-surface);
+  border: 1px solid var(--er-border);
+  border-radius: var(--er-radius-lg);
+}

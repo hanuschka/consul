@@ -17,7 +17,7 @@ class Adm::MasterportalPinsMapViewComponent < ApplicationComponent
   def feature_collection
     {
       "type" => "FeatureCollection",
-      "features" => @pins.map { |pin| pin.to_map_feature(include_search_text: false, include_icon_url: false) }
+      "features" => @pins.map { |pin| pin.to_map_feature(include_search_text: false) }
     }
   end
 

@@ -1,6 +1,6 @@
 class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   ALLOWED_COMMANDS = %w[regenerate summarize import start_over].freeze
-  MAX_AGGREGATE_BYTES = 45.megabytes
+  MAX_AGGREGATE_BYTES = 500.megabytes
 
   before_action :authorize_create
   before_action :find_projekt_import

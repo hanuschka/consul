@@ -48,6 +48,44 @@
   }
 }
 
+.custom-collapse--head.-with-hover-background {
+  &:hover::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -10px;
+    right: -10px;
+    z-index: -1;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+  }
+}
+
+.custom-collapse.-with-head-background {
+  > .custom-collapse--head {
+    padding: 12px 16px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+
+    &:hover {
+      background-color: #e9e9e9;
+    }
+
+    &:active {
+      background-color: #e3e3e3;
+    }
+
+    .icon-chevron-down {
+      margin-right: 0;
+    }
+  }
+
+  > .custom-collapse--body {
+    padding: 15px 16px;
+  }
+}
+
 .custom-collapse {
   > .custom-collapse--body {
     padding-top: 15px;

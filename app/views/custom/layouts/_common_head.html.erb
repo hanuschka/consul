@@ -17,8 +17,8 @@
 <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>
-<%= stylesheet_link_tag "application" %>
 <%= stylesheet_link_tag "elements" %>
+<%= stylesheet_link_tag "application" %>
 
 <% if Setting.new_design_enabled? %>
   <%= stylesheet_link_tag "custom_new_design" %>
@@ -60,7 +60,10 @@
   <%= javascript_include_tag "packs/studio", "data-turbolinks-track" => "reload" %>
 <% end %>
 
-<%= javascript_include_tag "klaro/config.js", defer: true %>
+<%= javascript_include_tag "klaro/config.js" %>
+
+<%= render "layouts/klaro_services" %>
+
 <%= javascript_include_tag "klaro/klaro.js", defer: true %>
 
 <% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>

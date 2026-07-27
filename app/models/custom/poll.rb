@@ -77,7 +77,21 @@ class Poll < ApplicationRecord
   end
 
   def safe_to_delete_answer?
-    voters.count == 0
+    voters.count == 0 || !live?
+  end
+
+  # Transition a poll out of test mode. Everything accumulated while the poll was
+  # not live is test data (admins/officers test via the officing booth; the public
+  # is blocked by the :poll_not_live phase restriction), so it is purged before the
+  # poll goes live to guarantee real results start from a clean slate.
+  def go_live!
+    transaction do
+      question_ids = questions.with_deleted.ids
+      Poll::Answer.where(question_id: question_ids).delete_all
+      Poll::PartialResult.where(question_id: question_ids).delete_all
+      Poll::Voter.where(poll_id: id).delete_all
+      update!(live: true)
+    end
   end
 
   def stats_age_groups

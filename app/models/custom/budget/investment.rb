@@ -7,6 +7,7 @@ class Budget
     include Labelable
     include Sentimentable
     include Memoable
+    include ConditionallyVotable
 
     default_scope { where(draft: false) }
 
@@ -40,7 +41,7 @@ to: :budget
     def self.sort_by_total_votes
       left_joins(:votes_for)
         .group("budget_investments.id")
-        .order(Arel.sql("COALESCE(SUM(votes.vote_weight), 0) + budget_investments.physical_votes DESC"))
+        .order(Arel.sql("COALESCE(SUM(CASE WHEN votes.conditional = false THEN votes.vote_weight ELSE 0 END), 0) + budget_investments.physical_votes DESC"))
     end
 
     def self.sort_by_ballot_line_weight
@@ -53,12 +54,16 @@ to: :budget
       vote_by(voter: user, vote: "yes", vote_weight:) if selectable_by?(user)
     end
 
+    def sentiment_required?
+      super && masterportal_pin_id.blank?
+    end
+
     def total_supporters
-      votes_for.joins("INNER JOIN users ON voter_id = users.id").count
+      votes_for.where(conditional: false).joins("INNER JOIN users ON voter_id = users.id").count
     end
 
     def total_votes
-      votes_for.sum(:vote_weight) + physical_votes
+      votes_for.where(conditional: false).sum(:vote_weight) + physical_votes
     end
 
     def total_ballot_votes
@@ -73,6 +78,10 @@ to: :budget
 
     def permission_problem(user)
       budget.projekt_phase.permission_problem(user)
+    end
+
+    def conditional_vote_confirmable_for?(user)
+      budget.selecting? && reason_for_not_being_selectable_by(user).blank?
     end
 
     def comments_allowed?(user)

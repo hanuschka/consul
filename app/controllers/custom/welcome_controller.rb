@@ -29,7 +29,9 @@ class WelcomeController < ApplicationController
     end
   end
 
-  def latest_activity; end
+  def latest_activity
+    @content_card = SiteCustomization::ContentCard.homepage.find_by(kind: "latest_user_activity")
+  end
 
   private
 

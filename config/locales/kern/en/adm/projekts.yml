@@ -20,8 +20,16 @@ en:
           home: Home
           projekts: Projects
           managers: Team
+          inspiration: Project inspirations
           landing_pages: Topic pages
           settings: Configuration
+      inspiration:
+        show:
+          title: Project inspirations
+          not_configured: DemokratieToday is not configured
+          not_configured_hint: >-
+            No DemokratieToday address is set. Please configure the connection to
+            embed the project overview here.
       settings:
         tabs:
           dashboard: Dashboard settings
@@ -54,7 +62,6 @@ en:
             are not visible on the frontend. Clicking the project title opens the settings;
             clicking the preview image opens the public project page.
           new_projekt: Create new project
-          import_projekt: Import project from file
           no_projekts_title: No projects available
           no_projekts_description: Create a new project to start configuring participation phases and settings.
           no_results_filtered_title: No projects match the current search
@@ -62,11 +69,6 @@ en:
           table:
             status: Status
             actions: Actions
-        import_projekt:
-          title: Import project from file
-          dt_not_connected: "The DemokratieToday service is not connected. Please set up the connection first."
-          error_title: "Import failed"
-          try_again: "Try again"
         new:
           title: Create new project
           intro_title: Create a new participation project

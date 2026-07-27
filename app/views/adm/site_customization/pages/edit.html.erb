@@ -1,23 +1,30 @@
 <%= content_for :title, @page.title %>
 
 <%= render Adm::HeaderComponent.new(title: t("adm.menu.items.application_subitems.pages"), breadcrumbs: @breadcrumbs, narrow: true) %>
-<%= render Adm::TabsComponent.new(tabs: pages_tabs) %>
 
 <div class="kern-container my-5">
   <%= form_with model: @page,
-      url: adm_site_customization_update_page_by_slug_path(slug: @page.slug),
+      url: adm_site_customization_page_path(@page),
       method: :patch do |f| %>
-    <div class="mb-4">
+
+    <%= render Kern::FormFieldComponent.new(label: t(".title_label"), hint: t(".title_hint")) do %>
+      <%= f.text_field :title, label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t(".slug_label"), hint: t(".slug_hint"), required: true) do %>
+      <%= f.text_field :slug, label: false %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t(".status_legend"), hint: t(".status_hint")) do %>
       <%= f.collection_radio_buttons :status,
             ::SiteCustomization::Page::VALID_STATUSES.map { |s| [s, t(".status_options.#{s}")] },
-            :first, :last,
-            legend: t(".status_legend") %>
-    </div>
+            :first, :last %>
+    <% end %>
 
-    <%= f.rich_text_area :content, label: t(".content_label") %>
+    <%= render Kern::FormFieldComponent.new(label: t(".content_label"), stacked: true) do %>
+      <%= f.rich_text_area :content, label: false %>
+    <% end %>
 
-    <div class="d-flex justify-content-end mt-3">
-      <%= kern_button(text: t(".save"), icon: "save", type: :submit) %>
-    </div>
+    <%= form_submit_button(text: t(".save")) %>
   <% end %>
 </div>

@@ -4,3 +4,4 @@ en:
       show:
         title: Features
         intro_text: "Global features that don't yet have a dedicated area in the new admin UI. Changes take effect immediately across the entire platform."
+        kobil_title: "KOBIL authentication"

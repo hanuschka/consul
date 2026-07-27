@@ -3,13 +3,40 @@ class Files::DocumentRowComponent < Files::ResourceAssetComponent
 
   with_collection_parameter :document
 
-  def initialize(document:)
+  def initialize(document:, detail_path: nil)
     @document = document
+    @detail_path = detail_path
   end
 
   private
 
-    attr_reader :document
+    attr_reader :document, :detail_path
+
+    def detail_url
+      return nil if detail_path.blank?
+
+      detail_path.call(document)
+    end
+
+    def owning_resource_label
+      owning_resource_type_label(document.documentable)
+    end
+
+    def owning_resource_name
+      resource_name(owning_resource(document.documentable))
+    end
+
+    def owning_resource_url
+      resource_url(owning_resource(document.documentable))
+    end
+
+    def projekt_name
+      resource_name(resource_projekt(document.documentable))
+    end
+
+    def projekt_url
+      resource_url(resource_projekt(document.documentable))
+    end
 
     def title_truncated?
       display_title.length > TITLE_TRUNCATE_LENGTH
@@ -71,14 +98,6 @@ class Files::DocumentRowComponent < Files::ResourceAssetComponent
     def documentable_type_label
       type_string = document.documentable_type.to_s
       type_string.safe_constantize&.model_name&.human || type_string
-    end
-
-    def documentable_name
-      resource_name(document.documentable)
-    end
-
-    def documentable_url
-      resource_url(document.documentable)
     end
 
     def admin_upload?

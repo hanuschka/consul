@@ -65,7 +65,7 @@ class ProjektsController < ApplicationController
       set_variables_for_footer_comments
     end
 
-    @projekts = @projekts.visible_for(current_user).sort_by_order_number
+    @projekts = @projekts.visible_for(current_user).reorder("projekts.created_at DESC").sort_by_order_number
     @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id).uniq)
     @projekts = @projekts.distinct.page(params[:page]).per(24)
 

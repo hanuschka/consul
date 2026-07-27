@@ -1,0 +1,15 @@
+<%= form_with scope: :option, url: url, method: local_assigns.fetch(:method, :post) do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.options.label_label"),
+                                          hint: t("adm.projekts.mitmachbox.options.label_hint")) do %>
+    <%= f.text_field :label, label: false, value: @option["label"] %>
+  <% end %>
+
+  <% if @question["question_type"] == "rating" %>
+    <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.options.value_label"),
+                                            hint: t("adm.projekts.mitmachbox.options.value_hint")) do %>
+      <%= f.number_field :value, label: false, value: @option["value"] %>
+    <% end %>
+  <% end %>
+
+  <%= form_submit_button(text: t("adm.projekts.mitmachbox.options.save_button")) %>
+<% end %>

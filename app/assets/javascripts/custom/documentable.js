@@ -11,8 +11,11 @@
       $("#nested-documents").on("cocoon:after-insert", function(e, nested_document) {
         var input;
         input = $(nested_document).find(".js-document-attachment");
+        input.lockUpload = $(nested_document).closest("#nested-documents").find(".document:visible").length >= $("#nested-documents").data("max-documents-allowed");
         App.Documentable.initializeDirectUploadInput(input);
-        App.Documentable.lockUploads();
+        if (input.lockUpload) {
+          App.Documentable.lockUploads();
+        }
       });
       App.Documentable.initializeRemoveCachedDocumentLinks();
     },

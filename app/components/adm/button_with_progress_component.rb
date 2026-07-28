@@ -9,6 +9,7 @@ class Adm::ButtonWithProgressComponent < ApplicationComponent
     icon: "download",
     success_icon: "check_circle",
     style: :secondary,
+    compact: false,
     button_type: "button",
     button_data: {},
     fallback_delay_ms: nil,
@@ -22,6 +23,7 @@ class Adm::ButtonWithProgressComponent < ApplicationComponent
     @icon = icon
     @success_icon = success_icon
     @style = STYLES.include?(style) ? style : :secondary
+    @compact = compact
     @button_type = button_type
     @button_data = button_data || {}
     @fallback_delay_ms = fallback_delay_ms
@@ -32,7 +34,7 @@ class Adm::ButtonWithProgressComponent < ApplicationComponent
   private
 
     attr_reader :label, :loading_label, :success_label, :url, :icon,
-                :success_icon, :style, :button_type, :button_data,
+                :success_icon, :style, :compact, :button_type, :button_data,
                 :fallback_delay_ms, :extra_controllers, :extra_root_data
 
     def link_mode?
@@ -51,14 +53,18 @@ class Adm::ButtonWithProgressComponent < ApplicationComponent
     end
 
     def trigger_class
-      "adm-button-with-progress__trigger kern-btn kern-btn--#{style}"
+      "adm-button-with-progress__trigger kern-btn kern-btn--#{style}#{compact_class}"
     end
 
     def loading_class
-      "adm-button-with-progress__loading kern-btn kern-btn--#{style}"
+      "adm-button-with-progress__loading kern-btn kern-btn--#{style}#{compact_class}"
     end
 
     def success_class
-      "adm-button-with-progress__success kern-btn kern-btn--#{style}"
+      "adm-button-with-progress__success kern-btn kern-btn--#{style}#{compact_class}"
+    end
+
+    def compact_class
+      compact ? " kern-btn--compact" : ""
     end
 end

@@ -11,6 +11,13 @@ class ProjektQuestions::ProjektQuestionComponent < ApplicationComponent
     @current_comment_order = "newest"
   end
 
+  def quiz_navigation?
+    projekt_question.previous_question_id.present? ||
+      projekt_question.next_question_id.present? ||
+      (projekt_question.first_question_id.present? && projekt_question.first_question_id != projekt_question.id) ||
+      projekt_phase&.question_list_enabled?
+  end
+
   def before_render
     comment_variables =
       helpers

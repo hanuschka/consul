@@ -1,0 +1,14 @@
+de:
+  omniauth:
+    kobil:
+      sign_in: Mit KOBIL anmelden
+      sign_up: Mit KOBIL registrieren
+      name: KOBIL
+  custom:
+    account:
+      connected_accounts:
+        title: Verknüpfte Konten
+        kobil: KOBIL
+        disconnect: Trennen
+        disconnect_confirm: Möchten Sie dieses verknüpfte Konto wirklich trennen?
+        disconnected: Das verknüpfte Konto wurde getrennt.

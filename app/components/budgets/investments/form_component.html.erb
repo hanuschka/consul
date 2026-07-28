@@ -61,12 +61,12 @@
               class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
-          <% if (projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any?) ||
+          <% if investment.projekt_phase.labels_selector_available? ||
                 (projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any?) ||
                  projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
             <div class="new-card" id='map-container'>
 
-              <% if projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any? %>
+              <% if investment.projekt_phase.labels_selector_available? %>
                 <div class="margin-bottom">
                   <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: investment.projekt_phase, model: investment } %>
                 </div>

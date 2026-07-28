@@ -12,6 +12,19 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     "budget" => ProjektImports::Builders::BudgetBuilder
   }.freeze
 
+  ALLOWED_PROJEKT_SETTINGS = %w[
+    projekt_feature.general.allow_downvoting_comments
+    projekt_feature.general.consider_underway
+    projekt_custom_feature.default_footer_tab
+  ].freeze
+
+  HIDDEN_DRAFT_SETTINGS = %w[
+    projekt_feature.general.show_in_navigation
+    projekt_feature.general.show_in_overview_page
+    projekt_feature.general.show_in_homepage
+    projekt_feature.general.allow_indexing
+  ].freeze
+
   attr_reader :projekt_import
 
   def initialize(projekt_import:)
@@ -36,6 +49,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
       apply_projekt_settings(projekt, data["projekt_settings"])
       apply_phase_settings(phases, data["projekt_phase_settings"])
+      enforce_hidden_draft_state(projekt)
 
       phases.each { |entry| build_long_tail(projekt, entry) }
 
@@ -78,7 +92,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       projekt.save!
     end
 
-    if data["sdg_codes"].present? && projekt.respond_to?(:related_sdg_list=)
+    if data["sdg_codes"].present? && projekt.respond_to?(:related_sdg_list=) && sdg_goals_available?
       projekt.related_sdg_list = Array(data["sdg_codes"]).compact_blank.join(", ")
       projekt.save!
     end
@@ -86,15 +100,21 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     projekt_import.add_warning!("tags/sdg: #{e.message}")
   end
 
+  def sdg_goals_available?
+    SDG::Goal.exists?
+  rescue NameError
+    false
+  end
+
   def create_phases(projekt, phases_data)
     phases_data = Array(phases_data)
     return [] if phases_data.empty?
 
     phases_data.map.with_index do |phase_data, index|
-      type = phase_data["type"]
-      next nil if type.blank? || ProjektPhase::ALL_PHASE_TYPES.exclude?(type)
+      phase_class = phase_class_for(phase_data["type"])
+      next nil if phase_class.blank?
 
-      record = type.constantize.create!(
+      record = phase_class.create!(
         projekt: projekt,
         phase_tab_name: phase_data["name"].presence,
         start_date: phase_data["start_date"].presence,
@@ -111,29 +131,19 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   end
 
   def create_content_blocks(projekt, blocks)
-    Array(blocks).each_with_index do |block, position|
-      body = block["html"].presence || block["content_data"].to_s
-      next if body.blank?
-
-      projekt.content_blocks.create!(
-        name: "custom",
-        key: "projekt_content_block_#{projekt.id}_#{position + 1}_#{DateTime.now.to_i}",
-        body: body,
-        locale: I18n.locale.to_s,
-        position: position + 1
-      )
-    rescue ActiveRecord::RecordInvalid => e
-      raise "content_block(##{position + 1}): #{e.message}"
-    end
+    ProjektContentBlocks::Services::CreateFromImportData.call(
+      projekt: projekt,
+      blocks: blocks,
+      locale: projekt_import.import_locale
+    )
   end
 
   def apply_projekt_settings(projekt, settings)
-    blocked_keys = %w[projekt_feature.main.activate projekt_feature.general.show_in_navigation]
     return if settings.blank?
 
     settings.each do |key, value|
       next if value.nil?
-      next if blocked_keys.include?(key)
+      next if ALLOWED_PROJEKT_SETTINGS.exclude?(key)
 
       setting = projekt.projekt_settings.find_by(key: key)
       next if setting.blank?
@@ -183,6 +193,25 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       rescue StandardError => e
         projekt_import.add_warning!("#{record.type}/#{key}: unexpected error: #{e.message}")
       end
+    end
+  end
+
+  def phase_class_for(type)
+    return nil if type.blank?
+
+    phase_class_map[type]
+  end
+
+  def phase_class_map
+    @phase_class_map ||= ProjektPhase::ALL_PHASE_TYPES.index_with(&:safe_constantize)
+  end
+
+  def enforce_hidden_draft_state(projekt)
+    HIDDEN_DRAFT_SETTINGS.each do |key|
+      setting = projekt.projekt_settings.find_by(key: key)
+      next if setting.blank?
+
+      setting.update!(value: "")
     end
   end
 end

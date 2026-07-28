@@ -28,5 +28,7 @@ class Ability
     else
       merge Abilities::Everyone.new(user)
     end
+
+    alias_action :wizard_step, to: :read
   end
 end

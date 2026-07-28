@@ -21,6 +21,14 @@ class Poll::Question < ApplicationRecord
                        foreign_key: :context_id,
                        optional: true
 
+  scope :with_wizard_associations, -> {
+    answer_includes = [:translations, :images, :documents, :videos]
+
+    includes(:context, :poll, :translations, :votation_type,
+             question_answers: answer_includes,
+             nested_questions: [:poll, :votation_type, :translations, { question_answers: answer_includes }])
+  }
+
   validates :votation_type, presence: true
   validate :validate_parent_question_id
 
@@ -42,7 +50,9 @@ class Poll::Question < ApplicationRecord
   end
 
   def open_question_answer
-    question_answers.where(open_answer: true).last
+    return @open_question_answer if defined?(@open_question_answer)
+
+    @open_question_answer = question_answers.select(&:open_answer).last
   end
 
   def allows_multiple_answers?
@@ -80,11 +90,35 @@ class Poll::Question < ApplicationRecord
   end
 
   def regenerate_contexted_clones
-    contexted_clones.destroy_all
+    # Clones are disposable, regenerated artifacts. Hard-delete them (Poll::Question
+    # is acts_as_paranoid) so their rows — and the context_id FK they hold to the
+    # source answers — are actually removed, otherwise soft-deleted clones would
+    # block those answers from ever being deleted.
+    contexted_clones.each(&:really_destroy!)
 
     contextualize_by_question.question_answers.each do |qa|
       clone_for_context(qa)
     end
+  end
+
+  # Questions in the same poll that use this question as their contextualisation
+  # source. Their contexted clones depend on this question's answer set, so they
+  # must be regenerated whenever this question's answers change.
+  def contextualized_dependents
+    poll.questions.where(contextualize_by_poll_question_id: id)
+  end
+
+  # Auto-regeneration entry point for the /adm edit flow. Rebuilds the contexted
+  # clones unless the poll already has voters — regeneration destroys and recreates
+  # the clone questions, which would discard any votes already cast on them. The
+  # manual admin action (#regenerate_contexted_clones) stays available to force a
+  # rebuild deliberately. Returns true when it regenerated, false when it skipped.
+  def regenerate_contexted_clones_if_safe
+    return false unless contextualize_by_question
+    return false unless poll.safe_to_delete_answer?
+
+    regenerate_contexted_clones
+    true
   end
 
   protected

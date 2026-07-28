@@ -1,0 +1,81 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <% if !Mitmachbox.configured? %>
+    <%= render "adm/projekts/phases/mitmachbox_survey/unconfigured" %>
+  <% elsif !@projekt_phase.remote_survey_created? %>
+    <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.missing_title"),
+                    description: t("adm.projekts.phases.mitmachbox_survey.missing_text"),
+                    icon: "ballot",
+                    link_url: mitmachbox_survey_adm_projekts_phase_path(@projekt_phase),
+                    link_text: t("adm.projekts.mitmachbox.go_to_survey_tab")) %>
+  <% elsif @mitmachbox_error.present? || @results.nil? %>
+    <%= kern_alert(title: @mitmachbox_error.present? ? mitmachbox_error_message(@mitmachbox_error) : t("adm.projekts.mitmachbox.errors.generic"),
+                   style: :danger) %>
+  <% else %>
+    <div class="mb-4">
+      <%= kern_alert(title: t(".latency_hint"), style: :info) %>
+    </div>
+
+    <% if @results["version"].nil? %>
+      <%= empty_state(title: t(".empty_title"), description: t(".empty_text"), icon: "bar_chart") %>
+    <% else %>
+      <div class="d-flex flex-wrap align-items-center gap-3 mb-5">
+        <p class="kern-body mb-0">
+          <strong><%= t(".responses_total") %>:</strong> <%= @results["responses_total"] %>
+        </p>
+
+        <p class="kern-body kern-body--small mb-0">
+          <%= t(".version_label", number: @results["version"]["version_number"]) %>
+          <% if @results["version"]["published_at"].present? %>
+            (<%= t(".published_at_label", date: l(Time.zone.parse(@results["version"]["published_at"]), format: :short)) %>)
+          <% end %>
+        </p>
+
+        <%= kern_link_button mitmachbox_results_export_adm_projekts_phase_path(@projekt_phase),
+              text: t(".export_button"), icon: "download", style: :secondary %>
+      </div>
+
+      <% (@results["questions"] || []).sort_by { |question| question["position"].to_i }.each do |question| %>
+        <div class="mb-5">
+          <h3 class="kern-title kern-title--small mb-1"><%= question["prompt"] %></h3>
+          <p class="kern-body kern-body--small mb-3"><%= t(".answered_label", count: question["answered"]) %></p>
+
+          <% question_options = (question["options"] || []).sort_by { |option| option["position"].to_i } %>
+          <% if question_options.any? %>
+            <% max_count = [question_options.map { |option| option["count"].to_i }.max, 1].max %>
+            <div class="kern-table-responsive" tabindex="0">
+              <table class="kern-table">
+                <thead class="kern-table__head">
+                  <tr class="kern-table__row">
+                    <th scope="col" class="kern-table__header"><%= t(".option_label") %></th>
+                    <th scope="col" class="kern-table__header"><%= t(".count_label") %></th>
+                    <th scope="col" class="kern-table__header"></th>
+                  </tr>
+                </thead>
+
+                <tbody class="kern-table__body">
+                  <% question_options.each do |option| %>
+                    <tr class="kern-table__row">
+                      <th scope="row" class="kern-table__header"><%= option["label"] %></th>
+                      <td class="kern-table__cell"><%= option["count"] %></td>
+                      <td class="kern-table__cell" style="min-width: 160px;">
+                        <div class="kern-progress">
+                          <progress value="<%= option["count"].to_i %>" max="<%= max_count %>" aria-hidden="true"></progress>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

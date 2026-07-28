@@ -9,16 +9,18 @@ class ProjektPhase::ProposalPhase::StatsService
 
   def call
     demographics = ProjektPhase::DemographicsCalculator.new(participant_ids)
+    online_votes = supports.count
+    offline_votes = proposals.sum(:officing_bulk_votes)
 
     @projekt_phase.update!(
       stats: {
-        total_unique_participants_count: participant_ids.uniq.count,
+        total_unique_participants_count: participant_ids.size,
         visible_proposals_count: proposals.count,
-        proposal_authors_count: proposals.select(:author_id).distinct.count,
-        unique_supporters_count: supports.select(:voter_id).distinct.count,
-        online_votes_count: supports.count,
-        offline_votes_count: proposals.sum(:officing_bulk_votes),
-        total_votes_count: supports.count + proposals.sum(:officing_bulk_votes),
+        proposal_authors_count: author_ids.size,
+        unique_supporters_count: voter_ids.size,
+        online_votes_count: online_votes,
+        offline_votes_count: offline_votes,
+        total_votes_count: online_votes + offline_votes,
         visible_comments_count: visible_comments.count,
         **demographics.gender_data,
         participants_by_age: demographics.age_data,
@@ -52,12 +54,19 @@ class ProjektPhase::ProposalPhase::StatsService
       )
     end
 
+    def author_ids
+      @author_ids ||= proposals.select(:author_id).distinct.pluck(:author_id).compact
+    end
+
+    def voter_ids
+      @voter_ids ||= supports.select(:voter_id).distinct.pluck(:voter_id).compact
+    end
+
+    def commenter_ids
+      @commenter_ids ||= visible_comments.select(:user_id).distinct.pluck(:user_id).compact
+    end
+
     def participant_ids
-      @participant_ids ||= begin
-        author_ids = proposals.select(:author_id).distinct.pluck(:author_id)
-        voter_ids = supports.select(:voter_id).distinct.pluck(:voter_id)
-        commenter_ids = visible_comments.select(:user_id).distinct.pluck(:user_id)
-        (author_ids + voter_ids + commenter_ids).uniq.compact
-      end
+      @participant_ids ||= (author_ids + voter_ids + commenter_ids).uniq
     end
 end

@@ -30,6 +30,25 @@ class SiteCustomization::Page < ApplicationRecord
   LANDING_VIDEO_FORMATS = ["video/mp4", "video/webm"].freeze
   LANDING_VIDEO_MAX_SIZE = 50.megabytes
 
+  # Pages linked from the public footer. footer_key is the immutable identity
+  # of a footer page (slug and title are admin-editable).
+  FOOTER_KEYS = %w[privacy additional_privacy conditions accessibility impressum
+                   netiquette contact_us open_source].freeze
+
+  validates :footer_key, uniqueness: true, inclusion: { in: FOOTER_KEYS }, allow_nil: true
+
+  scope :footer_pages, -> { where(footer_key: FOOTER_KEYS).reorder(:footer_position, :id) }
+
+  def self.order_footer_pages(ordered_ids)
+    pages_by_id = footer_pages.where(id: ordered_ids).index_by(&:id)
+
+    transaction do
+      ordered_ids.each_with_index do |page_id, index|
+        pages_by_id[page_id.to_i]&.update_column(:footer_position, index + 1)
+      end
+    end
+  end
+
   validates :landing_desktop_header_video,
             file_content_type: { allow: LANDING_VIDEO_FORMATS, if: -> { landing_desktop_header_video.attached? }},
             file_size: { less_than_or_equal_to: LANDING_VIDEO_MAX_SIZE, if: -> { landing_desktop_header_video.attached? }}

@@ -94,15 +94,16 @@ module ApplicationHelper
     count
   end
 
-  def use_mapbox?(projekt = nil)
-    if projekt.present?
-      Setting["feature.mapbox"].present? || projekt_feature?(projekt, "general.mapbox")
-    else
-      Setting["feature.mapbox"].present?
-    end
-  end
-
   def show_admin_controls_for_projekt?(projekt)
     Pundit.policy(current_user, [:adm, :projekts, projekt])&.update? || false
+  end
+
+  def studio_projekt_phases_data(projekt)
+    projekt
+      .projekt_phases
+      .includes(:translations, :settings)
+      .select(&:resource_map_enabled?)
+      .map { |phase| { id: phase.id, label: phase.title, name: phase.name } }
+      .to_json
   end
 end

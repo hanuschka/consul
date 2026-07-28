@@ -1,8 +1,10 @@
-<div class="margin-bottom main-column">
-  <%= render_custom_block(
-    "projekt_footer_tab_explainer_#{projekt_phase.id}",
-    projekt: @projekt,
-    return_path: url_to_footer_tab,
-    toolbar_position: :left
-  ) %>
-</div>
+<% if render_custom_projekt_content_block?("projekt_footer_tab_explainer_#{projekt_phase.id}", projekt_phase.projekt) %>
+  <div class="main-column">
+    <%= render_custom_block(
+      "projekt_footer_tab_explainer_#{projekt_phase.id}",
+      projekt: @projekt,
+      return_path: url_to_footer_tab,
+      toolbar_position: :left
+    ) %>
+  </div>
+<% end %>

@@ -11,26 +11,16 @@
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
  <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
     <% content_for :admin_topbar_display_settings do %>
-      <button
-        type="button"
-        tabindex="-1"
-        class="studio-admin-topbar-toggle js-toggle-content-background"
-        role="switch"
-        aria-checked="<%= @custom_page.projekt.show_content_background %>"
+      <custom-switch
+        theme="dark"
+        control-class="studio-admin-topbar-toggle"
+        control-title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
+        label="<%= t('custom.projekts.page.toggle_background_label') %>"
+        input-class="js-toggle-content-background"
+        <%= "checked" if @custom_page.projekt.show_content_background %>
         data-projekt-id="<%= @custom_page.projekt.id %>"
-        data-show-background="<%= @custom_page.projekt.show_content_background %>"
         data-url="<%= toggle_hide_content_background_adm_projekts_projekt_path(@custom_page.projekt) %>"
-        title="<%= t('custom.projekts.page.toggle_background_tooltip') %>"
-        data-tooltip
-        data-hover-delay="500"
-      >
-        <span class="studio-admin-topbar-toggle--track" aria-hidden="true">
-          <span class="studio-admin-topbar-toggle--thumb"></span>
-        </span>
-        <span class="studio-admin-topbar-toggle--label">
-          <%= t('custom.projekts.page.toggle_background_label') %>
-        </span>
-      </button>
+      ></custom-switch>
 
       <%= render "pages/topbar/admin_topbar_color_picker", projekt: @custom_page.projekt %>
 
@@ -69,8 +59,8 @@
     <% elsif @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
       <%= render "pages/topbar/admin_topbar_projekt_actions" %>
     <% else %>
-      <% if current_user&.administrator? %>
-        <%= link_to adm_site_customization_edit_page_by_slug_path(@custom_page.slug),
+      <% if current_user&.administrator? && @custom_page.footer_key.present? %>
+        <%= link_to edit_adm_site_customization_page_path(@custom_page),
               class: "button hollow studio-admin-topbar-button",
               target: "_blank",
               tabindex: "-1" do %>
@@ -100,12 +90,6 @@
       twitter_image_url: (@custom_page.image.present? ? polymorphic_path(@custom_page.image) : nil) %>
   <% end %>
 
-  <% if @custom_page.projekt.present? && projekt_feature?(@custom_page.projekt, "general.vc_map_enabled") %>
-    <% provide :vc_maps do %>
-      <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
-    <% end %>
-  <% end %>
-
   <style>
     <% if @custom_page.image&.attached? %>
       .custom-page-banner {
@@ -123,6 +107,9 @@
     data-projekt-id="<%= @custom_page.projekt&.id %>"
     data-default-margin-bottom="<%= SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>"
     data-ai-available="<%= Ai::Settings.ai_available? %>"
+    <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
+      data-studio-projekt-phases="<%= studio_projekt_phases_data(@custom_page.projekt) %>"
+    <% end %>
   >
     <%= render Projekts::BannerComponent.new(custom_page: @custom_page) %>
 

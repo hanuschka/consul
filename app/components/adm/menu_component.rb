@@ -31,7 +31,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.age_ranges"),            path: adm_age_ranges_path },
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
-        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_edit_page_by_slug_path(slug: "privacy"), active_prefix: "/adm/site_customization/pages" },
+        { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_pages_path, active_prefix: "/adm/site_customization/pages" },
         { label: t("adm.menu.items.application_subitems.features"),              path: adm_features_path,                                              active_prefix: "/adm/features" }
       ]
     end
@@ -40,7 +40,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
       [
         { label: t("adm.menu.items.files_subitems.images"),             path: adm_files_images_path },
         { label: t("adm.menu.items.files_subitems.documents"),          path: adm_files_documents_path },
-        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path }
+        { label: t("adm.menu.items.files_subitems.resource_documents"), path: adm_maintenance_resource_documents_path },
+        { label: t("adm.menu.items.files_subitems.file_settings"),      path: file_settings_adm_settings_path }
       ]
     end
 
@@ -54,7 +55,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def api_subitems
       [
         { label: t("adm.menu.items.api_subitems.api_clients"),        path: adm_api_clients_path,        active_prefix: "/adm/api_clients" },
-        { label: t("adm.menu.items.api_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" }
+        { label: t("adm.menu.items.api_subitems.api_request_logs"),   path: adm_api_request_logs_path,   active_prefix: "/adm/api_request_logs" },
+        { label: t("adm.menu.items.api_subitems.api_changelog"),      path: api_docs_path(anchor: "section/Changelog"), target: "_blank" }
       ]
     end
 

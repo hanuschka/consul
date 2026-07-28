@@ -97,7 +97,51 @@ class Poll::Stats
     voters.where(origin: "booth").count
   end
 
+  def channel_breakdown
+    channels.index_with { |channel| channel_figures(channel) }
+  end
+
   private
+
+    def channel_figures(channel)
+      case channel
+      when "web"
+        build_channel_figures(
+          total_web_valid, total_web_white, total_web_null,
+          valid_percentage_web, white_percentage_web, null_percentage_web,
+          total_participants_web, total_participants_web_percentage
+        )
+      when "booth"
+        build_channel_figures(
+          total_booth_valid, total_booth_white, total_booth_null,
+          valid_percentage_booth, white_percentage_booth, null_percentage_booth,
+          total_participants_booth, total_participants_booth_percentage
+        )
+      when "letter"
+        build_channel_figures(
+          total_letter_valid, total_letter_white, total_letter_null,
+          valid_percentage_letter, white_percentage_letter, null_percentage_letter,
+          total_participants_letter, total_participants_letter_percentage
+        )
+      end
+    end
+
+    def build_channel_figures(
+      valid, white, null_votes,
+      valid_percentage, white_percentage, null_percentage,
+      participants, participants_percentage
+    )
+      {
+        valid: valid,
+        white: white,
+        null_votes: null_votes,
+        valid_percentage: valid_percentage,
+        white_percentage: white_percentage,
+        null_percentage: null_percentage,
+        participants: participants,
+        participants_percentage: participants_percentage
+      }
+    end
 
     def participant_ids
       voters
@@ -115,7 +159,7 @@ class Poll::Stats
       [total_participants_booth - total_registered_booth, 0].max
     end
 
-    stats_cache(*stats_methods)
+    stats_cache(*stats_methods, :individual_group_breakdown)
 
     def stats_cache(key, &block)
       Rails.cache.fetch("polls_stats/#{poll.id}/#{key}/#{version}", &block)

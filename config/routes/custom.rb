@@ -1,4 +1,4 @@
-get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
+delete "account/disconnect_identity", to: "account#disconnect_identity", as: :disconnect_identity_account
 
 get "/map_data", to: "map_data#show", as: :map_data
 
@@ -40,17 +40,17 @@ end
 
 namespace :adm do
   namespace :files do
-    resources :images, only: [:index]
-    resources :documents, only: [:index, :update, :destroy] do
+    resources :images, only: [:index, :show]
+    resources :documents, only: [:index, :show, :update, :destroy] do
       get :documentable_type_filter, on: :collection
     end
   end
 
   namespace :maintenance do
-    resources :resource_images, only: [:index, :update, :destroy] do
+    resources :resource_images, only: [:index, :show, :update, :destroy] do
       get :imageable_type_filter, on: :collection
     end
-    resources :resource_documents, only: [:index] do
+    resources :resource_documents, only: [:index, :show] do
       get :documentable_type_filter, on: :collection
     end
   end
@@ -100,6 +100,12 @@ end
 resources :masterportal_pins, only: [] do
   member do
     get :json_data
+  end
+end
+
+resources :polls, only: [] do
+  member do
+    get :ai_analysis
   end
 end
 

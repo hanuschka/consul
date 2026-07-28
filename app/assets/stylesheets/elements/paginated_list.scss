@@ -1,0 +1,45 @@
+.paginated-list--controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.paginated-list--button {
+  padding: 0.4rem 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+
+  &:active {
+    background: #cbd5e1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1e40af;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    color: #94a3b8;
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+  }
+}
+
+.paginated-list--status {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}

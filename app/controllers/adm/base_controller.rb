@@ -25,6 +25,7 @@ class Adm::BaseController < ActionController::Base
   # Top-level Adm controllers that thematically belong to a section.
   # These bypass the default `self.class.module_parent_name` lookup.
   SECTION_NAMESPACE_OVERRIDES = {
+    "Adm::SiteCustomization::PagesController" => "Adm",
     "Adm::ModeratorsController" => "Adm::Moderation",
     "Adm::ValuatorsController" => "Adm::Valuation",
     "Adm::OfficingManagersController" => "Adm::Officing",

@@ -140,7 +140,7 @@ $phase-marker-border: #cbd5e1;
       font-size: 14px;
       font-weight: 500;
       line-height: 1.35;
-      color: inherit;
+      // color: inherit;
 
       i {
         opacity: 0;
@@ -756,8 +756,6 @@ $phase-marker-border: #cbd5e1;
 
         // Submit button
         input[type="submit"], button[type="submit"], .button.is-outlined {
-          background: $cta-orange !important;
-          color: #FFFFFF !important;
           border: none !important;
           border-radius: 6px !important;
           font-family: $heading-font;

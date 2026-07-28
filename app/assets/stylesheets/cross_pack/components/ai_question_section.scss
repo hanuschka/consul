@@ -3,14 +3,16 @@
 // (<details>/<summary>) and self-contained buttons — no kern-ux base CSS,
 // no Foundation .button required.
 
+@import "cross_pack/1_colors";
+
 .participation-stats-ai-question {
   --er-primary: #1e40af;
   --er-bg: #f8fafc;
-  --er-surface: #ffffff;
+  --er-surface: #f8fafc;
   --er-text: #0f172a;
   --er-text-secondary: #475569;
   --er-text-muted: #94a3b8;
-  --er-border: #e2e8f0;
+  --er-border: #{$soft-border};
   --er-border-light: #f1f5f9;
   --er-radius: 8px;
   --er-radius-lg: 12px;

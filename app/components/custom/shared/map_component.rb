@@ -110,6 +110,8 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:masterportal_pins_layer_label] =
         I18n.t("components.shared.map_component.layers.masterportal_pins")
+      options[:masterportal_default_icon_url] =
+        helpers.path_to_image("masterportal/pins/default_pin.svg")
 
       options[:admin_features] = admin_features
 

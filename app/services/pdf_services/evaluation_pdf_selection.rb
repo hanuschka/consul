@@ -1,10 +1,12 @@
 class PdfServices::EvaluationPdfSelection
   PHASE_SECTIONS = {
-    "ProjektPhase::ProposalPhase" => %w[kpis key_metrics phase_summary tone ranking proposals ai_summary timeline label_sentiment user_segments key_findings topic_clustering semantic_clustering ai_questions],
-    "ProjektPhase::VotingPhase" => %w[kpis questions open_responses key_findings ai_questions],
-    "ProjektPhase::BudgetPhase" => %w[kpis phase_summary tone timeline label_sentiment user_segments key_findings topic_clustering semantic_clustering ai_questions],
+    "ProjektPhase::ProposalPhase" => %w[kpis key_metrics phase_summary tone ranking ai_summary timeline label_sentiment user_segments heatmap key_findings topic_clustering semantic_clustering ai_questions],
+    "ProjektPhase::VotingPhase" => %w[kpis questions open_responses ai_summary key_findings ai_questions],
+    "ProjektPhase::BudgetPhase" => %w[kpis phase_summary tone timeline label_sentiment user_segments budget_segments heatmap key_findings topic_clustering semantic_clustering ai_questions],
     "ProjektPhase::CommentPhase" => %w[kpis phase_summary tone timeline user_segments key_findings ai_questions]
   }.freeze
+
+  PDF_EXCLUDED_SECTIONS = %w[heatmap].freeze
 
   ALL_SECTIONS = PHASE_SECTIONS.values.flatten.uniq.freeze
 
@@ -23,15 +25,22 @@ class PdfServices::EvaluationPdfSelection
   def self.from_saved_visibilities(evaluation)
     phases = evaluation.phases_data
     phase_ids = phases.map { |p| p["phase_id"].to_i }
+    visibilities = visibilities_by_phase_id(phase_ids)
     sections_by_phase = phases.each_with_object({}) do |phase, hash|
       available = available_sections(phase["phase_type"])
-      hash[phase["phase_id"].to_i] = visible_section_keys_for(phase["phase_id"], available)
+      hash[phase["phase_id"].to_i] = visible_section_keys_for(phase["phase_id"], available, visibilities)
     end
 
     new(phase_ids: phase_ids, sections_by_phase: sections_by_phase, include_report: true)
   end
 
-  def self.defaults_for(evaluation:, phase_id:)
+  def self.visibilities_by_phase_id(phase_ids)
+    ProjektPhaseEvaluationVisibility
+      .where(projekt_phase_id: phase_ids)
+      .index_by(&:projekt_phase_id)
+  end
+
+  def self.defaults_for(evaluation:, phase_id:, section_group: nil)
     return all(evaluation) if phase_id.blank?
 
     phase = evaluation.phases_data.find { |p| p["phase_id"].to_i == phase_id.to_i }
@@ -39,16 +48,36 @@ class PdfServices::EvaluationPdfSelection
 
     available = available_sections(phase["phase_type"])
     visible = visible_section_keys_for(phase_id, available)
+    scoped = filter_by_section_group(visible, section_group)
 
     new(
       phase_ids: [phase_id.to_i],
-      sections_by_phase: { phase_id.to_i => visible },
+      sections_by_phase: { phase_id.to_i => scoped },
       include_report: false
     )
   end
 
-  def self.visible_section_keys_for(phase_id, available_keys)
-    visibility = ProjektPhaseEvaluationVisibility.find_by(projekt_phase_id: phase_id)
+  def self.filter_by_section_group(section_keys, section_group)
+    ai_keys = Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
+
+    case section_group.to_s
+    when "stats"
+      section_keys - ai_keys
+    when "ai"
+      section_keys & ai_keys
+    else
+      section_keys
+    end
+  end
+
+  def self.visible_section_keys_for(phase_id, available_keys, visibilities = nil)
+    visibility =
+      if visibilities
+        visibilities[phase_id.to_i]
+      else
+        ProjektPhaseEvaluationVisibility.find_by(projekt_phase_id: phase_id)
+      end
+
     return available_keys if visibility.nil?
 
     available_keys & visibility.visible_sections
@@ -79,6 +108,10 @@ class PdfServices::EvaluationPdfSelection
 
   def self.available_sections(phase_type)
     PHASE_SECTIONS[phase_type] || []
+  end
+
+  def self.pdf_available_sections(phase_type)
+    available_sections(phase_type) - PDF_EXCLUDED_SECTIONS
   end
 
   def initialize(phase_ids:, sections_by_phase:, include_report: true)

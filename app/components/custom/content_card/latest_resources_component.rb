@@ -1,7 +1,9 @@
 class ContentCard::LatestResourcesComponent < ApplicationComponent
   # The phase carries the projekt, whose page + translations the list item's
   # breadcrumbs render; the phase settings back projekt_phase_feature? checks.
-  PHASE_ASSOCIATIONS = { projekt_phase: { projekt: { page: :translations } } }.freeze
+  PHASE_ASSOCIATIONS = {
+    projekt_phase: [:settings, { projekt: { page: :translations } }]
+  }.freeze
 
   delegate :current_user, :current_ability, to: :helpers
 
@@ -30,9 +32,33 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
     end
 
     def latest_resources
-      @latest_resources ||=
-        (latest_debates + latest_proposals + latest_investment_proposals + latest_deficiency_reports)
-        .sort_by(&:created_at).reverse
+      @latest_resources ||= begin
+        resources =
+          (latest_debates + latest_proposals + latest_investment_proposals + latest_deficiency_reports)
+          .sort_by(&:created_at).reverse
+
+        preload_resource_associations(resources)
+
+        resources
+      end
+    end
+
+    # The author set is identical for all four resource types, so it is loaded
+    # in one Preloader pass over the merged list instead of once per collection;
+    # only the phase path differs per class.
+    def preload_resource_associations(resources)
+      preload_associations(resources, Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS)
+      preload_associations(
+        resources.select { |resource| resource.is_a?(::Debate) || resource.is_a?(::Proposal) },
+        PHASE_ASSOCIATIONS
+      )
+      preload_associations(resources.grep(::Budget::Investment), budget: PHASE_ASSOCIATIONS)
+    end
+
+    def preload_associations(records, associations)
+      return if records.empty?
+
+      ActiveRecord::Associations::Preloader.new.preload(records, associations)
     end
 
     def latest_debates
@@ -45,7 +71,6 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
       Debate.with_current_projekt
         .merge(Projekt.show_in_homepage)
         .by_projekt_id(scoped_projekt_ids)
-        .includes(Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS, PHASE_ASSOCIATIONS)
         .sort_by_created_at.limit(@debates_limit)
     end
 
@@ -64,7 +89,6 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
         .meets_minimum_supports
         .merge(Projekt.show_in_homepage)
         .by_projekt_id(scoped_projekt_ids)
-        .includes(Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS, PHASE_ASSOCIATIONS)
         .sort_by_created_at
         .limit(@proposals_limit)
     end
@@ -87,7 +111,6 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
       end
 
       investment_proposals
-        .includes(Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS, budget: PHASE_ASSOCIATIONS)
         .sort_by_created_at
         .limit(@investments_limit)
     end
@@ -99,7 +122,6 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
 
       DeficiencyReport
         .accessible_by(current_ability)
-        .includes(Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS)
         .order(created_at: :desc)
         .limit(@deficiency_reports_limit)
     end

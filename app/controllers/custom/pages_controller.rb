@@ -206,7 +206,9 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+        @proposals_map_pin_count =
+          proposal_map_pin_count_up_to(@resources, Shared::MapComponent::LAZY_LOAD_THRESHOLD,
+                                       @projekt_phase)
 
         if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
           @proposals_coordinates = all_proposal_map_locations(@resources)

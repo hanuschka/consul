@@ -5,12 +5,6 @@ class ContentCard::CurrentProjektsComponent < ApplicationComponent
     @content_card = content_card
     @limit = @content_card.settings["limit"].to_i
     @custom_page = custom_page
-    @projekts =
-      if custom_page.present?
-        custom_page.landing_projekts.show_in_homepage
-      else
-        Projekt.show_in_homepage
-      end
   end
 
   def render?
@@ -29,16 +23,6 @@ class ContentCard::CurrentProjektsComponent < ApplicationComponent
 
     def current_projekts
       @current_projekts ||=
-        @projekts
-          .visible_for(current_user)
-          .includes(
-            :projekt_settings, :tags,
-            page: [:image, :translations],
-            active_and_visible_projekt_phases: [:translations, :settings]
-          )
-          .preload(sdg_relations: :related_sdg)
-          .sort_by_order_number
-          .index_order_underway
-          .first(@limit)
+        ContentCard::ProjektBuckets.for(@custom_page, current_user).current.first(@limit)
     end
 end

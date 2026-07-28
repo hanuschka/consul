@@ -167,7 +167,7 @@ module ContentBlocksHelper
 
   def render_custom_content_block?(key)
     locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: locale, key: key)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key, locale)
 
     return true if content_block&.body.present?
 
@@ -176,7 +176,7 @@ module ContentBlocksHelper
 
   def render_custom_projekt_content_block?(key, projekt)
     locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: locale, key: key)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key, locale)
 
     return true if content_block&.body.present?
 

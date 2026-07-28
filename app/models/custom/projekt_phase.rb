@@ -397,29 +397,27 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def settings_by_key
+    @settings_by_key ||= settings.each_with_object({}) do |setting, values|
+      values[setting.key] = setting.value
+    end
+  end
+
   def all_settings
-    @settings ||= settings.pluck(:key, :value)
+    settings_by_key.to_a
   end
 
   def feature?(key)
-    setting = settings.find { |s| s.key == "feature.#{key}" }
-
-    if setting.present?
-      setting.value.present?
-    else
-      false
-    end
+    settings_by_key["feature.#{key}"].present?
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their
   # resource map only when "form.show_map" is enabled; phase types without the
   # setting (e.g. point of interest) always show it.
   def resource_map_enabled?
-    setting = settings.find { |s| s.key == "feature.form.show_map" }
+    return true if !settings_by_key.key?("feature.form.show_map")
 
-    return true if setting.blank?
-
-    setting.value.present?
+    settings_by_key["feature.form.show_map"].present?
   end
 
   def publicly_visible?
@@ -466,13 +464,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def option(key)
-    option = settings.find { |s| s.key == "option.#{key}" }
-
-    if option.present?
-      option.value
-    else
-      nil
-    end
+    settings_by_key["option.#{key}"]
   end
 
   def setting(key)

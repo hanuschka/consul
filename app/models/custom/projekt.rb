@@ -524,7 +524,9 @@ class Projekt < ApplicationRecord
   #     present?
   # end
   def projekt_settings_hash
-    @projekt_settings_hash ||= projekt_settings.pluck(:key, :value).to_h
+    @projekt_settings_hash ||= projekt_settings.each_with_object({}) do |setting, values|
+      values[setting.key] = setting.value
+    end
   end
 
   def activated?
@@ -759,8 +761,7 @@ class Projekt < ApplicationRecord
   end
 
   def feature?(feature)
-    setting = projekt_settings.find { |setting| setting.key == "projekt_feature.#{feature}"}
-    (setting && (setting.value == 'active' || setting.value == 't'  )) ? true : false
+    projekt_settings_hash["projekt_feature.#{feature}"].in?(%w[active t])
   end
 
   def serialize

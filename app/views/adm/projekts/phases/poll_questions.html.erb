@@ -57,7 +57,7 @@
               </td>
               <th scope="row" class="kern-table__header">
                 <%= question.title %>
-                <% if question.contextualize_by_poll_question_id.present? %>
+                <% if question.contextualize_by_question.present? %>
                   <br>
                   <small><%= t(".table.contextualized_by") %> <%= question.contextualize_by_question.title %></small>
                 <% end %>

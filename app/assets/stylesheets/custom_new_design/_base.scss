@@ -216,6 +216,8 @@ ul.no-ul-style {
   flex-grow: 1;
   background: #c7c7c7;
   align-self: flex-end;
+  position: relative;
+  bottom: -7px;
 
   @media(max-width: $big-tablet-viewport-start) {
     display: none;

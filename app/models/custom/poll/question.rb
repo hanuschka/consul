@@ -21,6 +21,14 @@ class Poll::Question < ApplicationRecord
                        foreign_key: :context_id,
                        optional: true
 
+  scope :with_wizard_associations, -> {
+    answer_includes = [:translations, :images, :documents, :videos]
+
+    includes(:context, :poll, :translations, :votation_type,
+             question_answers: answer_includes,
+             nested_questions: [:poll, :votation_type, :translations, { question_answers: answer_includes }])
+  }
+
   validates :votation_type, presence: true
   validate :validate_parent_question_id
 
@@ -42,7 +50,9 @@ class Poll::Question < ApplicationRecord
   end
 
   def open_question_answer
-    question_answers.where(open_answer: true).last
+    return @open_question_answer if defined?(@open_question_answer)
+
+    @open_question_answer = question_answers.select(&:open_answer).last
   end
 
   def allows_multiple_answers?

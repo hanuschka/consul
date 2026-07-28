@@ -21,6 +21,10 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   before_validation :repair_html_body, :sanitize_body
 
+  after_create :touch_projekt_content_updated_at
+  after_destroy :touch_projekt_content_updated_at
+  after_update :touch_projekt_content_updated_at, if: :saved_change_to_body?
+
   def ai_generation_status
     return nil if ai_generation_data.blank?
 
@@ -36,9 +40,36 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     update_column(:ai_generation_data, new_data)
   end
 
+  # Memoized per locale+key rather than batch-loaded: the table holds thousands
+  # of distinct keys and a render only ever asks for a handful of them. The
+  # read-only and create-on-miss paths share one registry so a block reached
+  # through both is fetched once.
   def self.custom_block_for(key, locale)
     locale ||= I18n.default_locale
-    find_or_create_by(name: 'custom', locale: locale, key: key)
+    existing_block = find_custom_block(key, locale)
+
+    return existing_block if existing_block.present?
+
+    custom_blocks_registry[custom_block_registry_key(key, locale)] =
+      find_or_create_by(name: 'custom', locale: locale, key: key)
+  end
+
+  def self.find_custom_block(key, locale)
+    locale ||= I18n.default_locale
+    registry = custom_blocks_registry
+    memo_key = custom_block_registry_key(key, locale)
+
+    return registry[memo_key] if registry.key?(memo_key)
+
+    registry[memo_key] = find_by(name: 'custom', locale: locale, key: key)
+  end
+
+  def self.custom_blocks_registry
+    Current.custom_content_blocks ||= {}
+  end
+
+  def self.custom_block_registry_key(key, locale)
+    [locale.to_s, key]
   end
 
   def custom?
@@ -56,6 +87,12 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   end
 
   private
+
+  def touch_projekt_content_updated_at
+    return if destroyed_by_association.present?
+
+    projekt&.touch(:content_updated_at)
+  end
 
   def single_parent
     if projekt_id.present? && newsletter_id.present?

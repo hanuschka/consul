@@ -154,6 +154,12 @@ class DeficiencyReport < ApplicationRecord
     "CONSUL-DF-#{created_at.strftime("%Y-%m")}-#{id}"
   end
 
+  def publicly_visible?
+    return false if hidden?
+
+    Setting["deficiency_reports.admin_acceptance_required"].blank? || admin_accepted?
+  end
+
   def total_votes
     cached_votes_total
   end

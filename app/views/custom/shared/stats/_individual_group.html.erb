@@ -1,23 +1,9 @@
-<div id="participants_by_individual_group_value" class="stats-group">
-
+<div
+  id="participants_by_individual_group_value"
+  class="stats-group participation-stats--individual-groups adm-poll-stats"
+>
   <h4><%= t("stats.by_individual_group") %></h4>
 
-  <% stats.soft_individual_groups.each do |individual_group| %>
-    <table>
-      <thead>
-        <tr>
-          <th scope="col"><%= individual_group.name %></th>
-          <th scope="col"><%= t("stats.individual_group_value_count") %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% individual_group.individual_group_values.each do |individual_group_value| %>
-          <tr>
-            <td><%= individual_group_value.name %></td>
-            <td><%= "#{stats.total_individual_group_value_participants(individual_group_value)} (#{number_to_percentage(stats.percentage_individual_group_value_participants(individual_group_value), strip_insignificant_zeros: true, precision: 2 )})" %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% end %>
+  <%= render "adm/projekts/projekts/evaluation/individual_group_charts",
+    groups: stats.individual_group_breakdown %>
 </div>

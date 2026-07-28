@@ -16,6 +16,10 @@ en:
     use_full_projekt_context: "Use additional projekt context"
     use_full_projekt_context_hint: "The basic projekt context is always included for the AI. When enabled, additional content (all content blocks, projekt dates, SDGs, categories, and phases) is added — this consumes more tokens and is therefore more expensive."
     use_full_projekt_context_hint_short: "Additional context for more comprehensive AI responses"
+  proposals:
+    retire_form:
+      retired_explanation_hint: "Maximum 500 characters"
+      back_to_proposal: "Back to proposal"
   shared:
     suggest:
       deficiency_report:

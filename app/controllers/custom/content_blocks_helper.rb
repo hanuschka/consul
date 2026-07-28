@@ -6,7 +6,7 @@ module ContentBlocksHelper
   # up rendered outside the content block. Detect such bodies and wrap them in a
   # <div> instead, whatever tag was requested.
   BLOCK_LEVEL_BODY_REGEXP =
-    /<(div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
+    /<(p|div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
 
   def render_custom_block(
     key,
@@ -167,7 +167,7 @@ module ContentBlocksHelper
 
   def render_custom_content_block?(key)
     locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: locale, key: key)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key, locale)
 
     return true if content_block&.body.present?
 
@@ -176,7 +176,7 @@ module ContentBlocksHelper
 
   def render_custom_projekt_content_block?(key, projekt)
     locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: locale, key: key)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key, locale)
 
     return true if content_block&.body.present?
 
@@ -231,6 +231,10 @@ module ContentBlocksHelper
 
   def convert_br_to_paragraphs(html)
     return html if html.blank?
+
+    if html.match?(/<br\s*\/?>/) && !html.match?(BLOCK_LEVEL_BODY_REGEXP)
+      html = "<p>#{html}</p>"
+    end
 
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")

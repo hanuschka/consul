@@ -64,12 +64,13 @@
     }
     @media (max-width: 420px) {
       width: 100%;
+      max-width: none;
     }
   }
 }
 
 .ai-stats-card {
-  background: #f0f0f0;
+  background: var(--er-surface, #f8fafc);
   border-radius: 12px;
   padding: 10px 25px 15px;
   padding-right: 15px;
@@ -173,8 +174,20 @@
 
 .kpi-stats-pie-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 15px;
+
+  @media (max-width: $small-tablet-viewport-start) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpi-stats-pie-grid .participation-stats--individual-groups {
+  grid-column: 1 / -1;
+}
+
+.participation-stats--individual-groups .adm-poll-stats--groups {
+  margin-top: 0;
 }
 
 .budget-phase-stats-section-card {

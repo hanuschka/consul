@@ -7,70 +7,238 @@
     section_partial.key?((row.data || {})["phase_type"])
   end
 
-  generated_at_text = ->(time) do
+  ai_available = Ai::Settings.ai_available?
+
+  data = evaluation.data || {}
+  summary_text = data["ai_project_summary"].presence ||
+    evaluation_plain_text(data["project_content_summary"]).presence ||
+    t("adm.projekts.projekts.evaluation.overview.summary_fallback")
+
+  row_date_text = ->(time) do
     if time.present?
-      t("adm.projekts.projekts.evaluation.phase_tab.generated_at", date: l(time, format: :long))
+      t("adm.projekts.projekts.evaluation.phase_tab.generated_at",
+        date: time.strftime("%d.%m.%Y, %H:%M:%S"))
     else
       t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
     end
   end
 %>
 
-<% if rows.any? %>
-  <div class="adm-evaluation-cards">
+<section class="adm-evaluation-list-section">
+  <div class="adm-evaluation-list-section__head">
+    <h2 class="adm-evaluation-list-section__label">
+      <%= t("adm.projekts.projekts.evaluation.overview.section_report") %>
+    </h2>
+  </div>
+
+  <div class="adm-evaluation-list">
+    <article class="adm-evaluation-row adm-evaluation-row--summary">
+      <%= link_to report_summary_adm_projekts_projekt_path(projekt), class: "adm-evaluation-row__lead", data: { turbo: false } do %>
+        <span
+          class="adm-evaluation-row__icon"
+          style="--row-accent:#1E40AF;--row-accent-light:#DBEAFE"
+        >
+          <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">summarize</span>
+          <i class="fas fa-clipboard-list projekt-evaluation-icon-fa" aria-hidden="true"></i>
+        </span>
+
+        <div class="adm-evaluation-row__lead-body">
+          <div class="adm-evaluation-row__title">
+            <%= t("adm.projekts.projekts.evaluation.report_summary_card.title") %>
+          </div>
+
+          <div class="adm-evaluation-row__kpi">
+            <span class="adm-evaluation-row__kpi-value"><%= rows.size %></span>
+            <span class="adm-evaluation-row__kpi-label">
+              <%= t("adm.projekts.projekts.evaluation.report_summary_card.phases") %>
+            </span>
+          </div>
+
+          <div class="adm-evaluation-row__meta">
+            <%= t("adm.projekts.projekts.evaluation.report_summary_card.description") %>
+          </div>
+        </div>
+      <% end %>
+
+      <p class="adm-evaluation-row__summary"><%= summary_text %></p>
+
+      <div class="adm-evaluation-row__actions">
+        <div class="adm-evaluation-row__action-line">
+          <%= render Adm::AiActionButtonComponent.new(
+            url: generate_evaluation_adm_projekts_projekt_path(projekt),
+            text: t("adm.projekts.projekts.evaluation.overview.refresh"),
+            icon: "autorenew",
+            style: :secondary,
+            progress_mode: :inline,
+            processing_text: t("adm.projekts.projekts.evaluation.processing_title"),
+            status_url: evaluation_status_adm_projekts_projekt_path(projekt),
+            confirm: t("adm.projekts.projekts.evaluation.regenerate_confirm"),
+            compact: true,
+            extra_classes: "adm-evaluation-row__ai-btn"
+          ) %>
+
+          <%= link_to report_summary_adm_projekts_projekt_path(projekt),
+            class: "kern-btn kern-btn--compact adm-evaluation-row__open",
+            data: { turbo: false } do %>
+            <span class="kern-label material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.open") %></span>
+          <% end %>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="adm-evaluation-list-section">
+  <div class="adm-evaluation-list-section__head">
+    <h2 class="adm-evaluation-list-section__label">
+      <%= t("adm.projekts.projekts.evaluation.overview.section_modules") %>
+    </h2>
+    <span class="adm-evaluation-list-section__count">
+      <%= t("adm.projekts.projekts.evaluation.overview.entries_count", count: rows.size) %>
+    </span>
+  </div>
+
+  <div class="adm-evaluation-list">
     <% rows.each do |row| %>
       <%
         phase = row.data || {}
+        phase_id = phase["phase_id"]
         color = palette[phase["phase_type"]]
         config = kpi_config[phase["phase_type"]]
         stats = phase["stats"] || {}
-        ai = phase["ai_stats"] || {}
         kpi_value = stats[config[:kpi_key]].to_i
         has_stats = stats.present?
-        has_ai = ai["summary"].present? || ai["topic_clustering"].present? || ai["semantic_clustering"].present?
+        has_ai = phase_has_ai_content?(phase)
+
+        stats_url = evaluation_phase_adm_projekts_projekt_path(projekt, phase_id)
+        ai_open_url = evaluation_phase_adm_projekts_projekt_path(projekt, phase_id, tab: "ai")
+        regular_regenerate_url = regenerate_phase_regular_stats_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+        ai_regenerate_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+        phase_status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt, phase_id: phase_id)
       %>
       <article
-        class="adm-evaluation-card"
-        style="--card-accent:<%= color[:accent] %>;--card-accent-light:<%= color[:accent_light] %>"
+        class="adm-evaluation-row"
+        id="phase-<%= phase_id %>"
+        data-controller="adm--phase-regenerate"
+        data-adm--phase-regenerate-status-url-value="<%= phase_status_url %>"
+        data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
       >
-        <div class="adm-evaluation-card__head">
-          <span class="adm-evaluation-card__icon">
+        <%= link_to stats_url, class: "adm-evaluation-row__lead", data: { turbo: false } do %>
+          <span
+            class="adm-evaluation-row__icon"
+            style="--row-accent:<%= color[:accent] %>;--row-accent-light:<%= color[:accent_light] %>"
+          >
             <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
             <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
           </span>
-          <span class="adm-evaluation-card__title"><%= phase["phase_title"] %></span>
-        </div>
 
-        <div class="adm-evaluation-card__kpi">
-          <span class="adm-evaluation-card__kpi-value"><%= kpi_value %></span>
-          <span class="adm-evaluation-card__kpi-label"><%= t(config[:kpi_label_key]) %></span>
-        </div>
+          <div class="adm-evaluation-row__lead-body">
+            <div class="adm-evaluation-row__title"><%= phase["phase_title"] %></div>
+            <div class="adm-evaluation-row__subtitle"><%= t(config[:subtitle_key]) %></div>
 
-        <div class="adm-evaluation-card__badges">
-          <span class="adm-evaluation-card__badge <%= has_stats ? "-on" : "-off" %>">
-            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= has_stats ? "check_circle" : "cancel" %></span>
-            <i class="fas <%= has_stats ? "fa-check-circle" : "fa-times-circle" %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            <%= t("adm.projekts.projekts.evaluation.card.stats_badge") %>
-          </span>
-          <span class="adm-evaluation-card__badge <%= has_ai ? "-on" : "-off" %>">
-            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= has_ai ? "check_circle" : "cancel" %></span>
-            <i class="fas <%= has_ai ? "fa-check-circle" : "fa-times-circle" %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            <%= t("adm.projekts.projekts.evaluation.card.ai_badge") %>
-          </span>
-        </div>
+            <div class="adm-evaluation-row__kpi">
+              <span class="adm-evaluation-row__kpi-value"><%= kpi_value %></span>
+              <span class="adm-evaluation-row__kpi-label"><%= t(config[:kpi_label_key]) %></span>
+            </div>
 
-        <div class="adm-evaluation-card__date">
-          <%= generated_at_text.call(row.generated_at) %>
-        </div>
-
-        <%= link_to evaluation_phase_adm_projekts_projekt_path(projekt, phase["phase_id"]),
-          class: "kern-btn kern-btn--secondary adm-evaluation-card__cta",
-          data: { turbo: false } do %>
-          <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">monitoring</span>
-          <i class="kern-label fas fa-chart-bar projekt-evaluation-icon-fa" aria-hidden="true"></i>
-          <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.card.view_stats") %></span>
+            <div class="adm-evaluation-row__date">
+              <%= row_date_text.call(row.generated_at) %>
+            </div>
+          </div>
         <% end %>
+
+        <p class="adm-evaluation-row__summary"><%= phase_summary_plain_text(phase["short_summary"]) %></p>
+
+        <div class="adm-evaluation-row__actions" data-adm--phase-regenerate-target="content">
+          <div class="adm-evaluation-row__action-line">
+            <span class="adm-evaluation-row__status <%= has_stats ? '-on' : '-off' %>">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= has_stats ? "check_circle" : "cancel" %></span>
+              <i class="fas <%= has_stats ? 'fa-check-circle' : 'fa-times-circle' %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.card.stats_badge") %>
+            </span>
+
+            <a
+              href="<%= regular_regenerate_url %>"
+              class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn"
+              data-action="click->adm--phase-regenerate#start"
+              data-turbo-prefetch="false"
+            >
+              <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
+              <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
+            </a>
+
+            <%= link_to stats_url,
+              class: "kern-btn kern-btn--compact adm-evaluation-row__open",
+              data: { turbo: false } do %>
+              <span class="kern-label material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+              <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.open") %></span>
+            <% end %>
+          </div>
+
+          <div class="adm-evaluation-row__action-line">
+            <span class="adm-evaluation-row__status <%= has_ai ? '-on' : '-off' %>">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= has_ai ? "check_circle" : "cancel" %></span>
+              <i class="fas <%= has_ai ? 'fa-check-circle' : 'fa-times-circle' %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.card.ai_badge") %>
+            </span>
+
+            <% if has_ai %>
+              <% if ai_available %>
+                <a
+                  href="<%= ai_regenerate_url %>"
+                  class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn"
+                  data-action="click->adm--phase-regenerate#start"
+                  data-turbo-prefetch="false"
+                >
+                  <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
+                  <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
+                </a>
+              <% else %>
+                <%= render Shared::AiFeatureTooltipComponent.new(
+                  feature_title: t("adm.projekts.projekts.evaluation.card.ai_badge"),
+                  feature_text: t("adm.projekts.projekts.evaluation.view_tabs.ai_tab_disabled_hint")
+                ) do %>
+                  <span class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn" aria-disabled="true">
+                    <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
+                    <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
+                  </span>
+                <% end %>
+              <% end %>
+
+              <%= link_to ai_open_url,
+                class: "kern-btn kern-btn--compact adm-evaluation-row__open",
+                data: { turbo: false } do %>
+                <span class="kern-label material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.open") %></span>
+              <% end %>
+            <% elsif ai_available %>
+              <span class="kern-btn kern-btn--secondary kern-btn--compact adm-evaluation-row__btn -disabled" aria-disabled="true">
+                <span class="kern-label material-symbols-outlined" aria-hidden="true">autorenew</span>
+                <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.refresh") %></span>
+              </span>
+
+              <span class="kern-btn kern-btn--compact adm-evaluation-row__open -disabled" aria-disabled="true">
+                <span class="kern-label material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.overview.open") %></span>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <div
+          class="adm-evaluation-row__loading"
+          data-adm--phase-regenerate-target="loading"
+          role="status"
+          aria-live="polite"
+          <%= "hidden" unless row.processing? %>
+        >
+          <span class="adm-evaluation-row__loading-spinner" aria-hidden="true"></span>
+          <span class="adm-evaluation-row__loading-text">
+            <%= t("adm.projekts.projekts.evaluation.phase_processing_title") %>
+          </span>
+        </div>
       </article>
     <% end %>
   </div>
-<% end %>
+</section>

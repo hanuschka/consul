@@ -1,9 +1,3 @@
-<% if projekt_feature?(@projekt, "general.vc_map_enabled") %>
-  <% provide :vc_maps do %>
-    <script id="vcmap-core" type="module" src="/vcmap/vcmap-core.js"></script>
-  <% end %>
-<% end %>
-
 <%= back_link_to params[:controller].include?("projekt_management") ? projekt_management_projekts_path : admin_projekts_path %>
 
 <h2><%= @projekt.name %>  </h2>

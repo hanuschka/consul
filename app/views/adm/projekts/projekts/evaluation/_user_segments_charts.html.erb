@@ -10,25 +10,8 @@
 %>
 
 <div class="phase-segments-card__grid" data-controller="adm-charts">
-  <% if has_gender %>
-    <div class="phase-segments-card__panel">
-      <div class="phase-segments-card__panel-label">
-        <%= t("stats.by_gender") %>
-      </div>
-      <div
-        class="phase-segments-card__chart"
-        data-bar-chart
-        data-chart-labels="<%= (gender["labels"] || []).to_json %>"
-        data-chart-values="<%= (gender["values"] || []).to_json %>"
-        data-chart-colors="<%= evaluation_chart_colors(gender["values"] || [], gender["colors"]).to_json %>"
-      >
-        <canvas></canvas>
-      </div>
-    </div>
-  <% end %>
-
   <% if has_age %>
-    <div class="phase-segments-card__panel">
+    <div class="phase-segments-card__panel -full-width">
       <div class="phase-segments-card__panel-label">
         <%= t("stats.by_age") %>
       </div>
@@ -45,7 +28,7 @@
   <% end %>
 
   <% if has_geozone %>
-    <div class="phase-segments-card__panel">
+    <div class="phase-segments-card__panel -full-width">
       <div class="phase-segments-card__panel-label">
         <%= t("adm.projekts.projekts.evaluation.geozone_distribution") %>
       </div>
@@ -55,6 +38,23 @@
         data-chart-labels="<%= (geozone["labels"] || []).to_json %>"
         data-chart-values="<%= (geozone["values"] || []).to_json %>"
         data-chart-colors="<%= evaluation_chart_colors(geozone["values"] || []).to_json %>"
+      >
+        <canvas></canvas>
+      </div>
+    </div>
+  <% end %>
+
+  <% if has_gender %>
+    <div class="phase-segments-card__panel">
+      <div class="phase-segments-card__panel-label">
+        <%= t("stats.by_gender") %>
+      </div>
+      <div
+        class="phase-segments-card__chart"
+        data-pie-chart
+        data-chart-labels="<%= (gender["labels"] || []).to_json %>"
+        data-chart-values="<%= (gender["values"] || []).to_json %>"
+        data-chart-colors="<%= evaluation_chart_colors(gender["values"] || [], gender["colors"]).to_json %>"
       >
         <canvas></canvas>
       </div>

@@ -15,7 +15,8 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     poll_interval: 4000,
     extra_classes: nil,
     loading: false,
-    description: nil
+    description: nil,
+    compact: false
   )
     @url = url
     @text = text
@@ -30,10 +31,7 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     @extra_classes = extra_classes
     @loading = loading
     @description = description
-  end
-
-  def ai_disabled?
-    !Ai::Settings.ai_available?
+    @compact = compact
   end
 
   def tooltip_description
@@ -44,13 +42,16 @@ class Adm::AiActionButtonComponent < ApplicationComponent
 
     attr_reader :url, :text, :method, :icon, :style, :processing_text,
                 :status_url, :progress_mode, :confirm, :poll_interval,
-                :extra_classes, :loading, :description
+                :extra_classes, :loading, :description, :compact
 
     def wrapper_classes
       ["adm-ai-action-button", "-#{progress_mode}", extra_classes].compact_blank.join(" ")
     end
 
     def button_classes
-      ["kern-btn", "kern-btn--#{style}", "adm-ai-action-button--button"].join(" ")
+      classes = ["kern-btn", "kern-btn--#{style}", "adm-ai-action-button--button"]
+      classes << "kern-btn--compact" if compact
+
+      classes.join(" ")
     end
 end

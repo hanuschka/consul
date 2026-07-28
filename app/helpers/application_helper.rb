@@ -6,6 +6,10 @@ module ApplicationHelper
     url_for(request.query_parameters.merge(query_parameters).merge(only_path: true))
   end
 
+  def current_url_without_query_params
+    "#{request.base_url}#{request.path}"
+  end
+
   def rtl?(locale = I18n.locale)
     %i[ar fa he].include?(locale)
   end

@@ -3,7 +3,8 @@
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
     social_title: t("custom.projekts.index.title"),
-    social_description: t("custom.projekts.index.welcome_default_text_html") %>
+    social_description: t("custom.projekts.index.welcome_default_text_html"),
+    social_url: current_url_without_query_params %>
 <% end %>
 
 <% if @landing_page.present? %>

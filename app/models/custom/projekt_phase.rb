@@ -255,10 +255,6 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def self.any_selectable?(user, resource = nil)
-    any? { |phase| phase.selectable_by?(user, resource) }
-  end
-
   def selectable_by?(user, resource = nil)
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
@@ -288,7 +284,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id:).exists?
+    hidden_at.blank? &&
+      active? &&
+      type != "ProjektPhase::DebatePhase" &&
+      (start_date.blank? || start_date <= timestamp) &&
+      (end_date.blank? || end_date >= timestamp)
   end
 
   def not_current?

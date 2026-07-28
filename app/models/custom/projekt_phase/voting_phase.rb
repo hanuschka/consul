@@ -45,7 +45,7 @@ class ProjektPhase::VotingPhase < ProjektPhase
   end
 
   def poll
-    polls.order(:id).first
+    polls.min_by(&:id)
   end
 
   private

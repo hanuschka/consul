@@ -28,23 +28,27 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
     end
 
     def active_projekts
-      @active_projekts =
+      @active_projekts ||=
         @projekts
           .activated
           .visible_for(current_user)
           .where.not(id: excluded_projekts_ids)
           .includes(
-            :projekt_phases, :projekt_settings, :sdg_relations, :tags,
-            page: [:image, :translations], projekt_phases: [:translations]
+            :projekt_settings, :tags,
+            page: [:image, :translations],
+            active_and_visible_projekt_phases: [:translations, :settings]
           )
+          .preload(sdg_relations: :related_sdg)
           .sort_by_order_number
           .first(@limit)
     end
 
     def excluded_projekts_ids
-      current_projekts_ids = @projekts.index_order_underway.pluck(:id)
-      expired_projekts_ids = @projekts.index_order_expired.pluck(:id)
+      @excluded_projekts_ids ||= begin
+        current_projekts_ids = @projekts.index_order_underway.pluck(:id)
+        expired_projekts_ids = @projekts.index_order_expired.pluck(:id)
 
-      [current_projekts_ids + expired_projekts_ids].flatten.uniq
+        [current_projekts_ids + expired_projekts_ids].flatten.uniq
+      end
     end
 end

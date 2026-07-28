@@ -28,13 +28,15 @@ class ContentCard::CurrentProjektsComponent < ApplicationComponent
     end
 
     def current_projekts
-      @current_projekts =
+      @current_projekts ||=
         @projekts
           .visible_for(current_user)
           .includes(
-            :projekt_phases, :projekt_settings, :sdg_relations, :tags,
-            page: [:image, :translations], projekt_phases: [:translations]
+            :projekt_settings, :tags,
+            page: [:image, :translations],
+            active_and_visible_projekt_phases: [:translations, :settings]
           )
+          .preload(sdg_relations: :related_sdg)
           .sort_by_order_number
           .index_order_underway
           .first(@limit)

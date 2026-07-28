@@ -3,15 +3,15 @@
 
   <% c.with_subheading do %>
     <div class="resource-item--tags">
-      <% projekt.tags.first(2).each do |tag| %>
+      <% sorted_tags.first(2).each do |tag| %>
         <%= link_to(path_for_resource_with_params(projekt, tags: tag.name), class: 'resource-item--tag') do %>
           <%= tag.name %>
         <% end %>
       <% end %>
 
-      <% if projekt.tags[2].present? %>
-        <%= link_to(path_for_resource_with_params(projekt, tags: projekt.tags.map(&:name).join(",")), class: 'resource-item--tag') do %>
-          <% remaining_tags_count = projekt.tags.count - 2 %>
+      <% if sorted_tags[2].present? %>
+        <%= link_to(path_for_resource_with_params(projekt, tags: sorted_tags.map(&:name).join(",")), class: 'resource-item--tag') do %>
+          <% remaining_tags_count = sorted_tags.size - 2 %>
           <%= t("custom.tags.remaining_count", count: remaining_tags_count) %>
         <% end %>
       <% end %>

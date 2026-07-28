@@ -19,9 +19,15 @@ class ContentCard::ExpiredProjektsComponent < ApplicationComponent
   private
 
     def expired_projekts
-      @expired_projekts =
+      @expired_projekts ||=
         @projekts
           .visible_for(current_user)
+          .includes(
+            :projekt_settings, :tags,
+            page: [:image, :translations],
+            active_and_visible_projekt_phases: [:translations, :settings]
+          )
+          .preload(sdg_relations: :related_sdg)
           .index_order_expired
           .sort_by_order_number
           .first(@limit)

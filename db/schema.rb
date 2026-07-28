@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_27_111932) do
+ActiveRecord::Schema.define(version: 2026_07_27_180352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1280,11 +1280,15 @@ ActiveRecord::Schema.define(version: 2026_07_27_111932) do
   create_table "individual_group_values_projekt_phases", id: false, force: :cascade do |t|
     t.bigint "individual_group_value_id", null: false
     t.bigint "projekt_phase_id", null: false
+    t.index ["individual_group_value_id", "projekt_phase_id"], name: "idx_igv_projekt_phases_on_value_id_and_phase_id"
+    t.index ["projekt_phase_id", "individual_group_value_id"], name: "idx_igv_projekt_phases_on_phase_id_and_value_id"
   end
 
   create_table "individual_group_values_projekts", id: false, force: :cascade do |t|
     t.bigint "individual_group_value_id", null: false
     t.bigint "projekt_id", null: false
+    t.index ["individual_group_value_id", "projekt_id"], name: "idx_igv_projekts_on_value_id_and_projekt_id"
+    t.index ["projekt_id", "individual_group_value_id"], name: "idx_igv_projekts_on_projekt_id_and_value_id"
   end
 
   create_table "individual_groups", force: :cascade do |t|

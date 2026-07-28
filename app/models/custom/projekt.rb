@@ -5,6 +5,14 @@ class Projekt < ApplicationRecord
     index_order_ongoing index_order_upcoming
     index_order_expired index_order_individual_list
   ].freeze
+  PHASE_PRELOAD_FOR_CONTROLLER = {
+    "proposals" => { proposal_phases: [:individual_group_values, :settings] },
+    "debates" => { debate_phases: [:individual_group_values, :settings] },
+    "polls" => { voting_phases: [:individual_group_values, :settings, :polls] },
+    "processes" => {
+      legislation_phases: [:individual_group_values, :settings, :legislation_process]
+    }
+  }.freeze
 
   include Milestoneable
   acts_as_paranoid column: :hidden_at
@@ -105,17 +113,16 @@ class Projekt < ApplicationRecord
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity, :assign_author_as_manager
 
-  after_save do
-    if parent_id_previously_changed?
-      Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
-    end
-  end
+  after_save :recalculate_subtree_levels, if: :saved_change_to_parent_id?
 
   before_save :assign_top_level_projekt_from_parent
   before_save :sync_published_at
 
   before_create :initialize_content_updated_at
   before_update :bump_content_updated_at
+
+  after_save :reset_visible_projekt_ids_cache
+  after_destroy :reset_visible_projekt_ids_cache
 
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
@@ -278,36 +285,89 @@ class Projekt < ApplicationRecord
 
   scope :visible_for, ->(user) {
     return regular if user&.administrator?
+    return regular.activated.where.missing(:individual_group_values) if user.blank?
 
-    if user.present?
-      user_hard_group_value_ids = user.individual_group_values
-        .joins(:individual_group)
-        .where(individual_groups: { kind: "hard" })
-        .select(:id)
+    projekt_manager = user.projekt_manager
 
-      excluded_projekt_ids = Projekt.joins(:individual_group_values)
-                                    .where.not(id: Projekt
-                                      .joins(:individual_group_values)
-                                      .where(individual_group_values: { id: user_hard_group_value_ids })
-                                    )
-                                    .select(:id)
+    return regular if projekt_manager&.manage_all_projekts?
 
-      permitted_projekt_ids = Projekt.with_pm_permission_to(["manage", "review"], user.projekt_manager).select(:id)
+    individual_group_value_ids = user.hard_individual_group_value_ids
 
-      arel = Projekt.arel_table
-
-      regular.where(
-        arel[:id].in(
-          Projekt.activated.where.not(id: excluded_projekt_ids).select(:id).arel
-        ).or(
-          arel[:id].in(permitted_projekt_ids.arel)
-        )
+    unrestricted_or_member =
+      group_restricted_predicate.not.or(
+        group_membership_predicate(individual_group_value_ids)
       )
-    else
-      regular.activated
-        .where.not(id: Projekt.joins(:individual_group_values).select(:id))
+
+    visible =
+      activated_exists_predicate
+        .and(Arel::Nodes::Grouping.new(unrestricted_or_member))
+
+    if projekt_manager.present?
+      visible =
+        Arel::Nodes::Grouping.new(visible)
+          .or(pm_permission_predicate(projekt_manager, ["manage", "review"]))
     end
+
+    regular.where(visible)
   }
+
+  def self.visible_projekt_ids_for(user)
+    Current.visible_projekt_ids ||= {}
+    Current.visible_projekt_ids[user&.id] ||= visible_for(user).pluck(:id).to_set
+  end
+
+  def self.reset_visible_projekt_ids
+    Current.visible_projekt_ids = nil
+  end
+
+  def self.activated_exists_predicate
+    settings = ProjektSetting.arel_table
+
+    settings
+      .project(1)
+      .where(settings[:projekt_id].eq(arel_table[:id]))
+      .where(settings[:key].eq("projekt_feature.main.activate"))
+      .where(settings[:value].eq("active"))
+      .exists
+  end
+
+  def self.group_restricted_predicate
+    restrictions = Arel::Table.new(:individual_group_values_projekts)
+
+    restrictions
+      .project(1)
+      .where(restrictions[:projekt_id].eq(arel_table[:id]))
+      .exists
+  end
+
+  def self.group_membership_predicate(individual_group_value_ids)
+    return Arel::Nodes::False.new if individual_group_value_ids.blank?
+
+    restrictions = Arel::Table.new(:individual_group_values_projekts)
+
+    restrictions
+      .project(1)
+      .where(restrictions[:projekt_id].eq(arel_table[:id]))
+      .where(restrictions[:individual_group_value_id].in(individual_group_value_ids))
+      .exists
+  end
+
+  def self.pm_permission_predicate(projekt_manager, permissions)
+    assignments = ProjektManagerAssignment.arel_table
+    quoted_permissions = permissions.map { |permission| connection.quote(permission) }
+    overlaps = Arel::Nodes::InfixOperation.new(
+      "&&",
+      assignments[:permissions],
+      Arel::Nodes::SqlLiteral.new("ARRAY[#{quoted_permissions.join(",")}]::text[]")
+    )
+
+    assignments
+      .project(1)
+      .where(assignments[:projekt_id].eq(arel_table[:id]))
+      .where(assignments[:projekt_manager_id].eq(projekt_manager.id))
+      .where(overlaps)
+      .exists
+  end
 
   scope :for_overview_page_navigation, ->(user) {
     activated
@@ -376,8 +436,13 @@ class Projekt < ApplicationRecord
   end
 
   def self.selectable_in_selector(controller_name, current_user, resource = nil)
-    includes(:individual_group_values, :projekt_settings, { proposal_phases: [:individual_group_values, :settings] })
-      .includes_children_projekts_with(:individual_group_values, :proposal_phases, :individual_group_values, :projekt_settings, :hard_individual_group_values)
+    phase_preload = PHASE_PRELOAD_FOR_CONTROLLER.fetch(controller_name)
+    sub_relations = [
+      :individual_group_values, :projekt_settings, :hard_individual_group_values, phase_preload
+    ]
+
+    includes(:individual_group_values, :projekt_settings, phase_preload)
+      .includes_children_projekts_with(*sub_relations)
       .includes({ parent: :individual_group_values }, { top_level_projekt: :hard_individual_group_values })
       .select do |projekt|
         (!projekt.hidden_for?(current_user) || projekt.all_parent_projekts.none? { |p| p.hidden_for?(current_user) }) &&
@@ -413,22 +478,27 @@ class Projekt < ApplicationRecord
   def can_assign_resources?(controller_name, user, resource = nil)
     return false if user.nil?
     return true if resource&.respond_to?(:author) && resource.author == user
-    return false unless activated? || controller_name == "polls"
+    return false if !activated? && controller_name != "polls"
 
-    if controller_name == "proposals"
-      proposal_phases.any_selectable?(user, resource)
+    case controller_name
+    when "proposals"
+      any_phase_selectable?(proposal_phases, user, resource)
 
-    elsif controller_name == "debates"
-      debate_phases.any_selectable?(user, resource)
+    when "debates"
+      any_phase_selectable?(debate_phases, user, resource)
 
-    elsif controller_name == "polls"
-      voting_phases.any_selectable?(user)
+    when "polls"
+      any_phase_selectable?(voting_phases, user)
 
-    elsif controller_name == "processes"
+    when "processes"
       legislation_phases
-        .reject { |lp| lp.legislation_process.present? || !lp.selectable_by?(user) }
+        .reject { |phase| phase.legislation_process.present? || !phase.selectable_by?(user) }
         .any?
     end
+  end
+
+  def any_phase_selectable?(phases, user, resource = nil)
+    phases.to_a.any? { |phase| phase.selectable_by?(user, resource) }
   end
 
   def top_level?
@@ -454,7 +524,7 @@ class Projekt < ApplicationRecord
   #     present?
   # end
   def projekt_settings_hash
-    @projekt_settings ||= projekt_settings.reload.pluck(:key, :value).to_h
+    @projekt_settings_hash ||= projekt_settings.pluck(:key, :value).to_h
   end
 
   def activated?
@@ -498,12 +568,20 @@ class Projekt < ApplicationRecord
     breadcrumb_trail_ids
   end
 
+  def breadcrumb_trail(breadcrumb_trail = [])
+    breadcrumb_trail.unshift(self)
+
+    parent.breadcrumb_trail(breadcrumb_trail) if parent.present?
+
+    breadcrumb_trail
+  end
+
   def all_parent_ids
     all_parent_projekts.map(&:id)
   end
 
   def all_parent_projekts
-    Projekt.where(id: [parent_id, top_level_projekt_id]).compact
+    [parent, top_level_projekt].compact.uniq
   end
 
   def all_children_ids
@@ -511,8 +589,15 @@ class Projekt < ApplicationRecord
   end
 
   def all_children_projekts
-    children_with_preloaded_grandchildren = children.includes(:children)
-    children_with_preloaded_grandchildren.flat_map { |child| [child, *child.children] }.compact
+    children_with_grandchildren =
+      children_tree_preloaded? ? children : children.includes(:children)
+
+    children_with_grandchildren.flat_map { |child| [child, *child.children] }
+  end
+
+  def children_tree_preloaded?
+    children.loaded? &&
+      children.all? { |child| child.association(:children).loaded? }
   end
 
   def has_active_phase?(controller_name)
@@ -620,7 +705,7 @@ class Projekt < ApplicationRecord
   end
 
   def visible_for?(user = nil)
-    Projekt.visible_for(user).where(id: id).exists?
+    Projekt.visible_projekt_ids_for(user).include?(id)
   end
 
   def hidden_for?(user = nil)
@@ -873,7 +958,28 @@ class Projekt < ApplicationRecord
     end
 
     def touch_updated_at(geozone)
+      Projekt.reset_visible_projekt_ids
+
       touch if persisted?
+    end
+
+    def reset_visible_projekt_ids_cache
+      Projekt.reset_visible_projekt_ids
+    end
+
+    def recalculate_subtree_levels
+      update_column("level", calculate_level)
+
+      pending_projekts = [self]
+
+      while pending_projekts.any?
+        current_projekt = pending_projekts.shift
+
+        current_projekt.children.each do |child|
+          child.update_column("level", current_projekt.level + 1)
+          pending_projekts << child
+        end
+      end
     end
 
     def assign_author_as_manager

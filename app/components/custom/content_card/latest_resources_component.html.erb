@@ -7,7 +7,7 @@
   <% if latest_resources.present? %>
     <% c.with_items do %>
       <% latest_resources.each do |resource| %>
-        <%= render helpers.resources_list_item_component(resource) %>
+        <%= render helpers.resources_list_item_component(resource, voted_proposal_ids: voted_proposal_ids) %>
       <% end %>
     <% end %>
   <% end %>

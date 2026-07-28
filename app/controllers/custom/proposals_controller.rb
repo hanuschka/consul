@@ -72,7 +72,8 @@ class ProposalsController
       take_by_projekts(@scoped_projekt_ids)
     end
 
-    @proposals_map_pin_count = proposal_map_locations_count(@resources)
+    @proposals_map_pin_count =
+      proposal_map_pin_count_up_to(@resources, MAP_PINS_LAZY_LOAD_THRESHOLD)
 
     @proposals_coordinates =
       if @proposals_map_pin_count <= MAP_PINS_LAZY_LOAD_THRESHOLD

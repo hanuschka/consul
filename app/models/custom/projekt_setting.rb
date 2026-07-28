@@ -21,6 +21,8 @@ class ProjektSetting < ApplicationRecord
   after_update :touch_projekt_content_updated_at,
     if: Proc.new { |setting| setting.key.in?(CONTENT_TIMESTAMP_KEYS) && setting.saved_change_to_value? }
   after_update :trigger_sync_for_global_overview_related_projekt
+  after_save :reset_visible_projekt_ids_cache
+  after_destroy :reset_visible_projekt_ids_cache
 
   def prefix
     key.split(".").first
@@ -59,7 +61,6 @@ class ProjektSetting < ApplicationRecord
         "projekt_feature.general.show_in_individual_list": "",
         "projekt_feature.general.allow_downvoting_comments": "active",
         "projekt_feature.general.show_in_sidebar_filter": 'active',
-        "projekt_feature.general.vc_map_enabled": '',
         "projekt_feature.general.consider_underway": "",
         "projekt_feature.general.allow_indexing": "active",
         "projekt_feature.general.show_related_projekt_link": "active",
@@ -115,5 +116,9 @@ class ProjektSetting < ApplicationRecord
 
   def trigger_sync_for_global_overview_related_projekt
     projekt.perform_sync_update_for_global_overview
+  end
+
+  def reset_visible_projekt_ids_cache
+    Projekt.reset_visible_projekt_ids
   end
 end

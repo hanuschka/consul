@@ -10,6 +10,10 @@ class Users::LatestActivityComponent < ApplicationComponent
     current_user.present? && valid_filters.any?
   end
 
+  def voted_proposal_ids
+    @voted_proposal_ids ||= Proposal.up_voted_ids_by(current_user, resources.grep(Proposal))
+  end
+
   def current_filter
     if valid_filters.include?(params[:filter])
       params[:filter]
@@ -31,6 +35,14 @@ class Users::LatestActivityComponent < ApplicationComponent
   private
 
     def resources
+      @resources ||= resources_for_current_filter
+    end
+
+    def resources_for_current_filter
+      if current_filter == "follows"
+        return follows.map(&:followable)
+      end
+
       list =
         case current_filter
         when "debates"
@@ -42,10 +54,6 @@ class Users::LatestActivityComponent < ApplicationComponent
         when "comments"
           comments
         end
-
-      if current_filter == "follows"
-        return follows.map(&:followable)
-      end
 
       list.order(created_at: :desc).limit(3)
     end
@@ -66,6 +74,7 @@ class Users::LatestActivityComponent < ApplicationComponent
 
     def debates
       @debates ||= Debate.where(author_id: current_user.id)
+        .includes(Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS, ContentCard::LatestResourcesComponent::PHASE_ASSOCIATIONS)
     end
 
     def comments
@@ -79,6 +88,7 @@ class Users::LatestActivityComponent < ApplicationComponent
 
     def budget_investments
       @budget_investments ||= Budget::Investment.where(author_id: current_user.id)
+        .includes(Resources::ListItem::AuthorComponent::PRELOAD_ASSOCIATIONS)
     end
 
     def follows

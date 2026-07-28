@@ -255,10 +255,6 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def self.any_selectable?(user, resource = nil)
-    any? { |phase| phase.selectable_by?(user, resource) }
-  end
-
   def selectable_by?(user, resource = nil)
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
@@ -288,7 +284,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id:).exists?
+    hidden_at.blank? &&
+      active? &&
+      type != "ProjektPhase::DebatePhase" &&
+      (start_date.blank? || start_date <= timestamp) &&
+      (end_date.blank? || end_date >= timestamp)
   end
 
   def not_current?
@@ -397,29 +397,27 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def settings_by_key
+    @settings_by_key ||= settings.each_with_object({}) do |setting, values|
+      values[setting.key] = setting.value
+    end
+  end
+
   def all_settings
-    @settings ||= settings.pluck(:key, :value)
+    settings_by_key.to_a
   end
 
   def feature?(key)
-    setting = settings.find { |s| s.key == "feature.#{key}" }
-
-    if setting.present?
-      setting.value.present?
-    else
-      false
-    end
+    settings_by_key["feature.#{key}"].present?
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their
   # resource map only when "form.show_map" is enabled; phase types without the
   # setting (e.g. point of interest) always show it.
   def resource_map_enabled?
-    setting = settings.find { |s| s.key == "feature.form.show_map" }
+    return true if !settings_by_key.key?("feature.form.show_map")
 
-    return true if setting.blank?
-
-    setting.value.present?
+    settings_by_key["feature.form.show_map"].present?
   end
 
   def publicly_visible?
@@ -466,13 +464,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def option(key)
-    option = settings.find { |s| s.key == "option.#{key}" }
-
-    if option.present?
-      option.value
-    else
-      nil
-    end
+    settings_by_key["option.#{key}"]
   end
 
   def setting(key)

@@ -18,6 +18,9 @@ App.Studio.Projekt.AiFileImport = {
 
   handleButtonClick(e) {
     e.preventDefault();
+
+    if (App.Studio.Projekt.isAiTriggerDisabled(e.currentTarget)) return;
+
     this.showFileImportForm();
   },
 
@@ -145,7 +148,7 @@ App.Studio.Projekt.AiFileImport = {
 
     App.Ajax
       .request({
-        url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/import_document`,
+        url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/ai_generate_with_file`,
         type: "POST",
         dataType: "json",
         contentType: false,

@@ -111,7 +111,7 @@ module Adm
 
       def filter_by_archived_state(scope, values)
         values = Array(values).compact_blank.map(&:to_s)
-        return scope.not_archived if values.empty?
+        return scope if values.empty?
         return scope if values.include?("active") && values.include?("archived")
         return scope.not_archived if values == ["active"]
         return scope.archived if values == ["archived"]
@@ -121,7 +121,7 @@ module Adm
 
       def filter_by_hidden_state(scope, values)
         values = Array(values).compact_blank.map(&:to_s)
-        return scope if values.empty?
+        return scope.with_hidden if values.empty?
         return scope.with_hidden if values.include?("visible") && values.include?("hidden")
         return scope.only_hidden if values == ["hidden"]
         return scope if values == ["visible"]

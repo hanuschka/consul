@@ -7,7 +7,7 @@ module Budgets
     respond_to :js, only: [:stats]
 
     def new
-      if @budget.projekt_phase.permission_problem(current_user)
+      if @budget.projekt_phase.permission_problem(current_user, location: :new_button_component)
         redirect_to page_path(@budget.projekt.page.slug,
                               projekt_phase_id: @budget.projekt_phase.id,
                               anchor: "filter-subnav")

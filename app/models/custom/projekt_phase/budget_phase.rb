@@ -238,7 +238,9 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization?
 
-      :submissions_limit_exceeded if submissions_limit_exceeded?(user)
+      if location == :new_button_component && submissions_limit_exceeded?(user)
+        :submissions_limit_exceeded
+      end
     end
 
     def submissions_limit_exceeded?(user)

@@ -259,15 +259,16 @@ class ProjektPhase < ApplicationRecord
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
-    permission_problem(user).blank?
+    permission_problem(user, location: :new_button_component).blank?
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+    permission_problem(user, location: :votes_component).blank? || conditional_vote_possible_for?(user)
   end
 
   def conditional_vote_possible_for?(user)
-    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
+    permission_problem(user, location: :votes_component) == :not_verified &&
+      feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -296,6 +297,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
+    location = location&.to_sym
     @permission_problem_cache ||= {}
     cache_key = "#{user&.id}_#{location}"
 

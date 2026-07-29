@@ -6,6 +6,10 @@ module ApplicationHelper
     url_for(request.query_parameters.merge(query_parameters).merge(only_path: true))
   end
 
+  def current_url_without_query_params
+    "#{request.base_url}#{request.path}"
+  end
+
   def rtl?(locale = I18n.locale)
     %i[ar fa he].include?(locale)
   end
@@ -92,14 +96,6 @@ module ApplicationHelper
     end
 
     count
-  end
-
-  def use_mapbox?(projekt = nil)
-    if projekt.present?
-      Setting["feature.mapbox"].present? || projekt_feature?(projekt, "general.mapbox")
-    else
-      Setting["feature.mapbox"].present?
-    end
   end
 
   def show_admin_controls_for_projekt?(projekt)

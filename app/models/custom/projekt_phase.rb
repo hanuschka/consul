@@ -24,7 +24,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   DEPRECATED_PHASE_TYPES = [
@@ -58,10 +59,13 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "live_tv",
     "ProjektPhase::ArgumentPhase" => "forum",
     "ProjektPhase::NewsfeedPhase" => "feed",
+    "ProjektPhase::MitmachboxPhase" => "markunread_mailbox",
     "ProjektPhase::DebatePhase" => "forum"
   }.freeze
 
   DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
+
+  FOOTER_HIDDEN_EVALUATION_SECTIONS = %w[kpis heatmap].freeze
 
   PHASE_FA_ICONS = {
     "ProjektPhase::CommentPhase" => "fa-comment",
@@ -79,6 +83,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "fa-tv",
     "ProjektPhase::ArgumentPhase" => "fa-comments",
     "ProjektPhase::NewsfeedPhase" => "fa-rss",
+    "ProjektPhase::MitmachboxPhase" => "fa-box-open",
     "ProjektPhase::DebatePhase" => "fa-comments"
   }.freeze
 
@@ -250,10 +255,6 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def self.any_selectable?(user, resource = nil)
-    any? { |phase| phase.selectable_by?(user, resource) }
-  end
-
   def selectable_by?(user, resource = nil)
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
@@ -262,7 +263,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank?
+    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+  end
+
+  def conditional_vote_possible_for?(user)
+    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -279,7 +284,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id:).exists?
+    hidden_at.blank? &&
+      active? &&
+      type != "ProjektPhase::DebatePhase" &&
+      (start_date.blank? || start_date <= timestamp) &&
+      (end_date.blank? || end_date >= timestamp)
   end
 
   def not_current?
@@ -388,33 +397,66 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def settings_by_key
+    @settings_by_key ||= settings.each_with_object({}) do |setting, values|
+      values[setting.key] = setting.value
+    end
+  end
+
   def all_settings
-    @settings ||= settings.pluck(:key, :value)
+    settings_by_key.to_a
   end
 
   def feature?(key)
-    setting = settings.find { |s| s.key == "feature.#{key}" }
-
-    if setting.present?
-      setting.value.present?
-    else
-      false
-    end
+    settings_by_key["feature.#{key}"].present?
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their
   # resource map only when "form.show_map" is enabled; phase types without the
   # setting (e.g. point of interest) always show it.
   def resource_map_enabled?
-    setting = settings.find { |s| s.key == "feature.form.show_map" }
+    return true if !settings_by_key.key?("feature.form.show_map")
 
-    return true if setting.blank?
-
-    setting.value.present?
+    settings_by_key["feature.form.show_map"].present?
   end
 
   def publicly_visible?
     active? && frontend_visibility?
+  end
+
+  def evaluation_completed?
+    projekt_phase_evaluation.present? && projekt_phase_evaluation.completed?
+  end
+
+  def publicly_visible_evaluation_tabs
+    visibility = projekt_phase_evaluation_visibility
+    return [] if visibility.blank?
+
+    evaluation_data = projekt_phase_evaluation&.data || {}
+    available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
+    visible = visibility.visible_sections & available
+    footer_visible = visible - FOOTER_HIDDEN_EVALUATION_SECTIONS
+    present = footer_visible.select do |key|
+      ::ProjektEvaluations::SectionDataPresence.has_data?(evaluation_data, key)
+    end
+    ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
+
+    tabs = []
+    tabs << "poll_stats" if visibility.show_poll_stats
+    tabs << "stats" if present.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if present.any? { |key| ai_keys.include?(key) }
+
+    tabs
+  end
+
+  def evaluation_tab_publicly_visible?(tab)
+    if evaluation_completed?
+      publicly_visible_evaluation_tabs.include?(tab)
+    elsif tab == "ai"
+      feature?("general.public_ai_stats")
+    else
+      feature?("general.public_kpi_stats")
+    end
   end
 
   def max_submissions_per_user
@@ -422,13 +464,7 @@ class ProjektPhase < ApplicationRecord
   end
 
   def option(key)
-    option = settings.find { |s| s.key == "option.#{key}" }
-
-    if option.present?
-      option.value
-    else
-      nil
-    end
+    settings_by_key["option.#{key}"]
   end
 
   def setting(key)
@@ -469,6 +505,26 @@ class ProjektPhase < ApplicationRecord
 
   def projekt_labels_label_text
     labels_name.presence || I18n.t("custom.projekts.page.footer.sidebar.projekt_labels.title")
+  end
+
+  def use_masterportal_collections_as_labels?
+    feature?("form.use_masterportal_collections_as_labels") && masterportal_collections.exists?
+  end
+
+  def active_projekt_labels
+    active_masterportal_taxonomy(projekt_labels)
+  end
+
+  def active_projekt_point_of_interest_categories
+    active_masterportal_taxonomy(projekt_point_of_interest_categories)
+  end
+
+  def active_masterportal_taxonomy(scope)
+    use_masterportal_collections_as_labels? ? scope.collection_backed : scope.manual
+  end
+
+  def labels_selector_available?
+    (use_masterportal_collections_as_labels? || feature?("form.labels")) && active_projekt_labels.exists?
   end
 
   def sentiment_label_text

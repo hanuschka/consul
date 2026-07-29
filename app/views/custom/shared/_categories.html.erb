@@ -8,7 +8,7 @@
     <% @categories.each do |category| %>
       <li class="inline-block">
         <% css_class = selected_categories.include?(category.name) ? "selected" : "" %>
-        <%= link_to taggables_path(taggable, category.name), class: css_class do %>
+        <%= link_to taggables_path(taggable, category.name), class: css_class, rel: "nofollow" do %>
           <span class="tag"><%= category.name %></span>
         <% end %>
       </li>

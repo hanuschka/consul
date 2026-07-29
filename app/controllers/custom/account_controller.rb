@@ -67,6 +67,12 @@ class AccountController < ApplicationController
     end
   end
 
+  def disconnect_identity
+    current_user.identities.where(provider: params[:provider]).destroy_all
+
+    redirect_to account_path, notice: t("custom.account.connected_accounts.disconnected")
+  end
+
   private
 
     def account_params

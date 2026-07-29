@@ -181,7 +181,7 @@ Budget::Investment do |investment|
         user.projekt_manager.allowed_to?("manage", poll&.projekt)
       end
 
-      can [:results, :stats], Poll do |poll|
+      can [:results, :stats, :ai_analysis], Poll do |poll|
         user.projekt_manager.allowed_to?("manage", poll&.projekt)
       end
 

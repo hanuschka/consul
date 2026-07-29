@@ -15,14 +15,24 @@
     <div class="main-column">
       <%= render ResourcePage::BannerComponent.new(resource: @resource, compact: true) %>
 
-      <%= render(
-        Shared::ResourcesListComponent.new(
-          resources: @topics,
-          resource_type: Topic,
-          current_filter: @current_order,
-          filter_param: "order",
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: t("custom.topics.list.empty_list_text")
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.topics.list",
           filters: @valid_orders,
-          )) %>
+          current_filter: @current_order,
+          param: "order"
+        ) %>
+
+        <% if @topics.present? %>
+          <% c.with_items do %>
+            <% @topics.each do |topic| %>
+              <%= render Topics::ListItemComponent.new(topic: topic) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
       <%= paginate @topics %>
     </div>
     <aside class="sidebar">

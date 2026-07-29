@@ -3,18 +3,8 @@
 
 <%= render ProjektPhaseSubnavComponent.new(@projekt_phase) %>
 
-<% if params[:section] == "evaluation" && show_phase_evaluation_in_footer?(@projekt_phase) %>
-  <%= render "custom/pages/projekt_footer_new/evaluation_content" %>
-
-<% elsif params[:section] == "key_metrics" && can?(:read_stats, @projekt_phase) && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_kpi_stats")) %>
-  <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_kpi_stats') %>">
-    <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
-  </div>
-
-<% elsif params[:section] == "analysis" && can?(:read_stats, @projekt_phase) && Ai::Settings.ai_available? && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_ai_stats")) %>
-  <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_ai_stats') %>">
-    <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
-  </div>
+<% if params[:section].in?(%w[evaluation ai_evaluation]) %>
+  <%= render "custom/pages/projekt_footer_new/footer_evaluation_dispatch" %>
 
 <% else %>
   <div class="flex justify-between items-center">
@@ -66,17 +56,27 @@
     <% end %>
     <div class="flex-layout flex-layout-reverse-on-mobile">
       <div class="main-column">
-        <%= render(
-          Shared::ResourcesListComponent.new(
-            resources: @proposals,
-            resource_type: Proposal,
-            remote_url: projekt_footer_phase_filter_url(@projekt_phase),
-            current_filter: @current_order,
-            filter_param: "order",
+        <%= render Resources::List::BaseComponent.new(
+          empty_text: t("custom.proposals.index.empty_list_text")
+        ) do |c| %>
+          <% c.with_toolbar(
+            i18n_namespace: "custom.proposals.index",
             filters: @valid_orders,
+            current_filter: @current_order,
+            param: "order",
             text_search_enabled: true,
-            projekt_phase: @projekt_phase,
-          )) %>
+            remote_url: projekt_footer_phase_filter_url(@projekt_phase),
+            in_projekt_footer_tab: true
+          ) %>
+
+          <% if @proposals.present? %>
+            <% c.with_items do %>
+              <% @proposals.each do |proposal| %>
+                <%= render Proposals::ListItemComponent.new(proposal: proposal) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
         <%= paginate @proposals, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
       </div>
 

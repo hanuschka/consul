@@ -14,11 +14,6 @@
   tags = (report_settings["tags"] || []).reject(&:blank?)
   sdg_goals = report_settings["sdg_goals"] || []
 
-  report_visibility = projekt.projekt_evaluation_visibility
-  show_project_summary = report_visibility.nil? || report_visibility.show_project_summary
-  show_settings = report_visibility.nil? || report_visibility.show_settings
-  show_phase_summaries = report_visibility.nil? || report_visibility.show_phase_summaries
-
   renderable_phases = phases.select { |p| phase_palette.present? && p["phase_type"].present? }
 
   qr_url =
@@ -53,7 +48,6 @@
     </div>
   <% end %>
 
-  <% if show_project_summary %>
   <section class="report-summary--card report-summary--project">
     <h2 class="report-summary--project-title"><%= page_title %></h2>
 
@@ -77,10 +71,6 @@
           <div class="report-summary--project-subtitle">
             <%= sanitize(page_subtitle, tags: ["br"]) %>
           </div>
-        <% else %>
-          <div class="report-summary--project-subtitle -muted">
-            <%= t("adm.projekts.projekts.evaluation.report.project_summary_no_subtitle") %>
-          </div>
         <% end %>
 
         <div class="report-summary--ai-block">
@@ -91,7 +81,7 @@
           </div>
           <% if project_content_summary.present? %>
             <div class="report-summary--ai-body">
-              <%= sanitize(project_content_summary) %>
+              <%= sanitize(project_content_summary, tags: %w[h3 p]) %>
             </div>
           <% else %>
             <div class="report-summary--ai-body -muted">
@@ -102,9 +92,7 @@
       </div>
     </div>
   </section>
-  <% end %>
 
-  <% if show_settings %>
   <section class="report-summary--card report-summary--settings">
     <div class="report-summary--section-label">
       <%= t("adm.projekts.projekts.evaluation.report.settings_label") %>
@@ -171,9 +159,10 @@
           </div>
         </div>
         <% if sdg_goals.any? %>
+          <% sdg_records_by_code = SDG::Goal.where(code: sdg_goals.map { |g| g["code"] }).index_by { |g| g.code.to_s } %>
           <ul class="report-summary--sdg-list">
             <% sdg_goals.each do |goal| %>
-              <% sdg_record = SDG::Goal.find_by(code: goal["code"]) %>
+              <% sdg_record = sdg_records_by_code[goal["code"].to_s] %>
               <% if sdg_record %>
                 <li class="report-summary--sdg-list-item">
                   <span class="report-summary--sdg-list-icon">
@@ -192,9 +181,7 @@
       </div>
     </div>
   </section>
-  <% end %>
 
-  <% if show_phase_summaries %>
   <section class="report-summary--card report-summary--phases">
     <div class="report-summary--section-label">
       <%= t("adm.projekts.projekts.evaluation.report.phases_label") %>
@@ -205,7 +192,7 @@
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
             color = phase_palette[phase["phase_type"]]
-            short_summary = phase["short_summary"]
+            summary_sections = phase_summary_sections(phase["short_summary"])
           %>
           <div
             class="report-summary--phase-card"
@@ -229,9 +216,14 @@
               </div>
             </div>
 
-            <% if short_summary.present? %>
+            <% if summary_sections.any? %>
               <div class="report-summary--phase-body">
-                <%= sanitize(short_summary) %>
+                <% summary_sections.each do |section| %>
+                  <% if section["heading"].present? %>
+                    <h3 class="report-summary--phase-section-heading"><%= section["heading"] %></h3>
+                  <% end %>
+                  <%= simple_format(section["body"], class: "report-summary--phase-paragraph") %>
+                <% end %>
               </div>
             <% else %>
               <div class="report-summary--phase-body-empty">
@@ -247,5 +239,4 @@
       </div>
     <% end %>
   </section>
-  <% end %>
 </section>

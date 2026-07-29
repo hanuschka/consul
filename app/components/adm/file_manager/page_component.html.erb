@@ -97,49 +97,53 @@
     class="files-index"
     data-controller="files--filter-bar files--asset-modal"
     data-files--filter-bar-type-value="<%= type %>"
-    data-files--filter-bar-endpoint-value="<%= endpoint %>"
   >
-    <div class="files-index--filter-bar" data-files--filter-bar-target="form">
+    <div class="files-index--filter-bar">
       <%= render Adm::FilterBarComponent.new(
         type: type,
+        endpoint: endpoint,
         imageable_type_frame_src: imageable_type_frame_src,
         documentable_type_frame_src: documentable_type_frame_src,
         show_view_modes: supports_view_modes?
       ) %>
     </div>
 
-    <div class="files-index--grid" data-files--filter-bar-target="grid">
-      <% if assets.any? %>
-        <%= render(card_component.with_collection(assets, type: type, detail_path: detail_path)) %>
-      <% else %>
-        <div class="files-index--empty">
-          <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+    <%= turbo_frame_tag "files-index-results",
+          class: "files-index--results",
+          data: {
+            turbo_action: "advance",
+            "files--filter-bar-target": "resultsFrame"
+          } do %>
+      <div class="files-index--grid">
+        <% if assets.any? %>
+          <%= render(card_component.with_collection(assets, type: type, detail_path: detail_path)) %>
+        <% else %>
+          <div class="files-index--empty">
+            <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if supports_view_modes? %>
+        <div class="files-index--list">
+          <ul class="files-index--list-items">
+            <% if assets.any? %>
+              <%= render(row_component.with_collection(assets, detail_path: detail_path)) %>
+            <% else %>
+              <li class="files-index--list-empty">
+                <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
+              </li>
+            <% end %>
+          </ul>
         </div>
       <% end %>
-    </div>
 
-    <% if supports_view_modes? %>
-      <div class="files-index--list">
-        <ul class="files-index--list-items" data-files--filter-bar-target="list">
-          <% if assets.any? %>
-            <%= render(row_component.with_collection(assets, detail_path: detail_path)) %>
-          <% else %>
-            <li class="files-index--list-empty">
-              <%= helpers.empty_state(title: empty_title, description: empty_description, icon: empty_icon) %>
-            </li>
-          <% end %>
-        </ul>
+      <div class="files-index--pagination">
+        <%= render partial: "adm/files/pagination", locals: { assets: assets } %>
       </div>
     <% end %>
 
-    <div
-      class="files-index--pagination"
-      data-files--filter-bar-target="pagination"
-    >
-      <%= render partial: "ckeditor/assets/pagination", locals: { assets: assets } %>
-    </div>
-
-    <%= render Files::EditModalComponent.new %>
+    <%= render ::Files::EditModalComponent.new %>
 
     <dialog
       class="files-detail-modal"

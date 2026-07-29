@@ -110,8 +110,8 @@ namespace :projekt_management do
 
     resources :projekt_content_blocks, only: [:create] do
       collection do
-        post :import_document
-        post :generate_from_prompt
+        post :ai_generate_with_file
+        post :ai_generate_with_prompt
         post :generate_with_ai
         get :import_status
         delete :destroy_all

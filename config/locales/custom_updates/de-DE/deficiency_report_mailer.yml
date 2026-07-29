@@ -13,6 +13,10 @@ de:
           subject: Neue Meldung %{identifier}
           hi: Liebe/r Sachbearbeiter*in,
           p1: Ihnen wurde eine Meldung vom Admin zugewiesen.
+          adm_page: "Zur Bearbeitung gelangen Sie hier:"
+          adm_page_link_text: Meldung im Verwaltungsbereich öffnen
+          public_page: "Das Anliegen ist öffentlich einsehbar:"
+          public_page_link_text: Öffentliche Ansicht
         send_feedback_form_link:
           subject: Feedback zu Ihrem Anliegen
           hi: Guten Tag %{username},

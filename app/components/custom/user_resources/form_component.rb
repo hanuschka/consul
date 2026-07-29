@@ -91,7 +91,7 @@ class UserResources::FormComponent < ApplicationComponent
   def show_labels_selector?
     return false unless projekt_phase.present?
 
-    projekt_phase_feature?(projekt_phase, "form.labels")
+    projekt_phase.labels_selector_available?
   end
 
   def show_sentiments_selector?

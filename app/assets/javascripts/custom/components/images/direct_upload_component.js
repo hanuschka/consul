@@ -47,7 +47,6 @@
     confirmationConfirmClick: function(e) {
       e.preventDefault();
       var wrapper = e.currentTarget.closest(".js-direct-image-upload");
-      wrapper.classList.remove("-confirmation-pending");
       wrapper.querySelector(".js-direct-image-upload--input").click();
     },
 
@@ -67,6 +66,8 @@
         add: function(e, data) {
           var target = e.target;
           var wrapper = $(target).closest(".js-direct-image-upload")[0];
+
+          wrapper.classList.remove("-confirmation-pending");
 
           if (App.DirectUploadComponent.shouldCrop(wrapper, data.files[0])) {
             App.DirectUploadComponent.openCropper(wrapper, target, data);

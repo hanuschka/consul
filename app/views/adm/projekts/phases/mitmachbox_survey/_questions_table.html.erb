@@ -1,0 +1,57 @@
+<% sorted_questions = questions.sort_by { |question| question["position"].to_i } %>
+
+<div class="kern-table-responsive mb-5" tabindex="0">
+  <table class="kern-table">
+    <thead class="kern-table__head">
+      <tr class="kern-table__row">
+        <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.prompt") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.question_type") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.required") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.options") %></th>
+        <% if editable %>
+          <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.actions") %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody class="kern-table__body">
+      <% sorted_questions.each_with_index do |question, index| %>
+        <tr class="kern-table__row">
+          <th scope="row" class="kern-table__header"><%= question["prompt"] %></th>
+          <td class="kern-table__cell">
+            <%= t("adm.projekts.mitmachbox.questions.question_types.#{question["question_type"]}") %>
+          </td>
+          <td class="kern-table__cell"><%= human_boolean(question["required"]) %></td>
+          <td class="kern-table__cell"><%= (question["options"] || []).size %></td>
+          <% if editable %>
+            <td class="kern-table__cell">
+              <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                <% if index.positive? %>
+                  <% actions.with_action(label: t("adm.projekts.phases.mitmachbox_survey.move_up"),
+                       url: move_up_adm_projekts_phase_mitmachbox_question_path(@projekt_phase, question["id"]),
+                       icon: "arrow_upward",
+                       data: { turbo_method: :patch }) %>
+                <% end %>
+                <% if index < sorted_questions.size - 1 %>
+                  <% actions.with_action(label: t("adm.projekts.phases.mitmachbox_survey.move_down"),
+                       url: move_down_adm_projekts_phase_mitmachbox_question_path(@projekt_phase, question["id"]),
+                       icon: "arrow_downward",
+                       data: { turbo_method: :patch }) %>
+                <% end %>
+                <% actions.with_action(label: t("adm.projekts.phases.mitmachbox_survey.edit"),
+                     url: edit_adm_projekts_phase_mitmachbox_question_path(@projekt_phase, question["id"]),
+                     icon: "edit",
+                     style: :edit) %>
+                <% actions.with_action(label: t("adm.projekts.phases.mitmachbox_survey.delete"),
+                     url: adm_projekts_phase_mitmachbox_question_path(@projekt_phase, question["id"]),
+                     icon: "delete",
+                     style: :delete,
+                     data: { turbo_method: :delete, turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.delete_confirm") }) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

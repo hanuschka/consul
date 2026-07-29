@@ -1,4 +1,18 @@
 class ProjektsController < ApplicationController
+  # The index materialises every filtered projekt (categories, phases and SDG
+  # facets are computed in Ruby before pagination), so the list item's and the
+  # facet builders' associations are loaded in bulk rather than per row.
+  INDEX_PRELOAD_ASSOCIATIONS = [
+    :projekt_settings,
+    :tags,
+    :sdg_goals,
+    :sdg_global_targets,
+    :sdg_local_targets,
+    { page: [:image, :translations] },
+    { active_and_visible_projekt_phases: [:translations, :settings] },
+    { sdg_relations: :related_sdg }
+  ].freeze
+
   include CustomHelper
   include ProposalsHelper
   include Search
@@ -19,7 +33,7 @@ class ProjektsController < ApplicationController
         Projekt.all
       end
 
-    @projekts = base_projekts.regular.includes(:active_and_visible_projekt_phases)
+    @projekts = base_projekts.regular.preload(INDEX_PRELOAD_ASSOCIATIONS)
     @projekts = @projekts.search(@search_terms) if @search_terms.present?
 
     @all_projekts = @projekts.index_order_all
@@ -40,7 +54,7 @@ class ProjektsController < ApplicationController
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
     take_by_geozone_affiliations unless @search_terms.present?
 
-    @categories = @projekts.flat_map { |p| p.tags.category.to_a }.uniq.compact.sort
+    @categories = @projekts.flat_map { |p| p.tags.select(&:category?) }.uniq.compact.sort
     @tag_cloud = tag_cloud
     take_only_by_tag_names unless @search_terms.present?
 

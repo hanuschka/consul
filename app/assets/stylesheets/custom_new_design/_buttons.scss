@@ -5,7 +5,6 @@ $red-button-color: #cc4b37;
 
 button {
   cursor: pointer;
-
 }
 
 .link-button {
@@ -26,6 +25,11 @@ button {
 
     &:hover, &:focus {
       background-color: color-mix(in srgb, var(--brand-color), white 6%);
+      color: white;
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, var(--brand-color), black 8%);
       color: white;
     }
 

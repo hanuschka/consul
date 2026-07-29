@@ -21,24 +21,39 @@
 
         <%= render "poll_header", projekt_phase: @projekt_phase %>
 
-        <div class="participation-stats polls-results-stats">
-          <div class="row margin">
-            <div class="small-12 medium-2 column">
-              <%= render "shared/stats/links", stats: @stats %>
-              <%= render "advanced_stats_links", stats: @stats %>
+        <% poll_stats_public = @projekt_phase.evaluation_tab_publicly_visible?("poll_stats") %>
+
+        <% if poll_evaluation_admin?(@poll) %>
+          <div class="projekt-footer-evaluation__toolbar js-studio-hide-on-preview">
+            <%= render "pages/projekt_footer_new/tab_visibility_toggle",
+              tab: "poll_stats", checked: poll_stats_public %>
+          </div>
+        <% end %>
+
+        <div
+          class="js-footer-tab-content <%= "js-studio-hide-on-preview" if !poll_stats_public %>"
+          data-visibility-group="poll_stats"
+        >
+          <% if poll_evaluation_stats_visible?(@poll) %>
+            <div class="projekt-footer-evaluation">
+              <%= render "adm/projekts/projekts/evaluation/poll_stats_tab",
+                entries: [{ poll: @poll, stats: @stats }] %>
             </div>
+          <% else %>
+            <div class="participation-stats polls-results-stats">
+              <div class="row margin">
+                <div class="small-12 medium-2 column">
+                  <%= render "shared/stats/links", stats: @stats %>
+                  <%= render "advanced_stats_links", stats: @stats %>
+                </div>
 
-            <div class="small-12 medium-9 column stats-content">
-              <%= render "shared/stats/participation", stats: @stats %>
-              <%= render "advanced_stats", stats: @stats %>
-
-              <div id="total_no_demographic_data">
-                <p class="help-text">
-                  <%# = t("stats.no_demographic_data", count: @stats.total_no_demographic_data) %>
-                </p>
+                <div class="small-12 medium-9 column stats-content">
+                  <%= render "shared/stats/participation", stats: @stats %>
+                  <%= render "advanced_stats", stats: @stats %>
+                </div>
               </div>
             </div>
-          </div>
+          <% end %>
         </div>
 
       </div>

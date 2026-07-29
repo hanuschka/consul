@@ -27,6 +27,8 @@ en:
               no_files: "Please select at least one file."
               too_large: "The selected files exceed the 500 MB limit."
               unsupported_type: "The file %{filename} is not a supported format."
+              session_expired: "Your session has expired. Please reload the page, sign in again and retry."
+              request_failed: "The upload failed (error %{status}). Please try again or contact support."
           show:
             title: "Import progress"
             failed_title: "Import failed"

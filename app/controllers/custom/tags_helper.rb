@@ -2,7 +2,7 @@ require_dependency Rails.root.join("app", "helpers", "tags_helper").to_s
 
 module TagsHelper
   def taggables_path(taggable_type, tag_name)
-    selected_tags = Tags::ToggleSelectionService.call(params[:tags], tag_name)
+    selected_tags = ::Tags::ToggleSelectionService.call(params[:tags], tag_name)
 
     updated_params = params.merge({tags: selected_tags}).permit(
       :tags, :geozone_affiliation, :geozone_restriction, :affiliated_districts, :restricted_geozones,

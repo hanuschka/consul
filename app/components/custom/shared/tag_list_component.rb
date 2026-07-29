@@ -20,7 +20,7 @@ class Shared::TagListComponent < ApplicationComponent
     def prepare_tags_for_params(tag_name)
       return { tags: tag_name } if controller_name.in?([ 'welcome', 'pages' ])
 
-      selected_tags = Tags::ToggleSelectionService.call(params[:tags], tag_name)
+      selected_tags = ::Tags::ToggleSelectionService.call(params[:tags], tag_name)
 
       params.merge({tags: selected_tags})
         .permit(:tags, :geozone_affiliation, :affiliated_districts, :affiliated_geozones, :geozone_restriction, :restricted_geozones, :sdg_goals, :sdg_targets, filter_projekt_ids: [])

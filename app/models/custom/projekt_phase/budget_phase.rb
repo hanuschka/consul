@@ -240,6 +240,8 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
       if location == :new_button_component && submissions_limit_exceeded?(user)
         :submissions_limit_exceeded
+      elsif location == :votes_component && supports_limit_exceeded?(user)
+        :supports_limit_exceeded
       end
     end
 
@@ -247,6 +249,19 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       return false if max_submissions_per_user.zero?
 
       budget.investments.where(author: user).count >= max_submissions_per_user
+    end
+
+    def supports_limit_exceeded?(user)
+      return false if max_supports_per_user.zero?
+
+      supports_count_for(user) >= max_supports_per_user
+    end
+
+    # Conditional supports count too, otherwise an unverified user could cast any number of
+    # them and have them all confirmed at once.
+    def supports_count_for(user)
+      ActsAsVotable::Vote.where(voter: user, vote_flag: true, votable_type: "Budget::Investment",
+                                votable_id: budget.investments.select(:id)).count
     end
 
     def create_budget

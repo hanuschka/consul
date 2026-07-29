@@ -54,7 +54,8 @@ class Proposals::NewVotesComponent < ApplicationComponent
             registered_address_groupings: @projekt_phase&.registered_address_grouping_restriction_formatted,
             age_restriction: @proposal_phase&.age_restriction_formatted,
             restricted_streets: @proposal_phase&.street_restrictions_formatted,
-            individual_group_values: @proposal_phase&.individual_group_value_restriction_formatted
+            individual_group_values: @proposal_phase&.individual_group_value_restriction_formatted,
+            max_supports: @proposal_phase&.max_supports_per_user
       )
     end
 

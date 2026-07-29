@@ -301,34 +301,11 @@ class ProjektPhase < ApplicationRecord
     @permission_problem_cache ||= {}
     cache_key = "#{user&.id}_#{location}"
 
-    return @permission_problem_cache[cache_key] if @permission_problem_cache.key?(cache_key)
-
-    @permission_problem_cache[cache_key] = begin
-      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
-
-      return :phase_not_active if not_active?
-
-      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
-        return :phase_expired if expired?
-        return :phase_not_current if not_current?
-      end
-
-      return :guest_not_logged_in if user_status == "guest" && !user
-      return if user_status == "guest"
-      return :not_logged_in if !user || user&.guest?
-      return :not_verified if user_status == "verified" && !user.level_three_verified?
-
-      if phase_specific_permission_problems(user, location).present?
-        return phase_specific_permission_problems(user, location)
-      end
-
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-
-      nil
+    unless @permission_problem_cache.key?(cache_key)
+      @permission_problem_cache[cache_key] = uncached_permission_problem(user, location)
     end
+
+    @permission_problem_cache[cache_key]
   end
 
   def geozone_allowed?(user)
@@ -463,6 +440,10 @@ class ProjektPhase < ApplicationRecord
 
   def max_submissions_per_user
     option("resource.max_submissions_per_user").to_i
+  end
+
+  def max_supports_per_user
+    option("resource.max_supports_per_user").to_i
   end
 
   def option(key)
@@ -637,6 +618,36 @@ class ProjektPhase < ApplicationRecord
   end
 
   private
+
+    def uncached_permission_problem(user, location)
+      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
+
+      return :phase_not_active if not_active?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
+
+      return :guest_not_logged_in if user_status == "guest" && !user
+      return if user_status == "guest"
+      return :not_logged_in if !user || user&.guest?
+      return :not_verified if user_status == "verified" && !user.level_three_verified?
+
+      phase_specific_problem = phase_specific_permission_problems(user, location)
+      return phase_specific_problem if phase_specific_problem.present?
+
+      return age_permission_problem(user) if age_permission_problem(user).present?
+      return geozone_permission_problem(user) if geozone_permission_problem(user)
+
+      advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
+      return advanced_geozone_problem if advanced_geozone_problem.present?
+
+      individual_group_problem = individual_group_value_permission_problem(user)
+      return individual_group_problem if individual_group_problem.present?
+
+      nil
+    end
 
     def phase_specific_permission_problems(user, location)
       nil

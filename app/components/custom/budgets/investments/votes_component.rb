@@ -24,6 +24,7 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
           registered_address_groupings: investment.budget.projekt_phase.registered_address_grouping_restriction_formatted,
           age_restriction: investment.budget.projekt_phase.age_restriction_formatted,
           restricted_streets: investment.budget.projekt_phase.street_restrictions_formatted,
+          max_supports: investment.budget.projekt_phase.max_supports_per_user,
           individual_group_values: investment.budget.projekt_phase.individual_group_value_restriction_formatted
          )
       end

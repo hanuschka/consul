@@ -153,14 +153,7 @@
     getGenerateUrl() {
       if (this.state.generateUrl) return this.state.generateUrl
 
-      const contentBlocksList = this.getContentBlocksList();
-
-      if (contentBlocksList && contentBlocksList.dataset.generateUrl) {
-        return contentBlocksList.dataset.generateUrl;
-      }
-
-      const projektId = App.Studio.Projekt.getCurrentProjektId();
-      return `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/generate_with_ai`;
+      return App.Studio.Projekt.config.generateUrl;
     },
 
     loadMetadata() {

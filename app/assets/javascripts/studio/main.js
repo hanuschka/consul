@@ -44,6 +44,7 @@ window.App.Studio.Projekt = {
     const projektPage = document.querySelector(".js-projekt-page");
     this.config.defaultMarginBottom = parseInt(projektPage.dataset.defaultMarginBottom);
     this.config.aiAvailable = projektPage.dataset.aiAvailable === "true";
+    this.config.generateUrl = projektPage.dataset.generateUrl;
   },
 
   getCurrentProjektId() {

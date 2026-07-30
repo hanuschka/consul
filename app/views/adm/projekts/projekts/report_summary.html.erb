@@ -3,6 +3,7 @@
 <%= render Adm::HeaderComponent.new(
   title: t("adm.projekts.projekts.evaluation.report_summary_card.page_title"),
   breadcrumbs: @breadcrumbs,
+  back_button_url: evaluation_adm_projekts_projekt_path(@projekt),
   frontend_url: projekt_path(@projekt),
   compact: true
 ) %>

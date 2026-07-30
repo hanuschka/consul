@@ -33,7 +33,7 @@
 
 <div class="phase-block">
   <% if show_section.call("kpis") %>
-    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("kpis") %>"><% end %>
+    <% if tabbed %><custom-tab-panel for="stats ai"><% end %>
     <section
       class="<%= section_klass.call("kpis") %>"
       data-pdf-chunk="phase:<%= phase["phase_id"] %>:kpis"
@@ -83,7 +83,7 @@
               rel: "noopener" do %>
               <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">download</span>
               <i class="fas fa-download projekt-evaluation-icon-fa" aria-hidden="true"></i>
-              <%= t("custom.admin.common.download_current_selection") %>
+              <%= t("adm.projekts.projekts.evaluation.download_csv_file") %>
             <% end %>
           <% end %>
         <% end %>
@@ -193,7 +193,7 @@
       data-section="ranking"
     >
     <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "ranking", phase_id: phase["phase_id"], checked: !section_hidden.call("ranking"), toggle_url: visibility_toggle_url if visibility_toggle %>
-    <div class="card" style="margin-bottom:1rem">
+    <div class="card evaluation-stat-card" style="margin-bottom:1rem">
       <div class="card-title"><%= t("adm.projekts.projekts.evaluation.ranking_by_supports") %></div>
       <div class="card-subtitle">
         <%= t("adm.projekts.projekts.evaluation.ranking_subtitle",
@@ -271,7 +271,7 @@
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
-  <% if show_section.call("topic_clustering") %>
+  <% if show_section.call("topic_clustering") && evaluation_section_has_data?(phase, "topic_clustering") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("topic_clustering") %>"><% end %>
     <section
       class="<%= section_klass.call("topic_clustering") %>"
@@ -292,7 +292,7 @@
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>
 
-  <% if show_section.call("semantic_clustering") %>
+  <% if show_section.call("semantic_clustering") && evaluation_section_has_data?(phase, "semantic_clustering") %>
     <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("semantic_clustering") %>"><% end %>
     <section
       class="<%= section_klass.call("semantic_clustering") %>"
@@ -330,6 +330,21 @@
         accent_light: accent_light,
         pdf_mode: pdf_mode_local
       } %>
+    </section>
+    <% if tabbed %></custom-tab-panel><% end %>
+  <% end %>
+
+  <% if only_tab.blank? && !pdf_mode_local && show_section.call("heatmap") && evaluation_section_has_data?(phase, "heatmap") %>
+    <% if tabbed %><custom-tab-panel for="<%= evaluation_section_tabs("heatmap") %>"><% end %>
+    <section
+      class="<%= section_klass.call("heatmap") %>"
+      data-pdf-chunk="phase:<%= phase["phase_id"] %>:heatmap"
+      data-phase-id="<%= phase["phase_id"] %>"
+      data-section="heatmap"
+    >
+    <%= render "adm/projekts/projekts/evaluation/section_visibility_toggle", section_key: "heatmap", phase_id: phase["phase_id"], checked: !section_hidden.call("heatmap"), toggle_url: visibility_toggle_url if visibility_toggle %>
+      <%= render partial: "adm/projekts/projekts/evaluation/phase_heatmap",
+        locals: { phase: phase, accent: accent, accent_light: accent_light } %>
     </section>
     <% if tabbed %></custom-tab-panel><% end %>
   <% end %>

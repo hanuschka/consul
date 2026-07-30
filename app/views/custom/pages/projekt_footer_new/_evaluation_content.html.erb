@@ -3,37 +3,42 @@
   projekt_phase = @projekt_phase
   evaluation_row = projekt_phase.projekt_phase_evaluation
   partial_name = evaluation_phase_section_partial[projekt_phase.type]
+  is_admin_or_pm = footer_admin_or_projekt_manager?
+
+  phase_data = (evaluation_row&.data) || {}
+
+  if @live_phase_stats.present?
+    phase_data = phase_data.merge("stats" => @live_phase_stats)
+  end
+
+  if only_tab == "ai"
+    regenerate_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
+    regenerate_label = t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button")
+    regenerate_tooltip = t("adm.projekts.projekts.evaluation.regenerate_ai_stats_tooltip")
+    generate_title = t("adm.projekts.projekts.evaluation.phase_generate_ai_title")
+    generate_description = t("adm.projekts.projekts.evaluation.phase_generate_ai_description")
+    generate_button_label = t("adm.projekts.projekts.evaluation.phase_generate_ai_button")
+    empty_icon_class = "fa-magic"
+    generated_at_iso = phase_data["ai_generated_at"]
+  else
+    regenerate_url = regenerate_phase_regular_stats_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
+    regenerate_label = t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button")
+    regenerate_tooltip = t("adm.projekts.projekts.evaluation.regenerate_regular_stats_tooltip")
+    generate_title = t("adm.projekts.projekts.evaluation.phase_generate_stats_title")
+    generate_description = t("adm.projekts.projekts.evaluation.phase_generate_stats_description")
+    generate_button_label = t("adm.projekts.projekts.evaluation.phase_generate_stats_button")
+    empty_icon_class = "fa-chart-bar"
+    generated_at_iso = phase_data["regular_generated_at"]
+  end
+
+  tab_has_data = generated_at_iso.present?
+  processing = evaluation_row&.processing? || false
+  failed = evaluation_row&.failed? || false
+
+  status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
 %>
 
-<% if evaluation_row.present? && partial_name.present? %>
-  <%
-    phase_data = evaluation_row.data || {}
-    palette = evaluation_phase_palette[projekt_phase.type]
-    selection = PhaseEvaluationVisibility::Selector.for_phase(projekt_phase)
-    is_admin_or_pm = footer_admin_or_projekt_manager?
-    can_manage_visibility = can?(:edit, projekt_phase.projekt)
-    section_visibility = projekt_phase.projekt_phase_evaluation_visibility
-    visibility_toggle_url = toggle_evaluation_section_visibility_adm_projekts_projekt_path(projekt_phase.projekt, format: :json)
-    processing = evaluation_row.processing?
-    failed = evaluation_row.failed?
-
-    if only_tab == "ai"
-      regenerate_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
-      regenerate_label = t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button")
-      regenerate_tooltip = t("adm.projekts.projekts.evaluation.regenerate_ai_stats_tooltip")
-      generated_at_iso = phase_data["ai_generated_at"]
-    else
-      regenerate_url = regenerate_phase_regular_stats_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
-      regenerate_label = t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button")
-      regenerate_tooltip = t("adm.projekts.projekts.evaluation.regenerate_regular_stats_tooltip")
-      generated_at_iso = phase_data["regular_generated_at"]
-    end
-
-    generated_at_time = generated_at_iso.present? ? Time.zone.parse(generated_at_iso.to_s) : evaluation_row.generated_at
-
-    status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt_phase.projekt, phase_id: projekt_phase.id)
-  %>
-
+<% if partial_name.present? %>
   <div
     class="adm-projekt-evaluation-report projekt-footer-evaluation js-projekt-footer-phase-regenerate"
     data-status-url="<%= status_url %>"
@@ -44,12 +49,12 @@
       <%= "hidden" if !processing %>
     >
       <div class="adm-empty-state">
-        <h3><%= t("adm.projekts.projekts.evaluation.phase_processing_title") %></h3>
-        <p><%= t("adm.projekts.projekts.evaluation.phase_processing_description") %></p>
         <i
           class="fas fa-circle-notch adm-spinner adm-spinner--lg"
           aria-hidden="true"
         ></i>
+        <h3><%= t("adm.projekts.projekts.evaluation.phase_processing_title") %></h3>
+        <p><%= t("adm.projekts.projekts.evaluation.phase_processing_description") %></p>
       </div>
     </div>
 
@@ -73,7 +78,17 @@
             </a>
           <% end %>
         </div>
-      <% else %>
+
+      <% elsif tab_has_data %>
+        <%
+          palette = evaluation_phase_palette[projekt_phase.type]
+          selection = PhaseEvaluationVisibility::Selector.for_phase(projekt_phase)
+          can_manage_visibility = can?(:edit, projekt_phase.projekt)
+          section_visibility = projekt_phase.projekt_phase_evaluation_visibility
+          visibility_toggle_url = toggle_evaluation_section_visibility_adm_projekts_projekt_path(projekt_phase.projekt, format: :json)
+          generated_at_time = Time.zone.parse(generated_at_iso.to_s)
+        %>
+
         <% if is_admin_or_pm %>
           <div class="projekt-footer-evaluation__toolbar js-studio-hide-on-preview">
             <% if generated_at_time.present? %>
@@ -83,22 +98,35 @@
               </span>
             <% end %>
 
-            <rich-tooltip delay="300" trigger-only shadow="heavy" size="big">
-              <a
-                href="<%= regenerate_url %>"
-                class="button hollow projekt-footer-evaluation__regen-button js-projekt-footer-phase-regenerate-trigger"
-                tabindex="-1"
-              >
-                <i class="fas fa-sync-alt" aria-hidden="true"></i>
-                <span><%= regenerate_label %></span>
-              </a>
-              <template><%= regenerate_tooltip %></template>
-            </rich-tooltip>
+            <div class="projekt-footer-evaluation__regen-group">
+              <rich-tooltip delay="300" trigger-only shadow="heavy" size="big">
+                <a
+                  href="<%= regenerate_url %>"
+                  class="button hollow projekt-footer-evaluation__regen-button js-projekt-footer-phase-regenerate-trigger"
+                  tabindex="-1"
+                >
+                  <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                  <span><%= regenerate_label %></span>
+                </a>
+                <template><%= regenerate_tooltip %></template>
+              </rich-tooltip>
+
+              <% if only_tab != "ai" %>
+                <span class="projekt-footer-evaluation__auto-note">
+                  <i class="fas fa-clock" aria-hidden="true"></i>
+                  <%= t("adm.projekts.projekts.evaluation.regenerate_auto_hourly_note") %>
+                </span>
+              <% end %>
+            </div>
+
+            <%= render "pages/projekt_footer_new/tab_visibility_toggle", tab: only_tab %>
           </div>
         <% end %>
 
         <% visibility_token = projekt_phase.projekt_phase_evaluation_visibility&.cache_key_with_version || "none" %>
-        <% cache_if(!is_admin_or_pm, [evaluation_row, only_tab, visibility_token]) do %>
+        <% live_stats_bucket = @live_phase_stats.present? ? footer_live_stats_cache_bucket : "none" %>
+        <% cache_key = [evaluation_row, only_tab, visibility_token, live_stats_bucket, @frontend_answer_poll&.id] %>
+        <% cache_if(!is_admin_or_pm, cache_key) do %>
           <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
             locals: {
               projekt: projekt_phase.projekt,
@@ -109,12 +137,28 @@
               selection: can_manage_visibility ? nil : selection,
               only_tab: only_tab,
               tabbed: false,
-              hidden_sections: ["kpis"],
+              hidden_sections: ProjektPhase::FOOTER_HIDDEN_EVALUATION_SECTIONS,
               visibility_toggle: can_manage_visibility,
               visibility: section_visibility,
               visibility_toggle_url: visibility_toggle_url
             } %>
         <% end %>
+
+      <% elsif is_admin_or_pm %>
+        <div class="adm-empty-state projekt-footer-evaluation__generate js-studio-hide-on-preview">
+          <i class="fas <%= empty_icon_class %> projekt-footer-evaluation__generate-icon" aria-hidden="true"></i>
+          <h3><%= generate_title %></h3>
+          <p><%= generate_description %></p>
+
+          <a
+            href="<%= regenerate_url %>"
+            class="button button-primary js-projekt-footer-phase-regenerate-trigger"
+            tabindex="-1"
+          >
+            <i class="fas fa-bolt" aria-hidden="true"></i>
+            <span><%= generate_button_label %></span>
+          </a>
+        </div>
       <% end %>
     </div>
   </div>

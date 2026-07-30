@@ -53,6 +53,10 @@ to: :budget
       vote_by(voter: user, vote: "yes", vote_weight:) if selectable_by?(user)
     end
 
+    def sentiment_required?
+      super && masterportal_pin_id.blank?
+    end
+
     def total_supporters
       votes_for.where(conditional: false).joins("INNER JOIN users ON voter_id = users.id").count
     end

@@ -17,6 +17,9 @@
   //             [active], else the first tab)
   //   param     URL query-string key the active tab is synced into; on load a
   //             matching ?param=value overrides `default`
+  //   all-tabbable  keep every tab a Tab key stop (tabindex=0) instead of the
+  //             default roving-tabindex (only the active tab is a Tab stop,
+  //             arrow keys move between the rest)
   //
   // It fires "custom-tabs:change" (bubbling) with detail { tab, previousTab }
   // on every activation, so consumers react to tab changes without the element
@@ -29,6 +32,7 @@
   const PANEL_TAG = "custom-tab-panel";
   const CHANGE_EVENT = "custom-tabs:change";
   const NAV_KEYS = ["ArrowRight", "ArrowLeft", "Home", "End"];
+  const ACTIVATE_KEYS = ["Enter", " "];
 
   let instanceCounter = 0;
 
@@ -110,6 +114,16 @@
       return tab.getAttribute("for");
     }
 
+    // A disabled tab stays in the tablist (so it reads as an unavailable
+    // option) but can never be activated or receive roving focus.
+    isDisabled(tab) {
+      return tab.hasAttribute("disabled");
+    }
+
+    enabledTabs() {
+      return this.tabs().filter((tab) => !this.isDisabled(tab));
+    }
+
     // role=tablist belongs on the element wrapping the tabs, and each tab/panel
     // pair is linked via generated ids so screen readers announce the relation.
     wireAria() {
@@ -159,15 +173,15 @@
       if (!tabs.length) return null
 
       const fromUrl = this.tabFromUrl();
-      if (fromUrl && tabs.some((tab) => this.tabId(tab) === fromUrl)) return fromUrl
+      if (fromUrl && tabs.some((tab) => this.tabId(tab) === fromUrl && !this.isDisabled(tab))) return fromUrl
 
       const preset = this.getAttribute("default");
-      if (preset && tabs.some((tab) => this.tabId(tab) === preset)) return preset
+      if (preset && tabs.some((tab) => this.tabId(tab) === preset && !this.isDisabled(tab))) return preset
 
-      const active = tabs.find((tab) => tab.hasAttribute("active"));
+      const active = tabs.find((tab) => tab.hasAttribute("active") && !this.isDisabled(tab));
       if (active) return this.tabId(active)
 
-      return this.tabId(tabs[0]);
+      return this.tabId(this.enabledTabs()[0] || tabs[0]);
     }
 
     tabFromUrl() {
@@ -180,6 +194,7 @@
       const tab = event.target.closest(TAB_TAG);
 
       if (!tab || !this.contains(tab)) return
+      if (this.isDisabled(tab)) return
 
       this.activate(this.tabId(tab));
     }
@@ -188,6 +203,14 @@
       const tab = event.target.closest(TAB_TAG);
 
       if (!tab || !this.contains(tab)) return
+
+      if (ACTIVATE_KEYS.includes(event.key)) {
+        event.preventDefault();
+        this.activate(this.tabId(tab));
+
+        return
+      }
+
       if (!NAV_KEYS.includes(event.key)) return
 
       event.preventDefault();
@@ -195,8 +218,11 @@
     }
 
     moveFocus(currentTab, key) {
-      const tabs = this.tabs();
-      const index = tabs.indexOf(currentTab);
+      const tabs = this.enabledTabs();
+
+      if (!tabs.length) return
+
+      const index = Math.max(0, tabs.indexOf(currentTab));
       let nextIndex = index;
 
       if (key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
@@ -212,6 +238,9 @@
     activate(tab) {
       if (!tab || tab === this.activeTab) return
 
+      const tabElement = this.tabs().find((element) => this.tabId(element) === tab);
+      if (tabElement && this.isDisabled(tabElement)) return
+
       const previousTab = this.activeTab;
       this.activeTab = tab;
       this.applyActiveTab();
@@ -220,12 +249,18 @@
     }
 
     applyActiveTab() {
+      const allTabbable = this.hasAttribute("all-tabbable");
+
       this.tabs().forEach((tab) => {
-        const active = this.tabId(tab) === this.activeTab;
+        const disabled = this.isDisabled(tab);
+        const active = this.tabId(tab) === this.activeTab && !disabled;
 
         tab.classList.toggle("-active", active);
         tab.setAttribute("aria-selected", active ? "true" : "false");
-        tab.setAttribute("tabindex", active ? "0" : "-1");
+
+        if (disabled) tab.setAttribute("aria-disabled", "true");
+
+        tab.setAttribute("tabindex", (active || allTabbable) && !disabled ? "0" : "-1");
       });
 
       this.panels().forEach((panel) => {

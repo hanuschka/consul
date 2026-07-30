@@ -4,12 +4,7 @@ class ContentCard::ExpiredProjektsComponent < ApplicationComponent
   def initialize(content_card, custom_page: nil)
     @content_card = content_card
     @limit = @content_card.settings["limit"].to_i
-    @projekts =
-      if custom_page.present?
-        custom_page.landing_projekts.show_in_homepage
-      else
-        Projekt.show_in_homepage
-      end
+    @custom_page = custom_page
   end
 
   def render?
@@ -19,11 +14,7 @@ class ContentCard::ExpiredProjektsComponent < ApplicationComponent
   private
 
     def expired_projekts
-      @expired_projekts =
-        @projekts
-          .visible_for(current_user)
-          .index_order_expired
-          .sort_by_order_number
-          .first(@limit)
+      @expired_projekts ||=
+        ContentCard::ProjektBuckets.for(@custom_page, current_user).expired.first(@limit)
     end
 end

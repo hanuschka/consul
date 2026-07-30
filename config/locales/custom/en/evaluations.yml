@@ -2,13 +2,10 @@ en:
   time:
     formats:
       evaluation_header: "%d %B %Y, %H:%M"
-  public:
-    evaluations:
-      generated_at: "Generated at %{time}"
   adm:
     ai_action_button:
       processing: AI is working…
-      feature_description: "Uses AI to generate an evaluation from this project's participation data."
+      feature_description: "Generates an evaluation from this project's participation data. AI analyses are added once the AI feature is enabled."
 
     projekts:
       projekts:
@@ -38,6 +35,7 @@ en:
             evaluation will be overwritten.
           regenerate_phase_button: Regenerate phase stats
           regenerate_regular_stats_button: Regenerate statistics
+          regenerate_auto_hourly_note: Statistics update automatically every hour
           regenerate_ai_stats_button: Regenerate AI analysis
           regenerate_ai_stats_tooltip: >
             Re-runs the AI analysis for this phase — the summary, tone, key
@@ -52,6 +50,7 @@ en:
             Are you sure you want to regenerate this phase? The existing
             evaluation of this phase will be overwritten.
           phase_download_pdf_button: Create PDF report
+          download_csv_file: Download CSV file
           download_stats_pdf_button: Export statistics PDF…
           download_ai_pdf_button: Export AI analysis PDF…
           phase_download_pdf_tooltip: Export the entire phase as a PDF.
@@ -70,6 +69,17 @@ en:
             An error occurred while generating this phase.
             Please try again.
           phase_retry_button: Retry
+          phase_generate_stats_title: No statistics generated yet
+          phase_generate_stats_description: >
+            No statistics have been generated for this phase yet. Generate the
+            evaluation to show participation figures, timelines and demographic
+            breakdowns.
+          phase_generate_stats_button: Generate statistics
+          phase_generate_ai_title: No AI analysis generated yet
+          phase_generate_ai_description: >
+            No AI analysis has been generated for this phase yet. Generate the
+            analysis to show the summary, key findings and topic clustering.
+          phase_generate_ai_button: Generate AI analysis
           download_pdf: Download PDF
           generated_at: "Generated at %{time}"
           report_placeholder: Evaluation report will be displayed here.
@@ -80,15 +90,19 @@ en:
           contributions: Contributions
           supports: Supports
           proposals: Proposals
-          investments: Investments
+          investments: Proposals
           comments: Comments
           commenters: Commenters
           questions: Questions
-          other_questions_group: Other questions
           polls: Polls
           poll_meta: "%{voters} voters · %{questions} questions"
           scale_subtitle: "Scale %{min} to %{max} · n = %{n}"
           multiple_subtitle: "Multiple answers · %{mentions} mentions"
+          question_participation_title: "Participants data"
+          question_crossectional_title: "Crossectional voting"
+          answer_detail_close: "Close"
+          answer_no_data: "No data available"
+          bundle_question_caption: "Bundled question"
           open_contributions: Open contributions
           avg_per_proposal: "Avg per proposal"
           ranking_by_supports: Ranking by supports
@@ -103,6 +117,9 @@ en:
           sentiments_distribution: Sentiment distribution
           user_segments_title: User segments
           geozone_distribution: City districts / zones
+          heatmap_title: Geographic distribution
+          heatmap_subtitle: Where contributions are located on the map
+          heatmap_empty: No location data available
           key_findings: Key findings
           ai_questions_heading: Ask AI about this phase
           sources_label:
@@ -128,6 +145,7 @@ en:
               label_sentiment: Label and sentiment
               user_segments: User segments
               budget_segments: Metrics by phase
+              heatmap: Heatmap
               key_findings: Key findings
               topic_clustering: Topic groups
               semantic_clustering: Sentiment analysis
@@ -145,6 +163,7 @@ en:
               label_sentiment: Distribution of contributions by topic label and sentiment.
               user_segments: Breakdown of participants by demographic or interest segment.
               budget_segments: Detailed metrics and distributions for each participatory-budget phase (submission, review, support, voting, results).
+              heatmap: Map showing the geographic distribution of contributions.
               key_findings: Highlights of the most important insights surfaced by the AI.
               topic_clustering: Contributions grouped into thematic clusters.
               semantic_clustering: Sentiment-based grouping of contributions.
@@ -153,6 +172,14 @@ en:
           open_responses_title: "Open contributions from citizens — %{count} text entries"
           open_responses_show: Show responses
           open_responses_hide: Hide responses
+          open_answers_title: "Open answers — %{answer}"
+          open_answers_show: Show answers
+          open_answers_hide: Hide answers
+          open_answers_anonymized: anonymized
+          open_answers_prev: Previous
+          open_answers_next: Next
+          open_answers_page_status: "Page {current} of {total}"
+          open_answers_csv_hint: "%{count} open answers — full list in the CSV export."
           verdict:
             clear_yes: Clearly in favor
             majority_yes: Majority in favor
@@ -175,8 +202,15 @@ en:
             view_stats: View stats
           view_tabs:
             aria_label: Switch evaluation view
-            stats: Statistics
+            stats: Results
             ai: AI analysis
+            ai_tab_disabled_hint: "AI-based evaluation of this project's participation data."
+            poll_stats: Statistics
+            poll_stats_live: Live data
+            budget_results: Voting results
+          poll_stats_tab:
+            empty: No statistics are available for this poll yet.
+            channel: Channel
           report_summary_card:
             title: Report summary
             page_title: Projekt evaluation report summary
@@ -204,7 +238,6 @@ en:
           report:
             project_summary_label: Project page
             project_summary_subtitle: Subtitle
-            project_summary_no_subtitle: No subtitle
             project_summary_no_image: No project image
             project_summary_ai_label: AI summary
             project_summary_ai_empty: No content available for AI summary.

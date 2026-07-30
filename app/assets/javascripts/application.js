@@ -216,7 +216,6 @@ var initialize_modules = function() {
   App.ModalNotification.initialize();
   App.VerificationForm.initialize();
   App.SharedNewButtonComponent.initialize();
-  App.VCMap.initialize();
 
   App.CustomJS.initialize();
   App.SDGCustom.initialize();
@@ -243,6 +242,7 @@ var destroy_non_idempotent_modules = function() {
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();
+  App.ResponsiveMenu.destroy();
   App.FocusTrap.resetInert();
   App.SharedModal.reset();
 };

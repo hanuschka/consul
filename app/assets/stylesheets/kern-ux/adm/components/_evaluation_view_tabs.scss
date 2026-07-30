@@ -32,6 +32,14 @@
   font-weight: 600;
 }
 
+.adm-evaluation-view-tabs--tab.-disabled {
+  cursor: not-allowed;
+}
+
+.adm-evaluation-view-tabs--tab.-disabled .adm-evaluation-view-tabs--tab-label {
+  color: var(--kern-color-layout-text-subtle);
+}
+
 .adm-evaluation-view-tabs--icon {
   font-size: 1.25rem;
   line-height: 1;
@@ -46,10 +54,33 @@
   color: var(--kern-color-layout-text-subtle);
 }
 
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-material,
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-fa {
+  color: var(--kern-color-action-default);
+}
+
+
 .adm-evaluation-view-tabs__actions {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+}
+
+.adm-evaluation-view-tabs__actions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.adm-evaluation-view-tabs__auto-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--kern-color-layout-text-subtle);
 }

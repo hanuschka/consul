@@ -117,6 +117,11 @@ de:
               random: Zufällig
       polls:
         feature:
+          general:
+            public_kpi_stats: Kennzahlen öffentlich anzeigen
+            public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
+            public_ai_stats: KI-Analyse öffentlich anzeigen
+            public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
           resource:
             wizard_mode: Sequentielle Abstimmung
             wizard_mode_description: Die Abstimmung wird im Modus von sequentiellen Fragen angezeigt

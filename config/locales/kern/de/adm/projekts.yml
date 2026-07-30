@@ -20,8 +20,16 @@ de:
           home: Home
           projekts: Projekte
           managers: Team
+          inspiration: Projektinspirationen
           landing_pages: Themenseiten
           settings: Konfiguration
+      inspiration:
+        show:
+          title: Projektinspirationen
+          not_configured: DemokratieToday ist nicht konfiguriert
+          not_configured_hint: >-
+            Es ist keine DemokratieToday-Adresse hinterlegt. Bitte konfigurieren
+            Sie die Verbindung, um die Projektübersicht hier einzubetten.
       settings:
         tabs:
           dashboard: Dashboard-Einstellungen

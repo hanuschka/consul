@@ -1,7 +1,8 @@
 class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
   delegate :current_user, :can?, :phase_icon_class,
-    :footer_evaluation_tab_visible?, :footer_evaluation_tab_public_visible?,
-    :footer_evaluation_tab_disabled?, to: :helpers
+    :footer_evaluation_tab_available?, :footer_evaluation_tab_public_visible?,
+    :footer_evaluation_tab_disabled?, :hidden_from_public_tooltip,
+    :footer_evaluation_tab_label, to: :helpers
   attr_reader :budget, :projekt_phase
 
   def initialize(budget, projekt_phase)
@@ -27,25 +28,27 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
         }
       end
 
-      if can?(:read_stats, budget) && footer_evaluation_tab_visible?(projekt_phase, "stats")
+      if can?(:read_stats, budget) && footer_evaluation_tab_available?(projekt_phase, "stats")
         items << {
-          text: t("custom.projekt_phases.subnav.evaluation"),
+          text: footer_evaluation_tab_label(projekt_phase, "stats"),
           icon: "fa-chart-bar",
           url: url_to_footer_tab(section: "evaluation", remote: true),
           active: params[:section] == "evaluation",
           section: "evaluation",
+          visibility_group: "stats",
           hidden_from_public: !footer_evaluation_tab_public_visible?(projekt_phase, "stats")
         }
       end
 
-      if can?(:read_stats, budget) && footer_evaluation_tab_visible?(projekt_phase, "ai")
+      if can?(:read_stats, budget) && footer_evaluation_tab_available?(projekt_phase, "ai")
         items << {
-          text: t("custom.projekt_phases.subnav.ai_evaluation"),
+          text: footer_evaluation_tab_label(projekt_phase, "ai"),
           icon: "fa-magic",
           url: url_to_footer_tab(section: "ai_evaluation", remote: true),
           active: params[:section] == "ai_evaluation",
           disabled: footer_evaluation_tab_disabled?(projekt_phase, "ai"),
           section: "ai_evaluation",
+          visibility_group: "ai",
           hidden_from_public: !footer_evaluation_tab_public_visible?(projekt_phase, "ai")
         }
       end
@@ -65,5 +68,12 @@ class Pages::Projekts::BudgetsSubnavComponent < ApplicationComponent
 
     def admin_or_projekt_manager?
       current_user&.administrator? || current_user&.projekt_manager?
+    end
+
+    def tab_tooltip_hidden_state(item)
+      return nil if !item.key?(:hidden_from_public)
+      return nil if !can?(:edit, projekt_phase.projekt)
+
+      item[:hidden_from_public]
     end
 end

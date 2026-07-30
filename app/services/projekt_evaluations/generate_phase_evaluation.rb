@@ -1,4 +1,9 @@
 class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
+  AI_DATA_KEYS = %i[
+    ai_stats ai_stats_refreshed_at evaluation_summary
+    short_summary key_findings ai_generated_at
+  ].freeze
+
   def initialize(projekt_phase_evaluation)
     @row = projekt_phase_evaluation
     @projekt_phase = projekt_phase_evaluation.projekt_phase
@@ -6,6 +11,10 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
 
   def self.regenerate_regular_stats(projekt_phase_evaluation)
     new(projekt_phase_evaluation).regenerate_regular_stats
+  end
+
+  def self.refresh_regular_stats(projekt_phase_evaluation)
+    new(projekt_phase_evaluation).refresh_regular_stats
   end
 
   def self.regenerate_ai_stats(projekt_phase_evaluation)
@@ -16,7 +25,7 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     run do |base|
       next {} if base.blank?
 
-      build_regular_data(base).merge(build_ai_data(base))
+      build_regular_data(base).merge(ai_data(base))
     end
   end
 
@@ -28,9 +37,30 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
     end
   end
 
+  def refresh_regular_stats
+    return if !supported_phase_type?
+
+    base = aggregate_phase_stats
+    return if base.blank?
+
+    @row.update!(
+      status: :completed,
+      generated_at: Time.current,
+      data: existing_data.merge(build_regular_data(base)).deep_stringify_keys
+    )
+
+    @row
+  rescue StandardError => e
+    Rails.logger.error(
+      "[Evaluation] Background regular-stats refresh failed for row ##{@row.id} (phase ##{@projekt_phase.id}): #{e.message}"
+    )
+
+    nil
+  end
+
   def regenerate_ai_stats
     run do |base|
-      next existing_data if base.blank?
+      next existing_data if base.blank? || !Ai::Settings.ai_available?
 
       existing_data.merge(build_ai_data(base))
     end
@@ -65,11 +95,30 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
   end
 
   def build_regular_data(base)
+    refresh_precomputed_phase_stats
+
     base.merge(
-      stats: enrich_phase_stats(base),
       full_stats: ProjektPhaseStats::FullStatsCollector.call(@projekt_phase),
       regular_generated_at: Time.current.iso8601
     )
+  end
+
+  def refresh_precomputed_phase_stats
+    service_class = ProjektPhase::StatsRefreshService::STATS_SERVICES[@projekt_phase.class]
+    return if service_class.blank?
+
+    service_class.new(@projekt_phase).call
+    @projekt_phase.reload
+  rescue StandardError => e
+    Rails.logger.warn(
+      "[Evaluation] precomputed stats refresh failed for phase ##{@projekt_phase.id}: #{e.message}"
+    )
+  end
+
+  def ai_data(base)
+    return build_ai_data(base) if Ai::Settings.ai_available?
+
+    existing_data.slice(*AI_DATA_KEYS)
   end
 
   def build_ai_data(base)
@@ -115,23 +164,6 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
       ai_stats: @projekt_phase.ai_stats,
       ai_stats_refreshed_at: @projekt_phase.ai_stats_refreshed_at&.iso8601
     }
-  end
-
-  def enrich_phase_stats(phase)
-    stats = phase[:stats] || {}
-    return stats if phase[:phase_type] != "ProjektPhase::VotingPhase"
-
-    stats.merge(
-      polls: (stats[:polls] || []).map { |poll| enrich_poll_with_groupings(poll) }
-    )
-  end
-
-  def enrich_poll_with_groupings(poll)
-    questions = poll[:questions] || []
-    return poll if questions.empty?
-
-    groupings = ProjektEvaluations::GroupPollQuestions.call(questions)
-    poll.merge(groupings: groupings)
   end
 
   def generate_phase_evaluation_summary(phase)

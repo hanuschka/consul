@@ -1,4 +1,4 @@
-get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
+delete "account/disconnect_identity", to: "account#disconnect_identity", as: :disconnect_identity_account
 
 get "/map_data", to: "map_data#show", as: :map_data
 
@@ -100,6 +100,12 @@ end
 resources :masterportal_pins, only: [] do
   member do
     get :json_data
+  end
+end
+
+resources :polls, only: [] do
+  member do
+    get :ai_analysis
   end
 end
 

@@ -10,6 +10,7 @@ class ProjektPhaseEvaluationVisibility < ApplicationRecord
     label_sentiment
     user_segments
     budget_segments
+    heatmap
     key_findings
     topic_clustering
     semantic_clustering

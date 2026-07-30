@@ -1,0 +1,97 @@
+<% if @frontend_answer_poll.present? %>
+  <%= render "adm/projekts/projekts/evaluation/poll_answer_frontend_actions", answer: answer %>
+<% else %>
+<%
+  answer_id = answer["id"]
+  answer_title = answer["title"]
+  show_actions = local_assigns.fetch(:exportable, false) &&
+    answer_id.present? &&
+    answer["count"].to_i > 0
+%>
+
+<% if show_actions %>
+  <span class="poll-answer-actions">
+    <span class="poll-answer-actions--item" data-controller="shared--confirm-dialog">
+      <a
+        href="<%= poll_answer_participation_adm_projekts_projekt_path(@projekt, answer_id: answer_id) %>"
+        class="poll-answer-actions--trigger"
+        data-turbo-frame="poll-answer-participation-<%= answer_id %>"
+        data-action="click->shared--confirm-dialog#open"
+        rel="nofollow"
+        title="<%= t("adm.projekts.projekts.evaluation.question_participation_title") %>"
+        aria-label="<%= t("adm.projekts.projekts.evaluation.question_participation_title") %>"
+      >
+        <i class="fas fa-chart-pie" aria-hidden="true"></i>
+      </a>
+
+      <%= render Shared::ModalComponent.new(
+        id: "poll-answer-participation-modal-#{answer_id}",
+        title: "#{t("adm.projekts.projekts.evaluation.question_participation_title")} · #{answer_title}",
+        closeable: false,
+        modal_class: "adm-poll-answer-modal",
+        data: {
+          "shared--confirm-dialog-target": "dialog",
+          action: "click->shared--confirm-dialog#backdrop"
+        }
+      ) do %>
+        <button
+          type="button"
+          class="close-button round-icon-button"
+          data-action="click->shared--confirm-dialog#close"
+          aria-label="<%= t("adm.projekts.projekts.evaluation.answer_detail_close") %>"
+        >
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="adm-poll-answer-modal--body">
+          <%= turbo_frame_tag "poll-answer-participation-#{answer_id}" do %>
+            <div class="answer-detail-loading">
+              <%= render Shared::SpinnerComponent.new(size: :large) %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </span>
+
+    <span class="poll-answer-actions--item" data-controller="shared--confirm-dialog">
+      <a
+        href="<%= poll_answer_crossectional_adm_projekts_projekt_path(@projekt, answer_id: answer_id) %>"
+        class="poll-answer-actions--trigger"
+        data-turbo-frame="poll-answer-crossectional-<%= answer_id %>"
+        data-action="click->shared--confirm-dialog#open"
+        rel="nofollow"
+        title="<%= t("adm.projekts.projekts.evaluation.question_crossectional_title") %>"
+        aria-label="<%= t("adm.projekts.projekts.evaluation.question_crossectional_title") %>"
+      >
+        <i class="fas fa-clipboard-list" aria-hidden="true"></i>
+      </a>
+
+      <%= render Shared::ModalComponent.new(
+        id: "poll-answer-crossectional-modal-#{answer_id}",
+        title: "#{t("adm.projekts.projekts.evaluation.question_crossectional_title")} · #{answer_title}",
+        closeable: false,
+        modal_class: "adm-poll-answer-modal",
+        data: {
+          "shared--confirm-dialog-target": "dialog",
+          action: "click->shared--confirm-dialog#backdrop"
+        }
+      ) do %>
+        <button
+          type="button"
+          class="close-button round-icon-button"
+          data-action="click->shared--confirm-dialog#close"
+          aria-label="<%= t("adm.projekts.projekts.evaluation.answer_detail_close") %>"
+        >
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="adm-poll-answer-modal--body">
+          <%= turbo_frame_tag "poll-answer-crossectional-#{answer_id}" do %>
+            <div class="answer-detail-loading">
+              <%= render Shared::SpinnerComponent.new(size: :large) %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </span>
+  </span>
+<% end %>
+<% end %>

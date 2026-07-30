@@ -12,7 +12,8 @@
   padding: 1rem 1.125rem;
   background: white;
   border: 1px solid var(--er-border, #e2e8f0);
-  border-radius: var(--er-radius, 8px);
+  border-radius: 12px;
+  box-shadow: var(--er-shadow-md);
 }
 
 .phase-key-metrics-card__icon {

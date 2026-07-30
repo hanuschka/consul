@@ -1,26 +1,11 @@
 <div id="admin-proposal-info">
   <% if false && projekt_phase_feature?(@proposal.projekt_phase, "form.show_map") && map_location_available?(@proposal) %>
-    <% if @proposal.projekt.vc_map_enabled? %>
-      <div class="margin-bottom not-print">
-        <%= render Shared::VCMapComponent.new(
-          mappable: @proposal,
-          map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
-          parent_class: "proposal",
-          projekt_phase: @proposal.projekt_phase,
-          show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
-        ) %>
-      </div>
-    <% else %>
-      <div class="margin-bottom not-print">
-        <%= render Shared::MapComponent.new(
-          mappable: @proposal,
-          map_location: @proposal.map_location || @proposal.projekt_phase.map_location_with_admin_shape,
-          parent_class: "proposal",
-          projekt_phase: @proposal.projekt_phase,
-          show_admin_shape: @proposal.projekt_phase.map_location.show_admin_shape?
-        ) %>
-      </div>
-    <% end %>
+    <div class="margin-bottom not-print">
+      <%= render Shared::MapComponent.new(
+        mappable: @proposal,
+        masterportal_focus_view: true
+      ) %>
+    </div>
   <% end %>
 
   <div class="resource-taggings margin-bottom">

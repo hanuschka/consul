@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_27_180352) do
+ActiveRecord::Schema.define(version: 2026_07_28_125933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2568,6 +2568,7 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["key", "value", "projekt_id"], name: "index_projekt_settings_on_key_and_value_and_projekt_id"
     t.index ["projekt_id", "key", "value"], name: "index_projekt_settings_on_projekt_id_key_value"
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
   end
@@ -2625,11 +2626,25 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.boolean "imported_by_ai", default: false, null: false
     t.string "banner_image_generation_status"
     t.datetime "content_updated_at"
+    t.boolean "activated", default: false, null: false
+    t.boolean "show_in_navigation", default: true, null: false
+    t.boolean "show_in_overview_page", default: true, null: false
+    t.boolean "show_in_overview_page_navigation", default: false, null: false
+    t.boolean "show_in_homepage", default: true, null: false
+    t.boolean "show_in_individual_list", default: false, null: false
+    t.boolean "show_in_sidebar_filter", default: true, null: false
+    t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
+    t.index ["show_in_homepage"], name: "index_projekts_on_show_in_homepage"
+    t.index ["show_in_individual_list"], name: "index_projekts_on_show_in_individual_list"
+    t.index ["show_in_navigation"], name: "index_projekts_on_show_in_navigation"
+    t.index ["show_in_overview_page"], name: "index_projekts_on_show_in_overview_page"
+    t.index ["show_in_overview_page_navigation"], name: "index_projekts_on_show_in_overview_page_navigation"
+    t.index ["show_in_sidebar_filter"], name: "index_projekts_on_show_in_sidebar_filter"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 

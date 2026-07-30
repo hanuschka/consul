@@ -268,11 +268,11 @@ Devise.setup do |config|
                   discovery: true,
                   scope: [:openid, :email, :profile, :address],
                   strategy_class: OmniAuth::Strategies::OpenIDConnect,
-                  # post_logout_redirect_uri: kobil_secrets[:post_logout_redirect_uri],
+                  post_logout_redirect_uri: kobil_secrets[:post_logout_redirect_uri],
                   client_options: {
                     identifier: kobil_secrets[:client_id],
-                    secret: kobil_secrets[:client_secret]
-                    # redirect_uri: kobil_secrets[:redirect_uri]
+                    secret: kobil_secrets[:client_secret],
+                    redirect_uri: kobil_secrets[:redirect_uri]
                   }
 
   # ==> Warden configuration

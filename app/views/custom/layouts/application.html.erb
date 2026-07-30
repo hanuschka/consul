@@ -12,7 +12,10 @@
 
     <%= raw setting["html.per_page_code_head"] %>
   </head>
-  <body class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>">
+  <body
+    class="<%= yield(:body_class) %> <%= custom_new_design_body_class %>"
+    data-ai-available="<%= Ai::Settings.ai_available? %>"
+  >
     <%= render "layouts/brand_color_root_style" %>
     <%= yield :styles %>
 

@@ -211,6 +211,9 @@ namespace :projekt_management do
       member do
         patch :update_inline
         patch :change_with_ai
+        post :generate_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
       end
     end
   end

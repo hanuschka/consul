@@ -77,12 +77,14 @@ module ContentBlocksHelper
     if current_user&.administrator?
       {
         update_url: update_inline_admin_site_customization_content_block_path(block),
-        ai_url: change_with_ai_admin_site_customization_content_block_path(block)
+        ai_url: change_with_ai_admin_site_customization_content_block_path(block),
+        generate_url: generate_with_ai_admin_site_customization_content_block_path(block)
       }
     elsif current_user&.projekt_manager?
       {
         update_url: update_inline_projekt_management_site_customization_content_block_path(block),
-        ai_url: change_with_ai_projekt_management_site_customization_content_block_path(block)
+        ai_url: change_with_ai_projekt_management_site_customization_content_block_path(block),
+        generate_url: generate_with_ai_projekt_management_site_customization_content_block_path(block)
       }
     end
   end
@@ -94,6 +96,7 @@ module ContentBlocksHelper
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
+    res << " data-generate-url=\"#{inline_urls[:generate_url]}\""
 
     if default_content.present?
       res << " data-default-content=\"#{ERB::Util.html_escape(default_content)}\""

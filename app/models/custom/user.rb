@@ -239,6 +239,10 @@ User.class_eval do
     idea_officer.present?
   end
 
+  def hard_individual_group_value_ids
+    @hard_individual_group_value_ids ||= individual_group_values.hard.ids
+  end
+
   def projekt_manager?(projekt = nil)
     if projekt.present?
       projekt_manager.present? &&

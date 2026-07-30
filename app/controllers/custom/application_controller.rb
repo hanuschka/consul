@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "application_controller
 
 class ApplicationController < ActionController::Base
   before_action :sanitize_pagination_params
+  before_action :normalize_tags_param
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   helper_method :set_comment_flags
@@ -24,6 +25,21 @@ class ApplicationController < ActionController::Base
         next if value.nil? || value.is_a?(String) || value.is_a?(Numeric)
 
         params[key] = nil
+      end
+    end
+
+    # Tag names that match no tag are dropped here so nothing downstream can
+    # echo them back into links, hidden fields or filter queries.
+    def normalize_tags_param
+      return if params[:tags].blank?
+
+      normalized_tags = ::Tags::ExistingNamesService.call(params[:tags]).presence&.join(",")
+      params[:tags] = normalized_tags
+
+      if normalized_tags.blank?
+        request.query_parameters.delete("tags")
+      else
+        request.query_parameters["tags"] = normalized_tags
       end
     end
 
@@ -53,14 +69,6 @@ class ApplicationController < ActionController::Base
     def show_launch_page
       @header_launch = Widget::Card.header.find_by(title: "header_large_launch")
       render "welcome/launch", layout: "launch_page"
-    end
-
-    def all_selected_tags
-      if params[:tags]
-        params[:tags].split(",").map { |tag_name| Tag.find_by(name: tag_name) }.compact || []
-      else
-        []
-      end
     end
 
     def set_projekts_for_overview_page_navigation

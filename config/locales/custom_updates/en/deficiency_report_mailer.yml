@@ -13,6 +13,10 @@ en:
           subject: New deficiency report %{identifier}
           hi: Dear Officer,
           p1: Admin has assigned you one of the new deficiency reports.
+          adm_page: "To process the report, use the following link:"
+          adm_page_link_text: Open report in the administration area
+          public_page: "The report is publicly visible:"
+          public_page_link_text: Public page
         notify_author_about_submission:
           subject: Confirmation of your report
           hi: "Dear %{username},"

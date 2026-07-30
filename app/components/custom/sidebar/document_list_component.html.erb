@@ -1,10 +1,25 @@
-<ul class="document-list">
+<ul class="document-list -detailed">
   <% @documents.each do |document| %>
-  <% next unless document.attachment.attached? %>
-  <li class="document-list--document">
-  <%= link_to document.title,
-              document.attachment, target: "_blank",
-              rel: "nofollow" %>
-  </li>
+    <% next unless document.attachment.attached? %>
+    <li class="document-list--document">
+      <%= link_to document.attachment,
+                  target: "_blank",
+                  rel: "nofollow noopener",
+                  class: "document-list--link" do %>
+        <span class="document-list--icon" aria-hidden="true">
+          <i class="fa <%= icon_class(document) %>"></i>
+        </span>
+        <span class="document-list--info">
+          <span class="document-list--name"><%= display_title(document) %></span>
+          <% if meta_text(document).present? %>
+            <span class="document-list--meta"><%= meta_text(document) %></span>
+          <% end %>
+        </span>
+        <span class="document-list--open-icon" aria-hidden="true">
+          <i class="fa fa-external-link-alt"></i>
+        </span>
+        <span class="show-for-sr"><%= t("shared.target_blank") %></span>
+      <% end %>
+    </li>
   <% end %>
 </ul>

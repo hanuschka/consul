@@ -12,6 +12,10 @@ class ProposalsController
 
   MAP_PINS_LAZY_LOAD_THRESHOLD = 50
 
+  # A page shows 24 cards; the cap only stops a hand-rolled request from asking us to re-render
+  # every proposal in the phase.
+  MAX_REFRESHED_CARDS = 50
+
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
   prepend_before_action :load_draft_proposal_for_admin, only: :show
@@ -241,6 +245,8 @@ class ProposalsController
       @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
       @voted = @proposal.register_vote(voting_user, "yes")
     end
+
+    prepare_cards_to_refresh
   end
 
   def unvote
@@ -249,6 +255,8 @@ class ProposalsController
     @follow.destroy! if @follow
 
     @voted = !@proposal.unvote_by(voting_user)
+
+    prepare_cards_to_refresh
   end
 
   def created
@@ -271,6 +279,37 @@ class ProposalsController
   end
 
   private
+
+    # The support and withdraw buttons carry the ids of the cards that were on screen, so the
+    # response can refresh all of them. Only the clicked card is re-rendered otherwise, and
+    # crossing the phase's supports limit changes what every other card in the phase shows.
+    #
+    # Mirrors Budgets::Ballot::LinesController#load_investments, which solves the same
+    # interdependency for ballot lines. Scoped to the phase the vote happened in, both because
+    # that is the only phase whose cards can have changed and because it keeps a caller from
+    # asking for arbitrary proposals. Phases without a supports limit keep re-rendering a single
+    # card, as they did before the limit existed.
+    #
+    # Runs after the vote is written, never as a before_action: the answers being re-rendered
+    # depend on it. All the cards reach the same ProjektPhase instance, so resetting its cache
+    # once is enough for the whole response.
+    def prepare_cards_to_refresh
+      projekt_phase = @proposal.projekt_phase
+      projekt_phase&.reset_permission_problem_cache!
+
+      # The card sends this back so the re-render keeps the share popup it had. Only list cards
+      # carry one; the show page renders the same component without it.
+      @show_share_popup = params[:show_share_popup] == "true"
+
+      return if params[:proposals_ids].blank?
+      return unless projekt_phase&.supports_limit_applies?
+
+      @proposal_ids = Array(params[:proposals_ids]).first(MAX_REFRESHED_CARDS)
+      @proposals = projekt_phase.proposals
+                                .where(id: @proposal_ids)
+                                .where.not(id: @proposal.id)
+                                .includes(:votes_for)
+    end
 
     def load_draft_proposal_for_admin
       return if current_user.blank?

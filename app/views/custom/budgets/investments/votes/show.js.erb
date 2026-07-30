@@ -1,0 +1,11 @@
+$("#<%= dom_id(@investment) %>_votes")
+  .html("<%= j render Budgets::Investments::VotesComponent.new(@investment, investment_ids: @investment_ids) %>");
+
+<%# Crossing the supports limit changes what every other card in the budget should show - a
+    support button or the limit notice - but only the clicked card is re-rendered above. The
+    buttons carry the ids of the cards that were on screen, so refresh exactly those; the
+    controller leaves @investments blank when the phase has no limit. %>
+<% (@investments || []).each do |investment| %>
+$("#<%= dom_id(investment) %>_votes")
+  .html("<%= j render Budgets::Investments::VotesComponent.new(investment, investment_ids: @investment_ids) %>");
+<% end %>

@@ -1,10 +1,5 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
-  INDEX_FILTERS = %w[
-    index_order_underway index_order_all
-    index_order_ongoing index_order_upcoming
-    index_order_expired index_order_individual_list
-  ].freeze
   PHASE_PRELOAD_FOR_CONTROLLER = {
     "proposals" => { proposal_phases: [:individual_group_values, :settings] },
     "debates" => { debate_phases: [:individual_group_values, :settings] },
@@ -778,17 +773,6 @@ class Projekt < ApplicationRecord
 
   def section_tracking_user
     author
-  end
-
-  def self.available_filters(all_projekts)
-    return [] if all_projekts.blank?
-
-    projekts_count_hash = {}
-    INDEX_FILTERS.each do |order|
-      projekts_count_hash[order] = all_projekts.send(order).count
-    end
-
-    projekts_count_hash.select { |_, value| value > 0 }.keys
   end
 
   def current_phases

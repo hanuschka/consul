@@ -5,7 +5,10 @@ class InternalApi::ProjektSettingsController < InternalApi::BaseController
   skip_authorization_check
 
   def update
-    if @projekt_setting.update_column(:value, projekt_setting_params[:value])
+    # `update`, not `update_column`: a promoted setting mirrors its value onto
+    # the projekts column from an after_save callback, which update_column
+    # would skip — leaving the column stale (see Projekt::KEY_TO_COLUMN).
+    if @projekt_setting.update(value: projekt_setting_params[:value])
       render json: { message: "Projekt setting updated" }
     else
       render json: { message: "Error updating projekt setting" }

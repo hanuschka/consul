@@ -217,7 +217,6 @@ var initialize_modules = function() {
   App.ModalNotification.initialize();
   App.VerificationForm.initialize();
   App.SharedNewButtonComponent.initialize();
-  App.VCMap.initialize();
 
   App.CustomJS.initialize();
   App.SDGCustom.initialize();

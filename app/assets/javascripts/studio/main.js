@@ -52,6 +52,12 @@ window.App.Studio.Projekt = {
     return  document.querySelector(".js-projekt-page").dataset.projektId;
   },
 
+  isAiTriggerDisabled(trigger) {
+    const $trigger = $(trigger);
+
+    return $trigger.is("[disabled]") || $trigger.closest(".-ai-disabled").length > 0;
+  },
+
   getDefaultMarginBottom() {
     const configured = this.config.defaultMarginBottom;
 

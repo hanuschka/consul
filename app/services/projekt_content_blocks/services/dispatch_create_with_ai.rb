@@ -1,4 +1,4 @@
-class ProjektContentBlocks::DispatchCreateWithAi < ApplicationService
+class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
   attr_reader :projekt, :placeholder
 
   def initialize(

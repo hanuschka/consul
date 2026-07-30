@@ -131,20 +131,11 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   end
 
   def create_content_blocks(projekt, blocks)
-    Array(blocks).each_with_index do |block, position|
-      body = block["html"].presence || block["content_data"].to_s
-      next if body.blank?
-
-      projekt.content_blocks.create!(
-        name: "custom",
-        key: "projekt_content_block_#{projekt.id}_#{position + 1}_#{DateTime.now.to_i}",
-        body: body,
-        locale: projekt_import.import_locale,
-        position: position + 1
-      )
-    rescue ActiveRecord::RecordInvalid => e
-      raise "content_block(##{position + 1}): #{e.message}"
-    end
+    ProjektContentBlocks::Services::CreateFromImportData.call(
+      projekt: projekt,
+      blocks: blocks,
+      locale: projekt_import.import_locale
+    )
   end
 
   def apply_projekt_settings(projekt, settings)

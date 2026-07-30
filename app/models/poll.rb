@@ -53,8 +53,8 @@ class Poll < ApplicationRecord
   scope :created_by_admin, -> { where(related_type: nil) }
 
   def self.sort_for_list(user = nil)
-    all.sort do |poll, another_poll|
-      [poll.weight(user), poll.projekt_phase.start_date || Date.new(9999, 12, 31), poll.name] <=> [another_poll.weight(user), another_poll.starts_at || Date.new(9999, 12, 31), another_poll.name]
+    all.sort_by do |poll|
+      [poll.weight(user), poll.projekt_phase.start_date || Date.new(9999, 12, 31), poll.name.to_s, poll.id]
     end
   end
 

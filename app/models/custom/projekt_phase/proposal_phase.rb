@@ -119,6 +119,15 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.each(&:hide)
   end
 
+  # A "maximum number of supports" rule does not map onto agree/disagree voting: a dislike is not
+  # a support and is not counted, yet the gate behind the limit blocks every vote once it is
+  # reached - and that widget has no withdraw button, so the user would be frozen out of voting
+  # entirely with no way back under the limit. Phases using it are exempt, which means a limit
+  # configured on an up/down phase silently does nothing (as on guest phases).
+  def supports_limit_applies?
+    max_supports_per_user.positive? && !feature?("resource.enable_up_and_down_voting")
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)
@@ -138,7 +147,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     end
 
     def supports_limit_exceeded?(user)
-      return false if max_supports_per_user.zero?
+      return false unless supports_limit_applies?
 
       supports_count_for(user) >= max_supports_per_user
     end

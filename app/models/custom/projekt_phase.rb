@@ -308,6 +308,15 @@ class ProjektPhase < ApplicationRecord
     @permission_problem_cache[cache_key]
   end
 
+  # The cache above is a per-request read cache, and some answers depend on what the user has
+  # already submitted or supported. A request that *writes* one of those has to drop it before
+  # re-rendering anything, otherwise it reports the state from before its own write. Casting a
+  # support is the case that matters: register_selection asks the question on its way in, so the
+  # answer is cached while the vote row still does not exist.
+  def reset_permission_problem_cache!
+    @permission_problem_cache = nil
+  end
+
   def geozone_allowed?(user)
     geozone_permission_problem(user).present?
   end

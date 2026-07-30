@@ -40,9 +40,11 @@
         ) %>
 
         <% if @proposals.present? %>
+          <% proposal_ids = @proposals.map(&:id) %>
           <% c.with_items do %>
             <% @proposals.each do |proposal| %>
-              <%= render Proposals::ListItemComponent.new(proposal: proposal) %>
+              <%= render Proposals::ListItemComponent.new(proposal: proposal,
+                    proposal_ids: proposal_ids) %>
             <% end %>
           <% end %>
         <% end %>

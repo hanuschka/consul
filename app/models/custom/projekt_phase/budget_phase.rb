@@ -229,6 +229,10 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget.investments.winners.pluck(:author_id).uniq
   end
 
+  def supports_limit_applies?
+    max_supports_per_user.positive?
+  end
+
   private
 
     def group_value_counts
@@ -252,7 +256,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     end
 
     def supports_limit_exceeded?(user)
-      return false if max_supports_per_user.zero?
+      return false unless supports_limit_applies?
 
       supports_count_for(user) >= max_supports_per_user
     end

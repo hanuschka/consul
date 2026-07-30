@@ -34,7 +34,8 @@
         <% if voted? %>
           <%= button_to unvote_proposal_url(proposal, offline_user_id: params[:offline_user_id]),
               class: "button button-support small expanded unvote",
-              title: t("proposals.proposal.support_title"), method: "post", remote: true do %>
+              title: t("proposals.proposal.support_title"), method: "post", remote: true,
+              params: refresh_params do %>
             <%= t("custom.proposals.proposal.unsupport") %>
           <% end %>
 
@@ -43,7 +44,8 @@
               class: "button button-support small expanded",
               title: t("proposals.proposal.support_title"),
               method: "post",
-              remote: true do %>
+              remote: true,
+              params: refresh_params do %>
             <%= support_button_text %>
           <% end %>
         <% end %>

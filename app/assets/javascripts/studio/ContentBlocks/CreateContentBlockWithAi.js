@@ -10,6 +10,7 @@
       targetContentBlockId: null,
       previousContentBlockId: null,
       contentBlockId: null,
+      generateUrl: null,
       statusUrl: null,
       cancelUrl: null,
       pollAttempts: 0,
@@ -67,6 +68,8 @@
     handleOpen(e) {
       e.preventDefault();
 
+      if (App.Studio.Projekt.isAiTriggerDisabled(e.currentTarget)) return
+
       const directSection = e.currentTarget.closest(".js-show-content-block-templates-section");
       if (directSection) {
         const wrapper = App.Studio.ContentBlocks.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
@@ -91,6 +94,9 @@
         : null;
       this.state.previousContentBlockId = crud.addContentBlockAfter
         ? crud.addContentBlockAfter.dataset.contentBlockId
+        : null;
+      this.state.generateUrl = this.state.replaceTargetWrapper
+        ? this.state.replaceTargetWrapper.dataset.generateUrl
         : null;
 
       templateSelector.closeDialog();
@@ -121,6 +127,7 @@
 
       $(".js-content-block-ai-prompt").val("");
       $(".js-content-block-ai-context").prop("checked", false);
+      $(".js-content-block-ai-context-row").toggleClass("hide", !!this.state.generateUrl);
       $(".js-content-block-ai-loader").hide();
       $(".js-content-block-ai-error").hide().text("");
       $(".js-content-block-ai-fallback-note").hide();
@@ -144,6 +151,8 @@
     },
 
     getGenerateUrl() {
+      if (this.state.generateUrl) return this.state.generateUrl
+
       const contentBlocksList = this.getContentBlocksList();
 
       if (contentBlocksList && contentBlocksList.dataset.generateUrl) {

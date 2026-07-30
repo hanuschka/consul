@@ -26,7 +26,6 @@ window.App.Studio.Projekt = {
 
     App.Studio.Projekt.ProjektStart.initialize()
     App.Studio.Projekt.AiBuildWithPrompt.initialize()
-    App.Studio.ContentBlocks.CreateWithAi.initialize()
 
     // Initialize ContentBlock submodules
     App.Studio.ContentBlocks.Render.initialize()
@@ -34,7 +33,6 @@ window.App.Studio.Projekt = {
 
     App.Studio.initContentBlockModules()
 
-    App.Studio.ContentBlocks.SavedContentBlocks.initialize()
     App.Studio.Projekt.AiFileImport.initialize()
     App.Studio.Projekt.ToggleBackground.initialize()
     // ExplainWithAi.initialize()

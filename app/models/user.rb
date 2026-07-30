@@ -278,13 +278,15 @@ class User < ApplicationRecord
       reset_password_token: nil,
       email_verification_token: nil,
       confirmed_phone: nil,
-      unconfirmed_phone: nil
+      unconfirmed_phone: nil,
+      **erasable_identifiers #custom
     )
     unverify! if verified? #custom
     identities.destroy_all
     remove_roles
     remove_audits #custom
     remove_subscriptions #custom
+    erase_organization_identifiers #custom
   end
 
   # custom: irreversibly removes the user's votes and refreshes the denormalized

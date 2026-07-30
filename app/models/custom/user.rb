@@ -433,6 +433,49 @@ User.class_eval do
       projekt_phase_subscriptions.destroy_all
     end
 
+    # Identifiers wiped on erasure, so an erased row cannot be traced back to a
+    # person. Filtered against the actual table because client deployments do
+    # not all carry the same columns.
+    def erasable_identifiers
+      {
+        first_name: nil,
+        last_name: nil,
+        date_of_birth: nil,
+        gender: nil,
+        city_name: nil,
+        plz: nil,
+        street_name: nil,
+        street_number: nil,
+        street_number_extension: nil,
+        registered_address_id: nil,
+        city_street_id: nil,
+        geozone_id: nil,
+        document_number: nil,
+        document_type: nil,
+        document_last_digits: nil,
+        unique_stamp: nil,
+        oauth_email: nil,
+        keycloak_link: nil,
+        keycloak_id_token: "",
+        auth_image_link: nil,
+        temporary_auth_token: nil,
+        temporary_auth_token_valid_until: nil,
+        current_sign_in_ip: nil,
+        last_sign_in_ip: nil,
+        guest_user_agent: nil,
+        former_users_data_log: ""
+      }.select { |column, _| self.class.column_names.include?(column.to_s) }
+    end
+
+    # Organization#name and #responsible_name are validated for presence, and
+    # User validates_associated :organization, so these get neutral placeholders
+    # rather than nil.
+    def erase_organization_identifiers
+      return if organization.blank?
+
+      organization.update!(name: "erased_#{organization.id}", responsible_name: "-")
+    end
+
     def update_conditional_ballots_for_relevant_budgets
       Budget::Ballot.where(user_id: id).joins(:budget).select { |b| b.budget.balloting? }.each do |ballot|
         permission_problem_present = ballot.budget.projekt_phase.permission_problem(self).present?

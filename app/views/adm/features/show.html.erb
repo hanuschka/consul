@@ -14,6 +14,21 @@
 
   <section class="mb-5">
     <h2 class="kern-title kern-title--small mb-2"><%= t("adm.features.show.kobil_title") %></h2>
+
+    <dl class="kern-description-list mb-2">
+      <%= render partial: "kobil_credential_status",
+                 collection: Kobil::Settings.credential_statuses,
+                 as: :kobil_credential_status %>
+    </dl>
+
+    <% if Kobil::Settings.missing_required_credential_keys.any? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.features.show.kobil_credentials_incomplete_title"), style: :warning) do %>
+          <p class="kern-body"><%= t("adm.features.show.kobil_credentials_incomplete_body") %></p>
+        <% end %>
+      </div>
+    <% end %>
+
     <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "feature.kobil_login"),                :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "feature.kobil_single_logout"),        :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "feature.kobil_address_verification"), :value, :boolean) %>

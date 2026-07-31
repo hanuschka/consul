@@ -288,7 +288,3 @@ end
 Rails.application.config.to_prepare do
   Devise::Mailer.layout "mailer" # email.haml or email.erb
 end
-
-Warden::Manager.after_authentication do |user, _auth, _opts|
-  MarketplaceServices::BrevoContactExportJob.perform_later(user.id, "sign_in") if user.is_a?(User)
-end

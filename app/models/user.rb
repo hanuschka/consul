@@ -266,6 +266,7 @@ class User < ApplicationRecord
 
   def erase(erase_reason = nil, destroy_votes: false)
     destroy_votes! if destroy_votes #custom
+    brevo_email = email #custom: kept for the deletion below, the update! right after nulls it
     update!(
       erased_at: Time.current,
       erase_reason: erase_reason,
@@ -286,7 +287,7 @@ class User < ApplicationRecord
     remove_audits #custom
     remove_subscriptions #custom
 
-    MarketplaceServices::BrevoContactExportJob.perform_later(id, "delete")
+    MarketplaceServices::BrevoContactExportJob.perform_later(id, "delete", brevo_email)
   end
 
   # custom: irreversibly removes the user's votes and refreshes the denormalized

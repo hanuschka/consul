@@ -360,8 +360,12 @@ User.class_eval do
 
   private
 
+    # The record is gone once this job runs, so the address travels with it rather than being
+    # looked up. An already erased user has none left, and there is then nothing to delete.
     def export_to_brevo_on_destroy
-      MarketplaceServices::BrevoContactExportJob.perform_later(id, "delete")
+      return if email.blank?
+
+      MarketplaceServices::BrevoContactExportJob.perform_later(id, "delete", email)
     end
 
     def geozone_with_plz

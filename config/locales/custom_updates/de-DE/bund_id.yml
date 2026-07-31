@@ -1,0 +1,6 @@
+de:
+  omniauth:
+    bund_id:
+      sign_in: Mit BundID anmelden
+      sign_up: Mit BundID registrieren
+      name: BundID

@@ -42,7 +42,7 @@
       </div>
 
       <% if oauth_logins.any? || feature?("bund_id_login") %>
-        <div class="auth-page-template--oauth no-column-padding">
+        <div class="auth-page-template--oauth">
           <%= render "devise/omniauth_form", action: "sign_in" %>
         </div>
       <% end %>

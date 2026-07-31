@@ -12,37 +12,13 @@
     }
 
     .button {
-      margin-bottom: 5px !important;
-      margin-top: 5px !important;
-      border-left: none;
       border-radius: 7px;
 
       &::before {
         font-size: 1.5rem;
         margin-right: 3px;
         display: block;
-        min-width: 30px;
       }
-
-      &:hover {
-        color: black;
-      }
-    }
-
-    .button-twitter:hover {
-      background: #d4e9f3;
-    }
-
-    .button-facebook:hover {
-      background: #d1d8e7;
-    }
-
-    .button-google:hover {
-      background: #efd4cf;
-    }
-
-    .button-wordpress:hover {
-      background: #c9ccda;
     }
 
     strong {
@@ -249,8 +225,8 @@
   }
 
 
-  .auth-page-template--body a {
-    text-decoration: underline;
-  }
+  // .auth-page-template--body a {
+  //   text-decoration: underline;
+  // }
 }
 

@@ -1,10 +1,18 @@
 de:
   setting:
     feature:
+      bund_id_login: "BundID-Anmeldung aktivieren"
+      bund_id_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine BundID-Schaltfläche. Nutzer können sich dann mit ihrem BundID-Konto anmelden und registrieren."
+      twitter_login: "Twitter-Anmeldung aktivieren"
+      twitter_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Twitter-Konto. Erfordert hinterlegte Twitter-Zugangsdaten in der Serverkonfiguration."
+      facebook_login: "Facebook-Anmeldung aktivieren"
+      facebook_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Facebook-Konto. Erfordert hinterlegte Facebook-Zugangsdaten in der Serverkonfiguration."
+      google_login: "Google-Anmeldung aktivieren"
+      google_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Google-Konto. Erfordert hinterlegte Google-Zugangsdaten in der Serverkonfiguration."
+      wordpress_login: "Wordpress-Anmeldung aktivieren"
+      wordpress_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Wordpress-Konto. Erfordert hinterlegte Wordpress-Zugangsdaten in der Serverkonfiguration."
       kobil_login: "KOBIL-Anmeldung aktivieren"
       kobil_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine Schaltfläche „Mit KOBIL anmelden“. Nutzer können sich dann über ihr KOBIL-Konto (OpenID Connect) anmelden und registrieren. Erfordert hinterlegte KOBIL-Zugangsdaten in der Serverkonfiguration."
-      kobil_single_logout: "KOBIL Single Logout"
-      kobil_single_logout_description: "Meldet den Nutzer beim Abmelden auch aus seinem KOBIL-Konto ab (Single Logout). Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
       kobil_address_verification: "KOBIL Adressverifizierung"
       kobil_address_verification_description: "Übernimmt die vom KOBIL-Konto bereitgestellte Adresse (Straße, PLZ, Ort) in das Nutzerprofil. Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
     projekt_option:

@@ -1,0 +1,27 @@
+<td style="<%= css_for_mailer_content %>">
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.on_behalf_of_account.mailers.account_created.hi", username: @user.username) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.on_behalf_of_account.mailers.account_created.p1", email: @user.email) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.p2",
+      password_link: link_to(
+        t("custom.on_behalf_of_account.mailers.account_created.password_link_text"),
+        new_user_password_url,
+        target: "_blank"
+      )) %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("custom.on_behalf_of_account.mailers.closing") %><br>
+      <%= t("custom.on_behalf_of_account.mailers.signature") %>
+    </p>
+  <% end %>
+
+</td>

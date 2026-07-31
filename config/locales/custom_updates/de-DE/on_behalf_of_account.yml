@@ -13,7 +13,19 @@ de:
         placeholder: z. B. maria.musterfrau@example.com
         description: >
           Optional. Der Beitrag wird dem Benutzerkonto mit dieser E-Mail-Adresse zugeordnet.
-          Existiert noch kein Konto, wird eines angelegt und erhält eine Bestätigungs-E-Mail
-          (Double-Opt-In). Ein bereits vorhandenes Konto wird nur verknüpft.
+          Existiert noch kein Konto, wird eines angelegt, sofort freigeschaltet und per E-Mail
+          darüber informiert. Ein bereits vorhandenes Konto wird nur verknüpft.
       errors:
         blocked_account: Für diese E-Mail-Adresse existiert ein gesperrtes Benutzerkonto. Bitte wenden Sie sich an die Administration.
+      mailers:
+        closing: Freundliche Grüße
+        signature: Ihr Beteiligungsteam
+        account_created:
+          subject: Ihr Benutzerkonto wurde angelegt
+          hi: "Hallo %{username},"
+          p1: >
+            für Sie wurde ein Benutzerkonto mit der E-Mail-Adresse %{email} angelegt, weil ein
+            Beitrag in Ihrem Namen eingereicht wurde. Das Konto ist bereits freigeschaltet.
+          p2: >
+            Um sich anzumelden, vergeben Sie bitte zunächst ein Passwort: %{password_link}.
+          password_link_text: Passwort vergeben

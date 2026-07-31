@@ -1,8 +1,10 @@
 class Users::OnBehalfOfAccountService < ApplicationService
   # Resolves the email a staff member entered on an internal form into the User the resource
-  # should be attributed to. An address without an account gets one, which makes Devise send its
-  # confirmation (double opt-in) mail; an address that already has an account is only looked up,
-  # so nobody receives an unexpected confirmation request for an account they already confirmed.
+  # should be attributed to. An address without an account gets one, confirmed straight away —
+  # the address was supplied by staff acting for the person, so there is no opt-in to collect, and
+  # an unconfirmed account would leave them unable to log in. They are told about it by mail
+  # instead. An address that already has an account is only looked up, so nobody receives an
+  # unexpected mail about an account they already had.
   MAX_USERNAME_SUFFIX = 999
 
   Result = Struct.new(:user, :created, :error, keyword_init: true) do
@@ -54,14 +56,17 @@ class Users::OnBehalfOfAccountService < ApplicationService
         terms_general: "1",
         created_on_behalf_of: true
       )
+      user.skip_confirmation!
 
       return Result.new(error: user.errors.full_messages.to_sentence) unless user.save
+
+      OnBehalfOfAccountMailer.account_created(user).deliver_later
 
       Result.new(user: user, created: true)
     end
 
     # The account holder never sees this password. They set their own through the password reset
-    # flow once they followed the confirmation link.
+    # flow, which is what the mail above points them to.
     def random_password
       "#{SecureRandom.alphanumeric(20)}aA1!"
     end

@@ -1,29 +1,108 @@
+$oauth-button-hover-tint: 12%;
+$oauth-button-active-tint: 22%;
+$oauth-button-columns: 3;
+$oauth-button-columns-tablet: 2;
+
+.oauth-logins--divider {
+  padding-bottom: 22px;
+}
+
+.oauth-logins--title {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.oauth-logins--grid {
+  display: grid;
+  grid-template-columns: repeat($oauth-button-columns, minmax(0, 1fr));
+  gap: 10px;
+
+  @media (max-width: $big-tablet-viewport-start) {
+    grid-template-columns: repeat($oauth-button-columns-tablet, minmax(0, 1fr));
+  }
+}
+
+.bund-id-logo,
+.kobil-logo {
+  width: auto;
+  max-width: 100%;
+  height: 24px;
+}
+
 .button.button-bund-id,
+.button.button-kobil,
 .button.button-twitter,
 .button.button-facebook,
 .button.button-google,
 .button.button-wordpress {
-  color: $text;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  margin: 0;
+  color: $text;
+  border-left: none;
+
+  &:hover,
+  &:active {
+    color: $text;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $focus-outline-color;
+    outline-offset: 2px;
+  }
+}
+
+.button.button-twitter,
+.button.button-facebook,
+.button.button-google,
+.button.button-wordpress {
+  &::before {
+    width: 1.5rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    mask-position: center;
+    mask-size: contain;
+  }
 }
 
 .button.button-bund-id {
-  background: #ebeef4;
+  background: $bund-id-surface;
 
   &:hover {
-    background: #d1d8e7;
+    background: mix($bund-id-brand, $bund-id-surface, $oauth-button-hover-tint);
+  }
+
+  &:active {
+    background: mix($bund-id-brand, $bund-id-surface, $oauth-button-active-tint);
+  }
+}
+
+.button.button-kobil {
+  background: $kobil-blue;
+
+  &:hover {
+    background: $kobil-blue-hover;
+  }
+
+  &:active {
+    background: $kobil-blue-active;
   }
 }
 
 .button.button-twitter {
-  background-color: #222 !important;
+  background-color: $twitter-surface !important;
   color: #fff;
 
   &:hover {
     color: #fff !important;
-    background-color: #000 !important;
+    background-color: $twitter-brand !important;
+  }
+
+  &:active {
+    color: #fff !important;
+    background-color: $twitter-brand !important;
   }
 
   &::before {
@@ -32,28 +111,49 @@
 }
 
 .button.button-facebook {
-  background: #ebeef4;
-  border-left: 3px solid #3b5998;
+  background: $facebook-surface;
+
+  &:hover {
+    background: mix($facebook-brand, $facebook-surface, $oauth-button-hover-tint);
+  }
+
+  &:active {
+    background: mix($facebook-brand, $facebook-surface, $oauth-button-active-tint);
+  }
 
   &::before {
-    color: #3b5998;
+    color: $facebook-brand;
   }
 }
 
 .button.button-google {
-  background: #fcedea;
-  border-left: 3px solid #de4c34;
+  background: $google-surface;
+
+  &:hover {
+    background: mix($google-brand, $google-surface, $oauth-button-hover-tint);
+  }
+
+  &:active {
+    background: mix($google-brand, $google-surface, $oauth-button-active-tint);
+  }
 
   &::before {
-    color: #de4c34;
+    color: $google-brand;
   }
 }
 
 .button.button-wordpress {
-  background: #dcdde3;
-  border-left: 3px solid #2f2f33;
+  background: $wordpress-surface;
+
+  &:hover {
+    background: mix($wordpress-brand, $wordpress-surface, $oauth-button-hover-tint);
+  }
+
+  &:active {
+    background: mix($wordpress-brand, $wordpress-surface, $oauth-button-active-tint);
+  }
 
   &::before {
-    color: #2f2f33;
+    color: $wordpress-brand;
   }
 }

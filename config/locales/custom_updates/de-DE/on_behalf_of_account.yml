@@ -1,0 +1,19 @@
+de:
+  attributes:
+    company_name: Firma
+    on_behalf_of_company_name: Firma
+    on_behalf_of_email: E-Mail-Adresse
+  custom:
+    on_behalf_of_account:
+      company_name:
+        label: Firma
+        placeholder: z. B. Musterbau GmbH
+      email:
+        label: E-Mail-Adresse
+        placeholder: z. B. maria.musterfrau@example.com
+        description: >
+          Optional. Der Beitrag wird dem Benutzerkonto mit dieser E-Mail-Adresse zugeordnet.
+          Existiert noch kein Konto, wird eines angelegt und erhält eine Bestätigungs-E-Mail
+          (Double-Opt-In). Ein bereits vorhandenes Konto wird nur verknüpft.
+      errors:
+        blocked_account: Für diese E-Mail-Adresse existiert ein gesperrtes Benutzerkonto. Bitte wenden Sie sich an die Administration.

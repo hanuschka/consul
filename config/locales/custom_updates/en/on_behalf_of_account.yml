@@ -1,0 +1,19 @@
+en:
+  attributes:
+    company_name: Company
+    on_behalf_of_company_name: Company
+    on_behalf_of_email: Email address
+  custom:
+    on_behalf_of_account:
+      company_name:
+        label: Company
+        placeholder: e.g. Doe Construction Ltd.
+      email:
+        label: Email address
+        placeholder: e.g. jane.doe@example.com
+        description: >
+          Optional. The entry is assigned to the account with this email address. If no account
+          exists yet, one is created and receives a confirmation email (double opt-in). An
+          existing account is only linked.
+      errors:
+        blocked_account: There is a blocked account for this email address. Please contact the administration.

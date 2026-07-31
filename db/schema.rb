@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_28_125933) do
+ActiveRecord::Schema.define(version: 2026_07_30_090000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3347,6 +3347,7 @@ ActiveRecord::Schema.define(version: 2026_07_28_125933) do
     t.text "keycloak_id_token", default: ""
     t.string "guest_user_agent"
     t.boolean "system_user", default: false, null: false
+    t.string "company_name"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"

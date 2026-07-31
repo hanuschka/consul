@@ -9,6 +9,7 @@ class ProposalsController
   include GuestUsers
   include CustomHelper
   include LandingPageResolvable
+  include OnBehalfOfAccountLinking
 
   MAP_PINS_LAZY_LOAD_THRESHOLD = 50
 
@@ -160,16 +161,18 @@ class ProposalsController
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
-    if params[:save_draft].present? && @proposal.save
-      redirect_to proposal_path(@proposal),
-        notice: I18n.t("flash.actions.create.proposal")
+    if @proposal.valid? && link_on_behalf_of_account(@proposal) && @proposal.save
+      if params[:save_draft].present?
+        redirect_to proposal_path(@proposal),
+          notice: I18n.t("flash.actions.create.proposal")
 
-    elsif @proposal.save
-      @proposal.publish
+      else
+        @proposal.publish
 
-      Mailer.proposal_created(@proposal).deliver_later
+        Mailer.proposal_created(@proposal).deliver_later
 
-      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+        redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+      end
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
@@ -324,6 +327,7 @@ class ProposalsController
 
     def proposal_params
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,
+                    :on_behalf_of_company_name, :on_behalf_of_email,
                     :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                     :sentiment_id,

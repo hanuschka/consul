@@ -1,10 +1,18 @@
 en:
   setting:
     feature:
+      bund_id_login: "Enable BundID login"
+      bund_id_login_description: "Shows a BundID button on the sign-in and registration pages. Users can then sign in and register with their BundID account."
+      twitter_login: "Enable Twitter login"
+      twitter_login_description: "Allows signing in and registering with a Twitter account. Requires the Twitter credentials to be configured on the server."
+      facebook_login: "Enable Facebook login"
+      facebook_login_description: "Allows signing in and registering with a Facebook account. Requires the Facebook credentials to be configured on the server."
+      google_login: "Enable Google login"
+      google_login_description: "Allows signing in and registering with a Google account. Requires the Google credentials to be configured on the server."
+      wordpress_login: "Enable Wordpress login"
+      wordpress_login_description: "Allows signing in and registering with a Wordpress account. Requires the Wordpress credentials to be configured on the server."
       kobil_login: "Enable KOBIL login"
       kobil_login_description: "Shows a “Sign in with KOBIL” button on the sign-in and registration pages. Users can then sign in and register with their KOBIL account (OpenID Connect). Requires the KOBIL credentials to be configured on the server."
-      kobil_single_logout: "KOBIL single logout"
-      kobil_single_logout_description: "When the user logs out, they are also signed out of their KOBIL account (single logout). Only effective when KOBIL login is enabled."
       kobil_address_verification: "KOBIL address verification"
       kobil_address_verification_description: "Imports the address (street, postal code, city) supplied by the KOBIL account into the user profile. Only effective when KOBIL login is enabled."
     projekt_option:

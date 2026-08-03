@@ -8,6 +8,8 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     "progress_bars" => ProjektImports::Builders::ProgressBarBuilder,
     "livestreams" => ProjektImports::Builders::LivestreamBuilder,
     "point_of_interest_categories" => ProjektImports::Builders::PoiCategoryBuilder,
+    "projekt_labels" => ProjektImports::Builders::ProjektLabelBuilder,
+    "sentiments" => ProjektImports::Builders::SentimentBuilder,
     "iframe" => ProjektImports::Builders::IframeBuilder,
     "budget" => ProjektImports::Builders::BudgetBuilder
   }.freeze
@@ -38,26 +40,32 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     end
 
     projekt = nil
+    phase_entries = []
 
     ActiveRecord::Base.transaction do
       projekt = create_projekt(data)
       apply_subtitle(projekt, data["subtitle"])
       apply_tags_and_sdgs(projekt, data)
 
-      phases = create_phases(projekt, data["phases"])
-      create_content_blocks(projekt, data["content_blocks"])
+      phase_entries = create_phases(projekt, data["phases"])
 
       apply_projekt_settings(projekt, data["projekt_settings"])
-      apply_phase_settings(phases, data["projekt_phase_settings"])
+      apply_phase_settings(phase_entries, data["projekt_phase_settings"])
       enforce_hidden_draft_state(projekt)
 
-      phases.each { |entry| build_long_tail(projekt, entry) }
+      phase_entries.each { |entry| build_long_tail(projekt, entry) }
+      enable_form_features(phase_entries)
+      create_phase_footer_blocks(phase_entries)
+      apply_continuous_duration(projekt, phase_entries)
 
       projekt.update!(imported_by_ai: true)
       projekt_import.record_created_projekt!(projekt)
     end
 
-    ServiceResult.success(projekt: projekt)
+    ServiceResult.success(
+      projekt: projekt,
+      phases: phase_entries.map { |entry| entry[:record] }
+    )
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::CreateProjektFromImportService] failed: #{e.message}\n#{e.backtrace.first(10).join("\n")}")
     Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "create_projekt" }) if defined?(Sentry)
@@ -177,14 +185,6 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     end.compact
   end
 
-  def create_content_blocks(projekt, blocks)
-    ProjektContentBlocks::Services::CreateFromImportData.call(
-      projekt: projekt,
-      blocks: blocks,
-      locale: projekt_import.import_locale
-    )
-  end
-
   def apply_projekt_settings(projekt, settings)
     return if settings.blank?
 
@@ -243,6 +243,66 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
         projekt_import.add_warning!("#{record.type}/#{key}: unexpected error: #{e.message}")
       end
     end
+  end
+
+  # Labels and sentiments only reach the citizen form once the phase's own
+  # feature setting is on, and only ProposalPhase and BudgetPhase define those
+  # keys. Turning one on also makes the field mandatory for citizens, so it is
+  # done only for phases that actually received records.
+  def enable_form_features(phase_entries)
+    phase_entries.each do |entry|
+      record = entry[:record]
+
+      if record.projekt_labels.exists?
+        activate_form_feature(record, "feature.form.labels")
+      end
+
+      if record.sentiments.exists?
+        activate_form_feature(record, "feature.form.sentiments")
+      end
+    end
+  end
+
+  # A regular phase without an end date runs continuously ("fortlaufend"), and
+  # the projekt hosting it has to be treated the same way. An independently
+  # derived projekt end date would expire the projekt while that phase is still
+  # accepting participation. ProjektPhase#regular? queries the database, so the
+  # type list is compared directly instead.
+  def apply_continuous_duration(projekt, phase_entries)
+    return if projekt.total_duration_end.blank?
+
+    regular_phases = phase_entries
+      .map { |entry| entry[:record] }
+      .select { |phase| ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.type) }
+
+    return if regular_phases.none? { |phase| phase.end_date.blank? }
+
+    projekt.update!(total_duration_end: nil)
+  end
+
+  def create_phase_footer_blocks(phase_entries)
+    ProjektImports::CreatePhaseFooterBlocksService.call(
+      phase_entries: phase_entries,
+      locale: projekt_import.import_locale
+    )
+  rescue StandardError => e
+    projekt_import.add_warning!("phase_footer_blocks: #{e.message}")
+  end
+
+  def activate_form_feature(record, key)
+    setting = record.settings.find_by(key: key)
+
+    if setting.blank?
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.form_feature_unsupported",
+          phase: record.title, feature: key)
+      )
+      return
+    end
+
+    setting.update!(value: "active")
+  rescue StandardError => e
+    projekt_import.add_warning!("form_feature(#{key}): #{e.message}")
   end
 
   def warn_about_missing_poll_questions(record, data)

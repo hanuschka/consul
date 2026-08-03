@@ -7,12 +7,6 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     projekt_import = ProjektImport.find(projekt_import_id)
     projekt_import.update!(status: "submitting", warnings: unapplied_chat_warnings(projekt_import))
 
-    resolve_result = ProjektImports::ResolveContentBlocksService.call(projekt_import: projekt_import)
-    if !resolve_result.success?
-      projekt_import.mark_failed!(resolve_result.error, stage: "resolve_content_blocks", details: resolve_result.error_details)
-      return
-    end
-
     create_result = ProjektImports::CreateProjektFromImportService.call(projekt_import: projekt_import)
     if !create_result.success?
       projekt_import.mark_failed!(create_result.error, stage: "create_projekt", details: create_result.error_details)
@@ -21,7 +15,39 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
     projekt = create_result.data[:projekt]
 
-    generate_image_if_requested(projekt_import, projekt)
+    # Content blocks are rendered only now, with the created phases in hand, so
+    # links to a participation phase carry its real id and slug. The AI call
+    # deliberately runs between the two persistence steps rather than inside
+    # either transaction.
+    source_images = ProjektImports::AttachSourceImagesService.call(
+      projekt_import: projekt_import,
+      projekt: projekt
+    )
+
+    resolve_result = ProjektImports::ResolveContentBlocksService.call(
+      projekt_import: projekt_import,
+      phases: create_result.data[:phases],
+      image_urls: source_images.data[:image_urls]
+    )
+
+    if !resolve_result.success?
+      projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.content_blocks_unresolved"))
+      projekt_import.mark_failed!(
+        resolve_result.error,
+        stage: "resolve_content_blocks",
+        details: (resolve_result.error_details || {}).merge("created_projekt_id" => projekt.id)
+      )
+      return
+    end
+
+    blocks_created = create_content_blocks(projekt_import, projekt)
+    return if !blocks_created
+
+    if source_images.data[:hero_attached]
+      projekt_import.update!(image_status: "skipped")
+    else
+      generate_image_if_requested(projekt_import, projekt)
+    end
 
     projekt_import.update!(status: "completed", error_message: nil)
   rescue StandardError => e
@@ -66,6 +92,31 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     }]
   end
 
+  # CreateFromImportData writes all blocks in one transaction, so a single
+  # invalid block leaves the projekt with none. The projekt itself is already
+  # committed by now, so the import is failed while the projekt is kept — the
+  # admin can fill the blocks in or delete it.
+  def create_content_blocks(projekt_import, projekt)
+    ProjektContentBlocks::Services::CreateFromImportData.call(
+      projekt: projekt,
+      blocks: projekt_import.ai_result["content_blocks"],
+      locale: projekt_import.import_locale
+    )
+
+    true
+  rescue StandardError => e
+    Rails.logger.error("[ProjektImports::ExecuteImportJob#create_content_blocks] failed: #{e.message}")
+    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "create_content_blocks" }) if defined?(Sentry)
+    projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.content_blocks_unresolved"))
+    projekt_import.mark_failed!(
+      e.message,
+      stage: "create_content_blocks",
+      details: { "created_projekt_id" => projekt.id }
+    )
+
+    false
+  end
+
   def generate_image_if_requested(projekt_import, projekt)
     if !projekt_import.generate_image
       projekt_import.update!(image_status: "skipped")
@@ -105,28 +156,20 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     projekt_import.add_warning!("image_generation: #{e.message}")
   end
 
+  # Raising on failure is deliberate: generate_image_if_requested rescues it and
+  # records image_status "failed". Returning quietly would report a completed
+  # image generation that attached nothing.
   def attach_image(projekt, base64)
-    page = projekt.page
-    return if page.blank?
+    result = ::Projekts::AttachPageImageService.call(
+      projekt: projekt,
+      user: projekt.author,
+      data: Base64.decode64(base64),
+      filename: "projekt_#{projekt.id}_hero.jpg",
+      content_type: "image/jpeg"
+    )
 
-    file = Tempfile.new(["projekt_import_image", ".jpg"], binmode: true)
+    return if result.success?
 
-    begin
-      file.write(Base64.decode64(base64))
-      file.rewind
-
-      image = page.image || ::Image.new(imageable: page)
-      image.attachment = ActionDispatch::Http::UploadedFile.new(
-        tempfile: file,
-        filename: "projekt_#{projekt.id}_hero.jpg",
-        type: "image/jpeg"
-      )
-      image.user = projekt.author
-      image.save!
-      page.association(:image).reset
-    ensure
-      file.close
-      file.unlink
-    end
+    raise result.error
   end
 end

@@ -50,6 +50,36 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       ## Original Document Text
       #{projekt_import.extracted_text.to_s.truncate(EXTRACT_LIMIT)}
 
+      ## Data model rules
+
+      These constraints hold for every edit you make. They repeat the rules the
+      extraction step followed, so a correction here cannot undo them.
+
+      - Module choice: a submission where citizens write a title and/or free text
+        is a ProjektPhase::ProposalPhase. ProjektPhase::PointOfInterestPhase has
+        neither field — its citizens only drop a map pin and pick one of the
+        phase's point_of_interest_categories. Never move free-text submissions to
+        a point of interest phase.
+      - projekt_labels is ONE multi-select group and sentiments is ONE
+        single-select group, both only on ProposalPhase and BudgetPhase. There
+        are no further groups and no per-group choice mode: a requested
+        multiple-choice set becomes labels, a single-choice set becomes
+        sentiments. Filling either one makes that field REQUIRED for citizens, so
+        confirm with the user before adding one.
+      - Events belong in a ProjektPhase::EventPhase's events array, never in a
+        content block. Keep the phase name generic ("Veranstaltungen") even when
+        there is only one event, so more can be added later.
+      - intro_content and outro_content are short texts rendered directly above
+        and below that phase's content on the public page. Keep them to a few
+        sentences and specific to the phase; use null when there is nothing to
+        say.
+      - Never write a projekt or phase URL into any text. The real deep links are
+        inserted automatically when the projekt is created; a hand-built one such
+        as /projects/<slug>/phases/<id> is not a valid address on this platform.
+      - A phase that runs continuously has a null end_date, and then
+        projekt_end_date must be null too. When it is unclear whether a phase is
+        continuous or ends on a fixed date, ask.
+
       ## Guidelines
       - Always format every question you ask as a numbered list (1., 2., 3., ...), even when there is only a single question
       - When the user provides corrections, acknowledge them and confirm the change

@@ -109,6 +109,20 @@ module ProjektImports::OutputSchemaBuilder
           type: %w[string null],
           description: "CTA button label, in the requested output language"
         },
+        intro_content: {
+          type: %w[string null],
+          description: "Short markdown text rendered directly ABOVE this phase's " \
+                       "content in the projekt footer. Two or three sentences at " \
+                       "most, specific to this phase. Null when the document " \
+                       "offers nothing to say."
+        },
+        outro_content: {
+          type: %w[string null],
+          description: "Short markdown text rendered directly BELOW this phase's " \
+                       "content in the projekt footer, e.g. what happens with the " \
+                       "results or where to ask questions. Null when the document " \
+                       "offers nothing to say."
+        },
         user_status: {
           type: %w[string null],
           enum: ["guest", "registered", "verified", nil],
@@ -123,12 +137,15 @@ module ProjektImports::OutputSchemaBuilder
         budget: budget_schema,
         iframe: iframe_schema,
         livestreams: { type: "array", items: livestream_schema },
-        point_of_interest_categories: { type: "array", items: poi_category_schema }
+        point_of_interest_categories: { type: "array", items: poi_category_schema },
+        projekt_labels: { type: "array", items: projekt_label_schema },
+        sentiments: { type: "array", items: sentiment_schema }
       },
       required: %w[
-        type name start_date end_date description cta_button_name user_status
-        poll_questions events milestones arguments notifications progress_bars
-        budget iframe livestreams point_of_interest_categories
+        type name start_date end_date description cta_button_name intro_content
+        outro_content user_status poll_questions events milestones arguments
+        notifications progress_bars budget iframe livestreams
+        point_of_interest_categories projekt_labels sentiments
       ],
       additionalProperties: false
     }
@@ -294,6 +311,37 @@ module ProjektImports::OutputSchemaBuilder
         starts_at: { type: %w[string null], description: "YYYY-MM-DDTHH:MM" }
       },
       required: %w[url title description starts_at],
+      additionalProperties: false
+    }
+  end
+
+  def self.projekt_label_schema
+    {
+      type: "object",
+      description: "One entry of the phase's single multi-select label group. " \
+                   "Only ProposalPhase and BudgetPhase support labels.",
+      properties: {
+        name: { type: "string", description: "Label text shown to citizens" },
+        icon: {
+          type: %w[string null],
+          description: "Font Awesome icon name without the fa- prefix (e.g. tree). Null for no icon."
+        }
+      },
+      required: %w[name icon],
+      additionalProperties: false
+    }
+  end
+
+  def self.sentiment_schema
+    {
+      type: "object",
+      description: "One entry of the phase's single single-select sentiment group. " \
+                   "Only ProposalPhase and BudgetPhase support sentiments.",
+      properties: {
+        name: { type: "string", description: "Sentiment text shown to citizens" },
+        color: { type: %w[string null], description: "Hex color code (e.g. #3366CC)" }
+      },
+      required: %w[name color],
       additionalProperties: false
     }
   end

@@ -567,6 +567,17 @@ class ProjektPhase < ApplicationRecord
     projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
   end
 
+  # SiteCustomization::Page#url is path-only, which is enough inside a request
+  # but not for links written into stored content (content blocks, exports,
+  # anything a job generates).
+  def absolute_url
+    options = UrlOptions.default || {}
+    host = options[:host]
+    return url if host.blank?
+
+    "#{options[:protocol].presence || 'https'}://#{host}#{url}"
+  end
+
   def find_or_create_stats_version
     @find_or_create_stats_version ||= begin
       if stats_version.nil?

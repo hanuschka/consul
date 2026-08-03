@@ -6,11 +6,13 @@ class ProjektImports::AiResultEditor
   COLLECTION_FIELDS = %w[categories sdg_codes].freeze
 
   class IndexError < StandardError; end
+  class ResolvedContentBlocksError < StandardError; end
 
-  attr_reader :projekt_import
+  attr_reader :projekt_import, :journal
 
-  def initialize(projekt_import:)
+  def initialize(projekt_import:, journal:)
     @projekt_import = projekt_import
+    @journal = journal
   end
 
   def overview
@@ -20,12 +22,16 @@ class ProjektImports::AiResultEditor
     )
   end
 
+  # Array() is the identity function for an Array, so these would otherwise hand
+  # out the live ai_result arrays and let callers mutate the attribute in place
+  # before the save. A failed update! would then leave the in-memory record
+  # showing changes the database never took.
   def phases
-    Array(data["phases"])
+    Array(data["phases"]).dup
   end
 
   def content_blocks
-    Array(data["content_blocks"])
+    Array(data["content_blocks"]).dup
   end
 
   def update_fields(attributes)
@@ -33,6 +39,7 @@ class ProjektImports::AiResultEditor
     return [] if changed.empty?
 
     write(data.merge(changed))
+    journal.record("update_fields", fields: changed.keys)
 
     changed.keys
   end
@@ -43,6 +50,7 @@ class ProjektImports::AiResultEditor
     updated[phase_index] = phase
 
     write(data.merge("phases" => updated))
+    journal.record("replace_phase", phase_index: phase_index)
 
     phase_index
   end
@@ -51,6 +59,7 @@ class ProjektImports::AiResultEditor
     updated = phases + [phase]
 
     write(data.merge("phases" => updated))
+    journal.record("add_phase", phase_index: updated.size - 1, type: phase["type"])
 
     updated.size - 1
   end
@@ -61,12 +70,23 @@ class ProjektImports::AiResultEditor
     removed = updated.delete_at(phase_index)
 
     write(data.merge("phases" => updated))
+    journal.record("remove_phase", type: removed["type"])
 
     removed
   end
 
+  # ResolveContentBlocksService rewrites stored blocks from {template_id,
+  # content_data} to {html} and persists that, so once an import has run the
+  # template form is gone and writing it back would mix two shapes.
   def replace_content_blocks(blocks)
+    if content_blocks.any? { |block| block.key?("html") }
+      raise ResolvedContentBlocksError,
+        "content blocks were already rendered to HTML by a previous import and " \
+        "can no longer be edited here"
+    end
+
     write(data.merge("content_blocks" => Array(blocks)))
+    journal.record("replace_content_blocks", count: blocks.size)
 
     blocks.size
   end

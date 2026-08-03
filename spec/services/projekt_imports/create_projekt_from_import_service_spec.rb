@@ -139,10 +139,13 @@ describe ProjektImports::CreateProjektFromImportService do
       expect(warnings.first).to include("Abstimmung")
     end
 
-    it "does not leave an empty poll behind" do
+    # VotingPhase has after_create(-> { create_poll }), so the poll always exists.
+    # What the warning is about is that it has no questions.
+    it "leaves the auto-created poll without questions" do
       phase = result.data[:projekt].projekt_phases.find { |p| p.type == "ProjektPhase::VotingPhase" }
 
-      expect(phase.poll).to be_nil
+      expect(phase.poll).to be_present
+      expect(phase.poll.questions).to be_empty
     end
   end
 end

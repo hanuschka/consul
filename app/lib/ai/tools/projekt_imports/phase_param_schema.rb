@@ -35,6 +35,6 @@ class Ai::Tools::ProjektImports::PhaseParamSchema
   private
 
   def phase_schema
-    ProjektImports::OutputSchemaBuilder.phase_item_schema(ProjektPhase::PROJEKT_PHASES_TYPES)
+    ::ProjektImports::OutputSchemaBuilder.phase_item_schema(::ProjektPhase::PROJEKT_PHASES_TYPES)
   end
 end

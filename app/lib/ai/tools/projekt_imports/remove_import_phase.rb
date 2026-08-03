@@ -26,7 +26,7 @@ class Ai::Tools::ProjektImports::RemoveImportPhase < RubyLLM::Tool
     removed = @editor.remove_phase(phase_index)
 
     { status: "removed", phase_type: removed["type"] }
-  rescue ProjektImports::AiResultEditor::IndexError => e
+  rescue ::ProjektImports::AiResultEditor::IndexError => e
     { error: e.message }
   end
 end

@@ -36,5 +36,7 @@ class Ai::Tools::ProjektImports::SetImportContentBlocks < RubyLLM::Tool
     count = @editor.replace_content_blocks(content_blocks.map(&:deep_stringify_keys))
 
     { status: "replaced", content_block_count: count }
+  rescue ::ProjektImports::AiResultEditor::ResolvedContentBlocksError => e
+    { error: e.message }
   end
 end

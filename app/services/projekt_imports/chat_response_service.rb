@@ -1,8 +1,9 @@
 class ProjektImports::ChatResponseService < ApplicationService
-  attr_reader :projekt_import
+  attr_reader :projekt_import, :assistant_message
 
-  def initialize(projekt_import:)
+  def initialize(projekt_import:, assistant_message:)
     @projekt_import = projekt_import
+    @assistant_message = assistant_message
   end
 
   def call
@@ -41,7 +42,8 @@ class ProjektImports::ChatResponseService < ApplicationService
   # The tools write straight into ProjektImport#ai_result, so the stored data is
   # already correct once a turn ends. Nothing regenerates the payload later.
   def edit_tools
-    editor = ProjektImports::AiResultEditor.new(projekt_import: projekt_import)
+    journal = ProjektImports::AiEditJournal.new(ai_chat_message: assistant_message)
+    editor = ProjektImports::AiResultEditor.new(projekt_import: projekt_import, journal: journal)
 
     [
       Ai::Tools::ProjektImports::ReadImportData.new(editor: editor),
@@ -60,10 +62,23 @@ class ProjektImports::ChatResponseService < ApplicationService
     ai_chat.ai_chat_messages.order(created_at: :asc).filter_map do |msg|
       content = msg.content.to_s
       content = append_documents(content, msg.attached_documents) if msg.from_user?
+      content = append_applied_edits(content, msg.tool_activity) if msg.from_ai?
       next nil if content.blank? && msg.attached_documents.blank?
 
       { role: msg.role, content: content }
     end
+  end
+
+  # Tool calls are not replayed as provider tool messages, so without this the
+  # model only sees its own prose claiming a change and can be talked into
+  # applying the same edit twice — against indices that have already shifted.
+  def append_applied_edits(content, tool_activity)
+    summaries = ProjektImports::AiEditJournal.summarize(tool_activity)
+    return content if summaries.empty?
+
+    applied = summaries.join("; ")
+
+    "#{content}\n\n[Already applied to the stored import data: #{applied}]".strip
   end
 
   def append_documents(content, documents)

@@ -19,7 +19,7 @@ class Ai::Tools::ProjektImports::ReplaceImportPhase < RubyLLM::Tool
     @editor.replace_phase(phase_index, phase.deep_stringify_keys)
 
     { status: "replaced", phase_index: phase_index }
-  rescue ProjektImports::AiResultEditor::IndexError => e
+  rescue ::ProjektImports::AiResultEditor::IndexError => e
     { error: e.message }
   end
 end

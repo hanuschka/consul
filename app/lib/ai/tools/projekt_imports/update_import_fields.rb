@@ -1,6 +1,8 @@
 class Ai::Tools::ProjektImports::UpdateImportFields < RubyLLM::Tool
-  description "Updates top level fields of the project import. Only pass the fields " \
-              "the user asked to change; omitted fields keep their stored value."
+  description "Updates top level fields of the project import. Every field must be " \
+              "present in the call: send null for each field you are NOT changing and " \
+              "it keeps its stored value. To clear a text field send an empty string, " \
+              "not null. To clear a list send an empty array."
 
   params(
     type: "object",

@@ -145,6 +145,14 @@ de:
           questions_intro: "Einige Rückfragen zur Bestätigung:"
           questions_outro: "Wenn alles passt, klicken Sie oben auf „Projekt importieren\"."
           review_outro: "Klicken Sie oben auf „Projekt importieren\", wenn Sie bereit sind."
+        missing_tools:
+          title: "Eingeschränkte Importfunktionen"
+          package: "(fehlendes Systempaket „%{package}“)"
+          contact: "Bitte wenden Sie sich an die DT-Administration, damit die fehlenden Pakete auf diesem Server installiert werden. Alle übrigen Importfunktionen arbeiten normal weiter."
+          features:
+            pandoc: "ODT-Dateien können nicht gelesen werden – ein Import mit einer .odt-Datei schlägt fehl."
+            pdfimages: "Bilder aus PDF-Dateien werden nicht übernommen – Text und Struktur werden weiterhin ausgelesen."
+            imagemagick: "Bilder aus Dokumenten können nicht verarbeitet und nicht in Inhaltsblöcke eingefügt werden."
         default_questions:
           title_correct: 'Ist der Projekttitel „%{title}" korrekt?'
           phases_missing: "Welche Beteiligungsphasen soll dieses Projekt enthalten?"
@@ -192,6 +200,7 @@ de:
           form_feature_unsupported: "Die Phase „%{phase}\" unterstützt die Einstellung „%{feature}\" nicht. Die dafür erzeugten Einträge sind im Bürgerformular nicht sichtbar."
           content_blocks_unresolved: "Das Projekt wurde mit allen Phasen angelegt, die Inhaltsblöcke konnten jedoch nicht erzeugt werden. Bitte ergänzen Sie sie manuell oder löschen Sie das Projekt und starten Sie den Import erneut."
           pdf_images_tool_missing: "Die PDF-Datei „%{filename}\" enthält Bilder, die nicht übernommen werden konnten: auf diesem Server fehlt das Systempaket „poppler-utils\". Bitte laden Sie die Bilder manuell hoch oder lassen Sie das Paket von der Administration installieren."
+          pdf_images_unreadable: "Die Bilder der PDF-Datei „%{filename}\" konnten nicht ausgelesen werden. Bitte laden Sie sie manuell hoch."
         failure_stages:
           extract: "Textextraktion"
           extracting: "Textextraktion"

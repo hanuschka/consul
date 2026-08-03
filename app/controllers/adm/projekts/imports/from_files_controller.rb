@@ -18,6 +18,7 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
 
   def new
     @projekt_import = current_user.projekt_imports.build
+    @missing_tools = ProjektImports::RequiredTools.missing
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },

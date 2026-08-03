@@ -145,6 +145,14 @@ en:
           questions_intro: "A few questions to confirm:"
           questions_outro: "Once everything looks right, click \"Import projekt\" above."
           review_outro: "Click \"Import projekt\" above when you're ready."
+        missing_tools:
+          title: "Limited import functionality"
+          package: "(missing system package \"%{package}\")"
+          contact: "Please contact the DT administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
+          features:
+            pandoc: "ODT files cannot be read — an import using a .odt file will fail."
+            pdfimages: "Images in PDF files are not carried over — text and structure are still extracted."
+            imagemagick: "Images from documents cannot be processed or placed into content blocks."
         default_questions:
           title_correct: 'Is the project title "%{title}" correct?'
           phases_missing: "What participation phases should this projekt include?"
@@ -192,6 +200,7 @@ en:
           form_feature_unsupported: "The phase \"%{phase}\" does not support the setting \"%{feature}\". The entries created for it are not visible on the citizen form."
           content_blocks_unresolved: "The projekt was created with all its phases, but the content blocks could not be generated. Please add them manually, or delete the projekt and run the import again."
           pdf_images_tool_missing: "The PDF file \"%{filename}\" contains images that could not be carried over: this server is missing the \"poppler-utils\" system package. Please upload the images manually, or ask an administrator to install the package."
+          pdf_images_unreadable: "The images in the PDF file \"%{filename}\" could not be read. Please upload them manually."
         failure_stages:
           extract: "Text extraction"
           extracting: "Text extraction"

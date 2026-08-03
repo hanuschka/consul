@@ -10,6 +10,7 @@
   <section class="mb-5">
     <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.general.enable_google_translate"),  :value, :boolean) %>
     <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.general.show_guest_login_links"),   :value, :boolean) %>
+    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "direct_message_max_per_day"),                        :value, :string) %>
   </section>
 
   <section class="mb-5">

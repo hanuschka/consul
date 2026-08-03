@@ -41,6 +41,18 @@ en:
         total_duration_start_description: Start date
         total_duration_end_label: End date
         total_duration_end_description: End date
+        show_in_overview_page_label: Project on projects overview page
+        show_in_overview_page_description: Controls whether this project is shown on the general projects overview page. The overview lists all public projects on the platform and is the central entry point for users to discover and filter ongoing and completed participation projects.
+        show_in_homepage_label: Project on the homepage
+        show_in_homepage_description: Shows the project on the platform's homepage, e.g. in the "Current projects" area or under related resources. Especially relevant or current projects get extra attention on the first visit to the platform — independent of the projects overview page.
+        show_in_individual_list_label: Project in individual list
+        show_in_individual_list_description: Shows the project on the projects overview page in a standalone, individual list — separate from automatically generated lists like "Ongoing projects" or "Completed projects". This option is suitable for highlighted or permanently visible projects.
+        show_in_navigation_label: Project in the navigation menu
+        show_in_navigation_description: Shows the project as its own entry in the platform's main navigation menu. Suitable for permanently important projects users should reach directly from any page. Keep the navigation menu uncluttered — include only a few central projects.
+        show_in_overview_page_navigation_label: Project in the dropdown navigation
+        show_in_overview_page_navigation_description: Shows the project in the navigation menu's dropdown list, which groups all projects from the overview page. This keeps the main menu lean while the project stays reachable from the navigation.
+        show_in_sidebar_filter_label: Project in the sidebar filter
+        show_in_sidebar_filter_description: Includes the project in the sidebar's project filter, which users use to narrow proposals, debates and polls by project. Disable it if the project should not appear in those filter lists.
       image:
         attachment_label: Image
         attachment_description: "The image is shown at the top of the newsletter as a visual lead, directly below the logo and above the title. Use a landscape image with a clear subject that fits thematically with the newsletter content. Recommended format: at least 600 pixels wide, JPG or PNG. The image is required and must be uploaded before sending."

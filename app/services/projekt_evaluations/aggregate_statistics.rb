@@ -78,7 +78,8 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     supports = ActsAsVotable::Vote.where(
       votable_type: "Proposal",
       votable_id: proposals.select(:id),
-      voter_type: "User"
+      voter_type: "User",
+      conditional: false
     )
     comments = Comment.where(
       commentable_type: "Proposal",
@@ -127,7 +128,8 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     supports = ActsAsVotable::Vote.where(
       votable_type: "Budget::Investment",
       votable_id: investments.select(:id),
-      voter_type: "User"
+      voter_type: "User",
+      conditional: false
     )
 
     top_investments = investments
@@ -181,7 +183,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     polls_data = polls.map { |poll| collect_single_poll(poll) }
 
     {
-      polls_count: polls.count,
+      polls_count: polls_data.size,
       participants_count: polls_data.sum { |p| p[:voters_count] },
       questions_count: polls_data.sum { |p| p[:questions_count] },
       open_text_count: polls_data.sum { |p| p[:open_text_count] },
@@ -193,10 +195,25 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     voters_count = poll.voters.count
     visible_comments = poll.comments.where(hidden_at: nil)
 
-    questions_data = poll.questions
-      .includes(:votation_type, :question_answers)
+    root_questions = poll.questions
+      .root_questions
+      .includes(
+        :translations, :votation_type, :question_answers,
+        nested_questions: [:translations, :votation_type, :question_answers]
+      )
       .order(:given_order)
-      .map { |question| build_question_data(question, voters_count) }
+      .to_a
+
+    question_ids = root_questions.flat_map do |question|
+      [question.id] + question.nested_questions.map(&:id)
+    end
+
+    vote_totals = build_answer_vote_totals(question_ids)
+    open_answer_texts = build_open_answer_texts(question_ids, poll.show_open_answer_author_name?)
+
+    questions_data = root_questions.map do |question|
+      build_question_data(question, voters_count, vote_totals, open_answer_texts)
+    end
 
     comment_entries = visible_comments
       .order(created_at: :asc)
@@ -207,28 +224,35 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       id: poll.id,
       name: poll.name,
       voters_count: voters_count,
-      questions_count: questions_data.size,
+      questions_count: questions_data.sum { |q| q[:nested_questions].present? ? q[:nested_questions].size : 1 },
       open_text_count: comment_entries.size,
       open_text_entries: comment_entries,
       questions: questions_data
     }
   end
 
-  def build_question_data(question, voters_count)
+  def build_question_data(question, voters_count, vote_totals, open_answer_texts)
     answers_data = question.question_answers.map do |answer|
-      answer_count = answer.total_votes
+      answer_count = answer_total_votes(answer, vote_totals)
 
-      {
+      data = {
+        id: answer.id,
         title: answer.title,
         count: answer_count,
         percentage: safe_percentage(answer_count, voters_count)
       }
+
+      if answer.open_answer?
+        data[:open_texts] = open_answer_texts[[question.id, answer.title]] || []
+      end
+
+      data
     end
 
     total_mentions = answers_data.sum { |a| a[:count] }
     vote_type = question.votation_type&.vote_type
 
-    {
+    data = {
       id: question.id,
       title: question.title,
       vote_type: vote_type,
@@ -240,6 +264,78 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       chart_type: detect_chart_type(vote_type, answers_data),
       verdict: detect_verdict(vote_type, answers_data)
     }
+
+    if question.nested_questions.any?
+      data[:nested_questions] = question.nested_questions.map do |nested_question|
+        build_question_data(nested_question, voters_count, vote_totals, open_answer_texts)
+      end
+    end
+
+    data
+  end
+
+  def build_open_answer_texts(question_ids, show_author_name)
+    return {} if question_ids.empty?
+
+    scope = Poll::Answer
+      .where(question_id: question_ids)
+      .where.not(open_answer_text: [nil, ""])
+      .order(created_at: :asc)
+
+    if show_author_name
+      scope = scope.includes(:author)
+    end
+
+    scope.group_by { |answer| [answer.question_id, answer.answer] }
+      .transform_values do |records|
+        records
+          .reject { |record| record.open_answer_text.to_s.strip.blank? }
+          .map do |record|
+            {
+              text: record.open_answer_text,
+              author_name: show_author_name ? record.author&.username : nil,
+              created_at: record.created_at&.iso8601
+            }
+          end
+      end
+  end
+
+  def build_answer_vote_totals(question_ids)
+    return empty_answer_vote_totals if question_ids.empty?
+
+    {
+      weighted: Poll::Answer
+        .where(question_id: question_ids)
+        .group(:question_id, :answer)
+        .sum(:answer_weight),
+      open_counts: Poll::Answer
+        .where(question_id: question_ids)
+        .where.not(open_answer_text: [nil, ""])
+        .group(:question_id, :answer)
+        .count,
+      partial_amount: ::Poll::PartialResult
+        .where(question_id: question_ids)
+        .group(:question_id, :answer)
+        .sum(:amount),
+      partial_counts: ::Poll::PartialResult
+        .where(question_id: question_ids)
+        .group(:question_id, :answer)
+        .count
+    }
+  end
+
+  def empty_answer_vote_totals
+    { weighted: {}, open_counts: {}, partial_amount: {}, partial_counts: {} }
+  end
+
+  def answer_total_votes(answer, vote_totals)
+    key = [answer.question_id, answer.title]
+
+    if answer.open_answer?
+      (vote_totals[:open_counts][key] || 0) + (vote_totals[:partial_counts][key] || 0)
+    else
+      (vote_totals[:weighted][key] || 0) + (vote_totals[:partial_amount][key] || 0)
+    end
   end
 
   def rating_average(vote_type, answers)

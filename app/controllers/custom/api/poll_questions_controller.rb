@@ -1,6 +1,8 @@
 class Api::PollQuestionsController < Api::BaseController
   include Translatable
 
+  DEFAULT_QUESTIONS_PER_PAGE = 100
+
   before_action :find_poll, only: [:index, :create]
   before_action :find_question, only: [:show, :update, :destroy]
 
@@ -10,10 +12,15 @@ class Api::PollQuestionsController < Api::BaseController
     questions = @poll.questions
       .includes(:question_answers)
       .order(given_order: :asc, created_at: :asc)
+      .page(params[:page])
+      .per(params[:per_page] || DEFAULT_QUESTIONS_PER_PAGE)
 
     serialized_questions = Poll::QuestionSerializer.serialize_collection(questions)
 
-    render json: { data: { questions: serialized_questions }}
+    render json: {
+      data: { questions: serialized_questions },
+      pagination: pagination_meta(questions)
+    }
   end
 
   def create
@@ -89,6 +96,15 @@ class Api::PollQuestionsController < Api::BaseController
 
     def find_question
       @question = Poll::Question.includes(:question_answers).find(params[:id])
+    end
+
+    def pagination_meta(collection)
+      {
+        current_page: collection.current_page,
+        total_pages: collection.total_pages,
+        total_count: collection.total_count,
+        per_page: collection.limit_value
+      }
     end
 
     def inject_votation_type_id

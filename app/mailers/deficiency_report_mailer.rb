@@ -87,7 +87,9 @@ class DeficiencyReportMailer < ApplicationMailer
       {
         "deficiency_report_id" => @deficiency_report.id,
         "deficiency_report_title" => @deficiency_report.title,
-        "deficiency_report_url" => adm_deficiency_reports_deficiency_report_url(@deficiency_report)
+        "deficiency_report_url" => adm_deficiency_reports_deficiency_report_url(@deficiency_report),
+        "public_deficiency_report_url" =>
+          (@deficiency_report.publicly_visible? ? deficiency_report_url(@deficiency_report) : "")
       }
     end
 

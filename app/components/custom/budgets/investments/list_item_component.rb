@@ -4,23 +4,19 @@ class Budgets::Investments::ListItemComponent < ApplicationComponent
   attr_reader :budget_investment, :budget_investment_ids, :ballot
   delegate :management_controller?, to: :helpers
 
-  def initialize(budget_investment:, budget_investment_ids:, ballot:, hide_projekt_breadcrumb: false)
+  def initialize(budget_investment:, budget_investment_ids:, ballot:)
     @budget_investment = budget_investment
     @budget_investment_ids = budget_investment_ids
     @ballot = ballot
-    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
   end
 
   def component_attributes
     {
       resource: @budget_investment,
       projekt: @budget_investment.budget.projekt,
-      hide_projekt_breadcrumb: @hide_projekt_breadcrumb,
       title: budget_investment.title,
       description: budget_investment.description,
-      url: budget_investment_path,
-      image: budget_investment.image,
-      image_placeholder_icon_class: "fa-euro-sign"
+      url: budget_investment_path
     }
   end
 

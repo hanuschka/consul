@@ -12,21 +12,21 @@ class Adm::Maintenance::ResourceDocumentsController < Adm::Maintenance::BaseCont
         .page(params[:page])
         .per(24)
 
-    Files::ResourcePreloader.call(@assets.map(&:documentable))
+    ::Files::ResourcePreloader.call(@assets.map(&:documentable))
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },
       { name: t("adm.menu.items.files_subitems.resource_documents") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def show
     document = Document.find(params[:id])
     authorize [:adm, document]
 
-    @detail = Files::DocumentShowComponent.new(record: document)
+    @detail = ::Files::DocumentShowComponent.new(record: document)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },

@@ -20,8 +20,16 @@ en:
           home: Home
           projekts: Projects
           managers: Team
+          inspiration: Project inspirations
           landing_pages: Topic pages
           settings: Configuration
+      inspiration:
+        show:
+          title: Project inspirations
+          not_configured: DemokratieToday is not configured
+          not_configured_hint: >-
+            No DemokratieToday address is set. Please configure the connection to
+            embed the project overview here.
       settings:
         tabs:
           dashboard: Dashboard settings

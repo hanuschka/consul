@@ -9,6 +9,7 @@
           <%= render "custom/projekts/partials/projekt_question_particapation_not_allowed", projekt_question: projekt_question %>
         </div>
       </div>
+      <% if quiz_navigation? %>
       <div class="projekt-question-next-question-section projekt-question-section--quiz-header small-12 medium-4 column small-collapse">
         <div class="projekt-next-question-button-section">
           <% if projekt_question.previous_question_id %>
@@ -35,6 +36,7 @@
           </div>
         <% end %>
       </div>
+      <% end %>
     </div>
   </div>
 

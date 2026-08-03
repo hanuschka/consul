@@ -78,6 +78,9 @@ de:
             newsfeed:
               name: Newsfeed
               description: "Anzeige von Projektneuigkeiten und Statusmeldungen in chronologischer Reihenfolge. Funktioniert wie ein Nachrichtenfeed, über den Administratoren laufend über Entwicklungen und Entscheidungen berichten können. Geeignet für längerfristige Projekte, bei denen die Teilnehmer regelmäßig über den aktuellen Stand informiert werden sollen."
+            mitmachbox:
+              name: Mitmachbox
+              description: "Offline-Beteiligung über Mitmachbox-Geräte: batteriebetriebene Umfrageterminals mit E-Paper-Display, die an öffentlichen Orten aufgestellt werden. Die Umfrage wird hier erstellt, auf ausgeliehene Geräte ausgespielt und die vor Ort gesammelten Antworten werden gebündelt übertragen. Ergebnisse sind für Administratoren einsehbar und exportierbar. Geeignet, um Menschen ohne Online-Zugang einzubeziehen."
           select_phase_type: Bitte wählen...
           create_phase: Phase erstellen
         create:
@@ -176,6 +179,9 @@ de:
           create_button: Neues Label erstellen
           no_labels_title: Keine Labels vorhanden
           no_labels_description: Erstellen Sie Labels, um Vorschläge thematisch zu kategorisieren und die Übersichtlichkeit im Frontend zu erhöhen. Labels werden als Icons an den Vorschlägen angezeigt und ermöglichen es Nutzern, gezielt nach bestimmten Themen zu filtern. Jedes Label kann mit einem eigenen Icon versehen werden, das die visuelle Zuordnung erleichtert.
+          tabs:
+            labels: Labels
+            collections: Masterportal-Sammlungen
           table:
             icon: Icon
             name: Name
@@ -276,6 +282,9 @@ de:
           no_categories: Keine Kategorien vorhanden.
           no_categories_title: Keine Kategorien vorhanden
           no_categories_description: Erstellen Sie Kategorien, um die Orte von Interesse thematisch zu gruppieren und im Frontend als Filteroption bereitzustellen. Jede Kategorie kann mit einem eigenen Icon und einer Farbe versehen werden, um die visuelle Unterscheidung auf der Karte zu erleichtern. Kategorien helfen Nutzern, gezielt nach bestimmten Themen zu suchen.
+          tabs:
+            categories: Kategorien
+            collections: Masterportal-Sammlungen
           table:
             name: Name
             icon: Icon
@@ -583,3 +592,6 @@ de:
           user_resource_criteria: KI Bewertungskriterien
           comments: Kommentare
           email_templates: System-E-Mails
+          mitmachbox_survey: Umfrage
+          mitmachbox_deployments: Geräte
+          mitmachbox_results: Ergebnisse

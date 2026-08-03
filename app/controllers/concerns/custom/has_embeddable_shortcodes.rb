@@ -112,23 +112,12 @@ module HasEmbeddableShortcodes
     end
 
     def projekt_map_component(projekt, instance_suffix: nil)
-      if projekt.vc_map_enabled?
-        Shared::VCMapComponent.new(
-          map_location: projekt.map_location,
-          parent_class: "shortcode",
-          projekt: projekt,
-          show_admin_shape: projekt.map_location.show_admin_shape?,
-          process_coordinates: projekt_location_features(projekt),
-          instance_suffix: instance_suffix
-        )
-      else
-        Shared::MapComponent.new(
-          mappable: projekt,
-          features: projekt_location_features(projekt),
-          process: "projekts",
-          instance_suffix: instance_suffix
-        )
-      end
+      Shared::MapComponent.new(
+        mappable: projekt,
+        features: projekt_location_features(projekt),
+        process: "projekts",
+        instance_suffix: instance_suffix
+      )
     end
 
     def projekt_location_features(projekt)

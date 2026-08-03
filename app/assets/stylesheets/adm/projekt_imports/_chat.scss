@@ -765,14 +765,14 @@ $_chat-error-text: #7f1d1d;
   margin-top: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: black;
+  color: $_chat-text-muted;
 }
 
 .projekt-import-chat--overlay-message {
   margin: 20px 0 0;
   font-size: 14px;
   line-height: 1.5;
-  color: black;
+  color: $_chat-text-muted;
 }
 
 .projekt-import-chat--created-banner {

@@ -68,7 +68,8 @@ class ProjektPhase::ProposalPhase::Stats < ProjektPhase::Stats
                       .where(
                         votable_type: "Proposal",
                         votable_id: proposals.select(:id),
-                        voter_type: "User"
+                        voter_type: "User",
+                        conditional: false
                       )
     end
 

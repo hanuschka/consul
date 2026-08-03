@@ -14,21 +14,21 @@ class Adm::Maintenance::ResourceImagesController < Adm::Maintenance::BaseControl
         .page(params[:page])
         .per(24)
 
-    Files::ResourcePreloader.call(@assets.map(&:imageable))
+    ::Files::ResourcePreloader.call(@assets.map(&:imageable))
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },
       { name: t("adm.menu.items.files_subitems.resource_images") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
   end
 
   def show
     image = Image.find(params[:id])
     authorize [:adm, image]
 
-    @detail = Files::ImageShowComponent.new(record: image)
+    @detail = ::Files::ImageShowComponent.new(record: image)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.files"), icon: "folder" },

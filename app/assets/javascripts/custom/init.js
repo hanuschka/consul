@@ -4,6 +4,7 @@
   App.CustomJS = {
     initialize: function() {
       App.DropdownSelectMenuComponent.initialize();
+      App.FilterDropdownComponent.initialize();
       App.ResourcesListComponent.initialize();
       App.StikyHeader.initialize();
       App.DirectUploadComponent.initialize();
@@ -39,12 +40,9 @@
       App.PieChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
-      App.AiQuestionPolling.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
       App.ContentBlockTemplatesSelector.initialize();
-      App.StudioPreviewMode.initialize();
-      App.AdminTopbarColorPicker.initialize();
-      App.ProjektFooterSubnavUrlUpdater.initialize();
+      App.ProjektFooterTabs.initialize();
       App.ProjektFooterPhaseRegenerate.initialize();
       App.HashScroll.initialize();
       App.AiProposalFlow.initialize();

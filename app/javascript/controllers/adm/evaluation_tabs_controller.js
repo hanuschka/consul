@@ -1,73 +1,58 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Consumer glue for the <custom-tabs> element on the phase evaluation page. The
+// element owns all tab behaviour (active state, ARIA, panel visibility, URL
+// sync); this controller only reacts to its "custom-tabs:change" event to do
+// the evaluation-specific work the element must stay ignorant of: swapping the
+// regenerate button's target/label, toggling per-tab actions, and nudging the
+// charts to re-measure.
 export default class extends Controller {
-  static targets = ["tab", "bar", "regenerateButton", "regenerateLabel", "statsAction", "aiAction"]
+  static targets = ["bar", "regenerateButton", "regenerateLabel", "regenerateAiDisabled", "statsAction", "aiAction"]
   static values = {
-    aiSections: Array,
-    sharedSections: Array,
     regularUrl: String,
     aiUrl: String,
     regularLabel: String,
-    aiLabel: String
+    aiLabel: String,
+    aiRegenBlocked: Boolean
   }
 
   connect() {
     this.moveTabsBelowPhaseHeader()
-
-    const params = new URLSearchParams(window.location.search)
-
-    this.activeTab = params.get("tab") === "ai" ? "ai" : "stats"
-    this.applyActiveTab()
+    this.reflectTab(this.initialTab())
   }
 
-  moveTabsBelowPhaseHeader() {
-    const bar = this.hasBarTarget ? this.barTarget : this.element.querySelector(".adm-evaluation-view-tabs")
-    const phaseHeaderSection = this.element.querySelector('.phase-evaluation-section[data-section="kpis"]')
-
-    if (!bar) return
-    if (!phaseHeaderSection) return
-
-    phaseHeaderSection.after(bar)
-  }
-
-  select(event) {
-    const tab = event.currentTarget.dataset.tab
-
-    if (tab === this.activeTab) return
-
-    this.activeTab = tab
-    this.applyActiveTab()
-    this.syncUrl()
+  change(event) {
+    this.reflectTab(event.detail.tab)
     this.notifyCharts()
   }
 
-  applyActiveTab() {
-    this.tabTargets.forEach((button) => {
-      const active = button.dataset.tab === this.activeTab
+  initialTab() {
+    const aiTab = this.element.querySelector('custom-tab[for="ai"]')
 
-      button.classList.toggle("-active", active)
-      button.setAttribute("aria-selected", active ? "true" : "false")
-    })
+    if (aiTab && aiTab.hasAttribute("disabled")) return "stats"
 
-    this.sections().forEach((section) => {
-      section.hidden = !this.sectionVisible(section.dataset.section)
-    })
+    const tab = new URLSearchParams(window.location.search).get("tab")
 
-    this.updateRegenerateButton()
-    this.updateTabActions()
+    return tab === "ai" ? "ai" : "stats"
   }
 
-  updateTabActions() {
-    const isAi = this.activeTab === "ai"
+  reflectTab(tab) {
+    const isAi = tab === "ai"
 
-    if (this.hasStatsActionTarget) this.statsActionTarget.hidden = isAi
-    if (this.hasAiActionTarget) this.aiActionTarget.hidden = !isAi
+    this.updateRegenerateButton(isAi)
+    this.updateTabActions(isAi)
   }
 
-  updateRegenerateButton() {
+  updateRegenerateButton(isAi) {
     if (!this.hasRegenerateButtonTarget) return
 
-    const isAi = this.activeTab === "ai"
+    const blockAi = isAi && this.aiRegenBlockedValue
+
+    this.regenerateButtonTarget.hidden = blockAi
+
+    if (this.hasRegenerateAiDisabledTarget) this.regenerateAiDisabledTarget.hidden = !blockAi
+
+    if (blockAi) return
 
     this.regenerateButtonTarget.href = isAi ? this.aiUrlValue : this.regularUrlValue
 
@@ -76,28 +61,20 @@ export default class extends Controller {
     }
   }
 
-  sectionVisible(key) {
-    if (this.sharedSectionsValue.includes(key)) return true
-
-    const aiSection = this.aiSectionsValue.includes(key)
-
-    return this.activeTab === "ai" ? aiSection : !aiSection
+  updateTabActions(isAi) {
+    if (this.hasStatsActionTarget) this.statsActionTarget.hidden = isAi
+    if (this.hasAiActionTarget) this.aiActionTarget.hidden = !isAi
   }
 
-  sections() {
-    return this.element.querySelectorAll(".phase-evaluation-section[data-section]")
-  }
+  moveTabsBelowPhaseHeader() {
+    if (!this.hasBarTarget) return
 
-  syncUrl() {
-    const url = new URL(window.location.href)
+    const kpis = this.element.querySelector('[data-section="kpis"]')
 
-    if (this.activeTab === "ai") {
-      url.searchParams.set("tab", "ai")
-    } else {
-      url.searchParams.delete("tab")
-    }
+    if (!kpis) return
 
-    window.history.replaceState(window.history.state, "", url)
+    const anchor = kpis.closest("custom-tab-panel") || kpis
+    anchor.after(this.barTarget)
   }
 
   notifyCharts() {

@@ -19,9 +19,11 @@ namespace :stats do
       end
     end
 
-    Poll.accessible_by(admin_ability, :stats).find_each do |poll|
-      Poll::Stats.new(poll).generate
-      print "."
+    Poll.find_each do |poll|
+      if admin_ability.can?(:stats, poll)
+        Poll::Stats.new(poll).generate
+        print "."
+      end
     end
   end
 

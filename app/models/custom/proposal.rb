@@ -5,6 +5,7 @@ class Proposal < ApplicationRecord
   include ResourceBelongsToProjekt
   include OnBehalfOfSubmittable
   include Memoable
+  include ConditionallyVotable
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
@@ -112,6 +113,10 @@ class Proposal < ApplicationRecord
       .not_retired
   }
 
+  def sentiment_required?
+    super && masterportal_pin_id.blank?
+  end
+
   def self.proposals_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_up random]
     # orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals
@@ -137,18 +142,37 @@ class Proposal < ApplicationRecord
     end.pluck(:id)
   end
 
+  # Batched equivalent of user.voted_up_for?(proposal), for rendering a list
+  # without a query per row.
+  def self.up_voted_ids_by(user, proposals)
+    return Set.new if user.blank? || proposals.blank?
+
+    user.votes
+      .where(votable_type: "Proposal", votable_id: proposals.map(&:id),
+             vote_flag: true, vote_scope: nil)
+      .pluck(:votable_id)
+      .to_set
+  end
+
   def successful?
     cached_votes_up >= custom_votes_needed_for_success
   end
 
   def self.successful
-    ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal
+      .includes(projekt_phase: :settings)
+      .select { |proposal| proposal.cached_votes_up >= proposal.custom_votes_needed_for_success }
+      .pluck(:id)
+
     Proposal.where(id: ids)
   end
 
   def self.unsuccessful
-    ids = Proposal.includes([:projekt_phase]).select do |p|
- p.cached_votes_up < p.custom_votes_needed_for_success end.pluck(:id)
+    ids = Proposal
+      .includes(projekt_phase: :settings)
+      .select { |proposal| proposal.cached_votes_up < proposal.custom_votes_needed_for_success }
+      .pluck(:id)
+
     Proposal.where(id: ids)
   end
 
@@ -183,6 +207,10 @@ class Proposal < ApplicationRecord
 
   def submitted_anonymously?
     projekt_phase.feature?("form.anonimize_authors")
+  end
+
+  def conditional_vote_confirmable_for?(user)
+    !archived? && super
   end
 
   protected

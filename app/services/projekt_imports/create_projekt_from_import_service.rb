@@ -12,15 +12,10 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     "budget" => ProjektImports::Builders::BudgetBuilder
   }.freeze
 
-  RESTRICTED_PROJEKT_SETTINGS = %w[
-    projekt_feature.main.activate
-    projekt_feature.general.show_in_navigation
-    projekt_feature.general.show_in_overview_page
-    projekt_feature.general.show_in_overview_page_navigation
-    projekt_feature.general.show_in_homepage
-    projekt_feature.general.show_in_individual_list
-    projekt_feature.general.allow_indexing
-    projekt_option.general.external_participation_link
+  ALLOWED_PROJEKT_SETTINGS = %w[
+    projekt_feature.general.allow_downvoting_comments
+    projekt_feature.general.consider_underway
+    projekt_custom_feature.default_footer_tab
   ].freeze
 
   HIDDEN_DRAFT_SETTINGS = %w[
@@ -136,20 +131,11 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   end
 
   def create_content_blocks(projekt, blocks)
-    Array(blocks).each_with_index do |block, position|
-      body = block["html"].presence || block["content_data"].to_s
-      next if body.blank?
-
-      projekt.content_blocks.create!(
-        name: "custom",
-        key: "projekt_content_block_#{projekt.id}_#{position + 1}_#{DateTime.now.to_i}",
-        body: body,
-        locale: projekt_import.import_locale,
-        position: position + 1
-      )
-    rescue ActiveRecord::RecordInvalid => e
-      raise "content_block(##{position + 1}): #{e.message}"
-    end
+    ProjektContentBlocks::Services::CreateFromImportData.call(
+      projekt: projekt,
+      blocks: blocks,
+      locale: projekt_import.import_locale
+    )
   end
 
   def apply_projekt_settings(projekt, settings)
@@ -157,7 +143,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
     settings.each do |key, value|
       next if value.nil?
-      next if RESTRICTED_PROJEKT_SETTINGS.include?(key)
+      next if ALLOWED_PROJEKT_SETTINGS.exclude?(key)
 
       setting = projekt.projekt_settings.find_by(key: key)
       next if setting.blank?

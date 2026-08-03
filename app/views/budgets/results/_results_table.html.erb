@@ -1,3 +1,4 @@
+<% show_investment_stats_link = local_assigns.fetch(:show_investment_stats_link, true) %>
 <div class="<%= results_type == :compatible ? "success" : "js-discarded" %>"
      style="<%= results_type == :compatible ? "" : "display: none" %>"
      id="<%= results_type %>-container">
@@ -53,7 +54,7 @@
                 <%= number_to_percentage(investment.total_ballot_votes_percentage, { strip_insignificant_zeros: true, precision: 2 }) %>
               <% else %>
                 <%= investment.total_ballot_votes %>
-                <% if can?(:read_stats, investment) %>
+                <% if show_investment_stats_link && can?(:read_stats, investment) %>
                   <%= link_to read_stats_budget_investment_path(@budget, investment), remote: true, onclick: "$('#footer-content').addClass('show-loader');" do %>
                     <i class="fas fa-chart-pie"></i>
                   <% end %>

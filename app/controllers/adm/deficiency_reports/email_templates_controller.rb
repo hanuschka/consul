@@ -18,7 +18,7 @@ class Adm::DeficiencyReports::EmailTemplatesController < Adm::DeficiencyReports:
 
   def settings
     @from_address_setting = Setting.find_by!(key: "mailer_from_deficiency_report_address")
-    @footer_block = SiteCustomization::ContentBlock.custom_block_for(
+    @footer_block = ::SiteCustomization::ContentBlock.custom_block_for(
       MailerFooterHelper::DEFICIENCY_REPORT_EMAIL_FOOTER_BLOCK, I18n.default_locale
     )
   end

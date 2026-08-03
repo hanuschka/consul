@@ -182,6 +182,33 @@ module Statisticable
     (total_individual_group_value_participants(individual_group_value).to_f / total) * 100
   end
 
+  def individual_group_breakdown
+    groups = soft_individual_groups.includes(:individual_group_values).to_a
+    return [] if groups.empty?
+
+    value_counts = participants.joins(:individual_group_values).distinct
+      .group("individual_group_values.id").count
+    group_counts = participants.joins(:individual_group_values).distinct
+      .group("individual_group_values.individual_group_id").count
+
+    groups.map do |group|
+      group_total = group_counts[group.id].to_i
+
+      {
+        name: group.name,
+        values: group.individual_group_values.map do |value|
+          count = value_counts[value.id].to_i
+
+          {
+            name: value.name,
+            count: count,
+            percentage: group_total.zero? ? 0 : (count.to_f / group_total * 100)
+          }
+        end
+      }
+    end
+  end
+
   private
 
     def base_stats_methods

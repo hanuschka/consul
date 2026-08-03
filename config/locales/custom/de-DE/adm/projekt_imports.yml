@@ -27,6 +27,8 @@ de:
               no_files: "Bitte wählen Sie mindestens eine Datei aus."
               too_large: "Die ausgewählten Dateien überschreiten das Limit von 500 MB."
               unsupported_type: "Die Datei %{filename} hat ein nicht unterstütztes Format."
+              session_expired: "Ihre Sitzung ist abgelaufen. Bitte laden Sie die Seite neu, melden Sie sich erneut an und versuchen Sie es noch einmal."
+              request_failed: "Der Upload ist fehlgeschlagen (Fehler %{status}). Bitte versuchen Sie es erneut oder wenden Sie sich an den Support."
           show:
             title: "Importfortschritt"
             failed_title: "Import fehlgeschlagen"

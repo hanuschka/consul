@@ -3,6 +3,7 @@ de:
     actions:
       action: Aktion
       actions: Aktionen
+      block_author: "Autor sperren"
     homepage:
       feeds:
         active_projekts: Aktive Beteiligung

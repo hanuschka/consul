@@ -1,5 +1,6 @@
 class Adm::DeficiencyReports::BaseController < Adm::BaseController
   include DeficiencyReportsHelper
+  include OnBehalfOfAccountLinking
 
   before_action :authenticate_user!
   before_action :verify_deficiency_report_manager
@@ -15,6 +16,14 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
       raise Pundit::NotAuthorizedError unless current_user&.deficiency_report_manager? ||
                                               current_user&.deficiency_report_officer? ||
                                               current_user&.administrator?
+    end
+
+    # Filing a report for somebody else is part of the officer backend's job, and reaching a create
+    # action here already means the policy admitted the user for it — including officers who manage
+    # all reports, whom the public rule does not cover. So the namespace answers yes outright rather
+    # than asking the form permission a second, stricter time.
+    def on_behalf_of_account_allowed?(_resource)
+      true
     end
 
     def authenticate_user!

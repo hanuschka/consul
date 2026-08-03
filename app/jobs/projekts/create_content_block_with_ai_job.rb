@@ -6,7 +6,7 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
     return if content_block.blank?
 
     projekt = content_block.projekt
-    return if projekt.blank?
+    return if projekt.blank? && mode.to_s != "replace"
 
     data = content_block.ai_generation_data || {}
     options = data["options"] || {}

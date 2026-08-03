@@ -1,8 +1,10 @@
 class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
-  attr_reader :blocks, :sentry_context
+  attr_reader :blocks, :phase_links, :image_urls, :sentry_context
 
-  def initialize(blocks:, sentry_context: {})
+  def initialize(blocks:, phase_links: [], image_urls: [], sentry_context: {})
     @blocks = Array(blocks)
+    @phase_links = Array(phase_links)
+    @image_urls = Array(image_urls)
     @sentry_context = sentry_context
   end
 
@@ -68,9 +70,9 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
       - Keep each template's wrapper, tags, CSS classes, and inline styles; match its visual design exactly.
       - Repeated elements (list items <li>, cards, rows, columns) are a REUSABLE PATTERN: render exactly one per content entry. If the content has more entries than the template illustrates, duplicate the example item's markup (identical tags, classes, and styles) for each additional entry; if it has fewer, drop the surplus example items. The number of rendered items MUST equal the number of content entries — never output an empty item, and never drop, truncate, or merge content to fit the template's example count.
       - Replace all sample text with the real content; do not keep the template's placeholder wording.
-      - Output only semantic, inline-styled HTML that matches the template: use H3/H4 for headings (never H1 or H2), <p> for paragraphs, and <ul>/<li> or <ol>/<li> for lists. Do not add <style> or <script> tags, JavaScript, forms, or input elements. Any image must use a placeholder URL only (e.g. https://placehold.co/1200x500) — never a real or external image source. Use FontAwesome or Unicode icons (→ ✓ •).
+      - Output only semantic, inline-styled HTML that matches the template: use H3/H4 for headings (never H1 or H2), <p> for paragraphs, and <ul>/<li> or <ol>/<li> for lists. Do not add <style> or <script> tags, JavaScript, forms, or input elements. #{image_source_rule} Use FontAwesome or Unicode icons (→ ✓ •).
       - Convert every URL and email address in the content into an anchor tag: web links as <a href="URL" target="_blank" rel="noopener noreferrer">label</a> (prefix "https://" when the URL has no scheme); emails as <a href="mailto:ADDRESS">ADDRESS</a>.
-
+      #{phase_links_instruction}
       Input blocks:
       #{JSON.generate(input_blocks)}
     PROMPT
@@ -81,6 +83,37 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
         .ask(message)
 
     Array(response.content["blocks"])
+  end
+
+  # Without images from the source document the only safe src is a placeholder,
+  # because anything else the model writes is a hallucinated external URL.
+  def image_source_rule
+    if image_urls.blank?
+      return "Any image must use a placeholder URL only " \
+             "(e.g. https://placehold.co/1200x500) — never a real or external image source."
+    end
+
+    "These images come from the source document and are already hosted: " \
+      "#{image_urls.join(', ')}. Use them verbatim in <img src>, each at most once, " \
+      "in the order given, in the blocks whose content they illustrate. When a " \
+      "template needs an image and none of these fits, use a placeholder URL " \
+      "(e.g. https://placehold.co/1200x500). Never use any other real or external " \
+      "image source."
+  end
+
+  # Left-hand links to a participation phase were previously invented as
+  # /projects/<slug>/phases/<id>, which is not a route at all. The real deep
+  # links are passed in ready to use — the model must never build one.
+  def phase_links_instruction
+    return "" if phase_links.blank?
+
+    <<~INSTRUCTION.strip
+      - When a block's content refers to a participation phase (a call to
+        participate, vote, submit, comment or attend), link it with the matching
+        URL from this list, copied verbatim. Never construct a phase URL
+        yourself and never link to a phase that is not listed:
+        #{JSON.generate(phase_links)}
+    INSTRUCTION
   end
 
   def output_schema

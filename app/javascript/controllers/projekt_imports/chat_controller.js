@@ -17,9 +17,8 @@ const SCROLL_BOTTOM_THRESHOLD = 80
 const OVERLAY_PROGRESS_INITIAL_DELAY = 1200
 const OVERLAY_PROGRESS_STEP_DELAY = 2500
 const OVERLAY_PROGRESS_STEPS = [
-  { percent: 20, labelValue: "progressFinalizing" },
-  { percent: 40, labelValue: "progressResolving" },
-  { percent: 60, labelValue: "progressCreating" },
+  { percent: 35, labelValue: "progressResolving" },
+  { percent: 65, labelValue: "progressCreating" },
   { percent: 85, labelValue: "progressGeneratingImage" }
 ]
 
@@ -31,7 +30,8 @@ export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel", "overlayFill",
-    "importError", "importErrorMessage", "generateImage", "importButton"
+    "importError", "importErrorMessage", "importWarning", "importWarningList",
+    "generateImage", "importButton"
   ]
 
   static values = {
@@ -44,7 +44,6 @@ export default class extends Controller {
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
     confirmStartOver: String,
-    progressFinalizing: String,
     progressResolving: String,
     progressCreating: String,
     progressGeneratingImage: String,
@@ -60,6 +59,7 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
+    this.shownWarningCount = 0
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.chatRunning = false
@@ -233,6 +233,8 @@ export default class extends Controller {
   }
 
   handleImportState(state) {
+    this.renderImportWarnings(state.warnings)
+
     if (state.status === "submitting") {
       this.showOverlay()
       this.scheduleStatusPoll()
@@ -283,6 +285,28 @@ export default class extends Controller {
 
   dismissImportError() {
     this.importErrorTarget.classList.add("-hidden")
+  }
+
+  // Warnings accumulate server-side across the whole import, so the banner is
+  // rebuilt only when new ones arrive. A dismissal sticks until that happens.
+  renderImportWarnings(warnings) {
+    const entries = Array.isArray(warnings) ? warnings : []
+    if (entries.length === this.shownWarningCount) return
+
+    this.shownWarningCount = entries.length
+    this.importWarningListTarget.replaceChildren()
+
+    entries.forEach((warning) => {
+      const item = document.createElement("li")
+      item.textContent = warning.message || ""
+      this.importWarningListTarget.appendChild(item)
+    })
+
+    this.importWarningTarget.classList.toggle("-hidden", entries.length === 0)
+  }
+
+  dismissImportWarning() {
+    this.importWarningTarget.classList.add("-hidden")
   }
 
   scheduleStatusPoll() {

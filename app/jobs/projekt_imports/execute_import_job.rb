@@ -7,12 +7,6 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     projekt_import = ProjektImport.find(projekt_import_id)
     projekt_import.update!(status: "submitting")
 
-    finalize_result = ProjektImports::FinalizeDataService.call(projekt_import: projekt_import)
-    if !finalize_result.success?
-      projekt_import.mark_failed!(finalize_result.error, stage: "finalize", details: finalize_result.error_details)
-      return
-    end
-
     resolve_result = ProjektImports::ResolveContentBlocksService.call(projekt_import: projekt_import)
     if !resolve_result.success?
       projekt_import.mark_failed!(resolve_result.error, stage: "resolve_content_blocks", details: resolve_result.error_details)

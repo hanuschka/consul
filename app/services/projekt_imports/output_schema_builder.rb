@@ -128,21 +128,33 @@ module ProjektImports::OutputSchemaBuilder
         title: { type: "string", minLength: 4 },
         description: { type: %w[string null] },
         vote_type: { type: %w[string null], enum: ["unique", "multiple", "rating_scale", nil] },
+        min_rating_scale_label: {
+          type: %w[string null],
+          description: "Caption for the low end of a rating_scale question. Null otherwise."
+        },
+        max_rating_scale_label: {
+          type: %w[string null],
+          description: "Caption for the high end of a rating_scale question. Null otherwise."
+        },
         answers: {
           type: "array",
           minItems: 2,
+          description: "Selectable options. For a rating_scale question these are the scale points.",
           items: {
             type: "object",
             properties: {
               title: { type: "string", minLength: 1 },
-              description: { type: "string", minLength: 1 }
+              description: { type: %w[string null], description: "Optional explanatory text" }
             },
             required: %w[title description],
             additionalProperties: false
           }
         }
       },
-      required: %w[title description vote_type answers],
+      required: %w[
+        title description vote_type min_rating_scale_label
+        max_rating_scale_label answers
+      ],
       additionalProperties: false
     }
   end

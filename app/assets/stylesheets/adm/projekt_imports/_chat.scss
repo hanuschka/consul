@@ -14,6 +14,8 @@ $_chat-input-bg-hover: #e4e6ea;
 $_chat-input-bg-focus: #e8eaed;
 $_chat-error: #c0392b;
 $_chat-error-text: #7f1d1d;
+$_chat-warning: #b26a00;
+$_chat-warning-text: #6b4000;
 
 .projekt-import-chat {
   position: relative;
@@ -81,6 +83,65 @@ $_chat-error-text: #7f1d1d;
 
   &:hover {
     background: color-mix(in srgb, $_chat-error 14%, white);
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+.projekt-import-chat--warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: $_chat-warning-text;
+  background: color-mix(in srgb, $_chat-warning 10%, white);
+  border-bottom: 1px solid color-mix(in srgb, $_chat-warning 28%, white);
+
+  &.-hidden {
+    display: none;
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+    color: $_chat-warning;
+  }
+}
+
+.projekt-import-chat--warning-banner-list {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  word-break: break-word;
+
+  li + li {
+    margin-top: 4px;
+  }
+}
+
+.projekt-import-chat--warning-banner-dismiss {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: $_chat-warning;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+
+  &:hover {
+    background: color-mix(in srgb, $_chat-warning 16%, white);
   }
 
   .material-symbols-outlined {

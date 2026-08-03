@@ -182,6 +182,8 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     record = entry[:record]
     data = entry[:data]
 
+    warn_about_missing_poll_questions(record, data)
+
     LONG_TAIL_BUILDERS.each do |key, builder_class|
       payload = data[key]
       next if payload.blank?
@@ -194,6 +196,18 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
         projekt_import.add_warning!("#{record.type}/#{key}: unexpected error: #{e.message}")
       end
     end
+  end
+
+  def warn_about_missing_poll_questions(record, data)
+    return if !record.is_a?(ProjektPhase::VotingPhase)
+
+    questions = Array(data["poll_questions"]).select { |question| question["title"].present? }
+    return if questions.any?
+
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.voting_phase_without_questions",
+        phase: record.phase_tab_name.presence || record.type)
+    )
   end
 
   def phase_class_for(type)

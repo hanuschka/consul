@@ -29,10 +29,13 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       - Respond in #{response_language} language
       - Use markdown formatting (bold, lists, headings) for readability
 
-      ## Current Project Data (from AI analysis)
+      ## Current Project Data (overview only)
       ```json
       #{JSON.generate(compact_ai_result_summary)}
       ```
+      This is a summary. Phases, poll questions, events, milestones, arguments,
+      notifications and content blocks are NOT shown here — read them with the
+      read_import_data tool whenever you need their actual contents.
 
       ## Original Document Text
       #{projekt_import.extracted_text.to_s.truncate(EXTRACT_LIMIT)}
@@ -45,8 +48,18 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       - If the user says the data looks good or wants to import, tell them to click the Import button above the chat input
       - Do not make changes without user confirmation
 
-      ## Phase Resources
-      Phases may contain nested resources (poll questions with answers, events, milestones, pro/con arguments, notifications). When the user wants to add, modify, or remove these resources, track the changes carefully.
+      ## Applying Changes
+      Once the user has confirmed a change, apply it immediately with the edit tools —
+      never only describe it in prose. The tools are the single source of truth; a change
+      you only mention in a message is lost.
+
+      - Read before you write. Call read_import_data for the section you are about to
+        change, so you edit the stored values rather than what you remember.
+      - replace_import_phase and set_import_content_blocks replace the whole phase or the
+        whole block list. Send every element back, including the ones you are not
+        changing, or they are deleted.
+      - Only call remove_import_phase when the user explicitly asked to delete a phase.
+      - After a tool succeeds, tell the user in one short sentence what changed.
     PROMPT
   end
 

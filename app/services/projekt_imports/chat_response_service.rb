@@ -10,6 +10,7 @@ class ProjektImports::ChatResponseService < ApplicationService
     return prompt_result if !prompt_result.success?
 
     chat = Ai::RubyLlmFactory.chat.with_instructions(prompt_result.data[:prompt])
+    chat.with_tools(*edit_tools)
     history = build_history
 
     history[0..-2].each do |msg|
@@ -36,6 +37,21 @@ class ProjektImports::ChatResponseService < ApplicationService
   end
 
   private
+
+  # The tools write straight into ProjektImport#ai_result, so the stored data is
+  # already correct once a turn ends. Nothing regenerates the payload later.
+  def edit_tools
+    editor = ProjektImports::AiResultEditor.new(projekt_import: projekt_import)
+
+    [
+      Ai::Tools::ProjektImports::ReadImportData.new(editor: editor),
+      Ai::Tools::ProjektImports::UpdateImportFields.new(editor: editor),
+      Ai::Tools::ProjektImports::ReplaceImportPhase.new(editor: editor),
+      Ai::Tools::ProjektImports::AddImportPhase.new(editor: editor),
+      Ai::Tools::ProjektImports::RemoveImportPhase.new(editor: editor),
+      Ai::Tools::ProjektImports::SetImportContentBlocks.new(editor: editor)
+    ]
+  end
 
   def build_history
     ai_chat = projekt_import.ai_chat

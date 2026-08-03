@@ -37,6 +37,8 @@ en:
     brand_color_description: "The brand color is used as an accent color across the entire platform — among other things for buttons, links, and highlights. It can be overridden individually on specific landing pages. If no value is set, the default brand color from the platform's stylesheet is used."
     newsletter_brand_color: "Newsletter brand color"
     newsletter_brand_color_description: "This color is used as an accent color in the header and footer of newsletter emails, e.g. for buttons, links, and decorative elements. It can be chosen independently of the platform brand color to enable a distinct newsletter design. If no value is set, the platform's default brand color is used."
+    direct_message_max_per_day: "Maximum direct messages per day"
+    direct_message_max_per_day_description: "Limits how many direct messages one person can send to other users per day. The limit protects against spam and harassment. Leave the field empty or set it to 0 if the number should not be limited."
     meta_keywords: "Keywords (SEO)"
     meta_keywords_description: "Optional keywords that thematically describe the page's content. They are embedded in the HTML source as meta keywords. Although search engines barely use this tag anymore, it can be useful for internal purposes. Separate terms with commas, e.g. citizen participation, urban development, projects."
     facebook_handle: "Facebook username"

@@ -5,6 +5,10 @@ module Adm
       extended_feature.general.show_guest_login_links
     ].freeze
 
+    GENERAL_TEXT_SETTING_KEYS = %w[
+      direct_message_max_per_day
+    ].freeze
+
     OAUTH_LOGIN_SETTING_KEYS = %w[
       feature.bund_id_login
       feature.twitter_login
@@ -24,6 +28,7 @@ module Adm
       settings_by_key = Setting.where(key: displayed_setting_keys).index_by(&:key)
 
       @general_settings = GENERAL_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+      @general_text_settings = GENERAL_TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
       @oauth_login_settings = OAUTH_LOGIN_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
       @kobil_settings = KOBIL_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
 
@@ -36,7 +41,7 @@ module Adm
     private
 
       def displayed_setting_keys
-        GENERAL_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS + KOBIL_SETTING_KEYS
+        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS + KOBIL_SETTING_KEYS
       end
   end
 end

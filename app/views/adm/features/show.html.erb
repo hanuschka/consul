@@ -11,6 +11,10 @@
     <% @general_settings.each do |setting| %>
       <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
     <% end %>
+
+    <% @general_text_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+    <% end %>
   </section>
 
   <section class="mb-5">

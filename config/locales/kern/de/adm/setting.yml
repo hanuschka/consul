@@ -37,6 +37,8 @@ de:
     brand_color_description: "Die Markenfarbe wird als Akzentfarbe auf der gesamten Plattform verwendet – unter anderem für Buttons, Links und Hervorhebungen. Auf einzelnen Landingpages kann diese Farbe individuell überschrieben werden. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe aus dem Stylesheet der Plattform verwendet."
     newsletter_brand_color: "Newsletter-Markenfarbe"
     newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-E-Mails verwendet, z. B. für Buttons, Links und dekorative Elemente. Sie kann unabhängig von der Plattform-Markenfarbe gewählt werden, um ein eigenständiges Newsletter-Design zu ermöglichen. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe der Plattform verwendet."
+    direct_message_max_per_day: "Maximale Anzahl direkter Nachrichten pro Tag"
+    direct_message_max_per_day_description: "Begrenzt, wie viele direkte Nachrichten eine Person pro Tag an andere Nutzer*innen senden kann. Die Begrenzung schützt vor Spam und Belästigung. Lassen Sie das Feld leer oder tragen Sie 0 ein, wenn die Anzahl nicht begrenzt werden soll."
     meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
     meta_keywords_description: "Optionale Stichwörter, die den Inhalt der Seite thematisch beschreiben. Sie werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag kaum noch auswerten, kann er für interne Zwecke nützlich sein. Trennen Sie Begriffe durch Kommas, z. B. Bürgerbeteiligung, Stadtentwicklung, Projekte."
     facebook_handle: "Facebook-Nutzername"

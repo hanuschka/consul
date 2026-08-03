@@ -50,19 +50,23 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
       lines << ""
       lines << "### #{t(:phases)}"
 
+      empty_voting_phase = false
+
       data["phases"].each do |phase|
         phase_text = "- **#{phase['name'] || phase['type']}**"
         dates = [phase["start_date"], phase["end_date"]].compact
         phase_text += " (#{dates.map { |d| format_date(d) }.join(' – ')})" if dates.any?
-        phase_text += " — #{poll_question_summary(phase)}" if voting_phase?(phase)
+
+        if voting_phase?(phase)
+          question_count = poll_question_count(phase)
+          empty_voting_phase ||= question_count.zero?
+          phase_text += " — #{poll_question_summary(question_count)}"
+        end
+
         lines << phase_text
       end
 
-      empty_voting_phases = data["phases"].select do |phase|
-        voting_phase?(phase) && poll_question_count(phase).zero?
-      end
-
-      if empty_voting_phases.any?
+      if empty_voting_phase
         lines << ""
         lines << "**⚠️ #{t(:no_poll_questions_notice)}**"
       end
@@ -103,10 +107,10 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
     Array(phase["poll_questions"]).count { |question| question["title"].present? }
   end
 
-  def poll_question_summary(phase)
+  def poll_question_summary(question_count)
     I18n.t(
       "adm.projekts.imports.initial_message.poll_questions_count",
-      count: poll_question_count(phase)
+      count: question_count
     )
   end
 

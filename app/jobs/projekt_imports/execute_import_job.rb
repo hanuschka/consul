@@ -5,7 +5,9 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
   def perform(projekt_import_id)
     projekt_import = ProjektImport.find(projekt_import_id)
-    projekt_import.update!(status: "submitting")
+    projekt_import.update!(status: "submitting", warnings: [])
+
+    warn_about_unapplied_chat(projekt_import)
 
     resolve_result = ProjektImports::ResolveContentBlocksService.call(projekt_import: projekt_import)
     if !resolve_result.success?
@@ -33,6 +35,21 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
   end
 
   private
+
+  # Edits only reach ai_result through the chat's edit tools. A conversation the
+  # user contributed to that produced no tool call either predates those tools or
+  # is one where the model answered in prose without applying anything — either
+  # way the projekt is about to be created from unedited data, so say so.
+  def warn_about_unapplied_chat(projekt_import)
+    ai_chat = projekt_import.ai_chat
+    return if ai_chat.blank?
+
+    messages = ai_chat.ai_chat_messages
+    return if !messages.where(role: "user").exists?
+    return if messages.where.not(tool_activity: []).exists?
+
+    projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.chat_changes_not_applied"))
+  end
 
   def generate_image_if_requested(projekt_import, projekt)
     if !projekt_import.generate_image

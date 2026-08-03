@@ -21,7 +21,14 @@ describe ProjektImports::AiResultEditor do
     ProjektImport.create!(user: user, status: "chatting", ai_result: ai_result)
   end
 
-  let(:editor) { ProjektImports::AiResultEditor.new(projekt_import: projekt_import) }
+  let(:ai_chat) { AiChat.create!(resource: projekt_import) }
+  let(:assistant_message) do
+    ai_chat.ai_chat_messages.create!(role: "assistant", status: "running", content: "")
+  end
+  let(:journal) { ProjektImports::AiEditJournal.new(ai_chat_message: assistant_message) }
+  let(:editor) do
+    ProjektImports::AiResultEditor.new(projekt_import: projekt_import, journal: journal)
+  end
 
   describe "#update_fields" do
     it "writes only the fields that were passed" do
@@ -71,6 +78,24 @@ describe ProjektImports::AiResultEditor do
       expect(removed["type"]).to eq("ProjektPhase::CommentPhase")
       expect(projekt_import.reload.ai_result["phases"].map { |p| p["type"] })
         .to eq(["ProjektPhase::VotingPhase"])
+    end
+  end
+
+  describe "journalling" do
+    # Without a persisted record of the edit, a ChatMessageJob retry replays the
+    # turn against data the tools already changed.
+    it "records each applied edit on the assistant message as it happens" do
+      editor.update_fields("title" => "Neuer Titel")
+      editor.remove_phase(1)
+
+      expect(assistant_message.reload.tool_activity.map { |e| e["action"] })
+        .to eq(%w[update_fields remove_phase])
+    end
+
+    it "records nothing when no field was actually changed" do
+      editor.update_fields("title" => nil)
+
+      expect(assistant_message.reload.tool_activity).to be_empty
     end
   end
 

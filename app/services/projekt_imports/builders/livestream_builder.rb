@@ -17,14 +17,13 @@ class ProjektImports::Builders::LivestreamBuilder < ProjektImports::Builders::Ba
 
   private
 
-  # ProjektLivestream runs the url validator on this value. A model-invented URL
-  # that is not http(s) is dropped here rather than failing the whole phase.
+  # ProjektLivestream runs UrlValidator on this value. Asking the validator
+  # itself keeps the two in step instead of copying its predicate, so a
+  # model-invented URL is dropped here rather than failing the whole phase.
   def http_url?(value)
+    return false if !value.is_a?(String)
     return false if value.blank?
 
-    parsed = URI.parse(value)
-    parsed.is_a?(URI::HTTP) || parsed.is_a?(URI::HTTPS)
-  rescue URI::InvalidURIError
-    false
+    UrlValidator.new(attributes: [:url]).url_valid?(value)
   end
 end

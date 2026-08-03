@@ -176,8 +176,16 @@ de:
           create_projekt_failed: "Projekt konnte nicht erstellt werden: %{message}"
           missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
           extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
+        applied_edits_message: "Ich habe folgende Änderungen an den Importdaten vorgenommen: %{edits}."
+        applied_edits:
+          update_fields: "%{fields} aktualisiert"
+          replace_phase: "Phase %{index} ersetzt"
+          add_phase: "Phase %{index} hinzugefügt (%{type})"
+          remove_phase: "Phase entfernt (%{type})"
+          replace_content_blocks: "Inhaltsblöcke ersetzt (jetzt %{count})"
         warnings:
           voting_phase_without_questions: "Die Abstimmungsphase „%{phase}\" wurde ohne Fragen angelegt, da aus dem Dokument keine Fragen abgeleitet werden konnten."
+          chat_changes_not_applied: "Keine der im Chat besprochenen Änderungen wurde in die Importdaten übernommen, das Projekt wurde daher aus der ursprünglichen Dokumentanalyse erstellt. Bitte prüfen Sie es und ergänzen Sie fehlende Punkte."
         failure_stages:
           extract: "Textextraktion"
           extracting: "Textextraktion"

@@ -60,6 +60,7 @@ export default class extends Controller {
     this.statusPollTimer = null
     this.lastImportStatus = null
     this.shownWarningCount = 0
+    this.shownWarningSignature = null
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.chatRunning = false
@@ -258,6 +259,8 @@ export default class extends Controller {
   // When the import finishes live in this session (overlay showing), send the
   // user to the created projekt's frontend page. Revisiting an already-completed
   // import (guard) keeps the chat with its success state instead of redirecting.
+  // An import that produced warnings never redirects: leaving the page is the
+  // one thing that guarantees the admin never reads them.
   handleCompletion(redirectPath) {
     if (this.completionShown) {
       this.hideOverlay()
@@ -268,7 +271,7 @@ export default class extends Controller {
     this.completionShown = true
     this.completeOverlayProgress()
 
-    if (redirectPath) {
+    if (redirectPath && this.shownWarningCount === 0) {
       window.location.href = redirectPath
       return
     }
@@ -288,11 +291,16 @@ export default class extends Controller {
   }
 
   // Warnings accumulate server-side across the whole import, so the banner is
-  // rebuilt only when new ones arrive. A dismissal sticks until that happens.
+  // rebuilt only when the set actually changes. Comparing rendered text rather
+  // than count catches a same-length set from a later run. A dismissal sticks
+  // until the set changes.
   renderImportWarnings(warnings) {
     const entries = Array.isArray(warnings) ? warnings : []
-    if (entries.length === this.shownWarningCount) return
+    const messages = entries.map((warning) => warning.message || "")
+    const signature = JSON.stringify(messages)
+    if (signature === this.shownWarningSignature) return
 
+    this.shownWarningSignature = signature
     this.shownWarningCount = entries.length
     this.importWarningListTarget.replaceChildren()
 
@@ -328,6 +336,8 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
+        this.renderImportWarnings(data.warnings)
+
         if (data.status === "completed") {
           this.handleCompletion(data.redirect_path)
           return

@@ -29,6 +29,16 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       - Respond in #{response_language} language
       - Use markdown formatting (bold, lists, headings) for readability
 
+      ## Output language
+      Your messages AND every value you write through the edit tools must be in
+      #{response_language}. Phase names, CTA button labels, descriptions, content
+      block text, poll questions and answers and all other citizen-facing text are
+      covered by this. Phase type identifiers and setting keys stay in English.
+      Never write a phase name that is a type identifier such as
+      "ProjektPhase::VotingPhase" or an anglicised form of it like "Voting Phase";
+      use the #{response_language} default name for that type:
+      #{phase_type_labels_list}
+
       ## Current Project Data (overview only)
       ```json
       #{JSON.generate(compact_ai_result_summary)}
@@ -65,6 +75,13 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
 
   def response_language
     projekt_import.import_response_language
+  end
+
+  def phase_type_labels_list
+    labels =
+      I18n.with_locale(projekt_import.import_locale) { ProjektPhase.type_labels }
+
+    labels.map { |phase_type, label| "  #{phase_type} — #{label}" }.join("\n")
   end
 
   def compact_ai_result_summary

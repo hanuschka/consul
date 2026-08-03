@@ -116,7 +116,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
       record = phase_class.create!(
         projekt: projekt,
-        phase_tab_name: phase_data["name"].presence,
+        phase_tab_name: phase_tab_name_for(phase_data),
         start_date: phase_data["start_date"].presence,
         end_date: phase_data["end_date"].presence,
         description: phase_data["description"].presence,
@@ -206,8 +206,36 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
 
     projekt_import.add_warning!(
       I18n.t("adm.projekts.imports.warnings.voting_phase_without_questions",
-        phase: record.phase_tab_name.presence || record.type)
+        phase: record.title)
     )
+  end
+
+  # The AI is asked for a localized phase name, but it sometimes falls back to
+  # anglicising the phase type identifier ("ProjektPhase::VotingPhase" ->
+  # "Voting Phase"). Dropping such a name lets ProjektPhase#title serve the
+  # translated default instead.
+  def phase_tab_name_for(phase_data)
+    name = phase_data["name"].to_s.strip
+    return nil if name.blank?
+    return nil if echoes_phase_type?(name, phase_data["type"])
+
+    name
+  end
+
+  def echoes_phase_type?(name, type)
+    return false if type.blank?
+
+    normalized = name.downcase.gsub(/[^a-z]/, "")
+    return false if normalized.blank?
+
+    identifier = type.to_s.demodulize.underscore.delete("_")
+    echoes = [
+      identifier,
+      identifier.delete_suffix("phase"),
+      type.to_s.underscore.gsub(/[^a-z]/, "")
+    ]
+
+    echoes.include?(normalized)
   end
 
   def phase_class_for(type)

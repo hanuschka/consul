@@ -91,11 +91,24 @@ module ProjektImports::OutputSchemaBuilder
       type: "object",
       properties: {
         type: { type: "string", enum: phase_types },
-        name: { type: %w[string null], description: "Display name" },
+        name: {
+          type: %w[string null],
+          description: "Display name of the phase tab, in the requested output " \
+                       "language. Use the default name listed for this phase type " \
+                       "unless the document states a different one. Never use the " \
+                       "type identifier or an anglicised form of it such as " \
+                       "\"Voting Phase\"."
+        },
         start_date: { type: %w[string null], description: "YYYY-MM-DD" },
         end_date: { type: %w[string null], description: "YYYY-MM-DD" },
-        description: { type: %w[string null], description: "Phase description" },
-        cta_button_name: { type: %w[string null], description: "CTA button label" },
+        description: {
+          type: %w[string null],
+          description: "Phase description, in the requested output language"
+        },
+        cta_button_name: {
+          type: %w[string null],
+          description: "CTA button label, in the requested output language"
+        },
         user_status: {
           type: %w[string null],
           enum: ["guest", "registered", "verified", nil],

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_30_090000) do
+ActiveRecord::Schema.define(version: 2026_08_03_091120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -224,6 +224,7 @@ ActiveRecord::Schema.define(version: 2026_07_30_090000) do
     t.bigint "user_message_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "tool_activity", default: [], null: false
     t.index ["ai_chat_id", "created_at"], name: "index_ai_chat_messages_on_ai_chat_id_and_created_at"
     t.index ["ai_chat_id"], name: "index_ai_chat_messages_on_ai_chat_id"
     t.index ["user_message_id"], name: "index_ai_chat_messages_on_user_message_id"

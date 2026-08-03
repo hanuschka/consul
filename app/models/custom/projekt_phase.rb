@@ -196,6 +196,18 @@ class ProjektPhase < ApplicationRecord
     self
   end
 
+  def self.type_labels
+    PROJEKT_PHASES_TYPES.index_with { |phase_type| type_label_for(phase_type) }
+  end
+
+  def self.type_label_for(type)
+    label = I18n.t("activerecord.models.#{type.to_s.underscore}", default: nil)
+
+    return type.to_s.demodulize.titleize if !label.is_a?(String)
+
+    label
+  end
+
   def self.material_icon_for(type)
     PHASE_MATERIAL_ICONS[type.to_s] || DEFAULT_PHASE_MATERIAL_ICON
   end

@@ -4,6 +4,7 @@ class IdeasController < ApplicationController
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
+  include OnBehalfOfAccountLinking
   # include Search
 
   feature_flag :ideas
@@ -49,7 +50,7 @@ class IdeasController < ApplicationController
 
     @idea.officer = @idea.district&.default_idea_officer || @idea.category&.default_idea_officer
 
-    if @idea.save
+    if @idea.valid? && link_on_behalf_of_account(@idea) && @idea.save
       if @idea.officer.present?
         IdeaMailer.notify_officer(@idea, @idea.officer).deliver_later
         Notification.add(@idea.officer.user, @idea)
@@ -108,6 +109,7 @@ class IdeasController < ApplicationController
       attributes = [:resource_terms,
                     :idea_category_id,
                     :video_url, :on_behalf_of,
+                    :on_behalf_of_company_name, :on_behalf_of_email,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]

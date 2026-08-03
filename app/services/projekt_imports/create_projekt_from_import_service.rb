@@ -225,8 +225,13 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   def echoes_phase_type?(name, type)
     return false if type.blank?
 
-    normalized = name.downcase.gsub(/[^a-z]/, "")
+    normalized = comparable(name)
     return false if normalized.blank?
+
+    # Several types are named identically in both locales ("Budget", "Iframe",
+    # "Formular"), so their translated label collides with the anglicised
+    # identifier. That label is what the prompt asked for — keep it.
+    return false if normalized == comparable(localized_type_labels[type])
 
     identifier = type.to_s.demodulize.underscore.delete("_")
     echoes = [
@@ -236,6 +241,15 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     ]
 
     echoes.include?(normalized)
+  end
+
+  def comparable(value)
+    value.to_s.downcase.gsub(/[^a-z]/, "")
+  end
+
+  def localized_type_labels
+    @localized_type_labels ||=
+      I18n.with_locale(projekt_import.import_locale) { ProjektPhase.type_labels }
   end
 
   def phase_class_for(type)

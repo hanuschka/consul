@@ -46,9 +46,15 @@ class ProjektImports::ChatMessageJob < ApplicationJob
 
     summaries = ProjektImports::AiEditJournal.summarize(ai_message.tool_activity)
 
-    ai_message.update!(
-      content: I18n.t("adm.projekts.imports.applied_edits_message", edits: summaries.join("; ")),
-      status: "completed"
-    )
+    # An unrecognised action summarizes to nothing, which would leave the admin
+    # with "I applied the following changes: ." naming none of them.
+    content =
+      if summaries.empty?
+        I18n.t("adm.projekts.imports.applied_edits_message_unnamed")
+      else
+        I18n.t("adm.projekts.imports.applied_edits_message", edits: summaries.join("; "))
+      end
+
+    ai_message.update!(content: content, status: "completed")
   end
 end

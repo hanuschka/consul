@@ -177,6 +177,7 @@ de:
           missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
           extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
         applied_edits_message: "Ich habe folgende Änderungen an den Importdaten vorgenommen: %{edits}."
+        applied_edits_message_unnamed: "Ich habe die Importdaten geändert. Bitte prüfen Sie die aktuellen Daten."
         applied_edits:
           update_fields: "%{fields} aktualisiert"
           replace_phase: "Phase %{index} ersetzt"

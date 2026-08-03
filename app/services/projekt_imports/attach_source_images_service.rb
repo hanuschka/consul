@@ -39,18 +39,13 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
   end
 
   def images_from(source_file)
-    result = source_file.blob.open do |tmp|
-      file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: tmp,
-        filename: source_file.blob.filename.to_s,
-        type: source_file.blob.content_type
-      )
+    result = ::AttachmentUpload.open(source_file) do |file|
       ::DocumentImageExtractor.call(file: file)
     end
 
     if result.data[:unextractable]
       projekt_import.add_warning!(
-        I18n.t("adm.projekts.imports.warnings.pdf_images_not_extracted",
+        I18n.t("adm.projekts.imports.warnings.pdf_images_tool_missing",
           filename: source_file.blob.filename.to_s)
       )
     end
@@ -58,12 +53,20 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
     result.data[:images].select { |image| usable?(image) }
   end
 
-  # Documents are full of logos, bullets and letterhead fragments. A byte floor
-  # is a blunt but cheap filter, and it runs before any image is decoded.
+  # Documents are full of logos, bullets and letterhead fragments. Pixel
+  # dimensions are the honest measure and the PDF path reports them; the zip
+  # formats hand back compressed bytes only, where a byte floor is the cheap
+  # stand-in. A byte floor alone would misjudge PDFs badly — an uncompressed
+  # 144x145 logo weighs 20 KB.
   def usable?(image)
-    return false if image[:size].to_i < MIN_IMAGE_BYTES
+    return false if ALLOWED_CONTENT_TYPES.exclude?(image[:content_type])
 
-    ALLOWED_CONTENT_TYPES.include?(image[:content_type])
+    if image[:width].present? && image[:height].present?
+      return image[:width] >= ::DocumentImageExtractor::MIN_IMAGE_DIMENSION &&
+             image[:height] >= ::DocumentImageExtractor::MIN_IMAGE_DIMENSION
+    end
+
+    image[:size].to_i >= MIN_IMAGE_BYTES
   end
 
   def attach_hero(image)

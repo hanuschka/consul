@@ -191,7 +191,7 @@ de:
           chat_changes_not_applied: "Keine der im Chat besprochenen Änderungen wurde in die Importdaten übernommen, das Projekt wurde daher aus der ursprünglichen Dokumentanalyse erstellt. Bitte prüfen Sie es und ergänzen Sie fehlende Punkte."
           form_feature_unsupported: "Die Phase „%{phase}\" unterstützt die Einstellung „%{feature}\" nicht. Die dafür erzeugten Einträge sind im Bürgerformular nicht sichtbar."
           content_blocks_unresolved: "Das Projekt wurde mit allen Phasen angelegt, die Inhaltsblöcke konnten jedoch nicht erzeugt werden. Bitte ergänzen Sie sie manuell oder löschen Sie das Projekt und starten Sie den Import erneut."
-          pdf_images_not_extracted: "Die PDF-Datei „%{filename}\" enthält offenbar Bilder. Bilder können aus PDF-Dateien nicht übernommen werden – bitte laden Sie sie manuell hoch."
+          pdf_images_tool_missing: "Die PDF-Datei „%{filename}\" enthält Bilder, die nicht übernommen werden konnten: auf diesem Server fehlt das Systempaket „poppler-utils\". Bitte laden Sie die Bilder manuell hoch oder lassen Sie das Paket von der Administration installieren."
         failure_stages:
           extract: "Textextraktion"
           extracting: "Textextraktion"

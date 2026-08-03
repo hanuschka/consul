@@ -12,23 +12,6 @@
 <% end %>
 
 <div class="kern-container my-3 projekt-import-list-container" data-controller="projekt-imports--delete-confirm">
-  <% if @missing_tools.any? %>
-    <div class="projekt-import-list--tool-warning">
-      <%= kern_alert(title: t("adm.projekts.imports.missing_tools.title"), style: :warning) do %>
-        <ul>
-          <% @missing_tools.each do |tool| %>
-            <li>
-              <%= t("adm.projekts.imports.missing_tools.features.#{tool[:key]}") %>
-              <%= t("adm.projekts.imports.missing_tools.package", package: tool[:package]) %>
-            </li>
-          <% end %>
-        </ul>
-
-        <p><%= t("adm.projekts.imports.missing_tools.contact") %></p>
-      <% end %>
-    </div>
-  <% end %>
-
   <div class="projekt-import-list--filters">
     <%= render Kern::FilterChipsComponent.new(
           aria_label: t("adm.projekts.imports.list.filters.aria"),

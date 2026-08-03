@@ -14,6 +14,8 @@ $_chat-input-bg-hover: #e4e6ea;
 $_chat-input-bg-focus: #e8eaed;
 $_chat-error: #c0392b;
 $_chat-error-text: #7f1d1d;
+$_chat-warning: #b26a00;
+$_chat-warning-text: #6b4000;
 
 .projekt-import-chat {
   position: relative;
@@ -36,7 +38,7 @@ $_chat-error-text: #7f1d1d;
   }
 }
 
-.projekt-import-chat--error-banner {
+.projekt-import-chat--banner {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -44,9 +46,19 @@ $_chat-error-text: #7f1d1d;
   padding: 12px 16px;
   font-size: 14px;
   line-height: 1.45;
-  color: $_chat-error-text;
-  background: color-mix(in srgb, $_chat-error 8%, white);
-  border-bottom: 1px solid color-mix(in srgb, $_chat-error 25%, white);
+  color: var(--banner-text);
+  background: color-mix(in srgb, var(--banner-accent) 9%, white);
+  border-bottom: 1px solid color-mix(in srgb, var(--banner-accent) 26%, white);
+
+  &.-error {
+    --banner-accent: #{$_chat-error};
+    --banner-text: #{$_chat-error-text};
+  }
+
+  &.-warning {
+    --banner-accent: #{$_chat-warning};
+    --banner-text: #{$_chat-warning-text};
+  }
 
   &.-hidden {
     display: none;
@@ -54,17 +66,24 @@ $_chat-error-text: #7f1d1d;
 
   .material-symbols-outlined {
     font-size: 20px;
-    color: $_chat-error;
+    color: var(--banner-accent);
   }
 }
 
-.projekt-import-chat--error-banner-message {
+.projekt-import-chat--banner-body {
   flex: 1;
   min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   word-break: break-word;
+
+  li + li {
+    margin-top: 4px;
+  }
 }
 
-.projekt-import-chat--error-banner-dismiss {
+.projekt-import-chat--banner-dismiss {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +91,7 @@ $_chat-error-text: #7f1d1d;
   width: 26px;
   height: 26px;
   padding: 0;
-  color: $_chat-error;
+  color: var(--banner-accent);
   background: transparent;
   border: 0;
   border-radius: 6px;
@@ -80,7 +99,7 @@ $_chat-error-text: #7f1d1d;
   transition: background-color 120ms ease;
 
   &:hover {
-    background: color-mix(in srgb, $_chat-error 14%, white);
+    background: color-mix(in srgb, var(--banner-accent) 15%, white);
   }
 
   .material-symbols-outlined {

@@ -62,8 +62,6 @@ $oauth-button-columns-tablet: 2;
     width: 1.5rem;
     min-width: 1.5rem;
     height: 1.5rem;
-    mask-position: center;
-    mask-size: contain;
   }
 }
 
@@ -81,12 +79,15 @@ $oauth-button-columns-tablet: 2;
 
 .button.button-kobil {
   background: $kobil-blue;
+  color: #fff;
 
   &:hover {
+    color: #fff;
     background: $kobil-blue-hover;
   }
 
   &:active {
+    color: #fff;
     background: $kobil-blue-active;
   }
 }

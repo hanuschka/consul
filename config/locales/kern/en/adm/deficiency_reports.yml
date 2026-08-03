@@ -123,6 +123,8 @@ en:
             title: e.g. Broken street light on Main Street
             video_url: https://www.youtube.com/watch?v=...
             on_behalf_of: e.g. Jane Doe
+            on_behalf_of_company_name: e.g. Doe Construction Ltd.
+            on_behalf_of_email: e.g. jane.doe@example.com
           labels:
             title: Title
             description: Description
@@ -132,6 +134,8 @@ en:
             category: Category
             map_location: Map location
             on_behalf_of: On behalf of
+            on_behalf_of_company_name: Company
+            on_behalf_of_email: Email address
           hints:
             title: The title of the entry is shown in the list view and as the heading on the detail page. It should briefly and precisely describe the reported deficiency so officers and citizens can grasp the content at a glance. Changes to the title become visible on the public page immediately.
             description: The description contains all relevant details about the reported deficiency, such as its exact state, possible causes, and impact. This text is displayed publicly on the detail page of the entry. A precise description makes it easier for officers to assess the issue and significantly speeds up processing.
@@ -139,6 +143,8 @@ en:
             documents: Here you can add supplementary documents like expert reports, plans, or reports to the entry. The files are made available for download on the detail page and are visible to all users. Multiple documents can be uploaded at once to document the matter comprehensively.
             video_url: Enter the URL of a video documenting the reported deficiency. The video is embedded on the public detail page of the entry. Links from common video platforms like YouTube or Vimeo are supported. A video can illustrate the matter better than photos alone.
             on_behalf_of: Enter the name of the person on whose behalf the entry was created. This field is used when an officer or administrator records an entry on behalf of a citizen. The name is shown on the detail page and helps with attribution of the entry.
+            on_behalf_of_company_name: Optional. The company or organisation the person is reporting for. It is stored on the profile of the linked account, not on the report itself, and is only saved when the account has no company on file yet.
+            on_behalf_of_email: Optional. If you enter an email address, the report is assigned to the account behind it. If no account exists for the address, one is created and receives a confirmation email (double opt-in). An existing account is only linked and receives no confirmation email. Leave empty to keep the report attributed to yourself.
             category: The category assigns the entry to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
         administer:
           title: Administer

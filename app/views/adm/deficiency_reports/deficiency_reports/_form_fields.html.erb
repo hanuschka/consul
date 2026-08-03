@@ -34,6 +34,20 @@
   <%= form.text_field :on_behalf_of, label: false, placeholder: t(".placeholders.on_behalf_of") %>
 <% end %>
 
+<% if form.object.new_record? %>
+  <%= render Kern::FormFieldComponent.new(divider: false,
+    label: t(".labels.on_behalf_of_company_name"), hint: t(".hints.on_behalf_of_company_name")) do %>
+    <%= form.text_field :on_behalf_of_company_name, label: false,
+          placeholder: t(".placeholders.on_behalf_of_company_name") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(divider: false,
+    label: t(".labels.on_behalf_of_email"), hint: t(".hints.on_behalf_of_email")) do %>
+    <%= form.email_field :on_behalf_of_email, label: false,
+          placeholder: t(".placeholders.on_behalf_of_email") %>
+  <% end %>
+<% end %>
+
 <%= render Kern::FormFieldComponent.new(divider: false,
   label: t(".labels.category"), hint: t(".hints.category")) do %>
   <% if form.object.errors[:deficiency_report_category_id].present? %>

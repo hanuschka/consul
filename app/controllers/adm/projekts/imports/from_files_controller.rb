@@ -83,7 +83,7 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
   end
 
   def status
-    payload = { status: @projekt_import.status }
+    payload = { status: @projekt_import.status, warnings: @projekt_import.warnings }
 
     payload[:chat_url] = adm_projekts_import_chat_path(@projekt_import) if @projekt_import.chatting?
 

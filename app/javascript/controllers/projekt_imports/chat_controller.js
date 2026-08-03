@@ -17,9 +17,8 @@ const SCROLL_BOTTOM_THRESHOLD = 80
 const OVERLAY_PROGRESS_INITIAL_DELAY = 1200
 const OVERLAY_PROGRESS_STEP_DELAY = 2500
 const OVERLAY_PROGRESS_STEPS = [
-  { percent: 20, labelValue: "progressFinalizing" },
-  { percent: 40, labelValue: "progressResolving" },
-  { percent: 60, labelValue: "progressCreating" },
+  { percent: 35, labelValue: "progressResolving" },
+  { percent: 65, labelValue: "progressCreating" },
   { percent: 85, labelValue: "progressGeneratingImage" }
 ]
 
@@ -31,7 +30,8 @@ export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel", "overlayFill",
-    "importError", "importErrorMessage", "generateImage", "importButton"
+    "importError", "importErrorMessage", "importWarning", "importWarningList",
+    "generateImage", "importButton"
   ]
 
   static values = {
@@ -44,7 +44,6 @@ export default class extends Controller {
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
     confirmStartOver: String,
-    progressFinalizing: String,
     progressResolving: String,
     progressCreating: String,
     progressGeneratingImage: String,
@@ -60,6 +59,7 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
+    this.shownWarningSignature = null
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.chatRunning = false
@@ -233,6 +233,8 @@ export default class extends Controller {
   }
 
   handleImportState(state) {
+    this.renderImportWarnings(state.warnings)
+
     if (state.status === "submitting") {
       this.showOverlay()
       this.scheduleStatusPoll()
@@ -256,6 +258,8 @@ export default class extends Controller {
   // When the import finishes live in this session (overlay showing), send the
   // user to the created projekt's frontend page. Revisiting an already-completed
   // import (guard) keeps the chat with its success state instead of redirecting.
+  // An import that produced warnings never redirects: leaving the page is the
+  // one thing that guarantees the admin never reads them.
   handleCompletion(redirectPath) {
     if (this.completionShown) {
       this.hideOverlay()
@@ -266,7 +270,7 @@ export default class extends Controller {
     this.completionShown = true
     this.completeOverlayProgress()
 
-    if (redirectPath) {
+    if (redirectPath && !this.hasVisibleWarnings()) {
       window.location.href = redirectPath
       return
     }
@@ -281,8 +285,44 @@ export default class extends Controller {
     this.importErrorTarget.classList.remove("-hidden")
   }
 
-  dismissImportError() {
+  // Both banners share markup and styling; the clicked button's own banner is
+  // the one to hide.
+  dismissBanner(event) {
+    event.currentTarget.closest(".projekt-import-chat--banner").classList.add("-hidden")
+  }
+
+  // Warnings accumulate server-side across the whole import, so the banner is
+  // rebuilt only when the set actually changes. Comparing rendered text rather
+  // than count catches a same-length set from a later run. A dismissal sticks
+  // until the set changes.
+  renderImportWarnings(warnings) {
+    const messages = (Array.isArray(warnings) ? warnings : []).map((w) => w.message || "")
+    const signature = JSON.stringify(messages)
+    if (signature === this.shownWarningSignature) return
+
+    this.shownWarningSignature = signature
+    this.importWarningListTarget.replaceChildren()
+
+    messages.forEach((message) => {
+      const item = document.createElement("li")
+      item.textContent = message
+      this.importWarningListTarget.appendChild(item)
+    })
+
+    this.importWarningTarget.classList.toggle("-hidden", messages.length === 0)
+  }
+
+  hasVisibleWarnings() {
+    return this.importWarningListTarget.children.length > 0
+  }
+
+  // A new import run clears warnings server-side, so the previous run's banners
+  // must not linger while it is in flight.
+  resetBanners() {
     this.importErrorTarget.classList.add("-hidden")
+    this.importWarningTarget.classList.add("-hidden")
+    this.importWarningListTarget.replaceChildren()
+    this.shownWarningSignature = null
   }
 
   scheduleStatusPoll() {
@@ -304,6 +344,8 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
+        this.renderImportWarnings(data.warnings)
+
         if (data.status === "completed") {
           this.handleCompletion(data.redirect_path)
           return
@@ -557,7 +599,7 @@ export default class extends Controller {
   // Invoked by the shared confirm dialog's "confirmed" event (not directly by
   // the import button), so the modal replaces the old window.confirm.
   startImport() {
-    this.dismissImportError()
+    this.resetBanners()
     this.lastImportStatus = null
     // A fresh import procedure starts now (incl. re-import of a completed one),
     // so its completion should redirect to the projekt even on a revisit.

@@ -37,7 +37,7 @@
     }
   }
 
-  .skiptranslate:not([style*="display: none"]) + header {
+  .skiptranslate + header {
     margin-top: 39px;
 
     .top-bar-wrapper.sticky-header {
@@ -67,7 +67,6 @@
     align-items: center;
     text-align: center;
     color: #e5e5e5;
-    // margin: 1.5rem 0;
 
     span {
       color: $main-text-color;

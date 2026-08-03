@@ -185,6 +185,8 @@ de:
           remove_phase: "Phase entfernt (%{type})"
           replace_content_blocks: "Inhaltsblöcke ersetzt (jetzt %{count})"
         warnings:
+          unknown_categories: "Diese Kategorien existieren auf dieser Plattform nicht und wurden nicht übernommen: %{categories}. Legen Sie sie bei Bedarf an und ordnen Sie sie dem Projekt manuell zu."
+          unknown_sdg_codes: "Diese SDG-Codes existieren auf dieser Plattform nicht und wurden nicht übernommen: %{codes}."
           voting_phase_without_questions: "Die Abstimmungsphase „%{phase}\" wurde ohne Fragen angelegt, da aus dem Dokument keine Fragen abgeleitet werden konnten."
           chat_changes_not_applied: "Keine der im Chat besprochenen Änderungen wurde in die Importdaten übernommen, das Projekt wurde daher aus der ursprünglichen Dokumentanalyse erstellt. Bitte prüfen Sie es und ergänzen Sie fehlende Punkte."
         failure_stages:

@@ -185,6 +185,8 @@ en:
           remove_phase: "removed phase (%{type})"
           replace_content_blocks: "replaced the content blocks (now %{count})"
         warnings:
+          unknown_categories: "These categories do not exist on this platform and were not applied: %{categories}. Create them if needed and assign them to the projekt manually."
+          unknown_sdg_codes: "These SDG codes do not exist on this platform and were not applied: %{codes}."
           voting_phase_without_questions: "The voting phase \"%{phase}\" was created without any questions, because none could be derived from the document."
           chat_changes_not_applied: "None of the changes discussed in the chat were applied to the import data, so the projekt was created from the original document analysis. Please check it and correct anything that is missing."
         failure_stages:

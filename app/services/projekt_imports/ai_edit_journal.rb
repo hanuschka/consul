@@ -32,9 +32,9 @@ class ProjektImports::AiEditJournal
     when "replace_phase"
       translate(:replace_phase, index: details["phase_index"])
     when "add_phase"
-      translate(:add_phase, index: details["phase_index"], type: details["type"])
+      translate(:add_phase, index: details["phase_index"], type: phase_label(details["type"]))
     when "remove_phase"
-      translate(:remove_phase, type: details["type"])
+      translate(:remove_phase, type: phase_label(details["type"]))
     when "replace_content_blocks"
       translate(:replace_content_blocks, count: details["count"])
     end
@@ -42,6 +42,15 @@ class ProjektImports::AiEditJournal
 
   def self.translate(key, **interpolations)
     I18n.t("adm.projekts.imports.applied_edits.#{key}", **interpolations)
+  end
+
+  # The raw type identifier would otherwise reach both the admin's chat bubble
+  # and the replayed history the model reads, showing it the very form the
+  # system prompt forbids it from writing as a phase name.
+  def self.phase_label(type)
+    return "" if type.blank?
+
+    ProjektPhase.type_label_for(type)
   end
 
   private

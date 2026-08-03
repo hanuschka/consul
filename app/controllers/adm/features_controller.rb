@@ -22,11 +22,10 @@ module Adm
       authorize [:adm, Setting], :update?
 
       settings_by_key = Setting.where(key: displayed_setting_keys).index_by(&:key)
-      ensure_settings_present!(settings_by_key)
 
-      @general_settings = GENERAL_SETTING_KEYS.map { |key| settings_by_key[key] }
-      @oauth_login_settings = OAUTH_LOGIN_SETTING_KEYS.map { |key| settings_by_key[key] }
-      @kobil_settings = KOBIL_SETTING_KEYS.map { |key| settings_by_key[key] }
+      @general_settings = GENERAL_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+      @oauth_login_settings = OAUTH_LOGIN_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+      @kobil_settings = KOBIL_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
 
       @breadcrumbs = [
         { name: t("adm.menu.items.application"), icon: "desktop_windows" },
@@ -38,17 +37,6 @@ module Adm
 
       def displayed_setting_keys
         GENERAL_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS + KOBIL_SETTING_KEYS
-      end
-
-      # Skipping an absent row would render the page with the toggle simply
-      # missing: the admin cannot enable the feature and has no error to report.
-      # Naming the keys points straight at the unseeded install.
-      def ensure_settings_present!(settings_by_key)
-        missing = displayed_setting_keys - settings_by_key.keys
-        return if missing.empty?
-
-        raise ActiveRecord::RecordNotFound,
-          "Missing Setting rows: #{missing.join(', ')}. Run rake settings:add_new_settings."
       end
   end
 end

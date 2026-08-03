@@ -19,10 +19,8 @@ class DocumentImageExtractor < ApplicationService
   # ever places a handful.
   MAX_PDF_IMAGES = 80
 
-  # The probe only prints a version string; listing parses the whole object
-  # table; extraction decodes every image, which is the one step a large
-  # document can legitimately make slow.
-  PROBE_TIMEOUT = 15.seconds
+  # Listing parses the whole object table; extraction decodes every image, which
+  # is the one step a large document can legitimately make slow.
   LIST_TIMEOUT = 350.seconds
   EXTRACT_TIMEOUT = 380.seconds
 
@@ -40,16 +38,11 @@ class DocumentImageExtractor < ApplicationService
     "avif" => "image/avif"
   }.freeze
 
-  # Only a positive result is memoized. Caching a negative would keep every
-  # long-running worker reporting "not installed" after the package is added,
-  # until someone restarts it; re-probing costs one short-lived process and only
-  # happens while the binary is genuinely missing.
+  # Deliberately not memoized: a PATH lookup is a handful of stat calls, and
+  # caching a negative would keep every long-running worker reporting "not
+  # installed" after the package is added, until someone restarts it.
   def self.pdfimages_available?
-    return true if @pdfimages_available
-
-    @pdfimages_available = GuardedCommand.run(
-      "pdfimages", "-v", timeout: PROBE_TIMEOUT
-    ).success?
+    ExternalTool.installed?("pdfimages")
   end
 
   attr_reader :file, :file_path, :extension
@@ -110,27 +103,38 @@ class DocumentImageExtractor < ApplicationService
       return ServiceResult.success(images: [], unextractable: pdf_contains_images?)
     end
 
-    wanted = large_enough_pdf_entries
+    listing = pdf_listing
 
-    if wanted.empty?
-      ServiceResult.success(images: [], unextractable: false)
-    else
-      ServiceResult.success(images: extract_pdf_images(wanted), unextractable: false)
+    # An installed tool that could not list this document leaves the caller in
+    # the same position as a missing one: there may be images in there and we
+    # cannot get them out, so fall back to the probe and say so.
+    if listing.nil?
+      return ServiceResult.success(images: [], unextractable: pdf_contains_images?)
     end
+
+    wanted = large_enough_entries(listing)
+    return ServiceResult.success(images: [], unextractable: false) if wanted.empty?
+
+    ServiceResult.success(images: extract_pdf_images(wanted), unextractable: false)
   end
 
   # The listing is read before extracting so soft masks (the alpha channel of
   # another image, written as its own file by -png) and undersized logos never
-  # reach the disk-read stage.
-  def large_enough_pdf_entries
+  # reach the disk-read stage. Returns nil when the command itself failed, which
+  # is a different situation from a document holding no images.
+  def pdf_listing
     result = GuardedCommand.run("pdfimages", "-list", file_path, timeout: LIST_TIMEOUT)
 
     if !result.success?
       warn_about_command("pdfimages -list", result)
-      return []
+      return nil
     end
 
-    parse_pdf_listing(result.stdout).select do |entry|
+    parse_pdf_listing(result.stdout)
+  end
+
+  def large_enough_entries(listing)
+    listing.select do |entry|
       entry[:type] == "image" &&
         entry[:width] >= MIN_IMAGE_DIMENSION &&
         entry[:height] >= MIN_IMAGE_DIMENSION

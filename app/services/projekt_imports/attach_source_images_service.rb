@@ -44,13 +44,21 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
     end
 
     if result.data[:unextractable]
-      projekt_import.add_warning!(
-        I18n.t("adm.projekts.imports.warnings.pdf_images_tool_missing",
-          filename: source_file.blob.filename.to_s)
-      )
+      projekt_import.add_warning!(unextractable_message(source_file.blob.filename.to_s))
     end
 
     result.data[:images].select { |image| usable?(image) }
+  end
+
+  # Two different causes, so two different messages: an admin who can have the
+  # package installed should be told that, and an admin whose server is fine
+  # should not be sent chasing a package that is already there.
+  def unextractable_message(filename)
+    if ::DocumentImageExtractor.pdfimages_available?
+      return I18n.t("adm.projekts.imports.warnings.pdf_images_unreadable", filename: filename)
+    end
+
+    I18n.t("adm.projekts.imports.warnings.pdf_images_tool_missing", filename: filename)
   end
 
   # Documents are full of logos, bullets and letterhead fragments. Pixel

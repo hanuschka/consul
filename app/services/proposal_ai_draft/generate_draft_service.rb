@@ -124,7 +124,9 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         },
         description: {
           type: "string",
-          description: "A detailed description of the proposal explaining the problem, solution, and expected impact. Should be written in HTML format."
+          description: "A detailed description of the proposal explaining the problem, solution, and " \
+                       "expected impact. Should be written in HTML format, starting directly with a <p> " \
+                       "paragraph. Must not repeat or restate the title and must not begin with a heading."
         },
         tag_list: {
           type: "string",

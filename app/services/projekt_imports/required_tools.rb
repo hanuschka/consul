@@ -7,6 +7,7 @@
 module ProjektImports::RequiredTools
   TOOLS = [
     { key: "pandoc", commands: %w[pandoc], package: "pandoc" },
+    { key: "pdftotext", commands: %w[pdftotext], package: "poppler-utils" },
     { key: "pdfimages", commands: %w[pdfimages], package: "poppler-utils" },
     { key: "imagemagick", commands: %w[magick convert], package: "imagemagick" }
   ].freeze

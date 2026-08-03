@@ -150,7 +150,8 @@ de:
           package: "(fehlendes Systempaket „%{package}“)"
           contact: "Bitte wenden Sie sich an die DT-Administration, damit die fehlenden Pakete auf diesem Server installiert werden. Alle übrigen Importfunktionen arbeiten normal weiter."
           features:
-            pandoc: "ODT-Dateien können nicht gelesen werden – ein Import mit einer .odt-Datei schlägt fehl."
+            pandoc: "DOCX- und ODT-Dateien können nicht gelesen werden – ein Import mit einer .docx- oder .odt-Datei schlägt fehl."
+            pdftotext: "Tabellen in PDF-Dateien verlieren ihre Spaltenstruktur – Text wird weiterhin ausgelesen."
             pdfimages: "Bilder aus PDF-Dateien werden nicht übernommen – Text und Struktur werden weiterhin ausgelesen."
             imagemagick: "Bilder aus Dokumenten können nicht verarbeitet und nicht in Inhaltsblöcke eingefügt werden."
         default_questions:

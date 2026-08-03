@@ -29,3 +29,7 @@ en:
           p2: >
             To log in, please choose a password first: %{password_link}.
           password_link_text: set a password
+          p3: >
+            For security reasons the link is only valid for a limited time. If it has already
+            expired, you can have a new one sent to you here: %{password_reset_link}.
+          password_reset_link_text: request a new link

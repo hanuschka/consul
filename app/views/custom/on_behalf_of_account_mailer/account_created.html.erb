@@ -12,6 +12,15 @@
     <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.p2",
       password_link: link_to(
         t("custom.on_behalf_of_account.mailers.account_created.password_link_text"),
+        edit_user_password_url(reset_password_token: @token),
+        target: "_blank"
+      )) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.p3",
+      password_reset_link: link_to(
+        t("custom.on_behalf_of_account.mailers.account_created.password_reset_link_text"),
         new_user_password_url,
         target: "_blank"
       )) %>

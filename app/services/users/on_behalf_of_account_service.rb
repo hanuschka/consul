@@ -60,15 +60,26 @@ class Users::OnBehalfOfAccountService < ApplicationService
 
       return Result.new(error: user.errors.full_messages.to_sentence) unless user.save
 
-      OnBehalfOfAccountMailer.account_created(user).deliver_later
+      OnBehalfOfAccountMailer.account_created(user, reset_password_token(user)).deliver_later
 
       Result.new(user: user, created: true)
     end
 
-    # The account holder never sees this password. They set their own through the password reset
-    # flow, which is what the mail above points them to.
+    # The account holder never sees this password. They set their own through the link in the mail
+    # above, which carries the token below so they land on the password form directly.
     def random_password
       "#{SecureRandom.alphanumeric(20)}aA1!"
+    end
+
+    # The same token Devise mints for a password reset, so the mail can link straight into the
+    # password form instead of asking for the address a second time. Only the raw half works as a
+    # link parameter and it cannot be read back off the record, so it is returned to the caller.
+    def reset_password_token(user)
+      raw, encrypted = Devise.token_generator.generate(User, :reset_password_token)
+
+      user.update_columns(reset_password_token: encrypted, reset_password_sent_at: Time.now.utc)
+
+      raw
     end
 
     def available_username

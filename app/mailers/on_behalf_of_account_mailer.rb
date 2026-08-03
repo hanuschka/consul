@@ -4,8 +4,9 @@ class OnBehalfOfAccountMailer < ApplicationMailer
   # Sent once, to somebody who never asked for an account: staff submitted a contribution in their
   # name and the address had no account yet. The account is already confirmed, so this is not a
   # double opt-in step — it tells them the account exists and how to get into it.
-  def account_created(user)
+  def account_created(user, reset_password_token)
     @user = user
+    @token = reset_password_token
     @email_to = @user&.email
     return if @email_to.blank?
 

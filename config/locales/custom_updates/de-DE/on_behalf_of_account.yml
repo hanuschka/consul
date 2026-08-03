@@ -29,3 +29,7 @@ de:
           p2: >
             Um sich anzumelden, vergeben Sie bitte zunächst ein Passwort: %{password_link}.
           password_link_text: Passwort vergeben
+          p3: >
+            Der Link ist aus Sicherheitsgründen nur begrenzt gültig. Ist er bereits abgelaufen,
+            können Sie sich hier einen neuen zusenden lassen: %{password_reset_link}.
+          password_reset_link_text: neuen Link anfordern

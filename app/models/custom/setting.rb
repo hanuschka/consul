@@ -41,7 +41,7 @@ class Setting < ApplicationRecord
     end
 
     def [](key)
-      all_settings_hash[key]
+      all_settings_hash[key.to_s]
     end
 
     def newsletter_brand_color

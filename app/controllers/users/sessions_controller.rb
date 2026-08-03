@@ -24,12 +24,12 @@ class Users::SessionsController < Devise::SessionsController
       return if current_user.blank?
       return if current_user.identities.where(provider: "kobil").none?
 
-      issuer = Rails.application.secrets.kobil_issuer
+      issuer = Kobil::Settings.credential(:issuer)
       return if issuer.blank?
 
       query = {
-        client_id: Rails.application.secrets.kobil_client_id,
-        post_logout_redirect_uri: Rails.application.secrets.kobil_post_logout_redirect_uri
+        client_id: Kobil::Settings.credential(:client_id),
+        post_logout_redirect_uri: Kobil::Settings.credential(:post_logout_redirect_uri)
       }.compact
 
       "#{issuer}/protocol/openid-connect/logout?#{query.to_query}"

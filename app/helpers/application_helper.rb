@@ -102,6 +102,14 @@ module ApplicationHelper
     Pundit.policy(current_user, [:adm, :projekts, projekt])&.update? || false
   end
 
+  def projekt_content_blocks_generate_url(projekt)
+    if current_user&.administrator?
+      generate_with_ai_admin_projekt_projekt_content_blocks_path(projekt)
+    elsif current_user&.projekt_manager?
+      generate_with_ai_projekt_management_projekt_projekt_content_blocks_path(projekt)
+    end
+  end
+
   def studio_projekt_phases_data(projekt)
     projekt
       .projekt_phases

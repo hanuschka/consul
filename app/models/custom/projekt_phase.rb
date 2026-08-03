@@ -259,15 +259,16 @@ class ProjektPhase < ApplicationRecord
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
-    permission_problem(user).blank?
+    permission_problem(user, location: :new_button_component).blank?
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+    permission_problem(user, location: :votes_component).blank? || conditional_vote_possible_for?(user)
   end
 
   def conditional_vote_possible_for?(user)
-    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
+    permission_problem(user, location: :votes_component) == :not_verified &&
+      feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -296,37 +297,24 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
+    location = location&.to_sym
     @permission_problem_cache ||= {}
     cache_key = "#{user&.id}_#{location}"
 
-    return @permission_problem_cache[cache_key] if @permission_problem_cache.key?(cache_key)
-
-    @permission_problem_cache[cache_key] = begin
-      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
-
-      return :phase_not_active if not_active?
-
-      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
-        return :phase_expired if expired?
-        return :phase_not_current if not_current?
-      end
-
-      return :guest_not_logged_in if user_status == "guest" && !user
-      return if user_status == "guest"
-      return :not_logged_in if !user || user&.guest?
-      return :not_verified if user_status == "verified" && !user.level_three_verified?
-
-      if phase_specific_permission_problems(user, location).present?
-        return phase_specific_permission_problems(user, location)
-      end
-
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-
-      nil
+    unless @permission_problem_cache.key?(cache_key)
+      @permission_problem_cache[cache_key] = uncached_permission_problem(user, location)
     end
+
+    @permission_problem_cache[cache_key]
+  end
+
+  # The cache above is a per-request read cache, and some answers depend on what the user has
+  # already submitted or supported. A request that *writes* one of those has to drop it before
+  # re-rendering anything, otherwise it reports the state from before its own write. Casting a
+  # support is the case that matters: register_selection asks the question on its way in, so the
+  # answer is cached while the vote row still does not exist.
+  def reset_permission_problem_cache!
+    @permission_problem_cache = nil
   end
 
   def geozone_allowed?(user)
@@ -461,6 +449,10 @@ class ProjektPhase < ApplicationRecord
 
   def max_submissions_per_user
     option("resource.max_submissions_per_user").to_i
+  end
+
+  def max_supports_per_user
+    option("resource.max_supports_per_user").to_i
   end
 
   def option(key)
@@ -635,6 +627,36 @@ class ProjektPhase < ApplicationRecord
   end
 
   private
+
+    def uncached_permission_problem(user, location)
+      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
+
+      return :phase_not_active if not_active?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
+
+      return :guest_not_logged_in if user_status == "guest" && !user
+      return if user_status == "guest"
+      return :not_logged_in if !user || user&.guest?
+      return :not_verified if user_status == "verified" && !user.level_three_verified?
+
+      phase_specific_problem = phase_specific_permission_problems(user, location)
+      return phase_specific_problem if phase_specific_problem.present?
+
+      return age_permission_problem(user) if age_permission_problem(user).present?
+      return geozone_permission_problem(user) if geozone_permission_problem(user)
+
+      advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
+      return advanced_geozone_problem if advanced_geozone_problem.present?
+
+      individual_group_problem = individual_group_value_permission_problem(user)
+      return individual_group_problem if individual_group_problem.present?
+
+      nil
+    end
 
     def phase_specific_permission_problems(user, location)
       nil

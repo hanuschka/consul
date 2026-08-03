@@ -24,9 +24,25 @@ module SettingsHelper
   end
 
   # form permissions
-  def allowed_to_post_on_behalf_of?(current_user, projekt)
-    return true if current_user.administrator? || current_user.moderator?
 
-    current_user.projekt_manager? && current_user.projekt_manager.allowed_to?(:create_on_behalf_of, projekt)
+  # Single source of truth for "may this user submit this resource in somebody else's name?".
+  # Both the forms and the controllers ask it, so a form can never offer an input the create
+  # action then refuses. Takes the resource rather than a projekt because not every resource
+  # belongs to one — deficiency reports are governed by their own manager role instead.
+  #
+  # Every OnBehalfOfSubmittable model carries the on_behalf_of accessors, but only the resources
+  # whose controllers include OnBehalfOfAccountLinking consume them — anywhere else the address
+  # would be collected and then dropped, so those forms must not offer the inputs at all.
+  def allowed_to_post_on_behalf_of?(current_user, resource)
+    return false if current_user.blank?
+    return false unless resource.class.in?([Proposal, DeficiencyReport, Budget::Investment, Idea])
+    return true if current_user.administrator?
+    return current_user.deficiency_report_manager? if resource.is_a?(DeficiencyReport)
+    return current_user.idea_manager? if resource.is_a?(Idea)
+    return true if current_user.moderator?
+
+    projekt = resource.projekt_phase&.projekt
+    projekt.present? && current_user.projekt_manager? &&
+      current_user.projekt_manager.allowed_to?(:create_on_behalf_of, projekt)
   end
 end

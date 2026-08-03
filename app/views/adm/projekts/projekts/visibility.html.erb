@@ -10,12 +10,17 @@
 
 <div class="kern-container mb-5">
   <fieldset <%= "disabled" unless policy([:adm, :projekts, @projekt]).update? %> style="border:0; padding:0; margin:0;">
-    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_overview_page"), :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_homepage"), :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_in_individual_list"), :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.show_related_projekt_link"), :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.allow_indexing"), :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: "projekt_feature.general.consider_underway"), :value, :boolean) %>
+    <%# A promoted setting writes its projekt column directly; the rest write
+        their projekt_settings row. Flipping Projekt::USE_SETTING_COLUMNS to
+        false moves the promoted ones back to their rows too. %>
+    <% Adm::Projekts::ProjektsController::VISIBILITY_SETTINGS.each do |attribute| %>
+      <% key = "projekt_feature.general.#{attribute}" %>
+      <% if Projekt.setting_read_from_column?(key) %>
+        <%= render Adm::AttributeEditorComponent.new(@projekt, attribute, :boolean) %>
+      <% else %>
+        <%= render Adm::AttributeEditorComponent.new(@projekt.projekt_settings.find_by!(key: key), :value, :boolean) %>
+      <% end %>
+    <% end %>
 
     <% if @individual_groups.any? %>
       <%= render Kern::FormFieldComponent.new(label: t('.individual_groups_label'), hint: t('.individual_groups_description')) do %>

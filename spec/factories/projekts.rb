@@ -9,7 +9,7 @@ FactoryBot.define do
     icon { "biking" }
 
     after(:create) do |projekt, evaluator|
-      projekt.projekt_settings.find_by(key: "projekt_feature.main.activate").update!(value: "active")
+      projekt.update!(activated: true)
       projekt.page.update!(status: "published", title: "Projekt page", content: "Lorem ipsum", locale: "de")
     end
 

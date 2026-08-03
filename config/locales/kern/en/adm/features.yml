@@ -5,3 +5,14 @@ en:
         title: Features
         intro_text: "Global features that don't yet have a dedicated area in the new admin UI. Changes take effect immediately across the entire platform."
         kobil_title: "KOBIL authentication"
+        kobil_credential_configured: "configured"
+        kobil_credential_missing: "missing"
+        kobil_credential_missing_optional: "not set (optional)"
+        kobil_credentials_incomplete_title: "KOBIL credentials incomplete"
+        kobil_credentials_incomplete_body: "Until all required values are present in config/secrets.yml, signing in via KOBIL will fail — even when the feature below is enabled."
+        kobil_credentials:
+          issuer: "Issuer (realm URL)"
+          client_id: "Client ID"
+          client_secret: "Client secret"
+          redirect_uri: "Redirect URI"
+          post_logout_redirect_uri: "Post-logout redirect URI"

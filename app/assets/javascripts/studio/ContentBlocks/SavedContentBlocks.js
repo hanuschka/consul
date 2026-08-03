@@ -234,6 +234,20 @@ App.Studio.ContentBlocks.SavedContentBlocks = {
     const lastItem = templatesList.querySelector(".js-saved-content-block-item:last-child")
 
     lastItem.scrollIntoView({ block: "start" })
+
+    this.highlightAddedItem(lastItem)
+  },
+
+  highlightAddedItem(item) {
+    const removeHighlight = (e) => {
+      if (e.target !== item) return
+
+      item.classList.remove("-highlight-added")
+      item.removeEventListener("animationend", removeHighlight)
+    }
+
+    item.classList.add("-highlight-added")
+    item.addEventListener("animationend", removeHighlight)
   },
 
   setupAceEditor(container, currentHTML = '') {

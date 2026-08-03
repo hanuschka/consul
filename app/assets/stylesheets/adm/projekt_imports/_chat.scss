@@ -731,7 +731,7 @@ $_chat-warning-text: #6b4000;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, white 90%, transparent);
+  background: white;
   z-index: 10;
 
   &.-hidden {

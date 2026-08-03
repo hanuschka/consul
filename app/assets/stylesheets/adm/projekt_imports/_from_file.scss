@@ -12,6 +12,14 @@ $_import-border: #dbdfe4;
 $_import-input-bg: #f7f8fa;
 $_import-icon-bg-neutral: #f0f1f3;
 
+// Lines up with the centred upload form below it rather than the full
+// container width.
+.projekt-import-from-file--tool-warning {
+  max-width: $_import-section-max-width;
+  margin: 0 auto 24px;
+  padding: 0 24px;
+}
+
 .projekt-import-from-file {
   display: flex;
   flex-direction: column;

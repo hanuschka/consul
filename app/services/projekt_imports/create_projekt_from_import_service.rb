@@ -87,17 +87,64 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   end
 
   def apply_tags_and_sdgs(projekt, data)
-    if data["categories"].present?
-      projekt.tag_list = Array(data["categories"]).compact_blank.join(", ")
-      projekt.save!
-    end
-
-    if data["sdg_codes"].present? && projekt.respond_to?(:related_sdg_list=) && sdg_goals_available?
-      projekt.related_sdg_list = Array(data["sdg_codes"]).compact_blank.join(", ")
-      projekt.save!
-    end
+    apply_categories(projekt, data["categories"])
+    apply_sdg_codes(projekt, data["sdg_codes"])
   rescue StandardError => e
     projekt_import.add_warning!("tags/sdg: #{e.message}")
+  end
+
+  # acts_as_taggable creates whatever tag name it is handed, so a category the
+  # model invented would become a real Tag row the whole platform then offers in
+  # its filters. Only names that already exist are applied, and the rest are
+  # reported so an admin can add them deliberately.
+  def apply_categories(projekt, categories)
+    names = existing_names(categories)
+    return if names.blank?
+
+    projekt.tag_list = names.join(", ")
+    projekt.save!
+  end
+
+  def existing_names(categories)
+    names = normalized_list(categories)
+    return [] if names.empty?
+
+    known = Tag.where(name: names).pluck(:name)
+    unknown = names - known
+
+    if unknown.any?
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.unknown_categories", categories: unknown.join(", "))
+      )
+    end
+
+    names & known
+  end
+
+  def apply_sdg_codes(projekt, sdg_codes)
+    codes = normalized_list(sdg_codes)
+    return if codes.empty?
+    return if !projekt.respond_to?(:related_sdg_list=)
+    return if !sdg_goals_available?
+
+    known = SDG::Goal.where(code: codes).pluck(:code).map(&:to_s)
+    unknown = codes - known
+
+    if unknown.any?
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.unknown_sdg_codes", codes: unknown.join(", "))
+      )
+    end
+
+    applicable = codes & known
+    return if applicable.empty?
+
+    projekt.related_sdg_list = applicable.join(", ")
+    projekt.save!
+  end
+
+  def normalized_list(values)
+    Array(values).map { |value| value.to_s.strip }.compact_blank.uniq
   end
 
   def sdg_goals_available?

@@ -1,4 +1,4 @@
-class Ai::Tools::ProjektImports::ReadImportData < RubyLLM::Tool
+class Ai::Tools::ProjektImports::ReadImportData < Ai::Tools::ProjektImports::EditorTool
   SECTIONS = %w[overview phases content_blocks].freeze
 
   description "Reads the current project import data. Call this before changing " \
@@ -19,19 +19,11 @@ class Ai::Tools::ProjektImports::ReadImportData < RubyLLM::Tool
     additionalProperties: false
   )
 
-  def initialize(editor:)
-    @editor = editor
-  end
-
-  def name
-    "read_import_data"
-  end
-
   def execute(section:)
     case section
-    when "overview" then { overview: @editor.overview }
-    when "phases" then { phases: @editor.phases }
-    when "content_blocks" then { content_blocks: @editor.content_blocks }
+    when "overview" then { overview: editor.overview }
+    when "phases" then { phases: editor.phases }
+    when "content_blocks" then { content_blocks: editor.content_blocks }
     else { error: "Unknown section #{section}. Use one of: #{SECTIONS.join(", ")}" }
     end
   end

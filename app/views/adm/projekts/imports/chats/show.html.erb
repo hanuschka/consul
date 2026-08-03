@@ -34,32 +34,32 @@
        data-projekt-imports--chat-import-status-value="<%= @projekt_import.status %>">
 
     <%# Import error banner (shown once on failure, dismissible) %>
-    <div class="projekt-import-chat--error-banner -hidden"
+    <div class="projekt-import-chat--banner -error -hidden"
          role="alert"
          data-projekt-imports--chat-target="importError"
          data-fallback="<%= t('.errors.import_failed') %>">
       <span class="material-symbols-outlined" aria-hidden="true">error</span>
-      <span class="projekt-import-chat--error-banner-message"
+      <span class="projekt-import-chat--banner-body"
             data-projekt-imports--chat-target="importErrorMessage"></span>
       <button type="button"
-              class="projekt-import-chat--error-banner-dismiss"
+              class="projekt-import-chat--banner-dismiss"
               aria-label="<%= t('.errors.dismiss') %>"
-              data-action="click->projekt-imports--chat#dismissImportError">
+              data-action="click->projekt-imports--chat#dismissBanner">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
     </div>
 
     <%# Import warnings banner (non-fatal problems, dismissible) %>
-    <div class="projekt-import-chat--warning-banner -hidden"
+    <div class="projekt-import-chat--banner -warning -hidden"
          role="status"
          data-projekt-imports--chat-target="importWarning">
       <span class="material-symbols-outlined" aria-hidden="true">warning</span>
-      <ul class="projekt-import-chat--warning-banner-list"
+      <ul class="projekt-import-chat--banner-body"
           data-projekt-imports--chat-target="importWarningList"></ul>
       <button type="button"
-              class="projekt-import-chat--warning-banner-dismiss"
+              class="projekt-import-chat--banner-dismiss"
               aria-label="<%= t('.errors.dismiss') %>"
-              data-action="click->projekt-imports--chat#dismissImportWarning">
+              data-action="click->projekt-imports--chat#dismissBanner">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
     </div>

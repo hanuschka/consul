@@ -1,8 +1,15 @@
 class ProjektImports::Builders::PollBuilder < ProjektImports::Builders::Base
   DEFAULT_VOTE_TYPE = "unique".freeze
 
+  # The single definition of "a poll question this import can actually build".
+  # The chat's question count and the empty-voting-phase warning both ask here,
+  # so what the admin is told always matches what gets created.
+  def self.importable_questions(payload)
+    Array(payload).select { |question| question["title"].present? }
+  end
+
   def call
-    questions = Array(payload).select { |question| question["title"].present? }
+    questions = self.class.importable_questions(payload)
     return [] if questions.empty?
 
     poll = phase.poll || phase.create_poll!(name: phase.name.presence || projekt.name)

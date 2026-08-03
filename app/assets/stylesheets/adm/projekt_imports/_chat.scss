@@ -38,7 +38,7 @@ $_chat-warning-text: #6b4000;
   }
 }
 
-.projekt-import-chat--error-banner {
+.projekt-import-chat--banner {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -46,9 +46,19 @@ $_chat-warning-text: #6b4000;
   padding: 12px 16px;
   font-size: 14px;
   line-height: 1.45;
-  color: $_chat-error-text;
-  background: color-mix(in srgb, $_chat-error 8%, white);
-  border-bottom: 1px solid color-mix(in srgb, $_chat-error 25%, white);
+  color: var(--banner-text);
+  background: color-mix(in srgb, var(--banner-accent) 9%, white);
+  border-bottom: 1px solid color-mix(in srgb, var(--banner-accent) 26%, white);
+
+  &.-error {
+    --banner-accent: #{$_chat-error};
+    --banner-text: #{$_chat-error-text};
+  }
+
+  &.-warning {
+    --banner-accent: #{$_chat-warning};
+    --banner-text: #{$_chat-warning-text};
+  }
 
   &.-hidden {
     display: none;
@@ -56,63 +66,11 @@ $_chat-warning-text: #6b4000;
 
   .material-symbols-outlined {
     font-size: 20px;
-    color: $_chat-error;
+    color: var(--banner-accent);
   }
 }
 
-.projekt-import-chat--error-banner-message {
-  flex: 1;
-  min-width: 0;
-  word-break: break-word;
-}
-
-.projekt-import-chat--error-banner-dismiss {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  color: $_chat-error;
-  background: transparent;
-  border: 0;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 120ms ease;
-
-  &:hover {
-    background: color-mix(in srgb, $_chat-error 14%, white);
-  }
-
-  .material-symbols-outlined {
-    font-size: 18px;
-  }
-}
-
-.projekt-import-chat--warning-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  flex-shrink: 0;
-  padding: 12px 16px;
-  font-size: 14px;
-  line-height: 1.45;
-  color: $_chat-warning-text;
-  background: color-mix(in srgb, $_chat-warning 10%, white);
-  border-bottom: 1px solid color-mix(in srgb, $_chat-warning 28%, white);
-
-  &.-hidden {
-    display: none;
-  }
-
-  .material-symbols-outlined {
-    font-size: 20px;
-    color: $_chat-warning;
-  }
-}
-
-.projekt-import-chat--warning-banner-list {
+.projekt-import-chat--banner-body {
   flex: 1;
   min-width: 0;
   margin: 0;
@@ -125,7 +83,7 @@ $_chat-warning-text: #6b4000;
   }
 }
 
-.projekt-import-chat--warning-banner-dismiss {
+.projekt-import-chat--banner-dismiss {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,7 +91,7 @@ $_chat-warning-text: #6b4000;
   width: 26px;
   height: 26px;
   padding: 0;
-  color: $_chat-warning;
+  color: var(--banner-accent);
   background: transparent;
   border: 0;
   border-radius: 6px;
@@ -141,7 +99,7 @@ $_chat-warning-text: #6b4000;
   transition: background-color 120ms ease;
 
   &:hover {
-    background: color-mix(in srgb, $_chat-warning 16%, white);
+    background: color-mix(in srgb, var(--banner-accent) 15%, white);
   }
 
   .material-symbols-outlined {

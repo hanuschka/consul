@@ -5,9 +5,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
   def perform(projekt_import_id)
     projekt_import = ProjektImport.find(projekt_import_id)
-    projekt_import.update!(status: "submitting", warnings: [])
-
-    warn_about_unapplied_chat(projekt_import)
+    projekt_import.update!(status: "submitting", warnings: unapplied_chat_warnings(projekt_import))
 
     resolve_result = ProjektImports::ResolveContentBlocksService.call(projekt_import: projekt_import)
     if !resolve_result.success?
@@ -40,15 +38,24 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
   # user contributed to that produced no tool call either predates those tools or
   # is one where the model answered in prose without applying anything — either
   # way the projekt is about to be created from unedited data, so say so.
-  def warn_about_unapplied_chat(projekt_import)
+  #
+  # tool_activity is compared in raw SQL on purpose: Rails routes
+  # where.not(jsonb_column: []) through ArrayHandler, which yields 1 = 1 and
+  # silently matches every row.
+  def unapplied_chat_warnings(projekt_import)
     ai_chat = projekt_import.ai_chat
-    return if ai_chat.blank?
+    return [] if ai_chat.blank?
 
-    messages = ai_chat.ai_chat_messages
-    return if !messages.where(role: "user").exists?
-    return if messages.where.not(tool_activity: []).exists?
+    has_user_message, has_tool_activity = ai_chat.ai_chat_messages.pick(
+      Arel.sql("bool_or(role = 'user'), bool_or(tool_activity <> '[]'::jsonb)")
+    )
+    return [] if !has_user_message
+    return [] if has_tool_activity
 
-    projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.chat_changes_not_applied"))
+    [{
+      "message" => I18n.t("adm.projekts.imports.warnings.chat_changes_not_applied"),
+      "at" => Time.current.iso8601
+    }]
   end
 
   def generate_image_if_requested(projekt_import, projekt)

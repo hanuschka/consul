@@ -191,7 +191,7 @@ en:
           chat_changes_not_applied: "None of the changes discussed in the chat were applied to the import data, so the projekt was created from the original document analysis. Please check it and correct anything that is missing."
           form_feature_unsupported: "The phase \"%{phase}\" does not support the setting \"%{feature}\". The entries created for it are not visible on the citizen form."
           content_blocks_unresolved: "The projekt was created with all its phases, but the content blocks could not be generated. Please add them manually, or delete the projekt and run the import again."
-          pdf_images_not_extracted: "The PDF file \"%{filename}\" appears to contain images. Images cannot be carried over from PDF files — please upload them manually."
+          pdf_images_tool_missing: "The PDF file \"%{filename}\" contains images that could not be carried over: this server is missing the \"poppler-utils\" system package. Please upload the images manually, or ask an administrator to install the package."
         failure_stages:
           extract: "Text extraction"
           extracting: "Text extraction"

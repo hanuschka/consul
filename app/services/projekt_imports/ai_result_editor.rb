@@ -1,9 +1,8 @@
 class ProjektImports::AiResultEditor
-  SCALAR_FIELDS = %w[
+  EDITABLE_FIELDS = %w[
     title subtitle projekt_start_date projekt_end_date image_prompt
+    categories sdg_codes
   ].freeze
-
-  COLLECTION_FIELDS = %w[categories sdg_codes].freeze
 
   class IndexError < StandardError; end
   class ResolvedContentBlocksError < StandardError; end
@@ -16,8 +15,8 @@ class ProjektImports::AiResultEditor
   end
 
   def overview
-    data.slice(*(SCALAR_FIELDS + COLLECTION_FIELDS)).merge(
-      "phase_count" => phases.size,
+    data.slice(*EDITABLE_FIELDS).merge(
+      "phase_count" => Array(data["phases"]).size,
       "content_block_count" => Array(data["content_blocks"]).size
     )
   end
@@ -35,11 +34,10 @@ class ProjektImports::AiResultEditor
   end
 
   def update_fields(attributes)
-    changed = attributes.compact.slice(*(SCALAR_FIELDS + COLLECTION_FIELDS))
+    changed = attributes.compact.slice(*EDITABLE_FIELDS)
     return [] if changed.empty?
 
-    write(data.merge(changed))
-    journal.record("update_fields", fields: changed.keys)
+    write(data.merge(changed), "update_fields", fields: changed.keys)
 
     changed.keys
   end
@@ -49,8 +47,7 @@ class ProjektImports::AiResultEditor
     ensure_index!(phase_index, updated)
     updated[phase_index] = phase
 
-    write(data.merge("phases" => updated))
-    journal.record("replace_phase", phase_index: phase_index)
+    write(data.merge("phases" => updated), "replace_phase", phase_index: phase_index)
 
     phase_index
   end
@@ -58,8 +55,7 @@ class ProjektImports::AiResultEditor
   def add_phase(phase)
     updated = phases + [phase]
 
-    write(data.merge("phases" => updated))
-    journal.record("add_phase", phase_index: updated.size - 1, type: phase["type"])
+    write(data.merge("phases" => updated), "add_phase", phase_index: updated.size - 1, type: phase["type"])
 
     updated.size - 1
   end
@@ -69,8 +65,7 @@ class ProjektImports::AiResultEditor
     ensure_index!(phase_index, updated)
     removed = updated.delete_at(phase_index)
 
-    write(data.merge("phases" => updated))
-    journal.record("remove_phase", type: removed["type"])
+    write(data.merge("phases" => updated), "remove_phase", type: removed["type"])
 
     removed
   end
@@ -85,8 +80,7 @@ class ProjektImports::AiResultEditor
         "can no longer be edited here"
     end
 
-    write(data.merge("content_blocks" => Array(blocks)))
-    journal.record("replace_content_blocks", count: blocks.size)
+    write(data.merge("content_blocks" => Array(blocks)), "replace_content_blocks", count: blocks.size)
 
     blocks.size
   end
@@ -97,8 +91,13 @@ class ProjektImports::AiResultEditor
     projekt_import.ai_result.presence || {}
   end
 
-  def write(updated_data)
-    projekt_import.update!(ai_result: updated_data)
+  # One commit for the edit and its journal entry: an edit that persisted without
+  # its entry is exactly the state a retry would replay.
+  def write(updated_data, action, details)
+    ActiveRecord::Base.transaction do
+      projekt_import.update!(ai_result: updated_data)
+      journal.record(action, details)
+    end
   end
 
   def ensure_index!(phase_index, collection)

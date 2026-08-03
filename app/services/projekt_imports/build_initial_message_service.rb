@@ -104,7 +104,7 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
   end
 
   def poll_question_count(phase)
-    Array(phase["poll_questions"]).count { |question| question["title"].present? }
+    ProjektImports::Builders::PollBuilder.importable_questions(phase["poll_questions"]).size
   end
 
   def poll_question_summary(question_count)

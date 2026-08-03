@@ -59,7 +59,6 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
-    this.shownWarningCount = 0
     this.shownWarningSignature = null
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
@@ -271,7 +270,7 @@ export default class extends Controller {
     this.completionShown = true
     this.completeOverlayProgress()
 
-    if (redirectPath && this.shownWarningCount === 0) {
+    if (redirectPath && !this.hasVisibleWarnings()) {
       window.location.href = redirectPath
       return
     }
@@ -286,8 +285,10 @@ export default class extends Controller {
     this.importErrorTarget.classList.remove("-hidden")
   }
 
-  dismissImportError() {
-    this.importErrorTarget.classList.add("-hidden")
+  // Both banners share markup and styling; the clicked button's own banner is
+  // the one to hide.
+  dismissBanner(event) {
+    event.currentTarget.closest(".projekt-import-chat--banner").classList.add("-hidden")
   }
 
   // Warnings accumulate server-side across the whole import, so the banner is
@@ -295,26 +296,33 @@ export default class extends Controller {
   // than count catches a same-length set from a later run. A dismissal sticks
   // until the set changes.
   renderImportWarnings(warnings) {
-    const entries = Array.isArray(warnings) ? warnings : []
-    const messages = entries.map((warning) => warning.message || "")
+    const messages = (Array.isArray(warnings) ? warnings : []).map((w) => w.message || "")
     const signature = JSON.stringify(messages)
     if (signature === this.shownWarningSignature) return
 
     this.shownWarningSignature = signature
-    this.shownWarningCount = entries.length
     this.importWarningListTarget.replaceChildren()
 
-    entries.forEach((warning) => {
+    messages.forEach((message) => {
       const item = document.createElement("li")
-      item.textContent = warning.message || ""
+      item.textContent = message
       this.importWarningListTarget.appendChild(item)
     })
 
-    this.importWarningTarget.classList.toggle("-hidden", entries.length === 0)
+    this.importWarningTarget.classList.toggle("-hidden", messages.length === 0)
   }
 
-  dismissImportWarning() {
+  hasVisibleWarnings() {
+    return this.importWarningListTarget.children.length > 0
+  }
+
+  // A new import run clears warnings server-side, so the previous run's banners
+  // must not linger while it is in flight.
+  resetBanners() {
+    this.importErrorTarget.classList.add("-hidden")
     this.importWarningTarget.classList.add("-hidden")
+    this.importWarningListTarget.replaceChildren()
+    this.shownWarningSignature = null
   }
 
   scheduleStatusPoll() {
@@ -591,7 +599,7 @@ export default class extends Controller {
   // Invoked by the shared confirm dialog's "confirmed" event (not directly by
   // the import button), so the modal replaces the old window.confirm.
   startImport() {
-    this.dismissImportError()
+    this.resetBanners()
     this.lastImportStatus = null
     // A fresh import procedure starts now (incl. re-import of a completed one),
     // so its completion should redirect to the projekt even on a revisit.

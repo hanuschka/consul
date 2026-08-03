@@ -21,9 +21,6 @@ class ProjektImports::Builders::LivestreamBuilder < ProjektImports::Builders::Ba
   # itself keeps the two in step instead of copying its predicate, so a
   # model-invented URL is dropped here rather than failing the whole phase.
   def http_url?(value)
-    return false if !value.is_a?(String)
-    return false if value.blank?
-
     UrlValidator.new(attributes: [:url]).url_valid?(value)
   end
 end

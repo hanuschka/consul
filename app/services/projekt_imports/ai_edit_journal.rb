@@ -16,14 +16,6 @@ class ProjektImports::AiEditJournal
     entry
   end
 
-  def entries
-    Array(ai_chat_message.tool_activity)
-  end
-
-  def any?
-    entries.any?
-  end
-
   def self.summarize(entries)
     Array(entries).map { |entry| describe(entry) }.compact
   end
@@ -50,5 +42,11 @@ class ProjektImports::AiEditJournal
 
   def self.translate(key, **interpolations)
     I18n.t("adm.projekts.imports.applied_edits.#{key}", **interpolations)
+  end
+
+  private
+
+  def entries
+    Array(ai_chat_message.tool_activity)
   end
 end

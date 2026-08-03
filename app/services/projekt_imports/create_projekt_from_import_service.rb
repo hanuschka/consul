@@ -201,7 +201,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   def warn_about_missing_poll_questions(record, data)
     return if !record.is_a?(ProjektPhase::VotingPhase)
 
-    questions = Array(data["poll_questions"]).select { |question| question["title"].present? }
+    questions = ProjektImports::Builders::PollBuilder.importable_questions(data["poll_questions"])
     return if questions.any?
 
     projekt_import.add_warning!(

@@ -58,7 +58,7 @@
     <%= form_submit_button(text: t("shared.submit")) %>
 
     <% if Setting["feature.melderegister"].present? %>
-      <%= form_submit_button(text: t("adm.users.form.submit_with_reverify"), name: "reverify", icon: "verified", data: { turbo_confirm: t("adm.users.form.reverify_confirm") }) %>
+      <%= form_submit_button(text: t("adm.users.form.submit_with_reverify"), name: "reverify", value: "1", icon: "verified", data: { turbo_confirm: t("adm.users.form.reverify_confirm") }) %>
     <% end %>
   </div>
 <% end %>

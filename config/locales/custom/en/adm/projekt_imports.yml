@@ -148,7 +148,7 @@ en:
         missing_tools:
           title: "Limited import functionality"
           package: "(missing system package \"%{package}\")"
-          contact: "Please contact the DT administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
+          contact: "Please contact the DemokratieToday administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
           features:
             pandoc: "DOCX and ODT files cannot be read — an import using a .docx or .odt file will fail."
             pdftotext: "Tables in PDF files lose their column structure — text is still extracted."

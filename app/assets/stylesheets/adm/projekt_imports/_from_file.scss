@@ -11,6 +11,7 @@ $_import-text-faint: #8a939c;
 $_import-border: #dbdfe4;
 $_import-input-bg: #f7f8fa;
 $_import-icon-bg-neutral: #f0f1f3;
+$_import-notice-border: oklch(0.84 0.06 66.98);
 
 .projekt-import-from-file {
   display: flex;
@@ -528,12 +529,15 @@ $_import-icon-bg-neutral: #f0f1f3;
 
 // Sits at the foot of the upload card rather than above it: the admin reads
 // the limitation while still on the card they are about to drop a file onto,
-// and the primary action keeps its position.
+// and the primary action keeps its position. Rendered as a filled warning
+// callout so it cannot be mistaken for supplementary fine print.
 .projekt-import-tool-notice {
   width: 100%;
-  margin: 30px 0 0;
-  padding: 18px 20px 20px;
-  border-top: 1px solid color-mix(in srgb, $_import-border 80%, white);
+  margin: 32px 0 0;
+  padding: 20px 22px 22px;
+  border: 2px solid $_import-notice-border;
+  border-radius: $_import-radius;
+  background: var(--kern-color-feedback-warning-background);
   text-align: left;
 }
 
@@ -548,68 +552,70 @@ $_import-icon-bg-neutral: #f0f1f3;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  color: var(--kern-color-feedback-warning);
-  background:
-    color-mix(in srgb, var(--kern-color-feedback-warning) 14%, white);
+  color: #fff;
+  background: var(--kern-color-feedback-warning);
 
   .material-symbols-outlined {
-    font-size: 21px;
+    font-size: 24px;
   }
 }
 
 .projekt-import-tool-notice--title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: -0.1px;
-  color: $_import-text;
+  color: var(--kern-color-feedback-warning);
 }
 
 .projekt-import-tool-notice--list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 14px 0 0;
+  gap: 8px;
+  margin: 16px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .projekt-import-tool-notice--row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 14px;
-  padding: 11px 14px;
+  padding: 13px 16px;
+  border: 1px solid $_import-notice-border;
   border-radius: $_import-radius-sm;
-  background: var(--kern-color-feedback-warning-background);
+  background: #fff;
 }
 
 .projekt-import-tool-notice--row-text {
-  flex: 1 1 260px;
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: $_import-text;
+}
+
+.projekt-import-tool-notice--requirement {
+  font-weight: 400;
   color: $_import-text-muted;
 }
 
-// The package name is what an administrator copies into apt, so it is set
-// apart from the prose rather than folded into it in parentheses.
-.projekt-import-tool-notice--package {
-  flex-shrink: 0;
-  padding: 3px 9px;
+// The package name is what an administrator copies into apt, so it reads as a
+// badge inline in the sentence rather than as prose in parentheses.
+.projekt-import-tool-notice--badge {
+  display: inline-block;
+  padding: 2px 8px;
   border-radius: 6px;
   font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
   font-size: 14px;
+  font-weight: 400;
   color: $_import-text;
-  background: rgba(255, 255, 255, 0.75);
-  outline: 1px solid color-mix(in srgb, $_import-border 85%, white);
+  background: var(--kern-color-feedback-warning-background);
+  outline: 1px solid $_import-notice-border;
 }
 
 .projekt-import-tool-notice--note {
-  margin: 14px 0 0;
-  font-size: 14px;
+  margin: 16px 0 0;
+  font-size: 15px;
   line-height: 1.6;
-  color: $_import-text-faint;
+  color: $_import-text-muted;
 }

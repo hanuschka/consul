@@ -1,7 +1,7 @@
 <div class="projekt-import-tool-notice" role="alert">
   <div class="projekt-import-tool-notice--head">
     <span class="projekt-import-tool-notice--icon" aria-hidden="true">
-      <span class="material-symbols-outlined">report</span>
+      <span class="material-symbols-outlined">warning</span>
     </span>
 
     <p class="projekt-import-tool-notice--title">
@@ -12,11 +12,14 @@
   <ul class="projekt-import-tool-notice--list">
     <% missing_tools.each do |tool| %>
       <li class="projekt-import-tool-notice--row">
-        <span class="projekt-import-tool-notice--row-text"><%= feature_text(tool) %></span>
+        <span class="projekt-import-tool-notice--row-text">
+          <%= feature_text(tool) %>
 
-        <span class="projekt-import-tool-notice--package">
-          <span class="kern-sr-only"><%= package_label(tool) %></span>
-          <span aria-hidden="true"><%= tool[:package] %></span>
+          <span class="projekt-import-tool-notice--requirement">
+            <%= t("adm.projekts.imports.missing_tools.requires_package") %>
+          </span>
+
+          <span class="projekt-import-tool-notice--badge"><%= tool[:package] %></span>
         </span>
       </li>
     <% end %>

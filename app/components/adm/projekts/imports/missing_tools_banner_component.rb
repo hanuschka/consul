@@ -14,8 +14,4 @@ class Adm::Projekts::Imports::MissingToolsBannerComponent < ApplicationComponent
   def feature_text(tool)
     I18n.t("adm.projekts.imports.missing_tools.features.#{tool[:key]}")
   end
-
-  def package_label(tool)
-    I18n.t("adm.projekts.imports.missing_tools.package", package: tool[:package])
-  end
 end

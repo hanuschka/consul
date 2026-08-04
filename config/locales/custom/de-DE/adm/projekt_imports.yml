@@ -148,6 +148,7 @@ de:
         missing_tools:
           title: "Eingeschränkte Importfunktionen"
           package: "(fehlendes Systempaket „%{package}“)"
+          requires_package: "Erfordert die Installation des Pakets:"
           contact: "Bitte wenden Sie sich an die DT-Administration, damit die fehlenden Pakete auf diesem Server installiert werden. Alle übrigen Importfunktionen arbeiten normal weiter."
           features:
             pandoc: "DOCX- und ODT-Dateien können nicht gelesen werden – ein Import mit einer .docx- oder .odt-Datei schlägt fehl."

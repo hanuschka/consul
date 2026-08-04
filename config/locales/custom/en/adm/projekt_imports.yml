@@ -148,6 +148,7 @@ en:
         missing_tools:
           title: "Limited import functionality"
           package: "(missing system package \"%{package}\")"
+          requires_package: "Requires installing package:"
           contact: "Please contact the DemokratieToday administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
           features:
             pandoc: "DOCX and ODT files cannot be read — an import using a .docx or .odt file will fail."

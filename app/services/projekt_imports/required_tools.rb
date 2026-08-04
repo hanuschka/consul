@@ -16,6 +16,26 @@ module ProjektImports::RequiredTools
     TOOLS.reject { |tool| installed?(tool) }
   end
 
+  # Grouped by installable package rather than by tool, because that is the
+  # unit an operator acts on: pdftotext and pdfimages both come from
+  # poppler-utils, so reporting them separately would ask for one apt package
+  # twice.
+  def self.packages_status
+    TOOLS.group_by { |tool| tool[:package] }.transform_values do |tools|
+      missing_tools = tools.reject { |tool| installed?(tool) }
+
+      {
+        installed: missing_tools.empty?,
+        commands: tools.flat_map { |tool| tool[:commands] },
+        missing_commands: missing_tools.flat_map { |tool| tool[:commands] }
+      }
+    end
+  end
+
+  def self.missing_packages
+    packages_status.reject { |_package, status| status[:installed] }.keys
+  end
+
   def self.installed?(tool)
     tool[:commands].any? { |command| ExternalTool.installed?(command) }
   end

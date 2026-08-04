@@ -1,0 +1,28 @@
+<div class="projekt-import-tool-notice" role="alert">
+  <div class="projekt-import-tool-notice--head">
+    <span class="projekt-import-tool-notice--icon" aria-hidden="true">
+      <span class="material-symbols-outlined">report</span>
+    </span>
+
+    <p class="projekt-import-tool-notice--title">
+      <%= t("adm.projekts.imports.missing_tools.title") %>
+    </p>
+  </div>
+
+  <ul class="projekt-import-tool-notice--list">
+    <% missing_tools.each do |tool| %>
+      <li class="projekt-import-tool-notice--row">
+        <span class="projekt-import-tool-notice--row-text"><%= feature_text(tool) %></span>
+
+        <span class="projekt-import-tool-notice--package">
+          <span class="kern-sr-only"><%= package_label(tool) %></span>
+          <span aria-hidden="true"><%= tool[:package] %></span>
+        </span>
+      </li>
+    <% end %>
+  </ul>
+
+  <p class="projekt-import-tool-notice--note">
+    <%= t("adm.projekts.imports.missing_tools.contact") %>
+  </p>
+</div>

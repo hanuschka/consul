@@ -3,23 +3,6 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_imports_path) %>
 
 <div class="kern-container my-5">
-  <% if @missing_tools.any? %>
-    <div class="projekt-import-from-file--tool-warning">
-      <%= kern_alert(title: t("adm.projekts.imports.missing_tools.title"), style: :warning) do %>
-        <ul>
-          <% @missing_tools.each do |tool| %>
-            <li>
-              <%= t("adm.projekts.imports.missing_tools.features.#{tool[:key]}") %>
-              <%= t("adm.projekts.imports.missing_tools.package", package: tool[:package]) %>
-            </li>
-          <% end %>
-        </ul>
-
-        <p><%= t("adm.projekts.imports.missing_tools.contact") %></p>
-      <% end %>
-    </div>
-  <% end %>
-
   <div class="projekt-import-from-file"
        data-controller="projekt-imports--from-file"
        data-projekt-imports--from-file-create-url-value="<%= adm_projekts_imports_path %>"
@@ -66,6 +49,8 @@
                data-action="change->projekt-imports--from-file#filesPicked">
 
         <p class="projekt-import-from-file--drop-hint"><%= t(".drop_hint") %></p>
+
+        <%= render Adm::Projekts::Imports::MissingToolsBannerComponent.new(missing_tools: @missing_tools) %>
       </div>
 
       <%# File preview %>

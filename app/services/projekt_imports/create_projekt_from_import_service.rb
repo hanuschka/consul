@@ -281,10 +281,7 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   end
 
   def create_phase_footer_blocks(phase_entries)
-    ProjektImports::CreatePhaseFooterBlocksService.call(
-      phase_entries: phase_entries,
-      locale: projekt_import.import_locale
-    )
+    ProjektImports::CreatePhaseFooterBlocksService.call(phase_entries: phase_entries)
   rescue StandardError => e
     projekt_import.add_warning!("phase_footer_blocks: #{e.message}")
   end

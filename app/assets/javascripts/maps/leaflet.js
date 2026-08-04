@@ -79,7 +79,7 @@
     createMap() {
       this.map = L.map(this.element.id, {
         gestureHandling: true,
-        maxZoom: 18,
+        maxZoom: App.MapZoom.MAX,
         zoomControl: false,
         keyboard: !!this.editable
       }).setView(this.mapCenterLatLng, this.zoom);
@@ -349,6 +349,7 @@
     }
 
     createLayer(item) {
+      const zoomLimits = App.MapZoom;
       let layer;
 
       if (item.protocol === 'wms') {
@@ -359,12 +360,15 @@
           transparent: (item.transparent),
           show_by_default: (item.show_by_default),
           opacity: (item.opacity ? item.opacity : 1),
+          maxZoom: zoomLimits.MAX
         });
       } else if (item.protocol === 'geojson') {
         layer = this.createGeoJsonOverlay(item);
       } else {
         layer = L.tileLayer(item.provider, {
-          attribution: item.attribution
+          attribution: item.attribution,
+          maxZoom: zoomLimits.MAX,
+          maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
         });
       }
 
@@ -487,7 +491,9 @@
     ensureBaseLayerExistence() {
       if (Object.keys(this.baseLayers).length === 0) {
         const defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: App.MapZoom.MAX,
+          maxNativeZoom: App.MapZoom.MAX_NATIVE_TILE
         });
         this.baseLayers['defaultLayer'] = defaultLayer;
       }

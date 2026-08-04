@@ -9,7 +9,7 @@
 
   <div class="my-5">
     <%= render Adm::AttributeEditorComponent.new(
-      SiteCustomization::ContentBlock.custom_block_for(MailerFooterHelper::SYSTEM_EMAIL_FOOTER_BLOCK, I18n.default_locale),
+      SiteCustomization::ContentBlock.custom_block_for(MailerFooterHelper::SYSTEM_EMAIL_FOOTER_BLOCK),
       :body, :rich_text, wide: true, toolbar: "email"
     ) %>
   </div>

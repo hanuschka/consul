@@ -27,6 +27,8 @@ module AdmHelper
   end
 
   def restriction_label_for(projekt_phase)
+    return "-" unless projekt_phase.regular?
+
     restrictions = []
     restrictions << I18n.t("adm.projekts.phases.restrictions.user_status.#{projekt_phase.user_status}") if projekt_phase.user_status.present?
     restrictions << projekt_phase.geozone_restrictions_formatted if projekt_phase.geozone_restrictions.any?

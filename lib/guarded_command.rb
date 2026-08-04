@@ -64,8 +64,8 @@ module GuardedCommand
     end
 
     Result.new(
-      stdout: stdout_buffer,
-      stderr: stderr_buffer,
+      stdout: as_utf8(stdout_buffer),
+      stderr: as_utf8(stderr_buffer),
       timed_out: timed_out,
       exit_status: exit_status
     )
@@ -73,6 +73,16 @@ module GuardedCommand
     Rails.logger.warn("[GuardedCommand] #{command.first} failed to run: #{e.class}: #{e.message}")
 
     Result.new(stdout: "", stderr: e.message, timed_out: false, exit_status: nil)
+  end
+
+  # IO#read hands back ASCII-8BIT, so without this the captured output reaches
+  # callers as binary: String#length then counts bytes rather than characters,
+  # slicing it can split a multibyte character in half, and comparing it against
+  # any non-ASCII literal raises Encoding::CompatibilityError. Every command run
+  # here emits text. scrub rather than a bare force_encoding so a truncated tail
+  # cannot leave an invalid string behind.
+  def self.as_utf8(buffer)
+    buffer.force_encoding(Encoding::UTF_8).scrub
   end
 
   # pgroup: true so a converter that forks takes its children down with it.

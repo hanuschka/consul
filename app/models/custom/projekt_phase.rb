@@ -35,12 +35,12 @@ class ProjektPhase < ApplicationRecord
   ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
 
   SPECIAL_PROJEKT_PHASES = [
-    "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   PHASE_MATERIAL_ICONS = {

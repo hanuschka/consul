@@ -1,5 +1,12 @@
 <tr id="<%= dom_id(user) %>" class="kern-table__row">
-  <th scope="row" class="kern-table__header" data-field="username"><%= user.username %></th>
+  <th scope="row" class="kern-table__header" data-field="username">
+    <%= user.username %>
+    <% if user.brevo_contact_id.present? %>
+      <span class="material-symbols-outlined fs-2" role="img"
+            aria-label="<%= t(".brevo_member", id: user.brevo_contact_id) %>"
+            title="<%= t(".brevo_member", id: user.brevo_contact_id) %>">sync</span>
+    <% end %>
+  </th>
   <td class="kern-table__cell" data-field="email"><%= user.email %></td>
   <td class="kern-table__cell" data-field="first_name"><%= user.first_name %></td>
   <td class="kern-table__cell" data-field="last_name"><%= user.last_name %></td>

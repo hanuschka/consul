@@ -1,10 +1,26 @@
 require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
 
 class ApplicationController < ActionController::Base
+  # Pages a closed member instance still has to answer to anybody: the legally required ones, plus
+  # whatever it takes to get into an account. Sign-up is not among them — on a member instance the
+  # member list is the only way in.
+  MEMBER_INSTANCE_PUBLIC_PAGES = %w[impressum privacy additional_privacy conditions
+                                    accessibility].freeze
+
+  MEMBER_INSTANCE_PUBLIC_DEVISE_ACTIONS = {
+    "sessions" => %w[new create destroy],
+    "passwords" => %w[new create edit update],
+    "confirmations" => %w[new create show],
+    "unlocks" => %w[new create show],
+    # Erasing one's own account has to stay reachable for somebody the gate no longer lets in.
+    "registrations" => %w[delete_form delete destroy]
+  }.freeze
+
   before_action :sanitize_pagination_params
   before_action :normalize_tags_param
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
+  before_action :enforce_member_instance_access, if: -> { Brevo::Settings.member_instance? }
   helper_method :set_comment_flags
 
   # unless Rails.env.production?
@@ -41,6 +57,36 @@ class ApplicationController < ActionController::Base
       else
         request.query_parameters["tags"] = normalized_tags
       end
+    end
+
+    # AP1 of CON-2846: the restriction covers the whole site, not individual projekts, so it sits
+    # here. /adm and /admin are unaffected — their base controllers do not inherit this one.
+    #
+    # A signed-in non-member is answered with a page, not a redirect: Devise's
+    # require_no_authentication bounces an authenticated visitor from sessions#new back to
+    # after_sign_in_path_for, which is gated again — login, root, login, root, forever.
+    #
+    # The 403 page carries no header, navigation or footer, which is the point: every one of them
+    # links into content this visitor cannot open, and the page has to explain itself instead.
+    def enforce_member_instance_access
+      return if member_instance_public_request?
+      return if current_user&.member_instance_access?
+
+      if current_user.present?
+        render "custom/pages/member_instance_forbidden", layout: false, status: :forbidden,
+               formats: [:html]
+      else
+        redirect_to new_user_session_path, alert: t("custom.member_instance.sign_in_required")
+      end
+    end
+
+    def member_instance_public_request?
+      if devise_controller?
+        return MEMBER_INSTANCE_PUBLIC_DEVISE_ACTIONS.fetch(controller_name, []).include?(action_name)
+      end
+
+      controller_name == "pages" && action_name == "show" &&
+        params[:id].to_s.in?(MEMBER_INSTANCE_PUBLIC_PAGES)
     end
 
     def show_launch_page?

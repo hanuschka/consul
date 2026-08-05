@@ -3,6 +3,7 @@ en:
     users:
       index:
         title: Manage users
+        member_sync: Member sync
         download_csv: Download CSV
         csv_export_notice: The export is being prepared. You will receive an email with a download link.
         total_label:
@@ -30,6 +31,7 @@ en:
         no_results_filtered_title: No users match the current filters
         no_results_filtered_description: Adjust or remove the filters to see more users.
       user:
+        brevo_member: Brevo member (contact %{id})
         table:
           actions:
             verify: Verify

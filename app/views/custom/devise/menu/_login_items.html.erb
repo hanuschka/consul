@@ -37,11 +37,13 @@
     <%= link_to t("devise_views.menu.login_items.login"),
                 new_user_session_path, rel: "nofollow" %>
   </li>
-  <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
-      tabindex="0"
-      aria-label='<%= t("devise_views.menu.login_items.signup") %>'
-      >
-    <%= link_to t("devise_views.menu.login_items.signup"),
-                new_user_registration_path, rel: "nofollow" %>
-  </li>
+  <% unless Brevo::Settings.member_instance? %>
+    <li class='nav-element flyout-item js-access-flyout-menu-item focusable'
+        tabindex="0"
+        aria-label='<%= t("devise_views.menu.login_items.signup") %>'
+        >
+      <%= link_to t("devise_views.menu.login_items.signup"),
+                  new_user_registration_path, rel: "nofollow" %>
+    </li>
+  <% end %>
 <% end %>

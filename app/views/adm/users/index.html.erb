@@ -46,6 +46,15 @@
       </span>
     <% end %>
 
+    <% if Brevo::Settings.sync_enabled? || Brevo::Settings.member_instance? %>
+      <% c.with_toolbar_action do %>
+        <a href="<%= adm_brevo_member_sync_path %>" class="adm-text-link" data-turbo-frame="_top">
+          <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+          <%= t(".member_sync") %>
+        </a>
+      <% end %>
+    <% end %>
+
     <% c.with_toolbar_action do %>
       <a href="<%= adm_users_path(params.permit(
                      :sort_by, :sort_direction,

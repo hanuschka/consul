@@ -1,0 +1,141 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t(".title"),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_users_path
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro_text_p1") %></p>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".intro_text_p2") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <div class="kern-card p-4 mb-5">
+    <p class="mb-3">
+      <strong><%= t(".status.sync") %></strong><br>
+      <% if Brevo::Settings.sync_enabled? %>
+        <span class="kern-badge kern-badge--success"><%= t(".status.configured") %></span>
+      <% else %>
+        <span class="kern-badge kern-badge--danger"><%= t(".status.not_configured") %></span>
+      <% end %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".status.member_instance") %></strong><br>
+      <% if Brevo::Settings.member_instance? %>
+        <span class="kern-badge kern-badge--success"><%= t(".status.closed") %></span>
+      <% else %>
+        <span class="kern-badge kern-badge--warning"><%= t(".status.open") %></span>
+      <% end %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".status.member_list_id") %></strong><br>
+      <%= Brevo::Settings.member_list_id.presence || t(".status.unset") %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".status.member_count") %></strong><br>
+      <%= @member_count %>
+    </p>
+
+    <p class="mb-3">
+      <strong><%= t(".status.last_completed_run") %></strong><br>
+      <% if @last_completed_run.present? %>
+        <%= l(@last_completed_run.finished_at || @last_completed_run.created_at, format: :short) %>
+      <% else %>
+        <%= t(".status.never") %>
+      <% end %>
+    </p>
+
+    <div class="kern-hint">
+      <p class="mb-1 fs-2"><%= t(".status.configuration_hint") %></p>
+    </div>
+  </div>
+
+  <div class="kern-card p-4 mb-5">
+    <p class="mb-2"><strong><%= t(".manual.title") %></strong></p>
+    <p class="fs-2 text-muted"><%= t(".manual.explanation") %></p>
+
+    <%= form_with url: adm_brevo_member_sync_path, method: :post do %>
+      <%= form_submit_button(text: t(".manual.submit"), icon: "sync",
+                             disabled: !Brevo::Settings.sync_enabled?) %>
+    <% end %>
+  </div>
+
+  <div class="kern-card p-4 mb-5">
+    <p class="mb-2"><strong><%= t(".webhook.title") %></strong></p>
+    <p class="fs-2 text-muted"><%= t(".webhook.explanation") %></p>
+
+    <% if Brevo::Settings.webhook_enabled? %>
+      <p class="mb-2"><strong><%= t(".webhook.url") %></strong></p>
+      <div class="mb-3" style="height: 55px;">
+        <%= render Adm::HiddenTokenWidgetComponent.new(
+              token: webhooks_brevo_member_events_url(token: Brevo::Settings.webhook_token)
+            ) %>
+      </div>
+      <div class="kern-hint">
+        <p class="mb-1 fs-2"><%= t(".webhook.events_hint") %></p>
+      </div>
+    <% else %>
+      <span class="kern-badge kern-badge--danger"><%= t(".webhook.not_configured") %></span>
+    <% end %>
+  </div>
+</div>
+
+<div class="kern-container mb-5">
+  <h2 class="fs-4 mb-3"><%= t(".runs.title") %></h2>
+
+  <% if @sync_logs.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t(".runs.started_at") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.source") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.status") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.contacts") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.created") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.erased") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.failed") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.triggered_by") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".runs.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <% @sync_logs.each do |sync_log| %>
+            <tr class="kern-table__row">
+              <td scope="row" class="kern-table__header">
+                <%= l(sync_log.started_at || sync_log.created_at, format: :short) %>
+              </td>
+              <td class="kern-table__cell"><%= t("adm.brevo_member_sync.sources.#{sync_log.source}") %></td>
+              <td class="kern-table__cell">
+                <span class="kern-badge kern-badge--<%= sync_log.badge_style %>">
+                  <%= t("adm.brevo_member_sync.statuses.#{sync_log.status}") %>
+                </span>
+              </td>
+              <td class="kern-table__cell"><%= sync_log.contacts_count %></td>
+              <td class="kern-table__cell"><%= sync_log.created_count %></td>
+              <td class="kern-table__cell"><%= sync_log.erased_count %></td>
+              <td class="kern-table__cell"><%= sync_log.failed_count %></td>
+              <td class="kern-table__cell"><%= sync_log.triggered_by&.username %></td>
+              <td class="kern-table__cell">
+                <%= kern_link_button adm_brevo_member_sync_log_path(sync_log),
+                                     text: t(".runs.show"), icon: "visibility" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= empty_state(
+      title: t(".runs.empty_title"),
+      description: t(".runs.empty_description"),
+      icon: "sync"
+    ) %>
+  <% end %>
+</div>

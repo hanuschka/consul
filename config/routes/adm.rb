@@ -23,6 +23,8 @@ namespace :adm do
     get :file_settings, on: :collection
   end
   resource :features, controller: "features", only: [:show]
+  resource :brevo_member_sync, controller: "brevo_member_sync", only: [:show, :create]
+  get "brevo_member_sync/logs/:id", to: "brevo_member_sync#log", as: :brevo_member_sync_log
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection

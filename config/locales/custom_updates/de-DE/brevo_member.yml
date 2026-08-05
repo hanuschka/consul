@@ -1,0 +1,20 @@
+de:
+  custom:
+    brevo_member:
+      mailers:
+        closing: Freundliche Grüße
+        signature: Ihr Beteiligungsteam
+        invitation:
+          subject: Ihr Zugang zur Mitglieder-Plattform
+          hi: "Hallo %{username},"
+          p1: >
+            für Sie wurde ein Zugang zur Beteiligungsplattform angelegt, weil Ihre E-Mail-Adresse
+            %{email} in der Mitgliederliste des Vereins hinterlegt ist. Der Zugang ist bereits
+            freigeschaltet.
+          p2: >
+            Um sich anzumelden, vergeben Sie bitte zunächst ein Passwort: %{password_link}.
+          password_link_text: Passwort vergeben
+          p3: >
+            Der Link ist aus Sicherheitsgründen nur begrenzt gültig. Ist er bereits abgelaufen,
+            können Sie sich hier einen neuen zusenden lassen: %{password_reset_link}.
+          password_reset_link_text: neuen Link anfordern

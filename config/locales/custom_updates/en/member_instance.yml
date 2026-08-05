@@ -1,0 +1,13 @@
+en:
+  custom:
+    member_instance:
+      sign_in_required: This platform is available to members only. Please sign in.
+      access:
+        title: Members only
+        body: >
+          You are signed in, but your account is currently not registered as a member account, so
+          the content of this platform cannot be shown.
+        contact_hint: >
+          If you are a member, please contact the association's office. Access is taken from the
+          member list.
+        sign_out: Sign out

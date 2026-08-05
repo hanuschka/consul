@@ -1,0 +1,19 @@
+en:
+  custom:
+    brevo_member:
+      mailers:
+        closing: Best regards
+        signature: Your participation team
+        invitation:
+          subject: Your access to the members' platform
+          hi: "Hello %{username},"
+          p1: >
+            access to the participation platform has been created for you, because your email
+            address %{email} is on the association's member list. The access is already activated.
+          p2: >
+            To log in, please choose a password first: %{password_link}.
+          password_link_text: set a password
+          p3: >
+            For security reasons the link is only valid for a limited time. If it has already
+            expired, you can have a new one sent to you here: %{password_reset_link}.
+          password_reset_link_text: request a new link

@@ -1,0 +1,98 @@
+de:
+  adm:
+    brevo_member_sync:
+      sources:
+        scheduled: Automatisch (nachts)
+        manual: Manuell
+        webhook: Webhook
+      statuses:
+        running: Läuft
+        completed: Abgeschlossen
+        failed: Fehlgeschlagen
+      actions:
+        created: Konto angelegt
+        linked: Verknüpft
+        erased: Konto gelöscht
+        failed: Fehler
+      show:
+        title: Mitglieder-Synchronisation
+        intro_text_p1: >
+          Die Zugänge dieser Plattform werden aus einer Brevo-Mitgliederliste übernommen. Neue
+          Kontakte erhalten automatisch ein Konto und eine Einladungs-E-Mail, entfernte Kontakte
+          werden automatisch DSGVO-konform gelöscht.
+        intro_text_p2: >
+          Der Abgleich läuft jede Nacht und zusätzlich sofort, sobald Brevo eine Änderung meldet.
+          Hier sehen Sie den Status und können den Abgleich manuell auslösen.
+        status:
+          sync: Synchronisation
+          configured: Eingerichtet
+          not_configured: Nicht eingerichtet
+          member_instance: Zugang zur Plattform
+          closed: Nur für Mitglieder
+          open: Öffentlich
+          member_list_id: Brevo-Listen-ID
+          member_count: Verknüpfte Mitgliedskonten
+          last_completed_run: Letzter erfolgreicher Abgleich
+          never: Noch nie
+          unset: Nicht gesetzt
+          configuration_hint: >
+            Die Zugangsdaten und die Listen-ID werden in der Serverkonfiguration
+            (config/secrets.yml) gepflegt und können hier nicht geändert werden.
+        manual:
+          title: Abgleich manuell auslösen
+          explanation: >
+            Startet einen vollständigen Abgleich mit der Brevo-Mitgliederliste im Hintergrund. Das
+            Ergebnis erscheint anschließend in der Liste der Abgleiche.
+          submit: Jetzt synchronisieren
+        webhook:
+          title: Webhook
+          explanation: >
+            Diese Adresse in Brevo als Webhook hinterlegen, damit Änderungen sofort übernommen
+            werden. Ohne Webhook greift der nächtliche Abgleich.
+          url: Webhook-Adresse
+          not_configured: Kein Webhook-Token hinterlegt
+          events_hint: >
+            Benötigte Ereignisse: Kontakt zu Liste hinzugefügt, Kontakt aus Liste entfernt,
+            Kontakt gelöscht. Eine Abmeldung vom Newsletter löscht kein Konto.
+        runs:
+          title: Letzte Abgleiche
+          started_at: Zeitpunkt
+          source: Auslöser
+          status: Status
+          contacts: Kontakte
+          created: Angelegt
+          erased: Gelöscht
+          failed: Fehler
+          triggered_by: Ausgelöst von
+          actions: Aktionen
+          show: Details
+          empty_title: Noch kein Abgleich
+          empty_description: >
+            Sobald der erste Abgleich gelaufen ist, wird er hier mit allen Änderungen aufgeführt.
+      create:
+        enqueued: Der Abgleich wurde gestartet. Das Ergebnis erscheint in wenigen Momenten in der Liste der Abgleiche.
+        not_configured: Die Brevo-Synchronisation ist nicht eingerichtet. Bitte zuerst API-Schlüssel und Listen-ID in der Serverkonfiguration hinterlegen.
+      log:
+        title: Abgleich im Detail
+        status: Status
+        source: Auslöser
+        started_at: Beginn
+        duration: Dauer
+        seconds:
+          one: 1 Sekunde
+          other: "%{count} Sekunden"
+        still_running: Läuft noch
+        counters: Ergebnis
+        counters_summary: >
+          %{contacts} Kontakte geprüft, %{created} Konten angelegt, %{erased} Konten gelöscht,
+          %{skipped} unverändert, %{failed} Fehler
+        error_message: Fehlermeldung
+        details_title: Änderungen und Fehler
+        details:
+          action: Vorgang
+          email: E-Mail-Adresse
+          contact_id: Brevo-Kontakt-ID
+          message: Hinweis
+        details_empty_title: Keine Änderungen
+        details_empty_description: >
+          Bei diesem Abgleich gab es nichts zu tun — alle Kontakte waren bereits verknüpft.

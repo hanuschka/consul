@@ -93,3 +93,9 @@ every 1.day, at: "3:00 am", roles: [:cron] do
   runner "ProjektImports::PurgeOldImportsJob.perform_later"
 end
 
+# Backstop for the Brevo webhook: catches every contact change the webhook missed, and is a no-op
+# where the integration is not configured.
+every 1.day, at: "4:00 am", roles: [:cron] do
+  rake "brevo:sync_members"
+end
+

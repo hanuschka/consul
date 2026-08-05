@@ -1,0 +1,36 @@
+<td style="<%= css_for_mailer_content %>">
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.brevo_member.mailers.invitation.hi", username: @user.username) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.brevo_member.mailers.invitation.p1", email: @user.email) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize t("custom.brevo_member.mailers.invitation.p2",
+      password_link: link_to(
+        t("custom.brevo_member.mailers.invitation.password_link_text"),
+        edit_user_password_url(reset_password_token: @token),
+        target: "_blank"
+      )) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize t("custom.brevo_member.mailers.invitation.p3",
+      password_reset_link: link_to(
+        t("custom.brevo_member.mailers.invitation.password_reset_link_text"),
+        new_user_password_url,
+        target: "_blank"
+      )) %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("custom.brevo_member.mailers.closing") %><br>
+      <%= t("custom.brevo_member.mailers.signature") %>
+    </p>
+  <% end %>
+
+</td>

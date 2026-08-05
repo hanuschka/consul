@@ -3,6 +3,7 @@ de:
     users:
       index:
         title: Nutzer verwalten
+        member_sync: Mitglieder-Synchronisation
         download_csv: CSV herunterladen
         csv_export_notice: Der Export wird vorbereitet. Sie erhalten eine E-Mail mit einem Download-Link.
         total_label:
@@ -30,6 +31,7 @@ de:
         no_results_filtered_title: Keine Nutzer für die aktuellen Filter
         no_results_filtered_description: Passen Sie die Filter an oder entfernen Sie sie, um weitere Nutzer zu sehen.
       user:
+        brevo_member: Brevo-Mitglied (Kontakt %{id})
         table:
           actions:
             verify: Verifizieren

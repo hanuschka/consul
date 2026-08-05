@@ -1,0 +1,98 @@
+en:
+  adm:
+    brevo_member_sync:
+      sources:
+        scheduled: Scheduled (nightly)
+        manual: Manual
+        webhook: Webhook
+      statuses:
+        running: Running
+        completed: Completed
+        failed: Failed
+      actions:
+        created: Account created
+        linked: Linked
+        erased: Account deleted
+        failed: Error
+      show:
+        title: Member sync
+        intro_text_p1: >
+          Access to this platform is taken from a Brevo member list. New contacts get an account and
+          an invitation email automatically; removed contacts are deleted automatically in line with
+          GDPR.
+        intro_text_p2: >
+          The reconciliation runs every night, and immediately whenever Brevo reports a change. This
+          page shows the status and lets you start a sync by hand.
+        status:
+          sync: Sync
+          configured: Configured
+          not_configured: Not configured
+          member_instance: Platform access
+          closed: Members only
+          open: Public
+          member_list_id: Brevo list ID
+          member_count: Linked member accounts
+          last_completed_run: Last successful sync
+          never: Never
+          unset: Not set
+          configuration_hint: >
+            The credentials and the list ID are maintained in the server configuration
+            (config/secrets.yml) and cannot be changed here.
+        manual:
+          title: Start a sync by hand
+          explanation: >
+            Runs a full reconciliation against the Brevo member list in the background. The result
+            appears in the list of syncs afterwards.
+          submit: Sync now
+        webhook:
+          title: Webhook
+          explanation: >
+            Add this address as a webhook in Brevo so changes are picked up immediately. Without a
+            webhook, the nightly reconciliation catches them.
+          url: Webhook address
+          not_configured: No webhook token configured
+          events_hint: >
+            Events needed: contact added to list, contact removed from list, contact deleted.
+            Unsubscribing from the newsletter never deletes an account.
+        runs:
+          title: Recent syncs
+          started_at: Time
+          source: Trigger
+          status: Status
+          contacts: Contacts
+          created: Created
+          erased: Deleted
+          failed: Errors
+          triggered_by: Triggered by
+          actions: Actions
+          show: Details
+          empty_title: No sync yet
+          empty_description: >
+            Once the first sync has run it is listed here with everything it changed.
+      create:
+        enqueued: The sync has been started. The result will appear in the list of syncs shortly.
+        not_configured: The Brevo sync is not configured. Please add the API key and the list ID to the server configuration first.
+      log:
+        title: Sync details
+        status: Status
+        source: Trigger
+        started_at: Started
+        duration: Duration
+        seconds:
+          one: 1 second
+          other: "%{count} seconds"
+        still_running: Still running
+        counters: Result
+        counters_summary: >
+          %{contacts} contacts checked, %{created} accounts created, %{erased} accounts deleted,
+          %{skipped} unchanged, %{failed} errors
+        error_message: Error message
+        details_title: Changes and errors
+        details:
+          action: Action
+          email: Email address
+          contact_id: Brevo contact ID
+          message: Note
+        details_empty_title: No changes
+        details_empty_description: >
+          This sync had nothing to do — every contact was already linked.

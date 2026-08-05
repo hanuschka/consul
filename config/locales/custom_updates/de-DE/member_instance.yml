@@ -1,0 +1,13 @@
+de:
+  custom:
+    member_instance:
+      sign_in_required: Diese Plattform steht ausschließlich Mitgliedern zur Verfügung. Bitte melden Sie sich an.
+      access:
+        title: Zugang nur für Mitglieder
+        body: >
+          Sie sind angemeldet, Ihr Konto ist derzeit aber nicht als Mitgliedskonto hinterlegt.
+          Deshalb können die Inhalte dieser Plattform nicht angezeigt werden.
+        contact_hint: >
+          Wenn Sie Mitglied sind, wenden Sie sich bitte an die Geschäftsstelle des Vereins. Die
+          Zugänge werden aus der Mitgliederliste übernommen.
+        sign_out: Abmelden

@@ -146,3 +146,7 @@ namespace :api do
     resources :category_icons, only: [:create]
   end
 end
+
+namespace :webhooks do
+  post "brevo/member_events", to: "brevo#create", as: :brevo_member_events
+end

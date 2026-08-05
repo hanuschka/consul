@@ -75,6 +75,7 @@ User.class_eval do
   scope :to_reverify, -> { active.verified.where("verified_at < ?", 6.months.ago).where(reverify: true) }
   scope :not_guests, -> { where(guest: false) }
   scope :actual, -> { active.not_guests.where.not(email: nil).where.not(confirmed_at: nil) }
+  scope :brevo_members, -> { where.not(brevo_contact_id: nil) }
 
   validate :email_should_not_be_used_by_hidden_user
   validate :password_complexity, if: :password_required?
@@ -295,6 +296,18 @@ User.class_eval do
 
   def verified?
     !unverified?
+  end
+
+  def member_instance_access?
+    staff? || brevo_contact_id.present?
+  end
+
+  def staff?
+    %i[
+      administrator? moderator? valuator? manager? poll_officer?
+      projekt_manager? idea_manager? deficiency_report_manager? officing_manager?
+      landing_page_manager?
+    ].any? { |predicate| respond_to?(predicate) && public_send(predicate) }
   end
 
   def data_complete?

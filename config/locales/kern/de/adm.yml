@@ -25,6 +25,7 @@ de:
           system_user: Systemnutzer
           tags: Tags
           individual_groups: Nutzergruppen
+          brevo_member_sync: Mitglieder-Synchronisation
           age_ranges: Altersgruppen
           email_templates: System-E-Mails
           features: Funktionen

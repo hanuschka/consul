@@ -3,7 +3,7 @@ name: Mitmachportal Würzburg
 url: 'https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal'
 landingURL: 'https://mitmachportal.wuerzburg.de'
 isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
-softwareVersion: '2026.06.29'
+softwareVersion: 2026.06.29
 releaseDate: '2026-06-29'
 logo: logo.svg
 platforms:

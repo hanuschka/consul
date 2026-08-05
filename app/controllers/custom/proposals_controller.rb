@@ -209,7 +209,13 @@ class ProposalsController
       return
     end
 
-    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+    # Acceptance is gated here rather than in CanCan, so the signed link from an on-behalf-of account
+    # mail has to be admitted here too — otherwise that mail sends its recipient to a page that turns
+    # them away. :preview rather than :show because every proposal is :read-able to everyone, so only
+    # an action nothing else grants can single out the record that link names.
+    if !@proposal.admin_accepted? &&
+        !current_user&.has_pm_permission_to?(:manage, @projekt) &&
+        !can?(:preview, @proposal)
       redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 

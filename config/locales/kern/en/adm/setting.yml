@@ -13,8 +13,21 @@ en:
       wordpress_login_description: "Allows signing in and registering with a Wordpress account. Requires the Wordpress credentials to be configured on the server."
       kobil_login: "Enable KOBIL login"
       kobil_login_description: "Shows a “Sign in with KOBIL” button on the sign-in and registration pages. Users can then sign in and register with their KOBIL account (OpenID Connect). Requires the KOBIL credentials to be configured on the server."
+      whatsapp_bot: "Enable WhatsApp bot"
+      whatsapp_bot_description: "Enables the WhatsApp webhook, number linking in the user account and project notification sending. Only takes effect when the credentials are also present in config/secrets.yml."
       kobil_address_verification: "KOBIL address verification"
       kobil_address_verification_description: "Imports the address (street, postal code, city) supplied by the KOBIL account into the user profile. Only effective when KOBIL login is enabled."
+    whatsapp:
+      broadcast_template: "WhatsApp message template name"
+      broadcast_template_description: "Name of the 360dialog-approved template used for project notifications. The template must have exactly two body placeholders: 1. project name, 2. project link. Without an approved template, notifications only reach people who wrote in the last 24 hours."
+      broadcast_template_language: "Message template language"
+      broadcast_template_language_description: "Language code of the approved template, e.g. \"de\". Must match the code registered in 360dialog exactly, otherwise WhatsApp rejects the send."
+      transcription_model: "Voice message model"
+      transcription_model_description: "OpenAI model used to turn voice messages into text. Leave empty for the default \"gpt-4o-mini-transcribe\". Transcription only works with OpenAI credentials."
+      message_retention_days: "Chat message retention (days)"
+      message_retention_days_description: "After this period a nightly job deletes stored WhatsApp messages including their content. Default: 90 days."
+      max_voice_megabytes: "Maximum voice message size (MB)"
+      max_voice_megabytes_description: "Larger voice messages are not downloaded or transcribed; the bot asks for text instead. Default: 16 MB."
     projekt_option:
       general:
         external_participation_link: "Use an alternative link in the project resources"

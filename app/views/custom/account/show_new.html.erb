@@ -107,6 +107,31 @@
         <% end %>
       <% end %>
 
+      <% if Whatsapp.enabled? %>
+        <%= render Shared::SidebarCardComponent.new(
+          title: t("whatsapp.account.title"),
+          icon_name: "comment-dots"
+        ) do %>
+          <% whatsapp_account = @account.whatsapp_account %>
+
+          <% if whatsapp_account.blank? %>
+            <p><%= t("whatsapp.account.not_linked") %></p>
+          <% elsif !whatsapp_account.subscribed? %>
+            <p><%= t("whatsapp.account.opted_out", phone: whatsapp_account.phone) %></p>
+            <%= button_to t("whatsapp.account.opt_in"),
+              whatsapp_subscription_path,
+              method: :post,
+              class: "button margin-top" %>
+          <% else %>
+            <p><%= t("whatsapp.account.subscribed", phone: whatsapp_account.phone) %></p>
+            <%= button_to t("whatsapp.account.opt_out"),
+              whatsapp_subscription_path,
+              method: :delete,
+              class: "button hollow margin-top" %>
+          <% end %>
+        <% end %>
+      <% end %>
+
       <% if @account&.administrator? || @account&.moderator? || @account&.projekt_manager? %>
         <%= form_for @account, as: :account, url: account_path do |f| %>
           <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.admin_notifications"), icon_name: "user-cog") do |c| %>

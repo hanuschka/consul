@@ -41,4 +41,44 @@
       <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
     <% end %>
   </section>
+
+  <section class="mb-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.features.show.whatsapp_title") %></h2>
+    <p class="kern-body mb-3"><%= t("adm.features.show.whatsapp_intro") %></p>
+
+    <% missing_whatsapp_keys = Whatsapp.missing_required_credential_keys %>
+
+    <% if missing_whatsapp_keys.any? %>
+      <div class="mb-3">
+        <%= kern_alert(
+          title: t("adm.features.show.whatsapp_credentials_incomplete_title"),
+          style: :warning
+        ) do %>
+          <p class="kern-body">
+            <%= t("adm.features.show.whatsapp_credentials_incomplete_body",
+              keys: missing_whatsapp_keys.join(", ")) %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if Whatsapp.broadcast_template_name.blank? %>
+      <div class="mb-3">
+        <%= kern_alert(
+          title: t("adm.features.show.whatsapp_template_missing_title"),
+          style: :info
+        ) do %>
+          <p class="kern-body"><%= t("adm.features.show.whatsapp_template_missing_body") %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% @whatsapp_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+
+    <% @whatsapp_text_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+    <% end %>
+  </section>
 </div>

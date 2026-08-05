@@ -22,6 +22,18 @@ module Adm
       feature.kobil_address_verification
     ].freeze
 
+    WHATSAPP_SETTING_KEYS = %w[
+      feature.whatsapp_bot
+    ].freeze
+
+    WHATSAPP_TEXT_SETTING_KEYS = %w[
+      whatsapp.broadcast_template
+      whatsapp.broadcast_template_language
+      whatsapp.transcription_model
+      whatsapp.message_retention_days
+      whatsapp.max_voice_megabytes
+    ].freeze
+
     def show
       authorize [:adm, Setting], :update?
 
@@ -31,6 +43,8 @@ module Adm
       @general_text_settings = GENERAL_TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
       @oauth_login_settings = OAUTH_LOGIN_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
       @kobil_settings = KOBIL_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+      @whatsapp_settings = WHATSAPP_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+      @whatsapp_text_settings = WHATSAPP_TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
 
       @breadcrumbs = [
         { name: t("adm.menu.items.application"), icon: "desktop_windows" },
@@ -41,7 +55,8 @@ module Adm
     private
 
       def displayed_setting_keys
-        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS + KOBIL_SETTING_KEYS
+        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS +
+          KOBIL_SETTING_KEYS + WHATSAPP_SETTING_KEYS + WHATSAPP_TEXT_SETTING_KEYS
       end
   end
 end

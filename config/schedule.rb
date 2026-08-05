@@ -93,3 +93,7 @@ every 1.day, at: "3:00 am", roles: [:cron] do
   runner "ProjektImports::PurgeOldImportsJob.perform_later"
 end
 
+every 1.day, at: "3:15 am", roles: [:cron] do
+  runner "Whatsapp::PurgeOldMessagesJob.perform_later"
+end
+

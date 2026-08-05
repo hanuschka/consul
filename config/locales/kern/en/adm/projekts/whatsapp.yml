@@ -1,0 +1,31 @@
+en:
+  adm:
+    projekts:
+      projekts:
+        whatsapp_broadcast:
+          label: WhatsApp notification
+          description: >-
+            Sends a WhatsApp template message about the project start to all citizens who linked
+            their number and enabled notifications.
+          send: Send WhatsApp notification
+          confirm:
+            one: The notification will be sent to 1 person. Continue?
+            other: The notification will be sent to %{count} people. Continue?
+          missing_template: >-
+            No approved WhatsApp template is configured (setting "whatsapp.broadcast_template").
+          not_configured: WhatsApp is not fully configured.
+          enqueued:
+            one: The WhatsApp notification is being sent to 1 person.
+            other: The WhatsApp notification is being sent to %{count} people.
+      phases:
+        whatsapp_deep_link:
+          title: WhatsApp entry point
+          subline: >-
+            This link opens a WhatsApp chat with prefilled text. Printed as a QR code, it leads
+            straight into this phase.
+          prefilled_text: "Projekt %{token}"
+          token: Phase identifier
+          link: Direct link
+          qr_code: QR code
+          missing_number: >-
+            No WhatsApp number is configured (secret "whatsapp.business_number").

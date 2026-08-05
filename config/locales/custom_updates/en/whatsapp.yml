@@ -1,0 +1,83 @@
+en:
+  whatsapp:
+    account:
+      title: WhatsApp
+      not_linked: >-
+        Your WhatsApp number is not linked to this account yet. Message the participation bot on
+        WhatsApp to start linking.
+      subscribed: "Linked number: %{phone}. You receive notifications about new projects."
+      opted_out: "Linked number: %{phone}. You currently receive no notifications."
+      opt_in: Enable notifications
+      opt_out: Stop receiving notifications
+    link:
+      success: Your WhatsApp number is now linked to your account.
+      failure: >-
+        This link is no longer valid. Message the bot on WhatsApp again to get a new one.
+      page:
+        title: Link your WhatsApp number
+        intro: >-
+          You are about to link the WhatsApp number %{phone} to this account. Proposals you
+          submit via WhatsApp can then be attributed to your account.
+        broadcast_consent: >-
+          I want to be notified on WhatsApp when a new participation project starts.
+        consent_note: >-
+          Without this box you can still submit proposals via WhatsApp, you just receive no
+          notifications. You can change this any time in your account or by sending STOP.
+        confirm: Link number
+    subscription:
+      opted_in: You will receive WhatsApp notifications again.
+      opted_out: You will no longer receive WhatsApp notifications.
+      not_linked: No WhatsApp number is linked to your account.
+    bot:
+      link_invitation: >-
+        Hello! So your proposal can be attributed to your account, please link your number to the
+        participation platform once: %{url}
+
+        The link is valid for one hour.
+      link_confirmed: "Thanks, %{name}! Your number is now linked to your account."
+      ask_idea: >-
+        You are in the project “%{projekt}”. Do you have concrete ideas or suggestions? Send them
+        to me as text or as a voice message.
+      idea_missing: Please describe your idea as text or as a voice message.
+      no_projekt: >-
+        I do not know yet which project you want to contribute to. Please scan the project's QR
+        code.
+      drafting: Thanks! I am turning this into a proposal — one moment.
+      draft_summary: |-
+        Here is my proposal:
+
+        *%{title}*
+
+        %{description}
+      draft_failed: That did not work. Feel free to send me your idea again.
+      ask_revision: What should I change or add?
+      transcription_failed: >-
+        I could not understand the voice message. Please write your idea as text.
+      published: "Your proposal is published: %{url}"
+      published_pending_moderation: >-
+        Thanks! Your proposal was submitted and will be reviewed before it becomes publicly
+        visible: %{url}
+      publish_failed: Something went wrong while publishing. Please try again later.
+      criteria_failed: |-
+        Your proposal does not meet one of this project's requirements yet: %{criterion}
+
+        %{feedback}
+
+        Tell me what I should change.
+      too_fast: One moment — I am still working on your proposal.
+      opted_out: You will not receive any more messages from us. Send START to subscribe again.
+      opted_in: You will receive messages from us again.
+      verification_link: "You can verify your account here: %{url}"
+      buttons:
+        publish: Publish
+        revise: Revise
+      refused:
+        generic: I cannot submit a proposal for this project right now.
+        phase_missing: I could not find the project. Please scan the QR code again.
+        phase_not_proposal: This project does not accept proposals.
+        creation_disabled: This phase does not accept proposals right now.
+        ai_flow_disabled: Submitting via WhatsApp is not enabled for this project.
+        phase_not_active: This participation phase is not active right now.
+        phase_expired: This participation phase has already ended.
+        phase_not_current: This participation phase is not running right now.
+        not_verified: Your account must be verified to submit a proposal.

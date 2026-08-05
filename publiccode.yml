@@ -35,8 +35,10 @@ description:
       Open-Source-Software Consul, ist datenschutzfreundlich
       vorkonfiguriert und wird von demokratie.today betrieben, gehostet
       und weiterentwickelt.
-    documentation: 'https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal/-/blob/cli_wur_2/BETRIEBSHANDBUCH.md'
-    apiDocumentation: 'https://mitmachportal.wuerzburg.de/api/docs'
+    documentation: >- 
+    https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal/-/blob/cli_wur_2/BETRIEBSHANDBUCH.md
+    apiDocumentation: >-
+      https://mitmachportal.wuerzburg.de/api/docs
     features:
       - Bürgerbeteiligung
       - Bürgerhaushalt

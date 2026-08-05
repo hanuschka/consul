@@ -127,6 +127,7 @@ class Setting < ApplicationRecord
         "feature.matomo": false,
         "feature.melderegister": false,
         "feature.bund_id_verification": false,
+        "feature.whatsapp_bot": false,
 
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
@@ -226,6 +227,12 @@ class Setting < ApplicationRecord
         "sdg.process.projekts": true,
 
         "welcomepage.share_buttons": "",
+
+        "whatsapp.broadcast_template": nil,
+        "whatsapp.broadcast_template_language": "de",
+        "whatsapp.transcription_model": nil,
+        "whatsapp.message_retention_days": 90,
+        "whatsapp.max_voice_megabytes": 16,
 
         "deficiency_reports.admins_must_assign_officer": false,
         "deficiency_reports.allow_voting": false,

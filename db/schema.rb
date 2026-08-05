@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_03_091120) do
+ActiveRecord::Schema.define(version: 2026_08_05_150346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3464,6 +3464,59 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.text "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "whatsapp_accounts", force: :cascade do |t|
+    t.string "wa_id", null: false
+    t.string "phone"
+    t.string "profile_name"
+    t.integer "user_id"
+    t.string "state", default: "unlinked", null: false
+    t.datetime "verified_at"
+    t.datetime "opt_in_at"
+    t.datetime "opt_out_at"
+    t.datetime "last_inbound_at"
+    t.string "link_token"
+    t.datetime "link_token_sent_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["link_token"], name: "index_whatsapp_accounts_on_link_token", unique: true
+    t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id"
+    t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"
+    t.index ["wa_id"], name: "index_whatsapp_accounts_on_wa_id", unique: true
+  end
+
+  create_table "whatsapp_conversations", force: :cascade do |t|
+    t.integer "whatsapp_account_id", null: false
+    t.string "step", default: "idle", null: false
+    t.integer "projekt_phase_id"
+    t.integer "proposal_id"
+    t.jsonb "context", default: {}, null: false
+    t.integer "revisions_count", default: 0, null: false
+    t.datetime "last_inbound_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id"], name: "index_whatsapp_conversations_on_projekt_phase_id"
+    t.index ["proposal_id"], name: "index_whatsapp_conversations_on_proposal_id"
+    t.index ["whatsapp_account_id"], name: "index_whatsapp_conversations_on_whatsapp_account_id", unique: true
+  end
+
+  create_table "whatsapp_messages", force: :cascade do |t|
+    t.integer "whatsapp_account_id", null: false
+    t.string "direction", null: false
+    t.string "kind", default: "text", null: false
+    t.text "body"
+    t.string "wa_message_id"
+    t.string "status"
+    t.datetime "sent_at"
+    t.jsonb "error", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "projekt_id"
+    t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
+    t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
+    t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
+    t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
   end
 
   create_table "widget_card_translations", id: :serial, force: :cascade do |t|

@@ -63,6 +63,7 @@ User.class_eval do
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
+  has_one :whatsapp_account
 
   belongs_to :api_client, optional: true
 
@@ -439,6 +440,7 @@ User.class_eval do
     def remove_subscriptions
       projekt_subscriptions.destroy_all
       projekt_phase_subscriptions.destroy_all
+      whatsapp_account&.destroy!
     end
 
     def update_conditional_ballots_for_relevant_budgets

@@ -1,0 +1,32 @@
+de:
+  adm:
+    projekts:
+      projekts:
+        whatsapp_broadcast:
+          label: WhatsApp-Benachrichtigung
+          description: >-
+            Sendet eine WhatsApp-Vorlagennachricht über den Projektstart an alle Bürger:innen,
+            die ihre Nummer verbunden und Benachrichtigungen aktiviert haben.
+          send: WhatsApp-Benachrichtigung senden
+          confirm:
+            one: Die Benachrichtigung wird an 1 Person gesendet. Fortfahren?
+            other: Die Benachrichtigung wird an %{count} Personen gesendet. Fortfahren?
+          missing_template: >-
+            Es ist keine freigegebene WhatsApp-Vorlage konfiguriert (Einstellung
+            „whatsapp.broadcast_template“).
+          not_configured: WhatsApp ist nicht vollständig konfiguriert.
+          enqueued:
+            one: Die WhatsApp-Benachrichtigung wird an 1 Person gesendet.
+            other: Die WhatsApp-Benachrichtigung wird an %{count} Personen gesendet.
+      phases:
+        whatsapp_deep_link:
+          title: WhatsApp-Einstieg
+          subline: >-
+            Dieser Link öffnet einen WhatsApp-Chat mit vorbelegtem Text. Als QR-Code auf Plakaten
+            führt er direkt in diese Phase.
+          prefilled_text: "Projekt %{token}"
+          token: Phasen-Kennung
+          link: Direktlink
+          qr_code: QR-Code
+          missing_number: >-
+            Es ist keine WhatsApp-Nummer konfiguriert (Secret „whatsapp.business_number“).

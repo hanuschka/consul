@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   draw :idea_management
   draw :internal_api
   draw :api
+  draw :whatsapp_api
   draw :custom
 
   root "welcome#index"

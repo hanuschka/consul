@@ -1,0 +1,110 @@
+class Whatsapp::IngestWebhookService < ApplicationService
+  KIND_BY_MESSAGE_TYPE = {
+    "text" => "text",
+    "audio" => "audio",
+    "voice" => "audio",
+    "interactive" => "interactive",
+    "button" => "interactive"
+  }.freeze
+
+  def initialize(payload:)
+    @payload = payload || {}
+  end
+
+  def call
+    change_values.each do |value|
+      record_statuses(value["statuses"])
+      record_messages(value["messages"], value["contacts"])
+    end
+  end
+
+  private
+
+    def change_values
+      Array(@payload["entry"]).flat_map do |entry|
+        Array(entry["changes"]).map { |change| change["value"].to_h }
+      end
+    end
+
+    def record_statuses(statuses)
+      Array(statuses).each do |status|
+        message = WhatsappMessage.find_by(wa_message_id: status["id"], direction: "outbound")
+
+        next if message.blank?
+
+        message.update!(status: status["status"], error: status["errors"].to_a.first.to_h)
+      end
+    end
+
+    def record_messages(messages, contacts)
+      Array(messages).each do |message|
+        record_message(message, contacts)
+      end
+    end
+
+    # One failing message must never abort the rest of the batch: 360dialog
+    # retries deliveries, so a concurrent retry can lose the unique-index race
+    # while other messages in the same payload are still new.
+    def record_message(message, contacts)
+      return if WhatsappMessage.inbound_recorded?(message["id"])
+
+      account = find_or_create_account(message["from"], contacts)
+      inbound_message = persist_message(account, message)
+
+      account.update!(last_inbound_at: Time.current)
+
+      Whatsapp::ProcessInboundMessageJob.perform_later(inbound_message.id, message)
+    rescue ActiveRecord::RecordNotUnique
+      Rails.logger.info("[Whatsapp] duplicate delivery for #{message['id']} ignored")
+    rescue StandardError => e
+      Rails.logger.error("[Whatsapp] ingest failed for #{message['id']}: #{e.class} - #{e.message}")
+      Sentry.capture_exception(e, extra: { wa_message_id: message["id"] })
+    end
+
+    def find_or_create_account(wa_id, contacts)
+      account = WhatsappAccount.find_or_initialize_by(wa_id: wa_id)
+      account.phone ||= wa_id
+      account.profile_name = profile_name_for(wa_id, contacts) || account.profile_name
+      account.save!
+
+      account
+    end
+
+    def profile_name_for(wa_id, contacts)
+      contact = Array(contacts).find { |candidate| candidate["wa_id"] == wa_id }
+
+      contact.to_h.dig("profile", "name")
+    end
+
+    def persist_message(account, message)
+      WhatsappMessage.create!(
+        whatsapp_account: account,
+        direction: "inbound",
+        kind: KIND_BY_MESSAGE_TYPE.fetch(message["type"], "unsupported"),
+        body: inbound_body(message),
+        wa_message_id: message["id"],
+        status: "received",
+        sent_at: inbound_sent_at(message)
+      )
+    end
+
+    def inbound_body(message)
+      case message["type"]
+      when "text"
+        message.dig("text", "body")
+      when "interactive"
+        message.dig("interactive", "button_reply", "title") ||
+          message.dig("interactive", "list_reply", "title")
+      when "button"
+        message.dig("button", "text")
+      end
+    end
+
+    def inbound_sent_at(message)
+      timestamp = message["timestamp"].to_i
+
+      return if timestamp.zero?
+
+      Time.zone.at(timestamp)
+    end
+end

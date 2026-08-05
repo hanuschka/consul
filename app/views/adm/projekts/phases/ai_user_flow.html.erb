@@ -31,4 +31,8 @@
     kind: "soft",
     criteria: @soft_criteria
   ) %>
+
+  <% if Whatsapp.enabled? && @projekt_phase.is_a?(::ProjektPhase::ProposalPhase) %>
+    <%= render "whatsapp_deep_link", projekt_phase: @projekt_phase %>
+  <% end %>
 </div>

@@ -141,6 +141,11 @@ get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projek
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 
+get    "whatsapp/link",         to: "whatsapp/links#show",           as: :whatsapp_link
+post   "whatsapp/link",         to: "whatsapp/links#create"
+post   "whatsapp/subscription", to: "whatsapp/subscriptions#create",  as: :whatsapp_subscription
+delete "whatsapp/subscription", to: "whatsapp/subscriptions#destroy"
+
 namespace :api do
   namespace :masterportal do
     resources :category_icons, only: [:create]

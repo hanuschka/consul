@@ -16,7 +16,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     consider_underway
   ].freeze
 
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_answer_participation, :poll_answer_crossectional, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :toggle_evaluation_tab_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :regenerate_phase_regular_stats, :regenerate_phase_ai_stats, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_answer_participation, :poll_answer_crossectional, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :toggle_evaluation_tab_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :regenerate_phase_regular_stats, :regenerate_phase_ai_stats, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :whatsapp_broadcast, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
   before_action :process_tags, only: [:update]
 
@@ -475,6 +475,21 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       format.html { redirect_to page_path(@projekt.page.slug), notice: t(".success") }
       format.json { render json: { success: true, message: t(".success") } }
     end
+  end
+
+  def whatsapp_broadcast
+    authorize [:adm, :projekts, @projekt], :update?
+
+    if !::Whatsapp.enabled? || ::Whatsapp.broadcast_template_name.blank?
+      return redirect_to details_adm_projekts_projekt_path(@projekt),
+        alert: t("adm.projekts.projekts.whatsapp_broadcast.not_configured")
+    end
+
+    ::Whatsapp::BroadcastProjektJob.perform_later(@projekt.id)
+
+    redirect_to details_adm_projekts_projekt_path(@projekt),
+      notice: t("adm.projekts.projekts.whatsapp_broadcast.enqueued",
+        count: WhatsappAccount.subscribed.count)
   end
 
   def toggle_hide_content_background

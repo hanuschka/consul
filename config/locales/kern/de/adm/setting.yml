@@ -15,6 +15,19 @@ de:
       kobil_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine Schaltfläche „Mit KOBIL anmelden“. Nutzer können sich dann über ihr KOBIL-Konto (OpenID Connect) anmelden und registrieren. Erfordert hinterlegte KOBIL-Zugangsdaten in der Serverkonfiguration."
       kobil_address_verification: "KOBIL Adressverifizierung"
       kobil_address_verification_description: "Übernimmt die vom KOBIL-Konto bereitgestellte Adresse (Straße, PLZ, Ort) in das Nutzerprofil. Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
+      whatsapp_bot: "WhatsApp-Bot aktivieren"
+      whatsapp_bot_description: "Schaltet den WhatsApp-Webhook, die Nummernverbindung im Nutzerkonto und den Versand von Projekt-Benachrichtigungen frei. Wirkt nur, wenn zusätzlich die Zugangsdaten in config/secrets.yml hinterlegt sind."
+    whatsapp:
+      broadcast_template: "Name der WhatsApp-Nachrichtenvorlage"
+      broadcast_template_description: "Name der in 360dialog freigegebenen Vorlage, die für Projekt-Benachrichtigungen verwendet wird. Die Vorlage muss genau zwei Platzhalter im Textkörper haben: 1. Projektname, 2. Projektlink. Ohne freigegebene Vorlage erreichen Benachrichtigungen nur Personen, die in den letzten 24 Stunden geschrieben haben."
+      broadcast_template_language: "Sprache der Nachrichtenvorlage"
+      broadcast_template_language_description: "Sprachcode der freigegebenen Vorlage, z. B. „de“. Muss exakt dem in 360dialog hinterlegten Sprachcode entsprechen, sonst lehnt WhatsApp den Versand ab."
+      transcription_model: "Modell für Sprachnachrichten"
+      transcription_model_description: "OpenAI-Modell, mit dem Sprachnachrichten in Text umgewandelt werden. Leer lassen für den Standard „gpt-4o-mini-transcribe“. Die Umwandlung funktioniert nur mit OpenAI-Zugangsdaten."
+      message_retention_days: "Aufbewahrung der Chatnachrichten (Tage)"
+      message_retention_days_description: "Nach dieser Zeitspanne löscht ein nächtlicher Auftrag die gespeicherten WhatsApp-Nachrichten samt Inhalt. Standard: 90 Tage."
+      max_voice_megabytes: "Maximale Größe einer Sprachnachricht (MB)"
+      max_voice_megabytes_description: "Größere Sprachnachrichten werden nicht heruntergeladen und nicht umgewandelt; der Bot bittet dann um Text. Standard: 16 MB."
     projekt_option:
       general:
         external_participation_link: Alternativen Link in den Projektressourcen verwenden

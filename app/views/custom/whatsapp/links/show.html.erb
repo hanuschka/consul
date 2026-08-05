@@ -1,0 +1,18 @@
+<div class="row column margin-top">
+  <h1><%= t("whatsapp.link.page.title") %></h1>
+
+  <p><%= t("whatsapp.link.page.intro", phone: @account.phone) %></p>
+
+  <%= form_with url: whatsapp_link_path, method: :post, local: true do |f| %>
+    <%= hidden_field_tag :token, @token %>
+
+    <div class="margin-top">
+      <%= check_box_tag :broadcast_consent, "1", false, class: "checkbox-label--aligned" %>
+      <%= label_tag :broadcast_consent, t("whatsapp.link.page.broadcast_consent") %>
+    </div>
+
+    <p class="small margin-top"><%= t("whatsapp.link.page.consent_note") %></p>
+
+    <%= f.submit t("whatsapp.link.page.confirm"), class: "button margin-top" %>
+  <% end %>
+</div>

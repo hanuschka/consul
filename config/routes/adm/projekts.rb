@@ -284,6 +284,7 @@ namespace :adm do
       get :evaluation_pdf, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
+      post :whatsapp_broadcast, on: :member
       patch :toggle_hide_content_background, on: :member
       patch :update_color, on: :member
       patch :update_taxonomy, on: :member

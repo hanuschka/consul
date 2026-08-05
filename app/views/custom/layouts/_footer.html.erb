@@ -26,7 +26,7 @@
 
   social_handles_present = ["twitter_handle", "facebook_handle", "youtube_handle", "telegram_handle", "instagram_handle"]
     .any? { |key| setting[key].present? }
-  contact_block_present = content_block("footer", I18n.locale).present?
+  contact_block_present = content_block("footer").present?
   contact_column_render = social_handles_present || contact_block_present
 %>
 
@@ -141,7 +141,7 @@
 
         <% if contact_block_present %>
           <div class="footer-contact-block">
-            <%= raw content_block("footer", I18n.locale) %>
+            <%= raw content_block("footer") %>
           </div>
         <% end %>
       </div>

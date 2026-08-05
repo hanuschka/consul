@@ -101,6 +101,8 @@ de:
             minimum_supports_to_show_description: "Vorschläge werden erst ab dieser Anzahl von Unterstützungen angezeigt (0 = immer sichtbar)"
             max_submissions_per_user: "Maximale Einreichungen pro Nutzer"
             max_submissions_per_user_description: "Begrenzt die Anzahl der Vorschläge pro Nutzer (leer oder 0 = keine Begrenzung)"
+            max_supports_per_user: "Maximale Unterstützungen pro Nutzer"
+            max_supports_per_user_description: "Begrenzt die Anzahl der Vorschläge, die ein Nutzer unterstützen kann (leer oder 0 = keine Begrenzung)"
           form:
             map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
             map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
@@ -211,6 +213,8 @@ de:
           resource:
             max_submissions_per_user: "Maximale Einreichungen pro Nutzer"
             max_submissions_per_user_description: "Begrenzt die Anzahl der Investitionsvorschläge pro Nutzer (leer oder 0 = keine Begrenzung)"
+            max_supports_per_user: "Maximale Unterstützungen pro Nutzer"
+            max_supports_per_user_description: "Begrenzt die Anzahl der Investitionsvorschläge, die ein Nutzer unterstützen kann (leer oder 0 = keine Begrenzung)"
           form:
             map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
             map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.

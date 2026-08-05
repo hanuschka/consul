@@ -49,7 +49,8 @@
       <% c.with_footer_section do %>
         <div id="<%= dom_id(budget_investment) %>_votes"
              class="small-12 medium-3 column votes-section">
-             <%= render Budgets::Investments::VotesComponent.new(budget_investment) %>
+             <%= render Budgets::Investments::VotesComponent.new(budget_investment,
+                   investment_ids: budget_investment_ids) %>
         </div>
       <% end %>
 

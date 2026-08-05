@@ -65,8 +65,10 @@ class Ai::EditContentBlock < ApplicationService
     TEXT
   end
 
+  # Called inline from the controller, so the request locale is still the
+  # editor's own — unlike generation, which is dispatched to a job.
   def target_language
-    Rails.env.development? ? "English" : "German"
+    Ai::OutputLanguage.name_for(I18n.locale)
   end
 
   def fetch_prompt

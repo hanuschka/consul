@@ -133,7 +133,7 @@ export default class LeafletAdapter extends BaseAdapter {
 
     this.map = L.map(container, {
       gestureHandling: options.gestureHandling !== false,
-      maxZoom: 19,
+      maxZoom: window.App.MapZoom.MAX,
       zoomControl: false
     }).setView(center, options.zoom)
 
@@ -247,6 +247,7 @@ export default class LeafletAdapter extends BaseAdapter {
 
   createLayer(item) {
     const L = window.L
+    const zoomLimits = window.App.MapZoom
     let layer
 
     if (item.protocol === "wms") {
@@ -256,13 +257,16 @@ export default class LeafletAdapter extends BaseAdapter {
         format: item.transparent ? "image/png" : "image/jpeg",
         transparent: item.transparent,
         show_by_default: item.show_by_default,
-        opacity: item.opacity || 1
+        opacity: item.opacity || 1,
+        maxZoom: zoomLimits.MAX
       })
     } else if (item.protocol === "geojson") {
       layer = this.createGeoJsonOverlay(item)
     } else {
       layer = L.tileLayer(item.provider, {
-        attribution: item.attribution
+        attribution: item.attribution,
+        maxZoom: zoomLimits.MAX,
+        maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
       })
     }
 
@@ -389,11 +393,16 @@ export default class LeafletAdapter extends BaseAdapter {
 
   ensureBaseLayerExists() {
     const L = window.L
+    const zoomLimits = window.App.MapZoom
 
     if (Object.keys(this.baseLayers).length === 0) {
       this.baseLayers["OpenStreetMap"] = L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        { attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' }
+        {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: zoomLimits.MAX,
+          maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
+        }
       )
     }
   }

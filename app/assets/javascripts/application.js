@@ -58,6 +58,7 @@
 //= require initial
 //= require ahoy
 //= require app
+//= require config/map_zoom
 //= require check_all_none
 //= require comments
 //= require foundation_extras

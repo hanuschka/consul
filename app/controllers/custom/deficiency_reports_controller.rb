@@ -6,6 +6,7 @@ class DeficiencyReportsController < ApplicationController
   include DocumentAttributes
   include DeficiencyReportsHelper
   include Search
+  include OnBehalfOfAccountLinking
 
   before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
   before_action :load_categories
@@ -118,7 +119,7 @@ class DeficiencyReportsController < ApplicationController
       )
     )
 
-    if @deficiency_report.save
+    if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
@@ -198,7 +199,7 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def deficiency_report_params
-    attributes = [:video_url, :on_behalf_of,
+    attributes = [:video_url, :on_behalf_of, :on_behalf_of_company_name, :on_behalf_of_email,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
                   :notify_officer_about_new_comments,
@@ -207,7 +208,6 @@ class DeficiencyReportsController < ApplicationController
                   image_attributes: image_attributes]
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
   end
-
 
   def destroy_map_location_association
     map_location = params[:deficiency_report][:map_location_attributes]

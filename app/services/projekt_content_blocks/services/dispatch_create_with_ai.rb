@@ -48,7 +48,8 @@ class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
       "prompt" => @prompt,
       "category_hint" => @category_hint,
       "anchor_template_id" => @anchor_template_id,
-      "use_projekt_context" => @use_projekt_context
+      "use_projekt_context" => @use_projekt_context,
+      "text_locale" => I18n.locale.to_s
     }
   end
 
@@ -56,7 +57,7 @@ class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
     @placeholder = SiteCustomization::ContentBlock.unscoped.new(
       name: "custom",
       body: "",
-      locale: "de",
+      locale: SiteCustomization::ContentBlock.canonical_locale,
       projekt_id: @projekt.id,
       key: nil,
       position: nil,

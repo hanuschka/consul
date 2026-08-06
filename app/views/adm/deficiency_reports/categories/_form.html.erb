@@ -45,6 +45,10 @@
     </div>
   <% end %>
 
+  <%= render Kern::FormFieldComponent.new(label: t(".ai_fallback_label"), hint: t(".ai_fallback_hint")) do %>
+    <%= f.check_box :ai_fallback, label: false %>
+  <% end %>
+
   <%= render Kern::FormFieldComponent.new(label: t(".warning_text_label"), hint: t(".warning_text_hint"), stacked: true) do %>
     <%= f.rich_text_area :warning_text, label: false %>
   <% end %>

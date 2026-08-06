@@ -13,6 +13,14 @@ class DeficiencyReport::Category < ApplicationRecord
 
   default_scope { order(given_order: :asc) }
 
+  after_save :unset_other_ai_fallbacks, if: :ai_fallback?
+
+  # Where a report lands when AI categorization is on but produced nothing usable. Falls back to the
+  # first category so the feature still has somewhere to put a report before anybody marks one.
+  def self.ai_fallback
+    find_by(ai_fallback: true) || first
+  end
+
   def safe_to_destroy?
     !deficiency_reports.exists?
   end
@@ -22,4 +30,10 @@ class DeficiencyReport::Category < ApplicationRecord
       find(category_id).update_column(:given_order, (order + 1))
     end
   end
+
+  private
+
+    def unset_other_ai_fallbacks
+      self.class.unscoped.where.not(id: id).update_all(ai_fallback: false)
+    end
 end

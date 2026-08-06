@@ -251,6 +251,8 @@ de:
           officer_groups: Sachbearbeitergruppen
           officers: Sachbearbeiter
           no_responsible: "-- Kein Sachbearbeiter --"
+          ai_fallback_label: Rückfallkategorie der KI-Kategorisierung
+          ai_fallback_hint: Anliegen landen in dieser Kategorie, wenn die KI-Kategorisierung aktiviert ist, aber keine sichere Zuordnung treffen kann oder der KI-Dienst nicht erreichbar ist. Sachbearbeitende korrigieren die Kategorie dann manuell. Es kann immer nur eine Kategorie als Rückfallkategorie markiert sein; die Markierung wechselt automatisch, sobald Sie eine andere Kategorie festlegen. Ohne Markierung wird die erste Kategorie der Reihenfolge verwendet.
           warning_text_label: Popup
           warning_text_hint: Der Popup-Text wird Bürgern als Hinweismeldung angezeigt, wenn sie diese Kategorie bei der Erstellung einer neuen Meldung auswählen. Nutzen Sie dieses Feld, um wichtige Informationen oder Warnungen zu übermitteln, z. B. Hinweise auf alternative Meldewege oder spezielle Zuständigkeiten. Das Popup erscheint direkt nach der Kategorieauswahl.
           submit: Speichern

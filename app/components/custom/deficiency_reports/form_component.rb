@@ -12,6 +12,10 @@ class DeficiencyReports::FormComponent < ApplicationComponent
       Tag.category.order(:name)
     end
 
+    def ai_categorization?
+      DeficiencyReports::AiCategorizationService.enabled?
+    end
+
     def intake_channel_field?
       Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"].present? &&
         intake_channels.any?

@@ -1,3 +1,7 @@
+<%# AI categorization derives both fields from title, description and photo, so the reporting
+    person is not asked for them at all. %>
+<% unless DeficiencyReports::AiCategorizationService.enabled? %>
+
 <h2 class="rich-form-label">
   <i class="fas fa-th-large"></i>
   <%= t("custom.deficiency_reports.form.category.title") %>
@@ -37,4 +41,6 @@
       { prompt: t("custom.deficiency_reports.form.subcategory.placeholder"), label: false },
       { class: "js-deficiency-report-subcategory-select" } %>
   </div>
+<% end %>
+
 <% end %>

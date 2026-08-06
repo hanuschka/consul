@@ -271,6 +271,9 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
+      ai_categorization: KI-Kategorisierung im Meldeformular
+      ai_categorization_description: >
+        Bestimmt automatisch Haupt- und Unterkategorie einer Meldung anhand von Titel, Beschreibung und – sofern vorhanden – einer KI-Bildanalyse des hochgeladenen Fotos. Ist die Einstellung aktiviert, werden die Kategoriefelder der meldenden Person im öffentlichen Formular nicht angezeigt; ist sie deaktiviert, wählt die meldende Person Haupt- und Unterkategorie selbst über eine kaskadierende Auswahl. Aktivieren Sie diese Funktion, um die Kategorisierung eingehender Meldungen zu automatisieren und Sachbearbeitende zu entlasten.
       officer_groups_only_for_assignment: Nur Sachbearbeitergruppen bei Zuweisung
       officer_groups_only_for_assignment_description: >
         Schränkt die Auswahl bei der Zuweisung einer Zuständigkeit (Meldung, Kategorie, Unterkategorie) auf Sachbearbeitergruppen ein; einzelne Personen stehen dann nicht mehr zur Auswahl. Im Verwaltungsbereich zeigt das Zuweisungsfeld nur noch Gruppen an. Aktivieren Sie diese Einstellung, wenn Anliegen konsequent über die vorgesehenen Gruppenprozesse bearbeitet werden sollen statt über einzelne Personen.

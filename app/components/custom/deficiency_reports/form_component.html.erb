@@ -2,6 +2,7 @@
   <%= render "shared/errors", resource: deficiency_report %>
 
   <fieldset class="required-fields">
+    <% unless ai_categorization? %>
     <div>
       <%= f.select :deficiency_report_category_id,
             DeficiencyReport::Category.all.collect { |category| [category.name, category.id] },
@@ -19,6 +20,7 @@
                 label: t("custom.deficiency_reports.form.subcategory.title") },
               { class: "js-deficiency-report-subcategory-select" } %>
       </div>
+    <% end %>
     <% end %>
 
     <%= render "shared/globalize_locales", resource: deficiency_report %>

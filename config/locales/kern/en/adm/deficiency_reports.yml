@@ -251,6 +251,8 @@ en:
           officer_groups: Officer groups
           officers: Officers
           no_responsible: "-- No officer --"
+          ai_fallback_label: AI categorization fallback
+          ai_fallback_hint: Reports land in this category when AI categorization is enabled but cannot make a confident match, or the AI service is unreachable. Case workers then correct the category manually. Only one category can be the fallback at a time; the marker moves automatically as soon as you mark another one. Without a marker the first category in the order is used.
           warning_text_label: Popup
           warning_text_hint: The popup text is shown to citizens as a notice when they select this category while creating a new report. Use this field to convey important information or warnings, e.g. notes about alternative reporting channels or special responsibilities. The popup appears directly after category selection.
           submit: Save

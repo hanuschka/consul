@@ -10,11 +10,46 @@ class Whatsapp::BroadcastProjektJob < ApplicationJob
     return if projekt.blank?
     return if !::Whatsapp.enabled?
     return if ::Whatsapp.broadcast_template_name.blank?
+    return if already_broadcast?(projekt)
+    return if !still_published?(projekt)
 
     enqueue_batches(projekt)
+
+    projekt.mark_whatsapp_broadcast_sent!
   end
 
   private
+
+    # Guards every path into the broadcast at once: the automatic trigger on
+    # publication, its cascade onto child projekts, and a second publication
+    # inside PUBLICATION_BROADCAST_DELAY. Staff who deliberately re-send from
+    # the projekt page clear the marker first, so their click still gets
+    # through.
+    def already_broadcast?(projekt)
+      return false if !projekt.whatsapp_broadcast_sent_for_current_slug?
+
+      Rails.logger.info(
+        "[Whatsapp] broadcast for projekt #{projekt.id} skipped: already sent " \
+        "at #{projekt.whatsapp_broadcast_sent_at}"
+      )
+
+      true
+    end
+
+    # Publication is re-checked live rather than trusted from enqueue time: the
+    # automatic broadcast waits PUBLICATION_BROADCAST_DELAY, which is exactly
+    # the window in which a projekt published by mistake gets deactivated
+    # again. Criteria are read from the projekt itself, so a page taken back to
+    # draft counts too, even though that leaves `published_at` stale.
+    def still_published?(projekt)
+      return true if projekt.meets_publish_criteria?
+
+      Rails.logger.info(
+        "[Whatsapp] broadcast for projekt #{projekt.id} skipped: no longer published"
+      )
+
+      false
+    end
 
     def enqueue_batches(projekt)
       batch_count = 0

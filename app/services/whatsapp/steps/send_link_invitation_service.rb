@@ -1,4 +1,4 @@
-class Whatsapp::SendLinkInvitationService < ApplicationService
+class Whatsapp::Steps::SendLinkInvitationService < ApplicationService
   def initialize(conversation:)
     @conversation = conversation
   end
@@ -13,7 +13,7 @@ class Whatsapp::SendLinkInvitationService < ApplicationService
 
     return message if message&.status == "sent"
 
-    Whatsapp::SendTextService.call(
+    Whatsapp::Outbound.text(
       account: account,
       body: I18n.t("whatsapp.bot.link_invitation_with_url", url: link_url)
     )
@@ -22,7 +22,7 @@ class Whatsapp::SendLinkInvitationService < ApplicationService
   private
 
     def send_button(link_url)
-      Whatsapp::SendCtaUrlService.call(
+      Whatsapp::Outbound.cta_url(
         account: account,
         body: I18n.t("whatsapp.bot.link_invitation"),
         button_label: I18n.t("whatsapp.bot.link_invitation_button"),

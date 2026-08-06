@@ -11,6 +11,8 @@ module Adm
     ICE_BREAKER_SETTING_KEYS =
       (1..::Whatsapp::MAX_ICE_BREAKERS).map { |position| "whatsapp.ice_breaker_#{position}" }.freeze
 
+    AUTO_BROADCAST_SETTING_KEY = "whatsapp.auto_broadcast_new_projekts".freeze
+
     TEXT_SETTING_KEYS = %w[
       whatsapp.default_locale
       whatsapp.broadcast_template
@@ -31,7 +33,10 @@ module Adm
     # file: the constant below, the `except: :qr_poster` filter, the qr_poster
     # action and the four private helpers at the bottom — plus the route in
     # config/routes/adm.rb and the download button in
-    # Adm::WhatsappQrCodeComponent.
+    # Adm::WhatsappQrCodeComponent. It also needs `qr_token_subject` back: read
+    # the token through QrToken.projekt_phase_id_from, else projekt_id_from, and
+    # return the ProjektPhase or Projekt it names, so a poster request cannot be
+    # pointed at an arbitrary projekt by editing the URL.
     # QR_POSTER_MODULE_SIZE = 14
 
     before_action :authorize_settings # , except: :qr_poster
@@ -57,7 +62,7 @@ module Adm
 
     # def qr_poster
     #   token = params[:token].presence
-    #   subject = token.present? ? ::Whatsapp::QrTokenSubjectService.call(token: token) : nil
+    #   subject = token.present? ? qr_token_subject(token) : nil
     #
     #   if token.present? && subject.blank?
     #     raise ActiveRecord::RecordNotFound
@@ -80,7 +85,7 @@ module Adm
         flash[:success] = t("adm.whatsapp.conversational_components.applied")
       else
         flash[:error] = t("adm.whatsapp.conversational_components.failed",
-          error: ::Whatsapp::ApiErrorMessageService.call(response))
+          error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
       end
 
       redirect_to adm_whatsapp_path
@@ -92,14 +97,17 @@ module Adm
       return render_template_form_errors if @template_form.invalid?
 
       response =
-        ::Whatsapp::CreateBroadcastTemplateService.call(
+        ::Whatsapp::BroadcastTemplates.create(
           name: @template_form.name,
           language: @template_form.language,
           body: @template_form.body
         )
 
       if !response&.success?
-        @template_form.errors.add(:base, ::Whatsapp::ApiErrorMessageService.call(response))
+        @template_form.errors.add(
+          :base,
+          response&.admin_error_message || t("adm.whatsapp.not_configured")
+        )
 
         return render_template_form_errors
       end
@@ -218,6 +226,7 @@ module Adm
 
         @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+        @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
         @entry_settings = entry_settings(settings_by_key)
       end
 
@@ -236,7 +245,8 @@ module Adm
 
       def all_setting_keys
         FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + ICE_BREAKER_SETTING_KEYS +
-          [WELCOME_SETTING_KEY, GREETING_SETTING_KEY, COMMANDS_SETTING_KEY]
+          [WELCOME_SETTING_KEY, GREETING_SETTING_KEY, COMMANDS_SETTING_KEY,
+           AUTO_BROADCAST_SETTING_KEY]
       end
 
       def load_eligible_phases
@@ -245,7 +255,7 @@ module Adm
 
       def load_integration_state
         @webhook_status = ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
-        @templates = ::Whatsapp::BroadcastTemplatesService.call
+        @templates = ::Whatsapp::BroadcastTemplates.list
       end
 
       def load_reach_stats

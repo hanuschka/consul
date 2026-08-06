@@ -97,7 +97,9 @@ en:
       refused:
         generic: I cannot submit a proposal for this project right now.
         phase_missing: I could not find the project. Please scan the QR code again.
-        phase_not_proposal: This project does not accept proposals.
+        phase_not_supported: This phase does not accept submissions via WhatsApp.
+        budget_heading_missing: >-
+          This budget has no area set up yet that I could file your proposal under.
         creation_disabled: This phase does not accept proposals right now.
         ai_flow_disabled: Submitting via WhatsApp is not enabled for this project.
         phase_not_active: This participation phase is not active right now.

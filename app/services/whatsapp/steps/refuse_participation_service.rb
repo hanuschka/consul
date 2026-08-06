@@ -1,7 +1,8 @@
-class Whatsapp::RefuseParticipationService < ApplicationService
+class Whatsapp::Steps::RefuseParticipationService < ApplicationService
   REASONS_WITH_OWN_COPY = %w[
     phase_missing
-    phase_not_proposal
+    phase_not_supported
+    budget_heading_missing
     creation_disabled
     ai_flow_disabled
     phase_not_active
@@ -19,7 +20,7 @@ class Whatsapp::RefuseParticipationService < ApplicationService
   def call
     @conversation.reset_flow!
 
-    Whatsapp::SendRecoveryService.call(conversation: @conversation, body: message, actions: [:menu])
+    Whatsapp::Outbound.recovery(conversation: @conversation, body: message, actions: [:menu])
   end
 
   private

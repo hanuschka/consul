@@ -1,4 +1,4 @@
-class Whatsapp::AskPhaseChoiceService < ApplicationService
+class Whatsapp::Steps::AskPhaseChoiceService < ApplicationService
   ROW_ID_PREFIX = "whatsapp_phase_".freeze
 
   # Without a projekt the list spans the whole portal, which changes what the
@@ -13,7 +13,7 @@ class Whatsapp::AskPhaseChoiceService < ApplicationService
     @conversation.update!(step: "awaiting_phase_choice", projekt_phase_id: nil)
     @conversation.merge_context!(phase_choice_ids: @projekt_phases.map(&:id))
 
-    Whatsapp::SendListService.call(
+    Whatsapp::Outbound.list(
       account: @conversation.whatsapp_account,
       body: body,
       button_label: button_label,

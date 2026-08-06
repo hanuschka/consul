@@ -226,6 +226,17 @@ en:
           so they can join in right away.
         settings_title: "Settings"
         settings_intro: "Template, speech model and retention for the WhatsApp bot. Changes take effect immediately."
+        auto_broadcast_title: "Automatic project notification"
+        auto_broadcast_intro: >-
+          When this is on, the platform sends the WhatsApp notification by itself as soon as a
+          projekt is published — that is, activated and backed by a published projekt page.
+          Projekts restricted to individual districts are skipped; for those the button on the
+          projekt page remains available.
+        auto_broadcast_missing_template_title: "Automatic sending has no effect"
+        auto_broadcast_missing_template_body: >-
+          As long as no approved message template is configured, nothing is sent even with the
+          switch on. Enter the template above under "WhatsApp message template name" or submit one
+          in the "Templates" tab.
         template_missing_title: "No message template configured"
         template_missing_body: "Without an approved 360dialog template no project notifications can be sent. Submit a template below or enter its name above under \"Name of the WhatsApp message template\"."
         qr_title: "General QR code"

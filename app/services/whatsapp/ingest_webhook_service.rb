@@ -8,21 +8,35 @@ class Whatsapp::IngestWebhookService < ApplicationService
     "request_welcome" => "welcome"
   }.freeze
 
-  def initialize(payload:)
-    @payload = payload || {}
+  def initialize(event_id:)
+    @event_id = event_id
   end
 
   def call
+    return if event.blank?
+
     change_values.each do |value|
       record_statuses(value["statuses"])
       record_messages(value["messages"], value["contacts"])
     end
+
+    event.mark_processed!
   end
 
   private
 
+    def event
+      return @event if defined?(@event)
+
+      @event = WhatsappWebhookEvent.find_by(id: @event_id)
+    end
+
+    def payload
+      event.payload.to_h
+    end
+
     def change_values
-      values = Array(@payload["entry"]).flat_map do |entry|
+      values = Array(payload["entry"]).flat_map do |entry|
         Array(entry["changes"]).map { |change| change["value"].to_h }
       end
 

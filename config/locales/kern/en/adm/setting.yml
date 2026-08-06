@@ -38,6 +38,8 @@ en:
       broadcast_template_description: "Name of the 360dialog-approved template used for project notifications. The template must have exactly two body placeholders: 1. project name, 2. project link. Without an approved template, notifications only reach people who wrote in the last 24 hours."
       broadcast_template_language: "Message template language"
       broadcast_template_language_description: "Language code of the approved template, e.g. \"de\". Must match the code registered in 360dialog exactly, otherwise WhatsApp rejects the send."
+      auto_broadcast_new_projekts: "Send notification automatically"
+      auto_broadcast_new_projekts_description: "As soon as a projekt is published, the WhatsApp notification goes out to all linked citizens without any further action. With the switch off it has to be triggered manually on the projekt page. Each person receives at most one message per projekt."
       transcription_model: "Voice message model"
       transcription_model_description: "OpenAI model used to turn voice messages into text. Leave empty for the default \"gpt-4o-mini-transcribe\". Transcription only works with OpenAI credentials."
       message_retention_days: "Chat message retention (days)"

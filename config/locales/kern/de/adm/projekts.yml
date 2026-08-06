@@ -108,6 +108,8 @@ de:
             den Titel der Startseite, die Projektlaufzeit, die Zuordnung zu Themenseiten sowie
             die geografische Einordnung. Diese Angaben bestimmen, wie das Projekt auf der Plattform
             dargestellt und gefunden wird.
+          activated_label: Projekt aktiviert
+          activated_description: Schaltet das Projekt auf der Plattform frei. Nur aktivierte Projekte erscheinen in der öffentlichen Projektübersicht und können von Nutzern aufgerufen werden. Deaktivierte Projekte bleiben vollständig erhalten und sind weiterhin in der Verwaltung bearbeitbar.
           duration_label: Projektlaufzeit
           duration_description: Legt den Zeitraum fest, in dem das Projekt auf der Plattform sichtbar und zugänglich ist – unabhängig davon, ob gerade eine aktive Beteiligungsphase läuft. Das Start- und Enddatum bestimmt, wann das Projekt in der öffentlichen Projektübersicht erscheint und von Nutzern aufgerufen werden kann.
           landing_pages_label: Zuordnung zu Themenseiten

@@ -1,7 +1,20 @@
 class WhatsappConversation < ApplicationRecord
   belongs_to :whatsapp_account
   belongs_to :projekt_phase, optional: true
-  belongs_to :proposal, optional: true
+
+  # A proposal in a proposal phase, a Budget::Investment in a budget phase. The
+  # bot flow is the same either way, so the draft it is working on is held in
+  # one slot rather than a column per resource.
+  #
+  # The `draft` condition has to be unscoped: both models carry
+  # `default_scope { where(draft: false) }`, and everything this association
+  # points at is by definition still a draft. Without it the association
+  # resolves to nil on the next inbound message — which is a different request,
+  # so it reads from the database rather than the association cache.
+  belongs_to :draft_resource,
+    -> { unscope(where: :draft) },
+    polymorphic: true,
+    optional: true
 
   enum step: {
     idle: "idle",
@@ -16,7 +29,7 @@ class WhatsappConversation < ApplicationRecord
     update!(
       step: "idle",
       projekt_phase_id: nil,
-      proposal_id: nil,
+      draft_resource: nil,
       revisions_count: 0,
       context: {}
     )
@@ -25,7 +38,7 @@ class WhatsappConversation < ApplicationRecord
   def complete_flow!
     update!(
       step: "idle",
-      proposal_id: nil,
+      draft_resource: nil,
       revisions_count: 0,
       context: {}
     )
@@ -35,7 +48,7 @@ class WhatsappConversation < ApplicationRecord
     update!(
       step: "awaiting_idea",
       projekt_phase: projekt_phase,
-      proposal_id: nil,
+      draft_resource: nil,
       revisions_count: 0,
       context: {}
     )

@@ -1,4 +1,4 @@
-class Whatsapp::PresentDraftService < ApplicationService
+class Whatsapp::Steps::PresentDraftService < ApplicationService
   PUBLISH_BUTTON_ID = "whatsapp_publish".freeze
   REVISE_BUTTON_ID = "whatsapp_revise".freeze
   DESCRIPTION_PREVIEW_LENGTH = 700
@@ -10,7 +10,7 @@ class Whatsapp::PresentDraftService < ApplicationService
   def call
     @conversation.update!(step: "awaiting_draft_decision")
 
-    Whatsapp::SendButtonsService.call(
+    Whatsapp::Outbound.buttons(
       account: @conversation.whatsapp_account,
       body: draft_summary,
       buttons: buttons
@@ -19,21 +19,21 @@ class Whatsapp::PresentDraftService < ApplicationService
 
   private
 
-    def proposal
-      @conversation.proposal
+    def draft_resource
+      @conversation.draft_resource
     end
 
     def draft_summary
       I18n.t(
         "whatsapp.bot.draft_summary",
-        title: proposal.title,
+        title: draft_resource.title,
         description: plain_description
       )
     end
 
     def plain_description
       ActionController::Base.helpers
-        .strip_tags(proposal.description.to_s)
+        .strip_tags(draft_resource.description.to_s)
         .squish
         .truncate(DESCRIPTION_PREVIEW_LENGTH)
     end

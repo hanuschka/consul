@@ -230,6 +230,17 @@ de:
           sobald ein neues Beteiligungsprojekt startet, damit sie sofort mitmachen können.
         settings_title: "Einstellungen"
         settings_intro: "Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken sofort."
+        auto_broadcast_title: "Automatische Projekt-Benachrichtigung"
+        auto_broadcast_intro: >-
+          Ist dies aktiv, versendet die Plattform die WhatsApp-Benachrichtigung von selbst, sobald
+          ein Projekt veröffentlicht wird – also aktiviert ist und eine veröffentlichte Projektseite
+          hat. Projekte, die auf einzelne Stadtteile beschränkt sind, werden dabei übersprungen; für
+          diese steht die Schaltfläche auf der Projektseite weiterhin zur Verfügung.
+        auto_broadcast_missing_template_title: "Automatischer Versand ohne Wirkung"
+        auto_broadcast_missing_template_body: >-
+          Solange keine freigegebene Nachrichtenvorlage hinterlegt ist, wird auch bei aktivem
+          Schalter nichts versendet. Vorlage oben unter „Name der WhatsApp-Nachrichtenvorlage“
+          eintragen oder im Reiter „Vorlagen“ einreichen.
         template_missing_title: "Keine Nachrichtenvorlage hinterlegt"
         template_missing_body: "Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden. Vorlage unten einreichen oder oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen."
         qr_title: "Allgemeiner QR-Code"

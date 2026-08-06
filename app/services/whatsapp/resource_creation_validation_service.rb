@@ -1,4 +1,4 @@
-class Whatsapp::ProposalCreationValidationService < ApplicationService
+class Whatsapp::ResourceCreationValidationService < ApplicationService
   def initialize(projekt_phase:, user:)
     @projekt_phase = projekt_phase
     @user = user

@@ -208,7 +208,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # becomes a proposal.
     def refuse_if_not_permitted
       permission_problem =
-        Whatsapp::ProposalCreationValidationService.call(
+        Whatsapp::ResourceCreationValidationService.call(
           projekt_phase: conversation.projekt_phase,
           user: account.user
         )

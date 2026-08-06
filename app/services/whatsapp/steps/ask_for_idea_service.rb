@@ -8,7 +8,7 @@ class Whatsapp::Steps::AskForIdeaService < ApplicationService
       return Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.no_projekt"))
     end
 
-    permission_problem = Whatsapp::ProposalCreationValidationService.call(projekt_phase:, user: account.user)
+    permission_problem = Whatsapp::ResourceCreationValidationService.call(projekt_phase:, user: account.user)
 
     if permission_problem.present?
       return Whatsapp::Steps::RefuseParticipationService.call(

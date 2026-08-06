@@ -4,6 +4,7 @@ module Adm
     SORTABLE_FIELDS = %i[id created_at updated_at status_changed_at].freeze
     FILTERABLE_FIELDS = %i[
       deficiency_report_category_id
+      deficiency_report_subcategory_id
       deficiency_report_status_id
       responsible
       archived_state

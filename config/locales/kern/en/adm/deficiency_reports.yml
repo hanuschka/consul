@@ -66,6 +66,7 @@ en:
             address: Address
             district: District
             category: Category
+            subcategory: Subcategory
             responsible: Officer
             archived_state: Archive
             hidden_state: Hidden by moderation
@@ -99,6 +100,7 @@ en:
           image_label: Image
           documents_label: Documents
           category: Category
+          subcategory: Subcategory
           map_label: Map
           on_behalf_of_label: On behalf of
           intake_channel_label: Intake channel
@@ -128,6 +130,7 @@ en:
             on_behalf_of_company_name: e.g. Doe Construction Ltd.
             on_behalf_of_email: e.g. jane.doe@example.com
             intake_channel: Please select
+            subcategory: No subcategory
           labels:
             title: Title
             description: Description
@@ -140,6 +143,7 @@ en:
             on_behalf_of_company_name: Company
             on_behalf_of_email: Email address
             intake_channel: Intake channel
+            subcategory: Subcategory
           hints:
             title: The title of the entry is shown in the list view and as the heading on the detail page. It should briefly and precisely describe the reported deficiency so officers and citizens can grasp the content at a glance. Changes to the title become visible on the public page immediately.
             description: The description contains all relevant details about the reported deficiency, such as its exact state, possible causes, and impact. This text is displayed publicly on the detail page of the entry. A precise description makes it easier for officers to assess the issue and significantly speeds up processing.
@@ -151,6 +155,7 @@ en:
             on_behalf_of_email: Optional. If you enter an email address, the report is assigned to the account behind it. If no account exists for the address, one is created and receives a confirmation email (double opt-in). An existing account is only linked and receives no confirmation email. Leave empty to keep the report attributed to yourself.
             category: The category assigns the entry to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
             intake_channel: The route by which the report reached the administration, e.g. phone, email, or in person. It is mandatory as soon as you file a report on behalf of a third person. Reports citizens submit themselves via the platform automatically receive the configured default channel.
+            subcategory: The subcategory breaks the report down further within the chosen category, e.g. "Potholes" under "Construction & traffic". Only subcategories of the category selected above are offered; categories without subcategories show no select at all. If the subcategory carries its own default responsibility, the report is assigned there automatically.
         administer:
           title: Administer
           status: Status
@@ -171,6 +176,37 @@ en:
           title: Feedback form
           created_at: Created on
           for_report: For
+      subcategories:
+        index:
+          title: Subcategories
+          title_for_category: "Subcategories of \"%{category}\""
+          page_hint: "Manage the subcategories of this category, e.g. \"Potholes\" under \"Construction & traffic\". Each subcategory can carry its own default responsibility, which takes precedence over the main category's when new reports are assigned. Drag and drop to set the order of the select list. Categories without subcategories show no selection in the report form."
+          new_subcategory: New subcategory
+          no_items_title: No subcategories available
+          no_items_description: Create a subcategory to break reports within this category down further.
+          table:
+            name: Name
+            default_responsible: Default responsibility
+        new:
+          title: New subcategory
+        create:
+          success: Subcategory was created successfully.
+        edit:
+          title: Edit subcategory
+        update:
+          success: Subcategory was updated successfully.
+        destroy:
+          success: Subcategory was deleted successfully.
+          cannot_destroy: Subcategory cannot be deleted because reports are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the subcategory as shown in the report form and the report overview, e.g. "Potholes", "Street lighting" or "Illegal dumping". Choose names citizens understand without prior knowledge.
+          default_responsible_label: Default responsibility
+          default_responsible_hint: The officer group or person reports in this subcategory are assigned to automatically. It takes precedence over the main category's default, but only applies when the report's district carries no responsibility of its own. Without a value the main category's responsibility applies.
+          officer_groups: Officer groups
+          officers: Officers
+          no_responsible: No responsibility
+          submit: Save
       categories:
         index:
           title: Categories
@@ -184,8 +220,14 @@ en:
             color: Color
             icon: Icon
             default_responsible: Default officer
+            subcategories: Subcategories
             warning_text: Popup
             actions: Actions
+          subcategories_link:
+            one: 1 subcategory
+            other: "%{count} subcategories"
+            zero: None
+          manage_subcategories: Manage subcategories
         new:
           title: New category
         create:

@@ -59,6 +59,7 @@
   <% end %>
 <% end %>
 
+<div data-controller="adm--subcategory-cascade">
 <%= render Kern::FormFieldComponent.new(divider: false,
   label: t(".labels.category"), hint: t(".hints.category")) do %>
   <% if form.object.errors[:deficiency_report_category_id].present? %>
@@ -73,7 +74,8 @@
         <% DeficiencyReport::Category.all.each do |category| %>
           <% input_id = "deficiency_report_deficiency_report_category_id_#{category.id}" %>
           <input type="radio" name="deficiency_report[deficiency_report_category_id]" value="<%= category.id %>" id="<%= input_id %>"
-            style="display:none" <%= "checked" if form.object.deficiency_report_category_id == category.id %>>
+            style="display:none" data-action="change->adm--subcategory-cascade#refresh"
+            <%= "checked" if form.object.deficiency_report_category_id == category.id %>>
           <label for="<%= input_id %>"
             class="map-feature-pill map-feature-pill--sentiment"
             data-color="<%= category.color %>"
@@ -90,6 +92,21 @@
     </div>
   </div>
 <% end %>
+
+<% if DeficiencyReport::Subcategory.exists? %>
+  <div data-adm--subcategory-cascade-target="wrapper">
+    <%= render Kern::FormFieldComponent.new(divider: false,
+      label: t(".labels.subcategory"), hint: t(".hints.subcategory")) do %>
+      <%= form.select :deficiency_report_subcategory_id,
+            DeficiencyReport::Subcategory.includes(:category).map { |subcategory|
+              [subcategory.name, subcategory.id, { "data-category-id": subcategory.deficiency_report_category_id }]
+            },
+            { include_blank: t(".placeholders.subcategory") },
+            { label: false, data: { "adm--subcategory-cascade-target": "select" } } %>
+    <% end %>
+  </div>
+<% end %>
+</div>
 
 <% if Setting["deficiency_reports.show_map"].present? %>
   <div class="kern-row">

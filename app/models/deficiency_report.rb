@@ -20,7 +20,8 @@ class DeficiencyReport < ApplicationRecord
   include ActsAsParanoidAliases
 
   audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down
-                   deficiency_report_status_id deficiency_report_category_id responsible_type responsible_id]
+                   deficiency_report_status_id deficiency_report_category_id
+                   deficiency_report_subcategory_id responsible_type responsible_id]
   has_associated_audits
   translation_class.class_eval do
     audited associated_with: :globalized_model,
@@ -36,6 +37,8 @@ class DeficiencyReport < ApplicationRecord
 
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
+  belongs_to :subcategory, class_name: "DeficiencyReport::Subcategory",
+    foreign_key: :deficiency_report_subcategory_id
   belongs_to :intake_channel, class_name: "DeficiencyReport::IntakeChannel",
     foreign_key: :deficiency_report_intake_channel_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
@@ -51,6 +54,7 @@ class DeficiencyReport < ApplicationRecord
   validates :deficiency_report_intake_channel_id, presence: true, on: :create, if: :intake_channel_required?
 
   before_validation :assign_default_intake_channel, on: :create
+  before_validation :clear_mismatched_subcategory
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
@@ -114,6 +118,11 @@ class DeficiencyReport < ApplicationRecord
     if super.has_key?("deficiency_report_category_id")
       old_category_name = DeficiencyReport::Category.find_by(id: deficiency_report_category_id_was)&.name
       ch_attrs["deficiency_report_category_id"] = [old_category_name, category&.name]
+    end
+
+    if super.has_key?("deficiency_report_subcategory_id")
+      old_subcategory_name = DeficiencyReport::Subcategory.find_by(id: deficiency_report_subcategory_id_was)&.name
+      ch_attrs["deficiency_report_subcategory_id"] = [old_subcategory_name, subcategory&.name]
     end
 
     if super.has_key?("responsible_type") || super.has_key?("responsible_id")
@@ -229,7 +238,9 @@ class DeficiencyReport < ApplicationRecord
   end
 
   def assign_default_responsible
-    default_responsible = district&.default_deficiency_report_responsible || category&.default_responsible
+    default_responsible = district&.default_deficiency_report_responsible ||
+                          subcategory&.default_responsible ||
+                          category&.default_responsible
 
     if default_responsible.present?
       update_columns(
@@ -263,5 +274,16 @@ class DeficiencyReport < ApplicationRecord
       return if deficiency_report_intake_channel_id.present? || intake_channel_required?
 
       self.intake_channel = DeficiencyReport::IntakeChannel.default
+    end
+
+    # A subcategory only means anything under its own category, so moving a report to a different
+    # category drops one that no longer belongs. Silent rather than an error on purpose: the
+    # cascading form and the inline editor never produce the pair, so the only way to arrive here
+    # is a stale form, where refusing the save would strand the user on a field they cannot see.
+    def clear_mismatched_subcategory
+      return if deficiency_report_subcategory_id.blank?
+      return if subcategory&.deficiency_report_category_id == deficiency_report_category_id
+
+      self.deficiency_report_subcategory_id = nil
     end
 end

@@ -7,6 +7,8 @@ class DeficiencyReport::Category < ApplicationRecord
   attr_accessor :default_officer_id, :default_officer_group_id
 
   has_many :deficiency_reports, foreign_key: :deficiency_report_category_id
+  has_many :subcategories, class_name: "DeficiencyReport::Subcategory",
+    foreign_key: :deficiency_report_category_id, inverse_of: :category, dependent: :destroy
   belongs_to :default_responsible, polymorphic: true
 
   default_scope { order(given_order: :asc) }

@@ -1,0 +1,30 @@
+<% url = @subcategory.persisted? ? adm_deficiency_reports_category_subcategory_path(@category, @subcategory) : adm_deficiency_reports_category_subcategories_path(@category) %>
+<%= form_with model: @subcategory, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), hint: t(".default_responsible_hint")) do %>
+    <% assignable_officers = deficiency_report_assignable_officers(@subcategory.default_responsible) %>
+    <% grouped_options = {
+      t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] }
+    } %>
+    <% if assignable_officers.any? %>
+      <% grouped_options[t(".officers")] = assignable_officers.map { |o| [o.name, "Officer:#{o.id}"] } %>
+    <% end %>
+    <% selected = if @subcategory.default_responsible.is_a?(DeficiencyReport::OfficerGroup)
+                    "OfficerGroup:#{@subcategory.default_responsible.id}"
+                  elsif @subcategory.default_responsible.is_a?(DeficiencyReport::Officer)
+                    "Officer:#{@subcategory.default_responsible.id}"
+                  end %>
+    <div class="kern-form-input">
+      <%= select_tag :default_responsible,
+        grouped_options_for_select(grouped_options, selected),
+        include_blank: t(".no_responsible"),
+        class: "kern-form-input__input" %>
+    </div>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

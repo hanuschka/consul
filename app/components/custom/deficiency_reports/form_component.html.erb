@@ -3,8 +3,23 @@
 
   <fieldset class="required-fields">
     <div>
-      <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.collect{ |category| [category.name, category.id] }, { prompt: t('custom.deficiency_reports.form.category.placeholder') } %>
+      <%= f.select :deficiency_report_category_id,
+            DeficiencyReport::Category.all.collect { |category| [category.name, category.id] },
+            { prompt: t('custom.deficiency_reports.form.category.placeholder') },
+            { class: "js-user-resource-select-category" } %>
     </div>
+
+    <% if DeficiencyReport::Subcategory.exists? %>
+      <div class="js-deficiency-report-subcategory-wrapper">
+        <%= f.select :deficiency_report_subcategory_id,
+              DeficiencyReport::Subcategory.includes(:category).map { |subcategory|
+                [subcategory.name, subcategory.id, { "data-category-id": subcategory.deficiency_report_category_id }]
+              },
+              { prompt: t("custom.deficiency_reports.form.subcategory.placeholder"),
+                label: t("custom.deficiency_reports.form.subcategory.title") },
+              { class: "js-deficiency-report-subcategory-select" } %>
+      </div>
+    <% end %>
 
     <%= render "shared/globalize_locales", resource: deficiency_report %>
     <%= f.translatable_fields do |translations_form| %>

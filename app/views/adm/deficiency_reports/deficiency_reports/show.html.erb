@@ -113,6 +113,10 @@
           additional_rows << { label: t(".category"), value: category_html }
         end
 
+        if @deficiency_report.subcategory.present?
+          additional_rows << { label: t(".subcategory"), value: @deficiency_report.subcategory.name }
+        end
+
         if @deficiency_report.documents.any?
           docs_html = capture do %>
             <ul class="mb-0">

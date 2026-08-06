@@ -20,6 +20,10 @@ en:
           title: Category
           description: Please assign a category to your report
           placeholder: Please select
+        subcategory:
+          title: Subcategory
+          description: Please choose a fitting subcategory
+          placeholder: Please select
         documents:
           title: Add documents
         languages:

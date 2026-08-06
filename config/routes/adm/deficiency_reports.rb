@@ -10,6 +10,10 @@ namespace :adm do
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
       patch :order_categories, on: :collection
+
+      resources :subcategories, only: [:index, :new, :create, :edit, :update, :destroy] do
+        patch :order_subcategories, on: :collection
+      end
     end
 
     resources :statuses, only: [:index, :new, :create, :edit, :update, :destroy] do

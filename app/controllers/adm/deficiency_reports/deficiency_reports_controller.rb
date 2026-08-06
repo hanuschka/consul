@@ -13,7 +13,8 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     respond_to do |format|
       format.html do
-        preloaded = base_scope.preload(:status, :translations, :author, :category, :responsible, :feedback_form, map_location: :district)
+        preloaded = base_scope.preload(:status, :translations, :author, :category, :subcategory,
+                                       :responsible, :feedback_form, map_location: :district)
         @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params))
 
         @id_header_options = { search: true, sort: true }
@@ -26,6 +27,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         @address_header_options = { search: true }
         @district_header_options = { filter_options: district_filter_options }
         @category_header_options = { filter_options: category_filter_options }
+        @subcategory_header_options = { filter_options: subcategory_filter_options }
         @responsible_header_options = { filter_options: responsible_filter_options }
         @archived_state_header_options = { filter_options: archived_state_filter_options, default: ["active"] }
         @hidden_state_header_options = { filter_options: hidden_state_filter_options, default: ["visible"] }
@@ -289,6 +291,14 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     def category_filter_options
       DeficiencyReport::Category.all.map { |c| [c.id, c.name] }
+    end
+
+    # Prefixed with the parent so two categories can both have a "Sonstiges" subcategory without the
+    # filter list turning into a guessing game.
+    def subcategory_filter_options
+      DeficiencyReport::Subcategory.includes(:category).map do |s|
+        [s.id, "#{s.category.name} – #{s.name}"]
+      end
     end
 
     def district_filter_options

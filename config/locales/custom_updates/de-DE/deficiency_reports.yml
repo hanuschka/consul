@@ -22,6 +22,10 @@ de:
           title: Kategorie
           description: "Bitte ordnen Sie Ihr Meldung einer Kategorie zu:"
           placeholder: Bitte wählen
+        subcategory:
+          title: Unterkategorie
+          description: "Bitte wählen Sie eine passende Unterkategorie:"
+          placeholder: Bitte wählen
         documents:
           title: Dokumente hinzufügen
         languages:

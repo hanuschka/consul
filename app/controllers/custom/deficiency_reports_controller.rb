@@ -202,6 +202,7 @@ class DeficiencyReportsController < ApplicationController
     attributes = [:video_url, :on_behalf_of, :on_behalf_of_company_name, :on_behalf_of_email,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
+                  :deficiency_report_subcategory_id,
                   :notify_officer_about_new_comments,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,

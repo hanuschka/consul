@@ -66,6 +66,7 @@ de:
             address: Adresse
             district: Bezirk
             category: Kategorie
+            subcategory: Unterkategorie
             responsible: Sachbearbeiter
             archived_state: Archiv
             hidden_state: Herausmoderiert
@@ -99,6 +100,7 @@ de:
           image_label: Bild
           documents_label: Dokumente
           category: Kategorie
+          subcategory: Unterkategorie
           map_label: Karte
           on_behalf_of_label: Im Auftrag von
           intake_channel_label: Eingangskanal
@@ -128,6 +130,7 @@ de:
             on_behalf_of_company_name: z. B. Musterbau GmbH
             on_behalf_of_email: z. B. maria.musterfrau@example.com
             intake_channel: Bitte wählen
+            subcategory: Keine Unterkategorie
           labels:
             title: Titel der Meldung
             description: Beschreibung
@@ -140,6 +143,7 @@ de:
             on_behalf_of_company_name: Firma
             on_behalf_of_email: E-Mail-Adresse
             intake_channel: Eingangskanal
+            subcategory: Unterkategorie
           hints:
             title: Der Titel des Beitrags wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte das gemeldete Anliegen kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können.
             description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Anliegen, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird - je nach gewählter Voreinstellung - öffentlich auf der Detailseite des Beitrags angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
@@ -151,6 +155,7 @@ de:
             on_behalf_of_email: Optional. Wenn Sie eine E-Mail-Adresse angeben, wird das Anliegen dem dahinterliegenden Benutzerkonto zugeordnet. Existiert für die Adresse noch kein Konto, wird eines angelegt und erhält eine Bestätigungs-E-Mail (Double-Opt-In). Ein bereits vorhandenes Konto wird nur verknüpft und erhält keine Bestätigungs-E-Mail. Lassen Sie das Feld leer, bleibt das Anliegen Ihnen zugeordnet.
             category: Die Kategorie ordnet den Beitrag einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
             intake_channel: Der Weg, auf dem das Anliegen bei der Verwaltung eingegangen ist, z. B. Telefon, E-Mail oder persönlich. Die Angabe ist verpflichtend, sobald Sie ein Anliegen im Namen einer dritten Person erfassen. Anliegen, die Bürgerinnen und Bürger selbst über die Plattform einreichen, erhalten automatisch den konfigurierten Standardkanal.
+            subcategory: Die Unterkategorie gliedert das Anliegen innerhalb der gewählten Kategorie feiner, z. B. „Schlaglöcher” unter „Bau & Verkehr”. Zur Auswahl stehen nur Unterkategorien der oben gewählten Kategorie; Kategorien ohne Unterkategorien zeigen kein Auswahlfeld an. Hat die Unterkategorie eine eigene Standard-Zuständigkeit, wird das Anliegen automatisch dorthin zugewiesen.
         administer:
           title: Administrieren
           status: Status
@@ -171,6 +176,37 @@ de:
           title: Feedback-Formular
           created_at: Erstellt am
           for_report: Für
+      subcategories:
+        index:
+          title: Unterkategorien
+          title_for_category: "Unterkategorien von „%{category}”"
+          page_hint: "Hier verwalten Sie die Unterkategorien dieser Kategorie, z. B. „Schlaglöcher” unter „Bau & Verkehr”. Jede Unterkategorie kann eine eigene Standard-Zuständigkeit haben, die bei der Zuweisung neuer Anliegen Vorrang vor der Zuständigkeit der Hauptkategorie hat. Per Drag & Drop bestimmen Sie die Reihenfolge in der Auswahlliste. Kategorien ohne Unterkategorien zeigen im Meldeformular keine Auswahl an."
+          new_subcategory: Neue Unterkategorie
+          no_items_title: Keine Unterkategorien vorhanden
+          no_items_description: Erstellen Sie eine Unterkategorie, um Anliegen innerhalb dieser Kategorie feiner zu gliedern.
+          table:
+            name: Bezeichnung
+            default_responsible: Standard-Zuständigkeit
+        new:
+          title: Neue Unterkategorie
+        create:
+          success: Unterkategorie wurde erfolgreich erstellt.
+        edit:
+          title: Unterkategorie bearbeiten
+        update:
+          success: Unterkategorie wurde erfolgreich aktualisiert.
+        destroy:
+          success: Unterkategorie wurde erfolgreich gelöscht.
+          cannot_destroy: Unterkategorie kann nicht gelöscht werden, da ihr noch Anliegen zugeordnet sind.
+        form:
+          name_label: Bezeichnung
+          name_hint: Die Bezeichnung der Unterkategorie, wie sie im Meldeformular und in der Anliegenübersicht angezeigt wird, z. B. „Schlaglöcher”, „Straßenbeleuchtung” oder „Wilder Müll”. Wählen Sie Bezeichnungen, die Bürgerinnen und Bürger ohne Vorwissen verstehen.
+          default_responsible_label: Standard-Zuständigkeit
+          default_responsible_hint: Die Sachbearbeitergruppe oder Person, der Anliegen dieser Unterkategorie automatisch zugewiesen werden. Diese Angabe hat Vorrang vor der Standard-Zuständigkeit der Hauptkategorie, greift aber nur, wenn für das Gebiet des Anliegens keine eigene Zuständigkeit hinterlegt ist. Ohne Angabe gilt die Zuständigkeit der Hauptkategorie.
+          officer_groups: Sachbearbeitergruppen
+          officers: Sachbearbeitende
+          no_responsible: Keine Zuständigkeit
+          submit: Speichern
       categories:
         index:
           title: Kategorien
@@ -184,8 +220,14 @@ de:
             color: Farbe
             icon: Symbol
             default_responsible: Standard-Sachbearbeiter
+            subcategories: Unterkategorien
             warning_text: Popup
             actions: Aktionen
+          subcategories_link:
+            one: 1 Unterkategorie
+            other: "%{count} Unterkategorien"
+            zero: Keine
+          manage_subcategories: Unterkategorien verwalten
         new:
           title: Neue Kategorie
         create:

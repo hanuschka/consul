@@ -204,6 +204,17 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
   end
 
+  def whatsapp
+    authorize_phase(:update?)
+    @phase_token = ::Whatsapp::PhaseTokenService.call(projekt_phase: @projekt_phase)
+
+    @breadcrumbs = [
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
+  end
+
   def ai_user_flow
     authorize_phase(:update?)
     @hard_criteria = @projekt_phase.user_resource_criteria.hard_kind

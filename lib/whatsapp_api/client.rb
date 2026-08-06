@@ -1,6 +1,8 @@
 class WhatsappApi::Client
   include HTTParty
 
+  AUTH_HEADER_NAME = "D360-API-KEY".freeze
+
   base_uri ::Whatsapp.base_url.to_s
   default_timeout 20
 
@@ -26,6 +28,10 @@ class WhatsappApi::Client
 
   def webhooks
     @webhooks ||= WhatsappApi::Resources::Webhooks.new(self)
+  end
+
+  def templates
+    @templates ||= WhatsappApi::Resources::Templates.new(self)
   end
 
   def get(path, query: nil)
@@ -72,6 +78,6 @@ class WhatsappApi::Client
     end
 
     def auth_header
-      { "D360-API-KEY" => ::Whatsapp.api_key.to_s }
+      { AUTH_HEADER_NAME => ::Whatsapp.api_key.to_s }
     end
 end

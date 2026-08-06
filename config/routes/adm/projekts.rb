@@ -102,6 +102,7 @@ namespace :adm do
 
         # Users & permissions
         get :ai_user_flow
+        get :whatsapp
         post :create_user_resource_criterion
         patch :update_user_resource_criterion
         delete :destroy_user_resource_criterion
@@ -285,6 +286,7 @@ namespace :adm do
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       post :whatsapp_broadcast, on: :member
+      get :whatsapp, on: :member
       patch :toggle_hide_content_background, on: :member
       patch :update_color, on: :member
       patch :update_taxonomy, on: :member

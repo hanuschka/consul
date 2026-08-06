@@ -8,6 +8,7 @@ class Whatsapp::RefuseParticipationService < ApplicationService
     phase_expired
     phase_not_current
     not_verified
+    no_open_phase
   ].freeze
 
   def initialize(conversation:, reason:)

@@ -102,12 +102,16 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[
+    items = %w[
       duration naming restrictions general_settings form_author user_functions
       proposals comments
       projekt_labels sentiments map
       officing_managers email_templates ai_settings ai_user_flow
     ]
+
+    return items if !::Whatsapp.enabled?
+
+    items + %w[whatsapp]
   end
 
 

@@ -1,0 +1,47 @@
+<%= content_for :title, [(@projekt.page&.title || @projekt.name), t(".title")].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: (@projekt.page&.title || @projekt.name),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_projekts_root_path,
+  compact: true
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".hint_text") %></p>
+  <% end %>
+<% end %>
+
+<%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt, current_action: "whatsapp") %>
+
+<div class="kern-container my-5">
+  <%= render Adm::WhatsappQrCodeComponent.new(
+    title: t(".qr_title"),
+    subline: t(".qr_subline"),
+    token: @projekt_token,
+    prefilled_text: t("adm.whatsapp.prefilled_text", token: @projekt_token)
+  ) %>
+
+  <section class="mt-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t(".eligible_phases_title") %></h2>
+
+    <% if @eligible_projekt_phases.empty? %>
+      <%= kern_alert(title: t(".no_eligible_phases_title"), style: :warning) do %>
+        <p class="kern-body"><%= t(".no_eligible_phases_body") %></p>
+      <% end %>
+    <% else %>
+      <p class="kern-body mb-3">
+        <%= t(".eligible_phases_intro", count: @eligible_projekt_phases.size) %>
+      </p>
+
+      <ul class="kern-body">
+        <% @eligible_projekt_phases.each do |projekt_phase| %>
+          <li>
+            <%= link_to projekt_phase.title,
+              whatsapp_adm_projekts_phase_path(projekt_phase),
+              class: "kern-link" %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </section>
+</div>

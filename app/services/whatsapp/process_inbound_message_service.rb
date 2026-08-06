@@ -19,10 +19,12 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     return if account.opt_out_at.present?
     return if @whatsapp_message.audio? && inbound_text.blank?
 
-    phase_token_captured = capture_phase_token
+    entry = capture_entry_token
 
     return Whatsapp::SendLinkInvitationService.call(conversation:) if account.user.blank?
-    return Whatsapp::AskForIdeaService.call(conversation:) if phase_token_captured
+    return Whatsapp::RefuseParticipationService.call(conversation:, reason: :no_open_phase) if
+      entry == :projekt_without_phase
+    return Whatsapp::ResumeFlowService.call(conversation:) if entry.present?
 
     dispatch_step
   end
@@ -39,6 +41,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
     def dispatch_step
       case conversation.step
+      when "awaiting_phase_choice"
+        handle_phase_choice
       when "awaiting_idea"
         handle_idea
       when "awaiting_draft_decision"
@@ -46,8 +50,20 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when "awaiting_revision"
         handle_revision
       else
-        Whatsapp::AskForIdeaService.call(conversation:)
+        Whatsapp::ResumeFlowService.call(conversation:)
       end
+    end
+
+    def handle_phase_choice
+      chosen_id = Whatsapp::AskPhaseChoiceService.projekt_phase_id_from_row(list_reply_id)
+      offered_ids = Array(conversation.context["phase_choice_ids"]).map(&:to_i)
+      projekt_phase = ProjektPhase.find_by(id: chosen_id) if offered_ids.include?(chosen_id)
+
+      return Whatsapp::ResumeFlowService.call(conversation:) if projekt_phase.blank?
+
+      conversation.start_flow!(projekt_phase)
+
+      Whatsapp::AskForIdeaService.call(conversation:)
     end
 
     def handle_opt_keywords
@@ -69,20 +85,55 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       false
     end
 
-    # Returns true when the message carried a valid deep-link token, so the
-    # caller can prompt for the idea instead of treating the token text as one.
+    # Stores what a QR deep link points at without sending anything, so the
+    # caller decides the reply (link invitation first for unlinked numbers).
+    # Returns nil, :phase, :projekt or :projekt_without_phase.
+    def capture_entry_token
+      capture_phase_token || capture_projekt_token
+    end
+
     def capture_phase_token
       projekt_phase_id = Whatsapp::PhaseTokenService.projekt_phase_id_from(inbound_text)
 
-      return false if projekt_phase_id.blank?
+      return if projekt_phase_id.blank?
 
       projekt_phase = ProjektPhase.find_by(id: projekt_phase_id)
 
-      return false if projekt_phase.blank?
+      return if projekt_phase.blank?
 
       conversation.start_flow!(projekt_phase)
 
-      true
+      :phase
+    end
+
+    def capture_projekt_token
+      projekt_id = Whatsapp::ProjektTokenService.projekt_id_from(inbound_text)
+
+      return if projekt_id.blank?
+
+      projekt = Projekt.find_by(id: projekt_id)
+
+      return if projekt.blank?
+
+      store_projekt_entry(projekt)
+    end
+
+    def store_projekt_entry(projekt)
+      eligible_phases = WhatsappEligiblePhasesQuery.call(projekt: projekt)
+
+      return :projekt_without_phase if eligible_phases.empty?
+
+      if eligible_phases.one?
+        conversation.start_flow!(eligible_phases.first)
+      else
+        conversation.reset_flow!
+        conversation.merge_context!(
+          phase_choice_projekt_id: projekt.id,
+          phase_choice_ids: eligible_phases.map(&:id)
+        )
+      end
+
+      :projekt
     end
 
     def handle_idea
@@ -241,6 +292,10 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def button_reply_id
       @raw_message.dig("interactive", "button_reply", "id") ||
         @raw_message.dig("button", "payload")
+    end
+
+    def list_reply_id
+      @raw_message.dig("interactive", "list_reply", "id")
     end
 
     def normalized_text

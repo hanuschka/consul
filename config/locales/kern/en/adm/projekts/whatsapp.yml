@@ -17,15 +17,3 @@ en:
           enqueued:
             one: The WhatsApp notification is being sent to 1 person.
             other: The WhatsApp notification is being sent to %{count} people.
-      phases:
-        whatsapp_deep_link:
-          title: WhatsApp entry point
-          subline: >-
-            This link opens a WhatsApp chat with prefilled text. Printed as a QR code, it leads
-            straight into this phase.
-          prefilled_text: "Projekt %{token}"
-          token: Phase identifier
-          link: Direct link
-          qr_code: QR code
-          missing_number: >-
-            No WhatsApp number is configured (secret "whatsapp.business_number").

@@ -70,14 +70,14 @@
           </div>
         <% end %>
 
-        <div class="header--responsive-menu-title">
+        <%= link_to (@ui_site_homepage_path.presence || root_path), class: "header--responsive-menu-title" do %>
           <div>
             <%= Setting['extended_option.general.title'] %>
           </div>
           <div>
             <b><%= Setting["extended_option.general.subtitle"] %></b>
           </div>
-        </div>
+        <% end %>
 
         <% if !launch_page && !user_signed_in? %>
           <div class="show-on-mobile">

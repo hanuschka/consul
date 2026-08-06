@@ -6,6 +6,7 @@ class WhatsappConversation < ApplicationRecord
   enum step: {
     idle: "idle",
     awaiting_link: "awaiting_link",
+    awaiting_phase_choice: "awaiting_phase_choice",
     awaiting_idea: "awaiting_idea",
     awaiting_draft_decision: "awaiting_draft_decision",
     awaiting_revision: "awaiting_revision"

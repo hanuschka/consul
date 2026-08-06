@@ -1,0 +1,44 @@
+<%= form_tag adm_whatsapp_path, method: :get, class: "adm-filter-bar -labeled" do %>
+  <%= hidden_field_tag :tab, "dialogs" %>
+
+  <div class="adm-filter-bar--field adm-filter-bar--field-search adm-filter-bar--field-grow">
+    <%= label_tag :q, t("adm.whatsapp.dialogs.filters.search_label"), class: "adm-filter-bar--label" %>
+    <div class="adm-filter-bar--control">
+      <i class="fa fa-search adm-filter-bar--search-icon" aria-hidden="true"></i>
+      <%= search_field_tag :q, params[:q],
+        class: "adm-filter-bar--input adm-filter-bar--input-search",
+        placeholder: t("adm.whatsapp.dialogs.filters.search_placeholder") %>
+    </div>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :state, t("adm.whatsapp.dialogs.filters.state_label"), class: "adm-filter-bar--label" %>
+    <%= select_tag :state,
+      options_for_select(@dialog_state_options, params[:state]),
+      include_blank: t("adm.whatsapp.dialogs.filters.any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :step, t("adm.whatsapp.dialogs.filters.step_label"), class: "adm-filter-bar--label" %>
+    <%= select_tag :step,
+      options_for_select(@dialog_step_options, params[:step]),
+      include_blank: t("adm.whatsapp.dialogs.filters.any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :activity, t("adm.whatsapp.dialogs.filters.activity_label"), class: "adm-filter-bar--label" %>
+    <%= select_tag :activity,
+      options_for_select(@dialog_activity_options, params[:activity]),
+      include_blank: t("adm.whatsapp.dialogs.filters.any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--actions">
+    <%= submit_tag t("adm.whatsapp.dialogs.filters.submit"), name: nil, class: "adm-filter-bar--submit-button" %>
+    <%= link_to t("adm.whatsapp.dialogs.filters.reset"),
+      adm_whatsapp_path(tab: "dialogs"),
+      class: "adm-filter-bar--reset-button" %>
+  </div>
+<% end %>

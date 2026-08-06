@@ -19,6 +19,11 @@
           <%= t("adm.whatsapp.show.tabs.connection") %>
         </custom-tab>
         <custom-tab for="settings"><%= t("adm.whatsapp.show.tabs.settings") %></custom-tab>
+        <custom-tab for="templates"><%= t("adm.whatsapp.show.tabs.templates") %></custom-tab>
+        <custom-tab for="qr_code"><%= t("adm.whatsapp.show.tabs.qr_code") %></custom-tab>
+        <custom-tab for="reach"><%= t("adm.whatsapp.show.tabs.reach") %></custom-tab>
+        <custom-tab for="dialogs"><%= t("adm.whatsapp.show.tabs.dialogs") %></custom-tab>
+        <custom-tab for="test_message"><%= t("adm.whatsapp.show.tabs.test_message") %></custom-tab>
       </div>
 
       <custom-tab-panel for="connection" class="mt-4">
@@ -27,6 +32,26 @@
 
       <custom-tab-panel for="settings" class="mt-4">
         <%= render "adm/whatsapp/settings_tab" %>
+      </custom-tab-panel>
+
+      <custom-tab-panel for="templates" class="mt-4">
+        <%= render "adm/whatsapp/templates_tab" %>
+      </custom-tab-panel>
+
+      <custom-tab-panel for="qr_code" class="mt-4">
+        <%= render "adm/whatsapp/qr_code_tab" %>
+      </custom-tab-panel>
+
+      <custom-tab-panel for="reach" class="mt-4">
+        <%= render "adm/whatsapp/reach_tab" %>
+      </custom-tab-panel>
+
+      <custom-tab-panel for="dialogs" class="mt-4">
+        <%= render "adm/whatsapp/dialogs_tab" %>
+      </custom-tab-panel>
+
+      <custom-tab-panel for="test_message" class="mt-4">
+        <%= render "adm/whatsapp/test_message_tab" %>
       </custom-tab-panel>
     </custom-tabs>
   <% else %>

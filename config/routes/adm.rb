@@ -27,6 +27,12 @@ namespace :adm do
     post :test_message
     post :create_template
     patch :use_template
+    # PDF QR poster disabled for now — see Adm::WhatsappController.
+    # get :qr_poster
+
+    resources :dialogs, controller: "whatsapp_dialogs", only: [:show] do
+      post :reply, on: :member
+    end
   end
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do

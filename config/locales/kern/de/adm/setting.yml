@@ -16,7 +16,7 @@ de:
       kobil_address_verification: "KOBIL Adressverifizierung"
       kobil_address_verification_description: "Übernimmt die vom KOBIL-Konto bereitgestellte Adresse (Straße, PLZ, Ort) in das Nutzerprofil. Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
       whatsapp_bot: "WhatsApp-Bot aktivieren"
-      whatsapp_bot_description: "Schaltet den WhatsApp-Webhook, die Nummernverbindung im Nutzerkonto und den Versand von Projekt-Benachrichtigungen frei. Wirkt nur, wenn zusätzlich die Zugangsdaten in config/secrets.yml hinterlegt sind."
+      whatsapp_bot_description: "Schaltet den WhatsApp-Bot für Bürger:innen frei. Wirkt erst, wenn euer technisches Team das WhatsApp-Geschäftskonto auf dem Server eingerichtet hat."
     whatsapp:
       broadcast_template: "Name der WhatsApp-Nachrichtenvorlage"
       broadcast_template_description: "Name der in 360dialog freigegebenen Vorlage, die für Projekt-Benachrichtigungen verwendet wird. Die Vorlage muss genau zwei Platzhalter im Textkörper haben: 1. Projektname, 2. Projektlink. Ohne freigegebene Vorlage erreichen Benachrichtigungen nur Personen, die in den letzten 24 Stunden geschrieben haben."

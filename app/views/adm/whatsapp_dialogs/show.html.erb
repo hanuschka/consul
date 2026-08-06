@@ -1,0 +1,131 @@
+<%= content_for :title, t("adm.whatsapp.dialogs.thread_title", contact: @account.contact_label) %>
+
+<%= render Adm::HeaderComponent.new(
+  title: @account.contact_label,
+  breadcrumbs: @breadcrumbs,
+  compact: true
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.whatsapp.dialogs.thread_hint") %></p>
+  <% end %>
+
+  <% header.with_actions do %>
+    <%= kern_link_button adm_whatsapp_path(tab: "dialogs"),
+      icon: "arrow_back",
+      text: t("adm.whatsapp.dialogs.back_to_list"),
+      style: :secondary %>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3">
+  <div class="adm-whatsapp-thread">
+    <section class="adm-whatsapp-thread--main">
+      <% if @messages.any? %>
+        <% if @message_count > @messages.size %>
+          <p class="adm-whatsapp-thread--truncated">
+            <%= t("adm.whatsapp.dialogs.truncated",
+              shown: @messages.size, total: number_with_delimiter(@message_count)) %>
+          </p>
+        <% end %>
+
+        <% @message_days.each do |date, day_messages| %>
+          <section class="adm-whatsapp-thread--day">
+            <p class="adm-whatsapp-thread--day-label"><%= l(date, format: :long) %></p>
+
+            <ol class="adm-whatsapp-thread--messages">
+              <%= render partial: "adm/whatsapp_dialogs/message", collection: day_messages, as: :message %>
+            </ol>
+          </section>
+        <% end %>
+      <% else %>
+        <%= empty_state(title: t("adm.whatsapp.dialogs.no_messages"), icon: "chat_bubble") %>
+      <% end %>
+
+      <%= render "adm/whatsapp_dialogs/reply_form" %>
+    </section>
+
+    <aside class="adm-whatsapp-thread--sidebar">
+      <h2 class="kern-title kern-title--small mb-3"><%= t("adm.whatsapp.dialogs.contact") %></h2>
+
+      <dl class="kern-description-list kern-description-list--col">
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.profile_name") %></dt>
+          <dd class="kern-description-list-item__value">
+            <%= @account.profile_name.presence || t("adm.whatsapp.dialogs.unknown") %>
+          </dd>
+        </div>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.phone") %></dt>
+          <dd class="kern-description-list-item__value"><%= @account.phone.presence || @account.wa_id %></dd>
+        </div>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.account") %></dt>
+          <dd class="kern-description-list-item__value">
+            <% if @account.user.present? %>
+              <%= link_to @account.user.name, edit_adm_user_path(@account.user), class: "kern-link" %>
+            <% else %>
+              <%= t("adm.whatsapp.dialogs.no_account") %>
+            <% end %>
+          </dd>
+        </div>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.status") %></dt>
+          <dd class="kern-description-list-item__value">
+            <span class="kern-badge kern-badge--<%= @account.state_badge_variant %>">
+              <span class="kern-label"><%= t("adm.whatsapp.dialogs.states.#{@account.state}") %></span>
+            </span>
+            <% if @account.subscribed? %>
+              <span class="kern-badge kern-badge--success">
+                <span class="kern-label"><%= t("adm.whatsapp.dialogs.subscribed") %></span>
+              </span>
+            <% end %>
+          </dd>
+        </div>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.step") %></dt>
+          <dd class="kern-description-list-item__value">
+            <% if @conversation.present? %>
+              <%= t("adm.whatsapp.steps.#{@conversation.step}") %>
+            <% else %>
+              <%= t("adm.whatsapp.dialogs.steps_idle") %>
+            <% end %>
+          </dd>
+        </div>
+
+        <% if @conversation&.projekt_phase.present? %>
+          <div class="kern-description-list-item">
+            <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.active_phase") %></dt>
+            <dd class="kern-description-list-item__value">
+              <%= link_to @conversation.projekt_phase.title,
+                whatsapp_adm_projekts_phase_path(@conversation.projekt_phase),
+                class: "kern-link" %>
+            </dd>
+          </div>
+        <% end %>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.message_count") %></dt>
+          <dd class="kern-description-list-item__value"><%= number_with_delimiter(@message_count) %></dd>
+        </div>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.verified_at") %></dt>
+          <dd class="kern-description-list-item__value">
+            <%= @account.verified_at.present? ? l(@account.verified_at, format: :short) : "–" %>
+          </dd>
+        </div>
+
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.dialogs.last_active") %></dt>
+          <dd class="kern-description-list-item__value">
+            <%= @account.last_inbound_at.present? ? l(@account.last_inbound_at, format: :short) : "–" %>
+          </dd>
+        </div>
+      </dl>
+    </aside>
+  </div>
+</div>

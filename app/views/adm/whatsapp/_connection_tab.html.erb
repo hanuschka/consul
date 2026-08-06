@@ -1,6 +1,6 @@
 <section class="mb-5">
   <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.feature_title") %></h2>
-  <p class="kern-body mb-3"><%= t("adm.whatsapp.show.feature_intro") %></p>
+  <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.feature_intro") %></p>
 
   <% @feature_settings.each do |setting| %>
     <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
@@ -61,61 +61,5 @@
     </div>
   </dl>
 
-  <p class="kern-body mt-2"><%= t("adm.whatsapp.show.webhook_auto_hint") %></p>
-</section>
-
-<%= render Adm::WhatsappQrCodeComponent.new(
-  title: t("adm.whatsapp.show.qr_title"),
-  subline: t("adm.whatsapp.show.qr_subline")
-) %>
-
-<section class="mt-5">
-  <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.test_title") %></h2>
-  <p class="kern-body mb-3"><%= t("adm.whatsapp.show.test_intro") %></p>
-
-  <div
-    class="adm-whatsapp-page--form"
-    data-controller="adm--whatsapp-test-message"
-    data-adm--whatsapp-test-message-url-value="<%= test_message_adm_whatsapp_path %>"
-    data-adm--whatsapp-test-message-pending-title-value="<%= t("adm.whatsapp.show.test_pending") %>"
-  >
-    <%= form_with url: test_message_adm_whatsapp_path, scope: :test, method: :post,
-      data: { turbo: false, action: "submit->adm--whatsapp-test-message#send" } do |f| %>
-      <%= f.telephone_field :phone,
-        label: t("adm.whatsapp.show.test_phone_label"),
-        hint: t("adm.whatsapp.show.test_phone_hint"),
-        autocomplete: "tel",
-        value: nil,
-        data: { "adm--whatsapp-test-message-target": "phone" } %>
-
-      <%= form_submit_button(
-        text: t("adm.whatsapp.show.test_submit"),
-        icon: "send",
-        data: { "adm--whatsapp-test-message-target": "submit" }
-      ) %>
-    <% end %>
-
-    <div class="adm-whatsapp-page--result" data-adm--whatsapp-test-message-target="result"></div>
-  </div>
-</section>
-
-<section class="mt-5">
-  <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.audience_title") %></h2>
-
-  <dl class="kern-description-list">
-    <div class="kern-description-list-item">
-      <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.show.linked_count") %></dt>
-      <dd class="kern-description-list-item__value"><%= @linked_count %></dd>
-    </div>
-
-    <div class="kern-description-list-item">
-      <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.show.subscribed_count") %></dt>
-      <dd class="kern-description-list-item__value"><%= @subscribed_count %></dd>
-    </div>
-
-    <div class="kern-description-list-item">
-      <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.show.open_phases_count") %></dt>
-      <dd class="kern-description-list-item__value"><%= @eligible_projekt_phases.size %></dd>
-    </div>
-  </dl>
+  <p class="kern-body kern-prose mt-2"><%= t("adm.whatsapp.show.webhook_auto_hint") %></p>
 </section>

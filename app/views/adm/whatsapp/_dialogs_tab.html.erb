@@ -1,0 +1,50 @@
+<section>
+  <h2 class="kern-title kern-title--small mb-1"><%= t("adm.whatsapp.dialogs.title") %></h2>
+  <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.dialogs.intro") %></p>
+
+  <% if !@dialogs_present %>
+    <%= empty_state(
+      title: t("adm.whatsapp.dialogs.none_title"),
+      description: t("adm.whatsapp.dialogs.none_body"),
+      icon: "forum"
+    ) %>
+  <% else %>
+    <%= render "adm/whatsapp/dialogs_filter_bar" %>
+
+    <% if @dialogs.any? %>
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table adm-whatsapp-dialogs-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.dialogs.contact") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.dialogs.status") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.dialogs.step") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.dialogs.message_count") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.dialogs.last_message") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.dialogs.last_active") %></th>
+              <th scope="col" class="kern-table__header kern-table__header--action">
+                <%= t("shared.table.actions") %>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <%= render partial: "adm/whatsapp/dialog_row",
+              collection: @dialogs,
+              as: :account,
+              locals: {
+                message_counts: @dialog_message_counts,
+                last_messages: @dialog_last_messages
+              } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="my-5">
+        <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+      </div>
+    <% else %>
+      <%= empty_state(title: t("adm.whatsapp.dialogs.no_results"), icon: "filter_alt_off") %>
+    <% end %>
+  <% end %>
+</section>

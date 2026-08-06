@@ -1,0 +1,24 @@
+<section class="adm-whatsapp-composer">
+  <% if @service_window_open %>
+    <%= form_tag reply_adm_whatsapp_dialog_path(@account), class: "adm-whatsapp-composer--form" do %>
+      <div class="kern-form-input">
+        <label class="kern-label" for="reply_body"><%= t("adm.whatsapp.dialogs.reply_label") %></label>
+        <p class="kern-body kern-body--small adm-whatsapp-composer--hint">
+          <%= t("adm.whatsapp.dialogs.reply_hint") %>
+        </p>
+        <%= text_area_tag "reply[body]", nil,
+          id: "reply_body",
+          rows: 3,
+          maxlength: 4000,
+          class: "kern-form-input__input",
+          placeholder: t("adm.whatsapp.dialogs.reply_placeholder") %>
+      </div>
+
+      <%= form_submit_button text: t("adm.whatsapp.dialogs.reply_submit"), icon: "send" %>
+    <% end %>
+  <% else %>
+    <%= kern_alert(title: t("adm.whatsapp.dialogs.window_closed_title"), style: :warning) do %>
+      <p class="kern-body"><%= t("adm.whatsapp.dialogs.window_closed_body") %></p>
+    <% end %>
+  <% end %>
+</section>

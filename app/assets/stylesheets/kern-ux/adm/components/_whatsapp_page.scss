@@ -3,8 +3,8 @@
 // .kern-form-input wrapper does not carry.
 
 .adm-whatsapp-page {
-  --custom-tabs-border: var(--kern-grey-350);
-  --custom-tabs-text: var(--kern-color-layout-text-subtle);
+  --custom-tabs-border: var(--kern-color-layout-border);
+  --custom-tabs-text: var(--kern-color-layout-text-muted);
   --custom-tabs-text-strong: var(--kern-color-layout-text-default);
   --custom-tabs-accent: var(--kern-color-action-default);
 }
@@ -33,3 +33,4 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
+

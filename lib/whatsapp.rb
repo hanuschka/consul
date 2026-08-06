@@ -44,6 +44,29 @@ module Whatsapp
     "https://wa.me/#{business_number}?text=#{CGI.escape(prefilled_text.to_s)}"
   end
 
+  # The chat text a scanned QR code prefills: a projekt/phase token when the
+  # code points at one, a plain greeting for the portal-wide code.
+  def self.prefilled_text_for(token)
+    return I18n.t("adm.whatsapp.greeting") if token.blank?
+
+    I18n.t("adm.whatsapp.prefilled_text", token: token)
+  end
+
+  def self.deep_link_url_for(token)
+    deep_link_url(prefilled_text_for(token))
+  end
+
+  def self.qr_svg(text, module_size:)
+    return if text.blank?
+
+    RQRCode::QRCode.new(text).as_svg(
+      module_size: module_size,
+      standalone: true,
+      use_path: true,
+      viewbox: true
+    )
+  end
+
   def self.broadcast_template_name
     Setting["whatsapp.broadcast_template"].presence
   end

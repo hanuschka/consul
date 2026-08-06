@@ -5,6 +5,8 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
   before_action :authenticate_user!
   before_action :verify_deficiency_report_manager
 
+  helper_method :deficiency_report_officer_groups_only?, :deficiency_report_assignable_officers
+
   rescue_from Pundit::NotAuthorizedError do |exception|
     Sentry.capture_exception(exception, level: :warning)
     redirect_to adm_deficiency_reports_root_path, alert: t("adm.not_authorized")

@@ -268,6 +268,9 @@ en:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new deficiency report to a responsible officer. Without assignment, the report cannot be processed. This ensures that every report has a responsible person and no report remains without ownership.
+      officer_groups_only_for_assignment: Officer groups only for assignment
+      officer_groups_only_for_assignment_description: >
+        Restricts the choice when assigning responsibility (report, category, subcategory) to officer groups; individual people are no longer selectable. In the admin area the assignment field then only shows groups. Enable this when reports should consistently be handled through the intended group processes rather than through individuals.
       intake_channel_required_for_on_behalf_of: Intake channel required for third-party reports
       intake_channel_required_for_on_behalf_of_description: >
         Makes the intake channel (e.g. phone, email, in person) mandatory whenever a report is filed on behalf of a third person. The form then shows a required select with the configured channel options and a default value, both on the public form and in the admin area. Enable this when it should be traceable how third-party reports came in.

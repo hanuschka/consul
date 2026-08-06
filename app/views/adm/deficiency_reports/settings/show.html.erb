@@ -33,6 +33,7 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "process.deficiency_reports"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.admins_must_assign_officer"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.intake_channel_required_for_on_behalf_of"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.officer_groups_only_for_assignment"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.allow_voting"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.enable_comments"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.intro_text"), :value, :boolean) %>

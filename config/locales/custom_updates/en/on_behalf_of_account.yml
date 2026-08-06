@@ -26,6 +26,8 @@ en:
           p1: >
             an account has been created for you with the email address %{email}, because a
             contribution was submitted on your behalf. The account is already activated.
+          resource: >
+            This is the contribution in question: %{resource_link}.
           p2: >
             To log in, please choose a password first: %{password_link}.
           password_link_text: set a password

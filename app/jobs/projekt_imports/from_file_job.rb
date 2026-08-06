@@ -18,6 +18,8 @@ class ProjektImports::FromFileJob < ApplicationJob
       content_locale: ProjektImport.default_content_locale
     )
 
+    warn_about_unreadable_pdf_images(projekt_import)
+
     ai_result = ProjektImports::ProcessWithAiService.call(
       text: extract_result.data[:text],
       additional_user_instructions: projekt_import.additional_user_instructions,
@@ -70,13 +72,31 @@ class ProjektImports::FromFileJob < ApplicationJob
   end
 
   def extract_single_file(source_file)
-    source_file.blob.open do |tmp|
-      file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: tmp,
-        filename: source_file.blob.filename.to_s,
-        type: source_file.blob.content_type
-      )
+    ::AttachmentUpload.open(source_file) do |file|
       DocumentTextExtractor.call(file: file)
+    end
+  end
+
+  # Raised at extraction time rather than only when the projekt is created: the
+  # admin is still in the chat here, so there is time to upload the images by
+  # hand before anything is built.
+  def warn_about_unreadable_pdf_images(projekt_import)
+    return if ::DocumentImageExtractor.pdfimages_available?
+
+    projekt_import.source_files.each do |source_file|
+      filename = source_file.blob.filename.to_s
+      next if File.extname(filename).downcase != ".pdf"
+      next if !pdf_carries_images?(source_file)
+
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.pdf_images_tool_missing", filename: filename)
+      )
+    end
+  end
+
+  def pdf_carries_images?(source_file)
+    ::AttachmentUpload.open(source_file) do |file|
+      ::DocumentImageExtractor.call(file: file).data[:unextractable]
     end
   end
 

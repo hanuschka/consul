@@ -106,7 +106,6 @@ class Setting < ApplicationRecord
         "feature.wordpress_login": false,
         "feature.bund_id_login": false,
         "feature.kobil_login": false,
-        "feature.kobil_single_logout": false,
         "feature.kobil_address_verification": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,

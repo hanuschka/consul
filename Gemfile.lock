@@ -958,6 +958,7 @@ DEPENDENCIES
   rubocop-rspec (~> 2.24.1)
   ruby-saml (~> 1.16)
   ruby_llm (= 1.14.1)
+  rubyzip (= 2.3.2)
   rvm1-capistrano3 (~> 1.4.0)
   sassc-rails (~> 2.1.2)
   savon (~> 2.14.0)

@@ -49,6 +49,8 @@
                data-action="change->projekt-imports--from-file#filesPicked">
 
         <p class="projekt-import-from-file--drop-hint"><%= t(".drop_hint") %></p>
+
+        <%= render Adm::Projekts::Imports::MissingToolsBannerComponent.new(missing_tools: @missing_tools) %>
       </div>
 
       <%# File preview %>

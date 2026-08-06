@@ -35,12 +35,12 @@ class ProjektPhase < ApplicationRecord
   ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
 
   SPECIAL_PROJEKT_PHASES = [
-    "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   PHASE_MATERIAL_ICONS = {
@@ -194,6 +194,18 @@ class ProjektPhase < ApplicationRecord
     end
   rescue NameError
     self
+  end
+
+  def self.type_labels
+    PROJEKT_PHASES_TYPES.index_with { |phase_type| type_label_for(phase_type) }
+  end
+
+  def self.type_label_for(type)
+    label = I18n.t("activerecord.models.#{type.to_s.underscore}", default: nil)
+
+    return type.to_s.demodulize.titleize if !label.is_a?(String)
+
+    label
   end
 
   def self.material_icon_for(type)
@@ -553,6 +565,17 @@ class ProjektPhase < ApplicationRecord
 
   def url
     projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
+  end
+
+  # SiteCustomization::Page#url is path-only, which is enough inside a request
+  # but not for links written into stored content (content blocks, exports,
+  # anything a job generates).
+  def absolute_url
+    options = UrlOptions.default || {}
+    host = options[:host]
+    return url if host.blank?
+
+    "#{options[:protocol].presence || 'https'}://#{host}#{url}"
   end
 
   def find_or_create_stats_version

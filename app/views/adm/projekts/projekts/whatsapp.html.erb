@@ -17,8 +17,7 @@
   <%= render Adm::WhatsappQrCodeComponent.new(
     title: t(".qr_title"),
     subline: t(".qr_subline"),
-    token: @projekt_token,
-    prefilled_text: t("adm.whatsapp.prefilled_text", token: @projekt_token)
+    token: @projekt_token
   ) %>
 
   <section class="mt-5">

@@ -1,0 +1,65 @@
+<section class="mb-5">
+  <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.feature_title") %></h2>
+  <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.feature_intro") %></p>
+
+  <% @feature_settings.each do |setting| %>
+    <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+  <% end %>
+</section>
+
+<section class="mb-5">
+  <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.webhook_title") %></h2>
+
+  <% if !@webhook_status[:reachable] %>
+    <%= kern_alert(title: t("adm.whatsapp.show.webhook_unreachable_title"), style: :danger) do %>
+      <p class="kern-body"><%= t("adm.whatsapp.show.webhook_unreachable_body") %></p>
+    <% end %>
+  <% elsif @webhook_status[:url_matches] && @webhook_status[:header_matches] %>
+    <%= kern_alert(title: t("adm.whatsapp.show.webhook_ok_title"), style: :success) do %>
+      <p class="kern-body">
+        <%= t("adm.whatsapp.show.webhook_ok_body", url: @webhook_status[:registered_url]) %>
+      </p>
+    <% end %>
+  <% else %>
+    <%= kern_alert(title: t("adm.whatsapp.show.webhook_mismatch_title"), style: :warning) do %>
+      <p class="kern-body">
+        <%= t("adm.whatsapp.show.webhook_mismatch_body",
+          registered: @webhook_status[:registered_url].presence || t("adm.whatsapp.show.webhook_none"),
+          expected: @webhook_status[:expected_url]) %>
+      </p>
+    <% end %>
+  <% end %>
+
+  <dl class="kern-description-list kern-description-list--col mt-3">
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key">
+        <%= t("adm.whatsapp.show.webhook_registered_url") %>
+      </dt>
+      <dd class="kern-description-list-item__value">
+        <%= @webhook_status[:registered_url].presence || t("adm.whatsapp.show.webhook_none") %>
+      </dd>
+    </div>
+
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.show.webhook_header") %></dt>
+      <dd class="kern-description-list-item__value">
+        <% if @webhook_status[:header_matches] %>
+          <%= t("adm.whatsapp.show.webhook_header_ok", count: @webhook_status[:header_length]) %>
+        <% else %>
+          <%= t("adm.whatsapp.show.webhook_header_bad", count: @webhook_status[:header_length].to_i) %>
+        <% end %>
+      </dd>
+    </div>
+
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key">
+        <%= t("adm.whatsapp.show.webhook_checked_at") %>
+      </dt>
+      <dd class="kern-description-list-item__value">
+        <%= l(@webhook_status[:checked_at], format: :short) %>
+      </dd>
+    </div>
+  </dl>
+
+  <p class="kern-body kern-prose mt-2"><%= t("adm.whatsapp.show.webhook_auto_hint") %></p>
+</section>

@@ -1,6 +1,12 @@
 class WhatsappAccount < ApplicationRecord
   LINK_TOKEN_TTL = 1.hour
 
+  STATE_BADGE_VARIANTS = {
+    "linked" => "success",
+    "link_pending" => "warning",
+    "unlinked" => "info"
+  }.freeze
+
   belongs_to :user, optional: true
   has_one :whatsapp_conversation, dependent: :destroy
   has_many :whatsapp_messages, dependent: :destroy
@@ -19,6 +25,14 @@ class WhatsappAccount < ApplicationRecord
 
   def subscribed?
     verified_at.present? && user_id.present? && opt_in_at.present? && opt_out_at.nil?
+  end
+
+  def state_badge_variant
+    STATE_BADGE_VARIANTS.fetch(state, "info")
+  end
+
+  def contact_label
+    profile_name.presence || phone.presence || wa_id
   end
 
   def link_token_valid?

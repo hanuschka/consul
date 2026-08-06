@@ -1,0 +1,26 @@
+<li class="adm-whatsapp-message -<%= message.direction %><%= " -failed" if message.status == "failed" %>">
+  <div class="adm-whatsapp-message--bubble">
+    <% if message.kind != "text" %>
+      <p class="adm-whatsapp-message--kind">
+        <%= t("adm.whatsapp.kinds.#{message.kind}") %>
+      </p>
+    <% end %>
+
+    <% if message.body.present? %>
+      <p class="adm-whatsapp-message--body"><%= message.body %></p>
+    <% end %>
+
+    <% if message.error.present? %>
+      <p class="adm-whatsapp-message--error"><%= message.error.to_s.truncate(300) %></p>
+    <% end %>
+
+    <p class="adm-whatsapp-message--meta">
+      <time datetime="<%= message.created_at.iso8601 %>">
+        <%= message.created_at.strftime(t("adm.whatsapp.dialogs.time_format")) %>
+      </time>
+      <% if message.direction == "outbound" && message.status.present? %>
+        · <%= t("adm.whatsapp.dialogs.statuses.#{message.status}", default: message.status) %>
+      <% end %>
+    </p>
+  </div>
+</li>

@@ -1,0 +1,156 @@
+// Adm::WhatsappQrCodeComponent — the print-sized QR panel with its download
+// actions on the left, the card heading and the copyable number/link details
+// on the right.
+
+.adm-whatsapp-qr--split {
+  @media (min-width: 992px) {
+    // 1.3 : 1.7 rather than 1 : 2 — the QR column keeps the thirds layout but
+    // renders the code 30% larger for on-screen scanning.
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.7fr);
+    gap: var(--kern-metric-space-x-large);
+    align-items: start;
+  }
+}
+
+.adm-whatsapp-qr--main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-default);
+  min-width: 0;
+  align-self: stretch;
+
+  @media (min-width: 992px) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.adm-whatsapp-qr--heading .kern-title {
+  margin: 0;
+}
+
+.adm-whatsapp-qr--heading .kern-subline {
+  max-width: 90ch;
+  margin: var(--kern-metric-space-x-small) 0 0;
+}
+
+.adm-whatsapp-qr--details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-default);
+  margin: 0;
+  width: 100%;
+}
+
+.adm-whatsapp-qr--detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-x-small);
+  min-width: 0;
+}
+
+.adm-whatsapp-qr--detail-key {
+  color: var(--kern-color-layout-text-muted);
+  font-size: var(--kern-font-size-14);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.adm-whatsapp-qr--detail-value {
+  margin: 0;
+  min-width: 0;
+}
+
+.adm-whatsapp-qr--detail-hint {
+  margin: var(--kern-metric-space-x-small) 0 0;
+  max-width: 80ch;
+  color: var(--kern-color-layout-text-muted);
+  font-size: var(--kern-font-size-14);
+  line-height: 1.5;
+}
+
+// One bordered row per value so the long deep link reads as a field to copy
+// rather than as loose body text wrapping mid-URL.
+.adm-whatsapp-qr--field {
+  display: flex;
+  align-items: center;
+  gap: var(--kern-metric-space-small);
+  padding: var(--kern-metric-space-x-small) var(--kern-metric-space-x-small)
+    var(--kern-metric-space-x-small) var(--kern-metric-space-small);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: var(--kern-metric-border-radius-default);
+  background: var(--kern-color-layout-background-default);
+  min-width: 0;
+}
+
+.adm-whatsapp-qr--field-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--kern-font-size-16);
+  overflow-wrap: anywhere;
+}
+
+.adm-whatsapp-qr--field-text--numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.adm-whatsapp-qr--copy {
+  flex: 0 0 auto;
+  padding: var(--kern-metric-space-x-small);
+}
+
+.adm-whatsapp-qr--field.-copied {
+  border-color: var(--kern-color-feedback-success);
+}
+
+.adm-whatsapp-qr--field.-copied .adm-whatsapp-qr--copy .material-symbols-outlined {
+  color: var(--kern-color-feedback-success);
+}
+
+.adm-whatsapp-qr--code {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-default);
+  padding: var(--kern-metric-space-large);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: var(--kern-metric-border-radius-default);
+  background: var(--kern-color-layout-background-hued);
+  align-self: stretch;
+
+  @media (min-width: 992px) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+// Literal white, not a surface token: the QR modules are painted black and
+// have to stay scannable when the admin UI renders in dark mode.
+.adm-whatsapp-qr--code-frame {
+  padding: var(--kern-metric-space-default);
+  border-radius: var(--kern-metric-border-radius-default);
+  background: #fff;
+}
+
+.adm-whatsapp-qr--code-frame svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.adm-whatsapp-qr--actions {
+  display: grid;
+  gap: var(--kern-metric-space-small);
+}
+
+.adm-whatsapp-qr--action {
+  justify-content: center;
+  background: var(--kern-color-layout-background-default);
+}
+
+.adm-whatsapp-qr--code-hint {
+  margin: 0;
+  color: var(--kern-color-layout-text-muted);
+  font-size: var(--kern-font-size-14);
+}

@@ -8,8 +8,7 @@
   <%= render Adm::WhatsappQrCodeComponent.new(
     title: t(".qr_title"),
     subline: t(".qr_subline"),
-    token: @phase_token,
-    prefilled_text: t("adm.whatsapp.prefilled_text", token: @phase_token)
+    token: @phase_token
   ) %>
 
   <% if !@projekt_phase.feature?("resource.create_proposal_with_ai") %>

@@ -14,7 +14,7 @@ en:
       kobil_login: "Enable KOBIL login"
       kobil_login_description: "Shows a “Sign in with KOBIL” button on the sign-in and registration pages. Users can then sign in and register with their KOBIL account (OpenID Connect). Requires the KOBIL credentials to be configured on the server."
       whatsapp_bot: "Enable WhatsApp bot"
-      whatsapp_bot_description: "Enables the WhatsApp webhook, number linking in the user account and project notification sending. Only takes effect when the credentials are also present in config/secrets.yml."
+      whatsapp_bot_description: "Turns on the WhatsApp bot for citizens. Only takes effect once your technical team has set up the WhatsApp business account on the server."
       kobil_address_verification: "KOBIL address verification"
       kobil_address_verification_description: "Imports the address (street, postal code, city) supplied by the KOBIL account into the user profile. Only effective when KOBIL login is enabled."
     whatsapp:

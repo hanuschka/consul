@@ -1,0 +1,8 @@
+<section class="mb-5">
+  <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.settings_title") %></h2>
+  <p class="kern-body mb-3"><%= t("adm.whatsapp.show.settings_intro") %></p>
+
+  <% @text_settings.each do |setting| %>
+    <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+  <% end %>
+</section>

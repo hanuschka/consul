@@ -1,0 +1,52 @@
+// Stat tiles for the /adm WhatsApp "Reichweite" tab. Plain figure cards: the
+// number carries the hierarchy, tone only recolors the number — no accent
+// stripes, no hover affordance (the tiles are not interactive).
+
+.adm-whatsapp-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 1rem;
+}
+
+.adm-whatsapp-stat {
+  padding: 1.25rem;
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 4px;
+}
+
+.adm-whatsapp-stat--value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-whatsapp-stat--label {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-whatsapp-stat--hint {
+  margin: 0.375rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--kern-color-layout-text-muted);
+}
+
+.adm-whatsapp-stat.-accent .adm-whatsapp-stat--value {
+  color: var(--kern-color-action-default);
+}
+
+.adm-whatsapp-stat.-success .adm-whatsapp-stat--value {
+  color: var(--kern-color-feedback-success);
+}
+
+.adm-whatsapp-stat.-danger .adm-whatsapp-stat--value {
+  color: var(--kern-color-feedback-danger);
+}

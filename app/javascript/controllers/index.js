@@ -223,6 +223,12 @@ application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 import AdmBudgetResultsController from "./adm/budget_results_controller"
 application.register("adm--budget-results", AdmBudgetResultsController)
 
+import AdmWhatsappTestMessageController from "./adm/whatsapp_test_message_controller"
+application.register("adm--whatsapp-test-message", AdmWhatsappTestMessageController)
+
+import AdmWhatsappQrDownloadController from "./adm/whatsapp_qr_download_controller"
+application.register("adm--whatsapp-qr-download", AdmWhatsappQrDownloadController)
+
 import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
 application.register("projekt-imports--from-file", ProjektImportsFromFileController)
 

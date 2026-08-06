@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+<head>
+  <meta charset="utf-8">
+  <title><%= yield(:title).presence || t("adm.whatsapp.show.title") %></title>
+  <style><%= PdfServices::WhatsappQrPosterCss.call.html_safe %></style>
+</head>
+<body class="whatsapp-qr-pdf-body">
+  <%= yield %>
+</body>
+</html>

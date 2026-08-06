@@ -1,0 +1,20 @@
+<div class="adm-whatsapp-poster">
+  <% if preline.present? %>
+    <p class="adm-whatsapp-poster--preline"><%= preline %></p>
+  <% end %>
+
+  <h1 class="adm-whatsapp-poster--headline"><%= headline %></h1>
+
+  <p class="adm-whatsapp-poster--lead"><%= t("adm.whatsapp.poster.lead") %></p>
+
+  <div class="adm-whatsapp-poster--code"><%= raw qr_svg %></div>
+
+  <p class="adm-whatsapp-poster--steps"><%= t("adm.whatsapp.poster.steps") %></p>
+
+  <div class="adm-whatsapp-poster--footer">
+    <p class="adm-whatsapp-poster--number">
+      <%= t("adm.whatsapp.poster.number", number: "+#{::Whatsapp.business_number}") %>
+    </p>
+    <p class="adm-whatsapp-poster--link"><%= deep_link %></p>
+  </div>
+</div>

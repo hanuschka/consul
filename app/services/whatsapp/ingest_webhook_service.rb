@@ -4,7 +4,8 @@ class Whatsapp::IngestWebhookService < ApplicationService
     "audio" => "audio",
     "voice" => "audio",
     "interactive" => "interactive",
-    "button" => "interactive"
+    "button" => "interactive",
+    "request_welcome" => "welcome"
   }.freeze
 
   def initialize(payload:)

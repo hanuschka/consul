@@ -12,6 +12,7 @@ class WhatsappMessage < ApplicationRecord
     audio: "audio",
     interactive: "interactive",
     template: "template",
+    welcome: "welcome",
     unsupported: "unsupported"
   }
 

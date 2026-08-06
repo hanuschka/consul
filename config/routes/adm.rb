@@ -25,6 +25,7 @@ namespace :adm do
   resource :features, controller: "features", only: [:show]
   resource :whatsapp, controller: "whatsapp", only: [:show] do
     post :test_message
+    post :configure_conversational_components
     post :create_template
     patch :use_template
     # PDF QR poster disabled for now — see Adm::WhatsappController.

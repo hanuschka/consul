@@ -41,6 +41,9 @@ de:
         submitted: "Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe durch Meta kann einige Stunden dauern."
         failed: "Vorlage konnte nicht eingereicht werden: %{error}"
         selected: "„%{name}“ wird jetzt für Projekt-Benachrichtigungen verwendet."
+      conversational_components:
+        applied: "Chat-Einstieg übertragen. Bis er in WhatsApp erscheint, können einige Minuten vergehen."
+        failed: "Chat-Einstieg konnte nicht übertragen werden: %{error}"
       steps:
         idle: "Kein laufender Vorgang"
         awaiting_link: "Wartet auf Verknüpfung"
@@ -53,6 +56,7 @@ de:
         audio: "Sprachnachricht"
         interactive: "Auswahl"
         template: "Benachrichtigungsvorlage"
+        welcome: "Chat geöffnet"
         unsupported: "Nicht unterstützt"
       reach:
         contacts_title: "Kontakte"
@@ -248,6 +252,15 @@ de:
           other: "gesetzt, passt aber nicht (%{count} Zeichen)"
         webhook_checked_at: "Zuletzt geprüft"
         webhook_auto_hint: "Der Webhook wird automatisch registriert, sobald der WhatsApp-Bot oben eingeschaltet wird – mit der Adresse, unter der du gerade arbeitest."
+        entry_title: "Chat-Einstieg"
+        entry_intro: >-
+          Wer einen QR-Code scannt, landet in einem leeren Chat mit einer vorbereiteten Nachricht,
+          die noch abgeschickt werden muss. Diese Einstellungen setzen dort stattdessen antippbare
+          Optionen und eine Begrüßung ein, sodass der erste Schritt ein Tippen ist.
+        entry_apply: "An WhatsApp übertragen"
+        entry_apply_hint: >-
+          Die Vorschläge und Befehle liegen bei WhatsApp, nicht auf dieser Plattform. Änderungen
+          oben erreichen Bürger:innen erst, wenn du sie hier überträgst.
         test_title: "Testnachricht"
         test_intro: "Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen, die in den letzten 24 Stunden geschrieben haben."
         test_phone_label: "Nummer"

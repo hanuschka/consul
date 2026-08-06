@@ -34,10 +34,24 @@ de:
     bot:
       link_invitation: >-
         Hallo! Damit dein Vorschlag deinem Konto zugeordnet werden kann, verbinde bitte einmalig
+        deine Nummer mit dem Beteiligungsportal. Der Link ist eine Stunde gültig.
+      link_invitation_with_url: >-
+        Hallo! Damit dein Vorschlag deinem Konto zugeordnet werden kann, verbinde bitte einmalig
         deine Nummer mit dem Beteiligungsportal: %{url}
 
         Der Link ist eine Stunde gültig.
+      link_invitation_button: Konto verbinden
       link_confirmed: "Danke, %{name}! Deine Nummer ist jetzt mit deinem Konto verbunden."
+      welcome_greeting: >-
+        Willkommen! Hier kannst du Vorschläge zu den laufenden Beteiligungsprojekten einreichen.
+        Zu welchem möchtest du etwas beitragen?
+      choose_projekt_button: Projekte anzeigen
+      projekt_row_description: "%{phase} bis %{end_date}"
+      ice_breakers:
+        default_1: Welche Projekte laufen gerade?
+        default_2: Ich habe eine Idee für meine Stadt
+        default_3: Wie funktioniert das Einreichen?
+        default_4: Keine Nachrichten mehr erhalten
       ask_idea: >-
         Du bist beim Projekt „%{projekt}“. Hast du konkrete Ideen oder Vorschläge? Schreibe sie
         mir als Text oder schicke mir eine Sprachnachricht.
@@ -48,8 +62,8 @@ de:
       choose_phase_button: Phase wählen
       phase_row_description: "bis %{end_date}"
       no_projekt: >-
-        Ich weiß noch nicht, zu welchem Projekt du etwas einreichen möchtest. Scanne dazu den
-        QR-Code des Projekts.
+        Gerade nimmt kein Beteiligungsprojekt Vorschläge an. Schreib mir wieder, wenn ein neues
+        startet, oder scanne den QR-Code eines Projekts.
       drafting: Danke! Ich formuliere daraus einen Vorschlag – das dauert einen Moment.
       draft_summary: |-
         Das ist mein Vorschlag:

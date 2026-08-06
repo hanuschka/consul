@@ -31,10 +31,24 @@ en:
     bot:
       link_invitation: >-
         Hello! So your proposal can be attributed to your account, please link your number to the
+        participation platform once. The link is valid for one hour.
+      link_invitation_with_url: >-
+        Hello! So your proposal can be attributed to your account, please link your number to the
         participation platform once: %{url}
 
         The link is valid for one hour.
+      link_invitation_button: Link account
       link_confirmed: "Thanks, %{name}! Your number is now linked to your account."
+      welcome_greeting: >-
+        Welcome! You can submit proposals for the running participation projects here. Which one
+        would you like to contribute to?
+      choose_projekt_button: Show projects
+      projekt_row_description: "%{phase} until %{end_date}"
+      ice_breakers:
+        default_1: Which projects are running right now?
+        default_2: I have an idea for my city
+        default_3: How does submitting a proposal work?
+        default_4: Stop receiving messages
       ask_idea: >-
         You are in the project “%{projekt}”. Do you have concrete ideas or suggestions? Send them
         to me as text or as a voice message.
@@ -45,8 +59,8 @@ en:
       choose_phase_button: Choose phase
       phase_row_description: "until %{end_date}"
       no_projekt: >-
-        I do not know yet which project you want to contribute to. Please scan the project's QR
-        code.
+        There is no participation project accepting proposals at the moment. Write to me again
+        when a new one starts, or scan the QR code of a project.
       drafting: Thanks! I am turning this into a proposal — one moment.
       draft_summary: |-
         Here is my proposal:

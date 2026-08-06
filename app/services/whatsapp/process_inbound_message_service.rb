@@ -17,6 +17,11 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
     return if handle_opt_keywords
     return if account.opt_out_at.present?
+
+    # Opening the chat for the first time carries no text to interpret, so the
+    # only sensible answer is the menu of what is open.
+    return Whatsapp::SendEntryMenuService.call(conversation:) if @whatsapp_message.welcome?
+
     return if @whatsapp_message.audio? && inbound_text.blank?
 
     entry = capture_entry_token

@@ -51,6 +51,26 @@ class WhatsappApi::Resources::Messages
     )
   end
 
+  def send_cta_url(to:, body:, button_label:, url:)
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "interactive",
+        interactive: {
+          type: "cta_url",
+          body: { text: body },
+          action: {
+            name: "cta_url",
+            parameters: {
+              display_text: button_label.to_s.truncate(MAX_BUTTON_TITLE_LENGTH),
+              url: url
+            }
+          }
+        }
+      )
+    )
+  end
+
   def send_buttons(to:, body:, buttons:)
     @client.post(
       BASE_PATH,

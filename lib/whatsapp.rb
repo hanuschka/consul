@@ -4,6 +4,8 @@ module Whatsapp
   DEFAULT_MAX_VOICE_MEGABYTES = 16
   SERVICE_WINDOW = 24.hours
   WEBHOOK_EVENT_RETENTION = 7.days
+  MAX_ICE_BREAKERS = 4
+  COMMAND_SEPARATOR = "|".freeze
 
   def self.config
     Rails.application.secrets.whatsapp || {}
@@ -74,6 +76,41 @@ module Whatsapp
       viewbox: true
     )
   end
+
+  def self.welcome_message_enabled?
+    Setting["whatsapp.welcome_message_enabled"].present?
+  end
+
+  # Body of the list message the bot answers a first chat opening with. Admins
+  # override it per portal; the translation is the fallback copy.
+  def self.welcome_greeting
+    Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.bot.welcome_greeting")
+  end
+
+  def self.ice_breakers
+    (1..MAX_ICE_BREAKERS).filter_map { |position| ice_breaker(position) }
+  end
+
+  def self.ice_breaker(position)
+    Setting["whatsapp.ice_breaker_#{position}"].presence ||
+      I18n.t("whatsapp.bot.ice_breakers.default_#{position}", default: nil).presence
+  end
+
+  # One command per line, "name|hint". The leading slash WhatsApp displays is
+  # not part of the name, so it is dropped if an admin types it.
+  def self.commands
+    Setting["whatsapp.commands"].to_s.lines.filter_map { |line| command_from(line) }
+  end
+
+  def self.command_from(line)
+    name, description = line.split(COMMAND_SEPARATOR, 2)
+    name = name.to_s.strip.delete_prefix("/")
+
+    return if name.blank?
+
+    { command_name: name, command_description: description.to_s.strip }
+  end
+  private_class_method :command_from
 
   def self.broadcast_template_name
     Setting["whatsapp.broadcast_template"].presence

@@ -40,6 +40,9 @@ en:
         submitted: "Template submitted to 360dialog and set as the notification template. Meta approval can take several hours."
         failed: "Template could not be submitted: %{error}"
         selected: "\"%{name}\" is now used for project notifications."
+      conversational_components:
+        applied: "Chat start applied. It can take a few minutes to appear in WhatsApp."
+        failed: "Chat start could not be applied: %{error}"
       steps:
         idle: "No active flow"
         awaiting_link: "Waiting for account link"
@@ -52,6 +55,7 @@ en:
         audio: "Voice message"
         interactive: "Choice"
         template: "Notification template"
+        welcome: "Chat opened"
         unsupported: "Unsupported"
       reach:
         contacts_title: "Contacts"
@@ -244,6 +248,15 @@ en:
           other: "set but does not match (%{count} characters)"
         webhook_checked_at: "Last checked"
         webhook_auto_hint: "The webhook is registered automatically as soon as the WhatsApp bot above is switched on, using the host you are working on."
+        entry_title: "Chat start"
+        entry_intro: >-
+          Someone who scans a QR code lands in an empty chat with a prepared message they still
+          have to send. These settings put tappable options and a greeting there instead, so the
+          first step takes one tap.
+        entry_apply: "Apply to WhatsApp"
+        entry_apply_hint: >-
+          The suggestions and commands are stored at WhatsApp, not on this platform. Changes above
+          only reach citizens after you apply them here.
         test_title: "Test message"
         test_intro: "Sends a short message to a number. Free-text messages only reach people who wrote in the last 24 hours."
         test_phone_label: "Number"

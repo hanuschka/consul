@@ -63,3 +63,18 @@
 
   <p class="kern-body kern-prose mt-2"><%= t("adm.whatsapp.show.webhook_auto_hint") %></p>
 </section>
+
+<section class="mb-5">
+  <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.entry_title") %></h2>
+  <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.entry_intro") %></p>
+
+  <% @entry_settings.each do |setting, kind| %>
+    <%= render Adm::AttributeEditorComponent.new(setting, :value, kind) %>
+  <% end %>
+
+  <%= form_with url: configure_conversational_components_adm_whatsapp_path, method: :post do %>
+    <%= form_submit_button(text: t("adm.whatsapp.show.entry_apply"), icon: "cloud_upload") %>
+  <% end %>
+
+  <p class="kern-body kern-prose"><%= t("adm.whatsapp.show.entry_apply_hint") %></p>
+</section>

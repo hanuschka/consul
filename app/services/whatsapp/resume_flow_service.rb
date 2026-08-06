@@ -9,16 +9,15 @@ class Whatsapp::ResumeFlowService < ApplicationService
 
     return ask_phase_choice if pending_phase_choice?
 
-    Whatsapp::SendTextService.call(
-      account: @conversation.whatsapp_account,
-      body: I18n.t("whatsapp.bot.no_projekt")
-    )
+    Whatsapp::SendEntryMenuService.call(conversation: @conversation)
   end
 
   private
 
+    # A pending choice may span the whole portal, in which case no projekt was
+    # stored alongside the offered phases.
     def pending_phase_choice?
-      pending_projekt.present? && pending_phases.many?
+      pending_phases.many?
     end
 
     def pending_projekt

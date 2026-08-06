@@ -39,6 +39,10 @@ class WhatsappApi::Client
     @templates ||= WhatsappApi::Resources::Templates.new(self)
   end
 
+  def conversational_automation
+    @conversational_automation ||= WhatsappApi::Resources::ConversationalAutomation.new(self)
+  end
+
   def get(path, query: nil)
     wrap_with_response_object(path) do
       self.class.get(path, query:, **json_headers)

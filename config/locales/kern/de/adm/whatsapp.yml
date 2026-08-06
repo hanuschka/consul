@@ -143,7 +143,6 @@ de:
           step_label: "Schritt"
           activity_label: "Aktivität"
           any: "Alle"
-          submit: "Filtern"
           reset: "Zurücksetzen"
         activity_options:
           recent: "Aktiv (7 Tage)"
@@ -153,7 +152,6 @@ de:
         thread_hint: >-
           Kompletter Chatverlauf mit diesem Kontakt. Freie Antworten erreichen WhatsApp nur
           innerhalb von 24 Stunden nach der letzten eingehenden Nachricht.
-        back_to_list: "Zurück zur Übersicht"
         truncated: "Es werden die letzten %{shown} von %{total} Nachrichten angezeigt."
         no_messages: "In diesem Dialog gibt es noch keine Nachrichten."
         time_format: "%H:%M"

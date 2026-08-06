@@ -1,35 +1,104 @@
-// The /adm WhatsApp "Dialoge" tab (list rows) and the single-thread page:
-// chat transcript on the left, contact/flow facts on the right.
+// The /adm WhatsApp "Dialoge" tab (list of contacts) and the single-thread
+// page: chat transcript on the left, contact/flow facts on the right.
 
-.adm-whatsapp-dialog-contact {
-  display: block;
+.adm-whatsapp-dialogs-list {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+}
+
+.adm-whatsapp-dialog-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.adm-whatsapp-dialog-item + .adm-whatsapp-dialog-item {
+  border-top: 1px solid var(--kern-color-layout-border);
+}
+
+.adm-whatsapp-dialog-item--main {
+  min-width: 0;
+}
+
+.adm-whatsapp-dialog-item--head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.adm-whatsapp-dialog-item--name {
+  margin: 0;
+  font-size: 1rem;
   font-weight: 600;
+  line-height: 1.3;
   color: var(--kern-color-layout-text-default);
 }
 
-.adm-whatsapp-dialog-contact--meta {
-  display: block;
-  margin-top: 0.125rem;
-  font-size: 0.875rem;
-  color: var(--kern-color-layout-text-muted);
-}
-
-.adm-whatsapp-dialog-preview {
-  display: block;
-  max-width: 24rem;
+.adm-whatsapp-dialog-item--identity {
+  margin: 0.25rem 0 0;
   font-size: 0.875rem;
   line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--kern-color-layout-text-muted);
+}
+
+.adm-whatsapp-dialog-item--preview {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
   color: var(--kern-color-layout-text-default);
 }
 
-.adm-whatsapp-dialog-preview--direction {
-  margin-right: 0.375rem;
+.adm-whatsapp-dialog-item--direction {
+  flex: none;
   font-weight: 600;
   color: var(--kern-color-layout-text-muted);
 }
 
-.adm-whatsapp-dialog-preview--direction.-inbound {
+.adm-whatsapp-dialog-item--direction.-inbound {
   color: var(--kern-color-action-default);
+}
+
+.adm-whatsapp-dialog-item--preview-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.adm-whatsapp-dialog-item--meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--kern-color-layout-text-muted);
+}
+
+.adm-whatsapp-dialog-item--meta-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-whatsapp-dialog-item--action {
+  display: flex;
+  justify-content: flex-start;
 }
 
 // --- Single thread page ---
@@ -164,6 +233,10 @@
 
 .adm-whatsapp-composer--form {
   max-width: 42rem;
+}
+
+.adm-whatsapp-composer--field {
+  margin-bottom: 1.5rem;
 }
 
 .adm-whatsapp-composer--hint {

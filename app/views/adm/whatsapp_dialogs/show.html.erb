@@ -3,17 +3,11 @@
 <%= render Adm::HeaderComponent.new(
   title: @account.contact_label,
   breadcrumbs: @breadcrumbs,
+  back_button_url: adm_whatsapp_path(tab: "dialogs"),
   compact: true
 ) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t("adm.whatsapp.dialogs.thread_hint") %></p>
-  <% end %>
-
-  <% header.with_actions do %>
-    <%= kern_link_button adm_whatsapp_path(tab: "dialogs"),
-      icon: "arrow_back",
-      text: t("adm.whatsapp.dialogs.back_to_list"),
-      style: :secondary %>
   <% end %>
 <% end %>
 

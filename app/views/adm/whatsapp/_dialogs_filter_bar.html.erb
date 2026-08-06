@@ -1,4 +1,10 @@
-<%= form_tag adm_whatsapp_path, method: :get, class: "adm-filter-bar -labeled" do %>
+<%# Sits outside the turbo-frame it targets, so a live filter never re-renders
+   the form itself and the search field keeps focus and caret while typing. %>
+<%= form_tag adm_whatsapp_path, method: :get, class: "adm-filter-bar -labeled", data: {
+  turbo_frame: "whatsapp_dialogs",
+  controller: "shared--auto-submit-form",
+  action: "change->shared--auto-submit-form#submit input->shared--auto-submit-form#debouncedSubmit"
+} do %>
   <%= hidden_field_tag :tab, "dialogs" %>
 
   <div class="adm-filter-bar--field adm-filter-bar--field-search adm-filter-bar--field-grow">
@@ -36,9 +42,9 @@
   </div>
 
   <div class="adm-filter-bar--actions">
-    <%= submit_tag t("adm.whatsapp.dialogs.filters.submit"), name: nil, class: "adm-filter-bar--submit-button" %>
     <%= link_to t("adm.whatsapp.dialogs.filters.reset"),
       adm_whatsapp_path(tab: "dialogs"),
-      class: "adm-filter-bar--reset-button" %>
+      class: "adm-filter-bar--reset-button",
+      data: { turbo_frame: "_top" } %>
   </div>
 <% end %>

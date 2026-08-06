@@ -16,8 +16,8 @@ en:
       page:
         title: Link your WhatsApp number
         intro: >-
-          You are about to link the WhatsApp number %{phone} to this account. Proposals you
-          submit via WhatsApp can then be attributed to your account.
+          Once linked, proposals you submit by WhatsApp are attributed to your account.
+        number_label: WhatsApp number
         broadcast_consent: >-
           I want to be notified on WhatsApp when a new participation project starts.
         consent_note: >-

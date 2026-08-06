@@ -141,7 +141,6 @@ en:
           step_label: "Step"
           activity_label: "Activity"
           any: "All"
-          submit: "Filter"
           reset: "Reset"
         activity_options:
           recent: "Active (7 days)"
@@ -151,7 +150,6 @@ en:
         thread_hint: >-
           Full chat history with this contact. Free-form replies only reach WhatsApp within 24
           hours of the last inbound message.
-        back_to_list: "Back to overview"
         truncated: "Showing the last %{shown} of %{total} messages."
         no_messages: "This dialog has no messages yet."
         time_format: "%H:%M"

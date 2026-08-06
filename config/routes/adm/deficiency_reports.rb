@@ -16,6 +16,10 @@ namespace :adm do
       patch :order_statuses, on: :collection
     end
 
+    resources :intake_channels, only: [:index, :new, :create, :edit, :update, :destroy] do
+      patch :order_intake_channels, on: :collection
+    end
+
     resources :official_answer_templates, except: :show
     resources :officer_groups, except: :show
     resources :districts, only: [:index, :edit, :update]

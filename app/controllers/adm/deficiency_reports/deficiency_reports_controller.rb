@@ -244,6 +244,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       attributes = [:title, :description, :video_url, :on_behalf_of,
                     :deficiency_report_category_id,
                     :deficiency_report_status_id,
+                    :deficiency_report_intake_channel_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_03_091120) do
+ActiveRecord::Schema.define(version: 2026_08_06_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -833,6 +833,23 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
   end
 
+  create_table "deficiency_report_intake_channel_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_intake_channel_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_3ee3fbfe2e51b97debe9275dca58a65df747c9da"
+    t.index ["locale"], name: "index_deficiency_report_intake_channel_translations_on_locale"
+  end
+
+  create_table "deficiency_report_intake_channels", force: :cascade do |t|
+    t.integer "given_order"
+    t.boolean "default", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "deficiency_report_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
@@ -934,12 +951,14 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.bigint "responsible_id"
     t.datetime "status_changed_at"
     t.datetime "archived_at"
+    t.bigint "deficiency_report_intake_channel_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_deficiency_reports_on_intake_channel_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
@@ -3528,6 +3547,7 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
+  add_foreign_key "deficiency_reports", "deficiency_report_intake_channels"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
   add_foreign_key "documents", "users"

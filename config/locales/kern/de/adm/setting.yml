@@ -271,6 +271,9 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
+      intake_channel_required_for_on_behalf_of: Pflichtfeld Eingangskanal bei Fremdmeldung
+      intake_channel_required_for_on_behalf_of_description: >
+        Macht die Angabe des Eingangskanals (z. B. Telefon, E-Mail, persönlich) verpflichtend, wenn eine Meldung im Namen einer dritten Person erfasst wird. Im Formular – sowohl öffentlich als auch im Verwaltungsbereich – erscheint das Auswahlfeld dann als Pflichtfeld mit den konfigurierten Kanal-Optionen und einem Standardwert. Aktivieren Sie diese Einstellung, wenn nachvollziehbar sein soll, auf welchem Weg Fremdmeldungen eingegangen sind.
       allow_voting: Nutzer-Bewertung pro Mangel
       allow_voting_description: >
         Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.

@@ -97,6 +97,10 @@
           additional_rows << { label: t(".on_behalf_of_label"), value: @deficiency_report.on_behalf_of }
         end
 
+        if @deficiency_report.intake_channel.present?
+          additional_rows << { label: t(".intake_channel_label"), value: @deficiency_report.intake_channel.name }
+        end
+
         if @deficiency_report.category.present?
           category_html = capture do %>
             <span class="adm-detail-pill" style="background: color-mix(in srgb, <%= @deficiency_report.category.color %> 15%, transparent); color: <%= @deficiency_report.category.color %>;">

@@ -48,6 +48,17 @@
   <% end %>
 <% end %>
 
+<% if Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"].present? &&
+      DeficiencyReport::IntakeChannel.exists? %>
+  <%= render Kern::FormFieldComponent.new(divider: false,
+    label: t(".labels.intake_channel"), hint: t(".hints.intake_channel")) do %>
+    <%= form.select :deficiency_report_intake_channel_id,
+          DeficiencyReport::IntakeChannel.all.map { |channel| [channel.name, channel.id] },
+          { include_blank: t(".placeholders.intake_channel") },
+          { label: false } %>
+  <% end %>
+<% end %>
+
 <%= render Kern::FormFieldComponent.new(divider: false,
   label: t(".labels.category"), hint: t(".hints.category")) do %>
   <% if form.object.errors[:deficiency_report_category_id].present? %>

@@ -136,6 +136,7 @@ en:
         card_category: Category
       deficiency_report:
         deficiency_report_category_id: Category
+        deficiency_report_intake_channel_id: Intake channel
         video_url: External video URL
         official_answer: Official answer
         on_behalf_of: Create report on behalf of someone

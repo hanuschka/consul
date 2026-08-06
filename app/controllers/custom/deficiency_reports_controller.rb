@@ -206,6 +206,13 @@ class DeficiencyReportsController < ApplicationController
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
+
+    # Only staff filing for somebody else get to say how the report came in; for everybody else the
+    # field is not on the form and the default channel is stamped on by the model.
+    if helpers.allowed_to_post_on_behalf_of?(current_user, @deficiency_report || DeficiencyReport.new)
+      attributes << :deficiency_report_intake_channel_id
+    end
+
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
   end
 

@@ -36,6 +36,8 @@ class DeficiencyReport < ApplicationRecord
 
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
+  belongs_to :intake_channel, class_name: "DeficiencyReport::IntakeChannel",
+    foreign_key: :deficiency_report_intake_channel_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
@@ -46,6 +48,9 @@ class DeficiencyReport < ApplicationRecord
   validates :deficiency_report_category_id, presence: true
   validates :author, presence: true
   validates :map_location, presence: true, on: :create, if: :map_location_required?
+  validates :deficiency_report_intake_channel_id, presence: true, on: :create, if: :intake_channel_required?
+
+  before_validation :assign_default_intake_channel, on: :create
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
@@ -239,4 +244,24 @@ class DeficiencyReport < ApplicationRecord
     setting = Setting["deficiency_reports.map_location_required"]
     setting.nil? || setting.present?
   end
+
+  # Staff filing for somebody else have to say how the report reached them; a citizen filing for
+  # themselves never sees the field and is stamped with the default channel instead.
+  #
+  # The channel check keeps this in step with the forms, which only render the select once channels
+  # exist: without it, turning the setting on before configuring any channel would block every
+  # on-behalf-of submission with a field nobody can fill.
+  def intake_channel_required?
+    Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"].present? &&
+      on_behalf_of.present? &&
+      DeficiencyReport::IntakeChannel.exists?
+  end
+
+  private
+
+    def assign_default_intake_channel
+      return if deficiency_report_intake_channel_id.present? || intake_channel_required?
+
+      self.intake_channel = DeficiencyReport::IntakeChannel.default
+    end
 end

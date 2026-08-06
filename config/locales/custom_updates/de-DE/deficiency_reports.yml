@@ -35,6 +35,10 @@ de:
           title: Veröffentlichen für
           description: Dieses Feld sehen nur Admin. Sie können hier einen Beitrag im Namen von jemandem erstellen.
           placeholder: Namen eingeben...
+        intake_channel:
+          label: Eingangskanal
+          description: Pflichtangabe, wenn Sie das Anliegen im Namen einer dritten Person erfassen. Geben Sie an, auf welchem Weg das Anliegen bei Ihnen eingegangen ist.
+          placeholder: Bitte wählen
         create:
           submit_button: Jetzt einreichen
         labels:

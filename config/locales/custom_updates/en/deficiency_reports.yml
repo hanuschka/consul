@@ -33,6 +33,10 @@ en:
           title: On behalf of
           description: Only admins can see this field. You can create a post on behalf of someone here.
           placeholder: Enter name...
+        intake_channel:
+          label: Intake channel
+          description: Required when you file the report on behalf of a third person. State how the report reached you.
+          placeholder: Please select
         create:
           submit_button: Submit now
         labels:

@@ -75,6 +75,4 @@ localisation:
 dependsOn:
   open:
     - name: Ruby on Rails
-      versionMin: "7"
     - name: PostgreSQL
-      versionMin: "14"

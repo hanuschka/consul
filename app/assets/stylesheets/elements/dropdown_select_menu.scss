@@ -163,3 +163,16 @@ $dropdown-select-menu-focus-outline: 2px solid #005fcc;
     }
   }
 }
+
+.custom-new-design .dropdown-select-container .dropdown-select-menu-toggle {
+  background: transparent;
+  border: none;
+
+  &:hover {
+    background: var(--dropdown-toggle-bg-hover, var(--dropdown-toggle-bg-hover-derived));
+  }
+}
+
+.custom-new-design .dropdown-select-container.dropdown-open .dropdown-select-menu-toggle {
+  background: var(--dropdown-toggle-bg-active, var(--dropdown-toggle-bg-active-derived));
+}

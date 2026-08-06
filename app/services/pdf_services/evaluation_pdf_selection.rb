@@ -1,10 +1,12 @@
 class PdfServices::EvaluationPdfSelection
   PHASE_SECTIONS = {
-    "ProjektPhase::ProposalPhase" => %w[kpis key_metrics phase_summary tone ranking ai_summary timeline label_sentiment user_segments key_findings topic_clustering semantic_clustering ai_questions],
-    "ProjektPhase::VotingPhase" => %w[kpis questions open_responses key_findings ai_questions],
-    "ProjektPhase::BudgetPhase" => %w[kpis phase_summary tone timeline label_sentiment user_segments budget_segments key_findings topic_clustering semantic_clustering ai_questions],
+    "ProjektPhase::ProposalPhase" => %w[kpis key_metrics phase_summary tone ranking ai_summary timeline label_sentiment user_segments heatmap key_findings topic_clustering semantic_clustering ai_questions],
+    "ProjektPhase::VotingPhase" => %w[kpis questions open_responses ai_summary key_findings ai_questions],
+    "ProjektPhase::BudgetPhase" => %w[kpis phase_summary tone timeline label_sentiment user_segments budget_segments heatmap key_findings topic_clustering semantic_clustering ai_questions],
     "ProjektPhase::CommentPhase" => %w[kpis phase_summary tone timeline user_segments key_findings ai_questions]
   }.freeze
+
+  PDF_EXCLUDED_SECTIONS = %w[heatmap].freeze
 
   ALL_SECTIONS = PHASE_SECTIONS.values.flatten.uniq.freeze
 
@@ -57,13 +59,12 @@ class PdfServices::EvaluationPdfSelection
 
   def self.filter_by_section_group(section_keys, section_group)
     ai_keys = Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
-    shared_keys = Adm::Projekts::EvaluationHelper::EVALUATION_SHARED_SECTIONS
 
     case section_group.to_s
     when "stats"
       section_keys - ai_keys
     when "ai"
-      section_keys & (ai_keys + shared_keys)
+      section_keys & ai_keys
     else
       section_keys
     end
@@ -107,6 +108,10 @@ class PdfServices::EvaluationPdfSelection
 
   def self.available_sections(phase_type)
     PHASE_SECTIONS[phase_type] || []
+  end
+
+  def self.pdf_available_sections(phase_type)
+    available_sections(phase_type) - PDF_EXCLUDED_SECTIONS
   end
 
   def initialize(phase_ids:, sections_by_phase:, include_report: true)

@@ -162,7 +162,7 @@
       return document.querySelector(".glightbox-container.glightbox-clean");
     },
 
-    SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",
+    SLIDE_CAPTION_FALLBACK: "Vergrößerte Ansicht",
 
     applySlideAccessibility(data) {
       var slideEl = data.slideNode || data.slide;
@@ -173,7 +173,7 @@
 
       var sourceImg = this.getSourceImage(data.trigger);
 
-      slideImg.setAttribute("alt", this.resolveSlideAltText(data.trigger, sourceImg));
+      slideImg.setAttribute("alt", this.resolveSlideCaptionText(data.trigger, sourceImg));
     },
 
     getSourceImage(trigger) {

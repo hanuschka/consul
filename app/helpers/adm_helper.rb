@@ -27,6 +27,8 @@ module AdmHelper
   end
 
   def restriction_label_for(projekt_phase)
+    return "-" unless projekt_phase.regular?
+
     restrictions = []
     restrictions << I18n.t("adm.projekts.phases.restrictions.user_status.#{projekt_phase.user_status}") if projekt_phase.user_status.present?
     restrictions << projekt_phase.geozone_restrictions_formatted if projekt_phase.geozone_restrictions.any?
@@ -69,7 +71,10 @@ module AdmHelper
     "map_resources_overview" => "layers",
     "legislation_process_draft_versions" => "description",
     "age_ranges_for_stats" => "pie_chart",
-    "email_templates" => "mail"
+    "email_templates" => "mail",
+    "mitmachbox_survey" => "ballot",
+    "mitmachbox_deployments" => "devices",
+    "mitmachbox_results" => "bar_chart"
   }.freeze
 
   PHASE_MODERATION_ACTIONS = %w[proposals comments budget_investments].freeze
@@ -168,18 +173,6 @@ module AdmHelper
         current: current_action == "draft_text"
       }
     ]
-  end
-
-  def pages_tabs(current_slug: nil)
-    current_slug ||= params[:slug]
-
-    %w[privacy conditions impressum contact_us].map do |slug|
-      {
-        label: I18n.t("adm.site_customization.pages.tabs.#{slug}"),
-        url: adm_site_customization_edit_page_by_slug_path(slug: slug),
-        current: current_slug == slug
-      }
-    end
   end
 
   def overview_pages_tabs(current_action: nil)

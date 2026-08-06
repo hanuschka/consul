@@ -6,6 +6,10 @@ module ApplicationHelper
     url_for(request.query_parameters.merge(query_parameters).merge(only_path: true))
   end
 
+  def current_url_without_query_params
+    "#{request.base_url}#{request.path}"
+  end
+
   def rtl?(locale = I18n.locale)
     %i[ar fa he].include?(locale)
   end
@@ -58,8 +62,10 @@ module ApplicationHelper
     end
   end
 
-  def content_block(name, locale = I18n.locale)
-    SiteCustomization::ContentBlock.block_for(name, locale)
+  def content_block(name)
+    SiteCustomization::ContentBlock.block_for(
+      name, SiteCustomization::ContentBlock.canonical_locale
+    )
   end
 
   def self.asset_data_base64(path)
@@ -94,16 +100,16 @@ module ApplicationHelper
     count
   end
 
-  def use_mapbox?(projekt = nil)
-    if projekt.present?
-      Setting["feature.mapbox"].present? || projekt_feature?(projekt, "general.mapbox")
-    else
-      Setting["feature.mapbox"].present?
-    end
-  end
-
   def show_admin_controls_for_projekt?(projekt)
     Pundit.policy(current_user, [:adm, :projekts, projekt])&.update? || false
+  end
+
+  def projekt_content_blocks_generate_url(projekt)
+    if current_user&.administrator?
+      generate_with_ai_admin_projekt_projekt_content_blocks_path(projekt)
+    elsif current_user&.projekt_manager?
+      generate_with_ai_projekt_management_projekt_projekt_content_blocks_path(projekt)
+    end
   end
 
   def studio_projekt_phases_data(projekt)

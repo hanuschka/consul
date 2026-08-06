@@ -14,7 +14,7 @@
 
     <%= f.submit t("omniauth.finish_signup.submit"), class: "button expanded" %>
     <div class="text-center">
-      <%= link_to t("devise_views.users.registrations.new.cancel"), destroy_user_session_path, class: "delete", method: :delete %>
+      <%= link_to t("devise_views.users.registrations.new.cancel"), destroy_user_session_path, class: "delete", method: :delete, data: { turbo_method: :delete } %>
     </div>
   <% end %>
 <% end %>

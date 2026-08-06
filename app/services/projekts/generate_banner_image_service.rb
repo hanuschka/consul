@@ -94,30 +94,18 @@ class Projekts::GenerateBannerImageService < ApplicationService
     end
 
     def attach_image(base64_image)
-      page = @projekt.page
+      result = AttachPageImageService.call(
+        projekt: @projekt,
+        user: @user,
+        data: Base64.decode64(base64_image),
+        filename: "projekt_#{@projekt.id}_ai_banner.jpg",
+        content_type: "image/jpeg"
+      )
 
-      if page.blank?
-        raise GenerationFailedError, "Projekt has no page to attach the image to"
+      if !result.success?
+        raise GenerationFailedError, result.error
       end
 
-      file = Tempfile.new(["projekt_banner_ai_image", ".jpg"], binmode: true)
-
-      begin
-        file.write(Base64.decode64(base64_image))
-        file.rewind
-
-        image = page.image || ::Image.new(imageable: page)
-        image.attachment = ActionDispatch::Http::UploadedFile.new(
-          tempfile: file,
-          filename: "projekt_#{@projekt.id}_ai_banner.jpg",
-          type: "image/jpeg"
-        )
-        image.user = @user
-        image.save!
-        page.association(:image).reset
-      ensure
-        file.close
-        file.unlink
-      end
+      result.data[:image]
     end
 end

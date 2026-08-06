@@ -5,6 +5,7 @@ class ProjektEvaluations::GenerateEvaluation < ApplicationService
   end
 
   def call
+    preserved_ai_data = capture_preserved_ai_data
     evaluation = find_or_create_evaluation
     evaluation.update!(status: :processing)
     mark_phase_rows_processing(evaluation)
@@ -20,8 +21,14 @@ class ProjektEvaluations::GenerateEvaluation < ApplicationService
     end
 
     stats = ProjektEvaluations::AggregateStatistics.call(@projekt)
-    ai_summary = generate_ai_summary(stats)
-    project_content_summary = generate_project_content_summary
+    ai_available = Ai::Settings.ai_available?
+    ai_summary = ai_available ? generate_ai_summary(stats) : preserved_ai_data[:ai_project_summary]
+    project_content_summary =
+      if ai_available
+        generate_project_content_summary
+      else
+        preserved_ai_data[:project_content_summary]
+      end
     selected_questions = collect_selected_questions
 
     evaluation.update!(
@@ -47,6 +54,15 @@ class ProjektEvaluations::GenerateEvaluation < ApplicationService
   end
 
   private
+
+  def capture_preserved_ai_data
+    data = @projekt.projekt_evaluation&.data || {}
+
+    {
+      ai_project_summary: data["ai_project_summary"],
+      project_content_summary: data["project_content_summary"]
+    }
+  end
 
   def find_or_create_evaluation
     existing = @projekt.projekt_evaluation

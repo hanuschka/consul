@@ -11,7 +11,14 @@ de:
           proposal_phase: Vorschläge
           budget_phase: Investitionsvorschläge
           comment_phase: Kommentare
+          debate_phase: Diskussionen
           voting_phase: Abstimmungen
+      footer_evaluation:
+        section_visibility_toggle_title: "Abschnitt „%{section}“ für Besucher*innen anzeigen oder ausblenden"
+        tab_visibility_toggle_label: Öffentlich sichtbar
+        tab_visibility_toggle_title: "Tab „%{tab}“ für Besucher*innen anzeigen oder ausblenden"
+        tab_visibility_toggle_bulk_hint: Beim Umschalten werden alle Abschnitte dieses Tabs entsprechend ein- oder ausgeblendet.
+        tab_hidden_from_public_tooltip: Dieser Tab ist aktuell für Besucher*innen ausgeblendet
       stats:
         title: Statistiken
         banner_title: "Auswertung der %{phase_title}"
@@ -69,6 +76,9 @@ de:
         legislation_phase: Jetzt mitmachen
         comment_phase: Jetzt mitmachen
         livestream_phase: Jetzt mitmachen
+        mitmachbox_phase: Vor Ort mitmachen
+      mitmachbox_phase:
+        public_info: In dieser Phase können Sie vor Ort an einer Umfrage teilnehmen. Die Mitmachboxen finden Sie an den ausgewiesenen Standorten.
       permission_problem:
         new_button_component:
           shared:
@@ -99,6 +109,10 @@ de:
             not_enabled: Hinzufügen von Pins ist nicht aktiviert
             max_pins_reached: Die maximale Anzahl an Pins pro Nutzer*in ist auf %{max_pin_number} begrenzt. Sie haben diese Anzahl bereits erreicht.
         votes_component:
+          proposal_phase:
+            supports_limit_exceeded: Sie haben die maximale Anzahl an Unterstützungen (%{max_supports}) für diese Phase bereits erreicht.
+          budget_phase:
+            supports_limit_exceeded: Sie haben die maximale Anzahl an Unterstützungen (%{max_supports}) für diese Phase bereits erreicht.
           shared:
             guest_not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up} oder %{guest_sign_in}."
             not_logged_in: "Um fortzufahren, müssen Sie sich %{sign_in} oder %{sign_up}."

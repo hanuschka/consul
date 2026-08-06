@@ -1,0 +1,20 @@
+.adm-projekts-inspiration {
+  .kern-container {
+    max-width: none;
+  }
+}
+
+.adm-projekts-inspiration-frame {
+  height: calc(100vh - 160px);
+  min-height: 480px;
+  margin-top: 5px;
+  background-color: #e9ebee;
+  background-size: 64px 64px;
+
+  // Desktop: fit within the viewport so the page itself never scrolls.
+  // Offset = adm header + breadcrumb nav (~55px) + dividers.
+  @media (min-width: 992px) {
+    height: calc(100vh - var(--kern-adm-header-height) - 57px);
+    min-height: 0;
+  }
+}

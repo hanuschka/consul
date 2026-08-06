@@ -5,6 +5,7 @@ en:
         frontend_link: "Back to website"
         frontend_labels:
           projekt: "Go to project page"
+          projekt_phase: "Go to projekt phase"
           landing_page: "Go to topic page"
           deficiency_reports: "Go to deficiency reports"
           ideas: "Go to ideas management"

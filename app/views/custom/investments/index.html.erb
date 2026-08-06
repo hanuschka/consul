@@ -17,15 +17,30 @@
     <div class="main-column">
       <%= render "shared/loader_spinner" %>
 
-      <%= render(
-        Shared::ResourcesListComponent.new(
-          resources: @investments,
-          resource_type: Budget::Investment,
+      <% investment_ids = @investments.pluck(:id) %>
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: t("custom.budgets.investments.index.empty_list_text")
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.budgets.investments.index",
+          filters: @valid_orders,
           current_filter: @current_order,
-          filter_param: "order",
-          text_search_enabled: true,
-          filters: @valid_orders
-        )) %>
+          param: "order",
+          text_search_enabled: true
+        ) %>
+
+        <% if @investments.present? %>
+          <% c.with_items do %>
+            <% @investments.each do |investment| %>
+              <%= render Budgets::Investments::ListItemComponent.new(
+                budget_investment: investment,
+                budget_investment_ids: investment_ids,
+                ballot: nil
+              ) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
 
       <%= paginate @investments %>
     </div>

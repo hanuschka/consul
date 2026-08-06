@@ -15,26 +15,41 @@ module Adm::Projekts::EvaluationHelper
     ai_questions
   ].freeze
 
-  EVALUATION_SHARED_SECTIONS = %w[kpis].freeze
-
   def evaluation_ai_section_keys
     EVALUATION_AI_SECTIONS
-  end
-
-  def evaluation_shared_section_keys
-    EVALUATION_SHARED_SECTIONS
   end
 
   def evaluation_section_tabs(section_key)
     key = section_key.to_s
 
-    if EVALUATION_SHARED_SECTIONS.include?(key)
-      "stats ai"
-    elsif EVALUATION_AI_SECTIONS.include?(key)
+    if EVALUATION_AI_SECTIONS.include?(key)
       "ai"
     else
       "stats"
     end
+  end
+
+  def evaluation_section_has_data?(phase, section_key)
+    ::ProjektEvaluations::SectionDataPresence.has_data?(phase, section_key)
+  end
+
+  def evaluation_visibility_subgroups(available_sections)
+    ai_sections = Ai::Settings.ai_available? ? (available_sections & EVALUATION_AI_SECTIONS) : []
+
+    [
+      {
+        key: "stats",
+        icon: "monitoring",
+        label_key: "adm.projekts.projekts.evaluation.view_tabs.stats",
+        sections: available_sections - EVALUATION_AI_SECTIONS
+      },
+      {
+        key: "ai",
+        icon: "auto_awesome",
+        label_key: "adm.projekts.projekts.evaluation.view_tabs.ai",
+        sections: ai_sections
+      }
+    ]
   end
 
   def evaluation_chart_colors(values, base_colors = nil)

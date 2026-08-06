@@ -19,7 +19,9 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
   end
 
   def open_answer
-    @open_answer ||= question.answers.find_or_initialize_by(author: current_user, answer: question.open_question_answer.title)
+    @open_answer ||=
+      user_answers.find { |answer| answer.answer == question.open_question_answer&.title } ||
+      question.answers.new(author: current_user, answer: question.open_question_answer&.title)
   end
 
   def additional_form_class
@@ -34,7 +36,7 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
   private
 
     def user_answers
-      @user_answers ||= question.answers.by_author(current_user)
+      @user_answers ||= helpers.poll_answers_by_question_for_current_user(question.poll)[question.id] || []
     end
 
     def any_remaining_votes?

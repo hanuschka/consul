@@ -1,5 +1,11 @@
 .custom-new-design {
   .projekt-phase-subnav {
+    --custom-tabs-text: #{$medium-gray-1};
+    --custom-tabs-text-strong: #{$main-text-color};
+    --custom-tabs-border: #{$border-color};
+    --custom-tabs-border-hover: #{$medium-gray-2};
+    --custom-tabs-accent: var(--effective-brand-color, #{$dt-base});
+    --custom-tabs-focus: var(--focus-outline-color);
     margin-top: 0px;
     margin-bottom: 20px;
     display: flex;
@@ -9,67 +15,41 @@
     gap: 12px;
 
     .projekt-phase-subnav--items {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px;
-      background: $projekt-subnav-track-bg;
-      border-radius: 12px;
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      border-bottom: 1px solid var(--custom-tabs-border);
     }
 
-    .projekt-phase-subnav-item {
+    .projekt-phase-subnav-item.-disabled {
       display: inline-flex;
       align-items: center;
-      margin: 0;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
+      gap: 0.5rem;
+      margin: 0 0 -1px;
+      padding: 12px 25px;
       font-size: 15px;
       font-weight: 500;
       line-height: 1;
-      color: $medium-gray-1;
+      color: $blue-gray-1;
+      border-bottom: 2px solid transparent;
       white-space: nowrap;
-      cursor: pointer;
-      transition: background-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
+      cursor: default;
+    }
 
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
+    .projekt-phase-subnav-item.-hidden-from-public {
+      opacity: 0.5;
+    }
 
-      &:hover {
-        color: $main-text-color;
-        background-color: rgba(255, 255, 255, 0.5);
-      }
+    .projekt-phase-subnav-item--visibility-icon {
+      display: none;
+    }
 
-      &.-active {
-        color: $dt-base;
-        background-color: #ffffff;
-        font-weight: 600;
-        border: none;
-        border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 5px rgba(0, 0, 0, 0.08);
-      }
+    .projekt-phase-subnav-item.-hidden-from-public .projekt-phase-subnav-item--visibility-icon {
+      display: inline-block;
+    }
 
-      &.-active:hover {
-        color: $dt-base;
-        background-color: #ffffff;
-      }
-
-      &:focus-visible {
-        outline: 2px solid $focus-outline-color;
-        outline-offset: 2px;
-      }
-
-      &.-disabled {
-        color: $blue-gray-1;
-        cursor: default;
-
-        &:hover {
-          color: $blue-gray-1;
-          background-color: transparent;
-        }
-      }
+    .projekt-phase-subnav-item.-hidden-from-public:has(.projekt-phase-subnav-item--visibility-icon) .projekt-phase-subnav-item--phase-icon {
+      display: none;
     }
   }
 }

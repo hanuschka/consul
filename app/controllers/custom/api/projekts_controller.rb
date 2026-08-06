@@ -385,7 +385,7 @@ class Api::ProjektsController < Api::BaseController
     # Create a blank content block for projects created through the API
     projekt.content_blocks.create!(
       name: "custom",
-      locale: "de",
+      locale: SiteCustomization::ContentBlock.canonical_locale,
       body: "",
       key: "projekt_content_block_#{projekt.id}_1_#{Time.now.to_i}",
       position: 1

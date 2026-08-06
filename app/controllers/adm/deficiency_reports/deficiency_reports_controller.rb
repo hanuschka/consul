@@ -68,7 +68,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     ))
     authorize @deficiency_report, :create?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
-    if @deficiency_report.save
+    if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
       @deficiency_report.assign_default_responsible
       redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report), notice: t("adm.attribute.create.success")
     else
@@ -251,11 +251,14 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     end
 
     def create_params
-      if params.dig(:deficiency_report, :image_attributes, :cached_attachment).blank?
-        deficiency_report_params.except(:image_attributes)
-      else
-        deficiency_report_params
-      end
+      permitted = if params.dig(:deficiency_report, :image_attributes, :cached_attachment).blank?
+                    deficiency_report_params.except(:image_attributes)
+                  else
+                    deficiency_report_params
+                  end
+
+      permitted.merge(params.require(:deficiency_report)
+        .permit(:on_behalf_of_company_name, :on_behalf_of_email))
     end
 
     def new_breadcrumbs

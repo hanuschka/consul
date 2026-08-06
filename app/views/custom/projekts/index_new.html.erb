@@ -3,7 +3,8 @@
 <% provide :social_media_meta_tags do %>
   <%= render "shared/social_media_meta_tags",
     social_title: t("custom.projekts.index.title"),
-    social_description: t("custom.projekts.index.welcome_default_text_html") %>
+    social_description: t("custom.projekts.index.welcome_default_text_html"),
+    social_url: current_url_without_query_params %>
 <% end %>
 
 <% if @landing_page.present? %>
@@ -36,15 +37,26 @@
         role="region"
         aria-label="<%= t('custom.accessibility.regions.projekts_list') %>"
       >
-        <%= render Shared::ResourcesListComponent.new(
-          resources: @projekts,
-          resource_type: Projekt,
-          current_filter: @current_projekts_filter,
-          text_search_enabled: true,
-          filters: @active_projekts_filters,
+        <%= render Resources::List::BaseComponent.new(
+          empty_text: t("custom.projekts.empty_list_text")
         ) do |c| %>
-          <% c.with_items_remark do %>
+          <% c.with_toolbar(
+            i18n_namespace: "custom.projekts",
+            filters: @active_projekts_filters,
+            current_filter: @current_projekts_filter,
+            text_search_enabled: true
+          ) %>
+
+          <div class="margin-bottom">
             <%= render_custom_block("projekts_index_filter_#{@current_projekts_filter}") %>
+          </div>
+
+          <% if @projekts.present? %>
+            <% c.with_items do %>
+              <% @projekts.each do |projekt| %>
+                <%= render Projekts::ListItemComponent.new(projekt: projekt, title_heading_level: 2) %>
+              <% end %>
+            <% end %>
           <% end %>
         <% end %>
       </div>

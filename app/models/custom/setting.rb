@@ -41,7 +41,7 @@ class Setting < ApplicationRecord
     end
 
     def [](key)
-      all_settings_hash[key]
+      all_settings_hash[key.to_s]
     end
 
     def newsletter_brand_color
@@ -105,6 +105,8 @@ class Setting < ApplicationRecord
         "feature.twitter_login": true,
         "feature.wordpress_login": false,
         "feature.bund_id_login": false,
+        "feature.kobil_login": false,
+        "feature.kobil_address_verification": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": true,
@@ -161,7 +163,7 @@ class Setting < ApplicationRecord
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
         "uploads.images.title.max_length": 80,
-        "uploads.images.content_types": "image/jpeg image/png image/gif",
+        "uploads.images.content_types": "image/jpeg image/png image/gif image/webp",
         "uploads.documents.max_amount": 3,
         "uploads.documents.max_size": 3,
         "uploads.documents.content_types": "application/pdf",

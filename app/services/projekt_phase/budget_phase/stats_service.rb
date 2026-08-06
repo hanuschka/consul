@@ -51,7 +51,7 @@ class ProjektPhase::BudgetPhase::StatsService
       {
         participants_by_age:            combined.age_data,
         participants_by_geozone:        combined.geozone_data,
-        individual_group_value_counts:  individual_group_value_counts_for(participant_ids),
+        individual_group_value_counts:  combined.individual_group_value_counts,
         **combined.gender_data
       }
         .merge(segment_demographics("accepting", accepting_participant_ids))
@@ -66,7 +66,7 @@ class ProjektPhase::BudgetPhase::StatsService
       {
         "#{prefix}_participants_by_age"           => calculator.age_data,
         "#{prefix}_participants_by_geozone"       => calculator.geozone_data,
-        "#{prefix}_individual_group_value_counts" => individual_group_value_counts_for(ids)
+        "#{prefix}_individual_group_value_counts" => calculator.individual_group_value_counts
       }.merge(calculator.gender_data.transform_keys { |key| "#{prefix}_#{key}" })
     end
 
@@ -82,7 +82,8 @@ class ProjektPhase::BudgetPhase::StatsService
       @supports ||= ActsAsVotable::Vote.where(
         votable_type: "Budget::Investment",
         votable_id:   investments.select(:id),
-        voter_type:   "User"
+        voter_type:   "User",
+        conditional:  false
       )
     end
 
@@ -146,16 +147,6 @@ class ProjektPhase::BudgetPhase::StatsService
     def participant_ids
       @participant_ids ||=
         (accepting_participant_ids + selecting_participant_ids + balloting_participant_ids).uniq.compact
-    end
-
-    def individual_group_value_counts_for(ids)
-      return {} if ids.empty?
-
-      UserIndividualGroupValue
-        .joins(individual_group_value: :individual_group)
-        .where(user_id: ids, individual_groups: { kind: "soft" })
-        .group(:individual_group_value_id)
-        .count
     end
 
     def balloting_lines

@@ -8,6 +8,10 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
   private
 
     def cannot_vote_text
+      # Nothing to explain on an investment the user has already supported: they can still
+      # withdraw, and a limit notice next to the withdraw button reads as if they cannot.
+      return if user_voted_for?
+
       if reason == :not_logged_in
         t(path_to_key,
           sign_in: link_to_signin, sign_up: link_to_signup)
@@ -24,6 +28,7 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
           registered_address_groupings: investment.budget.projekt_phase.registered_address_grouping_restriction_formatted,
           age_restriction: investment.budget.projekt_phase.age_restriction_formatted,
           restricted_streets: investment.budget.projekt_phase.street_restrictions_formatted,
+          max_supports: investment.budget.projekt_phase.max_supports_per_user,
           individual_group_values: investment.budget.projekt_phase.individual_group_value_restriction_formatted
          )
       end

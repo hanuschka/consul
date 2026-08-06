@@ -1,6 +1,6 @@
 <% if Setting.new_design_enabled? %>
   $("#<%= dom_id(@proposal) %>_votes").html(
-    '<%= j render Proposals::NewVotesComponent.new(@proposal, voted: @voted) %>'
+    '<%= j render Proposals::NewVotesComponent.new(@proposal, voted: @voted, show_share_popup: @show_share_popup, proposal_ids: @proposal_ids) %>'
   );
 <% else %>
   $("#<%= dom_id(@proposal) %>_votes").html(
@@ -18,3 +18,4 @@ $("#<%= dom_id(@proposal) %>_votes .js-copy-data-url").on("click", function(even
 
 $("div[data-voted-badge=<%= @proposal.id %>]").addClass('hide');
 
+<%= render "custom/proposals/refresh_votes" %>

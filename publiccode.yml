@@ -2,7 +2,7 @@ publiccodeYmlVersion: "0.4"
 
 name: Mitmachportal Würzburg
 url: "https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal"
-landingURL: "https://mitmachportal.wuerzburg.de"
+landingURL: "https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal"
 softwareVersion: "2026.06.29"
 releaseDate: "2026-06-29"
 developmentStatus: stable

@@ -726,7 +726,8 @@ class ProjektPhase < ApplicationRecord
     def age_permission_problem(user)
       return if age_restriction.nil?
       return :missing_user_data if user.age.blank?
-      return if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
+      return if age_restriction.effective_min_age <= user.age &&
+                user.age <= age_restriction.effective_max_age
 
       :only_specific_ages
     end

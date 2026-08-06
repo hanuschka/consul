@@ -19,7 +19,7 @@ class Whatsapp::RefuseParticipationService < ApplicationService
   def call
     @conversation.reset_flow!
 
-    Whatsapp::SendTextService.call(account: @conversation.whatsapp_account, body: message)
+    Whatsapp::SendRecoveryService.call(conversation: @conversation, body: message, actions: [:menu])
   end
 
   private

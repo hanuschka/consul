@@ -30,10 +30,13 @@ class Whatsapp::SendEntryMenuService < ApplicationService
       Whatsapp::AskForIdeaService.call(conversation: @conversation)
     end
 
+    # The menu button is still worth offering: a phase may open later, and
+    # tapping it is how someone re-checks without composing a message.
     def send_nothing_open
-      Whatsapp::SendTextService.call(
-        account: @conversation.whatsapp_account,
-        body: I18n.t("whatsapp.bot.no_projekt")
+      Whatsapp::SendRecoveryService.call(
+        conversation: @conversation,
+        body: I18n.t("whatsapp.bot.no_projekt"),
+        actions: [:menu]
       )
     end
 end

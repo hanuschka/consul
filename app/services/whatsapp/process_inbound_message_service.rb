@@ -21,6 +21,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # Opening the chat for the first time carries no text to interpret, so the
     # only sensible answer is the menu of what is open.
     return Whatsapp::SendEntryMenuService.call(conversation:) if @whatsapp_message.welcome?
+    return if handle_recovery_action
 
     return if @whatsapp_message.audio? && inbound_text.blank?
 
@@ -42,6 +43,45 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
     def conversation
       @conversation ||= account.conversation
+    end
+
+    # Handled ahead of the step dispatcher: a tapped recovery button must not be
+    # read as idea text by whichever step happens to be active.
+    def handle_recovery_action
+      action = Whatsapp::SendRecoveryService.action_from(button_reply_id)
+
+      return false if action.blank?
+
+      case action
+      when :menu then Whatsapp::SendEntryMenuService.call(conversation:)
+      when :cancel then cancel_flow
+      when :retry then retry_last_action
+      end
+
+      true
+    end
+
+    def cancel_flow
+      conversation.reset_flow!
+
+      Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.cancelled"))
+      Whatsapp::SendEntryMenuService.call(conversation:)
+    end
+
+    # A failed publish leaves the draft intact, so retrying means publishing
+    # again; a failed draft leaves nothing behind but the text it was built from.
+    def retry_last_action
+      return publish if conversation.step == "awaiting_draft_decision" && conversation.proposal.present?
+
+      last_idea_text = conversation.context["last_idea_text"]
+
+      return generate_draft(last_idea_text) if last_idea_text.present?
+
+      Whatsapp::ResumeFlowService.call(conversation:)
+    end
+
+    def send_recovery(body, actions)
+      Whatsapp::SendRecoveryService.call(conversation:, body:, actions:)
     end
 
     def dispatch_step
@@ -82,7 +122,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       if OPT_IN_KEYWORDS.include?(normalized_text)
         account.update!(opt_in_at: Time.current, opt_out_at: nil)
-        Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.opted_in"))
+        send_recovery(I18n.t("whatsapp.bot.opted_in"), [:menu])
 
         return true
       end
@@ -145,7 +185,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       idea_text = inbound_text.to_s.strip
 
       if idea_text.blank?
-        return Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.idea_missing"))
+        return send_recovery(I18n.t("whatsapp.bot.idea_missing"), [:cancel, :menu])
       end
 
       permission_problem =
@@ -201,7 +241,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     def send_throttle_notice
-      Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.too_fast"))
+      send_recovery(I18n.t("whatsapp.bot.too_fast"), [:cancel, :menu])
     end
 
     def revised_idea_text(correction)
@@ -211,7 +251,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def generate_draft(idea_text)
       return send_throttle_notice if drafting_throttled?
 
-      conversation.merge_context!(last_draft_at: Time.current.iso8601)
+      conversation.merge_context!(last_draft_at: Time.current.iso8601, last_idea_text: idea_text)
 
       Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.drafting"))
 
@@ -225,7 +265,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       Rails.logger.error("[Whatsapp] draft generation failed: #{e.class} - #{e.message}")
       Sentry.capture_exception(e, extra: { whatsapp_conversation_id: conversation.id })
 
-      Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.draft_failed"))
+      send_recovery(I18n.t("whatsapp.bot.draft_failed"), [:retry, :cancel, :menu])
     end
 
     def publish
@@ -244,7 +284,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       return send_criteria_feedback if result == :criteria_failed
 
       if result.blank?
-        return Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.publish_failed"))
+        return send_recovery(I18n.t("whatsapp.bot.publish_failed"), [:retry, :cancel, :menu])
       end
 
       send_publish_confirmation(result)
@@ -256,13 +296,13 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       conversation.update!(step: "awaiting_revision")
       failed_criterion = conversation.proposal.ai_evaluation_result.to_h["failed_criterion"].to_h
 
-      Whatsapp::SendTextService.call(
-        account:,
-        body: I18n.t(
+      send_recovery(
+        I18n.t(
           "whatsapp.bot.criteria_failed",
           criterion: failed_criterion["name"].to_s,
           feedback: failed_criterion["feedback"].to_s
-        )
+        ),
+        [:cancel, :menu]
       )
     end
 
@@ -274,10 +314,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
           "whatsapp.bot.published_pending_moderation"
         end
 
-      Whatsapp::SendTextService.call(
-        account:,
-        body: I18n.t(copy_key, url: proposal_url(proposal))
-      )
+      send_recovery(I18n.t(copy_key, url: proposal_url(proposal)), [:menu])
     end
 
     def proposal_url(proposal)
@@ -322,7 +359,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       transcript = Whatsapp::TranscribeVoiceService.call(media_id: @raw_message.dig("audio", "id"))
 
       if transcript.blank?
-        Whatsapp::SendTextService.call(account:, body: I18n.t("whatsapp.bot.transcription_failed"))
+        send_recovery(I18n.t("whatsapp.bot.transcription_failed"), [:cancel, :menu])
 
         return nil
       end

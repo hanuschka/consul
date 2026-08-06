@@ -87,9 +87,13 @@ en:
       opted_out: You will not receive any more messages from us. Send START to subscribe again.
       opted_in: You will receive messages from us again.
       verification_link: "You can verify your account here: %{url}"
+      cancelled: Cancelled. Nothing was submitted.
       buttons:
         publish: Publish
         revise: Revise
+        retry: Try again
+        cancel: Cancel
+        menu: View all projects
       refused:
         generic: I cannot submit a proposal for this project right now.
         phase_missing: I could not find the project. Please scan the QR code again.

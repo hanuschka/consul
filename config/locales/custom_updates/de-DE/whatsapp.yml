@@ -93,9 +93,11 @@ de:
         default_2: Ich habe eine Idee für meine Stadt
         default_3: Wie funktioniert das Einreichen?
         default_4: Keine Nachrichten mehr erhalten
-      ask_idea: >-
-        Du bist beim Projekt „%{projekt}“. Hast du konkrete Ideen oder Vorschläge? Schreibe sie
-        mir als Text oder schicke mir eine Sprachnachricht.
+      ask_idea: |-
+        Du bist beim Projekt „%{projekt}“:
+        %{url}
+
+        Hast du konkrete Ideen oder Vorschläge? Schreibe sie mir als Text oder schicke mir eine Sprachnachricht.
       idea_missing: Bitte beschreibe deine Idee als Text oder als Sprachnachricht.
       choose_phase: >-
         Im Projekt „%{projekt}“ laufen mehrere Beteiligungsphasen. Zu welcher möchtest du etwas

@@ -104,10 +104,10 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
     end
 
     def projekt_title(projekt)
-      projekt.page&.title.presence || projekt.name
+      Whatsapp::ProjektLink.title(projekt)
     end
 
     def projekt_url(projekt)
-      Rails.application.routes.url_helpers.projekt_url(projekt, **UrlOptions.default.to_h)
+      Whatsapp::ProjektLink.url(projekt)
     end
 end

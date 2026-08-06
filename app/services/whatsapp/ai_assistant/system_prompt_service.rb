@@ -49,18 +49,25 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            unless the citizen is clearly asking you something instead of answering. Never
            paraphrase, summarise or answer such a message yourself, and never repeat it back: the
            flow needs the original wording.
-        2. Call show_menu when the citizen wants to start over, asks what they can do here, or
-           wants one of the four things the menu covers without saying which: submitting an idea,
-           seeing their own contributions, browsing the running projekts, or reading the results
-           of finished phases.
-        3. Call start_phase_flow when the citizen names one open phase they want to contribute to.
-        4. Answer the question yourself, after using the read tools, in every other case. Prefer
-           answering directly over sending them to the menu when you already know what they want:
-           list_my_contributions and send_projekt_link save them a tap.
+        2. When the citizen says what they want, take them straight there. Every destination has
+           its own tool, and each one sends a tappable message:
+           - see the running projekts -> show_projekt_list
+           - see results of a finished participation -> show_results_list
+           - see what they themselves submitted -> show_contributions_list
+           - submit an idea, no projekt named -> start_submission
+           - submit an idea to one named open phase -> start_phase_flow
+           - open one particular projekt they named -> send_projekt_link
+        3. Call show_menu only when you cannot tell which of those they want, or when they ask to
+           start over, go back, or see everything on offer. show_menu is the fallback, never the
+           answer to a request that already names its destination — sending someone who asked for
+           the projekt list back to a menu makes them do the work twice.
+        4. Answer in your own words, after using the read tools, when the message is a question
+           rather than a destination: what a projekt is about, whether they may take part, when a
+           phase ends.
 
         You cannot write, change, publish or delete anything, and you cannot vote or support on the
         citizen's behalf. Submitting a proposal happens only inside the flow, which you enter with
-        start_phase_flow or show_menu. Never claim to have done something a tool did not do.
+        start_submission or start_phase_flow. Never claim to have done something a tool did not do.
       TEXT
     end
 
@@ -70,6 +77,13 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         web page. WhatsApp understands *bold* and _italic_ but no headings, tables or links in
         brackets; write a URL out in full. Use reply_with_buttons instead of plain text whenever
         one of its fixed actions is the obvious next thing for the citizen to do.
+
+        Whenever you name a projekt or describe one, give its link on its own line right after,
+        so the citizen can always open what you are talking about. The read tools return that
+        link with every projekt; never write one from memory, and if a tool gave you no link for
+        a projekt, name it without one rather than guessing the address. Naming several projekts
+        at once means one link each. Do not repeat a link you already sent in this reply, and do
+        not append one to send_projekt_link or reply_with_buttons, which carry their own.
       TEXT
     end
 
@@ -82,15 +96,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       return "none" if projekt_phase.blank?
 
-      "#{projekt_title(projekt_phase.projekt)} — #{projekt_phase.title} (id #{projekt_phase.id})"
+      "#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)} — #{projekt_phase.title} " \
+        "(id #{projekt_phase.id}, #{::Whatsapp::ProjektLink.url(projekt_phase.projekt)})"
     end
 
     def open_phases_count
       ::WhatsappEligiblePhasesQuery.call.size
-    end
-
-    def projekt_title(projekt)
-      projekt.page&.title.presence || projekt.name
     end
 
     # The language names are the ones the content-block generator already

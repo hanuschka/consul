@@ -101,6 +101,10 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::ListMyContributions,
         ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
         ::Ai::Tools::WhatsappAiAssistant::ShowMenu,
+        ::Ai::Tools::WhatsappAiAssistant::ShowProjektList,
+        ::Ai::Tools::WhatsappAiAssistant::ShowResultsList,
+        ::Ai::Tools::WhatsappAiAssistant::ShowContributionsList,
+        ::Ai::Tools::WhatsappAiAssistant::StartSubmission,
         ::Ai::Tools::WhatsappAiAssistant::StartPhaseFlow,
         ::Ai::Tools::WhatsappAiAssistant::SendProjektLink,
         ::Ai::Tools::WhatsappAiAssistant::ReplyWithButtons

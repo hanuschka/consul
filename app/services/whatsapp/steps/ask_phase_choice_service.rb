@@ -81,6 +81,6 @@ class Whatsapp::Steps::AskPhaseChoiceService < ApplicationService
     end
 
     def projekt_title(projekt)
-      projekt.page&.title.presence || projekt.name
+      Whatsapp::ProjektLink.title(projekt)
     end
 end

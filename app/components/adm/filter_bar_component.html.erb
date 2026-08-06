@@ -1,8 +1,17 @@
-<div class="adm-filter-bar js-adm-filter-bar">
+<form
+  method="get"
+  action="<%= endpoint %>"
+  class="adm-filter-bar js-adm-filter-bar"
+  data-turbo-frame="files-index-results"
+  data-files--filter-bar-target="form"
+  data-action="formdata->files--filter-bar#stripBlankEntries"
+>
   <div class="adm-filter-bar--field adm-filter-bar--field-search">
     <i class="fa fa-search adm-filter-bar--search-icon" aria-hidden="true"></i>
     <input
       type="search"
+      name="search"
+      value="<%= params[:search] %>"
       class="adm-filter-bar--input adm-filter-bar--input-search js-fm-filter-search"
       placeholder="<%= t("files.filter_bar.search_placeholder") %>"
       aria-label="<%= t("files.filter_bar.aria.search") %>"
@@ -12,13 +21,14 @@
 
   <div class="adm-filter-bar--field">
     <select
+      name="extension"
       class="adm-filter-bar--input js-fm-filter-extension"
       aria-label="<%= t("files.filter_bar.aria.filter_extension") %>"
       data-action="change->files--filter-bar#filterChanged"
     >
       <option value=""><%= t("files.filter_bar.extension_any") %></option>
       <% extension_options.each do |ext| %>
-        <option value="<%= ext %>">.<%= ext %></option>
+        <option value="<%= ext %>" <%= "selected" if ext == params[:extension] %>>.<%= ext %></option>
       <% end %>
     </select>
   </div>
@@ -56,12 +66,13 @@
   <div class="adm-filter-bar--field adm-filter-bar--field-sort">
     <i class="fa fa-sort adm-filter-bar--sort-icon" aria-hidden="true"></i>
     <select
+      name="sort"
       class="adm-filter-bar--input adm-filter-bar--input-sort js-fm-filter-sort"
       aria-label="<%= t("files.filter_bar.aria.sort") %>"
-      data-action="change->files--filter-bar#sortChanged"
+      data-action="change->files--filter-bar#filterChanged"
     >
       <% Adm::FilterBarComponent::SORT_OPTIONS.each do |key| %>
-        <option value="<%= key %>"><%= t("files.filter_bar.sort.#{key}") %></option>
+        <option value="<%= key %>" <%= "selected" if key == params[:sort] %>><%= t("files.filter_bar.sort.#{key}") %></option>
       <% end %>
     </select>
   </div>
@@ -98,4 +109,4 @@
       </button>
     </div>
   <% end %>
-</div>
+</form>

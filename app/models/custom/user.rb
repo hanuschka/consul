@@ -176,6 +176,7 @@ User.class_eval do
     )
 
     update_conditional_ballots_for_relevant_budgets
+    update_conditional_votes
     true
   end
 
@@ -437,6 +438,20 @@ User.class_eval do
         next if permission_problem_present
 
         ballot.update!(conditional: false)
+      end
+    end
+
+    def update_conditional_votes
+      Vote.where(voter: self, conditional: true)
+          .includes(:votable)
+          .group_by(&:votable)
+          .each do |votable, votes|
+        next if votable.blank?
+        next unless votable.respond_to?(:conditional_vote_confirmable_for?)
+        next unless votable.conditional_vote_confirmable_for?(self)
+
+        Vote.where(id: votes.map(&:id)).update_all(conditional: false)
+        votable.update_cached_votes
       end
     end
 

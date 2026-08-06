@@ -1,0 +1,31 @@
+de:
+  components:
+    adm:
+      masterportal_file_upload_area_component:
+        label: GeoJSON-Dateien hochladen
+        attach_button: Dateien auswählen
+        explanation: >-
+          Laden Sie GeoJSON-Dateien direkt hoch, statt sie von einer Endpunkt-URL abzurufen.
+          Erwartet wird das Format einer OGC-API-Features-„items"-Antwort (eine
+          FeatureCollection mit Punkt-Objekten), z. B. der Download von
+          „…/collections/trinkbrunnen/items?f=json". Jede Datei wird zu einem eigenen
+          Datensatz und beim Import gemeinsam mit den ausgewählten Datensätzen verarbeitet.
+          Maximale Dateigröße: %{size} MB.
+        from_file: "Aus Datei:"
+        name_label: Name des Datensatzes
+        name_hint: >-
+          Dieser Name identifiziert den Datensatz. Beim erneuten Import aktualisiert derselbe Name
+          den vorhandenen Datensatz, ein anderer Name legt einen neuen an. Dateinamen sind oft
+          generisch (z. B. items.geojson) – wählen Sie daher einen klaren, aussagekräftigen Namen,
+          etwa den der zugehörigen Sammlung.
+        name_placeholder: "z. B. Trinkbrunnen"
+        remove: Entfernen
+        errors:
+          too_large: "Datei ist zu groß (max. %{size} MB)."
+          invalid_type: Datei muss eine .json- oder .geojson-Datei sein.
+          invalid_json: Datei ist kein gültiges JSON.
+          not_feature_collection: Datei ist keine GeoJSON-FeatureCollection.
+          empty: Datei ist leer.
+          duplicate_name: Eine andere Datei in diesem Upload verwendet denselben Datensatznamen.
+          name_taken: Ein Live-Datensatz verwendet diesen Namen bereits – bitte einen anderen wählen.
+          generic: Datei konnte nicht verarbeitet werden.

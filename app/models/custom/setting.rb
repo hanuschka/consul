@@ -111,6 +111,9 @@ class Setting < ApplicationRecord
         "feature.keycloak_google_login": true,
         #ENDE Ergänzung für Keycloak-Anbindung
         "feature.bund_id_login": false,
+        "feature.kobil_login": false,
+        "feature.kobil_single_logout": false,
+        "feature.kobil_address_verification": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": true,
@@ -167,7 +170,7 @@ class Setting < ApplicationRecord
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
         "uploads.images.title.max_length": 80,
-        "uploads.images.content_types": "image/jpeg image/png image/gif",
+        "uploads.images.content_types": "image/jpeg image/png image/gif image/webp",
         "uploads.documents.max_amount": 3,
         "uploads.documents.max_size": 3,
         "uploads.documents.content_types": "application/pdf",

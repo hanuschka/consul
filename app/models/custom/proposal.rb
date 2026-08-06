@@ -5,6 +5,7 @@ class Proposal < ApplicationRecord
   include ResourceBelongsToProjekt
   include OnBehalfOfSubmittable
   include Memoable
+  include ConditionallyVotable
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
@@ -183,6 +184,10 @@ class Proposal < ApplicationRecord
 
   def submitted_anonymously?
     projekt_phase.feature?("form.anonimize_authors")
+  end
+
+  def conditional_vote_confirmable_for?(user)
+    !archived? && super
   end
 
   protected

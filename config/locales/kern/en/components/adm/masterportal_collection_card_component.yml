@@ -8,6 +8,12 @@ en:
         last_imported_at: "Last update"
         never: "Never"
         icon_missing: "No icon available"
+        source_file_label: "File"
+        source_file_tooltip_title: "Uploaded file source"
+        source_file_tooltip_text: >-
+          This dataset was imported from an uploaded GeoJSON file, not a live endpoint URL.
+          "Import new and clean old" re-reads the stored file; upload a file under the same
+          dataset name to replace it.
         working: "Working…"
         delete: "Delete"
         clean: "Import new and clean old"

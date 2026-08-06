@@ -62,6 +62,7 @@ en:
         results_menu: Results
         report_menu: Report
         evaluation_menu: Evaluation
+        ai_analysis_menu: AI analysis
         vote_counted: Your vote was counted!
         vote_uncounted: Your vote was withdrawn
         results:
@@ -79,6 +80,8 @@ en:
         download_all_pdf: Download All Sections (PDF)
       evaluation:
         title: AI Evaluation
+      ai_analysis:
+        title: AI analysis
       ai_stats:
         refresh_button: Refresh AI Analysis
         last_updated: "AI analysis last updated:"
@@ -88,6 +91,7 @@ en:
   polls:
     index:
       filters:
+        status: Status
         title: Status
         all: All polls
         currrent: Active polls

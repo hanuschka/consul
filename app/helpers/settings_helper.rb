@@ -11,6 +11,7 @@ module SettingsHelper
       # (:m_login if feature?(:m_login_login)),
       # (:keycloak_google if feature?(:keycloak_google_login))
       #ENDE Ergänzung für Keycloak-Anbindung
+      (:kobil if feature?(:kobil_login))
     ].compact
   end
 

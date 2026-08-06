@@ -15,14 +15,16 @@ class Masterportal::ImportService < ApplicationService
 
   def initialize(
     projekt_phase:,
-    endpoint_url:,
-    collection_ids:,
+    endpoint_url: nil,
+    collection_ids: [],
+    uploaded_collection_ids: [],
     create_domain_records: false,
     triggered_by_user: nil
   )
     @projekt_phase = projekt_phase
     @endpoint_url = endpoint_url
     @collection_ids = Array(collection_ids)
+    @uploaded_collection_ids = Array(uploaded_collection_ids)
     @create_domain_records = create_domain_records
     @triggered_by_user = triggered_by_user
     @stats = { imported: 0, updated: 0, skipped: 0, failed: 0, errors: [] }
@@ -37,7 +39,11 @@ class Masterportal::ImportService < ApplicationService
     @collection_titles = fetch_collection_titles
 
     @collection_ids.each do |collection_id|
-      process_collection(collection_id)
+      process_geoserver_collection(collection_id)
+    end
+
+    uploaded_collections.each do |collection|
+      process_file_collection(collection)
     end
 
     finalize_success!
@@ -74,19 +80,53 @@ class Masterportal::ImportService < ApplicationService
       @projekt_phase.update_column(:masterportal_last_imported_count, processed)
     end
 
-    def process_collection(collection_id)
+    def process_geoserver_collection(collection_id)
+      if @endpoint_url.blank?
+        raise ArgumentError, "endpoint_url is required to import geoserver collection #{collection_id}"
+      end
+
       collection = find_or_create_collection(collection_id)
+      features = OgcApiFeatures::Client.fetch_features(@endpoint_url, collection_id)
+
+      process_collection(
+        collection: collection,
+        collection_id: collection_id,
+        collection_title: collection_titles[collection_id],
+        endpoint_url: @endpoint_url,
+        features: features
+      )
+    end
+
+    def process_file_collection(collection)
+      features = Masterportal::GeojsonFileFeatures.new(masterportal_collection: collection)
+
+      process_collection(
+        collection: collection,
+        collection_id: collection.collection_id,
+        collection_title: collection.display_name,
+        endpoint_url: collection.endpoint_url,
+        features: features
+      )
+    end
+
+    def process_collection(collection:, collection_id:, collection_title:, endpoint_url:, features:)
       collection.update!(import_status: "running", import_error: nil)
       count = 0
 
-      OgcApiFeatures::Client.fetch_features(@endpoint_url, collection_id) do |feature|
+      features.each do |feature|
         count += 1
 
         if count > MAX_FEATURES_PER_RUN
           raise "Collection #{collection_id} exceeds MAX_FEATURES_PER_RUN"
         end
 
-        process_feature(feature: feature, collection_id: collection_id, collection: collection)
+        process_feature(
+          feature: feature,
+          collection_id: collection_id,
+          collection: collection,
+          collection_title: collection_title,
+          endpoint_url: endpoint_url
+        )
       end
 
       finalize_collection_success!(collection)
@@ -106,11 +146,18 @@ class Masterportal::ImportService < ApplicationService
       raise
     end
 
+    def uploaded_collections
+      return MasterportalCollection.none if @uploaded_collection_ids.blank?
+
+      @projekt_phase.masterportal_collections.where(id: @uploaded_collection_ids)
+    end
+
     def find_or_create_collection(collection_id)
       collection =
         @projekt_phase.masterportal_collections.find_or_initialize_by(collection_id: collection_id)
       collection.name = collection_titles[collection_id].presence || collection.name
       collection.endpoint_url = @endpoint_url
+      collection.source = "geoserver"
       collection.create_domain_records = @create_domain_records
       collection.save!
 
@@ -126,7 +173,7 @@ class Masterportal::ImportService < ApplicationService
       )
     end
 
-    def process_feature(feature:, collection_id:, collection:)
+    def process_feature(feature:, collection_id:, collection:, collection_title:, endpoint_url:)
       if !point_geometry?(feature)
         @stats[:skipped] += 1
         return
@@ -135,8 +182,13 @@ class Masterportal::ImportService < ApplicationService
       report_out_of_bbox(feature)
 
       ActiveRecord::Base.transaction do
-        was_new_record, pin =
-          persist_pin(feature: feature, collection_id: collection_id, collection: collection)
+        was_new_record, pin = persist_pin(
+          feature: feature,
+          collection_id: collection_id,
+          collection: collection,
+          collection_title: collection_title,
+          endpoint_url: endpoint_url
+        )
 
         if @create_domain_records && pin.associated_record.nil?
           persist_domain_record(pin)
@@ -157,12 +209,12 @@ class Masterportal::ImportService < ApplicationService
       Sentry.capture_exception(e) if defined?(Sentry)
     end
 
-    def persist_pin(feature:, collection_id:, collection:)
+    def persist_pin(feature:, collection_id:, collection:, collection_title:, endpoint_url:)
       pin = Masterportal::PinBuilder.call(
         projekt_phase: @projekt_phase,
-        endpoint_url: @endpoint_url,
+        endpoint_url: endpoint_url,
         collection_id: collection_id,
-        collection_title: collection_titles[collection_id],
+        collection_title: collection_title,
         masterportal_collection: collection,
         feature: feature
       )
@@ -196,6 +248,8 @@ class Masterportal::ImportService < ApplicationService
     end
 
     def fetch_collection_titles
+      return {} if @collection_ids.blank? || @endpoint_url.blank?
+
       collections = OgcApiFeatures::Client.list_collections(@endpoint_url)
 
       collections.each_with_object({}) do |collection, titles|

@@ -63,7 +63,8 @@ class Setting < ApplicationRecord
         "images" => {
           "jpg"  => "image/jpeg",
           "png"  => "image/png",
-          "gif"  => "image/gif"
+          "gif"  => "image/gif",
+          "webp" => "image/webp"
         },
         "documents" => {
           "pdf"  => "application/pdf",

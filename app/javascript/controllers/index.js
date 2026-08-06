@@ -29,6 +29,9 @@ application.register("adm--menu-popover", AdmMenuPopoverController)
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
 
+import AdmVisibilityAutosaveController from "./adm/visibility_autosave_controller"
+application.register("adm--visibility-autosave", AdmVisibilityAutosaveController)
+
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
 
@@ -72,6 +75,9 @@ application.register("table-actions", TableActionsController)
 import MapController from "./map_controller"
 application.register("map", MapController)
 
+import AdmEvaluationHeatmapController from "./adm/evaluation_heatmap_controller"
+application.register("adm--evaluation-heatmap", AdmEvaluationHeatmapController)
+
 import RelatedContentController from "./related_content_controller"
 application.register("related-content", RelatedContentController)
 
@@ -107,6 +113,9 @@ application.register("adm-nested-fields", AdmNestedFieldsController)
 
 import AdmChartsController from "./adm/charts_controller"
 application.register("adm-charts", AdmChartsController)
+
+import AdmChartRangeController from "./adm/chart_range_controller"
+application.register("adm-chart-range", AdmChartRangeController)
 
 
 import CheckAllController from "./check_all_controller"
@@ -211,6 +220,9 @@ application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadCon
 import AdmEvaluationTabsController from "./adm/evaluation_tabs_controller"
 application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 
+import AdmBudgetResultsController from "./adm/budget_results_controller"
+application.register("adm--budget-results", AdmBudgetResultsController)
+
 import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
 application.register("projekt-imports--from-file", ProjektImportsFromFileController)
 
@@ -231,3 +243,6 @@ application.register("shared--image-cropper", SharedImageCropperController)
 
 import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
 application.register("shared--anchor-highlight", SharedAnchorHighlightController)
+
+import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
+application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)

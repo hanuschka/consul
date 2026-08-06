@@ -12,6 +12,8 @@ namespace :adm do
       get :contact_persons, on: :member
     end
 
+    resource :inspiration, only: [:show], controller: "inspiration"
+
     resources :contact_persons, controller: "/adm/section_contact_people",
               only: [:new, :create, :edit, :update, :destroy],
               path: "settings/contact_persons",
@@ -245,8 +247,12 @@ namespace :adm do
       get :report_summary, on: :member
       get "evaluation/:phase_id", on: :member, action: :evaluation_phase,
           as: :evaluation_phase, constraints: { phase_id: /\d+/ }
+      get :poll_answer_participation, on: :member
+      get :poll_answer_crossectional, on: :member
       get :evaluation_visibility, on: :member
       patch :update_evaluation_visibility, on: :member
+      patch :toggle_evaluation_section_visibility, on: :member
+      patch :toggle_evaluation_tab_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member

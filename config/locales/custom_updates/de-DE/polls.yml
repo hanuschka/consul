@@ -63,6 +63,7 @@ de:
         results_menu: Ergebnis
         report_menu: Report
         evaluation_menu: Bewertung
+        ai_analysis_menu: AI Analyse
         vote_counted: Ihre Stimme wurde gezählt!
         vote_uncounted: Ihre Stimme wurde entfernt
         results:
@@ -80,6 +81,8 @@ de:
         download_all_pdf: Alle Abschnitte herunterladen (PDF)
       evaluation:
         title: AI Bewertung
+      ai_analysis:
+        title: AI Analyse
       ai_stats:
         refresh_button: AI-Analyse aktualisieren
         last_updated: "AI-Analyse zuletzt aktualisiert:"
@@ -89,6 +92,7 @@ de:
   polls:
     index:
       filters:
+        status: Status
         title: Status
         all: Alle Abstimmungen
         currrent: Aktiv Abstimmungen

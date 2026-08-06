@@ -7,8 +7,8 @@ namespace :generate_data do
        "from the /adm 'Generate evaluation' button. Idempotent / re-runnable. " \
        "Run: bin/rails generate_data:evaluation_stats"
   task evaluation_stats: :environment do
-    projekt_name = "Projekt Evaluation"
-    slug = "projekt-evaluation"
+    projekt_name = "Projekt to test evaluation"
+    slug = "projekt-to-test-evaluation"
     password = "DemoEval2026!"
 
     log = ->(msg) { puts "  #{msg}" }
@@ -72,28 +72,81 @@ namespace :generate_data do
       "Ich unterstütze das, wünsche mir aber mehr Transparenz beim Zeitplan."
     ]
 
-    poll_specs = [
-      {
-        name: "Verkehr & Mobilität",
-        questions: [
-          { title: "Wie wichtig ist Ihnen der Ausbau sicherer Radwege?", type: "unique",
-            options: ["Sehr wichtig", "Eher wichtig", "Weniger wichtig", "Gar nicht wichtig"] },
-          { title: "Welche Verkehrsmaßnahmen sollen Vorrang haben?", type: "multiple", max_votes: 2,
-            options: ["Mehr Busverbindungen", "Tempo 30 in Wohngebieten", "Neue Fahrradstraßen", "Park-and-Ride-Plätze"] },
-          { title: "Wie zufrieden sind Sie mit dem ÖPNV-Angebot?", type: "unique",
-            options: ["Sehr zufrieden", "Eher zufrieden", "Eher unzufrieden", "Sehr unzufrieden"] }
-        ]
-      },
-      {
-        name: "Stadtgrün & Klima",
-        questions: [
-          { title: "Wie wichtig ist Ihnen mehr Stadtgrün in der Innenstadt?", type: "unique",
-            options: ["Sehr wichtig", "Wichtig", "Neutral", "Unwichtig"] },
-          { title: "Welche Klimaschutzmaßnahmen befürworten Sie?", type: "multiple", max_votes: 2,
-            options: ["Baumpflanzungen", "Solardächer", "Flächenentsiegelung", "Regenwassernutzung"] }
-        ]
-      }
-    ]
+    # ONE poll per voting phase, bundling many questions. The set deliberately
+    # covers every vote type (unique / multiple / multiple_with_weight /
+    # rating_scale) and every chart the evaluation report can render (stacked,
+    # measure with an abstain option, donut sentiment, preference, multi, scale)
+    # plus verdict-triggering yes/no questions. `weights` biases the answer
+    # distribution so charts show meaningful leans instead of a flat split.
+    poll_spec = {
+      name: "Bürgerbefragung zur Stadtentwicklung",
+      questions: [
+        { title: "Befürworten Sie die geplante Neugestaltung des Stadtparks?",
+          type: "unique", options: ["Ja", "Nein"], weights: [3, 1] },
+        { title: "Sollen autofreie Sonntage in der Innenstadt eingeführt werden?",
+          type: "unique", options: ["Ja", "Nein", "Keine Angabe"], weights: [5, 3, 2] },
+        { title: "Wie bewerten Sie die bisherige Bürgerbeteiligung?",
+          type: "unique", options: ["Positiv", "Neutral", "Negativ"], weights: [5, 3, 2] },
+        { title: "Wie wichtig ist Ihnen der Ausbau sicherer Radwege?",
+          type: "unique",
+          options: ["Sehr wichtig", "Eher wichtig", "Weniger wichtig", "Gar nicht wichtig"],
+          weights: [6, 4, 2, 1] },
+        { title: "Wie zufrieden sind Sie mit dem ÖPNV-Angebot?",
+          type: "unique",
+          options: ["Sehr zufrieden", "Eher zufrieden", "Eher unzufrieden", "Sehr unzufrieden"],
+          weights: [2, 4, 4, 3] },
+        { title: "Welche Verkehrsmaßnahmen sollen Vorrang haben?",
+          type: "multiple", max_votes: 2,
+          options: ["Mehr Busverbindungen", "Tempo 30 in Wohngebieten",
+                    "Neue Fahrradstraßen", "Park-and-Ride-Plätze"],
+          weights: [5, 3, 4, 2] },
+        { title: "Welche Klimaschutzmaßnahmen befürworten Sie?",
+          type: "multiple", max_votes: 3,
+          options: ["Baumpflanzungen", "Solardächer", "Flächenentsiegelung",
+                    "Regenwassernutzung", "Fassadenbegrünung"],
+          weights: [6, 4, 5, 3, 2] },
+        { title: "Verteilen Sie Ihre Stimmen auf die wichtigsten Vorhaben.",
+          type: "multiple_with_weight", max_votes: 5, max_votes_per_answer: 3,
+          options: ["Schulsanierung", "Radwegenetz", "Stadtgrün", "Digitalisierung"],
+          weights: [5, 4, 3, 2] },
+        { title: "Wie gewichten Sie die Bereiche des Klimabudgets?",
+          type: "multiple_with_weight", max_votes: 6, max_votes_per_answer: 4,
+          options: ["Energie", "Mobilität", "Gebäude", "Grünflächen", "Aufklärung"],
+          weights: [5, 5, 3, 4, 2] },
+        { title: "Wie sicher fühlen Sie sich im Straßenverkehr?",
+          type: "rating_scale", options: ["1", "2", "3", "4", "5"],
+          min_rating_scale_label: "Sehr unsicher", max_rating_scale_label: "Sehr sicher",
+          weights: [2, 4, 6, 4, 2] },
+        { title: "Wie beurteilen Sie die Sauberkeit öffentlicher Plätze?",
+          type: "rating_scale", options: ["1", "2", "3", "4", "5"],
+          min_rating_scale_label: "Sehr schlecht", max_rating_scale_label: "Sehr gut",
+          weights: [1, 3, 5, 6, 3] },
+        { title: "Sind Sie dafür, mehr Straßenbäume in der Innenstadt zu pflanzen?",
+          type: "unique", options: ["Dafür", "Dagegen"], weights: [3, 2] }
+      ]
+    }
+
+    # A bundled question: one DB-level Poll::Question with bundle_question: true
+    # grouping several nested (parent_question_id-linked) sub-questions, exactly
+    # like real bundles created via the poll editor. Exercises the evaluation
+    # report's bundle-grouping path (nested questions rendered under their
+    # parent instead of as flat, unrelated cards).
+    bundle_spec = {
+      title: "Fragenbündel: Naherholung im Stadtpark",
+      questions: [
+        { title: "Wie oft nutzen Sie den Stadtpark aktuell?",
+          type: "unique", options: ["Täglich", "Wöchentlich", "Selten", "Nie"],
+          weights: [3, 5, 4, 2] },
+        { title: "Welche Angebote im Park nutzen Sie am meisten?",
+          type: "multiple", max_votes: 2,
+          options: ["Spielplatz", "Liegewiese", "Sportgeräte", "Gastronomie"],
+          weights: [5, 6, 3, 2] },
+        { title: "Wie bewerten Sie die Aufenthaltsqualität aktuell?",
+          type: "rating_scale", options: ["1", "2", "3", "4", "5"],
+          min_rating_scale_label: "Sehr schlecht", max_rating_scale_label: "Sehr gut",
+          weights: [2, 3, 6, 5, 2] }
+      ]
+    }
 
     comment_phase_bodies = [
       "Die Idee mit den Fahrradstraßen finde ich hervorragend – bitte zügig umsetzen!",
@@ -176,6 +229,8 @@ namespace :generate_data do
       projekt = page&.projekt
 
       if projekt
+        projekt.update!(name: projekt_name)
+        projekt.page.update!(title: projekt_name)
         log.call "Reusing projekt ##{projekt.id}"
       else
         projekt = Projekt.create!(
@@ -339,7 +394,7 @@ namespace :generate_data do
                "#{Comment.where(commentable: proposals).count} comments"
 
       # =======================================================================
-      # VOTING PHASE (polls, questions, answer options, votes, voters)
+      # VOTING PHASE (one poll bundling many questions, answers, votes, voters)
       # =======================================================================
       voting_phase = projekt.projekt_phases.find_by(type: "ProjektPhase::VotingPhase")
       unless voting_phase
@@ -351,59 +406,120 @@ namespace :generate_data do
       voting_phase.update!(active: true, frontend_visibility: true)
       voting_phase.settings.find_or_initialize_by(key: "feature.general.public_kpi_stats").update!(value: "active")
 
-      polls = voting_phase.polls.order(:id).to_a
-      while polls.size < poll_specs.size
-        index = polls.size + 1
-        polls << voting_phase.polls.create!(
-          name: "#{projekt_name} #{index}", slug: "#{slug}-poll-#{index}"
+      poll = voting_phase.polls.order(:id).first
+      poll ||= voting_phase.polls.create!(name: poll_spec[:name], slug: "#{slug}-poll")
+      poll.update!(
+        name: poll_spec[:name], starts_at: 4.months.ago, ends_at: 3.months.ago,
+        results_enabled: true, stats_enabled: true, published: true
+      )
+
+      # Deterministic weighted pick: expands weights [3, 1] into indices
+      # [0, 0, 0, 1], so voter i maps to bag[i % bag.size] and the target answer
+      # distribution is reproduced without randomness.
+      weighted_bag = lambda do |weights, size|
+        bag = weights.each_with_index.flat_map { |weight, index| Array.new(weight, index) }
+        bag.empty? ? (0...size).to_a : bag
+      end
+
+      # Per-voter weight allocations for multiple_with_weight, keyed by the total
+      # vote budget. Each inner array sums to the budget and each element stays
+      # within the per-answer cap, so the model's weight validation passes.
+      weight_allocations = {
+        5 => [[3, 2], [2, 2, 1], [3, 1, 1], [2, 1, 1, 1]],
+        6 => [[4, 2], [3, 3], [4, 1, 1], [3, 2, 1], [2, 2, 1, 1]]
+      }
+
+      find_or_create_question = lambda do |qspec, parent_question: nil|
+        question = poll.questions.find_by(title: qspec[:title])
+
+        return question if question
+
+        question = Poll::Question.new(
+          poll: poll, author: users.first, title: qspec[:title], parent_question_id: parent_question&.id
         )
+        question.votation_type = VotationType.new(
+          vote_type: qspec[:type],
+          max_votes: qspec[:max_votes],
+          max_votes_per_answer: qspec[:max_votes_per_answer],
+          min_rating_scale_label: qspec[:min_rating_scale_label],
+          max_rating_scale_label: qspec[:max_rating_scale_label]
+        )
+        question.save!
+
+        qspec[:options].each_with_index do |option_title, oi|
+          Poll::Question::Answer.create!(question: question, title: option_title, given_order: oi + 1)
+        end
+
+        question
       end
 
       total_answers = 0
-      polls.each_with_index do |poll, pi|
-        spec = poll_specs[pi]
-        poll.update!(
-          name: spec[:name], starts_at: 4.months.ago, ends_at: 3.months.ago,
-          results_enabled: true, stats_enabled: true, published: true
-        )
+      cast_votes = lambda do |question, qspec, qi|
+        options = qspec[:options]
+        bag = weighted_bag.call(qspec[:weights] || [], options.size)
+        voters = users.rotate(qi * 3).first(40)
 
-        if poll.questions.count.zero?
-          spec[:questions].each do |qspec|
-            question = Poll::Question.new(poll: poll, author: users.first, title: qspec[:title])
-            question.votation_type = VotationType.new(vote_type: qspec[:type], max_votes: qspec[:max_votes])
-            question.save!
+        voters.each_with_index do |voter, vi|
+          next if Poll::Answer.where(question_id: question.id, author_id: voter.id).exists?
 
-            qspec[:options].each_with_index do |option_title, oi|
-              Poll::Question::Answer.create!(question: question, title: option_title, given_order: oi + 1)
+          case qspec[:type]
+          when "unique", "rating_scale"
+            title = options[bag[vi % bag.size]]
+            Poll::Answer.create!(question_id: question.id, author: voter, answer: title, answer_weight: 1)
+            total_answers += 1
+          when "multiple"
+            chosen = []
+            offset = 0
+
+            while chosen.size < qspec[:max_votes] && offset < bag.size + options.size
+              title = options[bag[(vi + offset) % bag.size]]
+              chosen << title unless chosen.include?(title)
+              offset += 1
             end
-          end
-        end
 
-        poll.questions.includes(:votation_type, :question_answers).each_with_index do |question, qi|
-          option_titles = question.question_answers.sort_by(&:given_order).map(&:title)
-          next if option_titles.empty?
-
-          vote_limit = question.unique? ? 1 : (question.votation_type&.max_votes || 2)
-          voters = users.rotate(qi).first(12)
-
-          voters.each_with_index do |voter, vi|
-            next if Poll::Answer.where(question_id: question.id, author_id: voter.id).exists?
-
-            chosen = [option_titles[vi % option_titles.size]]
-            chosen << option_titles[(vi + 1) % option_titles.size] if vote_limit > 1
-            chosen.uniq.first(vote_limit).each do |title|
+            chosen.each do |title|
               Poll::Answer.create!(question_id: question.id, author: voter, answer: title, answer_weight: 1)
+              total_answers += 1
+            end
+          when "multiple_with_weight"
+            patterns = weight_allocations[qspec[:max_votes]]
+            allocation = patterns[vi % patterns.size]
+            start_index = bag[vi % bag.size]
+
+            allocation.each_with_index do |weight, slot|
+              title = options[(start_index + slot) % options.size]
+              Poll::Answer.create!(
+                question_id: question.id, author: voter, answer: title, answer_weight: weight
+              )
               total_answers += 1
             end
           end
         end
-
-        poll.questions.flat_map(&:answers).map(&:author).uniq.each do |voter|
-          Poll::Voter.find_or_create_by!(user: voter, poll: poll, origin: "web")
-        end
       end
-      log.call "Voting phase ##{voting_phase.id}: #{polls.size} polls, " \
-               "#{polls.sum { |p| p.questions.count }} questions, #{total_answers} answers"
+
+      poll_spec[:questions].each_with_index do |qspec, qi|
+        question = find_or_create_question.call(qspec)
+        cast_votes.call(question, qspec, qi)
+      end
+
+      bundle_question = poll.questions.find_by(title: bundle_spec[:title])
+      unless bundle_question
+        bundle_question = Poll::Question.create!(
+          poll: poll, author: users.first, title: bundle_spec[:title], bundle_question: true,
+          votation_type: VotationType.new(vote_type: nil)
+        )
+      end
+
+      bundle_spec[:questions].each_with_index do |qspec, qi|
+        question = find_or_create_question.call(qspec, parent_question: bundle_question)
+        cast_votes.call(question, qspec, poll_spec[:questions].size + qi)
+      end
+
+      poll.questions.flat_map(&:answers).map(&:author).uniq.each do |voter|
+        Poll::Voter.find_or_create_by!(user: voter, poll: poll, origin: "web")
+      end
+      log.call "Voting phase ##{voting_phase.id}: 1 poll, " \
+               "#{poll.questions.count} questions, #{total_answers} answers"
 
       # =======================================================================
       # BUDGET PHASE (budget, investments, comments, supports, ballots)

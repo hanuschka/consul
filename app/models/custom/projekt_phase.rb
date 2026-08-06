@@ -63,6 +63,8 @@ class ProjektPhase < ApplicationRecord
 
   DEFAULT_PHASE_MATERIAL_ICON = "flag".freeze
 
+  FOOTER_HIDDEN_EVALUATION_SECTIONS = %w[kpis heatmap].freeze
+
   PHASE_FA_ICONS = {
     "ProjektPhase::CommentPhase" => "fa-comment",
     "ProjektPhase::ProposalPhase" => "fa-lightbulb",
@@ -262,7 +264,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank?
+    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+  end
+
+  def conditional_vote_possible_for?(user)
+    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -415,6 +421,37 @@ class ProjektPhase < ApplicationRecord
 
   def publicly_visible?
     active? && frontend_visibility?
+  end
+
+  def evaluation_completed?
+    projekt_phase_evaluation.present? && projekt_phase_evaluation.completed?
+  end
+
+  def publicly_visible_evaluation_tabs
+    visibility = projekt_phase_evaluation_visibility
+    return [] if visibility.blank?
+
+    available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
+    visible = visibility.visible_sections & available
+    footer_visible = visible - FOOTER_HIDDEN_EVALUATION_SECTIONS
+    ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
+
+    tabs = []
+    tabs << "poll_stats" if visibility.show_poll_stats
+    tabs << "stats" if footer_visible.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if footer_visible.any? { |key| ai_keys.include?(key) }
+
+    tabs
+  end
+
+  def evaluation_tab_publicly_visible?(tab)
+    if evaluation_completed?
+      publicly_visible_evaluation_tabs.include?(tab)
+    elsif tab == "ai"
+      feature?("general.public_ai_stats")
+    else
+      feature?("general.public_kpi_stats")
+    end
   end
 
   def max_submissions_per_user

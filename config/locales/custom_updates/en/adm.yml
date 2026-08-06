@@ -92,10 +92,11 @@ en:
           evaluation_visibility: Evaluation visibility
         evaluation_visibility:
           title: Evaluation visibility
-          heading: Configure visibility for regular users
+          heading: Configure evaluation visibility
           description: >
-            Choose which evaluation sections regular users can see for this phase
-            in the projekt footer. Admins and projekt managers always see everything.
+            Choose which evaluation sections are shown for this phase in the
+            projekt footer. Hidden sections are not shown to anyone — including
+            admins and projekt managers.
           save: Save
           cancel: Cancel
         update_evaluation_visibility:
@@ -129,6 +130,8 @@ en:
           success: The pin has been deleted.
         masterportal_pins_summary:
           loading: Loading map…
+        update_masterportal_collection:
+          missing_file: The uploaded file for this dataset is no longer available. Upload it again to re-import.
   projekt_phase_setting:
     proposal_phase:
       feature:

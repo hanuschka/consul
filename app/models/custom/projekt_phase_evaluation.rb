@@ -14,4 +14,12 @@ class ProjektPhaseEvaluation < ApplicationRecord
   validates :projekt_phase_id, uniqueness: { scope: :projekt_evaluation_id }
 
   scope :by_phase_id, ->(id) { where(projekt_phase_id: id) }
+
+  def ai_content?
+    info = data || {}
+
+    info["ai_stats"].present? ||
+      info["evaluation_summary"].present? ||
+      info["key_findings"].present?
+  end
 end

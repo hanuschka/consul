@@ -4,3 +4,4 @@ de:
       show:
         title: Funktionen
         intro_text: "Globale Funktionen, die noch keinen eigenen Bereich in der neuen Verwaltungsoberfläche haben. Änderungen wirken sich sofort auf die gesamte Plattform aus."
+        kobil_title: "KOBIL-Authentifizierung"

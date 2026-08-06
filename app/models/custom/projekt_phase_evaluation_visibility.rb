@@ -5,12 +5,12 @@ class ProjektPhaseEvaluationVisibility < ApplicationRecord
     phase_summary
     tone
     ranking
-    proposals
     ai_summary
     timeline
     label_sentiment
     user_segments
     budget_segments
+    heatmap
     key_findings
     topic_clustering
     semantic_clustering

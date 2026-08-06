@@ -5,6 +5,16 @@ class Resources::ListItemComponent < ApplicationComponent
   IMAGE_THUMB_SIZE_2X = [600, 360].freeze
 
   renders_one :header
+  renders_one :subheading
+  renders_one :author, Resources::ListItem::AuthorComponent
+  renders_one :image, ->(image:, resource:, image_placeholder_icon_class: "fa-file") do
+    Shared::ResourceImageComponent.new(
+      image_url: image_variant(image, IMAGE_THUMB_SIZE),
+      image_url_2x: image_variant(image, IMAGE_THUMB_SIZE_2X),
+      image_placeholder_icon_class: image_placeholder_icon_class,
+      resource: resource
+    )
+  end
   renders_one :image_overlay_item
   renders_many :additional_body_sections
   renders_many :footer_sections
@@ -14,51 +24,32 @@ class Resources::ListItemComponent < ApplicationComponent
     description:,
     resource: nil,
     projekt: nil,
-    hide_projekt_breadcrumb: false,
-    image: nil,
-    subline: nil,
     url: nil,
     url_target: nil,
-    tags: [],
-    image_placeholder_icon_class: "fa-file",
     header_style: nil,
-    narrow_header: false,
     date: nil,
-    no_footer_bottom_padding: false,
     title_heading_level: 3
   )
     @title = title
     @title_heading_level = title_heading_level
     @projekt = projekt
-    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
     @description = description
     @resource = resource
-    @image = image
     @url = url
     @url_target = url_target
-    @subline = subline
-    @tags = tags
-    @image_placeholder_icon_class = image_placeholder_icon_class
+
     @header_style = header_style
-    @narrow_header = narrow_header
     @date = date
-    @no_footer_bottom_padding = no_footer_bottom_padding
   end
 
   def component_class_name
-    class_name = "#{@resource.class.name&.underscore}-list-item"
+    resource_name = @resource ? @resource.class.name.underscore : "resource"
+    class_name = "#{resource_name}-list-item"
 
-    class_name += " -wide" if @wide
     class_name += " -no-header" if header.blank?
-    class_name += " -no-image" unless show_image?
+    class_name += " -no-image" if image.blank?
 
     class_name
-  end
-
-  def days_left
-    if @end_date.present?
-      "Noch #{(@end_date - Date.today).to_i} Tage"
-    end
   end
 
   def date
@@ -68,73 +59,33 @@ class Resources::ListItemComponent < ApplicationComponent
   end
 
   def show_projekt_breadcrumb?
-    @projekt.present? && !@hide_projekt_breadcrumb
+    @projekt.present?
   end
 
   def show_body_heading?
-    @subline.present? ||
-      show_projekt_breadcrumb? ||
-      (@projekt.blank? && @tags.present?) ||
-      date.present?
+    subheading? || show_projekt_breadcrumb? || date.present?
   end
 
-  def truncate_length
-    if @wide
-      150
-    else
-      120
-    end
+  def title_text
+    truncate(sanitize(@title), length: 72, escape: false)
   end
 
-  def header_class
-    if @narrow_header
-      "-narrow"
-    end
-  end
+  def description_text
+    formatted_description = @description&.gsub("</p><p>", "</p> <p>")
 
-  def show_author_name?
-    return false if @resource.try(:submitted_anonymously?)
-
-    @resource.is_a?(Debate) ||
-      @resource.is_a?(Proposal) ||
-      @resource.is_a?(Budget::Investment) ||
-      @resource.is_a?(DeficiencyReport) ||
-      @resource.is_a?(Topic) ||
-      @resource.is_a?(Idea)
-  end
-
-  def on_behalf_of?
-    return unless show_author_name?
-
-    @resource.on_behalf_of.present?
+    truncate(sanitize(strip_tags(formatted_description)), length: 160, escape: false)
   end
 
   def title_heading_tag
     "h#{@title_heading_level}"
   end
 
-  def show_image?
-    if (@resource.is_a?(Debate) || @resource.is_a?(Proposal) || @resource.is_a?(Budget::Investment)) && @resource.projekt_phase.present?
-      @resource.projekt_phase.feature?("form.allow_attached_image")
-    else
-      @resource.respond_to?(:image)
-    end
-  end
-
   private
 
-    def image_url
-      image_variant(IMAGE_THUMB_SIZE)
-    end
+    def image_variant(image, size)
+      return if image.blank?
 
-    def image_url_2x
-      image_variant(IMAGE_THUMB_SIZE_2X)
-    end
-
-    def image_variant(size)
-      return if @image.blank?
-
-      @image.attachment&.variant(
+      image.attachment&.variant(
         coalesce: true,
         resize_to_fill: size,
         saver: { quality: 85 },

@@ -31,7 +31,7 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
     def locale_for(whatsapp_message)
       user_locale = whatsapp_message.whatsapp_account.user&.locale.to_s
 
-      return I18n.default_locale if !I18n.available_locales.map(&:to_s).include?(user_locale)
+      return ::Whatsapp.default_locale if !I18n.available_locales.map(&:to_s).include?(user_locale)
 
       user_locale
     end

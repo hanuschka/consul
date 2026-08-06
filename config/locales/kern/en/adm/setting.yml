@@ -18,6 +18,8 @@ en:
       kobil_address_verification: "KOBIL address verification"
       kobil_address_verification_description: "Imports the address (street, postal code, city) supplied by the KOBIL account into the user profile. Only effective when KOBIL login is enabled."
     whatsapp:
+      default_locale: "Bot language for unknown numbers"
+      default_locale_description: "Language the bot uses before someone has linked their account — the invitation and every reply to an unlinked number. Once a number is linked, the language of that person's account is used instead. Enter a language code such as \"de\" or \"en\". Leave empty to use the platform's default language."
       welcome_message_enabled: "Greet first-time users"
       welcome_message_enabled_description: "When someone opens the chat with your number for the first time, WhatsApp notifies the bot and it answers straight away with the greeting below and a list of the running projects. Without this, the chat stays empty until the person writes something themselves. Takes effect only after \"Apply to WhatsApp\" below."
       welcome_greeting: "Greeting text"

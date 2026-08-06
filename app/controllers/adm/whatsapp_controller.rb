@@ -12,6 +12,7 @@ module Adm
       (1..::Whatsapp::MAX_ICE_BREAKERS).map { |position| "whatsapp.ice_breaker_#{position}" }.freeze
 
     TEXT_SETTING_KEYS = %w[
+      whatsapp.default_locale
       whatsapp.broadcast_template
       whatsapp.broadcast_template_language
       whatsapp.transcription_model

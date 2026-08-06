@@ -7,6 +7,8 @@ class Proposal < ApplicationRecord
   include Memoable
   include ConditionallyVotable
 
+  VOTES_FOR_SUCCESS_KEY = "option.resource.votes_for_proposal_success".freeze
+
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase, allow_nil: true
@@ -176,10 +178,17 @@ class Proposal < ApplicationRecord
     Proposal.where(id: ids)
   end
 
+  # A phase created before the setting existed, or one whose settings were never
+  # backfilled, has no row here. Falling back to the global threshold keeps that
+  # from raising in every list that renders a proposal.
   def custom_votes_needed_for_success
-    return Proposal.votes_needed_for_success unless projekt_phase.present?
+    return Proposal.votes_needed_for_success if projekt_phase.blank?
 
-    projekt_phase.settings.find { |setting| setting.key == "option.resource.votes_for_proposal_success" }.value.to_i
+    setting = projekt_phase.settings.find { |phase_setting| phase_setting.key == VOTES_FOR_SUCCESS_KEY }
+
+    return Proposal.votes_needed_for_success if setting.blank?
+
+    setting.value.to_i
   end
 
   def publish

@@ -71,6 +71,14 @@ en:
       messages:
         too_many_lines: must contain at most %{count} lines
       models:
+        setting:
+          attributes:
+            value:
+              whatsapp_template_name_invalid: >-
+                must match the template name at 360dialog: lowercase letters, digits and
+                underscores only, no spaces
+              whatsapp_template_language_invalid: >-
+                must be a language code, e.g. "de" or "de_DE"
         deficiency_report:
           attributes:
             map_location:

@@ -7,15 +7,19 @@
   <% input_options = {
         label: false,
         placeholder: label,
-        class: "kern-form-input__input",
+        class: class_names("kern-form-input__input", "kern-form-input__input--error": invalid?),
         disabled: disabled?,
         data: {"components-adm-attribute-editor-target": "input" },
-        aria: aria_attributes
+        aria: input_aria_attributes
       } %>
 
   <%= form.text_field @attribute, **input_options %>
 
   <%= kern_button(icon: "save", autofocus: request.format.turbo_stream?, type: "submit", disabled: disabled?) %>
+<% end %>
+
+<% if invalid? %>
+  <p class="kern-error mt-2" id="<%= error_id %>" role="alert"><%= error_message %></p>
 <% end %>
 
 <% if flash[:success].present? %>

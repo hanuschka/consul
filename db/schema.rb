@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_05_150346) do
+ActiveRecord::Schema.define(version: 2026_08_06_032942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3517,6 +3517,15 @@ ActiveRecord::Schema.define(version: 2026_08_05_150346) do
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
     t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
+  end
+
+  create_table "whatsapp_webhook_events", force: :cascade do |t|
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "processed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["created_at"], name: "index_whatsapp_webhook_events_on_created_at"
+    t.index ["processed_at"], name: "index_whatsapp_webhook_events_on_processed_at"
   end
 
   create_table "widget_card_translations", id: :serial, force: :cascade do |t|

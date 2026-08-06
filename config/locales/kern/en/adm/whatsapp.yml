@@ -40,6 +40,9 @@ en:
         submitted: "Template submitted to 360dialog and set as the notification template. Meta approval can take several hours."
         failed: "Template could not be submitted: %{error}"
         selected: "\"%{name}\" is now used for project notifications."
+      conversational_components:
+        applied: "Chat start applied. It can take a few minutes to appear in WhatsApp."
+        failed: "Chat start could not be applied: %{error}"
       steps:
         idle: "No active flow"
         awaiting_link: "Waiting for account link"
@@ -52,6 +55,7 @@ en:
         audio: "Voice message"
         interactive: "Choice"
         template: "Notification template"
+        welcome: "Chat opened"
         unsupported: "Unsupported"
       reach:
         contacts_title: "Contacts"
@@ -163,6 +167,7 @@ en:
         reply_blank: "Please enter some text."
         reply_sent: "Reply has been handed over."
         reply_failed: "Reply could not be sent: %{error}"
+        reply_window_closed: "The 24-hour reply window has closed in the meantime."
         window_closed_title: "Reply window closed"
         window_closed_body: >-
           The last inbound message is more than 24 hours old. WhatsApp only allows free-form
@@ -243,6 +248,15 @@ en:
           other: "set but does not match (%{count} characters)"
         webhook_checked_at: "Last checked"
         webhook_auto_hint: "The webhook is registered automatically as soon as the WhatsApp bot above is switched on, using the host you are working on."
+        entry_title: "Chat start"
+        entry_intro: >-
+          Someone who scans a QR code lands in an empty chat with a prepared message they still
+          have to send. These settings put tappable options and a greeting there instead, so the
+          first step takes one tap.
+        entry_apply: "Apply to WhatsApp"
+        entry_apply_hint: >-
+          The suggestions and commands are stored at WhatsApp, not on this platform. Changes above
+          only reach citizens after you apply them here.
         test_title: "Test message"
         test_intro: "Sends a short message to a number. Free-text messages only reach people who wrote in the last 24 hours."
         test_phone_label: "Number"
@@ -251,6 +265,15 @@ en:
         test_pending: "Sending message …"
         templates_title: "Bot message templates"
         templates_intro: "Project notifications need a Meta-approved template with exactly two placeholders: project name and project link."
+        template_unknown_title: "Configured template does not exist at 360dialog"
+        template_unknown_body: >-
+          Configured is "%{name}" (%{language}), but no template exists there under that name and
+          language. Project notifications would fail. Create the template below or pick an
+          existing one.
+        template_pending_title: "Template not approved yet"
+        template_pending_body: >-
+          "%{name}" has the status "%{status}" at Meta. Until it is approved, project
+          notifications reach nobody.
         template_name: "Name"
         template_language: "Language"
         template_status: "Status"
@@ -266,6 +289,8 @@ en:
         template_submit: "Submit template"
     projekts:
       projekts:
+        tabs:
+          whatsapp: "WhatsApp"
         whatsapp:
           title: "WhatsApp"
           hint_text: >-

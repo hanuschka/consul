@@ -25,6 +25,8 @@ module Adm
       elsif @record.update(permitted_params)
         flash.now[:success] = t(".success")
         register_whatsapp_webhook_if_enabled
+      else
+        flash.now[:error] = @record.errors.full_messages.to_sentence
       end
 
       render turbo_stream: turbo_stream.replace(

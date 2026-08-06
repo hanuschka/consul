@@ -5,7 +5,32 @@ class Setting < ApplicationRecord
     deficiency_reports.voice_assistant
   ].freeze
 
+  # Meta rejects template names with capitals, spaces or punctuation, and
+  # language codes that are not an ISO code with an optional region suffix.
+  # Both only fail at send time, so they are checked before they are stored.
+  WHATSAPP_TEMPLATE_NAME_FORMAT = /\A[a-z0-9_]{1,512}\z/.freeze
+  WHATSAPP_TEMPLATE_LANGUAGE_FORMAT = /\A[a-z]{2}(_[A-Z]{2})?\z/.freeze
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  validate :validate_whatsapp_template_name
+  validate :validate_whatsapp_template_language
+
+  def validate_whatsapp_template_name
+    return if key != "whatsapp.broadcast_template"
+    return if value.blank?
+    return if value.match?(WHATSAPP_TEMPLATE_NAME_FORMAT)
+
+    errors.add(:value, :whatsapp_template_name_invalid)
+  end
+
+  def validate_whatsapp_template_language
+    return if key != "whatsapp.broadcast_template_language"
+    return if value.blank?
+    return if value.match?(WHATSAPP_TEMPLATE_LANGUAGE_FORMAT)
+
+    errors.add(:value, :whatsapp_template_language_invalid)
+  end
 
   def ai_gated?
     AI_GATED_KEYS.include?(key)
@@ -228,6 +253,13 @@ class Setting < ApplicationRecord
 
         "welcomepage.share_buttons": "",
 
+        "whatsapp.welcome_message_enabled": true,
+        "whatsapp.welcome_greeting": nil,
+        "whatsapp.ice_breaker_1": nil,
+        "whatsapp.ice_breaker_2": nil,
+        "whatsapp.ice_breaker_3": nil,
+        "whatsapp.ice_breaker_4": nil,
+        "whatsapp.commands": nil,
         "whatsapp.broadcast_template": nil,
         "whatsapp.broadcast_template_language": "de",
         "whatsapp.transcription_model": nil,

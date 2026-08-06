@@ -92,6 +92,14 @@ de:
         excluded_file_content_types: 'Datei kann nicht %{types} sein'
 
       models:
+        setting:
+          attributes:
+            value:
+              whatsapp_template_name_invalid: >-
+                muss dem Namen der Vorlage bei 360dialog entsprechen: nur Kleinbuchstaben,
+                Zahlen und Unterstriche, keine Leerzeichen
+              whatsapp_template_language_invalid: >-
+                muss ein Sprachcode sein, z. B. „de“ oder „de_DE“
         deficiency_report:
           attributes:
             map_location:

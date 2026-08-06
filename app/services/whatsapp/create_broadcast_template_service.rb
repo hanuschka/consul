@@ -2,6 +2,11 @@ class Whatsapp::CreateBroadcastTemplateService < ApplicationService
   # The broadcast job always sends two variables, in this order.
   EXAMPLE_VARIABLES = ["Stadtpark neu gestalten", "https://example.org/stadtpark"].freeze
 
+  # Announcing a new projekt is promotional under Meta's policy. Submitting it
+  # as UTILITY gets the template reclassified or rejected, and repeated
+  # misclassification costs the number its quality rating.
+  CATEGORY = "MARKETING".freeze
+
   def initialize(name:, language:, body:)
     @name = name.to_s.strip.parameterize(separator: "_")
     @language = language.presence || ::Whatsapp.broadcast_template_language
@@ -15,7 +20,8 @@ class Whatsapp::CreateBroadcastTemplateService < ApplicationService
       name: @name,
       language: @language,
       body: @body,
-      example_variables: EXAMPLE_VARIABLES
+      example_variables: EXAMPLE_VARIABLES,
+      category: CATEGORY
     )
 
     Setting["whatsapp.broadcast_template"] = @name if response.success?

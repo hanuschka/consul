@@ -28,6 +28,7 @@ en:
           age_ranges: Age groups
           email_templates: System emails
           features: Features
+          whatsapp: WhatsApp
         pages: Pages
         pages_subitems:
           privacy: Privacy policy

@@ -9,6 +9,6 @@ class Whatsapp::SendLinkConfirmationService < ApplicationService
       body: I18n.t("whatsapp.bot.link_confirmed", name: @account.user.name)
     )
 
-    Whatsapp::AskForIdeaService.call(conversation: @account.conversation)
+    Whatsapp::ResumeFlowService.call(conversation: @account.conversation)
   end
 end

@@ -18,15 +18,3 @@ de:
           enqueued:
             one: Die WhatsApp-Benachrichtigung wird an 1 Person gesendet.
             other: Die WhatsApp-Benachrichtigung wird an %{count} Personen gesendet.
-      phases:
-        whatsapp_deep_link:
-          title: WhatsApp-Einstieg
-          subline: >-
-            Dieser Link öffnet einen WhatsApp-Chat mit vorbelegtem Text. Als QR-Code auf Plakaten
-            führt er direkt in diese Phase.
-          prefilled_text: "Projekt %{token}"
-          token: Phasen-Kennung
-          link: Direktlink
-          qr_code: QR-Code
-          missing_number: >-
-            Es ist keine WhatsApp-Nummer konfiguriert (Secret „whatsapp.business_number“).

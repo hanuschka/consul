@@ -1,0 +1,103 @@
+de:
+  adm:
+    whatsapp:
+      greeting: "Hallo"
+      prefilled_text: "Projekt %{token}"
+      token: "Kennung"
+      number: "WhatsApp-Nummer"
+      link: "Direktlink"
+      qr_code: "QR-Code"
+      qr_hint: "Rechtsklick zum Speichern. Für Plakate am besten in Originalgröße verwenden."
+      missing_number: "Es ist keine WhatsApp-Nummer konfiguriert (Secret „whatsapp.business_number“)."
+      not_configured: "WhatsApp ist nicht vollständig konfiguriert."
+      test_message:
+        body: "Testnachricht vom Beteiligungsportal. Wenn du das liest, funktioniert der Versand."
+        sent: "Testnachricht an %{phone} übergeben. Ankunft prüfen – außerhalb des 24-Stunden-Fensters lehnt WhatsApp den Versand ab."
+        failed: "Versand fehlgeschlagen: %{error}"
+      template:
+        submitted: "Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe durch Meta kann einige Stunden dauern."
+        failed: "Vorlage konnte nicht eingereicht werden: %{error}"
+        selected: "„%{name}“ wird jetzt für Projekt-Benachrichtigungen verwendet."
+      show:
+        title: "WhatsApp"
+        hint_text: >-
+          Allgemeiner Einstieg in den WhatsApp-Bot. Über diesen QR-Code können Bürger:innen ihre
+          Nummer verbinden und Benachrichtigungen zu neuen Projekten abonnieren. Zum Einreichen
+          von Vorschlägen brauchen sie den QR-Code eines Projekts oder einer Phase.
+        qr_title: "Allgemeiner QR-Code"
+        qr_subline: >-
+          Für Aufkleber, Rathaus-Aushänge und Printmedien. Führt in den Chat mit dem Bot, ohne
+          ein bestimmtes Projekt vorzugeben.
+        audience_title: "Reichweite"
+        linked_count: "Verbundene Nummern"
+        subscribed_count: "Abonnenten für Benachrichtigungen"
+        open_phases_count: "Offene Phasen mit WhatsApp-Einreichung"
+        settings_link: "WhatsApp-Einstellungen öffnen"
+        webhook_title: "Webhook"
+        webhook_ok_title: "Webhook korrekt registriert"
+        webhook_ok_body: "360dialog liefert eingehende Nachrichten an %{url} – mit passendem Sicherheits-Header."
+        webhook_mismatch_title: "Webhook stimmt nicht"
+        webhook_mismatch_body: "Registriert ist: %{registered}. Erwartet wird: %{expected}. Schalte die Funktion einmal aus und wieder ein, um sie neu zu registrieren."
+        webhook_unreachable_title: "Webhook-Status nicht abrufbar"
+        webhook_unreachable_body: "Die Konfiguration konnte nicht von 360dialog gelesen werden. Prüfe den API-Schlüssel in config/secrets.yml."
+        webhook_none: "kein Webhook registriert"
+        webhook_registered_url: "Registrierte Adresse"
+        webhook_header: "Sicherheits-Header"
+        webhook_header_ok:
+          one: "gesetzt (1 Zeichen, passt)"
+          other: "gesetzt (%{count} Zeichen, passt)"
+        webhook_header_bad:
+          zero: "nicht gesetzt"
+          one: "gesetzt, passt aber nicht (1 Zeichen)"
+          other: "gesetzt, passt aber nicht (%{count} Zeichen)"
+        webhook_checked_at: "Zuletzt geprüft"
+        webhook_auto_hint: "Der Webhook wird automatisch registriert, sobald die Funktion unter „Funktionen“ eingeschaltet wird – mit der Adresse, unter der du gerade arbeitest."
+        test_title: "Testnachricht"
+        test_intro: "Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen, die in den letzten 24 Stunden geschrieben haben."
+        test_phone_label: "Nummer"
+        test_phone_hint: "Nur Ziffern mit Landesvorwahl, z. B. 49177XXXXXXX."
+        test_submit: "Testnachricht senden"
+        templates_title: "Nachrichtenvorlagen"
+        templates_intro: "Für Projekt-Benachrichtigungen braucht WhatsApp eine von Meta freigegebene Vorlage mit genau zwei Platzhaltern: Projektname und Projektlink."
+        template_name: "Name"
+        template_language: "Sprache"
+        template_status: "Status"
+        template_use: "Verwenden"
+        template_in_use: "wird verwendet"
+        template_name_label: "Name der neuen Vorlage"
+        template_name_hint: "Nur Kleinbuchstaben und Unterstriche; Leerzeichen werden umgewandelt."
+        template_language_label: "Sprache"
+        template_body_label: "Text der Vorlage"
+        template_body_hint: "{{1}} wird durch den Projektnamen ersetzt, {{2}} durch den Link. Beide Platzhalter müssen vorkommen."
+        template_body_default: "Neues Beteiligungsprojekt: {{1}}. Alle Infos und Mitmachen: {{2}}"
+        template_submit: "Vorlage einreichen"
+    projekts:
+      projekts:
+        whatsapp:
+          title: "WhatsApp"
+          hint_text: >-
+            QR-Code für dieses gesamte Projekt. Läuft genau eine Vorschlagsphase mit
+            KI-Einreichung, landen Bürger:innen direkt dort. Laufen mehrere, fragt der Bot nach.
+          qr_title: "Projekt-QR-Code"
+          qr_subline: "Für Plakate und Flyer zu diesem Projekt."
+          eligible_phases_title: "Phasen, die Einreichungen annehmen"
+          eligible_phases_intro:
+            one: "Eine Phase nimmt Vorschläge per WhatsApp an – Einreichungen gehen direkt dorthin."
+            other: "%{count} Phasen nehmen Vorschläge per WhatsApp an – der Bot fragt, welche gemeint ist."
+          no_eligible_phases_title: "Derzeit keine Phase für WhatsApp-Einreichungen"
+          no_eligible_phases_body: >-
+            Es läuft keine Vorschlagsphase mit aktivierter KI-Einreichung. Wer diesen QR-Code
+            scannt, kann seine Nummer verbinden, aber keinen Vorschlag einreichen.
+      phases:
+        projekt_phase:
+          whatsapp: "WhatsApp"
+        whatsapp:
+          title: "WhatsApp"
+          qr_title: "Phasen-QR-Code"
+          qr_subline: >-
+            Führt direkt in diese Phase – ohne Rückfrage. Am besten für Plakate vor Ort.
+          ai_flow_disabled_title: "KI-Einreichung ist für diese Phase deaktiviert"
+          ai_flow_disabled_body: >-
+            Wer diesen QR-Code scannt, erhält derzeit eine Absage. Aktiviere die KI-Einreichung
+            unter
+          ai_flow_disabled_link: "KI-Nutzerfluss"

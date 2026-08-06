@@ -1,0 +1,50 @@
+<article class="kern-card">
+  <div class="kern-card__container">
+    <div class="kern-card__header">
+      <hgroup>
+        <h2 class="kern-title"><%= title %></h2>
+        <p class="kern-subline"><%= subline %></p>
+      </hgroup>
+    </div>
+
+    <section class="kern-card__body">
+      <% if deep_link.blank? %>
+        <%= kern_alert(title: t("adm.whatsapp.missing_number"), style: :warning) %>
+      <% else %>
+        <dl class="kern-description-list kern-description-list--col">
+          <% if token.present? %>
+            <div class="kern-description-list-item">
+              <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.token") %></dt>
+              <dd class="kern-description-list-item__value"><%= token %></dd>
+            </div>
+          <% end %>
+
+          <div class="kern-description-list-item">
+            <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.number") %></dt>
+            <dd class="kern-description-list-item__value">+<%= business_number %></dd>
+          </div>
+
+          <div class="kern-description-list-item">
+            <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.link") %></dt>
+            <dd class="kern-description-list-item__value">
+              <a
+                class="kern-link"
+                href="<%= deep_link %>"
+                target="_blank"
+                rel="noopener"
+              ><%= deep_link %></a>
+            </dd>
+          </div>
+
+          <div class="kern-description-list-item">
+            <dt class="kern-description-list-item__key"><%= t("adm.whatsapp.qr_code") %></dt>
+            <dd class="kern-description-list-item__value">
+              <div class="whatsapp-deep-link__qr"><%= raw qr_svg %></div>
+              <p class="kern-body"><%= t("adm.whatsapp.qr_hint") %></p>
+            </dd>
+          </div>
+        </dl>
+      <% end %>
+    </section>
+  </div>
+</article>

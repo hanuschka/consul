@@ -1,0 +1,168 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".hint_text") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <section class="mb-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t(".webhook_title") %></h2>
+
+    <% if !@webhook_status[:reachable] %>
+      <%= kern_alert(title: t(".webhook_unreachable_title"), style: :danger) do %>
+        <p class="kern-body"><%= t(".webhook_unreachable_body") %></p>
+      <% end %>
+    <% elsif @webhook_status[:url_matches] && @webhook_status[:header_matches] %>
+      <%= kern_alert(title: t(".webhook_ok_title"), style: :success) do %>
+        <p class="kern-body"><%= t(".webhook_ok_body", url: @webhook_status[:registered_url]) %></p>
+      <% end %>
+    <% else %>
+      <%= kern_alert(title: t(".webhook_mismatch_title"), style: :warning) do %>
+        <p class="kern-body">
+          <%= t(".webhook_mismatch_body",
+            registered: @webhook_status[:registered_url].presence || t(".webhook_none"),
+            expected: @webhook_status[:expected_url]) %>
+        </p>
+      <% end %>
+    <% end %>
+
+    <dl class="kern-description-list kern-description-list--col mt-3">
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".webhook_registered_url") %></dt>
+        <dd class="kern-description-list-item__value">
+          <%= @webhook_status[:registered_url].presence || t(".webhook_none") %>
+        </dd>
+      </div>
+
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".webhook_header") %></dt>
+        <dd class="kern-description-list-item__value">
+          <% if @webhook_status[:header_matches] %>
+            <%= t(".webhook_header_ok", count: @webhook_status[:header_length]) %>
+          <% else %>
+            <%= t(".webhook_header_bad", count: @webhook_status[:header_length].to_i) %>
+          <% end %>
+        </dd>
+      </div>
+
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".webhook_checked_at") %></dt>
+        <dd class="kern-description-list-item__value">
+          <%= l(@webhook_status[:checked_at], format: :short) %>
+        </dd>
+      </div>
+    </dl>
+
+    <p class="kern-body mt-2"><%= t(".webhook_auto_hint") %></p>
+  </section>
+
+  <%= render Adm::WhatsappQrCodeComponent.new(
+    title: t(".qr_title"),
+    subline: t(".qr_subline")
+  ) %>
+
+  <section class="mt-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t(".test_title") %></h2>
+    <p class="kern-body mb-3"><%= t(".test_intro") %></p>
+
+    <%= form_with url: test_message_adm_whatsapp_path, scope: :test, method: :post,
+      data: { turbo: false } do |f| %>
+      <%= f.telephone_field :phone,
+        label: t(".test_phone_label"),
+        hint: t(".test_phone_hint"),
+        value: nil %>
+
+      <%= form_submit_button(text: t(".test_submit"), icon: "send") %>
+    <% end %>
+  </section>
+
+  <section class="mt-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t(".templates_title") %></h2>
+    <p class="kern-body mb-3"><%= t(".templates_intro") %></p>
+
+    <% if @templates.any? %>
+      <table class="kern-table mb-4">
+        <thead>
+          <tr>
+            <th><%= t(".template_name") %></th>
+            <th><%= t(".template_language") %></th>
+            <th><%= t(".template_status") %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @templates.each do |template| %>
+            <tr>
+              <td><%= template[:name] %></td>
+              <td><%= template[:language] %></td>
+              <td>
+                <span class="kern-badge kern-badge--<%= template[:approved] ? "success" : "warning" %>">
+                  <span class="kern-label"><%= template[:status] %></span>
+                </span>
+              </td>
+              <td>
+                <% if template[:approved] && Setting["whatsapp.broadcast_template"] != template[:name] %>
+                  <%= kern_link_button(
+                    use_template_adm_whatsapp_path(name: template[:name], language: template[:language]),
+                    text: t(".template_use"),
+                    style: :tertiary,
+                    data: { turbo_method: :patch }
+                  ) %>
+                <% elsif Setting["whatsapp.broadcast_template"] == template[:name] %>
+                  <%= t(".template_in_use") %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <%= form_with url: create_template_adm_whatsapp_path, scope: :template, method: :post,
+      data: { turbo: false } do |f| %>
+      <%= f.text_field :name,
+        label: t(".template_name_label"),
+        hint: t(".template_name_hint"),
+        value: "neues_projekt" %>
+
+      <%= f.text_field :language,
+        label: t(".template_language_label"),
+        value: Whatsapp.broadcast_template_language %>
+
+      <%= f.text_area :body,
+        label: t(".template_body_label"),
+        hint: t(".template_body_hint"),
+        rows: 4,
+        value: t(".template_body_default") %>
+
+      <%= form_submit_button(text: t(".template_submit")) %>
+    <% end %>
+  </section>
+
+  <section class="mt-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t(".audience_title") %></h2>
+
+    <dl class="kern-description-list">
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".linked_count") %></dt>
+        <dd class="kern-description-list-item__value"><%= @linked_count %></dd>
+      </div>
+
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".subscribed_count") %></dt>
+        <dd class="kern-description-list-item__value"><%= @subscribed_count %></dd>
+      </div>
+
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".open_phases_count") %></dt>
+        <dd class="kern-description-list-item__value"><%= @eligible_projekt_phases.size %></dd>
+      </div>
+    </dl>
+
+    <p class="kern-body mt-3">
+      <%= link_to t(".settings_link"), adm_features_path, class: "kern-link" %>
+    </p>
+  </section>
+</div>

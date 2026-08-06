@@ -42,6 +42,11 @@ de:
         Du bist beim Projekt „%{projekt}“. Hast du konkrete Ideen oder Vorschläge? Schreibe sie
         mir als Text oder schicke mir eine Sprachnachricht.
       idea_missing: Bitte beschreibe deine Idee als Text oder als Sprachnachricht.
+      choose_phase: >-
+        Im Projekt „%{projekt}“ laufen mehrere Beteiligungsphasen. Zu welcher möchtest du etwas
+        einreichen?
+      choose_phase_button: Phase wählen
+      phase_row_description: "bis %{end_date}"
       no_projekt: >-
         Ich weiß noch nicht, zu welchem Projekt du etwas einreichen möchtest. Scanne dazu den
         QR-Code des Projekts.
@@ -87,3 +92,6 @@ de:
         phase_expired: Diese Beteiligungsphase ist bereits beendet.
         phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
         not_verified: Für die Einreichung muss dein Konto verifiziert sein.
+        no_open_phase: >-
+          In diesem Projekt läuft derzeit keine Phase, in der Vorschläge eingereicht werden
+          können.

@@ -1,6 +1,7 @@
 class Adm::Projekts::ProjektTabsComponent < ApplicationComponent
-  MANAGE_ONLY_ACTIONS = %w[details visibility projekt_managers map].freeze
+  MANAGE_ONLY_ACTIONS = %w[details visibility projekt_managers map whatsapp].freeze
   ALL_ACTIONS = %w[details visibility projekt_managers map phases images documents evaluation].freeze
+  WHATSAPP_ACTION = "whatsapp".freeze
 
   def initialize(projekt:, current_action: nil)
     @projekt = projekt
@@ -26,13 +27,19 @@ class Adm::Projekts::ProjektTabsComponent < ApplicationComponent
     end
 
     def projekt_action_tabs
-      ALL_ACTIONS.reject { |action| MANAGE_ONLY_ACTIONS.include?(action) && !manage_allowed? }.map do |action|
+      visible_actions.reject { |action| MANAGE_ONLY_ACTIONS.include?(action) && !manage_allowed? }.map do |action|
         {
           label: I18n.t("adm.projekts.projekts.tabs.#{action}"),
           url: helpers.send("#{action}_adm_projekts_projekt_path", projekt),
           current: current_action == action
         }
       end
+    end
+
+    def visible_actions
+      return ALL_ACTIONS if !::Whatsapp.enabled?
+
+      ALL_ACTIONS + [WHATSAPP_ACTION]
     end
 
     def manage_allowed?

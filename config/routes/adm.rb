@@ -23,6 +23,11 @@ namespace :adm do
     get :file_settings, on: :collection
   end
   resource :features, controller: "features", only: [:show]
+  resource :whatsapp, controller: "whatsapp", only: [:show] do
+    post :test_message
+    post :create_template
+    patch :use_template
+  end
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection

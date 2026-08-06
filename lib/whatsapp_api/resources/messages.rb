@@ -2,6 +2,9 @@ class WhatsappApi::Resources::Messages
   BASE_PATH = "/messages".freeze
   MAX_BUTTONS = 3
   MAX_BUTTON_TITLE_LENGTH = 20
+  MAX_LIST_ROWS = 10
+  MAX_ROW_TITLE_LENGTH = 24
+  MAX_ROW_DESCRIPTION_LENGTH = 72
 
   def initialize(client)
     @client = client
@@ -26,6 +29,23 @@ class WhatsappApi::Resources::Messages
           name: name,
           language: { code: language },
           components: template_components(variables)
+        }
+      )
+    )
+  end
+
+  def send_list(to:, body:, button_label:, rows:)
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "interactive",
+        interactive: {
+          type: "list",
+          body: { text: body },
+          action: {
+            button: button_label.to_s.truncate(MAX_BUTTON_TITLE_LENGTH),
+            sections: [{ rows: list_rows(rows) }]
+          }
         }
       )
     )
@@ -64,6 +84,16 @@ class WhatsappApi::Resources::Messages
           parameters: variables.map { |variable| { type: "text", text: variable.to_s } }
         }
       ]
+    end
+
+    def list_rows(rows)
+      rows.first(MAX_LIST_ROWS).map do |row|
+        {
+          id: row[:id],
+          title: row[:title].to_s.truncate(MAX_ROW_TITLE_LENGTH),
+          description: row[:description].to_s.truncate(MAX_ROW_DESCRIPTION_LENGTH).presence
+        }.compact
+      end
     end
 
     def interactive_buttons(buttons)

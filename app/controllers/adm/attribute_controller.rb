@@ -24,6 +24,7 @@ module Adm
         end
       elsif @record.update(permitted_params)
         flash.now[:success] = t(".success")
+        register_whatsapp_webhook_if_enabled
       end
 
       render turbo_stream: turbo_stream.replace(
@@ -33,6 +34,18 @@ module Adm
     end
 
     private
+
+      # Switching the bot on is the only moment we know both that WhatsApp should
+      # be live and which host the admin is working on, so the webhook is pushed
+      # to 360dialog from here rather than from a rake task or console.
+      def register_whatsapp_webhook_if_enabled
+        return if !@record.is_a?(::Setting)
+        return if @record.key != "feature.whatsapp_bot"
+        return if !@record.saved_change_to_value?
+        return if @record.value.blank?
+
+        ::Whatsapp::RegisterWebhookJob.perform_later(request.base_url)
+      end
 
       def attachment_kind?
         [:image, :video].include?(@kind)

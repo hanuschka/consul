@@ -1,17 +1,17 @@
-class Whatsapp::AskForIdeaService < ApplicationService
+class Whatsapp::Steps::AskForIdeaService < ApplicationService
   def initialize(conversation:)
     @conversation = conversation
   end
 
   def call
     if projekt_phase.blank?
-      return Whatsapp::SendTextService.call(account: account, body: I18n.t("whatsapp.bot.no_projekt"))
+      return Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.no_projekt"))
     end
 
-    permission_problem = Whatsapp::ProposalPermissionService.call(projekt_phase:, user: account.user)
+    permission_problem = Whatsapp::ResourceCreationValidationService.call(projekt_phase:, user: account.user)
 
     if permission_problem.present?
-      return Whatsapp::RefuseParticipationService.call(
+      return Whatsapp::Steps::RefuseParticipationService.call(
         conversation: @conversation,
         reason: permission_problem
       )
@@ -19,7 +19,7 @@ class Whatsapp::AskForIdeaService < ApplicationService
 
     @conversation.update!(step: "awaiting_idea")
 
-    Whatsapp::SendTextService.call(
+    Whatsapp::Outbound.text(
       account: account,
       body: I18n.t("whatsapp.bot.ask_idea", projekt: projekt_phase.projekt.page.title)
     )

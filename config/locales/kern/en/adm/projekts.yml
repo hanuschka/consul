@@ -108,6 +108,8 @@ en:
             the homepage title, project duration, assignment to topic pages, and
             geographic categorization. These details determine how the project is
             displayed and found on the platform.
+          activated_label: Project activated
+          activated_description: Releases the project on the platform. Only activated projects appear in the public projects overview and can be accessed by users. Deactivated projects are fully preserved and remain editable in the admin area.
           duration_label: Project duration
           duration_description: Defines the period during which the project is visible and accessible on the platform — regardless of whether an active participation phase is running. The start and end date determine when the project appears in the public projects overview and can be accessed by users.
           landing_pages_label: Assignment to topic pages

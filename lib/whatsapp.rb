@@ -4,6 +4,7 @@ module Whatsapp
   DEFAULT_MAX_VOICE_MEGABYTES = 16
   SERVICE_WINDOW = 24.hours
   WEBHOOK_EVENT_RETENTION = 7.days
+  PUBLICATION_BROADCAST_DELAY = 20.minutes
   MAX_ICE_BREAKERS = 4
   COMMAND_SEPARATOR = "|".freeze
 
@@ -145,6 +146,10 @@ module Whatsapp
 
   def self.broadcast_template_language
     Setting["whatsapp.broadcast_template_language"].presence || "de"
+  end
+
+  def self.auto_broadcast_new_projekts?
+    Setting["whatsapp.auto_broadcast_new_projekts"].present?
   end
 
   def self.transcription_model

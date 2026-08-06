@@ -481,7 +481,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt], :update?
 
     @eligible_projekt_phases = WhatsappEligiblePhasesQuery.call(projekt: @projekt)
-    @projekt_token = ::Whatsapp::ProjektTokenService.call(projekt: @projekt)
+    @projekt_token = ::Whatsapp::QrToken.for_projekt(@projekt)
 
     @breadcrumbs = [
       { name: t("adm.menu.items.projekts"), icon: "folder", url: adm_projekts_root_path },
@@ -497,6 +497,13 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       return redirect_to details_adm_projekts_projekt_path(@projekt),
         alert: t("adm.projekts.projekts.whatsapp_broadcast.not_configured")
     end
+
+    if !@projekt.meets_publish_criteria?
+      return redirect_to details_adm_projekts_projekt_path(@projekt),
+        alert: t("adm.projekts.projekts.whatsapp_broadcast.not_published")
+    end
+
+    @projekt.reset_whatsapp_broadcast!
 
     ::Whatsapp::BroadcastProjektJob.perform_later(@projekt.id)
 

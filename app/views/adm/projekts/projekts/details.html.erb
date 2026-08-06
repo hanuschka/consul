@@ -10,6 +10,16 @@
 
 <div class="kern-container mb-5">
   <fieldset <%= "disabled" unless policy([:adm, :projekts, @projekt]).update? %> style="border:0; padding:0; margin:0;">
+    <%= render Kern::FormFieldComponent.new(label: t('.activated_label'), hint: t('.activated_description')) do %>
+      <div id="<%= dom_id(@projekt, :activated) %>">
+        <%= render Adm::AttributeEditors::BooleanComponent.new(
+          @projekt,
+          :activated?,
+          path: toggle_activated_adm_projekts_projekt_path(@projekt)
+        ) %>
+      </div>
+    <% end %>
+
     <%= render Kern::FormFieldComponent.new(label: t('.duration_label'), hint: t('.duration_description')) do %>
       <%= render 'adm/projekts/projekts/details/duration', projekt: @projekt %>
     <% end %>

@@ -1,6 +1,24 @@
 class WhatsappEligiblePhasesQuery < ApplicationQuery
   MAX_CHOICES = 10
 
+  # Both flags have to be on for a phase to be reachable from the bot: the one
+  # that lets citizens create the resource at all, and the one that enables the
+  # AI flow the bot is a channel for.
+  FEATURE_KEYS_BY_PHASE_CLASS = {
+    ProjektPhase::ProposalPhase => {
+      creation: "resource.users_can_create_proposals",
+      ai_flow: "resource.create_proposal_with_ai"
+    }.freeze,
+    ProjektPhase::BudgetPhase => {
+      creation: "resource.users_can_create_investment_proposals",
+      ai_flow: "resource.create_investment_with_ai"
+    }.freeze
+  }.freeze
+
+  def self.feature_keys_for(projekt_phase)
+    FEATURE_KEYS_BY_PHASE_CLASS[projekt_phase.class]
+  end
+
   def initialize(projekt: nil)
     @projekt = projekt
   end
@@ -14,15 +32,28 @@ class WhatsappEligiblePhasesQuery < ApplicationQuery
   private
 
     def base_scope
-      scope = ProjektPhase::ProposalPhase.includes(:settings, projekt: :page)
+      FEATURE_KEYS_BY_PHASE_CLASS.keys.flat_map { |phase_class| phases_of(phase_class) }
+    end
+
+    def phases_of(phase_class)
+      scope = phase_class.includes(:settings, projekt: :page)
       scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
 
       scope.to_a
     end
 
     def eligible?(phase)
-      phase.current? &&
-        phase.feature?("resource.users_can_create_proposals") &&
-        phase.feature?("resource.create_proposal_with_ai")
+      return false if !phase.current?
+
+      feature_keys = self.class.feature_keys_for(phase)
+
+      return false if feature_keys.blank?
+      return false if !feature_keys.each_value.all? { |key| phase.feature?(key) }
+
+      # An investment is built from the budget's heading, so a budget phase
+      # without one set up cannot take a submission yet.
+      return phase.budget&.heading.present? if phase.is_a?(ProjektPhase::BudgetPhase)
+
+      true
     end
 end

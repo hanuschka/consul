@@ -14,6 +14,9 @@ en:
           missing_template: >-
             No approved WhatsApp template is configured (setting "whatsapp.broadcast_template").
           not_configured: WhatsApp is not fully configured.
+          not_published: >-
+            This projekt is currently not published. It has to be activated and have a published
+            projekt page before a notification can be sent.
           enqueued:
             one: The WhatsApp notification is being sent to 1 person.
             other: The WhatsApp notification is being sent to %{count} people.

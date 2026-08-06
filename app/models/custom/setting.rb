@@ -263,6 +263,7 @@ class Setting < ApplicationRecord
         "whatsapp.commands": nil,
         "whatsapp.broadcast_template": nil,
         "whatsapp.broadcast_template_language": "de",
+        "whatsapp.auto_broadcast_new_projekts": false,
         "whatsapp.transcription_model": nil,
         "whatsapp.message_retention_days": 90,
         "whatsapp.max_voice_megabytes": 16,

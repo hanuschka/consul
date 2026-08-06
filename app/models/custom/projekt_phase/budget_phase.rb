@@ -187,7 +187,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[
+    items = %w[
       budget_phases
       naming restrictions
       budget_edit budget_investments comments
@@ -198,6 +198,10 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       email_templates
       ai_settings ai_user_flow
     ]
+
+    return items if !::Whatsapp.enabled?
+
+    items + %w[whatsapp]
   end
 
 

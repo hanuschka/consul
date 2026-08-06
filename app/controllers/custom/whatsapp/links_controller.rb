@@ -21,7 +21,12 @@ class Whatsapp::LinksController < ApplicationController
       return redirect_to account_path, alert: t("whatsapp.link.failure")
     end
 
-    ::Whatsapp::SendLinkConfirmationService.call(account:)
+    ::Whatsapp::Outbound.text(
+      account: account,
+      body: t("whatsapp.bot.link_confirmed", name: account.user.name)
+    )
+
+    ::Whatsapp::NextStepService.call(conversation: account.conversation)
 
     redirect_to account_path, notice: t("whatsapp.link.success")
   end

@@ -38,6 +38,8 @@ de:
       broadcast_template_description: "Name der in 360dialog freigegebenen Vorlage, die für Projekt-Benachrichtigungen verwendet wird. Die Vorlage muss genau zwei Platzhalter im Textkörper haben: 1. Projektname, 2. Projektlink. Ohne freigegebene Vorlage erreichen Benachrichtigungen nur Personen, die in den letzten 24 Stunden geschrieben haben."
       broadcast_template_language: "Sprache der Nachrichtenvorlage"
       broadcast_template_language_description: "Sprachcode der freigegebenen Vorlage, z. B. „de“. Muss exakt dem in 360dialog hinterlegten Sprachcode entsprechen, sonst lehnt WhatsApp den Versand ab."
+      auto_broadcast_new_projekts: "Benachrichtigung automatisch senden"
+      auto_broadcast_new_projekts_description: "Sobald ein Projekt veröffentlicht wird, geht die WhatsApp-Benachrichtigung ohne weiteres Zutun an alle verbundenen Bürger:innen. Ist der Schalter aus, muss sie auf der Projektseite manuell ausgelöst werden. Jede Person erhält pro Projekt höchstens eine Nachricht."
       transcription_model: "Modell für Sprachnachrichten"
       transcription_model_description: "OpenAI-Modell, mit dem Sprachnachrichten in Text umgewandelt werden. Leer lassen für den Standard „gpt-4o-mini-transcribe“. Die Umwandlung funktioniert nur mit OpenAI-Zugangsdaten."
       message_retention_days: "Aufbewahrung der Chatnachrichten (Tage)"

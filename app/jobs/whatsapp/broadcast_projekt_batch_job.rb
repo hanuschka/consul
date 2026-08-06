@@ -22,7 +22,7 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
       WhatsappAccount.subscribed.where(id: account_ids).find_each do |account|
         next if WhatsappMessage.broadcast_delivered?(account.id, projekt.id)
 
-        Whatsapp::SendTemplateService.call(
+        Whatsapp::Outbound.template(
           account: account,
           name: template_name,
           variables: variables,

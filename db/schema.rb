@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_06_032942) do
+ActiveRecord::Schema.define(version: 2026_08_06_101806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2634,6 +2634,8 @@ ActiveRecord::Schema.define(version: 2026_08_06_032942) do
     t.boolean "show_in_homepage", default: true, null: false
     t.boolean "show_in_individual_list", default: false, null: false
     t.boolean "show_in_sidebar_filter", default: true, null: false
+    t.datetime "whatsapp_broadcast_sent_at"
+    t.string "whatsapp_broadcast_slug"
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
@@ -3490,14 +3492,15 @@ ActiveRecord::Schema.define(version: 2026_08_06_032942) do
     t.integer "whatsapp_account_id", null: false
     t.string "step", default: "idle", null: false
     t.integer "projekt_phase_id"
-    t.integer "proposal_id"
     t.jsonb "context", default: {}, null: false
     t.integer "revisions_count", default: 0, null: false
     t.datetime "last_inbound_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "draft_resource_type"
+    t.bigint "draft_resource_id"
+    t.index ["draft_resource_type", "draft_resource_id"], name: "index_whatsapp_conversations_on_draft_resource"
     t.index ["projekt_phase_id"], name: "index_whatsapp_conversations_on_projekt_phase_id"
-    t.index ["proposal_id"], name: "index_whatsapp_conversations_on_proposal_id"
     t.index ["whatsapp_account_id"], name: "index_whatsapp_conversations_on_whatsapp_account_id", unique: true
   end
 

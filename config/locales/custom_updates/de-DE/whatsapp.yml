@@ -94,13 +94,20 @@ de:
         Du erhältst keine Nachrichten mehr von uns. Schreibe START, um dich wieder anzumelden.
       opted_in: Du erhältst wieder Nachrichten von uns.
       verification_link: "Hier kannst du dein Konto verifizieren: %{url}"
+      cancelled: Abgebrochen. Es wurde nichts eingereicht.
       buttons:
         publish: Veröffentlichen
         revise: Ändern
+        retry: Nochmal versuchen
+        cancel: Abbrechen
+        menu: Alle Projekte
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
         phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.
-        phase_not_proposal: In diesem Projekt können keine Vorschläge eingereicht werden.
+        phase_not_supported: In dieser Phase können per WhatsApp keine Vorschläge eingereicht werden.
+        budget_heading_missing: >-
+          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich deinen Vorschlag zuordnen
+          könnte.
         creation_disabled: In dieser Phase können derzeit keine Vorschläge eingereicht werden.
         ai_flow_disabled: Die Einreichung per WhatsApp ist für dieses Projekt nicht aktiviert.
         phase_not_active: Diese Beteiligungsphase ist derzeit nicht aktiv.

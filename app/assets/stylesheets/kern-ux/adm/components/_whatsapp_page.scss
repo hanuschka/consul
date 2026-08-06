@@ -1,0 +1,35 @@
+// Layout for the /adm WhatsApp page: maps the <custom-tabs> theming hooks onto
+// kern tokens and gives the hand-built forms the breathing room the bare
+// .kern-form-input wrapper does not carry.
+
+.adm-whatsapp-page {
+  --custom-tabs-border: var(--kern-grey-350);
+  --custom-tabs-text: var(--kern-color-layout-text-subtle);
+  --custom-tabs-text-strong: var(--kern-color-layout-text-default);
+  --custom-tabs-accent: var(--kern-color-action-default);
+}
+
+.adm-whatsapp-page--form {
+  max-width: 42rem;
+}
+
+.adm-whatsapp-page--form .kern-form-input {
+  margin-bottom: 1.75rem;
+}
+
+.adm-whatsapp-page--form .kern-form-input:last-of-type {
+  margin-bottom: 2rem;
+}
+
+.adm-whatsapp-page--explanation {
+  max-width: 52rem;
+}
+
+.adm-whatsapp-page--result:empty {
+  display: none;
+}
+
+.adm-whatsapp-page--result-value {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}

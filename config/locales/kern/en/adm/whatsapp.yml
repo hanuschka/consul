@@ -13,7 +13,15 @@ en:
       test_message:
         body: "Test message from the participation platform. If you can read this, sending works."
         sent: "Test message handed to WhatsApp for %{phone}. Check arrival — outside the 24-hour window WhatsApp rejects the send."
-        failed: "Sending failed: %{error}"
+        failed: "Sending failed"
+        phone_missing: "Please enter a number."
+        details:
+          status: "HTTP status"
+          url: "Requested URL"
+          response: "360dialog response"
+          message_id: "Message ID"
+          exception: "Exception"
+          missing_secrets: "Missing credentials"
       template:
         submitted: "Template submitted to 360dialog and set as the notification template. Meta approval can take several hours."
         failed: "Template could not be submitted: %{error}"
@@ -24,6 +32,45 @@ en:
           General entry point to the WhatsApp bot. This QR code lets citizens link their number
           and subscribe to notifications about new projects. Submitting a proposal requires a
           project or phase QR code.
+        unavailable_title: "WhatsApp is not set up for this portal"
+        unavailable_body: >-
+          The connection to the WhatsApp service has to be configured on the server. Contact the
+          Demokratie Today administrators to have the feature set up and enabled.
+        explanation_title: "What the WhatsApp bot does"
+        explanation_intro: >-
+          The bot connects the participation platform to WhatsApp: citizens take part where they
+          already write, without signing in through a browser.
+        explanation_items:
+          - title: "Link a number to an account"
+            body: >-
+              A QR code or direct link opens the chat with the platform. The number is tied to
+              the user account and can be unlinked again at any time.
+          - title: "Submit proposals by chat"
+            body: >-
+              In phases with AI submission enabled, citizens write or record their proposal.
+              Voice messages are transcribed automatically, the bot asks for anything missing and
+              creates the proposal in the project.
+          - title: "Notifications about new projects"
+            body: >-
+              Anyone who opts in receives a short message with a link whenever a new
+              participation project starts, sent through a Meta-approved message template.
+          - title: "QR codes for posters and notices"
+            body: >-
+              Printable QR codes are available for the platform as a whole, for single projects
+              and for single phases — made for on-site notices.
+        explanation_outro: >-
+          Running the bot requires a business account with the provider 360dialog; the credentials
+          are configured on the server. Once they are in place, the settings, the QR code, the
+          webhook check and the message test appear here.
+        tabs:
+          connection: "Connection"
+          settings: "Settings"
+        feature_title: "WhatsApp bot"
+        feature_intro: "Citizens can link their WhatsApp number to their account, submit proposals by chat and receive notifications about new projects."
+        settings_title: "Settings"
+        settings_intro: "Template, speech model and retention for the WhatsApp bot. Changes take effect immediately."
+        template_missing_title: "No message template configured"
+        template_missing_body: "Without an approved 360dialog template no project notifications can be sent. Submit a template below or enter its name above under \"Name of the WhatsApp message template\"."
         qr_title: "General QR code"
         qr_subline: >-
           For stickers, town-hall notices and print media. Opens a chat with the bot without
@@ -32,7 +79,6 @@ en:
         linked_count: "Linked numbers"
         subscribed_count: "Notification subscribers"
         open_phases_count: "Open phases accepting WhatsApp submissions"
-        settings_link: "Open WhatsApp settings"
         webhook_title: "Webhook"
         webhook_ok_title: "Webhook registered correctly"
         webhook_ok_body: "360dialog delivers inbound messages to %{url} with a matching security header."
@@ -51,12 +97,13 @@ en:
           one: "set but does not match (1 character)"
           other: "set but does not match (%{count} characters)"
         webhook_checked_at: "Last checked"
-        webhook_auto_hint: "The webhook is registered automatically as soon as the feature is switched on under \"Features\", using the host you are working on."
+        webhook_auto_hint: "The webhook is registered automatically as soon as the WhatsApp bot above is switched on, using the host you are working on."
         test_title: "Test message"
         test_intro: "Sends a short message to a number. Free-text messages only reach people who wrote in the last 24 hours."
         test_phone_label: "Number"
         test_phone_hint: "Digits only, including country code, e.g. 49177XXXXXXX."
         test_submit: "Send test message"
+        test_pending: "Sending message …"
         templates_title: "Message templates"
         templates_intro: "Project notifications need a Meta-approved template with exactly two placeholders: project name and project link."
         template_name: "Name"
@@ -67,6 +114,7 @@ en:
         template_name_label: "Name of the new template"
         template_name_hint: "Lowercase letters and underscores only; spaces are converted."
         template_language_label: "Language"
+        template_language_hint: "Language code of the template, e.g. \"de\". Must match the code registered in 360dialog."
         template_body_label: "Template text"
         template_body_hint: "{{1}} is replaced by the project name, {{2}} by the link. Both placeholders must appear."
         template_body_default: "New participation project: {{1}}. All the details and how to join: {{2}}"

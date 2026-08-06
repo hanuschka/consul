@@ -13,7 +13,15 @@ de:
       test_message:
         body: "Testnachricht vom Beteiligungsportal. Wenn du das liest, funktioniert der Versand."
         sent: "Testnachricht an %{phone} übergeben. Ankunft prüfen – außerhalb des 24-Stunden-Fensters lehnt WhatsApp den Versand ab."
-        failed: "Versand fehlgeschlagen: %{error}"
+        failed: "Versand fehlgeschlagen"
+        phone_missing: "Bitte eine Nummer eingeben."
+        details:
+          status: "HTTP-Status"
+          url: "Angefragte Adresse"
+          response: "Antwort von 360dialog"
+          message_id: "Nachrichten-ID"
+          exception: "Ausnahme"
+          missing_secrets: "Fehlende Zugangsdaten"
       template:
         submitted: "Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe durch Meta kann einige Stunden dauern."
         failed: "Vorlage konnte nicht eingereicht werden: %{error}"
@@ -24,6 +32,46 @@ de:
           Allgemeiner Einstieg in den WhatsApp-Bot. Über diesen QR-Code können Bürger:innen ihre
           Nummer verbinden und Benachrichtigungen zu neuen Projekten abonnieren. Zum Einreichen
           von Vorschlägen brauchen sie den QR-Code eines Projekts oder einer Phase.
+        unavailable_title: "WhatsApp ist für dieses Portal nicht eingerichtet"
+        unavailable_body: >-
+          Die Anbindung an den WhatsApp-Dienst muss serverseitig hinterlegt werden. Wende dich an
+          die Administration von Demokratie Today, um die Funktion einrichten und freischalten zu
+          lassen.
+        explanation_title: "Was der WhatsApp-Bot leistet"
+        explanation_intro: >-
+          Der Bot verbindet das Beteiligungsportal mit WhatsApp: Bürger:innen erreichen die
+          Beteiligung dort, wo sie ohnehin schreiben – ohne Konto-Anmeldung im Browser.
+        explanation_items:
+          - title: "Nummer mit dem Konto verbinden"
+            body: >-
+              Über einen QR-Code oder Direktlink startet der Chat mit dem Portal. Die Nummer wird
+              dem Nutzerkonto zugeordnet und kann jederzeit wieder getrennt werden.
+          - title: "Vorschläge per Chat einreichen"
+            body: >-
+              In Phasen mit KI-Einreichung schreiben oder sprechen Bürger:innen ihren Vorschlag.
+              Sprachnachrichten werden automatisch in Text umgewandelt, der Bot fragt Fehlendes
+              nach und legt den Vorschlag im Projekt an.
+          - title: "Benachrichtigungen zu neuen Projekten"
+            body: >-
+              Wer zustimmt, erhält bei neuen Beteiligungsprojekten eine kurze Nachricht mit Link.
+              Versendet wird über eine von Meta freigegebene Nachrichtenvorlage.
+          - title: "QR-Codes für Plakate und Aushänge"
+            body: >-
+              Für das Portal insgesamt, für einzelne Projekte und für einzelne Phasen stehen
+              QR-Codes zum Ausdrucken bereit – ideal für Aushänge vor Ort.
+        explanation_outro: >-
+          Für den Betrieb wird ein Geschäftskonto beim Anbieter 360dialog benötigt; die
+          Zugangsdaten werden serverseitig hinterlegt. Danach erscheinen hier die Einstellungen,
+          der QR-Code, die Webhook-Prüfung und der Nachrichtentest.
+        tabs:
+          connection: "Verbindung"
+          settings: "Einstellungen"
+        feature_title: "WhatsApp-Bot"
+        feature_intro: "Bürger:innen können ihre WhatsApp-Nummer mit ihrem Konto verbinden, per Chat Vorschläge einreichen und Benachrichtigungen zu neuen Projekten erhalten."
+        settings_title: "Einstellungen"
+        settings_intro: "Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken sofort."
+        template_missing_title: "Keine Nachrichtenvorlage hinterlegt"
+        template_missing_body: "Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden. Vorlage unten einreichen oder oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen."
         qr_title: "Allgemeiner QR-Code"
         qr_subline: >-
           Für Aufkleber, Rathaus-Aushänge und Printmedien. Führt in den Chat mit dem Bot, ohne
@@ -32,7 +80,6 @@ de:
         linked_count: "Verbundene Nummern"
         subscribed_count: "Abonnenten für Benachrichtigungen"
         open_phases_count: "Offene Phasen mit WhatsApp-Einreichung"
-        settings_link: "WhatsApp-Einstellungen öffnen"
         webhook_title: "Webhook"
         webhook_ok_title: "Webhook korrekt registriert"
         webhook_ok_body: "360dialog liefert eingehende Nachrichten an %{url} – mit passendem Sicherheits-Header."
@@ -51,12 +98,13 @@ de:
           one: "gesetzt, passt aber nicht (1 Zeichen)"
           other: "gesetzt, passt aber nicht (%{count} Zeichen)"
         webhook_checked_at: "Zuletzt geprüft"
-        webhook_auto_hint: "Der Webhook wird automatisch registriert, sobald die Funktion unter „Funktionen“ eingeschaltet wird – mit der Adresse, unter der du gerade arbeitest."
+        webhook_auto_hint: "Der Webhook wird automatisch registriert, sobald der WhatsApp-Bot oben eingeschaltet wird – mit der Adresse, unter der du gerade arbeitest."
         test_title: "Testnachricht"
         test_intro: "Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen, die in den letzten 24 Stunden geschrieben haben."
         test_phone_label: "Nummer"
         test_phone_hint: "Nur Ziffern mit Landesvorwahl, z. B. 49177XXXXXXX."
         test_submit: "Testnachricht senden"
+        test_pending: "Nachricht wird gesendet …"
         templates_title: "Nachrichtenvorlagen"
         templates_intro: "Für Projekt-Benachrichtigungen braucht WhatsApp eine von Meta freigegebene Vorlage mit genau zwei Platzhaltern: Projektname und Projektlink."
         template_name: "Name"
@@ -67,6 +115,7 @@ de:
         template_name_label: "Name der neuen Vorlage"
         template_name_hint: "Nur Kleinbuchstaben und Unterstriche; Leerzeichen werden umgewandelt."
         template_language_label: "Sprache"
+        template_language_hint: "Sprachcode der Vorlage, z. B. „de“. Muss dem in 360dialog hinterlegten Code entsprechen."
         template_body_label: "Text der Vorlage"
         template_body_hint: "{{1}} wird durch den Projektnamen ersetzt, {{2}} durch den Link. Beide Platzhalter müssen vorkommen."
         template_body_default: "Neues Beteiligungsprojekt: {{1}}. Alle Infos und Mitmachen: {{2}}"

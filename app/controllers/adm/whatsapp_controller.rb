@@ -1,36 +1,43 @@
 module Adm
   class WhatsappController < Adm::BaseController
-    before_action :ensure_feature_enabled!
+    FEATURE_SETTING_KEYS = %w[
+      feature.whatsapp_bot
+    ].freeze
+
+    TEXT_SETTING_KEYS = %w[
+      whatsapp.broadcast_template
+      whatsapp.broadcast_template_language
+      whatsapp.transcription_model
+      whatsapp.message_retention_days
+      whatsapp.max_voice_megabytes
+    ].freeze
+
     before_action :authorize_settings
+    before_action :load_configured_state
 
     def show
-      @subscribed_count = WhatsappAccount.subscribed.count
-      @linked_count = WhatsappAccount.verified.count
-      @eligible_projekt_phases = WhatsappEligiblePhasesQuery.call
-      @webhook_status = ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
-      @templates = ::Whatsapp::BroadcastTemplatesService.call
-
       @breadcrumbs = [
         { name: t("adm.menu.items.application"), icon: "desktop_windows" },
-        { name: t(".title") }
+        { name: t("adm.whatsapp.show.title") }
       ]
+
+      return if !@configured
+
+      load_settings
+      load_audience
+      load_integration_state
     end
 
     def test_message
-      phone = params.dig(:test, :phone)
-      response =
+      return head :forbidden if !@configured
+
+      result =
         ::Whatsapp::SendTestMessageService.call(
-          phone: phone,
+          phone: params.dig(:test, :phone),
           body: t("adm.whatsapp.test_message.body")
         )
 
-      if response&.success?
-        flash[:success] = t("adm.whatsapp.test_message.sent", phone: phone)
-      else
-        flash[:error] = t("adm.whatsapp.test_message.failed", error: error_message(response))
-      end
-
-      redirect_to adm_whatsapp_path
+      render json: result
     end
 
     def create_template
@@ -66,10 +73,27 @@ module Adm
         authorize [:adm, Setting], :update?
       end
 
-      def ensure_feature_enabled!
-        return if ::Whatsapp.enabled?
+      def load_configured_state
+        @configured = ::Whatsapp.configured?
+      end
 
-        redirect_to adm_root_path
+      def load_settings
+        settings_by_key =
+          Setting.where(key: FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS).index_by(&:key)
+
+        @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+        @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+      end
+
+      def load_audience
+        @subscribed_count = WhatsappAccount.subscribed.count
+        @linked_count = WhatsappAccount.verified.count
+        @eligible_projekt_phases = WhatsappEligiblePhasesQuery.call
+      end
+
+      def load_integration_state
+        @webhook_status = ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
+        @templates = ::Whatsapp::BroadcastTemplatesService.call
       end
 
       def error_message(response)

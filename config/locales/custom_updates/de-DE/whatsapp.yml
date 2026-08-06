@@ -48,6 +48,46 @@ de:
         Zu welchem möchtest du etwas beitragen?
       choose_projekt_button: Projekte anzeigen
       projekt_row_description: "%{phase} bis %{end_date}"
+      menu:
+        body: >-
+          Willkommen! Hier kannst du Vorschläge einreichen, deine Beiträge sehen, die laufenden
+          Beteiligungsprojekte durchstöbern und Ergebnisse abgeschlossener Phasen nachlesen.
+          Was möchtest du tun?
+        button: Auswählen
+        rows:
+          create:
+            title: Idee einreichen
+            description: Vorschlag zu einem laufenden Projekt
+          contributions:
+            title: Meine Beiträge
+            description: Was du bereits eingereicht hast
+          projekts:
+            title: Projekte ansehen
+            description: Laufende Beteiligungsprojekte
+          results:
+            title: Ergebnisse
+            description: Auswertungen abgeschlossener Phasen
+        contributions:
+          intro: "Das hast du bisher eingereicht:"
+          entry: "*%{title}*\n%{url}"
+          empty: >-
+            Du hast bisher noch nichts eingereicht. Über das Menü kannst du jederzeit einen
+            Vorschlag zu einem laufenden Projekt schreiben.
+        projekts:
+          body: "Diese Beteiligungsprojekte laufen gerade. Zu welchem möchtest du mehr lesen?"
+          button: Projekt wählen
+          empty: >-
+            Gerade läuft kein Beteiligungsprojekt. Schreib mir wieder, wenn ein neues startet.
+        results:
+          body: "Für diese Phasen gibt es bereits Ergebnisse. Welche möchtest du sehen?"
+          button: Ergebnis wählen
+          empty: >-
+            Es sind noch keine Ergebnisse veröffentlicht. Sobald eine Phase ausgewertet ist,
+            findest du sie hier.
+        link:
+          body: "„%{title}“ kannst du hier im Beteiligungsportal öffnen:"
+          gone: >-
+            Das ist leider nicht mehr verfügbar. Schau im Menü, was gerade offen ist.
       ice_breakers:
         default_1: Welche Projekte laufen gerade?
         default_2: Ich habe eine Idee für meine Stadt
@@ -101,6 +141,7 @@ de:
         retry: Nochmal versuchen
         cancel: Abbrechen
         menu: Alle Projekte
+        open_projekt: Projekt öffnen
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
         phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.

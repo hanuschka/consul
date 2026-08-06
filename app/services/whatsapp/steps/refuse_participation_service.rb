@@ -23,6 +23,14 @@ class Whatsapp::Steps::RefuseParticipationService < ApplicationService
     Whatsapp::Outbound.recovery(conversation: @conversation, body: message, actions: [:menu])
   end
 
+  # Also read by the assistant, which explains a refusal in its own words but
+  # must not invent a second account of the same rule.
+  def self.reason_key(reason)
+    return reason.to_s if REASONS_WITH_OWN_COPY.include?(reason.to_s)
+
+    "generic"
+  end
+
   private
 
     def message
@@ -30,9 +38,7 @@ class Whatsapp::Steps::RefuseParticipationService < ApplicationService
     end
 
     def reason_key
-      return @reason if REASONS_WITH_OWN_COPY.include?(@reason)
-
-      "generic"
+      self.class.reason_key(@reason)
     end
 
     def verification_hint

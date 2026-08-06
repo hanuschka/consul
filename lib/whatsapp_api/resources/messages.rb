@@ -34,6 +34,23 @@ class WhatsappApi::Resources::Messages
     )
   end
 
+  # A template whose approved shape is an image header, a text body and a URL
+  # button — the projekt card. The button's variable is appended to the fixed
+  # prefix baked into the template, so only the projekt id travels here.
+  def send_card_template(to:, name:, language:, image_url:, variables:, button_variable:)
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "template",
+        template: {
+          name: name,
+          language: { code: language },
+          components: card_template_components(image_url, variables, button_variable)
+        }
+      )
+    )
+  end
+
   def send_list(to:, body:, button_label:, rows:)
     @client.post(
       BASE_PATH,
@@ -98,12 +115,29 @@ class WhatsappApi::Resources::Messages
     def template_components(variables)
       return [] if variables.blank?
 
+      [body_parameters(variables)]
+    end
+
+    # Component order is not significant to the API, but the button index is:
+    # "0" is the first button declared on the approved template.
+    def card_template_components(image_url, variables, button_variable)
       [
+        { type: "header", parameters: [{ type: "image", image: { link: image_url } }] },
+        body_parameters(variables),
         {
-          type: "body",
-          parameters: variables.map { |variable| { type: "text", text: variable.to_s } }
+          type: "button",
+          sub_type: "url",
+          index: "0",
+          parameters: [{ type: "text", text: button_variable.to_s }]
         }
       ]
+    end
+
+    def body_parameters(variables)
+      {
+        type: "body",
+        parameters: Array(variables).map { |variable| { type: "text", text: variable.to_s } }
+      }
     end
 
     def list_rows(rows)

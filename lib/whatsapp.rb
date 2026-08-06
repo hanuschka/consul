@@ -115,6 +115,13 @@ module Whatsapp
     Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.bot.welcome_greeting")
   end
 
+  # The same admin-written greeting heads the central menu, which offers more
+  # than submitting — only the fallback copy differs, because the default
+  # greeting asks which projekt to contribute to and the menu does not.
+  def self.menu_greeting
+    Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.bot.menu.body")
+  end
+
   def self.ice_breakers
     (1..MAX_ICE_BREAKERS).filter_map { |position| ice_breaker(position) }
   end
@@ -142,6 +149,18 @@ module Whatsapp
 
   def self.broadcast_template_name
     Setting["whatsapp.broadcast_template"].presence
+  end
+
+  # The card variant is optional: without it every broadcast uses the plain
+  # text template, and projekts with no image fall back to it either way.
+  def self.broadcast_card_template_name
+    Setting["whatsapp.broadcast_card_template"].presence
+  end
+
+  # Baked into the card template's URL button at approval time, with the projekt
+  # id appended at send time — so it has to match `projekt_url` minus the id.
+  def self.projekt_url_prefix
+    "#{Rails.application.routes.url_helpers.projekts_url(**UrlOptions.default.to_h)}/"
   end
 
   def self.broadcast_template_language

@@ -62,7 +62,11 @@ class Whatsapp::IngestWebhookService < ApplicationService
       account = find_or_create_account(message["from"], contacts)
       inbound_message = persist_message(account, message)
 
-      account.update!(last_inbound_at: Time.current)
+      # WhatsApp measures the 24-hour window from when the citizen sent the
+      # message, not from when we received it. A delivery retried hours later
+      # would otherwise reopen the window on our side while it stays shut on
+      # theirs, and the reply comes back as error 131047.
+      account.update!(last_inbound_at: inbound_sent_at(message) || Time.current)
 
       Whatsapp::ProcessInboundMessageJob.perform_later(inbound_message.id, message)
     rescue ActiveRecord::RecordNotUnique

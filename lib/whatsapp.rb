@@ -94,6 +94,16 @@ module Whatsapp
     )
   end
 
+  # Language for anyone the bot has no linked account for yet — the invitation
+  # that precedes linking, and every reply to an unlinked number.
+  def self.default_locale
+    configured_locale = Setting["whatsapp.default_locale"].to_s
+
+    return I18n.default_locale if !I18n.available_locales.map(&:to_s).include?(configured_locale)
+
+    configured_locale
+  end
+
   def self.welcome_message_enabled?
     Setting["whatsapp.welcome_message_enabled"].present?
   end

@@ -13,7 +13,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
   def call
     return if !::Whatsapp.enabled?
 
-    conversation.update!(last_inbound_at: Time.current)
+    conversation.update!(last_inbound_at: @whatsapp_message.sent_at || Time.current)
 
     return if handle_opt_keywords
     return if account.opt_out_at.present?

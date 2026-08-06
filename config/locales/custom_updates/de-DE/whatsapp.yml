@@ -140,7 +140,7 @@ de:
         revise: Ändern
         retry: Nochmal versuchen
         cancel: Abbrechen
-        menu: Alle Projekte
+        menu: Hauptmenü
         open_projekt: Projekt öffnen
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.

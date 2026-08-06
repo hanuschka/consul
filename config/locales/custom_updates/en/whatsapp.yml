@@ -133,7 +133,7 @@ en:
         revise: Revise
         retry: Try again
         cancel: Cancel
-        menu: View all projects
+        menu: Main menu
         open_projekt: Open project
       refused:
         generic: I cannot submit a proposal for this project right now.

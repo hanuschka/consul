@@ -35,8 +35,20 @@ class WhatsappEligiblePhasesQuery < ApplicationQuery
       FEATURE_KEYS_BY_PHASE_CLASS.keys.flat_map { |phase_class| phases_of(phase_class) }
     end
 
+    # The date and flag half of ProjektPhase#current? is plain columns, so it is
+    # asked of the database rather than of every phase the portal has ever had.
+    # eligible? still re-checks in Ruby: this only decides what is worth loading,
+    # never what is eligible.
     def phases_of(phase_class)
-      scope = phase_class.includes(:settings, projekt: :page)
+      scope =
+        phase_class
+          .where(hidden_at: nil, active: true)
+          .where("projekt_phases.start_date IS NULL OR projekt_phases.start_date <= :today",
+                 today: Time.zone.today)
+          .where("projekt_phases.end_date IS NULL OR projekt_phases.end_date >= :today",
+                 today: Time.zone.today)
+          .includes(:settings, projekt: :page)
+
       scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
 
       scope.to_a

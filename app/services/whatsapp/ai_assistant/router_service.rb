@@ -25,7 +25,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     response = chat.ask(@inbound_text)
     outcome = deliver(response)
 
-    save_state(chat, response)
+    persist(chat, response)
 
     return ServiceResult.failure(error: EMPTY_ANSWER_ERROR) if outcome == :empty
 
@@ -46,7 +46,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       chat.with_instructions(instructions)
       chat.with_tools(*tools)
-      chat.on_tool_call { |_tool_call| track_tool_call }
+      chat.on_tool_call { |tool_call| track_tool_call(tool_call) }
 
       state.replay_into(chat)
     end
@@ -55,8 +55,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Whatsapp::AiAssistant::SystemPromptService.call(conversation: @conversation)
     end
 
-    def track_tool_call
+    # Logged per call because which tool the model picked is the only way to see
+    # a misroute after the fact: the citizen's reply looks reasonable either way,
+    # and nothing else records that "show me the projekts" ended in the menu.
+    def track_tool_call(tool_call)
       @tool_calls_made += 1
+
+      Rails.logger.info(
+        "[Whatsapp] assistant conversation=#{@conversation.id} tool=#{tool_call.name}"
+      )
 
       return if @tool_calls_made <= MAX_TOOL_CALLS
 
@@ -77,6 +84,16 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: body)
 
       :answered
+    end
+
+    # Kept out of the turn's own rescue. By the time state is written the citizen
+    # has already been answered, so reporting the turn as failed would have the
+    # caller answer them a second time out of the deterministic flow — losing the
+    # history is the far smaller failure.
+    def persist(chat, response)
+      save_state(chat, response)
+    rescue StandardError => e
+      report(e)
     end
 
     # A halted turn ends on a tool result with nothing after it. The note keeps

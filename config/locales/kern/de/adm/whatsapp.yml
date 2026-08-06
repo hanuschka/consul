@@ -270,6 +270,8 @@ de:
         template_submit: "Vorlage einreichen"
     projekts:
       projekts:
+        tabs:
+          whatsapp: "WhatsApp"
         whatsapp:
           title: "WhatsApp"
           hint_text: >-

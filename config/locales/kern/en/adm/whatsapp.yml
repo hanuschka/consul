@@ -266,6 +266,8 @@ en:
         template_submit: "Submit template"
     projekts:
       projekts:
+        tabs:
+          whatsapp: "WhatsApp"
         whatsapp:
           title: "WhatsApp"
           hint_text: >-

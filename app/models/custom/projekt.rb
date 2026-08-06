@@ -904,10 +904,11 @@ class Projekt < ApplicationRecord
 
   def page_content
     if new_content_block_mode?
-      content_blocks_content =
-        content_blocks
-          .map(&:body)
-          .reduce(&:concat)
+      # join, never reduce(:concat): concat mutates the receiver, so reducing
+      # over the bodies appended the whole page into the first content block's
+      # in-memory body and left the record dirty, one save away from
+      # overwriting it.
+      content_blocks_content = content_blocks.map(&:body).join
 
       ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
     else

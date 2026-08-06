@@ -25,18 +25,27 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
 
   private
 
-    # The page content is editorial HTML of any length, so what reaches the
-    # model is the readable opening of it rather than the whole document.
+    # Read through Projekt#page_content rather than off the page: a projekt in
+    # content-block mode leaves pages.content empty, and reading the column
+    # directly described every modern projekt as having nothing to say.
+    #
+    # The result is editorial HTML of any length, so what reaches the model is
+    # the readable opening of it rather than the whole document.
     def summary_of(projekt)
-      page = projekt.page
+      return if projekt.page.blank?
 
-      return if page.blank?
-
-      text = [page.subtitle, ActionController::Base.helpers.strip_tags(page.content.to_s)]
+      text = [projekt.page.subtitle, strip_markup(projekt.page_content)]
         .compact_blank
         .join("\n\n")
         .squish
 
       text.presence&.truncate(SUMMARY_LENGTH)
+    end
+
+    # Content blocks carry {{projekt_map}}-style placeholders the page expands
+    # at render time. Left in, the model reads them as text and can repeat one
+    # at a citizen.
+    def strip_markup(content)
+      ActionController::Base.helpers.strip_tags(content.to_s).gsub(/\{\{.*?\}\}/, " ")
     end
 end

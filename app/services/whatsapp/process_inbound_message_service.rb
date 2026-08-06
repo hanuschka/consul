@@ -45,6 +45,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # assistant sees only what is left, and hands back anything the flow owns.
     def routed_by_assistant?
       return false if !Ai::Settings.ai_available?
+      return false if tapped_reply_id.present?
 
       result = Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
@@ -54,6 +55,15 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       return false if !result.success?
 
       result.outcome != :flow
+    end
+
+    # A tapped row or button already says exactly what it means, and the text
+    # WhatsApp sends alongside it is only that row's own label. The steps below
+    # read the id; sending the label to the assistant instead would pay for a
+    # completion to re-derive it, and risk a tapped "Veröffentlichen" being
+    # answered as conversation rather than publishing the draft.
+    def tapped_reply_id
+      list_reply_id.presence || button_reply_id.presence
     end
 
     def account

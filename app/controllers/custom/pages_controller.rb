@@ -11,6 +11,8 @@ class PagesController < ApplicationController
   include GuestUsers
   include LandingPageResolvable
 
+  helper DeficiencyReportsHelper
+
   has_orders %w[most_voted newest oldest], only: :show
 
   before_action :set_random_seed
@@ -206,7 +208,9 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+        @proposals_map_pin_count =
+          proposal_map_pin_count_up_to(@resources, Shared::MapComponent::LAZY_LOAD_THRESHOLD,
+                                       @projekt_phase)
 
         if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
           @proposals_coordinates = all_proposal_map_locations(@resources)
@@ -460,6 +464,8 @@ class PagesController < ApplicationController
     end
 
     def set_question_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
+
       projekt_questions = @projekt_phase.questions.root_questions
 
       if @projekt_phase.question_list_enabled?

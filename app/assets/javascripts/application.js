@@ -58,6 +58,7 @@
 //= require initial
 //= require ahoy
 //= require app
+//= require config/map_zoom
 //= require check_all_none
 //= require comments
 //= require foundation_extras
@@ -216,7 +217,6 @@ var initialize_modules = function() {
   App.ModalNotification.initialize();
   App.VerificationForm.initialize();
   App.SharedNewButtonComponent.initialize();
-  App.VCMap.initialize();
 
   App.CustomJS.initialize();
   App.SDGCustom.initialize();

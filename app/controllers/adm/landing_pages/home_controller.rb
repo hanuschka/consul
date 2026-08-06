@@ -6,6 +6,10 @@ class Adm::LandingPages::HomeController < Adm::LandingPages::BaseController
     @landing_pages = policy_scope(::SiteCustomization::Page,
                                   policy_scope_class: Adm::LandingPages::LandingPagePolicy::Scope).order(:landing_nav_position)
 
+    @landing_projekt_counts = Projekt.where(landing_page_id: @landing_pages.reorder(nil).select(:id))
+                                     .group(:landing_page_id)
+                                     .count
+
     @intro_text = Setting["adm.landing_pages.intro_text"].presence ||
                   I18n.t("adm.section_settings.intro_text_defaults.landing_pages", default: nil)
     @notice = if Setting["adm.landing_pages.notice_active"].present?

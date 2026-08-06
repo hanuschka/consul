@@ -25,12 +25,35 @@ class RegisteredAddress::District < ApplicationRecord
     "registered_address_"
   end
 
+  # Rendered once per district in every district filter list, so neither the
+  # city count nor the city lookup may sit on the per-district path. Both are
+  # resolved once per request instead of once per district.
   def name_for_display
-    if RegisteredAddress::City.count > 1
-      city_name = cities.first&.name
+    if self.class.multiple_cities?
+      city_name = self.class.first_city_names[id]
       city_name ? "#{city_name} / #{name}" : name.to_s
     else
       name.to_s
+    end
+  end
+
+  def self.multiple_cities?
+    return Current.multiple_registered_address_cities if !Current.multiple_registered_address_cities.nil?
+
+    Current.multiple_registered_address_cities = RegisteredAddress::City.count > 1
+  end
+
+  # district id => name of its lowest-id city, matching what the previous
+  # per-district `cities.first` (ORDER BY id LIMIT 1) returned.
+  def self.first_city_names
+    Current.registered_address_first_city_names ||= begin
+      city_names = RegisteredAddress::City.pluck(:id, :name).to_h
+
+      RegisteredAddress
+        .where.not(registered_address_city_id: nil)
+        .group(:registered_address_district_id)
+        .minimum(:registered_address_city_id)
+        .transform_values { |city_id| city_names[city_id] }
     end
   end
 

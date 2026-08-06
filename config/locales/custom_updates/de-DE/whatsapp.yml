@@ -101,6 +101,7 @@ de:
         retry: Nochmal versuchen
         cancel: Abbrechen
         menu: Alle Projekte
+        open_projekt: Projekt öffnen
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
         phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.

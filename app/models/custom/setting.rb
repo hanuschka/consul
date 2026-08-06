@@ -16,8 +16,13 @@ class Setting < ApplicationRecord
   validate :validate_whatsapp_template_name
   validate :validate_whatsapp_template_language
 
+  WHATSAPP_TEMPLATE_NAME_KEYS = %w[
+    whatsapp.broadcast_template
+    whatsapp.broadcast_card_template
+  ].freeze
+
   def validate_whatsapp_template_name
-    return if key != "whatsapp.broadcast_template"
+    return if !WHATSAPP_TEMPLATE_NAME_KEYS.include?(key)
     return if value.blank?
     return if value.match?(WHATSAPP_TEMPLATE_NAME_FORMAT)
 
@@ -262,6 +267,7 @@ class Setting < ApplicationRecord
         "whatsapp.ice_breaker_4": nil,
         "whatsapp.commands": nil,
         "whatsapp.broadcast_template": nil,
+        "whatsapp.broadcast_card_template": nil,
         "whatsapp.broadcast_template_language": "de",
         "whatsapp.auto_broadcast_new_projekts": false,
         "whatsapp.transcription_model": nil,

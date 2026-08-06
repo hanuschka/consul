@@ -1,14 +1,35 @@
 module Ai::RubyLlmFactory
   def self.chat
-    init.chat(
+    build_chat(init)
+  end
+
+  def self.chat_with_request_timeout(seconds)
+    build_chat(context_with_request_timeout(seconds))
+  end
+
+  def self.chat_with_json_output(output_schema)
+    chat.with_schema(output_schema)
+  end
+
+  def self.build_chat(context)
+    context.chat(
       model: Ai::Settings.current_llm_model,
       provider: Ai::Settings.current_llm_provider.to_sym,
       assume_model_exists: true
     )
   end
 
-  def self.chat_with_json_output(output_schema)
-    chat.with_schema(output_schema)
+  # An unrecognised provider leaves init returning the RubyLLM module itself,
+  # whose config is the global one — writing a timeout there would shorten it
+  # for every other caller in the process.
+  def self.context_with_request_timeout(seconds)
+    context = init
+
+    return context if !context.is_a?(RubyLLM::Context)
+
+    context.config.request_timeout = seconds
+
+    context
   end
 
   def self.init

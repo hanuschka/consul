@@ -31,11 +31,28 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     return Whatsapp::Steps::RefuseParticipationService.call(conversation:, reason: :no_open_phase) if
       entry == :projekt_without_phase
     return Whatsapp::NextStepService.call(conversation:) if entry.present?
+    return if routed_by_assistant?
 
     dispatch_step
   end
 
   private
+
+    # Everything above this point is protocol rather than dialogue — opting out,
+    # a tapped recovery button, a scanned QR code — and stays deterministic. The
+    # assistant sees only what is left, and hands back anything the flow owns.
+    def routed_by_assistant?
+      return false if !Ai::Settings.ai_available?
+
+      result = Whatsapp::AiAssistant::RouterService.call(
+        conversation: conversation,
+        inbound_text: inbound_text
+      )
+
+      return false if !result.success?
+
+      result.outcome != :flow
+    end
 
     def account
       @account ||= @whatsapp_message.whatsapp_account

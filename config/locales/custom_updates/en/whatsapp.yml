@@ -94,6 +94,7 @@ en:
         retry: Try again
         cancel: Cancel
         menu: View all projects
+        open_projekt: Open project
       refused:
         generic: I cannot submit a proposal for this project right now.
         phase_missing: I could not find the project. Please scan the QR code again.

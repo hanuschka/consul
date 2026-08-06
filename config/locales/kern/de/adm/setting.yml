@@ -36,6 +36,8 @@ de:
       commands_description: "Kurzbefehle, die angezeigt werden, wenn jemand im Chat einen Schrägstrich tippt. Einer pro Zeile in der Form name|Erklärung, zum Beispiel: projekte|Laufende Projekte anzeigen. Maximal 30 Befehle, Name bis 32 Zeichen. Wirkt erst nach „An WhatsApp übertragen“."
       broadcast_template: "Name der WhatsApp-Nachrichtenvorlage"
       broadcast_template_description: "Name der in 360dialog freigegebenen Vorlage, die für Projekt-Benachrichtigungen verwendet wird. Die Vorlage muss genau zwei Platzhalter im Textkörper haben: 1. Projektname, 2. Projektlink. Ohne freigegebene Vorlage erreichen Benachrichtigungen nur Personen, die in den letzten 24 Stunden geschrieben haben."
+      broadcast_card_template: "Name der Vorlage für Projektkarten"
+      broadcast_card_template_description: "Optional. Name einer freigegebenen Vorlage mit Bild-Kopfzeile, zwei Platzhaltern im Text (1. Projektname, 2. Untertitel) und einer Link-Schaltfläche. Ist sie hinterlegt, wird die Benachrichtigung als Projektkarte mit Bild versendet – aber nur für Projekte, die ein Bild und einen Untertitel haben. Alle anderen erhalten die reine Textvorlage oben."
       broadcast_template_language: "Sprache der Nachrichtenvorlage"
       broadcast_template_language_description: "Sprachcode der freigegebenen Vorlage, z. B. „de“. Muss exakt dem in 360dialog hinterlegten Sprachcode entsprechen, sonst lehnt WhatsApp den Versand ab."
       auto_broadcast_new_projekts: "Benachrichtigung automatisch senden"

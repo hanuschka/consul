@@ -52,6 +52,31 @@ module Whatsapp::Outbound
     end
   end
 
+  # The projekt card: same no-guard reasoning as `template`, plus an image the
+  # recipient's phone fetches from us and a button variable the template appends
+  # to its own fixed URL prefix.
+  def card_template(
+    account:, name:, image_url:, variables:, button_variable:, language: nil, projekt_id: nil
+  )
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{variables.join(' | ')}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_card_template(
+        to: account.wa_id,
+        name: name,
+        language: language,
+        image_url: image_url,
+        variables: variables,
+        button_variable: button_variable
+      )
+    end
+  end
+
   def recovery(conversation:, body:, actions:)
     buttons(
       account: conversation.whatsapp_account,

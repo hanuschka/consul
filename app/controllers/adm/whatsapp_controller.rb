@@ -16,6 +16,7 @@ module Adm
     TEXT_SETTING_KEYS = %w[
       whatsapp.default_locale
       whatsapp.broadcast_template
+      whatsapp.broadcast_card_template
       whatsapp.broadcast_template_language
       whatsapp.transcription_model
       whatsapp.message_retention_days

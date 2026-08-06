@@ -36,6 +36,8 @@ en:
       commands_description: "Shortcuts people see when they type a slash in the chat. One per line in the form name|explanation, for example: projects|Show running projects. Maximum 30 commands, name up to 32 characters. Takes effect only after \"Apply to WhatsApp\"."
       broadcast_template: "WhatsApp message template name"
       broadcast_template_description: "Name of the 360dialog-approved template used for project notifications. The template must have exactly two body placeholders: 1. project name, 2. project link. Without an approved template, notifications only reach people who wrote in the last 24 hours."
+      broadcast_card_template: "Projekt card template name"
+      broadcast_card_template_description: "Optional. Name of an approved template with an image header, two body placeholders (1. projekt name, 2. subtitle) and a link button. When set, notifications go out as a projekt card with an image — but only for projekts that have both an image and a subtitle. Everything else uses the plain text template above."
       broadcast_template_language: "Message template language"
       broadcast_template_language_description: "Language code of the approved template, e.g. \"de\". Must match the code registered in 360dialog exactly, otherwise WhatsApp rejects the send."
       auto_broadcast_new_projekts: "Send notification automatically"

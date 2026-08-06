@@ -144,6 +144,18 @@ module Whatsapp
     Setting["whatsapp.broadcast_template"].presence
   end
 
+  # The card variant is optional: without it every broadcast uses the plain
+  # text template, and projekts with no image fall back to it either way.
+  def self.broadcast_card_template_name
+    Setting["whatsapp.broadcast_card_template"].presence
+  end
+
+  # Baked into the card template's URL button at approval time, with the projekt
+  # id appended at send time — so it has to match `projekt_url` minus the id.
+  def self.projekt_url_prefix
+    "#{Rails.application.routes.url_helpers.projekts_url(**UrlOptions.default.to_h)}/"
+  end
+
   def self.broadcast_template_language
     Setting["whatsapp.broadcast_template_language"].presence || "de"
   end

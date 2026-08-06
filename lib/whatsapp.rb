@@ -115,6 +115,13 @@ module Whatsapp
     Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.bot.welcome_greeting")
   end
 
+  # The same admin-written greeting heads the central menu, which offers more
+  # than submitting — only the fallback copy differs, because the default
+  # greeting asks which projekt to contribute to and the menu does not.
+  def self.menu_greeting
+    Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.bot.menu.body")
+  end
+
   def self.ice_breakers
     (1..MAX_ICE_BREAKERS).filter_map { |position| ice_breaker(position) }
   end

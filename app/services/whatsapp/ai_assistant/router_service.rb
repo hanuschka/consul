@@ -39,7 +39,10 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   private
 
     def build_chat
-      chat = ::Ai::RubyLlmFactory.chat_with_request_timeout(REQUEST_TIMEOUT_SECONDS)
+      chat = ::Ai::RubyLlmFactory.chat_with_request_timeout(
+        REQUEST_TIMEOUT_SECONDS,
+        gpt_model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL
+      )
 
       chat.with_instructions(instructions)
       chat.with_tools(*tools)

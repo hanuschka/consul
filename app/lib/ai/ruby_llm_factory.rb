@@ -3,20 +3,29 @@ module Ai::RubyLlmFactory
     build_chat(init)
   end
 
-  def self.chat_with_request_timeout(seconds)
-    build_chat(context_with_request_timeout(seconds))
+  def self.chat_with_request_timeout(seconds, gpt_model: nil)
+    build_chat(context_with_request_timeout(seconds), gpt_model: gpt_model)
   end
 
   def self.chat_with_json_output(output_schema)
     chat.with_schema(output_schema)
   end
 
-  def self.build_chat(context)
+  def self.build_chat(context, gpt_model: nil)
     context.chat(
-      model: Ai::Settings.current_llm_model,
+      model: model_for(gpt_model),
       provider: Ai::Settings.current_llm_provider.to_sym,
       assume_model_exists: true
     )
+  end
+
+  # A model id named for one provider means nothing to another, so a caller's
+  # preference holds only while OpenAI is the configured provider.
+  def self.model_for(gpt_model)
+    return Ai::Settings.current_llm_model if gpt_model.blank?
+    return Ai::Settings.current_llm_model if Ai::Settings.current_llm_provider != "openai"
+
+    gpt_model
   end
 
   # An unrecognised provider leaves init returning the RubyLLM module itself,

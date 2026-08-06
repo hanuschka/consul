@@ -1,5 +1,6 @@
 module Ai::Settings
   DEFAULT_GPT_MODEL = "gpt-5.4"
+  DEFAULT_GPT_FAST_MODEL = "gpt-5.4-mini"
   # DEFAULT_GPT_MODEL = "gpt-5.2"
 
   def self.feature_enabled?

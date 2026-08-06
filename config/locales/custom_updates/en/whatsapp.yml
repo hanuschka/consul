@@ -44,6 +44,46 @@ en:
         would you like to contribute to?
       choose_projekt_button: Show projects
       projekt_row_description: "%{phase} until %{end_date}"
+      menu:
+        body: >-
+          Welcome! Here you can submit a proposal, look at your own contributions, browse the
+          running participation projects and read the results of finished phases. What would you
+          like to do?
+        button: Choose
+        rows:
+          create:
+            title: Submit an idea
+            description: Contribute to a running project
+          contributions:
+            title: My contributions
+            description: What you have submitted so far
+          projekts:
+            title: Browse projects
+            description: Current participation projects
+          results:
+            title: Results
+            description: Evaluations of completed phases
+        contributions:
+          intro: "This is what you have submitted so far:"
+          entry: "*%{title}*\n%{url}"
+          empty: >-
+            You have not submitted anything yet. You can write a proposal for a running project
+            from the menu at any time.
+        projekts:
+          body: "These participation projects are running right now. Which one would you like to read about?"
+          button: Choose project
+          empty: >-
+            No participation project is running right now. Write to me again when a new one starts.
+        results:
+          body: "Results are already available for these phases. Which one would you like to see?"
+          button: Choose result
+          empty: >-
+            No results have been published yet. Once a phase has been evaluated you will find it
+            here.
+        link:
+          body: "You can open \"%{title}\" here in the participation portal:"
+          gone: >-
+            That is unfortunately no longer available. Check the menu for what is currently open.
       ice_breakers:
         default_1: Which projects are running right now?
         default_2: I have an idea for my city

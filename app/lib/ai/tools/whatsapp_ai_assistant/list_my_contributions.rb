@@ -2,8 +2,9 @@ class Ai::Tools::WhatsappAiAssistant::ListMyContributions < Ai::Tools::WhatsappA
   MAX_PER_RESOURCE = 10
 
   description "Lists what this citizen has already submitted to the portal — their proposals and " \
-              "their budget investments, newest first, with the link to each. Takes no arguments. " \
-              "Use it to answer questions like what did I submit or where can I find my proposal."
+              "their budget investments, newest first, with the link to each and to the projekt " \
+              "it belongs to. Takes no arguments. Use it to answer questions like what did I " \
+              "submit or where can I find my proposal."
 
   def execute
     { contributions: (proposals + investments).sort_by { |row| row[:submitted_on] }.reverse }
@@ -34,6 +35,7 @@ class Ai::Tools::WhatsappAiAssistant::ListMyContributions < Ai::Tools::WhatsappA
         kind: kind,
         title: resource.title,
         projekt: projekt.present? ? projekt_title(projekt) : nil,
+        projekt_url: projekt.present? ? projekt_url(projekt) : nil,
         submitted_on: resource.created_at.to_date.iso8601,
         url: ::Whatsapp::PublishedResourceUrl.call(resource)
       }.compact

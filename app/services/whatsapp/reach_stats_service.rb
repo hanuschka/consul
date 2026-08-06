@@ -94,7 +94,7 @@ class Whatsapp::ReachStatsService < ApplicationService
         .where(id: projekt_ids)
         .includes(:page)
         .each_with_object({}) do |projekt, names|
-          names[projekt.id] = projekt.page&.title.presence || projekt.name
+          names[projekt.id] = Whatsapp::ProjektLink.title(projekt)
         end
     end
 

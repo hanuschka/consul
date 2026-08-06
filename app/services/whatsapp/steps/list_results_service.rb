@@ -43,7 +43,7 @@ class Whatsapp::Steps::ListResultsService < ApplicationService
     end
 
     def projekt_title(projekt)
-      projekt.page&.title.presence || projekt.name
+      Whatsapp::ProjektLink.title(projekt)
     end
 
     def send_empty

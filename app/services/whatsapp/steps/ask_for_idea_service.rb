@@ -21,7 +21,11 @@ class Whatsapp::Steps::AskForIdeaService < ApplicationService
 
     Whatsapp::Outbound.text(
       account: account,
-      body: I18n.t("whatsapp.bot.ask_idea", projekt: projekt_phase.projekt.page.title)
+      body: I18n.t(
+        "whatsapp.bot.ask_idea",
+        projekt: Whatsapp::ProjektLink.title(projekt_phase.projekt),
+        url: Whatsapp::ProjektLink.url(projekt_phase.projekt)
+      )
     )
   end
 

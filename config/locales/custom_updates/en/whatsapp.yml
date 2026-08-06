@@ -89,9 +89,11 @@ en:
         default_2: I have an idea for my city
         default_3: How does submitting a proposal work?
         default_4: Stop receiving messages
-      ask_idea: >-
-        You are in the project “%{projekt}”. Do you have concrete ideas or suggestions? Send them
-        to me as text or as a voice message.
+      ask_idea: |-
+        You are in the project “%{projekt}”:
+        %{url}
+
+        Do you have concrete ideas or suggestions? Send them to me as text or as a voice message.
       idea_missing: Please describe your idea as text or as a voice message.
       choose_phase: >-
         The project “%{projekt}” has several participation phases running. Which one do you want

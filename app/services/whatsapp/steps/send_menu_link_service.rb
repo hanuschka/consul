@@ -68,22 +68,15 @@ class Whatsapp::Steps::SendMenuLinkService < ApplicationService
     end
 
     def projekt_url(projekt)
-      Rails.application.routes.url_helpers.projekt_url(projekt, **UrlOptions.default.to_h)
+      Whatsapp::ProjektLink.url(projekt)
     end
 
-    # Built from the page slug rather than from projekt_url, which redirects and
-    # would drop the query string the projekt page reads to open the tab.
     def result_url(projekt_phase)
-      Rails.application.routes.url_helpers.page_url(
-        id: projekt_phase.projekt.page.slug,
-        projekt_phase_id: projekt_phase.id,
-        section: WhatsappPublishedResultsQuery.public_section_for(projekt_phase),
-        **UrlOptions.default.to_h
-      )
+      Whatsapp::ProjektLink.evaluation_url(projekt_phase)
     end
 
     def projekt_title(projekt)
-      projekt.page&.title.presence || projekt.name
+      Whatsapp::ProjektLink.title(projekt)
     end
 
     def send_gone

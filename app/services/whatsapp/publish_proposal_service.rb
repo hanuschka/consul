@@ -12,6 +12,7 @@ class Whatsapp::PublishProposalService < ApplicationService
     proposal = @conversation.proposal
 
     return if proposal.blank?
+    return proposal if proposal.published_at.present?
     return :criteria_failed if criteria_failed?(proposal)
 
     proposal.admin_accepted = false if moderated?

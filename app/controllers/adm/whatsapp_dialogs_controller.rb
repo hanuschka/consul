@@ -30,7 +30,9 @@ module Adm
 
       message = ::Whatsapp::SendTextService.call(account: @account, body: body)
 
-      if message.status == "sent"
+      if message.blank?
+        flash[:error] = t("adm.whatsapp.dialogs.reply_window_closed")
+      elsif message.status == "sent"
         flash[:success] = t("adm.whatsapp.dialogs.reply_sent")
       else
         flash[:error] = t("adm.whatsapp.dialogs.reply_failed", error: message.error.to_s.truncate(200))
@@ -59,8 +61,7 @@ module Adm
       end
 
       def service_window_open?
-        @account.last_inbound_at.present? &&
-          @account.last_inbound_at > ::Whatsapp::SERVICE_WINDOW.ago
+        ::Whatsapp::ServiceWindow.open?(@account)
       end
   end
 end

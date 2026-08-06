@@ -3,6 +3,7 @@ module Whatsapp
   DEFAULT_RETENTION_DAYS = 90
   DEFAULT_MAX_VOICE_MEGABYTES = 16
   SERVICE_WINDOW = 24.hours
+  WEBHOOK_EVENT_RETENTION = 7.days
 
   def self.config
     Rails.application.secrets.whatsapp || {}
@@ -14,6 +15,13 @@ module Whatsapp
 
   def self.webhook_secret
     config[:webhook_secret]
+  end
+
+  # Optional 360dialog platform secret. When present, inbound webhooks are
+  # authenticated by an HMAC over the raw body instead of a static shared
+  # secret, which a leaked log line can no longer expose.
+  def self.webhook_signature_secret
+    config[:webhook_signature_secret]
   end
 
   def self.base_url

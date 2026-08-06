@@ -2,10 +2,39 @@
   <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.templates_title") %></h2>
   <p class="kern-body mb-3"><%= t("adm.whatsapp.show.templates_intro") %></p>
 
-  <% if ::Whatsapp.broadcast_template_name.blank? %>
+<%
+  configured_template_name = ::Whatsapp.broadcast_template_name
+  configured_template =
+    @templates.find do |template|
+      template[:name] == configured_template_name &&
+        template[:language] == ::Whatsapp.broadcast_template_language
+    end
+%>
+
+  <% if configured_template_name.blank? %>
     <div class="mb-3">
       <%= kern_alert(title: t("adm.whatsapp.show.template_missing_title"), style: :info) do %>
         <p class="kern-body"><%= t("adm.whatsapp.show.template_missing_body") %></p>
+      <% end %>
+    </div>
+  <% elsif configured_template.blank? %>
+    <div class="mb-3">
+      <%= kern_alert(title: t("adm.whatsapp.show.template_unknown_title"), style: :danger) do %>
+        <p class="kern-body">
+          <%= t("adm.whatsapp.show.template_unknown_body",
+            name: configured_template_name,
+            language: ::Whatsapp.broadcast_template_language) %>
+        </p>
+      <% end %>
+    </div>
+  <% elsif !configured_template[:approved] %>
+    <div class="mb-3">
+      <%= kern_alert(title: t("adm.whatsapp.show.template_pending_title"), style: :warning) do %>
+        <p class="kern-body">
+          <%= t("adm.whatsapp.show.template_pending_body",
+            name: configured_template_name,
+            status: configured_template[:status]) %>
+        </p>
       <% end %>
     </div>
   <% end %>

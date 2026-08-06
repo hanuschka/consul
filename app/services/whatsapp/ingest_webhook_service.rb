@@ -21,9 +21,19 @@ class Whatsapp::IngestWebhookService < ApplicationService
   private
 
     def change_values
-      Array(@payload["entry"]).flat_map do |entry|
+      values = Array(@payload["entry"]).flat_map do |entry|
         Array(entry["changes"]).map { |change| change["value"].to_h }
       end
+
+      values.select { |value| whatsapp_value?(value) }
+    end
+
+    # The v1 payloads 360dialog forwards carry no messaging_product; a present
+    # one that names another product belongs to a different integration.
+    def whatsapp_value?(value)
+      product = value["messaging_product"]
+
+      product.blank? || product == "whatsapp"
     end
 
     def record_statuses(statuses)
@@ -32,7 +42,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
 
         next if message.blank?
 
-        message.update!(status: status["status"], error: status["errors"].to_a.first.to_h)
+        message.apply_status!(status["status"], errors: status["errors"])
       end
     end
 

@@ -7,6 +7,8 @@ class Whatsapp::SendListService < ApplicationService
   end
 
   def call
+    return if !Whatsapp::ServiceWindow.deliverable?(@account, "interactive")
+
     response =
       WhatsappApi::Client
         .new

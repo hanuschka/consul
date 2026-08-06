@@ -163,6 +163,7 @@ en:
         reply_blank: "Please enter some text."
         reply_sent: "Reply has been handed over."
         reply_failed: "Reply could not be sent: %{error}"
+        reply_window_closed: "The 24-hour reply window has closed in the meantime."
         window_closed_title: "Reply window closed"
         window_closed_body: >-
           The last inbound message is more than 24 hours old. WhatsApp only allows free-form
@@ -251,6 +252,15 @@ en:
         test_pending: "Sending message …"
         templates_title: "Bot message templates"
         templates_intro: "Project notifications need a Meta-approved template with exactly two placeholders: project name and project link."
+        template_unknown_title: "Configured template does not exist at 360dialog"
+        template_unknown_body: >-
+          Configured is "%{name}" (%{language}), but no template exists there under that name and
+          language. Project notifications would fail. Create the template below or pick an
+          existing one.
+        template_pending_title: "Template not approved yet"
+        template_pending_body: >-
+          "%{name}" has the status "%{status}" at Meta. Until it is approved, project
+          notifications reach nobody.
         template_name: "Name"
         template_language: "Language"
         template_status: "Status"

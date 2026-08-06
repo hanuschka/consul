@@ -166,6 +166,7 @@ de:
         reply_blank: "Bitte einen Text eingeben."
         reply_sent: "Antwort wurde übergeben."
         reply_failed: "Antwort konnte nicht gesendet werden: %{error}"
+        reply_window_closed: "Das 24-Stunden-Antwortfenster ist inzwischen geschlossen."
         window_closed_title: "Antwortfenster geschlossen"
         window_closed_body: >-
           Die letzte eingehende Nachricht liegt mehr als 24 Stunden zurück. WhatsApp lässt freie
@@ -255,6 +256,15 @@ de:
         test_pending: "Nachricht wird gesendet …"
         templates_title: "Bot-Nachrichtenvorlagen"
         templates_intro: "Für Projekt-Benachrichtigungen braucht WhatsApp eine von Meta freigegebene Vorlage mit genau zwei Platzhaltern: Projektname und Projektlink."
+        template_unknown_title: "Eingestellte Vorlage existiert nicht bei 360dialog"
+        template_unknown_body: >-
+          Eingestellt ist „%{name}“ (%{language}), aber unter diesem Namen und dieser Sprache
+          gibt es dort keine Vorlage. Projekt-Benachrichtigungen würden fehlschlagen. Vorlage
+          unten anlegen oder eine bestehende auswählen.
+        template_pending_title: "Vorlage noch nicht freigegeben"
+        template_pending_body: >-
+          „%{name}“ hat bei Meta den Status „%{status}“. Bis zur Freigabe erreichen
+          Projekt-Benachrichtigungen niemanden.
         template_name: "Name"
         template_language: "Sprache"
         template_status: "Status"

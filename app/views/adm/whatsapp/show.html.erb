@@ -13,13 +13,16 @@
 
 <div class="kern-container my-3 adm-whatsapp-page">
   <% if @configured %>
-    <custom-tabs param="tab" default="connection">
+    <custom-tabs param="tab" default="<%= @active_tab %>">
       <div class="custom-tabs--list" role="tablist">
-        <custom-tab for="connection" class="-active">
+        <custom-tab for="connection" class="<%= "-active" if @active_tab == "connection" %>">
           <%= t("adm.whatsapp.show.tabs.connection") %>
         </custom-tab>
         <custom-tab for="settings"><%= t("adm.whatsapp.show.tabs.settings") %></custom-tab>
-        <custom-tab for="templates"><%= t("adm.whatsapp.show.tabs.templates") %></custom-tab>
+        <custom-tab
+          for="templates"
+          class="<%= "-active" if @active_tab == "templates" %>"
+        ><%= t("adm.whatsapp.show.tabs.templates") %></custom-tab>
         <custom-tab for="qr_code"><%= t("adm.whatsapp.show.tabs.qr_code") %></custom-tab>
         <custom-tab for="reach"><%= t("adm.whatsapp.show.tabs.reach") %></custom-tab>
         <custom-tab for="dialogs"><%= t("adm.whatsapp.show.tabs.dialogs") %></custom-tab>

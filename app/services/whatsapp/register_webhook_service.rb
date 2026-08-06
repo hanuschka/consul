@@ -9,7 +9,7 @@ class Whatsapp::RegisterWebhookService < ApplicationService
 
     response = WhatsappApi::Client.new.webhooks.configure(
       url: webhook_url,
-      headers: { WhatsappApi::Client::AUTH_HEADER_NAME => ::Whatsapp.webhook_secret }
+      headers: auth_headers
     )
 
     log(response)
@@ -19,12 +19,21 @@ class Whatsapp::RegisterWebhookService < ApplicationService
 
   private
 
+    # Registered under both names because 360dialog accepts either and there is
+    # no way to tell in advance which one it will send back to us.
+    def auth_headers
+      {
+        WhatsappApi::Client::AUTH_HEADER_NAME => ::Whatsapp.webhook_secret,
+        "Authorization" => ::Whatsapp.webhook_secret
+      }
+    end
+
     def webhook_url
       @webhook_url ||=
         if host_url.blank?
           nil
         else
-          "#{host_url}#{Rails.application.routes.url_helpers.whatsapp_api_webhook_path}"
+          "#{host_url}#{::Whatsapp.webhook_path}"
         end
     end
 

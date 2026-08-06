@@ -23,7 +23,7 @@ class Whatsapp::WebhookStatusService < ApplicationService
 
     def build_status(payload)
       registered_url = payload["url"].to_s
-      header_value = payload["headers"].to_h[WhatsappApi::Client::AUTH_HEADER_NAME].to_s
+      header_value = registered_header_value(payload)
 
       {
         reachable: true,
@@ -36,6 +36,13 @@ class Whatsapp::WebhookStatusService < ApplicationService
       }
     end
 
+    # Either registered name counts: the controller accepts whichever arrives.
+    def registered_header_value(payload)
+      headers = payload["headers"].to_h
+
+      headers.values_at(WhatsappApi::Client::AUTH_HEADER_NAME, "Authorization").compact.first.to_s
+    end
+
     def header_matches?(header_value)
       return false if header_value.blank?
 
@@ -43,9 +50,7 @@ class Whatsapp::WebhookStatusService < ApplicationService
     end
 
     def expected_url
-      @expected_url ||=
-        "#{@expected_base_url.to_s.chomp('/')}" \
-        "#{Rails.application.routes.url_helpers.whatsapp_api_webhook_path}"
+      @expected_url ||= "#{@expected_base_url.to_s.chomp("/")}#{::Whatsapp.webhook_path}"
     end
 
     def unreachable

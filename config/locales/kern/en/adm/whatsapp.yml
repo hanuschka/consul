@@ -38,8 +38,11 @@ en:
           missing_secrets: "Missing credentials"
       template:
         submitted: "Template submitted to 360dialog and set as the notification template. Meta approval can take several hours."
-        failed: "Template could not be submitted: %{error}"
         selected: "\"%{name}\" is now used for project notifications."
+      api_errors:
+        placeholder_position: >-
+          Meta does not accept a template whose text begins or ends with a placeholder. Put static
+          words before {{1}} and after {{2}}.
       conversational_components:
         applied: "Chat start applied. It can take a few minutes to appear in WhatsApp."
         failed: "Chat start could not be applied: %{error}"
@@ -279,14 +282,28 @@ en:
         template_status: "Status"
         template_use: "Use"
         template_in_use: "in use"
+        template_language_mismatch: "language mismatch (%{language} configured)"
         template_name_label: "Name of the new template"
         template_name_hint: "Lowercase letters and underscores only; spaces are converted."
         template_language_label: "Language"
         template_language_hint: "Language code of the template, e.g. \"de\". Must match the code registered in 360dialog."
         template_body_label: "Template text"
-        template_body_hint: "{{1}} is replaced by the project name, {{2}} by the link. Both placeholders must appear."
-        template_body_default: "New participation project: {{1}}. All the details and how to join: {{2}}"
+        template_body_hint: >-
+          {{1}} is replaced by the project name, {{2}} by the link. Both placeholders must appear,
+          and the text may neither begin nor end with one — Meta rejects that.
+        template_body_default: "New participation project: {{1}}. All the details and how to join: {{2}} — see you there!"
         template_submit: "Submit template"
+        template_failed_title: "Template could not be submitted"
+        template_error_name_blank: "Enter a name for the template."
+        template_error_name_format: "Only lowercase letters, digits and underscores are allowed."
+        template_error_language_blank: "Enter a language code."
+        template_error_language_format: "Use a language code such as \"de\", \"en\" or \"de_DE\"."
+        template_error_body_blank: "Enter the template text."
+        template_error_body_too_long: "The text may be at most %{count} characters long."
+        template_error_body_placeholders: "The text must contain exactly the two placeholders {{1}} and {{2}}."
+        template_error_body_placeholder_edges: >-
+          The text may neither begin nor end with a placeholder. Put static words before {{1}} and
+          after {{2}}.
     projekts:
       projekts:
         tabs:

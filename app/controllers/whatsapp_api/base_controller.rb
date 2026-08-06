@@ -1,7 +1,11 @@
 class WhatsappApi::BaseController < ActionController::API
-  AUTH_HEADER = "HTTP_D360_API_KEY".freeze
+  # 360dialog forwards a different one of these depending on how the account was
+  # onboarded, and stores every header it is given either way, so the value is
+  # accepted under whichever name actually arrives.
+  AUTH_HEADERS = %w[HTTP_D360_API_KEY HTTP_AUTHORIZATION].freeze
   SIGNATURE_HEADER = "HTTP_X_360DIALOG_SIGNATURE".freeze
   SIGNATURE_PREFIX = /\Asha256=/
+  BEARER_PREFIX = /\ABearer\s+/i
 
   before_action :ensure_feature_enabled!
   before_action :authenticate_webhook!
@@ -20,28 +24,29 @@ class WhatsappApi::BaseController < ActionController::API
       head :unauthorized
     end
 
-    # The shared secret is only accepted while no signing secret is configured:
-    # a static header any intermediary can replay is the weaker of the two.
+    # Any one of the three is enough. Gating the others behind a configured
+    # signing secret looks stricter but means a single unused credential in
+    # secrets.yml silently rejects every delivery — an outage, not a defence.
     def authenticated?
-      return valid_signature? if ::Whatsapp.webhook_signature_secret.present?
-
-      valid_secret?(request.headers[AUTH_HEADER])
+      valid_signature? || valid_url_secret? || valid_header_secret?
     end
 
-    def valid_secret?(provided_secret)
-      return false if provided_secret.blank?
+    def valid_header_secret?
+      AUTH_HEADERS.any? do |header|
+        provided_secret = request.headers[header].to_s.sub(BEARER_PREFIX, "")
 
-      ActiveSupport::SecurityUtils.secure_compare(
-        provided_secret.to_s, ::Whatsapp.webhook_secret.to_s
-      )
+        matches?(provided_secret, ::Whatsapp.webhook_secret)
+      end
+    end
+
+    def valid_url_secret?
+      matches?(params[:url_secret], ::Whatsapp.url_secret)
     end
 
     def valid_signature?
       provided_signature = request.headers[SIGNATURE_HEADER].to_s.sub(SIGNATURE_PREFIX, "")
 
-      return false if provided_signature.blank?
-
-      ActiveSupport::SecurityUtils.secure_compare(provided_signature, expected_signature)
+      matches?(provided_signature, expected_signature)
     end
 
     # Signed over the raw body: re-serializing the parsed JSON would change the
@@ -50,5 +55,12 @@ class WhatsappApi::BaseController < ActionController::API
       OpenSSL::HMAC.hexdigest(
         "SHA256", ::Whatsapp.webhook_signature_secret.to_s, request.raw_post
       )
+    end
+
+    def matches?(provided_secret, expected_secret)
+      return false if provided_secret.blank?
+      return false if expected_secret.blank?
+
+      ActiveSupport::SecurityUtils.secure_compare(provided_secret.to_s, expected_secret.to_s)
     end
 end

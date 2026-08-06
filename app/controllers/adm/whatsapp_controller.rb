@@ -21,6 +21,10 @@ module Adm
 
     DIALOGS_PER_PAGE = 20
 
+    DEFAULT_TAB = "connection".freeze
+    TEMPLATES_TAB = "templates".freeze
+    DEFAULT_TEMPLATE_NAME = "neues_projekt".freeze
+
     # PDF QR poster disabled for now. Restoring it means uncommenting, in this
     # file: the constant below, the `except: :qr_poster` filter, the qr_poster
     # action and the four private helpers at the bottom — plus the route in
@@ -32,18 +36,7 @@ module Adm
     before_action :load_configured_state
 
     def show
-      @breadcrumbs = [
-        { name: t("adm.menu.items.application"), icon: "desktop_windows" },
-        { name: t("adm.whatsapp.show.title") }
-      ]
-
-      return if !@configured
-
-      load_settings
-      load_eligible_phases
-      load_integration_state
-      load_reach_stats
-      load_dialogs
+      load_show_data
     end
 
     def test_message
@@ -82,29 +75,34 @@ module Adm
       if response&.success?
         flash[:success] = t("adm.whatsapp.conversational_components.applied")
       else
-        flash[:error] =
-          t("adm.whatsapp.conversational_components.failed", error: error_message(response))
+        flash[:error] = t("adm.whatsapp.conversational_components.failed",
+          error: ::Whatsapp::ApiErrorMessageService.call(response))
       end
 
       redirect_to adm_whatsapp_path
     end
 
     def create_template
-      template_params = params.require(:template).permit(:name, :language, :body)
+      @template_form = WhatsappTemplateForm.new(template_params)
+
+      return render_template_form_errors if @template_form.invalid?
+
       response =
         ::Whatsapp::CreateBroadcastTemplateService.call(
-          name: template_params[:name],
-          language: template_params[:language],
-          body: template_params[:body]
+          name: @template_form.name,
+          language: @template_form.language,
+          body: @template_form.body
         )
 
-      if response&.success?
-        flash[:success] = t("adm.whatsapp.template.submitted")
-      else
-        flash[:error] = t("adm.whatsapp.template.failed", error: error_message(response))
+      if !response&.success?
+        @template_form.errors.add(:base, ::Whatsapp::ApiErrorMessageService.call(response))
+
+        return render_template_form_errors
       end
 
-      redirect_to adm_whatsapp_path
+      flash[:success] = t("adm.whatsapp.template.submitted")
+
+      redirect_to adm_whatsapp_path(tab: TEMPLATES_TAB)
     end
 
     def use_template
@@ -113,7 +111,7 @@ module Adm
 
       flash[:success] = t("adm.whatsapp.template.selected", name: params[:name])
 
-      redirect_to adm_whatsapp_path
+      redirect_to adm_whatsapp_path(tab: TEMPLATES_TAB)
     end
 
     private
@@ -160,6 +158,42 @@ module Adm
 
       def load_configured_state
         @configured = ::Whatsapp.configured?
+      end
+
+      def load_show_data
+        @active_tab ||= DEFAULT_TAB
+        @breadcrumbs = [
+          { name: t("adm.menu.items.application"), icon: "desktop_windows" },
+          { name: t("adm.whatsapp.show.title") }
+        ]
+
+        return if !@configured
+
+        load_settings
+        load_eligible_phases
+        load_integration_state
+        load_reach_stats
+        load_dialogs
+        load_template_form
+      end
+
+      def load_template_form
+        @template_form ||= WhatsappTemplateForm.new(
+          name: DEFAULT_TEMPLATE_NAME,
+          language: ::Whatsapp.broadcast_template_language,
+          body: t("adm.whatsapp.show.template_body_default")
+        )
+      end
+
+      def template_params
+        params.require(:template).permit(:name, :language, :body)
+      end
+
+      def render_template_form_errors
+        @active_tab = TEMPLATES_TAB
+        load_show_data
+
+        render :show, status: :unprocessable_entity
       end
 
       def load_settings
@@ -243,12 +277,6 @@ module Adm
           .select("DISTINCT ON (whatsapp_account_id) whatsapp_messages.*")
           .order(:whatsapp_account_id, created_at: :desc)
           .index_by(&:whatsapp_account_id)
-      end
-
-      def error_message(response)
-        return t("adm.whatsapp.not_configured") if response.blank?
-
-        response.error_payload.to_s.truncate(200)
       end
   end
 end

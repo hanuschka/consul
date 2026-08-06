@@ -4,10 +4,11 @@
 
 <%
   configured_template_name = ::Whatsapp.broadcast_template_name
+  configured_template_language = ::Whatsapp.broadcast_template_language
   configured_template =
     @templates.find do |template|
       template[:name] == configured_template_name &&
-        template[:language] == ::Whatsapp.broadcast_template_language
+        template[:language] == configured_template_language
     end
 %>
 
@@ -60,15 +61,25 @@
               </span>
             </td>
             <td>
-              <% if template[:approved] && Setting["whatsapp.broadcast_template"] != template[:name] %>
-                <%= kern_link_button(
-                  use_template_adm_whatsapp_path(name: template[:name], language: template[:language]),
-                  text: t("adm.whatsapp.show.template_use"),
-                  style: :tertiary,
-                  data: { turbo_method: :patch }
-                ) %>
-              <% elsif Setting["whatsapp.broadcast_template"] == template[:name] %>
+              <% if configured_template_name == template[:name] &&
+                    configured_template_language == template[:language] %>
                 <%= t("adm.whatsapp.show.template_in_use") %>
+              <% else %>
+                <% if configured_template_name == template[:name] %>
+                  <p class="kern-body kern-body--small">
+                    <%= t("adm.whatsapp.show.template_language_mismatch",
+                      language: configured_template_language) %>
+                  </p>
+                <% end %>
+
+                <% if template[:approved] %>
+                  <%= kern_link_button(
+                    use_template_adm_whatsapp_path(name: template[:name], language: template[:language]),
+                    text: t("adm.whatsapp.show.template_use"),
+                    style: :tertiary,
+                    data: { turbo_method: :patch }
+                  ) %>
+                <% end %>
               <% end %>
             </td>
           </tr>
@@ -78,23 +89,30 @@
   <% end %>
 
   <div class="adm-whatsapp-page--form">
-    <%= form_with url: create_template_adm_whatsapp_path, scope: :template, method: :post,
-      data: { turbo: false } do |f| %>
+    <% if @template_form.errors[:base].any? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.whatsapp.show.template_failed_title"), style: :danger) do %>
+          <% @template_form.errors[:base].each do |message| %>
+            <p class="kern-body"><%= message %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= form_with model: @template_form, url: create_template_adm_whatsapp_path,
+      scope: :template, method: :post, data: { turbo: false } do |f| %>
       <%= f.text_field :name,
         label: t("adm.whatsapp.show.template_name_label"),
-        hint: t("adm.whatsapp.show.template_name_hint"),
-        value: "neues_projekt" %>
+        hint: t("adm.whatsapp.show.template_name_hint") %>
 
       <%= f.text_field :language,
         label: t("adm.whatsapp.show.template_language_label"),
-        hint: t("adm.whatsapp.show.template_language_hint"),
-        value: ::Whatsapp.broadcast_template_language %>
+        hint: t("adm.whatsapp.show.template_language_hint") %>
 
       <%= f.text_area :body,
         label: t("adm.whatsapp.show.template_body_label"),
         hint: t("adm.whatsapp.show.template_body_hint"),
-        rows: 4,
-        value: t("adm.whatsapp.show.template_body_default") %>
+        rows: 4 %>
 
       <%= form_submit_button(text: t("adm.whatsapp.show.template_submit")) %>
     <% end %>

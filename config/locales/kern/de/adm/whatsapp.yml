@@ -39,8 +39,11 @@ de:
           missing_secrets: "Fehlende Zugangsdaten"
       template:
         submitted: "Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe durch Meta kann einige Stunden dauern."
-        failed: "Vorlage konnte nicht eingereicht werden: %{error}"
         selected: "„%{name}“ wird jetzt für Projekt-Benachrichtigungen verwendet."
+      api_errors:
+        placeholder_position: >-
+          Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet.
+          Vor {{1}} und nach {{2}} muss fester Text stehen.
       conversational_components:
         applied: "Chat-Einstieg übertragen. Bis er in WhatsApp erscheint, können einige Minuten vergehen."
         failed: "Chat-Einstieg konnte nicht übertragen werden: %{error}"
@@ -283,14 +286,28 @@ de:
         template_status: "Status"
         template_use: "Verwenden"
         template_in_use: "wird verwendet"
+        template_language_mismatch: "Sprache weicht ab (%{language} eingestellt)"
         template_name_label: "Name der neuen Vorlage"
         template_name_hint: "Nur Kleinbuchstaben und Unterstriche; Leerzeichen werden umgewandelt."
         template_language_label: "Sprache"
         template_language_hint: "Sprachcode der Vorlage, z. B. „de“. Muss dem in 360dialog hinterlegten Code entsprechen."
         template_body_label: "Text der Vorlage"
-        template_body_hint: "{{1}} wird durch den Projektnamen ersetzt, {{2}} durch den Link. Beide Platzhalter müssen vorkommen."
-        template_body_default: "Neues Beteiligungsprojekt: {{1}}. Alle Infos und Mitmachen: {{2}}"
+        template_body_hint: >-
+          {{1}} wird durch den Projektnamen ersetzt, {{2}} durch den Link. Beide Platzhalter müssen
+          vorkommen, und der Text darf weder mit einem beginnen noch enden — das lehnt Meta ab.
+        template_body_default: "Neues Beteiligungsprojekt: {{1}}. Alle Infos und Mitmachen: {{2}} — schauen Sie vorbei!"
         template_submit: "Vorlage einreichen"
+        template_failed_title: "Vorlage konnte nicht eingereicht werden"
+        template_error_name_blank: "Bitte einen Namen für die Vorlage angeben."
+        template_error_name_format: "Nur Kleinbuchstaben, Ziffern und Unterstriche sind erlaubt."
+        template_error_language_blank: "Bitte einen Sprachcode angeben."
+        template_error_language_format: "Bitte einen Sprachcode wie „de“, „en“ oder „de_DE“ verwenden."
+        template_error_body_blank: "Bitte den Text der Vorlage angeben."
+        template_error_body_too_long: "Der Text darf höchstens %{count} Zeichen lang sein."
+        template_error_body_placeholders: "Der Text muss genau die beiden Platzhalter {{1}} und {{2}} enthalten."
+        template_error_body_placeholder_edges: >-
+          Der Text darf weder mit einem Platzhalter beginnen noch enden. Vor {{1}} und nach {{2}}
+          muss fester Text stehen.
     projekts:
       projekts:
         tabs:

@@ -26,6 +26,23 @@ module Whatsapp
     config[:webhook_signature_secret]
   end
 
+  # Last-resort credential for accounts where 360dialog stores the configured
+  # security header but never sends it, leaving the caller nothing else to
+  # present. Deliberately a separate value from webhook_secret: a URL reaches
+  # access logs, and the API credential must not be what leaks there. Only
+  # environments that set this key expose the route at all.
+  def self.url_secret
+    config[:url_secret]
+  end
+
+  def self.webhook_path
+    helpers = Rails.application.routes.url_helpers
+
+    return helpers.whatsapp_api_webhook_path if url_secret.blank?
+
+    helpers.whatsapp_api_webhook_with_url_secret_path(url_secret)
+  end
+
   def self.base_url
     config[:url]
   end

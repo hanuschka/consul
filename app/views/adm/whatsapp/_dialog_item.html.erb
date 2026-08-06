@@ -1,0 +1,68 @@
+<% last_message = last_messages[account.id] %>
+<% step = account.whatsapp_conversation&.step %>
+
+<li class="adm-whatsapp-dialog-item">
+  <div class="adm-whatsapp-dialog-item--main">
+    <div class="adm-whatsapp-dialog-item--head">
+      <p class="adm-whatsapp-dialog-item--name"><%= account.contact_label %></p>
+
+      <span class="kern-badge kern-badge--<%= account.state_badge_variant %>">
+        <span class="kern-label"><%= t("adm.whatsapp.dialogs.states.#{account.state}") %></span>
+      </span>
+
+      <% if step.present? && step != "idle" %>
+        <span class="kern-badge kern-badge--info">
+          <span class="kern-label"><%= t("adm.whatsapp.steps.#{step}") %></span>
+        </span>
+      <% end %>
+
+      <% if account.subscribed? %>
+        <span class="kern-badge kern-badge--success">
+          <span class="kern-label"><%= t("adm.whatsapp.dialogs.subscribed") %></span>
+        </span>
+      <% end %>
+    </div>
+
+    <p class="adm-whatsapp-dialog-item--identity">
+      <%= account.phone.presence || account.wa_id %>
+      <% if account.user.present? %>
+        · <%= link_to account.user.name, edit_adm_user_path(account.user), class: "kern-link" %>
+      <% end %>
+    </p>
+
+    <% if last_message.present? %>
+      <p class="adm-whatsapp-dialog-item--preview">
+        <span class="adm-whatsapp-dialog-item--direction -<%= last_message.direction %>">
+          <%= t("adm.whatsapp.dialogs.directions.#{last_message.direction}") %>
+        </span>
+        <span class="adm-whatsapp-dialog-item--preview-text">
+          <%= last_message.body.presence&.truncate(120) ||
+            t("adm.whatsapp.kinds.#{last_message.kind}") %>
+        </span>
+      </p>
+    <% end %>
+
+    <p class="adm-whatsapp-dialog-item--meta">
+      <span class="adm-whatsapp-dialog-item--meta-item">
+        <%= t("adm.whatsapp.dialogs.message_count") %>
+        <span class="adm-whatsapp-dialog-item--meta-value"><%= message_counts[account.id].to_i %></span>
+      </span>
+
+      <span class="adm-whatsapp-dialog-item--meta-item">
+        <%= t("adm.whatsapp.dialogs.last_active") %>
+        <span class="adm-whatsapp-dialog-item--meta-value">
+          <%= account.last_inbound_at.present? ?
+            l(account.last_inbound_at, format: :short) :
+            t("adm.whatsapp.dialogs.never") %>
+        </span>
+      </span>
+    </p>
+  </div>
+
+  <div class="adm-whatsapp-dialog-item--action">
+    <%= kern_link_button adm_whatsapp_dialog_path(account),
+      icon: "forum",
+      text: t("adm.whatsapp.dialogs.open"),
+      style: :tertiary %>
+  </div>
+</li>

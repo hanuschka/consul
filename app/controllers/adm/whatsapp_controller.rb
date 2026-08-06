@@ -20,6 +20,7 @@ module Adm
     ].freeze
 
     DIALOGS_PER_PAGE = 20
+    DIALOGS_FRAME_ID = "whatsapp_dialogs".freeze
 
     DEFAULT_TAB = "connection".freeze
     TEMPLATES_TAB = "templates".freeze
@@ -36,6 +37,8 @@ module Adm
     before_action :load_configured_state
 
     def show
+      return render_dialogs_frame if dialogs_frame_request?
+
       load_show_data
     end
 
@@ -158,6 +161,19 @@ module Adm
 
       def load_configured_state
         @configured = ::Whatsapp.configured?
+      end
+
+      # Filtering and pagination happen inside the dialogs turbo-frame, so those
+      # requests render the list alone — skipping the six other tab panels and
+      # the two 360dialog round-trips load_integration_state would make.
+      def dialogs_frame_request?
+        @configured && turbo_frame_request_id == DIALOGS_FRAME_ID
+      end
+
+      def render_dialogs_frame
+        load_dialogs
+
+        render partial: "adm/whatsapp/dialogs_frame", layout: false
       end
 
       def load_show_data

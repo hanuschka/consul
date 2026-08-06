@@ -17,8 +17,9 @@ de:
       page:
         title: WhatsApp-Nummer verbinden
         intro: >-
-          Du bist dabei, die WhatsApp-Nummer %{phone} mit diesem Konto zu verbinden. Danach
-          können Vorschläge, die du per WhatsApp einreichst, deinem Konto zugeordnet werden.
+          Sobald deine Nummer verbunden ist, werden Vorschläge, die du per WhatsApp einreichst,
+          deinem Konto zugeordnet.
+        number_label: WhatsApp-Nummer
         broadcast_consent: >-
           Ich möchte per WhatsApp benachrichtigt werden, wenn ein neues Beteiligungsprojekt
           startet.

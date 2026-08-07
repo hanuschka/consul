@@ -14,7 +14,7 @@ module Adm
 
       @breadcrumbs = [
         { name: t("adm.menu.items.application"), icon: "desktop_windows" },
-        { name: t("adm.whatsapp.show.title"), url: adm_whatsapp_path(tab: "dialogs") },
+        { name: t("adm.whatsapp.show.title"), url: dialogs_adm_whatsapp_path },
         { name: @account.contact_label }
       ]
     end

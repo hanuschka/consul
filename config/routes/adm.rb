@@ -40,6 +40,8 @@ namespace :adm do
     post :configure_conversational_components
     post :create_template
     patch :use_template
+    post :create_notification_template
+    patch :use_notification_template
     # PDF QR poster disabled for now — see Adm::WhatsappController.
     # get :qr_poster
 

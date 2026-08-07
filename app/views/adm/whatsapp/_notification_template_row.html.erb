@@ -1,0 +1,62 @@
+<%
+  configured_name = notification_template[:configured_name]
+  in_use = configured_name == notification_template[:name]
+%>
+
+<tr>
+  <td>
+    <p class="kern-body"><%= t("adm.whatsapp.show.notification_template_kinds.#{notification_template[:kind]}") %></p>
+
+    <p class="kern-body kern-body--small adm-whatsapp-page--template-body"><%= notification_template[:body] %></p>
+  </td>
+
+  <td><%= notification_template[:name] %></td>
+
+  <td>
+    <% if notification_template[:submitted] %>
+      <span class="kern-badge kern-badge--<%= notification_template[:approved] ? "success" : "warning" %>">
+        <span class="kern-label"><%= notification_template[:status] %></span>
+      </span>
+    <% else %>
+      <span class="kern-body kern-body--small"><%= t("adm.whatsapp.show.notification_template_not_submitted") %></span>
+    <% end %>
+  </td>
+
+  <td>
+    <%# The setting is what the jobs read, so it is asked first: a portal whose
+        template was approved and then withdrawn at Meta still pushes with it,
+        and a row that offered "submit" there would suggest otherwise. %>
+    <% if in_use %>
+      <%= t("adm.whatsapp.show.template_in_use") %>
+    <% else %>
+      <% if configured_name.present? %>
+        <p class="kern-body kern-body--small">
+          <%= t("adm.whatsapp.show.notification_template_other_in_use", name: configured_name) %>
+        </p>
+      <% end %>
+
+      <%# A real form rather than an <a> carrying data-turbo-method, for the
+          reason the broadcast table gives: only POST and PATCH are routed, so
+          a Turbo prefetch or a middle-click on a link would raise. %>
+      <% if notification_template[:approved] %>
+        <%= form_with url: use_notification_template_adm_whatsapp_path, method: :patch do |form| %>
+          <%= form.hidden_field :kind, value: notification_template[:kind], id: nil %>
+          <%= kern_button(
+            text: t("adm.whatsapp.show.template_use"),
+            type: "submit",
+            style: :tertiary
+          ) %>
+        <% end %>
+      <% elsif !notification_template[:submitted] %>
+        <%= form_with url: create_notification_template_adm_whatsapp_path, method: :post do |form| %>
+          <%= form.hidden_field :kind, value: notification_template[:kind], id: nil %>
+          <%= kern_button(
+            text: t("adm.whatsapp.show.notification_template_submit"),
+            type: "submit",
+            style: :tertiary
+          ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

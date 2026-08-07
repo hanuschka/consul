@@ -66,6 +66,7 @@ module Adm
     def templates
       load_page_chrome
       load_templates
+      load_notification_templates
       load_template_form
     end
 
@@ -161,6 +162,43 @@ module Adm
       redirect_to templates_adm_whatsapp_path
     end
 
+    # The push counterpart of create_template. Nothing to fill in: the body is
+    # the catalog's, the name follows from the kind and the language from the
+    # broadcast setting the sending code reads, so the only decision left is
+    # which of the three to submit.
+    def create_notification_template
+      kind = notification_template_kind
+
+      return head :bad_request if kind.blank?
+
+      response = ::Whatsapp::NotificationTemplates.create(kind: kind)
+
+      if response&.success?
+        flash[:success] = t("adm.whatsapp.template.notification_submitted")
+      else
+        flash[:error] = t("adm.whatsapp.template.notification_failed",
+          error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
+      end
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # Arms one of the three pushes. The name is derived from the kind rather
+    # than taken from the request: this writes a Setting, and the only template
+    # the tab can vouch for is the one it submitted itself.
+    def use_notification_template
+      kind = notification_template_kind
+
+      return head :bad_request if kind.blank?
+
+      name = ::Whatsapp::NotificationTemplates.submission_name(kind)
+      Setting[::Whatsapp::NotificationTemplates::SETTING_KEYS_BY_KIND.fetch(kind)] = name
+
+      flash[:success] = t("adm.whatsapp.template.notification_selected", name: name)
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
     # The only path that activates a broadcast template, now that creating one
     # no longer does: it runs after Meta reports the template approved, and it
     # writes the language alongside the name so the pair cannot drift.
@@ -179,6 +217,17 @@ module Adm
 
       def authorize_settings
         authorize [:adm, Setting], :update?
+      end
+
+      # No default here, unlike the broadcast kinds: the three pushes have no
+      # obvious fallback, and guessing one would submit or arm the wrong
+      # notification.
+      def notification_template_kind
+        kind = params[:kind].to_s
+
+        return kind if ::Whatsapp::NotificationTemplates::KINDS.include?(kind)
+
+        nil
       end
 
       # Anything unrecognised is the text template: a wrong kind would write the
@@ -272,6 +321,7 @@ module Adm
         load_page_chrome
         @active_tab = TEMPLATES_TAB
         load_templates
+        load_notification_templates
 
         render :templates, status: :unprocessable_entity
       end
@@ -328,6 +378,13 @@ module Adm
 
       def load_templates
         @templates = cached_integration_state("templates") { ::Whatsapp::BroadcastTemplates.list }
+      end
+
+      # Reads the listing load_templates already fetched rather than asking
+      # 360dialog again: the push templates are rows of the same catalog, told
+      # apart by the name each kind is submitted under.
+      def load_notification_templates
+        @notification_templates = ::Whatsapp::NotificationTemplates.states(@templates)
       end
 
       def cached_integration_state(key, &block)

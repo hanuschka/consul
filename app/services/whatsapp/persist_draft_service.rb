@@ -82,7 +82,7 @@ class Whatsapp::PersistDraftService < ApplicationService
     end
 
     def assign_sentiment(resource)
-      sentiment_id = Whatsapp::DraftRequirements.valid_sentiment_id(@draft_data, projekt_phase)
+      sentiment_id = Whatsapp::DraftSentiment.valid_id(@draft_data, projekt_phase)
 
       return if sentiment_id.blank?
 
@@ -93,7 +93,7 @@ class Whatsapp::PersistDraftService < ApplicationService
     # a revision the citizen's own earlier choice is already on the record, and
     # a rewrite of the text is not a reason to throw it away.
     def assign_labels(resource)
-      label_ids = Whatsapp::DraftRequirements.valid_label_ids(@draft_data, projekt_phase)
+      label_ids = Whatsapp::DraftCategory.valid_ids(@draft_data, projekt_phase)
 
       return if label_ids.empty?
 

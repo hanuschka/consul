@@ -192,7 +192,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when :link_yes, :link_retry
         Whatsapp::Flows::SendLoginLinkService.call(conversation:)
       when :link_switch
-        Whatsapp::Flows::SwitchLinkService.call(conversation:)
+        Whatsapp::Flows::SendLoginLinkService.after_switch(conversation:)
       when :link_later
         Whatsapp::Flows::LinkDeclinedService.call(conversation:)
       when :discover
@@ -437,7 +437,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
         conversation.draft_resource, conversation.projekt_phase, label_id
       )
 
-      return Whatsapp::Flows::AskCategoryService.call(conversation:) if !assigned
+      return Whatsapp::Flows::AskDraftChoiceService.category(conversation:) if !assigned
 
       complete_draft
     end
@@ -449,7 +449,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
         conversation.draft_resource, conversation.projekt_phase, sentiment_id
       )
 
-      return Whatsapp::Flows::AskSentimentService.call(conversation:) if !assigned
+      return Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:) if !assigned
 
       complete_draft
     end
@@ -459,7 +459,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     # Written back through the same key the generation call filled, so
-    # DraftRequirements re-validates the citizen's answer against the phase
+    # DraftCategory and DraftSentiment re-validate the answer against the phase
     # exactly as it validated the model's.
     def stash_draft_choice(key, value)
       draft_data = conversation.context["draft_data"].to_h.merge(key.to_s => value)
@@ -494,9 +494,9 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when "awaiting_idea"
         handle_idea
       when "awaiting_category"
-        Whatsapp::Flows::AskCategoryService.call(conversation:)
+        Whatsapp::Flows::AskDraftChoiceService.category(conversation:)
       when "awaiting_sentiment"
-        Whatsapp::Flows::AskSentimentService.call(conversation:)
+        Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:)
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_image_choice"

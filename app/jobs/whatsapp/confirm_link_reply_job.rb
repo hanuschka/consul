@@ -15,7 +15,7 @@ class Whatsapp::ConfirmLinkReplyJob < ApplicationJob
     return if account.blank?
     return if !::Whatsapp.enabled?
 
-    I18n.with_locale(locale_for(account)) do
+    I18n.with_locale(::Whatsapp.locale_for(account)) do
       reply(account.conversation, outcome.to_s)
     end
   end
@@ -27,13 +27,5 @@ class Whatsapp::ConfirmLinkReplyJob < ApplicationJob
         outcome == "linked"
 
       Whatsapp::Flows::LinkErrorService.call(conversation: conversation, reason: outcome)
-    end
-
-    def locale_for(account)
-      user_locale = account.user&.locale.to_s
-
-      return ::Whatsapp.default_locale if !I18n.available_locales.map(&:to_s).include?(user_locale)
-
-      user_locale
     end
 end

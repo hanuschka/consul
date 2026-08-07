@@ -49,18 +49,30 @@ class Whatsapp::Flows::CompleteDraftService < ApplicationService
       @conversation.draft_resource.blank? && missing_requirement.present?
     end
 
+    # What the resource's on-create validations demand and the drafting model
+    # did not supply. Asked of the draft data rather than of a record, because
+    # those validations run exactly once — at the first save — so there is no
+    # record yet to ask.
     def missing_requirement
       return @missing_requirement if defined?(@missing_requirement)
 
+      projekt_phase = @conversation.projekt_phase
+
       @missing_requirement =
-        Whatsapp::DraftRequirements.missing(draft_data, @conversation.projekt_phase)
+        if Whatsapp::DraftCategory.valid_ids(draft_data, projekt_phase).empty? &&
+           Whatsapp::DraftCategory.required?(projekt_phase)
+          :category
+        elsif Whatsapp::DraftSentiment.valid_id(draft_data, projekt_phase).blank? &&
+              Whatsapp::DraftSentiment.required?(projekt_phase)
+          :sentiment
+        end
     end
 
     def ask_for(requirement)
-      return Whatsapp::Flows::AskCategoryService.call(conversation: @conversation) if
+      return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
         requirement == :category
 
-      Whatsapp::Flows::AskSentimentService.call(conversation: @conversation)
+      Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation)
     end
 
     def persist

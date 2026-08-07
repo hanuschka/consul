@@ -25,6 +25,18 @@ module Whatsapp::DraftSentiment
     projekt_phase.sentiments.includes(:translations).to_a
   end
 
+  # The id the drafting model returned, or nil when this phase does not offer
+  # it. Mirrors DraftCategory.valid_ids — the model is told what it may choose
+  # from, and answered outside that set often enough to be worth checking.
+  def valid_id(draft_data, projekt_phase)
+    sentiment_id = draft_data["sentiment_id"].to_i
+
+    return if sentiment_id.zero? || !required?(projekt_phase)
+    return if !projekt_phase.sentiments.exists?(id: sentiment_id)
+
+    sentiment_id
+  end
+
   # Both resources the bot drafts — Proposal and Budget::Investment — include
   # Sentimentable, so there is nothing to guard against beyond a missing draft.
   def missing?(resource, projekt_phase)

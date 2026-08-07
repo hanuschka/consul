@@ -17,11 +17,26 @@ module Whatsapp::DraftCategory
   # using masterportal collections as labels requires one while the feature flag
   # is off — asked with the flag alone, the question would come back with no
   # options to offer and the draft would never be written.
+  def required?(projekt_phase)
+    projekt_phase.present? && projekt_phase.labels_selector_available?
+  end
+
   def options_for(projekt_phase)
-    return [] if projekt_phase.blank?
-    return [] if !projekt_phase.labels_selector_available?
+    return [] if !required?(projekt_phase)
 
     projekt_phase.active_projekt_labels.includes(:translations).to_a
+  end
+
+  # The ids the drafting model returned, narrowed to the ones this phase
+  # actually offers. Re-checked here for the same reason #assign re-checks a
+  # tapped pill: an id the model invented, or one since removed from the phase,
+  # must not reach the record.
+  def valid_ids(draft_data, projekt_phase)
+    ids = Array(draft_data["projekt_label_ids"]).map(&:to_i).reject(&:zero?)
+
+    return [] if ids.empty? || !required?(projekt_phase)
+
+    projekt_phase.active_projekt_labels.where(id: ids).ids
   end
 
   # Nil when the draft carries no category at all, which is what makes the

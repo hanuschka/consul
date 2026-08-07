@@ -1,4 +1,14 @@
 class Whatsapp::Flows::SendLoginLinkService < ApplicationService
+  # The way out of a refused :number_taken confirmation. Releasing a linkage
+  # someone else made is safe only from here: the pill that reaches this entry
+  # point can be tapped by nobody but the citizen holding the phone the number
+  # belongs to, whereas the link page is opened by whoever has the URL.
+  def self.after_switch(conversation:)
+    conversation.whatsapp_account.unlink!
+
+    call(conversation: conversation)
+  end
+
   def initialize(conversation:)
     @conversation = conversation
   end

@@ -21,9 +21,9 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
 
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if
       result == :criteria_failed
-    return Whatsapp::Flows::AskSentimentService.call(conversation: @conversation) if
+    return Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation) if
       result == :sentiment_missing
-    return Whatsapp::Flows::AskCategoryService.call(conversation: @conversation) if
+    return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
       result == :category_missing
     return send_invalid if result == :invalid
     return send_failure if result.blank?

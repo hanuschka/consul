@@ -117,6 +117,17 @@ module Whatsapp
     configured_locale
   end
 
+  # The language to answer this number in: the linked citizen's own, falling
+  # back to the portal default when they have none or it is not available.
+  # Every job that replies asks the same question, so it is answered here.
+  def self.locale_for(account)
+    user_locale = account&.user&.locale.to_s
+
+    return default_locale if !I18n.available_locales.map(&:to_s).include?(user_locale)
+
+    user_locale
+  end
+
   def self.welcome_message_enabled?
     Setting["whatsapp.welcome_message_enabled"].present?
   end

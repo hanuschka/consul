@@ -20,7 +20,7 @@ class Whatsapp::Steps::ListMilestonesService < ApplicationService
     # Not every milestone carries a translated title, so the date is what the
     # entry falls back to — an untitled entry is worse than a dated one.
     def milestones
-      @milestones ||= WhatsappPublishedMilestonesQuery.call(projekt: @projekt)
+      @milestones ||= Whatsapp::PublishedMilestonesQuery.call(projekt: @projekt)
     end
 
     def entries

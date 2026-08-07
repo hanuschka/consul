@@ -1,4 +1,4 @@
-class WhatsappEligiblePhasesQuery < ApplicationQuery
+class Whatsapp::EligiblePhasesQuery < ApplicationQuery
   # The phase types the bot has a submission flow for. Which flags each of them
   # reads is the phase's own business — #selectable_by_users? and
   # #ai_flow_feature_key — so adding a third type here is the only edit.

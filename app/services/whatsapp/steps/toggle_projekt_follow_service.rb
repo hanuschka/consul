@@ -9,13 +9,12 @@ class Whatsapp::Steps::ToggleProjektFollowService < ApplicationService
 
     outcome = Whatsapp::ToggleProjektFollowService.call(user: user, projekt: @projekt)
 
-    Whatsapp::Outbound.recovery(
+    Whatsapp::Steps::MainMenuService.call(
       conversation: @conversation,
       body: I18n.t(
         "whatsapp.bot.menu.follow.#{outcome}",
         projekt: Whatsapp::ProjektLink.title(@projekt)
-      ),
-      actions: [:menu]
+      )
     )
   end
 

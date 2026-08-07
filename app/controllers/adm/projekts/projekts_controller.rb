@@ -53,7 +53,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
   def details
     authorize [:adm, :projekts, @projekt], :show?
-    @whatsapp_subscribed_count = WhatsappAccount.subscribed.count if ::Whatsapp.broadcast_available?
+    @whatsapp_subscribed_count = Whatsapp::Account.subscribed.count if ::Whatsapp.broadcast_available?
     @breadcrumbs = [
       { name: @projekt.page&.title || @projekt.name, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
@@ -481,7 +481,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def whatsapp
     authorize [:adm, :projekts, @projekt], :update?
 
-    @eligible_projekt_phases = WhatsappEligiblePhasesQuery.call(projekt: @projekt)
+    @eligible_projekt_phases = Whatsapp::EligiblePhasesQuery.call(projekt: @projekt)
     @projekt_token = ::Whatsapp::QrToken.for_projekt(@projekt)
 
     @breadcrumbs = [
@@ -510,7 +510,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     redirect_to details_adm_projekts_projekt_path(@projekt),
       notice: t("adm.projekts.projekts.whatsapp_broadcast.enqueued",
-        count: WhatsappAccount.subscribed.count)
+        count: Whatsapp::Account.subscribed.count)
   end
 
   def toggle_hide_content_background

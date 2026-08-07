@@ -24,6 +24,6 @@ class Whatsapp::Steps::SendListService < ApplicationService
   private
 
     def send_empty
-      Whatsapp::Outbound.recovery(conversation: @conversation, body: @empty_body, actions: [:menu])
+      Whatsapp::Steps::MainMenuService.call(conversation: @conversation, body: @empty_body)
     end
 end

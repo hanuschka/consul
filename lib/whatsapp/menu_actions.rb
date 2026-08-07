@@ -24,11 +24,13 @@ module Whatsapp::MenuActions
     service: %i[help contact]
   }.freeze
 
+  # No "open the page" row: the projekt menu prints the projekt's link in its
+  # own body, so the row only repeated what the citizen is already looking at.
+  # The phase menu keeps its row — its body carries no phase link.
   PROJEKT_SECTIONS = {
     participate: %i[phases],
     discover: %i[contributions events milestones results],
-    account: %i[follow],
-    service: %i[page]
+    account: %i[follow]
   }.freeze
 
   PHASE_SECTIONS = {

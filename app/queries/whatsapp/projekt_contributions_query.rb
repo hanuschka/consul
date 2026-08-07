@@ -1,4 +1,4 @@
-class WhatsappProjektContributionsQuery < ApplicationQuery
+class Whatsapp::ProjektContributionsQuery < ApplicationQuery
   # What citizens submitted to this projekt, across all of its proposal and
   # budget phases at once — the projekt-level view of what the phase-level
   # query returns per phase.
@@ -20,7 +20,7 @@ class WhatsappProjektContributionsQuery < ApplicationQuery
   private
 
     # base_selection is the portal's own definition of a publicly listed
-    # proposal; see WhatsappPhaseContributionsQuery for why omitting it leaks
+    # proposal; see Whatsapp::PhaseContributionsQuery for why omitting it leaks
     # proposals still awaiting moderation.
     def proposals_scope
       Proposal

@@ -113,7 +113,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     end
 
     def open_phases_count
-      ::WhatsappEligiblePhasesQuery.call.size
+      ::Whatsapp::EligiblePhasesQuery.call.size
     end
 
     # The language names are the ones the content-block generator already

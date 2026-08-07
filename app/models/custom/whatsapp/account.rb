@@ -1,4 +1,4 @@
-class WhatsappAccount < ApplicationRecord
+class Whatsapp::Account < ApplicationRecord
   LINK_TOKEN_TTL = 1.hour
 
   STATE_BADGE_VARIANTS = {
@@ -8,8 +8,21 @@ class WhatsappAccount < ApplicationRecord
   }.freeze
 
   belongs_to :user, optional: true
-  has_one :whatsapp_conversation, dependent: :destroy
-  has_many :whatsapp_messages, dependent: :destroy
+
+  # Both sides keep their original column and association names, so the class
+  # and the foreign key have to be spelled out: Rails would otherwise infer
+  # Whatsapp::WhatsappConversation and account_id.
+  has_one :whatsapp_conversation,
+    class_name: "Whatsapp::Conversation",
+    foreign_key: :whatsapp_account_id,
+    inverse_of: :whatsapp_account,
+    dependent: :destroy
+
+  has_many :whatsapp_messages,
+    class_name: "Whatsapp::Message",
+    foreign_key: :whatsapp_account_id,
+    inverse_of: :whatsapp_account,
+    dependent: :destroy
 
   enum state: {
     unlinked: "unlinked",

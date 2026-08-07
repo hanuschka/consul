@@ -93,7 +93,7 @@ module Adm
     end
 
     def create_template
-      @template_form = WhatsappTemplateForm.new(template_params)
+      @template_form = ::Whatsapp::TemplateForm.new(template_params)
 
       return render_template_form_errors if @template_form.invalid?
 
@@ -219,7 +219,7 @@ module Adm
       end
 
       def load_template_form
-        @template_form ||= WhatsappTemplateForm.new(
+        @template_form ||= ::Whatsapp::TemplateForm.new(
           name: DEFAULT_TEMPLATE_NAME,
           language: ::Whatsapp.broadcast_template_language,
           body: t("adm.whatsapp.show.template_body_default")
@@ -266,7 +266,7 @@ module Adm
       end
 
       def load_eligible_phases
-        @eligible_projekt_phases = WhatsappEligiblePhasesQuery.call
+        @eligible_projekt_phases = ::Whatsapp::EligiblePhasesQuery.call
       end
 
       # Two 360dialog round-trips, each retried three times with a sleep at a
@@ -310,8 +310,8 @@ module Adm
       end
 
       def load_dialogs
-        @dialogs_present = WhatsappAccount.exists?
-        scope = WhatsappAccount.includes(:user, :whatsapp_conversation)
+        @dialogs_present = ::Whatsapp::Account.exists?
+        scope = ::Whatsapp::Account.includes(:user, :whatsapp_conversation)
 
         @pagy, @dialogs = pagy(
           WhatsappDialogsQuery.call(scope, params),
@@ -325,11 +325,11 @@ module Adm
       end
 
       def assign_dialog_filter_options
-        @dialog_state_options = WhatsappAccount.states.keys.map do |state|
+        @dialog_state_options = ::Whatsapp::Account.states.keys.map do |state|
           [t("adm.whatsapp.dialogs.states.#{state}"), state]
         end
 
-        @dialog_step_options = WhatsappConversation.steps.keys.excluding("idle").map do |step|
+        @dialog_step_options = ::Whatsapp::Conversation.steps.keys.excluding("idle").map do |step|
           [t("adm.whatsapp.steps.#{step}"), step]
         end
 
@@ -339,14 +339,14 @@ module Adm
       end
 
       def dialog_message_counts
-        WhatsappMessage
+        ::Whatsapp::Message
           .where(whatsapp_account_id: @dialogs.map(&:id))
           .group(:whatsapp_account_id)
           .count
       end
 
       def dialog_last_messages
-        WhatsappMessage
+        ::Whatsapp::Message
           .where(whatsapp_account_id: @dialogs.map(&:id))
           .select("DISTINCT ON (whatsapp_account_id) whatsapp_messages.*")
           .order(:whatsapp_account_id, created_at: :desc)

@@ -20,7 +20,7 @@ class Whatsapp::ResourceCreationValidationService < ApplicationService
     # Same list the eligible-phases query offers from, so a phase the bot lists
     # and a phase the bot accepts cannot come apart.
     def supported_phase?
-      WhatsappEligiblePhasesQuery::PHASE_CLASSES.include?(@projekt_phase.class)
+      Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.include?(@projekt_phase.class)
     end
 
     # An investment cannot be built without the budget's heading, and a budget

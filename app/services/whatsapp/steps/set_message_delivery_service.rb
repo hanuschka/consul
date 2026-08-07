@@ -18,10 +18,9 @@ class Whatsapp::Steps::SetMessageDeliveryService < ApplicationService
   def turn_on
     account.opt_in!
 
-    Whatsapp::Outbound.recovery(
+    Whatsapp::Steps::MainMenuService.call(
       conversation: @conversation,
-      body: I18n.t("whatsapp.bot.opted_in"),
-      actions: [:menu]
+      body: I18n.t("whatsapp.bot.opted_in")
     )
   end
 

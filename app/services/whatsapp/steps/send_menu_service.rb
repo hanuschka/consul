@@ -3,12 +3,17 @@ class Whatsapp::Steps::SendMenuService < ApplicationService
   # map in Whatsapp::MenuActions plus a caller that says which actions are
   # actually worth offering right now. An action with nothing behind it is left
   # out rather than shown and then apologised for.
-  def initialize(conversation:, scope:, body:, available_actions:, record_id: 0)
+  #
+  # `empty_body` is what to say when there are no rows at all. A caller whose
+  # body is a confirmation passes it here too, so an empty portal answers with
+  # that message rather than swallowing it for the generic "nothing open" copy.
+  def initialize(conversation:, scope:, body:, available_actions:, record_id: 0, empty_body: nil)
     @conversation = conversation
     @scope = scope
     @body = body
     @available_actions = available_actions
     @record_id = record_id
+    @empty_body = empty_body
   end
 
   def call
@@ -45,22 +50,23 @@ class Whatsapp::Steps::SendMenuService < ApplicationService
       end
     end
 
-    # No menu button on the portal menu's own dead end: it would only redraw the
-    # same empty menu.
+    # The portal menu's own dead end falls back to plain text: offering the
+    # portal menu here would only redraw the same empty menu. A projekt or phase
+    # menu with nothing in it still has somewhere to go, so it hands over to the
+    # portal.
     def send_nothing_available
       return send_text if @scope == :portal
 
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.nothing_here"),
-        actions: [:menu]
+        body: I18n.t("whatsapp.bot.menu.nothing_here")
       )
     end
 
     def send_text
       Whatsapp::Outbound.text(
         account: @conversation.whatsapp_account,
-        body: I18n.t("whatsapp.bot.no_projekt")
+        body: @empty_body.presence || I18n.t("whatsapp.bot.no_projekt")
       )
     end
 end

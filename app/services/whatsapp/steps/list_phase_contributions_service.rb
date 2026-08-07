@@ -7,7 +7,7 @@ class Whatsapp::Steps::ListPhaseContributionsService < ApplicationService
   def call
     Whatsapp::Steps::SendDigestService.call(
       conversation: @conversation,
-      entries: WhatsappPhaseContributionsQuery.call(projekt_phase: @projekt_phase),
+      entries: Whatsapp::PhaseContributionsQuery.call(projekt_phase: @projekt_phase),
       intro: I18n.t("whatsapp.bot.menu.phase_contributions.intro", phase: @projekt_phase.title),
       empty_body: I18n.t("whatsapp.bot.menu.phase_contributions.empty"),
       more_url: Whatsapp::ProjektLink.phase_url(@projekt_phase)

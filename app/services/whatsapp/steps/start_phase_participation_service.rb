@@ -18,19 +18,18 @@ class Whatsapp::Steps::StartPhaseParticipationService < ApplicationService
   private
 
     def bot_can_submit_to_phase?
-      WhatsappEligiblePhasesQuery.eligible?(@projekt_phase)
+      Whatsapp::EligiblePhasesQuery.eligible?(@projekt_phase)
     end
 
     # A phase the bot has no flow for is not a refusal about this citizen, so it
     # points at the page where taking part is still possible.
     def refuse
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
         body: I18n.t(
           "whatsapp.bot.menu.phase_participation.unsupported",
           url: Whatsapp::ProjektLink.phase_url(@projekt_phase)
-        ),
-        actions: [:menu]
+        )
       )
     end
 end

@@ -17,8 +17,7 @@ class Whatsapp::MenuActionService < ApplicationService
     events: Whatsapp::Steps::ListEventsService,
     milestones: Whatsapp::Steps::ListMilestonesService,
     results: Whatsapp::Steps::ListResultsService,
-    follow: Whatsapp::Steps::ToggleProjektFollowService,
-    page: Whatsapp::Steps::SendProjektPageService
+    follow: Whatsapp::Steps::ToggleProjektFollowService
   }.freeze
 
   PHASE_STEPS = {
@@ -103,7 +102,7 @@ class Whatsapp::MenuActionService < ApplicationService
     def projekt
       return @projekt if defined?(@projekt)
 
-      @projekt = WhatsappBrowsableProjektsQuery.call.find { |candidate| candidate.id == @record_id }
+      @projekt = Whatsapp::BrowsableProjektsQuery.call.find { |candidate| candidate.id == @record_id }
     end
 
     # Restricted to phases of a projekt the portal itself shows. Without the

@@ -63,7 +63,7 @@ User.class_eval do
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
-  has_one :whatsapp_account
+  has_one :whatsapp_account, class_name: "Whatsapp::Account"
 
   belongs_to :api_client, optional: true
 

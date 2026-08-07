@@ -40,10 +40,9 @@ class Whatsapp::NextStepService < ApplicationService
     # The menu button is still worth offering: a phase may open later, and
     # tapping it is how someone re-checks without composing a message.
     def send_nothing_open
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.no_projekt"),
-        actions: [:menu]
+        body: I18n.t("whatsapp.bot.no_projekt")
       )
     end
 
@@ -56,7 +55,7 @@ class Whatsapp::NextStepService < ApplicationService
     end
 
     def open_projekt_phases
-      @open_projekt_phases ||= WhatsappEligiblePhasesQuery.call
+      @open_projekt_phases ||= Whatsapp::EligiblePhasesQuery.call
     end
 
     # A pending choice may span the whole portal, in which case no projekt was

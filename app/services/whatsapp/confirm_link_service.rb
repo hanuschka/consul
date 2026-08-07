@@ -25,7 +25,7 @@ class Whatsapp::ConfirmLinkService < ApplicationService
   private
 
     def account
-      @account ||= WhatsappAccount.find_by(link_token: @token.to_s)
+      @account ||= Whatsapp::Account.find_by(link_token: @token.to_s)
     end
 
     # Linking is not consent to broadcasts: an account only enters the
@@ -37,6 +37,6 @@ class Whatsapp::ConfirmLinkService < ApplicationService
     end
 
     def user_linked_to_other_number?
-      WhatsappAccount.where(user_id: @user.id).where.not(id: account.id).exists?
+      Whatsapp::Account.where(user_id: @user.id).where.not(id: account.id).exists?
     end
 end

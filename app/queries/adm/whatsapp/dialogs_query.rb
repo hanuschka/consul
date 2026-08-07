@@ -1,4 +1,4 @@
-class Adm::WhatsappDialogsQuery < ApplicationQuery
+class Adm::Whatsapp::DialogsQuery < ApplicationQuery
   RECENT_WINDOW = 7.days
   GROWTH_WINDOW = 30.days
 
@@ -40,14 +40,14 @@ class Adm::WhatsappDialogsQuery < ApplicationQuery
 
     def filter_by_state(scope)
       return scope if params[:state].blank?
-      return scope if !WhatsappAccount.states.key?(params[:state])
+      return scope if !::Whatsapp::Account.states.key?(params[:state])
 
       scope.where(state: params[:state])
     end
 
     def filter_by_step(scope)
       return scope if params[:step].blank?
-      return scope if !WhatsappConversation.steps.key?(params[:step])
+      return scope if !::Whatsapp::Conversation.steps.key?(params[:step])
 
       scope
         .joins(:whatsapp_conversation)

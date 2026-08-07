@@ -1,6 +1,6 @@
-class WhatsappMessage < ApplicationRecord
-  belongs_to :whatsapp_account
-  belongs_to :projekt, optional: true
+class Whatsapp::Message < ApplicationRecord
+  belongs_to :whatsapp_account, class_name: "Whatsapp::Account", inverse_of: :whatsapp_messages
+  belongs_to :projekt, class_name: "::Projekt", optional: true
 
   enum direction: {
     inbound: "inbound",

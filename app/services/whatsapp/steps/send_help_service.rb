@@ -14,11 +14,11 @@ class Whatsapp::Steps::SendHelpService < ApplicationService
   # currently empty is added from live data, so a quiet week reads as "nothing
   # right now" instead of as a bot that cannot do it at all.
   EMPTY_CHECKS = {
-    events: -> { WhatsappUpcomingEventsQuery.call.empty? },
-    polls: -> { WhatsappOpenPollsQuery.call.empty? },
-    results: -> { WhatsappPublishedResultsQuery.call.empty? },
-    milestones: -> { WhatsappPublishedMilestonesQuery.call.empty? },
-    create: -> { WhatsappEligiblePhasesQuery.call.empty? }
+    events: -> { Whatsapp::UpcomingEventsQuery.call.empty? },
+    polls: -> { Whatsapp::OpenPollsQuery.call.empty? },
+    results: -> { Whatsapp::PublishedResultsQuery.call.empty? },
+    milestones: -> { Whatsapp::PublishedMilestonesQuery.call.empty? },
+    create: -> { Whatsapp::EligiblePhasesQuery.call.empty? }
   }.freeze
 
   def initialize(conversation:)
@@ -26,10 +26,9 @@ class Whatsapp::Steps::SendHelpService < ApplicationService
   end
 
   def call
-    Whatsapp::Outbound.recovery(
+    Whatsapp::Steps::MainMenuService.call(
       conversation: @conversation,
-      body: body.truncate(MAX_BODY_LENGTH),
-      actions: [:menu]
+      body: body.truncate(MAX_BODY_LENGTH)
     )
   end
 

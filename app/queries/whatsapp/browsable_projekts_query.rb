@@ -1,4 +1,4 @@
-class WhatsappBrowsableProjektsQuery < ApplicationQuery
+class Whatsapp::BrowsableProjektsQuery < ApplicationQuery
   # Reading is a wider set than submitting: a projekt worth browsing is one the
   # portal's own overview shows, not only one whose phase happens to accept a
   # submission from the bot.

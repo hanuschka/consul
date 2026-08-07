@@ -39,7 +39,7 @@ class Whatsapp::Steps::PhaseMenuService < ApplicationService
 
       actions << :participate if participation_open?
       actions << :contributions if phase_contributions.any?
-      actions << :results if WhatsappPublishedResultsQuery.public_section_for(@projekt_phase).present?
+      actions << :results if Whatsapp::PublishedResultsQuery.public_section_for(@projekt_phase).present?
 
       actions
     end
@@ -48,7 +48,7 @@ class Whatsapp::Steps::PhaseMenuService < ApplicationService
     # offered rather than after it is tapped.
     def participation_open?
       return false if user.blank?
-      return false if !WhatsappEligiblePhasesQuery.eligible?(@projekt_phase)
+      return false if !Whatsapp::EligiblePhasesQuery.eligible?(@projekt_phase)
 
       Whatsapp::ResourceCreationValidationService.call(
         projekt_phase: @projekt_phase, user: user
@@ -57,6 +57,6 @@ class Whatsapp::Steps::PhaseMenuService < ApplicationService
 
     def phase_contributions
       @phase_contributions ||=
-        WhatsappPhaseContributionsQuery.call(projekt_phase: @projekt_phase)
+        Whatsapp::PhaseContributionsQuery.call(projekt_phase: @projekt_phase)
     end
 end

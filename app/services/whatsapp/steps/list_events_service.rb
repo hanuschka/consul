@@ -18,7 +18,7 @@ class Whatsapp::Steps::ListEventsService < ApplicationService
     # The date leads the description because "which of these is soon" is the
     # only question a list of events has to answer at a glance.
     def entries
-      WhatsappUpcomingEventsQuery.call(projekt: @projekt).map do |event|
+      Whatsapp::UpcomingEventsQuery.call(projekt: @projekt).map do |event|
         {
           title: event.title,
           description: description_for(event),

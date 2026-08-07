@@ -1,5 +1,5 @@
 class Whatsapp::SubscriptionsController < ApplicationController
-  include WhatsappFeatureGated
+  include Whatsapp::FeatureGated
 
   before_action :authenticate_user!
   before_action :find_account

@@ -6,7 +6,7 @@ class Whatsapp::ConfirmLinkReplyJob < ApplicationJob
   # three retries, so leaving them inline held a Puma thread for up to two
   # minutes on a page the citizen is waiting on.
   def perform(whatsapp_account_id)
-    account = WhatsappAccount.find_by(id: whatsapp_account_id)
+    account = Whatsapp::Account.find_by(id: whatsapp_account_id)
 
     return if account.blank?
     return if !::Whatsapp.enabled?

@@ -1,4 +1,4 @@
-class WhatsappPublishedMilestonesQuery < ApplicationQuery
+class Whatsapp::PublishedMilestonesQuery < ApplicationQuery
   # Milestones hang off phases (134 of them) far more than off proposals (2), so
   # progress is read through the phase and reported under its projekt.
   #

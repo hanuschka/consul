@@ -1,6 +1,6 @@
-class WhatsappConversation < ApplicationRecord
-  belongs_to :whatsapp_account
-  belongs_to :projekt_phase, optional: true
+class Whatsapp::Conversation < ApplicationRecord
+  belongs_to :whatsapp_account, class_name: "Whatsapp::Account", inverse_of: :whatsapp_conversation
+  belongs_to :projekt_phase, class_name: "::ProjektPhase", optional: true
 
   # Every step and tool needs the account, and most of them only need the
   # citizen behind it. Nil until the number is linked, which is the state each

@@ -41,10 +41,9 @@ class Whatsapp::Steps::SendStaticPageService < ApplicationService
     # A portal that never created the page should not leave the citizen with a
     # broken row, so the reply says so and offers the way back.
     def send_missing
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.#{@page_key}.missing"),
-        actions: [:menu]
+        body: I18n.t("whatsapp.bot.menu.#{@page_key}.missing")
       )
     end
 end

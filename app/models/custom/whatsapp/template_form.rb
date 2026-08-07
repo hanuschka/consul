@@ -1,4 +1,4 @@
-class WhatsappTemplateForm
+class Whatsapp::TemplateForm
   include ActiveModel::Model
 
   NAME_PATTERN = /\A[a-z0-9_]+\z/.freeze

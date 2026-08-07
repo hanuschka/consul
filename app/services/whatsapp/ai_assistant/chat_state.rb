@@ -7,7 +7,7 @@ class Whatsapp::AiAssistant::ChatState
   CONTEXT_KEY = "ai_chat".freeze
 
   # Bounded here rather than by the retention job: that one purges
-  # WhatsappMessage rows and never looks at this column.
+  # Whatsapp::Message rows and never looks at this column.
   MAX_MESSAGES = 24
 
   def initialize(conversation:)

@@ -39,7 +39,7 @@ class Whatsapp::BroadcastProjektJob < ApplicationJob
     def enqueue_batches(projekt)
       batch_count = 0
 
-      WhatsappAccount.subscribed.pluck(:id).each_slice(BATCH_SIZE) do |account_ids|
+      Whatsapp::Account.subscribed.pluck(:id).each_slice(BATCH_SIZE) do |account_ids|
         Whatsapp::BroadcastProjektBatchJob
           .set(wait: batch_count * BATCH_INTERVAL)
           .perform_later(projekt.id, account_ids)

@@ -19,7 +19,7 @@ class Whatsapp::Steps::ListResultsService < ApplicationService
     # The projekt names the row because a citizen recognises the projekt, not
     # the phase; the phase and its end date go in the description.
     def rows
-      WhatsappPublishedResultsQuery.call(projekt: @projekt).map do |projekt_phase|
+      Whatsapp::PublishedResultsQuery.call(projekt: @projekt).map do |projekt_phase|
         {
           id: Whatsapp::MenuActions.id_for(
             scope: :phase, action: :results, record_id: projekt_phase.id

@@ -114,7 +114,7 @@ module Whatsapp::Outbound
   def deliver(account:, kind:, body:, projekt_id: nil)
     response = yield(WhatsappApi::Client.new.messages)
 
-    WhatsappMessage.record_outbound!(
+    Whatsapp::Message.record_outbound!(
       account: account,
       kind: kind,
       body: body,

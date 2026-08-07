@@ -21,7 +21,7 @@ class Whatsapp::Steps::ListPhasesService < ApplicationService
     # Each row opens that phase's own menu rather than its page: a phase is a
     # place with several things in it, not a single destination.
     def rows
-      WhatsappProjektPhasesQuery.call(projekt: @projekt).map do |projekt_phase|
+      Whatsapp::ProjektPhasesQuery.call(projekt: @projekt).map do |projekt_phase|
         {
           id: Whatsapp::MenuActions.id_for(
             scope: :phase, action: :menu, record_id: projekt_phase.id

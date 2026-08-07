@@ -1,4 +1,4 @@
-class WhatsappUserContributionsQuery < ApplicationQuery
+class Whatsapp::UserContributionsQuery < ApplicationQuery
   # What one citizen has published, newest first, as one list across both
   # resources. The bot flow submits a proposal or an investment depending on the
   # phase, so a citizen's own history spans the two without knowing it.

@@ -16,7 +16,7 @@ module Whatsapp::ProjektLink
   # Built from the page slug rather than from #url, whose route redirects and
   # would drop the query string the projekt page reads to open the tab.
   def evaluation_url(projekt_phase)
-    phase_url(projekt_phase, section: WhatsappPublishedResultsQuery.public_section_for(projekt_phase))
+    phase_url(projekt_phase, section: Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase))
   end
 
   # Nil rather than a crash when the projekt has no page: a phase is reached

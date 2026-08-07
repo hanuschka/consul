@@ -21,7 +21,7 @@ class Whatsapp::Steps::RefuseParticipationService < ApplicationService
   def call
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.recovery(conversation: @conversation, body: message, actions: [:menu])
+    Whatsapp::Steps::MainMenuService.call(conversation: @conversation, body: message)
   end
 
   # Also read by the assistant, which explains a refusal in its own words but

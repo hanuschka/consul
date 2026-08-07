@@ -18,10 +18,9 @@ class Whatsapp::Steps::SendDigestService < ApplicationService
   def call
     return send_empty if @entries.empty?
 
-    Whatsapp::Outbound.recovery(
+    Whatsapp::Steps::MainMenuService.call(
       conversation: @conversation,
-      body: [@intro, *formatted_entries, more_line].compact.join("\n\n"),
-      actions: [:menu]
+      body: [@intro, *formatted_entries, more_line].compact.join("\n\n")
     )
   end
 
@@ -47,10 +46,9 @@ class Whatsapp::Steps::SendDigestService < ApplicationService
     end
 
     def send_empty
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
-        body: @empty_body,
-        actions: [:menu]
+        body: @empty_body
       )
     end
 end

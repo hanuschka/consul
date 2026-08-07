@@ -52,7 +52,7 @@ class Whatsapp::Steps::NotificationSettingsService < ApplicationService
     end
 
     def followed_projekts
-      @followed_projekts ||= WhatsappFollowedProjektsQuery.call(user: user)
+      @followed_projekts ||= Whatsapp::FollowedProjektsQuery.call(user: user)
     end
 
     def buttons

@@ -106,9 +106,6 @@ en:
             follow:
               title: Follow this project
               description: Be told when something happens
-            page:
-              title: Open the page
-              description: This project in the portal
           phase:
             participate:
               title: Take part here

@@ -1,4 +1,4 @@
-class WhatsappOpenPollsQuery < ApplicationQuery
+class Whatsapp::OpenPollsQuery < ApplicationQuery
   def initialize(projekt: nil)
     @projekt = projekt
   end

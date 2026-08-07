@@ -8,7 +8,7 @@ class Whatsapp::Steps::SendPhaseResultsService < ApplicationService
   # withdrew the evaluation, and a hidden evaluation must not stay reachable
   # through an old message.
   def call
-    return send_gone if WhatsappPublishedResultsQuery.public_section_for(@projekt_phase).blank?
+    return send_gone if Whatsapp::PublishedResultsQuery.public_section_for(@projekt_phase).blank?
 
     Whatsapp::Steps::SendLinkButtonService.call(
       conversation: @conversation,
@@ -20,10 +20,9 @@ class Whatsapp::Steps::SendPhaseResultsService < ApplicationService
   private
 
     def send_gone
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.link.gone"),
-        actions: [:menu]
+        body: I18n.t("whatsapp.bot.menu.link.gone")
       )
     end
 end

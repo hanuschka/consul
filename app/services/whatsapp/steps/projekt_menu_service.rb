@@ -35,13 +35,13 @@ class Whatsapp::Steps::ProjektMenuService < ApplicationService
     end
 
     def available_actions
-      actions = [:page]
+      actions = []
 
-      actions << :phases if WhatsappProjektPhasesQuery.exists?(projekt: @projekt)
-      actions << :contributions if WhatsappProjektContributionsQuery.exists?(projekt: @projekt)
-      actions << :events if WhatsappUpcomingEventsQuery.exists?(projekt: @projekt)
-      actions << :milestones if WhatsappPublishedMilestonesQuery.exists?(projekt: @projekt)
-      actions << :results if WhatsappPublishedResultsQuery.exists?(projekt: @projekt)
+      actions << :phases if Whatsapp::ProjektPhasesQuery.exists?(projekt: @projekt)
+      actions << :contributions if Whatsapp::ProjektContributionsQuery.exists?(projekt: @projekt)
+      actions << :events if Whatsapp::UpcomingEventsQuery.exists?(projekt: @projekt)
+      actions << :milestones if Whatsapp::PublishedMilestonesQuery.exists?(projekt: @projekt)
+      actions << :results if Whatsapp::PublishedResultsQuery.exists?(projekt: @projekt)
       actions << :follow if user.present?
 
       actions

@@ -19,7 +19,7 @@ class Whatsapp::Steps::ListProjektsService < ApplicationService
     # with phases, contributions and dates in it, and the page link is one of
     # the things the card offers.
     def rows
-      WhatsappBrowsableProjektsQuery.call.map do |projekt|
+      Whatsapp::BrowsableProjektsQuery.call.map do |projekt|
         {
           id: Whatsapp::MenuActions.id_for(scope: :projekt, action: :card, record_id: projekt.id),
           title: Whatsapp::ProjektLink.title(projekt),

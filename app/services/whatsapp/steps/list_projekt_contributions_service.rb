@@ -7,7 +7,7 @@ class Whatsapp::Steps::ListProjektContributionsService < ApplicationService
   def call
     Whatsapp::Steps::SendDigestService.call(
       conversation: @conversation,
-      entries: WhatsappProjektContributionsQuery.call(projekt: @projekt),
+      entries: Whatsapp::ProjektContributionsQuery.call(projekt: @projekt),
       intro: I18n.t(
         "whatsapp.bot.menu.projekt_contributions.intro",
         projekt: Whatsapp::ProjektLink.title(@projekt)

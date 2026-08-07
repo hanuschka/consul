@@ -1,4 +1,4 @@
-class WhatsappUpcomingEventsQuery < ApplicationQuery
+class Whatsapp::UpcomingEventsQuery < ApplicationQuery
   # Portal-wide, or the events of one projekt. Past events are dropped rather
   # than shown greyed out: a chat row offers no way to say "this already
   # happened" that a citizen would read before tapping it.

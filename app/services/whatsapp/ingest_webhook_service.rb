@@ -28,7 +28,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
     def event
       return @event if defined?(@event)
 
-      @event = WhatsappWebhookEvent.find_by(id: @event_id)
+      @event = Whatsapp::WebhookEvent.find_by(id: @event_id)
     end
 
     def payload
@@ -53,7 +53,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
 
     def record_statuses(statuses)
       Array(statuses).each do |status|
-        message = WhatsappMessage.find_by(wa_message_id: status["id"], direction: "outbound")
+        message = Whatsapp::Message.find_by(wa_message_id: status["id"], direction: "outbound")
 
         next if message.blank?
 
@@ -71,7 +71,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
     # retries deliveries, so a concurrent retry can lose the unique-index race
     # while other messages in the same payload are still new.
     def record_message(message, contacts)
-      return if WhatsappMessage.inbound_recorded?(message["id"])
+      return if Whatsapp::Message.inbound_recorded?(message["id"])
 
       account = find_or_create_account(message["from"], contacts)
       inbound_message = persist_message(account, message)
@@ -94,7 +94,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
     end
 
     def find_or_create_account(wa_id, contacts)
-      account = WhatsappAccount.find_or_initialize_by(wa_id: wa_id)
+      account = Whatsapp::Account.find_or_initialize_by(wa_id: wa_id)
       account.phone ||= wa_id
       account.profile_name = profile_name_for(wa_id, contacts) || account.profile_name
       account.save!
@@ -109,7 +109,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
     end
 
     def persist_message(account, message)
-      WhatsappMessage.create!(
+      Whatsapp::Message.create!(
         whatsapp_account: account,
         direction: "inbound",
         kind: KIND_BY_MESSAGE_TYPE.fetch(message["type"], "unsupported"),

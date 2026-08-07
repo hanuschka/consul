@@ -10,10 +10,9 @@ class Whatsapp::Steps::ListContributionsService < ApplicationService
   def call
     return send_empty if contributions.empty?
 
-    Whatsapp::Outbound.recovery(
+    Whatsapp::Steps::MainMenuService.call(
       conversation: @conversation,
-      body: [I18n.t("whatsapp.bot.menu.contributions.intro"), *entries].join("\n\n"),
-      actions: [:menu]
+      body: [I18n.t("whatsapp.bot.menu.contributions.intro"), *entries].join("\n\n")
     )
   end
 
@@ -24,7 +23,7 @@ class Whatsapp::Steps::ListContributionsService < ApplicationService
     end
 
     def contributions
-      @contributions ||= WhatsappUserContributionsQuery.call(user: account.user)
+      @contributions ||= Whatsapp::UserContributionsQuery.call(user: account.user)
     end
 
     def entries
@@ -38,10 +37,9 @@ class Whatsapp::Steps::ListContributionsService < ApplicationService
     end
 
     def send_empty
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Steps::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.contributions.empty"),
-        actions: [:menu]
+        body: I18n.t("whatsapp.bot.menu.contributions.empty")
       )
     end
 end

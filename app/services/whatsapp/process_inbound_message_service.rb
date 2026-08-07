@@ -281,7 +281,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     def store_projekt_entry(projekt)
-      eligible_phases = WhatsappEligiblePhasesQuery.call(projekt: projekt)
+      eligible_phases = Whatsapp::EligiblePhasesQuery.call(projekt: projekt)
 
       return :projekt_without_phase if eligible_phases.empty?
 
@@ -435,9 +435,9 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
           "whatsapp.bot.published"
         end
 
-      send_recovery(
-        I18n.t(copy_key, url: Whatsapp::PublishedResourceUrl.call(resource)),
-        [:menu]
+      Whatsapp::Steps::MainMenuService.call(
+        conversation:,
+        body: I18n.t(copy_key, url: Whatsapp::PublishedResourceUrl.call(resource))
       )
     end
 

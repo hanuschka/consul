@@ -1,4 +1,4 @@
-class WhatsappPhaseContributionsQuery < ApplicationQuery
+class Whatsapp::PhaseContributionsQuery < ApplicationQuery
   # Every phase type declares what it holds through resources_name, but only
   # proposal and debate phases expose a `resources` association — the rest reach
   # their content by their own route. So the route is an explicit map keyed by

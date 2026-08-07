@@ -1,5 +1,5 @@
 class Whatsapp::LinksController < ApplicationController
-  include WhatsappFeatureGated
+  include Whatsapp::FeatureGated
 
   before_action :authenticate_user!
   before_action :find_pending_account
@@ -30,7 +30,7 @@ class Whatsapp::LinksController < ApplicationController
   private
 
     def find_pending_account
-      @account = WhatsappAccount.find_by(link_token: params[:token].to_s)
+      @account = Whatsapp::Account.find_by(link_token: params[:token].to_s)
 
       return if @account.present? && @account.link_token_valid?
 

@@ -8,7 +8,7 @@ class Ai::Tools::WhatsappAiAssistant::ListMyContributions < Ai::Tools::WhatsappA
   # cannot answer "what did I submit" differently.
   def execute
     contributions =
-      ::WhatsappUserContributionsQuery.call(user: user).map { |resource| row_for(resource) }
+      ::Whatsapp::UserContributionsQuery.call(user: user).map { |resource| row_for(resource) }
 
     { contributions: contributions }
   end

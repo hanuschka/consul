@@ -110,9 +110,6 @@ de:
             follow:
               title: Projekt folgen
               description: Bei Neuigkeiten benachrichtigt werden
-            page:
-              title: Seite öffnen
-              description: Das Projekt im Beteiligungsportal
           phase:
             participate:
               title: Hier mitmachen

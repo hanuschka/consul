@@ -14,6 +14,12 @@ module Whatsapp
   # edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
+  # The models under this namespace keep their original tables, so the prefix is
+  # declared once here rather than as a self.table_name on each of them.
+  def self.table_name_prefix
+    "whatsapp_"
+  end
+
   def self.config
     Rails.application.secrets.whatsapp || {}
   end

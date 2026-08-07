@@ -1,4 +1,4 @@
-module WhatsappFeatureGated
+module Whatsapp::FeatureGated
   extend ActiveSupport::Concern
 
   included do

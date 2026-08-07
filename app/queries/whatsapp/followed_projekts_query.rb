@@ -1,4 +1,4 @@
-class WhatsappFollowedProjektsQuery < ApplicationQuery
+class Whatsapp::FollowedProjektsQuery < ApplicationQuery
   # The same ProjektSubscription rows the website's follow button writes, so a
   # projekt followed on the web is followed in the chat and unfollowing in
   # either place is the same act.

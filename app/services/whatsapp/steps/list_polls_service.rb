@@ -18,7 +18,7 @@ class Whatsapp::Steps::ListPollsService < ApplicationService
     # Links to the poll rather than casting a vote: the bot may not vote on the
     # citizen's behalf, and a poll answer cannot be taken back.
     def entries
-      WhatsappOpenPollsQuery.call(projekt: @projekt).map do |poll|
+      Whatsapp::OpenPollsQuery.call(projekt: @projekt).map do |poll|
         {
           title: poll.name,
           description: description_for(poll),

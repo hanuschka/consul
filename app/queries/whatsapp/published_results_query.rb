@@ -1,4 +1,4 @@
-class WhatsappPublishedResultsQuery < ApplicationQuery
+class Whatsapp::PublishedResultsQuery < ApplicationQuery
   # Enough rows to fill the list several times over after the Ruby filter, but
   # bounded: whether an evaluation is public is a per-record decision no SQL
   # predicate can make.

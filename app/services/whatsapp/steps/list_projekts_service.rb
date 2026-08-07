@@ -4,41 +4,27 @@ class Whatsapp::Steps::ListProjektsService < ApplicationService
   end
 
   def call
-    return send_empty if projekts.empty?
-
-    Whatsapp::Outbound.list(
-      account: @conversation.whatsapp_account,
+    Whatsapp::Steps::SendListService.call(
+      conversation: @conversation,
+      rows: rows,
       body: I18n.t("whatsapp.bot.menu.projekts.body"),
       button_label: I18n.t("whatsapp.bot.menu.projekts.button"),
-      rows: rows
+      empty_body: I18n.t("whatsapp.bot.menu.projekts.empty")
     )
   end
 
   private
 
-    def projekts
-      @projekts ||= WhatsappBrowsableProjektsQuery.call
-    end
-
+    # A tap opens the projekt's card rather than its page: a projekt is a place
+    # with phases, contributions and dates in it, and the page link is one of
+    # the things the card offers.
     def rows
-      projekts.map do |projekt|
+      WhatsappBrowsableProjektsQuery.call.map do |projekt|
         {
-          id: Whatsapp::MenuActions.projekt_row_id_for(projekt.id),
-          title: projekt_title(projekt),
+          id: Whatsapp::MenuActions.id_for(scope: :projekt, action: :card, record_id: projekt.id),
+          title: Whatsapp::ProjektLink.title(projekt),
           description: projekt.page&.subtitle
         }
       end
-    end
-
-    def projekt_title(projekt)
-      Whatsapp::ProjektLink.title(projekt)
-    end
-
-    def send_empty
-      Whatsapp::Outbound.recovery(
-        conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.projekts.empty"),
-        actions: [:menu]
-      )
     end
 end

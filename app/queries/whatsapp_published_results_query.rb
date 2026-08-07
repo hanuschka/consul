@@ -15,6 +15,10 @@ class WhatsappPublishedResultsQuery < ApplicationQuery
     "ai" => "ai_evaluation"
   }.freeze
 
+  def initialize(projekt: nil)
+    @projekt = projekt
+  end
+
   def call
     candidates.select { |projekt_phase| publicly_visible?(projekt_phase) }.first(MAX_CHOICES)
   end
@@ -32,7 +36,7 @@ class WhatsappPublishedResultsQuery < ApplicationQuery
   private
 
     def candidates
-      ProjektPhase
+      scope = ProjektPhase
         .joins(:projekt_phase_evaluation)
         .joins(projekt: :page)
         .where(site_customization_pages: { status: "published" })
@@ -40,7 +44,10 @@ class WhatsappPublishedResultsQuery < ApplicationQuery
         .includes(:projekt_phase_evaluation, :projekt_phase_evaluation_visibility, projekt: :page)
         .order(Arel.sql("projekt_phases.end_date DESC NULLS LAST"))
         .limit(CANDIDATE_LIMIT)
-        .to_a
+
+      scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
+
+      scope.to_a
     end
 
     # Deliberately only the public predicate. The footer helper has a second

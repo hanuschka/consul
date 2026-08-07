@@ -50,40 +50,149 @@ de:
       projekt_row_description: "%{phase} bis %{end_date}"
       menu:
         body: >-
-          Willkommen! Hier kannst du Vorschläge einreichen, deine Beiträge sehen, die laufenden
-          Beteiligungsprojekte durchstöbern und Ergebnisse abgeschlossener Phasen nachlesen.
+          Willkommen! Hier findest du alles rund um die Beteiligung in deiner Region.
           Was möchtest du tun?
         button: Auswählen
+        nothing_here: Hier gibt es gerade nichts zu sehen.
+        sections:
+          participate: Mitmachen
+          discover: Entdecken
+          account: Mein Konto
+          service: Hilfe
         rows:
-          create:
-            title: Idee einreichen
-            description: Vorschlag zu einem laufenden Projekt
-          contributions:
-            title: Meine Beiträge
-            description: Was du bereits eingereicht hast
-          projekts:
-            title: Projekte ansehen
-            description: Laufende Beteiligungsprojekte
-          results:
-            title: Ergebnisse
-            description: Auswertungen abgeschlossener Phasen
+          portal:
+            create:
+              title: Idee einreichen
+              description: Vorschlag zu einem laufenden Projekt
+            polls:
+              title: Abstimmungen
+              description: Umfragen, bei denen du mitentscheiden kannst
+            projekts:
+              title: Projekte ansehen
+              description: Laufende Beteiligungsprojekte
+            events:
+              title: Termine
+              description: Kommende Veranstaltungen
+            milestones:
+              title: Projektfortschritt
+              description: Was sich zuletzt getan hat
+            results:
+              title: Ergebnisse
+              description: Auswertungen abgeschlossener Phasen
+            contributions:
+              title: Meine Beiträge
+              description: Was du bereits eingereicht hast
+            notifications:
+              title: Benachrichtigungen
+              description: Nachrichten und gefolgte Projekte
+            help:
+              title: So funktioniert's
+              description: Kurz erklärt
+            contact:
+              title: Kontakt
+              description: Das Team erreichen
+          projekt:
+            phases:
+              title: Beteiligungsphasen
+              description: Was in diesem Projekt läuft
+            contributions:
+              title: Beiträge
+              description: Was andere eingereicht haben
+            events:
+              title: Termine
+              description: Kommende Veranstaltungen
+            milestones:
+              title: Projektfortschritt
+              description: Was sich zuletzt getan hat
+            results:
+              title: Ergebnisse
+              description: Auswertungen abgeschlossener Phasen
+            follow:
+              title: Projekt folgen
+              description: Bei Neuigkeiten benachrichtigt werden
+            page:
+              title: Seite öffnen
+              description: Das Projekt im Beteiligungsportal
+          phase:
+            participate:
+              title: Hier mitmachen
+              description: Eigenen Vorschlag einreichen
+            contributions:
+              title: Beiträge ansehen
+              description: Was andere hier eingereicht haben
+            results:
+              title: Ergebnisse
+              description: Auswertung dieser Phase
+            page:
+              title: Seite öffnen
+              description: Diese Phase im Beteiligungsportal
+        phase:
+          until: "bis %{end_date}"
+        digest:
+          more: "Und %{count} weitere: %{url}"
+          more_plain: "Und %{count} weitere."
         contributions:
           intro: "Das hast du bisher eingereicht:"
           entry: "*%{title}*\n%{url}"
           empty: >-
             Du hast bisher noch nichts eingereicht. Über das Menü kannst du jederzeit einen
             Vorschlag zu einem laufenden Projekt schreiben.
+        projekt_contributions:
+          intro: "Diese Beiträge gibt es zu „%{projekt}“:"
+          empty: Zu diesem Projekt wurde bisher noch nichts eingereicht.
+        phase_contributions:
+          intro: "Das wurde bei „%{phase}“ eingereicht:"
+          empty: In dieser Phase gibt es bisher noch keine Beiträge.
+        phase_participation:
+          unsupported: >-
+            In dieser Phase kann ich hier im Chat nichts für dich einreichen. Auf der Projektseite
+            geht es: %{url}
         projekts:
-          body: "Diese Beteiligungsprojekte laufen gerade. Zu welchem möchtest du mehr lesen?"
+          body: "Diese Beteiligungsprojekte laufen gerade. Welches möchtest du dir ansehen?"
           button: Projekt wählen
           empty: >-
             Gerade läuft kein Beteiligungsprojekt. Schreib mir wieder, wenn ein neues startet.
+        phases:
+          body: "Das läuft bei „%{projekt}“:"
+          button: Phase wählen
+          closed: bereits beendet
+          empty: In diesem Projekt gibt es derzeit keine Phasen zu sehen.
+        events:
+          intro: "Diese Termine stehen an:"
+          empty: Es sind derzeit keine Termine geplant.
+        polls:
+          intro: "Bei diesen Abstimmungen kannst du gerade mitmachen:"
+          until: "noch bis %{end_date}"
+          empty: Gerade läuft keine Abstimmung.
+        milestones:
+          intro: "Das hat sich zuletzt getan:"
+          empty: Es gibt noch keine Fortschritte zu berichten.
         results:
           body: "Für diese Phasen gibt es bereits Ergebnisse. Welche möchtest du sehen?"
           button: Ergebnis wählen
+          link_body: "Die Auswertung zu „%{phase}“ findest du hier:"
           empty: >-
             Es sind noch keine Ergebnisse veröffentlicht. Sobald eine Phase ausgewertet ist,
             findest du sie hier.
+        notifications:
+          state_on: Du erhältst Nachrichten von uns.
+          state_off: Du erhältst derzeit keine Nachrichten von uns.
+          follows: "Du folgst diesen Projekten:"
+          no_follows: Du folgst bisher keinem Projekt.
+        follow:
+          followed: "Du folgst jetzt „%{projekt}“ und wirst bei Neuigkeiten benachrichtigt."
+          unfollowed: "Du folgst „%{projekt}“ nicht mehr."
+        help:
+          body: "So funktioniert die Beteiligung:"
+          button: Hilfe öffnen
+          missing: >-
+            Zu diesem Portal gibt es noch keine Hilfeseite. Schreib mir einfach, was du wissen
+            möchtest.
+        contact:
+          body: "Hier erreichst du das Team:"
+          button: Kontakt öffnen
+          missing: >-
+            Zu diesem Portal ist keine Kontaktseite hinterlegt. Schreib mir, worum es geht.
         link:
           body: "„%{title}“ kannst du hier im Beteiligungsportal öffnen:"
           gone: >-
@@ -144,6 +253,11 @@ de:
         cancel: Abbrechen
         menu: Hauptmenü
         open_projekt: Projekt öffnen
+        projekt_menu: Mehr zum Projekt
+        follow: Folgen
+        unfollow: Nicht mehr folgen
+        messages_off: Keine Nachrichten
+        messages_on: Nachrichten an
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
         phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.

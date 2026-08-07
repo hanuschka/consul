@@ -16,10 +16,14 @@ module Whatsapp::ProjektLink
   # Built from the page slug rather than from #url, whose route redirects and
   # would drop the query string the projekt page reads to open the tab.
   def evaluation_url(projekt_phase)
+    phase_url(projekt_phase, section: WhatsappPublishedResultsQuery.public_section_for(projekt_phase))
+  end
+
+  def phase_url(projekt_phase, section: nil)
     Rails.application.routes.url_helpers.page_url(
       id: projekt_phase.projekt.page.slug,
       projekt_phase_id: projekt_phase.id,
-      section: WhatsappPublishedResultsQuery.public_section_for(projekt_phase),
+      section: section,
       **UrlOptions.default.to_h
     )
   end

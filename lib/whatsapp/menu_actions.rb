@@ -1,50 +1,92 @@
 module Whatsapp::MenuActions
-  # The central navigation. Ids are global the way the recovery ones are: a row
-  # is answered before the step dispatcher and before the assistant, so tapping
-  # it works from whatever state the conversation is in.
-  ROW_IDS = {
-    create: "whatsapp_menu_create",
-    contributions: "whatsapp_menu_contributions",
-    projekts: "whatsapp_menu_projekts",
-    results: "whatsapp_menu_results"
+  # Every navigation row and every navigation button the bot sends carries an id
+  # of one shape: what it acts on, which record, and what to do. One shape means
+  # one parser and one dispatcher, so the portal menu, a projekt's menu and a
+  # phase's menu can never drift into answering the same tap differently.
+  #
+  #   whatsapp_a_m_0_create        the portal menu, no record
+  #   whatsapp_a_p_219_phases      projekt 219
+  #   whatsapp_a_f_484_participate projekt phase 484
+  PREFIX = "whatsapp_a_".freeze
+
+  SCOPE_CODES = {
+    portal: "m",
+    projekt: "p",
+    phase: "f"
   }.freeze
 
-  # Second-level rows. Both lead to a link rather than to a state change, which
-  # is why they share one handler and differ only in what they point at.
-  PROJEKT_ROW_PREFIX = "whatsapp_open_projekt_".freeze
-  RESULT_ROW_PREFIX = "whatsapp_open_result_".freeze
+  # Ordered: the sections and the rows inside them reach the citizen in this
+  # order, and the ten-row budget is spent top down.
+  PORTAL_SECTIONS = {
+    participate: %i[create polls],
+    discover: %i[projekts events milestones results],
+    account: %i[contributions notifications],
+    service: %i[help contact]
+  }.freeze
+
+  PROJEKT_SECTIONS = {
+    participate: %i[phases],
+    discover: %i[contributions events milestones results],
+    account: %i[follow],
+    service: %i[page]
+  }.freeze
+
+  PHASE_SECTIONS = {
+    participate: %i[participate],
+    discover: %i[contributions results],
+    service: %i[page]
+  }.freeze
+
+  # Actions that are reachable but are not rows of the menu they belong to: a
+  # projekt menu listing "projekt menu" leads nowhere. :card is what a projekt
+  # row in a list opens; :menu is what the card's own button opens.
+  ACTIONS_BY_SCOPE = {
+    portal: PORTAL_SECTIONS.values.flatten.freeze,
+    projekt: (PROJEKT_SECTIONS.values.flatten + %i[menu card]).freeze,
+    phase: (PHASE_SECTIONS.values.flatten + %i[menu]).freeze
+  }.freeze
+
+  ID_PATTERN = /\A#{PREFIX}(?<scope>[mpf])_(?<record_id>\d+)_(?<action>[a-z_]+)\z/.freeze
 
   module_function
 
-  def action_from(row_id)
-    ROW_IDS.key(row_id.to_s)
+  def id_for(scope:, action:, record_id: 0)
+    "#{PREFIX}#{SCOPE_CODES.fetch(scope)}_#{record_id}_#{action}"
   end
 
-  def projekt_row_id_for(projekt_id)
-    "#{PROJEKT_ROW_PREFIX}#{projekt_id}"
+  # Returns nil for anything that is not one of ours, including a row id from an
+  # older deploy whose action no longer exists.
+  def parse(row_id)
+    match = ID_PATTERN.match(row_id.to_s)
+
+    return if match.blank?
+
+    scope = SCOPE_CODES.key(match[:scope])
+    action = match[:action].to_sym
+
+    return if !ACTIONS_BY_SCOPE.fetch(scope, []).include?(action)
+
+    { scope: scope, record_id: match[:record_id].to_i, action: action }
   end
 
-  def result_row_id_for(projekt_phase_id)
-    "#{RESULT_ROW_PREFIX}#{projekt_phase_id}"
+  def ours?(row_id)
+    parse(row_id).present?
   end
 
-  def projekt_id_from(row_id)
-    id_from(row_id, PROJEKT_ROW_PREFIX)
+  def sections_for(scope)
+    case scope
+    when :portal then PORTAL_SECTIONS
+    when :projekt then PROJEKT_SECTIONS
+    when :phase then PHASE_SECTIONS
+    end
   end
 
-  def projekt_phase_id_from(row_id)
-    id_from(row_id, RESULT_ROW_PREFIX)
-  end
+  # Reading the portal needs no account; taking part in it or changing one's own
+  # settings does. Split here rather than at the call site so both the tapped
+  # row and the assistant tool are held to the same line.
+  ACCOUNT_ACTIONS = %i[create participate contributions notifications follow].freeze
 
-  def link_row?(row_id)
-    projekt_id_from(row_id).present? || projekt_phase_id_from(row_id).present?
+  def needs_account?(action)
+    ACCOUNT_ACTIONS.include?(action)
   end
-
-  def id_from(row_id, prefix)
-    return if row_id.to_s.blank?
-    return if !row_id.to_s.start_with?(prefix)
-
-    row_id.to_s.delete_prefix(prefix).to_i
-  end
-  private_class_method :id_from
 end

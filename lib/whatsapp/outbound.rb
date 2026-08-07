@@ -30,6 +30,16 @@ module Whatsapp::Outbound
     end
   end
 
+  # For a list long enough that ungrouped rows read as a wall. Sections are
+  # {title:, rows:}; the ten-row limit is shared across all of them.
+  def sectioned_list(account:, body:, button_label:, sections:)
+    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+      messages.send_sectioned_list(
+        to: account.wa_id, body: body, button_label: button_label, sections: sections
+      )
+    end
+  end
+
   def cta_url(account:, body:, button_label:, url:)
     deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
       messages.send_cta_url(to: account.wa_id, body: body, button_label: button_label, url: url)

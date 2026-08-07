@@ -1,32 +1,30 @@
 class Whatsapp::Steps::ListResultsService < ApplicationService
-  def initialize(conversation:)
+  def initialize(conversation:, projekt: nil)
     @conversation = conversation
+    @projekt = projekt
   end
 
   def call
-    return send_empty if projekt_phases.empty?
-
-    Whatsapp::Outbound.list(
-      account: @conversation.whatsapp_account,
+    Whatsapp::Steps::SendListService.call(
+      conversation: @conversation,
+      rows: rows,
       body: I18n.t("whatsapp.bot.menu.results.body"),
       button_label: I18n.t("whatsapp.bot.menu.results.button"),
-      rows: rows
+      empty_body: I18n.t("whatsapp.bot.menu.results.empty")
     )
   end
 
   private
 
-    def projekt_phases
-      @projekt_phases ||= WhatsappPublishedResultsQuery.call
-    end
-
     # The projekt names the row because a citizen recognises the projekt, not
     # the phase; the phase and its end date go in the description.
     def rows
-      projekt_phases.map do |projekt_phase|
+      WhatsappPublishedResultsQuery.call(projekt: @projekt).map do |projekt_phase|
         {
-          id: Whatsapp::MenuActions.result_row_id_for(projekt_phase.id),
-          title: projekt_title(projekt_phase.projekt),
+          id: Whatsapp::MenuActions.id_for(
+            scope: :phase, action: :results, record_id: projekt_phase.id
+          ),
+          title: Whatsapp::ProjektLink.title(projekt_phase.projekt),
           description: row_description(projekt_phase)
         }
       end
@@ -39,18 +37,6 @@ class Whatsapp::Steps::ListResultsService < ApplicationService
         "whatsapp.bot.projekt_row_description",
         phase: projekt_phase.title,
         end_date: I18n.l(projekt_phase.end_date.to_date)
-      )
-    end
-
-    def projekt_title(projekt)
-      Whatsapp::ProjektLink.title(projekt)
-    end
-
-    def send_empty
-      Whatsapp::Outbound.recovery(
-        conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.results.empty"),
-        actions: [:menu]
       )
     end
 end

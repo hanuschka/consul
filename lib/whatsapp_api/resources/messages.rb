@@ -52,6 +52,12 @@ class WhatsappApi::Resources::Messages
   end
 
   def send_list(to:, body:, button_label:, rows:)
+    send_sectioned_list(to: to, body: body, button_label: button_label, sections: [{ rows: rows }])
+  end
+
+  # WhatsApp counts rows across all sections against the same ten-row limit, so
+  # grouping buys readability, never room.
+  def send_sectioned_list(to:, body:, button_label:, sections:)
     @client.post(
       BASE_PATH,
       body: envelope(to).merge(
@@ -61,7 +67,7 @@ class WhatsappApi::Resources::Messages
           body: { text: body },
           action: {
             button: button_label.to_s.truncate(MAX_BUTTON_TITLE_LENGTH),
-            sections: [{ rows: list_rows(rows) }]
+            sections: list_sections(sections)
           }
         }
       )
@@ -138,6 +144,37 @@ class WhatsappApi::Resources::Messages
         type: "body",
         parameters: Array(variables).map { |variable| { type: "text", text: variable.to_s } }
       }
+    end
+
+    # The row budget is spent across the sections in order, so an over-long menu
+    # loses its last rows rather than a slice out of every group. Dropping any
+    # is logged: silently short lists read as "that is all there is".
+    def list_sections(sections)
+      remaining = MAX_LIST_ROWS
+
+      kept = sections.filter_map do |section|
+        rows = Array(section[:rows]).first(remaining)
+        remaining -= rows.size
+
+        next if rows.empty?
+
+        { title: section[:title].to_s.truncate(MAX_ROW_TITLE_LENGTH).presence, rows: list_rows(rows) }
+          .compact
+      end
+
+      log_dropped_rows(sections)
+
+      kept
+    end
+
+    def log_dropped_rows(sections)
+      total = sections.sum { |section| Array(section[:rows]).size }
+
+      return if total <= MAX_LIST_ROWS
+
+      Rails.logger.warn(
+        "[Whatsapp] list had #{total} rows, #{total - MAX_LIST_ROWS} dropped past the limit"
+      )
     end
 
     def list_rows(rows)

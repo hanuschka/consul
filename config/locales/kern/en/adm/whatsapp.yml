@@ -287,6 +287,9 @@ en:
           "%{name}" has the status "%{status}" at Meta. Until it is approved, project
           notifications reach nobody.
         template_name: "Name"
+        template_kind: "Kind"
+        template_kind_text: "Text"
+        template_kind_card: "Card with image"
         template_language: "Language"
         template_status: "Status"
         template_use: "Use"

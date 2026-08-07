@@ -10,6 +10,7 @@ class Whatsapp::Steps::RefuseParticipationService < ApplicationService
     phase_not_current
     not_verified
     no_open_phase
+    submissions_limit_exceeded
   ].freeze
 
   def initialize(conversation:, reason:)

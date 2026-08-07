@@ -13,7 +13,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
   def call
     return if !::Whatsapp.enabled?
 
-    conversation.update!(last_inbound_at: @whatsapp_message.sent_at || Time.current)
+    conversation.update!(last_inbound_at: latest_inbound_at)
 
     return if handle_opt_keywords
     return if account.opt_out_at.present?
@@ -22,6 +22,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # only sensible answer is the menu of what is open.
     return send_entry_menu if @whatsapp_message.welcome?
     return if handle_recovery_action
+    return if handle_notification_action
+    return if handle_command
     return if handle_public_menu_action
 
     return if @whatsapp_message.audio? && inbound_text.blank?
@@ -66,6 +68,12 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       list_reply_id.presence || button_reply_id.presence
     end
 
+    # Only ever forwards, for the same reason the account's copy is: a retried
+    # or out-of-order delivery must not rewind the conversation's clock.
+    def latest_inbound_at
+      [@whatsapp_message.sent_at || Time.current, conversation.last_inbound_at].compact.max
+    end
+
     def account
       @account ||= @whatsapp_message.whatsapp_account
     end
@@ -99,53 +107,71 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       Whatsapp::Steps::MainMenuService.call(conversation:)
     end
 
-    # Tapped rows carry an unambiguous id, so they are answered here for the
-    # same reason recovery buttons are: sending one through the assistant would
-    # pay for a completion to re-derive what the id already says, and risk it
-    # being read as something else.
-    #
-    # Split in two by what the row needs. Reading the portal needs no account,
-    # so those rows are answered before the linking check rather than after it —
-    # asking someone to connect an account to read a public result would be a
-    # dead end they did not ask for.
-    def handle_public_menu_action
-      return handle_menu_link if Whatsapp::MenuActions.link_row?(list_reply_id)
+    # A word the number's own command menu advertises answers the same way every
+    # time, whatever the conversation was doing. Matched only as the whole
+    # message, so a sentence that happens to contain "menu" still reaches the
+    # assistant.
+    def handle_command
+      action = Whatsapp::MenuActions.command_action_from(normalized_text)
 
-      case menu_action
-      when :projekts then Whatsapp::Steps::ListProjektsService.call(conversation:)
-      when :results then Whatsapp::Steps::ListResultsService.call(conversation:)
-      else return false
-      end
+      return false if action.blank?
+      return send_entry_menu.then { true } if action == :menu
+
+      Whatsapp::MenuActionService.call(
+        conversation: conversation, scope: :portal, action: action
+      )
+    end
+
+    # Turning messages off must work from any state and must never depend on a
+    # model reading the request correctly, so it sits with the recovery buttons
+    # rather than behind the assistant.
+    def handle_notification_action
+      action = Whatsapp::NotificationActions.action_from(button_reply_id)
+
+      return false if action.blank?
+
+      Whatsapp::Steps::SetMessageDeliveryService.call(
+        conversation: conversation, enabled: action == :messages_on
+      )
 
       true
+    end
+
+    # Tapped rows and buttons carry an unambiguous action, so they are answered
+    # here for the same reason recovery buttons are: sending one through the
+    # assistant would pay for a completion to re-derive what the id already
+    # says, and risk it being read as something else.
+    #
+    # Split in two by what the action needs. Reading the portal needs no
+    # account, so those are answered before the linking check rather than after
+    # it — asking someone to connect an account to read a public result would be
+    # a dead end they did not ask for.
+    def handle_public_menu_action
+      return false if menu_action.blank?
+      return false if Whatsapp::MenuActions.needs_account?(menu_action[:action])
+
+      dispatch_menu_action
     end
 
     def handle_account_menu_action
-      case menu_action
-      when :create then start_creation
-      when :contributions then Whatsapp::Steps::ListContributionsService.call(conversation:)
-      else return false
-      end
+      return false if menu_action.blank?
 
-      true
+      dispatch_menu_action
+    end
+
+    def dispatch_menu_action
+      Whatsapp::MenuActionService.call(
+        conversation: conversation,
+        scope: menu_action[:scope],
+        record_id: menu_action[:record_id],
+        action: menu_action[:action]
+      )
     end
 
     def menu_action
-      @menu_action ||= Whatsapp::MenuActions.action_from(list_reply_id)
-    end
+      return @menu_action if defined?(@menu_action)
 
-    def handle_menu_link
-      Whatsapp::Steps::SendMenuLinkService.call(conversation:, row_id: list_reply_id)
-
-      true
-    end
-
-    # The menu row only says "submit something"; which phase, and whether one
-    # has to be chosen at all, is the question NextStepService already answers.
-    def start_creation
-      conversation.reset_flow!
-
-      Whatsapp::NextStepService.call(conversation:)
+      @menu_action = Whatsapp::MenuActions.parse(tapped_reply_id)
     end
 
     def cancel_flow

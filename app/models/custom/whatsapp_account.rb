@@ -40,7 +40,13 @@ class WhatsappAccount < ApplicationRecord
       link_token_sent_at > LINK_TOKEN_TTL.ago
   end
 
+  # Two messages from the same number are two jobs, and each asks for the
+  # conversation before the advisory lock can be taken — the lock needs this id
+  # to exist. So the unique index is the arbiter: the loser of the race reads
+  # the row the winner just wrote instead of failing its job.
   def conversation
     whatsapp_conversation || create_whatsapp_conversation!
+  rescue ActiveRecord::RecordNotUnique
+    reload.whatsapp_conversation
   end
 end

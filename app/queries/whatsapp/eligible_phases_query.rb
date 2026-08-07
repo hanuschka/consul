@@ -34,7 +34,6 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
 
     projekt.activated?
   end
-  private_class_method :projekt_visible?
 
   def initialize(projekt: nil)
     @projekt = projekt

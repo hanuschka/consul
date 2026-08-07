@@ -1,15 +1,15 @@
-class Whatsapp::Steps::ListPollsService < ApplicationService
+class Whatsapp::Archive::ListPollsService < ApplicationService
   def initialize(conversation:, projekt: nil)
     @conversation = conversation
     @projekt = projekt
   end
 
   def call
-    Whatsapp::Steps::SendDigestService.call(
+    ::Whatsapp::Archive::SendDigestService.call(
       conversation: @conversation,
       entries: entries,
-      intro: I18n.t("whatsapp.bot.menu.polls.intro"),
-      empty_body: I18n.t("whatsapp.bot.menu.polls.empty")
+      intro: I18n.t("whatsapp.archive.menu.polls.intro"),
+      empty_body: I18n.t("whatsapp.archive.menu.polls.empty")
     )
   end
 
@@ -30,6 +30,6 @@ class Whatsapp::Steps::ListPollsService < ApplicationService
     def description_for(poll)
       return if poll.ends_at.blank?
 
-      I18n.t("whatsapp.bot.menu.polls.until", end_date: I18n.l(poll.ends_at.to_date))
+      I18n.t("whatsapp.archive.menu.polls.until", end_date: I18n.l(poll.ends_at.to_date))
     end
 end

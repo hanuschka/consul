@@ -1,15 +1,15 @@
-class Whatsapp::Steps::ListEventsService < ApplicationService
+class Whatsapp::Archive::ListEventsService < ApplicationService
   def initialize(conversation:, projekt: nil)
     @conversation = conversation
     @projekt = projekt
   end
 
   def call
-    Whatsapp::Steps::SendDigestService.call(
+    ::Whatsapp::Archive::SendDigestService.call(
       conversation: @conversation,
       entries: entries,
-      intro: I18n.t("whatsapp.bot.menu.events.intro"),
-      empty_body: I18n.t("whatsapp.bot.menu.events.empty")
+      intro: I18n.t("whatsapp.archive.menu.events.intro"),
+      empty_body: I18n.t("whatsapp.archive.menu.events.empty")
     )
   end
 

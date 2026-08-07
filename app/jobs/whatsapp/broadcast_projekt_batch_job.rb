@@ -25,7 +25,7 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
     # the batch, so it is resolved once: the template names and the language are
     # uncached Setting reads, and the signed blob URL is an HMAC per call.
     def deliver(account_ids)
-      accounts = Whatsapp::Account.subscribed.where(id: account_ids)
+      accounts = Whatsapp::Account.subscribed_to(:new_projekt).where(id: account_ids)
       pending = accounts.where.not(id: already_delivered_account_ids(account_ids))
 
       pending.find_each { |account| deliver_to(account) }

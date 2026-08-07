@@ -1,16 +1,16 @@
-class Whatsapp::Steps::ListResultsService < ApplicationService
+class Whatsapp::Archive::ListResultsService < ApplicationService
   def initialize(conversation:, projekt: nil)
     @conversation = conversation
     @projekt = projekt
   end
 
   def call
-    Whatsapp::Steps::SendListService.call(
+    ::Whatsapp::Flows::SendListService.call(
       conversation: @conversation,
       rows: rows,
-      body: I18n.t("whatsapp.bot.menu.results.body"),
-      button_label: I18n.t("whatsapp.bot.menu.results.button"),
-      empty_body: I18n.t("whatsapp.bot.menu.results.empty")
+      body: I18n.t("whatsapp.archive.menu.results.body"),
+      button_label: I18n.t("whatsapp.archive.menu.results.button"),
+      empty_body: I18n.t("whatsapp.archive.menu.results.empty")
     )
   end
 
@@ -21,7 +21,7 @@ class Whatsapp::Steps::ListResultsService < ApplicationService
     def rows
       Whatsapp::PublishedResultsQuery.call(projekt: @projekt).map do |projekt_phase|
         {
-          id: Whatsapp::MenuActions.id_for(
+          id: ::Whatsapp::Archive::MenuActions.id_for(
             scope: :phase, action: :results, record_id: projekt_phase.id
           ),
           title: Whatsapp::ProjektLink.title(projekt_phase.projekt),
@@ -34,7 +34,7 @@ class Whatsapp::Steps::ListResultsService < ApplicationService
       return projekt_phase.title if projekt_phase.end_date.blank?
 
       I18n.t(
-        "whatsapp.bot.projekt_row_description",
+        "whatsapp.archive.projekt_row_description",
         phase: projekt_phase.title,
         end_date: I18n.l(projekt_phase.end_date.to_date)
       )

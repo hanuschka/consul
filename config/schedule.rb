@@ -97,3 +97,9 @@ every 1.day, at: "3:15 am", roles: [:cron] do
   runner "Whatsapp::PurgeOldMessagesJob.perform_later"
 end
 
+# Late enough in the morning to be a reasonable hour to receive a push, which
+# the 3am maintenance slot is not.
+every 1.day, at: "9:00 am", roles: [:cron] do
+  runner "Whatsapp::NotifyPhaseDeadlineJob.perform_later"
+end
+

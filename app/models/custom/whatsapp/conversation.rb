@@ -24,11 +24,48 @@ class Whatsapp::Conversation < ApplicationRecord
   enum step: {
     idle: "idle",
     awaiting_link: "awaiting_link",
+    awaiting_link_decision: "awaiting_link_decision",
+    awaiting_unlink_confirmation: "awaiting_unlink_confirmation",
     awaiting_phase_choice: "awaiting_phase_choice",
     awaiting_idea: "awaiting_idea",
+    awaiting_category: "awaiting_category",
     awaiting_draft_decision: "awaiting_draft_decision",
-    awaiting_revision: "awaiting_revision"
+    awaiting_revision: "awaiting_revision",
+    awaiting_comment: "awaiting_comment",
+    awaiting_notification_settings: "awaiting_notification_settings",
+    awaiting_resume_decision: "awaiting_resume_decision"
   }
+
+  # The steps that mean a submission is half-finished. "Stop" aborts one of
+  # these; typed at any other moment the same word is the opt-out, so the two
+  # readings of the catalog's one keyword are separated here rather than at each
+  # call site.
+  DRAFTING_STEPS = %w[
+    awaiting_idea
+    awaiting_category
+    awaiting_draft_decision
+    awaiting_revision
+    awaiting_comment
+    awaiting_resume_decision
+  ].freeze
+
+  # A draft older than this is not resumed silently: the citizen is asked
+  # whether to continue it or start over (catalog C23). Deliberately far longer
+  # than WhatsApp's 24-hour service window, so the question is always asked as a
+  # reply to the citizen writing in again, never pushed.
+  STALE_FLOW_AFTER = 3600.minutes
+
+  def drafting?
+    DRAFTING_STEPS.include?(step)
+  end
+
+  def stale_flow?
+    started_at = context["flow_started_at"]
+
+    return false if started_at.blank?
+
+    Time.zone.parse(started_at) < STALE_FLOW_AFTER.ago
+  end
 
   # Completing keeps the phase so the next idea goes to the same one; resetting
   # drops it so the citizen is asked again.
@@ -40,9 +77,16 @@ class Whatsapp::Conversation < ApplicationRecord
     update!(cleared_flow_attributes.merge(step: "idle"))
   end
 
+  # Stamped here rather than by the caller so every entry into a submission —
+  # a QR scan, a tapped pill, an assistant tool — shares one clock for the
+  # staleness question.
   def start_flow!(projekt_phase)
     update!(
-      cleared_flow_attributes.merge(step: "awaiting_idea", projekt_phase: projekt_phase)
+      cleared_flow_attributes.merge(
+        step: "awaiting_idea",
+        projekt_phase: projekt_phase,
+        context: { "flow_started_at" => Time.current.iso8601 }
+      )
     )
   end
 

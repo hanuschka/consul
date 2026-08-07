@@ -1,4 +1,4 @@
-class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::DescribeProjekt < ::Ai::Tools::WhatsappAiAssistant::BaseTool
   SUMMARY_LENGTH = 800
 
   description "Describes the projekt behind an open participation phase: what it is about, when " \

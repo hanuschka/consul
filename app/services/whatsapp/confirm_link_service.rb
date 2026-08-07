@@ -5,10 +5,15 @@ class Whatsapp::ConfirmLinkService < ApplicationService
     @broadcast_consent = broadcast_consent
   end
 
+  # Answers with the outcome rather than with the account or nil. The bot has to
+  # say something different for each of the catalog's A5 and A6 branches, and a
+  # bare nil made "your link expired" and "this number belongs to someone else"
+  # indistinguishable to every caller.
   def call
-    return if account.blank?
-    return if !account.link_token_valid?
-    return if user_linked_to_other_number?
+    return ServiceResult.failure(error: :expired) if account.blank?
+    return ServiceResult.failure(error: :expired) if !account.link_token_valid?
+
+    return ServiceResult.failure(error: :already_linked) if user_linked_to_other_number?
 
     account.update!(
       user: @user,
@@ -19,7 +24,7 @@ class Whatsapp::ConfirmLinkService < ApplicationService
       **consent_attributes
     )
 
-    account
+    ServiceResult.success(account: account)
   end
 
   private

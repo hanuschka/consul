@@ -1,4 +1,4 @@
-class Whatsapp::NextStepService < ApplicationService
+class Whatsapp::Archive::NextStepService < ApplicationService
   # The single answer to "what does this conversation need next?", asked after a
   # QR entry, a finished or cancelled flow, a first chat opening and any message
   # that arrives with no step able to handle it.
@@ -26,7 +26,7 @@ class Whatsapp::NextStepService < ApplicationService
   private
 
     def ask_for_idea
-      Whatsapp::Steps::AskForIdeaService.call(conversation: @conversation)
+      ::Whatsapp::Flows::AskIdeaService.call(conversation: @conversation)
     end
 
     # With one open phase there is nothing to choose, so the menu is skipped in
@@ -40,14 +40,14 @@ class Whatsapp::NextStepService < ApplicationService
     # The menu button is still worth offering: a phase may open later, and
     # tapping it is how someone re-checks without composing a message.
     def send_nothing_open
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
         body: I18n.t("whatsapp.bot.no_projekt")
       )
     end
 
     def ask_phase_choice(projekt, projekt_phases)
-      Whatsapp::Steps::AskPhaseChoiceService.call(
+      ::Whatsapp::Archive::AskPhaseChoiceService.call(
         conversation: @conversation,
         projekt: projekt,
         projekt_phases: projekt_phases

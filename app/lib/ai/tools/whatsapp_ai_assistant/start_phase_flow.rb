@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::StartPhaseFlow < Ai::Tools::WhatsappAiAssi
 
     # Refuses on its own and resets the flow when the citizen may not take
     # part, so the permission rule stays in one place.
-    ::Whatsapp::Steps::AskForIdeaService.call(conversation: conversation)
+    ::Whatsapp::Flows::AskIdeaService.call(conversation: conversation)
 
     halt("Started the submission flow for projekt phase #{projekt_phase.id}.")
   end

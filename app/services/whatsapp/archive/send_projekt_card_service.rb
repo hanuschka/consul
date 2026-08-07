@@ -1,4 +1,4 @@
-class Whatsapp::Steps::SendProjektCardService < ApplicationService
+class Whatsapp::Archive::SendProjektCardService < ApplicationService
   SUMMARY_LENGTH = 300
 
   # What a tapped projekt row answers with. WhatsApp will not carry a URL button
@@ -44,8 +44,8 @@ class Whatsapp::Steps::SendProjektCardService < ApplicationService
 
     def menu_button
       {
-        id: Whatsapp::MenuActions.id_for(scope: :projekt, action: :menu, record_id: @projekt.id),
-        title: I18n.t("whatsapp.bot.buttons.projekt_menu")
+        id: ::Whatsapp::Archive::MenuActions.id_for(scope: :projekt, action: :menu, record_id: @projekt.id),
+        title: I18n.t("whatsapp.archive.buttons.projekt_menu")
       }
     end
 
@@ -55,8 +55,8 @@ class Whatsapp::Steps::SendProjektCardService < ApplicationService
       following = Whatsapp::ToggleProjektFollowService.following?(user: user, projekt: @projekt)
 
       {
-        id: Whatsapp::MenuActions.id_for(scope: :projekt, action: :follow, record_id: @projekt.id),
-        title: I18n.t("whatsapp.bot.buttons.#{following ? "unfollow" : "follow"}")
+        id: ::Whatsapp::Archive::MenuActions.id_for(scope: :projekt, action: :follow, record_id: @projekt.id),
+        title: I18n.t("whatsapp.archive.buttons.#{following ? "unfollow" : "follow"}")
       }
     end
 

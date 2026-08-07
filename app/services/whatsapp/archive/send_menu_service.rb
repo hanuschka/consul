@@ -1,6 +1,6 @@
-class Whatsapp::Steps::SendMenuService < ApplicationService
+class Whatsapp::Archive::SendMenuService < ApplicationService
   # Renders any of the three menus — portal, projekt, phase — from the section
-  # map in Whatsapp::MenuActions plus a caller that says which actions are
+  # map in ::Whatsapp::Archive::MenuActions plus a caller that says which actions are
   # actually worth offering right now. An action with nothing behind it is left
   # out rather than shown and then apologised for.
   #
@@ -22,7 +22,7 @@ class Whatsapp::Steps::SendMenuService < ApplicationService
     Whatsapp::Outbound.sectioned_list(
       account: @conversation.whatsapp_account,
       body: @body,
-      button_label: I18n.t("whatsapp.bot.menu.button"),
+      button_label: I18n.t("whatsapp.archive.menu.button"),
       sections: sections
     )
   end
@@ -31,21 +31,21 @@ class Whatsapp::Steps::SendMenuService < ApplicationService
 
     def sections
       @sections ||=
-        Whatsapp::MenuActions.sections_for(@scope).filter_map do |section_key, actions|
+        ::Whatsapp::Archive::MenuActions.sections_for(@scope).filter_map do |section_key, actions|
           rows = rows_for(actions)
 
           next if rows.empty?
 
-          { title: I18n.t("whatsapp.bot.menu.sections.#{section_key}"), rows: rows }
+          { title: I18n.t("whatsapp.archive.menu.sections.#{section_key}"), rows: rows }
         end
     end
 
     def rows_for(actions)
       actions.select { |action| @available_actions.include?(action) }.map do |action|
         {
-          id: Whatsapp::MenuActions.id_for(scope: @scope, action: action, record_id: @record_id),
-          title: I18n.t("whatsapp.bot.menu.rows.#{@scope}.#{action}.title"),
-          description: I18n.t("whatsapp.bot.menu.rows.#{@scope}.#{action}.description")
+          id: ::Whatsapp::Archive::MenuActions.id_for(scope: @scope, action: action, record_id: @record_id),
+          title: I18n.t("whatsapp.archive.menu.rows.#{@scope}.#{action}.title"),
+          description: I18n.t("whatsapp.archive.menu.rows.#{@scope}.#{action}.description")
         }
       end
     end
@@ -57,9 +57,9 @@ class Whatsapp::Steps::SendMenuService < ApplicationService
     def send_nothing_available
       return send_text if @scope == :portal
 
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.nothing_here")
+        body: I18n.t("whatsapp.archive.menu.nothing_here")
       )
     end
 

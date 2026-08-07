@@ -1,4 +1,4 @@
-class Whatsapp::Steps::SendStaticPageService < ApplicationService
+class Whatsapp::Archive::SendStaticPageService < ApplicationService
   # The portal's own help and contact pages, by slug. Admins already write and
   # translate them, so the bot links rather than keeping a second copy of the
   # same answers that would drift from the site's.
@@ -15,11 +15,11 @@ class Whatsapp::Steps::SendStaticPageService < ApplicationService
   def call
     return send_missing if page.blank?
 
-    Whatsapp::Steps::SendLinkButtonService.call(
+    ::Whatsapp::Flows::SendLinkButtonService.call(
       conversation: @conversation,
-      body: I18n.t("whatsapp.bot.menu.#{@page_key}.body"),
+      body: I18n.t("whatsapp.archive.menu.#{@page_key}.body"),
       url: page_url,
-      button_label: I18n.t("whatsapp.bot.menu.#{@page_key}.button")
+      button_label: I18n.t("whatsapp.archive.menu.#{@page_key}.button")
     )
   end
 
@@ -41,9 +41,9 @@ class Whatsapp::Steps::SendStaticPageService < ApplicationService
     # A portal that never created the page should not leave the citizen with a
     # broken row, so the reply says so and offers the way back.
     def send_missing
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.#{@page_key}.missing")
+        body: I18n.t("whatsapp.archive.menu.#{@page_key}.missing")
       )
     end
 end

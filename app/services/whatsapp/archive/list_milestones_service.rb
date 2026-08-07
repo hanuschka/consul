@@ -1,4 +1,4 @@
-class Whatsapp::Steps::ListMilestonesService < ApplicationService
+class Whatsapp::Archive::ListMilestonesService < ApplicationService
   DESCRIPTION_LENGTH = 200
 
   def initialize(conversation:, projekt: nil)
@@ -7,11 +7,11 @@ class Whatsapp::Steps::ListMilestonesService < ApplicationService
   end
 
   def call
-    Whatsapp::Steps::SendDigestService.call(
+    ::Whatsapp::Archive::SendDigestService.call(
       conversation: @conversation,
       entries: entries,
-      intro: I18n.t("whatsapp.bot.menu.milestones.intro"),
-      empty_body: I18n.t("whatsapp.bot.menu.milestones.empty")
+      intro: I18n.t("whatsapp.archive.menu.milestones.intro"),
+      empty_body: I18n.t("whatsapp.archive.menu.milestones.empty")
     )
   end
 

@@ -1,15 +1,15 @@
-class Whatsapp::Steps::ListProjektsService < ApplicationService
+class Whatsapp::Archive::ListProjektsService < ApplicationService
   def initialize(conversation:)
     @conversation = conversation
   end
 
   def call
-    Whatsapp::Steps::SendListService.call(
+    ::Whatsapp::Flows::SendListService.call(
       conversation: @conversation,
       rows: rows,
-      body: I18n.t("whatsapp.bot.menu.projekts.body"),
-      button_label: I18n.t("whatsapp.bot.menu.projekts.button"),
-      empty_body: I18n.t("whatsapp.bot.menu.projekts.empty")
+      body: I18n.t("whatsapp.archive.menu.projekts.body"),
+      button_label: I18n.t("whatsapp.archive.menu.projekts.button"),
+      empty_body: I18n.t("whatsapp.archive.menu.projekts.empty")
     )
   end
 
@@ -21,7 +21,7 @@ class Whatsapp::Steps::ListProjektsService < ApplicationService
     def rows
       Whatsapp::BrowsableProjektsQuery.call.map do |projekt|
         {
-          id: Whatsapp::MenuActions.id_for(scope: :projekt, action: :card, record_id: projekt.id),
+          id: ::Whatsapp::Archive::MenuActions.id_for(scope: :projekt, action: :card, record_id: projekt.id),
           title: Whatsapp::ProjektLink.title(projekt),
           description: projekt.page&.subtitle
         }

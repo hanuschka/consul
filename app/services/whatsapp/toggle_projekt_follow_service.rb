@@ -18,6 +18,28 @@ class Whatsapp::ToggleProjektFollowService < ApplicationService
     subscription.active? ? :followed : :unfollowed
   end
 
+  # The catalog's "Subscribe X" / "Unsubscribe X" name the state they want
+  # rather than asking for it to be flipped, so repeating the command is a
+  # no-op instead of undoing what it just did.
+  def self.follow(user:, projekt:)
+    write(user: user, projekt: projekt, active: true)
+
+    :followed
+  end
+
+  def self.unfollow(user:, projekt:)
+    write(user: user, projekt: projekt, active: false)
+
+    :unfollowed
+  end
+
+  def self.write(user:, projekt:, active:)
+    ProjektSubscription
+      .find_or_initialize_by(user: user, projekt: projekt)
+      .update!(active: active)
+  end
+  private_class_method :write
+
   def self.following?(user:, projekt:)
     return false if user.blank?
 

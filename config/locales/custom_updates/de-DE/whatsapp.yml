@@ -3,55 +3,258 @@ de:
     account:
       title: WhatsApp
       not_linked: >-
-        Deine WhatsApp-Nummer ist noch nicht mit diesem Konto verbunden. Schreibe dem
-        Beteiligungs-Bot auf WhatsApp, um die Verbindung zu starten.
-      subscribed: "Verbundene Nummer: %{phone}. Du erhältst Benachrichtigungen zu neuen Projekten."
-      opted_out: "Verbundene Nummer: %{phone}. Du erhältst derzeit keine Benachrichtigungen."
+        Deine WhatsApp-Nummer ist noch nicht mit diesem Konto verbunden. Schreibe dem Beteiligungs-Bot
+        auf WhatsApp, um die Verbindung zu starten.
+      subscribed: 'Verbundene Nummer: %{phone}. Du erhältst Benachrichtigungen zu neuen Projekten.'
+      opted_out: 'Verbundene Nummer: %{phone}. Du erhältst derzeit keine Benachrichtigungen.'
       opt_in: Benachrichtigungen aktivieren
       opt_out: Keine Benachrichtigungen mehr erhalten
     link:
       success: Deine WhatsApp-Nummer ist jetzt mit deinem Konto verbunden.
       failure: >-
-        Dieser Link ist nicht mehr gültig. Schreibe dem Bot erneut auf WhatsApp, um einen
-        neuen Link zu erhalten.
+        Dieser Link ist nicht mehr gültig. Schreibe dem Bot erneut auf WhatsApp, um einen neuen Link
+        zu erhalten.
       page:
         title: WhatsApp-Nummer verbinden
         intro: >-
-          Sobald deine Nummer verbunden ist, werden Vorschläge, die du per WhatsApp einreichst,
-          deinem Konto zugeordnet.
+          Sobald deine Nummer verbunden ist, werden Vorschläge, die du per WhatsApp einreichst, deinem
+          Konto zugeordnet.
         number_label: WhatsApp-Nummer
-        broadcast_consent: >-
-          Ich möchte per WhatsApp benachrichtigt werden, wenn ein neues Beteiligungsprojekt
+        broadcast_consent: Ich möchte per WhatsApp benachrichtigt werden, wenn ein neues Beteiligungsprojekt
           startet.
         consent_note: >-
-          Ohne dieses Häkchen kannst du weiterhin Vorschläge per WhatsApp einreichen, erhältst
-          aber keine Benachrichtigungen. Du kannst die Auswahl jederzeit in deinem Konto oder
-          mit der Nachricht STOPP ändern.
+          Ohne dieses Häkchen kannst du weiterhin Vorschläge per WhatsApp einreichen, erhältst aber
+          keine Benachrichtigungen. Du kannst die Auswahl jederzeit in deinem Konto oder mit der Nachricht
+          STOPP ändern.
         confirm: Nummer verbinden
+      expired: >-
+        Dieser Link ist nicht mehr gültig. Schreiben Sie dem Bot erneut auf WhatsApp, um einen neuen
+        zu erhalten.
+      already_linked: Diese WhatsApp-Nummer ist bereits mit einem anderen Konto verknüpft.
     subscription:
       opted_in: Du erhältst wieder WhatsApp-Benachrichtigungen.
       opted_out: Du erhältst keine WhatsApp-Benachrichtigungen mehr.
       not_linked: Für dein Konto ist keine WhatsApp-Nummer verbunden.
     bot:
-      link_invitation: >-
-        Hallo! Damit dein Vorschlag deinem Konto zugeordnet werden kann, verbinde bitte einmalig
-        deine Nummer mit dem Beteiligungsportal. Der Link ist eine Stunde gültig.
-      link_invitation_with_url: >-
-        Hallo! Damit dein Vorschlag deinem Konto zugeordnet werden kann, verbinde bitte einmalig
-        deine Nummer mit dem Beteiligungsportal: %{url}
-
-        Der Link ist eine Stunde gültig.
-      link_invitation_button: Konto verbinden
-      link_confirmed: "Danke, %{name}! Deine Nummer ist jetzt mit deinem Konto verbunden."
       welcome_greeting: >-
-        Willkommen! Hier kannst du Vorschläge zu den laufenden Beteiligungsprojekten einreichen.
-        Zu welchem möchtest du etwas beitragen?
-      choose_projekt_button: Projekte anzeigen
-      projekt_row_description: "%{phase} bis %{end_date}"
+        Willkommen! Hier kannst du Vorschläge zu den laufenden Beteiligungsprojekten einreichen. Zu
+        welchem möchtest du etwas beitragen?
+      commands:
+        default: |-
+          hilfe|Was dieser Chat kann
+          projekte|Laufende Beteiligungsprojekte
+          benachrichtigungen|Auswählen, worüber Sie informiert werden
+          stopp|Keine Nachrichten mehr erhalten
+      ice_breakers:
+        default_1: Welche Projekte laufen gerade?
+        default_2: Ich habe eine Idee für meine Stadt
+        default_3: Wie funktioniert das Einreichen?
+        default_4: Keine Nachrichten mehr erhalten
+      idea_missing: Bitte beschreibe deine Idee als Text oder als Sprachnachricht.
+      no_projekt: >-
+        Gerade nimmt kein Beteiligungsprojekt Vorschläge an. Schreib mir wieder, wenn ein neues startet,
+        oder scanne den QR-Code eines Projekts.
+      drafting: Danke! Ich formuliere daraus einen Vorschlag – das dauert einen Moment.
+      draft_failed: Das hat leider nicht funktioniert. Schicke mir deine Idee gerne noch einmal.
+      transcription_failed: Ich konnte die Sprachnachricht nicht verstehen. Schreibe deine Idee bitte
+        als Text.
+      publish_failed: Beim Veröffentlichen ist etwas schiefgegangen. Bitte versuche es später noch
+        einmal.
+      criteria_failed: |-
+        Dein Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
+
+        %{feedback}
+
+        Schreibe mir, was ich ändern soll.
+      too_fast: Einen Moment noch – ich arbeite gerade an deinem Vorschlag.
+      opted_in: Du erhältst wieder Nachrichten von uns.
+      verification_link: 'Hier kannst du dein Konto verifizieren: %{url}'
+      buttons:
+        publish: Veröffentlichen
+        revise: Ändern
+        retry: Nochmal versuchen
+        cancel: Abbrechen
+        link_yes: Ja, verknüpfen
+        link_later: Später
+        login: 🔗 Anmelden
+        login_again: Erneut anmelden
+        show_projekts: Projekte zeigen
+        show_current_projekts: Aktuelle Projekte
+        no_thanks: Nein, danke
+        got_it: Alles klar
+        unlink_yes: Ja, trennen
+        done: Fertig
+        choose_notifications: Auswählen
+        choose_category: Kategorie wählen
+        idea_start: Idee einreichen
+        draft_publish: Ja, einreichen
+        draft_revise: Ändern
+        resume: Fortsetzen
+        restart: Neu beginnen
+        support: 👍 Unterstützen
+        help: Hilfe
+        open_page: Seite öffnen
+      refused:
+        generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
+        phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.
+        phase_not_supported: In dieser Phase können per WhatsApp keine Vorschläge eingereicht werden.
+        budget_heading_missing: >-
+          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich deinen Vorschlag zuordnen
+          könnte.
+        creation_disabled: In dieser Phase können derzeit keine Vorschläge eingereicht werden.
+        ai_flow_disabled: Die Einreichung per WhatsApp ist für dieses Projekt nicht aktiviert.
+        phase_not_active: Diese Beteiligungsphase ist derzeit nicht aktiv.
+        phase_expired: Diese Beteiligungsphase ist bereits beendet.
+        phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
+        not_verified: Für die Einreichung muss dein Konto verifiziert sein.
+        submissions_limit_exceeded: Du hast für dieses Projekt bereits so viele Vorschläge eingereicht,
+          wie erlaubt sind.
+        no_open_phase: In diesem Projekt läuft derzeit keine Phase, in der Vorschläge eingereicht
+          werden können.
+      portal_fallback_name: das Beteiligungsportal
+      onboarding:
+        disclosure: >-
+          👋 Willkommen bei %{portal_name}! Ich bin ein KI-Bot und helfe Ihnen dabei, Vorschläge einzureichen,
+          sie zu unterstützen und auf dem Laufenden zu bleiben.
+        link_question: >-
+          Möchten Sie Ihr Konto verknüpfen? Dann können Sie hier direkt mitmachen und persönliche
+          Benachrichtigungen erhalten.
+        consent: >-
+          Mit „Ja“ willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß unserer Datenschutzerklärung
+          ein: %{privacy_url}
+        login_prompt: 'Zum Anmelden hier tippen:'
+        login_prompt_with_url: 'Zum Anmelden diesen Link öffnen: %{url}'
+        linked: >-
+          ✅ Verknüpfung erfolgreich! Ab jetzt können Sie hier direkt Vorschläge einreichen, unterstützen
+          und Benachrichtigungen erhalten.
+        discovery_offer: Möchten Sie sehen, bei welchen Projekten Sie gerade mitmachen können?
+        declined: >-
+          Kein Problem! Auch ohne Verknüpfung sehen Sie, was gerade läuft — nur eben ohne persönliche
+          Benachrichtigungen und ohne direkte Beteiligung.
+        no_account: >-
+          Für die Verknüpfung brauchen Sie ein Konto. Die Registrierung dauert 2 Minuten: %{register_url}
+        expired: >-
+          Das hat leider nicht geklappt — der Link ist womöglich abgelaufen. Versuchen Sie es noch
+          einmal:
+        already_linked: Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchten Sie wechseln?
+        unlink_confirm: >-
+          Möchten Sie die Verknüpfung wirklich aufheben? Sie erhalten dann keine Benachrichtigungen
+          mehr und können Vorschläge nicht mehr direkt unterstützen.
+        unlinked: >-
+          ✅ Verknüpfung aufgehoben. Ihre Nummer wurde gelöscht. Sie können jederzeit erneut verknüpfen.
+        welcome_back: 👋 Willkommen zurück! Diese Nummer ist noch nicht verknüpft — möchten Sie das
+          (wieder) tun?
+      discovery:
+        body: Bei diesen Projekten können Sie gerade mitmachen. Welches interessiert Sie?
+        phase_body: Bei „%{projekt}“ läuft gerade mehr als eine Sache. Wo möchten Sie sich einbringen?
+        button: Projekt wählen
+        empty: >-
+          Gerade läuft nichts, wo Sie etwas einreichen können. Schreiben Sie mir wieder, wenn ein
+          neues Projekt startet.
+        row_description: '%{phase} bis %{end_date}'
+        public_intro: 'Das läuft gerade:'
+        entry: |-
+          *%{title}*
+          %{url}
+        more: 'Und %{count} weitere: %{url}'
+      notifications:
+        settings_title: 🔔 Worüber möchten Sie benachrichtigt werden?
+        saved: ✅ Einstellungen gespeichert.
+        types:
+          new_projekt:
+            short: Neues Projekt
+            label: Neues Projekt
+          deadline_approaching:
+            short: Frist bald
+            label: Frist läuft bald ab
+          deadline_passed:
+            short: Frist vorbei
+            label: Frist abgelaufen
+          new_supports:
+            short: Unterstützung
+            label: Neue Unterstützung für meinen Vorschlag
+          new_comments:
+            short: Kommentare
+            label: Neue Kommentare zu meinem Vorschlag
+          moderation_decision:
+            short: Moderation
+            label: Entscheidung der Moderation
+        push:
+          new_projekt: |-
+            📣 Es gibt ein neues Beteiligungsprojekt bei %{portal_name}.
+            %{url}
+          deadline_approaching: |-
+            ⏳ Nur noch wenige Tage: Die Frist für Vorschläge läuft bald ab.
+            %{url}
+          deadline_passed: |-
+            🏁 Die Frist ist abgelaufen. Hier ist das Ergebnis:
+            %{url}
+          status_change: |-
+            🔔 Es gibt eine Neuigkeit zu Ihrem Vorschlag.
+            %{url}
+      proposal:
+        prompt: '🏗️ Neues Projekt: %{projekt}. Haben Sie dazu eine konkrete Idee?'
+        ask_idea: Schreiben Sie mir kurz, woran Sie denken — ich mache einen Vorschlag daraus.
+        ask_category: Welche Kategorie passt am besten?
+        category_line: 'Kategorie: %{category}'
+        draft: |-
+          Gute Idee! So würde ich es formulieren:
+
+          _„%{title}“_
+          %{description}
+        draft_question: Passt das so?
+        draft_revised: |-
+          Alles klar:
+
+          _„%{title}“_
+          %{description}
+        draft_revised_question: Passt es jetzt?
+        ask_revision: Gerne, was soll ich ändern?
+        published: '✅ Ist jetzt online: %{url}'
+        published_pending_moderation: Danke! Ihr Vorschlag wird jetzt geprüft, wir melden uns.
+        unclear: >-
+          Das habe ich nicht ganz verstanden — meinen Sie einen neuen Vorschlag oder einen Kommentar
+          zu einem bestehenden?
+        cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
+        unsafe: So kann ich das nicht einreichen. Möchten Sie es anders formulieren?
+        resume: >-
+          Sie waren eine Weile weg — möchten Sie Ihren früheren Vorschlag fortsetzen oder neu beginnen?
+      support:
+        prompt: '👍 Möchten Sie diesen Vorschlag unterstützen: „%{title}“?'
+        thanks: ✅ Danke für Ihre Unterstützung! (bisher %{count} Unterstützende)
+        already: Sie haben diesen Vorschlag bereits unterstützt.
+        gone: Diesen Vorschlag gibt es leider nicht mehr.
+      comment:
+        prompt: Möchten Sie zu diesem Vorschlag noch etwas ergänzen?
+        published: Danke, Ihr Kommentar steht jetzt auf der Projektseite.
+        pending: Danke, Ihr Kommentar wird geprüft und erscheint dann auf der Projektseite.
+        invalid: Diesen Kommentar konnte ich nicht speichern. Versuchen Sie es bitte etwas anders.
+        closed: Für diesen Vorschlag sind Kommentare geschlossen.
+      subscription:
+        followed: ✅ Sie folgen jetzt „%{projekt}“ und werden benachrichtigt.
+        unfollowed: >-
+          Sie erhalten keine Benachrichtigungen mehr zu „%{projekt}“. Mit „Abonnieren %{projekt}“
+          können Sie das jederzeit rückgängig machen.
+        unknown: >-
+          Ein Projekt mit diesem Namen habe ich nicht gefunden. Schreiben Sie „Projekte“, um zu sehen,
+          was läuft.
+      compliance:
+        disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
+        help:
+          linked: >-
+            Das kann ich: 📝 Vorschlag einreichen · 👍 Vorschlag unterstützen · 🔔 Benachrichtigungen
+            verwalten · 🔗 Konto trennen. Sagen Sie einfach, was Sie möchten.
+          unlinked: >-
+            Das kann ich: 📝 Vorschlag einreichen · 👍 Vorschlag unterstützen · 🔔 Benachrichtigungen
+            verwalten · 🔗 Jetzt verknüpfen. Sagen Sie einfach, was Sie möchten.
+        out_of_scope: >-
+          Das kann ich hier nicht beantworten — hier geht es nur um %{portal_name}. Mehr unter %{help_url}.
+        opted_out: Verstanden, Sie erhalten keine Nachrichten mehr von uns.
+    archive:
       menu:
         body: >-
-          Willkommen! Hier findest du alles rund um die Beteiligung in deiner Region.
-          Was möchtest du tun?
+          Willkommen! Hier findest du alles rund um die Beteiligung in deiner Region. Was möchtest
+          du tun?
         button: Auswählen
         nothing_here: Hier gibt es gerade nichts zu sehen.
         sections:
@@ -124,61 +327,62 @@ de:
               title: Seite öffnen
               description: Diese Phase im Beteiligungsportal
         phase:
-          until: "bis %{end_date}"
+          until: bis %{end_date}
         digest:
-          more: "Und %{count} weitere: %{url}"
-          more_plain: "Und %{count} weitere."
+          more: 'Und %{count} weitere: %{url}'
+          more_plain: Und %{count} weitere.
         contributions:
-          intro: "Das hast du bisher eingereicht:"
-          entry: "*%{title}*\n%{url}"
+          intro: 'Das hast du bisher eingereicht:'
+          entry: |-
+            *%{title}*
+            %{url}
           empty: >-
-            Du hast bisher noch nichts eingereicht. Über das Menü kannst du jederzeit einen
-            Vorschlag zu einem laufenden Projekt schreiben.
+            Du hast bisher noch nichts eingereicht. Über das Menü kannst du jederzeit einen Vorschlag
+            zu einem laufenden Projekt schreiben.
         projekt_contributions:
-          intro: "Diese Beiträge gibt es zu „%{projekt}“:"
+          intro: 'Diese Beiträge gibt es zu „%{projekt}“:'
           empty: Zu diesem Projekt wurde bisher noch nichts eingereicht.
         phase_contributions:
-          intro: "Das wurde bei „%{phase}“ eingereicht:"
+          intro: 'Das wurde bei „%{phase}“ eingereicht:'
           empty: In dieser Phase gibt es bisher noch keine Beiträge.
         phase_participation:
           unsupported: >-
             In dieser Phase kann ich hier im Chat nichts für dich einreichen. Auf der Projektseite
             geht es: %{url}
         projekts:
-          body: "Diese Beteiligungsprojekte laufen gerade. Welches möchtest du dir ansehen?"
+          body: Diese Beteiligungsprojekte laufen gerade. Welches möchtest du dir ansehen?
           button: Projekt wählen
-          empty: >-
-            Gerade läuft kein Beteiligungsprojekt. Schreib mir wieder, wenn ein neues startet.
+          empty: Gerade läuft kein Beteiligungsprojekt. Schreib mir wieder, wenn ein neues startet.
         phases:
-          body: "Das läuft bei „%{projekt}“:"
+          body: 'Das läuft bei „%{projekt}“:'
           button: Phase wählen
           closed: bereits beendet
           empty: In diesem Projekt gibt es derzeit keine Phasen zu sehen.
         events:
-          intro: "Diese Termine stehen an:"
+          intro: 'Diese Termine stehen an:'
           empty: Es sind derzeit keine Termine geplant.
         polls:
-          intro: "Bei diesen Abstimmungen kannst du gerade mitmachen:"
-          until: "noch bis %{end_date}"
+          intro: 'Bei diesen Abstimmungen kannst du gerade mitmachen:'
+          until: noch bis %{end_date}
           empty: Gerade läuft keine Abstimmung.
         milestones:
-          intro: "Das hat sich zuletzt getan:"
+          intro: 'Das hat sich zuletzt getan:'
           empty: Es gibt noch keine Fortschritte zu berichten.
         results:
-          body: "Für diese Phasen gibt es bereits Ergebnisse. Welche möchtest du sehen?"
+          body: Für diese Phasen gibt es bereits Ergebnisse. Welche möchtest du sehen?
           button: Ergebnis wählen
-          link_body: "Die Auswertung zu „%{phase}“ findest du hier:"
+          link_body: 'Die Auswertung zu „%{phase}“ findest du hier:'
           empty: >-
-            Es sind noch keine Ergebnisse veröffentlicht. Sobald eine Phase ausgewertet ist,
-            findest du sie hier.
+            Es sind noch keine Ergebnisse veröffentlicht. Sobald eine Phase ausgewertet ist, findest
+            du sie hier.
         notifications:
           state_on: Du erhältst Nachrichten von uns.
           state_off: Du erhältst derzeit keine Nachrichten von uns.
-          follows: "Du folgst diesen Projekten:"
+          follows: 'Du folgst diesen Projekten:'
           no_follows: Du folgst bisher keinem Projekt.
         follow:
-          followed: "Du folgst jetzt „%{projekt}“ und wirst bei Neuigkeiten benachrichtigt."
-          unfollowed: "Du folgst „%{projekt}“ nicht mehr."
+          followed: Du folgst jetzt „%{projekt}“ und wirst bei Neuigkeiten benachrichtigt.
+          unfollowed: Du folgst „%{projekt}“ nicht mehr.
         help:
           intro: |-
             *Was ich kann*
@@ -193,104 +397,29 @@ de:
             Deine eigenen Beiträge ansehen, Projekten folgen und Nachrichten jederzeit abstellen.
 
             Du kannst mir auch einfach schreiben, was du suchst — ich bringe dich hin.
-          currently_empty: "Gerade ohne Inhalte: %{items}."
-          more: "Mehr zur Beteiligung: %{url}"
-          body: "So funktioniert die Beteiligung:"
+          currently_empty: 'Gerade ohne Inhalte: %{items}.'
+          more: 'Mehr zur Beteiligung: %{url}'
+          body: 'So funktioniert die Beteiligung:'
           button: Hilfe öffnen
-          missing: >-
-            Zu diesem Portal gibt es noch keine Hilfeseite. Schreib mir einfach, was du wissen
+          missing: Zu diesem Portal gibt es noch keine Hilfeseite. Schreib mir einfach, was du wissen
             möchtest.
         contact:
-          body: "Hier erreichst du das Team:"
+          body: 'Hier erreichst du das Team:'
           button: Kontakt öffnen
-          missing: >-
-            Zu diesem Portal ist keine Kontaktseite hinterlegt. Schreib mir, worum es geht.
+          missing: Zu diesem Portal ist keine Kontaktseite hinterlegt. Schreib mir, worum es geht.
         link:
-          body: "„%{title}“ kannst du hier im Beteiligungsportal öffnen:"
-          gone: >-
-            Das ist leider nicht mehr verfügbar. Schau im Menü, was gerade offen ist.
-      commands:
-        default: |-
-          menu|Alle Möglichkeiten anzeigen
-          hilfe|Was dieser Chat kann
-          projekte|Laufende Beteiligungsprojekte
-          stopp|Keine Nachrichten mehr erhalten
-      ice_breakers:
-        default_1: Welche Projekte laufen gerade?
-        default_2: Ich habe eine Idee für meine Stadt
-        default_3: Wie funktioniert das Einreichen?
-        default_4: Keine Nachrichten mehr erhalten
-      ask_idea: |-
-        Du bist beim Projekt „%{projekt}“:
-        %{url}
-
-        Hast du konkrete Ideen oder Vorschläge? Schreibe sie mir als Text oder schicke mir eine Sprachnachricht.
-      idea_missing: Bitte beschreibe deine Idee als Text oder als Sprachnachricht.
+          body: '„%{title}“ kannst du hier im Beteiligungsportal öffnen:'
+          gone: Das ist leider nicht mehr verfügbar. Schau im Menü, was gerade offen ist.
+      choose_projekt_button: Projekte anzeigen
+      projekt_row_description: '%{phase} bis %{end_date}'
       choose_phase: >-
-        Im Projekt „%{projekt}“ laufen mehrere Beteiligungsphasen. Zu welcher möchtest du etwas
-        einreichen?
+        Im Projekt „%{projekt}“ laufen mehrere Beteiligungsphasen. Zu welcher möchtest du etwas einreichen?
       choose_phase_button: Phase wählen
-      phase_row_description: "bis %{end_date}"
-      no_projekt: >-
-        Gerade nimmt kein Beteiligungsprojekt Vorschläge an. Schreib mir wieder, wenn ein neues
-        startet, oder scanne den QR-Code eines Projekts.
-      drafting: Danke! Ich formuliere daraus einen Vorschlag – das dauert einen Moment.
-      draft_summary: |-
-        Das ist mein Vorschlag:
-
-        *%{title}*
-
-        %{description}
-      draft_failed: >-
-        Das hat leider nicht funktioniert. Schicke mir deine Idee gerne noch einmal.
-      ask_revision: Was soll ich ändern oder ergänzen?
-      transcription_failed: >-
-        Ich konnte die Sprachnachricht nicht verstehen. Schreibe deine Idee bitte als Text.
-      published: "Dein Vorschlag ist veröffentlicht: %{url}"
-      published_pending_moderation: >-
-        Danke! Dein Vorschlag wurde eingereicht und wird noch geprüft, bevor er öffentlich
-        sichtbar ist: %{url}
-      publish_failed: >-
-        Beim Veröffentlichen ist etwas schiefgegangen. Bitte versuche es später noch einmal.
-      criteria_failed: |-
-        Dein Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
-
-        %{feedback}
-
-        Schreibe mir, was ich ändern soll.
-      too_fast: Einen Moment noch – ich arbeite gerade an deinem Vorschlag.
-      opted_out: >-
-        Du erhältst keine Nachrichten mehr von uns. Schreibe START, um dich wieder anzumelden.
-      opted_in: Du erhältst wieder Nachrichten von uns.
-      verification_link: "Hier kannst du dein Konto verifizieren: %{url}"
-      cancelled: Abgebrochen. Es wurde nichts eingereicht.
+      phase_row_description: bis %{end_date}
       buttons:
-        publish: Veröffentlichen
-        revise: Ändern
-        retry: Nochmal versuchen
-        cancel: Abbrechen
-        menu: Hauptmenü
         open_projekt: Projekt öffnen
         projekt_menu: Mehr zum Projekt
         follow: Folgen
         unfollow: Nicht mehr folgen
         messages_off: Keine Nachrichten
         messages_on: Nachrichten an
-      refused:
-        generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
-        phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.
-        phase_not_supported: In dieser Phase können per WhatsApp keine Vorschläge eingereicht werden.
-        budget_heading_missing: >-
-          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich deinen Vorschlag zuordnen
-          könnte.
-        creation_disabled: In dieser Phase können derzeit keine Vorschläge eingereicht werden.
-        ai_flow_disabled: Die Einreichung per WhatsApp ist für dieses Projekt nicht aktiviert.
-        phase_not_active: Diese Beteiligungsphase ist derzeit nicht aktiv.
-        phase_expired: Diese Beteiligungsphase ist bereits beendet.
-        phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
-        not_verified: Für die Einreichung muss dein Konto verifiziert sein.
-        submissions_limit_exceeded: >-
-          Du hast für dieses Projekt bereits so viele Vorschläge eingereicht, wie erlaubt sind.
-        no_open_phase: >-
-          In diesem Projekt läuft derzeit keine Phase, in der Vorschläge eingereicht werden
-          können.

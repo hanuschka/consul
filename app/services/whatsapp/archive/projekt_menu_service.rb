@@ -1,4 +1,4 @@
-class Whatsapp::Steps::ProjektMenuService < ApplicationService
+class Whatsapp::Archive::ProjektMenuService < ApplicationService
   SUMMARY_LENGTH = 400
 
   def initialize(conversation:, projekt:)
@@ -7,7 +7,7 @@ class Whatsapp::Steps::ProjektMenuService < ApplicationService
   end
 
   def call
-    Whatsapp::Steps::SendMenuService.call(
+    ::Whatsapp::Archive::SendMenuService.call(
       conversation: @conversation,
       scope: :projekt,
       record_id: @projekt.id,

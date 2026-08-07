@@ -1,5 +1,5 @@
-class Ai::Tools::WhatsappAiAssistant::OpenMenuAction < Ai::Tools::WhatsappAiAssistant::BaseTool
-  PORTAL_ACTIONS = ::Whatsapp::MenuActions::ACTIONS_BY_SCOPE.fetch(:portal).map(&:to_s).freeze
+class Ai::Tools::WhatsappAiAssistant::Archive::OpenMenuAction < ::Ai::Tools::WhatsappAiAssistant::BaseTool
+  PORTAL_ACTIONS = ::Whatsapp::Archive::MenuActions::ACTIONS_BY_SCOPE.fetch(:portal).map(&:to_s).freeze
 
   description "Takes the citizen straight to one of the portal's destinations, exactly as tapping " \
               "that row in the menu would. Use it whenever they say what they want instead of " \
@@ -23,7 +23,7 @@ class Ai::Tools::WhatsappAiAssistant::OpenMenuAction < Ai::Tools::WhatsappAiAssi
   def execute(action:)
     return unknown_action_error if !PORTAL_ACTIONS.include?(action.to_s)
 
-    handled = ::Whatsapp::MenuActionService.call(
+    handled = ::Whatsapp::Archive::MenuActionService.call(
       conversation: conversation,
       scope: :portal,
       action: action.to_s.to_sym

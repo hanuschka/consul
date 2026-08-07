@@ -1,11 +1,11 @@
-class Whatsapp::Steps::PhaseMenuService < ApplicationService
+class Whatsapp::Archive::PhaseMenuService < ApplicationService
   def initialize(conversation:, projekt_phase:)
     @conversation = conversation
     @projekt_phase = projekt_phase
   end
 
   def call
-    Whatsapp::Steps::SendMenuService.call(
+    ::Whatsapp::Archive::SendMenuService.call(
       conversation: @conversation,
       scope: :phase,
       record_id: @projekt_phase.id,
@@ -27,7 +27,7 @@ class Whatsapp::Steps::PhaseMenuService < ApplicationService
     def end_date_line
       return if @projekt_phase.end_date.blank?
 
-      I18n.t("whatsapp.bot.menu.phase.until", end_date: I18n.l(@projekt_phase.end_date.to_date))
+      I18n.t("whatsapp.archive.menu.phase.until", end_date: I18n.l(@projekt_phase.end_date.to_date))
     end
 
     def user

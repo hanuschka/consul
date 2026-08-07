@@ -1,4 +1,4 @@
-class Whatsapp::Steps::SendDigestService < ApplicationService
+class Whatsapp::Archive::SendDigestService < ApplicationService
   MAX_SHOWN = 5
 
   # A digest is the reply for content whose items each have their own link:
@@ -18,7 +18,7 @@ class Whatsapp::Steps::SendDigestService < ApplicationService
   def call
     return send_empty if @entries.empty?
 
-    Whatsapp::Steps::MainMenuService.call(
+    ::Whatsapp::Archive::MainMenuService.call(
       conversation: @conversation,
       body: [@intro, *formatted_entries, more_line].compact.join("\n\n")
     )
@@ -40,13 +40,13 @@ class Whatsapp::Steps::SendDigestService < ApplicationService
       hidden = @entries.size - MAX_SHOWN
 
       return if hidden <= 0
-      return I18n.t("whatsapp.bot.menu.digest.more_plain", count: hidden) if @more_url.blank?
+      return I18n.t("whatsapp.archive.menu.digest.more_plain", count: hidden) if @more_url.blank?
 
-      I18n.t("whatsapp.bot.menu.digest.more", count: hidden, url: @more_url)
+      I18n.t("whatsapp.archive.menu.digest.more", count: hidden, url: @more_url)
     end
 
     def send_empty
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
         body: @empty_body
       )

@@ -1,4 +1,4 @@
-module Whatsapp::MenuActions
+module Whatsapp::Archive::MenuActions
   # Every navigation row and every navigation button the bot sends carries an id
   # of one shape: what it acts on, which record, and what to do. One shape means
   # one parser and one dispatcher, so the portal menu, a projekt's menu and a

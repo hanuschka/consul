@@ -314,7 +314,7 @@ module Adm
         scope = ::Whatsapp::Account.includes(:user, :whatsapp_conversation)
 
         @pagy, @dialogs = pagy(
-          WhatsappDialogsQuery.call(scope, params),
+          ::Adm::Whatsapp::DialogsQuery.call(scope, params),
           limit: DIALOGS_PER_PAGE
         )
 
@@ -333,7 +333,7 @@ module Adm
           [t("adm.whatsapp.steps.#{step}"), step]
         end
 
-        @dialog_activity_options = WhatsappDialogsQuery::ACTIVITY_OPTIONS.map do |option|
+        @dialog_activity_options = ::Adm::Whatsapp::DialogsQuery::ACTIVITY_OPTIONS.map do |option|
           [t("adm.whatsapp.dialogs.activity_options.#{option}"), option]
         end
       end

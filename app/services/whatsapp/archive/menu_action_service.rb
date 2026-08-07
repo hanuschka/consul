@@ -1,4 +1,4 @@
-class Whatsapp::MenuActionService < ApplicationService
+class Whatsapp::Archive::MenuActionService < ApplicationService
   # The one place a navigation action is turned into a reply. A tapped row and
   # the assistant's open_menu_action tool both arrive here, so the two entry
   # points cannot answer the same action differently — and adding an action
@@ -10,22 +10,22 @@ class Whatsapp::MenuActionService < ApplicationService
   # so the routes are data: adding an action is a line here, not an arm in a
   # case that already reads as nine copies of the same call.
   PROJEKT_STEPS = {
-    card: Whatsapp::Steps::SendProjektCardService,
-    menu: Whatsapp::Steps::ProjektMenuService,
-    phases: Whatsapp::Steps::ListPhasesService,
-    contributions: Whatsapp::Steps::ListProjektContributionsService,
-    events: Whatsapp::Steps::ListEventsService,
-    milestones: Whatsapp::Steps::ListMilestonesService,
-    results: Whatsapp::Steps::ListResultsService,
-    follow: Whatsapp::Steps::ToggleProjektFollowService
+    card: ::Whatsapp::Archive::SendProjektCardService,
+    menu: ::Whatsapp::Archive::ProjektMenuService,
+    phases: ::Whatsapp::Archive::ListPhasesService,
+    contributions: ::Whatsapp::Archive::ListProjektContributionsService,
+    events: ::Whatsapp::Archive::ListEventsService,
+    milestones: ::Whatsapp::Archive::ListMilestonesService,
+    results: ::Whatsapp::Archive::ListResultsService,
+    follow: ::Whatsapp::Archive::ToggleProjektFollowService
   }.freeze
 
   PHASE_STEPS = {
-    menu: Whatsapp::Steps::PhaseMenuService,
-    participate: Whatsapp::Steps::StartPhaseParticipationService,
-    contributions: Whatsapp::Steps::ListPhaseContributionsService,
-    results: Whatsapp::Steps::SendPhaseResultsService,
-    page: Whatsapp::Steps::SendPhasePageService
+    menu: ::Whatsapp::Archive::PhaseMenuService,
+    participate: ::Whatsapp::Archive::StartPhaseParticipationService,
+    contributions: ::Whatsapp::Archive::ListPhaseContributionsService,
+    results: ::Whatsapp::Archive::SendPhaseResultsService,
+    page: ::Whatsapp::Archive::SendPhasePageService
   }.freeze
 
   def initialize(conversation:, scope:, action:, record_id: 0)
@@ -49,14 +49,14 @@ class Whatsapp::MenuActionService < ApplicationService
     def portal_action
       case @action
       when :create then start_creation
-      when :polls then Whatsapp::Steps::ListPollsService.call(conversation: @conversation)
-      when :projekts then Whatsapp::Steps::ListProjektsService.call(conversation: @conversation)
-      when :events then Whatsapp::Steps::ListEventsService.call(conversation: @conversation)
-      when :milestones then Whatsapp::Steps::ListMilestonesService.call(conversation: @conversation)
-      when :results then Whatsapp::Steps::ListResultsService.call(conversation: @conversation)
-      when :contributions then Whatsapp::Steps::ListContributionsService.call(conversation: @conversation)
-      when :notifications then Whatsapp::Steps::NotificationSettingsService.call(conversation: @conversation)
-      when :help then Whatsapp::Steps::SendHelpService.call(conversation: @conversation)
+      when :polls then ::Whatsapp::Archive::ListPollsService.call(conversation: @conversation)
+      when :projekts then ::Whatsapp::Archive::ListProjektsService.call(conversation: @conversation)
+      when :events then ::Whatsapp::Archive::ListEventsService.call(conversation: @conversation)
+      when :milestones then ::Whatsapp::Archive::ListMilestonesService.call(conversation: @conversation)
+      when :results then ::Whatsapp::Archive::ListResultsService.call(conversation: @conversation)
+      when :contributions then ::Whatsapp::Archive::ListContributionsService.call(conversation: @conversation)
+      when :notifications then ::Whatsapp::Archive::NotificationSettingsService.call(conversation: @conversation)
+      when :help then ::Whatsapp::Flows::HelpService.call(conversation: @conversation)
       when :contact then send_page(:contact)
       else return false
       end
@@ -89,11 +89,11 @@ class Whatsapp::MenuActionService < ApplicationService
     def start_creation
       @conversation.reset_flow!
 
-      Whatsapp::NextStepService.call(conversation: @conversation)
+      ::Whatsapp::Archive::NextStepService.call(conversation: @conversation)
     end
 
     def send_page(page_key)
-      Whatsapp::Steps::SendStaticPageService.call(conversation: @conversation, page_key: page_key)
+      ::Whatsapp::Archive::SendStaticPageService.call(conversation: @conversation, page_key: page_key)
     end
 
     # Resolved through the browsable list rather than by id: a row can be tapped

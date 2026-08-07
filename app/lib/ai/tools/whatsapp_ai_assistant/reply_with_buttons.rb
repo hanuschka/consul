@@ -6,7 +6,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithButtons < Ai::Tools::WhatsappAiAs
   ALLOWED_ACTIONS = ::Whatsapp::Outbound::RECOVERY_ACTION_IDS.keys.map(&:to_s).freeze
 
   description "Answers the citizen with a short text and up to three tappable buttons. " \
-              "The buttons may only be: menu (show what the portal has open), cancel (abandon " \
+              "The buttons may only be: help (show what this bot can do), cancel (abandon " \
               "the current submission), retry (try the last failed step again). Use it whenever " \
               "one of those is the obvious next thing to do. This sends the message itself — do " \
               "not write one as well."

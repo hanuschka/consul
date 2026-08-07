@@ -1,4 +1,4 @@
-class Whatsapp::Steps::AskPhaseChoiceService < ApplicationService
+class Whatsapp::Archive::AskPhaseChoiceService < ApplicationService
   ROW_ID_PREFIX = "whatsapp_phase_".freeze
 
   # Without a projekt the list spans the whole portal, which changes what the
@@ -37,13 +37,13 @@ class Whatsapp::Steps::AskPhaseChoiceService < ApplicationService
     def body
       return ::Whatsapp.welcome_greeting if @projekt.blank?
 
-      I18n.t("whatsapp.bot.choose_phase", projekt: projekt_title(@projekt))
+      I18n.t("whatsapp.archive.choose_phase", projekt: projekt_title(@projekt))
     end
 
     def button_label
-      return I18n.t("whatsapp.bot.choose_projekt_button") if @projekt.blank?
+      return I18n.t("whatsapp.archive.choose_projekt_button") if @projekt.blank?
 
-      I18n.t("whatsapp.bot.choose_phase_button")
+      I18n.t("whatsapp.archive.choose_phase_button")
     end
 
     def rows
@@ -69,7 +69,7 @@ class Whatsapp::Steps::AskPhaseChoiceService < ApplicationService
       return phase.title if phase.end_date.blank?
 
       I18n.t(
-        "whatsapp.bot.projekt_row_description",
+        "whatsapp.archive.projekt_row_description",
         phase: phase.title, end_date: I18n.l(phase.end_date.to_date)
       )
     end
@@ -77,7 +77,7 @@ class Whatsapp::Steps::AskPhaseChoiceService < ApplicationService
     def end_date_description(phase)
       return if phase.end_date.blank?
 
-      I18n.t("whatsapp.bot.phase_row_description", end_date: I18n.l(phase.end_date.to_date))
+      I18n.t("whatsapp.archive.phase_row_description", end_date: I18n.l(phase.end_date.to_date))
     end
 
     def projekt_title(projekt)

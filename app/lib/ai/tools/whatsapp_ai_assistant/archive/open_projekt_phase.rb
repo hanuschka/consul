@@ -1,4 +1,4 @@
-class Ai::Tools::WhatsappAiAssistant::OpenProjektPhase < Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::OpenProjektPhase < ::Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Opens one participation phase's own menu: taking part in it, what others " \
               "contributed there, its results, and its page. Use it when the citizen asks about " \
               "one particular phase rather than the projekt as a whole. Take the " \
@@ -11,7 +11,7 @@ class Ai::Tools::WhatsappAiAssistant::OpenProjektPhase < Ai::Tools::WhatsappAiAs
   end
 
   def execute(projekt_phase_id:)
-    handled = ::Whatsapp::MenuActionService.call(
+    handled = ::Whatsapp::Archive::MenuActionService.call(
       conversation: conversation,
       scope: :phase,
       record_id: projekt_phase_id.to_i,

@@ -1,4 +1,4 @@
-class Whatsapp::Steps::StartPhaseParticipationService < ApplicationService
+class Whatsapp::Archive::StartPhaseParticipationService < ApplicationService
   # The phase menu offers this row only when the citizen may take part, but the
   # tap can arrive long after the row was sent, so entering the flow re-asks the
   # same question AskForIdeaService would.
@@ -12,7 +12,7 @@ class Whatsapp::Steps::StartPhaseParticipationService < ApplicationService
 
     @conversation.start_flow!(@projekt_phase)
 
-    Whatsapp::Steps::AskForIdeaService.call(conversation: @conversation)
+    ::Whatsapp::Flows::AskIdeaService.call(conversation: @conversation)
   end
 
   private
@@ -24,10 +24,10 @@ class Whatsapp::Steps::StartPhaseParticipationService < ApplicationService
     # A phase the bot has no flow for is not a refusal about this citizen, so it
     # points at the page where taking part is still possible.
     def refuse
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
         body: I18n.t(
-          "whatsapp.bot.menu.phase_participation.unsupported",
+          "whatsapp.archive.menu.phase_participation.unsupported",
           url: Whatsapp::ProjektLink.phase_url(@projekt_phase)
         )
       )

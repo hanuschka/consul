@@ -1,4 +1,4 @@
-class Whatsapp::Steps::SendLinkButtonService < ApplicationService
+class Whatsapp::Flows::SendLinkButtonService < ApplicationService
   # Every "here is a page to open" reply. A button WhatsApp refuses for any
   # reason falls back to the plain link rather than to silence, the same way the
   # linking invitation does.
@@ -14,7 +14,7 @@ class Whatsapp::Steps::SendLinkButtonService < ApplicationService
     message = Whatsapp::Outbound.cta_url(
       account: account,
       body: @body,
-      button_label: @button_label || I18n.t("whatsapp.bot.buttons.open_projekt"),
+      button_label: @button_label || I18n.t("whatsapp.bot.buttons.open_page"),
       url: @url
     )
 

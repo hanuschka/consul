@@ -1,4 +1,4 @@
-module Whatsapp::NotificationActions
+module Whatsapp::Archive::NotificationActions
   # Handled before the step dispatcher and before the assistant, like the
   # recovery buttons: turning messages off is the one instruction that must work
   # from any state and must never depend on a model reading it correctly.

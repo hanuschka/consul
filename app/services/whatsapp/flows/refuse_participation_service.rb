@@ -1,4 +1,4 @@
-class Whatsapp::Steps::RefuseParticipationService < ApplicationService
+class Whatsapp::Flows::RefuseParticipationService < ApplicationService
   REASONS_WITH_OWN_COPY = %w[
     phase_missing
     phase_not_supported
@@ -18,10 +18,13 @@ class Whatsapp::Steps::RefuseParticipationService < ApplicationService
     @reason = reason.to_s
   end
 
+  # The catalog has no menu to return to, so a refusal ends in plain text rather
+  # than in an invitation. What the citizen can do instead is in the copy: the
+  # verification link where that is the blocker, the help command otherwise.
   def call
     @conversation.reset_flow!
 
-    Whatsapp::Steps::MainMenuService.call(conversation: @conversation, body: message)
+    Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: message)
   end
 
   # Also read by the assistant, which explains a refusal in its own words but

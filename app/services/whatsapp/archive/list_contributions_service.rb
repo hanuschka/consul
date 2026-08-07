@@ -1,4 +1,4 @@
-class Whatsapp::Steps::ListContributionsService < ApplicationService
+class Whatsapp::Archive::ListContributionsService < ApplicationService
   MAX_SHOWN = 5
 
   # Answered as text rather than as a list: a row would have to lead somewhere,
@@ -10,9 +10,9 @@ class Whatsapp::Steps::ListContributionsService < ApplicationService
   def call
     return send_empty if contributions.empty?
 
-    Whatsapp::Steps::MainMenuService.call(
+    ::Whatsapp::Archive::MainMenuService.call(
       conversation: @conversation,
-      body: [I18n.t("whatsapp.bot.menu.contributions.intro"), *entries].join("\n\n")
+      body: [I18n.t("whatsapp.archive.menu.contributions.intro"), *entries].join("\n\n")
     )
   end
 
@@ -29,7 +29,7 @@ class Whatsapp::Steps::ListContributionsService < ApplicationService
     def entries
       contributions.first(MAX_SHOWN).map do |resource|
         I18n.t(
-          "whatsapp.bot.menu.contributions.entry",
+          "whatsapp.archive.menu.contributions.entry",
           title: resource.title,
           url: Whatsapp::PublishedResourceUrl.call(resource)
         )
@@ -37,9 +37,9 @@ class Whatsapp::Steps::ListContributionsService < ApplicationService
     end
 
     def send_empty
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.contributions.empty")
+        body: I18n.t("whatsapp.archive.menu.contributions.empty")
       )
     end
 end

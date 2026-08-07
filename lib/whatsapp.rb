@@ -131,7 +131,7 @@ module Whatsapp
   # than submitting — only the fallback copy differs, because the default
   # greeting asks which projekt to contribute to and the menu does not.
   def self.menu_greeting
-    Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.bot.menu.body")
+    Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.archive.menu.body")
   end
 
   def self.ice_breakers

@@ -1,4 +1,4 @@
-class Whatsapp::Steps::SendPhaseResultsService < ApplicationService
+class Whatsapp::Archive::SendPhaseResultsService < ApplicationService
   def initialize(conversation:, projekt_phase:)
     @conversation = conversation
     @projekt_phase = projekt_phase
@@ -10,9 +10,9 @@ class Whatsapp::Steps::SendPhaseResultsService < ApplicationService
   def call
     return send_gone if Whatsapp::PublishedResultsQuery.public_section_for(@projekt_phase).blank?
 
-    Whatsapp::Steps::SendLinkButtonService.call(
+    ::Whatsapp::Flows::SendLinkButtonService.call(
       conversation: @conversation,
-      body: I18n.t("whatsapp.bot.menu.results.link_body", phase: @projekt_phase.title),
+      body: I18n.t("whatsapp.archive.menu.results.link_body", phase: @projekt_phase.title),
       url: Whatsapp::ProjektLink.evaluation_url(@projekt_phase)
     )
   end
@@ -20,9 +20,9 @@ class Whatsapp::Steps::SendPhaseResultsService < ApplicationService
   private
 
     def send_gone
-      Whatsapp::Steps::MainMenuService.call(
+      ::Whatsapp::Archive::MainMenuService.call(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.menu.link.gone")
+        body: I18n.t("whatsapp.archive.menu.link.gone")
       )
     end
 end

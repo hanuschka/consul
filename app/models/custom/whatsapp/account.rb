@@ -32,9 +32,28 @@ class Whatsapp::Account < ApplicationRecord
 
   validates :wa_id, presence: true, uniqueness: true
 
+  # Ordered: this is the order the catalog's settings list prints them in, and
+  # the order is spent top down against WhatsApp's ten-row budget.
+  NOTIFICATION_TYPES = %i[
+    new_projekt
+    deadline_approaching
+    deadline_passed
+    new_supports
+    new_comments
+    moderation_decision
+  ].freeze
+
+  NOTIFICATION_COLUMNS =
+    NOTIFICATION_TYPES.index_with { |type| :"notify_#{type}" }.freeze
+
   scope :linked_to_user, -> { joins(:user).where(users: { erased_at: nil }) }
   scope :verified, -> { where.not(verified_at: nil) }
   scope :subscribed, -> { verified.linked_to_user.where(opt_out_at: nil).where.not(opt_in_at: nil) }
+
+  # Composed onto `subscribed` by every push, so opting out of the channel and
+  # switching off one notification type are answered by one query rather than by
+  # each job remembering to ask both questions.
+  scope :subscribed_to, ->(type) { subscribed.where(NOTIFICATION_COLUMNS.fetch(type) => true) }
 
   def subscribed?
     verified_at.present? && user_id.present? && opt_in_at.present? && opt_out_at.nil?
@@ -49,6 +68,38 @@ class Whatsapp::Account < ApplicationRecord
 
   def opt_out!
     update!(opt_out_at: Time.current)
+  end
+
+  # Whether this number has ever been written to. What separates a genuine
+  # first contact — which gets the catalog's three opening messages — from
+  # someone writing in again after a quiet week, who gets only the AI
+  # disclosure. Asked of the messages rather than of a flag on the conversation
+  # because resetting a flow clears the conversation's context.
+  def greeted?
+    Whatsapp::Message.exists?(whatsapp_account_id: id, direction: "outbound")
+  end
+
+  def notifies?(type)
+    self[NOTIFICATION_COLUMNS.fetch(type)]
+  end
+
+  def toggle_notification!(type)
+    column = NOTIFICATION_COLUMNS.fetch(type)
+
+    update!(column => !self[column])
+  end
+
+  # Unlinking is self-service, so it clears everything that ties the number to a
+  # citizen in one write: the account row stays (it is the conversation's
+  # parent) but carries nothing about who was behind it.
+  def unlink!
+    update!(
+      user_id: nil,
+      state: "unlinked",
+      verified_at: nil,
+      link_token: nil,
+      link_token_sent_at: nil
+    )
   end
 
   def state_badge_variant

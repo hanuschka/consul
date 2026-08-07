@@ -1,4 +1,4 @@
-class Ai::Tools::WhatsappAiAssistant::SendProjektLink < Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::SendProjektLink < ::Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Sends the citizen a tappable button opening the web page of the projekt behind an " \
               "open participation phase. Use it when they want to read more, see other people's " \
               "contributions, or do something the chat cannot do. This sends the message itself " \
@@ -14,7 +14,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektLink < Ai::Tools::WhatsappAiAss
 
     return unknown_phase_error if projekt_phase.blank?
 
-    ::Whatsapp::Steps::SendLinkButtonService.call(
+    ::Whatsapp::Flows::SendLinkButtonService.call(
       conversation: conversation,
       body: body,
       url: projekt_url(projekt_phase.projekt)

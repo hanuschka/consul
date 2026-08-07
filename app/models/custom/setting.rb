@@ -19,6 +19,9 @@ class Setting < ApplicationRecord
   WHATSAPP_TEMPLATE_NAME_KEYS = %w[
     whatsapp.broadcast_template
     whatsapp.broadcast_card_template
+    whatsapp.deadline_approaching_template
+    whatsapp.deadline_passed_template
+    whatsapp.status_change_template
   ].freeze
 
   def validate_whatsapp_template_name
@@ -268,6 +271,10 @@ class Setting < ApplicationRecord
         "whatsapp.commands": nil,
         "whatsapp.broadcast_template": nil,
         "whatsapp.broadcast_card_template": nil,
+        "whatsapp.deadline_approaching_template": nil,
+        "whatsapp.deadline_passed_template": nil,
+        "whatsapp.status_change_template": nil,
+        "whatsapp.deadline_notifications_enabled": false,
         "whatsapp.broadcast_template_language": "de",
         "whatsapp.auto_broadcast_new_projekts": false,
         "whatsapp.transcription_model": nil,

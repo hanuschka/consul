@@ -1,4 +1,4 @@
-class Whatsapp::Steps::NotificationSettingsService < ApplicationService
+class Whatsapp::Archive::NotificationSettingsService < ApplicationService
   MAX_SHOWN = 5
 
   # What the citizen currently receives and how to change it. Turning messages
@@ -36,19 +36,19 @@ class Whatsapp::Steps::NotificationSettingsService < ApplicationService
     end
 
     def state_line
-      return I18n.t("whatsapp.bot.menu.notifications.state_off") if opted_out?
+      return I18n.t("whatsapp.archive.menu.notifications.state_off") if opted_out?
 
-      I18n.t("whatsapp.bot.menu.notifications.state_on")
+      I18n.t("whatsapp.archive.menu.notifications.state_on")
     end
 
     def followed_lines
-      return I18n.t("whatsapp.bot.menu.notifications.no_follows") if followed_projekts.empty?
+      return I18n.t("whatsapp.archive.menu.notifications.no_follows") if followed_projekts.empty?
 
       titles = followed_projekts.first(MAX_SHOWN).map do |projekt|
         "• #{Whatsapp::ProjektLink.title(projekt)}"
       end
 
-      [I18n.t("whatsapp.bot.menu.notifications.follows"), *titles].join("\n")
+      [I18n.t("whatsapp.archive.menu.notifications.follows"), *titles].join("\n")
     end
 
     def followed_projekts
@@ -63,8 +63,8 @@ class Whatsapp::Steps::NotificationSettingsService < ApplicationService
       action = opted_out? ? :messages_on : :messages_off
 
       {
-        id: Whatsapp::NotificationActions::BUTTON_IDS.fetch(action),
-        title: I18n.t("whatsapp.bot.buttons.#{action}")
+        id: Whatsapp::Archive::NotificationActions::BUTTON_IDS.fetch(action),
+        title: I18n.t("whatsapp.archive.buttons.#{action}")
       }
     end
 

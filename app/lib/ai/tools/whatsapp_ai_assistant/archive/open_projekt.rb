@@ -1,4 +1,4 @@
-class Ai::Tools::WhatsappAiAssistant::OpenProjekt < Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::OpenProjekt < ::Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Opens one projekt's own card: its description, its link, and buttons leading to " \
               "that projekt's phases, contributions, dates, progress and results. Use it when " \
               "the citizen names a projekt they want to look into, rather than only describing " \
@@ -10,7 +10,7 @@ class Ai::Tools::WhatsappAiAssistant::OpenProjekt < Ai::Tools::WhatsappAiAssista
   end
 
   def execute(projekt_id:)
-    handled = ::Whatsapp::MenuActionService.call(
+    handled = ::Whatsapp::Archive::MenuActionService.call(
       conversation: conversation,
       scope: :projekt,
       record_id: projekt_id.to_i,

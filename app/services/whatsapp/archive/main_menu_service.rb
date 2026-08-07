@@ -1,4 +1,4 @@
-class Whatsapp::Steps::MainMenuService < ApplicationService
+class Whatsapp::Archive::MainMenuService < ApplicationService
   # The portal's central navigation. Which rows appear is decided by what the
   # portal currently holds, so a quiet portal offers reading rather than a wall
   # of dead ends.
@@ -13,7 +13,7 @@ class Whatsapp::Steps::MainMenuService < ApplicationService
   end
 
   def call
-    Whatsapp::Steps::SendMenuService.call(
+    ::Whatsapp::Archive::SendMenuService.call(
       conversation: @conversation,
       scope: :portal,
       body: @body.presence || ::Whatsapp.menu_greeting,

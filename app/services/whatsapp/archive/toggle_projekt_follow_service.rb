@@ -1,4 +1,4 @@
-class Whatsapp::Steps::ToggleProjektFollowService < ApplicationService
+class Whatsapp::Archive::ToggleProjektFollowService < ApplicationService
   def initialize(conversation:, projekt:)
     @conversation = conversation
     @projekt = projekt
@@ -9,10 +9,10 @@ class Whatsapp::Steps::ToggleProjektFollowService < ApplicationService
 
     outcome = Whatsapp::ToggleProjektFollowService.call(user: user, projekt: @projekt)
 
-    Whatsapp::Steps::MainMenuService.call(
+    ::Whatsapp::Archive::MainMenuService.call(
       conversation: @conversation,
       body: I18n.t(
-        "whatsapp.bot.menu.follow.#{outcome}",
+        "whatsapp.archive.menu.follow.#{outcome}",
         projekt: Whatsapp::ProjektLink.title(@projekt)
       )
     )
@@ -25,6 +25,6 @@ class Whatsapp::Steps::ToggleProjektFollowService < ApplicationService
     end
 
     def send_link_invitation
-      Whatsapp::Steps::SendLinkInvitationService.call(conversation: @conversation)
+      ::Whatsapp::Flows::SendLoginLinkService.call(conversation: @conversation)
     end
 end

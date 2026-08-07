@@ -114,17 +114,18 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     def tools
       [
         ::Ai::Tools::WhatsappAiAssistant::ListOpenPhases,
-        ::Ai::Tools::WhatsappAiAssistant::DescribeProjekt,
-        ::Ai::Tools::WhatsappAiAssistant::ListMyContributions,
         ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
-        ::Ai::Tools::WhatsappAiAssistant::ShowMenu,
-        ::Ai::Tools::WhatsappAiAssistant::OpenMenuAction,
-        ::Ai::Tools::WhatsappAiAssistant::OpenProjekt,
-        ::Ai::Tools::WhatsappAiAssistant::OpenProjektPhase,
+        ::Ai::Tools::WhatsappAiAssistant::ShowProjekts,
         ::Ai::Tools::WhatsappAiAssistant::StartPhaseFlow,
-        ::Ai::Tools::WhatsappAiAssistant::SendProjektLink,
-        ::Ai::Tools::WhatsappAiAssistant::ToggleProjektFollow,
+        ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
+        ::Ai::Tools::WhatsappAiAssistant::CommentOnProposal,
+        ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
+        ::Ai::Tools::WhatsappAiAssistant::OpenNotificationSettings,
+        ::Ai::Tools::WhatsappAiAssistant::StartUnlink,
         ::Ai::Tools::WhatsappAiAssistant::StopMessages,
+        ::Ai::Tools::WhatsappAiAssistant::ShowHelp,
+        ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,
+        ::Ai::Tools::WhatsappAiAssistant::RefuseOutOfScope,
         ::Ai::Tools::WhatsappAiAssistant::ReplyWithButtons
       ].map { |tool_class| tool_class.new(conversation: @conversation) } + [hand_to_flow]
     end

@@ -1,10 +1,20 @@
-class Whatsapp::Steps::PresentDraftService < ApplicationService
-  PUBLISH_BUTTON_ID = "whatsapp_publish".freeze
-  REVISE_BUTTON_ID = "whatsapp_revise".freeze
+class Whatsapp::Flows::PresentDraftService < ApplicationService
   DESCRIPTION_PREVIEW_LENGTH = 700
 
-  def initialize(conversation:)
+  # Catalog C16 and C18 — the same card, with different copy the second time so
+  # a citizen who asked for a change can tell that the change landed. The draft
+  # is always shown for active confirmation; nothing here publishes.
+  def self.first_draft(conversation:)
+    new(conversation: conversation, copy_key: "whatsapp.bot.proposal.draft").call
+  end
+
+  def self.revised_draft(conversation:)
+    new(conversation: conversation, copy_key: "whatsapp.bot.proposal.draft_revised").call
+  end
+
+  def initialize(conversation:, copy_key: "whatsapp.bot.proposal.draft")
     @conversation = conversation
+    @copy_key = copy_key
   end
 
   def call
@@ -24,11 +34,21 @@ class Whatsapp::Steps::PresentDraftService < ApplicationService
     end
 
     def draft_summary
-      I18n.t(
-        "whatsapp.bot.draft_summary",
-        title: draft_resource.title,
-        description: plain_description
-      )
+      [
+        I18n.t(@copy_key, title: draft_resource.title, description: plain_description),
+        category_line,
+        I18n.t("#{@copy_key}_question")
+      ].compact_blank.join("\n\n")
+    end
+
+    # Omitted rather than printed empty when the phase has no categories at all:
+    # a "Category:" line with nothing after it reads as a bug.
+    def category_line
+      category = Whatsapp::DraftCategory.label_for(draft_resource)
+
+      return if category.blank?
+
+      I18n.t("whatsapp.bot.proposal.category_line", category: category)
     end
 
     def plain_description
@@ -40,8 +60,12 @@ class Whatsapp::Steps::PresentDraftService < ApplicationService
 
     def buttons
       [
-        { id: PUBLISH_BUTTON_ID, title: I18n.t("whatsapp.bot.buttons.publish") },
-        { id: REVISE_BUTTON_ID, title: I18n.t("whatsapp.bot.buttons.revise") }
+        Whatsapp::FlowActions.button(
+          action: :draft_publish, label_key: "whatsapp.bot.buttons.draft_publish"
+        ),
+        Whatsapp::FlowActions.button(
+          action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"
+        )
       ]
     end
 end

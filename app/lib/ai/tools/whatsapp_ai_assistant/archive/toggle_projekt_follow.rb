@@ -1,5 +1,5 @@
-class Ai::Tools::WhatsappAiAssistant::ToggleProjektFollow <
-  Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::ToggleProjektFollow <
+  ::Ai::Tools::WhatsappAiAssistant::BaseTool
 
   description "Starts or stops following one projekt, so the citizen is told on WhatsApp when " \
               "something happens in it. The same follow the website's button sets, so following " \
@@ -12,7 +12,7 @@ class Ai::Tools::WhatsappAiAssistant::ToggleProjektFollow <
   end
 
   def execute(projekt_id:)
-    handled = ::Whatsapp::MenuActionService.call(
+    handled = ::Whatsapp::Archive::MenuActionService.call(
       conversation: conversation,
       scope: :projekt,
       record_id: projekt_id.to_i,

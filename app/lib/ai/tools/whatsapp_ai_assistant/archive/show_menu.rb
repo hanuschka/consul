@@ -1,4 +1,4 @@
-class Ai::Tools::WhatsappAiAssistant::ShowMenu < Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::ShowMenu < ::Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Shows the citizen the central menu — submitting an idea, their own " \
               "contributions, browsing the running projekts, results of finished phases — and " \
               "abandons whatever they were in the middle of. Use it when they ask what they can " \
@@ -10,7 +10,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowMenu < Ai::Tools::WhatsappAiAssistant:
   def execute
     conversation.reset_flow!
 
-    ::Whatsapp::Steps::MainMenuService.call(conversation: conversation)
+    ::Whatsapp::Archive::MainMenuService.call(conversation: conversation)
 
     halt("Sent the citizen the central menu.")
   end

@@ -1,4 +1,4 @@
-class Ai::Tools::WhatsappAiAssistant::ListMyContributions < Ai::Tools::WhatsappAiAssistant::BaseTool
+class Ai::Tools::WhatsappAiAssistant::Archive::ListMyContributions < ::Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Lists what this citizen has already submitted to the portal — their proposals and " \
               "their budget investments, newest first, with the link to each and to the projekt " \
               "it belongs to. Takes no arguments. Use it to answer questions like what did I " \

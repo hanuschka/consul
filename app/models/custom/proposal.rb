@@ -25,6 +25,12 @@ class Proposal < ApplicationRecord
   validates :projekt_phase, presence: true
   validate :description_sanitized
 
+  # Catalog B12's "moderation decision" trigger. Both directions count: a
+  # proposal being accepted and a proposal being hidden are each a decision the
+  # author asked to hear about, and hearing only about the good one would make
+  # the setting a lie.
+  after_update_commit :notify_whatsapp_moderation_decision
+
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
@@ -226,5 +232,18 @@ class Proposal < ApplicationRecord
 
     def set_responsible_name
       self.responsible_name = "unregistriered"
+    end
+
+  private
+
+    # A draft has never been submitted, so there is nothing to have decided
+    # about it yet — publishing one would otherwise read as a moderation
+    # decision the moment it flips admin_accepted.
+    def notify_whatsapp_moderation_decision
+      return if draft?
+      return if !saved_change_to_admin_accepted? && !saved_change_to_hidden_at?
+      return if !::Whatsapp.enabled?
+
+      Whatsapp::NotifyProposalStatusJob.perform_later(id, "moderation_decision")
     end
 end

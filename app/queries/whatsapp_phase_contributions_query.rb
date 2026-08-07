@@ -29,8 +29,13 @@ class WhatsappPhaseContributionsQuery < ApplicationQuery
 
   private
 
+    # base_selection is the portal's own definition of a publicly listed
+    # proposal: published, not archived, not retired, admin-accepted. The bot
+    # publishes with admin_accepted false wherever a phase moderates, so without
+    # it this digest would hand out links to proposals awaiting moderation.
     def proposals
       Proposal
+        .base_selection
         .where(projekt_phase_id: @projekt_phase.id)
         .order(created_at: :desc)
         .limit(MAX_CHOICES)
@@ -43,6 +48,7 @@ class WhatsappPhaseContributionsQuery < ApplicationQuery
       return [] if budget.blank?
 
       Budget::Investment
+        .not_unfeasible
         .where(budget_id: budget.id)
         .includes(:budget)
         .order(created_at: :desc)

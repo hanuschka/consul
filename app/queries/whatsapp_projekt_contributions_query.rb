@@ -14,8 +14,12 @@ class WhatsappProjektContributionsQuery < ApplicationQuery
 
   private
 
+    # base_selection is the portal's own definition of a publicly listed
+    # proposal; see WhatsappPhaseContributionsQuery for why omitting it leaks
+    # proposals still awaiting moderation.
     def proposals
       Proposal
+        .base_selection
         .where(projekt_phase_id: @projekt.projekt_phases.select(:id))
         .order(created_at: :desc)
         .limit(MAX_CHOICES)
@@ -26,6 +30,7 @@ class WhatsappProjektContributionsQuery < ApplicationQuery
       budget_ids = Budget.where(projekt_phase_id: @projekt.projekt_phases.select(:id)).select(:id)
 
       Budget::Investment
+        .not_unfeasible
         .where(budget_id: budget_ids)
         .includes(:budget)
         .order(created_at: :desc)

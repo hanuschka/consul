@@ -18,7 +18,7 @@ class Whatsapp::Steps::StartPhaseParticipationService < ApplicationService
   private
 
     def bot_can_submit_to_phase?
-      WhatsappEligiblePhasesQuery.call.any? { |phase| phase.id == @projekt_phase.id }
+      WhatsappEligiblePhasesQuery.eligible?(@projekt_phase)
     end
 
     # A phase the bot has no flow for is not a refusal about this citizen, so it

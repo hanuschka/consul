@@ -67,6 +67,12 @@ class ProjektPhase < ApplicationRecord
 
   FOOTER_HIDDEN_EVALUATION_SECTIONS = %w[kpis heatmap].freeze
 
+  # Every place a citizen can start a submission, and so every place the
+  # per-user submission cap has to be enforced. The bot belongs here for the
+  # same reason the new-proposal button does: naming only one of them lets the
+  # other channel publish past the limit.
+  SUBMISSION_LOCATIONS = %i[new_button_component whatsapp_bot].freeze
+
   PHASE_FA_ICONS = {
     "ProjektPhase::CommentPhase" => "fa-comment",
     "ProjektPhase::ProposalPhase" => "fa-lightbulb",

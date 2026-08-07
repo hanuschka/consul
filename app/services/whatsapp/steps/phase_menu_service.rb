@@ -48,11 +48,11 @@ class Whatsapp::Steps::PhaseMenuService < ApplicationService
     # offered rather than after it is tapped.
     def participation_open?
       return false if user.blank?
+      return false if !WhatsappEligiblePhasesQuery.eligible?(@projekt_phase)
 
-      WhatsappEligiblePhasesQuery.call.any? { |phase| phase.id == @projekt_phase.id } &&
-        Whatsapp::ResourceCreationValidationService.call(
-          projekt_phase: @projekt_phase, user: user
-        ).blank?
+      Whatsapp::ResourceCreationValidationService.call(
+        projekt_phase: @projekt_phase, user: user
+      ).blank?
     end
 
     def phase_contributions

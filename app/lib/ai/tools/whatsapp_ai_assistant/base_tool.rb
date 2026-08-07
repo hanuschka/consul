@@ -22,11 +22,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       account.user
     end
 
-    # Every id the model can hold came out of this list, so resolving through
-    # it again is also what stops a guessed id from reaching a phase the bot
-    # does not serve.
+    # Checked one phase at a time rather than by searching the ten-row display
+    # list: an eleventh open phase is still open, and a model that guessed an id
+    # is stopped by the eligibility rule itself, not by the list's length.
     def eligible_phase(projekt_phase_id)
-      open_projekt_phases.find { |projekt_phase| projekt_phase.id == projekt_phase_id.to_i }
+      projekt_phase =
+        ::ProjektPhase.includes(:settings, projekt: :page).find_by(id: projekt_phase_id.to_i)
+
+      return if !::WhatsappEligiblePhasesQuery.eligible?(projekt_phase)
+
+      projekt_phase
     end
 
     def open_projekt_phases

@@ -19,9 +19,16 @@ module Whatsapp::ProjektLink
     phase_url(projekt_phase, section: WhatsappPublishedResultsQuery.public_section_for(projekt_phase))
   end
 
+  # Nil rather than a crash when the projekt has no page: a phase is reached
+  # through its projekt's page, and callers already treat a missing link as
+  # "name it without one".
   def phase_url(projekt_phase, section: nil)
+    slug = projekt_phase.projekt&.page&.slug
+
+    return if slug.blank?
+
     Rails.application.routes.url_helpers.page_url(
-      id: projekt_phase.projekt.page.slug,
+      id: slug,
       projekt_phase_id: projekt_phase.id,
       section: section,
       **UrlOptions.default.to_h

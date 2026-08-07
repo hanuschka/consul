@@ -111,12 +111,19 @@ class Whatsapp::MenuActionService < ApplicationService
       @projekt = WhatsappBrowsableProjektsQuery.call.find { |candidate| candidate.id == @record_id }
     end
 
+    # Restricted to phases of a projekt the portal itself shows. Without the
+    # projekt check an id — tapped from an old row, or supplied by the model
+    # through open_projekt_phase — would open a phase of a deactivated or
+    # unpublished projekt that no visitor can reach on the website.
     def projekt_phase
       return @projekt_phase if defined?(@projekt_phase)
 
       @projekt_phase =
         ProjektPhase
           .where(hidden_at: nil, active: true)
+          .joins(projekt: :page)
+          .where(site_customization_pages: { status: "published" })
+          .where(projekt_id: Projekt.activated.select(:id))
           .includes(projekt: :page)
           .find_by(id: @record_id)
     end

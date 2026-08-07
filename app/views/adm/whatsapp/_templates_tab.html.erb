@@ -5,6 +5,15 @@
 <%
   configured_template_name = ::Whatsapp.broadcast_template_name
   configured_template_language = ::Whatsapp.broadcast_template_language
+
+  # The two kinds live in different settings, so a row is "in use" only against
+  # the setting for its own kind — comparing every row to the text template
+  # would mark a card template unused while it is the one being broadcast.
+  configured_template_names = {
+    ::Whatsapp::BroadcastTemplates::TEXT_KIND => configured_template_name,
+    ::Whatsapp::BroadcastTemplates::CARD_KIND => ::Whatsapp.broadcast_card_template_name
+  }
+
   configured_template =
     @templates.find do |template|
       template[:name] == configured_template_name &&
@@ -45,6 +54,7 @@
       <thead>
         <tr>
           <th><%= t("adm.whatsapp.show.template_name") %></th>
+          <th><%= t("adm.whatsapp.show.template_kind") %></th>
           <th><%= t("adm.whatsapp.show.template_language") %></th>
           <th><%= t("adm.whatsapp.show.template_status") %></th>
           <th></th>
@@ -52,8 +62,10 @@
       </thead>
       <tbody>
         <% @templates.each do |template| %>
+          <% configured_name_for_kind = configured_template_names[template[:kind]] %>
           <tr>
             <td><%= template[:name] %></td>
+            <td><%= t("adm.whatsapp.show.template_kind_#{template[:kind]}") %></td>
             <td><%= template[:language] %></td>
             <td>
               <span class="kern-badge kern-badge--<%= template[:approved] ? "success" : "warning" %>">
@@ -61,26 +73,36 @@
               </span>
             </td>
             <td>
-              <% if configured_template_name == template[:name] &&
+              <% if configured_name_for_kind == template[:name] &&
                     configured_template_language == template[:language] %>
                 <%= t("adm.whatsapp.show.template_in_use") %>
               <% else %>
-                <% if configured_template_name == template[:name] %>
+                <% if configured_name_for_kind == template[:name] %>
                   <p class="kern-body kern-body--small">
                     <%= t("adm.whatsapp.show.template_language_mismatch",
                       language: configured_template_language) %>
                   </p>
                 <% end %>
 
+                <%# Only an approved template may be activated: Meta accepts a
+                    submission long before it approves one, and broadcasting a
+                    pending template fails while still marking the projekt
+                    announced. Creating a template no longer activates it, so
+                    this is the only path that does.
+
+                    A real PATCH form, not an <a> carrying data-turbo-method:
+                    only PATCH is routed, so a Turbo prefetch, a middle-click
+                    or a bookmarked href would raise a routing error. %>
                 <% if template[:approved] %>
-                  <%# A real PATCH form, not an <a> carrying data-turbo-method:
-                      only PATCH is routed, so a Turbo prefetch, a middle-click
-                      or a bookmarked href would raise a routing error. %>
                   <%= form_with url: use_template_adm_whatsapp_path, method: :patch do |form| %>
                     <%= form.hidden_field :name, value: template[:name] %>
                     <%= form.hidden_field :language, value: template[:language] %>
-                    <%= form.submit t("adm.whatsapp.show.template_use"),
-                          class: "kern-btn kern-btn--tertiary" %>
+                    <%= form.hidden_field :kind, value: template[:kind] %>
+                    <%= kern_button(
+                      text: t("adm.whatsapp.show.template_use"),
+                      type: "submit",
+                      style: :tertiary
+                    ) %>
                   <% end %>
                 <% end %>
               <% end %>

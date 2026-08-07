@@ -291,6 +291,9 @@ de:
           „%{name}“ hat bei Meta den Status „%{status}“. Bis zur Freigabe erreichen
           Projekt-Benachrichtigungen niemanden.
         template_name: "Name"
+        template_kind: "Art"
+        template_kind_text: "Text"
+        template_kind_card: "Karte mit Bild"
         template_language: "Sprache"
         template_status: "Status"
         template_use: "Verwenden"

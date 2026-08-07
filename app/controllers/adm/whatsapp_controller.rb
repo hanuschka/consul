@@ -118,8 +118,13 @@ module Adm
       redirect_to adm_whatsapp_path(tab: TEMPLATES_TAB)
     end
 
+    # The only path that activates a broadcast template, now that creating one
+    # no longer does: it runs after Meta reports the template approved, and it
+    # writes the language alongside the name so the pair cannot drift.
     def use_template
-      Setting["whatsapp.broadcast_template"] = params[:name].to_s
+      setting_key = ::Whatsapp::BroadcastTemplates::SETTING_KEYS_BY_KIND[template_kind]
+
+      Setting[setting_key] = params[:name].to_s
       Setting["whatsapp.broadcast_template_language"] = params[:language].to_s
 
       flash[:success] = t("adm.whatsapp.template.selected", name: params[:name])
@@ -131,6 +136,16 @@ module Adm
 
       def authorize_settings
         authorize [:adm, Setting], :update?
+      end
+
+      # Anything unrecognised is the text template: a wrong kind would write the
+      # name into the setting the other variant reads.
+      def template_kind
+        kind = params[:kind].to_s
+
+        return kind if ::Whatsapp::BroadcastTemplates::SETTING_KEYS_BY_KIND.key?(kind)
+
+        ::Whatsapp::BroadcastTemplates::TEXT_KIND
       end
 
       # def authorize_qr_poster(subject)

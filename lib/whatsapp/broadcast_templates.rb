@@ -16,6 +16,16 @@ module Whatsapp::BroadcastTemplates
   # misclassification costs the number its quality rating.
   CATEGORY = "MARKETING".freeze
 
+  # Which broadcast setting a template belongs to. The card variant carries the
+  # projekt image and its link in a button; the text one is the plain fallback.
+  TEXT_KIND = "text".freeze
+  CARD_KIND = "card".freeze
+
+  SETTING_KEYS_BY_KIND = {
+    TEXT_KIND => "whatsapp.broadcast_template",
+    CARD_KIND => "whatsapp.broadcast_card_template"
+  }.freeze
+
   module_function
 
   def list
@@ -69,7 +79,10 @@ module Whatsapp::BroadcastTemplates
       category: CATEGORY
     )
 
-    Setting["whatsapp.broadcast_card_template"] = name if response.success?
+    # Not activated here, for the same reason the text variant is not: Meta
+    # accepting the submission is not Meta approving it, and broadcasting a
+    # pending template fails while still marking the projekt announced.
+
 
     response
   end
@@ -81,10 +94,23 @@ module Whatsapp::BroadcastTemplates
         language: template["language"].to_s,
         status: template["status"].to_s.downcase,
         approved: template["status"].to_s.downcase == APPROVED_STATUS,
-        category: template["category"].to_s
+        category: template["category"].to_s,
+        kind: kind_of(template)
       }
     end
   end
 
-  private_class_method :build_list
+  # The card variant is the one Meta reports with an image header, which is
+  # exactly what create_card submits. Told apart here because the two kinds are
+  # stored in different settings, and offering "use" without knowing which
+  # would write the wrong one.
+  def kind_of(template)
+    header = Array(template["components"]).find { |component| component["type"].to_s.casecmp?("HEADER") }
+
+    return CARD_KIND if header && header["format"].to_s.casecmp?("IMAGE")
+
+    TEXT_KIND
+  end
+
+  private_class_method :build_list, :kind_of
 end

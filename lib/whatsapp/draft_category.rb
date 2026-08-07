@@ -12,27 +12,28 @@ module Whatsapp::DraftCategory
 
   module_function
 
-  def available?(projekt_phase)
-    options_for(projekt_phase).any?
-  end
-
+  # Gated on the phase's own predicate rather than on feature?("form.labels")
+  # alone, because that is the one Labelable's create validation reads. A phase
+  # using masterportal collections as labels requires one while the feature flag
+  # is off — asked with the flag alone, the question would come back with no
+  # options to offer and the draft would never be written.
   def options_for(projekt_phase)
     return [] if projekt_phase.blank?
-    return [] if !projekt_phase.feature?("form.labels")
+    return [] if !projekt_phase.labels_selector_available?
 
-    projekt_phase.projekt_labels.includes(:translations).to_a
+    projekt_phase.active_projekt_labels.includes(:translations).to_a
   end
 
   # Nil when the draft carries no category at all, which is what makes the
   # explicit C15 question worth asking.
   #
-  # Gated on the same phase feature as options_for. Without it a phase with
-  # labels switched off still printed a "Category:" line built from whatever
-  # free-form tag the model happened to write — a category the projekt's team
-  # never defined and the citizen was never offered a way to change.
+  # Gated on the same predicate as options_for. Without it a phase with labels
+  # switched off still printed a "Category:" line built from whatever free-form
+  # tag the model happened to write — a category the projekt's team never
+  # defined and the citizen was never offered a way to change.
   def label_for(resource)
     return if resource.blank?
-    return if !resource.projekt_phase&.feature?("form.labels")
+    return if !resource.projekt_phase&.labels_selector_available?
 
     chosen = chosen_label(resource)
 
@@ -51,7 +52,9 @@ module Whatsapp::DraftCategory
   # label id from a card sent days ago may since have been removed from the
   # phase.
   def assign(resource, projekt_phase, label_id)
-    label = options_for(projekt_phase).find { |option| option.id == label_id.to_i }
+    return false if projekt_phase.blank? || !projekt_phase.labels_selector_available?
+
+    label = projekt_phase.active_projekt_labels.find_by(id: label_id)
 
     return false if label.blank?
 

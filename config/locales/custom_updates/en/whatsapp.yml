@@ -237,7 +237,6 @@ en:
             🔔 There's an update on your proposal.
             %{url}
       proposal:
-        prompt: '🏗️ New project: %{projekt}. Do you have a concrete idea for this?'
         ask_idea: Write me a short summary of what you're thinking — I'll turn it into a proposal.
         ask_category: Which category fits best?
         ask_sentiment: Where does your proposal stand on this?

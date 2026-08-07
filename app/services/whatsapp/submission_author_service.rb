@@ -3,21 +3,19 @@ class Whatsapp::SubmissionAuthorService < ApplicationService
   # citizen. An unlinked one authors as a guest, but only where the phase allows
   # guest participation — everywhere else the answer is nobody, and the caller
   # asks for a link instead.
-  def initialize(conversation:, projekt_phase:)
+  #
+  # The phase is read from the conversation rather than passed in: every caller
+  # had only the conversation's own phase to give, and a second parameter that
+  # can hold a different one lets "who authors this" and "which phase are we
+  # validating against" disagree.
+  def initialize(conversation:)
     @conversation = conversation
-    @projekt_phase = projekt_phase
   end
 
   def call
     return @conversation.user if @conversation.user.present?
-    return if !guest_phase?
+    return if !@conversation.projekt_phase&.guest_participation?
 
     Whatsapp::GuestUserService.call(account: @conversation.whatsapp_account)
   end
-
-  private
-
-    def guest_phase?
-      @projekt_phase.present? && @projekt_phase.user_status == "guest"
-    end
 end

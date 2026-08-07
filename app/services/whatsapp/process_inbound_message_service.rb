@@ -47,14 +47,11 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # unlinked number is not stopped at the door. It is still stopped later, by
     # the restrictions the phase carries — see ResourceCreationValidationService.
     def guest_participation?
-      conversation.projekt_phase&.user_status == "guest"
+      conversation.projekt_phase&.guest_participation?
     end
 
     def submission_author
-      @submission_author ||= Whatsapp::SubmissionAuthorService.call(
-        conversation: conversation,
-        projekt_phase: conversation.projekt_phase
-      )
+      @submission_author ||= Whatsapp::SubmissionAuthorService.call(conversation:)
     end
 
     # Everything above the assistant is protocol rather than dialogue — opting
@@ -176,13 +173,16 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       support notify_toggle notifications_done unlink_confirm unlink_cancel
     ].freeze
 
-    # The subset of ACCOUNT_ACTIONS a guest phase may waive. Supporting a
-    # proposal, changing notification settings and unlinking all act on a Consul
-    # account, and a guest has nothing to stand in for it with.
-    GUEST_ELIGIBLE_ACTIONS = %i[
-      idea_start category sentiment draft_publish draft_revise resume restart
-      image_upload image_generate image_skip
+    # Supporting a proposal, changing notification settings and unlinking all
+    # act on a Consul account, and a guest has nothing to stand in for it with.
+    # Everything else in ACCOUNT_ACTIONS is part of making a submission, which a
+    # guest phase does allow — derived rather than listed again so a new
+    # drafting pill cannot be added to one list and forgotten in the other.
+    ACCOUNT_ONLY_ACTIONS = %i[
+      support notify_toggle notifications_done unlink_confirm unlink_cancel
     ].freeze
+
+    GUEST_ELIGIBLE_ACTIONS = (ACCOUNT_ACTIONS - ACCOUNT_ONLY_ACTIONS).freeze
 
     def dispatch_flow_action(action, param)
       return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if
@@ -251,7 +251,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def guest_action?(action, param)
       return false if !GUEST_ELIGIBLE_ACTIONS.include?(action)
 
-      target_phase_for(action, param)&.user_status == "guest"
+      target_phase_for(action, param)&.guest_participation?
     end
 
     def target_phase_for(action, param)
@@ -345,13 +345,9 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # link went cold — so the question is put again instead.
     def handle_unlinked(entry)
       return Whatsapp::Flows::WelcomeBackService.call(conversation:) if
-        entry.blank? && !awaiting_link?
+        entry.blank? && !account.awaiting_link?
 
       Whatsapp::Flows::SendLoginLinkService.call(conversation:)
-    end
-
-    def awaiting_link?
-      account.state == "link_pending" && account.link_token_valid?
     end
 
     # A phase QR code names the phase, so the citizen has already chosen and is
@@ -522,9 +518,10 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       end
     end
 
-    # Nothing in progress and nothing the assistant could route. A linked
-    # citizen gets the greeting with somewhere to tap; an unlinked one has no
-    # participation to offer, so the help text stays their answer.
+    # Nothing in progress and nothing the assistant could route. Only an
+    # unlinked guest submitter reaches here without an account, and the greeting
+    # offers contributions and notification settings they have none of — so the
+    # help text stays their answer.
     def handle_idle_message
       return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
 

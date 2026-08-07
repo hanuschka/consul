@@ -5,6 +5,12 @@ class Whatsapp::SupportableProposalsQuery < ApplicationQuery
   # retired, admin-accepted — which is exactly the set that may be supported
   # from outside the projekt page.
   #
+  # Searched through the portal's own index rather than by matching the title
+  # column: there is no title column to match (Proposal translates it), and the
+  # citizen is describing a proposal in their own words, which is the case
+  # Searchable's stemming and ranking exist to handle. It already orders by
+  # supports within rank, so no ordering is added here.
+  #
   # Deliberately few results: this feeds a chat reply, and a citizen scanning
   # eight near-identical titles on a phone will pick the wrong one.
   MAX_RESULTS = 3
@@ -16,18 +22,6 @@ class Whatsapp::SupportableProposalsQuery < ApplicationQuery
   def call
     return [] if @text.blank?
 
-    Proposal
-      .base_selection
-      .where("proposals.title ILIKE ?", "%#{sanitized_text}%")
-      .includes(projekt_phase: { projekt: :page })
-      .order(cached_votes_up: :desc)
-      .limit(MAX_RESULTS)
-      .to_a
+    Proposal.base_selection.search(@text).limit(MAX_RESULTS).to_a
   end
-
-  private
-
-    def sanitized_text
-      ActiveRecord::Base.sanitize_sql_like(@text)
-    end
 end

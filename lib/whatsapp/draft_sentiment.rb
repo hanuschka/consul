@@ -25,19 +25,16 @@ module Whatsapp::DraftSentiment
     projekt_phase.sentiments.includes(:translations).to_a
   end
 
-  # Debates and budget investments carry the concern too, but a phase type the
-  # bot has no flow for can never reach this — the respond_to? guard is for the
-  # resource, not for the phase.
+  # Both resources the bot drafts — Proposal and Budget::Investment — include
+  # Sentimentable, so there is nothing to guard against beyond a missing draft.
   def missing?(resource, projekt_phase)
     return false if resource.blank?
-    return false if !resource.respond_to?(:sentiment_id)
 
     required?(projekt_phase) && resource.sentiment_id.blank?
   end
 
   def label_for(resource)
     return if resource.blank?
-    return if !resource.respond_to?(:sentiment)
 
     resource.sentiment&.name
   end
@@ -46,7 +43,9 @@ module Whatsapp::DraftSentiment
   # the same reason DraftCategory does it: a sentiment id from a card sent days
   # ago may since have been removed from the phase.
   def assign(resource, projekt_phase, sentiment_id)
-    sentiment = options_for(projekt_phase).find { |option| option.id == sentiment_id.to_i }
+    return false if !required?(projekt_phase)
+
+    sentiment = projekt_phase.sentiments.find_by(id: sentiment_id)
 
     return false if sentiment.blank?
 

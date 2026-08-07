@@ -9,8 +9,10 @@ class Whatsapp::Flows::SubmitProposalService < ApplicationService
 
   def call
     return send_no_open_phase if open_phases.empty?
-    return Whatsapp::Flows::DiscoveryService.call(conversation: @conversation) if
-      open_phases.size > 1
+
+    return Whatsapp::Flows::DiscoveryService.call(
+      conversation: @conversation, projekt_phases: open_phases
+    ) if open_phases.size > 1
 
     Whatsapp::Flows::ProposalPromptService.call(
       conversation: @conversation, projekt_phase: open_phases.first

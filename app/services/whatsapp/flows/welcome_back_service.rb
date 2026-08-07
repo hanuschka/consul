@@ -30,7 +30,7 @@ class Whatsapp::Flows::WelcomeBackService < ApplicationService
         )
       ]
 
-      return link_buttons if guest_phases.empty?
+      return link_buttons if !guest_participation_open?
 
       link_buttons + [
         Whatsapp::FlowActions.button(
@@ -42,15 +42,21 @@ class Whatsapp::Flows::WelcomeBackService < ApplicationService
     # Asked rather than assumed: on a portal with no guest phase open the third
     # button would lead straight to "nothing is open right now", which is a
     # worse answer than not offering it.
-    def guest_phases
-      @guest_phases ||= Whatsapp::EligiblePhasesQuery.guest_open
+    #
+    # This runs for every message from every number that declined linking, so it
+    # asks the existence question rather than the listing one — the phases
+    # themselves are never read here.
+    def guest_participation_open?
+      return @guest_participation_open if defined?(@guest_participation_open)
+
+      @guest_participation_open = Whatsapp::EligiblePhasesQuery.guest_open?
     end
 
     # The linking question is the same either way; only the sentence under it
     # changes, because someone who can take part without an account should be
     # told so rather than left to tap and find out.
     def body
-      return I18n.t("whatsapp.bot.onboarding.welcome_back") if guest_phases.empty?
+      return I18n.t("whatsapp.bot.onboarding.welcome_back") if !guest_participation_open?
 
       [
         I18n.t("whatsapp.bot.onboarding.welcome_back"),

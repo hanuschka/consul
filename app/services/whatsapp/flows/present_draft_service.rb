@@ -66,9 +66,9 @@ class Whatsapp::Flows::PresentDraftService < ApplicationService
 
     def evaluate
       return {} if draft_resource.blank?
+      return {} if !projekt_phase&.user_resource_criteria&.exists?
       return draft_resource.ai_evaluation_result.to_h if
         draft_resource.ai_evaluation_result.present?
-      return {} if !projekt_phase&.user_resource_criteria&.exists?
 
       Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 

@@ -6,9 +6,12 @@ class Whatsapp::Flows::DiscoveryService < ApplicationService
   #
   # A tap goes straight into the proposal prompt for that phase, which is the
   # only thing the catalog does with a chosen projekt.
-  def initialize(conversation:, projekt: nil)
+  # projekt_phases is passed in by a caller that has already resolved them, so
+  # the same query does not run twice for one tap.
+  def initialize(conversation:, projekt: nil, projekt_phases: nil)
     @conversation = conversation
     @projekt = projekt
+    @projekt_phases = projekt_phases
   end
 
   def call
@@ -36,6 +39,8 @@ class Whatsapp::Flows::DiscoveryService < ApplicationService
     end
 
     def rows
-      Whatsapp::PhaseListRows.build(Whatsapp::EligiblePhasesQuery.call(projekt: @projekt))
+      Whatsapp::PhaseListRows.build(
+        @projekt_phases || Whatsapp::EligiblePhasesQuery.call(projekt: @projekt)
+      )
     end
 end

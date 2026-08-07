@@ -58,9 +58,10 @@ class Whatsapp::PublishDraftService < ApplicationService
       resource.admin_accepted = false if moderated? && resource.is_a?(Proposal)
       resource.draft = false
 
-      return :invalid if !resource.valid?
+      # One validation pass, and it leaves the messages on the record for the
+      # caller to read back.
+      return :invalid if !resource.save
 
-      resource.save!
       release(resource)
 
       resource

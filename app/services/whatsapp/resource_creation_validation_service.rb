@@ -12,24 +12,13 @@ class Whatsapp::ResourceCreationValidationService < ApplicationService
     return :ai_flow_disabled if !@projekt_phase.ai_flow_enabled?
     return :budget_heading_missing if budget_heading_missing?
 
-    return guest_permission_problem if @user.guest?
-
+    # :whatsapp_bot is exempt from the guest waiver, so a guest phase answers
+    # here with its own restrictions rather than waving everything through —
+    # and with the phase-lifecycle checks that precede them either way.
     @projekt_phase.permission_problem(@user, location: :whatsapp_bot)
   end
 
   private
-
-    # A guest author only ever reaches here for a phase that allows guest
-    # participation, and #permission_problem would turn it away as
-    # :not_logged_in before it could say anything about the phase. So the
-    # restrictions are asked for directly — the web waives them on a guest
-    # phase, the bot does not, because it accepts submissions from anywhere
-    # rather than from the projekt page.
-    def guest_permission_problem
-      return :not_logged_in if @projekt_phase.user_status != "guest"
-
-      @projekt_phase.restriction_problem(@user, location: :whatsapp_bot)
-    end
 
     # Same list the eligible-phases query offers from, so a phase the bot lists
     # and a phase the bot accepts cannot come apart.

@@ -88,11 +88,10 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
       )
     end
 
+    # Read off the record rather than re-validated: the failed save left them
+    # there, and validating again would re-run the sanitiser over the whole
+    # description for a message that is already available.
     def validation_reason
-      resource = @conversation.draft_resource
-
-      resource.validate
-
-      resource.errors.full_messages.first.to_s
+      @conversation.draft_resource.errors.full_messages.first.to_s
     end
 end

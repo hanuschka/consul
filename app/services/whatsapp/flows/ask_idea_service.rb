@@ -38,9 +38,6 @@ class Whatsapp::Flows::AskIdeaService < ApplicationService
     end
 
     def author
-      @author ||= Whatsapp::SubmissionAuthorService.call(
-        conversation: @conversation,
-        projekt_phase: projekt_phase
-      )
+      @author ||= Whatsapp::SubmissionAuthorService.call(conversation: @conversation)
     end
 end

@@ -37,7 +37,7 @@ module Whatsapp::DraftRequirements
 
     return [] if ids.empty?
 
-    projekt_phase.projekt_labels.where(id: ids).ids
+    projekt_phase.active_projekt_labels.where(id: ids).ids
   end
 
   def missing_sentiment?(draft_data, projekt_phase)

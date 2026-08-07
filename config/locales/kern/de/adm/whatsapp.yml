@@ -41,6 +41,11 @@ de:
           Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe
           durch Meta kann einige Stunden dauern.
         selected: „%{name}“ wird jetzt für Projekt-Benachrichtigungen verwendet.
+        notification_submitted: >-
+          Vorlage wurde bei 360dialog eingereicht. Die Freigabe durch Meta kann einige Stunden dauern;
+          versendet wird erst, wenn Sie die Vorlage hier aktivieren.
+        notification_failed: 'Vorlage konnte nicht eingereicht werden: %{error}'
+        notification_selected: „%{name}“ wird jetzt für diese Benachrichtigung verwendet.
       api_errors:
         placeholder_position: >-
           Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet. Vor
@@ -342,6 +347,21 @@ de:
         template_error_body_placeholder_edges: >-
           Der Text darf weder mit einem Platzhalter beginnen noch enden. Vor {{1}} und nach {{2}}
           muss fester Text stehen.
+        notification_templates_title: Push-Benachrichtigungen
+        notification_templates_intro: >-
+          Die drei Nachrichten, die die Plattform von selbst verschickt: zweimal rund um das Ende
+          einer Vorschlagsphase und einmal, wenn sich beim eigenen Vorschlag etwas tut. Jede braucht
+          eine eigene freigegebene Vorlage, eingereicht auf %{language} mit dem Wortlaut unten.
+          Solange eine Vorlage hier nicht eingereicht und aktiviert ist, erreicht diese
+          Benachrichtigung niemanden.
+        notification_template_column: Benachrichtigung
+        notification_template_kinds:
+          deadline_approaching: Frist läuft ab
+          deadline_passed: Frist abgelaufen
+          status_change: Update zum eigenen Vorschlag
+        notification_template_not_submitted: noch nicht eingereicht
+        notification_template_submit: Einreichen
+        notification_template_other_in_use: 'aktiv: %{name}'
       pages:
         connection:
           hint: Ob der Bot aktiv ist, ob Meta ihn erreicht und was Bürgerinnen und Bürger zuerst sehen.
@@ -434,6 +454,12 @@ de:
             lassen sich über die Schaltfläche daneben aktivieren. Dabei werden Name und Sprache gemeinsam
             in die Einstellungen geschrieben, die der Versand liest, damit beide nicht auseinanderlaufen
             können. Je Art ist immer nur eine Vorlage aktiv.
+          - >-
+            Die drei Push-Benachrichtigungen ganz unten funktionieren genauso, lassen aber nichts
+            zu schreiben übrig. Ihr Wortlaut steht fest, und zwar mit Absicht: Jede trägt einen Link
+            und sonst nichts — keinen Projektnamen, keinen Vorschlagstitel, keine Unterstützerzahl
+            —, denn ein Push landet auf einem Sperrbildschirm, den auch andere lesen können. Worum
+            es geht, wird erst nach dem Antippen sichtbar.
           - >-
             Meta stuft Vorlagen in Kategorien ein, und diese Einstufung wiegt schwerer, als sie aussieht.
             Die Ankündigung eines neuen Projekts ist Marketing; wird sie als Servicenachricht eingereicht,

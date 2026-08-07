@@ -41,6 +41,11 @@ en:
           Template submitted to 360dialog and set as the notification template. Meta approval can
           take several hours.
         selected: '"%{name}" is now used for project notifications.'
+        notification_submitted: >-
+          Template submitted to 360dialog. Meta approval can take several hours; the push starts
+          going out once you activate the template here.
+        notification_failed: 'Template could not be submitted: %{error}'
+        notification_selected: '"%{name}" is now used for this notification.'
       api_errors:
         placeholder_position: >-
           Meta does not accept a template whose text begins or ends with a placeholder. Put static
@@ -336,6 +341,20 @@ en:
         template_error_body_placeholder_edges: >-
           The text may neither begin nor end with a placeholder. Put static words before {{1}} and
           after {{2}}.
+        notification_templates_title: Push notifications
+        notification_templates_intro: >-
+          The three messages the platform sends by itself: twice around the end of a proposal phase,
+          and once when something happens on someone's own proposal. Each needs its own approved
+          template, submitted in %{language} with the wording below. Until one is submitted and
+          activated here, that notification reaches nobody.
+        notification_template_column: Notification
+        notification_template_kinds:
+          deadline_approaching: Deadline approaching
+          deadline_passed: Deadline passed
+          status_change: Update on own proposal
+        notification_template_not_submitted: not submitted yet
+        notification_template_submit: Submit
+        notification_template_other_in_use: 'currently active: %{name}'
       pages:
         connection:
           hint: Whether the bot is live, whether Meta can reach it, and what a citizen meets first.
@@ -419,6 +438,12 @@ en:
             can be activated with the button beside them, which writes both the name and its language
             into the settings the sending code reads, so the two cannot drift apart. Only one template
             per kind is active at a time.
+          - >-
+            The three push notifications at the bottom work the same way but leave nothing to write.
+            Their wording is fixed, and deliberately so: each carries a link and nothing else — no
+            projekt name, no proposal title, no support count — because a push arrives on a lock
+            screen that other people can read. What the message is about becomes visible only after
+            tapping through.
           - >-
             Meta classifies templates, and the classification matters more than it appears to. Announcing
             a new projekt is marketing, and submitting it as a utility message gets it reclassified

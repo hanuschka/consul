@@ -1,0 +1,28 @@
+<%# The three pushes the bot sends on its own, each bound to one setting the
+    jobs read. Nothing to fill in here: body, name and language all follow from
+    the kind, so the only choice left is which of the three to run. %>
+<section class="mt-5">
+  <h2 class="kern-title kern-title--small mb-2">
+    <%= t("adm.whatsapp.show.notification_templates_title") %>
+  </h2>
+
+  <p class="kern-body adm-whatsapp-page--explanation mb-3">
+    <%= t("adm.whatsapp.show.notification_templates_intro",
+      language: ::Whatsapp.broadcast_template_language) %>
+  </p>
+
+  <table class="kern-table">
+    <thead>
+      <tr>
+        <th><%= t("adm.whatsapp.show.notification_template_column") %></th>
+        <th><%= t("adm.whatsapp.show.template_name") %></th>
+        <th><%= t("adm.whatsapp.show.template_status") %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: "adm/whatsapp/notification_template_row",
+        collection: @notification_templates, as: :notification_template %>
+    </tbody>
+  </table>
+</section>

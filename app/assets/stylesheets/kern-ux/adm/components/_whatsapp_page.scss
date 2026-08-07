@@ -25,6 +25,15 @@
   max-width: 52rem;
 }
 
+// The push bodies are two-line messages and are shown as the citizen receives
+// them, so the line break is content rather than source formatting.
+.adm-whatsapp-page--template-body {
+  max-width: 34rem;
+  margin-top: 0.25rem;
+  white-space: pre-line;
+  color: var(--kern-color-layout-text-muted);
+}
+
 .adm-whatsapp-page--result:empty {
   display: none;
 }

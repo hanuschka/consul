@@ -30,6 +30,8 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_idea: "awaiting_idea",
     awaiting_category: "awaiting_category",
     awaiting_draft_decision: "awaiting_draft_decision",
+    awaiting_image_choice: "awaiting_image_choice",
+    awaiting_image_upload: "awaiting_image_upload",
     awaiting_revision: "awaiting_revision",
     awaiting_comment: "awaiting_comment",
     awaiting_notification_settings: "awaiting_notification_settings",
@@ -44,6 +46,8 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_idea
     awaiting_category
     awaiting_draft_decision
+    awaiting_image_choice
+    awaiting_image_upload
     awaiting_revision
     awaiting_comment
     awaiting_resume_decision

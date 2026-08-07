@@ -24,7 +24,19 @@ namespace :adm do
   end
   resource :features, controller: "features", only: [:show]
   resource :whatsapp, controller: "whatsapp", only: [:show] do
-    post :test_message
+    # One page per tab rather than one page with seven panels: each loads only
+    # its own data, and the two 360dialog round-trips now cost only the pages
+    # that actually show their answer.
+    get :connection
+    get :settings
+    get :templates
+    get :qr_code
+    get :reach
+    get :dialogs
+    get :test_message
+
+    # Named apart from the GET page above, which owns `test_message`.
+    post :send_test_message
     post :configure_conversational_components
     post :create_template
     patch :use_template

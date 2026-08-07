@@ -162,6 +162,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # skips the check.
     ACCOUNT_ACTIONS = %i[
       idea_start category draft_publish draft_revise resume restart
+      image_upload image_generate image_skip
       support notify_toggle notifications_done unlink_confirm unlink_cancel
     ].freeze
 
@@ -191,6 +192,12 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when :category
         assign_category(param)
       when :draft_publish
+        ask_image
+      when :image_upload
+        ask_image_upload
+      when :image_generate
+        generate_image_then_publish
+      when :image_skip
         publish
       when :draft_revise
         ask_revision
@@ -373,6 +380,10 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
         Whatsapp::Flows::AskCategoryService.call(conversation:)
       when "awaiting_draft_decision"
         handle_draft_decision
+      when "awaiting_image_choice"
+        Whatsapp::Flows::AskImageService.call(conversation:)
+      when "awaiting_image_upload"
+        handle_image_upload
       when "awaiting_revision"
         handle_revision
       when "awaiting_comment"
@@ -453,6 +464,70 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       [conversation.draft_resource&.ai_idea_text, correction].compact.join("\n\n")
     end
 
+    # The picture is offered between confirming the draft and publishing it, so
+    # the permission re-check moves here: refusing after a citizen has already
+    # chosen and uploaded an image would waste the one thing they had to do
+    # work for.
+    def ask_image
+      return if refuse_if_not_permitted
+
+      Whatsapp::Flows::AskImageService.call(conversation:)
+    end
+
+    def ask_image_upload
+      conversation.update!(step: "awaiting_image_upload")
+
+      send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt")
+    end
+
+    # A photo sent while the bot is waiting for one. Anything else at this step
+    # is answered by asking again rather than by silently publishing without the
+    # picture the citizen said they wanted to send.
+    def handle_image_upload
+      return send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt") if
+        inbound_image_id.blank?
+
+      attached = Whatsapp::Flows::AttachUploadedImageService.call(
+        conversation:, media_id: inbound_image_id
+      )
+
+      return send_upload_prompt("whatsapp.bot.proposal.image_failed") if !attached
+
+      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_received"))
+
+      publish
+    end
+
+    # Every prompt at this step carries the same way out, so the citizen is
+    # never stuck waiting to be asked for a photo they cannot send.
+    def send_upload_prompt(body_key)
+      Whatsapp::Outbound.buttons(
+        account: account,
+        body: I18n.t(body_key),
+        buttons: [
+          Whatsapp::FlowActions.button(
+            action: :image_skip, label_key: "whatsapp.bot.buttons.image_skip"
+          )
+        ]
+      )
+    end
+
+    # Generation is a slow external call, so the citizen is told it started and
+    # the typing bubble covers the wait. A failure publishes anyway: the picture
+    # was optional, and losing the proposal over it would be the worse outcome.
+    def generate_image_then_publish
+      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_generating"))
+      Whatsapp::Outbound.typing(message_id: inbound_message_id)
+
+      generated = Whatsapp::Flows::GenerateProposalImageService.call(conversation:)
+
+      if !generated
+        Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_generate_failed"))
+      end
+
+      publish
+    end
+
     def publish
       return if refuse_if_not_permitted
 
@@ -522,6 +597,10 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def button_reply_id
       @raw_message.dig("interactive", "button_reply", "id") ||
         @raw_message.dig("button", "payload")
+    end
+
+    def inbound_image_id
+      @raw_message.dig("image", "id")
     end
 
     def list_reply_id

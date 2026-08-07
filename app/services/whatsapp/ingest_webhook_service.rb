@@ -2,6 +2,7 @@ class Whatsapp::IngestWebhookService < ApplicationService
   KIND_BY_MESSAGE_TYPE = {
     "text" => "text",
     "audio" => "audio",
+    "image" => "image",
     "voice" => "audio",
     "interactive" => "interactive",
     "button" => "interactive",

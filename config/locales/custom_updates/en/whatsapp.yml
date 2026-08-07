@@ -84,6 +84,9 @@ en:
         support: 👍 Support
         help: Help
         open_page: Open page
+        image_upload: Upload a photo
+        image_generate: Create one for me
+        image_skip: No picture
       refused:
         generic: I cannot submit a proposal for this project right now.
         phase_missing: I could not find the project. Please scan the QR code again.
@@ -202,6 +205,14 @@ en:
         unsafe: I can't submit that as is. Would you like to rephrase it?
         resume: You've been away a while — would you like to continue your earlier proposal or start
           over?
+        ask_image: >-
+          Would you like a picture for your proposal? You can send me one, or I can create one from
+          your text.
+        image_upload_prompt: Send me the photo now — just attach it to your next message.
+        image_received: ✅ Got the photo, thanks!
+        image_failed: I couldn't use that file. Try another photo, or carry on without one.
+        image_generating: Alright, I'm painting something — one moment.
+        image_generate_failed: That didn't work, so your proposal goes out without a picture.
       support:
         prompt: '👍 Would you like to support this proposal: "%{title}"?'
         thanks: ✅ Thanks for your support! (%{count} supporters so far)

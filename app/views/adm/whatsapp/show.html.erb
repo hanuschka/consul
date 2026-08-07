@@ -1,83 +1,33 @@
+<%# Only reached when the portal has no WhatsApp credentials — a configured one
+    is redirected to the first page. There are no tabs here on purpose: none of
+    them can show anything until the integration exists. %>
 <%= content_for :title, t("adm.whatsapp.show.title") %>
 
 <%= render Adm::HeaderComponent.new(
   title: t("adm.whatsapp.show.title"),
   breadcrumbs: @breadcrumbs
-) do |header| %>
-  <% if @configured %>
-    <% header.with_hint do %>
-      <p class="adm-hint__text"><%= t("adm.whatsapp.show.hint_text") %></p>
-    <% end %>
-  <% end %>
-<% end %>
+) %>
 
 <div class="kern-container my-3 adm-whatsapp-page">
-  <% if @configured %>
-    <custom-tabs param="tab" default="<%= @active_tab %>">
-      <div class="custom-tabs--list" role="tablist">
-        <custom-tab for="connection" class="<%= "-active" if @active_tab == "connection" %>">
-          <%= t("adm.whatsapp.show.tabs.connection") %>
-        </custom-tab>
-        <custom-tab for="settings"><%= t("adm.whatsapp.show.tabs.settings") %></custom-tab>
-        <custom-tab
-          for="templates"
-          class="<%= "-active" if @active_tab == "templates" %>"
-        ><%= t("adm.whatsapp.show.tabs.templates") %></custom-tab>
-        <custom-tab for="qr_code"><%= t("adm.whatsapp.show.tabs.qr_code") %></custom-tab>
-        <custom-tab for="reach"><%= t("adm.whatsapp.show.tabs.reach") %></custom-tab>
-        <custom-tab for="dialogs"><%= t("adm.whatsapp.show.tabs.dialogs") %></custom-tab>
-        <custom-tab for="test_message"><%= t("adm.whatsapp.show.tabs.test_message") %></custom-tab>
-      </div>
-
-      <custom-tab-panel for="connection" class="mt-4">
-        <%= render "adm/whatsapp/connection_tab" %>
-      </custom-tab-panel>
-
-      <custom-tab-panel for="settings" class="mt-4">
-        <%= render "adm/whatsapp/settings_tab" %>
-      </custom-tab-panel>
-
-      <custom-tab-panel for="templates" class="mt-4">
-        <%= render "adm/whatsapp/templates_tab" %>
-      </custom-tab-panel>
-
-      <custom-tab-panel for="qr_code" class="mt-4">
-        <%= render "adm/whatsapp/qr_code_tab" %>
-      </custom-tab-panel>
-
-      <custom-tab-panel for="reach" class="mt-4">
-        <%= render "adm/whatsapp/reach_tab" %>
-      </custom-tab-panel>
-
-      <custom-tab-panel for="dialogs" class="mt-4">
-        <%= render "adm/whatsapp/dialogs_tab" %>
-      </custom-tab-panel>
-
-      <custom-tab-panel for="test_message" class="mt-4">
-        <%= render "adm/whatsapp/test_message_tab" %>
-      </custom-tab-panel>
-    </custom-tabs>
-  <% else %>
-    <%= kern_alert(title: t("adm.whatsapp.show.unavailable_title"), style: :info) do %>
-      <p class="kern-body"><%= t("adm.whatsapp.show.unavailable_body") %></p>
-    <% end %>
-
-    <section class="adm-whatsapp-page--explanation mt-5">
-      <h2 class="kern-title kern-title--small mb-2">
-        <%= t("adm.whatsapp.show.explanation_title") %>
-      </h2>
-      <p class="kern-body mb-3"><%= t("adm.whatsapp.show.explanation_intro") %></p>
-
-      <dl class="kern-description-list kern-description-list--col">
-        <% t("adm.whatsapp.show.explanation_items").each do |item| %>
-          <div class="kern-description-list-item">
-            <dt class="kern-description-list-item__key"><%= item[:title] %></dt>
-            <dd class="kern-description-list-item__value"><%= item[:body] %></dd>
-          </div>
-        <% end %>
-      </dl>
-
-      <p class="kern-body mt-3"><%= t("adm.whatsapp.show.explanation_outro") %></p>
-    </section>
+  <%= kern_alert(title: t("adm.whatsapp.show.unavailable_title"), style: :info) do %>
+    <p class="kern-body"><%= t("adm.whatsapp.show.unavailable_body") %></p>
   <% end %>
+
+  <section class="adm-whatsapp-page--explanation mt-5">
+    <h2 class="kern-title kern-title--small mb-2">
+      <%= t("adm.whatsapp.show.explanation_title") %>
+    </h2>
+    <p class="kern-body mb-3"><%= t("adm.whatsapp.show.explanation_intro") %></p>
+
+    <dl class="kern-description-list kern-description-list--col">
+      <% t("adm.whatsapp.show.explanation_items").each do |item| %>
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= item[:title] %></dt>
+          <dd class="kern-description-list-item__value"><%= item[:body] %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <p class="kern-body mt-3"><%= t("adm.whatsapp.show.explanation_outro") %></p>
+  </section>
 </div>

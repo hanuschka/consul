@@ -30,6 +30,9 @@ module Whatsapp::FlowActions
     category
     draft_publish
     draft_revise
+    image_upload
+    image_generate
+    image_skip
     resume
     restart
   ].freeze

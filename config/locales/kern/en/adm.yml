@@ -28,7 +28,6 @@ en:
           age_ranges: Age groups
           email_templates: System emails
           features: Features
-          whatsapp: WhatsApp
         pages: Pages
         pages_subitems:
           privacy: Privacy policy
@@ -57,6 +56,7 @@ en:
           connection: DT connection
           ai_settings: AI settings
           external_api_keys: API keys
+          whatsapp: WhatsApp
     email_templates:
       send_test:
         success: "Test email sent to %{email}."

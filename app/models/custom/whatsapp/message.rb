@@ -10,6 +10,7 @@ class Whatsapp::Message < ApplicationRecord
   enum kind: {
     text: "text",
     audio: "audio",
+    image: "image",
     interactive: "interactive",
     template: "template",
     welcome: "welcome",

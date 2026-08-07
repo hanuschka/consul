@@ -1,0 +1,25 @@
+<%# Reads @active_tab, which every action sets from its own name, so a page
+    cannot disagree with the tab that claims to be showing it. %>
+<%= render Adm::TabsComponent.new(tabs: [
+  { label: t("adm.whatsapp.show.tabs.connection"),
+    url: connection_adm_whatsapp_path,
+    current: @active_tab == "connection" },
+  { label: t("adm.whatsapp.show.tabs.settings"),
+    url: settings_adm_whatsapp_path,
+    current: @active_tab == "settings" },
+  { label: t("adm.whatsapp.show.tabs.templates"),
+    url: templates_adm_whatsapp_path,
+    current: @active_tab == "templates" },
+  { label: t("adm.whatsapp.show.tabs.qr_code"),
+    url: qr_code_adm_whatsapp_path,
+    current: @active_tab == "qr_code" },
+  { label: t("adm.whatsapp.show.tabs.reach"),
+    url: reach_adm_whatsapp_path,
+    current: @active_tab == "reach" },
+  { label: t("adm.whatsapp.show.tabs.dialogs"),
+    url: dialogs_adm_whatsapp_path,
+    current: @active_tab == "dialogs" },
+  { label: t("adm.whatsapp.show.tabs.test_message"),
+    url: test_message_adm_whatsapp_path,
+    current: @active_tab == "test_message" }
+]) %>

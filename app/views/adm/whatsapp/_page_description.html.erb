@@ -1,0 +1,17 @@
+<%# The long explanation of the page, as a native <details>. Collapsed by
+    default: an admin who already knows the page should not have to scroll past
+    three hundred words of it on every visit. %>
+<% page_scope = "adm.whatsapp.pages.#{key}" %>
+
+<div class="kern-accordion-group adm-whatsapp-page--description mb-4">
+  <details class="kern-accordion">
+    <summary class="kern-accordion__header">
+      <span class="kern-title"><%= t("#{page_scope}.description_title") %></span>
+    </summary>
+    <section class="kern-accordion__body">
+      <% t("#{page_scope}.description").each do |paragraph| %>
+        <p class="kern-body"><%= paragraph %></p>
+      <% end %>
+    </section>
+  </details>
+</div>

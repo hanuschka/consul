@@ -1,0 +1,151 @@
+<%= render "adm/whatsapp/page_header", key: "templates" %>
+
+<div class="kern-container my-3 adm-whatsapp-page">
+  <%= render "adm/whatsapp/page_description", key: "templates" %>
+
+  <section>
+    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.templates_title") %></h2>
+    <p class="kern-body mb-3"><%= t("adm.whatsapp.show.templates_intro") %></p>
+
+  <%
+    configured_template_name = ::Whatsapp.broadcast_template_name
+    configured_template_language = ::Whatsapp.broadcast_template_language
+
+    # The two kinds live in different settings, so a row is "in use" only against
+    # the setting for its own kind — comparing every row to the text template
+    # would mark a card template unused while it is the one being broadcast.
+    configured_template_names = {
+      ::Whatsapp::BroadcastTemplates::TEXT_KIND => configured_template_name,
+      ::Whatsapp::BroadcastTemplates::CARD_KIND => ::Whatsapp.broadcast_card_template_name
+    }
+
+    configured_template =
+      @templates.find do |template|
+        template[:name] == configured_template_name &&
+          template[:language] == configured_template_language
+      end
+  %>
+
+    <% if configured_template_name.blank? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.whatsapp.show.template_missing_title"), style: :info) do %>
+          <p class="kern-body"><%= t("adm.whatsapp.show.template_missing_body") %></p>
+        <% end %>
+      </div>
+    <% elsif configured_template.blank? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.whatsapp.show.template_unknown_title"), style: :danger) do %>
+          <p class="kern-body">
+            <%= t("adm.whatsapp.show.template_unknown_body",
+              name: configured_template_name,
+              language: ::Whatsapp.broadcast_template_language) %>
+          </p>
+        <% end %>
+      </div>
+    <% elsif !configured_template[:approved] %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.whatsapp.show.template_pending_title"), style: :warning) do %>
+          <p class="kern-body">
+            <%= t("adm.whatsapp.show.template_pending_body",
+              name: configured_template_name,
+              status: configured_template[:status]) %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @templates.any? %>
+      <table class="kern-table mb-4">
+        <thead>
+          <tr>
+            <th><%= t("adm.whatsapp.show.template_name") %></th>
+            <th><%= t("adm.whatsapp.show.template_kind") %></th>
+            <th><%= t("adm.whatsapp.show.template_language") %></th>
+            <th><%= t("adm.whatsapp.show.template_status") %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @templates.each do |template| %>
+            <% configured_name_for_kind = configured_template_names[template[:kind]] %>
+            <tr>
+              <td><%= template[:name] %></td>
+              <td><%= t("adm.whatsapp.show.template_kind_#{template[:kind]}") %></td>
+              <td><%= template[:language] %></td>
+              <td>
+                <span class="kern-badge kern-badge--<%= template[:approved] ? "success" : "warning" %>">
+                  <span class="kern-label"><%= template[:status] %></span>
+                </span>
+              </td>
+              <td>
+                <% if configured_name_for_kind == template[:name] &&
+                      configured_template_language == template[:language] %>
+                  <%= t("adm.whatsapp.show.template_in_use") %>
+                <% else %>
+                  <% if configured_name_for_kind == template[:name] %>
+                    <p class="kern-body kern-body--small">
+                      <%= t("adm.whatsapp.show.template_language_mismatch",
+                        language: configured_template_language) %>
+                    </p>
+                  <% end %>
+
+                  <%# Only an approved template may be activated: Meta accepts a
+                      submission long before it approves one, and broadcasting a
+                      pending template fails while still marking the projekt
+                      announced. Creating a template no longer activates it, so
+                      this is the only path that does.
+
+                      A real PATCH form, not an <a> carrying data-turbo-method:
+                      only PATCH is routed, so a Turbo prefetch, a middle-click
+                      or a bookmarked href would raise a routing error. %>
+                  <% if template[:approved] %>
+                    <%= form_with url: use_template_adm_whatsapp_path, method: :patch do |form| %>
+                      <%= form.hidden_field :name, value: template[:name] %>
+                      <%= form.hidden_field :language, value: template[:language] %>
+                      <%= form.hidden_field :kind, value: template[:kind] %>
+                      <%= kern_button(
+                        text: t("adm.whatsapp.show.template_use"),
+                        type: "submit",
+                        style: :tertiary
+                      ) %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+
+    <div class="adm-whatsapp-page--form">
+      <% if @template_form.errors[:base].any? %>
+        <div class="mb-3">
+          <%= kern_alert(title: t("adm.whatsapp.show.template_failed_title"), style: :danger) do %>
+            <% @template_form.errors[:base].each do |message| %>
+              <p class="kern-body"><%= message %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= form_with model: @template_form, url: create_template_adm_whatsapp_path,
+        scope: :template, method: :post, data: { turbo: false } do |f| %>
+        <%= f.text_field :name,
+          label: t("adm.whatsapp.show.template_name_label"),
+          hint: t("adm.whatsapp.show.template_name_hint") %>
+
+        <%= f.text_field :language,
+          label: t("adm.whatsapp.show.template_language_label"),
+          hint: t("adm.whatsapp.show.template_language_hint") %>
+
+        <%= f.text_area :body,
+          label: t("adm.whatsapp.show.template_body_label"),
+          hint: t("adm.whatsapp.show.template_body_hint"),
+          rows: 4 %>
+
+        <%= form_submit_button(text: t("adm.whatsapp.show.template_submit")) %>
+      <% end %>
+    </div>
+  </section>
+</div>

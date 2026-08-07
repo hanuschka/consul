@@ -107,22 +107,9 @@ class AiController < ApplicationController
     end
 
     def attach_generated_image(resource, base64_image)
-      new_temp_file = Base64ImageUtils.decode_to_tempfile(base64_image)
-      uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: new_temp_file,
-        filename: "ai_generated_#{Time.current.to_i}.jpg",
-        type: "image/jpeg"
+      ResourceImages::AttachService.from_base64(
+        resource: resource, user: current_user, base64: base64_image
       )
-
-      if resource.image.nil?
-        Image.new(
-          attachment: uploaded_file,
-          user: current_user,
-          imageable: resource
-        ).save!
-      else
-        resource.image.attachment.attach(uploaded_file)
-      end
     end
 
     def image_url(attachment)

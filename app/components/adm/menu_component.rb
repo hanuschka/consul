@@ -32,8 +32,7 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
         { label: t("adm.menu.items.application_subitems.individual_groups"),     path: adm_individual_groups_path },
         { label: t("adm.menu.items.application_subitems.gdpr_settings"),         path: gdpr_adm_settings_path },
         { label: t("adm.menu.items.application_subitems.pages"),                 path: adm_site_customization_pages_path, active_prefix: "/adm/site_customization/pages" },
-        { label: t("adm.menu.items.application_subitems.features"),              path: adm_features_path,                                              active_prefix: "/adm/features" },
-        { label: t("adm.menu.items.application_subitems.whatsapp"),              path: adm_whatsapp_path,                                              active_prefix: "/adm/whatsapp" }
+        { label: t("adm.menu.items.application_subitems.features"),              path: adm_features_path,                                              active_prefix: "/adm/features" }
       ]
     end
 
@@ -64,7 +63,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def developer_subitems
       [
         { label: t("adm.menu.items.developer_subitems.ai_settings"),       path: adm_ai_settings_path,       active_prefix: "/adm/ai_settings" },
-        { label: t("adm.menu.items.developer_subitems.external_api_keys"), path: adm_external_api_keys_path, active_prefix: "/adm/external_api_keys" }
+        { label: t("adm.menu.items.developer_subitems.external_api_keys"), path: adm_external_api_keys_path, active_prefix: "/adm/external_api_keys" },
+        { label: t("adm.menu.items.developer_subitems.whatsapp"),          path: adm_whatsapp_path,          active_prefix: "/adm/whatsapp" }
       ]
     end
 

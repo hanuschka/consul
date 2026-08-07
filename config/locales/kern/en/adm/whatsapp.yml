@@ -336,6 +336,218 @@ en:
         template_error_body_placeholder_edges: >-
           The text may neither begin nor end with a placeholder. Put static words before {{1}} and
           after {{2}}.
+      pages:
+        connection:
+          hint: Whether the bot is live, whether Meta can reach it, and what a citizen meets first.
+          description_title: What this page is for
+          description:
+          - >-
+            This page decides whether the WhatsApp bot exists at all for your portal, and what a citizen
+            meets in the first seconds of their first conversation. The feature switch at the top
+            is the master control: with it off, incoming messages are still received and stored but
+            nothing is answered, and no broadcast leaves the system. Turning it on takes effect immediately
+            — there is no separate publish step.
+          - >-
+            Below it, the connection status reports whether Meta can actually reach this installation.
+            The webhook is the address WhatsApp posts every incoming message to, and it is registered
+            once per phone number. A failing status here almost always means one of three things:
+            the callback URL registered with 360dialog points at a different host than this one, the
+            shared secret no longer matches, or the application sits behind something the request
+            cannot cross. The check runs against the host you are currently browsing, so opening this
+            page from a staging URL reports staging's address rather than production's.
+          - >-
+            The remaining fields shape first contact. The welcome message is what the bot sends when
+            someone opens the chat without typing anything, which is usually a scanned QR code. The
+            greeting replaces the default wording everywhere the bot introduces itself. The four ice
+            breakers are the tappable suggestions WhatsApp shows above an empty conversation; they
+            disappear after the citizen's first message, so treat them as an opening offer rather
+            than as a menu. The command list is the slash menu that stays available for the whole
+            conversation, written one command per line as name|description.
+          - >-
+            Greetings, ice breakers and commands are stored here but only reach WhatsApp once you
+            apply them. Meta keeps its own copy of these conversational components, and the button
+            below the fields is what pushes yours across. Applying is safe to repeat as often as you
+            like.
+        settings:
+          hint: Values the bot reads while it runs. Every field has a default when left empty.
+          description_title: What this page is for
+          description:
+          - >-
+            Everything on this page is a value the bot reads while running rather than something a
+            citizen ever sees directly. None of it has to be set for the bot to work; each field falls
+            back to a sensible default when left empty.
+          - >-
+            The default language decides which translation an unlinked number is answered in. Once
+            a number is linked to an account the bot follows that citizen's own language setting instead,
+            so this value governs first contact and anyone who declined to link, and nothing else.
+          - >-
+            The two template names point at approved Meta templates and are what a broadcast actually
+            sends. The text variant is the plain fallback; the card variant carries the projekt image
+            and puts the link in a button. Both are chosen on the templates page rather than typed
+            here, and these fields show which is currently active. The template language has to match
+            the language the template was approved in — a mismatch is rejected at send time, not here.
+          - >-
+            The transcription model handles voice messages. Citizens send them often, and each one
+            costs a transcription call before its text reaches the flow. Leaving the field empty uses
+            the default, which is the cheapest model that handles German reliably.
+          - >-
+            Retention and voice size are the two limits worth reviewing periodically. Messages older
+            than the retention window are deleted nightly, which is a data-protection obligation rather
+            than housekeeping; the default is ninety days. The voice limit is checked before a file
+            is downloaded, so raising it raises what the portal is willing to fetch and pay to transcribe,
+            while lowering it makes long messages fail quietly.
+          - >-
+            Automatic broadcasting sends a message to every subscribed number whenever a projekt is
+            published. It is off by default, and it is the one setting here that can reach thousands
+            of people through a single click made elsewhere in the admin.
+        templates:
+          hint: Approved Meta templates — the only way to message someone outside the 24-hour window.
+          description_title: What this page is for
+          description:
+          - >-
+            WhatsApp does not let a business message someone who has not written in the last twenty-four
+            hours. Outside that window only a template Meta has reviewed and approved may be sent,
+            which is why every notification this portal pushes has to exist here first.
+          - >-
+            The form creates a template and submits it for review. A name may contain only lowercase
+            letters, digits and underscores; the language must match the text you write; and the body
+            carries placeholders in the form of double braces that the portal fills at send time.
+            Submitting is not activating — approval takes anywhere from a few minutes to a couple
+            of days, and broadcasting with a template that is still pending simply fails.
+          - >-
+            The list below shows every template on the account with its current status. Approved ones
+            can be activated with the button beside them, which writes both the name and its language
+            into the settings the sending code reads, so the two cannot drift apart. Only one template
+            per kind is active at a time.
+          - >-
+            Meta classifies templates, and the classification matters more than it appears to. Announcing
+            a new projekt is marketing, and submitting it as a utility message gets it reclassified
+            or rejected outright. Repeated misclassification lowers the phone number's quality rating,
+            which reduces how many messages that number may send per day — a limit that is slow and
+            difficult to recover from once it drops.
+          - >-
+            Rejected templates cannot be edited; a replacement has to be submitted under a different
+            name. Meta rejects most often for placeholder problems: a body that begins or ends with
+            a placeholder, two placeholders next to each other, or example values that do not match
+            the number of parameters in the text.
+        qr_code:
+          hint: The portal-wide code and link that open a chat with the bot.
+          description_title: What this page is for
+          description:
+          - >-
+            The QR code on this page opens a WhatsApp conversation with the portal's number and pre-fills
+            the first message, so a citizen who scans it lands in the bot without needing to know
+            the number or what to type.
+          - >-
+            This is the portal-wide code. Scanning it starts a general conversation: the bot greets,
+            offers to link the account, and then shows what is currently open for participation. It
+            carries no projekt and no phase, which makes it the right code for a poster in a town
+            hall, a footer on a printed newsletter, or a sticker somewhere permanent.
+          - >-
+            Codes that point at one specific projekt or one participation phase are generated on that
+            projekt's own page instead of here. Those carry a signed token, so a scan drops the citizen
+            straight into the submission flow for that phase with no menu in between. Use them for
+            signage at the place a projekt is actually about — a construction hoarding, a park noticeboard,
+            a public meeting.
+          - >-
+            The link beneath the code is the same address in text form. It works everywhere a printed
+            code cannot: an email, a button on the website, a post on social media. Both go through
+            WhatsApp's own redirector, so the destination stays correct even if the portal later moves
+            to a different number.
+          - >-
+            The code contains no personal data and does not expire, so it can be printed, photographed
+            and reproduced freely. What it cannot do is prove who scanned it. A citizen still has
+            to link their account before they can submit or support anything, which is the step the
+            bot offers immediately after its first message.
+        reach:
+          hint: How many people this channel can reach, and how many are using it.
+          description_title: What this page is for
+          description:
+          - >-
+            This page answers one question: how many people can this channel actually reach, and how
+            many of them are using it.
+          - >-
+            The first row counts numbers by their linking state. Unlinked numbers have written to
+            the bot but have not connected an account — they can read what the portal offers but cannot
+            submit, support, or receive personal notifications. Pending numbers have been sent a login
+            link and have not completed it. That link expires after an hour, so a large pending count
+            usually means people are dropping out at the login page rather than that they are still
+            deciding.
+          - >-
+            Subscribed is the number that matters for broadcasting. It counts only accounts that are
+            verified, linked to a user who still exists, and have not opted out. A broadcast reaches
+            exactly this set, minus anyone who has switched off that particular notification type.
+            It is always smaller than the total, and the gap between the two is the honest measure
+            of how much of the audience a push actually gets to.
+          - >-
+            Flows in progress counts conversations that are part-way through something — writing a
+            proposal, deciding on a draft, choosing a category. A figure here that never falls is
+            worth investigating: it usually means citizens are abandoning at one particular step rather
+            than that many people happen to be mid-submission at once.
+          - >-
+            The list at the bottom shows which participation phases currently accept a submission
+            through the bot. A phase appears only when its projekt is published, the phase is running,
+            and both the create and AI-flow switches are on. If a phase you expect is missing, one
+            of those three is the reason — the bot deliberately never offers a submission it would
+            then have to refuse.
+        dialogs:
+          hint: Every conversation the bot has had, with filters and a way to reply.
+          description_title: What this page is for
+          description:
+          - >-
+            Every conversation the bot has had is listed here, most recent activity first. This is
+            the closest thing the portal has to a support inbox, and it is the only place a person
+            can read what a citizen actually wrote.
+          - >-
+            The filters narrow the list three ways. State is the linking status of the number. Step
+            is where the conversation currently sits; idle conversations are hidden, so this filter
+            only ever surfaces people who are part-way through something. Activity narrows by recency,
+            which is the fastest route to the conversations that need attention now rather than those
+            that ended weeks ago.
+          - >-
+            Opening a conversation shows its full message history in both directions, with delivery
+            status on everything the bot sent. A message marked failed was rejected by WhatsApp rather
+            than lost. The usual reason is that the twenty-four hour window had closed, which the
+            bot checks before sending, though a number that has blocked the business will fail as
+            well.
+          - >-
+            You can reply directly from a conversation. That reply is an ordinary freeform message
+            and is subject to the same twenty-four hour rule: if the citizen has not written in the
+            last day it will not go out, and the failure appears in the history. There is no way around
+            this from here — reaching someone outside the window needs an approved template, which
+            is a broadcast rather than a reply.
+          - >-
+            Conversations are not kept indefinitely. Messages older than the retention window configured
+            on the settings page are deleted nightly, so this list thins out over time by design.
+            Export anything you need to keep as a record before it ages out.
+        test_message:
+          hint: Send one real message to a number to confirm delivery works.
+          description_title: What this page is for
+          description:
+          - >-
+            This page sends one real WhatsApp message to a number you type, through the same code
+            path as everything else the bot sends. It exists to answer a single question before anyone
+            relies on the channel: does this installation actually deliver.
+          - >-
+            Enter the number in international format, including the country code and without spaces
+            or a leading zero. What arrives is a short fixed text. You cannot change it here, because
+            the point is to test the transport rather than the wording.
+          - >-
+            The result appears below the button and is worth reading rather than glancing at. Success
+            means Meta accepted the message, not that it was delivered — delivery shows up afterwards
+            in the conversation list as a status on that message. A failure reports the error Meta
+            returned, and two of them are worth recognising on sight: a number that has never written
+            to this business cannot be sent a freeform message at all, and a number outside the twenty-four
+            hour window can only be reached with an approved template.
+          - >-
+            That first case catches most people out. If you are testing with your own phone and have
+            never messaged the portal's number from it, the send will fail no matter how correct the
+            configuration is. Message the number once from that phone, then run the test.
+          - >-
+            Nothing sent here is a broadcast and nothing is recorded against a projekt. The test does
+            create a conversation record for the number if none exists, so a number tested here appears
+            in the conversation list afterwards. That is expected, and it is the quickest way to confirm
+            the inbound side works too: reply to the test message and watch it arrive.
     projekts:
       projekts:
         tabs:

@@ -26,7 +26,6 @@ module Adm
     DIALOGS_PER_PAGE = 20
     DIALOGS_FRAME_ID = "whatsapp_dialogs".freeze
 
-    DEFAULT_TAB = "connection".freeze
     TEMPLATES_TAB = "templates".freeze
     DEFAULT_TEMPLATE_NAME = "neues_projekt".freeze
 
@@ -43,13 +42,57 @@ module Adm
     before_action :authorize_settings # , except: :qr_poster
     before_action :load_configured_state
 
+    # The landing route. Configured portals have nothing to show here that the
+    # first page does not, so it hands straight over rather than duplicating it;
+    # unconfigured ones get the explanation, which is the only thing there is to
+    # say before credentials exist.
     def show
+      return redirect_to connection_adm_whatsapp_path if @configured
+
+      load_page_chrome
+    end
+
+    def connection
+      load_page_chrome
+      load_settings
+      load_webhook_status
+    end
+
+    def settings
+      load_page_chrome
+      load_settings
+    end
+
+    def templates
+      load_page_chrome
+      load_templates
+      load_template_form
+    end
+
+    def qr_code
+      load_page_chrome
+    end
+
+    def reach
+      load_page_chrome
+      load_eligible_phases
+      load_reach_stats
+    end
+
+    # The only page whose own controls re-request it: filtering and paginating
+    # happen inside the turbo-frame, which renders the list alone.
+    def dialogs
       return render_dialogs_frame if dialogs_frame_request?
 
-      load_show_data
+      load_page_chrome
+      load_dialogs
     end
 
     def test_message
+      load_page_chrome
+    end
+
+    def send_test_message
       return head :forbidden if !@configured
 
       result =
@@ -89,7 +132,7 @@ module Adm
           error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
       end
 
-      redirect_to adm_whatsapp_path
+      redirect_to connection_adm_whatsapp_path
     end
 
     def create_template
@@ -115,7 +158,7 @@ module Adm
 
       flash[:success] = t("adm.whatsapp.template.submitted")
 
-      redirect_to adm_whatsapp_path(tab: TEMPLATES_TAB)
+      redirect_to templates_adm_whatsapp_path
     end
 
     # The only path that activates a broadcast template, now that creating one
@@ -129,7 +172,7 @@ module Adm
 
       flash[:success] = t("adm.whatsapp.template.selected", name: params[:name])
 
-      redirect_to adm_whatsapp_path(tab: TEMPLATES_TAB)
+      redirect_to templates_adm_whatsapp_path
     end
 
     private
@@ -190,7 +233,7 @@ module Adm
 
       # Filtering and pagination happen inside the dialogs turbo-frame, so those
       # requests render the list alone — skipping the six other tab panels and
-      # the two 360dialog round-trips load_integration_state would make.
+      # the 360dialog round-trip the connection page makes.
       def dialogs_frame_request?
         @configured && turbo_frame_request_id == DIALOGS_FRAME_ID
       end
@@ -201,21 +244,14 @@ module Adm
         render partial: "adm/whatsapp/dialogs_frame", layout: false
       end
 
-      def load_show_data
-        @active_tab ||= DEFAULT_TAB
+      # Everything every page needs and nothing any single one does: the tab
+      # strip reads @active_tab, the header reads @breadcrumbs.
+      def load_page_chrome
+        @active_tab = action_name
         @breadcrumbs = [
           { name: t("adm.menu.items.application"), icon: "desktop_windows" },
           { name: t("adm.whatsapp.show.title") }
         ]
-
-        return if !@configured
-
-        load_settings
-        load_eligible_phases
-        load_integration_state
-        load_reach_stats
-        load_dialogs
-        load_template_form
       end
 
       def load_template_form
@@ -230,11 +266,14 @@ module Adm
         params.require(:template).permit(:name, :language, :body)
       end
 
+      # Re-renders the page the form lives on, not the landing route, so the
+      # invalid values stay in the fields the admin typed them into.
       def render_template_form_errors
+        load_page_chrome
         @active_tab = TEMPLATES_TAB
-        load_show_data
+        load_templates
 
-        render :show, status: :unprocessable_entity
+        render :templates, status: :unprocessable_entity
       end
 
       def load_settings
@@ -278,11 +317,16 @@ module Adm
       # be remembered.
       INTEGRATION_STATE_TTL = 1.minute
 
-      def load_integration_state
+      # Split in two because the two answers are now read by two different
+      # pages: asking for the template list on the connection page would spend a
+      # round-trip on something nothing there renders.
+      def load_webhook_status
         @webhook_status = cached_integration_state("webhook_status") do
           ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
         end
+      end
 
+      def load_templates
         @templates = cached_integration_state("templates") { ::Whatsapp::BroadcastTemplates.list }
       end
 

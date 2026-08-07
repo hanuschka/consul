@@ -94,6 +94,9 @@ de:
         support: 👍 Unterstützen
         help: Hilfe
         open_page: Seite öffnen
+        image_upload: Foto hochladen
+        image_generate: Bild erzeugen
+        image_skip: Ohne Bild
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
         phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.
@@ -219,6 +222,17 @@ de:
         unsafe: So kann ich das nicht einreichen. Möchten Sie es anders formulieren?
         resume: >-
           Sie waren eine Weile weg — möchten Sie Ihren früheren Vorschlag fortsetzen oder neu beginnen?
+        ask_image: >-
+          Möchten Sie ein Bild zu Ihrem Vorschlag? Sie können mir eines schicken, oder ich erstelle
+          eines aus Ihrem Text.
+        image_upload_prompt: Schicken Sie mir das Foto jetzt — hängen Sie es einfach an Ihre nächste
+          Nachricht an.
+        image_received: ✅ Foto erhalten, danke!
+        image_failed: >-
+          Diese Datei konnte ich nicht verwenden. Versuchen Sie ein anderes Foto, oder machen Sie
+          ohne Bild weiter.
+        image_generating: Alles klar, ich male etwas — einen Moment.
+        image_generate_failed: Das hat nicht geklappt, Ihr Vorschlag geht deshalb ohne Bild hinaus.
       support:
         prompt: '👍 Möchten Sie diesen Vorschlag unterstützen: „%{title}“?'
         thanks: ✅ Danke für Ihre Unterstützung! (bisher %{count} Unterstützende)

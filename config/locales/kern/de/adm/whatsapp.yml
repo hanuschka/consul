@@ -342,6 +342,235 @@ de:
         template_error_body_placeholder_edges: >-
           Der Text darf weder mit einem Platzhalter beginnen noch enden. Vor {{1}} und nach {{2}}
           muss fester Text stehen.
+      pages:
+        connection:
+          hint: Ob der Bot aktiv ist, ob Meta ihn erreicht und was Bürgerinnen und Bürger zuerst sehen.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            Diese Seite entscheidet, ob es den WhatsApp-Bot für Ihr Portal überhaupt gibt, und was
+            Bürgerinnen und Bürger in den ersten Sekunden ihres ersten Gesprächs erleben. Der Schalter
+            ganz oben ist die zentrale Steuerung: Ist er aus, werden eingehende Nachrichten zwar weiterhin
+            empfangen und gespeichert, aber nichts wird beantwortet, und es geht keine Rundnachricht
+            hinaus. Das Einschalten wirkt sofort, es gibt keinen zusätzlichen Veröffentlichungsschritt.
+          - >-
+            Darunter meldet die Verbindungsanzeige, ob Meta diese Installation tatsächlich erreichen
+            kann. Der Webhook ist die Adresse, an die WhatsApp jede eingehende Nachricht sendet, und
+            er wird einmal pro Telefonnummer registriert. Eine Fehlermeldung an dieser Stelle hat
+            fast immer eine von drei Ursachen: Die bei 360dialog hinterlegte Rückruf-Adresse zeigt
+            auf einen anderen Host als diesen, das gemeinsame Geheimnis stimmt nicht mehr überein,
+            oder die Anwendung liegt hinter etwas, das die Anfrage nicht passieren kann. Die Prüfung
+            läuft gegen den Host, den Sie gerade aufgerufen haben — auf einer Staging-Adresse meldet
+            sie deshalb Staging und nicht die Produktivumgebung.
+          - >-
+            Die übrigen Felder gestalten den Erstkontakt. Die Willkommensnachricht sendet der Bot,
+            wenn jemand den Chat öffnet, ohne etwas zu schreiben, was in der Regel über einen gescannten
+            QR-Code geschieht. Die Begrüßung ersetzt den Standardtext überall dort, wo der Bot sich
+            vorstellt. Die vier Gesprächseinstiege sind die antippbaren Vorschläge, die WhatsApp über
+            einem leeren Chat anzeigt; sie verschwinden nach der ersten Nachricht und sind deshalb
+            ein Angebot zum Einstieg, kein Menü. Die Befehlsliste ist das Schrägstrich-Menü, das während
+            des gesamten Gesprächs verfügbar bleibt, geschrieben als eine Zeile je Befehl im Format
+            Name|Beschreibung.
+          - >-
+            Begrüßung, Gesprächseinstiege und Befehle werden hier gespeichert, erreichen WhatsApp
+            aber erst, wenn Sie sie übertragen. Meta hält eine eigene Kopie dieser Bestandteile vor,
+            und die Schaltfläche unter den Feldern schickt Ihre Fassung dorthin. Das Übertragen können
+            Sie beliebig oft wiederholen.
+        settings:
+          hint: Werte, die der Bot im Betrieb liest. Jedes leere Feld greift auf einen Standard zurück.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            Alles auf dieser Seite ist ein Wert, den der Bot im laufenden Betrieb liest, und nicht
+            etwas, das Bürgerinnen und Bürger unmittelbar zu sehen bekommen. Nichts davon muss gesetzt
+            sein, damit der Bot funktioniert; jedes leere Feld greift auf einen sinnvollen Standard
+            zurück.
+          - >-
+            Die Standardsprache bestimmt, in welcher Übersetzung eine nicht verknüpfte Nummer angesprochen
+            wird. Sobald eine Nummer mit einem Konto verknüpft ist, folgt der Bot stattdessen der
+            Spracheinstellung dieser Person. Dieser Wert regelt also den Erstkontakt und alle, die
+            eine Verknüpfung abgelehnt haben, sonst nichts.
+          - >-
+            Die beiden Vorlagennamen verweisen auf freigegebene Meta-Vorlagen und bestimmen, was eine
+            Rundnachricht tatsächlich versendet. Die Textvariante ist der einfache Rückfall, die Kartenvariante
+            trägt das Projektbild und legt den Link auf eine Schaltfläche. Beide werden auf der Seite
+            Vorlagen ausgewählt und nicht hier eingetippt; diese Felder zeigen nur, was gerade aktiv
+            ist. Die Vorlagensprache muss zu der Sprache passen, in der die Vorlage freigegeben wurde
+            — eine Abweichung wird beim Senden abgewiesen, nicht hier.
+          - >-
+            Das Transkriptionsmodell verarbeitet Sprachnachrichten. Bürgerinnen und Bürger senden
+            sie häufig, und jede kostet einen Transkriptionsaufruf, bevor ihr Text im Ablauf ankommt.
+            Ein leeres Feld nutzt den Standard, also das günstigste Modell, das Deutsch zuverlässig
+            verarbeitet.
+          - >-
+            Aufbewahrung und Sprachnachrichtengröße sind die beiden Grenzwerte, die eine regelmäßige
+            Prüfung verdienen. Nachrichten, die älter sind als die Aufbewahrungsfrist, werden nächtlich
+            gelöscht; das ist eine datenschutzrechtliche Pflicht und keine Frage der Ordnung. Der
+            Standard liegt bei neunzig Tagen. Die Größengrenze wird geprüft, bevor eine Datei heruntergeladen
+            wird: Ein höherer Wert erhöht, was das Portal zu laden und zu transkribieren bereit ist,
+            ein niedrigerer lässt lange Nachrichten stillschweigend scheitern.
+          - >-
+            Der automatische Versand schickt bei jeder Veröffentlichung eines Projekts eine Nachricht
+            an alle angemeldeten Nummern. Er ist standardmäßig aus und ist die einzige Einstellung
+            hier, die durch einen einzigen Klick an anderer Stelle Tausende Menschen erreichen kann.
+        templates:
+          hint: >-
+            Freigegebene Meta-Vorlagen — der einzige Weg, außerhalb des 24-Stunden-Fensters zu schreiben.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            WhatsApp erlaubt es Unternehmen nicht, jemandem zu schreiben, der in den letzten vierundzwanzig
+            Stunden nichts geschrieben hat. Außerhalb dieses Fensters darf nur eine von Meta geprüfte
+            und freigegebene Vorlage gesendet werden. Deshalb muss jede Benachrichtigung, die dieses
+            Portal versendet, zuerst hier existieren.
+          - >-
+            Das Formular erstellt eine Vorlage und reicht sie zur Prüfung ein. Ein Name darf nur Kleinbuchstaben,
+            Ziffern und Unterstriche enthalten, die Sprache muss zum geschriebenen Text passen, und
+            der Textkörper trägt Platzhalter in doppelten geschweiften Klammern, die das Portal beim
+            Senden füllt. Einreichen ist nicht Aktivieren: Die Freigabe dauert zwischen wenigen Minuten
+            und einigen Tagen, und eine Rundnachricht mit einer noch offenen Vorlage scheitert schlicht.
+          - >-
+            Die Liste darunter zeigt jede Vorlage des Kontos mit ihrem aktuellen Status. Freigegebene
+            lassen sich über die Schaltfläche daneben aktivieren. Dabei werden Name und Sprache gemeinsam
+            in die Einstellungen geschrieben, die der Versand liest, damit beide nicht auseinanderlaufen
+            können. Je Art ist immer nur eine Vorlage aktiv.
+          - >-
+            Meta stuft Vorlagen in Kategorien ein, und diese Einstufung wiegt schwerer, als sie aussieht.
+            Die Ankündigung eines neuen Projekts ist Marketing; wird sie als Servicenachricht eingereicht,
+            wird sie umgestuft oder abgelehnt. Wiederholte Fehleinstufungen senken die Qualitätsbewertung
+            der Telefonnummer, und diese Bewertung begrenzt, wie viele Nachrichten die Nummer pro
+            Tag senden darf — eine Grenze, die sich nach einem Absturz nur langsam wieder erholt.
+          - >-
+            Abgelehnte Vorlagen lassen sich nicht bearbeiten; ein Ersatz muss unter einem anderen
+            Namen eingereicht werden. Meta lehnt am häufigsten wegen der Platzhalter ab: ein Text,
+            der mit einem Platzhalter beginnt oder endet, zwei unmittelbar aufeinanderfolgende Platzhalter,
+            oder Beispielwerte, die nicht zur Anzahl der Platzhalter passen.
+        qr_code:
+          hint: Der portalweite Code und Link, die einen Chat mit dem Bot öffnen.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            Der QR-Code auf dieser Seite öffnet ein WhatsApp-Gespräch mit der Nummer des Portals und
+            füllt die erste Nachricht vor. Wer ihn scannt, landet also im Bot, ohne die Nummer zu
+            kennen oder zu wissen, was zu schreiben wäre.
+          - >-
+            Dies ist der portalweite Code. Ein Scan startet ein allgemeines Gespräch: Der Bot begrüßt,
+            bietet die Verknüpfung des Kontos an und zeigt anschließend, wozu es gerade Beteiligungsmöglichkeiten
+            gibt. Er trägt kein Projekt und keine Phase in sich und ist damit der richtige Code für
+            ein Plakat im Rathaus, eine Fußzeile im gedruckten Mitteilungsblatt oder einen Aufkleber
+            an einem dauerhaften Ort.
+          - >-
+            Codes, die auf ein bestimmtes Projekt oder eine bestimmte Beteiligungsphase zeigen, entstehen
+            auf der Seite des jeweiligen Projekts und nicht hier. Sie tragen ein signiertes Merkmal,
+            sodass ein Scan direkt in den Einreichungsablauf dieser Phase führt, ohne Menü dazwischen.
+            Nutzen Sie diese für Beschilderung genau dort, worum es im Projekt geht: an einem Bauzaun,
+            an einer Tafel im Park, bei einer Bürgerversammlung.
+          - >-
+            Der Link unter dem Code ist dieselbe Adresse in Textform. Er wirkt überall dort, wo ein
+            gedruckter Code nicht hinkommt: in einer E-Mail, als Schaltfläche auf der Website, in
+            einem Beitrag in sozialen Netzwerken. Beide laufen über die Weiterleitung von WhatsApp
+            selbst, sodass das Ziel richtig bleibt, auch wenn das Portal später auf eine andere Nummer
+            wechselt.
+          - >-
+            Der Code enthält keine personenbezogenen Daten und läuft nicht ab; er darf frei gedruckt,
+            fotografiert und vervielfältigt werden. Was er nicht leisten kann, ist ein Nachweis darüber,
+            wer ihn gescannt hat. Vor einer Einreichung oder Unterstützung muss weiterhin das Konto
+            verknüpft werden — genau das bietet der Bot unmittelbar nach seiner ersten Nachricht an.
+        reach:
+          hint: Wie viele Menschen dieser Kanal erreicht und wie viele ihn nutzen.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            Diese Seite beantwortet eine einzige Frage: Wie viele Menschen erreicht dieser Kanal tatsächlich,
+            und wie viele von ihnen nutzen ihn.
+          - >-
+            Die erste Zeile zählt Nummern nach ihrem Verknüpfungsstand. Nicht verknüpfte Nummern haben
+            dem Bot geschrieben, aber kein Konto verbunden; sie können lesen, was das Portal anbietet,
+            aber nichts einreichen, nichts unterstützen und keine persönlichen Benachrichtigungen
+            erhalten. Offene Nummern haben einen Anmeldelink erhalten und ihn nicht abgeschlossen.
+            Dieser Link verfällt nach einer Stunde, weshalb eine hohe Zahl offener Verknüpfungen meist
+            bedeutet, dass Menschen auf der Anmeldeseite abspringen, und nicht, dass sie noch überlegen.
+          - >-
+            Angemeldet ist die Zahl, auf die es beim Versand ankommt. Gezählt werden nur Konten, die
+            bestätigt sind, zu einer noch bestehenden Person gehören und sich nicht abgemeldet haben.
+            Eine Rundnachricht erreicht genau diese Menge, abzüglich aller, die diese eine Benachrichtigungsart
+            ausgeschaltet haben. Sie ist immer kleiner als die Gesamtzahl, und der Abstand zwischen
+            beiden ist das ehrliche Maß dafür, wie viel des Publikums eine Nachricht wirklich erreicht.
+          - >-
+            Laufende Vorgänge zählt Gespräche, die mitten in etwas stecken: beim Schreiben eines Vorschlags,
+            bei der Entscheidung über einen Entwurf, bei der Wahl einer Kategorie. Ein Wert, der nie
+            sinkt, verdient eine genauere Betrachtung; meist bedeutet er, dass Menschen an einer bestimmten
+            Stelle abbrechen, und nicht, dass gerade viele gleichzeitig mitten in einer Einreichung
+            sind.
+          - >-
+            Die Liste am Ende zeigt, welche Beteiligungsphasen derzeit eine Einreichung über den Bot
+            annehmen. Eine Phase erscheint nur, wenn ihr Projekt veröffentlicht ist, die Phase läuft
+            und sowohl das Einreichen als auch der KI-Ablauf eingeschaltet sind. Fehlt eine erwartete
+            Phase, liegt es an einer dieser drei Bedingungen — der Bot bietet bewusst nie eine Einreichung
+            an, die er anschließend ablehnen müsste.
+        dialogs:
+          hint: Alle Gespräche des Bots, mit Filtern und einer Antwortmöglichkeit.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            Hier sind alle Gespräche aufgeführt, die der Bot geführt hat, das mit der jüngsten Aktivität
+            zuerst. Dies kommt einem Posteingang für Rückfragen am nächsten und ist die einzige Stelle,
+            an der ein Mensch lesen kann, was Bürgerinnen und Bürger tatsächlich geschrieben haben.
+          - >-
+            Die Filter grenzen die Liste auf drei Arten ein. Der Status ist der Verknüpfungsstand
+            der Nummer. Der Schritt beschreibt, wo das Gespräch gerade steht; ruhende Gespräche werden
+            ausgeblendet, sodass dieser Filter ausschließlich Menschen zeigt, die mitten in etwas
+            stecken. Die Aktivität grenzt nach Aktualität ein und ist der schnellste Weg zu den Gesprächen,
+            die jetzt Aufmerksamkeit brauchen, statt zu jenen, die vor Wochen endeten.
+          - >-
+            Beim Öffnen eines Gesprächs erscheint der vollständige Nachrichtenverlauf in beide Richtungen,
+            mit Zustellstatus zu allem, was der Bot gesendet hat. Eine als fehlgeschlagen markierte
+            Nachricht wurde von WhatsApp abgewiesen und nicht etwa verloren. Der übliche Grund ist
+            ein geschlossenes Vierundzwanzig-Stunden-Fenster, das der Bot vor dem Senden prüft; auch
+            eine Nummer, die das Unternehmen blockiert hat, schlägt fehl.
+          - >-
+            Aus einem Gespräch heraus können Sie direkt antworten. Diese Antwort ist eine gewöhnliche
+            freie Nachricht und unterliegt derselben Vierundzwanzig-Stunden-Regel: Hat die Person
+            am Vortag nichts geschrieben, geht sie nicht hinaus, und der Fehlschlag erscheint im Verlauf.
+            Von hier aus führt daran kein Weg vorbei — außerhalb des Fensters braucht es eine freigegebene
+            Vorlage, und das ist eine Rundnachricht und keine Antwort.
+          - >-
+            Gespräche bleiben nicht unbegrenzt erhalten. Nachrichten, die älter sind als die auf der
+            Seite Einstellungen festgelegte Aufbewahrungsfrist, werden nächtlich gelöscht; diese Liste
+            dünnt sich also planmäßig aus. Sichern Sie alles, was Sie als Nachweis benötigen, bevor
+            es verfällt.
+        test_message:
+          hint: Eine echte Nachricht an eine Nummer senden, um die Zustellung zu prüfen.
+          description_title: Wofür diese Seite da ist
+          description:
+          - >-
+            Diese Seite sendet eine echte WhatsApp-Nachricht an eine Nummer, die Sie eingeben, und
+            zwar über denselben Weg wie alles andere, was der Bot versendet. Sie beantwortet eine
+            einzige Frage, bevor sich jemand auf den Kanal verlässt: Stellt diese Installation tatsächlich
+            zu?
+          - >-
+            Geben Sie die Nummer im internationalen Format ein, mit Ländervorwahl, ohne Leerzeichen
+            und ohne führende Null. Es kommt ein kurzer, fester Text an. Ändern lässt er sich hier
+            nicht, denn geprüft werden soll der Transportweg und nicht die Formulierung.
+          - >-
+            Das Ergebnis erscheint unter der Schaltfläche und verdient es, gelesen und nicht überflogen
+            zu werden. Erfolg bedeutet, dass Meta die Nachricht angenommen hat, nicht dass sie zugestellt
+            wurde; die Zustellung erscheint anschließend in der Gesprächsliste als Status dieser Nachricht.
+            Ein Fehlschlag nennt die von Meta gemeldete Ursache, und zwei davon sollte man auf den
+            ersten Blick erkennen: An eine Nummer, die diesem Unternehmen noch nie geschrieben hat,
+            lässt sich überhaupt keine freie Nachricht senden, und eine Nummer außerhalb des Vierundzwanzig-Stunden-Fensters
+            ist nur über eine freigegebene Vorlage erreichbar.
+          - >-
+            Der erste Fall überrascht die meisten. Wenn Sie mit Ihrem eigenen Telefon testen und von
+            diesem Gerät nie an die Nummer des Portals geschrieben haben, scheitert der Versand, gleich
+            wie richtig alles eingerichtet ist. Schreiben Sie der Nummer einmal von diesem Telefon
+            aus und starten Sie den Test dann erneut.
+          - >-
+            Nichts von hier ist eine Rundnachricht, und nichts wird einem Projekt zugerechnet. Der
+            Test legt allerdings einen Gesprächseintrag für die Nummer an, falls noch keiner besteht;
+            eine hier getestete Nummer erscheint danach also in der Gesprächsliste. Das ist so gewollt
+            und zugleich der schnellste Weg, auch den eingehenden Weg zu prüfen: Antworten Sie auf
+            die Testnachricht und sehen Sie zu, wie sie ankommt.
     projekts:
       projekts:
         tabs:

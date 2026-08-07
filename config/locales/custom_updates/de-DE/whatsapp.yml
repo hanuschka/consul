@@ -80,6 +80,10 @@ de:
       publish_failed: >-
         Ich konnte gerade nicht prüfen, ob Ihr Vorschlag die Vorgaben dieses Projekts erfüllt.
         Versuchen Sie es in ein paar Minuten noch einmal — Ihr Entwurf bleibt erhalten.
+      draft_invalid: |-
+        So kann ich den Vorschlag noch nicht einreichen: %{reason}
+
+        Schreiben Sie mir, was ich ändern soll.
       criteria_failed: |-
         Ihr Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
 

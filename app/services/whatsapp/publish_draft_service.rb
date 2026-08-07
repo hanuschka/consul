@@ -9,28 +9,23 @@ class Whatsapp::PublishDraftService < ApplicationService
   # Returns the published proposal or budget investment, or a symbol naming what
   # stopped it: :criteria_failed when the phase's hard criteria reject the draft
   # — mirroring the web flow, which shows the evaluation result instead of
-  # publishing — or :sentiment_missing when the phase requires a sentiment the
-  # draft does not carry.
+  # publishing — :sentiment_missing or :category_missing when the phase requires
+  # a choice the draft does not carry, or :invalid when the record fails its own
+  # validations for any other reason.
   def call
     resource = @conversation.draft_resource
 
     return if resource.blank?
     return resource if resource.published_at.present?
-    return :sentiment_missing if sentiment_missing?(resource)
+    return :sentiment_missing if Whatsapp::DraftSentiment.missing?(resource, projekt_phase)
+    return :category_missing if category_missing?(resource)
 
     stage = evaluation_stage(resource)
 
     return :criteria_failed if stage == HARD_FAILED_STAGE
     return if stage == ERROR_STAGE
 
-    # Investments have no admin_accepted column, and the web budget flow
-    # publishes them outright, so moderation stays a proposal concern.
-    resource.admin_accepted = false if moderated? && resource.is_a?(Proposal)
-    resource.draft = false
-    resource.published_at = Time.current
-    resource.save!(validate: false)
-
-    resource
+    publish(resource)
   end
 
   private
@@ -43,14 +38,43 @@ class Whatsapp::PublishDraftService < ApplicationService
       projekt_phase.feature?("general.require_admin_acceptance")
     end
 
-    # The last line of defence for a requirement nothing else on this path can
-    # enforce: every write here is save!(validate: false), so Sentimentable's
-    # create-time presence check never runs. The drafting flow asks for the
-    # sentiment before the card, and this catches a draft that reached publish
-    # without one anyway — a resumed draft from before the question existed,
-    # or a phase that switched the feature on mid-flow.
-    def sentiment_missing?(resource)
-      Whatsapp::DraftSentiment.missing?(resource, projekt_phase)
+    # Labelable validates on create, so a draft written before the flow asked
+    # for a label can still be sitting here without one. Caught rather than
+    # saved past, and answered with the question instead of an error.
+    def category_missing?(resource)
+      return false if !resource.respond_to?(:projekt_labels)
+      return false if !projekt_phase.labels_selector_available?
+
+      resource.projekt_labels.empty?
+    end
+
+    # The same two steps the web takes, in the same order: save the record, then
+    # publish it. Publishing is what notifies the projekt's followers, and doing
+    # it by hand — which is what this used to do — meant a submission made by
+    # chat quietly reached nobody.
+    def publish(resource)
+      # Investments have no admin_accepted column, and the web budget flow
+      # publishes them outright, so moderation stays a proposal concern.
+      resource.admin_accepted = false if moderated? && resource.is_a?(Proposal)
+      resource.draft = false
+
+      return :invalid if !resource.valid?
+
+      resource.save!
+      release(resource)
+
+      resource
+    end
+
+    # Proposal#publish stamps published_at and runs the notifications. An
+    # investment has no such method and the web never calls one either, so it is
+    # stamped here and given the notifier its own controller sends.
+    def release(resource)
+      return resource.publish if resource.is_a?(Proposal)
+
+      resource.update!(published_at: Time.current)
+
+      NotificationServices::NewBudgetInvestmentNotifier.call(resource.id)
     end
 
     # The evaluator swallows its own exceptions and answers with the error

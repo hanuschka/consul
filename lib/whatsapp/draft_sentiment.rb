@@ -3,12 +3,11 @@ module Whatsapp::DraftSentiment
   # — which Sentimentable turns into a create-time requirement wherever the
   # phase enables it.
   #
-  # That requirement could not stop anything here: every write on the bot's path
-  # is save!(validate: false), because a half-finished draft cannot satisfy the
-  # resource's own validations. So a draft the drafting model gave no sentiment
-  # published without one, in a state the web form rejects outright. This module
-  # asks the citizen for it instead, the same way DraftCategory asks for a
-  # category the model did not choose.
+  # The bot used to write past that requirement, so a draft the drafting model
+  # gave no sentiment published without one, in a state the web form rejects
+  # outright. Nothing on this path saves unvalidated any more, so the question
+  # below is what makes the record writable at all — the same way DraftCategory
+  # asks for a category the model did not choose.
   MAX_CHOICE_BUTTONS = 3
 
   module_function
@@ -52,7 +51,7 @@ module Whatsapp::DraftSentiment
     return false if sentiment.blank?
 
     resource.sentiment_id = sentiment.id
-    resource.save!(validate: false)
+    resource.save!
 
     true
   end

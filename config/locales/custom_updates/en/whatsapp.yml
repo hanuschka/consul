@@ -69,6 +69,10 @@ en:
       publish_failed: >-
         I could not check right now whether your proposal meets this project's requirements. Please
         try again in a few minutes — your draft is kept.
+      draft_invalid: |-
+        I cannot submit the proposal like this yet: %{reason}
+
+        Tell me what I should change.
       criteria_failed: |-
         Your proposal does not meet one of this project's requirements yet: %{criterion}
 

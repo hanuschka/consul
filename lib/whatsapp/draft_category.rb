@@ -56,7 +56,7 @@ module Whatsapp::DraftCategory
     return false if label.blank?
 
     resource.projekt_label_ids = [label.id]
-    resource.save!(validate: false)
+    resource.save!
 
     true
   end

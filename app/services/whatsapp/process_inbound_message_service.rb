@@ -429,34 +429,51 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       Whatsapp::Flows::AskIdeaService.call(conversation:)
     end
 
+    # Before the record exists the answer goes into the stashed draft data,
+    # because the validation it satisfies runs at creation and the record cannot
+    # be written until it is satisfied. Afterwards it goes onto the record,
+    # where the citizen is correcting a choice rather than supplying a missing
+    # one. Either way CompleteDraftService decides what is still outstanding.
     def assign_category(label_id)
+      return stash_draft_choice(:projekt_label_ids, [label_id.to_i]) if pre_creation_draft?
+
       assigned = Whatsapp::DraftCategory.assign(
         conversation.draft_resource, conversation.projekt_phase, label_id
       )
 
       return Whatsapp::Flows::AskCategoryService.call(conversation:) if !assigned
 
-      present_draft_or_ask_sentiment
+      complete_draft
     end
 
     def assign_sentiment(sentiment_id)
+      return stash_draft_choice(:sentiment_id, sentiment_id.to_i) if pre_creation_draft?
+
       assigned = Whatsapp::DraftSentiment.assign(
         conversation.draft_resource, conversation.projekt_phase, sentiment_id
       )
 
       return Whatsapp::Flows::AskSentimentService.call(conversation:) if !assigned
 
-      Whatsapp::Flows::PresentDraftService.first_draft(conversation:, inbound_message_id:)
+      complete_draft
     end
 
-    # The questions the phase still needs answered come before the card, in the
-    # order the drafting flow asks them. A phase that wants both a category and
-    # a sentiment must not skip one depending on which route reached here.
-    def present_draft_or_ask_sentiment
-      return Whatsapp::Flows::AskSentimentService.call(conversation:) if
-        Whatsapp::DraftSentiment.missing?(conversation.draft_resource, conversation.projekt_phase)
+    def pre_creation_draft?
+      conversation.draft_resource.blank? && conversation.context["draft_data"].present?
+    end
 
-      Whatsapp::Flows::PresentDraftService.first_draft(conversation:, inbound_message_id:)
+    # Written back through the same key the generation call filled, so
+    # DraftRequirements re-validates the citizen's answer against the phase
+    # exactly as it validated the model's.
+    def stash_draft_choice(key, value)
+      draft_data = conversation.context["draft_data"].to_h.merge(key.to_s => value)
+      conversation.merge_context!(draft_data: draft_data)
+
+      complete_draft
+    end
+
+    def complete_draft
+      Whatsapp::Flows::CompleteDraftService.for_first_draft(conversation:, inbound_message_id:)
     end
 
     # A failed publish leaves the draft intact, so retrying means publishing

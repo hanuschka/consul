@@ -23,6 +23,9 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
       result == :criteria_failed
     return Whatsapp::Flows::AskSentimentService.call(conversation: @conversation) if
       result == :sentiment_missing
+    return Whatsapp::Flows::AskCategoryService.call(conversation: @conversation) if
+      result == :category_missing
+    return send_invalid if result == :invalid
     return send_failure if result.blank?
 
     send_confirmation(result)
@@ -69,5 +72,27 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
         body: I18n.t("whatsapp.bot.publish_failed"),
         actions: [:retry, :cancel]
       )
+    end
+
+    # The draft breaks a rule the portal applies to every submission — a title
+    # too long, a description the sanitiser rejected. The citizen is put back in
+    # the revision step with the record's own message, because they are the only
+    # one who can rewrite it and a retry would fail identically.
+    def send_invalid
+      @conversation.update!(step: "awaiting_revision")
+
+      Whatsapp::Outbound.recovery(
+        conversation: @conversation,
+        body: I18n.t("whatsapp.bot.draft_invalid", reason: validation_reason),
+        actions: [:cancel]
+      )
+    end
+
+    def validation_reason
+      resource = @conversation.draft_resource
+
+      resource.validate
+
+      resource.errors.full_messages.first.to_s
     end
 end

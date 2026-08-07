@@ -1,9 +1,14 @@
 class Whatsapp::Flows::LinkErrorService < ApplicationService
-  # Catalog A4-A6. Three ways a login attempt can fail, each with its own way
+  # Catalog A4-A6. Four ways a login attempt can fail, each with its own way
   # out: register, retry, or switch the account this number points at. A shared
   # "that didn't work" would leave the citizen with nothing to do next, which is
   # the whole reason the catalog splits them.
-  REASONS = %w[no_account expired already_linked].freeze
+  #
+  # already_linked and number_taken are the two directions of the same clash and
+  # need opposite answers: the citizen whose account already holds another
+  # number has nothing to switch here, while the number that belongs to someone
+  # else can only be freed from this chat.
+  REASONS = %w[no_account expired already_linked number_taken].freeze
 
   def initialize(conversation:, reason:)
     @conversation = conversation
@@ -30,15 +35,23 @@ class Whatsapp::Flows::LinkErrorService < ApplicationService
     end
 
     # No account is the one branch with nothing to offer in the chat: the way on
-    # is registering on the portal, which the copy links to. The other two both
-    # end in another login attempt, so both carry the same retry pill.
+    # is registering on the portal, which the copy links to. A number that
+    # belongs to someone else is the one branch a retry cannot fix — the pill
+    # releases it first, which is why it is the only producer of link_switch.
     def buttons
       return [] if @reason == "no_account"
+      return [switch_button] if @reason == "number_taken"
 
       [
         Whatsapp::FlowActions.button(
           action: :link_retry, label_key: "whatsapp.bot.buttons.login_again"
         )
       ]
+    end
+
+    def switch_button
+      Whatsapp::FlowActions.button(
+        action: :link_switch, label_key: "whatsapp.bot.buttons.link_switch"
+      )
     end
 end

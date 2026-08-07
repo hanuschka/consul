@@ -21,9 +21,22 @@ module Whatsapp::Outbound
     end
   end
 
-  def buttons(account:, body:, buttons:)
+  def buttons(account:, body:, buttons:, header_image_url: nil)
     deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
-      messages.send_buttons(to: account.wa_id, body: body, buttons: buttons)
+      messages.send_buttons(
+        to: account.wa_id,
+        body: body,
+        buttons: buttons,
+        header_image_url: header_image_url
+      )
+    end
+  end
+
+  # The caption is recorded as the message body: the dialog history in /adm is
+  # read to find out what the bot said, and "image" alone answers nothing.
+  def image(account:, image_url:, caption: nil)
+    deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
+      messages.send_image(to: account.wa_id, image_url: image_url, caption: caption)
     end
   end
 
@@ -58,7 +71,7 @@ module Whatsapp::Outbound
     deliver(
       account: account,
       kind: "template",
-      body: "#{name}: #{variables.join(' | ')}",
+      body: "#{name}: #{variables.join(" | ")}",
       projekt_id: projekt_id
     ) do |messages|
       messages.send_template(to: account.wa_id, name: name, language: language, variables: variables)
@@ -76,7 +89,7 @@ module Whatsapp::Outbound
     deliver(
       account: account,
       kind: "template",
-      body: "#{name}: #{variables.join(' | ')}",
+      body: "#{name}: #{variables.join(" | ")}",
       projekt_id: projekt_id
     ) do |messages|
       messages.send_card_template(

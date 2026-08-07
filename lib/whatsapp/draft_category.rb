@@ -25,8 +25,14 @@ module Whatsapp::DraftCategory
 
   # Nil when the draft carries no category at all, which is what makes the
   # explicit C15 question worth asking.
+  #
+  # Gated on the same phase feature as options_for. Without it a phase with
+  # labels switched off still printed a "Category:" line built from whatever
+  # free-form tag the model happened to write — a category the projekt's team
+  # never defined and the citizen was never offered a way to change.
   def label_for(resource)
     return if resource.blank?
+    return if !resource.projekt_phase&.feature?("form.labels")
 
     chosen = chosen_label(resource)
 

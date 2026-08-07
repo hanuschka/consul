@@ -35,6 +35,14 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     projekt.activated?
   end
 
+  # The subset an unlinked number may submit to. Composed from #call rather than
+  # given its own scope: guest participation is a property the portal already
+  # decides per phase, and a second path to "which phases are open" is a second
+  # place for the eligibility rules to drift.
+  def self.guest_open(projekt: nil)
+    new(projekt: projekt).call.select { |projekt_phase| projekt_phase.user_status == "guest" }
+  end
+
   def initialize(projekt: nil)
     @projekt = projekt
   end

@@ -1,4 +1,9 @@
 class Whatsapp::Flows::RefuseParticipationService < ApplicationService
+  # The second group are the phase's participation restrictions. They used to be
+  # unreachable here — a phase that applies them requires an account, and the
+  # bot required one before any of them could be asked. Guest phases changed
+  # that: the bot checks the restrictions the web waives, so a guest can now be
+  # refused for a reason that needs saying rather than a generic "not right now".
   REASONS_WITH_OWN_COPY = %w[
     phase_missing
     phase_not_supported
@@ -11,6 +16,15 @@ class Whatsapp::Flows::RefuseParticipationService < ApplicationService
     not_verified
     no_open_phase
     submissions_limit_exceeded
+
+    not_logged_in
+    missing_user_data
+    only_citizens
+    only_specific_geozones
+    no_registered_address
+    only_specific_streets
+    only_specific_registered_address_groupings
+    only_specific_ages
   ].freeze
 
   def initialize(conversation:, reason:)

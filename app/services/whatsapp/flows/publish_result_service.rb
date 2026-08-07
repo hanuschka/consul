@@ -12,13 +12,17 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
   end
 
   def call
-    # Publishing is not instant when the phase has hard criteria: PublishDraft
-    # runs the two-tier evaluator, which is a second LLM call.
+    # Usually instant now that the draft card carries the evaluation, but not
+    # always: a draft whose evaluation was unreachable at the time is evaluated
+    # here instead, and that is a second LLM call.
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
     result = Whatsapp::PublishDraftService.call(conversation: @conversation)
 
-    return send_criteria_feedback if result == :criteria_failed
+    return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if
+      result == :criteria_failed
+    return Whatsapp::Flows::AskSentimentService.call(conversation: @conversation) if
+      result == :sentiment_missing
     return send_failure if result.blank?
 
     send_confirmation(result)
@@ -35,7 +39,7 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
     # Only proposals can be held back for moderation — an investment has no
     # admin_accepted column, and the web budget flow publishes it outright.
     def send_confirmation(resource)
-      return send_pending if resource.is_a?(Proposal) && !resource.admin_accepted?
+      return send_pending(resource) if resource.is_a?(Proposal) && !resource.admin_accepted?
 
       Whatsapp::Outbound.text(
         account: account,
@@ -46,10 +50,16 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
       )
     end
 
-    def send_pending
+    # The link is back, and now leads somewhere: the author may open their own
+    # proposal while it waits for moderation. It asks them to log in first,
+    # which the copy says rather than leaving them to discover it.
+    def send_pending(resource)
       Whatsapp::Outbound.text(
         account: account,
-        body: I18n.t("whatsapp.bot.proposal.published_pending_moderation")
+        body: I18n.t(
+          "whatsapp.bot.proposal.published_pending_moderation",
+          url: Whatsapp::PublishedResourceUrl.call(resource)
+        )
       )
     end
 
@@ -58,26 +68,6 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
         conversation: @conversation,
         body: I18n.t("whatsapp.bot.publish_failed"),
         actions: [:retry, :cancel]
-      )
-    end
-
-    # The phase's hard criteria are the portal's own rules, not a safety filter,
-    # so the citizen is told which one failed and left in the revision step with
-    # the draft intact.
-    def send_criteria_feedback
-      @conversation.update!(step: "awaiting_revision")
-
-      failed_criterion =
-        @conversation.draft_resource.ai_evaluation_result.to_h["failed_criterion"].to_h
-
-      Whatsapp::Outbound.recovery(
-        conversation: @conversation,
-        body: I18n.t(
-          "whatsapp.bot.criteria_failed",
-          criterion: failed_criterion["name"].to_s,
-          feedback: failed_criterion["feedback"].to_s
-        ),
-        actions: [:cancel]
       )
     end
 end

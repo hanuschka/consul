@@ -23,11 +23,13 @@ module Whatsapp::FlowActions
     unlink_cancel
   ].freeze
 
-  DISCOVERY_ACTIONS = %i[discover discover_public dismiss].freeze
+  DISCOVERY_ACTIONS = %i[discover discover_public dismiss view_projekt].freeze
 
   PROPOSAL_ACTIONS = %i[
+    submit_proposal
     idea_start
     category
+    sentiment
     draft_publish
     draft_revise
     image_upload
@@ -37,7 +39,7 @@ module Whatsapp::FlowActions
     restart
   ].freeze
 
-  ENGAGEMENT_ACTIONS = %i[support].freeze
+  ENGAGEMENT_ACTIONS = %i[support my_contributions].freeze
 
   NOTIFICATION_ACTIONS = %i[notify_toggle notifications_done].freeze
 

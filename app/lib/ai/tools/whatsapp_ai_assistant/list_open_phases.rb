@@ -3,10 +3,10 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssi
               "the whole portal, each with the link to its projekt. Returns the " \
               "projekt_phase_id that describe_projekt, check_participation_eligibility and " \
               "start_phase_flow expect. Takes no arguments. To show the citizen a tappable list " \
-              "of these phases, call show_menu instead."
+              "of these phases, call show_projekts instead."
 
   def execute
-    { phases: open_projekt_phases.map { |projekt_phase| summary_of(projekt_phase) } }
+    { phases: open_projekt_phases.map { |projekt_phase| summary_of(projekt_phase) }}
   end
 
   private

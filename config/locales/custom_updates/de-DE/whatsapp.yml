@@ -3,42 +3,59 @@ de:
     account:
       title: WhatsApp
       not_linked: >-
-        Deine WhatsApp-Nummer ist noch nicht mit diesem Konto verbunden. Schreibe dem Beteiligungs-Bot
-        auf WhatsApp, um die Verbindung zu starten.
-      subscribed: 'Verbundene Nummer: %{phone}. Du erhältst Benachrichtigungen zu neuen Projekten.'
-      opted_out: 'Verbundene Nummer: %{phone}. Du erhältst derzeit keine Benachrichtigungen.'
+        Ihre WhatsApp-Nummer ist noch nicht mit diesem Konto verbunden. Schreiben Sie dem
+        Beteiligungs-Bot auf WhatsApp, um die Verbindung zu starten.
+      subscribed: 'Verbundene Nummer: %{phone}. Sie erhalten Benachrichtigungen zu neuen Projekten.'
+      opted_out: 'Verbundene Nummer: %{phone}. Sie erhalten derzeit keine Benachrichtigungen.'
       opt_in: Benachrichtigungen aktivieren
       opt_out: Keine Benachrichtigungen mehr erhalten
     link:
-      success: Deine WhatsApp-Nummer ist jetzt mit deinem Konto verbunden.
+      success: Ihre WhatsApp-Nummer ist jetzt mit Ihrem Konto verbunden.
       failure: >-
-        Dieser Link ist nicht mehr gültig. Schreibe dem Bot erneut auf WhatsApp, um einen neuen Link
+        Dieser Link ist nicht mehr gültig. Schreiben Sie dem Bot erneut auf WhatsApp, um einen neuen
         zu erhalten.
       page:
         title: WhatsApp-Nummer verbinden
         intro: >-
-          Sobald deine Nummer verbunden ist, werden Vorschläge, die du per WhatsApp einreichst, deinem
-          Konto zugeordnet.
+          Sobald Ihre Nummer verbunden ist, werden Vorschläge, die Sie per WhatsApp einreichen,
+          Ihrem Konto zugeordnet.
         number_label: WhatsApp-Nummer
         broadcast_consent: Ich möchte per WhatsApp benachrichtigt werden, wenn ein neues Beteiligungsprojekt
           startet.
         consent_note: >-
-          Ohne dieses Häkchen kannst du weiterhin Vorschläge per WhatsApp einreichen, erhältst aber
-          keine Benachrichtigungen. Du kannst die Auswahl jederzeit in deinem Konto oder mit der Nachricht
-          STOPP ändern.
+          Ohne dieses Häkchen können Sie weiterhin Vorschläge per WhatsApp einreichen, erhalten aber
+          keine Benachrichtigungen. Sie können die Auswahl jederzeit in Ihrem Konto oder mit der
+          Nachricht STOPP ändern.
         confirm: Nummer verbinden
       expired: >-
         Dieser Link ist nicht mehr gültig. Schreiben Sie dem Bot erneut auf WhatsApp, um einen neuen
         zu erhalten.
-      already_linked: Diese WhatsApp-Nummer ist bereits mit einem anderen Konto verknüpft.
+      already_linked: Ihr Konto ist bereits mit einer anderen WhatsApp-Nummer verknüpft.
+      number_taken: >-
+        Diese WhatsApp-Nummer ist bereits mit einem anderen Konto verknüpft. Die Verknüpfung lässt
+        sich nur im WhatsApp-Chat dieser Nummer lösen.
     subscription:
-      opted_in: Du erhältst wieder WhatsApp-Benachrichtigungen.
-      opted_out: Du erhältst keine WhatsApp-Benachrichtigungen mehr.
-      not_linked: Für dein Konto ist keine WhatsApp-Nummer verbunden.
+      opted_in: Sie erhalten wieder WhatsApp-Benachrichtigungen.
+      opted_out: Sie erhalten keine WhatsApp-Benachrichtigungen mehr.
+      not_linked: Für Ihr Konto ist keine WhatsApp-Nummer verbunden.
     bot:
-      welcome_greeting: >-
-        Willkommen! Hier kannst du Vorschläge zu den laufenden Beteiligungsprojekten einreichen. Zu
-        welchem möchtest du etwas beitragen?
+      welcome_greeting: 👋 Willkommen zurück! Was möchten Sie tun?
+      free_text_hint: >-
+        Ich kann noch mehr — schreiben Sie mir einfach, was Sie brauchen.
+      no_open_phase_notice: >-
+        Gerade ist keine Phase offen, in der Vorschläge eingereicht werden können. Sobald ein neues
+        Beteiligungsprojekt startet, melde ich mich bei Ihnen.
+      contributions:
+        intro: 'Das haben Sie bisher eingereicht:'
+        entry: |-
+          *%{title}* (%{status})
+          %{url}
+        status:
+          published: online
+          pending: wird geprüft
+        more: Und %{count} weitere.
+        empty: >-
+          Sie haben bisher nichts eingereicht. Tippen Sie auf „Vorschlag einreichen“, um anzufangen.
       commands:
         default: |-
           hilfe|Was dieser Chat kann
@@ -50,25 +67,28 @@ de:
         default_2: Ich habe eine Idee für meine Stadt
         default_3: Wie funktioniert das Einreichen?
         default_4: Keine Nachrichten mehr erhalten
-      idea_missing: Bitte beschreibe deine Idee als Text oder als Sprachnachricht.
+      idea_missing: Bitte beschreiben Sie Ihre Idee als Text oder als Sprachnachricht.
       no_projekt: >-
-        Gerade nimmt kein Beteiligungsprojekt Vorschläge an. Schreib mir wieder, wenn ein neues startet,
-        oder scanne den QR-Code eines Projekts.
+        Gerade nimmt kein Beteiligungsprojekt Vorschläge an. Schreiben Sie mir wieder, wenn ein neues
+        startet, oder scannen Sie den QR-Code eines Projekts.
       drafting: Danke! Ich formuliere daraus einen Vorschlag – das dauert einen Moment.
-      draft_failed: Das hat leider nicht funktioniert. Schicke mir deine Idee gerne noch einmal.
-      transcription_failed: Ich konnte die Sprachnachricht nicht verstehen. Schreibe deine Idee bitte
-        als Text.
-      publish_failed: Beim Veröffentlichen ist etwas schiefgegangen. Bitte versuche es später noch
-        einmal.
+      draft_failed: >-
+        Das hat gerade nicht geklappt — vermutlich nur vorübergehend. Versuchen Sie es in ein paar
+        Minuten noch einmal.
+      transcription_failed: >-
+        Ich konnte die Sprachnachricht nicht verstehen. Schreiben Sie Ihre Idee bitte als Text.
+      publish_failed: >-
+        Ich konnte gerade nicht prüfen, ob Ihr Vorschlag die Vorgaben dieses Projekts erfüllt.
+        Versuchen Sie es in ein paar Minuten noch einmal — Ihr Entwurf bleibt erhalten.
       criteria_failed: |-
-        Dein Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
+        Ihr Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
 
         %{feedback}
 
-        Schreibe mir, was ich ändern soll.
-      too_fast: Einen Moment noch – ich arbeite gerade an deinem Vorschlag.
-      opted_in: Du erhältst wieder Nachrichten von uns.
-      verification_link: 'Hier kannst du dein Konto verifizieren: %{url}'
+        Schreiben Sie mir, was ich ändern soll.
+      too_fast: Einen Moment noch – ich arbeite gerade an Ihrem Vorschlag.
+      opted_in: Sie erhalten wieder Nachrichten von uns.
+      verification_link: 'Hier können Sie Ihr Konto verifizieren: %{url}'
       buttons:
         publish: Veröffentlichen
         revise: Ändern
@@ -76,6 +96,7 @@ de:
         cancel: Abbrechen
         link_yes: Ja, verknüpfen
         link_later: Später
+        link_switch: Konto wechseln
         login: 🔗 Anmelden
         login_again: Erneut anmelden
         show_projekts: Projekte zeigen
@@ -86,6 +107,10 @@ de:
         done: Fertig
         choose_notifications: Auswählen
         choose_category: Kategorie wählen
+        choose_sentiment: Auswählen
+        submit_proposal: Vorschlag einreichen
+        my_contributions: Meine Beiträge
+        view_projekt: Projekt ansehen
         idea_start: Idee einreichen
         draft_publish: Ja, einreichen
         draft_revise: Ändern
@@ -99,21 +124,44 @@ de:
         image_skip: Ohne Bild
       refused:
         generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
-        phase_missing: Ich konnte das Projekt nicht finden. Scanne bitte den QR-Code erneut.
+        phase_missing: Ich konnte das Projekt nicht finden. Scannen Sie bitte den QR-Code erneut.
         phase_not_supported: In dieser Phase können per WhatsApp keine Vorschläge eingereicht werden.
         budget_heading_missing: >-
-          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich deinen Vorschlag zuordnen
+          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich Ihren Vorschlag zuordnen
           könnte.
         creation_disabled: In dieser Phase können derzeit keine Vorschläge eingereicht werden.
         ai_flow_disabled: Die Einreichung per WhatsApp ist für dieses Projekt nicht aktiviert.
         phase_not_active: Diese Beteiligungsphase ist derzeit nicht aktiv.
         phase_expired: Diese Beteiligungsphase ist bereits beendet.
         phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
-        not_verified: Für die Einreichung muss dein Konto verifiziert sein.
-        submissions_limit_exceeded: Du hast für dieses Projekt bereits so viele Vorschläge eingereicht,
-          wie erlaubt sind.
+        not_verified: Für die Einreichung muss Ihr Konto verifiziert sein.
+        submissions_limit_exceeded: >-
+          Sie haben für dieses Projekt bereits so viele Vorschläge eingereicht, wie erlaubt sind.
         no_open_phase: In diesem Projekt läuft derzeit keine Phase, in der Vorschläge eingereicht
           werden können.
+        not_logged_in: >-
+          Für dieses Projekt brauche ich ein verknüpftes Konto. Schreiben Sie mir „Konto
+          verknüpfen“, dann schicke ich Ihnen den Anmeldelink.
+        missing_user_data: >-
+          Dieses Projekt ist auf bestimmte Personen beschränkt, und dafür fehlen mir Angaben zu
+          Ihnen. Reichen Sie den Vorschlag bitte über die Projektseite ein, wo Sie die Angaben
+          ergänzen können.
+        only_citizens: >-
+          An diesem Projekt können nur Personen aus der Kommune teilnehmen. Ihre hinterlegte
+          Adresse gehört nicht dazu.
+        only_specific_geozones: >-
+          Dieses Projekt ist auf bestimmte Stadtteile beschränkt. Ihre hinterlegte Adresse gehört
+          nicht dazu.
+        no_registered_address: >-
+          Für dieses Projekt ist eine hinterlegte Adresse nötig. Ergänzen Sie sie bitte in Ihrem
+          Konto auf der Projektseite.
+        only_specific_streets: >-
+          Dieses Projekt ist auf bestimmte Straßen beschränkt. Ihre hinterlegte Adresse gehört
+          nicht dazu.
+        only_specific_registered_address_groupings: >-
+          Dieses Projekt ist auf einen bestimmten Bereich beschränkt. Ihre hinterlegte Adresse
+          gehört nicht dazu.
+        only_specific_ages: An diesem Projekt können nur bestimmte Altersgruppen teilnehmen.
       portal_fallback_name: das Beteiligungsportal
       onboarding:
         disclosure: >-
@@ -139,16 +187,26 @@ de:
         expired: >-
           Das hat leider nicht geklappt — der Link ist womöglich abgelaufen. Versuchen Sie es noch
           einmal:
-        already_linked: Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchten Sie wechseln?
+        already_linked: >-
+          Ihr Konto ist bereits mit einer anderen WhatsApp-Nummer verknüpft. Lösen Sie diese
+          Verknüpfung zuerst, dann klappt es hier.
+        number_taken: Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchten Sie wechseln?
         unlink_confirm: >-
           Möchten Sie die Verknüpfung wirklich aufheben? Sie erhalten dann keine Benachrichtigungen
           mehr und können Vorschläge nicht mehr direkt unterstützen.
         unlinked: >-
-          ✅ Verknüpfung aufgehoben. Ihre Nummer wurde gelöscht. Sie können jederzeit erneut verknüpfen.
+          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer und
+          Chatverlauf bleiben für die übliche Speicherdauer erhalten. Sie können jederzeit erneut
+          verknüpfen.
         welcome_back: 👋 Willkommen zurück! Diese Nummer ist noch nicht verknüpft — möchten Sie das
           (wieder) tun?
+        welcome_back_guest_hint: >-
+          Bei mindestens einem Projekt können Sie auch ohne Konto etwas einreichen.
       discovery:
         body: Bei diesen Projekten können Sie gerade mitmachen. Welches interessiert Sie?
+        guest_body: >-
+          Bei diesen Projekten können Sie auch ohne Konto etwas einreichen. Welches interessiert
+          Sie?
         phase_body: Bei „%{projekt}“ läuft gerade mehr als eine Sache. Wo möchten Sie sich einbringen?
         button: Projekt wählen
         empty: >-
@@ -199,7 +257,12 @@ de:
         prompt: '🏗️ Neues Projekt: %{projekt}. Haben Sie dazu eine konkrete Idee?'
         ask_idea: Schreiben Sie mir kurz, woran Sie denken — ich mache einen Vorschlag daraus.
         ask_category: Welche Kategorie passt am besten?
+        ask_sentiment: Wie steht Ihr Vorschlag zum Thema?
         category_line: 'Kategorie: %{category}'
+        sentiment_line: 'Stimmung: %{sentiment}'
+        evaluation_line: |-
+          Einschätzung: %{score} von %{max_score} Punkten
+          %{feedback}
         draft: |-
           Gute Idee! So würde ich es formulieren:
 
@@ -214,7 +277,10 @@ de:
         draft_revised_question: Passt es jetzt?
         ask_revision: Gerne, was soll ich ändern?
         published: '✅ Ist jetzt online: %{url}'
-        published_pending_moderation: Danke! Ihr Vorschlag wird jetzt geprüft, wir melden uns.
+        published_pending_moderation: |-
+          Danke! Ihr Vorschlag wird jetzt geprüft, wir melden uns.
+
+          Ansehen können Sie ihn hier, sobald Sie im Portal angemeldet sind: %{url}
         unclear: >-
           Das habe ich nicht ganz verstanden — meinen Sie einen neuen Vorschlag oder einen Kommentar
           zu einem bestehenden?

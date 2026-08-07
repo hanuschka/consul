@@ -14,17 +14,17 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
   def call
     return if !::Whatsapp.enabled?
 
-    new_session = new_session?
     conversation.update!(last_inbound_at: latest_inbound_at)
 
     return if handle_stop_keywords
     return if account.opt_out_at.present?
     return Whatsapp::Flows::FirstContactService.call(conversation:) if first_contact?
 
-    # The AI disclosure heads the session, so it is sent before anything below
-    # can reply. A first contact is the exception: its own opening message
-    # already carries the disclosure, and sending both would say it twice.
-    Whatsapp::Flows::AiDisclosureService.call(conversation:) if new_session
+    # The disclosure heads the citizen's first message, so it is sent before
+    # anything below can reply. Once per number rather than once per 24-hour
+    # window: a regular who reads it every day stops reading it at all. A first
+    # contact is the exception, its own opening message already carries it.
+    Whatsapp::Flows::AiDisclosureService.call(conversation:) if !account.ai_disclosed?
 
     return if handle_recovery_action
     return if handle_flow_action
@@ -33,7 +33,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
     entry = capture_entry_token
 
-    return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if account.user.blank?
+    return handle_unlinked(entry) if account.user.blank? && !guest_participation?
     return handle_entry(entry) if entry.present?
     return if handle_stale_flow
     return if routed_by_assistant?
@@ -43,11 +43,30 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
   private
 
+    # A phase that takes guest submissions on the web takes them here too, so an
+    # unlinked number is not stopped at the door. It is still stopped later, by
+    # the restrictions the phase carries — see ResourceCreationValidationService.
+    def guest_participation?
+      conversation.projekt_phase&.user_status == "guest"
+    end
+
+    def submission_author
+      @submission_author ||= Whatsapp::SubmissionAuthorService.call(
+        conversation: conversation,
+        projekt_phase: conversation.projekt_phase
+      )
+    end
+
     # Everything above the assistant is protocol rather than dialogue — opting
     # out, a tapped pill, a scanned QR code — and stays deterministic. The
     # assistant sees only what is left, and hands back anything the flow owns.
+    #
+    # An unlinked guest submitter skips it: half its tools act on a Consul
+    # account, and a guest reaching them would only produce errors it cannot
+    # explain. Their whole path is the deterministic drafting flow.
     def routed_by_assistant?
       return false if !Ai::Settings.ai_available?
+      return false if account.user.blank?
       return false if tapped_reply_id.present?
 
       result = Whatsapp::AiAssistant::RouterService.call(
@@ -68,15 +87,6 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # answered as conversation rather than publishing the draft.
     def tapped_reply_id
       list_reply_id.presence || button_reply_id.presence
-    end
-
-    # A session in WhatsApp's sense is the 24-hour service window, and it is
-    # read before last_inbound_at is moved forward — afterwards every message
-    # looks like it arrived inside the window it just opened.
-    def new_session?
-      last_seen = conversation.last_inbound_at
-
-      last_seen.blank? || last_seen < ::Whatsapp::SERVICE_WINDOW.ago
     end
 
     def first_contact?
@@ -161,24 +171,40 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # dead-ends into "connect an account" and participating never silently
     # skips the check.
     ACCOUNT_ACTIONS = %i[
-      idea_start category draft_publish draft_revise resume restart
+      idea_start category sentiment draft_publish draft_revise resume restart
       image_upload image_generate image_skip
       support notify_toggle notifications_done unlink_confirm unlink_cancel
     ].freeze
 
+    # The subset of ACCOUNT_ACTIONS a guest phase may waive. Supporting a
+    # proposal, changing notification settings and unlinking all act on a Consul
+    # account, and a guest has nothing to stand in for it with.
+    GUEST_ELIGIBLE_ACTIONS = %i[
+      idea_start category sentiment draft_publish draft_revise resume restart
+      image_upload image_generate image_skip
+    ].freeze
+
     def dispatch_flow_action(action, param)
       return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if
-        ACCOUNT_ACTIONS.include?(action) && account.user.blank?
+        account_required?(action, param)
 
       case action
-      when :link_yes, :link_retry, :link_switch
+      when :link_yes, :link_retry
         Whatsapp::Flows::SendLoginLinkService.call(conversation:)
+      when :link_switch
+        Whatsapp::Flows::SwitchLinkService.call(conversation:)
       when :link_later
         Whatsapp::Flows::LinkDeclinedService.call(conversation:)
       when :discover
         Whatsapp::Flows::DiscoveryService.call(conversation:)
       when :discover_public
         Whatsapp::Flows::PublicDiscoveryService.call(conversation:)
+      when :submit_proposal
+        Whatsapp::Flows::SubmitProposalService.call(conversation:)
+      when :view_projekt
+        send_projekt_card(param)
+      when :my_contributions
+        Whatsapp::Flows::ContributionsService.call(conversation:)
       when :dismiss, :unlink_cancel
         conversation.reset_flow!
       when :unlink_confirm
@@ -191,6 +217,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
         start_phase_flow(param)
       when :category
         assign_category(param)
+      when :sentiment
+        assign_sentiment(param)
       when :draft_publish
         ask_image
       when :image_upload
@@ -208,6 +236,28 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when :support
         Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
       end
+    end
+
+    def account_required?(action, param)
+      return false if !ACCOUNT_ACTIONS.include?(action)
+      return false if account.user.present?
+
+      !guest_action?(action, param)
+    end
+
+    # Read from the phase the action points at rather than the conversation's:
+    # idea_start carries its own phase id, and it is the tap that opens the flow
+    # in the first place.
+    def guest_action?(action, param)
+      return false if !GUEST_ELIGIBLE_ACTIONS.include?(action)
+
+      target_phase_for(action, param)&.user_status == "guest"
+    end
+
+    def target_phase_for(action, param)
+      return conversation.projekt_phase if action != :idea_start
+
+      ProjektPhase.find_by(id: param)
     end
 
     # A word a citizen types instead of tapping. Matched only as the whole
@@ -289,11 +339,34 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.notifications.saved"))
     end
 
+    # Someone who scanned a QR code has just said what they want, and someone
+    # mid-login is waiting on the link itself: both get it. A number that wrote
+    # in with neither has not asked for a link — it declined one earlier, or its
+    # link went cold — so the question is put again instead.
+    def handle_unlinked(entry)
+      return Whatsapp::Flows::WelcomeBackService.call(conversation:) if
+        entry.blank? && !awaiting_link?
+
+      Whatsapp::Flows::SendLoginLinkService.call(conversation:)
+    end
+
+    def awaiting_link?
+      account.state == "link_pending" && account.link_token_valid?
+    end
+
+    # A phase QR code names the phase, so the citizen has already chosen and is
+    # asked for their idea. A projekt QR code with one open phase has chosen only
+    # the projekt: they get its card first, because the phase is this bot's
+    # inference and not their decision.
     def handle_entry(entry)
       return Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: :no_open_phase) if
         entry == :projekt_without_phase
       return Whatsapp::Flows::DiscoveryService.call(conversation:, projekt: entry_projekt) if
         entry == :projekt_choice
+
+      return Whatsapp::Flows::ProposalPromptService.call(
+        conversation:, projekt_phase: conversation.projekt_phase
+      ) if entry == :projekt
 
       Whatsapp::Flows::AskIdeaService.call(conversation:)
     end
@@ -334,6 +407,17 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       Whatsapp::Flows::DiscoveryService.call(conversation:)
     end
 
+    # The card on its own, for a citizen who wanted to look before deciding. No
+    # flow is started and nothing is remembered: the submission button on the
+    # card they were just sent is still there to come back to.
+    def send_projekt_card(projekt_id)
+      projekt = Projekt.find_by(id: projekt_id)
+
+      return Whatsapp::Flows::HelpService.call(conversation:) if projekt.blank?
+
+      Whatsapp::Flows::SendProjektCardService.call(conversation:, projekt: projekt)
+    end
+
     def start_phase_flow(projekt_phase_id)
       projekt_phase = ProjektPhase.find_by(id: projekt_phase_id.to_i)
 
@@ -352,7 +436,27 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       return Whatsapp::Flows::AskCategoryService.call(conversation:) if !assigned
 
-      Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
+      present_draft_or_ask_sentiment
+    end
+
+    def assign_sentiment(sentiment_id)
+      assigned = Whatsapp::DraftSentiment.assign(
+        conversation.draft_resource, conversation.projekt_phase, sentiment_id
+      )
+
+      return Whatsapp::Flows::AskSentimentService.call(conversation:) if !assigned
+
+      Whatsapp::Flows::PresentDraftService.first_draft(conversation:, inbound_message_id:)
+    end
+
+    # The questions the phase still needs answered come before the card, in the
+    # order the drafting flow asks them. A phase that wants both a category and
+    # a sentiment must not skip one depending on which route reached here.
+    def present_draft_or_ask_sentiment
+      return Whatsapp::Flows::AskSentimentService.call(conversation:) if
+        Whatsapp::DraftSentiment.missing?(conversation.draft_resource, conversation.projekt_phase)
+
+      Whatsapp::Flows::PresentDraftService.first_draft(conversation:, inbound_message_id:)
     end
 
     # A failed publish leaves the draft intact, so retrying means publishing
@@ -378,6 +482,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
         handle_idea
       when "awaiting_category"
         Whatsapp::Flows::AskCategoryService.call(conversation:)
+      when "awaiting_sentiment"
+        Whatsapp::Flows::AskSentimentService.call(conversation:)
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_image_choice"
@@ -395,8 +501,17 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when "awaiting_resume_decision"
         Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
       else
-        Whatsapp::Flows::HelpService.call(conversation:)
+        handle_idle_message
       end
+    end
+
+    # Nothing in progress and nothing the assistant could route. A linked
+    # citizen gets the greeting with somewhere to tap; an unlinked one has no
+    # participation to offer, so the help text stays their answer.
+    def handle_idle_message
+      return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
+
+      Whatsapp::Flows::IdleGreetingService.call(conversation:)
     end
 
     def handle_idea
@@ -423,7 +538,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       permission_problem =
         Whatsapp::ResourceCreationValidationService.call(
           projekt_phase: conversation.projekt_phase,
-          user: account.user
+          user: submission_author
         )
 
       return false if permission_problem.blank?

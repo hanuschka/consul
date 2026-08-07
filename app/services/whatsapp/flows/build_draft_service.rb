@@ -73,16 +73,28 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
     # the generation call, so this is the exception rather than a step.
     def present
       return Whatsapp::Flows::AskCategoryService.call(conversation: @conversation) if ask_category?
-      return Whatsapp::Flows::PresentDraftService.revised_draft(conversation: @conversation) if
-        @copy == :revised
+      return Whatsapp::Flows::AskSentimentService.call(conversation: @conversation) if ask_sentiment?
 
-      Whatsapp::Flows::PresentDraftService.first_draft(conversation: @conversation)
+      return Whatsapp::Flows::PresentDraftService.revised_draft(
+        conversation: @conversation, inbound_message_id: @inbound_message_id
+      ) if @copy == :revised
+
+      Whatsapp::Flows::PresentDraftService.first_draft(
+        conversation: @conversation, inbound_message_id: @inbound_message_id
+      )
     end
 
     def ask_category?
       return false if Whatsapp::DraftCategory.label_for(@conversation.draft_resource).present?
 
       Whatsapp::DraftCategory.available?(@conversation.projekt_phase)
+    end
+
+    # Asked for the same reason as the category, but on a stricter footing: the
+    # phase's own validation makes a sentiment mandatory, and the bot writes
+    # past that validation, so nothing else would catch a draft without one.
+    def ask_sentiment?
+      Whatsapp::DraftSentiment.missing?(@conversation.draft_resource, @conversation.projekt_phase)
     end
 
     def throttled?

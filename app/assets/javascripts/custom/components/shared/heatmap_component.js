@@ -21,14 +21,18 @@
         return;
       }
 
+      const zoomLimits = App.MapZoom;
+
       const map = L.map(container, {
         gestureHandling: true,
-        zoomControl: true
+        zoomControl: true,
+        maxZoom: zoomLimits.MAX
       }).setView(center, zoom);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 18
+        maxZoom: zoomLimits.MAX,
+        maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
       }).addTo(map);
 
       const boostedCoordinates = coordinates.map((coord) => {

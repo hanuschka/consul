@@ -91,7 +91,7 @@ class UserResources::FormComponent < ApplicationComponent
   def show_labels_selector?
     return false unless projekt_phase.present?
 
-    projekt_phase_feature?(projekt_phase, "form.labels")
+    projekt_phase.labels_selector_available?
   end
 
   def show_sentiments_selector?
@@ -114,12 +114,6 @@ class UserResources::FormComponent < ApplicationComponent
     return ideas_feature?("external_video") if resource.is_a?(Idea)
 
     projekt_phase_feature?(projekt_phase, "form.enable_external_video")
-  end
-
-  def show_post_on_behalf_of_input?
-    return true if resource.is_a?(Idea)
-
-    helpers.allowed_to_post_on_behalf_of?(current_user, projekt_phase.projekt)
   end
 
   def show_image_input?

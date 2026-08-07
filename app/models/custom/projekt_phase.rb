@@ -24,7 +24,8 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::LivestreamPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   DEPRECATED_PHASE_TYPES = [
@@ -34,12 +35,12 @@ class ProjektPhase < ApplicationRecord
   ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
 
   SPECIAL_PROJEKT_PHASES = [
-    "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   PHASE_MATERIAL_ICONS = {
@@ -58,6 +59,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "live_tv",
     "ProjektPhase::ArgumentPhase" => "forum",
     "ProjektPhase::NewsfeedPhase" => "feed",
+    "ProjektPhase::MitmachboxPhase" => "markunread_mailbox",
     "ProjektPhase::DebatePhase" => "forum"
   }.freeze
 
@@ -81,6 +83,7 @@ class ProjektPhase < ApplicationRecord
     "ProjektPhase::LivestreamPhase" => "fa-tv",
     "ProjektPhase::ArgumentPhase" => "fa-comments",
     "ProjektPhase::NewsfeedPhase" => "fa-rss",
+    "ProjektPhase::MitmachboxPhase" => "fa-box-open",
     "ProjektPhase::DebatePhase" => "fa-comments"
   }.freeze
 
@@ -193,6 +196,18 @@ class ProjektPhase < ApplicationRecord
     self
   end
 
+  def self.type_labels
+    PROJEKT_PHASES_TYPES.index_with { |phase_type| type_label_for(phase_type) }
+  end
+
+  def self.type_label_for(type)
+    label = I18n.t("activerecord.models.#{type.to_s.underscore}", default: nil)
+
+    return type.to_s.demodulize.titleize if !label.is_a?(String)
+
+    label
+  end
+
   def self.material_icon_for(type)
     PHASE_MATERIAL_ICONS[type.to_s] || DEFAULT_PHASE_MATERIAL_ICON
   end
@@ -252,23 +267,20 @@ class ProjektPhase < ApplicationRecord
     mname
   end
 
-  def self.any_selectable?(user, resource = nil)
-    any? { |phase| phase.selectable_by?(user, resource) }
-  end
-
   def selectable_by?(user, resource = nil)
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
-    permission_problem(user).blank?
+    permission_problem(user, location: :new_button_component).blank?
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+    permission_problem(user, location: :votes_component).blank? || conditional_vote_possible_for?(user)
   end
 
   def conditional_vote_possible_for?(user)
-    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
+    permission_problem(user, location: :votes_component) == :not_verified &&
+      feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -285,7 +297,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   def current?(timestamp = Time.zone.today)
-    self.class.current(timestamp).where(id:).exists?
+    hidden_at.blank? &&
+      active? &&
+      type != "ProjektPhase::DebatePhase" &&
+      (start_date.blank? || start_date <= timestamp) &&
+      (end_date.blank? || end_date >= timestamp)
   end
 
   def not_current?
@@ -293,37 +309,24 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
+    location = location&.to_sym
     @permission_problem_cache ||= {}
     cache_key = "#{user&.id}_#{location}"
 
-    return @permission_problem_cache[cache_key] if @permission_problem_cache.key?(cache_key)
-
-    @permission_problem_cache[cache_key] = begin
-      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
-
-      return :phase_not_active if not_active?
-
-      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
-        return :phase_expired if expired?
-        return :phase_not_current if not_current?
-      end
-
-      return :guest_not_logged_in if user_status == "guest" && !user
-      return if user_status == "guest"
-      return :not_logged_in if !user || user&.guest?
-      return :not_verified if user_status == "verified" && !user.level_three_verified?
-
-      if phase_specific_permission_problems(user, location).present?
-        return phase_specific_permission_problems(user, location)
-      end
-
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-
-      nil
+    unless @permission_problem_cache.key?(cache_key)
+      @permission_problem_cache[cache_key] = uncached_permission_problem(user, location)
     end
+
+    @permission_problem_cache[cache_key]
+  end
+
+  # The cache above is a per-request read cache, and some answers depend on what the user has
+  # already submitted or supported. A request that *writes* one of those has to drop it before
+  # re-rendering anything, otherwise it reports the state from before its own write. Casting a
+  # support is the case that matters: register_selection asks the question on its way in, so the
+  # answer is cached while the vote row still does not exist.
+  def reset_permission_problem_cache!
+    @permission_problem_cache = nil
   end
 
   def geozone_allowed?(user)
@@ -394,29 +397,27 @@ class ProjektPhase < ApplicationRecord
     end
   end
 
+  def settings_by_key
+    @settings_by_key ||= settings.each_with_object({}) do |setting, values|
+      values[setting.key] = setting.value
+    end
+  end
+
   def all_settings
-    @settings ||= settings.pluck(:key, :value)
+    settings_by_key.to_a
   end
 
   def feature?(key)
-    setting = settings.find { |s| s.key == "feature.#{key}" }
-
-    if setting.present?
-      setting.value.present?
-    else
-      false
-    end
+    settings_by_key["feature.#{key}"].present?
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their
   # resource map only when "form.show_map" is enabled; phase types without the
   # setting (e.g. point of interest) always show it.
   def resource_map_enabled?
-    setting = settings.find { |s| s.key == "feature.form.show_map" }
+    return true if !settings_by_key.key?("feature.form.show_map")
 
-    return true if setting.blank?
-
-    setting.value.present?
+    settings_by_key["feature.form.show_map"].present?
   end
 
   def publicly_visible?
@@ -431,15 +432,19 @@ class ProjektPhase < ApplicationRecord
     visibility = projekt_phase_evaluation_visibility
     return [] if visibility.blank?
 
+    evaluation_data = projekt_phase_evaluation&.data || {}
     available = ::PdfServices::EvaluationPdfSelection.available_sections(type)
     visible = visibility.visible_sections & available
     footer_visible = visible - FOOTER_HIDDEN_EVALUATION_SECTIONS
+    present = footer_visible.select do |key|
+      ::ProjektEvaluations::SectionDataPresence.has_data?(evaluation_data, key)
+    end
     ai_keys = ::Adm::Projekts::EvaluationHelper::EVALUATION_AI_SECTIONS
 
     tabs = []
     tabs << "poll_stats" if visibility.show_poll_stats
-    tabs << "stats" if footer_visible.any? { |key| !ai_keys.include?(key) }
-    tabs << "ai" if footer_visible.any? { |key| ai_keys.include?(key) }
+    tabs << "stats" if present.any? { |key| !ai_keys.include?(key) }
+    tabs << "ai" if present.any? { |key| ai_keys.include?(key) }
 
     tabs
   end
@@ -458,14 +463,12 @@ class ProjektPhase < ApplicationRecord
     option("resource.max_submissions_per_user").to_i
   end
 
-  def option(key)
-    option = settings.find { |s| s.key == "option.#{key}" }
+  def max_supports_per_user
+    option("resource.max_supports_per_user").to_i
+  end
 
-    if option.present?
-      option.value
-    else
-      nil
-    end
+  def option(key)
+    settings_by_key["option.#{key}"]
   end
 
   def setting(key)
@@ -508,6 +511,26 @@ class ProjektPhase < ApplicationRecord
     labels_name.presence || I18n.t("custom.projekts.page.footer.sidebar.projekt_labels.title")
   end
 
+  def use_masterportal_collections_as_labels?
+    feature?("form.use_masterportal_collections_as_labels") && masterportal_collections.exists?
+  end
+
+  def active_projekt_labels
+    active_masterportal_taxonomy(projekt_labels)
+  end
+
+  def active_projekt_point_of_interest_categories
+    active_masterportal_taxonomy(projekt_point_of_interest_categories)
+  end
+
+  def active_masterportal_taxonomy(scope)
+    use_masterportal_collections_as_labels? ? scope.collection_backed : scope.manual
+  end
+
+  def labels_selector_available?
+    (use_masterportal_collections_as_labels? || feature?("form.labels")) && active_projekt_labels.exists?
+  end
+
   def sentiment_label_text
     sentiments_name.presence || I18n.t("custom.projekts.page.footer.sidebar.sentiments.title")
   end
@@ -542,6 +565,17 @@ class ProjektPhase < ApplicationRecord
 
   def url
     projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
+  end
+
+  # SiteCustomization::Page#url is path-only, which is enough inside a request
+  # but not for links written into stored content (content blocks, exports,
+  # anything a job generates).
+  def absolute_url
+    options = UrlOptions.default || {}
+    host = options[:host]
+    return url if host.blank?
+
+    "#{options[:protocol].presence || 'https'}://#{host}#{url}"
   end
 
   def find_or_create_stats_version
@@ -617,6 +651,36 @@ class ProjektPhase < ApplicationRecord
 
   private
 
+    def uncached_permission_problem(user, location)
+      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
+
+      return :phase_not_active if not_active?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
+
+      return :guest_not_logged_in if user_status == "guest" && !user
+      return if user_status == "guest"
+      return :not_logged_in if !user || user&.guest?
+      return :not_verified if user_status == "verified" && !user.level_three_verified?
+
+      phase_specific_problem = phase_specific_permission_problems(user, location)
+      return phase_specific_problem if phase_specific_problem.present?
+
+      return age_permission_problem(user) if age_permission_problem(user).present?
+      return geozone_permission_problem(user) if geozone_permission_problem(user)
+
+      advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
+      return advanced_geozone_problem if advanced_geozone_problem.present?
+
+      individual_group_problem = individual_group_value_permission_problem(user)
+      return individual_group_problem if individual_group_problem.present?
+
+      nil
+    end
+
     def phase_specific_permission_problems(user, location)
       nil
     end
@@ -662,7 +726,8 @@ class ProjektPhase < ApplicationRecord
     def age_permission_problem(user)
       return if age_restriction.nil?
       return :missing_user_data if user.age.blank?
-      return if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
+      return if age_restriction.effective_min_age <= user.age &&
+                user.age <= age_restriction.effective_max_age
 
       :only_specific_ages
     end

@@ -45,6 +45,7 @@
 @use "adm/components/masterportal_pins_summary";
 @use "adm/components/masterportal_integration";
 @use "adm/components/masterportal_collections";
+@use "adm/components/masterportal_taxonomy";
 @use "adm/components/system_user_info";
 @use "adm/components/delete_collection";
 @use "adm/components/turbo_frame_placeholder";
@@ -65,7 +66,7 @@
 @use "cross_pack/components/shared_accordion";
 @use "cross_pack/components/shared_tabs";
 @use "cross_pack/components/ai_question_section";
-@use "cross_pack/components/masterportal_square_marker";
+@use "cross_pack/components/masterportal_dot_marker";
 @use "cross_pack/components/shared_pagination";
 @use "cross_pack/components/shared_modal";
 @use "cross_pack/components/modern_modal_header";

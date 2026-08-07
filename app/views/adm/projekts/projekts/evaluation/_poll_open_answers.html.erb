@@ -17,7 +17,7 @@
       hide_label: t("adm.projekts.projekts.evaluation.open_answers_hide"),
       icon_material: "edit_note",
       icon_fa: "fa-pen",
-      open_by_default: pdf_mode_local
+      open_by_default: pdf_mode_local || entries.size <= 6
     } do %>
     <% if pdf_mode_local %>
       <p class="open-answer-response--note">

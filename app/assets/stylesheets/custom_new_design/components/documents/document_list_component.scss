@@ -2,3 +2,75 @@
   list-style: none;
   margin: 0;
 }
+
+.document-list.-detailed {
+  .document-list--document {
+    margin: 0;
+
+    + .document-list--document {
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  .document-list--link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    margin: 0 -10px;
+    padding: 10px;
+    border-radius: $radius-base;
+    color: $dark-navy;
+    transition: background-color $transition-base;
+
+    &:hover,
+    &:focus {
+      background: color-mix(in srgb, var(--brand-color) 8%, transparent);
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brand-color);
+      outline-offset: -2px;
+    }
+  }
+
+  .document-list--icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-base;
+    background: color-mix(in srgb, var(--brand-color) 14%, transparent);
+    color: var(--brand-color);
+    font-size: 14px;
+  }
+
+  .document-list--info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .document-list--name {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .document-list--meta {
+    color: $muted-text;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .document-list--open-icon {
+    flex-shrink: 0;
+    color: $muted-text;
+    font-size: 13px;
+  }
+}

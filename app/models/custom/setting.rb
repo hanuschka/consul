@@ -41,7 +41,7 @@ class Setting < ApplicationRecord
     end
 
     def [](key)
-      all_settings_hash[key]
+      all_settings_hash[key.to_s]
     end
 
     def newsletter_brand_color
@@ -112,7 +112,6 @@ class Setting < ApplicationRecord
         #ENDE Ergänzung für Keycloak-Anbindung
         "feature.bund_id_login": false,
         "feature.kobil_login": false,
-        "feature.kobil_single_logout": false,
         "feature.kobil_address_verification": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,

@@ -13,6 +13,10 @@
   }
 }
 
+.accordion {
+  border-radius: 7px;
+}
+
 .accordion-title {
   color: black;
   font-size: 18px;
@@ -25,8 +29,18 @@
     line-height: 1rem;
     height: 1rem;
     width: 1rem;
-    color: #434343;
+    color: var(--medium-gray-3);
+    transform: translatey(-3px);
   }
+
+}
+
+.accordion-title:focus {
+  background-color: unset;
+}
+
+.accordion-title:hover, .accordion-title:focus-within {
+  background-color: #e8e8e8;
 }
 
 .custom-content-block {

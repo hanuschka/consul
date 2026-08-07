@@ -21,6 +21,7 @@ export default class LeafletAdapter extends BaseAdapter {
     this.options = options
     this.adminEditor = options.adminEditor || false
     this.masterportalEnabled = options.masterportalEnabled || false
+    this.masterportalDefaultIconUrl = options.masterportalDefaultIconUrl || null
     this.defaultFeatureColor = this.getDefaultFeatureColor(this.adminEditor)
     this.featuresLimit = options.featuresLimit || 1
     this.clusterGroup = null
@@ -132,7 +133,7 @@ export default class LeafletAdapter extends BaseAdapter {
 
     this.map = L.map(container, {
       gestureHandling: options.gestureHandling !== false,
-      maxZoom: 19,
+      maxZoom: window.App.MapZoom.MAX,
       zoomControl: false
     }).setView(center, options.zoom)
 
@@ -246,6 +247,7 @@ export default class LeafletAdapter extends BaseAdapter {
 
   createLayer(item) {
     const L = window.L
+    const zoomLimits = window.App.MapZoom
     let layer
 
     if (item.protocol === "wms") {
@@ -255,13 +257,16 @@ export default class LeafletAdapter extends BaseAdapter {
         format: item.transparent ? "image/png" : "image/jpeg",
         transparent: item.transparent,
         show_by_default: item.show_by_default,
-        opacity: item.opacity || 1
+        opacity: item.opacity || 1,
+        maxZoom: zoomLimits.MAX
       })
     } else if (item.protocol === "geojson") {
       layer = this.createGeoJsonOverlay(item)
     } else {
       layer = L.tileLayer(item.provider, {
-        attribution: item.attribution
+        attribution: item.attribution,
+        maxZoom: zoomLimits.MAX,
+        maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
       })
     }
 
@@ -388,11 +393,16 @@ export default class LeafletAdapter extends BaseAdapter {
 
   ensureBaseLayerExists() {
     const L = window.L
+    const zoomLimits = window.App.MapZoom
 
     if (Object.keys(this.baseLayers).length === 0) {
       this.baseLayers["OpenStreetMap"] = L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        { attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' }
+        {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: zoomLimits.MAX,
+          maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
+        }
       )
     }
   }
@@ -595,16 +605,13 @@ export default class LeafletAdapter extends BaseAdapter {
     const L = window.L
 
     if (feature && feature.properties && feature.properties.feature_icon_url) {
-      return L.icon({
-        iconUrl: encodeURI(feature.properties.feature_icon_url),
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
-        popupAnchor: [0, -18]
-      })
+      return this.masterportalImageIcon(feature.properties.feature_icon_url)
     }
 
     if (this.isMasterportalFeature(feature)) {
-      return this.masterportalMarkerIcon()
+      const dotColor = (feature && feature.properties && feature.properties.feature_color) ||
+                       this.defaultFeatureColor
+      return this.masterportalDotIcon(dotColor)
     }
 
     color = color || getBrandColor()
@@ -625,20 +632,31 @@ export default class LeafletAdapter extends BaseAdapter {
     return this.masterportalEnabled || feature.properties.resource_type === "masterportal_pin"
   }
 
-  // Temporary: fully replaces the default marker for masterportal pins with a
-  // half-transparent green square whose top-center sits on the pin location.
-  masterportalMarkerIcon() {
+  masterportalImageIcon(iconUrl) {
+    const L = window.L
+
+    return L.icon({
+      iconUrl: encodeURI(iconUrl),
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor: [0, -18]
+    })
+  }
+
+  // Masterportal pins without a custom image render as a colored dot (pins are
+  // reserved for user resources); the color comes from the collection color.
+  masterportalDotIcon(color) {
     const L = window.L
     const title = "Masterportal-Pin"
-    const size = 42
+    const size = 20
     const half = size / 2
 
     return L.divIcon({
-      className: "masterportal-square-marker",
+      className: "masterportal-dot-marker",
       iconSize: [size, size],
       iconAnchor: [half, half],
-      popupAnchor: [0, 0],
-      html: `<div role="img" aria-label="${title}" title="${title}"></div>`
+      popupAnchor: [0, -half],
+      html: `<span role="img" aria-label="${title}" title="${title}" style="background-color: ${color}"></span>`
     })
   }
 

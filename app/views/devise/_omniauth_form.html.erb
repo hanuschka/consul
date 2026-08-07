@@ -1,48 +1,52 @@
 <% if oauth_logins.any? || feature?("bund_id_login") %>
-  <div class="hr-with-text" style="padding-bottom: 22px;">
-    <span><%= t("devise_views.omniauth.oder") %></div>
-  </div>
-
-  <div class="row">
-    <div class="small-12 column">
-      <div class="margin-bottom">
-        <strong><%= t("omniauth.info.#{action}") %></strong>
-      </div>
+  <div class="oauth-logins">
+    <div class="hr-with-text oauth-logins--divider">
+      <span><%= t("devise_views.omniauth.oder") %></span>
     </div>
 
-    <% if feature?("bund_id_login") %>
-      <div class="small-12 medium-4 large-4 columns">
-        <%= link_to users_bund_id_send_request_path, class: "button-bund-id button expanded", title: "Login with BundId", data: { turbolinks: false } do %>
-          <%= image_tag "bund_id_logo.svg", alt: "BundId Logo", class: "bund-id-logo" %>
-        <% end %>
-      </div>
-    <% end %>
+    <strong class="oauth-logins--title"><%= t("omniauth.info.#{action}") %></strong>
 
-    <% oauth_logins.each do |login| %>
-      <div class="small-12 medium-6 large-4 column end">
-        <% if login.in? %i[bayern_id m_login keycloak_google] %>
-          <% link_text = "" %>
+    <div class="oauth-logins--grid">
+      <% if feature?("bund_id_login") %>
+        <%= link_to users_bund_id_send_request_path,
+                    class: "button button-bund-id",
+                    title: t("omniauth.bund_id.#{action}"),
+                    data: { turbolinks: false } do %>
+          <%= image_tag "bund_id_logo.svg", alt: t("omniauth.bund_id.name"), class: "bund-id-logo" %>
+        <% end %>
+      <% end %>
+
+      <% oauth_logins.each do |login| %>
+        <% if login == :kobil %>
+          <%= link_to send("user_#{login}_omniauth_authorize_path"),
+                      class: "button button-kobil",
+                      title: t("omniauth.kobil.#{action}"),
+                      method: :post do %>
+            <%= image_tag "services/kobil_logo_white.svg", alt: t("omniauth.kobil.name"), class: "kobil-logo" %>
+          <% end %>
         <% else %>
-          <% link_text = t("omniauth.#{login}.name") %>
+          <% if login.in? %i[bayern_id m_login keycloak_google] %>
+            <% link_text = "" %>
+          <% else %>
+            <% link_text = t("omniauth.#{login}.name") %>
+          <% end %>
+          <%= link_to link_text,
+                      send("user_#{login}_omniauth_authorize_path"),
+                      class: "button button-#{login.to_s.delete_suffix("_oauth2")}",
+                      title: t("omniauth.#{login}.#{action}"),
+                      method: :post %>
         <% end %>
-        <%= link_to link_text, send("user_#{login}_omniauth_authorize_path"),
-                    title: t("omniauth.#{login}.#{action}"),
-                    class: "button-#{login.to_s.delete_suffix("_oauth2")} button expanded",
-                    role: 'button',
-                    method: :post %>
-      </div>
-    <% end %>
-
-    <div class="small-12 column">
-      <% if params[:reason] == 'uh' %>
-        <div class="callout alert" style="clear:both;">
-          <%= t('cli.devise_views.users.registrations.errors.user_hidden')  %>
-        </div>
-      <% elsif params[:reason] == 'ee' %>
-        <div class="callout alert" style="clear:both;">
-          <%= t('cli.devise_views.users.registrations.errors.email_exists')  %>
-        </div>
       <% end %>
     </div>
+
+    <% if params[:reason] == "uh" %>
+      <div class="callout alert">
+        <%= t("cli.devise_views.users.registrations.errors.user_hidden") %>
+      </div>
+    <% elsif params[:reason] == "ee" %>
+      <div class="callout alert">
+        <%= t("cli.devise_views.users.registrations.errors.email_exists") %>
+      </div>
+    <% end %>
   </div>
 <% end %>

@@ -1,4 +1,6 @@
 <% has_projekt_labels_error = model.errors.where(:projekt_labels).any? %>
+<% single_select_labels = projekt_phase.use_masterportal_collections_as_labels? %>
+<% selectable_labels = (projekt_phase.active_projekt_labels.includes(:masterportal_collection).to_a | model.projekt_labels.includes(:masterportal_collection).to_a) %>
 <div
   id="projekt_labels_selector"
   class="projekt-labels"
@@ -14,7 +16,8 @@
   </h2>
 
   <div class="projekt-labels-selector--checkboxes">
-    <%= f.collection_check_boxes :projekt_label_ids, projekt_phase.projekt_labels, :id, :name do |cb| %>
+    <%= f.collection_check_boxes :projekt_label_ids, selectable_labels, :id, :name do |cb| %>
+      <% label_icon_url = cb.object.image_icon_url %>
       <%= cb.check_box %>
       <%= cb.label(id: dom_id(cb.object),
                    class: "projekt-label js-projekt-label js-map-change-feature-style #{'marked' if model.projekt_label_ids.include?(cb.object.id)}",
@@ -22,8 +25,18 @@
                      "label-id" => cb.object.id,
                      "feature-icon-name" => cb.object.icon,
                      "feature-icon-unicode" => AwesomeIcon.find_by(name: cb.object.icon)&.unicode,
-                     "feature-multiple-allowed" => true
-                   }) { content_tag(:i, nil, class: "fas fa-#{cb.object.icon}") + cb.text } %>
+                     "feature-icon-url" => label_icon_url,
+                     "feature-multiple-allowed" => !single_select_labels
+                   }) do
+            icon =
+              if label_icon_url.present?
+                image_tag(label_icon_url, class: "projekt-label--image-icon", alt: "", referrerpolicy: "no-referrer")
+              else
+                content_tag(:i, nil, class: "fas fa-#{cb.object.icon}")
+              end
+
+            icon + cb.text
+          end %>
     <% end %>
   </div>
 </div>

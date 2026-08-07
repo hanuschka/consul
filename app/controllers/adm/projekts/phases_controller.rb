@@ -1,4 +1,6 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
+  include Adm::Projekts::MitmachboxPhaseActions
+
   before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
   before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats, :send_notifications]
@@ -6,6 +8,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def new
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
+    @phase_types -= ["ProjektPhase::MitmachboxPhase"] unless Mitmachbox.configured?
 
     @breadcrumbs = [
       { name: @projekt.page.title },
@@ -16,9 +19,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def create
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
+
     @projekt_phase = ProjektPhase.new(create_params.merge(active: true))
 
     if @projekt_phase.save
+      create_mitmachbox_remote_survey if @projekt_phase.is_a?(ProjektPhase::MitmachboxPhase)
       redirect_to phases_adm_projekts_projekt_path(@projekt), notice: t(".success")
     else
       redirect_to new_adm_projekts_projekt_phase_path(@projekt), alert: @projekt_phase.errors.full_messages.join(", ")
@@ -560,6 +565,22 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     render json: masterportal_collection_status_payload(collection), status: :accepted
   end
 
+  def update_masterportal_collection_color
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+    color = masterportal_feature_color_param
+
+    if color.nil?
+      return render json: {
+        message: t("adm.projekts.phases.update_masterportal_collection_color.invalid_color")
+      }, status: :unprocessable_entity
+    end
+
+    collection.update!(feature_color: color)
+
+    render json: { feature_color: collection.feature_color }
+  end
+
   def destroy_masterportal_collection
     authorize_phase(:update?)
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
@@ -637,7 +658,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
-    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+    @categories = @projekt_phase.projekt_point_of_interest_categories.manual.ordered
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -693,7 +716,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_labels
     authorize_phase(:update?)
-    @projekt_labels = @projekt_phase.projekt_labels
+    @projekt_labels = @projekt_phase.projekt_labels.manual
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -929,6 +954,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         destroy_status: collection.destroy_status,
         destroy_error: collection.destroy_error
       }
+    end
+
+    def enqueue_collection_taxonomy_sync
+      return if !Masterportal::CollectionTaxonomySyncService.out_of_sync?(projekt_phase: @projekt_phase)
+
+      MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
+    end
+
+    def masterportal_feature_color_param
+      color = params[:feature_color].to_s.strip
+      return nil if color.blank?
+
+      color.match?(/\A#[0-9a-fA-F]{6}\z/) ? color : nil
     end
 
     def masterportal_resync_job_args(collection)

@@ -79,7 +79,7 @@
     createMap() {
       this.map = L.map(this.element.id, {
         gestureHandling: true,
-        maxZoom: 18,
+        maxZoom: App.MapZoom.MAX,
         zoomControl: false,
         keyboard: !!this.editable
       }).setView(this.mapCenterLatLng, this.zoom);
@@ -349,6 +349,7 @@
     }
 
     createLayer(item) {
+      const zoomLimits = App.MapZoom;
       let layer;
 
       if (item.protocol === 'wms') {
@@ -359,12 +360,15 @@
           transparent: (item.transparent),
           show_by_default: (item.show_by_default),
           opacity: (item.opacity ? item.opacity : 1),
+          maxZoom: zoomLimits.MAX
         });
       } else if (item.protocol === 'geojson') {
         layer = this.createGeoJsonOverlay(item);
       } else {
         layer = L.tileLayer(item.provider, {
-          attribution: item.attribution
+          attribution: item.attribution,
+          maxZoom: zoomLimits.MAX,
+          maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
         });
       }
 
@@ -487,7 +491,9 @@
     ensureBaseLayerExistence() {
       if (Object.keys(this.baseLayers).length === 0) {
         const defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: App.MapZoom.MAX,
+          maxNativeZoom: App.MapZoom.MAX_NATIVE_TILE
         });
         this.baseLayers['defaultLayer'] = defaultLayer;
       }
@@ -645,6 +651,21 @@
       return this.masterportalImageIcons[iconUrl];
     }
 
+    createUserImageIcon(iconUrl) {
+      var imgHtml = "<img src='" + encodeURI(iconUrl) + "' alt='' referrerpolicy='no-referrer'>";
+      var shape = "<svg class='map-user-pin--shape' viewBox='0 0 40 52' aria-hidden='true'>" +
+        "<path d='M20 0C9 0 0 9 0 20c0 11 20 32 20 32s20-21 20-32C40 9 31 0 20 0z'/></svg>";
+      var head = "<span class='map-user-pin--icon'>" + imgHtml + "</span>";
+
+      return L.divIcon({
+        className: "map-user-pin",
+        html: "<span class='map-user-pin--teardrop'>" + shape + head + "</span>",
+        iconSize: [46, 60],
+        iconAnchor: [23, 60],
+        popupAnchor: [0, -54]
+      });
+    }
+
     renderFeatureCollection(featureCollection, pointCluster) {
       if (!featureCollection || featureCollection.features.length === 0) return;
       const self = this;
@@ -655,13 +676,13 @@
           var icon;
 
           if (feature.properties.feature_icon_url) {
-            icon = self.createMasterportalImageIcon(feature.properties.feature_icon_url);
-          } else if (feature.properties.resource_type === "masterportal_pin") {
-            if (self.masterportalDefaultIconUrl) {
-              icon = self.createMasterportalImageIcon(self.masterportalDefaultIconUrl);
+            if (self.hasMasterportalPins && feature.properties.resource_type !== "masterportal_pin") {
+              icon = self.createUserImageIcon(feature.properties.feature_icon_url);
             } else {
-              icon = App.Utils.getMasterportalSquareMarker();
+              icon = self.createMasterportalImageIcon(feature.properties.feature_icon_url);
             }
+          } else if (feature.properties.resource_type === "masterportal_pin") {
+            icon = App.Utils.getMasterportalDotMarker(feature.properties.feature_color || self.defaultFeatureColor);
           } else {
             icon = App.Utils.getLeafletMarkerHTML(feature.properties.feature_color || feature.properties.color || self.defaultFeatureColor, feature.properties.feature_icon_name, markerTitle);
           }
@@ -697,6 +718,7 @@
               layer.options.feature_color = feature.properties.feature_color || self.defaultFeatureColor;
               layer.options.feature_icon_name = feature.properties.feature_icon_name || 'circle';
               layer.options.feature_category_name = feature.properties.feature_category_name || null;
+              layer.options.has_masterportal_context = self.hasMasterportalPins;
 
               layer.on("click", self.openMarkerPopup);
             }
@@ -726,7 +748,7 @@
           }
 
           e.target.bindPopup(
-            App.MapPopup.generatePopupContent(data, resourceType, properties),
+            App.MapPopup.generatePopupContent(data, resourceType, properties, e.target.options.has_masterportal_context),
             popupOptions
           ).openPopup();
         }

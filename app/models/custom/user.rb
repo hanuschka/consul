@@ -3,7 +3,7 @@ require_dependency Rails.root.join("app", "models", "user").to_s
 User.class_eval do
   audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
                  :city_name, :plz, :street_name, :street_number, :street_number_extension,
-                 :unique_stamp, :verified_at]
+                 :unique_stamp, :verified_at, :company_name]
 
   include Imageable
   has_one_attached :background_image
@@ -29,6 +29,10 @@ User.class_eval do
   attr_accessor :form_registered_address_city_id,
                 :form_registered_address_street_id,
                 :form_registered_address_id
+
+  # Accounts opened by staff on behalf of a citizen only ever carry an email address, so the
+  # profile fields the public registration form collects cannot be validated on that save.
+  attr_accessor :created_on_behalf_of
 
   before_validation :strip_whitespace
 
@@ -240,6 +244,10 @@ User.class_eval do
     idea_officer.present?
   end
 
+  def hard_individual_group_value_ids
+    @hard_individual_group_value_ids ||= individual_group_values.hard.ids
+  end
+
   def projekt_manager?(projekt = nil)
     if projekt.present?
       projekt_manager.present? &&
@@ -271,11 +279,14 @@ User.class_eval do
 
   def extended_registration?
     return false if registering_with_oauth?
+    return false if created_on_behalf_of
 
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.extended"].present?
   end
 
   def document_required?
+    return false if created_on_behalf_of
+
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
 

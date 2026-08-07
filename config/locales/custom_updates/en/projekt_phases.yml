@@ -76,6 +76,9 @@ en:
         legislation_phase: Participate now
         comment_phase: Participate now
         livestream_phase: Participate now
+        mitmachbox_phase: Participate on site
+      mitmachbox_phase:
+        public_info: During this phase you can take part in a survey on site. You will find the Mitmachbox devices at the designated locations.
       permission_problem:
         new_button_component:
           shared:
@@ -105,6 +108,10 @@ en:
             not_enabled: Adding points of interest is not enabled
             max_pins_reached: Maximum number of pins per user is limited to %{max_pin_number}. You have already reached this number.
         votes_component:
+          proposal_phase:
+            supports_limit_exceeded: You have reached the maximum number of supports (%{max_supports}) for this phase.
+          budget_phase:
+            supports_limit_exceeded: You have reached the maximum number of supports (%{max_supports}) for this phase.
           shared:
             guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."

@@ -35,6 +35,7 @@ de:
             Auswertung wird überschrieben.
           regenerate_phase_button: Phasenstatistiken neu generieren
           regenerate_regular_stats_button: Statistiken neu generieren
+          regenerate_auto_hourly_note: Statistiken werden stündlich automatisch aktualisiert
           regenerate_ai_stats_button: KI-Analyse neu generieren
           regenerate_ai_stats_tooltip: >
             Erstellt die KI-Analyse dieser Phase neu — Zusammenfassung,
@@ -70,6 +71,18 @@ de:
             Bei der Generierung dieser Phase ist ein Fehler aufgetreten.
             Bitte versuchen Sie es erneut.
           phase_retry_button: Erneut versuchen
+          phase_generate_stats_title: Noch keine Statistiken erstellt
+          phase_generate_stats_description: >
+            Für diese Phase wurden noch keine Statistiken generiert. Erstellen
+            Sie die Auswertung, um Teilnahmezahlen, Zeitverläufe und
+            demografische Auswertungen anzuzeigen.
+          phase_generate_stats_button: Statistiken generieren
+          phase_generate_ai_title: Noch keine KI-Analyse erstellt
+          phase_generate_ai_description: >
+            Für diese Phase wurde noch keine KI-Analyse generiert. Erstellen Sie
+            die Analyse, um Zusammenfassung, zentrale Erkenntnisse und
+            Themen-Clustering anzuzeigen.
+          phase_generate_ai_button: KI-Analyse generieren
           download_pdf: PDF herunterladen
           generated_at: "Erstellt am %{time}"
           report_placeholder: Auswertungsbericht wird hier angezeigt.

@@ -14,6 +14,7 @@ class Whatsapp::ConfirmLinkService < ApplicationService
     return ServiceResult.failure(error: :expired) if !account.link_token_valid?
 
     return ServiceResult.failure(error: :already_linked) if user_linked_to_other_number?
+    return ServiceResult.failure(error: :number_taken) if number_linked_to_other_user?
 
     account.update!(
       user: @user,
@@ -43,5 +44,13 @@ class Whatsapp::ConfirmLinkService < ApplicationService
 
     def user_linked_to_other_number?
       Whatsapp::Account.where(user_id: @user.id).where.not(id: account.id).exists?
+    end
+
+    # The number's own side of the same question, which used to go unasked: a
+    # confirmation for a number someone else had already verified overwrote that
+    # linkage without telling either of them. Refused here, and undone only from
+    # the chat — where the person holding the phone is the one tapping.
+    def number_linked_to_other_user?
+      account.user_id.present? && account.user_id != @user.id
     end
 end

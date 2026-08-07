@@ -1,13 +1,6 @@
 class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
   queue_as :default
 
-  # Meta fetches the header image itself and rejects anything it cannot render
-  # as a template image, so a projekt whose picture is a webp or oversized file
-  # gets the plain text message instead of a broken card.
-  CARD_IMAGE_CONTENT_TYPES = ["image/jpeg", "image/png"].freeze
-  CARD_IMAGE_MAX_BYTES = 5.megabytes
-  CARD_SUBTITLE_MAX_LENGTH = 900
-
   def perform(projekt_id, account_ids)
     @projekt = Projekt.find_by(id: projekt_id)
 
@@ -73,7 +66,7 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
       return @card_deliverable if defined?(@card_deliverable)
 
       @card_deliverable =
-        card_template_name.present? && card_subtitle.present? && card_image.present?
+        card_template_name.present? && card_subtitle.present? && card_image_url.present?
     end
 
     def card_template_name
@@ -89,29 +82,13 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
     def card_subtitle
       return @card_subtitle if defined?(@card_subtitle)
 
-      @card_subtitle = @projekt.page&.subtitle.to_s.squish.truncate(CARD_SUBTITLE_MAX_LENGTH).presence
-    end
-
-    def card_image
-      return @card_image if defined?(@card_image)
-
-      attachment = @projekt.page&.image&.attachment
-
-      @card_image = attachment if usable_card_image?(attachment)
-    end
-
-    def usable_card_image?(attachment)
-      return false if attachment.blank? || !attachment.attached?
-      return false if !CARD_IMAGE_CONTENT_TYPES.include?(attachment.blob.content_type)
-
-      attachment.blob.byte_size <= CARD_IMAGE_MAX_BYTES
+      @card_subtitle = Whatsapp::ProjektCard.subtitle(@projekt)
     end
 
     def card_image_url
-      @card_image_url ||= Rails.application.routes.url_helpers.rails_blob_url(
-        card_image,
-        **UrlOptions.default.to_h
-      )
+      return @card_image_url if defined?(@card_image_url)
+
+      @card_image_url = Whatsapp::ProjektCard.image_url(@projekt)
     end
 
     def projekt_title

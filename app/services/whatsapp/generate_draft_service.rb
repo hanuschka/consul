@@ -26,7 +26,10 @@ class Whatsapp::GenerateDraftService < ApplicationService
     end
 
     def author
-      @conversation.user
+      @author ||= Whatsapp::SubmissionAuthorService.call(
+        conversation: @conversation,
+        projekt_phase: projekt_phase
+      )
     end
 
     def budget_phase?
@@ -64,6 +67,12 @@ class Whatsapp::GenerateDraftService < ApplicationService
 
       resource.title = draft_data["title"]
       resource.description = draft_data["description"]
+
+      # A verdict belongs to the text it was reached on. Clearing it here is
+      # what lets PresentDraftService and PublishDraftService treat a stored
+      # result as "already evaluated, do not pay for it twice" — after a
+      # revision there is nothing valid left to reuse.
+      resource.ai_evaluation_result = nil
 
       # Proposals carry the terms acknowledgement the web form collects; an
       # investment has no such column.

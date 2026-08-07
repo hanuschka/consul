@@ -26,7 +26,8 @@
     <p class="adm-whatsapp-dialog-item--identity">
       <%= account.phone.presence || account.wa_id %>
       <% if account.user.present? %>
-        · <%= link_to account.user.name, edit_adm_user_path(account.user), class: "kern-link" %>
+        · <%= link_to account.user.name, edit_adm_user_path(account.user),
+          class: "kern-link", data: { turbo_frame: "_top" } %>
       <% end %>
     </p>
 
@@ -59,10 +60,14 @@
     </p>
   </div>
 
+  <%# Both links leave the list for a full page, and the list lives inside the
+      whatsapp_dialogs frame — without _top Turbo would try to load a page that
+      carries no such frame into it and render "content missing" instead. %>
   <div class="adm-whatsapp-dialog-item--action">
     <%= kern_link_button adm_whatsapp_dialog_path(account),
       icon: "forum",
       text: t("adm.whatsapp.dialogs.open"),
-      style: :tertiary %>
+      style: :tertiary,
+      data: { turbo_frame: "_top" } %>
   </div>
 </li>

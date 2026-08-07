@@ -38,6 +38,19 @@ class WhatsappApi::Resources::Messages
     )
   end
 
+  # A picture with its text underneath, for a card that carries no buttons —
+  # an interactive message must have at least one, so the two shapes cannot be
+  # the same call.
+  def send_image(to:, image_url:, caption: nil)
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "image",
+        image: { link: image_url, caption: caption }.compact
+      )
+    )
+  end
+
   def send_template(to:, name:, language:, variables: [])
     @client.post(
       BASE_PATH,
@@ -112,13 +125,18 @@ class WhatsappApi::Resources::Messages
     )
   end
 
-  def send_buttons(to:, body:, buttons:)
+  # The header is optional because it is the one part WhatsApp will reject the
+  # whole message over: it fetches the picture itself, from us, while the send
+  # is in flight. A caller that cannot vouch for the URL passes none and gets
+  # the same message without it.
+  def send_buttons(to:, body:, buttons:, header_image_url: nil)
     @client.post(
       BASE_PATH,
       body: envelope(to).merge(
         type: "interactive",
         interactive: {
           type: "button",
+          **image_header(header_image_url),
           body: { text: body },
           action: { buttons: interactive_buttons(buttons) }
         }
@@ -146,7 +164,7 @@ class WhatsappApi::Resources::Messages
     # "0" is the first button declared on the approved template.
     def card_template_components(image_url, variables, button_variable)
       [
-        { type: "header", parameters: [{ type: "image", image: { link: image_url } }] },
+        { type: "header", parameters: [{ type: "image", image: { link: image_url }}] },
         body_parameters(variables),
         {
           type: "button",
@@ -203,6 +221,12 @@ class WhatsappApi::Resources::Messages
           description: row[:description].to_s.truncate(MAX_ROW_DESCRIPTION_LENGTH).presence
         }.compact
       end
+    end
+
+    def image_header(url)
+      return {} if url.blank?
+
+      { header: { type: "image", image: { link: url }}}
     end
 
     def interactive_buttons(buttons)

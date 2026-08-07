@@ -1,22 +1,27 @@
 class Whatsapp::Flows::AiDisclosureService < ApplicationService
-  # Catalog E31. WhatsApp requires the bot to say it is a bot at the start of
-  # every new session, and a session here is the 24-hour service window: outside
-  # it the bot cannot send freeform messages at all, so a citizen writing in
-  # after a day away is starting a new conversation whether or not they think of
-  # it that way.
+  # Catalog E31. The bot has to say it is a bot, once, on a citizen's very first
+  # message. It used to repeat on every new 24-hour service window, which meant
+  # a regular reads the same sentence every day and stops seeing it — the thing
+  # the rule exists to prevent.
   #
   # Sent as its own message rather than prepended to whatever answer follows. A
-  # disclosure buried above three paragraphs of something else is the one thing
-  # this rule exists to prevent.
+  # disclosure buried above three paragraphs of something else is just as
+  # invisible.
   def initialize(conversation:)
     @conversation = conversation
   end
 
   def call
-    Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: body)
+    Whatsapp::Outbound.text(account: account, body: body)
+
+    account.mark_ai_disclosed!
   end
 
   private
+
+    def account
+      @conversation.whatsapp_account
+    end
 
     def body
       I18n.t(

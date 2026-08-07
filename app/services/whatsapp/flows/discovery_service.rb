@@ -36,22 +36,6 @@ class Whatsapp::Flows::DiscoveryService < ApplicationService
     end
 
     def rows
-      Whatsapp::EligiblePhasesQuery.call(projekt: @projekt).map do |projekt_phase|
-        {
-          id: Whatsapp::FlowActions.id_for(action: :idea_start, param: projekt_phase.id),
-          title: Whatsapp::ProjektLink.title(projekt_phase.projekt),
-          description: description_for(projekt_phase)
-        }
-      end
-    end
-
-    def description_for(projekt_phase)
-      return projekt_phase.name if projekt_phase.end_date.blank?
-
-      I18n.t(
-        "whatsapp.bot.discovery.row_description",
-        phase: projekt_phase.name,
-        end_date: I18n.l(projekt_phase.end_date)
-      )
+      Whatsapp::PhaseListRows.build(Whatsapp::EligiblePhasesQuery.call(projekt: @projekt))
     end
 end

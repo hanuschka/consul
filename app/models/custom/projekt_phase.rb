@@ -356,6 +356,27 @@ class ProjektPhase < ApplicationRecord
     @permission_problem_cache = nil
   end
 
+  # The who-may-take-part restrictions on their own, without the account rules
+  # above them. A guest phase skips all of these on the web, which is right for
+  # a form the citizen fills in on the projekt page but not for a channel that
+  # accepts submissions from anywhere: the WhatsApp bot asks for them anyway.
+  # Split out rather than folded into #permission_problem so the answer that
+  # method gives every existing caller is unchanged.
+  def restriction_problem(user, location: nil)
+    return :not_logged_in if user.blank?
+
+    phase_specific_problem = phase_specific_permission_problems(user, location)
+    return phase_specific_problem if phase_specific_problem.present?
+
+    return age_permission_problem(user) if age_permission_problem(user).present?
+    return geozone_permission_problem(user) if geozone_permission_problem(user)
+
+    advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
+    return advanced_geozone_problem if advanced_geozone_problem.present?
+
+    individual_group_value_permission_problem(user)
+  end
+
   def geozone_allowed?(user)
     geozone_permission_problem(user).present?
   end
@@ -693,19 +714,7 @@ class ProjektPhase < ApplicationRecord
       return :not_logged_in if !user || user&.guest?
       return :not_verified if user_status == "verified" && !user.level_three_verified?
 
-      phase_specific_problem = phase_specific_permission_problems(user, location)
-      return phase_specific_problem if phase_specific_problem.present?
-
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-
-      advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
-      return advanced_geozone_problem if advanced_geozone_problem.present?
-
-      individual_group_problem = individual_group_value_permission_problem(user)
-      return individual_group_problem if individual_group_problem.present?
-
-      nil
+      restriction_problem(user, location: location)
     end
 
     def phase_specific_permission_problems(user, location)

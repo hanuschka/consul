@@ -9,6 +9,11 @@ class Whatsapp::Account < ApplicationRecord
 
   belongs_to :user, optional: true
 
+  # The stand-in author for submissions to a guest phase from a number that
+  # never linked. Never promoted into user: a guest sitting in that column would
+  # make every "is this number linked" check answer yes.
+  belongs_to :guest_user, class_name: "::User", optional: true
+
   # Both sides keep their original column and association names, so the class
   # and the foreign key have to be spelled out: Rails would otherwise infer
   # Whatsapp::WhatsappConversation and account_id.
@@ -77,6 +82,19 @@ class Whatsapp::Account < ApplicationRecord
   # because resetting a flow clears the conversation's context.
   def greeted?
     Whatsapp::Message.exists?(whatsapp_account_id: id, direction: "outbound")
+  end
+
+  # Whether this number has been told it is talking to a bot. Held on the
+  # account rather than derived from #greeted?, which is already true for every
+  # number a broadcast reached without a word of disclosure in it.
+  def ai_disclosed?
+    ai_disclosed_at.present?
+  end
+
+  def mark_ai_disclosed!
+    return if ai_disclosed?
+
+    update!(ai_disclosed_at: Time.current)
   end
 
   def notifies?(type)

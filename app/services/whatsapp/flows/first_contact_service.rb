@@ -12,6 +12,7 @@ class Whatsapp::Flows::FirstContactService < ApplicationService
     Whatsapp::Outbound.text(account: account, body: disclosure)
     Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.onboarding.link_question"))
 
+    account.mark_ai_disclosed!
     @conversation.update!(step: "awaiting_link_decision")
 
     Whatsapp::Outbound.buttons(account: account, body: consent, buttons: buttons)

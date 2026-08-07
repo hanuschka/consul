@@ -209,7 +209,7 @@ class ProposalsController
       return
     end
 
-    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+    if !@proposal.admin_accepted? && !allowed_to_preview_pending?
       redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
@@ -282,6 +282,17 @@ class ProposalsController
   end
 
   private
+
+    # A proposal awaiting moderation is hidden from the portal, but not from the
+    # person who wrote it: they are the one party who already knows it exists and
+    # has the most reason to check what was submitted. This is the only way a
+    # WhatsApp submitter can see their own pending proposal at all — the chat
+    # sends them the link, and it stops being a dead end once they are logged in.
+    def allowed_to_preview_pending?
+      return true if current_user&.has_pm_permission_to?(:manage, @projekt)
+
+      current_user.present? && @proposal.author_id == current_user.id
+    end
 
     # The support and withdraw buttons carry the ids of the cards that were on screen, so the
     # response can refresh all of them. Only the clicked card is re-rendered otherwise, and

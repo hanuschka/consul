@@ -22,15 +22,30 @@ en:
           You can change this any time in your account or by sending STOP.
         confirm: Link number
       expired: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
-      already_linked: This WhatsApp number is already linked to a different account.
+      already_linked: Your account is already linked to a different WhatsApp number.
+      number_taken: >-
+        This WhatsApp number is already linked to a different account. The link can only be released
+        from that number's WhatsApp chat.
     subscription:
       opted_in: You will receive WhatsApp notifications again.
       opted_out: You will no longer receive WhatsApp notifications.
       not_linked: No WhatsApp number is linked to your account.
     bot:
-      welcome_greeting: >-
-        Welcome! You can submit proposals for the running participation projects here. Which one would
-        you like to contribute to?
+      welcome_greeting: 👋 Welcome back! What would you like to do?
+      free_text_hint: I can do more than this — just tell me what you need.
+      no_open_phase_notice: >-
+        No phase is open for proposals right now. I will let you know as soon as a new participation
+        project starts.
+      contributions:
+        intro: 'Here is what you have submitted so far:'
+        entry: |-
+          *%{title}* (%{status})
+          %{url}
+        status:
+          published: online
+          pending: under review
+        more: And %{count} more.
+        empty: You have not submitted anything yet. Tap "Submit a proposal" to get started.
       commands:
         default: |-
           help|What this chat can do
@@ -47,9 +62,13 @@ en:
         There is no participation project accepting proposals at the moment. Write to me again when
         a new one starts, or scan the QR code of a project.
       drafting: Thanks! I am turning this into a proposal — one moment.
-      draft_failed: That did not work. Feel free to send me your idea again.
+      draft_failed: >-
+        That did not work just now — most likely a temporary problem. Please try again in a few
+        minutes.
       transcription_failed: I could not understand the voice message. Please write your idea as text.
-      publish_failed: Something went wrong while publishing. Please try again later.
+      publish_failed: >-
+        I could not check right now whether your proposal meets this project's requirements. Please
+        try again in a few minutes — your draft is kept.
       criteria_failed: |-
         Your proposal does not meet one of this project's requirements yet: %{criterion}
 
@@ -66,6 +85,7 @@ en:
         cancel: Cancel
         link_yes: Yes, link it
         link_later: Later
+        link_switch: Switch account
         login: 🔗 Log in
         login_again: Log in again
         show_projekts: Show projects
@@ -76,6 +96,10 @@ en:
         done: Done
         choose_notifications: Choose
         choose_category: Choose category
+        choose_sentiment: Choose
+        submit_proposal: Submit a proposal
+        my_contributions: My contributions
+        view_projekt: View project
         idea_start: Yes, I have an idea
         draft_publish: Yes, submit it
         draft_revise: Edit
@@ -102,6 +126,27 @@ en:
         submissions_limit_exceeded: You have already submitted as many proposals to this project as
           are allowed.
         no_open_phase: This project currently has no phase that accepts proposals.
+        not_logged_in: >-
+          This project needs a linked account. Send me "link account" and I will send you the login
+          link.
+        missing_user_data: >-
+          This project is limited to certain people, and I am missing the details that decide it.
+          Please submit through the project page, where you can add them.
+        only_citizens: >-
+          Only residents of the municipality can take part in this project, and your registered
+          address is not one of them.
+        only_specific_geozones: >-
+          This project is limited to certain districts, and your registered address is not in one
+          of them.
+        no_registered_address: >-
+          This project needs a registered address. Please add one to your account on the project
+          page.
+        only_specific_streets: >-
+          This project is limited to certain streets, and your registered address is not on one of
+          them.
+        only_specific_registered_address_groupings: >-
+          This project is limited to a specific area, and your registered address is not in it.
+        only_specific_ages: Only certain age groups can take part in this project.
       portal_fallback_name: the participation portal
       onboarding:
         disclosure: >-
@@ -124,14 +169,23 @@ en:
           notifications and direct participation.
         no_account: You need an account to link. You can register in 2 minutes at %{register_url}.
         expired: 'That didn''t work — the link may have expired. Try again:'
-        already_linked: This number is already linked to a different account. Would you like to switch?
+        already_linked: >-
+          Your account is already linked to a different WhatsApp number. Release that link first and
+          this will work.
+        number_taken: This number is already linked to a different account. Would you like to switch?
         unlink_confirm: >-
           Are you sure you want to unlink your account? You'll no longer receive notifications and
           won't be able to support proposals directly.
-        unlinked: ✅ Account unlinked. Your number has been deleted. You can link again at any time.
+        unlinked: >-
+          ✅ Account unlinked. This number is no longer tied to an account. The number and the chat
+          history are kept for the usual retention period. You can link again at any time.
         welcome_back: 👋 Welcome back! This number isn't linked yet — would you like to link it (again)?
+        welcome_back_guest_hint: >-
+          At least one project also accepts submissions without an account.
       discovery:
         body: These are the projects you can contribute to right now. Which one would you like?
+        guest_body: >-
+          These projects accept submissions without an account too. Which one would you like?
         phase_body: >-
           There is more than one thing running in "%{projekt}". Which one do you want to contribute
           to?
@@ -182,7 +236,12 @@ en:
         prompt: '🏗️ New project: %{projekt}. Do you have a concrete idea for this?'
         ask_idea: Write me a short summary of what you're thinking — I'll turn it into a proposal.
         ask_category: Which category fits best?
+        ask_sentiment: Where does your proposal stand on this?
         category_line: 'Category: %{category}'
+        sentiment_line: 'Sentiment: %{sentiment}'
+        evaluation_line: |-
+          Assessment: %{score} out of %{max_score} points
+          %{feedback}
         draft: |-
           Great idea! Here's how I'd phrase it:
 
@@ -197,8 +256,10 @@ en:
         draft_revised_question: Does that work now?
         ask_revision: Sure, what should I change?
         published: '✅ It''s live now: %{url}'
-        published_pending_moderation: Thanks! Your proposal is now being reviewed, we'll get back
-          to you.
+        published_pending_moderation: |-
+          Thanks! Your proposal is now being reviewed, we'll get back to you.
+
+          You can view it here once you are logged in to the portal: %{url}
         unclear: I didn't quite understand that — do you mean a new proposal or a comment on an existing
           one?
         cancelled: OK, cancelled. Just message me again whenever you'd like.

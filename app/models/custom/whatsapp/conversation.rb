@@ -29,6 +29,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_phase_choice: "awaiting_phase_choice",
     awaiting_idea: "awaiting_idea",
     awaiting_category: "awaiting_category",
+    awaiting_sentiment: "awaiting_sentiment",
     awaiting_draft_decision: "awaiting_draft_decision",
     awaiting_image_choice: "awaiting_image_choice",
     awaiting_image_upload: "awaiting_image_upload",
@@ -45,6 +46,7 @@ class Whatsapp::Conversation < ApplicationRecord
   DRAFTING_STEPS = %w[
     awaiting_idea
     awaiting_category
+    awaiting_sentiment
     awaiting_draft_decision
     awaiting_image_choice
     awaiting_image_upload

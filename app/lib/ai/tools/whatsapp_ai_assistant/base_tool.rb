@@ -29,13 +29,13 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       projekt_phase =
         ::ProjektPhase.includes(:settings, projekt: :page).find_by(id: projekt_phase_id.to_i)
 
-      return if !::WhatsappEligiblePhasesQuery.eligible?(projekt_phase)
+      return if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
 
       projekt_phase
     end
 
     def open_projekt_phases
-      @open_projekt_phases ||= ::WhatsappEligiblePhasesQuery.call
+      @open_projekt_phases ||= ::Whatsapp::EligiblePhasesQuery.call
     end
 
     def projekt_title(projekt)

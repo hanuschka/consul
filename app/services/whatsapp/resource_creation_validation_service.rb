@@ -7,9 +7,9 @@ class Whatsapp::ResourceCreationValidationService < ApplicationService
   def call
     return :phase_missing if @projekt_phase.blank?
     return :not_logged_in if @user.blank?
-    return :phase_not_supported if feature_keys.blank?
-    return :creation_disabled if !@projekt_phase.feature?(feature_keys[:creation])
-    return :ai_flow_disabled if !@projekt_phase.feature?(feature_keys[:ai_flow])
+    return :phase_not_supported if !supported_phase?
+    return :creation_disabled if !@projekt_phase.selectable_by_users?
+    return :ai_flow_disabled if !@projekt_phase.ai_flow_enabled?
     return :budget_heading_missing if budget_heading_missing?
 
     @projekt_phase.permission_problem(@user, location: :whatsapp_bot)
@@ -17,10 +17,10 @@ class Whatsapp::ResourceCreationValidationService < ApplicationService
 
   private
 
-    # Which flags apply depends on the phase type, and a type absent from the
-    # map is one the bot has no flow for.
-    def feature_keys
-      WhatsappEligiblePhasesQuery.feature_keys_for(@projekt_phase)
+    # Same list the eligible-phases query offers from, so a phase the bot lists
+    # and a phase the bot accepts cannot come apart.
+    def supported_phase?
+      Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.include?(@projekt_phase.class)
     end
 
     # An investment cannot be built without the budget's heading, and a budget

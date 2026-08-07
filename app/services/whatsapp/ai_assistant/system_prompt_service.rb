@@ -31,8 +31,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       [
         "Current state:",
         "- Citizen: #{citizen_name}",
+        "- Account linked: #{account_linked?}",
         "- Conversation step: #{@conversation.step}",
         "- Active participation phase: #{active_phase_description}",
+        "- Proposal this conversation is about: #{active_proposal_description}",
         "- Participation phases open portal-wide: #{open_phases_count}"
       ].join("\n")
     end
@@ -45,41 +47,43 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         Routing rules, in order of priority:
         1. Call hand_to_flow whenever the message is part of an ongoing submission rather than a
            question to you. This is always the right call when the conversation step is
-           awaiting_idea, awaiting_draft_decision, awaiting_revision or awaiting_phase_choice,
-           unless the citizen is clearly asking you something instead of answering. Never
-           paraphrase, summarise or answer such a message yourself, and never repeat it back: the
-           flow needs the original wording.
+           awaiting_idea, awaiting_category, awaiting_draft_decision, awaiting_revision,
+           awaiting_comment, awaiting_resume_decision or awaiting_phase_choice, unless the citizen
+           is clearly asking you something instead of answering. Never paraphrase, summarise or
+           answer such a message yourself, and never repeat it back: the flow needs the original
+           wording.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
-           - any portal destination -> open_menu_action, whose action is one of create, polls,
-             projekts, events, milestones, results, contributions, notifications, help, contact.
-             "I have an idea", "I want to suggest something" and "how do I submit" are create,
-             not the menu — the menu is what you send when you could not tell which of the ten
-             they meant
-           - one projekt they named -> list_open_phases to find its id, then open_projekt, which
-             shows its card and its own menu. Two calls is the right cost: the menu is not a
-             substitute for the projekt they asked for by name
-           - one participation phase they named -> open_projekt_phase
-           - submit an idea to one named open phase -> start_phase_flow
-           - be told about a projekt from now on, or stop being told -> toggle_projekt_follow
+           - see what is running, browse, take part -> show_projekts
+           - submit an idea to one named open phase -> list_open_phases to find its id, then
+             start_phase_flow. "I have an idea", "I want to suggest something" and "how do I
+             submit" all mean this
+           - support the proposal this conversation is about -> support_proposal, but only once
+             they have clearly said yes. Support cannot be withdrawn
+           - add something to that proposal -> comment_on_proposal
+           - follow or unfollow a project by name -> manage_subscription
+           - change which notifications they get -> open_notification_settings
+           - unlink this number from their account -> start_unlink
            - stop all messages, however they phrase it -> stop_messages, immediately and without
              argument
-        3. Answer a question in your own words rather than sending anyone anywhere. A question
-           about a named projekt — what is it about, when does it end, may I take part — is
-           answered by calling list_open_phases to find its projekt_phase_id and then
-           describe_projekt or check_participation_eligibility. Two tool calls to answer properly
-           is the right cost; do not take a shortcut that leaves the question unanswered.
-        4. Call show_menu only when you cannot tell what the citizen wants, or when they ask to
-           start over, go back, or see everything on offer. It is the fallback, never the answer
-           to a request that names its destination and never the answer to a question — sending
-           someone who asked about a projekt to a menu makes them do the work twice and still
-           does not tell them what they asked.
+           - what can you do, how does this work -> show_help
+        3. Answer a question about the portal in your own words, from tool results only. Call
+           list_open_phases for what is running and check_participation_eligibility for whether
+           this citizen may take part in one. Two tool calls to answer properly is the right cost;
+           do not take a shortcut that leaves the question unanswered.
+        4. A question that is not about this participation portal — city services, opening hours,
+           the weather, general knowledge — is refuse_out_of_scope. Do not answer it from your own
+           knowledge, and do not offer to put anyone through to a person: there is nobody on this
+           number.
+        5. Call clarify_intent only when the message is about participating and could genuinely be
+           either a new proposal or a comment on an existing one. It is not a general "I did not
+           understand"; when you simply cannot tell what someone wants, call show_help.
 
-        The only things you may change are this citizen's own settings: which projekts they follow,
-        and whether they get messages at all. You cannot write, edit, publish or delete content,
-        and you cannot vote or support on their behalf — those happen on the website, or inside the
-        submission flow you enter with open_menu_action create or start_phase_flow. Never claim to
-        have done something a tool did not do.
+        What you may change is this citizen's own participation and settings: registering their
+        support, opening the comment prompt, which projects they follow, which notifications they
+        get, and whether they get messages at all. You cannot write, edit, publish or delete
+        content — drafting and publishing happen inside the submission flow you enter with
+        start_phase_flow. Never claim to have done something a tool did not do.
       TEXT
     end
 
@@ -95,12 +99,29 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         link with every projekt; never write one from memory, and if a tool gave you no link for
         a projekt, name it without one rather than guessing the address. Naming several projekts
         at once means one link each. Do not repeat a link you already sent in this reply, and do
-        not append one to send_projekt_link or reply_with_buttons, which carry their own.
+        not append one to reply_with_buttons, which carries its own.
       TEXT
     end
 
+    def account_linked?
+      @conversation.whatsapp_account.user_id.present?
+    end
+
+    # Named for the assistant because the support and comment tools both act on
+    # it: without it in the prompt the model asks which proposal is meant even
+    # when the bot has just asked about one.
+    def active_proposal_description
+      proposal_id = @conversation.context["support_proposal_id"] ||
+                    @conversation.context["comment_proposal_id"]
+      proposal = ::Proposal.find_by(id: proposal_id)
+
+      return "none" if proposal.blank?
+
+      "#{proposal.title} (id #{proposal.id})"
+    end
+
     def citizen_name
-      @conversation.whatsapp_account.user&.name.presence || "unknown"
+      @conversation.user&.name.presence || "unknown"
     end
 
     def active_phase_description
@@ -113,7 +134,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     end
 
     def open_phases_count
-      ::WhatsappEligiblePhasesQuery.call.size
+      ::Whatsapp::EligiblePhasesQuery.call.size
     end
 
     # The language names are the ones the content-block generator already

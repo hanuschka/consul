@@ -3,7 +3,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
   PUBLISH_KEYWORDS = ["veröffentlichen", "veroeffentlichen", "publish", "ja", "senden"].freeze
   REVISE_KEYWORDS = ["ändern", "aendern", "korrigieren", "revise", "nein"].freeze
-  DRAFT_INTERVAL = 15.seconds
+  SUBSCRIBE_COMMAND = /\A(subscribe|abonnieren|folgen)\s+(?<name>.+)\z/i
+  UNSUBSCRIBE_COMMAND = /\A(unsubscribe|abbestellen|entfolgen)\s+(?<name>.+)\z/i
 
   def initialize(whatsapp_message:, raw_message: {})
     @whatsapp_message = whatsapp_message
@@ -13,28 +14,28 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
   def call
     return if !::Whatsapp.enabled?
 
+    new_session = new_session?
     conversation.update!(last_inbound_at: latest_inbound_at)
 
-    return if handle_opt_keywords
+    return if handle_stop_keywords
     return if account.opt_out_at.present?
+    return Whatsapp::Flows::FirstContactService.call(conversation:) if first_contact?
 
-    # Opening the chat for the first time carries no text to interpret, so the
-    # only sensible answer is the menu of what is open.
-    return send_entry_menu if @whatsapp_message.welcome?
+    # The AI disclosure heads the session, so it is sent before anything below
+    # can reply. A first contact is the exception: its own opening message
+    # already carries the disclosure, and sending both would say it twice.
+    Whatsapp::Flows::AiDisclosureService.call(conversation:) if new_session
+
     return if handle_recovery_action
-    return if handle_notification_action
+    return if handle_flow_action
     return if handle_command
-    return if handle_public_menu_action
-
     return if @whatsapp_message.audio? && inbound_text.blank?
 
     entry = capture_entry_token
 
-    return Whatsapp::Steps::SendLinkInvitationService.call(conversation:) if account.user.blank?
-    return Whatsapp::Steps::RefuseParticipationService.call(conversation:, reason: :no_open_phase) if
-      entry == :projekt_without_phase
-    return Whatsapp::NextStepService.call(conversation:) if entry.present?
-    return if handle_account_menu_action
+    return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if account.user.blank?
+    return handle_entry(entry) if entry.present?
+    return if handle_stale_flow
     return if routed_by_assistant?
 
     dispatch_step
@@ -42,8 +43,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
   private
 
-    # Everything above this point is protocol rather than dialogue — opting out,
-    # a tapped recovery button, a scanned QR code — and stays deterministic. The
+    # Everything above the assistant is protocol rather than dialogue — opting
+    # out, a tapped pill, a scanned QR code — and stays deterministic. The
     # assistant sees only what is left, and hands back anything the flow owns.
     def routed_by_assistant?
       return false if !Ai::Settings.ai_available?
@@ -62,14 +63,29 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # A tapped row or button already says exactly what it means, and the text
     # WhatsApp sends alongside it is only that row's own label. The steps below
     # read the id; sending the label to the assistant instead would pay for a
-    # completion to re-derive it, and risk a tapped "Veröffentlichen" being
+    # completion to re-derive it, and risk a tapped "Yes, submit it" being
     # answered as conversation rather than publishing the draft.
     def tapped_reply_id
       list_reply_id.presence || button_reply_id.presence
     end
 
-    # Only ever forwards, for the same reason the account's copy is: a retried
-    # or out-of-order delivery must not rewind the conversation's clock.
+    # A session in WhatsApp's sense is the 24-hour service window, and it is
+    # read before last_inbound_at is moved forward — afterwards every message
+    # looks like it arrived inside the window it just opened.
+    def new_session?
+      last_seen = conversation.last_inbound_at
+
+      last_seen.blank? || last_seen < ::Whatsapp::SERVICE_WINDOW.ago
+    end
+
+    def first_contact?
+      return true if @whatsapp_message.welcome? && !account.greeted?
+
+      account.user_id.blank? && !account.greeted?
+    end
+
+    # Only ever forwards: a retried or out-of-order delivery must not rewind the
+    # conversation's clock.
     def latest_inbound_at
       [@whatsapp_message.sent_at || Time.current, conversation.last_inbound_at].compact.max
     end
@@ -82,6 +98,33 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       @conversation ||= account.conversation
     end
 
+    # The catalog uses one word for two things: "Stop" abandons the submission
+    # in progress (C21), and "STOP" ends all messages for good (E34). The
+    # difference is whether a submission is open, and it is decided here rather
+    # than inside either service — getting it wrong means a citizen who wanted
+    # to cancel a draft is silently unsubscribed instead.
+    def handle_stop_keywords
+      if Whatsapp::FlowActions::ABORT_KEYWORDS.include?(normalized_text) && conversation.drafting?
+        Whatsapp::Flows::CancelService.call(conversation:)
+
+        return true
+      end
+
+      if OPT_OUT_KEYWORDS.include?(normalized_text)
+        Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
+
+        return true
+      end
+
+      if OPT_IN_KEYWORDS.include?(normalized_text)
+        Whatsapp::Flows::MessageDeliveryService.enable(conversation:)
+
+        return true
+      end
+
+      false
+    end
+
     # Handled ahead of the step dispatcher: a tapped recovery button must not be
     # read as idea text by whichever step happens to be active.
     def handle_recovery_action
@@ -90,162 +133,329 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       return false if action.blank?
 
       case action
-      when :menu then send_entry_menu
-      when :cancel then cancel_flow
+      when :help then Whatsapp::Flows::HelpService.call(conversation:)
+      when :cancel then Whatsapp::Flows::CancelService.call(conversation:)
       when :retry then retry_last_action
       end
 
       true
     end
 
-    # The one caller shape that must ignore the open flow: an empty chat and a
-    # tapped menu button both mean "start from what the portal has", so the flow
-    # is dropped before asking what comes next.
-    def send_entry_menu
-      conversation.reset_flow!
+    def handle_flow_action
+      return false if flow_action.blank?
 
-      Whatsapp::Steps::MainMenuService.call(conversation:)
-    end
-
-    # A word the number's own command menu advertises answers the same way every
-    # time, whatever the conversation was doing. Matched only as the whole
-    # message, so a sentence that happens to contain "menu" still reaches the
-    # assistant.
-    def handle_command
-      action = Whatsapp::MenuActions.command_action_from(normalized_text)
-
-      return false if action.blank?
-      return send_entry_menu.then { true } if action == :menu
-
-      Whatsapp::MenuActionService.call(
-        conversation: conversation, scope: :portal, action: action
-      )
-    end
-
-    # Turning messages off must work from any state and must never depend on a
-    # model reading the request correctly, so it sits with the recovery buttons
-    # rather than behind the assistant.
-    def handle_notification_action
-      action = Whatsapp::NotificationActions.action_from(button_reply_id)
-
-      return false if action.blank?
-
-      Whatsapp::Steps::SetMessageDeliveryService.call(
-        conversation: conversation, enabled: action == :messages_on
-      )
+      dispatch_flow_action(flow_action[:action], flow_action[:param])
 
       true
     end
 
-    # Tapped rows and buttons carry an unambiguous action, so they are answered
-    # here for the same reason recovery buttons are: sending one through the
-    # assistant would pay for a completion to re-derive what the id already
-    # says, and risk it being read as something else.
-    #
-    # Split in two by what the action needs. Reading the portal needs no
-    # account, so those are answered before the linking check rather than after
-    # it — asking someone to connect an account to read a public result would be
-    # a dead end they did not ask for.
-    def handle_public_menu_action
-      return false if menu_action.blank?
-      return false if Whatsapp::MenuActions.needs_account?(menu_action[:action])
+    def flow_action
+      return @flow_action if defined?(@flow_action)
 
-      dispatch_menu_action
+      @flow_action = Whatsapp::FlowActions.parse(tapped_reply_id)
     end
 
-    def handle_account_menu_action
-      return false if menu_action.blank?
+    # One place every pill in the catalog lands. Actions that need an account
+    # are refused here rather than in each service, so reading the portal never
+    # dead-ends into "connect an account" and participating never silently
+    # skips the check.
+    ACCOUNT_ACTIONS = %i[
+      idea_start category draft_publish draft_revise resume restart
+      support notify_toggle notifications_done unlink_confirm unlink_cancel
+    ].freeze
 
-      dispatch_menu_action
+    def dispatch_flow_action(action, param)
+      return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if
+        ACCOUNT_ACTIONS.include?(action) && account.user.blank?
+
+      case action
+      when :link_yes, :link_retry, :link_switch
+        Whatsapp::Flows::SendLoginLinkService.call(conversation:)
+      when :link_later
+        Whatsapp::Flows::LinkDeclinedService.call(conversation:)
+      when :discover
+        Whatsapp::Flows::DiscoveryService.call(conversation:)
+      when :discover_public
+        Whatsapp::Flows::PublicDiscoveryService.call(conversation:)
+      when :dismiss, :unlink_cancel
+        conversation.reset_flow!
+      when :unlink_confirm
+        Whatsapp::Flows::ConfirmUnlinkService.call(conversation:)
+      when :notify_toggle
+        Whatsapp::Flows::ToggleNotificationService.call(conversation:, type: param)
+      when :notifications_done
+        finish_notification_settings
+      when :idea_start
+        start_phase_flow(param)
+      when :category
+        assign_category(param)
+      when :draft_publish
+        publish
+      when :draft_revise
+        ask_revision
+      when :resume
+        resume_flow
+      when :restart
+        restart_flow
+      when :support
+        Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
+      end
     end
 
-    def dispatch_menu_action
-      Whatsapp::MenuActionService.call(
-        conversation: conversation,
-        scope: menu_action[:scope],
-        record_id: menu_action[:record_id],
-        action: menu_action[:action]
-      )
+    # A word a citizen types instead of tapping. Matched only as the whole
+    # message, so a sentence that happens to contain "help" still reaches the
+    # assistant.
+    def handle_command
+      return send_help if Whatsapp::FlowActions::HELP_KEYWORDS.include?(normalized_text)
+      return send_discovery if Whatsapp::FlowActions::DISCOVERY_KEYWORDS.include?(normalized_text)
+      return send_notification_settings if
+        Whatsapp::FlowActions::NOTIFICATION_KEYWORDS.include?(normalized_text)
+      return start_unlink if Whatsapp::FlowActions::UNLINK_KEYWORDS.include?(normalized_text)
+
+      handle_subscription_command
     end
 
-    def menu_action
-      return @menu_action if defined?(@menu_action)
+    # The catalog manages subscriptions by typed command, with no menu to
+    # navigate. Matched deterministically first so the common, exactly-worded
+    # case costs no completion; anything looser falls through to the assistant,
+    # which resolves the name with its own tool.
+    def handle_subscription_command
+      subscribe = SUBSCRIBE_COMMAND.match(inbound_text.to_s.strip)
+      unsubscribe = UNSUBSCRIBE_COMMAND.match(inbound_text.to_s.strip)
 
-      @menu_action = Whatsapp::MenuActions.parse(tapped_reply_id)
+      return false if subscribe.blank? && unsubscribe.blank?
+      return false if account.user.blank?
+
+      run_subscription_command(subscribe, unsubscribe)
+
+      true
     end
 
-    def cancel_flow
+    def run_subscription_command(subscribe, unsubscribe)
+      match = subscribe || unsubscribe
+      projekt = Whatsapp::ProjektByNameQuery.call(term: match[:name])
+
+      return Whatsapp::Flows::SubscriptionCommandService.subscribe(conversation:, projekt:) if
+        subscribe.present?
+
+      Whatsapp::Flows::SubscriptionCommandService.unsubscribe(conversation:, projekt:)
+    end
+
+    def send_help
+      Whatsapp::Flows::HelpService.call(conversation:)
+
+      true
+    end
+
+    # Answered deterministically rather than left to the assistant so the
+    # command menu's own word still works on a portal with AI switched off.
+    def send_discovery
+      return Whatsapp::Flows::PublicDiscoveryService.call(conversation:).then { true } if
+        account.user.blank?
+
+      Whatsapp::Flows::DiscoveryService.call(conversation:)
+
+      true
+    end
+
+    def send_notification_settings
+      return Whatsapp::Flows::SendLoginLinkService.call(conversation:).then { true } if
+        account.user.blank?
+
+      Whatsapp::Flows::NotificationSettingsService.call(conversation:)
+
+      true
+    end
+
+    def start_unlink
+      return false if account.user.blank?
+
+      Whatsapp::Flows::UnlinkService.call(conversation:)
+
+      true
+    end
+
+    def finish_notification_settings
       conversation.reset_flow!
 
-      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.cancelled"))
-      Whatsapp::Steps::MainMenuService.call(conversation:)
+      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.notifications.saved"))
+    end
+
+    def handle_entry(entry)
+      return Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: :no_open_phase) if
+        entry == :projekt_without_phase
+      return Whatsapp::Flows::DiscoveryService.call(conversation:, projekt: entry_projekt) if
+        entry == :projekt_choice
+
+      Whatsapp::Flows::AskIdeaService.call(conversation:)
+    end
+
+    # A draft older than the catalog's 3600 minutes is not resumed silently.
+    # Only asked once — the question itself moves the step, so the next message
+    # is an answer to it rather than a second asking.
+    def handle_stale_flow
+      return false if !conversation.drafting?
+      return false if conversation.step == "awaiting_resume_decision"
+      return false if !conversation.stale_flow?
+
+      Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
+
+      true
+    end
+
+    # The draft can be gone by the time the question is answered — retention
+    # purges, an admin deleting the phase — so "continue" falls back to asking
+    # for the idea again rather than to a crash.
+    def resume_flow
+      return Whatsapp::Flows::PresentDraftService.first_draft(conversation:) if
+        conversation.draft_resource.present?
+
+      restart_flow
+    end
+
+    # Starting over inside a phase that is no longer taking submissions would
+    # leave the citizen stuck on the resume question, answering it forever. When
+    # there is nothing to restart into, the flow is dropped and the portal's
+    # open projekts are offered instead.
+    def restart_flow
+      return Whatsapp::Flows::AskIdeaService.call(conversation:) if
+        Whatsapp::EligiblePhasesQuery.eligible?(conversation.projekt_phase)
+
+      conversation.reset_flow!
+
+      Whatsapp::Flows::DiscoveryService.call(conversation:)
+    end
+
+    def start_phase_flow(projekt_phase_id)
+      projekt_phase = ProjektPhase.find_by(id: projekt_phase_id.to_i)
+
+      return Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: :phase_missing) if
+        !Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+
+      conversation.start_flow!(projekt_phase)
+
+      Whatsapp::Flows::AskIdeaService.call(conversation:)
+    end
+
+    def assign_category(label_id)
+      assigned = Whatsapp::DraftCategory.assign(
+        conversation.draft_resource, conversation.projekt_phase, label_id
+      )
+
+      return Whatsapp::Flows::AskCategoryService.call(conversation:) if !assigned
+
+      Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
     end
 
     # A failed publish leaves the draft intact, so retrying means publishing
     # again; a failed draft leaves nothing behind but the text it was built from.
     def retry_last_action
-      return publish if conversation.step == "awaiting_draft_decision" && conversation.draft_resource.present?
+      return publish if conversation.step == "awaiting_draft_decision" &&
+                        conversation.draft_resource.present?
 
       last_idea_text = conversation.context["last_idea_text"]
 
-      return generate_draft(last_idea_text) if last_idea_text.present?
+      return Whatsapp::Flows::BuildDraftService.from_idea(conversation:, idea_text: last_idea_text) if
+        last_idea_text.present?
 
-      Whatsapp::NextStepService.call(conversation:)
-    end
-
-    def send_recovery(body, actions)
-      Whatsapp::Outbound.recovery(conversation:, body:, actions:)
+      Whatsapp::Flows::HelpService.call(conversation:)
     end
 
     def dispatch_step
       case conversation.step
-      when "awaiting_phase_choice"
-        handle_phase_choice
       when "awaiting_idea"
         handle_idea
+      when "awaiting_category"
+        Whatsapp::Flows::AskCategoryService.call(conversation:)
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_revision"
         handle_revision
+      when "awaiting_comment"
+        Whatsapp::Flows::CreateCommentService.call(conversation:, body: inbound_text)
+      when "awaiting_notification_settings"
+        Whatsapp::Flows::NotificationSettingsService.call(conversation:)
+      when "awaiting_unlink_confirmation"
+        Whatsapp::Flows::UnlinkService.call(conversation:)
+      when "awaiting_resume_decision"
+        Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
       else
-        Whatsapp::NextStepService.call(conversation:)
+        Whatsapp::Flows::HelpService.call(conversation:)
       end
     end
 
-    def handle_phase_choice
-      chosen_id = Whatsapp::Steps::AskPhaseChoiceService.projekt_phase_id_from_row(list_reply_id)
-      offered_ids = Array(conversation.context["phase_choice_ids"]).map(&:to_i)
-      projekt_phase = ProjektPhase.find_by(id: chosen_id) if offered_ids.include?(chosen_id)
+    def handle_idea
+      idea_text = inbound_text.to_s.strip
 
-      return Whatsapp::NextStepService.call(conversation:) if projekt_phase.blank?
+      if idea_text.blank?
+        return Whatsapp::Outbound.recovery(
+          conversation:, body: I18n.t("whatsapp.bot.idea_missing"), actions: [:cancel]
+        )
+      end
 
-      conversation.start_flow!(projekt_phase)
+      return if refuse_if_not_permitted
 
-      Whatsapp::Steps::AskForIdeaService.call(conversation:)
+      Whatsapp::Flows::BuildDraftService.from_idea(conversation:, idea_text: idea_text)
     end
 
-    def handle_opt_keywords
-      if OPT_OUT_KEYWORDS.include?(normalized_text)
-        account.update!(opt_out_at: Time.current)
-        conversation.reset_flow!
-        Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.opted_out"))
+    # Checked again per action rather than once at flow entry: the same three
+    # steps can be minutes or days apart, and a phase that expires in between
+    # must stop an idea before it costs a draft and stop a draft before it
+    # becomes a proposal.
+    def refuse_if_not_permitted
+      permission_problem =
+        Whatsapp::ResourceCreationValidationService.call(
+          projekt_phase: conversation.projekt_phase,
+          user: account.user
+        )
 
-        return true
+      return false if permission_problem.blank?
+
+      Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: permission_problem)
+
+      true
+    end
+
+    def handle_draft_decision
+      return publish if PUBLISH_KEYWORDS.include?(normalized_text)
+      return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
+
+      Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
+    end
+
+    def ask_revision
+      conversation.update!(step: "awaiting_revision")
+
+      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.ask_revision"))
+    end
+
+    def handle_revision
+      correction = inbound_text.to_s.strip
+
+      if correction.blank?
+        return Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.ask_revision"))
       end
 
-      if OPT_IN_KEYWORDS.include?(normalized_text)
-        account.update!(opt_in_at: Time.current, opt_out_at: nil)
-        send_recovery(I18n.t("whatsapp.bot.opted_in"), [:menu])
+      conversation.update!(revisions_count: conversation.revisions_count + 1)
 
-        return true
-      end
+      Whatsapp::Flows::BuildDraftService.from_revision(
+        conversation:, idea_text: revised_idea_text(correction)
+      )
+    end
 
-      false
+    def revised_idea_text(correction)
+      [conversation.draft_resource&.ai_idea_text, correction].compact.join("\n\n")
+    end
+
+    def publish
+      return if refuse_if_not_permitted
+
+      Whatsapp::Flows::PublishResultService.call(conversation:)
     end
 
     # Stores what a QR deep link points at without sending anything, so the
-    # caller decides the reply (link invitation first for unlinked numbers).
-    # Returns nil, :phase, :projekt or :projekt_without_phase.
+    # caller decides the reply (the login link first for unlinked numbers).
+    # Returns nil, :phase, :projekt, :projekt_choice or :projekt_without_phase.
     def capture_entry_token
       capture_phase_token || capture_projekt_token
     end
@@ -277,182 +487,24 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     def store_projekt_entry(projekt)
-      eligible_phases = WhatsappEligiblePhasesQuery.call(projekt: projekt)
+      eligible_phases = Whatsapp::EligiblePhasesQuery.call(projekt: projekt)
 
       return :projekt_without_phase if eligible_phases.empty?
 
       if eligible_phases.one?
         conversation.start_flow!(eligible_phases.first)
-      else
-        conversation.reset_flow!
-        conversation.merge_context!(
-          phase_choice_projekt_id: projekt.id,
-          phase_choice_ids: eligible_phases.map(&:id)
-        )
+
+        return :projekt
       end
 
-      :projekt
+      conversation.reset_flow!
+      @entry_projekt = projekt
+
+      :projekt_choice
     end
 
-    def handle_idea
-      idea_text = inbound_text.to_s.strip
-
-      if idea_text.blank?
-        return send_recovery(I18n.t("whatsapp.bot.idea_missing"), [:cancel, :menu])
-      end
-
-      return if refuse_if_not_permitted
-
-      generate_draft(idea_text)
-    end
-
-    # Checked again per action rather than once at flow entry: the same three
-    # steps can be minutes or days apart, and a phase that expires in between
-    # must stop an idea before it costs a draft and stop a draft before it
-    # becomes a proposal.
-    def refuse_if_not_permitted
-      permission_problem =
-        Whatsapp::ResourceCreationValidationService.call(
-          projekt_phase: conversation.projekt_phase,
-          user: account.user
-        )
-
-      return false if permission_problem.blank?
-
-      Whatsapp::Steps::RefuseParticipationService.call(conversation:, reason: permission_problem)
-
-      true
-    end
-
-    def handle_draft_decision
-      if publish_requested?
-        return publish
-      end
-
-      if revision_requested?
-        conversation.update!(step: "awaiting_revision")
-
-        return Whatsapp::Outbound.text(
-          account:,
-          body: I18n.t("whatsapp.bot.ask_revision")
-        )
-      end
-
-      Whatsapp::Steps::PresentDraftService.call(conversation:)
-    end
-
-    def handle_revision
-      correction = inbound_text.to_s.strip
-
-      if correction.blank?
-        return Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.ask_revision"))
-      end
-
-      conversation.update!(revisions_count: conversation.revisions_count + 1)
-
-      generate_draft(revised_idea_text(correction))
-    end
-
-    # Revisions are unlimited by design (CON-2908 acceptance criterion), so the
-    # abuse guard is a rate limit per conversation, not a cap on rounds.
-    def drafting_throttled?
-      last_draft_at = conversation.context["last_draft_at"]
-
-      return false if last_draft_at.blank?
-
-      Time.zone.parse(last_draft_at) > DRAFT_INTERVAL.ago
-    end
-
-    def send_throttle_notice
-      send_recovery(I18n.t("whatsapp.bot.too_fast"), [:cancel, :menu])
-    end
-
-    def revised_idea_text(correction)
-      [conversation.draft_resource&.ai_idea_text, correction].compact.join("\n\n")
-    end
-
-    def generate_draft(idea_text)
-      return send_throttle_notice if drafting_throttled?
-
-      conversation.merge_context!(last_draft_at: Time.current.iso8601, last_idea_text: idea_text)
-
-      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.drafting"))
-
-      draft_resource =
-        Whatsapp::GenerateDraftService.call(conversation:, idea_text: idea_text)
-
-      conversation.update!(draft_resource: draft_resource)
-
-      Whatsapp::Steps::PresentDraftService.call(conversation:)
-    rescue StandardError => e
-      Rails.logger.error("[Whatsapp] draft generation failed: #{e.class} - #{e.message}")
-      Sentry.capture_exception(e, extra: { whatsapp_conversation_id: conversation.id })
-
-      send_recovery(I18n.t("whatsapp.bot.draft_failed"), [:retry, :cancel, :menu])
-    end
-
-    def publish
-      return if refuse_if_not_permitted
-
-      result = Whatsapp::PublishDraftService.call(conversation:)
-
-      return send_criteria_feedback if result == :criteria_failed
-
-      if result.blank?
-        return send_recovery(I18n.t("whatsapp.bot.publish_failed"), [:retry, :cancel, :menu])
-      end
-
-      send_publish_confirmation(result)
-
-      conversation.complete_flow!
-    end
-
-    def send_criteria_feedback
-      conversation.update!(step: "awaiting_revision")
-      failed_criterion = conversation.draft_resource.ai_evaluation_result.to_h["failed_criterion"].to_h
-
-      send_recovery(
-        I18n.t(
-          "whatsapp.bot.criteria_failed",
-          criterion: failed_criterion["name"].to_s,
-          feedback: failed_criterion["feedback"].to_s
-        ),
-        [:cancel, :menu]
-      )
-    end
-
-    # Only proposals can be held back for moderation — an investment has no
-    # admin_accepted column, and the web budget flow publishes it outright.
-    def send_publish_confirmation(resource)
-      copy_key =
-        if resource.is_a?(Proposal) && !resource.admin_accepted?
-          "whatsapp.bot.published_pending_moderation"
-        else
-          "whatsapp.bot.published"
-        end
-
-      send_recovery(I18n.t(copy_key, url: published_resource_url(resource)), [:menu])
-    end
-
-    def published_resource_url(resource)
-      helpers = Rails.application.routes.url_helpers
-      options = UrlOptions.default.to_h
-
-      if resource.is_a?(Budget::Investment)
-        return helpers.budget_investment_url(resource.budget, resource, **options)
-      end
-
-      helpers.proposal_url(resource, **options)
-    end
-
-    def publish_requested?
-      button_reply_id == Whatsapp::Steps::PresentDraftService::PUBLISH_BUTTON_ID ||
-        PUBLISH_KEYWORDS.include?(normalized_text)
-    end
-
-    def revision_requested?
-      button_reply_id == Whatsapp::Steps::PresentDraftService::REVISE_BUTTON_ID ||
-        REVISE_KEYWORDS.include?(normalized_text)
+    def entry_projekt
+      @entry_projekt
     end
 
     def button_reply_id
@@ -483,7 +535,9 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       transcript = Whatsapp::TranscribeVoiceService.call(media_id: @raw_message.dig("audio", "id"))
 
       if transcript.blank?
-        send_recovery(I18n.t("whatsapp.bot.transcription_failed"), [:cancel, :menu])
+        Whatsapp::Outbound.recovery(
+          conversation:, body: I18n.t("whatsapp.bot.transcription_failed"), actions: [:cancel]
+        )
 
         return nil
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_06_101806) do
+ActiveRecord::Schema.define(version: 2026_08_07_052857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3482,6 +3482,14 @@ ActiveRecord::Schema.define(version: 2026_08_06_101806) do
     t.datetime "link_token_sent_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "notify_new_projekt", default: true, null: false
+    t.boolean "notify_deadline_approaching", default: true, null: false
+    t.boolean "notify_deadline_passed", default: true, null: false
+    t.boolean "notify_new_supports", default: true, null: false
+    t.boolean "notify_new_comments", default: true, null: false
+    t.boolean "notify_moderation_decision", default: true, null: false
+    t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
+    t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"
     t.index ["link_token"], name: "index_whatsapp_accounts_on_link_token", unique: true
     t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id"
     t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"
@@ -3520,6 +3528,16 @@ ActiveRecord::Schema.define(version: 2026_08_06_101806) do
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
     t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
+  end
+
+  create_table "whatsapp_notification_deliveries", force: :cascade do |t|
+    t.bigint "whatsapp_account_id", null: false
+    t.bigint "projekt_phase_id"
+    t.string "kind", null: false
+    t.datetime "sent_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["whatsapp_account_id", "projekt_phase_id", "kind"], name: "index_whatsapp_notification_deliveries_on_account_phase_kind", unique: true
   end
 
   create_table "whatsapp_webhook_events", force: :cascade do |t|

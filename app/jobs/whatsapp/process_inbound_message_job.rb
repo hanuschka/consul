@@ -4,7 +4,7 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
   CONTENDED_RETRY_DELAY = 5.seconds
 
   def perform(whatsapp_message_id, raw_message = {})
-    whatsapp_message = WhatsappMessage.find_by(id: whatsapp_message_id)
+    whatsapp_message = Whatsapp::Message.find_by(id: whatsapp_message_id)
 
     return if whatsapp_message.blank?
 

@@ -48,7 +48,7 @@ module Adm
       end
 
       def load_account
-        @account = WhatsappAccount.find(params[:id])
+        @account = ::Whatsapp::Account.find(params[:id])
       end
 
       def recent_messages

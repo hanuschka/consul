@@ -6,7 +6,7 @@ class Ai::Tools::WhatsappAiAssistant::StopMessages < Ai::Tools::WhatsappAiAssist
               "This sends the confirmation itself — do not write one as well."
 
   def execute
-    ::Whatsapp::Steps::SetMessageDeliveryService.call(conversation: conversation, enabled: false)
+    ::Whatsapp::Flows::MessageDeliveryService.disable(conversation: conversation)
 
     halt("Turned off all messages for this citizen.")
   end

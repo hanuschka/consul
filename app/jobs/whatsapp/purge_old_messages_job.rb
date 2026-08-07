@@ -10,7 +10,7 @@ class Whatsapp::PurgeOldMessagesJob < ApplicationJob
 
     def purge_messages
       cutoff = ::Whatsapp.retention_days.days.ago
-      purged_count = WhatsappMessage.older_than(cutoff).delete_all
+      purged_count = Whatsapp::Message.older_than(cutoff).delete_all
 
       Rails.logger.info("[Whatsapp] purged #{purged_count} messages older than #{cutoff.to_date}")
     end
@@ -19,7 +19,7 @@ class Whatsapp::PurgeOldMessagesJob < ApplicationJob
     # failed ingestion, so they are dropped long before the messages themselves.
     def purge_webhook_events
       cutoff = ::Whatsapp::WEBHOOK_EVENT_RETENTION.ago
-      purged_count = WhatsappWebhookEvent.older_than(cutoff).delete_all
+      purged_count = Whatsapp::WebhookEvent.older_than(cutoff).delete_all
 
       Rails.logger.info(
         "[Whatsapp] purged #{purged_count} webhook events older than #{cutoff.to_date}"

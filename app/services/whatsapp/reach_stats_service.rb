@@ -16,32 +16,32 @@ class Whatsapp::ReachStatsService < ApplicationService
   private
 
     def account_stats
-      counts_by_state = WhatsappAccount.group(:state).count
+      counts_by_state = Whatsapp::Account.group(:state).count
 
       {
         total: counts_by_state.values.sum,
         unlinked: counts_by_state["unlinked"].to_i,
         link_pending: counts_by_state["link_pending"].to_i,
         linked: counts_by_state["linked"].to_i,
-        verified: WhatsappAccount.verified.count,
-        subscribed: WhatsappAccount.subscribed.count,
-        opted_out: WhatsappAccount.where.not(opt_out_at: nil).count
+        verified: Whatsapp::Account.verified.count,
+        subscribed: Whatsapp::Account.subscribed.count,
+        opted_out: Whatsapp::Account.where.not(opt_out_at: nil).count
       }
     end
 
     def activity_stats
       {
-        active_recent: WhatsappAccount.where(last_inbound_at: RECENT_WINDOW.ago..).count,
-        active_growth: WhatsappAccount.where(last_inbound_at: GROWTH_WINDOW.ago..).count,
-        new_verified: WhatsappAccount.where(verified_at: GROWTH_WINDOW.ago..).count,
-        new_opt_ins: WhatsappAccount.where(opt_in_at: GROWTH_WINDOW.ago..).count
+        active_recent: Whatsapp::Account.where(last_inbound_at: RECENT_WINDOW.ago..).count,
+        active_growth: Whatsapp::Account.where(last_inbound_at: GROWTH_WINDOW.ago..).count,
+        new_verified: Whatsapp::Account.where(verified_at: GROWTH_WINDOW.ago..).count,
+        new_opt_ins: Whatsapp::Account.where(opt_in_at: GROWTH_WINDOW.ago..).count
       }
     end
 
     def message_stats
-      by_direction = WhatsappMessage.group(:direction).count
+      by_direction = Whatsapp::Message.group(:direction).count
       recent_by_direction =
-        WhatsappMessage.where(created_at: GROWTH_WINDOW.ago..).group(:direction).count
+        Whatsapp::Message.where(created_at: GROWTH_WINDOW.ago..).group(:direction).count
 
       {
         inbound: by_direction["inbound"].to_i,
@@ -54,48 +54,59 @@ class Whatsapp::ReachStatsService < ApplicationService
     end
 
     def counts_by_kind
-      counts = WhatsappMessage.group(:kind).count
+      counts = Whatsapp::Message.group(:kind).count
 
-      WhatsappMessage.kinds.each_key.index_with { |kind| counts[kind].to_i }
+      Whatsapp::Message.kinds.each_key.index_with { |kind| counts[kind].to_i }
     end
 
     def failed_outbound_count
-      WhatsappMessage.where(direction: "outbound", status: "failed").count
+      Whatsapp::Message.where(direction: "outbound", status: "failed").count
     end
 
+    # One grouped pass over the broadcast rows rather than a count and a maximum
+    # over the same scan: whatsapp_messages is the largest table the feature has
+    # and this renders on every /adm/whatsapp load.
+    #
+    # "sent" is everything that left the system, not literally status "sent": a
+    # delivery receipt moves a row on to "delivered" and then "read", so
+    # counting the one status reported zero for every broadcast whose receipts
+    # had come back. Whatsapp::Message.broadcast_delivered? draws the same line.
     def broadcast_rows
-      counts = broadcast_scope.group(:projekt_id, :status).count
-      return [] if counts.empty?
+      totals_by_projekt = broadcast_totals_by_projekt
 
-      last_sent_at = broadcast_scope.group(:projekt_id).maximum(:created_at)
-      names = broadcast_projekt_names(last_sent_at.keys)
+      return [] if totals_by_projekt.empty?
 
-      rows = last_sent_at.map do |projekt_id, sent_at|
+      names = broadcast_projekt_names(totals_by_projekt.keys)
+
+      rows = totals_by_projekt.map do |projekt_id, totals|
         {
           projekt_id: projekt_id,
           projekt_name: names[projekt_id],
-          sent: sent_count(counts, projekt_id),
-          failed: counts[[projekt_id, "failed"]].to_i,
-          last_sent_at: sent_at
+          sent: totals[:sent],
+          failed: totals[:failed],
+          last_sent_at: totals[:last_sent_at]
         }
       end
 
       rows.sort_by { |row| -row[:last_sent_at].to_i }.first(BROADCAST_PROJEKT_LIMIT)
     end
 
-    # Everything that left the system, not literally status "sent": a delivery
-    # receipt moves a row on to "delivered" and then "read", so counting the one
-    # status reported zero for every broadcast whose receipts had come back.
-    # WhatsappMessage.broadcast_delivered? draws the same line.
-    def sent_count(counts, projekt_id)
-      counts
-        .select { |(row_projekt_id, status), _| row_projekt_id == projekt_id && status != "failed" }
-        .values
-        .sum
+    def broadcast_totals_by_projekt
+      grouped = broadcast_scope
+        .group(:projekt_id, :status)
+        .pluck(:projekt_id, :status, Arel.sql("COUNT(*)"), Arel.sql("MAX(created_at)"))
+
+      grouped.each_with_object({}) do |(projekt_id, status, count, last_created_at), totals|
+        row = totals[projekt_id] ||= { sent: 0, failed: 0, last_sent_at: nil }
+        bucket = status == "failed" ? :failed : :sent
+
+        row[bucket] += count
+        row[:last_sent_at] = [row[:last_sent_at], last_created_at].compact.max
+      end
     end
 
     def broadcast_scope
-      WhatsappMessage
+      Whatsapp::Message
         .where(kind: "template", direction: "outbound")
         .where.not(projekt_id: nil)
     end
@@ -110,7 +121,7 @@ class Whatsapp::ReachStatsService < ApplicationService
     end
 
     def conversation_stats
-      by_step = WhatsappConversation.group(:step).count
+      by_step = Whatsapp::Conversation.group(:step).count
 
       {
         total: by_step.values.sum,

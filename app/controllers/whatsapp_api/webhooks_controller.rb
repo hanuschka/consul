@@ -3,7 +3,7 @@ class WhatsappApi::WebhooksController < WhatsappApi::BaseController
   # been answered by the time the job runs, so this row is the only copy left to
   # replay a delivery from if ingestion fails.
   def create
-    event = WhatsappWebhookEvent.create!(payload: request.request_parameters)
+    event = Whatsapp::WebhookEvent.create!(payload: request.request_parameters)
 
     ::Whatsapp::IngestWebhookJob.perform_later(event.id)
 

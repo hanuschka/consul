@@ -3,51 +3,237 @@ en:
     account:
       title: WhatsApp
       not_linked: >-
-        Your WhatsApp number is not linked to this account yet. Message the participation bot on
-        WhatsApp to start linking.
-      subscribed: "Linked number: %{phone}. You receive notifications about new projects."
-      opted_out: "Linked number: %{phone}. You currently receive no notifications."
+        Your WhatsApp number is not linked to this account yet. Message the participation bot on WhatsApp
+        to start linking.
+      subscribed: 'Linked number: %{phone}. You receive notifications about new projects.'
+      opted_out: 'Linked number: %{phone}. You currently receive no notifications.'
       opt_in: Enable notifications
       opt_out: Stop receiving notifications
     link:
       success: Your WhatsApp number is now linked to your account.
-      failure: >-
-        This link is no longer valid. Message the bot on WhatsApp again to get a new one.
+      failure: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
       page:
         title: Link your WhatsApp number
-        intro: >-
-          Once linked, proposals you submit by WhatsApp are attributed to your account.
+        intro: Once linked, proposals you submit by WhatsApp are attributed to your account.
         number_label: WhatsApp number
-        broadcast_consent: >-
-          I want to be notified on WhatsApp when a new participation project starts.
+        broadcast_consent: I want to be notified on WhatsApp when a new participation project starts.
         consent_note: >-
-          Without this box you can still submit proposals via WhatsApp, you just receive no
-          notifications. You can change this any time in your account or by sending STOP.
+          Without this box you can still submit proposals via WhatsApp, you just receive no notifications.
+          You can change this any time in your account or by sending STOP.
         confirm: Link number
+      expired: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
+      already_linked: This WhatsApp number is already linked to a different account.
     subscription:
       opted_in: You will receive WhatsApp notifications again.
       opted_out: You will no longer receive WhatsApp notifications.
       not_linked: No WhatsApp number is linked to your account.
     bot:
-      link_invitation: >-
-        Hello! So your proposal can be attributed to your account, please link your number to the
-        participation platform once. The link is valid for one hour.
-      link_invitation_with_url: >-
-        Hello! So your proposal can be attributed to your account, please link your number to the
-        participation platform once: %{url}
-
-        The link is valid for one hour.
-      link_invitation_button: Link account
-      link_confirmed: "Thanks, %{name}! Your number is now linked to your account."
       welcome_greeting: >-
-        Welcome! You can submit proposals for the running participation projects here. Which one
-        would you like to contribute to?
-      choose_projekt_button: Show projects
-      projekt_row_description: "%{phase} until %{end_date}"
+        Welcome! You can submit proposals for the running participation projects here. Which one would
+        you like to contribute to?
+      commands:
+        default: |-
+          help|What this chat can do
+          projects|Current participation projects
+          notifications|Choose what you hear about
+          stop|Stop receiving messages
+      ice_breakers:
+        default_1: Which projects are running right now?
+        default_2: I have an idea for my city
+        default_3: How does submitting a proposal work?
+        default_4: Stop receiving messages
+      idea_missing: Please describe your idea as text or as a voice message.
+      no_projekt: >-
+        There is no participation project accepting proposals at the moment. Write to me again when
+        a new one starts, or scan the QR code of a project.
+      drafting: Thanks! I am turning this into a proposal — one moment.
+      draft_failed: That did not work. Feel free to send me your idea again.
+      transcription_failed: I could not understand the voice message. Please write your idea as text.
+      publish_failed: Something went wrong while publishing. Please try again later.
+      criteria_failed: |-
+        Your proposal does not meet one of this project's requirements yet: %{criterion}
+
+        %{feedback}
+
+        Tell me what I should change.
+      too_fast: One moment — I am still working on your proposal.
+      opted_in: You will receive messages from us again.
+      verification_link: 'You can verify your account here: %{url}'
+      buttons:
+        publish: Publish
+        revise: Revise
+        retry: Try again
+        cancel: Cancel
+        link_yes: Yes, link it
+        link_later: Later
+        login: 🔗 Log in
+        login_again: Log in again
+        show_projekts: Show projects
+        show_current_projekts: Current projects
+        no_thanks: No thanks
+        got_it: OK, got it
+        unlink_yes: Yes, unlink
+        done: Done
+        choose_notifications: Choose
+        choose_category: Choose category
+        idea_start: Yes, I have an idea
+        draft_publish: Yes, submit it
+        draft_revise: Edit
+        resume: Continue
+        restart: Start over
+        support: 👍 Support
+        help: Help
+        open_page: Open page
+      refused:
+        generic: I cannot submit a proposal for this project right now.
+        phase_missing: I could not find the project. Please scan the QR code again.
+        phase_not_supported: This phase does not accept submissions via WhatsApp.
+        budget_heading_missing: This budget has no area set up yet that I could file your proposal
+          under.
+        creation_disabled: This phase does not accept proposals right now.
+        ai_flow_disabled: Submitting via WhatsApp is not enabled for this project.
+        phase_not_active: This participation phase is not active right now.
+        phase_expired: This participation phase has already ended.
+        phase_not_current: This participation phase is not running right now.
+        not_verified: Your account must be verified to submit a proposal.
+        submissions_limit_exceeded: You have already submitted as many proposals to this project as
+          are allowed.
+        no_open_phase: This project currently has no phase that accepts proposals.
+      portal_fallback_name: the participation portal
+      onboarding:
+        disclosure: >-
+          👋 Welcome to %{portal_name}! I'm an AI bot that helps you submit proposals, support them,
+          and stay up to date.
+        link_question: >-
+          Would you like to link your account? Then you can participate directly here and get personal
+          notifications.
+        consent: >-
+          By tapping "Yes" you consent to the processing of your phone number under our privacy policy:
+          %{privacy_url}
+        login_prompt: 'Tap below to log in:'
+        login_prompt_with_url: 'Tap the link to log in: %{url}'
+        linked: >-
+          ✅ Successfully linked! From now on you can submit proposals, support them, and receive notifications
+          directly here.
+        discovery_offer: Want to see which projects you can currently participate in?
+        declined: >-
+          No problem! Even without linking you can see what's currently happening — just without personal
+          notifications and direct participation.
+        no_account: You need an account to link. You can register in 2 minutes at %{register_url}.
+        expired: 'That didn''t work — the link may have expired. Try again:'
+        already_linked: This number is already linked to a different account. Would you like to switch?
+        unlink_confirm: >-
+          Are you sure you want to unlink your account? You'll no longer receive notifications and
+          won't be able to support proposals directly.
+        unlinked: ✅ Account unlinked. Your number has been deleted. You can link again at any time.
+        welcome_back: 👋 Welcome back! This number isn't linked yet — would you like to link it (again)?
+      discovery:
+        body: These are the projects you can contribute to right now. Which one would you like?
+        phase_body: >-
+          There is more than one thing running in "%{projekt}". Which one do you want to contribute
+          to?
+        button: Choose project
+        empty: Nothing is open for contributions right now. Write to me again when a new project starts.
+        row_description: '%{phase} until %{end_date}'
+        public_intro: 'This is what''s currently happening:'
+        entry: |-
+          *%{title}*
+          %{url}
+        more: 'And %{count} more: %{url}'
+      notifications:
+        settings_title: 🔔 What would you like to be notified about?
+        saved: ✅ Settings saved.
+        types:
+          new_projekt:
+            short: New project
+            label: New project
+          deadline_approaching:
+            short: Deadline soon
+            label: Deadline approaching
+          deadline_passed:
+            short: Deadline passed
+            label: Deadline passed
+          new_supports:
+            short: New supports
+            label: New supports on my proposal
+          new_comments:
+            short: New comments
+            label: New comments on my proposal
+          moderation_decision:
+            short: Moderation
+            label: Moderation decision
+        push:
+          new_projekt: |-
+            📣 There's a new participation project on %{portal_name}.
+            %{url}
+          deadline_approaching: |-
+            ⏳ Only a few days left: the proposal submission deadline is coming up soon.
+            %{url}
+          deadline_passed: |-
+            🏁 The deadline has passed. See the result:
+            %{url}
+          status_change: |-
+            🔔 There's an update on your proposal.
+            %{url}
+      proposal:
+        prompt: '🏗️ New project: %{projekt}. Do you have a concrete idea for this?'
+        ask_idea: Write me a short summary of what you're thinking — I'll turn it into a proposal.
+        ask_category: Which category fits best?
+        category_line: 'Category: %{category}'
+        draft: |-
+          Great idea! Here's how I'd phrase it:
+
+          _"%{title}"_
+          %{description}
+        draft_question: Does that sound right?
+        draft_revised: |-
+          Got it:
+
+          _"%{title}"_
+          %{description}
+        draft_revised_question: Does that work now?
+        ask_revision: Sure, what should I change?
+        published: '✅ It''s live now: %{url}'
+        published_pending_moderation: Thanks! Your proposal is now being reviewed, we'll get back
+          to you.
+        unclear: I didn't quite understand that — do you mean a new proposal or a comment on an existing
+          one?
+        cancelled: OK, cancelled. Just message me again whenever you'd like.
+        unsafe: I can't submit that as is. Would you like to rephrase it?
+        resume: You've been away a while — would you like to continue your earlier proposal or start
+          over?
+      support:
+        prompt: '👍 Would you like to support this proposal: "%{title}"?'
+        thanks: ✅ Thanks for your support! (%{count} supporters so far)
+        already: You've already supported this proposal.
+        gone: That proposal is unfortunately no longer available.
+      comment:
+        prompt: Would you like to add anything to this proposal?
+        published: Thanks, your comment is now on the project page.
+        pending: Thanks, your comment is being reviewed and will then appear on the project page.
+        invalid: I couldn't save that comment. Try writing it a little differently.
+        closed: Comments are closed for this proposal.
+      subscription:
+        followed: ✅ You're now following "%{projekt}" and will be notified.
+        unfollowed: >-
+          You'll no longer receive notifications about "%{projekt}". You can resubscribe anytime with
+          "Subscribe %{projekt}".
+        unknown: I couldn't find a project with that name. Write "projects" to see what's running.
+      compliance:
+        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
+        help:
+          linked: >-
+            Here's what I can do: 📝 Submit a proposal · 👍 Support a proposal · 🔔 Manage notifications
+            · 🔗 Unlink account. Just tell me what you'd like.
+          unlinked: >-
+            Here's what I can do: 📝 Submit a proposal · 👍 Support a proposal · 🔔 Manage notifications
+            · 🔗 Link now. Just tell me what you'd like.
+        out_of_scope: I can't answer that here — this is only about %{portal_name}. More at %{help_url}.
+        opted_out: Understood, you won't receive any more messages from us.
+    archive:
       menu:
-        body: >-
-          Welcome! Everything about participation in your region is here. What would you like to
-          do?
+        body: Welcome! Everything about participation in your region is here. What would you like
+          to do?
         button: Choose
         nothing_here: There is nothing to see here at the moment.
         sections:
@@ -106,9 +292,6 @@ en:
             follow:
               title: Follow this project
               description: Be told when something happens
-            page:
-              title: Open the page
-              description: This project in the portal
           phase:
             participate:
               title: Take part here
@@ -123,61 +306,61 @@ en:
               title: Open the page
               description: This phase in the portal
         phase:
-          until: "until %{end_date}"
+          until: until %{end_date}
         digest:
-          more: "And %{count} more: %{url}"
-          more_plain: "And %{count} more."
+          more: 'And %{count} more: %{url}'
+          more_plain: And %{count} more.
         contributions:
-          intro: "This is what you have submitted so far:"
-          entry: "*%{title}*\n%{url}"
+          intro: 'This is what you have submitted so far:'
+          entry: |-
+            *%{title}*
+            %{url}
           empty: >-
-            You have not submitted anything yet. You can write a proposal for a running project
-            from the menu at any time.
+            You have not submitted anything yet. You can write a proposal for a running project from
+            the menu at any time.
         projekt_contributions:
-          intro: "These contributions were made to \"%{projekt}\":"
+          intro: 'These contributions were made to "%{projekt}":'
           empty: Nothing has been submitted to this project yet.
         phase_contributions:
-          intro: "This was submitted to \"%{phase}\":"
+          intro: 'This was submitted to "%{phase}":'
           empty: There are no contributions in this phase yet.
         phase_participation:
           unsupported: >-
             I cannot submit anything for you in this phase here in the chat. You can do it on the
             project page: %{url}
         projekts:
-          body: "These participation projects are running right now. Which one would you like to see?"
+          body: These participation projects are running right now. Which one would you like to see?
           button: Choose project
-          empty: >-
-            No participation project is running right now. Write to me again when a new one starts.
+          empty: No participation project is running right now. Write to me again when a new one starts.
         phases:
-          body: "This is running in \"%{projekt}\":"
+          body: 'This is running in "%{projekt}":'
           button: Choose phase
           closed: already finished
           empty: There are no phases to see in this project at the moment.
         events:
-          intro: "These dates are coming up:"
+          intro: 'These dates are coming up:'
           empty: No events are planned at the moment.
         polls:
-          intro: "You can take part in these votes right now:"
-          until: "open until %{end_date}"
+          intro: 'You can take part in these votes right now:'
+          until: open until %{end_date}
           empty: No vote is running at the moment.
         milestones:
-          intro: "This is what has happened recently:"
+          intro: 'This is what has happened recently:'
           empty: There is no progress to report yet.
         results:
-          body: "Results are already available for these phases. Which one would you like to see?"
+          body: Results are already available for these phases. Which one would you like to see?
           button: Choose result
-          link_body: "You can find the evaluation of \"%{phase}\" here:"
-          empty: >-
-            No results have been published yet. Once a phase has been evaluated you will find it
-            here.
+          link_body: 'You can find the evaluation of "%{phase}" here:'
+          empty: No results have been published yet. Once a phase has been evaluated you will find
+            it here.
         notifications:
           state_on: You receive messages from us.
           state_off: You currently receive no messages from us.
-          follows: "You follow these projects:"
+          follows: 'You follow these projects:'
           no_follows: You do not follow any project yet.
         follow:
-          followed: "You now follow \"%{projekt}\" and will be told when something happens."
-          unfollowed: "You no longer follow \"%{projekt}\"."
+          followed: You now follow "%{projekt}" and will be told when something happens.
+          unfollowed: You no longer follow "%{projekt}".
         help:
           intro: |-
             *What I can do*
@@ -192,98 +375,30 @@ en:
             See your own contributions, follow projects, and stop messages at any time.
 
             You can also just write what you are looking for — I will take you there.
-          currently_empty: "Nothing right now for: %{items}."
-          more: "More about participation: %{url}"
-          body: "This is how participation works:"
+          currently_empty: 'Nothing right now for: %{items}.'
+          more: 'More about participation: %{url}'
+          body: 'This is how participation works:'
           button: Open help
-          missing: >-
-            This portal has no help page yet. Just write and tell me what you would like to know.
+          missing: This portal has no help page yet. Just write and tell me what you would like to
+            know.
         contact:
-          body: "This is how to reach the team:"
+          body: 'This is how to reach the team:'
           button: Open contact
-          missing: >-
-            This portal has no contact page. Write to me and tell me what it is about.
+          missing: This portal has no contact page. Write to me and tell me what it is about.
         link:
-          body: "You can open \"%{title}\" here in the participation portal:"
-          gone: >-
-            That is unfortunately no longer available. Check the menu for what is currently open.
-      commands:
-        default: |-
-          menu|Show everything on offer
-          help|What this chat can do
-          projects|Current participation projects
-          stop|Stop receiving messages
-      ice_breakers:
-        default_1: Which projects are running right now?
-        default_2: I have an idea for my city
-        default_3: How does submitting a proposal work?
-        default_4: Stop receiving messages
-      ask_idea: |-
-        You are in the project “%{projekt}”:
-        %{url}
-
-        Do you have concrete ideas or suggestions? Send them to me as text or as a voice message.
-      idea_missing: Please describe your idea as text or as a voice message.
+          body: 'You can open "%{title}" here in the participation portal:'
+          gone: That is unfortunately no longer available. Check the menu for what is currently open.
+      choose_projekt_button: Show projects
+      projekt_row_description: '%{phase} until %{end_date}'
       choose_phase: >-
-        The project “%{projekt}” has several participation phases running. Which one do you want
-        to contribute to?
+        The project “%{projekt}” has several participation phases running. Which one do you want to
+        contribute to?
       choose_phase_button: Choose phase
-      phase_row_description: "until %{end_date}"
-      no_projekt: >-
-        There is no participation project accepting proposals at the moment. Write to me again
-        when a new one starts, or scan the QR code of a project.
-      drafting: Thanks! I am turning this into a proposal — one moment.
-      draft_summary: |-
-        Here is my proposal:
-
-        *%{title}*
-
-        %{description}
-      draft_failed: That did not work. Feel free to send me your idea again.
-      ask_revision: What should I change or add?
-      transcription_failed: >-
-        I could not understand the voice message. Please write your idea as text.
-      published: "Your proposal is published: %{url}"
-      published_pending_moderation: >-
-        Thanks! Your proposal was submitted and will be reviewed before it becomes publicly
-        visible: %{url}
-      publish_failed: Something went wrong while publishing. Please try again later.
-      criteria_failed: |-
-        Your proposal does not meet one of this project's requirements yet: %{criterion}
-
-        %{feedback}
-
-        Tell me what I should change.
-      too_fast: One moment — I am still working on your proposal.
-      opted_out: You will not receive any more messages from us. Send START to subscribe again.
-      opted_in: You will receive messages from us again.
-      verification_link: "You can verify your account here: %{url}"
-      cancelled: Cancelled. Nothing was submitted.
+      phase_row_description: until %{end_date}
       buttons:
-        publish: Publish
-        revise: Revise
-        retry: Try again
-        cancel: Cancel
-        menu: Main menu
         open_projekt: Open project
         projekt_menu: More about it
         follow: Follow
         unfollow: Unfollow
         messages_off: Stop messages
         messages_on: Resume messages
-      refused:
-        generic: I cannot submit a proposal for this project right now.
-        phase_missing: I could not find the project. Please scan the QR code again.
-        phase_not_supported: This phase does not accept submissions via WhatsApp.
-        budget_heading_missing: >-
-          This budget has no area set up yet that I could file your proposal under.
-        creation_disabled: This phase does not accept proposals right now.
-        ai_flow_disabled: Submitting via WhatsApp is not enabled for this project.
-        phase_not_active: This participation phase is not active right now.
-        phase_expired: This participation phase has already ended.
-        phase_not_current: This participation phase is not running right now.
-        not_verified: Your account must be verified to submit a proposal.
-        submissions_limit_exceeded: >-
-          You have already submitted as many proposals to this project as are allowed.
-        no_open_phase: >-
-          This project currently has no phase that accepts proposals.

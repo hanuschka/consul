@@ -32,7 +32,7 @@ class Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility <
     # The same copy the deterministic refusal sends, so the two paths never
     # give the citizen two different accounts of the same rule.
     def explanation_for(reason)
-      reason_key = ::Whatsapp::Steps::RefuseParticipationService.reason_key(reason)
+      reason_key = ::Whatsapp::Flows::RefuseParticipationService.reason_key(reason)
 
       I18n.t("whatsapp.bot.refused.#{reason_key}")
     end

@@ -1,29 +1,24 @@
 class Whatsapp::SubscriptionsController < ApplicationController
-  before_action :ensure_feature_enabled!
+  include Whatsapp::FeatureGated
+
   before_action :authenticate_user!
   before_action :find_account
 
   skip_authorization_check
 
   def create
-    @account.update!(opt_in_at: Time.current, opt_out_at: nil)
+    @account.opt_in!
 
     redirect_to account_path, notice: t("whatsapp.subscription.opted_in")
   end
 
   def destroy
-    @account.update!(opt_out_at: Time.current)
+    @account.opt_out!
 
     redirect_to account_path, notice: t("whatsapp.subscription.opted_out")
   end
 
   private
-
-    def ensure_feature_enabled!
-      return if ::Whatsapp.enabled?
-
-      redirect_to root_path
-    end
 
     def find_account
       @account = current_user.whatsapp_account

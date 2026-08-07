@@ -2,10 +2,13 @@ module Whatsapp::Outbound
   # Every dead end offers a way out, so a citizen never has to guess what the
   # bot expects next. Ids are global: they are handled before the step
   # dispatcher, so a button works from whatever state the flow is in.
+  # `help` replaced `menu` when the portal-wide list menu was archived: the
+  # catalog's way out of a dead end is the help overview, and a button that
+  # opened a menu which no longer exists would be the dead end itself.
   RECOVERY_ACTION_IDS = {
     retry: "whatsapp_retry",
     cancel: "whatsapp_cancel",
-    menu: "whatsapp_menu"
+    help: "whatsapp_help"
   }.freeze
 
   MAX_RECOVERY_BUTTONS = 3
@@ -114,7 +117,7 @@ module Whatsapp::Outbound
   def deliver(account:, kind:, body:, projekt_id: nil)
     response = yield(WhatsappApi::Client.new.messages)
 
-    WhatsappMessage.record_outbound!(
+    Whatsapp::Message.record_outbound!(
       account: account,
       kind: kind,
       body: body,

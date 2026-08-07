@@ -14,7 +14,7 @@
 
     <%= render Adm::AttributeEditorComponent.new(@auto_broadcast_setting, :value, :boolean) %>
 
-    <% if @auto_broadcast_setting.value.present? && Whatsapp.broadcast_template_name.blank? %>
+    <% if @auto_broadcast_setting.value.present? && ::Whatsapp.broadcast_template_name.blank? %>
       <%= kern_alert(title: t("adm.whatsapp.show.auto_broadcast_missing_template_title"), style: :warning) do %>
         <p class="kern-body"><%= t("adm.whatsapp.show.auto_broadcast_missing_template_body") %></p>
       <% end %>

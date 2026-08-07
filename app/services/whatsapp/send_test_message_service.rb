@@ -58,10 +58,10 @@ class Whatsapp::SendTestMessageService < ApplicationService
     end
 
     def record_against_known_account(response)
-      account = WhatsappAccount.find_by(wa_id: @phone)
+      account = Whatsapp::Account.find_by(wa_id: @phone)
 
       return if account.blank?
 
-      WhatsappMessage.record_outbound!(account:, kind: "text", body: @body, response:)
+      Whatsapp::Message.record_outbound!(account:, kind: "text", body: @body, response:)
     end
 end

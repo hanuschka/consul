@@ -73,6 +73,18 @@ class ProjektPhase < ApplicationRecord
   # other channel publish past the limit.
   SUBMISSION_LOCATIONS = %i[new_button_component whatsapp_bot].freeze
 
+  # Phase types the AI drafting flow exists for override this with their own
+  # feature key. Nil means the type has no such flow, which is what every
+  # caller — the new-proposal button, the /adm toggle, the WhatsApp bot — has
+  # to branch on, so the branch lives here rather than once per caller.
+  def ai_flow_feature_key
+    nil
+  end
+
+  def ai_flow_enabled?
+    ai_flow_feature_key.present? && feature?(ai_flow_feature_key)
+  end
+
   PHASE_FA_ICONS = {
     "ProjektPhase::CommentPhase" => "fa-comment",
     "ProjektPhase::ProposalPhase" => "fa-lightbulb",
@@ -245,6 +257,15 @@ class ProjektPhase < ApplicationRecord
     active
       .where("start_date IS NULL OR start_date <= ?", timestamp)
       .where("end_date IS NULL OR end_date >= ?", timestamp)
+  }
+
+  # Phases of a projekt a visitor can actually reach: activated, and with its
+  # page published. Anything offered outside a session — the WhatsApp bot, a
+  # digest — has to narrow by this before it links to a phase.
+  scope :of_publicly_visible_projekt, -> {
+    joins(projekt: :page)
+      .where(site_customization_pages: { status: "published" })
+      .merge(Projekt.activated)
   }
 
   scope :has_resources, -> {

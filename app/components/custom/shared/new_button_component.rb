@@ -136,11 +136,7 @@ projekt_id: @projekt)
     end
 
     def ai_flow_feature_key
-      if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
-        "resource.create_proposal_with_ai"
-      elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
-        "resource.create_investment_with_ai"
-      end
+      @projekt_phase.ai_flow_feature_key
     end
 
     def ai_flow_link_path

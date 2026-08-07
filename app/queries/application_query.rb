@@ -3,6 +3,12 @@ class ApplicationQuery
     new(*args, **kwargs).call(&block)
   end
 
+  # Opt-in: only queries that define #exists? answer it. A caller asking whether
+  # a list would have any rows should not pay for building the rows.
+  def self.exists?(*args, **kwargs)
+    new(*args, **kwargs).exists?
+  end
+
   private
 
     def apply_sorting(base_scope)

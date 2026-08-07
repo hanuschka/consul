@@ -90,6 +90,10 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     feature?("resource.users_can_create_proposals")
   end
 
+  def ai_flow_feature_key
+    "resource.create_proposal_with_ai"
+  end
+
   def selectable_by_admins_only?
     !selectable_by_users?
   end

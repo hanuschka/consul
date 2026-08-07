@@ -12,74 +12,24 @@
         <% else %>
           <dl class="adm-whatsapp-qr--details">
             <% if token.present? %>
-              <div class="adm-whatsapp-qr--detail">
-                <dt class="adm-whatsapp-qr--detail-key"><%= t("adm.whatsapp.token") %></dt>
-                <dd class="adm-whatsapp-qr--detail-value">
-                  <div class="adm-whatsapp-qr--field" data-controller="clipboard">
-                    <span
-                      class="adm-whatsapp-qr--field-text"
-                      data-clipboard-target="source"
-                    ><%= token %></span>
-
-                    <button
-                      type="button"
-                      class="kern-btn kern-btn--tertiary adm-whatsapp-qr--copy"
-                      data-action="clipboard#copy"
-                    >
-                      <span class="kern-label material-symbols-outlined" aria-hidden="true">content_copy</span>
-                      <span class="kern-label kern-sr-only"><%= t("adm.whatsapp.copy_token") %></span>
-                    </button>
-                  </div>
-                </dd>
-              </div>
+              <%= render "adm/whatsapp/copy_field",
+                    label: t("adm.whatsapp.token"),
+                    copy_label: t("adm.whatsapp.copy_token"),
+                    text: token %>
             <% end %>
 
-            <div class="adm-whatsapp-qr--detail">
-              <dt class="adm-whatsapp-qr--detail-key"><%= t("adm.whatsapp.number") %></dt>
-              <dd class="adm-whatsapp-qr--detail-value">
-                <div class="adm-whatsapp-qr--field" data-controller="clipboard">
-                  <span
-                    class="adm-whatsapp-qr--field-text adm-whatsapp-qr--field-text--numeric"
-                    data-clipboard-target="source"
-                  >+<%= business_number %></span>
+            <%= render "adm/whatsapp/copy_field",
+                  label: t("adm.whatsapp.number"),
+                  copy_label: t("adm.whatsapp.copy_number"),
+                  text: "+#{business_number}",
+                  text_modifier: "numeric" %>
 
-                  <button
-                    type="button"
-                    class="kern-btn kern-btn--tertiary adm-whatsapp-qr--copy"
-                    data-action="clipboard#copy"
-                  >
-                    <span class="kern-label material-symbols-outlined" aria-hidden="true">content_copy</span>
-                    <span class="kern-label kern-sr-only"><%= t("adm.whatsapp.copy_number") %></span>
-                  </button>
-                </div>
-              </dd>
-            </div>
-
-            <div class="adm-whatsapp-qr--detail">
-              <dt class="adm-whatsapp-qr--detail-key"><%= t("adm.whatsapp.link") %></dt>
-              <dd class="adm-whatsapp-qr--detail-value">
-                <div class="adm-whatsapp-qr--field" data-controller="clipboard">
-                  <a
-                    class="kern-link adm-whatsapp-qr--field-text adm-whatsapp-qr--link"
-                    href="<%= deep_link %>"
-                    target="_blank"
-                    rel="noopener"
-                    data-clipboard-target="source"
-                  ><%= deep_link %></a>
-
-                  <button
-                    type="button"
-                    class="kern-btn kern-btn--tertiary adm-whatsapp-qr--copy"
-                    data-action="clipboard#copy"
-                  >
-                    <span class="kern-label material-symbols-outlined" aria-hidden="true">content_copy</span>
-                    <span class="kern-label kern-sr-only"><%= t("adm.whatsapp.copy_link") %></span>
-                  </button>
-                </div>
-
-                <p class="adm-whatsapp-qr--detail-hint"><%= t("adm.whatsapp.link_hint") %></p>
-              </dd>
-            </div>
+            <%= render "adm/whatsapp/copy_field",
+                  label: t("adm.whatsapp.link"),
+                  copy_label: t("adm.whatsapp.copy_link"),
+                  text: deep_link,
+                  href: deep_link,
+                  hint: t("adm.whatsapp.link_hint") %>
           </dl>
         <% end %>
       </section>

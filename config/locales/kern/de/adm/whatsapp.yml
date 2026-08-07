@@ -1,354 +1,375 @@
 de:
   adm:
     whatsapp:
-      greeting: "Hallo"
-      prefilled_text: "Projekt %{token}"
-      token: "Kennung"
-      number: "WhatsApp-Nummer"
-      link: "Direktlink"
-      qr_code: "QR-Code"
-      copy_token: "Kennung kopieren"
-      copy_number: "WhatsApp-Nummer kopieren"
-      copy_link: "Direktlink kopieren"
+      greeting: Hallo
+      prefilled_text: Projekt %{token}
+      token: Kennung
+      number: WhatsApp-Nummer
+      link: Direktlink
+      qr_code: QR-Code
+      copy_token: Kennung kopieren
+      copy_number: WhatsApp-Nummer kopieren
+      copy_link: Direktlink kopieren
       link_hint: >-
-        Öffnet den Chat mit dem Bot und legt eine erste Nachricht zum Senden bereit. Überall
-        einsetzbar, wo kein QR-Code gescannt werden kann – auf der Website, in E-Mails oder in
-        Social-Media-Beiträgen.
-      qr_hint: "Für Plakate den QR-Code als JPEG herunterladen."
-      # PDF-Aushang vorerst deaktiviert — zum Wiederherstellen:
-      # qr_hint: "Für Plakate den QR-Code als JPEG oder den fertigen Aushang als PDF herunterladen."
-      download_jpeg: "JPEG herunterladen"
-      download_pdf: "PDF-Aushang"
+        Öffnet den Chat mit dem Bot und legt eine erste Nachricht zum Senden bereit. Überall einsetzbar,
+        wo kein QR-Code gescannt werden kann – auf der Website, in E-Mails oder in Social-Media-Beiträgen.
+      qr_hint: Für Plakate den QR-Code als JPEG herunterladen.
+      download_jpeg: JPEG herunterladen
+      download_pdf: PDF-Aushang
       poster:
-        lead: "Mitreden per WhatsApp – einfach den QR-Code mit der Handykamera scannen."
-        steps: "Der Chat öffnet sich direkt. Kurz „Hallo“ senden, dann führt der Bot durch die Beteiligung."
-        number: "WhatsApp-Nummer: %{number}"
-      missing_number: "Es ist keine WhatsApp-Nummer konfiguriert (Secret „whatsapp.business_number“)."
-      not_configured: "WhatsApp ist nicht vollständig konfiguriert."
+        lead: Mitreden per WhatsApp – einfach den QR-Code mit der Handykamera scannen.
+        steps: Der Chat öffnet sich direkt. Kurz „Hallo“ senden, dann führt der Bot durch die Beteiligung.
+        number: 'WhatsApp-Nummer: %{number}'
+      missing_number: Es ist keine WhatsApp-Nummer konfiguriert (Secret „whatsapp.business_number“).
+      not_configured: WhatsApp ist nicht vollständig konfiguriert.
       test_message:
-        body: "Testnachricht vom Beteiligungsportal. Wenn du das liest, funktioniert der Versand."
-        sent: "Testnachricht an %{phone} übergeben. Ankunft prüfen – außerhalb des 24-Stunden-Fensters lehnt WhatsApp den Versand ab."
-        failed: "Versand fehlgeschlagen"
-        phone_missing: "Bitte eine Nummer eingeben."
+        body: Testnachricht vom Beteiligungsportal. Wenn du das liest, funktioniert der Versand.
+        sent: >-
+          Testnachricht an %{phone} übergeben. Ankunft prüfen – außerhalb des 24-Stunden-Fensters
+          lehnt WhatsApp den Versand ab.
+        failed: Versand fehlgeschlagen
+        phone_missing: Bitte eine Nummer eingeben.
         details:
-          status: "HTTP-Status"
-          url: "Angefragte Adresse"
-          response: "Antwort von 360dialog"
-          message_id: "Nachrichten-ID"
-          exception: "Ausnahme"
-          missing_secrets: "Fehlende Zugangsdaten"
+          status: HTTP-Status
+          url: Angefragte Adresse
+          response: Antwort von 360dialog
+          message_id: Nachrichten-ID
+          exception: Ausnahme
+          missing_secrets: Fehlende Zugangsdaten
       template:
-        submitted: "Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe durch Meta kann einige Stunden dauern."
-        selected: "„%{name}“ wird jetzt für Projekt-Benachrichtigungen verwendet."
+        submitted: >-
+          Vorlage wurde bei 360dialog eingereicht und als Benachrichtigungsvorlage gesetzt. Die Freigabe
+          durch Meta kann einige Stunden dauern.
+        selected: „%{name}“ wird jetzt für Projekt-Benachrichtigungen verwendet.
       api_errors:
         placeholder_position: >-
-          Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet.
-          Vor {{1}} und nach {{2}} muss fester Text stehen.
+          Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet. Vor
+          {{1}} und nach {{2}} muss fester Text stehen.
       conversational_components:
-        applied: "Chat-Einstieg übertragen. Bis er in WhatsApp erscheint, können einige Minuten vergehen."
-        failed: "Chat-Einstieg konnte nicht übertragen werden: %{error}"
+        applied: Chat-Einstieg übertragen. Bis er in WhatsApp erscheint, können einige Minuten vergehen.
+        failed: 'Chat-Einstieg konnte nicht übertragen werden: %{error}'
       steps:
-        idle: "Kein laufender Vorgang"
-        awaiting_link: "Wartet auf Verknüpfung"
-        awaiting_phase_choice: "Wählt eine Phase"
-        awaiting_idea: "Schreibt den Vorschlag"
-        awaiting_draft_decision: "Entscheidet über den Entwurf"
-        awaiting_revision: "Überarbeitet den Entwurf"
+        idle: Kein laufender Vorgang
+        awaiting_link: Wartet auf Verknüpfung
+        awaiting_phase_choice: Wählt eine Phase
+        awaiting_idea: Schreibt den Vorschlag
+        awaiting_draft_decision: Entscheidet über den Entwurf
+        awaiting_revision: Überarbeitet den Entwurf
+        awaiting_link_decision: Entscheidet über Verknüpfung
+        awaiting_unlink_confirmation: Bestätigt Trennung
+        awaiting_category: Wählt eine Kategorie
+        awaiting_comment: Schreibt einen Kommentar
+        awaiting_notification_settings: Ändert Benachrichtigungen
+        awaiting_resume_decision: Entscheidet über Fortsetzung
       kinds:
-        text: "Text"
-        audio: "Sprachnachricht"
-        interactive: "Auswahl"
-        template: "Benachrichtigungsvorlage"
-        welcome: "Chat geöffnet"
-        unsupported: "Nicht unterstützt"
+        text: Text
+        audio: Sprachnachricht
+        interactive: Auswahl
+        template: Benachrichtigungsvorlage
+        welcome: Chat geöffnet
+        unsupported: Nicht unterstützt
       reach:
-        contacts_title: "Kontakte"
+        contacts_title: Kontakte
         contacts_intro: >-
-          Alle Nummern, die den Bot schon einmal angeschrieben haben – und wie viele davon
-          verbunden, abonniert oder wieder abgemeldet sind.
-        total: "Kontakte gesamt"
-        linked: "Verknüpft"
-        subscribed: "Abonniert"
-        opted_out: "Abgemeldet"
-        verified: "Bestätigte Nummern"
-        link_pending: "Verknüpfung offen"
-        unlinked: "Ohne Konto"
-        activity_title: "Aktivität"
+          Alle Nummern, die den Bot schon einmal angeschrieben haben – und wie viele davon verbunden,
+          abonniert oder wieder abgemeldet sind.
+        total: Kontakte gesamt
+        linked: Verknüpft
+        subscribed: Abonniert
+        opted_out: Abgemeldet
+        verified: Bestätigte Nummern
+        link_pending: Verknüpfung offen
+        unlinked: Ohne Konto
+        activity_title: Aktivität
         activity_intro: >-
-          Wie viele Kontakte zuletzt geschrieben haben und wie viele in den letzten 30 Tagen
-          dazugekommen sind.
-        active_recent: "Aktiv (7 Tage)"
-        active_growth: "Aktiv (30 Tage)"
-        new_verified: "Neu verknüpft (30 Tage)"
-        new_opt_ins: "Neue Abos (30 Tage)"
-        messages_title: "Nachrichten"
+          Wie viele Kontakte zuletzt geschrieben haben und wie viele in den letzten 30 Tagen dazugekommen
+          sind.
+        active_recent: Aktiv (7 Tage)
+        active_growth: Aktiv (30 Tage)
+        new_verified: Neu verknüpft (30 Tage)
+        new_opt_ins: Neue Abos (30 Tage)
+        messages_title: Nachrichten
         messages_intro: >-
-          Nachrichtenaufkommen insgesamt. Ältere Nachrichten werden nach der eingestellten
-          Aufbewahrungsfrist automatisch gelöscht.
-        inbound: "Eingehend"
-        outbound: "Ausgehend"
-        failed_outbound: "Versand fehlgeschlagen"
-        last_30_days: "%{count} in 30 Tagen"
-        by_kind_title: "Nach Nachrichtentyp"
-        broadcasts_title: "Projekt-Benachrichtigungen"
+          Nachrichtenaufkommen insgesamt. Ältere Nachrichten werden nach der eingestellten Aufbewahrungsfrist
+          automatisch gelöscht.
+        inbound: Eingehend
+        outbound: Ausgehend
+        failed_outbound: Versand fehlgeschlagen
+        last_30_days: '%{count} in 30 Tagen'
+        by_kind_title: Nach Nachrichtentyp
+        broadcasts_title: Projekt-Benachrichtigungen
         broadcasts_intro: >-
-          Versendete Vorlagen-Nachrichten je Projekt. Fehlgeschlagene Zustellungen deuten auf
-          abgelaufene Nummern oder eine nicht freigegebene Vorlage hin.
-        projekt: "Projekt"
-        phase: "Phase"
-        sent: "Zugestellt"
-        failed: "Fehlgeschlagen"
-        last_sent_at: "Zuletzt versendet"
-        no_broadcasts: "Es wurden noch keine Projekt-Benachrichtigungen versendet."
-        flows_title: "Laufende Vorgänge"
-        flows_intro: "Kontakte, die gerade mitten in einem Bot-Dialog stecken – nach Schritt."
-        no_flows: "Derzeit steckt niemand in einem laufenden Vorgang."
-        phases_title: "Phasen mit WhatsApp-Einreichung"
-        phases_intro: "Laufende Vorschlagsphasen, in die per Chat eingereicht werden kann."
-        qr_code: "QR-Code"
-        open_phase_qr: "QR-Code öffnen"
-        no_phases: "Derzeit nimmt keine Phase Vorschläge per WhatsApp an."
+          Versendete Vorlagen-Nachrichten je Projekt. Fehlgeschlagene Zustellungen deuten auf abgelaufene
+          Nummern oder eine nicht freigegebene Vorlage hin.
+        projekt: Projekt
+        phase: Phase
+        sent: Zugestellt
+        failed: Fehlgeschlagen
+        last_sent_at: Zuletzt versendet
+        no_broadcasts: Es wurden noch keine Projekt-Benachrichtigungen versendet.
+        flows_title: Laufende Vorgänge
+        flows_intro: Kontakte, die gerade mitten in einem Bot-Dialog stecken – nach Schritt.
+        no_flows: Derzeit steckt niemand in einem laufenden Vorgang.
+        phases_title: Phasen mit WhatsApp-Einreichung
+        phases_intro: Laufende Vorschlagsphasen, in die per Chat eingereicht werden kann.
+        qr_code: QR-Code
+        open_phase_qr: QR-Code öffnen
+        no_phases: Derzeit nimmt keine Phase Vorschläge per WhatsApp an.
       dialogs:
-        title: "Dialoge"
+        title: Dialoge
         intro: >-
-          Alle Chatverläufe mit dem Bot. Verläufe öffnen, um den kompletten Austausch zu lesen
-          und bei Bedarf zu antworten.
-        none_title: "Noch keine Dialoge"
-        none_body: "Sobald jemand den Bot anschreibt, erscheint der Verlauf hier."
-        no_results: "Keine Dialoge für diese Filter."
-        contact: "Kontakt"
-        status: "Status"
-        step: "Schritt"
-        steps_idle: "–"
-        message_count: "Nachrichten"
-        last_message: "Letzte Nachricht"
-        last_active: "Zuletzt aktiv"
-        never: "nie"
-        open: "Öffnen"
-        subscribed: "Abonniert"
+          Alle Chatverläufe mit dem Bot. Verläufe öffnen, um den kompletten Austausch zu lesen und
+          bei Bedarf zu antworten.
+        none_title: Noch keine Dialoge
+        none_body: Sobald jemand den Bot anschreibt, erscheint der Verlauf hier.
+        no_results: Keine Dialoge für diese Filter.
+        contact: Kontakt
+        status: Status
+        step: Schritt
+        steps_idle: –
+        message_count: Nachrichten
+        last_message: Letzte Nachricht
+        last_active: Zuletzt aktiv
+        never: nie
+        open: Öffnen
+        subscribed: Abonniert
         states:
-          unlinked: "Ohne Konto"
-          link_pending: "Verknüpfung offen"
-          linked: "Verknüpft"
+          unlinked: Ohne Konto
+          link_pending: Verknüpfung offen
+          linked: Verknüpft
         directions:
-          inbound: "Eingehend"
-          outbound: "Ausgehend"
+          inbound: Eingehend
+          outbound: Ausgehend
         statuses:
-          sent: "zugestellt"
-          failed: "fehlgeschlagen"
+          sent: zugestellt
+          failed: fehlgeschlagen
         filters:
-          search_label: "Suche"
-          search_placeholder: "Nummer oder Profilname"
-          state_label: "Status"
-          step_label: "Schritt"
-          activity_label: "Aktivität"
-          any: "Alle"
-          reset: "Zurücksetzen"
+          search_label: Suche
+          search_placeholder: Nummer oder Profilname
+          state_label: Status
+          step_label: Schritt
+          activity_label: Aktivität
+          any: Alle
+          reset: Zurücksetzen
         activity_options:
-          recent: "Aktiv (7 Tage)"
-          month: "Aktiv (30 Tage)"
-          stale: "Länger inaktiv"
-        thread_title: "Dialog mit %{contact}"
+          recent: Aktiv (7 Tage)
+          month: Aktiv (30 Tage)
+          stale: Länger inaktiv
+        thread_title: Dialog mit %{contact}
         thread_hint: >-
-          Kompletter Chatverlauf mit diesem Kontakt. Freie Antworten erreichen WhatsApp nur
-          innerhalb von 24 Stunden nach der letzten eingehenden Nachricht.
-        truncated: "Es werden die letzten %{shown} von %{total} Nachrichten angezeigt."
-        no_messages: "In diesem Dialog gibt es noch keine Nachrichten."
-        time_format: "%H:%M"
-        profile_name: "Profilname"
-        phone: "Nummer"
-        account: "Nutzerkonto"
-        no_account: "nicht verknüpft"
-        unknown: "unbekannt"
-        active_phase: "Aktive Phase"
-        verified_at: "Verknüpft am"
-        reply_label: "Antwort senden"
-        reply_hint: >-
-          Wird als normale Textnachricht vom Portal-Konto verschickt und erscheint direkt im
-          Verlauf.
-        reply_placeholder: "Antwort an diesen Kontakt …"
-        reply_submit: "Antwort senden"
-        reply_blank: "Bitte einen Text eingeben."
-        reply_sent: "Antwort wurde übergeben."
-        reply_failed: "Antwort konnte nicht gesendet werden: %{error}"
-        reply_window_closed: "Das 24-Stunden-Antwortfenster ist inzwischen geschlossen."
-        window_closed_title: "Antwortfenster geschlossen"
+          Kompletter Chatverlauf mit diesem Kontakt. Freie Antworten erreichen WhatsApp nur innerhalb
+          von 24 Stunden nach der letzten eingehenden Nachricht.
+        truncated: Es werden die letzten %{shown} von %{total} Nachrichten angezeigt.
+        no_messages: In diesem Dialog gibt es noch keine Nachrichten.
+        time_format: '%H:%M'
+        profile_name: Profilname
+        phone: Nummer
+        account: Nutzerkonto
+        no_account: nicht verknüpft
+        unknown: unbekannt
+        active_phase: Aktive Phase
+        verified_at: Verknüpft am
+        reply_label: Antwort senden
+        reply_hint: Wird als normale Textnachricht vom Portal-Konto verschickt und erscheint direkt
+          im Verlauf.
+        reply_placeholder: Antwort an diesen Kontakt …
+        reply_submit: Antwort senden
+        reply_blank: Bitte einen Text eingeben.
+        reply_sent: Antwort wurde übergeben.
+        reply_failed: 'Antwort konnte nicht gesendet werden: %{error}'
+        reply_window_closed: Das 24-Stunden-Antwortfenster ist inzwischen geschlossen.
+        window_closed_title: Antwortfenster geschlossen
         window_closed_body: >-
-          Die letzte eingehende Nachricht liegt mehr als 24 Stunden zurück. WhatsApp lässt freie
-          Textnachrichten erst wieder zu, wenn der Kontakt erneut schreibt.
+          Die letzte eingehende Nachricht liegt mehr als 24 Stunden zurück. WhatsApp lässt freie Textnachrichten
+          erst wieder zu, wenn der Kontakt erneut schreibt.
       show:
-        title: "WhatsApp"
+        title: WhatsApp
         hint_text: >-
-          Allgemeiner Einstieg in den WhatsApp-Bot. Über diesen QR-Code können Bürger:innen ihre
-          Nummer verbinden und Benachrichtigungen zu neuen Projekten abonnieren. Zum Einreichen
-          von Vorschlägen brauchen sie den QR-Code eines Projekts oder einer Phase.
-        unavailable_title: "WhatsApp ist für dieses Portal nicht eingerichtet"
+          Allgemeiner Einstieg in den WhatsApp-Bot. Über diesen QR-Code können Bürger:innen ihre Nummer
+          verbinden und Benachrichtigungen zu neuen Projekten abonnieren. Zum Einreichen von Vorschlägen
+          brauchen sie den QR-Code eines Projekts oder einer Phase.
+        unavailable_title: WhatsApp ist für dieses Portal nicht eingerichtet
         unavailable_body: >-
           Die Anbindung an den WhatsApp-Dienst muss serverseitig hinterlegt werden. Wende dich an
           die Administration von Demokratie Today, um die Funktion einrichten und freischalten zu
           lassen.
-        explanation_title: "Was der WhatsApp-Bot leistet"
+        explanation_title: Was der WhatsApp-Bot leistet
         explanation_intro: >-
-          Der Bot verbindet das Beteiligungsportal mit WhatsApp: Bürger:innen erreichen die
-          Beteiligung dort, wo sie ohnehin schreiben – ohne Konto-Anmeldung im Browser.
+          Der Bot verbindet das Beteiligungsportal mit WhatsApp: Bürger:innen erreichen die Beteiligung
+          dort, wo sie ohnehin schreiben – ohne Konto-Anmeldung im Browser.
         explanation_items:
-          - title: "Nummer mit dem Konto verbinden"
-            body: >-
-              Über einen QR-Code oder Direktlink startet der Chat mit dem Portal. Die Nummer wird
-              dem Nutzerkonto zugeordnet und kann jederzeit wieder getrennt werden.
-          - title: "Vorschläge per Chat einreichen"
-            body: >-
-              In Phasen mit KI-Einreichung schreiben oder sprechen Bürger:innen ihren Vorschlag.
-              Sprachnachrichten werden automatisch in Text umgewandelt, der Bot fragt Fehlendes
-              nach und legt den Vorschlag im Projekt an.
-          - title: "Benachrichtigungen zu neuen Projekten"
-            body: >-
-              Wer zustimmt, erhält bei neuen Beteiligungsprojekten eine kurze Nachricht mit Link.
-              Versendet wird über eine von Meta freigegebene Nachrichtenvorlage.
-          - title: "QR-Codes für Plakate und Aushänge"
-            body: >-
-              Für das Portal insgesamt, für einzelne Projekte und für einzelne Phasen stehen
-              QR-Codes zum Ausdrucken bereit – ideal für Aushänge vor Ort.
+        - title: Nummer mit dem Konto verbinden
+          body: >-
+            Über einen QR-Code oder Direktlink startet der Chat mit dem Portal. Die Nummer wird dem
+            Nutzerkonto zugeordnet und kann jederzeit wieder getrennt werden.
+        - title: Vorschläge per Chat einreichen
+          body: >-
+            In Phasen mit KI-Einreichung schreiben oder sprechen Bürger:innen ihren Vorschlag. Sprachnachrichten
+            werden automatisch in Text umgewandelt, der Bot fragt Fehlendes nach und legt den Vorschlag
+            im Projekt an.
+        - title: Benachrichtigungen zu neuen Projekten
+          body: >-
+            Wer zustimmt, erhält bei neuen Beteiligungsprojekten eine kurze Nachricht mit Link. Versendet
+            wird über eine von Meta freigegebene Nachrichtenvorlage.
+        - title: QR-Codes für Plakate und Aushänge
+          body: >-
+            Für das Portal insgesamt, für einzelne Projekte und für einzelne Phasen stehen QR-Codes
+            zum Ausdrucken bereit – ideal für Aushänge vor Ort.
         explanation_outro: >-
-          Für den Betrieb wird ein Geschäftskonto beim Anbieter 360dialog benötigt; die
-          Zugangsdaten werden serverseitig hinterlegt. Danach erscheinen hier die Einstellungen,
-          der QR-Code, die Webhook-Prüfung und der Nachrichtentest.
+          Für den Betrieb wird ein Geschäftskonto beim Anbieter 360dialog benötigt; die Zugangsdaten
+          werden serverseitig hinterlegt. Danach erscheinen hier die Einstellungen, der QR-Code, die
+          Webhook-Prüfung und der Nachrichtentest.
         tabs:
-          connection: "Verbindung"
-          settings: "Einstellungen"
-          templates: "Bot-Nachrichtenvorlagen"
-          qr_code: "QR-Code"
-          reach: "Reichweite"
-          dialogs: "Dialoge"
-          test_message: "Testnachricht"
-        feature_title: "WhatsApp-Bot"
+          connection: Verbindung
+          settings: Einstellungen
+          templates: Bot-Nachrichtenvorlagen
+          qr_code: QR-Code
+          reach: Reichweite
+          dialogs: Dialoge
+          test_message: Testnachricht
+        feature_title: WhatsApp-Bot
         feature_intro: >-
-          Nach der Aktivierung können Bürger:innen ihre WhatsApp-Nummer mit ihrem Konto verbinden –
-          genauso, wie sie sich auch auf der Website anmelden würden. Von dort aus können sie per
-          Chat-Nachricht einen neuen Vorschlag oder einen Kommentar einreichen, ganz ohne den
-          Browser zu öffnen. Außerdem erhalten sie eine kurze WhatsApp-Nachricht mit direktem Link,
-          sobald ein neues Beteiligungsprojekt startet, damit sie sofort mitmachen können.
-        settings_title: "Einstellungen"
-        settings_intro: "Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken sofort."
-        auto_broadcast_title: "Automatische Projekt-Benachrichtigung"
+          Nach der Aktivierung können Bürger:innen ihre WhatsApp-Nummer mit ihrem Konto verbinden
+          – genauso, wie sie sich auch auf der Website anmelden würden. Von dort aus können sie per
+          Chat-Nachricht einen neuen Vorschlag oder einen Kommentar einreichen, ganz ohne den Browser
+          zu öffnen. Außerdem erhalten sie eine kurze WhatsApp-Nachricht mit direktem Link, sobald
+          ein neues Beteiligungsprojekt startet, damit sie sofort mitmachen können.
+        settings_title: Einstellungen
+        settings_intro: Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken
+          sofort.
+        auto_broadcast_title: Automatische Projekt-Benachrichtigung
         auto_broadcast_intro: >-
           Ist dies aktiv, versendet die Plattform die WhatsApp-Benachrichtigung von selbst, sobald
           ein Projekt veröffentlicht wird – also aktiviert ist und eine veröffentlichte Projektseite
           hat. Projekte, die auf einzelne Stadtteile beschränkt sind, werden dabei übersprungen; für
           diese steht die Schaltfläche auf der Projektseite weiterhin zur Verfügung.
-        auto_broadcast_missing_template_title: "Automatischer Versand ohne Wirkung"
+        auto_broadcast_missing_template_title: Automatischer Versand ohne Wirkung
         auto_broadcast_missing_template_body: >-
-          Solange keine freigegebene Nachrichtenvorlage hinterlegt ist, wird auch bei aktivem
-          Schalter nichts versendet. Vorlage oben unter „Name der WhatsApp-Nachrichtenvorlage“
-          eintragen oder im Reiter „Vorlagen“ einreichen.
-        template_missing_title: "Keine Nachrichtenvorlage hinterlegt"
-        template_missing_body: "Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden. Vorlage unten einreichen oder oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen."
-        qr_title: "Allgemeiner QR-Code"
-        qr_subline: "Öffnet einen allgemeinen Consul-Chat."
-        webhook_title: "Webhook"
-        webhook_ok_title: "Webhook korrekt registriert"
-        webhook_ok_body: "360dialog liefert eingehende Nachrichten an %{url} – mit passendem Sicherheits-Header."
-        webhook_mismatch_title: "Webhook stimmt nicht"
-        webhook_mismatch_body: "Registriert ist: %{registered}. Erwartet wird: %{expected}. Schalte die Funktion einmal aus und wieder ein, um sie neu zu registrieren."
-        webhook_unreachable_title: "Webhook-Status nicht abrufbar"
-        webhook_unreachable_body: "Die Konfiguration konnte nicht von 360dialog gelesen werden. Prüfe den API-Schlüssel in config/secrets.yml."
-        webhook_none: "kein Webhook registriert"
-        webhook_registered_url: "Registrierte Adresse"
-        webhook_header: "Sicherheits-Header"
+          Solange keine freigegebene Nachrichtenvorlage hinterlegt ist, wird auch bei aktivem Schalter
+          nichts versendet. Vorlage oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen oder
+          im Reiter „Vorlagen“ einreichen.
+        template_missing_title: Keine Nachrichtenvorlage hinterlegt
+        template_missing_body: >-
+          Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden.
+          Vorlage unten einreichen oder oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen.
+        qr_title: Allgemeiner QR-Code
+        qr_subline: Öffnet einen allgemeinen Consul-Chat.
+        webhook_title: Webhook
+        webhook_ok_title: Webhook korrekt registriert
+        webhook_ok_body: 360dialog liefert eingehende Nachrichten an %{url} – mit passendem Sicherheits-Header.
+        webhook_mismatch_title: Webhook stimmt nicht
+        webhook_mismatch_body: >-
+          Registriert ist: %{registered}. Erwartet wird: %{expected}. Schalte die Funktion einmal
+          aus und wieder ein, um sie neu zu registrieren.
+        webhook_unreachable_title: Webhook-Status nicht abrufbar
+        webhook_unreachable_body: >-
+          Die Konfiguration konnte nicht von 360dialog gelesen werden. Prüfe den API-Schlüssel in
+          config/secrets.yml.
+        webhook_none: kein Webhook registriert
+        webhook_registered_url: Registrierte Adresse
+        webhook_header: Sicherheits-Header
         webhook_header_ok:
-          one: "gesetzt (1 Zeichen, passt)"
-          other: "gesetzt (%{count} Zeichen, passt)"
+          one: gesetzt (1 Zeichen, passt)
+          other: gesetzt (%{count} Zeichen, passt)
         webhook_header_bad:
-          zero: "nicht gesetzt"
-          one: "gesetzt, passt aber nicht (1 Zeichen)"
-          other: "gesetzt, passt aber nicht (%{count} Zeichen)"
-        webhook_checked_at: "Zuletzt geprüft"
-        webhook_auto_hint: "Der Webhook wird automatisch registriert, sobald der WhatsApp-Bot oben eingeschaltet wird – mit der Adresse, unter der du gerade arbeitest."
-        entry_title: "Chat-Einstieg"
+          zero: nicht gesetzt
+          one: gesetzt, passt aber nicht (1 Zeichen)
+          other: gesetzt, passt aber nicht (%{count} Zeichen)
+        webhook_checked_at: Zuletzt geprüft
+        webhook_auto_hint: >-
+          Der Webhook wird automatisch registriert, sobald der WhatsApp-Bot oben eingeschaltet wird
+          – mit der Adresse, unter der du gerade arbeitest.
+        entry_title: Chat-Einstieg
         entry_intro: >-
           Wer einen QR-Code scannt, landet in einem leeren Chat mit einer vorbereiteten Nachricht,
           die noch abgeschickt werden muss. Diese Einstellungen setzen dort stattdessen antippbare
           Optionen und eine Begrüßung ein, sodass der erste Schritt ein Tippen ist.
-        entry_apply: "An WhatsApp übertragen"
+        entry_apply: An WhatsApp übertragen
         entry_apply_hint: >-
-          Die Vorschläge und Befehle liegen bei WhatsApp, nicht auf dieser Plattform. Änderungen
-          oben erreichen Bürger:innen erst, wenn du sie hier überträgst.
-        test_title: "Testnachricht"
-        test_intro: "Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen, die in den letzten 24 Stunden geschrieben haben."
-        test_phone_label: "Nummer"
-        test_phone_hint: "Nur Ziffern mit Landesvorwahl, z. B. 49177XXXXXXX."
-        test_submit: "Testnachricht senden"
-        test_pending: "Nachricht wird gesendet …"
-        templates_title: "Bot-Nachrichtenvorlagen"
-        templates_intro: "Für Projekt-Benachrichtigungen braucht WhatsApp eine von Meta freigegebene Vorlage mit genau zwei Platzhaltern: Projektname und Projektlink."
-        template_unknown_title: "Eingestellte Vorlage existiert nicht bei 360dialog"
+          Die Vorschläge und Befehle liegen bei WhatsApp, nicht auf dieser Plattform. Änderungen oben
+          erreichen Bürger:innen erst, wenn du sie hier überträgst.
+        test_title: Testnachricht
+        test_intro: >-
+          Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen,
+          die in den letzten 24 Stunden geschrieben haben.
+        test_phone_label: Nummer
+        test_phone_hint: Nur Ziffern mit Landesvorwahl, z. B. 49177XXXXXXX.
+        test_submit: Testnachricht senden
+        test_pending: Nachricht wird gesendet …
+        templates_title: Bot-Nachrichtenvorlagen
+        templates_intro: >-
+          Für Projekt-Benachrichtigungen braucht WhatsApp eine von Meta freigegebene Vorlage mit genau
+          zwei Platzhaltern: Projektname und Projektlink.
+        template_unknown_title: Eingestellte Vorlage existiert nicht bei 360dialog
         template_unknown_body: >-
-          Eingestellt ist „%{name}“ (%{language}), aber unter diesem Namen und dieser Sprache
-          gibt es dort keine Vorlage. Projekt-Benachrichtigungen würden fehlschlagen. Vorlage
-          unten anlegen oder eine bestehende auswählen.
-        template_pending_title: "Vorlage noch nicht freigegeben"
+          Eingestellt ist „%{name}“ (%{language}), aber unter diesem Namen und dieser Sprache gibt
+          es dort keine Vorlage. Projekt-Benachrichtigungen würden fehlschlagen. Vorlage unten anlegen
+          oder eine bestehende auswählen.
+        template_pending_title: Vorlage noch nicht freigegeben
         template_pending_body: >-
-          „%{name}“ hat bei Meta den Status „%{status}“. Bis zur Freigabe erreichen
-          Projekt-Benachrichtigungen niemanden.
-        template_name: "Name"
-        template_kind: "Art"
-        template_kind_text: "Text"
-        template_kind_card: "Karte mit Bild"
-        template_language: "Sprache"
-        template_status: "Status"
-        template_use: "Verwenden"
-        template_in_use: "wird verwendet"
-        template_language_mismatch: "Sprache weicht ab (%{language} eingestellt)"
-        template_name_label: "Name der neuen Vorlage"
-        template_name_hint: "Nur Kleinbuchstaben und Unterstriche; Leerzeichen werden umgewandelt."
-        template_language_label: "Sprache"
-        template_language_hint: "Sprachcode der Vorlage, z. B. „de“. Muss dem in 360dialog hinterlegten Code entsprechen."
-        template_body_label: "Text der Vorlage"
+          „%{name}“ hat bei Meta den Status „%{status}“. Bis zur Freigabe erreichen Projekt-Benachrichtigungen
+          niemanden.
+        template_name: Name
+        template_kind: Art
+        template_kind_text: Text
+        template_kind_card: Karte mit Bild
+        template_language: Sprache
+        template_status: Status
+        template_use: Verwenden
+        template_in_use: wird verwendet
+        template_language_mismatch: Sprache weicht ab (%{language} eingestellt)
+        template_name_label: Name der neuen Vorlage
+        template_name_hint: Nur Kleinbuchstaben und Unterstriche; Leerzeichen werden umgewandelt.
+        template_language_label: Sprache
+        template_language_hint: Sprachcode der Vorlage, z. B. „de“. Muss dem in 360dialog hinterlegten
+          Code entsprechen.
+        template_body_label: Text der Vorlage
         template_body_hint: >-
           {{1}} wird durch den Projektnamen ersetzt, {{2}} durch den Link. Beide Platzhalter müssen
           vorkommen, und der Text darf weder mit einem beginnen noch enden — das lehnt Meta ab.
-        template_body_default: "Neues Beteiligungsprojekt: {{1}}. Alle Infos und Mitmachen: {{2}} — schauen Sie vorbei!"
-        template_submit: "Vorlage einreichen"
-        template_failed_title: "Vorlage konnte nicht eingereicht werden"
-        template_error_name_blank: "Bitte einen Namen für die Vorlage angeben."
-        template_error_name_format: "Nur Kleinbuchstaben, Ziffern und Unterstriche sind erlaubt."
-        template_error_language_blank: "Bitte einen Sprachcode angeben."
-        template_error_language_format: "Bitte einen Sprachcode wie „de“, „en“ oder „de_DE“ verwenden."
-        template_error_body_blank: "Bitte den Text der Vorlage angeben."
-        template_error_body_too_long: "Der Text darf höchstens %{count} Zeichen lang sein."
-        template_error_body_placeholders: "Der Text muss genau die beiden Platzhalter {{1}} und {{2}} enthalten."
+        template_body_default: 'Neues Beteiligungsprojekt: {{1}}. Alle Infos und Mitmachen: {{2}}
+          — schauen Sie vorbei!'
+        template_submit: Vorlage einreichen
+        template_failed_title: Vorlage konnte nicht eingereicht werden
+        template_error_name_blank: Bitte einen Namen für die Vorlage angeben.
+        template_error_name_format: Nur Kleinbuchstaben, Ziffern und Unterstriche sind erlaubt.
+        template_error_language_blank: Bitte einen Sprachcode angeben.
+        template_error_language_format: Bitte einen Sprachcode wie „de“, „en“ oder „de_DE“ verwenden.
+        template_error_body_blank: Bitte den Text der Vorlage angeben.
+        template_error_body_too_long: Der Text darf höchstens %{count} Zeichen lang sein.
+        template_error_body_placeholders: Der Text muss genau die beiden Platzhalter {{1}} und {{2}}
+          enthalten.
         template_error_body_placeholder_edges: >-
           Der Text darf weder mit einem Platzhalter beginnen noch enden. Vor {{1}} und nach {{2}}
           muss fester Text stehen.
     projekts:
       projekts:
         tabs:
-          whatsapp: "WhatsApp"
+          whatsapp: WhatsApp
         whatsapp:
-          title: "WhatsApp"
+          title: WhatsApp
           hint_text: >-
-            QR-Code für dieses gesamte Projekt. Läuft genau eine Vorschlagsphase mit
-            KI-Einreichung, landen Bürger:innen direkt dort. Laufen mehrere, fragt der Bot nach.
-          qr_title: "Projekt-QR-Code"
-          qr_subline: "Für Plakate und Flyer zu diesem Projekt."
-          eligible_phases_title: "Phasen, die Einreichungen annehmen"
+            QR-Code für dieses gesamte Projekt. Läuft genau eine Vorschlagsphase mit KI-Einreichung,
+            landen Bürger:innen direkt dort. Laufen mehrere, fragt der Bot nach.
+          qr_title: Projekt-QR-Code
+          qr_subline: Für Plakate und Flyer zu diesem Projekt.
+          eligible_phases_title: Phasen, die Einreichungen annehmen
           eligible_phases_intro:
-            one: "Eine Phase nimmt Vorschläge per WhatsApp an – Einreichungen gehen direkt dorthin."
-            other: "%{count} Phasen nehmen Vorschläge per WhatsApp an – der Bot fragt, welche gemeint ist."
-          no_eligible_phases_title: "Derzeit keine Phase für WhatsApp-Einreichungen"
+            one: Eine Phase nimmt Vorschläge per WhatsApp an – Einreichungen gehen direkt dorthin.
+            other: '%{count} Phasen nehmen Vorschläge per WhatsApp an – der Bot fragt, welche gemeint
+              ist.'
+          no_eligible_phases_title: Derzeit keine Phase für WhatsApp-Einreichungen
           no_eligible_phases_body: >-
-            Es läuft keine Vorschlagsphase mit aktivierter KI-Einreichung. Wer diesen QR-Code
-            scannt, kann seine Nummer verbinden, aber keinen Vorschlag einreichen.
+            Es läuft keine Vorschlagsphase mit aktivierter KI-Einreichung. Wer diesen QR-Code scannt,
+            kann seine Nummer verbinden, aber keinen Vorschlag einreichen.
       phases:
         projekt_phase:
-          whatsapp: "WhatsApp"
+          whatsapp: WhatsApp
         whatsapp:
-          title: "WhatsApp"
-          qr_title: "Phasen-QR-Code"
-          qr_subline: >-
-            Führt direkt in diese Phase – ohne Rückfrage. Am besten für Plakate vor Ort.
-          ai_flow_disabled_title: "KI-Einreichung ist für diese Phase deaktiviert"
-          ai_flow_disabled_body: >-
-            Wer diesen QR-Code scannt, erhält derzeit eine Absage. Aktiviere die KI-Einreichung
-            unter
-          ai_flow_disabled_link: "KI-Nutzerfluss"
+          title: WhatsApp
+          qr_title: Phasen-QR-Code
+          qr_subline: Führt direkt in diese Phase – ohne Rückfrage. Am besten für Plakate vor Ort.
+          ai_flow_disabled_title: KI-Einreichung ist für diese Phase deaktiviert
+          ai_flow_disabled_body: Wer diesen QR-Code scannt, erhält derzeit eine Absage. Aktiviere
+            die KI-Einreichung unter
+          ai_flow_disabled_link: KI-Nutzerfluss

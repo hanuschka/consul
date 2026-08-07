@@ -1,40 +1,22 @@
 class WhatsappEligiblePhasesQuery < ApplicationQuery
-  # A display cap, not an eligibility rule: #call is what fills a ten-row
-  # WhatsApp list. Whether one particular phase may be submitted to is
-  # .eligible?, which is uncapped — otherwise the eleventh open phase would be
-  # offered in a menu and then refused when tapped.
-  MAX_CHOICES = 10
-
-  # Both flags have to be on for a phase to be reachable from the bot: the one
-  # that lets citizens create the resource at all, and the one that enables the
-  # AI flow the bot is a channel for.
-  FEATURE_KEYS_BY_PHASE_CLASS = {
-    ProjektPhase::ProposalPhase => {
-      creation: "resource.users_can_create_proposals",
-      ai_flow: "resource.create_proposal_with_ai"
-    }.freeze,
-    ProjektPhase::BudgetPhase => {
-      creation: "resource.users_can_create_investment_proposals",
-      ai_flow: "resource.create_investment_with_ai"
-    }.freeze
-  }.freeze
-
-  def self.feature_keys_for(projekt_phase)
-    FEATURE_KEYS_BY_PHASE_CLASS[projekt_phase.class]
-  end
+  # The phase types the bot has a submission flow for. Which flags each of them
+  # reads is the phase's own business — #selectable_by_users? and
+  # #ai_flow_feature_key — so adding a third type here is the only edit.
+  PHASE_CLASSES = [ProjektPhase::ProposalPhase, ProjektPhase::BudgetPhase].freeze
 
   # The single-phase question, asked without loading the portal. A phase whose
   # projekt is deactivated or whose page is unpublished is not reachable on the
   # website either, so the bot must not take a submission into it.
+  #
+  # Both flags have to be on: the one that lets citizens create the resource at
+  # all, and the one that enables the AI flow the bot is a channel for.
   def self.eligible?(projekt_phase)
     return false if projekt_phase.blank?
+    return false if !PHASE_CLASSES.include?(projekt_phase.class)
     return false if !projekt_phase.current?
     return false if !projekt_visible?(projekt_phase.projekt)
-
-    feature_keys = feature_keys_for(projekt_phase)
-
-    return false if feature_keys.blank?
-    return false if !feature_keys.each_value.all? { |key| projekt_phase.feature?(key) }
+    return false if !projekt_phase.selectable_by_users?
+    return false if !projekt_phase.ai_flow_enabled?
 
     # An investment is built from the budget's heading, so a budget phase
     # without one set up cannot take a submission yet.
@@ -43,11 +25,14 @@ class WhatsappEligiblePhasesQuery < ApplicationQuery
     true
   end
 
+  # Read off the already-loaded projekt rather than asked of the database: the
+  # collection path eager-loads it, and both stores behind Projekt.activated are
+  # kept in sync, so the column is current whichever one the scope reads.
   def self.projekt_visible?(projekt)
     return false if projekt.blank?
     return false if projekt.page&.status != "published"
 
-    Projekt.activated.exists?(projekt.id)
+    projekt.activated?
   end
   private_class_method :projekt_visible?
 
@@ -55,16 +40,27 @@ class WhatsappEligiblePhasesQuery < ApplicationQuery
     @projekt = projekt
   end
 
+  # A display cap, not an eligibility rule: #call is what fills a ten-row
+  # WhatsApp list. Whether one particular phase may be submitted to is
+  # .eligible?, which is uncapped — otherwise the eleventh open phase would be
+  # offered in a menu and then refused when tapped.
   def call
-    base_scope
+    candidates
       .select { |projekt_phase| self.class.eligible?(projekt_phase) }
-      .first(MAX_CHOICES)
+      .first(::Whatsapp::MAX_LIST_ROWS)
+  end
+
+  # Stops at the first eligible phase. The menus ask only whether anything is
+  # open at all, and answering that by materialising ten phases with their
+  # settings and pages is the most expensive question the bot asks.
+  def exists?
+    candidates.lazy.any? { |projekt_phase| self.class.eligible?(projekt_phase) }
   end
 
   private
 
-    def base_scope
-      FEATURE_KEYS_BY_PHASE_CLASS.keys.flat_map { |phase_class| phases_of(phase_class) }
+    def candidates
+      PHASE_CLASSES.flat_map { |phase_class| phases_of(phase_class) }
     end
 
     # The date and flag half of ProjektPhase#current?, plus the projekt's own
@@ -74,18 +70,23 @@ class WhatsappEligiblePhasesQuery < ApplicationQuery
     def phases_of(phase_class)
       scope =
         phase_class
-          .where(hidden_at: nil, active: true)
-          .where("projekt_phases.start_date IS NULL OR projekt_phases.start_date <= :today",
-                 today: Time.zone.today)
-          .where("projekt_phases.end_date IS NULL OR projekt_phases.end_date >= :today",
-                 today: Time.zone.today)
-          .joins(projekt: :page)
-          .where(site_customization_pages: { status: "published" })
-          .where(projekt_id: Projekt.activated.select(:id))
-          .includes(:settings, projekt: :page)
+          .current
+          .where(hidden_at: nil)
+          .of_publicly_visible_projekt
+          .includes(preloads_for(phase_class))
 
       scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
 
       scope.to_a
+    end
+
+    # eligible? asks a budget phase for its heading, which is two more queries
+    # per phase unless the chain comes along with the rest.
+    def preloads_for(phase_class)
+      preloads = [:settings, { projekt: :page }]
+
+      return preloads if phase_class != ProjektPhase::BudgetPhase
+
+      preloads + [{ budget: :heading }]
     end
 end

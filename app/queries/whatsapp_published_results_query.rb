@@ -1,6 +1,4 @@
 class WhatsappPublishedResultsQuery < ApplicationQuery
-  MAX_CHOICES = 10
-
   # Enough rows to fill the list several times over after the Ruby filter, but
   # bounded: whether an evaluation is public is a per-record decision no SQL
   # predicate can make.
@@ -20,17 +18,29 @@ class WhatsappPublishedResultsQuery < ApplicationQuery
   end
 
   def call
-    candidates.select { |projekt_phase| publicly_visible?(projekt_phase) }.first(MAX_CHOICES)
+    candidates
+      .includes(projekt: :page)
+      .select { |projekt_phase| publicly_visible?(projekt_phase) }
+      .first(::Whatsapp::MAX_LIST_ROWS)
+  end
+
+  # Answers the menus without the projekt pages the rows themselves need, and
+  # stops at the first phase with a public evaluation.
+  def exists?
+    candidates.lazy.any? { |projekt_phase| publicly_visible?(projekt_phase) }
   end
 
   # Nil for a phase whose evaluation is not public, which is also how a caller
   # re-checks a row the citizen tapped long after it was sent.
+  #
+  # The tab list is derived once: asking evaluation_tab_publicly_visible? per
+  # tab rebuilds it from the evaluation snapshot each time.
   def self.public_section_for(projekt_phase)
     return if !projekt_phase.evaluation_completed?
 
-    SECTIONS_BY_TAB
-      .find { |tab, _section| projekt_phase.evaluation_tab_publicly_visible?(tab) }
-      &.last
+    public_tabs = projekt_phase.publicly_visible_evaluation_tabs
+
+    SECTIONS_BY_TAB.find { |tab, _section| public_tabs.include?(tab) }&.last
   end
 
   private
@@ -38,16 +48,14 @@ class WhatsappPublishedResultsQuery < ApplicationQuery
     def candidates
       scope = ProjektPhase
         .joins(:projekt_phase_evaluation)
-        .joins(projekt: :page)
-        .where(site_customization_pages: { status: "published" })
-        .merge(Projekt.activated)
-        .includes(:projekt_phase_evaluation, :projekt_phase_evaluation_visibility, projekt: :page)
+        .of_publicly_visible_projekt
+        .includes(:projekt_phase_evaluation, :projekt_phase_evaluation_visibility)
         .order(Arel.sql("projekt_phases.end_date DESC NULLS LAST"))
         .limit(CANDIDATE_LIMIT)
 
-      scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
+      return scope if @projekt.blank?
 
-      scope.to_a
+      scope.where(projekt_id: @projekt.id)
     end
 
     # Deliberately only the public predicate. The footer helper has a second

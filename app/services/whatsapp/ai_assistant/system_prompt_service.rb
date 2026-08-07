@@ -100,7 +100,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     end
 
     def citizen_name
-      @conversation.whatsapp_account.user&.name.presence || "unknown"
+      @conversation.user&.name.presence || "unknown"
     end
 
     def active_phase_description

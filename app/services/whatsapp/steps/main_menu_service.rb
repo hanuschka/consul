@@ -18,21 +18,25 @@ class Whatsapp::Steps::MainMenuService < ApplicationService
   private
 
     def user
-      @conversation.whatsapp_account.user
+      @conversation.user
     end
 
     # Help and contact are the only rows that are always there: they are the
     # answer when nothing else is.
+    #
+    # Every row is a yes/no question, so it is asked as one: the menu is the
+    # most-sent message the bot has, and building each list only to count it
+    # made it the most expensive one too.
     def available_actions
       actions = %i[help contact]
 
-      actions << :create if WhatsappEligiblePhasesQuery.call.any?
-      actions << :polls if WhatsappOpenPollsQuery.call.any?
-      actions << :projekts if WhatsappBrowsableProjektsQuery.call.any?
-      actions << :events if WhatsappUpcomingEventsQuery.call.any?
-      actions << :milestones if WhatsappPublishedMilestonesQuery.call.any?
-      actions << :results if WhatsappPublishedResultsQuery.call.any?
-      actions << :contributions if WhatsappUserContributionsQuery.call(user: user).any?
+      actions << :create if WhatsappEligiblePhasesQuery.exists?
+      actions << :polls if WhatsappOpenPollsQuery.exists?
+      actions << :projekts if WhatsappBrowsableProjektsQuery.exists?
+      actions << :events if WhatsappUpcomingEventsQuery.exists?
+      actions << :milestones if WhatsappPublishedMilestonesQuery.exists?
+      actions << :results if WhatsappPublishedResultsQuery.exists?
+      actions << :contributions if WhatsappUserContributionsQuery.exists?(user: user)
       actions << :notifications if user.present?
 
       actions

@@ -1,0 +1,38 @@
+<%# Wrapper, source hook and copy button for one copy-to-clipboard row. The
+    clipboard controller finds its source by target, so the markup around it
+    is the contract — locals: label, copy_label, text, href, text_modifier,
+    hint. %>
+<div class="adm-whatsapp-qr--detail">
+  <dt class="adm-whatsapp-qr--detail-key"><%= label %></dt>
+  <dd class="adm-whatsapp-qr--detail-value">
+    <div class="adm-whatsapp-qr--field" data-controller="clipboard">
+      <% if local_assigns[:href].present? %>
+        <a
+          class="kern-link adm-whatsapp-qr--field-text adm-whatsapp-qr--link"
+          href="<%= href %>"
+          target="_blank"
+          rel="noopener"
+          data-clipboard-target="source"
+        ><%= text %></a>
+      <% else %>
+        <span
+          class="adm-whatsapp-qr--field-text <%= "adm-whatsapp-qr--field-text--#{local_assigns[:text_modifier]}" if local_assigns[:text_modifier].present? %>"
+          data-clipboard-target="source"
+        ><%= text %></span>
+      <% end %>
+
+      <button
+        type="button"
+        class="kern-btn kern-btn--tertiary adm-whatsapp-qr--copy"
+        data-action="clipboard#copy"
+      >
+        <span class="kern-label material-symbols-outlined" aria-hidden="true">content_copy</span>
+        <span class="kern-label kern-sr-only"><%= copy_label %></span>
+      </button>
+    </div>
+
+    <% if local_assigns[:hint].present? %>
+      <p class="adm-whatsapp-qr--detail-hint"><%= hint %></p>
+    <% end %>
+  </dd>
+</div>

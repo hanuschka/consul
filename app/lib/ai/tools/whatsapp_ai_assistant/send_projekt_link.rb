@@ -14,25 +14,12 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektLink < Ai::Tools::WhatsappAiAss
 
     return unknown_phase_error if projekt_phase.blank?
 
-    deliver(body, projekt_url(projekt_phase.projekt))
+    ::Whatsapp::Steps::SendLinkButtonService.call(
+      conversation: conversation,
+      body: body,
+      url: projekt_url(projekt_phase.projekt)
+    )
 
     halt("Sent the citizen a link button to projekt phase #{projekt_phase.id}.")
   end
-
-  private
-
-    # A button WhatsApp refuses for any reason falls back to the plain link
-    # rather than to silence, the same way the linking invitation does.
-    def deliver(body, url)
-      message = ::Whatsapp::Outbound.cta_url(
-        account: account,
-        body: body,
-        button_label: I18n.t("whatsapp.bot.buttons.open_projekt"),
-        url: url
-      )
-
-      return message if message&.status == "sent"
-
-      ::Whatsapp::Outbound.text(account: account, body: "#{body}\n\n#{url}")
-    end
 end

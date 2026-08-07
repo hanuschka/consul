@@ -31,7 +31,7 @@ class Whatsapp::Steps::PhaseMenuService < ApplicationService
     end
 
     def user
-      @conversation.whatsapp_account.user
+      @conversation.user
     end
 
     def available_actions

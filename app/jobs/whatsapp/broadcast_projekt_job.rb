@@ -11,7 +11,7 @@ class Whatsapp::BroadcastProjektJob < ApplicationJob
     return if !::Whatsapp.enabled?
     return if ::Whatsapp.broadcast_template_name.blank?
     return if already_broadcast?(projekt)
-    return if !still_published?(projekt)
+    return if !Whatsapp::BroadcastGuards.still_published?(projekt, context: "broadcast")
 
     enqueue_batches(projekt)
 
@@ -34,21 +34,6 @@ class Whatsapp::BroadcastProjektJob < ApplicationJob
       )
 
       true
-    end
-
-    # Publication is re-checked live rather than trusted from enqueue time: the
-    # automatic broadcast waits PUBLICATION_BROADCAST_DELAY, which is exactly
-    # the window in which a projekt published by mistake gets deactivated
-    # again. Criteria are read from the projekt itself, so a page taken back to
-    # draft counts too, even though that leaves `published_at` stale.
-    def still_published?(projekt)
-      return true if projekt.meets_publish_criteria?
-
-      Rails.logger.info(
-        "[Whatsapp] broadcast for projekt #{projekt.id} skipped: no longer published"
-      )
-
-      false
     end
 
     def enqueue_batches(projekt)

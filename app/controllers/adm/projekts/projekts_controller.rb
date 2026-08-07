@@ -53,6 +53,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
   def details
     authorize [:adm, :projekts, @projekt], :show?
+    @whatsapp_subscribed_count = WhatsappAccount.subscribed.count if ::Whatsapp.broadcast_available?
     @breadcrumbs = [
       { name: @projekt.page&.title || @projekt.name, id: "breadcrumb-projekt-name" },
       { name: t(".title") }
@@ -493,7 +494,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def whatsapp_broadcast
     authorize [:adm, :projekts, @projekt], :update?
 
-    if !::Whatsapp.enabled? || ::Whatsapp.broadcast_template_name.blank?
+    if !::Whatsapp.broadcast_available?
       return redirect_to details_adm_projekts_projekt_path(@projekt),
         alert: t("adm.projekts.projekts.whatsapp_broadcast.not_configured")
     end

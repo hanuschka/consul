@@ -24,10 +24,6 @@ class Whatsapp::AiAssistant::ChatState
     @conversation.merge_context!(CONTEXT_KEY => dump(chat.messages))
   end
 
-  def clear!
-    @conversation.merge_context!(CONTEXT_KEY => [])
-  end
-
   private
 
     def stored_messages

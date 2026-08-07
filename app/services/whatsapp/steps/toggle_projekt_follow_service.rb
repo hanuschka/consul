@@ -22,7 +22,7 @@ class Whatsapp::Steps::ToggleProjektFollowService < ApplicationService
   private
 
     def user
-      @conversation.whatsapp_account.user
+      @conversation.user
     end
 
     def send_link_invitation

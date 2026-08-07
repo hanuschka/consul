@@ -27,6 +27,17 @@ class WhatsappAccount < ApplicationRecord
     verified_at.present? && user_id.present? && opt_in_at.present? && opt_out_at.nil?
   end
 
+  # Opting back in has to clear opt_out_at as well as stamp opt_in_at, which is
+  # the pair `subscribed` reads. Written here so the bot keyword, the recovery
+  # button, the assistant and the account page cannot each write half of it.
+  def opt_in!
+    update!(opt_in_at: Time.current, opt_out_at: nil)
+  end
+
+  def opt_out!
+    update!(opt_out_at: Time.current)
+  end
+
   def state_badge_variant
     STATE_BADGE_VARIANTS.fetch(state, "info")
   end

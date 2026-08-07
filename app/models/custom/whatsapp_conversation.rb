@@ -2,6 +2,11 @@ class WhatsappConversation < ApplicationRecord
   belongs_to :whatsapp_account
   belongs_to :projekt_phase, optional: true
 
+  # Every step and tool needs the account, and most of them only need the
+  # citizen behind it. Nil until the number is linked, which is the state each
+  # caller already has to answer for.
+  delegate :user, to: :whatsapp_account
+
   # A proposal in a proposal phase, a Budget::Investment in a budget phase. The
   # bot flow is the same either way, so the draft it is working on is held in
   # one slot rather than a column per resource.
@@ -25,36 +30,29 @@ class WhatsappConversation < ApplicationRecord
     awaiting_revision: "awaiting_revision"
   }
 
+  # Completing keeps the phase so the next idea goes to the same one; resetting
+  # drops it so the citizen is asked again.
   def reset_flow!
-    update!(
-      step: "idle",
-      projekt_phase_id: nil,
-      draft_resource: nil,
-      revisions_count: 0,
-      context: {}
-    )
+    update!(cleared_flow_attributes.merge(step: "idle", projekt_phase_id: nil))
   end
 
   def complete_flow!
-    update!(
-      step: "idle",
-      draft_resource: nil,
-      revisions_count: 0,
-      context: {}
-    )
+    update!(cleared_flow_attributes.merge(step: "idle"))
   end
 
   def start_flow!(projekt_phase)
     update!(
-      step: "awaiting_idea",
-      projekt_phase: projekt_phase,
-      draft_resource: nil,
-      revisions_count: 0,
-      context: {}
+      cleared_flow_attributes.merge(step: "awaiting_idea", projekt_phase: projekt_phase)
     )
   end
 
   def merge_context!(attributes)
     update!(context: context.merge(attributes.stringify_keys))
   end
+
+  private
+
+    def cleared_flow_attributes
+      { draft_resource: nil, revisions_count: 0, context: {}}
+    end
 end

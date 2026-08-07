@@ -63,35 +63,46 @@ class Whatsapp::ReachStatsService < ApplicationService
       WhatsappMessage.where(direction: "outbound", status: "failed").count
     end
 
+    # One grouped pass over the broadcast rows rather than a count and a maximum
+    # over the same scan: whatsapp_messages is the largest table the feature has
+    # and this renders on every /adm/whatsapp load.
+    #
+    # "sent" is everything that left the system, not literally status "sent": a
+    # delivery receipt moves a row on to "delivered" and then "read", so
+    # counting the one status reported zero for every broadcast whose receipts
+    # had come back. WhatsappMessage.broadcast_delivered? draws the same line.
     def broadcast_rows
-      counts = broadcast_scope.group(:projekt_id, :status).count
-      return [] if counts.empty?
+      totals_by_projekt = broadcast_totals_by_projekt
 
-      last_sent_at = broadcast_scope.group(:projekt_id).maximum(:created_at)
-      names = broadcast_projekt_names(last_sent_at.keys)
+      return [] if totals_by_projekt.empty?
 
-      rows = last_sent_at.map do |projekt_id, sent_at|
+      names = broadcast_projekt_names(totals_by_projekt.keys)
+
+      rows = totals_by_projekt.map do |projekt_id, totals|
         {
           projekt_id: projekt_id,
           projekt_name: names[projekt_id],
-          sent: sent_count(counts, projekt_id),
-          failed: counts[[projekt_id, "failed"]].to_i,
-          last_sent_at: sent_at
+          sent: totals[:sent],
+          failed: totals[:failed],
+          last_sent_at: totals[:last_sent_at]
         }
       end
 
       rows.sort_by { |row| -row[:last_sent_at].to_i }.first(BROADCAST_PROJEKT_LIMIT)
     end
 
-    # Everything that left the system, not literally status "sent": a delivery
-    # receipt moves a row on to "delivered" and then "read", so counting the one
-    # status reported zero for every broadcast whose receipts had come back.
-    # WhatsappMessage.broadcast_delivered? draws the same line.
-    def sent_count(counts, projekt_id)
-      counts
-        .select { |(row_projekt_id, status), _| row_projekt_id == projekt_id && status != "failed" }
-        .values
-        .sum
+    def broadcast_totals_by_projekt
+      grouped = broadcast_scope
+        .group(:projekt_id, :status)
+        .pluck(:projekt_id, :status, Arel.sql("COUNT(*)"), Arel.sql("MAX(created_at)"))
+
+      grouped.each_with_object({}) do |(projekt_id, status, count, last_created_at), totals|
+        row = totals[projekt_id] ||= { sent: 0, failed: 0, last_sent_at: nil }
+        bucket = status == "failed" ? :failed : :sent
+
+        row[bucket] += count
+        row[:last_sent_at] = [row[:last_sent_at], last_created_at].compact.max
+      end
     end
 
     def broadcast_scope

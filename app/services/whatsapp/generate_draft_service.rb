@@ -26,7 +26,7 @@ class Whatsapp::GenerateDraftService < ApplicationService
     end
 
     def author
-      @conversation.whatsapp_account.user
+      @conversation.user
     end
 
     def budget_phase?

@@ -37,6 +37,12 @@ module Whatsapp::MenuActions
     service: %i[page]
   }.freeze
 
+  SECTIONS_BY_SCOPE = {
+    portal: PORTAL_SECTIONS,
+    projekt: PROJEKT_SECTIONS,
+    phase: PHASE_SECTIONS
+  }.freeze
+
   # Actions that are reachable but are not rows of the menu they belong to: a
   # projekt menu listing "projekt menu" leads nowhere. :card is what a projekt
   # row in a list opens; :menu is what the card's own button opens.
@@ -88,16 +94,8 @@ module Whatsapp::MenuActions
     { scope: scope, record_id: match[:record_id].to_i, action: action }
   end
 
-  def ours?(row_id)
-    parse(row_id).present?
-  end
-
   def sections_for(scope)
-    case scope
-    when :portal then PORTAL_SECTIONS
-    when :projekt then PROJEKT_SECTIONS
-    when :phase then PHASE_SECTIONS
-    end
+    SECTIONS_BY_SCOPE[scope]
   end
 
   # Reading the portal needs no account; taking part in it or changing one's own

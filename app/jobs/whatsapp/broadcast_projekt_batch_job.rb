@@ -9,82 +9,93 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
   CARD_SUBTITLE_MAX_LENGTH = 900
 
   def perform(projekt_id, account_ids)
-    projekt = Projekt.find_by(id: projekt_id)
+    @projekt = Projekt.find_by(id: projekt_id)
 
-    return if projekt.blank?
+    return if @projekt.blank?
     return if !::Whatsapp.enabled?
     return if ::Whatsapp.broadcast_template_name.blank?
-    return if !still_published?(projekt)
+    return if !Whatsapp::BroadcastGuards.still_published?(@projekt, context: "broadcast batch")
 
-    deliver(projekt, account_ids)
+    deliver(account_ids)
   end
 
   private
 
-    def still_published?(projekt)
-      return true if projekt.meets_publish_criteria?
+    # Everything the message is built from is the same for all fifty accounts in
+    # the batch, so it is resolved once: the template names and the language are
+    # uncached Setting reads, and the signed blob URL is an HMAC per call.
+    def deliver(account_ids)
+      accounts = WhatsappAccount.subscribed.where(id: account_ids)
+      pending = accounts.where.not(id: already_delivered_account_ids(account_ids))
 
-      Rails.logger.info(
-        "[Whatsapp] broadcast batch for projekt #{projekt.id} skipped: no longer published"
-      )
-
-      false
+      pending.find_each { |account| deliver_to(account) }
     end
 
-    def deliver(projekt, account_ids)
-      WhatsappAccount.subscribed.where(id: account_ids).find_each do |account|
-        next if WhatsappMessage.broadcast_delivered?(account.id, projekt.id)
-
-        if card_deliverable?(projekt)
-          deliver_card(projekt, account)
-        else
-          deliver_text(projekt, account)
-        end
-      end
+    def already_delivered_account_ids(account_ids)
+      WhatsappMessage
+        .where(
+          whatsapp_account_id: account_ids,
+          projekt_id: @projekt.id,
+          kind: "template",
+          direction: "outbound"
+        )
+        .where.not(status: "failed")
+        .distinct
+        .pluck(:whatsapp_account_id)
     end
 
-    def deliver_card(projekt, account)
+    def deliver_to(account)
+      return deliver_text(account) if !card_deliverable?
+
       Whatsapp::Outbound.card_template(
         account: account,
-        name: ::Whatsapp.broadcast_card_template_name,
-        image_url: card_image_url(projekt),
-        variables: [projekt_title(projekt), card_subtitle(projekt)],
-        button_variable: projekt.id,
-        projekt_id: projekt.id
+        name: card_template_name,
+        image_url: card_image_url,
+        variables: [projekt_title, card_subtitle],
+        button_variable: @projekt.id,
+        projekt_id: @projekt.id
       )
     end
 
-    def deliver_text(projekt, account)
+    def deliver_text(account)
       Whatsapp::Outbound.template(
         account: account,
-        name: ::Whatsapp.broadcast_template_name,
-        variables: [projekt_title(projekt), projekt_url(projekt)],
-        projekt_id: projekt.id
+        name: text_template_name,
+        variables: [projekt_title, projekt_url],
+        projekt_id: @projekt.id
       )
     end
 
     # Every part of the card has to be there before it is worth sending as one:
     # an approved card template, a picture Meta will accept, and a subtitle for
     # the second body variable — Meta rejects a template parameter that is empty.
-    def card_deliverable?(projekt)
+    def card_deliverable?
       return @card_deliverable if defined?(@card_deliverable)
 
       @card_deliverable =
-        ::Whatsapp.broadcast_card_template_name.present? &&
-        card_subtitle(projekt).present? &&
-        card_image(projekt).present?
+        card_template_name.present? && card_subtitle.present? && card_image.present?
     end
 
-    def card_subtitle(projekt)
+    def card_template_name
+      return @card_template_name if defined?(@card_template_name)
+
+      @card_template_name = ::Whatsapp.broadcast_card_template_name
+    end
+
+    def text_template_name
+      @text_template_name ||= ::Whatsapp.broadcast_template_name
+    end
+
+    def card_subtitle
       return @card_subtitle if defined?(@card_subtitle)
 
-      @card_subtitle = projekt.page&.subtitle.to_s.squish.truncate(CARD_SUBTITLE_MAX_LENGTH).presence
+      @card_subtitle = @projekt.page&.subtitle.to_s.squish.truncate(CARD_SUBTITLE_MAX_LENGTH).presence
     end
 
-    def card_image(projekt)
+    def card_image
       return @card_image if defined?(@card_image)
 
-      attachment = projekt.page&.image&.attachment
+      attachment = @projekt.page&.image&.attachment
 
       @card_image = attachment if usable_card_image?(attachment)
     end
@@ -96,18 +107,18 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
       attachment.blob.byte_size <= CARD_IMAGE_MAX_BYTES
     end
 
-    def card_image_url(projekt)
-      Rails.application.routes.url_helpers.rails_blob_url(
-        card_image(projekt),
+    def card_image_url
+      @card_image_url ||= Rails.application.routes.url_helpers.rails_blob_url(
+        card_image,
         **UrlOptions.default.to_h
       )
     end
 
-    def projekt_title(projekt)
-      Whatsapp::ProjektLink.title(projekt)
+    def projekt_title
+      @projekt_title ||= Whatsapp::ProjektLink.title(@projekt)
     end
 
-    def projekt_url(projekt)
-      Whatsapp::ProjektLink.url(projekt)
+    def projekt_url
+      @projekt_url ||= Whatsapp::ProjektLink.url(@projekt)
     end
 end

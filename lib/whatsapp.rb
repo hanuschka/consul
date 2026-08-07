@@ -8,6 +8,12 @@ module Whatsapp
   MAX_ICE_BREAKERS = 4
   COMMAND_SEPARATOR = "|".freeze
 
+  # A WhatsApp list holds ten rows, and the bot has nowhere to paginate to, so
+  # every query that fills one is capped here rather than per query object.
+  # WhatsappApi::Resources::Messages enforces the same number at the protocol
+  # edge, where it truncates and warns.
+  MAX_LIST_ROWS = 10
+
   def self.config
     Rails.application.secrets.whatsapp || {}
   end
@@ -168,6 +174,13 @@ module Whatsapp
   # id appended at send time — so it has to match `projekt_url` minus the id.
   def self.projekt_url_prefix
     "#{Rails.application.routes.url_helpers.projekts_url(**UrlOptions.default.to_h)}/"
+  end
+
+  # Whether a broadcast can be sent at all. Asked by the projekt details page
+  # before it offers the button and by the action before it enqueues, so the two
+  # cannot disagree about what "configured" means.
+  def self.broadcast_available?
+    enabled? && broadcast_template_name.present?
   end
 
   def self.broadcast_template_language

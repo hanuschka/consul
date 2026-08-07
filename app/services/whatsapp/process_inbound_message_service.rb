@@ -130,11 +130,15 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       return false if action.blank?
 
-      Whatsapp::Steps::SetMessageDeliveryService.call(
-        conversation: conversation, enabled: action == :messages_on
-      )
+      set_message_delivery(action)
 
       true
+    end
+
+    def set_message_delivery(action)
+      return Whatsapp::Steps::SetMessageDeliveryService.enable(conversation:) if action == :messages_on
+
+      Whatsapp::Steps::SetMessageDeliveryService.disable(conversation:)
     end
 
     # Tapped rows and buttons carry an unambiguous action, so they are answered
@@ -224,18 +228,18 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       Whatsapp::Steps::AskForIdeaService.call(conversation:)
     end
 
+    # Routed through the step service rather than writing the columns here, so
+    # the keywords, the recovery button and the assistant cannot drift into
+    # leaving the account in three different states.
     def handle_opt_keywords
       if OPT_OUT_KEYWORDS.include?(normalized_text)
-        account.update!(opt_out_at: Time.current)
-        conversation.reset_flow!
-        Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.opted_out"))
+        Whatsapp::Steps::SetMessageDeliveryService.disable(conversation:)
 
         return true
       end
 
       if OPT_IN_KEYWORDS.include?(normalized_text)
-        account.update!(opt_in_at: Time.current, opt_out_at: nil)
-        send_recovery(I18n.t("whatsapp.bot.opted_in"), [:menu])
+        Whatsapp::Steps::SetMessageDeliveryService.enable(conversation:)
 
         return true
       end
@@ -431,18 +435,10 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
           "whatsapp.bot.published"
         end
 
-      send_recovery(I18n.t(copy_key, url: published_resource_url(resource)), [:menu])
-    end
-
-    def published_resource_url(resource)
-      helpers = Rails.application.routes.url_helpers
-      options = UrlOptions.default.to_h
-
-      if resource.is_a?(Budget::Investment)
-        return helpers.budget_investment_url(resource.budget, resource, **options)
-      end
-
-      helpers.proposal_url(resource, **options)
+      send_recovery(
+        I18n.t(copy_key, url: Whatsapp::PublishedResourceUrl.call(resource)),
+        [:menu]
+      )
     end
 
     def publish_requested?

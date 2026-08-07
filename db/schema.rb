@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_06_101806) do
+ActiveRecord::Schema.define(version: 2026_08_07_042005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3482,6 +3482,8 @@ ActiveRecord::Schema.define(version: 2026_08_06_101806) do
     t.datetime "link_token_sent_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
+    t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"
     t.index ["link_token"], name: "index_whatsapp_accounts_on_link_token", unique: true
     t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id"
     t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"

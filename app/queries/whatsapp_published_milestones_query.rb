@@ -1,6 +1,4 @@
 class WhatsappPublishedMilestonesQuery < ApplicationQuery
-  MAX_CHOICES = 10
-
   # Milestones hang off phases (134 of them) far more than off proposals (2), so
   # progress is read through the phase and reported under its projekt.
   #
@@ -11,24 +9,26 @@ class WhatsappPublishedMilestonesQuery < ApplicationQuery
   end
 
   def call
-    Milestone
-      .where(milestoneable_type: "ProjektPhase")
-      .where(milestoneable_id: phase_ids)
-      .where.not(publication_date: nil)
-      .where("milestones.publication_date <= ?", Time.zone.today)
-      .includes(:translations)
-      .order(publication_date: :desc)
-      .limit(MAX_CHOICES)
-      .to_a
+    scope.includes(:translations).limit(::Whatsapp::MAX_LIST_ROWS).to_a
+  end
+
+  def exists?
+    scope.exists?
   end
 
   private
 
+    def scope
+      Milestone
+        .where(milestoneable_type: "ProjektPhase")
+        .where(milestoneable_id: phase_ids)
+        .where.not(publication_date: nil)
+        .where("milestones.publication_date <= ?", Time.zone.today)
+        .order(publication_date: :desc)
+    end
+
     def phase_ids
-      scope = ProjektPhase
-        .joins(projekt: :page)
-        .where(site_customization_pages: { status: "published" })
-        .merge(Projekt.activated)
+      scope = ProjektPhase.of_publicly_visible_projekt
 
       scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
 

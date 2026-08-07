@@ -1,6 +1,4 @@
 class WhatsappFollowedProjektsQuery < ApplicationQuery
-  MAX_CHOICES = 10
-
   # The same ProjektSubscription rows the website's follow button writes, so a
   # projekt followed on the web is followed in the chat and unfollowing in
   # either place is the same act.
@@ -16,7 +14,7 @@ class WhatsappFollowedProjektsQuery < ApplicationQuery
       .where(projekt_subscriptions: { user_id: @user.id, active: true })
       .includes(:page)
       .order("projekts.created_at DESC")
-      .limit(MAX_CHOICES)
+      .limit(::Whatsapp::MAX_LIST_ROWS)
       .to_a
   end
 end

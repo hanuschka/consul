@@ -21,7 +21,7 @@ class Whatsapp::Steps::SendProjektCardService < ApplicationService
   private
 
     def user
-      @conversation.whatsapp_account.user
+      @conversation.user
     end
 
     def body

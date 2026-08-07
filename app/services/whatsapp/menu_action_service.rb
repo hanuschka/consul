@@ -6,6 +6,29 @@ class Whatsapp::MenuActionService < ApplicationService
   #
   # Returns false for an action whose record has gone, which is how the caller
   # knows to fall back rather than leave the citizen with silence.
+  # A projekt row and a phase row each reach one step service with one argument,
+  # so the routes are data: adding an action is a line here, not an arm in a
+  # case that already reads as nine copies of the same call.
+  PROJEKT_STEPS = {
+    card: Whatsapp::Steps::SendProjektCardService,
+    menu: Whatsapp::Steps::ProjektMenuService,
+    phases: Whatsapp::Steps::ListPhasesService,
+    contributions: Whatsapp::Steps::ListProjektContributionsService,
+    events: Whatsapp::Steps::ListEventsService,
+    milestones: Whatsapp::Steps::ListMilestonesService,
+    results: Whatsapp::Steps::ListResultsService,
+    follow: Whatsapp::Steps::ToggleProjektFollowService,
+    page: Whatsapp::Steps::SendProjektPageService
+  }.freeze
+
+  PHASE_STEPS = {
+    menu: Whatsapp::Steps::PhaseMenuService,
+    participate: Whatsapp::Steps::StartPhaseParticipationService,
+    contributions: Whatsapp::Steps::ListPhaseContributionsService,
+    results: Whatsapp::Steps::SendPhaseResultsService,
+    page: Whatsapp::Steps::SendPhasePageService
+  }.freeze
+
   def initialize(conversation:, scope:, action:, record_id: 0)
     @conversation = conversation
     @scope = scope
@@ -43,51 +66,23 @@ class Whatsapp::MenuActionService < ApplicationService
     end
 
     def projekt_action
-      return false if projekt.blank?
+      service = PROJEKT_STEPS[@action]
 
-      case @action
-      when :card then step(Whatsapp::Steps::SendProjektCardService)
-      when :menu then step(Whatsapp::Steps::ProjektMenuService)
-      when :phases then step(Whatsapp::Steps::ListPhasesService)
-      when :contributions then step(Whatsapp::Steps::ListProjektContributionsService)
-      when :events then step(Whatsapp::Steps::ListEventsService)
-      when :milestones then step(Whatsapp::Steps::ListMilestonesService)
-      when :results then step(Whatsapp::Steps::ListResultsService)
-      when :follow then step(Whatsapp::Steps::ToggleProjektFollowService)
-      when :page then step(Whatsapp::Steps::SendProjektPageService)
-      else return false
-      end
+      return false if service.blank? || projekt.blank?
+
+      service.call(conversation: @conversation, projekt: projekt)
 
       true
     end
 
     def phase_action
-      return false if projekt_phase.blank?
+      service = PHASE_STEPS[@action]
 
-      case @action
-      when :menu then Whatsapp::Steps::PhaseMenuService.call(
-        conversation: @conversation, projekt_phase: projekt_phase
-      )
-      when :participate then Whatsapp::Steps::StartPhaseParticipationService.call(
-        conversation: @conversation, projekt_phase: projekt_phase
-      )
-      when :contributions then Whatsapp::Steps::ListPhaseContributionsService.call(
-        conversation: @conversation, projekt_phase: projekt_phase
-      )
-      when :results then Whatsapp::Steps::SendPhaseResultsService.call(
-        conversation: @conversation, projekt_phase: projekt_phase
-      )
-      when :page then Whatsapp::Steps::SendPhasePageService.call(
-        conversation: @conversation, projekt_phase: projekt_phase
-      )
-      else return false
-      end
+      return false if service.blank? || projekt_phase.blank?
+
+      service.call(conversation: @conversation, projekt_phase: projekt_phase)
 
       true
-    end
-
-    def step(service)
-      service.call(conversation: @conversation, projekt: projekt)
     end
 
     # The row only says "submit something"; which phase, and whether one has to
@@ -121,9 +116,7 @@ class Whatsapp::MenuActionService < ApplicationService
       @projekt_phase =
         ProjektPhase
           .where(hidden_at: nil, active: true)
-          .joins(projekt: :page)
-          .where(site_customization_pages: { status: "published" })
-          .where(projekt_id: Projekt.activated.select(:id))
+          .of_publicly_visible_projekt
           .includes(projekt: :page)
           .find_by(id: @record_id)
     end

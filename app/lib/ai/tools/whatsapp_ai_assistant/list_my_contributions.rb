@@ -1,38 +1,25 @@
 class Ai::Tools::WhatsappAiAssistant::ListMyContributions < Ai::Tools::WhatsappAiAssistant::BaseTool
-  MAX_PER_RESOURCE = 10
-
   description "Lists what this citizen has already submitted to the portal — their proposals and " \
               "their budget investments, newest first, with the link to each and to the projekt " \
               "it belongs to. Takes no arguments. Use it to answer questions like what did I " \
               "submit or where can I find my proposal."
 
+  # The same history the menu's contributions row lists, so the two channels
+  # cannot answer "what did I submit" differently.
   def execute
-    { contributions: (proposals + investments).sort_by { |row| row[:submitted_on] }.reverse }
+    contributions =
+      ::WhatsappUserContributionsQuery.call(user: user).map { |resource| row_for(resource) }
+
+    { contributions: contributions }
   end
 
   private
 
-    def proposals
-      ::Proposal
-        .where(author: user)
-        .includes(projekt_phase: { projekt: :page })
-        .order(created_at: :desc)
-        .limit(MAX_PER_RESOURCE)
-        .map { |proposal| row_for(proposal, "proposal", proposal.projekt) }
-    end
+    def row_for(resource)
+      projekt = resource.projekt
 
-    def investments
-      ::Budget::Investment
-        .where(author: user)
-        .includes(budget: { projekt_phase: { projekt: :page }})
-        .order(created_at: :desc)
-        .limit(MAX_PER_RESOURCE)
-        .map { |investment| row_for(investment, "budget investment", investment.projekt) }
-    end
-
-    def row_for(resource, kind, projekt)
       {
-        kind: kind,
+        kind: resource.is_a?(::Proposal) ? "proposal" : "budget investment",
         title: resource.title,
         projekt: projekt.present? ? projekt_title(projekt) : nil,
         projekt_url: projekt.present? ? projekt_url(projekt) : nil,

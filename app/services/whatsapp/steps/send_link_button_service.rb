@@ -2,11 +2,12 @@ class Whatsapp::Steps::SendLinkButtonService < ApplicationService
   # Every "here is a page to open" reply. A button WhatsApp refuses for any
   # reason falls back to the plain link rather than to silence, the same way the
   # linking invitation does.
-  def initialize(conversation:, body:, url:, button_label: nil)
+  def initialize(conversation:, body:, url:, button_label: nil, fallback_body: nil)
     @conversation = conversation
     @body = body
     @url = url
     @button_label = button_label
+    @fallback_body = fallback_body
   end
 
   def call
@@ -19,7 +20,10 @@ class Whatsapp::Steps::SendLinkButtonService < ApplicationService
 
     return message if message&.status == "sent"
 
-    Whatsapp::Outbound.text(account: account, body: "#{@body}\n\n#{@url}")
+    Whatsapp::Outbound.text(
+      account: account,
+      body: @fallback_body || "#{@body}\n\n#{@url}"
+    )
   end
 
   private

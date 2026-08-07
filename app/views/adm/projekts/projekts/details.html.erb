@@ -44,22 +44,21 @@
       label: t("adm.projekts.projekts.whatsapp_broadcast.label"),
       hint: t("adm.projekts.projekts.whatsapp_broadcast.description")
     ) do %>
-      <% subscribed_count = WhatsappAccount.subscribed.count %>
-
-      <% if Whatsapp.broadcast_template_name.blank? %>
-        <%= kern_alert(
-          title: t("adm.projekts.projekts.whatsapp_broadcast.missing_template"),
-          style: :warning
-        ) %>
-      <% else %>
+      <% if Whatsapp.broadcast_available? %>
         <%= kern_link_button(
           whatsapp_broadcast_adm_projekts_projekt_path(@projekt),
           text: t("adm.projekts.projekts.whatsapp_broadcast.send"),
           style: :secondary,
           data: {
             turbo_method: :post,
-            turbo_confirm: t("adm.projekts.projekts.whatsapp_broadcast.confirm", count: subscribed_count)
+            turbo_confirm: t("adm.projekts.projekts.whatsapp_broadcast.confirm",
+              count: @whatsapp_subscribed_count)
           }
+        ) %>
+      <% else %>
+        <%= kern_alert(
+          title: t("adm.projekts.projekts.whatsapp_broadcast.missing_template"),
+          style: :warning
         ) %>
       <% end %>
     <% end %>

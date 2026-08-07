@@ -108,6 +108,28 @@ module Whatsapp::Outbound
     end
   end
 
+  # WhatsApp dismisses the bubble after this long, and there is no way to extend
+  # it — the indicator belongs to one inbound message. A turn that can outrun it
+  # is a turn worth making faster rather than one worth re-signalling.
+  TYPING_INDICATOR_SECONDS = 25
+
+  # Shown only on the turns that make the citizen wait: an LLM call, a draft, a
+  # criteria evaluation. Deliberately not routed through `deliver` — this is not
+  # a message, so it gets no whatsapp_messages row and never appears in the
+  # dialog history the admin pages read.
+  #
+  # Never raises. The bubble is cosmetic: someone who does not see it waits
+  # exactly as long, whereas an exception here would cost them the reply itself.
+  def typing(message_id:)
+    return if message_id.blank?
+
+    WhatsappApi::Client.new.messages.send_typing_indicator(message_id: message_id)
+  rescue StandardError => e
+    Rails.logger.info("[Whatsapp] typing indicator failed: #{e.class} - #{e.message}")
+
+    nil
+  end
+
   def deliver_within_service_window(account:, kind:, body:, &block)
     return if !Whatsapp::ServiceWindow.deliverable?(account, kind)
 

@@ -6,11 +6,16 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
   # Lifted out of ProcessInboundMessageService so the gate chain stays a
   # dispatcher and the thing that decides what a citizen is told about their
   # submission lives in one readable place.
-  def initialize(conversation:)
+  def initialize(conversation:, inbound_message_id: nil)
     @conversation = conversation
+    @inbound_message_id = inbound_message_id
   end
 
   def call
+    # Publishing is not instant when the phase has hard criteria: PublishDraft
+    # runs the two-tier evaluator, which is a second LLM call.
+    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+
     result = Whatsapp::PublishDraftService.call(conversation: @conversation)
 
     return send_criteria_feedback if result == :criteria_failed

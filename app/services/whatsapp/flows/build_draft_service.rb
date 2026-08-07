@@ -10,18 +10,25 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
   # Two entry points rather than one with a flag: the only thing that differs is
   # which copy the finished card carries, and a caller reading
   # `BuildDraftService.call(..., true)` could not tell you which.
-  def self.from_idea(conversation:, idea_text:)
-    new(conversation: conversation, idea_text: idea_text, copy: :first).call
+  def self.from_idea(conversation:, idea_text:, inbound_message_id: nil)
+    new(
+      conversation: conversation, idea_text: idea_text,
+      copy: :first, inbound_message_id: inbound_message_id
+    ).call
   end
 
-  def self.from_revision(conversation:, idea_text:)
-    new(conversation: conversation, idea_text: idea_text, copy: :revised).call
+  def self.from_revision(conversation:, idea_text:, inbound_message_id: nil)
+    new(
+      conversation: conversation, idea_text: idea_text,
+      copy: :revised, inbound_message_id: inbound_message_id
+    ).call
   end
 
-  def initialize(conversation:, idea_text:, copy: :first)
+  def initialize(conversation:, idea_text:, copy: :first, inbound_message_id: nil)
     @conversation = conversation
     @idea_text = idea_text
     @copy = copy
+    @inbound_message_id = inbound_message_id
   end
 
   def call
@@ -32,6 +39,11 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
     )
 
     Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.drafting"))
+
+    # After the "one moment" message, not before it: sending any message
+    # dismisses the bubble, so asking for it first would spend it on the
+    # millisecond before the wait rather than on the wait.
+    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
     @conversation.update!(draft_resource: generate)
 

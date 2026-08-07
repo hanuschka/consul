@@ -52,7 +52,8 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       result = Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
-        inbound_text: inbound_text
+        inbound_text: inbound_text,
+        inbound_message_id: inbound_message_id
       )
 
       return false if !result.success?
@@ -355,8 +356,11 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       last_idea_text = conversation.context["last_idea_text"]
 
-      return Whatsapp::Flows::BuildDraftService.from_idea(conversation:, idea_text: last_idea_text) if
-        last_idea_text.present?
+      if last_idea_text.present?
+        return Whatsapp::Flows::BuildDraftService.from_idea(
+          conversation:, idea_text: last_idea_text, inbound_message_id:
+        )
+      end
 
       Whatsapp::Flows::HelpService.call(conversation:)
     end
@@ -395,7 +399,9 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       return if refuse_if_not_permitted
 
-      Whatsapp::Flows::BuildDraftService.from_idea(conversation:, idea_text: idea_text)
+      Whatsapp::Flows::BuildDraftService.from_idea(
+        conversation:, idea_text: idea_text, inbound_message_id:
+      )
     end
 
     # Checked again per action rather than once at flow entry: the same three
@@ -439,7 +445,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       conversation.update!(revisions_count: conversation.revisions_count + 1)
 
       Whatsapp::Flows::BuildDraftService.from_revision(
-        conversation:, idea_text: revised_idea_text(correction)
+        conversation:, idea_text: revised_idea_text(correction), inbound_message_id:
       )
     end
 
@@ -450,7 +456,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def publish
       return if refuse_if_not_permitted
 
-      Whatsapp::Flows::PublishResultService.call(conversation:)
+      Whatsapp::Flows::PublishResultService.call(conversation:, inbound_message_id:)
     end
 
     # Stores what a QR deep link points at without sending anything, so the
@@ -505,6 +511,12 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
     def entry_projekt
       @entry_projekt
+    end
+
+    # The wamid of the message being answered. WhatsApp ties a typing indicator
+    # to one inbound message, so the slow paths need it to show the bubble.
+    def inbound_message_id
+      @whatsapp_message.wa_message_id
     end
 
     def button_reply_id

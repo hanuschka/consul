@@ -10,6 +10,24 @@ class WhatsappApi::Resources::Messages
     @client = client
   end
 
+  # Not a message, despite the endpoint: it marks the inbound message read and
+  # shows the "typing…" bubble until a reply is sent, or for 25 seconds — Meta
+  # and 360dialog both take it on POST /messages, which is why it lives here.
+  #
+  # There is no way to show typing without the read receipt; `status: "read"` is
+  # required, not incidental.
+  def send_typing_indicator(message_id:)
+    @client.post(
+      BASE_PATH,
+      body: {
+        messaging_product: "whatsapp",
+        status: "read",
+        message_id: message_id,
+        typing_indicator: { type: "text" }
+      }
+    )
+  end
+
   def send_text(to:, body:)
     @client.post(
       BASE_PATH,

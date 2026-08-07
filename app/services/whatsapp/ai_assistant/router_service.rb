@@ -12,9 +12,10 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   BLANK_MESSAGE_ERROR = "nothing to route".freeze
   EMPTY_ANSWER_ERROR = "assistant produced no reply".freeze
 
-  def initialize(conversation:, inbound_text:)
+  def initialize(conversation:, inbound_text:, inbound_message_id: nil)
     @conversation = conversation
     @inbound_text = inbound_text
+    @inbound_message_id = inbound_message_id
     @tool_calls_made = 0
   end
 
@@ -22,6 +23,11 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     return ServiceResult.failure(error: BLANK_MESSAGE_ERROR) if @inbound_text.blank?
 
     chat = build_chat
+
+    # After the chat is assembled, so the bubble covers the wait the citizen
+    # actually experiences rather than the prompt building that precedes it.
+    ::Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+
     response = chat.ask(@inbound_text)
     outcome = deliver(response)
 

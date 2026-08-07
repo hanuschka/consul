@@ -133,8 +133,15 @@ module Whatsapp
 
   # One command per line, "name|hint". The leading slash WhatsApp displays is
   # not part of the name, so it is dropped if an admin types it.
+  #
+  # Falls back to the translation the way ice breakers do. Unset, the number's
+  # command menu is empty — and unlike the ice breakers, which vanish after the
+  # first message, that menu is the one entry point still there weeks later.
   def self.commands
-    Setting["whatsapp.commands"].to_s.lines.filter_map { |line| command_from(line) }
+    configured = Setting["whatsapp.commands"].presence ||
+                 I18n.t("whatsapp.bot.commands.default", default: nil).to_s
+
+    configured.lines.filter_map { |line| command_from(line) }
   end
 
   def self.command_from(line)

@@ -23,6 +23,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     return send_entry_menu if @whatsapp_message.welcome?
     return if handle_recovery_action
     return if handle_notification_action
+    return if handle_command
     return if handle_public_menu_action
 
     return if @whatsapp_message.audio? && inbound_text.blank?
@@ -104,6 +105,21 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       conversation.reset_flow!
 
       Whatsapp::Steps::MainMenuService.call(conversation:)
+    end
+
+    # A word the number's own command menu advertises answers the same way every
+    # time, whatever the conversation was doing. Matched only as the whole
+    # message, so a sentence that happens to contain "menu" still reaches the
+    # assistant.
+    def handle_command
+      action = Whatsapp::MenuActions.command_action_from(normalized_text)
+
+      return false if action.blank?
+      return send_entry_menu.then { true } if action == :menu
+
+      Whatsapp::MenuActionService.call(
+        conversation: conversation, scope: :portal, action: action
+      )
     end
 
     # Turning messages off must work from any state and must never depend on a

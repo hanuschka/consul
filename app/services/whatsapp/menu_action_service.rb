@@ -34,7 +34,7 @@ class Whatsapp::MenuActionService < ApplicationService
       when :results then Whatsapp::Steps::ListResultsService.call(conversation: @conversation)
       when :contributions then Whatsapp::Steps::ListContributionsService.call(conversation: @conversation)
       when :notifications then Whatsapp::Steps::NotificationSettingsService.call(conversation: @conversation)
-      when :help then send_page(:help)
+      when :help then Whatsapp::Steps::SendHelpService.call(conversation: @conversation)
       when :contact then send_page(:contact)
       else return false
       end

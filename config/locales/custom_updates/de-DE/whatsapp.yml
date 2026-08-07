@@ -183,6 +183,21 @@ de:
           followed: "Du folgst jetzt „%{projekt}“ und wirst bei Neuigkeiten benachrichtigt."
           unfollowed: "Du folgst „%{projekt}“ nicht mehr."
         help:
+          intro: |-
+            *Was ich kann*
+
+            *Vorschlag einreichen*
+            Schreib mir deine Idee als Text oder schick sie als Sprachnachricht. Ich formuliere daraus einen Vorschlag, zeige ihn dir und reiche ihn erst ein, wenn du zustimmst. Ändern kannst du ihn so oft du möchtest.
+
+            *Informieren*
+            Laufende Projekte, Termine, Abstimmungen, Projektfortschritt und Ergebnisse abgeschlossener Phasen.
+
+            *Dein Konto*
+            Deine eigenen Beiträge ansehen, Projekten folgen und Nachrichten jederzeit abstellen.
+
+            Du kannst mir auch einfach schreiben, was du suchst — ich bringe dich hin.
+          currently_empty: "Gerade ohne Inhalte: %{items}."
+          more: "Mehr zur Beteiligung: %{url}"
           body: "So funktioniert die Beteiligung:"
           button: Hilfe öffnen
           missing: >-
@@ -197,6 +212,12 @@ de:
           body: "„%{title}“ kannst du hier im Beteiligungsportal öffnen:"
           gone: >-
             Das ist leider nicht mehr verfügbar. Schau im Menü, was gerade offen ist.
+      commands:
+        default: |-
+          menu|Alle Möglichkeiten anzeigen
+          hilfe|Was dieser Chat kann
+          projekte|Laufende Beteiligungsprojekte
+          stopp|Keine Nachrichten mehr erhalten
       ice_breakers:
         default_1: Welche Projekte laufen gerade?
         default_2: Ich habe eine Idee für meine Stadt

@@ -179,6 +179,21 @@ en:
           followed: "You now follow \"%{projekt}\" and will be told when something happens."
           unfollowed: "You no longer follow \"%{projekt}\"."
         help:
+          intro: |-
+            *What I can do*
+
+            *Submit a proposal*
+            Write me your idea, or send it as a voice message. I turn it into a proposal, show it to you, and only submit it once you agree. You can change it as often as you like.
+
+            *Find out what is going on*
+            Running projects, events, votes, progress and results of completed phases.
+
+            *Your account*
+            See your own contributions, follow projects, and stop messages at any time.
+
+            You can also just write what you are looking for — I will take you there.
+          currently_empty: "Nothing right now for: %{items}."
+          more: "More about participation: %{url}"
           body: "This is how participation works:"
           button: Open help
           missing: >-
@@ -192,6 +207,12 @@ en:
           body: "You can open \"%{title}\" here in the participation portal:"
           gone: >-
             That is unfortunately no longer available. Check the menu for what is currently open.
+      commands:
+        default: |-
+          menu|Show everything on offer
+          help|What this chat can do
+          projects|Current participation projects
+          stop|Stop receiving messages
       ice_breakers:
         default_1: Which projects are running right now?
         default_2: I have an idea for my city

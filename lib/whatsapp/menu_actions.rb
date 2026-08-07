@@ -48,7 +48,26 @@ module Whatsapp::MenuActions
 
   ID_PATTERN = /\A#{PREFIX}(?<scope>[mpf])_(?<record_id>\d+)_(?<action>[a-z_]+)\z/.freeze
 
+  # The words the number's command menu advertises. WhatsApp sends a tapped
+  # command as ordinary text, so without this they would reach the assistant and
+  # cost a completion to re-derive what the word already says.
+  #
+  # Both languages are recognised regardless of the citizen's locale: someone
+  # who saw the menu in German keeps typing "hilfe" after switching their phone
+  # to English. :menu means the portal menu itself, which is not a row action.
+  COMMAND_ACTIONS = {
+    "menu" => :menu,
+    "hilfe" => :help,
+    "help" => :help,
+    "projekte" => :projekts,
+    "projects" => :projekts
+  }.freeze
+
   module_function
+
+  def command_action_from(text)
+    COMMAND_ACTIONS[text.to_s.strip.downcase.delete_prefix("/")]
+  end
 
   def id_for(scope:, action:, record_id: 0)
     "#{PREFIX}#{SCOPE_CODES.fetch(scope)}_#{record_id}_#{action}"

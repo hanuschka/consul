@@ -80,7 +80,10 @@ class Whatsapp::IngestWebhookService < ApplicationService
       # message, not from when we received it. A delivery retried hours later
       # would otherwise reopen the window on our side while it stays shut on
       # theirs, and the reply comes back as error 131047.
-      account.update!(last_inbound_at: inbound_sent_at(message) || Time.current)
+      # Only ever forwards. Deliveries arrive out of order and get retried, and
+      # an older timestamp written over a newer one would shut the window while
+      # the citizen is still inside it, silently dropping every reply.
+      account.update!(last_inbound_at: latest_inbound_at(account, message))
 
       Whatsapp::ProcessInboundMessageJob.perform_later(inbound_message.id, message)
     rescue ActiveRecord::RecordNotUnique
@@ -127,6 +130,10 @@ class Whatsapp::IngestWebhookService < ApplicationService
       when "button"
         message.dig("button", "text")
       end
+    end
+
+    def latest_inbound_at(account, message)
+      [inbound_sent_at(message) || Time.current, account.last_inbound_at].compact.max
     end
 
     def inbound_sent_at(message)

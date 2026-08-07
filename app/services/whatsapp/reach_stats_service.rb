@@ -74,13 +74,24 @@ class Whatsapp::ReachStatsService < ApplicationService
         {
           projekt_id: projekt_id,
           projekt_name: names[projekt_id],
-          sent: counts[[projekt_id, "sent"]].to_i,
+          sent: sent_count(counts, projekt_id),
           failed: counts[[projekt_id, "failed"]].to_i,
           last_sent_at: sent_at
         }
       end
 
       rows.sort_by { |row| -row[:last_sent_at].to_i }.first(BROADCAST_PROJEKT_LIMIT)
+    end
+
+    # Everything that left the system, not literally status "sent": a delivery
+    # receipt moves a row on to "delivered" and then "read", so counting the one
+    # status reported zero for every broadcast whose receipts had come back.
+    # WhatsappMessage.broadcast_delivered? draws the same line.
+    def sent_count(counts, projekt_id)
+      counts
+        .select { |(row_projekt_id, status), _| row_projekt_id == projekt_id && status != "failed" }
+        .values
+        .sum
     end
 
     def broadcast_scope

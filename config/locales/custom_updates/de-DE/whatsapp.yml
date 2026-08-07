@@ -271,6 +271,8 @@ de:
         phase_expired: Diese Beteiligungsphase ist bereits beendet.
         phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
         not_verified: Für die Einreichung muss dein Konto verifiziert sein.
+        submissions_limit_exceeded: >-
+          Du hast für dieses Projekt bereits so viele Vorschläge eingereicht, wie erlaubt sind.
         no_open_phase: >-
           In diesem Projekt läuft derzeit keine Phase, in der Vorschläge eingereicht werden
           können.

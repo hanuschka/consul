@@ -45,8 +45,11 @@ module Whatsapp::BroadcastTemplates
       category: CATEGORY
     )
 
-    Setting["whatsapp.broadcast_template"] = name if response.success?
-
+    # Deliberately not activated here. A 2xx only means Meta accepted the
+    # submission; approval takes hours, and broadcasting a pending template
+    # fails while still marking the projekt as announced. The templates tab
+    # offers "use" once the listing reports it approved, and that path sets the
+    # language alongside the name so the two cannot drift.
     response
   end
 

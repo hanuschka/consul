@@ -262,5 +262,7 @@ en:
         phase_expired: This participation phase has already ended.
         phase_not_current: This participation phase is not running right now.
         not_verified: Your account must be verified to submit a proposal.
+        submissions_limit_exceeded: >-
+          You have already submitted as many proposals to this project as are allowed.
         no_open_phase: >-
           This project currently has no phase that accepts proposals.

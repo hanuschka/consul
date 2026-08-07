@@ -13,7 +13,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
   def call
     return if !::Whatsapp.enabled?
 
-    conversation.update!(last_inbound_at: @whatsapp_message.sent_at || Time.current)
+    conversation.update!(last_inbound_at: latest_inbound_at)
 
     return if handle_opt_keywords
     return if account.opt_out_at.present?
@@ -65,6 +65,12 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # answered as conversation rather than publishing the draft.
     def tapped_reply_id
       list_reply_id.presence || button_reply_id.presence
+    end
+
+    # Only ever forwards, for the same reason the account's copy is: a retried
+    # or out-of-order delivery must not rewind the conversation's clock.
+    def latest_inbound_at
+      [@whatsapp_message.sent_at || Time.current, conversation.last_inbound_at].compact.max
     end
 
     def account

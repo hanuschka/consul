@@ -73,12 +73,15 @@
                 <% end %>
 
                 <% if template[:approved] %>
-                  <%= kern_link_button(
-                    use_template_adm_whatsapp_path(name: template[:name], language: template[:language]),
-                    text: t("adm.whatsapp.show.template_use"),
-                    style: :tertiary,
-                    data: { turbo_method: :patch }
-                  ) %>
+                  <%# A real PATCH form, not an <a> carrying data-turbo-method:
+                      only PATCH is routed, so a Turbo prefetch, a middle-click
+                      or a bookmarked href would raise a routing error. %>
+                  <%= form_with url: use_template_adm_whatsapp_path, method: :patch do |form| %>
+                    <%= form.hidden_field :name, value: template[:name] %>
+                    <%= form.hidden_field :language, value: template[:language] %>
+                    <%= form.submit t("adm.whatsapp.show.template_use"),
+                          class: "kern-btn kern-btn--tertiary" %>
+                  <% end %>
                 <% end %>
               <% end %>
             </td>

@@ -254,9 +254,40 @@ module Adm
         @eligible_projekt_phases = WhatsappEligiblePhasesQuery.call
       end
 
+      # Two 360dialog round-trips, each retried three times with a sleep at a
+      # 20-second timeout, so a gateway returning 502 used to cost the page a
+      # couple of minutes with the worker blocked throughout. Both answers are
+      # configuration that changes on the order of hours, so they are cached for
+      # a minute — and only when the call actually came back, because both
+      # services report failure as an empty or unreachable value that must not
+      # be remembered.
+      INTEGRATION_STATE_TTL = 1.minute
+
       def load_integration_state
-        @webhook_status = ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
-        @templates = ::Whatsapp::BroadcastTemplates.list
+        @webhook_status = cached_integration_state("webhook_status") do
+          ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
+        end
+
+        @templates = cached_integration_state("templates") { ::Whatsapp::BroadcastTemplates.list }
+      end
+
+      def cached_integration_state(key, &block)
+        cache_key = "whatsapp/integration_state/#{key}"
+        cached = Rails.cache.read(cache_key)
+
+        return cached if cached.present?
+
+        value = block.call
+
+        Rails.cache.write(cache_key, value, expires_in: INTEGRATION_STATE_TTL) if usable?(value)
+
+        value
+      end
+
+      def usable?(value)
+        return value[:reachable].present? if value.is_a?(Hash)
+
+        value.present?
       end
 
       def load_reach_stats

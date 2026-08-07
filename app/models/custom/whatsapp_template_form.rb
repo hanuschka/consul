@@ -2,7 +2,12 @@ class WhatsappTemplateForm
   include ActiveModel::Model
 
   NAME_PATTERN = /\A[a-z0-9_]+\z/.freeze
-  LANGUAGE_PATTERN = /\A[a-z]{2}([_-][A-Za-z]{2})?\z/.freeze
+
+  # The very value this form produces is later written to
+  # Setting["whatsapp.broadcast_template_language"], which validates it. A
+  # looser pattern here accepted "pt-BR", let it reach Meta, and then turned
+  # "use this template" into an uncaught RecordInvalid.
+  LANGUAGE_PATTERN = Setting::WHATSAPP_TEMPLATE_LANGUAGE_FORMAT
   PLACEHOLDER_PATTERN = /\{\{\s*(\d+)\s*\}\}/.freeze
   LEADING_PLACEHOLDER_PATTERN = /\A\{\{\s*\d+\s*\}\}/.freeze
   TRAILING_PLACEHOLDER_PATTERN = /\{\{\s*\d+\s*\}\}\z/.freeze

@@ -14,6 +14,11 @@ module Whatsapp
   # edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
+  # A WhatsApp interactive message holds three reply buttons; anything longer
+  # becomes a list instead. Declared beside the row cap for the same reason —
+  # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
+  MAX_BUTTONS = 3
+
   # The models under this namespace keep their original tables, so the prefix is
   # declared once here rather than as a self.table_name on each of them.
   def self.table_name_prefix
@@ -112,9 +117,13 @@ module Whatsapp
   def self.default_locale
     configured_locale = Setting["whatsapp.default_locale"].to_s
 
-    return I18n.default_locale if !I18n.available_locales.map(&:to_s).include?(configured_locale)
+    return I18n.default_locale if !available_locale?(configured_locale)
 
     configured_locale
+  end
+
+  def self.available_locale?(locale)
+    I18n.available_locales.map(&:to_s).include?(locale)
   end
 
   # The language to answer this number in: the linked citizen's own, falling
@@ -123,7 +132,7 @@ module Whatsapp
   def self.locale_for(account)
     user_locale = account&.user&.locale.to_s
 
-    return default_locale if !I18n.available_locales.map(&:to_s).include?(user_locale)
+    return default_locale if !available_locale?(user_locale)
 
     user_locale
   end

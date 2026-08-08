@@ -7,7 +7,7 @@ class Whatsapp::Platform::RegisterWebhookService < ApplicationService
     return if !::Whatsapp.configured?
     return if webhook_url.blank?
 
-    response = WhatsappApi::Client.new.webhooks.configure(
+    response = ::WhatsappApi::Client.new.webhooks.configure(
       url: webhook_url,
       headers: auth_headers
     )
@@ -23,7 +23,7 @@ class Whatsapp::Platform::RegisterWebhookService < ApplicationService
     # no way to tell in advance which one it will send back to us.
     def auth_headers
       {
-        WhatsappApi::Client::AUTH_HEADER_NAME => ::Whatsapp.webhook_secret,
+        ::WhatsappApi::Client::AUTH_HEADER_NAME => ::Whatsapp.webhook_secret,
         "Authorization" => ::Whatsapp.webhook_secret
       }
     end

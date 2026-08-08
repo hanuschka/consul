@@ -6,7 +6,7 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
   def call
     return if @media_id.blank?
 
-    media = WhatsappApi::Client.new.media.download(@media_id, max_bytes: ::Whatsapp.max_voice_bytes)
+    media = ::WhatsappApi::Client.new.media.download(@media_id, max_bytes: ::Whatsapp.max_voice_bytes)
 
     return if media.blank?
 
@@ -21,12 +21,12 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
   private
 
     def transcribe(media)
-      tempfile = ::Tempfile.new(["whatsapp_voice", extension_for(media[:mime_type])])
+      tempfile = Tempfile.new(["whatsapp_voice", extension_for(media[:mime_type])])
       tempfile.binmode
       tempfile.write(media[:body])
       tempfile.flush
 
-      transcription = ::RubyLLM.transcribe(
+      transcription = RubyLLM.transcribe(
         tempfile.path,
         model: ::Whatsapp.transcription_model,
         language: I18n.locale.to_s.first(2),

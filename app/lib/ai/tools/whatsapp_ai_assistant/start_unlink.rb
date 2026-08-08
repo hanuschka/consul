@@ -5,10 +5,16 @@ class Ai::Tools::WhatsappAiAssistant::StartUnlink < Ai::Tools::WhatsappAiAssista
               "confirm. This sends the message itself."
 
   def execute
-    return not_linked_error("there is nothing to unlink.") if user.blank?
+    return not_linked_error if user.blank?
 
     ::Whatsapp::Flows::UnlinkService.ask(conversation: conversation)
 
     halt("Asked the citizen to confirm unlinking.")
   end
+
+  private
+
+    def not_linked_error
+      { error: "This number is not linked to an account, so there is nothing to unlink." }
+    end
 end

@@ -8,7 +8,7 @@ class Whatsapp::Platform::WebhookStatusService < ApplicationService
   def call
     return unreachable if !::Whatsapp.configured?
 
-    response = WhatsappApi::Client.new.webhooks.show
+    response = ::WhatsappApi::Client.new.webhooks.show
 
     return unreachable if !response.success?
 
@@ -40,13 +40,13 @@ class Whatsapp::Platform::WebhookStatusService < ApplicationService
     def registered_header_value(payload)
       headers = payload["headers"].to_h
 
-      headers.values_at(WhatsappApi::Client::AUTH_HEADER_NAME, "Authorization").compact.first.to_s
+      headers.values_at(::WhatsappApi::Client::AUTH_HEADER_NAME, "Authorization").compact.first.to_s
     end
 
     def header_matches?(header_value)
       return false if header_value.blank?
 
-      ::ActiveSupport::SecurityUtils.secure_compare(header_value, ::Whatsapp.webhook_secret.to_s)
+      ActiveSupport::SecurityUtils.secure_compare(header_value, ::Whatsapp.webhook_secret.to_s)
     end
 
     def expected_url

@@ -66,7 +66,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # the wrapper was one delegation, and two GenerateDraftServices one namespace
     # apart is what made comments elsewhere describe the wrong one.
     def generate
-      ProposalAiDraft::GenerateDraftService.call(
+      ::ProposalAiDraft::GenerateDraftService.call(
         idea_text: @idea_text,
         projekt_phase: @conversation.projekt_phase
       ).to_h

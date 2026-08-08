@@ -1,6 +1,6 @@
 class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
   DESCRIPTION_PREVIEW_LENGTH = 700
-  MAX_SCORE_PER_CRITERION = ProposalAiDraft::EvaluateSoftCriteriaService::SCORE_MAX
+  MAX_SCORE_PER_CRITERION = ::ProposalAiDraft::EvaluateSoftCriteriaService::SCORE_MAX
 
   # Catalog C16 and C18 — the same card, with different copy the second time so
   # a citizen who asked for a change can tell that the change landed. The draft
@@ -72,11 +72,11 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
 
       Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
-      ProposalAiDraft::EvaluateTwoTierService.call(resource: draft_resource).to_h
+      ::ProposalAiDraft::EvaluateTwoTierService.call(resource: draft_resource).to_h
     end
 
     def hard_failed?
-      evaluation["stage"] == ProposalAiDraft::EvaluateTwoTierService::STAGE_HARD_FAILED
+      evaluation["stage"] == ::ProposalAiDraft::EvaluateTwoTierService::STAGE_HARD_FAILED
     end
 
     def draft_summary
@@ -114,7 +114,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
     # feedback. An empty feedback string is dropped rather than printed as a
     # blank line under a number.
     def evaluation_line
-      return if evaluation["stage"] != ProposalAiDraft::EvaluateTwoTierService::STAGE_COMPLETED
+      return if evaluation["stage"] != ::ProposalAiDraft::EvaluateTwoTierService::STAGE_COMPLETED
       return if max_score.zero?
 
       I18n.t(

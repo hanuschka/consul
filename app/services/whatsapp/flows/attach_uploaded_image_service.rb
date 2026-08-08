@@ -39,7 +39,7 @@ class Whatsapp::Flows::AttachUploadedImageService < Whatsapp::Flows::BaseService
     end
 
     def download
-      WhatsappApi::Client.new.media.download(
+      ::WhatsappApi::Client.new.media.download(
         @media_id, max_bytes: Image.max_file_size.megabytes
       )
     end

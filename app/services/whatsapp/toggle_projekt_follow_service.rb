@@ -12,7 +12,7 @@ class Whatsapp::ToggleProjektFollowService < ApplicationService
   end
 
   def call
-    subscription = ProjektSubscription.find_or_initialize_by(user: @user, projekt: @projekt)
+    subscription = ::ProjektSubscription.find_or_initialize_by(user: @user, projekt: @projekt)
 
     subscription.update!(active: !subscription.active?)
 
@@ -35,7 +35,7 @@ class Whatsapp::ToggleProjektFollowService < ApplicationService
   end
 
   def self.write(user:, projekt:, active:)
-    ProjektSubscription
+    ::ProjektSubscription
       .find_or_initialize_by(user: user, projekt: projekt)
       .update!(active: active)
   end
@@ -44,6 +44,6 @@ class Whatsapp::ToggleProjektFollowService < ApplicationService
   def self.following?(user:, projekt:)
     return false if user.blank?
 
-    ProjektSubscription.exists?(user_id: user.id, projekt_id: projekt.id, active: true)
+    ::ProjektSubscription.exists?(user_id: user.id, projekt_id: projekt.id, active: true)
   end
 end

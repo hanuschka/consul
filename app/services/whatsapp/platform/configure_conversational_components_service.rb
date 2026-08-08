@@ -5,7 +5,7 @@ class Whatsapp::Platform::ConfigureConversationalComponentsService < Application
     return if !::Whatsapp.configured?
 
     response =
-      WhatsappApi::Client
+      ::WhatsappApi::Client
         .new
         .conversational_automation
         .configure(

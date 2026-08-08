@@ -407,7 +407,7 @@ module Adm
       end
 
       def load_reach_stats
-        @reach_stats = ::Whatsapp::ReachStatsService.call
+        @reach_stats = ::Whatsapp::Platform::ReachStatsService.call
       end
 
       def load_dialogs

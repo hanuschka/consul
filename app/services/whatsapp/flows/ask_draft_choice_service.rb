@@ -8,10 +8,22 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   # more become a list, because WhatsApp carries at most three buttons and
   # dropping the rest would hide options that exist.
   #
-  # One service for both because the two questions differed in nothing but four
-  # names, and every one of them derives from the choice itself: the step, the
-  # two copy keys and the pill's action are all spelled with it.
-  MAX_CHOICE_BUTTONS = 3
+  # One service for both because the two questions differ in nothing but which
+  # taxonomy they read and which words they use. Those words are spelled out per
+  # kind rather than interpolated from it, so a locale key and a step name are
+  # still things you can grep for.
+  CHOICES = {
+    category: {
+      step: "awaiting_category",
+      body_key: "whatsapp.bot.proposal.ask_category",
+      button_label_key: "whatsapp.bot.buttons.choose_category"
+    },
+    sentiment: {
+      step: "awaiting_sentiment",
+      body_key: "whatsapp.bot.proposal.ask_sentiment",
+      button_label_key: "whatsapp.bot.buttons.choose_sentiment"
+    }
+  }.freeze
 
   def self.category(conversation:)
     new(conversation: conversation, kind: :category).call
@@ -29,22 +41,23 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   def call
     return if options.empty?
 
-    @conversation.update!(step: "awaiting_#{@kind}")
+    @conversation.update!(step: choice.fetch(:step))
 
-    return send_buttons if options.size <= MAX_CHOICE_BUTTONS
+    return send_buttons if options.size <= ::Whatsapp::MAX_BUTTONS
 
     send_list
   end
 
   private
 
-    # The one place the two questions genuinely part company: each reads its own
-    # taxonomy off the phase. An explicit branch rather than a constant map, so
-    # neither module is resolved at load time.
-    def options
-      return @options if defined?(@options)
+    def choice
+      CHOICES.fetch(@kind)
+    end
 
-      @options =
+    # The one place the two questions genuinely part company: each reads its own
+    # taxonomy off the phase.
+    def options
+      @options ||=
         if @kind == :category
           Whatsapp::DraftCategory.options_for(@conversation.projekt_phase)
         else
@@ -53,7 +66,7 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     end
 
     def body
-      I18n.t("whatsapp.bot.proposal.ask_#{@kind}")
+      I18n.t(choice.fetch(:body_key))
     end
 
     def rows
@@ -69,7 +82,7 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
         conversation: @conversation,
         rows: rows,
         body: body,
-        button_label: I18n.t("whatsapp.bot.buttons.choose_#{@kind}"),
+        button_label: I18n.t(choice.fetch(:button_label_key)),
         empty_body: body
       )
     end

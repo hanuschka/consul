@@ -8,7 +8,6 @@ module Whatsapp::DraftSentiment
   # outright. Nothing on this path saves unvalidated any more, so the question
   # below is what makes the record writable at all — the same way DraftCategory
   # asks for a category the model did not choose.
-  MAX_CHOICE_BUTTONS = 3
 
   module_function
 

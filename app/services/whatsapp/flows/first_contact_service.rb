@@ -11,8 +11,11 @@ class Whatsapp::Flows::FirstContactService < Whatsapp::Flows::BaseService
     account.mark_ai_disclosed!
     @conversation.update!(step: "awaiting_link_decision")
 
-    Whatsapp::Outbound.buttons(account: account, body: consent,
-buttons: Whatsapp::FlowActions.link_decision_buttons)
+    Whatsapp::Outbound.buttons(
+      account: account,
+      body: consent,
+      buttons: Whatsapp::FlowActions.link_decision_buttons
+    )
   end
 
   private

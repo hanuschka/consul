@@ -59,11 +59,11 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
       projekt_phase = @conversation.projekt_phase
 
       @missing_requirement =
-        if Whatsapp::DraftCategory.valid_ids(draft_data, projekt_phase).empty? &&
-           Whatsapp::DraftCategory.required?(projekt_phase)
+        if Whatsapp::DraftCategory.required?(projekt_phase) &&
+           Whatsapp::DraftCategory.valid_ids(draft_data, projekt_phase).empty?
           :category
-        elsif Whatsapp::DraftSentiment.valid_id(draft_data, projekt_phase).blank? &&
-              Whatsapp::DraftSentiment.required?(projekt_phase)
+        elsif Whatsapp::DraftSentiment.required?(projekt_phase) &&
+              Whatsapp::DraftSentiment.valid_id(draft_data, projekt_phase).blank?
           :sentiment
         end
     end

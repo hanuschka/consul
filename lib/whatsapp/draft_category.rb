@@ -8,7 +8,6 @@ module Whatsapp::DraftCategory
   # ProjektLabel is preferred wherever the phase enables it: it is curated by
   # the projekt's own team and the model can only choose from it, whereas
   # tag_list is whatever the model wrote.
-  MAX_CHOICE_BUTTONS = 3
 
   module_function
 

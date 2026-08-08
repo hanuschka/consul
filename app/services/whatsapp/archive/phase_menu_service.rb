@@ -50,7 +50,7 @@ class Whatsapp::Archive::PhaseMenuService < ApplicationService
       return false if user.blank?
       return false if !Whatsapp::EligiblePhasesQuery.eligible?(@projekt_phase)
 
-      Whatsapp::ResourceCreationValidationService.call(
+      Whatsapp::Drafting::ResourceCreationValidationService.call(
         projekt_phase: @projekt_phase, user: user
       ).blank?
     end

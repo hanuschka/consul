@@ -1,4 +1,4 @@
-class Whatsapp::PersistDraftService < ApplicationService
+class Whatsapp::Drafting::PersistDraftService < ApplicationService
   # Writes the drafting model's output to a real record, validated. The bot used
   # to save past the resource's own validations because a half-finished draft
   # cannot satisfy them; the flow now withholds the record until it can, so the
@@ -30,17 +30,17 @@ class Whatsapp::PersistDraftService < ApplicationService
     end
 
     def author
-      @author ||= Whatsapp::SubmissionAuthorService.call(conversation: @conversation)
+      @author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation: @conversation)
     end
 
     def budget_phase?
-      projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+      projekt_phase.is_a?(::ProjektPhase::BudgetPhase)
     end
 
     def build_resource
       return build_investment if budget_phase?
 
-      Proposal.new(draft: true, projekt_phase: projekt_phase, author: author)
+      ::Proposal.new(draft: true, projekt_phase: projekt_phase, author: author)
     end
 
     # An investment reaches its phase through the budget, and a budget here has
@@ -49,7 +49,7 @@ class Whatsapp::PersistDraftService < ApplicationService
     def build_investment
       budget = projekt_phase.budget
 
-      Budget::Investment.new(
+      ::Budget::Investment.new(
         draft: true,
         budget: budget,
         heading: budget.heading,
@@ -109,6 +109,6 @@ class Whatsapp::PersistDraftService < ApplicationService
 
       return if location_name.blank?
 
-      ProposalAiDraft::GeocodeLocationService.call(proposal: resource, location_name: location_name)
+      ::ProposalAiDraft::GeocodeLocationService.call(proposal: resource, location_name: location_name)
     end
 end

@@ -1,4 +1,4 @@
-class Whatsapp::ResourceCreationValidationService < ApplicationService
+class Whatsapp::Drafting::ResourceCreationValidationService < ApplicationService
   def initialize(projekt_phase:, user:)
     @projekt_phase = projekt_phase
     @user = user
@@ -29,7 +29,7 @@ class Whatsapp::ResourceCreationValidationService < ApplicationService
     # An investment cannot be built without the budget's heading, and a budget
     # here has exactly one (Budget has_one :heading, through: :group).
     def budget_heading_missing?
-      return false if !@projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+      return false if !@projekt_phase.is_a?(::ProjektPhase::BudgetPhase)
 
       @projekt_phase.budget&.heading.blank?
     end

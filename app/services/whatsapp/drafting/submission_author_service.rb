@@ -1,4 +1,4 @@
-class Whatsapp::SubmissionAuthorService < ApplicationService
+class Whatsapp::Drafting::SubmissionAuthorService < ApplicationService
   # Who a submission from this chat belongs to. A linked number authors as its
   # citizen. An unlinked one authors as a guest, but only where the phase allows
   # guest participation — everywhere else the answer is nobody, and the caller
@@ -16,6 +16,6 @@ class Whatsapp::SubmissionAuthorService < ApplicationService
     return @conversation.user if @conversation.user.present?
     return if !@conversation.projekt_phase&.guest_participation?
 
-    Whatsapp::GuestUserService.call(account: @conversation.whatsapp_account)
+    Whatsapp::Accounts::GuestUserService.call(account: @conversation.whatsapp_account)
   end
 end

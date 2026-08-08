@@ -1,4 +1,4 @@
-class Whatsapp::TranscribeVoiceService < ApplicationService
+class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
   def initialize(media_id:)
     @media_id = media_id
   end
@@ -21,18 +21,18 @@ class Whatsapp::TranscribeVoiceService < ApplicationService
   private
 
     def transcribe(media)
-      tempfile = Tempfile.new(["whatsapp_voice", extension_for(media[:mime_type])])
+      tempfile = ::Tempfile.new(["whatsapp_voice", extension_for(media[:mime_type])])
       tempfile.binmode
       tempfile.write(media[:body])
       tempfile.flush
 
-      transcription = RubyLLM.transcribe(
+      transcription = ::RubyLLM.transcribe(
         tempfile.path,
         model: ::Whatsapp.transcription_model,
         language: I18n.locale.to_s.first(2),
         provider: :openai,
         assume_model_exists: true,
-        context: Ai::RubyLlmFactory.openai_context
+        context: ::Ai::RubyLlmFactory.openai_context
       )
 
       transcription.text.presence

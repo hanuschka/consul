@@ -1,4 +1,4 @@
-class Whatsapp::LinkTokenService < ApplicationService
+class Whatsapp::Accounts::LinkTokenService < ApplicationService
   TOKEN_BYTES = 24
 
   def initialize(account:)
@@ -20,7 +20,7 @@ class Whatsapp::LinkTokenService < ApplicationService
   def self.url_for(token)
     Rails.application.routes.url_helpers.whatsapp_link_url(
       token: token,
-      **UrlOptions.default.to_h
+      **::UrlOptions.default.to_h
     )
   end
 end

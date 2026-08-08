@@ -14,7 +14,7 @@ class Whatsapp::Flows::SendLoginLinkService < Whatsapp::Flows::BaseService
   # than to silence — with its own copy, because the fallback has to say what
   # the link is for without a button to name it.
   def call
-    link_url = Whatsapp::LinkTokenService.call(account: account)
+    link_url = Whatsapp::Accounts::LinkTokenService.call(account: account)
     @conversation.update!(step: "awaiting_link")
 
     Whatsapp::Flows::SendLinkButtonService.call(

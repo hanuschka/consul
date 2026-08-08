@@ -12,7 +12,7 @@ class Whatsapp::LinksController < ApplicationController
 
   def create
     result =
-      ::Whatsapp::ConfirmLinkService.call(
+      ::Whatsapp::Accounts::ConfirmLinkService.call(
         token: params[:token],
         user: current_user,
         broadcast_consent: broadcast_consent?

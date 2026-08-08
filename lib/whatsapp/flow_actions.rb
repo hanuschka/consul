@@ -62,7 +62,7 @@ module Whatsapp::FlowActions
 
   # Aborting a draft, not unsubscribing. Held apart from Whatsapp::OPT_OUT
   # keywords deliberately: the catalog uses the same word for both, and the
-  # difference is whether a flow is open. See ProcessInboundMessageService.
+  # difference is whether a flow is open. See Inbound::ProcessMessageService.
   ABORT_KEYWORDS = ["stop", "stopp", "abbrechen", "cancel"].freeze
 
   module_function

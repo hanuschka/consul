@@ -1,4 +1,4 @@
-class Whatsapp::WebhookStatusService < ApplicationService
+class Whatsapp::Platform::WebhookStatusService < ApplicationService
   # Reads the registration back from 360dialog. The header value is compared in
   # memory and only its length is exposed, so the secret never reaches a view.
   def initialize(expected_base_url: nil)
@@ -46,7 +46,7 @@ class Whatsapp::WebhookStatusService < ApplicationService
     def header_matches?(header_value)
       return false if header_value.blank?
 
-      ActiveSupport::SecurityUtils.secure_compare(header_value, ::Whatsapp.webhook_secret.to_s)
+      ::ActiveSupport::SecurityUtils.secure_compare(header_value, ::Whatsapp.webhook_secret.to_s)
     end
 
     def expected_url

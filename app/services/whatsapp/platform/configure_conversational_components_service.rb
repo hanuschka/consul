@@ -1,4 +1,4 @@
-class Whatsapp::ConfigureConversationalComponentsService < ApplicationService
+class Whatsapp::Platform::ConfigureConversationalComponentsService < ApplicationService
   # Ice breakers, commands and the welcome trigger live on the phone number at
   # Meta, not in our database, so every copy change has to be pushed again.
   def call

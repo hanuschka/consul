@@ -1,4 +1,4 @@
-class Whatsapp::RegisterWebhookService < ApplicationService
+class Whatsapp::Platform::RegisterWebhookService < ApplicationService
   def initialize(base_url: nil)
     @base_url = base_url
   end
@@ -38,11 +38,11 @@ class Whatsapp::RegisterWebhookService < ApplicationService
     end
 
     def host_url
-      @base_url.presence || Setting["url"].presence&.chomp("/") || url_options_host
+      @base_url.presence || ::Setting["url"].presence&.chomp("/") || url_options_host
     end
 
     def url_options_host
-      options = UrlOptions.default.to_h
+      options = ::UrlOptions.default.to_h
 
       return if options[:host].blank?
 

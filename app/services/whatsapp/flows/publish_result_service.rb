@@ -3,7 +3,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   # rather than by anything the bot knows: published with its link, held for
   # review, or refused because the phase's hard criteria rejected it.
   #
-  # Lifted out of ProcessInboundMessageService so the gate chain stays a
+  # Lifted out of Inbound::ProcessMessageService so the gate chain stays a
   # dispatcher and the thing that decides what a citizen is told about their
   # submission lives in one readable place.
   def initialize(conversation:, inbound_message_id: nil)
@@ -17,7 +17,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # here instead, and that is a second LLM call.
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
-    result = Whatsapp::PublishDraftService.call(conversation: @conversation)
+    result = Whatsapp::Drafting::PublishDraftService.call(conversation: @conversation)
 
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if
       result == :criteria_failed

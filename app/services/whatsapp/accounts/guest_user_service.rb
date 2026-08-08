@@ -1,4 +1,4 @@
-class Whatsapp::GuestUserService < ApplicationService
+class Whatsapp::Accounts::GuestUserService < ApplicationService
   # The author a submission gets when the phase allows guest participation and
   # the number never linked. Modelled on the web's guest user
   # (Custom::ApplicationController#initialize_guest_user) but built without a

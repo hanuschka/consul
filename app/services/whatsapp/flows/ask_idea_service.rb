@@ -9,7 +9,7 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
     end
 
     permission_problem =
-      Whatsapp::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: author)
+      Whatsapp::Drafting::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: author)
 
     if permission_problem.present?
       return Whatsapp::Flows::RefuseParticipationService.call(
@@ -30,6 +30,6 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
     end
 
     def author
-      @author ||= Whatsapp::SubmissionAuthorService.call(conversation: @conversation)
+      @author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation: @conversation)
     end
 end

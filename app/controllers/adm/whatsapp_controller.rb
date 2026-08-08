@@ -97,7 +97,7 @@ module Adm
       return head :forbidden if !@configured
 
       result =
-        ::Whatsapp::SendTestMessageService.call(
+        ::Whatsapp::Platform::SendTestMessageService.call(
           phone: params.dig(:test, :phone),
           body: t("adm.whatsapp.test_message.body")
         )
@@ -124,7 +124,7 @@ module Adm
     def configure_conversational_components
       return head :forbidden if !@configured
 
-      response = ::Whatsapp::ConfigureConversationalComponentsService.call
+      response = ::Whatsapp::Platform::ConfigureConversationalComponentsService.call
 
       if response&.success?
         flash[:success] = t("adm.whatsapp.conversational_components.applied")
@@ -372,7 +372,7 @@ module Adm
       # round-trip on something nothing there renders.
       def load_webhook_status
         @webhook_status = cached_integration_state("webhook_status") do
-          ::Whatsapp::WebhookStatusService.call(expected_base_url: request.base_url)
+          ::Whatsapp::Platform::WebhookStatusService.call(expected_base_url: request.base_url)
         end
       end
 

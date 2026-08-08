@@ -76,7 +76,7 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
     end
 
     def persist
-      Whatsapp::PersistDraftService.call(conversation: @conversation, draft_data: draft_data)
+      Whatsapp::Drafting::PersistDraftService.call(conversation: @conversation, draft_data: draft_data)
     end
 
     def present

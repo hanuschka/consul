@@ -1,6 +1,6 @@
-class Whatsapp::PublishDraftService < ApplicationService
-  HARD_FAILED_STAGE = ProposalAiDraft::EvaluateTwoTierService::STAGE_HARD_FAILED
-  ERROR_STAGE = ProposalAiDraft::EvaluateTwoTierService::STAGE_ERROR
+class Whatsapp::Drafting::PublishDraftService < ApplicationService
+  HARD_FAILED_STAGE = ::ProposalAiDraft::EvaluateTwoTierService::STAGE_HARD_FAILED
+  ERROR_STAGE = ::ProposalAiDraft::EvaluateTwoTierService::STAGE_ERROR
 
   def initialize(conversation:)
     @conversation = conversation
@@ -55,7 +55,7 @@ class Whatsapp::PublishDraftService < ApplicationService
     def publish(resource)
       # Investments have no admin_accepted column, and the web budget flow
       # publishes them outright, so moderation stays a proposal concern.
-      resource.admin_accepted = false if moderated? && resource.is_a?(Proposal)
+      resource.admin_accepted = false if moderated? && resource.is_a?(::Proposal)
       resource.draft = false
 
       # One validation pass, and it leaves the messages on the record for the
@@ -71,11 +71,11 @@ class Whatsapp::PublishDraftService < ApplicationService
     # investment has no such method and the web never calls one either, so it is
     # stamped here and given the notifier its own controller sends.
     def release(resource)
-      return resource.publish if resource.is_a?(Proposal)
+      return resource.publish if resource.is_a?(::Proposal)
 
       resource.update!(published_at: Time.current)
 
-      NotificationServices::NewBudgetInvestmentNotifier.call(resource.id)
+      ::NotificationServices::NewBudgetInvestmentNotifier.call(resource.id)
     end
 
     # The evaluator swallows its own exceptions and answers with the error
@@ -101,7 +101,7 @@ class Whatsapp::PublishDraftService < ApplicationService
     # An error is not a verdict, so it is retried rather than reused — an
     # evaluator that was unreachable while drafting may well be reachable now.
     def evaluate(resource)
-      ProposalAiDraft::EvaluateTwoTierService.call(resource: resource)["stage"]
+      ::ProposalAiDraft::EvaluateTwoTierService.call(resource: resource)["stage"]
     end
 
     def stored_stage(resource)

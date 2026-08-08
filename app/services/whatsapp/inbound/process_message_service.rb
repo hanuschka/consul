@@ -1,4 +1,4 @@
-class Whatsapp::ProcessInboundMessageService < ApplicationService
+class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   OPT_OUT_KEYWORDS = ["stop", "stopp", "abmelden", "unsubscribe"].freeze
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
   PUBLISH_KEYWORDS = ["veröffentlichen", "veroeffentlichen", "publish", "ja", "senden"].freeze
@@ -51,7 +51,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     def submission_author
-      @submission_author ||= Whatsapp::SubmissionAuthorService.call(conversation:)
+      @submission_author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation:)
     end
 
     # Everything above the assistant is protocol rather than dialogue — opting
@@ -62,7 +62,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # account, and a guest reaching them would only produce errors it cannot
     # explain. Their whole path is the deterministic drafting flow.
     def routed_by_assistant?
-      return false if !Ai::Settings.ai_available?
+      return false if !::Ai::Settings.ai_available?
       return false if account.user.blank?
       return false if tapped_reply_id.present?
 
@@ -257,7 +257,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def target_phase_for(action, param)
       return conversation.projekt_phase if action != :idea_start
 
-      ProjektPhase.find_by(id: param)
+      ::ProjektPhase.find_by(id: param)
     end
 
     # A word a citizen types instead of tapping. Matched only as the whole
@@ -407,7 +407,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # flow is started and nothing is remembered: the submission button on the
     # card they were just sent is still there to come back to.
     def send_projekt_card(projekt_id)
-      projekt = Projekt.find_by(id: projekt_id)
+      projekt = ::Projekt.find_by(id: projekt_id)
 
       return Whatsapp::Flows::HelpService.call(conversation:) if projekt.blank?
 
@@ -415,7 +415,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     def start_phase_flow(projekt_phase_id)
-      projekt_phase = ProjektPhase.find_by(id: projekt_phase_id.to_i)
+      projekt_phase = ::ProjektPhase.find_by(id: projekt_phase_id.to_i)
 
       return Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: :phase_missing) if
         !Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
@@ -550,7 +550,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     # becomes a proposal.
     def refuse_if_not_permitted
       permission_problem =
-        Whatsapp::ResourceCreationValidationService.call(
+        Whatsapp::Drafting::ResourceCreationValidationService.call(
           projekt_phase: conversation.projekt_phase,
           user: submission_author
         )
@@ -675,7 +675,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       return if projekt_phase_id.blank?
 
-      projekt_phase = ProjektPhase.find_by(id: projekt_phase_id)
+      projekt_phase = ::ProjektPhase.find_by(id: projekt_phase_id)
 
       return if projekt_phase.blank?
 
@@ -689,7 +689,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
 
       return if projekt_id.blank?
 
-      projekt = Projekt.find_by(id: projekt_id)
+      projekt = ::Projekt.find_by(id: projekt_id)
 
       return if projekt.blank?
 
@@ -752,7 +752,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     end
 
     def transcribed_text
-      transcript = Whatsapp::TranscribeVoiceService.call(media_id: @raw_message.dig("audio", "id"))
+      transcript = Whatsapp::Inbound::TranscribeVoiceService.call(media_id: @raw_message.dig("audio", "id"))
 
       if transcript.blank?
         Whatsapp::Outbound.recovery(

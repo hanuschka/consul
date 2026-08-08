@@ -13,7 +13,7 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
     # publish one draft twice.
     handled = Whatsapp::ConversationLock.hold(conversation_id_for(whatsapp_message)) do
       I18n.with_locale(::Whatsapp.locale_for(whatsapp_message.whatsapp_account)) do
-        Whatsapp::ProcessInboundMessageService.call(whatsapp_message:, raw_message:)
+        Whatsapp::Inbound::ProcessMessageService.call(whatsapp_message:, raw_message:)
       end
     end
 

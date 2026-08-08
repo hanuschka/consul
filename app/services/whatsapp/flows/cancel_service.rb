@@ -4,7 +4,7 @@ class Whatsapp::Flows::CancelService < Whatsapp::Flows::BaseService
   #
   # Reached only while a flow is open. The same word typed at any other moment
   # is the section E opt-out, and the two are separated in the gate chain rather
-  # than here — see ProcessInboundMessageService.
+  # than here — see Inbound::ProcessMessageService.
   def call
     @conversation.reset_flow!
 

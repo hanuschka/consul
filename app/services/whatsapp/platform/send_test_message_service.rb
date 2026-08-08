@@ -1,4 +1,4 @@
-class Whatsapp::SendTestMessageService < ApplicationService
+class Whatsapp::Platform::SendTestMessageService < ApplicationService
   def initialize(phone:, body:)
     @phone = phone.to_s.gsub(/\D/, "")
     @body = body

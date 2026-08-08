@@ -1,9 +1,9 @@
-class Whatsapp::Flows::CommentPromptService < ApplicationService
+class Whatsapp::Flows::CommentPromptService < Whatsapp::Flows::BaseService
   # Catalog D27. No buttons: the reply the bot wants here is the comment itself,
   # and a pill next to that question would only give the citizen something to
   # tap instead of writing.
   def initialize(conversation:, proposal:)
-    @conversation = conversation
+    super(conversation: conversation)
     @proposal = proposal
   end
 
@@ -12,7 +12,7 @@ class Whatsapp::Flows::CommentPromptService < ApplicationService
     @conversation.merge_context!(comment_proposal_id: @proposal.id)
 
     Whatsapp::Outbound.text(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: I18n.t("whatsapp.bot.comment.prompt")
     )
   end

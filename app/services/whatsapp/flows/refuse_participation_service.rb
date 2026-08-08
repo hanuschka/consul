@@ -1,4 +1,4 @@
-class Whatsapp::Flows::RefuseParticipationService < ApplicationService
+class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
   # The second group are the phase's participation restrictions. They used to be
   # unreachable here — a phase that applies them requires an account, and the
   # bot required one before any of them could be asked. Guest phases changed
@@ -28,7 +28,7 @@ class Whatsapp::Flows::RefuseParticipationService < ApplicationService
   ].freeze
 
   def initialize(conversation:, reason:)
-    @conversation = conversation
+    super(conversation: conversation)
     @reason = reason.to_s
   end
 
@@ -38,7 +38,7 @@ class Whatsapp::Flows::RefuseParticipationService < ApplicationService
   def call
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: message)
+    Whatsapp::Outbound.text(account: account, body: message)
   end
 
   # Also read by the assistant, which explains a refusal in its own words but

@@ -8,7 +8,7 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
   def execute
     proposal_id = conversation.context["support_proposal_id"]
 
-    return no_proposal_error if proposal_id.blank?
+    return no_proposal_error("support") if proposal_id.blank?
 
     ::Whatsapp::Flows::RegisterSupportService.call(
       conversation: conversation, proposal_id: proposal_id
@@ -16,11 +16,4 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
 
     halt("Registered the support and told the citizen the count.")
   end
-
-  private
-
-    def no_proposal_error
-      { error: "This conversation is not about a specific proposal, so there is nothing to " \
-               "support. Ask which proposal they mean." }
-    end
 end

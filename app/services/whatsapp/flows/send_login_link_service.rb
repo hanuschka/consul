@@ -1,4 +1,4 @@
-class Whatsapp::Flows::SendLoginLinkService < ApplicationService
+class Whatsapp::Flows::SendLoginLinkService < Whatsapp::Flows::BaseService
   # The way out of a refused :number_taken confirmation. Releasing a linkage
   # someone else made is safe only from here: the pill that reaches this entry
   # point can be tapped by nobody but the citizen holding the phone the number
@@ -9,16 +9,12 @@ class Whatsapp::Flows::SendLoginLinkService < ApplicationService
     call(conversation: conversation)
   end
 
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   # Catalog A2. Linking is the step the whole catalog depends on, so a button
   # that WhatsApp refuses for any reason falls back to the plain link rather
   # than to silence — with its own copy, because the fallback has to say what
   # the link is for without a button to name it.
   def call
-    link_url = Whatsapp::LinkTokenService.call(account: @conversation.whatsapp_account)
+    link_url = Whatsapp::LinkTokenService.call(account: account)
     @conversation.update!(step: "awaiting_link")
 
     Whatsapp::Flows::SendLinkButtonService.call(

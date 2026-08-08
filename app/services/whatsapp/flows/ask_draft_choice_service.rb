@@ -1,4 +1,4 @@
-class Whatsapp::Flows::AskDraftChoiceService < ApplicationService
+class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   # Catalog C15 and its sentiment counterpart: the one thing about the draft the
   # citizen has to choose. Asked only when the drafting model came back without
   # a valid answer — it is handed both as closed enums in the same call that
@@ -22,7 +22,7 @@ class Whatsapp::Flows::AskDraftChoiceService < ApplicationService
   end
 
   def initialize(conversation:, kind:)
-    @conversation = conversation
+    super(conversation: conversation)
     @kind = kind
   end
 
@@ -37,10 +37,6 @@ class Whatsapp::Flows::AskDraftChoiceService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     # The one place the two questions genuinely part company: each reads its own
     # taxonomy off the phase. An explicit branch rather than a constant map, so

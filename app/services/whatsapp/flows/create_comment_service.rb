@@ -1,4 +1,4 @@
-class Whatsapp::Flows::CreateCommentService < ApplicationService
+class Whatsapp::Flows::CreateCommentService < Whatsapp::Flows::BaseService
   # Catalog D28. One message commits, like the support tap and unlike a
   # proposal: a comment is short enough that showing it back for confirmation
   # would cost more taps than writing it did.
@@ -9,7 +9,7 @@ class Whatsapp::Flows::CreateCommentService < ApplicationService
   # "being reviewed" would be false. If a moderation rule does hide it on
   # creation, the reviewing copy is the true one and this asks the row.
   def initialize(conversation:, body:)
-    @conversation = conversation
+    super(conversation: conversation)
     @body = body.to_s.strip
   end
 
@@ -28,10 +28,6 @@ class Whatsapp::Flows::CreateCommentService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def user
       account.user

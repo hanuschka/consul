@@ -93,7 +93,7 @@ class Whatsapp::PublishDraftService < ApplicationService
       stage
     end
 
-    # The draft card already evaluated this exact text: GenerateDraftService
+    # The draft card already evaluated this exact text: PersistDraftService
     # clears the stored result whenever it rewrites the draft, so a verdict that
     # is present is about what the citizen just confirmed. Re-running it here
     # would be a second LLM call for the same answer.

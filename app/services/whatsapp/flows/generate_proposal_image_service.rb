@@ -1,4 +1,4 @@
-class Whatsapp::Flows::GenerateProposalImageService < ApplicationService
+class Whatsapp::Flows::GenerateProposalImageService < Whatsapp::Flows::BaseService
   # The bot's own picture, from the prompt the drafting call already produced
   # and stored on the resource. Until now that prompt was written and never
   # used, so a proposal drafted in WhatsApp ended up without the image its web
@@ -6,10 +6,6 @@ class Whatsapp::Flows::GenerateProposalImageService < ApplicationService
   #
   # Runs inline rather than in a job: the citizen is waiting on the answer, and
   # publishing has to happen after the picture is attached, not before.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   # Returns true when a picture was attached.
   def call
     return false if draft_resource.blank?
@@ -21,8 +17,7 @@ class Whatsapp::Flows::GenerateProposalImageService < ApplicationService
 
     attach(response.parsed_response["image"])
   rescue StandardError => e
-    Rails.logger.error("[Whatsapp] image generation failed: #{e.class} - #{e.message}")
-    Sentry.capture_exception(e, extra: { whatsapp_conversation_id: @conversation.id })
+    report(e, "image generation")
 
     false
   end

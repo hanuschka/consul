@@ -1,13 +1,9 @@
-class Whatsapp::Flows::OutOfScopeService < ApplicationService
+class Whatsapp::Flows::OutOfScopeService < Whatsapp::Flows::BaseService
   # Catalog E33. A friendly boundary and a link, with no handoff to a human —
   # there is no human on this number, and implying otherwise would leave the
   # citizen waiting for an answer that never comes.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
-    Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: body)
+    Whatsapp::Outbound.text(account: account, body: body)
   end
 
   private

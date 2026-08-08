@@ -208,7 +208,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when :dismiss, :unlink_cancel
         conversation.reset_flow!
       when :unlink_confirm
-        Whatsapp::Flows::ConfirmUnlinkService.call(conversation:)
+        Whatsapp::Flows::UnlinkService.confirm(conversation:)
       when :notify_toggle
         Whatsapp::Flows::ToggleNotificationService.call(conversation:, type: param)
       when :notifications_done
@@ -328,7 +328,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
     def start_unlink
       return false if account.user.blank?
 
-      Whatsapp::Flows::UnlinkService.call(conversation:)
+      Whatsapp::Flows::UnlinkService.ask(conversation:)
 
       true
     end
@@ -510,7 +510,7 @@ class Whatsapp::ProcessInboundMessageService < ApplicationService
       when "awaiting_notification_settings"
         Whatsapp::Flows::NotificationSettingsService.call(conversation:)
       when "awaiting_unlink_confirmation"
-        Whatsapp::Flows::UnlinkService.call(conversation:)
+        Whatsapp::Flows::UnlinkService.ask(conversation:)
       when "awaiting_resume_decision"
         Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
       else

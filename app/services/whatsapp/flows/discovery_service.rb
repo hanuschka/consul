@@ -1,4 +1,4 @@
-class Whatsapp::Flows::DiscoveryService < ApplicationService
+class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
   # Catalog A1's "Show projects", for a linked citizen. Rows are the phases that
   # will actually accept a submission, not every projekt that exists: the offer
   # is made right after linking, and an offer that leads to "you cannot take
@@ -9,7 +9,7 @@ class Whatsapp::Flows::DiscoveryService < ApplicationService
   # projekt_phases is passed in by a caller that has already resolved them, so
   # the same query does not run twice for one tap.
   def initialize(conversation:, projekt: nil, projekt_phases: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @projekt = projekt
     @projekt_phases = projekt_phases
   end

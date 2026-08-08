@@ -1,10 +1,10 @@
-class Whatsapp::Flows::AttachUploadedImageService < ApplicationService
+class Whatsapp::Flows::AttachUploadedImageService < Whatsapp::Flows::BaseService
   # The citizen's own photo. Downloaded through the same media resource the
   # voice-note transcription uses, and bounded by the portal's own image limit
   # rather than a number invented here — a picture the bot accepts must be one
   # the website would also have accepted through its upload form.
   def initialize(conversation:, media_id:)
-    @conversation = conversation
+    super(conversation: conversation)
     @media_id = media_id
   end
 
@@ -27,8 +27,7 @@ class Whatsapp::Flows::AttachUploadedImageService < ApplicationService
 
     true
   rescue StandardError => e
-    Rails.logger.error("[Whatsapp] image attach failed: #{e.class} - #{e.message}")
-    Sentry.capture_exception(e, extra: { whatsapp_conversation_id: @conversation.id })
+    report(e, "image attach")
 
     false
   end

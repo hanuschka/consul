@@ -1,16 +1,12 @@
-class Whatsapp::Flows::LinkDeclinedService < ApplicationService
+class Whatsapp::Flows::LinkDeclinedService < Whatsapp::Flows::BaseService
   # Catalog A3. Declining is not commented on negatively — what is lost is
   # stated plainly and the discovery offer still stands, because someone who
   # will not link may still want to read the portal.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     @conversation.reset_flow!
 
     Whatsapp::Outbound.buttons(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: I18n.t("whatsapp.bot.onboarding.declined"),
       buttons: buttons
     )

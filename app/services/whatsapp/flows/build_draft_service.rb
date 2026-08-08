@@ -1,4 +1,4 @@
-class Whatsapp::Flows::BuildDraftService < ApplicationService
+class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   # Everything between "the citizen sent an idea" and "the draft card is on
   # screen": the rate guard and the generation call. What happens to the result
   # — asking for a missing choice, writing the record, showing the card — is
@@ -27,7 +27,7 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
   end
 
   def initialize(conversation:, idea_text:, copy: :first, inbound_message_id: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @idea_text = idea_text
     @copy = copy
     @inbound_message_id = inbound_message_id
@@ -51,7 +51,7 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
 
     complete
   rescue StandardError => e
-    report(e)
+    report(e, "draft generation")
 
     Whatsapp::Outbound.recovery(
       conversation: @conversation,
@@ -62,12 +62,14 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
 
   private
 
-    def account
-      @conversation.whatsapp_account
-    end
-
+    # Called direct rather than through a Whatsapp:: wrapper of the same name:
+    # the wrapper was one delegation, and two GenerateDraftServices one namespace
+    # apart is what made comments elsewhere describe the wrong one.
     def generate
-      Whatsapp::GenerateDraftService.call(conversation: @conversation, idea_text: @idea_text)
+      ProposalAiDraft::GenerateDraftService.call(
+        idea_text: @idea_text,
+        projekt_phase: @conversation.projekt_phase
+      ).to_h
     end
 
     def complete
@@ -94,10 +96,5 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
         body: I18n.t("whatsapp.bot.too_fast"),
         actions: [:cancel]
       )
-    end
-
-    def report(exception)
-      Rails.logger.error("[Whatsapp] draft generation failed: #{exception.class} - #{exception.message}")
-      Sentry.capture_exception(exception, extra: { whatsapp_conversation_id: @conversation.id })
     end
 end

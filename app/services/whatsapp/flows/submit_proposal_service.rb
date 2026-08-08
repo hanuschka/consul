@@ -1,12 +1,8 @@
-class Whatsapp::Flows::SubmitProposalService < ApplicationService
+class Whatsapp::Flows::SubmitProposalService < Whatsapp::Flows::BaseService
   # "I want to submit something" before a projekt is chosen. What comes back
   # depends only on how many phases are open, and each count needs a different
   # message: one projekt is named and offered, several are listed to choose
   # from, none is a dead end that has to say when it will end.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     return send_no_open_phase if open_phases.empty?
 
@@ -43,7 +39,7 @@ class Whatsapp::Flows::SubmitProposalService < ApplicationService
       @conversation.reset_flow!
 
       Whatsapp::Outbound.text(
-        account: @conversation.whatsapp_account,
+        account: account,
         body: I18n.t("whatsapp.bot.no_open_phase_notice")
       )
     end

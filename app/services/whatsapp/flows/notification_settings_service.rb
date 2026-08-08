@@ -1,4 +1,4 @@
-class Whatsapp::Flows::NotificationSettingsService < ApplicationService
+class Whatsapp::Flows::NotificationSettingsService < Whatsapp::Flows::BaseService
   # Catalog B12-extended. Six independent switches and a Done row.
   #
   # WhatsApp list rows carry no state of their own, so a "toggle" is really
@@ -13,10 +13,6 @@ class Whatsapp::Flows::NotificationSettingsService < ApplicationService
   OFF_GLYPH = "⬜".freeze
   DONE_ROW_ID = "#{Whatsapp::FlowActions::PREFIX}notifications_done".freeze
 
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     @conversation.update!(step: "awaiting_notification_settings")
 
@@ -29,10 +25,6 @@ class Whatsapp::Flows::NotificationSettingsService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def rows
       type_rows << done_row

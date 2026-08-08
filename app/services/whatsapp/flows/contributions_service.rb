@@ -1,4 +1,4 @@
-class Whatsapp::Flows::ContributionsService < ApplicationService
+class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
   # What this citizen has submitted, newest first. Answered as text rather than
   # as a tappable list: a row would have to lead somewhere, and the only place
   # to lead is the link the text already carries.
@@ -8,15 +8,11 @@ class Whatsapp::Flows::ContributionsService < ApplicationService
   # there was nowhere at all to see them.
   MAX_SHOWN = 5
 
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     return send_empty if contributions.empty?
 
     Whatsapp::Outbound.text(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: [I18n.t("whatsapp.bot.contributions.intro"), *entries, more_line].compact_blank.join("\n\n")
     )
   end
@@ -60,7 +56,7 @@ class Whatsapp::Flows::ContributionsService < ApplicationService
 
     def send_empty
       Whatsapp::Outbound.text(
-        account: @conversation.whatsapp_account,
+        account: account,
         body: I18n.t("whatsapp.bot.contributions.empty")
       )
     end

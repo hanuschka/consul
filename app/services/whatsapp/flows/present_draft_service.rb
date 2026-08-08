@@ -1,4 +1,4 @@
-class Whatsapp::Flows::PresentDraftService < ApplicationService
+class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
   DESCRIPTION_PREVIEW_LENGTH = 700
   MAX_SCORE_PER_CRITERION = ProposalAiDraft::EvaluateSoftCriteriaService::SCORE_MAX
 
@@ -27,7 +27,7 @@ class Whatsapp::Flows::PresentDraftService < ApplicationService
   end
 
   def initialize(conversation:, copy_key: "whatsapp.bot.proposal.draft", inbound_message_id: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @copy_key = copy_key
     @inbound_message_id = inbound_message_id
   end
@@ -38,7 +38,7 @@ class Whatsapp::Flows::PresentDraftService < ApplicationService
     @conversation.update!(step: "awaiting_draft_decision")
 
     Whatsapp::Outbound.buttons(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: draft_summary,
       buttons: buttons
     )
@@ -54,7 +54,7 @@ class Whatsapp::Flows::PresentDraftService < ApplicationService
       @conversation.projekt_phase
     end
 
-    # Evaluated once per draft: GenerateDraftService clears the stored result
+    # Evaluated once per draft: PersistDraftService clears the stored result
     # whenever it rewrites the text, so a result that is present was produced
     # for exactly what the card is about to show — and PublishDraftService
     # reuses it rather than paying for the same call twice.

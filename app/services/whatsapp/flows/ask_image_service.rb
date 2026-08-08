@@ -1,17 +1,13 @@
-class Whatsapp::Flows::AskImageService < ApplicationService
+class Whatsapp::Flows::AskImageService < Whatsapp::Flows::BaseService
   # Asked once the draft has been confirmed and before anything is published: a
   # picture is offered, never assumed. Three pills is exactly WhatsApp's limit,
   # which is also why "skip" is a button rather than an implied timeout — a
   # citizen who wants no picture must be able to say so in one tap.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     @conversation.update!(step: "awaiting_image_choice")
 
     Whatsapp::Outbound.buttons(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: I18n.t("whatsapp.bot.proposal.ask_image"),
       buttons: buttons
     )

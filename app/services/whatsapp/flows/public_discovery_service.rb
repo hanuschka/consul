@@ -1,4 +1,4 @@
-class Whatsapp::Flows::PublicDiscoveryService < ApplicationService
+class Whatsapp::Flows::PublicDiscoveryService < Whatsapp::Flows::BaseService
   # Catalog A3's "Show current projects", for a number that declined linking.
   #
   # It used to be a plain digest of names and links on the reasoning that
@@ -8,10 +8,6 @@ class Whatsapp::Flows::PublicDiscoveryService < ApplicationService
   # the only way to reach guest participation without scanning a QR code.
   MAX_SHOWN = 5
 
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   # One projekt is a projekt the bot is pointing at, so it gets the card. Several
   # are a digest, and five cards would be five notifications for a question that
   # asked for an overview.
@@ -19,7 +15,7 @@ class Whatsapp::Flows::PublicDiscoveryService < ApplicationService
     return send_guest_phases if guest_phases.any?
     return send_card if projekts.one?
 
-    Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: body)
+    Whatsapp::Outbound.text(account: account, body: body)
   end
 
   private

@@ -1,4 +1,4 @@
-class Whatsapp::Flows::PublishResultService < ApplicationService
+class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   # Catalog C19. Three outcomes, decided by the phase's own moderation setting
   # rather than by anything the bot knows: published with its link, held for
   # review, or refused because the phase's hard criteria rejected it.
@@ -7,7 +7,7 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
   # dispatcher and the thing that decides what a citizen is told about their
   # submission lives in one readable place.
   def initialize(conversation:, inbound_message_id: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @inbound_message_id = inbound_message_id
   end
 
@@ -34,10 +34,6 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     # Only proposals can be held back for moderation — an investment has no
     # admin_accepted column, and the web budget flow publishes it outright.

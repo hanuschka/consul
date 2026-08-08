@@ -1,4 +1,4 @@
-class Whatsapp::Flows::SendProjektCardService < ApplicationService
+class Whatsapp::Flows::SendProjektCardService < Whatsapp::Flows::BaseService
   # The one shape the bot names a projekt in: title, subtitle, link and the
   # projekt's own header picture. Every reply that points at a single projekt
   # goes through here, so a projekt named in passing looks the same as one
@@ -12,7 +12,7 @@ class Whatsapp::Flows::SendProjektCardService < ApplicationService
   SEPARATOR = "\n\n".freeze
 
   def initialize(conversation:, projekt:, buttons: [])
-    @conversation = conversation
+    super(conversation: conversation)
     @projekt = projekt
     @buttons = buttons
   end
@@ -38,10 +38,6 @@ class Whatsapp::Flows::SendProjektCardService < ApplicationService
       return Whatsapp::Outbound.text(account: account, body: body) if image_url.blank?
 
       Whatsapp::Outbound.image(account: account, image_url: image_url, caption: body)
-    end
-
-    def account
-      @conversation.whatsapp_account
     end
 
     def image_url

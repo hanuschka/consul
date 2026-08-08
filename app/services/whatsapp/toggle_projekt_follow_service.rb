@@ -4,7 +4,8 @@ class Whatsapp::ToggleProjektFollowService < ApplicationService
   # two that disagree. Rows are deactivated rather than destroyed, which is what
   # the web side does and what keeps an unfollow reversible.
   #
-  # Returns :followed or :unfollowed.
+  # Returns :followed or :unfollowed. Kept for the archived menu, which asks for
+  # a flip rather than for a state.
   def initialize(user:, projekt:)
     @user = user
     @projekt = projekt

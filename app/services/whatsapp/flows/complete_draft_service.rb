@@ -1,4 +1,4 @@
-class Whatsapp::Flows::CompleteDraftService < ApplicationService
+class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
   # The gate between a generated draft and a persisted one, and the single place
   # that decides whether the citizen still has to answer something.
   #
@@ -18,7 +18,7 @@ class Whatsapp::Flows::CompleteDraftService < ApplicationService
   end
 
   def initialize(conversation:, copy: :first, inbound_message_id: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @copy = copy
     @inbound_message_id = inbound_message_id
   end

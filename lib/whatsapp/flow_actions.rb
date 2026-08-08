@@ -90,4 +90,14 @@ module Whatsapp::FlowActions
   def button(action:, label_key:, param: nil)
     { id: id_for(action: action, param: param), title: I18n.t(label_key) }
   end
+
+  # The pair every "shall we link your account" message offers, whether it is
+  # the first contact or a return visit. One definition so the two cannot drift
+  # into offering different words for the same choice.
+  def link_decision_buttons
+    [
+      button(action: :link_yes, label_key: "whatsapp.bot.buttons.link_yes"),
+      button(action: :link_later, label_key: "whatsapp.bot.buttons.link_later")
+    ]
+  end
 end

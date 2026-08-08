@@ -6,17 +6,10 @@ class Ai::Tools::WhatsappAiAssistant::OpenNotificationSettings <
               "messages — that is stop_messages. This sends the message itself."
 
   def execute
-    return not_linked_error if user.blank?
+    return not_linked_error("there are no personal notification settings yet. Offer to link the account first.") if user.blank?
 
     ::Whatsapp::Flows::NotificationSettingsService.call(conversation: conversation)
 
     halt("Sent the notification settings list.")
   end
-
-  private
-
-    def not_linked_error
-      { error: "This number is not linked to an account, so there are no personal notification " \
-               "settings yet. Offer to link the account first." }
-    end
 end

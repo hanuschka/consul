@@ -49,4 +49,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     def unknown_phase_error
       { error: "No open participation phase with that id. Call list_open_phases first." }
     end
+
+    # These reach the model, not the citizen, so one wording per rule matters
+    # more than it looks: three phrasings of "this number is not linked" is
+    # three chances for the router to treat them as three different situations.
+    # Only the opening is shared. What follows differs by tool, and for unlink it
+    # must not suggest linking — that is the opposite of what was asked for.
+    def not_linked_error(rest)
+      { error: "This number is not linked to an account, so #{rest}" }
+    end
+
+    def no_proposal_error(verb)
+      { error: "This conversation is not about a specific proposal, so there is nothing to " \
+               "#{verb}. Ask which proposal they mean." }
+    end
 end

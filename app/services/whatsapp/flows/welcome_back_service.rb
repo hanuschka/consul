@@ -1,18 +1,14 @@
-class Whatsapp::Flows::WelcomeBackService < ApplicationService
+class Whatsapp::Flows::WelcomeBackService < Whatsapp::Flows::BaseService
   # For a number that has written before and is still not linked — someone who
   # tapped "Later", or whose login link went cold. They used to be handed
   # another login link on every message, which answers a question they never
   # re-asked; this puts the question back, with the same two ways out the first
   # contact offered.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     @conversation.update!(step: "awaiting_link_decision")
 
     Whatsapp::Outbound.buttons(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: body,
       buttons: buttons
     )
@@ -21,14 +17,7 @@ class Whatsapp::Flows::WelcomeBackService < ApplicationService
   private
 
     def buttons
-      link_buttons = [
-        Whatsapp::FlowActions.button(
-          action: :link_yes, label_key: "whatsapp.bot.buttons.link_yes"
-        ),
-        Whatsapp::FlowActions.button(
-          action: :link_later, label_key: "whatsapp.bot.buttons.link_later"
-        )
-      ]
+      link_buttons = Whatsapp::FlowActions.link_decision_buttons
 
       return link_buttons if !guest_participation_open?
 

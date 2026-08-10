@@ -55,7 +55,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            wording.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
-           - see what is running, browse, take part -> show_projekts
+           - see what is running, browse, look around -> show_projekts
            - submit an idea without naming a projekt -> start_proposal_submission, which offers
              what is open and lets them pick. "I have an idea", "I want to suggest something",
              "I would like to take part" and "how do I submit" all mean this. Never ask which

@@ -16,10 +16,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     conversation.update!(last_inbound_at: latest_inbound_at)
 
+    consume_pending_question
+
     return if handle_stop_keywords
-
-    clear_pending_question
-
     return if account.opt_out_at.present?
     return Whatsapp::Flows::FirstContactService.call(conversation:) if first_contact?
 
@@ -113,28 +112,47 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # progress (C21), and "STOP" ends all messages for good (E34). Decided here
     # rather than inside either service — getting it wrong means a citizen who
     # wanted to cancel is silently unsubscribed instead.
-    #
-    # Any step other than idle is the first reading, and so is an idle
-    # conversation the bot has just asked a question in: the assistant's own
-    # button replies leave the step at idle, so the step alone cannot tell a
-    # citizen dismissing a question from one leaving the channel.
+    def abort_interaction?
+      return false if !Whatsapp::FlowActions::ABORT_KEYWORDS.include?(normalized_text)
+
+      # "stop" and "stopp" are also the opt-out words, and they are what someone
+      # types to leave the channel, so they abort only a submission actually in
+      # progress. Reading them any wider would answer a link invitation or a
+      # settings list with "cancelled" and never write opt_out_at, leaving us
+      # broadcasting to a number that asked us to stop.
+      return conversation.drafting? if OPT_OUT_KEYWORDS.include?(normalized_text)
+
+      interaction_open?
+    end
+
+    # A word that cannot mean "leave the channel" dismisses whatever the bot last
+    # asked. Any step other than idle is that, and so is an idle conversation
+    # holding a question: the assistant's own button replies leave the step at
+    # idle, so the step alone cannot tell the two apart.
     def interaction_open?
       return true if !conversation.idle?
 
-      conversation.context["pending_question"].present?
+      pending_question?
     end
 
-    # True only for the message that follows the question. Cleared as soon as
-    # anything else is answered, so an "abbrechen" days later is still the
-    # opt-out it has always been.
-    def clear_pending_question
-      return if conversation.context["pending_question"].blank?
+    def pending_question?
+      @pending_question
+    end
+
+    # Read and cleared in the same breath. The flag answers "was the bot's last
+    # message a question", which is true only for the message that follows it —
+    # consumed before any gate below can return early, so no branch can leave it
+    # set and turn an "abbrechen" days later into a cancellation.
+    def consume_pending_question
+      @pending_question = conversation.context["pending_question"].present?
+
+      return if !@pending_question
 
       conversation.merge_context!(pending_question: nil)
     end
 
     def handle_stop_keywords
-      if Whatsapp::FlowActions::ABORT_KEYWORDS.include?(normalized_text) && interaction_open?
+      if abort_interaction?
         Whatsapp::Flows::CancelService.call(conversation:)
 
         return true
@@ -407,7 +425,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # belongs to. The draft can also be gone by then — retention purges, an admin
     # deleting the phase — in which case the idea is asked for again inside the
     # same phase rather than sending the citizen back to the entry question.
+    #
+    # A phase deleted outright leaves nothing to resume into and nothing for
+    # AskIdeaService to move the step with, so it restarts instead — otherwise
+    # every later message would re-ask the resume question it cannot answer.
     def resume_flow
+      return restart_flow if conversation.projekt_phase.blank?
+
+      # The clock the staleness question is asked off is only stamped by
+      # start_flow!, and resuming moves the step without going through it. Left
+      # alone, the resumed step would be found stale again by the citizen's very
+      # next message and the same question asked forever.
+      conversation.merge_context!(flow_started_at: Time.current.iso8601)
+
       Whatsapp::Flows::ResumeRecapService.call(conversation:)
 
       return Whatsapp::Flows::PresentDraftService.first_draft(conversation:) if

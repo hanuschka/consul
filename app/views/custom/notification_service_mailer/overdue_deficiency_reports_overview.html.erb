@@ -1,0 +1,43 @@
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.hi") %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <% if @overdue_reports.count == 1 %>
+      <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.p1_s") %>
+    <% else %>
+      <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.p1_p") %>
+    <% end %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_hint",
+          label: t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_badge")) %>
+  </p>
+
+  <ul style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <% @overdue_reports.each do |report| %>
+      <li style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+        <% if @fresh_reports_ids.include?(report.id) %>
+          <strong><%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_badge") %></strong>
+        <% end %>
+        <%= link_to report.title, adm_deficiency_reports_deficiency_report_url(report) %>
+        <% if report.responsible.present? %>
+          &ndash; <%= report.responsible.name %>
+        <% else %>
+          &ndash; <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.no_responsible") %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
+</td>

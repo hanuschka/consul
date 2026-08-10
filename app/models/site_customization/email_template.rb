@@ -134,6 +134,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "NotificationServiceMailer#overdue_deficiency_reports" => {
       variables: %w[officer_name overdue_count]
     },
+    "NotificationServiceMailer#overdue_deficiency_reports_overview" => {
+      variables: %w[officer_name overdue_count fresh_count]
+    },
     "NotificationServiceMailer#not_assigned_deficiency_reports" => {
       variables: %w[admin_name not_assigned_count]
     }
@@ -179,7 +182,8 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       ["DeficiencyReportMailer", "notify_default_officer_group_email"],
       ["NotificationServiceMailer", "not_assigned_deficiency_reports"],
       ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
-      ["NotificationServiceMailer", "overdue_deficiency_reports"]
+      ["NotificationServiceMailer", "overdue_deficiency_reports"],
+      ["NotificationServiceMailer", "overdue_deficiency_reports_overview"]
     ]
   }.freeze
 

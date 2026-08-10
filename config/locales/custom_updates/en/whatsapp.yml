@@ -268,6 +268,8 @@ en:
         cancelled: OK, cancelled. Just message me again whenever you'd like.
         resume: You've been away a while — would you like to continue your earlier proposal or start
           over?
+        resume_recap: 'Picking up where you left off with “%{projekt}”.'
+        resume_recap_idea: 'This is what you had written: “%{idea}”'
         ask_image: >-
           Would you like a picture for your proposal? You can send me one, or I can create one from
           your text.

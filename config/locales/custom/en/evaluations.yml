@@ -290,3 +290,7 @@ en:
           download: Download PDF
           downloading: Preparing PDF…
           ready: Ready
+          renderer_unavailable:
+            title: PDF export not possible
+            body: The backend libraries required for rendering rich PDFs are missing on the server. Please contact the DemokratieToday administrator.
+            close: Close

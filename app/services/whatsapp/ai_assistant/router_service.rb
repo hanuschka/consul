@@ -123,6 +123,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
         ::Ai::Tools::WhatsappAiAssistant::ShowProjekts,
         ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,
+        ::Ai::Tools::WhatsappAiAssistant::StartProposalSubmission,
         ::Ai::Tools::WhatsappAiAssistant::StartPhaseFlow,
         ::Ai::Tools::WhatsappAiAssistant::OfferProposalSupport,
         ::Ai::Tools::WhatsappAiAssistant::SupportProposal,

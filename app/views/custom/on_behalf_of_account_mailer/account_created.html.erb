@@ -8,6 +8,17 @@
     <%= t("custom.on_behalf_of_account.mailers.account_created.p1", email: @user.email) %>
   </p>
 
+  <% if @resource_url.present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.resource",
+        resource_link: link_to(
+          @resource.title.presence || @resource.model_name.human,
+          @resource_url,
+          target: "_blank"
+        )) %>
+    </p>
+  <% end %>
+
   <p style="<%= css_for_mailer_text %>">
     <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.p2",
       password_link: link_to(

@@ -288,8 +288,15 @@ class ProposalsController
     # has the most reason to check what was submitted. This is the only way a
     # WhatsApp submitter can see their own pending proposal at all — the chat
     # sends them the link, and it stops being a dead end once they are logged in.
+    #
+    # Acceptance is gated here rather than in CanCan, so the signed link from an
+    # on-behalf-of account mail has to be admitted here too — otherwise that mail
+    # sends its recipient to a page that turns them away. :preview rather than
+    # :show because every proposal is :read-able to everyone, so only an action
+    # nothing else grants can single out the record that link names.
     def allowed_to_preview_pending?
       return true if current_user&.has_pm_permission_to?(:manage, @projekt)
+      return true if can?(:preview, @proposal)
 
       current_user.present? && @proposal.author_id == current_user.id
     end

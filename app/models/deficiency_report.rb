@@ -44,6 +44,9 @@ class DeficiencyReport < ApplicationRecord
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_many :watches, class_name: "DeficiencyReport::Watch", dependent: :destroy,
+    inverse_of: :deficiency_report
+  has_many :watchers, through: :watches, source: :user
   has_one :feedback_form, class_name: "DeficiencyReport::FeedbackForm", dependent: :destroy
 
   delegate :approximated_address, to: :map_location, allow_nil: true
@@ -65,6 +68,25 @@ class DeficiencyReport < ApplicationRecord
 
   scope :assigned, -> { where.not(responsible_type: nil, responsible_id: nil, assigned_at: nil) }
   scope :not_assigned, -> { where(responsible_type: nil).or(where(responsible_id: nil)) }
+
+  # A subquery rather than a join, so this stays structurally compatible with assigned_to_officer
+  # and the two can be combined with .or in the overview filter.
+  scope :watched_by, ->(user) {
+    return none if user.blank?
+
+    where(id: DeficiencyReport::Watch.where(user_id: user.id).select(:deficiency_report_id))
+  }
+
+  # The Anliegen an officer is responsible for, either in person or through one of their groups.
+  scope :assigned_to_officer, ->(officer) {
+    return none if officer.blank?
+
+    where(
+      "(responsible_type = ? AND responsible_id = ?) OR (responsible_type = ? AND responsible_id IN (?))",
+      "DeficiencyReport::Officer", officer.id,
+      "DeficiencyReport::OfficerGroup", officer.officer_groups.select(:id)
+    )
+  }
 
   scope :sort_by_most_commented,       -> { reorder(comments_count: :desc) }
   scope :sort_by_hot_score,            -> { reorder(hot_score: :desc) }
@@ -212,6 +234,14 @@ class DeficiencyReport < ApplicationRecord
 
   def comments_allowed?(user)
     true
+  end
+
+  # Block form rather than exists?, so a preloaded :watches association answers this in memory
+  # instead of one query per row in the overview.
+  def watched_by?(user)
+    return false if user.blank?
+
+    watches.any? { |watch| watch.user_id == user.id }
   end
 
   def responsible_officers

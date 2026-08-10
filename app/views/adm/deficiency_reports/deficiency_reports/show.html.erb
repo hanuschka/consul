@@ -19,9 +19,12 @@
               <%= t(".view_on_site") %>
             <% end %>
           </span>
-          <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-                               text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "deficiency_report_content" })
-          %>
+          <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle", deficiency_report: @deficiency_report %>
+          <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).edit? %>
+            <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+                                 text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "deficiency_report_content" })
+            %>
+          <% end %>
           <%= render Adm::DownloadPdfButtonComponent.new(
             url: adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
             map_location: @deficiency_report.map_location,
@@ -159,18 +162,30 @@
   </section>
 
   <%# === Section 2: Verwaltung === %>
+  <%# Officers who only hold the read-all visibility right see the current values instead of the
+      editors: they may follow an Anliegen outside their own remit, but not restatus or reassign it. %>
+  <% may_administer = Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).update? %>
   <section class="adm-detail-section">
     <h2 class="adm-detail-section-title mb-3"><%= t(".section_admin") %></h2>
 
     <%= render Kern::FormFieldComponent.new(label: t("adm.deficiency_reports.deficiency_reports.administer.status"), hint: t("adm.deficiency_reports.deficiency_reports.administer.status_hint")) do %>
-      <%= render "adm/deficiency_reports/deficiency_reports/administer/status", deficiency_report: @deficiency_report %>
+      <% if may_administer %>
+        <%= render "adm/deficiency_reports/deficiency_reports/administer/status", deficiency_report: @deficiency_report %>
+      <% else %>
+        <p class="adm-detail-value m-0"><%= @deficiency_report.status&.title %></p>
+      <% end %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(label: t("adm.deficiency_reports.deficiency_reports.administer.responsible"), hint: t("adm.deficiency_reports.deficiency_reports.administer.responsible_hint")) do %>
-      <%= render "adm/deficiency_reports/deficiency_reports/administer/responsible", deficiency_report: @deficiency_report %>
+      <% if may_administer %>
+        <%= render "adm/deficiency_reports/deficiency_reports/administer/responsible", deficiency_report: @deficiency_report %>
+      <% else %>
+        <p class="adm-detail-value m-0"><%= @deficiency_report.responsible&.name %></p>
+      <% end %>
     <% end %>
 
-    <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
+    <% if Setting["deficiency_reports.admin_acceptance_required"].present? &&
+          Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).accept? %>
       <%= render Kern::FormFieldComponent.new(label: t(".admin_accepted_status"), hint: t(".admin_accepted_status_hint")) do %>
         <%= render "admin_accepted_toggle", deficiency_report: @deficiency_report %>
       <% end %>
@@ -181,7 +196,7 @@
   <section class="adm-detail-section">
     <h2 class="adm-detail-section-title mb-3"><%= t(".official_answer") %></h2>
 
-    <% if DeficiencyReport::OfficialAnswerTemplate.any? %>
+    <% if DeficiencyReport::OfficialAnswerTemplate.any? && may_administer %>
       <%= render Kern::FormFieldComponent.new(label: t(".answer_template_label"), hint: t(".answer_template_hint"), divider: false) do %>
         <div class="kern-form-input">
           <select class="kern-form-input__input"
@@ -195,19 +210,32 @@
       <% end %>
     <% end %>
 
-    <%= render Adm::AttributeEditorComponent.new(
-      @deficiency_report,
-      :official_answer,
-      :rich_text,
-      path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-      label: t(".official_answer"),
-      description: t(".official_answer_hint"),
-      hide_label: true,
-      divider: false
-    ) %>
+    <% if may_administer %>
+      <%= render Adm::AttributeEditorComponent.new(
+        @deficiency_report,
+        :official_answer,
+        :rich_text,
+        path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+        label: t(".official_answer"),
+        description: t(".official_answer_hint"),
+        hide_label: true,
+        divider: false
+      ) %>
+    <% else %>
+      <div class="adm-detail-description">
+        <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.official_answer) %>
+      </div>
+    <% end %>
   </section>
 
-  <%# === Section 4: Interne Notizen === %>
+  <%# === Section 4: Anliegen teilen === %>
+  <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).share? %>
+    <section class="adm-detail-section">
+      <%= render "adm/deficiency_reports/deficiency_reports/share", deficiency_report: @deficiency_report %>
+    </section>
+  <% end %>
+
+  <%# === Section 5: Interne Notizen === %>
   <section class="adm-detail-section">
     <%= render "adm/memos/memos", memoable: @deficiency_report %>
   </section>

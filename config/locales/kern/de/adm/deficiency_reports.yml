@@ -43,6 +43,24 @@ de:
         settings:
           page_hint: Legen Sie die Absenderadresse und die gemeinsame Fußzeile fest, die in allen Mängelmelder-E-Mails verwendet werden.
       deficiency_reports:
+        watch:
+          start: Benachrichtigungen für dieses Anliegen einschalten
+          stop: Benachrichtigungen für dieses Anliegen ausschalten
+        unwatch:
+          success: Sie erhalten für dieses Anliegen keine Benachrichtigungen mehr.
+        share:
+          title: Anliegen teilen
+          hint: Teilen Sie dieses Anliegen mit weiteren Sachbearbeitenden oder Sachbearbeitergruppen. Die ausgewählten Personen erhalten eine E-Mail und ab sofort Benachrichtigungen zu Änderungen an diesem Anliegen.
+          label: Empfänger
+          submit: Teilen
+          officers: Sachbearbeitende
+          officer_groups: Sachbearbeitergruppen
+          success:
+            zero: Es wurden keine neuen Empfänger hinzugefügt.
+            one: Das Anliegen wurde mit einer Person geteilt.
+            other: Das Anliegen wurde mit %{count} Personen geteilt.
+          current_watchers: Beobachten dieses Anliegen bereits
+          no_officers: Es sind keine Sachbearbeitenden angelegt, mit denen Sie dieses Anliegen teilen könnten.
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
@@ -64,12 +82,17 @@ de:
             status: Status
             location: Standort
             address: Adresse
+            watch: Beobachtung
             district: Bezirk
             category: Kategorie
             subcategory: Unterkategorie
             responsible: Sachbearbeiter
             archived_state: Archiv
             hidden_state: Herausmoderiert
+          assignment_scope:
+            assigned_to_me: Mir zugewiesen
+            watching: Unter Beobachtung
+            all: Alle Anliegen
           archived_state:
             active: Aktiv
             archived: Archiviert

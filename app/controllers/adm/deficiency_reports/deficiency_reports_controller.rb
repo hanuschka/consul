@@ -4,18 +4,21 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   include ImageAttributes
   include DocumentAttributes
 
+  helper_method :assignment_scope_filter?
+
   def index
     params[:archived_state] = ["active"] if params[:archived_state].blank?
     params[:hidden_state] = ["visible"] if params[:hidden_state].blank?
+    params[:assignment_scope] = ["assigned_to_me"] if assignment_scope_filter? &&
+                                                      params[:assignment_scope].blank?
 
-    base_scope = policy_scope(DeficiencyReport, policy_scope_class: Adm::DeficiencyReports::DeficiencyReportPolicy::Scope)
-    base_scope = filter_assigned_reports_only(base_scope)
+    base_scope = scoped_deficiency_reports
 
     respond_to do |format|
       format.html do
         preloaded = base_scope.preload(:status, :translations, :author, :category, :subcategory,
-                                       :responsible, :feedback_form, map_location: :district)
-        @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params))
+                                       :responsible, :feedback_form, :watches, map_location: :district)
+        @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params, current_user: current_user))
 
         @id_header_options = { search: true, sort: true }
         @title_header_options = { search: true }
@@ -29,6 +32,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         @category_header_options = { filter_options: category_filter_options }
         @subcategory_header_options = { filter_options: subcategory_filter_options }
         @responsible_header_options = { filter_options: responsible_filter_options }
+        @assignment_scope_header_options = { filter_options: assignment_scope_filter_options, default: ["assigned_to_me"] }
         @archived_state_header_options = { filter_options: archived_state_filter_options, default: ["active"] }
         @hidden_state_header_options = { filter_options: hidden_state_filter_options, default: ["visible"] }
 
@@ -36,14 +40,14 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       end
 
       format.csv do
-        scope = Adm::DeficiencyReportsQuery.call(base_scope, params)
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params, current_user: current_user)
         send_data CsvServices::DeficiencyReportsExporter.call(scope),
           filename: "deficiency_reports-#{Time.zone.today}.csv",
           type: "text/csv"
       end
 
       format.geojson do
-        scope = Adm::DeficiencyReportsQuery.call(base_scope, params).preload(:category)
+        scope = Adm::DeficiencyReportsQuery.call(base_scope, params, current_user: current_user).preload(:category)
         send_data GeoServices::MappablesGeojsonExporter.call(scope),
           filename: "deficiency_reports-#{Time.zone.today}.geojson",
           type: "application/geo+json"
@@ -181,6 +185,66 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     render :administer
   end
 
+  # The bell. Watching is per person, so this only ever touches the caller's own row.
+  def toggle_watch
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize @deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    watch = @deficiency_report.watches.find_by(user: current_user)
+
+    if watch
+      watch.destroy!
+    else
+      @deficiency_report.watches.create!(user: current_user)
+    end
+
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(@deficiency_report, :watch_toggle),
+      partial: "adm/deficiency_reports/deficiency_reports/watch_toggle",
+      locals: { deficiency_report: @deficiency_report.reload }
+    )
+  end
+
+  # Sharing an Anliegen with colleagues is the same act as switching their bell on: the watch is what
+  # earns them the change notifications, the read access, and the "Unter Beobachtung" filter entry.
+  # So there is no separate sharing record — recipients simply become watchers.
+  def share
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize @deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    already_watching = @deficiency_report.watches.pluck(:user_id)
+    recipients = share_recipients.reject do |user|
+      user == current_user || user.id.in?(already_watching)
+    end
+
+    recipients.each do |user|
+      @deficiency_report.watches.create!(user: user)
+      DeficiencyReportMailer.notify_shared_report(@deficiency_report, user, current_user).deliver_later
+    end
+
+    redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+      notice: t(".success", count: recipients.size)
+  end
+
+  # The opt-out link in the "shared with you" mail. Same effect as the bell, but always off rather
+  # than a toggle, so following the link twice cannot switch notifications back on.
+  def unwatch
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize @deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    @deficiency_report.watches.find_by(user: current_user)&.destroy
+
+    # Opting out of a shared Anliegen can remove the very access the share granted, so only return to
+    # it while it is still readable — otherwise the redirect bounces straight off the policy.
+    still_readable = Adm::DeficiencyReports::DeficiencyReportPolicy
+                       .new(current_user, @deficiency_report.reload).show?
+
+    redirect_to(
+      still_readable ? adm_deficiency_reports_deficiency_report_path(@deficiency_report) : adm_deficiency_reports_deficiency_reports_list_path,
+      notice: t(".success")
+    )
+  end
+
   def audits
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
@@ -242,6 +306,41 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
   private
 
+    # Share targets arrive as "Officer:12" / "OfficerGroup:3", the same encoding the assignment field
+    # uses. A group resolves to its members, because notifications go to people, not to a group row.
+    def share_recipients
+      users = Array(params[:recipients]).compact_blank.flat_map do |value|
+        type, id = value.split(":")
+
+        case type
+        when "Officer"      then DeficiencyReport::Officer.where(id: id).filter_map(&:user)
+        when "OfficerGroup" then DeficiencyReport::OfficerGroup.find_by(id: id)&.officers&.filter_map(&:user) || []
+        else []
+        end
+      end
+
+      users.uniq
+    end
+
+    # Everyone following this Anliegen except whoever caused the change — mailing somebody about their
+    # own edit is noise. The responsible officers are excluded too when they are already receiving the
+    # assignment mail for the same event.
+    def notify_watchers_about_change(dr, except: [])
+      excluded = ([current_user] + Array(except)).compact.map(&:id)
+
+      dr.watchers.where.not(id: excluded).find_each do |user|
+        DeficiencyReportMailer.notify_watcher_about_change(dr, user).deliver_later
+      end
+    end
+
+    # Only case workers get the three-way filter, and only while the visibility setting is on.
+    # Without the setting their scope is already narrowed to their own Anliegen, and for a manager or
+    # administrator — who is not an officer — "Mir zugewiesen" would always be empty.
+    def assignment_scope_filter?
+      Setting["deficiency_reports.officers_see_all_reports"].present? &&
+        current_user.deficiency_report_officer?
+    end
+
     def deficiency_report_params
       attributes = [:title, :description, :video_url, :on_behalf_of,
                     :deficiency_report_category_id,
@@ -271,24 +370,6 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       ]
     end
 
-    def filter_assigned_reports_only(scope)
-      return scope if current_user.administrator? || current_user.deficiency_report_manager?
-      return scope unless Setting["deficiency_reports.admins_must_assign_officer"].present?
-      raise Pundit::NotAuthorizedError unless current_user.deficiency_report_officer?
-
-      officer = current_user.deficiency_report_officer
-
-      return scope if officer.manage_all?
-
-      officer_group_ids = DeficiencyReport::OfficerGroup.joins(:officers).where(deficiency_report_officers: { id: officer.id }).pluck(:id)
-
-      scope.where(
-        "(responsible_type = ? AND responsible_id = ?) OR (responsible_type = ? AND responsible_id IN (?))",
-        "DeficiencyReport::Officer", officer.id,
-        "DeficiencyReport::OfficerGroup", officer_group_ids
-      )
-    end
-
     def category_filter_options
       DeficiencyReport::Category.all.map { |c| [c.id, c.name] }
     end
@@ -313,6 +394,12 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     def responsible_filter_options
       deficiency_report_all_responsible_sorted.map do |r|
         ["#{r.class.name.demodulize}_#{r.id}", r.name]
+      end
+    end
+
+    def assignment_scope_filter_options
+      %w[assigned_to_me watching all].map do |value|
+        [value, t("adm.deficiency_reports.deficiency_reports.index.assignment_scope.#{value}")]
       end
     end
 
@@ -342,12 +429,15 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
         end
       end
+
+      notify_watchers_about_change(dr, except: dr.responsible_officers.filter_map(&:user))
     end
 
     def notify_author_about_status_change(dr)
       return if dr.deficiency_report_status_id_before_last_save == dr.deficiency_report_status_id
 
       DeficiencyReportMailer.notify_author_about_status_change(dr).deliver_later
+      notify_watchers_about_change(dr)
 
       if Setting["deficiency_reports.send_feedback_form_link"].present? &&
           dr.deficiency_report_status_id.in?(DeficiencyReport::Status.where(archive_reports: true).pluck(:id))
@@ -380,5 +470,4 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       when "Officer" then DeficiencyReport::Officer.find(id)
       end
     end
-
 end

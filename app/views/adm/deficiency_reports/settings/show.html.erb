@@ -32,6 +32,7 @@
 <div class="kern-container my-5">
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "process.deficiency_reports"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.admins_must_assign_officer"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.officers_see_all_reports"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.intake_channel_required_for_on_behalf_of"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.officer_groups_only_for_assignment"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "deficiency_reports.ai_categorization"), :value, :boolean) %>

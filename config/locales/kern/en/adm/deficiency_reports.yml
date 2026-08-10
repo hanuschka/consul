@@ -43,6 +43,24 @@ en:
         settings:
           page_hint: Configure the sender address and the shared footer used in all deficiency-report emails.
       deficiency_reports:
+        watch:
+          start: Turn on notifications for this report
+          stop: Turn off notifications for this report
+        unwatch:
+          success: You will no longer receive notifications for this report.
+        share:
+          title: Share report
+          hint: Share this report with other case workers or officer groups. The people you select receive an email and will get notifications about changes to this report.
+          label: Recipients
+          submit: Share
+          officers: Case workers
+          officer_groups: Officer groups
+          success:
+            zero: No new recipients were added.
+            one: The report was shared with one person.
+            other: The report was shared with %{count} people.
+          current_watchers: Already watching this report
+          no_officers: There are no case workers to share this report with.
         index:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
@@ -64,12 +82,17 @@ en:
             status: Status
             location: Location
             address: Address
+            watch: Watching
             district: District
             category: Category
             subcategory: Subcategory
             responsible: Officer
             archived_state: Archive
             hidden_state: Hidden by moderation
+          assignment_scope:
+            assigned_to_me: Assigned to me
+            watching: Watching
+            all: All reports
           archived_state:
             active: Active
             archived: Archived

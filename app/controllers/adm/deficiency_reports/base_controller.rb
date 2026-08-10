@@ -41,17 +41,14 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
       return scope if current_user.administrator? || current_user.deficiency_report_manager?
       return scope unless Setting["deficiency_reports.admins_must_assign_officer"].present?
       return scope unless current_user.deficiency_report_officer?
+      return scope if Setting["deficiency_reports.officers_see_all_reports"].present?
 
       officer = current_user.deficiency_report_officer
 
       return scope if officer.manage_all?
 
-      officer_group_ids = DeficiencyReport::OfficerGroup.joins(:officers).where(deficiency_report_officers: { id: officer.id }).pluck(:id)
-
-      scope.where(
-        "(responsible_type = ? AND responsible_id = ?) OR (responsible_type = ? AND responsible_id IN (?))",
-        "DeficiencyReport::Officer", officer.id,
-        "DeficiencyReport::OfficerGroup", officer_group_ids
-      )
+      # Watched Anliegen ride along with the assigned ones: an Anliegen shared with this officer is
+      # exactly a watch, and it would be invisible here otherwise.
+      scope.assigned_to_officer(officer).or(scope.watched_by(current_user))
     end
 end

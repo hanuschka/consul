@@ -231,6 +231,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.intake_channel_required_for_on_behalf_of": false,
         "deficiency_reports.officer_groups_only_for_assignment": false,
         "deficiency_reports.ai_categorization": false,
+        "deficiency_reports.officers_see_all_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,

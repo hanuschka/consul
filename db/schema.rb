@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_06_160000) do
+ActiveRecord::Schema.define(version: 2026_08_06_180000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -944,6 +944,15 @@ ActiveRecord::Schema.define(version: 2026_08_06_160000) do
     t.text "official_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
+  end
+
+  create_table "deficiency_report_watches", force: :cascade do |t|
+    t.bigint "deficiency_report_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id", "user_id"], name: "index_dr_watches_on_report_and_user", unique: true
+    t.index ["user_id"], name: "index_dr_watches_on_user_id"
   end
 
   create_table "deficiency_reports", force: :cascade do |t|
@@ -3571,6 +3580,8 @@ ActiveRecord::Schema.define(version: 2026_08_06_160000) do
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
   add_foreign_key "deficiency_report_subcategories", "deficiency_report_categories"
+  add_foreign_key "deficiency_report_watches", "deficiency_reports"
+  add_foreign_key "deficiency_report_watches", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
   add_foreign_key "deficiency_reports", "deficiency_report_intake_channels"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"

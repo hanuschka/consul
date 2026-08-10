@@ -1,5 +1,8 @@
 <% public_linkable = !deficiency_report.hidden? %>
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
+  <td class="kern-table__cell" data-field="watch">
+    <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle", deficiency_report: deficiency_report %>
+  </td>
   <td class="kern-table__cell" data-field="id"><%= link_to_if public_linkable, deficiency_report.id, deficiency_report_path(deficiency_report), class: "kern-link", target: "_blank", data: { turbo: false } %></td>
   <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
     <% if public_linkable %>

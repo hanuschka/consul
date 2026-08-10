@@ -17,6 +17,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     conversation.update!(last_inbound_at: latest_inbound_at)
 
     return if handle_stop_keywords
+
+    clear_pending_question
+
     return if account.opt_out_at.present?
     return Whatsapp::Flows::FirstContactService.call(conversation:) if first_contact?
 
@@ -106,13 +109,32 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       @conversation ||= account.conversation
     end
 
-    # The catalog uses one word for two things: "Stop" abandons the submission
-    # in progress (C21), and "STOP" ends all messages for good (E34). The
-    # difference is whether a submission is open, and it is decided here rather
-    # than inside either service — getting it wrong means a citizen who wanted
-    # to cancel a draft is silently unsubscribed instead.
+    # The catalog uses one word for two things: "Stop" abandons what is in
+    # progress (C21), and "STOP" ends all messages for good (E34). Decided here
+    # rather than inside either service — getting it wrong means a citizen who
+    # wanted to cancel is silently unsubscribed instead.
+    #
+    # Any step other than idle is the first reading, and so is an idle
+    # conversation the bot has just asked a question in: the assistant's own
+    # button replies leave the step at idle, so the step alone cannot tell a
+    # citizen dismissing a question from one leaving the channel.
+    def interaction_open?
+      return true if !conversation.idle?
+
+      conversation.context["pending_question"].present?
+    end
+
+    # True only for the message that follows the question. Cleared as soon as
+    # anything else is answered, so an "abbrechen" days later is still the
+    # opt-out it has always been.
+    def clear_pending_question
+      return if conversation.context["pending_question"].blank?
+
+      conversation.merge_context!(pending_question: nil)
+    end
+
     def handle_stop_keywords
-      if Whatsapp::FlowActions::ABORT_KEYWORDS.include?(normalized_text) && conversation.drafting?
+      if Whatsapp::FlowActions::ABORT_KEYWORDS.include?(normalized_text) && interaction_open?
         Whatsapp::Flows::CancelService.call(conversation:)
 
         return true
@@ -380,27 +402,29 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       true
     end
 
-    # The draft can be gone by the time the question is answered — retention
-    # purges, an admin deleting the phase — so "continue" falls back to asking
-    # for the idea again rather than to a crash.
+    # The recap goes first either way: hours or days passed since the draft was
+    # started, and the step being resumed says nothing about which projekt it
+    # belongs to. The draft can also be gone by then — retention purges, an admin
+    # deleting the phase — in which case the idea is asked for again inside the
+    # same phase rather than sending the citizen back to the entry question.
     def resume_flow
+      Whatsapp::Flows::ResumeRecapService.call(conversation:)
+
       return Whatsapp::Flows::PresentDraftService.first_draft(conversation:) if
         conversation.draft_resource.present?
 
-      restart_flow
+      Whatsapp::Flows::AskIdeaService.call(conversation:)
     end
 
-    # Starting over inside a phase that is no longer taking submissions would
-    # leave the citizen stuck on the resume question, answering it forever. When
-    # there is nothing to restart into, the flow is dropped and the portal's
-    # open projekts are offered instead.
+    # Starting over drops the draft and asks the entry question again rather than
+    # the idea question: by the time the resume prompt is answered the citizen may
+    # not remember which projekt the conversation was in, and "tell me your idea"
+    # names none. SubmitProposalService re-derives what is open, so a phase that
+    # closed in the meantime cannot be restarted into.
     def restart_flow
-      return Whatsapp::Flows::AskIdeaService.call(conversation:) if
-        Whatsapp::EligiblePhasesQuery.eligible?(conversation.projekt_phase)
-
       conversation.reset_flow!
 
-      Whatsapp::Flows::DiscoveryService.call(conversation:)
+      Whatsapp::Flows::SubmitProposalService.call(conversation:)
     end
 
     # The card on its own, for a citizen who wanted to look before deciding. No

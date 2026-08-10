@@ -103,7 +103,15 @@ module Whatsapp::Outbound
     end
   end
 
+  # Recorded on the conversation as well as sent: these buttons are the bot
+  # asking something, and "abbrechen" typed instead of tapping Cancel has to be
+  # read as cancelling that question rather than as the opt-out keyword. The step
+  # cannot answer that on its own — the assistant sends these while the
+  # conversation is still idle. Whatsapp::Message carries no marker to read
+  # instead: recovery buttons, projekt cards and lists are all "interactive".
   def recovery(conversation:, body:, actions:)
+    conversation.merge_context!(pending_question: true)
+
     buttons(
       account: conversation.whatsapp_account,
       body: body,

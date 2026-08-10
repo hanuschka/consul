@@ -290,6 +290,8 @@ de:
         cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
         resume: >-
           Sie waren eine Weile weg — möchten Sie Ihren früheren Vorschlag fortsetzen oder neu beginnen?
+        resume_recap: 'Wir machen weiter bei „%{projekt}“.'
+        resume_recap_idea: 'Das hatten Sie mir geschrieben: „%{idea}“'
         ask_image: >-
           Möchten Sie ein Bild zu Ihrem Vorschlag? Sie können mir eines schicken, oder ich erstelle
           eines aus Ihrem Text.

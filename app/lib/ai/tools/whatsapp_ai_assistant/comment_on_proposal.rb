@@ -9,17 +9,10 @@ class Ai::Tools::WhatsappAiAssistant::CommentOnProposal < Ai::Tools::WhatsappAiA
                   conversation.context["comment_proposal_id"]
     proposal = ::Proposal.find_by(id: proposal_id)
 
-    return no_proposal_error if proposal.blank?
+    return no_proposal_error("comment on") if proposal.blank?
 
     ::Whatsapp::Flows::CommentPromptService.call(conversation: conversation, proposal: proposal)
 
     halt("Asked the citizen for their comment.")
   end
-
-  private
-
-    def no_proposal_error
-      { error: "This conversation is not about a specific proposal, so there is nothing to " \
-               "comment on. Ask which proposal they mean." }
-    end
 end

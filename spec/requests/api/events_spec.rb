@@ -15,7 +15,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       security [bearer_auth: []]
       description "Retrieve all events scheduled for a specific projekt phase. Events are public meetings, webinars, or participation activities scheduled as part of the project engagement. Returns paginated results with event details (time, location, registration link).#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (**default:** 100, max: 500)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt events found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -423,7 +423,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       security [bearer_auth: []]
       description "Retrieve all events across all projekts. Returns paginated results ordered by creation date. Clients with `public_data` access only see events belonging to phases that are active and frontend-visible.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of events per page (**default:** 100, max: 500)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt events found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

@@ -3,13 +3,11 @@ module Whatsapp::DraftSentiment
   # — which Sentimentable turns into a create-time requirement wherever the
   # phase enables it.
   #
-  # That requirement could not stop anything here: every write on the bot's path
-  # is save!(validate: false), because a half-finished draft cannot satisfy the
-  # resource's own validations. So a draft the drafting model gave no sentiment
-  # published without one, in a state the web form rejects outright. This module
-  # asks the citizen for it instead, the same way DraftCategory asks for a
-  # category the model did not choose.
-  MAX_CHOICE_BUTTONS = 3
+  # The bot used to write past that requirement, so a draft the drafting model
+  # gave no sentiment published without one, in a state the web form rejects
+  # outright. Nothing on this path saves unvalidated any more, so the question
+  # below is what makes the record writable at all — the same way DraftCategory
+  # asks for a category the model did not choose.
 
   module_function
 
@@ -26,19 +24,28 @@ module Whatsapp::DraftSentiment
     projekt_phase.sentiments.includes(:translations).to_a
   end
 
-  # Debates and budget investments carry the concern too, but a phase type the
-  # bot has no flow for can never reach this — the respond_to? guard is for the
-  # resource, not for the phase.
+  # The id the drafting model returned, or nil when this phase does not offer
+  # it. Mirrors DraftCategory.valid_ids — the model is told what it may choose
+  # from, and answered outside that set often enough to be worth checking.
+  def valid_id(draft_data, projekt_phase)
+    sentiment_id = draft_data["sentiment_id"].to_i
+
+    return if sentiment_id.zero? || !required?(projekt_phase)
+    return if !projekt_phase.sentiments.exists?(id: sentiment_id)
+
+    sentiment_id
+  end
+
+  # Both resources the bot drafts — Proposal and Budget::Investment — include
+  # Sentimentable, so there is nothing to guard against beyond a missing draft.
   def missing?(resource, projekt_phase)
     return false if resource.blank?
-    return false if !resource.respond_to?(:sentiment_id)
 
     required?(projekt_phase) && resource.sentiment_id.blank?
   end
 
   def label_for(resource)
     return if resource.blank?
-    return if !resource.respond_to?(:sentiment)
 
     resource.sentiment&.name
   end
@@ -47,12 +54,14 @@ module Whatsapp::DraftSentiment
   # the same reason DraftCategory does it: a sentiment id from a card sent days
   # ago may since have been removed from the phase.
   def assign(resource, projekt_phase, sentiment_id)
-    sentiment = options_for(projekt_phase).find { |option| option.id == sentiment_id.to_i }
+    return false if !required?(projekt_phase)
+
+    sentiment = projekt_phase.sentiments.find_by(id: sentiment_id)
 
     return false if sentiment.blank?
 
     resource.sentiment_id = sentiment.id
-    resource.save!(validate: false)
+    resource.save!
 
     true
   end

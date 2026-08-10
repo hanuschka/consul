@@ -1,4 +1,4 @@
-class Whatsapp::SendTestMessageService < ApplicationService
+class Whatsapp::Platform::SendTestMessageService < ApplicationService
   def initialize(phone:, body:)
     @phone = phone.to_s.gsub(/\D/, "")
     @body = body
@@ -8,7 +8,7 @@ class Whatsapp::SendTestMessageService < ApplicationService
     return blank_phone_result if @phone.blank?
     return missing_credentials_result if !::Whatsapp.configured?
 
-    response = WhatsappApi::Client.new.messages.send_text(to: @phone, body: @body)
+    response = ::WhatsappApi::Client.new.messages.send_text(to: @phone, body: @body)
 
     record_against_known_account(response)
 

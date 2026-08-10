@@ -1,6 +1,6 @@
 class AddWhatsappAccountUserUniqueIndex < ActiveRecord::Migration[6.1]
   # One number per account, enforced where the application check could not:
-  # Whatsapp::ConfirmLinkService reads before it writes, so two confirmations
+  # Whatsapp::Accounts::ConfirmLinkService reads before it writes, so two confirmations
   # racing on the same user both passed. Postgres treats NULLs as distinct, so
   # unlinked rows are unaffected.
   def change

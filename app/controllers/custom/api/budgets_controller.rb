@@ -13,11 +13,7 @@ class Api::BudgetsController < Api::BaseController
       Budget.includes(:projekt_phase)
     end
 
-    budgets =
-      budgets
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    budgets = paginate(budgets.order(created_at: :asc))
 
     serialized_budgets = BudgetSerializer.serialize_collection(budgets)
 
@@ -95,14 +91,5 @@ class Api::BudgetsController < Api::BaseController
 
   def find_budget
     @budget = Budget.find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end

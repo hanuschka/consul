@@ -1,23 +1,21 @@
 class Api::FormularsController < Api::BaseController
+  DEFAULT_FORMULARS_PER_PAGE = 100
+
   before_action :find_projekt_phase, only: [:index, :create]
   before_action :find_formular, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
-    formulars = @projekt_phase.formular ? [@projekt_phase.formular] : []
-    page = params[:page].to_i > 0 ? params[:page].to_i : 1
-    per_page = [(params[:per_page] || 100).to_i, 500].min
+    formulars = paginate(
+      Formular.where(projekt_phase_id: @projekt_phase.id).order(:id),
+      default_per_page: DEFAULT_FORMULARS_PER_PAGE
+    )
 
     serialized_formulars = formulars.map { |formular| FormularSerializer.new(formular).serialize }
 
     render json: {
       data: { formulars: serialized_formulars },
-      pagination: {
-        current_page: page,
-        total_pages: (formulars.count / per_page.to_f).ceil,
-        total_count: formulars.count,
-        per_page: per_page
-      }
+      pagination: pagination_meta(formulars)
     }
   end
 

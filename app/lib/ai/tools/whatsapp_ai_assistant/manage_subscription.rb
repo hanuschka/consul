@@ -46,7 +46,7 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
     end
 
     def not_linked_error
-      { error: "This number is not linked to an account, so it cannot follow a project yet. " \
+      { error: "This number is not linked to an account, so it cannot follow a project yet. "\
                "Offer to link the account first." }
     end
 end

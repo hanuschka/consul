@@ -4,12 +4,13 @@ class Api::Budgets::PhasesController < Api::BaseController
 
   def index
     check_read_access!
-    phases = @budget.phases.order(:id)
+    phases = paginate(@budget.phases.order(:id))
 
     render json: {
       data: {
-        budget_phases: phases.map { |p| serialize_phase(p) }
-      }
+        budget_phases: phases.map { |phase| serialize_phase(phase) }
+      },
+      pagination: pagination_meta(phases)
     }
   end
 

@@ -1,7 +1,9 @@
-class Whatsapp::Flows::BuildDraftService < ApplicationService
+class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   # Everything between "the citizen sent an idea" and "the draft card is on
-  # screen": the rate guard, the generation call, and the one branch the catalog
-  # adds — asking for a category when the drafting model did not choose one.
+  # screen": the rate guard and the generation call. What happens to the result
+  # — asking for a missing choice, writing the record, showing the card — is
+  # CompleteDraftService's, because a category answer arriving a message later
+  # has to reach exactly the same decision.
   #
   # Revisions are unlimited by design, so the abuse guard is a rate limit per
   # conversation rather than a cap on rounds.
@@ -25,7 +27,7 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
   end
 
   def initialize(conversation:, idea_text:, copy: :first, inbound_message_id: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @idea_text = idea_text
     @copy = copy
     @inbound_message_id = inbound_message_id
@@ -45,11 +47,11 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
     # millisecond before the wait rather than on the wait.
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
-    @conversation.update!(draft_resource: generate)
+    @conversation.merge_context!(draft_data: generate)
 
-    present
+    complete
   rescue StandardError => e
-    report(e)
+    report(e, "draft generation")
 
     Whatsapp::Outbound.recovery(
       conversation: @conversation,
@@ -60,41 +62,24 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
 
   private
 
-    def account
-      @conversation.whatsapp_account
-    end
-
+    # Called direct rather than through a Whatsapp:: wrapper of the same name:
+    # the wrapper was one delegation, and two GenerateDraftServices one namespace
+    # apart is what made comments elsewhere describe the wrong one.
     def generate
-      Whatsapp::GenerateDraftService.call(conversation: @conversation, idea_text: @idea_text)
+      ::ProposalAiDraft::GenerateDraftService.call(
+        idea_text: @idea_text,
+        projekt_phase: @conversation.projekt_phase
+      ).to_h
     end
 
-    # Asked only when the phase offers categories and the draft came back
-    # without one. The model is handed the same categories as a closed enum in
-    # the generation call, so this is the exception rather than a step.
-    def present
-      return Whatsapp::Flows::AskCategoryService.call(conversation: @conversation) if ask_category?
-      return Whatsapp::Flows::AskSentimentService.call(conversation: @conversation) if ask_sentiment?
-
-      return Whatsapp::Flows::PresentDraftService.revised_draft(
+    def complete
+      return Whatsapp::Flows::CompleteDraftService.for_revised_draft(
         conversation: @conversation, inbound_message_id: @inbound_message_id
       ) if @copy == :revised
 
-      Whatsapp::Flows::PresentDraftService.first_draft(
+      Whatsapp::Flows::CompleteDraftService.for_first_draft(
         conversation: @conversation, inbound_message_id: @inbound_message_id
       )
-    end
-
-    def ask_category?
-      return false if Whatsapp::DraftCategory.label_for(@conversation.draft_resource).present?
-
-      Whatsapp::DraftCategory.available?(@conversation.projekt_phase)
-    end
-
-    # Asked for the same reason as the category, but on a stricter footing: the
-    # phase's own validation makes a sentiment mandatory, and the bot writes
-    # past that validation, so nothing else would catch a draft without one.
-    def ask_sentiment?
-      Whatsapp::DraftSentiment.missing?(@conversation.draft_resource, @conversation.projekt_phase)
     end
 
     def throttled?
@@ -111,10 +96,5 @@ class Whatsapp::Flows::BuildDraftService < ApplicationService
         body: I18n.t("whatsapp.bot.too_fast"),
         actions: [:cancel]
       )
-    end
-
-    def report(exception)
-      Rails.logger.error("[Whatsapp] draft generation failed: #{exception.class} - #{exception.message}")
-      Sentry.capture_exception(exception, extra: { whatsapp_conversation_id: @conversation.id })
     end
 end

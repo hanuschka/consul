@@ -1,4 +1,4 @@
-class Whatsapp::ConfirmLinkService < ApplicationService
+class Whatsapp::Accounts::ConfirmLinkService < ApplicationService
   def initialize(token:, user:, broadcast_consent: false)
     @token = token
     @user = user
@@ -10,11 +10,11 @@ class Whatsapp::ConfirmLinkService < ApplicationService
   # bare nil made "your link expired" and "this number belongs to someone else"
   # indistinguishable to every caller.
   def call
-    return ServiceResult.failure(error: :expired) if account.blank?
-    return ServiceResult.failure(error: :expired) if !account.link_token_valid?
+    return ::ServiceResult.failure(error: :expired) if account.blank?
+    return ::ServiceResult.failure(error: :expired) if !account.link_token_valid?
 
-    return ServiceResult.failure(error: :already_linked) if user_linked_to_other_number?
-    return ServiceResult.failure(error: :number_taken) if number_linked_to_other_user?
+    return ::ServiceResult.failure(error: :already_linked) if user_linked_to_other_number?
+    return ::ServiceResult.failure(error: :number_taken) if number_linked_to_other_user?
 
     account.update!(
       user: @user,
@@ -25,7 +25,7 @@ class Whatsapp::ConfirmLinkService < ApplicationService
       **consent_attributes
     )
 
-    ServiceResult.success(account: account)
+    ::ServiceResult.success(account: account)
   end
 
   private

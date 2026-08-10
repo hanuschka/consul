@@ -73,6 +73,16 @@ class ProjektPhase < ApplicationRecord
   # other channel publish past the limit.
   SUBMISSION_LOCATIONS = %i[new_button_component whatsapp_bot].freeze
 
+  # A guest phase waives its own participation restrictions, which is right for
+  # a form the citizen fills in on the projekt page: they got there through the
+  # projekt, and the page is the gate. A channel that accepts submissions from
+  # anywhere has no such gate, so the restrictions are asked for after all.
+  #
+  # Named as a location rather than checked at the call site so the order of the
+  # checks above it — phase active, not expired, still current — stays the one
+  # canonical sequence every channel runs.
+  GUEST_WAIVER_EXEMPT_LOCATIONS = %i[whatsapp_bot].freeze
+
   # Phase types the AI drafting flow exists for override this with their own
   # feature key. Nil means the type has no such flow, which is what every
   # caller — the new-proposal button, the /adm toggle, the WhatsApp bot — has
@@ -356,25 +366,11 @@ class ProjektPhase < ApplicationRecord
     @permission_problem_cache = nil
   end
 
-  # The who-may-take-part restrictions on their own, without the account rules
-  # above them. A guest phase skips all of these on the web, which is right for
-  # a form the citizen fills in on the projekt page but not for a channel that
-  # accepts submissions from anywhere: the WhatsApp bot asks for them anyway.
-  # Split out rather than folded into #permission_problem so the answer that
-  # method gives every existing caller is unchanged.
-  def restriction_problem(user, location: nil)
-    return :not_logged_in if user.blank?
-
-    phase_specific_problem = phase_specific_permission_problems(user, location)
-    return phase_specific_problem if phase_specific_problem.present?
-
-    return age_permission_problem(user) if age_permission_problem(user).present?
-    return geozone_permission_problem(user) if geozone_permission_problem(user)
-
-    advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
-    return advanced_geozone_problem if advanced_geozone_problem.present?
-
-    individual_group_value_permission_problem(user)
+  # Whether this phase accepts submissions from someone with no account. Asked
+  # in enough places — the bot's dispatcher, its author resolution, its eligible
+  # phases query — that the string comparison is worth having exactly once.
+  def guest_participation?
+    user_status == "guest"
   end
 
   def geozone_allowed?(user)
@@ -709,12 +705,29 @@ class ProjektPhase < ApplicationRecord
         return :phase_not_current if not_current?
       end
 
-      return :guest_not_logged_in if user_status == "guest" && !user
-      return if user_status == "guest"
-      return :not_logged_in if !user || user&.guest?
+      return :guest_not_logged_in if guest_participation? && !user
+      return if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
+      return :not_logged_in if user.blank? || (user.guest? && !guest_participation?)
       return :not_verified if user_status == "verified" && !user.level_three_verified?
 
       restriction_problem(user, location: location)
+    end
+
+    # The who-may-take-part restrictions on their own, below the account rules
+    # that precede them. Split out of the sequence above so the guest waiver can
+    # skip exactly these and nothing else — the phase-lifecycle checks are not
+    # waivable by anyone.
+    def restriction_problem(user, location: nil)
+      phase_specific_problem = phase_specific_permission_problems(user, location)
+      return phase_specific_problem if phase_specific_problem.present?
+
+      return age_permission_problem(user) if age_permission_problem(user).present?
+      return geozone_permission_problem(user) if geozone_permission_problem(user)
+
+      advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
+      return advanced_geozone_problem if advanced_geozone_problem.present?
+
+      individual_group_value_permission_problem(user)
     end
 
     def phase_specific_permission_problems(user, location)

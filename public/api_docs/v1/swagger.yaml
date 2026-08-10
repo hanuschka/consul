@@ -300,13 +300,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: Page number for pagination (**default:** 1)
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: Number of items per page (**default:** depends on configuration)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -835,7 +835,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: 'Number of investments per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       - name: heading_id
@@ -1193,7 +1193,7 @@ paths:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of investments per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -1677,6 +1677,19 @@ paths:
         informing, accepting, reviewing, selecting, valuating, publishing_prices,
         balloting, reviewing_ballots, finished. \n\n*Authorization: Available to both
         `admin` and `public_data` access levels.*"
+      parameters:
+      - name: page
+        in: query
+        description: Pagination page number (**default:** 1)
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Number of items per page (**default:** 500, max: 2000)'
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: budget phases returned
@@ -1709,8 +1722,25 @@ paths:
                               type: boolean
                     required:
                     - budget_phases
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                    required:
+                    - current_page
+                    - total_pages
+                    - total_count
+                    - per_page
                 required:
                 - data
+                - pagination
         '404':
           description: budget not found
         '401':
@@ -2008,13 +2038,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number for pagination (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of budgets per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -2085,13 +2115,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number for pagination (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of budgets per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -2669,13 +2699,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: Pagination page number for results (**default:** 1)
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of comments per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 5000, max: 5000)'
         schema:
           type: integer
       responses:
@@ -2853,13 +2883,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: Pagination page number for results (**default:** 1)
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: 'Number of comments per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 5000, max: 5000)'
         schema:
           type: integer
       responses:
@@ -3057,13 +3087,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: Pagination page number
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -3125,7 +3155,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: 'Number of reports per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -3668,7 +3698,7 @@ paths:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of events per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -4201,7 +4231,7 @@ paths:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of events per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -4278,7 +4308,7 @@ paths:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of formulars per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 100, max: 2000)'
         required: false
         schema:
           type: integer
@@ -4839,13 +4869,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: Pagination page number
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -5196,13 +5226,13 @@ paths:
       - name: page
         in: query
         required: false
-        description: Pagination page number
+        description: Pagination page number (**default:** 1)
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -5272,7 +5302,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: 'Number of ideas per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -5927,7 +5957,7 @@ paths:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of livestreams per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -6099,13 +6129,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -6431,13 +6461,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -6811,7 +6841,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: 'Number of milestones per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -7163,7 +7193,7 @@ paths:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of notifications per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -7331,13 +7361,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -7622,13 +7652,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -7785,13 +7815,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -8074,13 +8104,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -8251,13 +8281,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -8555,13 +8585,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 100, max: 2000)'
         required: false
         schema:
           type: integer
@@ -9115,13 +9145,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 100, max: 2000)'
         required: false
         schema:
           type: integer
@@ -9616,13 +9646,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -9808,13 +9838,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -10121,6 +10151,19 @@ paths:
         Retrieve all progress bars for a projekt phase.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        description: Pagination page number (**default:** 1)
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Number of items per page (**default:** 500, max: 2000)'
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: progress bars returned
@@ -10138,8 +10181,25 @@ paths:
                           type: object
                     required:
                     - progress_bars
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                    required:
+                    - current_page
+                    - total_pages
+                    - total_count
+                    - per_page
                 required:
                 - data
+                - pagination
         '404':
           description: projekt phase not found
         '401':
@@ -10462,6 +10522,19 @@ paths:
         etc.) with their own active/inactive periods, visibility settings, and restrictions.
         Returns full details including phase type, dates, and configuration. \n\n*Authorization:
         Available to both `admin` and `public_data` access levels.*"
+      parameters:
+      - name: page
+        in: query
+        description: Pagination page number (**default:** 1)
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        description: 'Number of items per page (**default:** 500, max: 2000)'
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: projekt phases found and returned (public_data sees only visible/active)
@@ -10479,8 +10552,25 @@ paths:
                           "$ref": "#/components/schemas/ProjektPhase"
                     required:
                     - projekt_phases
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                    required:
+                    - current_page
+                    - total_pages
+                    - total_count
+                    - per_page
                 required:
                 - data
+                - pagination
         '401':
           description: unauthorized - missing or invalid token
           content:
@@ -10600,6 +10690,7 @@ paths:
                       - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
+                      - ProjektPhase::MitmachboxPhase
                       description: Phase type determining participation type. Required
                         for creation.
                     start_date:
@@ -11071,6 +11162,7 @@ paths:
                       - ProjektPhase::LivestreamPhase
                       - ProjektPhase::ArgumentPhase
                       - ProjektPhase::NewsfeedPhase
+                      - ProjektPhase::MitmachboxPhase
                       description: Phase type determining participation type.
                     start_date:
                       type: string
@@ -11372,7 +11464,7 @@ paths:
         description: |
           Number of projekts per page when paginating. Only applies when page or per_page is provided.
 
-          **Default:** 20.
+          **Default:** 20. **Max:** 2000 (higher values are clamped).
         schema:
           type: integer
       - name: image_variant_versions
@@ -12399,7 +12491,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: 'Number of proposals per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       - name: for_public_render
@@ -12757,13 +12849,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -13617,13 +13709,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number for pagination (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: 'Number of questions per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -13785,13 +13877,13 @@ paths:
       parameters:
       - name: page
         in: query
-        description: Page number (**default:** 1)
+        description: Pagination page number (**default:** 1)
         required: false
         schema:
           type: integer
       - name: per_page
         in: query
-        description: Items per page (**default:** 100)
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         required: false
         schema:
           type: integer
@@ -14180,7 +14272,7 @@ paths:
       - name: per_page
         in: query
         required: false
-        description: 'Number of texts per page (**default:** 100, max: 500)'
+        description: 'Number of items per page (**default:** 500, max: 2000)'
         schema:
           type: integer
       responses:
@@ -14952,6 +15044,7 @@ components:
           - ProjektPhase::LivestreamPhase
           - ProjektPhase::ArgumentPhase
           - ProjektPhase::NewsfeedPhase
+          - ProjektPhase::MitmachboxPhase
           description: 'The type of projekt phase that determines what kind of participation
             or content is available. Regular phases: CommentPhase (discussion/feedback),
             ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting),

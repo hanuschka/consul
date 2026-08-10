@@ -80,6 +80,10 @@ de:
       publish_failed: >-
         Ich konnte gerade nicht prüfen, ob Ihr Vorschlag die Vorgaben dieses Projekts erfüllt.
         Versuchen Sie es in ein paar Minuten noch einmal — Ihr Entwurf bleibt erhalten.
+      draft_invalid: |-
+        So kann ich den Vorschlag noch nicht einreichen: %{reason}
+
+        Schreiben Sie mir, was ich ändern soll.
       criteria_failed: |-
         Ihr Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
 
@@ -254,7 +258,6 @@ de:
             🔔 Es gibt eine Neuigkeit zu Ihrem Vorschlag.
             %{url}
       proposal:
-        prompt: '🏗️ Neues Projekt: %{projekt}. Haben Sie dazu eine konkrete Idee?'
         ask_idea: Schreiben Sie mir kurz, woran Sie denken — ich mache einen Vorschlag daraus.
         ask_category: Welche Kategorie passt am besten?
         ask_sentiment: Wie steht Ihr Vorschlag zum Thema?
@@ -285,7 +288,6 @@ de:
           Das habe ich nicht ganz verstanden — meinen Sie einen neuen Vorschlag oder einen Kommentar
           zu einem bestehenden?
         cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
-        unsafe: So kann ich das nicht einreichen. Möchten Sie es anders formulieren?
         resume: >-
           Sie waren eine Weile weg — möchten Sie Ihren früheren Vorschlag fortsetzen oder neu beginnen?
         ask_image: >-

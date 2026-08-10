@@ -1,9 +1,9 @@
-class Whatsapp::Flows::SupportPromptService < ApplicationService
+class Whatsapp::Flows::SupportPromptService < Whatsapp::Flows::BaseService
   # Catalog D24. The proposal id is written into the conversation as well as
   # into the pill, because the citizen may answer in words rather than tapping —
   # "yes" has to reach the same proposal the pill would have.
   def initialize(conversation:, proposal:)
-    @conversation = conversation
+    super(conversation: conversation)
     @proposal = proposal
   end
 
@@ -11,7 +11,7 @@ class Whatsapp::Flows::SupportPromptService < ApplicationService
     @conversation.merge_context!(support_proposal_id: @proposal.id)
 
     Whatsapp::Outbound.buttons(
-      account: @conversation.whatsapp_account,
+      account: account,
       body: I18n.t("whatsapp.bot.support.prompt", title: @proposal.title),
       buttons: buttons
     )

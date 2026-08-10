@@ -54,7 +54,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       security [bearer_auth: []]
       description "Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of livestreams per page (**default:** 100, max: 500)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt livestreams found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -179,8 +179,8 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all livestreams across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt livestreams found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

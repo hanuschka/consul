@@ -76,7 +76,7 @@ class Api::ProjektsController < Api::BaseController
     paginating = params[:page].present? || params[:per_page].present?
 
     if paginating
-      projekts = paginate_projekts(projekts)
+      projekts = paginate(projekts, default_per_page: DEFAULT_PROJEKTS_PER_PAGE)
     end
 
     projekts = eager_load_projekt_associations(projekts, includes_hash)
@@ -302,12 +302,6 @@ class Api::ProjektsController < Api::BaseController
     SORT_EXPRESSIONS[sort_column] || "projekts.#{sort_column}"
   end
 
-  def paginate_projekts(projekts)
-    per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
-
-    projekts.page(params[:page]).per(per_page)
-  end
-
   def image_variant_versions
     return nil if params[:image_variant_versions].blank?
 
@@ -318,15 +312,6 @@ class Api::ProjektsController < Api::BaseController
     return projekts if includes_hash.blank?
 
     projekts.includes(includes_hash)
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 
   def projekt_params

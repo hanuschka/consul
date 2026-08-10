@@ -1,4 +1,4 @@
-class Whatsapp::IngestWebhookService < ApplicationService
+class Whatsapp::Inbound::IngestWebhookService < ApplicationService
   KIND_BY_MESSAGE_TYPE = {
     "text" => "text",
     "audio" => "audio",

@@ -97,6 +97,14 @@ class Whatsapp::Account < ApplicationRecord
     update!(ai_disclosed_at: Time.current)
   end
 
+  # Mid-login: a token was minted and has not lapsed. Both halves are the
+  # account's own facts, so the combination lives here rather than being
+  # re-spelled by each flow that has to tell "waiting on the link" apart from
+  # "declined it a week ago".
+  def awaiting_link?
+    link_pending? && link_token_valid?
+  end
+
   def notifies?(type)
     self[NOTIFICATION_COLUMNS.fetch(type)]
   end

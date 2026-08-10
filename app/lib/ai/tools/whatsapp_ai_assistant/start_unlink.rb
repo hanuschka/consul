@@ -7,7 +7,7 @@ class Ai::Tools::WhatsappAiAssistant::StartUnlink < Ai::Tools::WhatsappAiAssista
   def execute
     return not_linked_error if user.blank?
 
-    ::Whatsapp::Flows::UnlinkService.call(conversation: conversation)
+    ::Whatsapp::Flows::UnlinkService.ask(conversation: conversation)
 
     halt("Asked the citizen to confirm unlinking.")
   end

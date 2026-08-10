@@ -1,4 +1,4 @@
-class Whatsapp::Flows::RegisterSupportService < ApplicationService
+class Whatsapp::Flows::RegisterSupportService < Whatsapp::Flows::BaseService
   # Catalog D25 and D26. One tap commits — supporting is binary, cannot be
   # withdrawn, and asking a citizen to confirm a thing they already tapped once
   # is the kind of ceremony the catalog deliberately does not have.
@@ -7,7 +7,7 @@ class Whatsapp::Flows::RegisterSupportService < ApplicationService
   # pill: the id may have come from a card sent days ago, and by now the phase
   # can have closed or the proposal been retired.
   def initialize(conversation:, proposal_id:)
-    @conversation = conversation
+    super(conversation: conversation)
     @proposal_id = proposal_id
   end
 
@@ -22,10 +22,6 @@ class Whatsapp::Flows::RegisterSupportService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def user
       account.user

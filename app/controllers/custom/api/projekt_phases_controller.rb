@@ -17,12 +17,17 @@ class Api::ProjektPhasesController < Api::BaseController
       projekt_phases = projekt_phases.frontend_visible.active
     end
 
+    projekt_phases = paginate(projekt_phases.order(:id))
+
     serialized_projekt_phases = ProjektPhaseSerializer.serialize_collection(
       projekt_phases,
       current_api_client: current_client
     )
 
-    render json: { data: { projekt_phases: serialized_projekt_phases } }
+    render json: {
+      data: { projekt_phases: serialized_projekt_phases },
+      pagination: pagination_meta(projekt_phases)
+    }
   end
 
   def show

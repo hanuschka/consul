@@ -12,8 +12,8 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
     # they read-modify-write the same conversation step concurrently, which can
     # publish one draft twice.
     handled = Whatsapp::ConversationLock.hold(conversation_id_for(whatsapp_message)) do
-      I18n.with_locale(locale_for(whatsapp_message)) do
-        Whatsapp::ProcessInboundMessageService.call(whatsapp_message:, raw_message:)
+      I18n.with_locale(::Whatsapp.locale_for(whatsapp_message.whatsapp_account)) do
+        Whatsapp::Inbound::ProcessMessageService.call(whatsapp_message:, raw_message:)
       end
     end
 
@@ -26,13 +26,5 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
 
     def conversation_id_for(whatsapp_message)
       whatsapp_message.whatsapp_account.conversation.id
-    end
-
-    def locale_for(whatsapp_message)
-      user_locale = whatsapp_message.whatsapp_account.user&.locale.to_s
-
-      return ::Whatsapp.default_locale if !I18n.available_locales.map(&:to_s).include?(user_locale)
-
-      user_locale
     end
 end

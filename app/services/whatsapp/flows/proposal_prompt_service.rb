@@ -1,4 +1,4 @@
-class Whatsapp::Flows::ProposalPromptService < ApplicationService
+class Whatsapp::Flows::ProposalPromptService < Whatsapp::Flows::BaseService
   # Catalog C13, for the one open phase. Sent as the projekt card rather than as
   # a sentence naming the projekt: this is the moment the citizen decides
   # whether that projekt is theirs, and a title with no picture and no page
@@ -8,7 +8,7 @@ class Whatsapp::Flows::ProposalPromptService < ApplicationService
   # "View project" must be able to answer without committing the citizen to a
   # submission they have not agreed to yet.
   def initialize(conversation:, projekt_phase:)
-    @conversation = conversation
+    super(conversation: conversation)
     @projekt_phase = projekt_phase
   end
 

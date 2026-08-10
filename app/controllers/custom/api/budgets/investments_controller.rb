@@ -33,11 +33,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       )
     end
 
-    budget_investments =
-      budget_investments
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    budget_investments = paginate(budget_investments.order(created_at: :asc))
 
     budget_investments = apply_filters(budget_investments)
     budget_investments = apply_sorting(budget_investments)
@@ -174,14 +170,5 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     else
       budget_investments.sort_by_id
     end
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end

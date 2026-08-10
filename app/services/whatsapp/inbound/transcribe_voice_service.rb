@@ -1,4 +1,4 @@
-class Whatsapp::TranscribeVoiceService < ApplicationService
+class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
   def initialize(media_id:)
     @media_id = media_id
   end
@@ -6,7 +6,7 @@ class Whatsapp::TranscribeVoiceService < ApplicationService
   def call
     return if @media_id.blank?
 
-    media = WhatsappApi::Client.new.media.download(@media_id, max_bytes: ::Whatsapp.max_voice_bytes)
+    media = ::WhatsappApi::Client.new.media.download(@media_id, max_bytes: ::Whatsapp.max_voice_bytes)
 
     return if media.blank?
 
@@ -32,7 +32,7 @@ class Whatsapp::TranscribeVoiceService < ApplicationService
         language: I18n.locale.to_s.first(2),
         provider: :openai,
         assume_model_exists: true,
-        context: Ai::RubyLlmFactory.openai_context
+        context: ::Ai::RubyLlmFactory.openai_context
       )
 
       transcription.text.presence

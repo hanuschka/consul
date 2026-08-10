@@ -16,7 +16,7 @@ class Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility <
     return unknown_phase_error if projekt_phase.blank?
 
     permission_problem =
-      ::Whatsapp::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: user)
+      ::Whatsapp::Drafting::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: user)
 
     return { eligible: true } if permission_problem.blank?
 

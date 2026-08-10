@@ -18,6 +18,9 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
       conversation: conversation, projekt: projekt_phase.projekt
     )
 
-    { sent: true, projekt: projekt_title(projekt_phase.projekt) }
+    # Halts like every other tool that sends its own message: the card already
+    # carries the title, the picture and the link, so a further completion would
+    # pay for a sentence that may only repeat them.
+    halt("Sent the projekt card, which carries the title, picture and link.")
   end
 end

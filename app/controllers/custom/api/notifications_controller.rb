@@ -11,11 +11,7 @@ class Api::NotificationsController < Api::BaseController
       ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
     end
 
-    notifications =
-      notifications
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    notifications = paginate(notifications.order(created_at: :asc))
 
     serialized_notifications = NotificationSerializer.serialize_collection(notifications)
 
@@ -81,15 +77,6 @@ class Api::NotificationsController < Api::BaseController
 
   def find_projekt_notification
     @projekt_notification = ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

@@ -1,4 +1,4 @@
-class Whatsapp::Flows::LinkErrorService < ApplicationService
+class Whatsapp::Flows::LinkErrorService < Whatsapp::Flows::BaseService
   # Catalog A4-A6. Four ways a login attempt can fail, each with its own way
   # out: register, retry, or switch the account this number points at. A shared
   # "that didn't work" would leave the citizen with nothing to do next, which is
@@ -11,7 +11,7 @@ class Whatsapp::Flows::LinkErrorService < ApplicationService
   REASONS = %w[no_account expired already_linked number_taken].freeze
 
   def initialize(conversation:, reason:)
-    @conversation = conversation
+    super(conversation: conversation)
     @reason = REASONS.include?(reason.to_s) ? reason.to_s : "expired"
   end
 
@@ -22,10 +22,6 @@ class Whatsapp::Flows::LinkErrorService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def body
       I18n.t(

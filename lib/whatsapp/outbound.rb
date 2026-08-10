@@ -11,7 +11,7 @@ module Whatsapp::Outbound
     help: "whatsapp_help"
   }.freeze
 
-  MAX_RECOVERY_BUTTONS = 3
+  MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_BUTTONS
 
   module_function
 

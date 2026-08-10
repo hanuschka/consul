@@ -38,9 +38,7 @@ class Api::CommentsController < Api::BaseController
                  comments.order(created_at: :asc)
                end
 
-    comments = comments
-      .page(params[:page])
-      .per(params[:per_page] || COMMENTS_PER_PAGE)
+    comments = paginate(comments, default_per_page: COMMENTS_PER_PAGE)
 
     serialized_comments = CommentSerializer.serialize_collection(comments)
 
@@ -98,14 +96,5 @@ class Api::CommentsController < Api::BaseController
 
   def find_comment
     @comment = Comment.includes(:user, :commentable).find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end

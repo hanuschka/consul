@@ -69,6 +69,10 @@ en:
       publish_failed: >-
         I could not check right now whether your proposal meets this project's requirements. Please
         try again in a few minutes — your draft is kept.
+      draft_invalid: |-
+        I cannot submit the proposal like this yet: %{reason}
+
+        Tell me what I should change.
       criteria_failed: |-
         Your proposal does not meet one of this project's requirements yet: %{criterion}
 
@@ -233,7 +237,6 @@ en:
             🔔 There's an update on your proposal.
             %{url}
       proposal:
-        prompt: '🏗️ New project: %{projekt}. Do you have a concrete idea for this?'
         ask_idea: Write me a short summary of what you're thinking — I'll turn it into a proposal.
         ask_category: Which category fits best?
         ask_sentiment: Where does your proposal stand on this?
@@ -263,7 +266,6 @@ en:
         unclear: I didn't quite understand that — do you mean a new proposal or a comment on an existing
           one?
         cancelled: OK, cancelled. Just message me again whenever you'd like.
-        unsafe: I can't submit that as is. Would you like to rephrase it?
         resume: You've been away a while — would you like to continue your earlier proposal or start
           over?
         ask_image: >-

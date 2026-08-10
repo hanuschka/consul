@@ -1,4 +1,4 @@
-class Whatsapp::Flows::SubscriptionCommandService < ApplicationService
+class Whatsapp::Flows::SubscriptionCommandService < Whatsapp::Flows::BaseService
   # Catalog D29 and D30. Subscription management is a typed command with no menu
   # to navigate, so the whole flow is: resolve the name, write the state, say
   # what happened and how to undo it.
@@ -15,7 +15,7 @@ class Whatsapp::Flows::SubscriptionCommandService < ApplicationService
   end
 
   def initialize(conversation:, projekt:, outcome:)
-    @conversation = conversation
+    super(conversation: conversation)
     @projekt = projekt
     @outcome = outcome
   end
@@ -29,10 +29,6 @@ class Whatsapp::Flows::SubscriptionCommandService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def write
       return Whatsapp::ToggleProjektFollowService.follow(user: account.user, projekt: @projekt) if

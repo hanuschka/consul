@@ -16,7 +16,7 @@ class Ai::Tools::WhatsappAiAssistant::OpenNotificationSettings <
   private
 
     def not_linked_error
-      { error: "This number is not linked to an account, so there are no personal notification " \
+      { error: "This number is not linked to an account, so there are no personal notification "\
                "settings yet. Offer to link the account first." }
     end
 end

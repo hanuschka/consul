@@ -1,13 +1,13 @@
-class Whatsapp::Flows::PublishResultService < ApplicationService
+class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   # Catalog C19. Three outcomes, decided by the phase's own moderation setting
   # rather than by anything the bot knows: published with its link, held for
   # review, or refused because the phase's hard criteria rejected it.
   #
-  # Lifted out of ProcessInboundMessageService so the gate chain stays a
+  # Lifted out of Inbound::ProcessMessageService so the gate chain stays a
   # dispatcher and the thing that decides what a citizen is told about their
   # submission lives in one readable place.
   def initialize(conversation:, inbound_message_id: nil)
-    @conversation = conversation
+    super(conversation: conversation)
     @inbound_message_id = inbound_message_id
   end
 
@@ -17,12 +17,15 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
     # here instead, and that is a second LLM call.
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
-    result = Whatsapp::PublishDraftService.call(conversation: @conversation)
+    result = Whatsapp::Drafting::PublishDraftService.call(conversation: @conversation)
 
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if
       result == :criteria_failed
-    return Whatsapp::Flows::AskSentimentService.call(conversation: @conversation) if
+    return Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation) if
       result == :sentiment_missing
+    return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
+      result == :category_missing
+    return send_invalid if result == :invalid
     return send_failure if result.blank?
 
     send_confirmation(result)
@@ -31,10 +34,6 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     # Only proposals can be held back for moderation — an investment has no
     # admin_accepted column, and the web budget flow publishes it outright.
@@ -69,5 +68,26 @@ class Whatsapp::Flows::PublishResultService < ApplicationService
         body: I18n.t("whatsapp.bot.publish_failed"),
         actions: [:retry, :cancel]
       )
+    end
+
+    # The draft breaks a rule the portal applies to every submission — a title
+    # too long, a description the sanitiser rejected. The citizen is put back in
+    # the revision step with the record's own message, because they are the only
+    # one who can rewrite it and a retry would fail identically.
+    def send_invalid
+      @conversation.update!(step: "awaiting_revision")
+
+      Whatsapp::Outbound.recovery(
+        conversation: @conversation,
+        body: I18n.t("whatsapp.bot.draft_invalid", reason: validation_reason),
+        actions: [:cancel]
+      )
+    end
+
+    # Read off the record rather than re-validated: the failed save left them
+    # there, and validating again would re-run the sanitiser over the whole
+    # description for a message that is already available.
+    def validation_reason
+      @conversation.draft_resource.errors.full_messages.first.to_s
     end
 end

@@ -1,4 +1,4 @@
-class Whatsapp::Flows::CriteriaFeedbackService < ApplicationService
+class Whatsapp::Flows::CriteriaFeedbackService < Whatsapp::Flows::BaseService
   # The phase's hard criteria are the portal's own rules, not a safety filter,
   # so the citizen is told which one failed and left in the revision step with
   # the draft intact.
@@ -6,10 +6,6 @@ class Whatsapp::Flows::CriteriaFeedbackService < ApplicationService
   # Reached from the draft card now that the evaluation runs before the card
   # rather than at publish, and still from the publish path for a draft whose
   # evaluation could not be reused.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     @conversation.update!(step: "awaiting_revision")
 

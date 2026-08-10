@@ -1,13 +1,9 @@
-class Whatsapp::Flows::FirstContactService < ApplicationService
+class Whatsapp::Flows::FirstContactService < Whatsapp::Flows::BaseService
   # Catalog A1. Three messages, in this order and as three separate bubbles
   # rather than one: the AI disclosure is a platform obligation and has to stand
   # on its own, the consent line has to be readable next to the button that
   # accepts it, and burying either inside a longer body is what makes them easy
   # to miss.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     Whatsapp::Outbound.text(account: account, body: disclosure)
     Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.onboarding.link_question"))
@@ -15,14 +11,14 @@ class Whatsapp::Flows::FirstContactService < ApplicationService
     account.mark_ai_disclosed!
     @conversation.update!(step: "awaiting_link_decision")
 
-    Whatsapp::Outbound.buttons(account: account, body: consent, buttons: buttons)
+    Whatsapp::Outbound.buttons(
+      account: account,
+      body: consent,
+      buttons: Whatsapp::FlowActions.link_decision_buttons
+    )
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def disclosure
       I18n.t(
@@ -39,16 +35,5 @@ class Whatsapp::Flows::FirstContactService < ApplicationService
         "whatsapp.bot.onboarding.consent",
         privacy_url: Whatsapp::PortalLinks.privacy_url
       )
-    end
-
-    def buttons
-      [
-        Whatsapp::FlowActions.button(
-          action: :link_yes, label_key: "whatsapp.bot.buttons.link_yes"
-        ),
-        Whatsapp::FlowActions.button(
-          action: :link_later, label_key: "whatsapp.bot.buttons.link_later"
-        )
-      ]
     end
 end

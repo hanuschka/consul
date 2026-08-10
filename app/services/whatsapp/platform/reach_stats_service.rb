@@ -1,4 +1,4 @@
-class Whatsapp::ReachStatsService < ApplicationService
+class Whatsapp::Platform::ReachStatsService < ApplicationService
   RECENT_WINDOW = 7.days
   GROWTH_WINDOW = 30.days
   BROADCAST_PROJEKT_LIMIT = 20

@@ -14,8 +14,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all point of interest pins for a specific projekt phase. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt point of interest pins found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -169,8 +169,8 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all point of interest pins across all projekt phases. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt point of interest pins found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

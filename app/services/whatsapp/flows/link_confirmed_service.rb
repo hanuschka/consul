@@ -1,11 +1,7 @@
-class Whatsapp::Flows::LinkConfirmedService < ApplicationService
+class Whatsapp::Flows::LinkConfirmedService < Whatsapp::Flows::BaseService
   # Catalog A1 tail. The success confirmation flows straight into the discovery
   # offer rather than ending the conversation: the moment someone has just
   # linked is the one moment they are certain to be looking at the chat.
-  def initialize(conversation:)
-    @conversation = conversation
-  end
-
   def call
     @conversation.reset_flow!
 
@@ -19,10 +15,6 @@ class Whatsapp::Flows::LinkConfirmedService < ApplicationService
   end
 
   private
-
-    def account
-      @conversation.whatsapp_account
-    end
 
     def buttons
       [

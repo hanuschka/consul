@@ -35,16 +35,22 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     projekt.activated?
   end
 
-  # The subset an unlinked number may submit to. Composed from #call rather than
-  # given its own scope: guest participation is a property the portal already
-  # decides per phase, and a second path to "which phases are open" is a second
-  # place for the eligibility rules to drift.
+  # The subset an unlinked number may submit to. Narrowed in the query rather
+  # than filtered afterwards: the row cap in #call is applied before any Ruby
+  # filter would run, so selecting in memory could return nothing while guest
+  # phases were open just past the tenth row.
   def self.guest_open(projekt: nil)
-    new(projekt: projekt).call.select { |projekt_phase| projekt_phase.user_status == "guest" }
+    new(projekt: projekt, user_status: :guest).call
   end
 
-  def initialize(projekt: nil)
+  # For callers that only need to know whether to offer the option at all.
+  def self.guest_open?(projekt: nil)
+    new(projekt: projekt, user_status: :guest).exists?
+  end
+
+  def initialize(projekt: nil, user_status: nil)
     @projekt = projekt
+    @user_status = user_status
   end
 
   # A display cap, not an eligibility rule: #call is what fills a ten-row
@@ -83,6 +89,7 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
           .includes(preloads_for(phase_class))
 
       scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
+      scope = scope.where(user_status: @user_status) if @user_status.present?
 
       scope.to_a
     end

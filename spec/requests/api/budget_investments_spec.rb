@@ -36,7 +36,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       security [bearer_auth: []]
       description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of investments per page (**default:** 100, max: 500)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
       parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category group'
       parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible", "unfeasible", or "undecided"'
@@ -347,7 +347,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       security [bearer_auth: []]
       description "Retrieve all budget investments across all budgets. Includes investment details (title, description, status, cost) and voting/support statistics. Useful for global investment tracking and analytics.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of investments per page (**default:** 100, max: 500)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'budget investments found and returned' do
         before do

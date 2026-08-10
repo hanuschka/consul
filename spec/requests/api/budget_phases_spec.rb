@@ -14,6 +14,8 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all workflow phases for a budget. Each budget has 9 phases: informing, accepting, reviewing, selecting, valuating, publishing_prices, balloting, reviewing_ballots, finished. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'budget phases returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
@@ -42,9 +44,19 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
                      }
                    },
                    required: ['budget_phases']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   },
+                   required: ['current_page', 'total_pages', 'total_count', 'per_page']
                  }
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test! do |response|
           data = JSON.parse(response.body)

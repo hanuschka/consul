@@ -14,8 +14,8 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all questions from a specific projekt phase. Questions can be standalone survey questions or livestream questions. Each question includes its options and answer statistics. Returns paginated results. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of questions per page (**default:** 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt questions found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -138,8 +138,8 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all projekt questions across all phases. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt questions found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

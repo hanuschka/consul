@@ -14,8 +14,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
       produces 'application/json'
       security [bearer_auth: []]
       description "List all answers for a specific poll question, paginated with pagination metadata. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 100, max: 2000)', required: false
 
       response '200', 'answers found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

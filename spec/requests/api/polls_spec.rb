@@ -14,8 +14,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "List all polls within a specific voting phase. Polls are voting mechanisms within a phase that allow communities to vote on various options. Returns paginated results with pagination metadata. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'polls found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -182,8 +182,8 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "List all polls across all voting phases. Returns paginated results with polling information and current voting status. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'polls found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

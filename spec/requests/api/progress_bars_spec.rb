@@ -31,6 +31,8 @@ RSpec.describe 'Progress Bars API', type: :request, openapi_spec: 'v1/swagger.ya
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all progress bars for a projekt phase.#{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'progress bars returned' do
         let(:projekt) { Projekt.create!(name: 'Test Projekt') }
@@ -54,9 +56,19 @@ RSpec.describe 'Progress Bars API', type: :request, openapi_spec: 'v1/swagger.ya
                      }
                    },
                    required: ['progress_bars']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   },
+                   required: ['current_page', 'total_pages', 'total_count', 'per_page']
                  }
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test! do |response|
           data = JSON.parse(response.body)

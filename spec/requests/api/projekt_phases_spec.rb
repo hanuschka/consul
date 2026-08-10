@@ -14,6 +14,8 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all phases defined for a specific projekt. Phases define different stages of participation (comments, proposals, voting, budgeting, etc.) with their own active/inactive periods, visibility settings, and restrictions. Returns full details including phase type, dates, and configuration. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt phases found and returned (admin sees all)' do
         let(:projekt) { Projekt.create!(name: 'Projekt With Phases') }
@@ -35,9 +37,19 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
                      }
                    },
                    required: ['projekt_phases']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   },
+                   required: ['current_page', 'total_pages', 'total_count', 'per_page']
                  }
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -66,9 +78,19 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
                      }
                    },
                    required: ['projekt_phases']
+                 },
+                 pagination: {
+                   type: :object,
+                   properties: {
+                     current_page: { type: :integer },
+                     total_pages: { type: :integer },
+                     total_count: { type: :integer },
+                     per_page: { type: :integer }
+                   },
+                   required: ['current_page', 'total_pages', 'total_count', 'per_page']
                  }
                },
-               required: ['data']
+               required: ['data', 'pagination']
 
         run_test! do |response|
           data = JSON.parse(response.body)

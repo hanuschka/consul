@@ -10,8 +10,8 @@ RSpec.describe 'Deficiency Report Categories API', type: :request, openapi_spec:
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all deficiency report categories.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Items per page (**default:** 100)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
       response '200', 'deficiency report categories found' do
         before do

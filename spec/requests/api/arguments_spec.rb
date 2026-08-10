@@ -45,8 +45,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       security [bearer_auth: []]
       description "List all arguments (pro and con) for a specific projekt phase. Supports pagination for efficient loading of large argument sets. Arguments are ordered by creation date with pagination support. #{ApiAccessRequirements::GET_READ_ONLY}"
 
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Page number for pagination (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** depends on configuration)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
       response '200', 'projekt arguments list returned successfully' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

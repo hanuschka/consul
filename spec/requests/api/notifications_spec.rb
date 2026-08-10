@@ -15,7 +15,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       security [bearer_auth: []]
       description "Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of notifications per page (**default:** 100, max: 500)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt notifications found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -136,8 +136,8 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all notifications across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'projekt notifications found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

@@ -9,11 +9,12 @@ class Api::PollQuestionsController < Api::BaseController
   def index
     check_read_access!
 
-    questions = @poll.questions
-      .includes(:question_answers)
-      .order(given_order: :asc, created_at: :asc)
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_QUESTIONS_PER_PAGE)
+    questions = paginate(
+      @poll.questions
+        .includes(:question_answers)
+        .order(given_order: :asc, created_at: :asc),
+      default_per_page: DEFAULT_QUESTIONS_PER_PAGE
+    )
 
     serialized_questions = Poll::QuestionSerializer.serialize_collection(questions)
 
@@ -96,15 +97,6 @@ class Api::PollQuestionsController < Api::BaseController
 
     def find_question
       @question = Poll::Question.includes(:question_answers).find(params[:id])
-    end
-
-    def pagination_meta(collection)
-      {
-        current_page: collection.current_page,
-        total_pages: collection.total_pages,
-        total_count: collection.total_count,
-        per_page: collection.limit_value
-      }
     end
 
     def inject_votation_type_id

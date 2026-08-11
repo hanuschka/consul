@@ -20,6 +20,8 @@ en:
     whatsapp:
       default_locale: "Bot language for unknown numbers"
       default_locale_description: "Language the bot uses before someone has linked their account — the invitation and every reply to an unlinked number. Once a number is linked, the language of that person's account is used instead. Enter a language code such as \"de\" or \"en\". Leave empty to use the platform's default language."
+      address_form: "How the bot addresses people"
+      address_form_description: "Whether the bot uses the formal \"Sie\" or the informal \"du\". Enter \"sie\" or \"du\"; leave empty for \"Sie\". It applies to the bot's freely written replies and to the standard sentences around submitting. Fixed button and list labels are unaffected."
       welcome_message_enabled: "Greet first-time users"
       welcome_message_enabled_description: "When someone opens the chat with your number for the first time, WhatsApp notifies the bot and it answers straight away with the greeting below and a list of the running projects. Without this, the chat stays empty until the person writes something themselves. Takes effect only after \"Apply to WhatsApp\" below."
       welcome_greeting: "Greeting text"
@@ -304,6 +306,18 @@ en:
       admins_must_assign_officer: Required assignment to officer
       admins_must_assign_officer_description: >
         When enabled, administrators must manually assign every new deficiency report to a responsible officer. Without assignment, the report cannot be processed. This ensures that every report has a responsible person and no report remains without ownership.
+      officers_see_all_reports: Visibility for case workers and groups
+      officers_see_all_reports_description: >
+        Lets case workers and officer groups read every report, not only the ones assigned to them. When enabled, the report overview gains a filter with the values "Assigned to me", "Watching" and "All reports". Enable this when case workers need an overview of all incoming reports, including those outside their own responsibility.
+      ai_categorization: AI categorization in the report form
+      ai_categorization_description: >
+        Determines a report's main and subcategory automatically from its title, description and — where present — an AI image analysis of the uploaded photo. When enabled, the category fields are hidden from the reporting person on the public form; when disabled, the reporting person picks main and subcategory themselves via a cascading selection. Enable this to automate the categorization of incoming reports and take work off your case workers.
+      officer_groups_only_for_assignment: Officer groups only for assignment
+      officer_groups_only_for_assignment_description: >
+        Restricts the choice when assigning responsibility (report, category, subcategory) to officer groups; individual people are no longer selectable. In the admin area the assignment field then only shows groups. Enable this when reports should consistently be handled through the intended group processes rather than through individuals.
+      intake_channel_required_for_on_behalf_of: Intake channel required for third-party reports
+      intake_channel_required_for_on_behalf_of_description: >
+        Makes the intake channel (e.g. phone, email, in person) mandatory whenever a report is filed on behalf of a third person. The form then shows a required select with the configured channel options and a default value, both on the public form and in the admin area. Enable this when it should be traceable how third-party reports came in.
       allow_voting: User rating per deficiency
       allow_voting_description: >
         Enables a rating feature letting users support or prioritize individual deficiency reports. The number of ratings is shown publicly and helps administration identify frequently reported or especially urgent deficiencies sooner and prioritize accordingly.

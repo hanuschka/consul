@@ -6,6 +6,8 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Status') }
+
   path '/api/milestone_statuses' do
     get 'List all milestone statuses' do
       tags 'Milestone Statuses'
@@ -236,7 +238,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_milestone_status.id } }
     end
 
     delete 'Delete a milestone status' do
@@ -289,7 +291,7 @@ RSpec.describe 'Milestone Statuses API', type: :request, openapi_spec: 'v1/swagg
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_milestone_status.id } }
     end
   end
 

@@ -1,5 +1,4 @@
 class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
-  DESCRIPTION_PREVIEW_LENGTH = 700
   MAX_SCORE_PER_CRITERION = ::ProposalAiDraft::EvaluateSoftCriteriaService::SCORE_MAX
 
   # Catalog C16 and C18 — the same card, with different copy the second time so
@@ -10,10 +9,13 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
   # and the feedback land on the card the citizen is deciding on and can be
   # acted on through the revise loop they already have. A hard failure never
   # reaches the card at all.
+  # The prefix names a pair of keys — the sentence above the card and the
+  # question under it — so the two halves of one piece of copy cannot be given
+  # different wordings by two callers.
   def self.first_draft(conversation:, inbound_message_id: nil)
     new(
       conversation: conversation,
-      copy_key: "whatsapp.bot.proposal.draft",
+      copy_prefix: "whatsapp.bot.proposal.draft",
       inbound_message_id: inbound_message_id
     ).call
   end
@@ -21,14 +23,16 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
   def self.revised_draft(conversation:, inbound_message_id: nil)
     new(
       conversation: conversation,
-      copy_key: "whatsapp.bot.proposal.draft_revised",
+      copy_prefix: "whatsapp.bot.proposal.draft_revised",
       inbound_message_id: inbound_message_id
     ).call
   end
 
-  def initialize(conversation:, copy_key: "whatsapp.bot.proposal.draft", inbound_message_id: nil)
+  def initialize(
+    conversation:, copy_prefix: "whatsapp.bot.proposal.draft", inbound_message_id: nil
+  )
     super(conversation: conversation)
-    @copy_key = copy_key
+    @copy_prefix = copy_prefix
     @inbound_message_id = inbound_message_id
   end
 
@@ -79,14 +83,20 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
       evaluation["stage"] == ::ProposalAiDraft::EvaluateTwoTierService::STAGE_HARD_FAILED
     end
 
+    # Category and sentiment are one block rather than two: they are the same
+    # kind of fact about the draft, and a blank line between two short labelled
+    # lines reads as two unrelated statements.
     def draft_summary
       [
-        I18n.t(@copy_key, title: draft_resource.title, description: plain_description),
-        category_line,
-        sentiment_line,
+        Whatsapp::DraftCard.body(draft_resource, intro_key: "#{@copy_prefix}_intro"),
+        taxonomy_block,
         evaluation_line,
-        I18n.t("#{@copy_key}_question")
+        Whatsapp::AiAssistant::PhrasingService.call(key: "#{@copy_prefix}_question")
       ].compact_blank.join("\n\n")
+    end
+
+    def taxonomy_block
+      [category_line, sentiment_line].compact_blank.join("\n")
     end
 
     # Omitted rather than printed empty when the phase has no categories at all:
@@ -129,13 +139,10 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
       @max_score ||= evaluation.dig("soft", "criteria").to_a.size * MAX_SCORE_PER_CRITERION
     end
 
-    def plain_description
-      ActionController::Base.helpers
-        .strip_tags(draft_resource.description.to_s)
-        .squish
-        .truncate(DESCRIPTION_PREVIEW_LENGTH)
-    end
-
+    # Three pills is WhatsApp's whole budget, and cancelling is worth one of
+    # them here: this is the first message the citizen can answer with anything
+    # other than "yes" or "change it", and typing "abbrechen" is only obvious to
+    # someone who already knows it works.
     def buttons
       [
         Whatsapp::FlowActions.button(
@@ -143,7 +150,8 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
         ),
         Whatsapp::FlowActions.button(
           action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"
-        )
+        ),
+        Whatsapp::Outbound.recovery_button(:cancel)
       ]
     end
 end

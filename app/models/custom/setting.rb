@@ -262,6 +262,7 @@ class Setting < ApplicationRecord
         "welcomepage.share_buttons": "",
 
         "whatsapp.default_locale": nil,
+        "whatsapp.address_form": "sie",
         "whatsapp.welcome_message_enabled": true,
         "whatsapp.welcome_greeting": nil,
         "whatsapp.ice_breaker_1": nil,
@@ -282,6 +283,10 @@ class Setting < ApplicationRecord
         "whatsapp.max_voice_megabytes": 16,
 
         "deficiency_reports.admins_must_assign_officer": false,
+        "deficiency_reports.intake_channel_required_for_on_behalf_of": false,
+        "deficiency_reports.officer_groups_only_for_assignment": false,
+        "deficiency_reports.ai_categorization": false,
+        "deficiency_reports.officers_see_all_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,

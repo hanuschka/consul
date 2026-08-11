@@ -20,7 +20,10 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
 
     @conversation.update!(step: "awaiting_idea")
 
-    Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.proposal.ask_idea"))
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.proposal.ask_idea")
+    )
   end
 
   private

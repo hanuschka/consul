@@ -123,6 +123,13 @@ module Whatsapp::Outbound
     RECOVERY_ACTION_IDS.key(button_reply_id.to_s)
   end
 
+  # One recovery pill to put beside flow buttons of a different kind. The
+  # handler is the same global one either way, which is the point: a "Cancel"
+  # sitting next to two catalog pills must not need its own step to be read.
+  def recovery_button(action)
+    { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
+  end
+
   def recovery_buttons(actions)
     actions.first(MAX_RECOVERY_BUTTONS).map do |action|
       { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }

@@ -6,6 +6,13 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_poi_phase) { create_projekt_phase('ProjektPhase::PointOfInterestPhase') }
+let(:existing_poi_category) do
+  existing_poi_phase.projekt_point_of_interest_categories.create!(
+    name: 'Existing Category', color: '#FF0000', icon: 'map-pin'
+  )
+end
+
   path '/api/projekt_phases/{projekt_phase_id}/point_of_interest_categories' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
@@ -133,7 +140,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_poi_phase.id } }
     end
   end
 
@@ -335,7 +342,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_poi_category.id } }
     end
 
     delete 'Delete a projekt point of interest category' do
@@ -404,7 +411,7 @@ RSpec.describe 'Projekt Point Of Interest Categories API', type: :request, opena
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_poi_category.id } }
     end
   end
 end

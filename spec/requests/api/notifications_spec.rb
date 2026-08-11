@@ -6,6 +6,13 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_notification_phase) { create_projekt_phase('ProjektPhase::ProjektNotificationPhase') }
+let(:existing_projekt_notification) do
+  existing_notification_phase.projekt_notifications.create!(
+    title: 'Existing Notification', body: 'Existing body'
+  )
+end
+
   path '/api/projekt_phases/{projekt_phase_id}/notifications' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (ProjektNotificationPhase)'
 
@@ -126,7 +133,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_notification_phase.id } }
     end
   end
 
@@ -288,7 +295,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_notification.id } }
     end
 
     delete 'Delete a projekt notification' do
@@ -337,7 +344,7 @@ RSpec.describe 'Projekt Notifications API', type: :request, openapi_spec: 'v1/sw
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_notification.id } }
     end
   end
 end

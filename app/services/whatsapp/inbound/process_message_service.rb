@@ -209,8 +209,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # skips the check.
     ACCOUNT_ACTIONS = %i[
       idea_start category sentiment draft_publish draft_revise resume restart
-      image_upload image_generate image_skip
-      support notify_toggle notifications_done unlink_confirm unlink_cancel
+      image_upload image_generate image_skip submit_final
+      support support_prompt comment_prompt
+      notify_toggle notifications_done notifications_open
+      unlink_confirm unlink_cancel unlink_start
     ].freeze
 
     # Supporting a proposal, changing notification settings and unlinking all
@@ -219,7 +221,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # guest phase does allow — derived rather than listed again so a new
     # drafting pill cannot be added to one list and forgotten in the other.
     ACCOUNT_ONLY_ACTIONS = %i[
-      support notify_toggle notifications_done unlink_confirm unlink_cancel
+      support support_prompt comment_prompt
+      notify_toggle notifications_done notifications_open
+      unlink_confirm unlink_cancel unlink_start
     ].freeze
 
     GUEST_ELIGIBLE_ACTIONS = (ACCOUNT_ACTIONS - ACCOUNT_ONLY_ACTIONS).freeze
@@ -245,6 +249,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         send_projekt_card(param)
       when :my_contributions
         Whatsapp::Flows::ContributionsService.call(conversation:)
+      when :main_menu
+        send_main_menu
+      when :support_prompt
+        send_menu_prompt("whatsapp.bot.help_menu.prompts.support")
+      when :comment_prompt
+        send_menu_prompt("whatsapp.bot.help_menu.prompts.comment")
+      when :notifications_open
+        Whatsapp::Flows::NotificationSettingsService.call(conversation:)
+      when :unlink_start
+        Whatsapp::Flows::UnlinkService.ask(conversation:)
       when :dismiss, :unlink_cancel
         conversation.reset_flow!
       when :unlink_confirm
@@ -264,8 +278,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :image_upload
         ask_image_upload
       when :image_generate
-        generate_image_then_publish
-      when :image_skip
+        generate_image_then_confirm
+      when :image_skip, :submit_final
         publish
       when :draft_revise
         ask_revision
@@ -343,6 +357,24 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::HelpService.call(conversation:)
 
       true
+    end
+
+    # An unlinked guest has no contributions and no notification settings, so
+    # the three-button menu would offer them two dead ends. The help list is
+    # already the answer they get when nothing is in progress.
+    def send_main_menu
+      return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
+
+      Whatsapp::Flows::MainMenuService.greeting(conversation:)
+    end
+
+    # A help row that names something the assistant resolves rather than a flow
+    # the bot owns. It asks the question and stops: the citizen's next message
+    # is free text, and the assistant's own tools find the proposal in it.
+    def send_menu_prompt(body_key)
+      conversation.reset_flow!
+
+      Whatsapp::Outbound.text(account:, body: I18n.t(body_key))
     end
 
     # Answered deterministically rather than left to the assistant so the
@@ -557,6 +589,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         Whatsapp::Flows::AskImageService.call(conversation:)
       when "awaiting_image_upload"
         handle_image_upload
+      when "awaiting_final_confirmation"
+        handle_final_confirmation
       when "awaiting_revision"
         handle_revision
       when "awaiting_comment"
@@ -575,11 +609,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Nothing in progress and nothing the assistant could route. Only an
     # unlinked guest submitter reaches here without an account, and the greeting
     # offers contributions and notification settings they have none of — so the
-    # help text stays their answer.
+    # help list stays their answer.
     def handle_idle_message
       return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
 
-      Whatsapp::Flows::IdleGreetingService.call(conversation:)
+      Whatsapp::Flows::MainMenuService.greeting(conversation:)
     end
 
     def handle_idea
@@ -623,18 +657,34 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
     end
 
+    # The same "ja" that publishes from the draft card publishes from the
+    # preview, because the two look alike and a citizen who typed it once will
+    # type it again. Anything else re-sends the preview rather than guessing.
+    def handle_final_confirmation
+      return publish if PUBLISH_KEYWORDS.include?(normalized_text)
+
+      Whatsapp::Flows::ConfirmSubmissionService.call(conversation:)
+    end
+
     def ask_revision
       conversation.update!(step: "awaiting_revision")
 
-      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.ask_revision"))
+      send_revision_question
+    end
+
+    def send_revision_question
+      Whatsapp::Outbound.text(
+        account:,
+        body: Whatsapp::AiAssistant::PhrasingService.call(
+          key: "whatsapp.bot.proposal.ask_revision"
+        )
+      )
     end
 
     def handle_revision
       correction = inbound_text.to_s.strip
 
-      if correction.blank?
-        return Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.ask_revision"))
-      end
+      return send_revision_question if correction.blank?
 
       conversation.update!(revisions_count: conversation.revisions_count + 1)
 
@@ -678,7 +728,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_received"))
 
-      publish
+      confirm_submission
     end
 
     # Every prompt at this step carries the same way out, so the citizen is
@@ -696,9 +746,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # Generation is a slow external call, so the citizen is told it started and
-    # the typing bubble covers the wait. A failure publishes anyway: the picture
+    # the typing bubble covers the wait. A failure goes on anyway: the picture
     # was optional, and losing the proposal over it would be the worse outcome.
-    def generate_image_then_publish
+    def generate_image_then_confirm
       Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_generating"))
       Whatsapp::Outbound.typing(message_id: inbound_message_id)
 
@@ -708,7 +758,17 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_generate_failed"))
       end
 
-      publish
+      confirm_submission
+    end
+
+    # Only the two paths that produced a picture stop here. "Ohne Bild
+    # einreichen" says what it does and publishes on the tap: a preview of a
+    # draft the citizen approved two messages ago, with nothing new on it,
+    # would be a confirmation of nothing.
+    def confirm_submission
+      return if refuse_if_not_permitted
+
+      Whatsapp::Flows::ConfirmSubmissionService.call(conversation:)
     end
 
     def publish

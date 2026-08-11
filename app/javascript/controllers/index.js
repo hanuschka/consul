@@ -13,6 +13,9 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmSubcategoryCascadeController from "./adm/subcategory_cascade_controller"
+application.register("adm--subcategory-cascade", AdmSubcategoryCascadeController)
+
 import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
 application.register("adm--ai-question-form", AdmAiQuestionFormController)
 

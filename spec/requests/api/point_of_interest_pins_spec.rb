@@ -6,6 +6,20 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_poi_phase) { create_projekt_phase('ProjektPhase::PointOfInterestPhase') }
+let(:existing_poi_category) do
+  existing_poi_phase.projekt_point_of_interest_categories.create!(
+    name: 'Existing Category', color: '#FF0000', icon: 'map-pin'
+  )
+end
+let(:existing_poi_pin) do
+  existing_poi_phase.projekt_point_of_interest_pins.create!(
+    author: api_client.user,
+    projekt_point_of_interest_category: existing_poi_category,
+    map_location_attributes: { latitude: 52.52, longitude: 13.405, zoom: 15 }
+  )
+end
+
   path '/api/projekt_phases/{projekt_phase_id}/point_of_interest_pins' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (PointOfInterestPhase)'
 
@@ -159,7 +173,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_poi_phase.id } }
     end
   end
 
@@ -416,7 +430,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_poi_pin.id } }
     end
 
     delete 'Delete a projekt point of interest pin' do
@@ -499,7 +513,7 @@ RSpec.describe 'Projekt Point Of Interest Pins API', type: :request, openapi_spe
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_poi_pin.id } }
     end
   end
 end

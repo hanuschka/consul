@@ -6,6 +6,10 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+  let(:existing_budget) do
+    create_projekt_phase('ProjektPhase::BudgetPhase').reload.budget
+  end
+
   path '/api/budgets/{budget_id}/budget_phases' do
     parameter name: :budget_id, in: :path, type: :integer, description: 'Budget ID'
 
@@ -20,7 +24,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       response '200', 'budget phases returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:budget_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { budget_phase.budget }
+        let(:test_budget) { budget_phase.reload.budget }
         let(:budget_id) { test_budget.id }
 
         schema type: :object,
@@ -88,7 +92,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       response '200', 'budget phase returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:budget_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { budget_phase.budget }
+        let(:test_budget) { budget_phase.reload.budget }
         let(:id) { test_budget.phases.find_by(kind: 'accepting').id }
 
         schema type: :object,
@@ -147,14 +151,14 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       response '200', 'budget phase updated' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { projekt_phase.budget }
+        let(:test_budget) { projekt_phase.reload.budget }
         let(:accepting_phase) { test_budget.phases.find_by(kind: 'accepting') }
         let(:id) { accepting_phase.id }
         let(:budget_phase) do
           {
             budget_phase: {
-              starts_at: '2026-03-01',
-              ends_at: '2026-05-31',
+              starts_at: 20.days.from_now.to_date.to_s,
+              ends_at: 50.days.from_now.to_date.to_s,
               enabled: true
             }
           }
@@ -182,7 +186,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       response '200', 'budget phase disabled' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { projekt_phase.budget }
+        let(:test_budget) { projekt_phase.reload.budget }
         let(:reviewing_phase) { test_budget.phases.find_by(kind: 'reviewing') }
         let(:id) { reviewing_phase.id }
         let(:budget_phase) do
@@ -218,7 +222,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
 
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { projekt_phase.budget }
+        let(:test_budget) { projekt_phase.reload.budget }
         let(:id) { test_budget.phases.find_by(kind: 'accepting').id }
         let(:budget_phase) do
           {
@@ -282,7 +286,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       response '200', 'budget phases updated' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:budget_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { budget_phase.budget }
+        let(:test_budget) { budget_phase.reload.budget }
         let(:budget_id) { test_budget.id }
         let(:budget_phases) do
           {
@@ -311,7 +315,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       response '422', 'unknown phase kind' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:budget_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
-        let(:test_budget) { budget_phase.budget }
+        let(:test_budget) { budget_phase.reload.budget }
         let(:budget_id) { test_budget.id }
         let(:budget_phases) do
           { budget_phases: [{ kind: 'nonexistent', enabled: true }] }
@@ -331,7 +335,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       end
 
       unauthorized_response { let(:budget_id) { 1 } }
-      forbidden_response { let(:budget_id) { 1 } }
+      forbidden_response { let(:budget_id) { existing_budget.id } }
     end
   end
 end

@@ -34,7 +34,7 @@ en:
       welcome_greeting: 👋 Welcome back! What would you like to do?
       free_text_hint: I can do more than this — just tell me what you need.
       no_open_phase_notice: >-
-        No phase is open for proposals right now. I will let you know as soon as a new participation
+        No phase is open for contributions right now. I will let you know as soon as a new participation
         project starts.
       contributions:
         intro: 'Here is what you have submitted so far:'
@@ -45,7 +45,7 @@ en:
           published: online
           pending: under review
         more: And %{count} more.
-        empty: You have not submitted anything yet. Tap "Submit a proposal" to get started.
+        empty: You have not submitted anything yet. Tap "Submit a contribution" to get started.
       commands:
         default: |-
           help|What this chat can do
@@ -55,31 +55,34 @@ en:
       ice_breakers:
         default_1: Which projects are running right now?
         default_2: I have an idea for my city
-        default_3: How does submitting a proposal work?
+        default_3: How does submitting a contribution work?
         default_4: Stop receiving messages
       idea_missing: Please describe your idea as text or as a voice message.
       no_projekt: >-
-        There is no participation project accepting proposals at the moment. Write to me again when
+        There is no participation project accepting contributions at the moment. Write to me again when
         a new one starts, or scan the QR code of a project.
-      drafting: Thanks! I am turning this into a proposal — one moment.
+      drafting: Thanks! I am turning this into a contribution — one moment.
       draft_failed: >-
         That did not work just now — most likely a temporary problem. Please try again in a few
         minutes.
       transcription_failed: I could not understand the voice message. Please write your idea as text.
       publish_failed: >-
-        I could not check right now whether your proposal meets this project's requirements. Please
+        I could not check right now whether your contribution meets this project's requirements. Please
         try again in a few minutes — your draft is kept.
       draft_invalid: |-
-        I cannot submit the proposal like this yet: %{reason}
+        I cannot submit the contribution like this yet: %{reason}
 
         Tell me what I should change.
       criteria_failed: |-
-        Your proposal does not meet one of this project's requirements yet: %{criterion}
+        Your contribution does not meet one of this project's requirements yet: %{criterion}
 
         %{feedback}
 
         Tell me what I should change.
-      too_fast: One moment — I am still working on your proposal.
+      safety_check_failed: >-
+        I could not check right now whether your text may be published. Please try again in a few
+        minutes.
+      too_fast: One moment — I am still working on your contribution.
       opted_in: You will receive messages from us again.
       verification_link: 'You can verify your account here: %{url}'
       buttons:
@@ -101,35 +104,85 @@ en:
         choose_notifications: Choose
         choose_category: Choose category
         choose_sentiment: Choose
-        submit_proposal: Submit a proposal
+        submit_proposal: Submit contribution
         my_contributions: My contributions
         view_projekt: View project
         idea_start: Yes, I have an idea
-        draft_publish: Yes, submit it
+        draft_publish: Yes, that works
         draft_revise: Edit
         resume: Continue
         restart: Start over
         support: 👍 Support
         help: Help
+        main_menu: Main menu
+        choose_help: Choose
         open_page: Open page
         image_upload: Upload a photo
         image_generate: Create one for me
-        image_skip: No picture
+        image_skip: Submit without one
+        submit_final: Submit it now
+      help_menu:
+        body: 'Happy to help. Choose what I can help you with:'
+        rows:
+          submit:
+            title: Submit contribution
+            description: Contribute an idea to a running project
+          support:
+            title: Support one
+            description: Support an existing contribution
+          comment:
+            title: Comment
+            description: Add a comment to a contribution
+          projekts:
+            title: Browse projects
+            description: See the running participation projects
+          contributions:
+            title: My contributions
+            description: See what you have submitted
+          notifications:
+            title: Notifications
+            description: Change your message settings
+          unlink:
+            title: Unlink account
+            description: Release the link to your account
+          link:
+            title: Link account
+            description: Connect this number to your account
+        prompts:
+          support: >-
+            Which contribution would you like to support? Send me its title or a few words from
+            it.
+          comment: >-
+            Which contribution would you like to comment on? Send me its title or a few words
+            from it.
+      refused_content:
+        intro: I'm afraid I cannot submit that.
+        retry_hint: >-
+          Feel free to write your concern again in different words — plain criticism is expressly
+          welcome here.
+        reasons:
+          hate: The text demeans people or groups.
+          violence: The text contains threats or calls for violence.
+          harassment: The text personally attacks an individual.
+          sexual: The text contains sexual content.
+          illegal: The text calls for or spreads criminal content.
+          personal_data: The text contains other people's personal data, which cannot be published.
+          spam: The text is advertising or has no recognisable concern.
       refused:
-        generic: I cannot submit a proposal for this project right now.
+        generic: I cannot submit a contribution for this project right now.
         phase_missing: I could not find the project. Please scan the QR code again.
         phase_not_supported: This phase does not accept submissions via WhatsApp.
-        budget_heading_missing: This budget has no area set up yet that I could file your proposal
+        budget_heading_missing: This budget has no area set up yet that I could file your contribution
           under.
-        creation_disabled: This phase does not accept proposals right now.
+        creation_disabled: This phase does not accept contributions right now.
         ai_flow_disabled: Submitting via WhatsApp is not enabled for this project.
         phase_not_active: This participation phase is not active right now.
         phase_expired: This participation phase has already ended.
         phase_not_current: This participation phase is not running right now.
-        not_verified: Your account must be verified to submit a proposal.
-        submissions_limit_exceeded: You have already submitted as many proposals to this project as
+        not_verified: Your account must be verified to submit a contribution.
+        submissions_limit_exceeded: You have already submitted as many contributions to this project as
           are allowed.
-        no_open_phase: This project currently has no phase that accepts proposals.
+        no_open_phase: This project currently has no phase that accepts contributions.
         not_logged_in: >-
           This project needs a linked account. Send me "link account" and I will send you the login
           link.
@@ -154,7 +207,7 @@ en:
       portal_fallback_name: the participation portal
       onboarding:
         disclosure: >-
-          👋 Welcome to %{portal_name}! I'm an AI bot that helps you submit proposals, support them,
+          👋 Welcome to %{portal_name}! I'm an AI bot that helps you submit contributions, support them,
           and stay up to date.
         link_question: >-
           Would you like to link your account? Then you can participate directly here and get personal
@@ -165,7 +218,7 @@ en:
         login_prompt: 'Tap below to log in:'
         login_prompt_with_url: 'Tap the link to log in: %{url}'
         linked: >-
-          ✅ Successfully linked! From now on you can submit proposals, support them, and receive notifications
+          ✅ Successfully linked! From now on you can submit contributions, support them, and receive notifications
           directly here.
         discovery_offer: Want to see which projects you can currently participate in?
         declined: >-
@@ -179,7 +232,7 @@ en:
         number_taken: This number is already linked to a different account. Would you like to switch?
         unlink_confirm: >-
           Are you sure you want to unlink your account? You'll no longer receive notifications and
-          won't be able to support proposals directly.
+          won't be able to support contributions directly.
         unlinked: >-
           ✅ Account unlinked. This number is no longer tied to an account. The number and the chat
           history are kept for the usual retention period. You can link again at any time.
@@ -216,10 +269,10 @@ en:
             label: Deadline passed
           new_supports:
             short: New supports
-            label: New supports on my proposal
+            label: New supports on my contribution
           new_comments:
             short: New comments
-            label: New comments on my proposal
+            label: New comments on my contribution
           moderation_decision:
             short: Moderation
             label: Moderation decision
@@ -228,67 +281,66 @@ en:
             📣 There's a new participation project on %{portal_name}.
             %{url}
           deadline_approaching: |-
-            ⏳ Only a few days left: the proposal submission deadline is coming up soon.
+            ⏳ Only a few days left: the contribution submission deadline is coming up soon.
             %{url}
           deadline_passed: |-
             🏁 The deadline has passed. See the result:
             %{url}
           status_change: |-
-            🔔 There's an update on your proposal.
+            🔔 There's an update on your contribution.
             %{url}
       proposal:
-        ask_idea: Write me a short summary of what you're thinking — I'll turn it into a proposal.
+        ask_idea: Write me a short summary of what you're thinking — I'll turn it into a contribution.
         ask_category: Which category fits best?
-        ask_sentiment: Where does your proposal stand on this?
+        ask_sentiment: Where does your contribution stand on this?
         category_line: 'Category: %{category}'
         sentiment_line: 'Sentiment: %{sentiment}'
         evaluation_line: |-
           Assessment: %{score} out of %{max_score} points
           %{feedback}
-        draft: |-
-          Great idea! Here's how I'd phrase it:
+        card: |-
+          *%{title}*
 
-          _"%{title}"_
           %{description}
+        draft_intro: 'Great idea! Here''s how I''d phrase it:'
         draft_question: Does that sound right?
-        draft_revised: |-
-          Got it:
-
-          _"%{title}"_
-          %{description}
+        draft_revised_intro: 'Got it:'
         draft_revised_question: Does that work now?
+        preview_intro: 'Here''s how your contribution would look:'
+        preview_question: Shall I submit it like this?
         ask_revision: Sure, what should I change?
         published: '✅ It''s live now: %{url}'
+        next_action: Anything else you'd like to do?
         published_pending_moderation: |-
-          Thanks! Your proposal is now being reviewed, we'll get back to you.
+          Thanks! Your contribution is now being reviewed, we'll get back to you.
 
           You can view it here once you are logged in to the portal: %{url}
-        unclear: I didn't quite understand that — do you mean a new proposal or a comment on an existing
+        unclear: I didn't quite understand that — do you mean a new contribution or a comment on an existing
           one?
         cancelled: OK, cancelled. Just message me again whenever you'd like.
-        resume: You've been away a while — would you like to continue your earlier proposal or start
+        resume: You've been away a while — would you like to continue your earlier contribution or start
           over?
         resume_recap: 'Picking up where you left off with “%{projekt}”.'
         resume_recap_idea: 'This is what you had written: “%{idea}”'
         ask_image: >-
-          Would you like a picture for your proposal? You can send me one, or I can create one from
+          Would you like a picture for your contribution? You can send me one, or I can create one from
           your text.
         image_upload_prompt: Send me the photo now — just attach it to your next message.
         image_received: ✅ Got the photo, thanks!
         image_failed: I couldn't use that file. Try another photo, or carry on without one.
         image_generating: Alright, I'm painting something — one moment.
-        image_generate_failed: That didn't work, so your proposal goes out without a picture.
+        image_generate_failed: That didn't work, so your contribution goes out without a picture.
       support:
-        prompt: '👍 Would you like to support this proposal: "%{title}"?'
+        prompt: '👍 Would you like to support this contribution: "%{title}"?'
         thanks: ✅ Thanks for your support! (%{count} supporters so far)
-        already: You've already supported this proposal.
-        gone: That proposal is unfortunately no longer available.
+        already: You've already supported this contribution.
+        gone: That contribution is unfortunately no longer available.
       comment:
-        prompt: Would you like to add anything to this proposal?
+        prompt: Would you like to add anything to this contribution?
         published: Thanks, your comment is now on the project page.
         pending: Thanks, your comment is being reviewed and will then appear on the project page.
         invalid: I couldn't save that comment. Try writing it a little differently.
-        closed: Comments are closed for this proposal.
+        closed: Comments are closed for this contribution.
       subscription:
         followed: ✅ You're now following "%{projekt}" and will be notified.
         unfollowed: >-
@@ -297,13 +349,6 @@ en:
         unknown: I couldn't find a project with that name. Write "projects" to see what's running.
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
-        help:
-          linked: >-
-            Here's what I can do: 📝 Submit a proposal · 👍 Support a proposal · 🔔 Manage notifications
-            · 🔗 Unlink account. Just tell me what you'd like.
-          unlinked: >-
-            Here's what I can do: 📝 Submit a proposal · 👍 Support a proposal · 🔔 Manage notifications
-            · 🔗 Link now. Just tell me what you'd like.
         out_of_scope: I can't answer that here — this is only about %{portal_name}. More at %{help_url}.
         opted_out: Understood, you won't receive any more messages from us.
     archive:

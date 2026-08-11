@@ -43,7 +43,7 @@ de:
       free_text_hint: >-
         Ich kann noch mehr — schreiben Sie mir einfach, was Sie brauchen.
       no_open_phase_notice: >-
-        Gerade ist keine Phase offen, in der Vorschläge eingereicht werden können. Sobald ein neues
+        Gerade ist keine Phase offen, in der Beiträge eingereicht werden können. Sobald ein neues
         Beteiligungsprojekt startet, melde ich mich bei Ihnen.
       contributions:
         intro: 'Das haben Sie bisher eingereicht:'
@@ -55,7 +55,7 @@ de:
           pending: wird geprüft
         more: Und %{count} weitere.
         empty: >-
-          Sie haben bisher nichts eingereicht. Tippen Sie auf „Vorschlag einreichen“, um anzufangen.
+          Sie haben bisher nichts eingereicht. Tippen Sie auf „Beitrag einreichen“, um anzufangen.
       commands:
         default: |-
           hilfe|Was dieser Chat kann
@@ -69,28 +69,31 @@ de:
         default_4: Keine Nachrichten mehr erhalten
       idea_missing: Bitte beschreiben Sie Ihre Idee als Text oder als Sprachnachricht.
       no_projekt: >-
-        Gerade nimmt kein Beteiligungsprojekt Vorschläge an. Schreiben Sie mir wieder, wenn ein neues
+        Gerade nimmt kein Beteiligungsprojekt Beiträge an. Schreiben Sie mir wieder, wenn ein neues
         startet, oder scannen Sie den QR-Code eines Projekts.
-      drafting: Danke! Ich formuliere daraus einen Vorschlag – das dauert einen Moment.
+      drafting: Danke! Ich formuliere daraus einen Beitrag – das dauert einen Moment.
       draft_failed: >-
         Das hat gerade nicht geklappt — vermutlich nur vorübergehend. Versuchen Sie es in ein paar
         Minuten noch einmal.
       transcription_failed: >-
         Ich konnte die Sprachnachricht nicht verstehen. Schreiben Sie Ihre Idee bitte als Text.
       publish_failed: >-
-        Ich konnte gerade nicht prüfen, ob Ihr Vorschlag die Vorgaben dieses Projekts erfüllt.
+        Ich konnte gerade nicht prüfen, ob Ihr Beitrag die Vorgaben dieses Projekts erfüllt.
         Versuchen Sie es in ein paar Minuten noch einmal — Ihr Entwurf bleibt erhalten.
       draft_invalid: |-
-        So kann ich den Vorschlag noch nicht einreichen: %{reason}
+        So kann ich den Beitrag noch nicht einreichen: %{reason}
 
         Schreiben Sie mir, was ich ändern soll.
       criteria_failed: |-
-        Ihr Vorschlag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
+        Ihr Beitrag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
 
         %{feedback}
 
         Schreiben Sie mir, was ich ändern soll.
-      too_fast: Einen Moment noch – ich arbeite gerade an Ihrem Vorschlag.
+      safety_check_failed: >-
+        Ich konnte gerade nicht prüfen, ob Ihr Text veröffentlicht werden darf. Versuchen Sie es
+        in ein paar Minuten noch einmal.
+      too_fast: Einen Moment noch – ich arbeite gerade an Ihrem Beitrag.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       verification_link: 'Hier können Sie Ihr Konto verifizieren: %{url}'
       buttons:
@@ -112,43 +115,95 @@ de:
         choose_notifications: Auswählen
         choose_category: Kategorie wählen
         choose_sentiment: Auswählen
-        submit_proposal: Vorschlag einreichen
+        submit_proposal: Beitrag einreichen
         my_contributions: Meine Beiträge
         view_projekt: Projekt ansehen
         idea_start: Idee einreichen
-        draft_publish: Ja, einreichen
+        draft_publish: Ja, passt
         draft_revise: Ändern
         resume: Fortsetzen
         restart: Neu beginnen
         support: 👍 Unterstützen
         help: Hilfe
+        main_menu: Hauptmenü
+        choose_help: Auswählen
         open_page: Seite öffnen
         image_upload: Foto hochladen
         image_generate: Bild erzeugen
-        image_skip: Ohne Bild
+        image_skip: Ohne Bild einreichen
+        submit_final: Beitrag einreichen
+      help_menu:
+        body: 'Ich helfe Ihnen gerne weiter. Wählen Sie aus, womit ich Ihnen helfen kann:'
+        rows:
+          submit:
+            title: Beitrag einreichen
+            description: Idee zu einem laufenden Projekt einreichen
+          support:
+            title: Beitrag unterstützen
+            description: Einen bestehenden Beitrag unterstützen
+          comment:
+            title: Kommentieren
+            description: Einen Kommentar zu einem Beitrag hinzufügen
+          projekts:
+            title: Projekte durchsuchen
+            description: Laufende Beteiligungsprojekte ansehen
+          contributions:
+            title: Meine Beiträge
+            description: Eigene eingereichte Beiträge ansehen
+          notifications:
+            title: Benachrichtigungen
+            description: Einstellungen für Nachrichten ändern
+          unlink:
+            title: Konto trennen
+            description: Verknüpfung mit Ihrem Konto aufheben
+          link:
+            title: Konto verknüpfen
+            description: Diese Nummer mit Ihrem Konto verbinden
+        prompts:
+          support: >-
+            Welchen Beitrag möchten Sie unterstützen? Schreiben Sie mir den Titel oder ein paar
+            Worte daraus.
+          comment: >-
+            Zu welchem Beitrag möchten Sie etwas schreiben? Schreiben Sie mir den Titel oder ein
+            paar Worte daraus.
+      refused_content:
+        intro: So kann ich das leider nicht einreichen.
+        retry_hint: >-
+          Schreiben Sie mir Ihr Anliegen gerne noch einmal in anderen Worten — sachliche Kritik
+          ist hier ausdrücklich erwünscht.
+        reasons:
+          hate: Der Text richtet sich herabwürdigend gegen Menschen oder Gruppen.
+          violence: Der Text enthält Drohungen oder ruft zu Gewalt auf.
+          harassment: Der Text greift eine einzelne Person persönlich an.
+          sexual: Der Text enthält sexuelle Inhalte.
+          illegal: Der Text ruft zu strafbaren Handlungen auf oder verbreitet solche Inhalte.
+          personal_data: >-
+            Der Text enthält persönliche Daten anderer Menschen, die nicht veröffentlicht werden
+            dürfen.
+          spam: Der Text enthält Werbung oder kein erkennbares Anliegen.
       refused:
-        generic: Für dieses Projekt kann ich derzeit keinen Vorschlag einreichen.
+        generic: Für dieses Projekt kann ich derzeit keinen Beitrag einreichen.
         phase_missing: Ich konnte das Projekt nicht finden. Scannen Sie bitte den QR-Code erneut.
-        phase_not_supported: In dieser Phase können per WhatsApp keine Vorschläge eingereicht werden.
+        phase_not_supported: In dieser Phase können per WhatsApp keine Beiträge eingereicht werden.
         budget_heading_missing: >-
-          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich Ihren Vorschlag zuordnen
+          Für dieses Budget ist noch kein Bereich eingerichtet, dem ich Ihren Beitrag zuordnen
           könnte.
-        creation_disabled: In dieser Phase können derzeit keine Vorschläge eingereicht werden.
+        creation_disabled: In dieser Phase können derzeit keine Beiträge eingereicht werden.
         ai_flow_disabled: Die Einreichung per WhatsApp ist für dieses Projekt nicht aktiviert.
         phase_not_active: Diese Beteiligungsphase ist derzeit nicht aktiv.
         phase_expired: Diese Beteiligungsphase ist bereits beendet.
         phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
         not_verified: Für die Einreichung muss Ihr Konto verifiziert sein.
         submissions_limit_exceeded: >-
-          Sie haben für dieses Projekt bereits so viele Vorschläge eingereicht, wie erlaubt sind.
-        no_open_phase: In diesem Projekt läuft derzeit keine Phase, in der Vorschläge eingereicht
+          Sie haben für dieses Projekt bereits so viele Beiträge eingereicht, wie erlaubt sind.
+        no_open_phase: In diesem Projekt läuft derzeit keine Phase, in der Beiträge eingereicht
           werden können.
         not_logged_in: >-
           Für dieses Projekt brauche ich ein verknüpftes Konto. Schreiben Sie mir „Konto
           verknüpfen“, dann schicke ich Ihnen den Anmeldelink.
         missing_user_data: >-
           Dieses Projekt ist auf bestimmte Personen beschränkt, und dafür fehlen mir Angaben zu
-          Ihnen. Reichen Sie den Vorschlag bitte über die Projektseite ein, wo Sie die Angaben
+          Ihnen. Reichen Sie den Beitrag bitte über die Projektseite ein, wo Sie die Angaben
           ergänzen können.
         only_citizens: >-
           An diesem Projekt können nur Personen aus der Kommune teilnehmen. Ihre hinterlegte
@@ -169,7 +224,7 @@ de:
       portal_fallback_name: das Beteiligungsportal
       onboarding:
         disclosure: >-
-          👋 Willkommen bei %{portal_name}! Ich bin ein KI-Bot und helfe Ihnen dabei, Vorschläge einzureichen,
+          👋 Willkommen bei %{portal_name}! Ich bin ein KI-Bot und helfe Ihnen dabei, Beiträge einzureichen,
           sie zu unterstützen und auf dem Laufenden zu bleiben.
         link_question: >-
           Möchten Sie Ihr Konto verknüpfen? Dann können Sie hier direkt mitmachen und persönliche
@@ -180,7 +235,7 @@ de:
         login_prompt: 'Zum Anmelden hier tippen:'
         login_prompt_with_url: 'Zum Anmelden diesen Link öffnen: %{url}'
         linked: >-
-          ✅ Verknüpfung erfolgreich! Ab jetzt können Sie hier direkt Vorschläge einreichen, unterstützen
+          ✅ Verknüpfung erfolgreich! Ab jetzt können Sie hier direkt Beiträge einreichen, unterstützen
           und Benachrichtigungen erhalten.
         discovery_offer: Möchten Sie sehen, bei welchen Projekten Sie gerade mitmachen können?
         declined: >-
@@ -197,7 +252,7 @@ de:
         number_taken: Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchten Sie wechseln?
         unlink_confirm: >-
           Möchten Sie die Verknüpfung wirklich aufheben? Sie erhalten dann keine Benachrichtigungen
-          mehr und können Vorschläge nicht mehr direkt unterstützen.
+          mehr und können Beiträge nicht mehr direkt unterstützen.
         unlinked: >-
           ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer und
           Chatverlauf bleiben für die übliche Speicherdauer erhalten. Sie können jederzeit erneut
@@ -237,10 +292,10 @@ de:
             label: Frist abgelaufen
           new_supports:
             short: Unterstützung
-            label: Neue Unterstützung für meinen Vorschlag
+            label: Neue Unterstützung für meinen Beitrag
           new_comments:
             short: Kommentare
-            label: Neue Kommentare zu meinem Vorschlag
+            label: Neue Kommentare zu meinem Beitrag
           moderation_decision:
             short: Moderation
             label: Entscheidung der Moderation
@@ -249,51 +304,50 @@ de:
             📣 Es gibt ein neues Beteiligungsprojekt bei %{portal_name}.
             %{url}
           deadline_approaching: |-
-            ⏳ Nur noch wenige Tage: Die Frist für Vorschläge läuft bald ab.
+            ⏳ Nur noch wenige Tage: Die Frist für Beiträge läuft bald ab.
             %{url}
           deadline_passed: |-
             🏁 Die Frist ist abgelaufen. Hier ist das Ergebnis:
             %{url}
           status_change: |-
-            🔔 Es gibt eine Neuigkeit zu Ihrem Vorschlag.
+            🔔 Es gibt eine Neuigkeit zu Ihrem Beitrag.
             %{url}
       proposal:
-        ask_idea: Schreiben Sie mir kurz, woran Sie denken — ich mache einen Vorschlag daraus.
+        ask_idea: Schreiben Sie mir kurz, woran Sie denken — ich mache einen Beitrag daraus.
         ask_category: Welche Kategorie passt am besten?
-        ask_sentiment: Wie steht Ihr Vorschlag zum Thema?
+        ask_sentiment: Wie steht Ihr Beitrag zum Thema?
         category_line: 'Kategorie: %{category}'
         sentiment_line: 'Stimmung: %{sentiment}'
         evaluation_line: |-
           Einschätzung: %{score} von %{max_score} Punkten
           %{feedback}
-        draft: |-
-          Gute Idee! So würde ich es formulieren:
+        card: |-
+          *%{title}*
 
-          _„%{title}“_
           %{description}
+        draft_intro: 'Gute Idee! So würde ich es formulieren:'
         draft_question: Passt das so?
-        draft_revised: |-
-          Alles klar:
-
-          _„%{title}“_
-          %{description}
+        draft_revised_intro: 'Alles klar:'
         draft_revised_question: Passt es jetzt?
+        preview_intro: 'So würde Ihr Beitrag aussehen:'
+        preview_question: Soll ich ihn so einreichen?
         ask_revision: Gerne, was soll ich ändern?
         published: '✅ Ist jetzt online: %{url}'
+        next_action: Möchten Sie noch etwas tun?
         published_pending_moderation: |-
-          Danke! Ihr Vorschlag wird jetzt geprüft, wir melden uns.
+          Danke! Ihr Beitrag wird jetzt geprüft, wir melden uns.
 
           Ansehen können Sie ihn hier, sobald Sie im Portal angemeldet sind: %{url}
         unclear: >-
-          Das habe ich nicht ganz verstanden — meinen Sie einen neuen Vorschlag oder einen Kommentar
+          Das habe ich nicht ganz verstanden — meinen Sie einen neuen Beitrag oder einen Kommentar
           zu einem bestehenden?
         cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
         resume: >-
-          Sie waren eine Weile weg — möchten Sie Ihren früheren Vorschlag fortsetzen oder neu beginnen?
+          Sie waren eine Weile weg — möchten Sie Ihren früheren Beitrag fortsetzen oder neu beginnen?
         resume_recap: 'Wir machen weiter bei „%{projekt}“.'
         resume_recap_idea: 'Das hatten Sie mir geschrieben: „%{idea}“'
         ask_image: >-
-          Möchten Sie ein Bild zu Ihrem Vorschlag? Sie können mir eines schicken, oder ich erstelle
+          Möchten Sie ein Bild zu Ihrem Beitrag? Sie können mir eines schicken, oder ich erstelle
           eines aus Ihrem Text.
         image_upload_prompt: Schicken Sie mir das Foto jetzt — hängen Sie es einfach an Ihre nächste
           Nachricht an.
@@ -302,18 +356,18 @@ de:
           Diese Datei konnte ich nicht verwenden. Versuchen Sie ein anderes Foto, oder machen Sie
           ohne Bild weiter.
         image_generating: Alles klar, ich male etwas — einen Moment.
-        image_generate_failed: Das hat nicht geklappt, Ihr Vorschlag geht deshalb ohne Bild hinaus.
+        image_generate_failed: Das hat nicht geklappt, Ihr Beitrag geht deshalb ohne Bild hinaus.
       support:
-        prompt: '👍 Möchten Sie diesen Vorschlag unterstützen: „%{title}“?'
+        prompt: '👍 Möchten Sie diesen Beitrag unterstützen: „%{title}“?'
         thanks: ✅ Danke für Ihre Unterstützung! (bisher %{count} Unterstützende)
-        already: Sie haben diesen Vorschlag bereits unterstützt.
-        gone: Diesen Vorschlag gibt es leider nicht mehr.
+        already: Sie haben diesen Beitrag bereits unterstützt.
+        gone: Diesen Beitrag gibt es leider nicht mehr.
       comment:
-        prompt: Möchten Sie zu diesem Vorschlag noch etwas ergänzen?
+        prompt: Möchten Sie zu diesem Beitrag noch etwas ergänzen?
         published: Danke, Ihr Kommentar steht jetzt auf der Projektseite.
         pending: Danke, Ihr Kommentar wird geprüft und erscheint dann auf der Projektseite.
         invalid: Diesen Kommentar konnte ich nicht speichern. Versuchen Sie es bitte etwas anders.
-        closed: Für diesen Vorschlag sind Kommentare geschlossen.
+        closed: Für diesen Beitrag sind Kommentare geschlossen.
       subscription:
         followed: ✅ Sie folgen jetzt „%{projekt}“ und werden benachrichtigt.
         unfollowed: >-
@@ -324,13 +378,6 @@ de:
           was läuft.
       compliance:
         disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
-        help:
-          linked: >-
-            Das kann ich: 📝 Vorschlag einreichen · 👍 Vorschlag unterstützen · 🔔 Benachrichtigungen
-            verwalten · 🔗 Konto trennen. Sagen Sie einfach, was Sie möchten.
-          unlinked: >-
-            Das kann ich: 📝 Vorschlag einreichen · 👍 Vorschlag unterstützen · 🔔 Benachrichtigungen
-            verwalten · 🔗 Jetzt verknüpfen. Sagen Sie einfach, was Sie möchten.
         out_of_scope: >-
           Das kann ich hier nicht beantworten — hier geht es nur um %{portal_name}. Mehr unter %{help_url}.
         opted_out: Verstanden, Sie erhalten keine Nachrichten mehr von uns.

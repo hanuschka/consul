@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require_relative 'shared/api_client_helper'
+require_relative 'shared/api_record_helper'
 require_relative 'shared/api_access_requirements'
 require_relative 'shared/api_response_examples'
 require_relative 'schemas/projekts_schemas'
@@ -188,5 +189,6 @@ RSpec.configure do |config|
   config.openapi_format = :yaml
 
   config.include ApiClientHelper, type: :request
+  config.include ApiRecordHelper, type: :request
   config.extend ApiResponseExamples, type: :request
 end

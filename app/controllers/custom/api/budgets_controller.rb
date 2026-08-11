@@ -26,9 +26,10 @@ class Api::BudgetsController < Api::BaseController
   def create
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
-    budget = @projekt_phase.build_budget(budget_params)
+    budget = @projekt_phase.build_budget(budget_attributes)
 
     if budget.save
+      update_heading(budget)
       process_image_with_base64(budget, params[:budget][:image_attributes])
       serialized_budget = BudgetSerializer.new(budget).serialize
 
@@ -47,7 +48,8 @@ class Api::BudgetsController < Api::BaseController
 
   def update
     check_admin_access!
-    if @budget.update(budget_params)
+    if @budget.update(budget_attributes)
+      update_heading(@budget)
       process_image_with_base64(@budget, params[:budget][:image_attributes])
       serialized_budget = BudgetSerializer.new(@budget).serialize
 
@@ -83,6 +85,26 @@ class Api::BudgetsController < Api::BaseController
       :max_preselected,
       heading_attributes: [:id, :price, :population, :max_ballot_lines]
     )
+  end
+
+  # `heading` is a has_one :through, so it can neither be built nor nested-
+  # assigned. A budget always carries a default group and heading, so the
+  # submitted attributes are applied to that record instead.
+  def budget_attributes
+    budget_params.except(:heading_attributes)
+  end
+
+  def heading_params
+    budget_params[:heading_attributes]
+  end
+
+  def update_heading(budget)
+    return if heading_params.blank?
+
+    heading = budget.reload.heading
+    return if heading.blank?
+
+    heading.update!(heading_params.except(:id))
   end
 
   def find_projekt_phase

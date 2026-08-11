@@ -35,6 +35,7 @@ module Whatsapp::FlowActions
     image_upload
     image_generate
     image_skip
+    submit_final
     resume
     restart
   ].freeze
@@ -43,9 +44,20 @@ module Whatsapp::FlowActions
 
   NOTIFICATION_ACTIONS = %i[notify_toggle notifications_done].freeze
 
+  # The rows of the help list and the button every dead end now ends in. They
+  # are their own group because none of them does anything on its own: each
+  # only puts the citizen where typing the same words would have.
+  MENU_ACTIONS = %i[
+    main_menu
+    support_prompt
+    comment_prompt
+    notifications_open
+    unlink_start
+  ].freeze
+
   ACTIONS = (
     ONBOARDING_ACTIONS + DISCOVERY_ACTIONS + PROPOSAL_ACTIONS +
-      ENGAGEMENT_ACTIONS + NOTIFICATION_ACTIONS
+      ENGAGEMENT_ACTIONS + NOTIFICATION_ACTIONS + MENU_ACTIONS
   ).freeze
 
   ID_PATTERN =
@@ -89,6 +101,18 @@ module Whatsapp::FlowActions
 
   def button(action:, label_key:, param: nil)
     { id: id_for(action: action, param: param), title: I18n.t(label_key) }
+  end
+
+  # The three things a citizen can start from nothing. Defined once because
+  # three separate messages now offer them — the greeting, the cancellation and
+  # the confirmation after publishing — and a set that drifts between them
+  # reads as three different menus.
+  def main_menu_buttons
+    [
+      button(action: :submit_proposal, label_key: "whatsapp.bot.buttons.submit_proposal"),
+      button(action: :discover, label_key: "whatsapp.bot.buttons.show_projekts"),
+      button(action: :my_contributions, label_key: "whatsapp.bot.buttons.my_contributions")
+    ]
   end
 
   # The pair every "shall we link your account" message offers, whether it is

@@ -12,10 +12,12 @@
     <% end %>
   </p>
 
-  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_hint",
-          label: t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_badge")) %>
-  </p>
+  <% if @fresh_reports_ids.any? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_hint",
+            label: t("custom.notification_service_mailers.overdue_deficiency_reports_overview.fresh_badge")) %>
+    </p>
+  <% end %>
 
   <ul style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <% @overdue_reports.each do |report| %>

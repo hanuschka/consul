@@ -14,11 +14,15 @@ module NotificationServices
     THRESHOLD_SQL = "CURRENT_DATE - (deficiency_report_statuses.reminder_delay || ' days')::interval".freeze
 
     def call
-      return if fresh_report_ids.blank?
-
+      # The personal nudge is a one-day event: it only fires for officers whose Anliegen cross their
+      # reminder delay today, so it goes quiet by itself on days without arrivals.
       officers_needing_personal_digest_ids.each do |officer_id|
         NotificationServiceMailer.overdue_deficiency_reports(officer_id, overdue_reports_ids_for_officer(officer_id)).deliver_later
       end
+
+      # The oversight overview is a standing backlog report instead: it goes out every day for as
+      # long as anything is still overdue, and stays silent only once the backlog is empty.
+      return if still_overdue_report_ids.blank?
 
       oversight_officer_ids.each do |officer_id|
         NotificationServiceMailer.overdue_deficiency_reports_overview(

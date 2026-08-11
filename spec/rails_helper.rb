@@ -8,7 +8,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 
 require "rspec/rails"
 require "spec_helper"
-require "custom_spec_helper"
 require "capybara/rails"
 require "capybara/rspec"
 require "selenium/webdriver"
@@ -42,11 +41,6 @@ RSpec.configure do |config|
   config.after do
     Warden.test_reset!
   end
-
-  config.include CustomExtension::SharedActions, type: :feature # custom line
-  config.include CustomExtension::SharedActions, type: :system # custom line
-  config.include CustomExtension::Helpers, type: :feature # custom line
-  config.include CustomExtension::Helpers, type: :system # custom line
 end
 
 FactoryBot.use_parent_strategy = false
@@ -70,3 +64,10 @@ Capybara.enable_aria_label = true
 Capybara.disable_animation = true
 
 OmniAuth.config.test_mode = true
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end

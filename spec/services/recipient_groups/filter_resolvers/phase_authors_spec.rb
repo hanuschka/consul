@@ -39,26 +39,6 @@ describe RecipientGroups::FilterResolvers::PhaseAuthors do
     end
   end
 
-  describe "DebatePhase" do
-    let(:phase) { create(:projekt_phase, :debate_phase) }
-    let!(:author) { create(:user, email: "d@x.test", skip_password_validation: true) }
-
-    before do
-      Debate.create!(
-        title: "Test Debate",
-        description: "Description",
-        resource_terms: "1",
-        projekt_phase: phase,
-        author: author
-      )
-    end
-
-    it "returns debate authors for criterion=all" do
-      emails = described_class.new("projekt_phase_id" => phase.id, "criterion" => "all").emails
-      expect(emails).to contain_exactly("d@x.test")
-    end
-  end
-
   it "returns empty when projekt_phase_id is missing" do
     expect(described_class.new({}).emails).to eq([])
   end

@@ -161,6 +161,7 @@ en:
           Feel free to write your concern again in different words — plain criticism is expressly
           welcome here.
         reasons:
+          generic: The text breaks the rules for published contributions.
           hate: The text demeans people or groups.
           violence: The text contains threats or calls for violence.
           harassment: The text personally attacks an individual.

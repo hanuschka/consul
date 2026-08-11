@@ -210,18 +210,24 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     ACCOUNT_ACTIONS = %i[
       idea_start category sentiment draft_publish draft_revise resume restart
       image_upload image_generate image_skip submit_final
-      support support_prompt comment_prompt
+      support support_prompt comment_prompt my_contributions
       notify_toggle notifications_done notifications_open
       unlink_confirm unlink_cancel unlink_start
     ].freeze
 
-    # Supporting a proposal, changing notification settings and unlinking all
-    # act on a Consul account, and a guest has nothing to stand in for it with.
-    # Everything else in ACCOUNT_ACTIONS is part of making a submission, which a
-    # guest phase does allow — derived rather than listed again so a new
-    # drafting pill cannot be added to one list and forgotten in the other.
+    # Supporting a proposal, reading your own submissions, changing
+    # notification settings and unlinking all act on a Consul account, and a
+    # guest has nothing to stand in for it with. Everything else in
+    # ACCOUNT_ACTIONS is part of making a submission, which a guest phase does
+    # allow — derived rather than listed again so a new drafting pill cannot be
+    # added to one list and forgotten in the other.
+    #
+    # my_contributions is here because the help list offers it to unlinked
+    # numbers too: without the check it answers "you have not submitted
+    # anything yet" to someone whose account is full of submissions, and never
+    # mentions that linking is the missing part.
     ACCOUNT_ONLY_ACTIONS = %i[
-      support support_prompt comment_prompt
+      support support_prompt comment_prompt my_contributions
       notify_toggle notifications_done notifications_open
       unlink_confirm unlink_cancel unlink_start
     ].freeze
@@ -240,7 +246,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :link_later
         Whatsapp::Flows::LinkDeclinedService.call(conversation:)
       when :discover
-        Whatsapp::Flows::DiscoveryService.call(conversation:)
+        dispatch_discovery
       when :discover_public
         Whatsapp::Flows::PublicDiscoveryService.call(conversation:)
       when :submit_proposal
@@ -380,12 +386,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Answered deterministically rather than left to the assistant so the
     # command menu's own word still works on a portal with AI switched off.
     def send_discovery
-      return Whatsapp::Flows::PublicDiscoveryService.call(conversation:).then { true } if
-        account.user.blank?
-
-      Whatsapp::Flows::DiscoveryService.call(conversation:)
+      dispatch_discovery
 
       true
+    end
+
+    # The same branch whether the citizen typed "projekte" or tapped a pill
+    # that offers it. The pill is on the help list, which is what an unlinked
+    # number is answered with, so the two cannot differ: the account listing
+    # dead-ends for a guest and the public one does not.
+    def dispatch_discovery
+      return Whatsapp::Flows::PublicDiscoveryService.call(conversation:) if account.user.blank?
+
+      Whatsapp::Flows::DiscoveryService.call(conversation:)
     end
 
     def send_notification_settings
@@ -658,12 +671,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # The same "ja" that publishes from the draft card publishes from the
-    # preview, because the two look alike and a citizen who typed it once will
-    # type it again. Anything else re-sends the preview rather than guessing.
+    # preview, and the same "nein" still means "change it" — the preview has no
+    # revise pill, only Submit and Cancel, so the typed word is the only way
+    # back into the loop and re-sending the identical card would leave
+    # abandoning the submission as the only way out.
     def handle_final_confirmation
       return publish if PUBLISH_KEYWORDS.include?(normalized_text)
+      return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
 
-      Whatsapp::Flows::ConfirmSubmissionService.call(conversation:)
+      confirm_submission
     end
 
     def ask_revision
@@ -765,7 +781,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # einreichen" says what it does and publishes on the tap: a preview of a
     # draft the citizen approved two messages ago, with nothing new on it,
     # would be a confirmation of nothing.
+    #
+    # A draft that is gone by the time the step is reached — a retention purge,
+    # an admin deleting the phase — restarts rather than being previewed. The
+    # preview reads the record's title and picture, so without this the step
+    # raises on every message and the conversation can never leave it.
     def confirm_submission
+      return restart_flow if conversation.draft_resource.blank?
       return if refuse_if_not_permitted
 
       Whatsapp::Flows::ConfirmSubmissionService.call(conversation:)

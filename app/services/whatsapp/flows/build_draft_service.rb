@@ -36,9 +36,9 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   def call
     return send_throttle_notice if throttled?
 
-    @conversation.merge_context!(
-      last_draft_at: Time.current.iso8601, last_idea_text: @idea_text
-    )
+    # Stored before the gate because the retry button reads it back, and after
+    # a failed check it is the only copy of what the citizen wrote.
+    @conversation.merge_context!(last_idea_text: @idea_text)
 
     # Screened before the "one moment" message rather than after it: a text
     # that is about to be refused should not first be promised a draft, and the
@@ -48,6 +48,13 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
     return send_safety_check_failed if !safety.success?
     return refuse_content if safety.reason.present?
+
+    # Only a draft that is actually about to be generated arms the throttle.
+    # Armed before the gate, a refusal answered by the rewrite its own copy
+    # invites — or a failed check answered by the retry button it offers — is
+    # met with "one moment, I am working on your contribution" instead, which
+    # is a dead end and is not true.
+    @conversation.merge_context!(last_draft_at: Time.current.iso8601)
 
     Whatsapp::Outbound.text(
       account: account,

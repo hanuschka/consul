@@ -172,6 +172,7 @@ de:
           Schreiben Sie mir Ihr Anliegen gerne noch einmal in anderen Worten — sachliche Kritik
           ist hier ausdrücklich erwünscht.
         reasons:
+          generic: Der Text verstößt gegen die Regeln für veröffentlichte Beiträge.
           hate: Der Text richtet sich herabwürdigend gegen Menschen oder Gruppen.
           violence: Der Text enthält Drohungen oder ruft zu Gewalt auf.
           harassment: Der Text greift eine einzelne Person persönlich an.

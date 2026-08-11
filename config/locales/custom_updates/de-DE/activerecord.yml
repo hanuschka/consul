@@ -100,6 +100,8 @@ de:
                 Zahlen und Unterstriche, keine Leerzeichen
               whatsapp_template_language_invalid: >-
                 muss ein Sprachcode sein, z. B. „de“ oder „de_DE“
+              whatsapp_address_form_invalid: >-
+                muss „sie“ oder „du“ sein
         deficiency_report:
           attributes:
             map_location:

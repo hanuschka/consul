@@ -79,6 +79,8 @@ en:
                 underscores only, no spaces
               whatsapp_template_language_invalid: >-
                 must be a language code, e.g. "de" or "de_DE"
+              whatsapp_address_form_invalid: >-
+                must be "sie" or "du"
         deficiency_report:
           attributes:
             map_location:

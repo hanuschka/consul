@@ -427,7 +427,15 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       }
     )
 
-    pdf = Grover.new(html, display_url: request.base_url).to_pdf
+    pdf =
+      begin
+        Grover.new(html, display_url: request.base_url).to_pdf
+      rescue Grover::JavaScript::Error => e
+        Sentry.capture_exception(e, extra: { projekt_id: @projekt.id, stage: "evaluation_pdf" }) if defined?(Sentry)
+
+        render json: { error: "renderer_unavailable" }, status: :service_unavailable
+        return
+      end
 
     send_data pdf,
       filename: "evaluation_#{@projekt.id}_#{Time.current.strftime('%Y%m%d')}.pdf",

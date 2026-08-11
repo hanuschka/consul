@@ -1,0 +1,7 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_category_subcategories_path(@category), narrow: true) %>
+
+<div class="kern-container my-5">
+  <%= render "form" %>
+</div>

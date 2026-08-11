@@ -6,6 +6,18 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_question_phase) { create_projekt_phase('ProjektPhase::QuestionPhase') }
+let(:existing_projekt_question) do
+  existing_question_phase.questions.create!(title: 'Existing Question')
+end
+let(:existing_livestream) do
+  create_projekt_phase('ProjektPhase::LivestreamPhase').projekt_livestreams.create!(
+    url: 'https://example.com/existing_livestream',
+    title: 'Existing Livestream',
+    video_platform: 'youtube'
+  )
+end
+
   path '/api/projekt_phases/{projekt_phase_id}/questions' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (QuestionPhase or LivestreamPhase)'
 
@@ -128,7 +140,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_question_phase.id } }
     end
   end
 
@@ -319,7 +331,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_question.id } }
     end
 
     delete 'Delete a projekt question' do
@@ -384,7 +396,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_question.id } }
     end
   end
 
@@ -459,7 +471,7 @@ RSpec.describe 'Projekt Questions API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:livestream_id) { 1 } }
-      forbidden_response { let(:livestream_id) { 1 } }
+      forbidden_response { let(:livestream_id) { existing_livestream.id } }
     end
   end
 end

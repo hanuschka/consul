@@ -393,7 +393,8 @@ paths:
                 required:
                 - data
         '422':
-          description: projekt argument with invalid image returns validation error
+          description: projekt argument with unsupported image content type returns
+            validation error
           content:
             application/json:
               schema:
@@ -586,8 +587,8 @@ paths:
         '404':
           description: projekt argument not found
         '422':
-          description: projekt argument update with invalid image returns validation
-            error
+          description: projekt argument update with unsupported image content type
+            returns validation error
           content:
             application/json:
               schema:
@@ -16820,16 +16821,6 @@ components:
                 type: string
                 description: YouTube or Vimeo URL
           description: External videos
-        created_at:
-          type: string
-          format: date_time
-          description: Created timestamp
-        updated_at:
-          type: string
-          format: date_time
-          description: Updated timestamp
       required:
       - id
       - title
-      - created_at
-      - updated_at

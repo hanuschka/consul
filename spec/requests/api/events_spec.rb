@@ -6,6 +6,13 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_event_phase) { create_projekt_phase('ProjektPhase::EventPhase') }
+let(:existing_projekt_event) do
+  existing_event_phase.projekt_events.create!(
+    title: 'Existing Event', datetime: '2025-02-01T18:00:00Z'
+  )
+end
+
   path '/api/projekt_phases/{projekt_phase_id}/events' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (EventPhase)'
 
@@ -187,7 +194,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_event_phase.id } }
     end
   end
 
@@ -363,7 +370,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_event.id } }
     end
 
     delete 'Delete a projekt event' do
@@ -412,7 +419,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_event.id } }
     end
   end
 

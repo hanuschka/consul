@@ -36,6 +36,12 @@ class ApplicationPolicy
     false
   end
 
+  # Leaving an internal note. Defaults to the right to change the resource, so a policy that does
+  # not care about the distinction behaves exactly as before.
+  def add_memo?
+    update?
+  end
+
   # Base scope class for all Pundit policies.
   class Scope
     def initialize(user, scope)

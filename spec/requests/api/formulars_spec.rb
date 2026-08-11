@@ -6,6 +6,9 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_formular_phase) { create_projekt_phase('ProjektPhase::FormularPhase') }
+let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_phase.id) }
+
   FORMULAR_RESPONSE_SCHEMA = {
     type: :object,
     properties: {
@@ -154,7 +157,7 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_formular_phase.id } }
     end
   end
 
@@ -232,7 +235,7 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_formular.id } }
     end
 
     delete 'Delete a formular' do
@@ -283,7 +286,7 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_formular.id } }
     end
   end
 end

@@ -9,6 +9,15 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   # conversation rather than a cap on rounds.
   DRAFT_INTERVAL = 15.seconds
 
+  # The screening call is throttled separately and far more loosely. It has to
+  # be throttled at all — a refused text is invited to be rewritten and a
+  # failed check offers a retry button, so without a floor the refusal loop is
+  # an unbounded completion-per-message hole that never reaches a draft. But it
+  # cannot share the drafting floor: fifteen seconds would answer the rewrite
+  # its own copy just asked for with "one moment, I am working on your
+  # contribution", which is both a dead end and untrue.
+  SCREENING_INTERVAL = 3.seconds
+
   # Two entry points rather than one with a flag: the only thing that differs is
   # which copy the finished card carries, and a caller reading
   # `BuildDraftService.call(..., true)` could not tell you which.
@@ -37,8 +46,12 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     return send_throttle_notice if throttled?
 
     # Stored before the gate because the retry button reads it back, and after
-    # a failed check it is the only copy of what the citizen wrote.
-    @conversation.merge_context!(last_idea_text: @idea_text)
+    # a failed check it is the only copy of what the citizen wrote. The
+    # screening clock is armed in the same write: the call it guards is the
+    # next thing that happens.
+    @conversation.merge_context!(
+      last_idea_text: @idea_text, last_screened_at: Time.current.iso8601
+    )
 
     # Screened before the "one moment" message rather than after it: a text
     # that is about to be refused should not first be promised a draft, and the
@@ -48,13 +61,6 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
     return send_safety_check_failed if !safety.success?
     return refuse_content if safety.reason.present?
-
-    # Only a draft that is actually about to be generated arms the throttle.
-    # Armed before the gate, a refusal answered by the rewrite its own copy
-    # invites — or a failed check answered by the retry button it offers — is
-    # met with "one moment, I am working on your contribution" instead, which
-    # is a dead end and is not true.
-    @conversation.merge_context!(last_draft_at: Time.current.iso8601)
 
     Whatsapp::Outbound.text(
       account: account,
@@ -66,7 +72,10 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # millisecond before the wait rather than on the wait.
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
-    @conversation.merge_context!(draft_data: generate)
+    # The drafting clock is armed in the same write as the result rather than
+    # in one of its own: the advisory lock means no other message can read it
+    # while `generate` runs, so a second write beforehand buys nothing.
+    @conversation.merge_context!(draft_data: generate, last_draft_at: Time.current.iso8601)
 
     complete
   rescue StandardError => e
@@ -123,12 +132,20 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       )
     end
 
+    # Two clocks, because the two calls this service makes cost differently and
+    # are reached differently: a draft is the expensive one and is followed by
+    # a card to read, a screening is the cheap one and may be followed straight
+    # away by the rewrite its refusal asked for.
     def throttled?
-      last_draft_at = @conversation.context["last_draft_at"]
+      within?("last_draft_at", DRAFT_INTERVAL) || within?("last_screened_at", SCREENING_INTERVAL)
+    end
 
-      return false if last_draft_at.blank?
+    def within?(context_key, interval)
+      stamped_at = @conversation.context[context_key]
 
-      Time.zone.parse(last_draft_at) > DRAFT_INTERVAL.ago
+      return false if stamped_at.blank?
+
+      Time.zone.parse(stamped_at) > interval.ago
     end
 
     def send_throttle_notice

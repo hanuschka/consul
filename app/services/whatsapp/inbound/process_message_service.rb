@@ -207,20 +207,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # are refused here rather than in each service, so reading the portal never
     # dead-ends into "connect an account" and participating never silently
     # skips the check.
-    ACCOUNT_ACTIONS = %i[
+    # Making a submission, which a guest phase does allow: these need an
+    # account only when the phase they point at does.
+    SUBMISSION_ACTIONS = %i[
       idea_start category sentiment draft_publish draft_revise resume restart
       image_upload image_generate image_skip submit_final
-      support support_prompt comment_prompt my_contributions
-      notify_toggle notifications_done notifications_open
-      unlink_confirm unlink_cancel unlink_start
     ].freeze
 
     # Supporting a proposal, reading your own submissions, changing
     # notification settings and unlinking all act on a Consul account, and a
-    # guest has nothing to stand in for it with. Everything else in
-    # ACCOUNT_ACTIONS is part of making a submission, which a guest phase does
-    # allow — derived rather than listed again so a new drafting pill cannot be
-    # added to one list and forgotten in the other.
+    # guest has nothing to stand in for it with.
     #
     # my_contributions is here because the help list offers it to unlinked
     # numbers too: without the check it answers "you have not submitted
@@ -232,7 +228,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       unlink_confirm unlink_cancel unlink_start
     ].freeze
 
-    GUEST_ELIGIBLE_ACTIONS = (ACCOUNT_ACTIONS - ACCOUNT_ONLY_ACTIONS).freeze
+    # Derived from the two groups rather than listed a third time. The union is
+    # what account_required? gates on, so an action named in only one of the
+    # source lists is still gated; written out by hand, an account-only pill
+    # left out of the union would skip the check entirely and reach the flow
+    # with no user behind it.
+    ACCOUNT_ACTIONS = (SUBMISSION_ACTIONS + ACCOUNT_ONLY_ACTIONS).freeze
+
+    GUEST_ELIGIBLE_ACTIONS = SUBMISSION_ACTIONS
 
     def dispatch_flow_action(action, param)
       return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if
@@ -256,7 +259,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :my_contributions
         Whatsapp::Flows::ContributionsService.call(conversation:)
       when :main_menu
-        send_main_menu
+        Whatsapp::Flows::MainMenuService.greeting(conversation:)
       when :support_prompt
         send_menu_prompt("whatsapp.bot.help_menu.prompts.support")
       when :comment_prompt
@@ -363,15 +366,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::HelpService.call(conversation:)
 
       true
-    end
-
-    # An unlinked guest has no contributions and no notification settings, so
-    # the three-button menu would offer them two dead ends. The help list is
-    # already the answer they get when nothing is in progress.
-    def send_main_menu
-      return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
-
-      Whatsapp::Flows::MainMenuService.greeting(conversation:)
     end
 
     # A help row that names something the assistant resolves rather than a flow
@@ -619,13 +613,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       end
     end
 
-    # Nothing in progress and nothing the assistant could route. Only an
-    # unlinked guest submitter reaches here without an account, and the greeting
-    # offers contributions and notification settings they have none of — so the
-    # help list stays their answer.
+    # Nothing in progress and nothing the assistant could route. An unlinked
+    # guest submitter reaches here too, and the menu answers them with the help
+    # list rather than three buttons they mostly cannot use.
     def handle_idle_message
-      return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
-
       Whatsapp::Flows::MainMenuService.greeting(conversation:)
     end
 

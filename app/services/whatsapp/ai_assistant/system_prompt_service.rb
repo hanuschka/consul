@@ -154,6 +154,6 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # declares; only the choice of which one applies differs here, because a
     # chat reply follows the citizen's locale rather than the site's.
     def output_language
-      ::Ai::OutputLanguage::LANGUAGE_NAMES.fetch(I18n.locale.to_s, ::Ai::OutputLanguage::FALLBACK)
+      ::Ai::OutputLanguage.chat_name_for(I18n.locale)
     end
 end

@@ -39,14 +39,9 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
 
     # Sent after the flow is completed, so the menu is offered from a
     # conversation with nothing open in it: all three of its buttons start
-    # something new, and one of them starts another submission.
-    #
-    # A guest submitter is left with the confirmation alone. Two of the three
-    # act on a Consul account they do not have, and answering "you're online"
-    # with a login link reads as a condition attached after the fact.
+    # something new, and one of them starts another submission. A guest
+    # submitter is left with the confirmation alone, which the menu decides.
     def send_next_actions
-      return if @conversation.user.blank?
-
       Whatsapp::Flows::MainMenuService.after_publishing(conversation: @conversation)
     end
 

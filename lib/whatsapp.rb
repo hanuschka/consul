@@ -171,16 +171,12 @@ module Whatsapp
     configured
   end
 
-  def self.informal_address?
-    address_form == "du"
-  end
-
   # The sentence every prompt that writes German for a citizen carries. Written
   # once because two of them do — the assistant's own replies and the reworded
   # routine lines — and a portal answering formally in one and informally in
   # the other is the failure this setting exists to prevent.
   def self.address_form_instruction
-    return 'informally, with "du" (or the equivalent in other languages)' if informal_address?
+    return 'informally, with "du" (or the equivalent in other languages)' if address_form == "du"
 
     'formally, with "Sie" (or the equivalent in other languages)'
   end

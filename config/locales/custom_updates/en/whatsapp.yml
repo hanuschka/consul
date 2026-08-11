@@ -125,7 +125,6 @@ en:
         body: 'Happy to help. Choose what I can help you with:'
         rows:
           submit:
-            title: Submit contribution
             description: Contribute an idea to a running project
           support:
             title: Support one
@@ -137,7 +136,6 @@ en:
             title: Browse projects
             description: See the running participation projects
           contributions:
-            title: My contributions
             description: See what you have submitted
           notifications:
             title: Notifications

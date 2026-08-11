@@ -126,14 +126,16 @@ module Whatsapp::Outbound
   # One recovery pill to put beside flow buttons of a different kind. The
   # handler is the same global one either way, which is the point: a "Cancel"
   # sitting next to two catalog pills must not need its own step to be read.
+  #
+  # Unlike `recovery`, this sets no pending_question: the callers that use it
+  # are already on a step of their own, so "abbrechen" typed instead of tapped
+  # is read by the step rather than by the flag.
   def recovery_button(action)
     { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
   end
 
   def recovery_buttons(actions)
-    actions.first(MAX_RECOVERY_BUTTONS).map do |action|
-      { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
-    end
+    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action) }
   end
 
   # WhatsApp dismisses the bubble after this long, and there is no way to extend

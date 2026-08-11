@@ -136,7 +136,6 @@ de:
         body: 'Ich helfe Ihnen gerne weiter. Wählen Sie aus, womit ich Ihnen helfen kann:'
         rows:
           submit:
-            title: Beitrag einreichen
             description: Idee zu einem laufenden Projekt einreichen
           support:
             title: Beitrag unterstützen
@@ -148,7 +147,6 @@ de:
             title: Projekte durchsuchen
             description: Laufende Beteiligungsprojekte ansehen
           contributions:
-            title: Meine Beiträge
             description: Eigene eingereichte Beiträge ansehen
           notifications:
             title: Benachrichtigungen

@@ -10,11 +10,14 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
   def call
     @conversation.update!(step: "awaiting_final_confirmation")
 
+    # A nil header leaves the same message without the picture rather than
+    # risking the send: WhatsApp fetches it from us while the send is in flight
+    # and refuses the whole message over one it cannot render.
     Whatsapp::Outbound.buttons(
       account: account,
       body: body,
       buttons: buttons,
-      header_image_url: header_image_url
+      header_image_url: Whatsapp::DraftCard.image_url(draft_resource)
     )
   end
 
@@ -33,13 +36,6 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
           key: "whatsapp.bot.proposal.preview_question"
         )
       ].join("\n\n")
-    end
-
-    # Nil leaves the same message without the header rather than risking the
-    # send: WhatsApp fetches the picture from us while the send is in flight and
-    # refuses the whole message over one it cannot render.
-    def header_image_url
-      Whatsapp::DraftCard.image_url(draft_resource)
     end
 
     def buttons

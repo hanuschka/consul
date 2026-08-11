@@ -1,0 +1,13 @@
+<% url = @intake_channel.persisted? ? adm_deficiency_reports_intake_channel_path(@intake_channel) : adm_deficiency_reports_intake_channels_path %>
+<%= form_with model: @intake_channel, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".default_label"), hint: t(".default_hint")) do %>
+    <%= f.check_box :default, label: false %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

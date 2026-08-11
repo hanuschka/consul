@@ -4,15 +4,8 @@ de:
       show:
         title: Funktionen
         intro_text: "Globale Funktionen, die noch keinen eigenen Bereich in der neuen Verwaltungsoberfläche haben. Änderungen wirken sich sofort auf die gesamte Plattform aus."
+        oauth_logins_title: "Externe Anmeldedienste"
+        oauth_logins_intro: "Jeder Dienst ergänzt die Anmelde- und Registrierungsseite um eine Schaltfläche. Ein Dienst funktioniert erst, wenn seine Zugangsdaten in der Serverkonfiguration hinterlegt sind."
         kobil_title: "KOBIL-Authentifizierung"
-        kobil_credential_configured: "konfiguriert"
-        kobil_credential_missing: "fehlt"
-        kobil_credential_missing_optional: "nicht gesetzt (optional)"
         kobil_credentials_incomplete_title: "KOBIL-Zugangsdaten unvollständig"
         kobil_credentials_incomplete_body: "Solange nicht alle erforderlichen Werte in config/secrets.yml hinterlegt sind, schlägt die Anmeldung über KOBIL fehl – auch wenn die Funktion unten aktiviert ist."
-        kobil_credentials:
-          issuer: "Issuer (Realm-URL)"
-          client_id: "Client ID"
-          client_secret: "Client Secret"
-          redirect_uri: "Redirect URI"
-          post_logout_redirect_uri: "Post-Logout Redirect URI"

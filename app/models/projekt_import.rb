@@ -30,7 +30,7 @@ class ProjektImport < ApplicationRecord
   ANALYZING_STATUSES = %w[pending extracting processing].freeze
 
   FAILURE_STAGES = %w[
-    extract ai_processing finalize resolve_content_blocks
+    extract ai_processing resolve_content_blocks
     create_projekt image_generation unknown
   ].freeze
 

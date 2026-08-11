@@ -1,0 +1,21 @@
+<%
+  watching = deficiency_report.watched_by?(current_user)
+  action_label = t("adm.deficiency_reports.deficiency_reports.watch.#{watching ? "stop" : "start"}")
+  icon_style = if watching
+                 "font-size: 20px; font-variation-settings: 'FILL' 1; color: var(--kern-color-action-default);"
+               else
+                 "font-size: 20px; color: var(--kern-grey-600);"
+               end
+%>
+<span id="<%= dom_id(deficiency_report, :watch_toggle) %>" class="d-flex align-items-center">
+  <%= form_with url: toggle_watch_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        method: :patch, class: "d-flex" do %>
+    <button type="submit" class="px-2"
+            style="background: none; border: none; line-height: 0; cursor: pointer;"
+            title="<%= action_label %>"
+            aria-label="<%= action_label %>"
+            aria-pressed="<%= watching %>">
+      <span class="material-symbols-outlined" aria-hidden="true" style="<%= icon_style %>">notifications</span>
+    </button>
+  <% end %>
+</span>

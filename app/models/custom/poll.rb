@@ -92,7 +92,7 @@ class Poll < ApplicationRecord
   def stats_age_groups
     return [] if projekt_phase.blank?
 
-    projekt_phase.age_ranges_for_stats.map { |ar| [ar.min_age, ar.max_age] }
+    projekt_phase.age_ranges_for_stats.map { |ar| [ar.effective_min_age, ar.effective_max_age] }
   end
 
   def in_wizard_mode?

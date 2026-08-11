@@ -13,6 +13,13 @@ class Sidebar::UsersListComponent < ApplicationComponent
   end
 
   def visible_users
-    @visible_users ||= @users.includes(PRELOAD_ASSOCIATIONS).last(VISIBLE_USERS_LIMIT)
+    @visible_users ||=
+      if @users.respond_to?(:includes)
+        @users.includes(PRELOAD_ASSOCIATIONS).last(VISIBLE_USERS_LIMIT)
+      else
+        @users.last(VISIBLE_USERS_LIMIT).tap do |users|
+          ActiveRecord::Associations::Preloader.new.preload(users, PRELOAD_ASSOCIATIONS)
+        end
+      end
   end
 end

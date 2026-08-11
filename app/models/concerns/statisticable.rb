@@ -265,7 +265,7 @@ module Statisticable
     end
 
     def range_description(start, finish)
-      if finish > 200
+      if finish >= AgeRange::UNBOUNDED_MAX_AGE
         I18n.t("stats.age_more_than", start: start)
       else
         I18n.t("stats.age_range", start: start, finish: finish)

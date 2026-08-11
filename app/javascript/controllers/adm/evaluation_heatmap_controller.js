@@ -90,14 +90,20 @@ export default class extends Controller {
     if (this.map) return
 
     const L = window.L
+    const zoomLimits = window.App.MapZoom
     const center = this.centerValue.length === 2 ? this.centerValue : DEFAULT_CENTER
     const zoom = this.zoomValue || DEFAULT_ZOOM
 
-    this.map = L.map(this.element, { scrollWheelZoom: false, zoomControl: true }).setView(center, zoom)
+    this.map = L.map(this.element, {
+      scrollWheelZoom: false,
+      zoomControl: true,
+      maxZoom: zoomLimits.MAX
+    }).setView(center, zoom)
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>",
-      maxZoom: 18
+      maxZoom: zoomLimits.MAX,
+      maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
     }).addTo(this.map)
 
     L.heatLayer(this.coordinatesValue, HEAT_OPTIONS).addTo(this.map)

@@ -25,10 +25,13 @@
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), hint: t(".default_responsible_hint")) do %>
+    <% assignable_officers = deficiency_report_assignable_officers(@category.default_responsible) %>
     <% grouped_options = {
-      t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] },
-      t(".officers") => DeficiencyReport::Officer.all.map { |o| [o.name, "Officer:#{o.id}"] }
+      t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] }
     } %>
+    <% if assignable_officers.any? %>
+      <% grouped_options[t(".officers")] = assignable_officers.map { |o| [o.name, "Officer:#{o.id}"] } %>
+    <% end %>
     <% selected = if @category.default_responsible.is_a?(DeficiencyReport::OfficerGroup)
                     "OfficerGroup:#{@category.default_responsible.id}"
                   elsif @category.default_responsible.is_a?(DeficiencyReport::Officer)
@@ -40,6 +43,10 @@
         include_blank: t(".no_responsible"),
         class: "kern-form-input__input" %>
     </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t(".ai_fallback_label"), hint: t(".ai_fallback_hint")) do %>
+    <%= f.check_box :ai_fallback, label: false %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t(".warning_text_label"), hint: t(".warning_text_hint"), stacked: true) do %>

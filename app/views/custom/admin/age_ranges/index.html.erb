@@ -21,7 +21,7 @@
           <% @age_ranges.each do |age_range| %>
             <tr id="<%= dom_id(age_range) %>" data-answer-id="<%= age_range.id %>">
               <td><%= age_range.name %></td>
-              <td><%= "#{age_range.min_age} - #{age_range.max_age}" %></td>
+              <td><%= age_range.range_label %></td>
               <td><%= render Admin::TableActionsComponent.new(age_range) %></td>
             </tr>
           <% end %>

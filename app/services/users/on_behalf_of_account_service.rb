@@ -2,9 +2,11 @@ class Users::OnBehalfOfAccountService < ApplicationService
   # Resolves the email a staff member entered on an internal form into the User the resource
   # should be attributed to. An address without an account gets one, confirmed straight away —
   # the address was supplied by staff acting for the person, so there is no opt-in to collect, and
-  # an unconfirmed account would leave them unable to log in. They are told about it by mail
-  # instead. An address that already has an account is only looked up, so nobody receives an
-  # unexpected mail about an account they already had.
+  # an unconfirmed account would leave them unable to log in. They are told about it by the mail
+  # OnBehalfOfSubmittable sends once the resource has committed, which is also why nothing is sent
+  # from here: the mail links to the contribution, and it has no URL until it has an id. An address
+  # that already has an account is only looked up, so nobody receives an unexpected mail about an
+  # account they already had.
   MAX_USERNAME_SUFFIX = 999
 
   Result = Struct.new(:user, :created, :error, keyword_init: true) do
@@ -54,32 +56,21 @@ class Users::OnBehalfOfAccountService < ApplicationService
         terms_data_storage: "1",
         terms_data_protection: "1",
         terms_general: "1",
+        # Not a column: it relaxes the registration validations here, and it is the signal
+        # OnBehalfOfSubmittable reads off this very object to decide whether to send the mail.
         created_on_behalf_of: true
       )
       user.skip_confirmation!
 
       return Result.new(error: user.errors.full_messages.to_sentence) unless user.save
 
-      OnBehalfOfAccountMailer.account_created(user, reset_password_token(user)).deliver_later
-
       Result.new(user: user, created: true)
     end
 
     # The account holder never sees this password. They set their own through the link in the mail
-    # above, which carries the token below so they land on the password form directly.
+    # OnBehalfOfSubmittable sends once the resource has committed.
     def random_password
       "#{SecureRandom.alphanumeric(20)}aA1!"
-    end
-
-    # The same token Devise mints for a password reset, so the mail can link straight into the
-    # password form instead of asking for the address a second time. Only the raw half works as a
-    # link parameter and it cannot be read back off the record, so it is returned to the caller.
-    def reset_password_token(user)
-      raw, encrypted = Devise.token_generator.generate(User, :reset_password_token)
-
-      user.update_columns(reset_password_token: encrypted, reset_password_sent_at: Time.now.utc)
-
-      raw
     end
 
     def available_username

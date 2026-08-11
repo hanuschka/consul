@@ -6,7 +6,8 @@ class Admin::AiFeaturesService < ApplicationService
       ai_model: Ai::Settings.current_llm_model,
       ai_provider: Ai::Settings.current_llm_provider,
       custom_endpoint: custom_endpoint,
-      projekt_import_tools: projekt_import_tools
+      projekt_import_tools: projekt_import_tools,
+      headless_browser_libraries: headless_browser_libraries
     }
   end
 
@@ -40,6 +41,29 @@ class Admin::AiFeaturesService < ApplicationService
       all_installed: packages.values.all? { |status| status[:installed] },
       packages: packages,
       missing_packages: packages.reject { |_package, status| status[:installed] }.keys
+    }
+  end
+
+  def headless_browser_libraries
+    if !HeadlessBrowser::RequiredLibraries.supported?
+      return {
+        supported: false,
+        all_installed: nil,
+        packages: {},
+        missing_packages: [],
+        install_command: HeadlessBrowser::RequiredLibraries::INSTALL_COMMAND
+      }
+    end
+
+    packages = HeadlessBrowser::RequiredLibraries.packages_status
+    missing_packages = packages.reject { |_package, status| status[:installed] }.keys
+
+    {
+      supported: true,
+      all_installed: missing_packages.empty?,
+      packages: packages,
+      missing_packages: missing_packages,
+      install_command: HeadlessBrowser::RequiredLibraries::INSTALL_COMMAND
     }
   end
 

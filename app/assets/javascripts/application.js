@@ -134,6 +134,7 @@
 //= require select2/dist/js/select2.full
 //= require siriwave/dist/siriwave.umd.min
 //= require cropperjs/dist/cropper
+//= require deficiency_report_subcategories
 //= require custom
 //= require_tree ./custom
 //= require lib/files/filter_serializer
@@ -195,6 +196,7 @@ var initialize_modules = function() {
   App.BudgetEditAssociations.initialize();
   App.BudgetHideMoney.initialize();
   App.Datepicker.initialize();
+  App.DeficiencyReportSubcategories.initialize();
   App.SDGRelatedListSelector.initialize();
   App.SDGManagementRelationSearch.initialize();
   App.Geozones.initialize();

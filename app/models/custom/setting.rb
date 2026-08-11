@@ -15,6 +15,7 @@ class Setting < ApplicationRecord
 
   validate :validate_whatsapp_template_name
   validate :validate_whatsapp_template_language
+  validate :validate_whatsapp_address_form
 
   WHATSAPP_TEMPLATE_NAME_KEYS = %w[
     whatsapp.broadcast_template
@@ -38,6 +39,17 @@ class Setting < ApplicationRecord
     return if value.match?(WHATSAPP_TEMPLATE_LANGUAGE_FORMAT)
 
     errors.add(:value, :whatsapp_template_language_invalid)
+  end
+
+  # The field is free text in /adm, and anything the bot does not recognise
+  # falls back to the formal form — silently, which is the same thing as the
+  # setting not working. Refused here instead.
+  def validate_whatsapp_address_form
+    return if key != "whatsapp.address_form"
+    return if value.blank?
+    return if ::Whatsapp::ADDRESS_FORMS.include?(value.to_s.downcase)
+
+    errors.add(:value, :whatsapp_address_form_invalid)
   end
 
   def ai_gated?

@@ -35,6 +35,6 @@ class Whatsapp::Flows::RefuseContentService < Whatsapp::Flows::BaseService
     def reason_key
       return @reason if ::ProposalAiDraft::EvaluateContentSafetyService::REASONS.include?(@reason)
 
-      ::ProposalAiDraft::EvaluateContentSafetyService::REASONS.first
+      ::ProposalAiDraft::EvaluateContentSafetyService::GENERIC_REASON
     end
 end

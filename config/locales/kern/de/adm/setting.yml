@@ -20,6 +20,8 @@ de:
     whatsapp:
       default_locale: "Bot-Sprache für unbekannte Nummern"
       default_locale_description: "Sprache, die der Bot verwendet, solange jemand sein Konto noch nicht verbunden hat – die Einladung und jede Antwort an eine unverbundene Nummer. Sobald eine Nummer verbunden ist, wird die Sprache des jeweiligen Kontos verwendet. Trage einen Sprachcode wie „de“ oder „en“ ein. Leer lassen, um die Standardsprache der Plattform zu verwenden."
+      address_form: "Anrede des Bots"
+      address_form_description: "Ob der Bot die Bürger:innen mit „Sie“ oder mit „du“ anspricht. Trage „sie“ oder „du“ ein; leer lassen für „Sie“. Gilt für die frei formulierten Antworten des Bots und für die Standardsätze rund um das Einreichen. Feste Beschriftungen von Schaltflächen und Auswahllisten bleiben unverändert."
       welcome_message_enabled: "Erstbesucher:innen begrüßen"
       welcome_message_enabled_description: "Öffnet jemand den Chat mit eurer Nummer zum ersten Mal, meldet WhatsApp das an den Bot und er antwortet sofort mit dem Begrüßungstext unten und einer Liste der laufenden Projekte. Ohne diese Option bleibt der Chat leer, bis die Person selbst etwas schreibt. Wirkt erst nach „An WhatsApp übertragen“ weiter unten."
       welcome_greeting: "Begrüßungstext"

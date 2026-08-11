@@ -48,6 +48,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         1. Call hand_to_flow whenever the message is part of an ongoing submission rather than a
            question to you. This is always the right call when the conversation step is
            awaiting_idea, awaiting_category, awaiting_sentiment, awaiting_draft_decision,
+           awaiting_image_choice, awaiting_image_upload, awaiting_final_confirmation,
            awaiting_revision, awaiting_comment, awaiting_resume_decision or
            awaiting_phase_choice, unless the citizen
            is clearly asking you something instead of answering. Never paraphrase, summarise or
@@ -94,10 +95,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
     def style_section
       <<~TEXT.strip
-        Write in #{output_language}. Keep replies to a few short sentences — this is a chat, not a
-        web page. WhatsApp understands *bold* and _italic_ but no headings, tables or links in
-        brackets; write a URL out in full. Use reply_with_buttons instead of plain text whenever
-        one of its fixed actions is the obvious next thing for the citizen to do.
+        Write in #{output_language}, addressing the citizen #{address_form_instruction}. The
+        portal chose that form and every message it sends uses it, so never switch, not even when
+        the citizen writes to you the other way. Keep replies to a few short sentences — this is a
+        chat, not a web page. WhatsApp understands *bold* and _italic_ but no headings, tables or
+        links in brackets; write a URL out in full. Use reply_with_buttons instead of plain text
+        whenever one of its fixed actions is the obvious next thing for the citizen to do.
 
         Whenever you point the citizen at one specific projekt, call send_projekt_card for it
         rather than writing its address into your reply: the card carries the title, the picture
@@ -107,6 +110,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         a card rather than guessing one, and never write an address from memory. Do not append a
         link to reply_with_buttons, which carries its own.
       TEXT
+    end
+
+    def address_form_instruction
+      ::Whatsapp.address_form_instruction
     end
 
     def account_linked?

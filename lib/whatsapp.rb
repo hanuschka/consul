@@ -19,6 +19,24 @@ module Whatsapp
   # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
   MAX_BUTTONS = 3
 
+  # WhatsApp fetches a header or card picture itself, from us, while the send is
+  # in flight, and rejects the whole message over anything it cannot render. Any
+  # caller that puts one on a message answers to these two numbers, so they are
+  # declared once here rather than per card.
+  HEADER_IMAGE_CONTENT_TYPES = ["image/jpeg", "image/png"].freeze
+  HEADER_IMAGE_MAX_BYTES = 5.megabytes
+
+  # Nil rather than a placeholder when the picture is missing or unusable:
+  # every caller has a shape it falls back to, and a broken image is worse than
+  # none.
+  def self.header_image_url(attachment)
+    return if attachment.blank? || !attachment.attached?
+    return if !HEADER_IMAGE_CONTENT_TYPES.include?(attachment.blob.content_type)
+    return if attachment.blob.byte_size > HEADER_IMAGE_MAX_BYTES
+
+    Rails.application.routes.url_helpers.rails_blob_url(attachment, **::UrlOptions.default.to_h)
+  end
+
   # The models under this namespace keep their original tables, so the prefix is
   # declared once here rather than as a self.table_name on each of them.
   def self.table_name_prefix
@@ -135,6 +153,36 @@ module Whatsapp
     return default_locale if !available_locale?(user_locale)
 
     user_locale
+  end
+
+  # How the bot addresses the citizen. German splits this in two and every
+  # portal has an answer already — a city writes "Sie", a youth participation
+  # project writes "du" — so it is a setting rather than a translation. Only
+  # the generated prose follows it; the fixed copy in the locale files is
+  # written formally and stays that way.
+  ADDRESS_FORMS = %w[sie du].freeze
+  DEFAULT_ADDRESS_FORM = "sie".freeze
+
+  def self.address_form
+    configured = Setting["whatsapp.address_form"].to_s.downcase
+
+    return DEFAULT_ADDRESS_FORM if !ADDRESS_FORMS.include?(configured)
+
+    configured
+  end
+
+  def self.informal_address?
+    address_form == "du"
+  end
+
+  # The sentence every prompt that writes German for a citizen carries. Written
+  # once because two of them do — the assistant's own replies and the reworded
+  # routine lines — and a portal answering formally in one and informally in
+  # the other is the failure this setting exists to prevent.
+  def self.address_form_instruction
+    return 'informally, with "du" (or the equivalent in other languages)' if informal_address?
+
+    'formally, with "Sie" (or the equivalent in other languages)'
   end
 
   def self.welcome_message_enabled?

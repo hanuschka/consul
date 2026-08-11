@@ -8,7 +8,7 @@ class Whatsapp::Flows::AskImageService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: I18n.t("whatsapp.bot.proposal.ask_image"),
+      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.proposal.ask_image"),
       buttons: buttons
     )
   end

@@ -262,6 +262,7 @@ class Setting < ApplicationRecord
         "welcomepage.share_buttons": "",
 
         "whatsapp.default_locale": nil,
+        "whatsapp.address_form": "sie",
         "whatsapp.welcome_message_enabled": true,
         "whatsapp.welcome_greeting": nil,
         "whatsapp.ice_breaker_1": nil,

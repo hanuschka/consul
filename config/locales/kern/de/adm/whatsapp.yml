@@ -57,8 +57,12 @@ de:
         idle: Kein laufender Vorgang
         awaiting_link: Wartet auf Verknüpfung
         awaiting_phase_choice: Wählt eine Phase
-        awaiting_idea: Schreibt den Vorschlag
+        awaiting_idea: Schreibt den Beitrag
         awaiting_draft_decision: Entscheidet über den Entwurf
+        awaiting_sentiment: Wählt eine Stimmung
+        awaiting_image_choice: Entscheidet über ein Bild
+        awaiting_image_upload: Schickt ein Foto
+        awaiting_final_confirmation: Bestätigt die Einreichung
         awaiting_revision: Überarbeitet den Entwurf
         awaiting_link_decision: Entscheidet über Verknüpfung
         awaiting_unlink_confirmation: Bestätigt Trennung

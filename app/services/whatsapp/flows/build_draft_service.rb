@@ -40,7 +40,19 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       last_draft_at: Time.current.iso8601, last_idea_text: @idea_text
     )
 
-    Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.drafting"))
+    # Screened before the "one moment" message rather than after it: a text
+    # that is about to be refused should not first be promised a draft, and the
+    # generation call it would have paid for is the one thing worth skipping.
+    # The bubble covers this call too — it is a completion like any other.
+    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+
+    return send_safety_check_failed if !safety.success?
+    return refuse_content if safety.reason.present?
+
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.drafting")
+    )
 
     # After the "one moment" message, not before it: sending any message
     # dismisses the bubble, so asking for it first would spend it on the
@@ -61,6 +73,28 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   end
 
   private
+
+    def safety
+      @safety ||= ::ProposalAiDraft::EvaluateContentSafetyService.call(idea_text: @idea_text)
+    end
+
+    def refuse_content
+      Whatsapp::Flows::RefuseContentService.call(
+        conversation: @conversation, reason: safety.reason
+      )
+    end
+
+    # Fail closed. The alternative is publishing whatever the check could not
+    # read, and a submission postponed by an outage is recoverable in a way a
+    # published slur is not — the retry button re-runs this whole service with
+    # the text the citizen already sent.
+    def send_safety_check_failed
+      Whatsapp::Outbound.recovery(
+        conversation: @conversation,
+        body: I18n.t("whatsapp.bot.safety_check_failed"),
+        actions: [:retry, :cancel]
+      )
+    end
 
     # Called direct rather than through a Whatsapp:: wrapper of the same name:
     # the wrapper was one delegation, and two GenerateDraftServices one namespace

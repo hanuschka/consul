@@ -57,8 +57,12 @@ en:
         idle: No active flow
         awaiting_link: Waiting for account link
         awaiting_phase_choice: Choosing a phase
-        awaiting_idea: Writing the proposal
+        awaiting_idea: Writing the contribution
         awaiting_draft_decision: Deciding on the draft
+        awaiting_sentiment: Choosing a sentiment
+        awaiting_image_choice: Deciding on a picture
+        awaiting_image_upload: Sending a photo
+        awaiting_final_confirmation: Confirming the submission
         awaiting_revision: Revising the draft
         awaiting_link_decision: Deciding whether to link
         awaiting_unlink_confirmation: Confirming unlink

@@ -15,6 +15,7 @@ module Adm
 
     TEXT_SETTING_KEYS = %w[
       whatsapp.default_locale
+      whatsapp.address_form
       whatsapp.broadcast_template
       whatsapp.broadcast_card_template
       whatsapp.broadcast_template_language

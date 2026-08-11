@@ -32,6 +32,20 @@ module Whatsapp::Outbound
     end
   end
 
+  # For a picture that exists only on an unpublished record. Uploading it to
+  # WhatsApp first means nothing about the send depends on Meta being able to
+  # reach us, which on an access-restricted environment it cannot.
+  def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
+    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+      messages.send_buttons_with_media_header(
+        to: account.wa_id,
+        body: body,
+        buttons: buttons,
+        header_media_id: header_media_id
+      )
+    end
+  end
+
   # The caption is recorded as the message body: the dialog history in /adm is
   # read to find out what the bot said, and "image" alone answers nothing.
   def image(account:, image_url:, caption: nil)
@@ -116,6 +130,20 @@ module Whatsapp::Outbound
       account: conversation.whatsapp_account,
       body: body,
       buttons: recovery_buttons(actions)
+    )
+  end
+
+  # Like `recovery`, for a message whose way out is one of the flow's own pills
+  # rather than a retry — so the buttons come from the caller instead of from
+  # the recovery list. The flag is set for the same reason and must not be left
+  # to the caller: without it, "abbrechen" typed instead of tapped is read as
+  # the opt-out keyword rather than as an answer to what was just asked, and
+  # nothing about the message says so.
+  def question(conversation:, body:, buttons:)
+    conversation.merge_context!(pending_question: true)
+
+    ::Whatsapp::Outbound.buttons(
+      account: conversation.whatsapp_account, body: body, buttons: buttons
     )
   end
 

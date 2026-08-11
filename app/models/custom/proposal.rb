@@ -91,6 +91,31 @@ class Proposal < ApplicationRecord
       .admin_accepted
   }
 
+  # Searchable's `pg_search` ANDs every token of the query, which is right for
+  # a search box — someone typing three words means all three. It is wrong for
+  # matching one whole text against another: a citizen's idea is a paragraph,
+  # and demanding that a proposal contain all fifteen of its words matches
+  # nothing. Here any word may hit, and the tsearch rank orders the result.
+  #
+  # Held apart from `pg_search` rather than replacing it: the search box and
+  # this share an index, not a question.
+  pg_search_scope :pg_search_any_word, ->(query) do
+    {
+      against: :ignored,
+      using: {
+        tsearch: {
+          tsvector_column: "tsv",
+          dictionary: SearchDictionarySelector.call,
+          prefix: true,
+          any_word: true
+        }
+      },
+      ignoring: :accents,
+      ranked_by: "(:tsearch)",
+      query: query
+    }
+  end
+
   scope :with_current_projekt, -> { joins(projekt_phase: :projekt).merge(Projekt.current) }
   scope :by_author, ->(user_id) {
     return if user_id.nil?

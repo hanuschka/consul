@@ -28,6 +28,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_unlink_confirmation: "awaiting_unlink_confirmation",
     awaiting_phase_choice: "awaiting_phase_choice",
     awaiting_idea: "awaiting_idea",
+    awaiting_duplicate_decision: "awaiting_duplicate_decision",
     awaiting_category: "awaiting_category",
     awaiting_sentiment: "awaiting_sentiment",
     awaiting_draft_decision: "awaiting_draft_decision",
@@ -46,6 +47,7 @@ class Whatsapp::Conversation < ApplicationRecord
   # call site.
   DRAFTING_STEPS = %w[
     awaiting_idea
+    awaiting_duplicate_decision
     awaiting_category
     awaiting_sentiment
     awaiting_draft_decision

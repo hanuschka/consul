@@ -175,8 +175,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # Handled ahead of the step dispatcher: a tapped recovery button must not be
     # read as idea text by whichever step happens to be active.
+    #
+    # Read off either shape of tap. A list carries no buttons beside it, so a
+    # message offering rows has to put its way out among them, and a recovery id
+    # cannot collide with a flow one: the two are built by different modules from
+    # different prefixes.
     def handle_recovery_action
-      action = Whatsapp::Outbound.recovery_action_from(button_reply_id)
+      action = Whatsapp::Outbound.recovery_action_from(tapped_reply_id)
 
       return false if action.blank?
 
@@ -211,7 +216,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # account only when the phase they point at does.
     SUBMISSION_ACTIONS = %i[
       idea_start category sentiment draft_publish draft_revise resume restart
-      image_upload image_generate image_skip submit_final
+      image_upload image_generate image_skip submit_final submit_anyway
     ].freeze
 
     # Supporting a proposal, reading your own submissions, changing
@@ -292,13 +297,64 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         publish
       when :draft_revise
         ask_revision
+      when :submit_anyway
+        draft_despite_duplicates
       when :resume
         resume_flow
       when :restart
         restart_flow
       when :support
-        Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
+        register_support(param)
       end
+    end
+
+    # Supporting from the duplicate offer ends the submission it interrupted:
+    # the citizen chose an existing proposal over writing their own, so the flow
+    # has nothing left to do and the menu is what follows publishing too. Read
+    # before the support is registered, and supporting from anywhere else — a
+    # projekt card, the assistant — leaves the conversation exactly as it was.
+    def register_support(proposal_id)
+      from_duplicate_offer = conversation.step == "awaiting_duplicate_decision"
+
+      registered = Whatsapp::Flows::RegisterSupportService.call(
+        conversation:, proposal_id: proposal_id
+      )
+
+      return if !from_duplicate_offer
+
+      # Only once the support actually landed. A proposal retired between the
+      # offer and the tap answers "that one is gone" — ending the flow there
+      # would throw away the idea they were part-way through submitting, and
+      # they would have to type the whole thing again.
+      return if !registered
+
+      Whatsapp::Flows::MainMenuService.greeting(conversation:)
+    end
+
+    # A stale step with nothing left to offer — every proposal retired, the
+    # context purged — asks for the idea again rather than leaving the citizen
+    # on a question that can no longer be put.
+    def reask_duplicate_choice
+      asked = Whatsapp::Flows::AskDuplicateChoiceService.reask(conversation:)
+
+      return if asked
+
+      Whatsapp::Flows::AskIdeaService.call(conversation:)
+    end
+
+    # The text is re-read from the context rather than carried on the pill: an
+    # id holds one short parameter and an idea can be a paragraph. It was
+    # screened on the way in, so it goes straight to generation.
+    def draft_despite_duplicates
+      last_idea_text = conversation.context["last_idea_text"]
+
+      if last_idea_text.blank?
+        return Whatsapp::Flows::AskIdeaService.call(conversation:)
+      end
+
+      Whatsapp::Flows::BuildDraftService.from_accepted_idea(
+        conversation:, idea_text: last_idea_text, inbound_message_id:
+      )
     end
 
     def account_required?(action, param)
@@ -327,6 +383,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # message, so a sentence that happens to contain "help" still reaches the
     # assistant.
     def handle_command
+      return send_main_menu if Whatsapp::FlowActions::GREETING_KEYWORDS.include?(normalized_text)
       return send_help if Whatsapp::FlowActions::HELP_KEYWORDS.include?(normalized_text)
       return send_discovery if Whatsapp::FlowActions::DISCOVERY_KEYWORDS.include?(normalized_text)
       return send_notification_settings if
@@ -364,6 +421,25 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     def send_help
       Whatsapp::Flows::HelpService.call(conversation:)
+
+      true
+    end
+
+    # Answered here rather than by the assistant, which can only offer the
+    # recovery pills and so replies to "Hallo" with a lone Hilfe button. Costing
+    # no completion is the smaller reason; the menu being the same three buttons
+    # cancelling and publishing end in is the larger one.
+    #
+    # Returning false falls through to the rest of the pipeline. Two cases need
+    # that: a greeting typed mid-draft is not a request for the menu, and
+    # MainMenuService.greeting resets the flow, so answering it would drop a
+    # submission in progress. And an unlinked number is better served by the
+    # link invitation it still has to answer than by a menu of account actions.
+    def send_main_menu
+      return false if account.user.blank?
+      return false if interaction_open?
+
+      Whatsapp::Flows::MainMenuService.greeting(conversation:)
 
       true
     end
@@ -590,6 +666,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         Whatsapp::Flows::AskDraftChoiceService.category(conversation:)
       when "awaiting_sentiment"
         Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:)
+      when "awaiting_duplicate_decision"
+        reask_duplicate_choice
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_image_choice"
@@ -662,10 +740,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # The same "ja" that publishes from the draft card publishes from the
-    # preview, and the same "nein" still means "change it" — the preview has no
-    # revise pill, only Submit and Cancel, so the typed word is the only way
-    # back into the loop and re-sending the identical card would leave
-    # abandoning the submission as the only way out.
+    # preview, and the same "nein" still means "change it". The preview carries
+    # a revise pill of its own, so this is the typed shortcut rather than the
+    # only way back into the loop.
     def handle_final_confirmation
       return publish if PUBLISH_KEYWORDS.include?(normalized_text)
       return ask_revision if REVISE_KEYWORDS.include?(normalized_text)

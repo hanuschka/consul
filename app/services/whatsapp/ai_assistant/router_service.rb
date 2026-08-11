@@ -133,6 +133,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::StartUnlink,
         ::Ai::Tools::WhatsappAiAssistant::StopMessages,
         ::Ai::Tools::WhatsappAiAssistant::ShowHelp,
+        ::Ai::Tools::WhatsappAiAssistant::ShowMainMenu,
         ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,
         ::Ai::Tools::WhatsappAiAssistant::RefuseOutOfScope,
         ::Ai::Tools::WhatsappAiAssistant::ReplyWithButtons

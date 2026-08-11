@@ -24,10 +24,6 @@ module Whatsapp::DraftCard
     ].join("\n\n")
   end
 
-  def image_url(resource)
-    ::Whatsapp.header_image_url(resource.image&.attachment)
-  end
-
   # The description is rich text written by the drafting model and edited
   # through the portal, and WhatsApp renders no markup at all.
   def plain_description(resource)

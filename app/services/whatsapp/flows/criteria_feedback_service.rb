@@ -9,10 +9,12 @@ class Whatsapp::Flows::CriteriaFeedbackService < Whatsapp::Flows::BaseService
   def call
     @conversation.update!(step: "awaiting_revision")
 
-    Whatsapp::Outbound.recovery(
+    # Not Outbound.recovery: that renders recovery pills only, and the way out
+    # of a failed criterion is the flow's own revise action rather than a retry.
+    Whatsapp::Outbound.question(
       conversation: @conversation,
       body: body,
-      actions: [:cancel]
+      buttons: Whatsapp::FlowActions.revise_decision_buttons
     )
   end
 
@@ -28,7 +30,17 @@ class Whatsapp::Flows::CriteriaFeedbackService < Whatsapp::Flows::BaseService
       I18n.t(
         "whatsapp.bot.criteria_failed",
         criterion: criterion["name"].to_s,
-        feedback: criterion["feedback"].to_s
+        feedback: citizen_feedback(criterion["feedback"].to_s)
+      )
+    end
+
+    # Said back to the citizen in their own terms rather than about a Beitrag
+    # that may not exist yet. The idea text is what they last wrote — on a
+    # revision, everything they have written so far.
+    def citizen_feedback(feedback)
+      Whatsapp::AiAssistant::CriterionFeedbackService.call(
+        criterion_feedback: feedback,
+        idea_text: @conversation.context["last_idea_text"].to_s
       )
     end
 end

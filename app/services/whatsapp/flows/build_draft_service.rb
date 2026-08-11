@@ -35,10 +35,23 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     ).call
   end
 
-  def initialize(conversation:, idea_text:, copy: :first, inbound_message_id: nil)
+  # The same first draft, for a text that has already been through the gates
+  # and that the citizen chose to submit anyway after being shown what the
+  # phase already holds. Screening it a second time would buy the identical
+  # answer, and inside the screening floor it would answer their tap with "one
+  # moment, you are too fast".
+  def self.from_accepted_idea(conversation:, idea_text:, inbound_message_id: nil)
+    new(
+      conversation: conversation, idea_text: idea_text, copy: :first,
+      screened: true, inbound_message_id: inbound_message_id
+    ).call
+  end
+
+  def initialize(conversation:, idea_text:, copy: :first, screened: false, inbound_message_id: nil)
     super(conversation: conversation)
     @idea_text = idea_text
     @copy = copy
+    @screened = screened
     @inbound_message_id = inbound_message_id
   end
 
@@ -59,8 +72,11 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # The bubble covers this call too — it is a completion like any other.
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
-    return send_safety_check_failed if !safety.success?
-    return refuse_content if safety.reason.present?
+    if !@screened
+      return send_safety_check_failed if !safety.success?
+      return refuse_content if safety.reason.present?
+      return if duplicates_offered?
+    end
 
     Whatsapp::Outbound.text(
       account: account,
@@ -100,6 +116,22 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       )
     end
 
+    # Asked after screening and before generation, which is the only point
+    # where it is both safe and still free: a text about to be refused should
+    # not first be shown what it duplicates, and a generated draft is the cost
+    # the question exists to avoid.
+    #
+    # Only on a first idea. A revision refines something already checked, and
+    # re-asking every round would stand between the citizen and the change they
+    # came back to make. Returns true when it took the turn over.
+    def duplicates_offered?
+      return false if @copy != :first
+
+      Whatsapp::Flows::AskDuplicateChoiceService.for_idea(
+        conversation: @conversation, idea_text: @idea_text
+      )
+    end
+
     # Fail closed. The alternative is publishing whatever the check could not
     # read, and a submission postponed by an outage is recoverable in a way a
     # published slur is not — the retry button re-runs this whole service with
@@ -136,7 +168,13 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # are reached differently: a draft is the expensive one and is followed by
     # a card to read, a screening is the cheap one and may be followed straight
     # away by the rewrite its refusal asked for.
+    #
+    # An already-screened text answers to the drafting clock alone: its
+    # screening stamp was written moments ago by the turn that offered the
+    # duplicates, so reading it here would refuse the tap that answered them.
     def throttled?
+      return within?("last_draft_at", DRAFT_INTERVAL) if @screened
+
       within?("last_draft_at", DRAFT_INTERVAL) || within?("last_screened_at", SCREENING_INTERVAL)
     end
 

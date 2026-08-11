@@ -61,6 +61,22 @@ class WhatsappApi::Client
     end
   end
 
+  # The media endpoint takes the file itself rather than a JSON document, and
+  # HTTParty writes the multipart boundary only when the Content-Type header is
+  # left to it — so this one cannot share json_headers.
+  def post_multipart(path, body:)
+    wrap_with_response_object(path) do
+      # Rewound per attempt, not once before them. HTTParty reads the file
+      # handle to build the part, and the retry loop re-runs this block on a
+      # 429 or a gateway error — a second attempt over an exhausted handle
+      # posts an empty file, which comes back as a media id for zero bytes
+      # rather than as an error.
+      body.each_value { |value| value.rewind if value.respond_to?(:rewind) }
+
+      self.class.post(path, body: body, multipart: true, headers: auth_header)
+    end
+  end
+
   def download(absolute_url)
     wrap_with_response_object(absolute_url) do
       self.class.get(absolute_url, headers: auth_header)

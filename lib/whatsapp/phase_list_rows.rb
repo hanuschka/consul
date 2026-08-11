@@ -18,12 +18,15 @@ module Whatsapp::PhaseListRows
     end
   end
 
+  # `title` rather than `name`: a phase's name is its type identifier —
+  # ProposalPhase#name returns the literal "proposal_phase" — while `title` is
+  # the tab name an admin gave it, falling back to the model's human name.
   def description_for(projekt_phase)
-    return projekt_phase.name if projekt_phase.end_date.blank?
+    return projekt_phase.title if projekt_phase.end_date.blank?
 
     I18n.t(
       "whatsapp.bot.discovery.row_description",
-      phase: projekt_phase.name,
+      phase: projekt_phase.title,
       end_date: I18n.l(projekt_phase.end_date)
     )
   end

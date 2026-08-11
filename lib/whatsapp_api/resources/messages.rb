@@ -130,17 +130,18 @@ class WhatsappApi::Resources::Messages
   # is in flight. A caller that cannot vouch for the URL passes none and gets
   # the same message without it.
   def send_buttons(to:, body:, buttons:, header_image_url: nil)
-    @client.post(
-      BASE_PATH,
-      body: envelope(to).merge(
-        type: "interactive",
-        interactive: {
-          type: "button",
-          **image_header(header_image_url),
-          body: { text: body },
-          action: { buttons: interactive_buttons(buttons) }
-        }
-      )
+    send_button_message(
+      to: to, body: body, buttons: buttons, header_image: image_by_link(header_image_url)
+    )
+  end
+
+  # The same message with a picture WhatsApp already holds, named by the id its
+  # own upload returned. A separate method rather than a second optional
+  # argument beside the URL: exactly one of the two can be right for a given
+  # picture, and the name says which one the caller has.
+  def send_buttons_with_media_header(to:, body:, buttons:, header_media_id:)
+    send_button_message(
+      to: to, body: body, buttons: buttons, header_image: image_by_id(header_media_id)
     )
   end
 
@@ -223,10 +224,40 @@ class WhatsappApi::Resources::Messages
       end
     end
 
-    def image_header(url)
-      return {} if url.blank?
+    def send_button_message(to:, body:, buttons:, header_image:)
+      @client.post(
+        BASE_PATH,
+        body: envelope(to).merge(
+          type: "interactive",
+          interactive: {
+            type: "button",
+            **image_header(header_image),
+            body: { text: body },
+            action: { buttons: interactive_buttons(buttons) }
+          }
+        )
+      )
+    end
 
-      { header: { type: "image", image: { link: url }}}
+    # WhatsApp takes a picture either way round — as a link it fetches itself,
+    # or as the id of media already uploaded to it. The two shapes differ by one
+    # key, so they are built here and the header is written once.
+    def image_by_link(url)
+      return if url.blank?
+
+      { link: url }
+    end
+
+    def image_by_id(media_id)
+      return if media_id.blank?
+
+      { id: media_id }
+    end
+
+    def image_header(image)
+      return {} if image.blank?
+
+      { header: { type: "image", image: image }}
     end
 
     def interactive_buttons(buttons)

@@ -58,6 +58,7 @@ de:
         awaiting_link: Wartet auf Verknüpfung
         awaiting_phase_choice: Wählt eine Phase
         awaiting_idea: Schreibt den Beitrag
+        awaiting_duplicate_decision: Entscheidet über einen ähnlichen Beitrag
         awaiting_draft_decision: Entscheidet über den Entwurf
         awaiting_sentiment: Wählt eine Stimmung
         awaiting_image_choice: Entscheidet über ein Bild

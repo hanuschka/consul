@@ -71,7 +71,7 @@ de:
       no_projekt: >-
         Gerade nimmt kein Beteiligungsprojekt Beiträge an. Schreiben Sie mir wieder, wenn ein neues
         startet, oder scannen Sie den QR-Code eines Projekts.
-      drafting: Danke! Ich formuliere daraus einen Beitrag – das dauert einen Moment.
+      drafting: Danke! Ich prüfe das kurz — einen Moment.
       draft_failed: >-
         Das hat gerade nicht geklappt — vermutlich nur vorübergehend. Versuchen Sie es in ein paar
         Minuten noch einmal.
@@ -80,16 +80,11 @@ de:
       publish_failed: >-
         Ich konnte gerade nicht prüfen, ob Ihr Beitrag die Vorgaben dieses Projekts erfüllt.
         Versuchen Sie es in ein paar Minuten noch einmal — Ihr Entwurf bleibt erhalten.
-      draft_invalid: |-
-        So kann ich den Beitrag noch nicht einreichen: %{reason}
-
-        Schreiben Sie mir, was ich ändern soll.
+      draft_invalid: 'So kann ich den Beitrag noch nicht einreichen: %{reason}'
       criteria_failed: |-
-        Ihr Beitrag erfüllt eine Vorgabe dieses Projekts noch nicht: %{criterion}
+        Eine Vorgabe dieses Projekts ist noch nicht erfüllt: %{criterion}
 
         %{feedback}
-
-        Schreiben Sie mir, was ich ändern soll.
       safety_check_failed: >-
         Ich konnte gerade nicht prüfen, ob Ihr Text veröffentlicht werden darf. Versuchen Sie es
         in ein paar Minuten noch einmal.
@@ -132,6 +127,7 @@ de:
         image_generate: Bild erzeugen
         image_skip: Ohne Bild einreichen
         submit_final: Beitrag einreichen
+        submit_anyway: Neu einreichen
       help_menu:
         body: 'Ich helfe Ihnen gerne weiter. Wählen Sie aus, womit ich Ihnen helfen kann:'
         rows:
@@ -354,7 +350,19 @@ de:
         image_failed: >-
           Diese Datei konnte ich nicht verwenden. Versuchen Sie ein anderes Foto, oder machen Sie
           ohne Bild weiter.
-        image_generating: Alles klar, ich male etwas — einen Moment.
+        duplicate:
+          single: |-
+            Dazu gibt es schon einen Beitrag: „%{title}“
+
+            %{url}
+
+            Möchten Sie diesen unterstützen, oder Ihren eigenen Beitrag einreichen?
+          multiple: >-
+            Zu Ihrem Anliegen gibt es schon Beiträge. Möchten Sie einen davon unterstützen, oder
+            Ihren eigenen Beitrag einreichen?
+          list_label: Auswählen
+          submit_anyway_hint: Eigenen Beitrag einreichen
+        image_generating: Alles klar, ich erstelle ein Bild — einen Moment.
         image_generate_failed: Das hat nicht geklappt, Ihr Beitrag geht deshalb ohne Bild hinaus.
       support:
         prompt: '👍 Möchten Sie diesen Beitrag unterstützen: „%{title}“?'

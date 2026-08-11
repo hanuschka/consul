@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_03_091120) do
+ActiveRecord::Schema.define(version: 2026_08_06_180000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -789,6 +789,7 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.text "warning_text", default: ""
     t.string "default_responsible_type"
     t.bigint "default_responsible_id"
+    t.boolean "ai_fallback", default: false, null: false
     t.index ["default_responsible_type", "default_responsible_id"], name: "index_deficiency_report_categories_on_default_responsible"
   end
 
@@ -831,6 +832,23 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
+  end
+
+  create_table "deficiency_report_intake_channel_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_intake_channel_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_3ee3fbfe2e51b97debe9275dca58a65df747c9da"
+    t.index ["locale"], name: "index_deficiency_report_intake_channel_translations_on_locale"
+  end
+
+  create_table "deficiency_report_intake_channels", force: :cascade do |t|
+    t.integer "given_order"
+    t.boolean "default", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_managers", force: :cascade do |t|
@@ -894,6 +912,27 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.integer "reminder_delay"
   end
 
+  create_table "deficiency_report_subcategories", force: :cascade do |t|
+    t.bigint "deficiency_report_category_id", null: false
+    t.integer "given_order"
+    t.string "default_responsible_type"
+    t.bigint "default_responsible_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["default_responsible_type", "default_responsible_id"], name: "index_dr_subcategories_on_default_responsible"
+    t.index ["deficiency_report_category_id"], name: "index_dr_subcategories_on_category_id"
+  end
+
+  create_table "deficiency_report_subcategory_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_subcategory_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_subcategory_id"], name: "index_5cceb5c9355a5d7ca9bee41d38d557369ce7db46"
+    t.index ["locale"], name: "index_deficiency_report_subcategory_translations_on_locale"
+  end
+
   create_table "deficiency_report_translations", force: :cascade do |t|
     t.bigint "deficiency_report_id", null: false
     t.string "locale", null: false
@@ -905,6 +944,15 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.text "official_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
+  end
+
+  create_table "deficiency_report_watches", force: :cascade do |t|
+    t.bigint "deficiency_report_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id", "user_id"], name: "index_dr_watches_on_report_and_user", unique: true
+    t.index ["user_id"], name: "index_dr_watches_on_user_id"
   end
 
   create_table "deficiency_reports", force: :cascade do |t|
@@ -934,14 +982,18 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
     t.bigint "responsible_id"
     t.datetime "status_changed_at"
     t.datetime "archived_at"
+    t.bigint "deficiency_report_intake_channel_id"
+    t.bigint "deficiency_report_subcategory_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_deficiency_reports_on_intake_channel_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
+    t.index ["deficiency_report_subcategory_id"], name: "index_deficiency_reports_on_subcategory_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
     t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
@@ -3527,9 +3579,14 @@ ActiveRecord::Schema.define(version: 2026_08_03_091120) do
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
+  add_foreign_key "deficiency_report_subcategories", "deficiency_report_categories"
+  add_foreign_key "deficiency_report_watches", "deficiency_reports"
+  add_foreign_key "deficiency_report_watches", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
+  add_foreign_key "deficiency_reports", "deficiency_report_intake_channels"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
+  add_foreign_key "deficiency_reports", "deficiency_report_subcategories"
   add_foreign_key "documents", "users"
   add_foreign_key "failed_census_calls", "poll_officers"
   add_foreign_key "failed_census_calls", "users"

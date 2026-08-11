@@ -78,7 +78,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
 
     def category_params
       params.require(:deficiency_report_category).permit(
-        :name, :color, :icon, :warning_text, :ai_fallback
+        :name, :color, :icon, :warning_text, :ai_fallback, :ai_hint
       )
     end
 

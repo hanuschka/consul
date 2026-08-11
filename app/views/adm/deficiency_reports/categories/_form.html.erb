@@ -5,6 +5,10 @@
     <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
   <% end %>
 
+  <%= render Kern::FormFieldComponent.new(label: t(".ai_hint_label"), hint: t(".ai_hint_hint")) do %>
+    <%= f.text_area :ai_hint, label: false, rows: 3, placeholder: t(".ai_hint_placeholder") %>
+  <% end %>
+
   <%= render Kern::FormFieldComponent.new(label: t(".color_label"), hint: t(".color_hint")) do %>
     <div data-controller="adm-color-picker">
       <div class="color-picker" data-adm-color-picker-target="picker"></div>

@@ -5,6 +5,10 @@
     <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
   <% end %>
 
+  <%= render Kern::FormFieldComponent.new(label: t(".ai_hint_label"), hint: t(".ai_hint_hint")) do %>
+    <%= f.text_area :ai_hint, label: false, rows: 3, placeholder: t(".ai_hint_placeholder") %>
+  <% end %>
+
   <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), hint: t(".default_responsible_hint")) do %>
     <% assignable_officers = deficiency_report_assignable_officers(@subcategory.default_responsible) %>
     <% grouped_options = {

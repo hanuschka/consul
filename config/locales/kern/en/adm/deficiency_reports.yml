@@ -224,6 +224,9 @@ en:
         form:
           name_label: Name
           name_hint: The name of the subcategory as shown in the report form and the report overview, e.g. "Potholes", "Street lighting" or "Illegal dumping". Choose names citizens understand without prior knowledge.
+          ai_hint_label: AI categorization hint
+          ai_hint_hint: "This hint goes to the AI categorization only and is never shown to citizens. In one or two sentences, mark the boundary against the other subcategories of the same category — that is where most misclassifications happen. Example: “Holes, cracks and subsidence in the road surface. Not: loose manhole covers, those belong to Sewers and drainage.” Without a hint the AI decides from the name alone."
+          ai_hint_placeholder: "e.g. Holes, cracks and subsidence in the road surface. Not: loose manhole covers (Sewers and drainage)."
           default_responsible_label: Default responsibility
           default_responsible_hint: The officer group or person reports in this subcategory are assigned to automatically. It takes precedence over the main category's default, but only applies when the report's district carries no responsibility of its own. Without a value the main category's responsibility applies.
           officer_groups: Officer groups
@@ -265,6 +268,9 @@ en:
         form:
           name_label: Name
           name_hint: The category name is shown on the frontend as a selectable option when creating a report and serves as thematic assignment. Choose a short, commonly understood term like road damage, lighting, or green spaces. The name also appears in the administration overview and in statistics as a filter.
+          ai_hint_label: AI categorization hint
+          ai_hint_hint: "This hint goes to the AI categorization only and is never shown to citizens. In one or two sentences, describe which reports belong in this category — and above all which do not. Drawing the boundary against similar categories is what improves accuracy most. Example: “Damage to roads, pavements and cycle paths. Not: broken street lamps, those belong to Lighting.” Without a hint the AI decides from the name alone."
+          ai_hint_placeholder: "e.g. Damage to roads, pavements and cycle paths. Not: street lamps (Lighting), traffic signs (Signage)."
           color_label: Color
           color_hint: The color is used as a visual marker of the category in the list view and on the map. It helps citizens and officers distinguish reports of different categories at a glance. Choose high-contrast colors that stand out clearly from one another to keep the list view readable.
           icon_label: Icon

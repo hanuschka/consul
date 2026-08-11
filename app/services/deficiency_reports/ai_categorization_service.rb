@@ -10,6 +10,7 @@ module DeficiencyReports
     DT_PROMPT_KEY = :deficiency_report_categorize
     MINIMUM_CONFIDENCE = 0.6
     TIMEOUT_SECONDS = 10
+    MAX_AI_HINT_LENGTH = 300
 
     Result = Struct.new(:category, :subcategory, :confidence, :fallback_reason, keyword_init: true) do
       def fallback?
@@ -97,10 +98,43 @@ module DeficiencyReports
 
       def taxonomy
         categories.map do |category|
-          subcategories = category.subcategories.map { |s| "    - #{s.id}: #{s.name}" }.join("\n")
-          entry = "- #{category.id}: #{category.name}"
+          subcategories = category.subcategories.map do |subcategory|
+            "    - #{subcategory.id}: #{subcategory.name}#{ai_hint(subcategory)}"
+          end.join("\n")
+
+          entry = "- #{category.id}: #{category.name}#{ai_hint(category)}"
           subcategories.present? ? "#{entry}\n#{subcategories}" : "#{entry}\n    (keine Unterkategorien)"
         end.join("\n")
+      end
+
+      # A category name like "Sonstiges" or "Ordnung" says nothing about what a given municipality
+      # files under it, and the system prompt is maintained centrally, so it cannot say either. The
+      # hints are the one place that knowledge fits. Blank ones emit nothing: a client who never
+      # fills them in gets exactly the list this built before.
+      def ai_hint(record)
+        hint = record.ai_hint.to_s.squish
+        return "" if hint.blank?
+
+        " — #{hint.truncate(MAX_AI_HINT_LENGTH)}"
+      end
+
+      def ai_hints?
+        return @ai_hints if defined?(@ai_hints)
+
+        @ai_hints = categories.any? do |category|
+          category.ai_hint.present? || category.subcategories.any? { |s| s.ai_hint.present? }
+        end
+      end
+
+      # The hints have to explain themselves next to the list rather than in the system prompt: a
+      # client running the centrally maintained prompt would otherwise get a prompt that predates
+      # this field and treats the hints as decoration.
+      def ai_hint_legend
+        return "" unless ai_hints?
+
+        "\n\nDie Angabe hinter „—“ ist ein verbindlicher Abgrenzungshinweis der Verwaltung. Er legt " \
+          "fest, was zu einer Kategorie oder Unterkategorie gehört und was nicht, und hat Vorrang " \
+          "vor dem, was der Name allein nahelegt."
       end
 
       def user_prompt
@@ -109,7 +143,7 @@ module DeficiencyReports
           Beschreibung: #{ActionController::Base.helpers.strip_tags(deficiency_report.description).to_s.truncate(2000)}
 
           Verfügbare Kategorien (id: Name) mit ihren Unterkategorien:
-          #{taxonomy}
+          #{taxonomy}#{ai_hint_legend}
         PROMPT
       end
 
@@ -140,6 +174,9 @@ module DeficiencyReports
         Liste; erfinde keine IDs.
 
         Berücksichtige Titel, Beschreibung und – falls ein Foto beiliegt – dessen Bildinhalt.
+
+        Steht hinter einer Kategorie oder Unterkategorie ein Abgrenzungshinweis der Verwaltung,
+        richte dich danach: Er hat Vorrang vor dem, was der Name allein nahelegt.
 
         Gib in confidence einen Wert zwischen 0 und 1 an, der ausdrückt, wie sicher die Zuordnung
         ist. Nutze niedrige Werte, wenn die Meldung mehrdeutig ist, zu wenig Information enthält

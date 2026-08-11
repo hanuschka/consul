@@ -86,7 +86,7 @@ class Adm::DeficiencyReports::SubcategoriesController < Adm::DeficiencyReports::
     end
 
     def subcategory_params
-      params.require(:deficiency_report_subcategory).permit(:name)
+      params.require(:deficiency_report_subcategory).permit(:name, :ai_hint)
     end
 
     def resolve_responsible

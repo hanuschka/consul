@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_06_180000) do
+ActiveRecord::Schema.define(version: 2026_08_11_090000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -790,6 +790,7 @@ ActiveRecord::Schema.define(version: 2026_08_06_180000) do
     t.string "default_responsible_type"
     t.bigint "default_responsible_id"
     t.boolean "ai_fallback", default: false, null: false
+    t.text "ai_hint"
     t.index ["default_responsible_type", "default_responsible_id"], name: "index_deficiency_report_categories_on_default_responsible"
   end
 
@@ -919,6 +920,7 @@ ActiveRecord::Schema.define(version: 2026_08_06_180000) do
     t.bigint "default_responsible_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "ai_hint"
     t.index ["default_responsible_type", "default_responsible_id"], name: "index_dr_subcategories_on_default_responsible"
     t.index ["deficiency_report_category_id"], name: "index_dr_subcategories_on_category_id"
   end

@@ -39,14 +39,9 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
 
     # Sent after the flow is completed, so the menu is offered from a
     # conversation with nothing open in it: all three of its buttons start
-    # something new, and one of them starts another submission.
-    #
-    # A guest submitter is left with the confirmation alone. Two of the three
-    # act on a Consul account they do not have, and answering "you're online"
-    # with a login link reads as a condition attached after the fact.
+    # something new, and one of them starts another submission. A guest
+    # submitter is left with the confirmation alone, which the menu decides.
     def send_next_actions
-      return if @conversation.user.blank?
-
       Whatsapp::Flows::MainMenuService.after_publishing(conversation: @conversation)
     end
 
@@ -89,13 +84,17 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # too long, a description the sanitiser rejected. The citizen is put back in
     # the revision step with the record's own message, because they are the only
     # one who can rewrite it and a retry would fail identically.
+    #
+    # The same pair a failed criterion offers: both say "this cannot go in as it
+    # stands", and a citizen who met one and then the other would otherwise find
+    # the way out in a different place each time.
     def send_invalid
       @conversation.update!(step: "awaiting_revision")
 
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Outbound.question(
         conversation: @conversation,
         body: I18n.t("whatsapp.bot.draft_invalid", reason: validation_reason),
-        actions: [:cancel]
+        buttons: Whatsapp::FlowActions.revise_decision_buttons
       )
     end
 

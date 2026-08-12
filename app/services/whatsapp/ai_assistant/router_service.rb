@@ -45,10 +45,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   private
 
     def build_chat
-      chat = ::Ai::RubyLlmFactory.chat_with_request_timeout(
-        REQUEST_TIMEOUT_SECONDS,
-        gpt_model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL
-      )
+      chat = ::Ai::RubyLlmFactory.fast_chat(REQUEST_TIMEOUT_SECONDS)
 
       chat.with_instructions(instructions)
       chat.with_tools(*tools)
@@ -133,6 +130,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::StartUnlink,
         ::Ai::Tools::WhatsappAiAssistant::StopMessages,
         ::Ai::Tools::WhatsappAiAssistant::ShowHelp,
+        ::Ai::Tools::WhatsappAiAssistant::ShowMainMenu,
         ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,
         ::Ai::Tools::WhatsappAiAssistant::RefuseOutOfScope,
         ::Ai::Tools::WhatsappAiAssistant::ReplyWithButtons

@@ -24,17 +24,16 @@ class Whatsapp::Flows::RefuseContentService < Whatsapp::Flows::BaseService
     # The reason is named, but never quoted back: repeating the sentence that
     # was refused would put it in the chat a second time, and the citizen wrote
     # it and knows what it said.
+    #
+    # The reason is used as given. EvaluateContentSafetyService#refusal_reason
+    # is the one place that decides which values can escape the model, and
+    # re-checking its allowlist here would be the same rule written twice, to
+    # be kept in step by hand.
     def body
       [
         I18n.t("whatsapp.bot.refused_content.intro"),
-        I18n.t("whatsapp.bot.refused_content.reasons.#{reason_key}"),
+        I18n.t("whatsapp.bot.refused_content.reasons.#{@reason}"),
         I18n.t("whatsapp.bot.refused_content.retry_hint")
       ].join("\n\n")
-    end
-
-    def reason_key
-      return @reason if ::ProposalAiDraft::EvaluateContentSafetyService::REASONS.include?(@reason)
-
-      ::ProposalAiDraft::EvaluateContentSafetyService::GENERIC_REASON
     end
 end

@@ -47,10 +47,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         Routing rules, in order of priority:
         1. Call hand_to_flow whenever the message is part of an ongoing submission rather than a
            question to you. This is always the right call when the conversation step is
-           awaiting_idea, awaiting_category, awaiting_sentiment, awaiting_draft_decision,
-           awaiting_image_choice, awaiting_image_upload, awaiting_final_confirmation,
-           awaiting_revision, awaiting_comment, awaiting_resume_decision or
-           awaiting_phase_choice, unless the citizen
+           awaiting_idea, awaiting_category, awaiting_sentiment, awaiting_duplicate_decision,
+           awaiting_draft_decision, awaiting_image_choice, awaiting_image_upload,
+           awaiting_final_confirmation, awaiting_revision, awaiting_comment,
+           awaiting_resume_decision or awaiting_phase_choice, unless the citizen
            is clearly asking you something instead of answering. Never paraphrase, summarise or
            answer such a message yourself, and never repeat it back: the flow needs the original
            wording.
@@ -73,6 +73,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            - stop all messages, however they phrase it -> stop_messages, immediately and without
              argument
            - what can you do, how does this work -> show_help
+           - a greeting, or anything that says nothing about what they want -> show_main_menu,
+             which offers the three starting points. Never answer a bare "Hallo" with plain text
         3. Answer a question about the portal in your own words, from tool results only. Call
            list_open_phases for what is running and check_participation_eligibility for whether
            this citizen may take part in one. Two tool calls to answer properly is the right cost;
@@ -83,7 +85,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            number.
         5. Call clarify_intent only when the message is about participating and could genuinely be
            either a new proposal or a comment on an existing one. It is not a general "I did not
-           understand"; when you simply cannot tell what someone wants, call show_help.
+           understand"; when you simply cannot tell what someone wants, call show_main_menu.
 
         What you may change is this citizen's own participation and settings: registering their
         support, opening the comment prompt, which projects they follow, which notifications they
@@ -154,6 +156,6 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # declares; only the choice of which one applies differs here, because a
     # chat reply follows the citizen's locale rather than the site's.
     def output_language
-      ::Ai::OutputLanguage::LANGUAGE_NAMES.fetch(I18n.locale.to_s, ::Ai::OutputLanguage::FALLBACK)
+      ::Ai::OutputLanguage.chat_name_for(I18n.locale)
     end
 end

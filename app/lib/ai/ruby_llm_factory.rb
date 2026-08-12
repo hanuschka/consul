@@ -11,6 +11,14 @@ module Ai::RubyLlmFactory
     chat.with_schema(output_schema)
   end
 
+  # The cheap model on a bounded clock, for the short judgements made while
+  # someone is waiting on the other end of a chat — routing a message, ranking
+  # a handful of titles, rewording one line. Three callers asked for exactly
+  # this pairing by hand before it had a name.
+  def self.fast_chat(timeout_seconds)
+    chat_with_request_timeout(timeout_seconds, gpt_model: Ai::Settings::DEFAULT_GPT_FAST_MODEL)
+  end
+
   def self.build_chat(context, gpt_model: nil)
     context.chat(
       model: model_for(gpt_model),

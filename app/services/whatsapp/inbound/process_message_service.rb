@@ -175,8 +175,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # Handled ahead of the step dispatcher: a tapped recovery button must not be
     # read as idea text by whichever step happens to be active.
+    #
+    # Read off either shape of tap. A list carries no buttons beside it, so a
+    # message offering rows has to put its way out among them, and a recovery id
+    # cannot collide with a flow one: the two are built by different modules from
+    # different prefixes.
     def handle_recovery_action
-      action = Whatsapp::Outbound.recovery_action_from(button_reply_id)
+      action = Whatsapp::Outbound.recovery_action_from(tapped_reply_id)
 
       return false if action.blank?
 
@@ -207,32 +212,35 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # are refused here rather than in each service, so reading the portal never
     # dead-ends into "connect an account" and participating never silently
     # skips the check.
-    ACCOUNT_ACTIONS = %i[
+    # Making a submission, which a guest phase does allow: these need an
+    # account only when the phase they point at does.
+    SUBMISSION_ACTIONS = %i[
       idea_start category sentiment draft_publish draft_revise resume restart
-      image_upload image_generate image_skip submit_final
-      support support_prompt comment_prompt my_contributions
-      notify_toggle notifications_done notifications_open
-      unlink_confirm unlink_cancel unlink_start
+      image_upload image_generate image_skip submit_final submit_anyway
     ].freeze
 
     # Supporting a proposal, reading your own submissions, changing
     # notification settings and unlinking all act on a Consul account, and a
-    # guest has nothing to stand in for it with. Everything else in
-    # ACCOUNT_ACTIONS is part of making a submission, which a guest phase does
-    # allow — derived rather than listed again so a new drafting pill cannot be
-    # added to one list and forgotten in the other.
+    # guest has nothing to stand in for it with.
     #
     # my_contributions is here because the help list offers it to unlinked
     # numbers too: without the check it answers "you have not submitted
     # anything yet" to someone whose account is full of submissions, and never
     # mentions that linking is the missing part.
     ACCOUNT_ONLY_ACTIONS = %i[
-      support support_prompt comment_prompt my_contributions
+      support support_instead support_prompt comment_prompt my_contributions
       notify_toggle notifications_done notifications_open
       unlink_confirm unlink_cancel unlink_start
     ].freeze
 
-    GUEST_ELIGIBLE_ACTIONS = (ACCOUNT_ACTIONS - ACCOUNT_ONLY_ACTIONS).freeze
+    # Derived from the two groups rather than listed a third time. The union is
+    # what account_required? gates on, so an action named in only one of the
+    # source lists is still gated; written out by hand, an account-only pill
+    # left out of the union would skip the check entirely and reach the flow
+    # with no user behind it.
+    ACCOUNT_ACTIONS = (SUBMISSION_ACTIONS + ACCOUNT_ONLY_ACTIONS).freeze
+
+    GUEST_ELIGIBLE_ACTIONS = SUBMISSION_ACTIONS
 
     def dispatch_flow_action(action, param)
       return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if
@@ -256,7 +264,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :my_contributions
         Whatsapp::Flows::ContributionsService.call(conversation:)
       when :main_menu
-        send_main_menu
+        Whatsapp::Flows::MainMenuService.greeting(conversation:)
       when :support_prompt
         send_menu_prompt("whatsapp.bot.help_menu.prompts.support")
       when :comment_prompt
@@ -289,13 +297,58 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         publish
       when :draft_revise
         ask_revision
+      when :submit_anyway
+        draft_despite_duplicates
       when :resume
         resume_flow
       when :restart
         restart_flow
       when :support
         Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
+      when :support_instead
+        support_instead_of_drafting(param)
       end
+    end
+
+    # The duplicate offer's own support pill: the citizen chose an existing
+    # proposal over writing their own, so the submission it interrupted is over
+    # and the menu is what follows publishing too.
+    def support_instead_of_drafting(proposal_id)
+      registered = Whatsapp::Flows::RegisterSupportService.call(
+        conversation:, proposal_id: proposal_id
+      )
+
+      # Only once the support actually landed. A proposal retired between the
+      # offer and the tap answers "that one is gone" — ending the flow there
+      # would throw away the idea they were part-way through submitting, and
+      # they would have to type the whole thing again.
+      return if !registered
+
+      Whatsapp::Flows::MainMenuService.greeting(conversation:)
+    end
+
+    # A stale step with nothing left to offer — every proposal retired, the
+    # context purged — asks for the idea again rather than leaving the citizen
+    # on a question that can no longer be put.
+    def reask_duplicate_choice
+      asked = Whatsapp::Flows::AskDuplicateChoiceService.reask(conversation:)
+
+      return if asked
+
+      Whatsapp::Flows::AskIdeaService.call(conversation:)
+    end
+
+    # The idea was screened on the way in, so it goes straight to generation.
+    # Nothing to draft from means the context was purged between the offer and
+    # the tap; asking again is the only way forward.
+    def draft_despite_duplicates
+      if conversation.context["last_idea_text"].blank?
+        return Whatsapp::Flows::AskIdeaService.call(conversation:)
+      end
+
+      Whatsapp::Flows::BuildDraftService.from_accepted_idea(
+        conversation:, inbound_message_id:
+      )
     end
 
     def account_required?(action, param)
@@ -324,6 +377,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # message, so a sentence that happens to contain "help" still reaches the
     # assistant.
     def handle_command
+      return send_main_menu if Whatsapp::FlowActions::GREETING_KEYWORDS.include?(normalized_text)
       return send_help if Whatsapp::FlowActions::HELP_KEYWORDS.include?(normalized_text)
       return send_discovery if Whatsapp::FlowActions::DISCOVERY_KEYWORDS.include?(normalized_text)
       return send_notification_settings if
@@ -365,13 +419,23 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       true
     end
 
-    # An unlinked guest has no contributions and no notification settings, so
-    # the three-button menu would offer them two dead ends. The help list is
-    # already the answer they get when nothing is in progress.
+    # Answered here rather than by the assistant, which can only offer the
+    # recovery pills and so replies to "Hallo" with a lone Hilfe button. Costing
+    # no completion is the smaller reason; the menu being the same three buttons
+    # cancelling and publishing end in is the larger one.
+    #
+    # Returning false falls through to the rest of the pipeline. Two cases need
+    # that: a greeting typed mid-draft is not a request for the menu, and
+    # MainMenuService.greeting resets the flow, so answering it would drop a
+    # submission in progress. And an unlinked number is better served by the
+    # link invitation it still has to answer than by a menu of account actions.
     def send_main_menu
-      return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
+      return false if account.user.blank?
+      return false if interaction_open?
 
       Whatsapp::Flows::MainMenuService.greeting(conversation:)
+
+      true
     end
 
     # A help row that names something the assistant resolves rather than a flow
@@ -596,6 +660,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         Whatsapp::Flows::AskDraftChoiceService.category(conversation:)
       when "awaiting_sentiment"
         Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:)
+      when "awaiting_duplicate_decision"
+        reask_duplicate_choice
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_image_choice"
@@ -619,13 +685,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       end
     end
 
-    # Nothing in progress and nothing the assistant could route. Only an
-    # unlinked guest submitter reaches here without an account, and the greeting
-    # offers contributions and notification settings they have none of — so the
-    # help list stays their answer.
+    # Nothing in progress and nothing the assistant could route. An unlinked
+    # guest submitter reaches here too, and the menu answers them with the help
+    # list rather than three buttons they mostly cannot use.
     def handle_idle_message
-      return Whatsapp::Flows::HelpService.call(conversation:) if account.user.blank?
-
       Whatsapp::Flows::MainMenuService.greeting(conversation:)
     end
 
@@ -671,10 +734,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # The same "ja" that publishes from the draft card publishes from the
-    # preview, and the same "nein" still means "change it" — the preview has no
-    # revise pill, only Submit and Cancel, so the typed word is the only way
-    # back into the loop and re-sending the identical card would leave
-    # abandoning the submission as the only way out.
+    # preview, and the same "nein" still means "change it". The preview carries
+    # a revise pill of its own, so this is the typed shortcut rather than the
+    # only way back into the loop.
     def handle_final_confirmation
       return publish if PUBLISH_KEYWORDS.include?(normalized_text)
       return ask_revision if REVISE_KEYWORDS.include?(normalized_text)

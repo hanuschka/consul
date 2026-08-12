@@ -58,6 +58,7 @@ en:
         awaiting_link: Waiting for account link
         awaiting_phase_choice: Choosing a phase
         awaiting_idea: Writing the contribution
+        awaiting_duplicate_decision: Deciding on a similar contribution
         awaiting_draft_decision: Deciding on the draft
         awaiting_sentiment: Choosing a sentiment
         awaiting_image_choice: Deciding on a picture

@@ -61,7 +61,7 @@ en:
       no_projekt: >-
         There is no participation project accepting contributions at the moment. Write to me again when
         a new one starts, or scan the QR code of a project.
-      drafting: Thanks! I am turning this into a contribution — one moment.
+      drafting: Thanks! I am taking a quick look — one moment.
       draft_failed: >-
         That did not work just now — most likely a temporary problem. Please try again in a few
         minutes.
@@ -69,16 +69,11 @@ en:
       publish_failed: >-
         I could not check right now whether your contribution meets this project's requirements. Please
         try again in a few minutes — your draft is kept.
-      draft_invalid: |-
-        I cannot submit the contribution like this yet: %{reason}
-
-        Tell me what I should change.
+      draft_invalid: 'I cannot submit the contribution like this yet: %{reason}'
       criteria_failed: |-
-        Your contribution does not meet one of this project's requirements yet: %{criterion}
+        One of this project's requirements is not met yet: %{criterion}
 
         %{feedback}
-
-        Tell me what I should change.
       safety_check_failed: >-
         I could not check right now whether your text may be published. Please try again in a few
         minutes.
@@ -121,11 +116,11 @@ en:
         image_generate: Create one for me
         image_skip: Submit without one
         submit_final: Submit it now
+        submit_anyway: Submit mine
       help_menu:
         body: 'Happy to help. Choose what I can help you with:'
         rows:
           submit:
-            title: Submit contribution
             description: Contribute an idea to a running project
           support:
             title: Support one
@@ -137,7 +132,6 @@ en:
             title: Browse projects
             description: See the running participation projects
           contributions:
-            title: My contributions
             description: See what you have submitted
           notifications:
             title: Notifications
@@ -329,7 +323,19 @@ en:
         image_upload_prompt: Send me the photo now — just attach it to your next message.
         image_received: ✅ Got the photo, thanks!
         image_failed: I couldn't use that file. Try another photo, or carry on without one.
-        image_generating: Alright, I'm painting something — one moment.
+        duplicate:
+          single: |-
+            There is already a contribution about this: "%{title}"
+
+            %{url}
+
+            Would you like to support it, or submit your own contribution?
+          multiple: >-
+            There are already contributions about this. Would you like to support one of them, or
+            submit your own?
+          list_label: Choose
+          submit_anyway_hint: Submit my own contribution
+        image_generating: Alright, I'm creating an image — one moment.
         image_generate_failed: That didn't work, so your contribution goes out without a picture.
       support:
         prompt: '👍 Would you like to support this contribution: "%{title}"?'

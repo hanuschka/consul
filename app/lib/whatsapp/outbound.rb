@@ -32,6 +32,20 @@ module Whatsapp::Outbound
     end
   end
 
+  # For a picture that exists only on an unpublished record. Uploading it to
+  # WhatsApp first means nothing about the send depends on Meta being able to
+  # reach us, which on an access-restricted environment it cannot.
+  def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
+    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+      messages.send_buttons_with_media_header(
+        to: account.wa_id,
+        body: body,
+        buttons: buttons,
+        header_media_id: header_media_id
+      )
+    end
+  end
+
   # The caption is recorded as the message body: the dialog history in /adm is
   # read to find out what the bot said, and "image" alone answers nothing.
   def image(account:, image_url:, caption: nil)
@@ -109,14 +123,22 @@ module Whatsapp::Outbound
   # cannot answer that on its own — the assistant sends these while the
   # conversation is still idle. Whatsapp::Message carries no marker to read
   # instead: recovery buttons, projekt cards and lists are all "interactive".
-  def recovery(conversation:, body:, actions:)
+  #
+  # Every asking message goes through here, whatever its buttons are, so the
+  # flag is written in exactly one place. A second copy of this pairing is how
+  # a future asker ends up sending one without it.
+  def question(conversation:, body:, buttons:)
     conversation.merge_context!(pending_question: true)
 
-    buttons(
-      account: conversation.whatsapp_account,
-      body: body,
-      buttons: recovery_buttons(actions)
+    ::Whatsapp::Outbound.buttons(
+      account: conversation.whatsapp_account, body: body, buttons: buttons
     )
+  end
+
+  # The same question when its way out is a retry or a cancel rather than one of
+  # the flow's own pills.
+  def recovery(conversation:, body:, actions:)
+    question(conversation: conversation, body: body, buttons: recovery_buttons(actions))
   end
 
   def recovery_action_from(button_reply_id)
@@ -126,14 +148,16 @@ module Whatsapp::Outbound
   # One recovery pill to put beside flow buttons of a different kind. The
   # handler is the same global one either way, which is the point: a "Cancel"
   # sitting next to two catalog pills must not need its own step to be read.
+  #
+  # Unlike `recovery`, this sets no pending_question: the callers that use it
+  # are already on a step of their own, so "abbrechen" typed instead of tapped
+  # is read by the step rather than by the flag.
   def recovery_button(action)
     { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
   end
 
   def recovery_buttons(actions)
-    actions.first(MAX_RECOVERY_BUTTONS).map do |action|
-      { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
-    end
+    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action) }
   end
 
   # WhatsApp dismisses the bubble after this long, and there is no way to extend

@@ -28,9 +28,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
     ).call
   end
 
-  def initialize(
-    conversation:, copy_prefix: "whatsapp.bot.proposal.draft", inbound_message_id: nil
-  )
+  def initialize(conversation:, copy_prefix:, inbound_message_id: nil)
     super(conversation: conversation)
     @copy_prefix = copy_prefix
     @inbound_message_id = inbound_message_id

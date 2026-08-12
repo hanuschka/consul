@@ -26,15 +26,35 @@ module Whatsapp
   HEADER_IMAGE_CONTENT_TYPES = ["image/jpeg", "image/png"].freeze
   HEADER_IMAGE_MAX_BYTES = 5.megabytes
 
+  # Every description the bot quotes is rich text written in the portal's
+  # editor, and WhatsApp renders no markup at all — so each one is flattened
+  # the same way and cut to whatever the message it lands in has room for.
+  # Declared once because three messages now do it at three different lengths,
+  # and how portal HTML becomes chat text is one decision, not three.
+  def self.plain_text(html, length:)
+    ActionController::Base.helpers
+      .strip_tags(html.to_s)
+      .squish
+      .truncate(length)
+  end
+
   # Nil rather than a placeholder when the picture is missing or unusable:
   # every caller has a shape it falls back to, and a broken image is worse than
   # none.
   def self.header_image_url(attachment)
-    return if attachment.blank? || !attachment.attached?
-    return if !HEADER_IMAGE_CONTENT_TYPES.include?(attachment.blob.content_type)
-    return if attachment.blob.byte_size > HEADER_IMAGE_MAX_BYTES
+    return if !usable_header_image?(attachment)
 
     Rails.application.routes.url_helpers.rails_blob_url(attachment, **::UrlOptions.default.to_h)
+  end
+
+  # Whether WhatsApp will render this attachment at all. Asked on its own
+  # because a picture can reach a message either as a URL it fetches or as
+  # media uploaded to it, and both routes answer to the same two numbers.
+  def self.usable_header_image?(attachment)
+    return false if attachment.blank? || !attachment.attached?
+    return false if !HEADER_IMAGE_CONTENT_TYPES.include?(attachment.blob.content_type)
+
+    attachment.blob.byte_size <= HEADER_IMAGE_MAX_BYTES
   end
 
   # The models under this namespace keep their original tables, so the prefix is
@@ -171,16 +191,12 @@ module Whatsapp
     configured
   end
 
-  def self.informal_address?
-    address_form == "du"
-  end
-
   # The sentence every prompt that writes German for a citizen carries. Written
   # once because two of them do — the assistant's own replies and the reworded
   # routine lines — and a portal answering formally in one and informally in
   # the other is the failure this setting exists to prevent.
   def self.address_form_instruction
-    return 'informally, with "du" (or the equivalent in other languages)' if informal_address?
+    return 'informally, with "du" (or the equivalent in other languages)' if address_form == "du"
 
     'formally, with "Sie" (or the equivalent in other languages)'
   end

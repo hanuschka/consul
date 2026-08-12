@@ -9,17 +9,27 @@ class Whatsapp::Flows::HelpService < Whatsapp::Flows::BaseService
   # It adapts to whether the number is linked: offering "unlink your account" to
   # someone who never linked one contradicts the invitation they were just sent,
   # and offering "link now" to someone already linked is noise.
-  ROWS = [
-    { key: :submit, action: :submit_proposal },
-    { key: :support, action: :support_prompt },
-    { key: :comment, action: :comment_prompt },
-    { key: :projekts, action: :discover },
-    { key: :contributions, action: :my_contributions },
-    { key: :notifications, action: :notifications_open }
-  ].freeze
+  ROWS = {
+    submit: :submit_proposal,
+    support: :support_prompt,
+    comment: :comment_prompt,
+    projekts: :discover,
+    contributions: :my_contributions,
+    notifications: :notifications_open
+  }.freeze
 
-  LINKED_ROW = { key: :unlink, action: :unlink_start }.freeze
-  UNLINKED_ROW = { key: :link, action: :link_yes }.freeze
+  LINKED_ROW = { unlink: :unlink_start }.freeze
+  UNLINKED_ROW = { link: :link_yes }.freeze
+
+  # Two rows name the same thing as the button that starts it elsewhere, so
+  # they read that button's label rather than carrying a second copy of the
+  # word. The Vorschlag/Beitrag rename had to touch both copies; the next one
+  # would have renamed the button and left the list naming the same action
+  # differently.
+  SHARED_TITLE_KEYS = {
+    submit: "whatsapp.bot.buttons.submit_proposal",
+    contributions: "whatsapp.bot.buttons.my_contributions"
+  }.freeze
 
   def call
     Whatsapp::Outbound.list(
@@ -33,18 +43,22 @@ class Whatsapp::Flows::HelpService < Whatsapp::Flows::BaseService
   private
 
     def rows
-      (ROWS + [account_row]).map { |row| list_row(row) }
+      ROWS.merge(account_row).map { |key, action| list_row(key, action) }
     end
 
     def account_row
       account.user_id.present? ? LINKED_ROW : UNLINKED_ROW
     end
 
-    def list_row(row)
+    def list_row(key, action)
       {
-        id: Whatsapp::FlowActions.id_for(action: row[:action]),
-        title: I18n.t("whatsapp.bot.help_menu.rows.#{row[:key]}.title"),
-        description: I18n.t("whatsapp.bot.help_menu.rows.#{row[:key]}.description")
+        id: Whatsapp::FlowActions.id_for(action: action),
+        title: I18n.t(title_key_for(key)),
+        description: I18n.t("whatsapp.bot.help_menu.rows.#{key}.description")
       }
+    end
+
+    def title_key_for(key)
+      SHARED_TITLE_KEYS.fetch(key, "whatsapp.bot.help_menu.rows.#{key}.title")
     end
 end

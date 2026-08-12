@@ -32,6 +32,7 @@ module Whatsapp::FlowActions
     sentiment
     draft_publish
     draft_revise
+    submit_anyway
     image_upload
     image_generate
     image_skip
@@ -40,7 +41,13 @@ module Whatsapp::FlowActions
     restart
   ].freeze
 
-  ENGAGEMENT_ACTIONS = %i[support my_contributions].freeze
+  # `support_instead` is supporting from the duplicate offer, and it is its own
+  # action rather than a `support` tapped at the right moment: it also ends the
+  # submission it interrupted, and that consequence has to travel on the pill.
+  # Inferred from the step instead, an ordinary support pill — which the
+  # assistant can offer at any moment, including that one — would silently
+  # discard a half-written submission.
+  ENGAGEMENT_ACTIONS = %i[support support_instead my_contributions].freeze
 
   NOTIFICATION_ACTIONS = %i[notify_toggle notifications_done].freeze
 
@@ -68,6 +75,15 @@ module Whatsapp::FlowActions
   # someone who saw the pill in German keeps typing "hilfe" after switching
   # their phone to English.
   HELP_KEYWORDS = ["help", "hilfe"].freeze
+
+  # A greeting and nothing else. Matched as the whole message, so "hallo, ich
+  # hätte da eine Idee" still reaches the assistant that can act on it — these
+  # are only the openers that say nothing about what the citizen wants.
+  GREETING_KEYWORDS = [
+    "hallo", "hallo!", "hi", "hey", "moin", "servus", "grüß gott", "gruess gott",
+    "guten tag", "guten morgen", "guten abend", "hello", "good morning", "good evening"
+  ].freeze
+
   DISCOVERY_KEYWORDS = ["projects", "projekte"].freeze
   NOTIFICATION_KEYWORDS = ["notifications", "benachrichtigungen"].freeze
   UNLINK_KEYWORDS = ["unlink account", "konto trennen", "verknüpfung aufheben"].freeze
@@ -112,6 +128,21 @@ module Whatsapp::FlowActions
       button(action: :submit_proposal, label_key: "whatsapp.bot.buttons.submit_proposal"),
       button(action: :discover, label_key: "whatsapp.bot.buttons.show_projekts"),
       button(action: :my_contributions, label_key: "whatsapp.bot.buttons.my_contributions")
+    ]
+  end
+
+  # The pair every "this cannot go in as it stands" message offers. Two of them
+  # now end this way — a failed phase criterion, and a draft the portal's own
+  # validations rejected — and they ask the citizen the same question, so they
+  # must not offer two different ways to answer it.
+  #
+  # Unlike the sets around it, one of the two is a recovery pill: it is handled
+  # globally rather than by the step, which is what lets the same word typed
+  # instead of tapped mean the same thing.
+  def revise_decision_buttons
+    [
+      button(action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"),
+      ::Whatsapp::Outbound.recovery_button(:cancel)
     ]
   end
 

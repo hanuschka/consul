@@ -11,14 +11,18 @@ class Whatsapp::Flows::RegisterSupportService < Whatsapp::Flows::BaseService
     @proposal_id = proposal_id
   end
 
+  # Returns whether the support was actually registered. The three refusals
+  # answer the citizen either way, but a caller that ends the conversation on
+  # the strength of this — the duplicate offer does — must not do so when the
+  # proposal turned out to be gone and the citizen still has a submission open.
   def call
-    return send_gone if proposal.blank?
-    return send_already_supported if proposal.voted_up_by?(user)
-    return send_not_allowed if !proposal.votable_by?(user)
+    return send_gone.then { false } if proposal.blank?
+    return send_already_supported.then { false } if proposal.voted_up_by?(user)
+    return send_not_allowed.then { false } if !proposal.votable_by?(user)
 
     proposal.register_vote(user, "yes")
 
-    send_thanks
+    send_thanks.then { true }
   end
 
   private

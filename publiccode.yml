@@ -1,11 +1,11 @@
 publiccodeYmlVersion: '0.4'
-name: '{{PORTAL_NAME}}' # Public name of the instance, e.g. "Mitmachportal Würzburg".
-url: '{{OPENCODE_REPO_URL}}' # HTTPS URL of the openCoDE repository this file is published in.
-landingURL: '{{PORTAL_URL}}'
-landingUrl: '{{PORTAL_URL}}'
+name: Öffentlichkeitsbeteiligung in der Stadt Regensburg
+url: 'https://gitlab.opencode.de/regensburg_next/mein.regensburg'
+landingURL: 'https://mein.regensburg.de'
+landingUrl: 'https://mein.regensburg.de'
 isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
-softwareVersion: '{{RELEASE_DATE}}' # Date of the pushed code state, format YYYY-MM-DD. Keep both in sync.
-releaseDate: '2026-06-29'
+softwareVersion: '2026-08-12'
+releaseDate: '2026-08-12'
 logo: logo.png
 platforms:
   - web
@@ -17,15 +17,15 @@ developmentStatus: stable
 softwareType: standalone/web
 description:
   de:
-    localisedName: '{{PORTAL_LOCALISED_NAME}}' # Long form of the portal name, e.g. "Mitmachportal der Region Würzburg".
+    localisedName: Öffentlichkeitsbeteiligung in der Stadt Regensburg
     genericName: Bürgerbeteiligungsplattform
     shortDescription: >-
-      Digitale Beteiligungsplattform {{CLIENT_GENITIVE}} für Vorschläge,
-      Diskussionen und weitere Beteiligungsformate.
+      Digitale Beteiligungsplattform der Stadt Regensburg für Bürgerhaushalt,
+      Vorschläge und weitere Beteiligungsformate.
     longDescription: >-
-      {{PORTAL_NAME}} ist die Online-Beteiligungsplattform
-      {{CLIENT_GENITIVE}}. Bürgerinnen und Bürger können Vorschläge
-      einreichen, diskutieren und über Beteiligungsprojekte abstimmen.
+      Auf der Plattform „Öffentlichkeitsbeteiligung in der Stadt Regensburg“
+      können Bürgerinnen und Bürger Vorschläge einreichen, diskutieren und
+      über Beteiligungsprojekte wie den Bürgerhaushalt abstimmen.
       Beteiligungsverfahren werden als Projekte mit eigenen Phasen
       abgebildet – von der Ideensammlung über die Diskussion bis zur
       Abstimmung und der Rückmeldung der Verwaltung. Ortsbezogene Anliegen
@@ -35,8 +35,8 @@ description:
       angepassten Version der Open-Source-Software Consul, ist
       datenschutzfreundlich vorkonfiguriert und wird von demokratie.today
       betrieben, gehostet und weiterentwickelt.
-    documentation: '{{OPENCODE_REPO_URL}}/-/blob/{{CLIENT_BRANCH}}/BETRIEBSHANDBUCH.md'
-    apiDocumentation: '{{PORTAL_URL}}/api/docs'
+    documentation: 'https://gitlab.opencode.de/regensburg_next/mein.regensburg/-/blob/cli_reg_2/BETRIEBSHANDBUCH.md'
+    apiDocumentation: 'https://mein.regensburg.de/api/docs'
     features:
       - Bürgerbeteiligung
       - Bürgerhaushalt
@@ -49,14 +49,14 @@ description:
 legal:
   license: AGPL-3.0
   mainCopyrightOwner: demokratie.today
-  repoOwner: '{{CLIENT_NAME}}' # Owner of the openCoDE repository, e.g. "Stadt Würzburg".
+  repoOwner: 'Stadt Regensburg'
 maintenance:
   type: contract
   contractors:
     - name: demokratie.today
       email: info@demokratie.today
       website: 'https://demokratie.today'
-      until: '{{CONTRACT_UNTIL}}' # End of the current maintenance contract, format YYYY-MM-DD.
+      until: '2027-12-31'
 localisation:
   localisationReady: true
   availableLanguages:
@@ -68,7 +68,7 @@ intendedAudience:
     - local-authorities
 
 usedBy: # Add every public body operating this instance (e.g. city and district).
-  - '{{CLIENT_NAME}}'
+  - 'Stadt Regensburg'
 dependsOn:
   open:
     - name: Ruby on Rails

@@ -20,12 +20,13 @@ description:
     localisedName: '{{PORTAL_LOCALISED_NAME}}' # Long form of the portal name, e.g. "Mitmachportal der Region Würzburg".
     genericName: Bürgerbeteiligungsplattform
     shortDescription: >-
-      Digitale Beteiligungsplattform {{CLIENT_GENITIVE}} für Vorschläge,
-      Diskussionen und weitere Beteiligungsformate.
+      Digitale Beteiligungsplattform {{CLIENT_GENITIVE}} für Bürgerhaushalt,
+      Vorschläge und weitere Beteiligungsformate.
     longDescription: >-
       {{PORTAL_NAME}} ist die Online-Beteiligungsplattform
       {{CLIENT_GENITIVE}}. Bürgerinnen und Bürger können Vorschläge
-      einreichen, diskutieren und über Beteiligungsprojekte abstimmen.
+      einreichen, diskutieren und über Beteiligungsprojekte wie den
+      Bürgerhaushalt abstimmen.
       Beteiligungsverfahren werden als Projekte mit eigenen Phasen
       abgebildet – von der Ideensammlung über die Diskussion bis zur
       Abstimmung und der Rückmeldung der Verwaltung. Ortsbezogene Anliegen

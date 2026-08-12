@@ -5,7 +5,7 @@ landingURL: '{{PORTAL_URL}}'
 landingUrl: '{{PORTAL_URL}}'
 isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
 softwareVersion: '{{RELEASE_DATE}}' # Date of the pushed code state, format YYYY-MM-DD. Keep both in sync.
-releaseDate: '2026-06-29'
+releaseDate: '{{RELEASE_DATE}}'
 logo: logo.png
 platforms:
   - web

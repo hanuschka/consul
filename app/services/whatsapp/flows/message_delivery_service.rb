@@ -13,7 +13,10 @@ class Whatsapp::Flows::MessageDeliveryService < Whatsapp::Flows::BaseService
   def turn_on
     account.opt_in!
 
-    Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.opted_in"))
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp.phrase("whatsapp.bot.opted_in")
+    )
   end
 
   # Opting out also drops whatever flow was open: a citizen asking not to be
@@ -24,6 +27,9 @@ class Whatsapp::Flows::MessageDeliveryService < Whatsapp::Flows::BaseService
     account.opt_out!
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.compliance.opted_out"))
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp.phrase("whatsapp.bot.compliance.opted_out")
+    )
   end
 end

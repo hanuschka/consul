@@ -6,6 +6,7 @@ class Whatsapp::Inbound::IngestWebhookService < ApplicationService
     "voice" => "audio",
     "interactive" => "interactive",
     "button" => "interactive",
+    "location" => "location",
     "request_welcome" => "welcome"
   }.freeze
 
@@ -130,7 +131,20 @@ class Whatsapp::Inbound::IngestWebhookService < ApplicationService
           message.dig("interactive", "list_reply", "title")
       when "button"
         message.dig("button", "text")
+      when "location"
+        location_description(message)
       end
+    end
+
+    # The coordinates are the fallback rather than the first choice: WhatsApp's
+    # picker sends a name and address when the citizen picked a place and neither
+    # when they dropped a pin, and the message log is read to find out what was
+    # said — a row with an empty body answers nothing.
+    def location_description(message)
+      location = message["location"].to_h
+
+      [location["name"], location["address"]].compact_blank.join(", ").presence ||
+        [location["latitude"], location["longitude"]].compact.join(", ").presence
     end
 
     def latest_inbound_at(account, message)

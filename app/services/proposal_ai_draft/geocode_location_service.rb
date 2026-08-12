@@ -1,8 +1,11 @@
 class ProposalAiDraft::GeocodeLocationService < ApplicationService
   PROJEKT_AREA_HALF_EXTENT_DEGREES = 0.5
 
-  def initialize(proposal:, location_name:)
-    @proposal = proposal
+  # Any mappable the drafting flows produce — a Proposal on the web and either a
+  # Proposal or a Budget::Investment over WhatsApp, which is why the keyword no
+  # longer names one of them.
+  def initialize(mappable:, location_name:)
+    @mappable = mappable
     @location_name = location_name
   end
 
@@ -11,15 +14,8 @@ class ProposalAiDraft::GeocodeLocationService < ApplicationService
     return if geo_result.blank?
 
     lat, lng = geo_result.coordinates
-    zoom = projekt_phase_map_location&.zoom || 15
 
-    MapLocation.create!(
-      mappable: @proposal,
-      latitude: lat,
-      longitude: lng,
-      zoom:,
-      features: build_features(lat, lng)
-    )
+    MapLocation.create_pin!(mappable: @mappable, latitude: lat, longitude: lng)
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] GeocodeLocationService failed: #{e.message}")
   end
@@ -37,7 +33,7 @@ class ProposalAiDraft::GeocodeLocationService < ApplicationService
     end
 
     def projekt_phase_map_location
-      @projekt_phase_map_location ||= @proposal.projekt_phase&.map_location
+      @projekt_phase_map_location ||= @mappable.projekt_phase&.map_location
     end
 
     def viewbox_params(center)
@@ -48,20 +44,6 @@ class ProposalAiDraft::GeocodeLocationService < ApplicationService
       {
         viewbox: "#{lng - delta},#{lat - delta},#{lng + delta},#{lat + delta}",
         bounded: 1
-      }
-    end
-
-    def build_features(lat, lng)
-      {
-        "type" => "FeatureCollection",
-        "features" => [{
-          "type" => "Feature",
-          "geometry" => {
-            "type" => "Point",
-            "coordinates" => [lng, lat]
-          },
-          "properties" => {}
-        }]
       }
     end
 end

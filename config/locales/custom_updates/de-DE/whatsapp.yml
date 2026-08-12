@@ -17,13 +17,13 @@ de:
       page:
         title: WhatsApp-Nummer verbinden
         intro: >-
-          Sobald Ihre Nummer verbunden ist, werden Vorschläge, die Sie per WhatsApp einreichen,
+          Sobald Ihre Nummer verbunden ist, werden Beiträge, die Sie per WhatsApp einreichen,
           Ihrem Konto zugeordnet.
         number_label: WhatsApp-Nummer
         broadcast_consent: Ich möchte per WhatsApp benachrichtigt werden, wenn ein neues Beteiligungsprojekt
           startet.
         consent_note: >-
-          Ohne dieses Häkchen können Sie weiterhin Vorschläge per WhatsApp einreichen, erhalten aber
+          Ohne dieses Häkchen können Sie weiterhin Beiträge per WhatsApp einreichen, erhalten aber
           keine Benachrichtigungen. Sie können die Auswahl jederzeit in Ihrem Konto oder mit der
           Nachricht STOPP ändern.
         confirm: Nummer verbinden
@@ -126,8 +126,10 @@ de:
         image_upload: Foto hochladen
         image_generate: Bild erzeugen
         image_skip: Ohne Bild einreichen
+        location_share: Standort teilen
+        location_skip: Ohne Ort einreichen
         submit_final: Beitrag einreichen
-        submit_anyway: Neu einreichen
+        submit_anyway: Eigenen Beitrag
       help_menu:
         body: 'Ich helfe Ihnen gerne weiter. Wählen Sie aus, womit ich Ihnen helfen kann:'
         rows:
@@ -194,8 +196,9 @@ de:
         no_open_phase: In diesem Projekt läuft derzeit keine Phase, in der Beiträge eingereicht
           werden können.
         not_logged_in: >-
-          Für dieses Projekt brauche ich ein verknüpftes Konto. Schreiben Sie mir „Konto
-          verknüpfen“, dann schicke ich Ihnen den Anmeldelink.
+          Für dieses Projekt brauche ich ein verknüpftes Konto, damit ich Ihren Beitrag Ihrem
+          Konto zuordnen kann.
+        organization: Organisationen können hier keine Beiträge einreichen.
         missing_user_data: >-
           Dieses Projekt ist auf bestimmte Personen beschränkt, und dafür fehlen mir Angaben zu
           Ihnen. Reichen Sie den Beitrag bitte über die Projektseite ein, wo Sie die Angaben
@@ -216,8 +219,16 @@ de:
           Dieses Projekt ist auf einen bestimmten Bereich beschränkt. Ihre hinterlegte Adresse
           gehört nicht dazu.
         only_specific_ages: An diesem Projekt können nur bestimmte Altersgruppen teilnehmen.
+        only_specific_individual_group_values: >-
+          Die Teilnahme an diesem Projekt ist beschränkt auf: %{individual_group_values}.
       portal_fallback_name: das Beteiligungsportal
+      resource_nouns:
+        Vorschläge: Beiträge
+        vorschläge: beiträge
+        Vorschlag: Beitrag
+        vorschlag: beitrag
       onboarding:
+        welcome_greeting: 👋 Schön, dass Sie hier sind!
         disclosure: >-
           👋 Willkommen bei %{portal_name}! Ich bin ein KI-Bot und helfe Ihnen dabei, Beiträge einzureichen,
           sie zu unterstützen und auf dem Laufenden zu bleiben.
@@ -310,7 +321,7 @@ de:
       proposal:
         ask_idea: Schreiben Sie mir kurz, woran Sie denken — ich mache einen Beitrag daraus.
         ask_category: Welche Kategorie passt am besten?
-        ask_sentiment: Wie steht Ihr Beitrag zum Thema?
+        ask_sentiment: Wie stehen Sie zum Thema?
         category_line: 'Kategorie: %{category}'
         sentiment_line: 'Stimmung: %{sentiment}'
         evaluation_line: |-
@@ -350,6 +361,7 @@ de:
         image_failed: >-
           Diese Datei konnte ich nicht verwenden. Versuchen Sie ein anderes Foto, oder machen Sie
           ohne Bild weiter.
+        image_rights_notice: Bitte achten Sie darauf, dass Sie die Nutzungsrechte am Foto besitzen.
         duplicate:
           single: |-
             Dazu gibt es schon einen Beitrag: „%{title}“
@@ -361,9 +373,17 @@ de:
             Zu Ihrem Anliegen gibt es schon Beiträge. Möchten Sie einen davon unterstützen, oder
             Ihren eigenen Beitrag einreichen?
           list_label: Auswählen
-          submit_anyway_hint: Eigenen Beitrag einreichen
+          submit_anyway_hint: Trotzdem einen eigenen Beitrag einreichen
         image_generating: Alles klar, ich erstelle ein Bild — einen Moment.
         image_generate_failed: Das hat nicht geklappt, Ihr Beitrag geht deshalb ohne Bild hinaus.
+        ask_location: >-
+          Möchten Sie den Ort auf der Karte markieren? Sie können Ihren Standort direkt über
+          WhatsApp teilen.
+        location_request: Tippen Sie auf „Standort senden“ und wählen Sie den Ort aus.
+        location_retry: >-
+          Das war noch kein Standort. Tippen Sie auf „Standort senden“ — oder schreiben Sie mir
+          irgendetwas, dann reiche ich Ihren Beitrag ohne Ort ein.
+        location_received: ✅ Ort gespeichert, danke!
       support:
         prompt: '👍 Möchten Sie diesen Beitrag unterstützen: „%{title}“?'
         thanks: ✅ Danke für Ihre Unterstützung! (bisher %{count} Unterstützende)

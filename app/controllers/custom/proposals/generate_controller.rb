@@ -109,7 +109,7 @@ idea_text: @draft_resource.ai_idea_text)
 
       if draft_data["location"].present?
         ProposalAiDraft::GeocodeLocationService.call(
-          proposal:,
+          mappable: proposal,
           location_name: draft_data["location"]
         )
       end

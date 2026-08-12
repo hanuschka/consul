@@ -72,11 +72,8 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
 
       Whatsapp::Outbound.buttons(
         account: account,
-        body: I18n.t(
-          "whatsapp.bot.proposal.duplicate.single",
-          title: proposal.title,
-          url: Whatsapp::PublishedResourceUrl.call(proposal)
-        ),
+        body: Whatsapp.phrase("whatsapp.bot.proposal.duplicate.single", title: proposal.title,
+          url: Whatsapp::PublishedResourceUrl.call(proposal)),
         buttons: [
           support_button(proposal),
           Whatsapp::FlowActions.button(
@@ -96,7 +93,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     def ask_about_several
       Whatsapp::Outbound.list(
         account: account,
-        body: I18n.t("whatsapp.bot.proposal.duplicate.multiple"),
+        body: Whatsapp.phrase("whatsapp.bot.proposal.duplicate.multiple"),
         button_label: I18n.t("whatsapp.bot.proposal.duplicate.list_label"),
         rows: proposal_rows + escape_rows
       )

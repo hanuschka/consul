@@ -14,11 +14,12 @@ en:
       failure: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
       page:
         title: Link your WhatsApp number
-        intro: Once linked, proposals you submit by WhatsApp are attributed to your account.
+        intro: Once linked, contributions you submit by WhatsApp are attributed to your account.
         number_label: WhatsApp number
         broadcast_consent: I want to be notified on WhatsApp when a new participation project starts.
         consent_note: >-
-          Without this box you can still submit proposals via WhatsApp, you just receive no notifications.
+          Without this box you can still submit contributions via WhatsApp, you just receive no
+          notifications.
           You can change this any time in your account or by sending STOP.
         confirm: Link number
       expired: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
@@ -115,8 +116,10 @@ en:
         image_upload: Upload a photo
         image_generate: Create one for me
         image_skip: Submit without one
+        location_share: Share location
+        location_skip: Submit without one
         submit_final: Submit it now
-        submit_anyway: Submit mine
+        submit_anyway: Own contribution
       help_menu:
         body: 'Happy to help. Choose what I can help you with:'
         rows:
@@ -179,8 +182,8 @@ en:
           are allowed.
         no_open_phase: This project currently has no phase that accepts contributions.
         not_logged_in: >-
-          This project needs a linked account. Send me "link account" and I will send you the login
-          link.
+          This project needs a linked account, so that I can attribute your contribution to you.
+        organization: Organisations cannot submit contributions here.
         missing_user_data: >-
           This project is limited to certain people, and I am missing the details that decide it.
           Please submit through the project page, where you can add them.
@@ -199,8 +202,16 @@ en:
         only_specific_registered_address_groupings: >-
           This project is limited to a specific area, and your registered address is not in it.
         only_specific_ages: Only certain age groups can take part in this project.
+        only_specific_individual_group_values: >-
+          Taking part in this project is limited to: %{individual_group_values}.
       portal_fallback_name: the participation portal
+      resource_nouns:
+        Proposals: Contributions
+        proposals: contributions
+        Proposal: Contribution
+        proposal: contribution
       onboarding:
+        welcome_greeting: 👋 Good to have you here!
         disclosure: >-
           👋 Welcome to %{portal_name}! I'm an AI bot that helps you submit contributions, support them,
           and stay up to date.
@@ -287,7 +298,7 @@ en:
       proposal:
         ask_idea: Write me a short summary of what you're thinking — I'll turn it into a contribution.
         ask_category: Which category fits best?
-        ask_sentiment: Where does your contribution stand on this?
+        ask_sentiment: Where do you stand on this topic?
         category_line: 'Category: %{category}'
         sentiment_line: 'Sentiment: %{sentiment}'
         evaluation_line: |-
@@ -323,6 +334,7 @@ en:
         image_upload_prompt: Send me the photo now — just attach it to your next message.
         image_received: ✅ Got the photo, thanks!
         image_failed: I couldn't use that file. Try another photo, or carry on without one.
+        image_rights_notice: Please make sure you hold the usage rights to the photo.
         duplicate:
           single: |-
             There is already a contribution about this: "%{title}"
@@ -334,9 +346,17 @@ en:
             There are already contributions about this. Would you like to support one of them, or
             submit your own?
           list_label: Choose
-          submit_anyway_hint: Submit my own contribution
+          submit_anyway_hint: Submit your own contribution anyway
         image_generating: Alright, I'm creating an image — one moment.
         image_generate_failed: That didn't work, so your contribution goes out without a picture.
+        ask_location: >-
+          Would you like to mark the place on the map? You can share your location straight from
+          WhatsApp.
+        location_request: Tap "Send location" and pick the place.
+        location_retry: >-
+          That was not a location yet. Tap "Send location" — or write me anything and I will submit
+          your contribution without one.
+        location_received: ✅ Location saved, thanks!
       support:
         prompt: '👍 Would you like to support this contribution: "%{title}"?'
         thanks: ✅ Thanks for your support! (%{count} supporters so far)

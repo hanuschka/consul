@@ -46,6 +46,35 @@ module Whatsapp::Outbound
     end
   end
 
+  # A message that carries a picture, and what to do when WhatsApp will not take
+  # it. Which route works is a property of the transport rather than of the flow
+  # asking, so the ladder is walked here: the media id first, because an
+  # uploaded picture travels with the send and needs nothing fetched from us;
+  # the blob URL second, which WhatsApp fetches mid-send and which it refuses
+  # the whole message over when our host is not reachable from its network — an
+  # access-restricted environment, every time.
+  #
+  # A refused send is repeated without the picture rather than left undelivered:
+  # the citizen is standing at a step that expects an answer, and no message at
+  # all is the one outcome worse than a message they cannot see the photo in.
+  # Nil for both routes is simply the message, which is what the caller wants
+  # when there was no showable picture to begin with.
+  def buttons_with_picture(account:, body:, buttons:, media_id: nil, image_url: nil)
+    return buttons_with_media_header(
+      account: account, body: body, buttons: buttons, header_media_id: media_id
+    ) if media_id.present?
+
+    return buttons(account: account, body: body, buttons: buttons) if image_url.blank?
+
+    message = buttons(account: account, body: body, buttons: buttons, header_image_url: image_url)
+
+    return message if message&.status != "failed"
+
+    Rails.logger.info("[Whatsapp] picture header refused, message re-sent without it")
+
+    buttons(account: account, body: body, buttons: buttons)
+  end
+
   # The caption is recorded as the message body: the dialog history in /adm is
   # read to find out what the bot said, and "image" alone answers nothing.
   def image(account:, image_url:, caption: nil)
@@ -67,6 +96,14 @@ module Whatsapp::Outbound
       messages.send_sectioned_list(
         to: account.wa_id, body: body, button_label: button_label, sections: sections
       )
+    end
+  end
+
+  # The native location picker. Recorded as an interactive message like every
+  # other tappable one, so the dialog history in /adm reads in order.
+  def location_request(account:, body:)
+    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+      messages.send_location_request(to: account.wa_id, body: body)
     end
   end
 

@@ -5,7 +5,10 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
   # draft.
   def call
     if projekt_phase.blank?
-      return Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.no_projekt"))
+      return Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.no_projekt")
+      )
     end
 
     permission_problem =
@@ -22,7 +25,7 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.text(
       account: account,
-      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.proposal.ask_idea")
+      body: Whatsapp.phrase("whatsapp.bot.proposal.ask_idea")
     )
   end
 

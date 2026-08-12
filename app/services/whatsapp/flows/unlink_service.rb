@@ -17,7 +17,7 @@ class Whatsapp::Flows::UnlinkService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: I18n.t("whatsapp.bot.onboarding.unlink_confirm"),
+      body: Whatsapp.phrase("whatsapp.bot.onboarding.unlink_confirm"),
       buttons: buttons
     )
   end
@@ -29,7 +29,7 @@ class Whatsapp::Flows::UnlinkService < Whatsapp::Flows::BaseService
   def confirm
     Whatsapp::Outbound.text(
       account: account,
-      body: I18n.t("whatsapp.bot.onboarding.unlinked")
+      body: Whatsapp.phrase("whatsapp.bot.onboarding.unlinked")
     )
 
     @conversation.reset_flow!

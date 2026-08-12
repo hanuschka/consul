@@ -16,9 +16,6 @@ class Whatsapp::Flows::AiDisclosureService < Whatsapp::Flows::BaseService
   private
 
     def body
-      I18n.t(
-        "whatsapp.bot.compliance.disclosure",
-        portal_name: Whatsapp::PortalLinks.portal_name
-      )
+      Whatsapp.phrase("whatsapp.bot.compliance.disclosure", portal_name: Whatsapp::PortalLinks.portal_name)
     end
 end

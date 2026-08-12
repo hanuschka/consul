@@ -48,10 +48,6 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
 
   private
 
-    def draft_resource
-      @conversation.draft_resource
-    end
-
     def projekt_phase
       @conversation.projekt_phase
     end
@@ -89,7 +85,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
         Whatsapp::DraftCard.body(draft_resource, intro_key: "#{@copy_prefix}_intro"),
         taxonomy_block,
         evaluation_line,
-        Whatsapp::AiAssistant::PhrasingService.call(key: "#{@copy_prefix}_question")
+        Whatsapp.phrase("#{@copy_prefix}_question")
       ].compact_blank.join("\n\n")
     end
 
@@ -104,7 +100,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
 
       return if category.blank?
 
-      I18n.t("whatsapp.bot.proposal.category_line", category: category)
+      Whatsapp.phrase("whatsapp.bot.proposal.category_line", category: category)
     end
 
     # The draft carries a sentiment the citizen never chose, assigned by the
@@ -115,7 +111,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
 
       return if sentiment.blank?
 
-      I18n.t("whatsapp.bot.proposal.sentiment_line", sentiment: sentiment)
+      Whatsapp.phrase("whatsapp.bot.proposal.sentiment_line", sentiment: sentiment)
     end
 
     # Parity with the web flow, which shows the submitter their score and
@@ -125,7 +121,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
       return if evaluation["stage"] != ::ProposalAiDraft::EvaluateTwoTierService::STAGE_COMPLETED
       return if max_score.zero?
 
-      I18n.t(
+      Whatsapp.phrase(
         "whatsapp.bot.proposal.evaluation_line",
         score: evaluation["total_score"].to_i,
         max_score: max_score,

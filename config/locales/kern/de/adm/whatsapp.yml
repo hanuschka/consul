@@ -74,7 +74,9 @@ de:
       kinds:
         text: Text
         audio: Sprachnachricht
+        image: Bild
         interactive: Auswahl
+        location: Standort
         template: Benachrichtigungsvorlage
         welcome: Chat geöffnet
         unsupported: Nicht unterstützt

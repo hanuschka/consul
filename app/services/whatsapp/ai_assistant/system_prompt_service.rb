@@ -49,7 +49,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            question to you. This is always the right call when the conversation step is
            awaiting_idea, awaiting_category, awaiting_sentiment, awaiting_duplicate_decision,
            awaiting_draft_decision, awaiting_image_choice, awaiting_image_upload,
-           awaiting_final_confirmation, awaiting_revision, awaiting_comment,
+           awaiting_location, awaiting_final_confirmation, awaiting_revision, awaiting_comment,
            awaiting_resume_decision or awaiting_phase_choice, unless the citizen
            is clearly asking you something instead of answering. Never paraphrase, summarise or
            answer such a message yourself, and never repeat it back: the flow needs the original

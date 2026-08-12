@@ -18,7 +18,7 @@ class Whatsapp::Flows::NotificationSettingsService < Whatsapp::Flows::BaseServic
 
     Whatsapp::Outbound.list(
       account: account,
-      body: I18n.t("whatsapp.bot.notifications.settings_title"),
+      body: Whatsapp.phrase("whatsapp.bot.notifications.settings_title"),
       button_label: I18n.t("whatsapp.bot.buttons.choose_notifications"),
       rows: rows
     )

@@ -15,7 +15,7 @@ module Whatsapp::DraftCard
   # the card under it is the citizen's own words and is never touched.
   def body(resource, intro_key:)
     [
-      ::Whatsapp::AiAssistant::PhrasingService.call(key: intro_key),
+      Whatsapp.phrase(intro_key),
       I18n.t(
         "whatsapp.bot.proposal.card",
         title: resource.title,

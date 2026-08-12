@@ -15,7 +15,7 @@ class Whatsapp::Flows::CancelService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.proposal.cancelled"),
+      body: Whatsapp.phrase("whatsapp.bot.proposal.cancelled"),
       buttons: [
         Whatsapp::FlowActions.button(
           action: :main_menu, label_key: "whatsapp.bot.buttons.main_menu"

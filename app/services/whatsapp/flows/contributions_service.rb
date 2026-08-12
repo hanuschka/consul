@@ -13,7 +13,11 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.text(
       account: account,
-      body: [I18n.t("whatsapp.bot.contributions.intro"), *entries, more_line].compact_blank.join("\n\n")
+      body: [
+        Whatsapp.phrase("whatsapp.bot.contributions.intro"),
+        *entries,
+        more_line
+      ].compact_blank.join("\n\n")
     )
   end
 
@@ -51,13 +55,13 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
 
       return if remaining < 1
 
-      I18n.t("whatsapp.bot.contributions.more", count: remaining)
+      Whatsapp.phrase("whatsapp.bot.contributions.more", count: remaining)
     end
 
     def send_empty
       Whatsapp::Outbound.text(
         account: account,
-        body: I18n.t("whatsapp.bot.contributions.empty")
+        body: Whatsapp.phrase("whatsapp.bot.contributions.empty")
       )
     end
 end

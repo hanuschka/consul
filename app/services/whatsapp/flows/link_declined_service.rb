@@ -7,7 +7,7 @@ class Whatsapp::Flows::LinkDeclinedService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: I18n.t("whatsapp.bot.onboarding.declined"),
+      body: Whatsapp.phrase("whatsapp.bot.onboarding.declined"),
       buttons: buttons
     )
   end

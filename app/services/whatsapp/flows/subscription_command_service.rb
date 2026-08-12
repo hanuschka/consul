@@ -38,13 +38,13 @@ class Whatsapp::Flows::SubscriptionCommandService < Whatsapp::Flows::BaseService
     end
 
     def body
-      I18n.t(
-        "whatsapp.bot.subscription.#{@outcome}",
-        projekt: Whatsapp::ProjektLink.title(@projekt)
-      )
+      Whatsapp.phrase("whatsapp.bot.subscription.#{@outcome}", projekt: Whatsapp::ProjektLink.title(@projekt))
     end
 
     def send_unknown
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.subscription.unknown"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.subscription.unknown")
+      )
     end
 end

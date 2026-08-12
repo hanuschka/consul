@@ -28,9 +28,9 @@ class Whatsapp::Flows::PublicDiscoveryService < Whatsapp::Flows::BaseService
       Whatsapp::Flows::SendListService.call(
         conversation: @conversation,
         rows: Whatsapp::PhaseListRows.build(guest_phases),
-        body: I18n.t("whatsapp.bot.discovery.guest_body"),
+        body: Whatsapp.phrase("whatsapp.bot.discovery.guest_body"),
         button_label: I18n.t("whatsapp.bot.discovery.button"),
-        empty_body: I18n.t("whatsapp.bot.discovery.empty")
+        empty_body: empty_body
       )
     end
 
@@ -41,9 +41,17 @@ class Whatsapp::Flows::PublicDiscoveryService < Whatsapp::Flows::BaseService
     end
 
     def body
-      return I18n.t("whatsapp.bot.discovery.empty") if projekts.empty?
+      return empty_body if projekts.empty?
 
-      [I18n.t("whatsapp.bot.discovery.public_intro"), entries, more_line].compact_blank.join("\n\n")
+      [
+        Whatsapp.phrase("whatsapp.bot.discovery.public_intro"),
+        entries,
+        more_line
+      ].compact_blank.join("\n\n")
+    end
+
+    def empty_body
+      Whatsapp.phrase("whatsapp.bot.discovery.empty")
     end
 
     def projekts
@@ -67,6 +75,6 @@ class Whatsapp::Flows::PublicDiscoveryService < Whatsapp::Flows::BaseService
 
       return if remaining < 1
 
-      I18n.t("whatsapp.bot.discovery.more", count: remaining, url: Whatsapp::PortalLinks.root_url)
+      Whatsapp.phrase("whatsapp.bot.discovery.more", count: remaining, url: Whatsapp::PortalLinks.root_url)
     end
 end

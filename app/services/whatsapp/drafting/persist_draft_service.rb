@@ -100,15 +100,22 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
       resource.projekt_label_ids = label_ids
     end
 
-    # Proposals only, matching the web flow: the budget investment form has no
-    # location step and its generate controller does not geocode either.
+    # Only where the phase offers a map at all. The pin inferred from the
+    # citizen's own wording lands in the same field the web form shows, so a
+    # phase with the map switched off has nowhere to render it and no business
+    # deriving it — and the citizen is never shown what was guessed.
+    #
+    # Budget phases included: an investment is `Mappable` like a proposal, and
+    # the bot now offers both of them an explicit pin, so inferring one from the
+    # text for only one of the two would be the odd case rather than the safe
+    # one.
     def geocode(resource)
-      return if budget_phase?
+      return if !@conversation.location_question_available?
 
       location_name = @draft_data["location"]
 
       return if location_name.blank?
 
-      ::ProposalAiDraft::GeocodeLocationService.call(proposal: resource, location_name: location_name)
+      ::ProposalAiDraft::GeocodeLocationService.call(mappable: resource, location_name: location_name)
     end
 end

@@ -13,7 +13,7 @@ class Whatsapp::Flows::CommentPromptService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.text(
       account: account,
-      body: I18n.t("whatsapp.bot.comment.prompt")
+      body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
     )
   end
 end

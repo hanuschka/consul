@@ -20,7 +20,7 @@ class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
       rows: rows,
       body: body,
       button_label: I18n.t("whatsapp.bot.discovery.button"),
-      empty_body: I18n.t("whatsapp.bot.discovery.empty")
+      empty_body: Whatsapp.phrase("whatsapp.bot.discovery.empty")
     )
   end
 
@@ -30,12 +30,11 @@ class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
     # open phases: the citizen already chose the projekt by scanning, and
     # offering them the whole portal again would throw that choice away.
     def body
-      return I18n.t("whatsapp.bot.discovery.body") if @projekt.blank?
+      if @projekt.blank?
+        return Whatsapp.phrase("whatsapp.bot.discovery.body")
+      end
 
-      I18n.t(
-        "whatsapp.bot.discovery.phase_body",
-        projekt: Whatsapp::ProjektLink.title(@projekt)
-      )
+      Whatsapp.phrase("whatsapp.bot.discovery.phase_body", projekt: Whatsapp::ProjektLink.title(@projekt))
     end
 
     def rows

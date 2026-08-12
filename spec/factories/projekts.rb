@@ -4,5 +4,10 @@ FactoryBot.define do
 
     total_duration_start { 1.month.ago }
     total_duration_end { 1.month.from_now }
+    activated { true }
+
+    trait :deactivated do
+      activated { false }
+    end
   end
 end

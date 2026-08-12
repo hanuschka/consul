@@ -33,6 +33,7 @@ en:
             header:
               name: Topic pages
               url: URL
+              projekts: Projects
               status: Status
             no_landing_pages: No topic pages have been created yet.
         new:
@@ -51,6 +52,16 @@ en:
           managers_empty_title: No topic-page managers available
           managers_empty_description: No topic-page managers have been created yet. First create a manager, then assign them to this topic page.
           managers_empty_link: Create manager
+          projekts_title: Assigned projects
+          projekts_description: These projects are currently assigned to this topic page and are shown on it. The assignment is made on the project itself under Projects > Details. Deleting this topic page moves the projects back to the main site.
+          projekts_empty_title: No projects assigned
+          projekts_empty_description: No project is assigned to this topic page yet. Open a project under Projects > Details and select this topic page there.
+          destroy_title: Delete topic page
+          destroy_description: Deleting this topic page also removes its navigation entries and content cards. This cannot be undone.
+          destroy_detaches_projekts:
+            one: The assigned project is kept and moved back to the main site.
+            other: The %{count} assigned projects are kept and moved back to the main site.
+          destroy_blocked_description: This topic page cannot be deleted because it belongs to a project.
         navbar_items:
           title: Navigation
           description: >
@@ -59,6 +70,13 @@ en:
           new_item: Create new entry
         update:
           success: The value was updated successfully.
+        destroy:
+          success: The topic page was deleted successfully.
+          confirm: "Delete the topic page “%{title}”? Its navigation entries and content cards will also be removed, and any assigned projects will be moved back to the main site. This cannot be undone."
+          confirm_with_projekts:
+            one: "Delete the topic page “%{title}”? Its navigation entries and content cards will also be removed. The assigned project is kept and moved back to the main site. This cannot be undone."
+            other: "Delete the topic page “%{title}”? Its navigation entries and content cards will also be removed. The %{count} assigned projects are kept and moved back to the main site. This cannot be undone."
+          cannot_destroy: The topic page cannot be deleted because it belongs to a project.
       managers:
         index:
           title: Topic-page managers

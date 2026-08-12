@@ -1,9 +1,24 @@
 class Budgets::Investments::VotesComponent < ApplicationComponent
-  attr_reader :investment
+  attr_reader :investment, :investment_ids
   delegate :namespace, :current_user, :image_absolute_url, :link_to_verify_account, to: :helpers
 
-  def initialize(investment)
+  def initialize(investment, investment_ids: nil)
     @investment = investment
+    @investment_ids = investment_ids
+  end
+
+  # The ids of the cards currently on screen travel with the support and withdraw requests as
+  # hidden fields, so the response can refresh all of them instead of only the clicked one:
+  # crossing the phase's supports limit changes what every other card in the budget shows.
+  # Same mechanism the ballot buttons use.
+  #
+  # Only phases that actually have a limit send them - the response has nothing to do with them
+  # otherwise, and they would be a hidden field per card on every budget list. An empty hash
+  # renders no hidden fields at all.
+  def refresh_params
+    return {} unless investment.budget.projekt_phase&.supports_limit_applies?
+
+    { investments_ids: Array(investment_ids) }
   end
 
   def support_path

@@ -170,7 +170,7 @@ class Adm::Newsletters::ContentBlocksController < Adm::BaseController
 
     def find_ai_in_progress_content_block
       @content_block =
-        SiteCustomization::ContentBlock
+        ::SiteCustomization::ContentBlock
           .unscoped
           .where(newsletter_id: @newsletter.id)
           .find(params[:id])

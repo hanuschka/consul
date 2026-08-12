@@ -2,7 +2,11 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
   include Translatable
 
   def index
+    authorize DeficiencyReport::Category, :index?,
+      policy_class: Adm::DeficiencyReports::CategoryPolicy
+
     @categories = policy_scope(DeficiencyReport::Category, policy_scope_class: Adm::DeficiencyReports::CategoryPolicy::Scope)
+                    .includes(:subcategories)
                     .order(:given_order)
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.categories"), icon: "category" }]
@@ -77,7 +81,7 @@ class Adm::DeficiencyReports::CategoriesController < Adm::DeficiencyReports::Bas
 
     def category_params
       params.require(:deficiency_report_category).permit(
-        :name, :color, :icon, :warning_text
+        :name, :color, :icon, :warning_text, :ai_fallback, :ai_hint
       )
     end
 

@@ -2,6 +2,6 @@
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: projekt_questions_adm_projekts_phase_path(@projekt_phase), narrow: true) %>
 
-<div class="kern-container kern-container--form my-5">
+<div class="kern-container my-5">
   <%= render "form", url: adm_projekts_phase_projekt_questions_path(@projekt_phase) %>
 </div>

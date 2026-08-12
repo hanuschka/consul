@@ -1,4 +1,4 @@
-ProjektStudio.utils.debounce = function(func, wait) {
+App.Studio.utils.debounce = function(func, wait) {
   let timeout;
   return function(...args) {
     const context = this;
@@ -7,7 +7,7 @@ ProjektStudio.utils.debounce = function(func, wait) {
   };
 }
 
-ProjektStudio.utils.throttle = function(func, wait) {
+App.Studio.utils.throttle = function(func, wait) {
   let lastTime = 0;
   return function(...args) {
     const context = this;

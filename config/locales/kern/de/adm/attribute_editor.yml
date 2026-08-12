@@ -41,6 +41,18 @@ de:
         total_duration_start_description: Startdatum
         total_duration_end_label: Enddatum
         total_duration_end_description: Enddatum
+        show_in_overview_page_label: Projekt auf Projektübersichtsseite
+        show_in_overview_page_description: Steuert, ob dieses Projekt auf der allgemeinen Projektübersichtsseite angezeigt wird. Die Projektübersichtsseite listet alle öffentlichen Projekte der Plattform auf und ist für Nutzer der zentrale Einstiegspunkt, um laufende und abgeschlossene Beteiligungsprojekte zu entdecken und zu filtern.
+        show_in_homepage_label: Projekt auf der Startseite
+        show_in_homepage_description: Blendet das Projekt auf der Startseite der Plattform ein, z. B. im Bereich „Aktuelle Projekte” oder unter weiterführenden Ressourcen. So erhalten besonders relevante oder aktuelle Projekte zusätzliche Aufmerksamkeit direkt beim ersten Besuch der Plattform – unabhängig von der Projektübersichtsseite.
+        show_in_individual_list_label: Projekt in individueller Liste
+        show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer eigenständigen, individuellen Liste an – getrennt von den automatisch generierten Listen wie „Laufende Projekte” oder „Abgeschlossene Projekte”. Diese Option eignet sich z. B. für hervorgehobene oder dauerhaft sichtbare Projekte.
+        show_in_navigation_label: Projekt im Navigationsmenü
+        show_in_navigation_description: Zeigt das Projekt als eigenen Eintrag im Hauptnavigationsmenü der Plattform an. Geeignet für dauerhaft wichtige Projekte, die Nutzer von jeder Seite aus direkt erreichen sollen. Das Navigationsmenü sollte übersichtlich bleiben – nehmen Sie nur wenige, zentrale Projekte auf.
+        show_in_overview_page_navigation_label: Projekt in der Dropdown-Navigation
+        show_in_overview_page_navigation_description: Zeigt das Projekt in der Dropdownliste des Navigationsmenüs an, die alle Projekte der Übersichtsseite bündelt. So bleibt das Hauptmenü schlank, während das Projekt trotzdem über die Navigation erreichbar ist.
+        show_in_sidebar_filter_label: Projekt im Seitenleisten-Filter
+        show_in_sidebar_filter_description: Nimmt das Projekt in den Projektfilter der Seitenleiste auf, mit dem Nutzer Vorschläge, Debatten und Abstimmungen nach Projekt einschränken können. Deaktivieren Sie die Option, wenn das Projekt in diesen Filterlisten nicht erscheinen soll.
       image:
         attachment_label: Bild
         attachment_description: "Das Bild wird im oberen Bereich des Newsletters als visueller Aufmacher angezeigt, direkt unterhalb des Logos und oberhalb des Titels. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zum Newsletter-Inhalt passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG. Das Bild ist ein Pflichtfeld und muss vor dem Versand hochgeladen werden."

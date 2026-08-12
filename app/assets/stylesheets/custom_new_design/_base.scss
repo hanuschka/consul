@@ -216,6 +216,8 @@ ul.no-ul-style {
   flex-grow: 1;
   background: #c7c7c7;
   align-self: flex-end;
+  position: relative;
+  bottom: -7px;
 
   @media(max-width: $big-tablet-viewport-start) {
     display: none;
@@ -251,7 +253,7 @@ ul.no-ul-style {
   width: 100%;
   font-weight: 500;
   justify-content: space-between;
-  padding: 1px 0;
+  padding: 7px 0;
 
   &:hover {
     color: #4c5967;
@@ -263,11 +265,12 @@ ul.no-ul-style {
 }
 
 a.resources--info-count {
-  text-decoration: underline;
+  background: #c7c7c730;
+  border-radius: 7px;
+  margin-bottom: 5px;
 
   &:hover {
-    text-decoration: underline !important;
-    color: black !important;
+    background: #c7c7c730;
   }
 }
 

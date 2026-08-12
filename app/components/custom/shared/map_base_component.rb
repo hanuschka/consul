@@ -51,6 +51,10 @@ class Shared::MapBaseComponent < ApplicationComponent
       }
     end
 
+    def admin_editor?
+      @parent_class == "projekts" || @parent_class == "projekt_phases"
+    end
+
     def get_process_coordinates
       if @mappable.present? && @mappable.persisted? && @mappable.map_location.present?
         [

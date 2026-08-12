@@ -21,7 +21,7 @@
       outline-offset: 2px;
     }
 
-    a, .no-link {
+    a {
       color: $main-text-color;
       transition: color 100ms ease;
       text-decoration: none;
@@ -103,7 +103,7 @@
     display: flex;
     position: absolute;
     width: 100%;
-    z-index: 100;
+    z-index: 20;
     bottom: 0;
     padding: 7px 10px;
 
@@ -134,6 +134,13 @@
     }
   }
 
+  .resource-item--title-heading {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+
   .resource-item--title {
     display: block;
     font-size: 20px;
@@ -149,7 +156,7 @@
     }
   }
 
-  .resource-item--title-link {
+  a.resource-item--title {
     text-decoration: none;
     color: inherit;
 
@@ -265,12 +272,11 @@
     p.investment-project-amount {
       margin-bottom: 0;
     }
+  }
 
-    &.-no-bottom-padding {
-      .resource-item--footer-section {
-        padding-bottom: 0;
-      }
-    }
+  .proposal-list-item .resource-item--footer .resource-item--footer-section,
+  .projekt_event-list-item .resource-item--footer .resource-item--footer-section {
+    padding-bottom: 0;
   }
 
   .resource-item--wide-head-title--date-range {
@@ -619,10 +625,6 @@
     margin-bottom: 0;
     position: relative;
     z-index: 1;
-
-    &.-narrow {
-      padding-right: 10px;
-    }
 
     a {
       color: white;

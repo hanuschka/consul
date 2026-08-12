@@ -31,6 +31,8 @@ class ProjektQuestionsController < ApplicationController
   end
 
   def show
+    auto_sign_in_guest_for(@question.projekt_phase)
+
     @commentable = @question
     @current_order = "newest"
 

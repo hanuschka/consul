@@ -1,0 +1,154 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+
+<% deployments_ready = Mitmachbox.configured? && @projekt_phase.remote_survey_created? && @mitmachbox_error.nil? %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) do |header| %>
+  <% if deployments_ready %>
+    <% header.with_hint do %>
+      <p class="adm-hint__text"><%= t(".hint_text") %></p>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
+
+<div class="kern-container mb-5">
+  <% if !Mitmachbox.configured? %>
+    <%= render "adm/projekts/phases/mitmachbox_survey/unconfigured" %>
+  <% elsif !@projekt_phase.remote_survey_created? %>
+    <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.missing_title"),
+                    description: t("adm.projekts.phases.mitmachbox_survey.missing_text"),
+                    icon: "ballot",
+                    link_url: mitmachbox_survey_adm_projekts_phase_path(@projekt_phase),
+                    link_text: t("adm.projekts.mitmachbox.go_to_survey_tab")) %>
+  <% elsif @mitmachbox_error.present? %>
+    <%= kern_alert(title: mitmachbox_error_message(@mitmachbox_error), style: :danger) %>
+  <% else %>
+    <% format_window = ->(starts_at, ends_at) do
+         start_text = starts_at.present? ? l(Time.zone.parse(starts_at), format: :short) : "–"
+         end_text = ends_at.present? ? l(Time.zone.parse(ends_at), format: :short) : t(".open_ended")
+         "#{start_text} – #{end_text}"
+       end %>
+    <% status_badge_variants = Hash.new("").merge("scheduled" => "kern-badge--info", "active" => "kern-badge--success") %>
+    <% assignments = @assignments || [] %>
+    <% available_assignments = assignments.reject { |assignment| assignment["status"] == "ended" } %>
+    <% deployments = @deployments || [] %>
+    <% all_deployments = @all_deployments || [] %>
+    <% servable_deployments_by_assignment = all_deployments.select do |deployment|
+         deployment["ends_at"].blank? || Time.zone.parse(deployment["ends_at"]).future?
+       end.group_by { |deployment| deployment["assignment_id"].to_s } %>
+
+    <h3 class="kern-title kern-title--small mb-3"><%= t(".assignments_title") %></h3>
+
+    <% if available_assignments.any? %>
+      <div class="kern-table-responsive mb-5" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t(".assignment_table.serial") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".assignment_table.device_status") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".assignment_table.last_synced_at") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".assignment_table.window") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".assignment_table.status") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".assignment_table.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% available_assignments.each do |assignment| %>
+              <tr class="kern-table__row">
+                <th scope="row" class="kern-table__header"><%= assignment.dig("device", "serial") %></th>
+                <td class="kern-table__cell"><%= assignment.dig("device", "status") %></td>
+                <td class="kern-table__cell">
+                  <% last_synced_at = assignment.dig("device", "last_synced_at") %>
+                  <%= last_synced_at.present? ? l(Time.zone.parse(last_synced_at), format: :short) : t(".never_synced") %>
+                </td>
+                <td class="kern-table__cell"><%= format_window.call(assignment["starts_at"], assignment["ends_at"]) %></td>
+                <td class="kern-table__cell">
+                  <span class="kern-badge <%= status_badge_variants[assignment["status"].to_s] %>">
+                    <%= t(".statuses.#{assignment["status"]}") %>
+                  </span>
+                </td>
+                <td class="kern-table__cell">
+                  <% servable_here = servable_deployments_by_assignment[assignment["id"].to_s] || [] %>
+                  <% showing_this_survey = servable_here.any? do |deployment|
+                       deployment["survey_id"].to_s == @projekt_phase.mitmachbox_survey_id.to_s
+                     end %>
+                  <% other_deployment = servable_here.find do |deployment|
+                       deployment["survey_id"].to_s != @projekt_phase.mitmachbox_survey_id.to_s
+                     end %>
+                  <% if showing_this_survey %>
+                    <span class="kern-body kern-body--small"><%= t(".showing_this_survey") %></span>
+                  <% else %>
+                    <div class="d-flex flex-column align-items-start gap-2">
+                      <% if other_deployment %>
+                        <span class="kern-body kern-body--small">
+                          <%= t(".showing_other_survey", title: other_deployment["survey_title"]) %>
+                        </span>
+                      <% end %>
+                      <%= kern_link_button new_adm_projekts_phase_mitmachbox_deployment_path(@projekt_phase, assignment_id: assignment["id"]),
+                            text: t(".deploy_button"), icon: "play_circle", style: :secondary %>
+                    </div>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <%= empty_state(title: t(".assignments_empty"), icon: "devices") %>
+    <% end %>
+
+    <h3 class="kern-title kern-title--small mb-3 mt-5"><%= t(".deployments_title") %></h3>
+
+    <% if deployments.any? %>
+      <div class="kern-table-responsive mb-5" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t(".deployment_table.device") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".deployment_table.location") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".deployment_table.status") %></th>
+              <th scope="col" class="kern-table__header"><%= t(".deployment_table.actions") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% deployments.each do |deployment| %>
+              <% assignment = assignments.find { |candidate| candidate["id"].to_s == deployment["assignment_id"].to_s } %>
+              <tr class="kern-table__row">
+                <th scope="row" class="kern-table__header">
+                  <%= assignment&.dig("device", "serial") || deployment["assignment_id"] %>
+                </th>
+                <td class="kern-table__cell"><%= deployment["location"].presence || "–" %></td>
+                <td class="kern-table__cell">
+                  <span class="kern-badge <%= status_badge_variants[deployment["status"].to_s] %>">
+                    <%= t(".statuses.#{deployment["status"]}") %>
+                  </span>
+                </td>
+                <td class="kern-table__cell">
+                  <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                    <% actions.with_action(label: t(".adjust_button"),
+                         url: edit_adm_projekts_phase_mitmachbox_deployment_path(@projekt_phase, deployment["id"]),
+                         icon: "edit_location_alt",
+                         style: :edit) %>
+                    <% if deployment["status"] != "ended" %>
+                      <% actions.with_action(label: t(".end_button"),
+                           url: adm_projekts_phase_mitmachbox_deployment_path(@projekt_phase, deployment["id"]),
+                           icon: "stop_circle",
+                           style: :delete,
+                           data: { turbo_method: :delete, turbo_confirm: t(".end_confirm") }) %>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <%= empty_state(title: t(".deployments_empty"), icon: "play_circle") %>
+    <% end %>
+  <% end %>
+</div>

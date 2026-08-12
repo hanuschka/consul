@@ -2,64 +2,12 @@
   data = evaluation.data || {}
   totals = data["totals"] || {}
   phases = evaluation.phases_data
-  ai_project_summary = data["ai_project_summary"]
 
-  phase_palette = {
-    "ProjektPhase::ProposalPhase" => {
-      accent: "#059669",
-      accent_light: "#D1FAE5",
-      shades: ["#059669", "#10B981", "#34D399", "#6EE7B7", "#A7F3D0", "#D1FAE5"]
-    },
-    "ProjektPhase::VotingPhase" => {
-      accent: "#1E40AF",
-      accent_light: "#DBEAFE",
-      shades: ["#1E40AF", "#1E3A8A", "#3B82F6", "#60A5FA", "#93C5FD", "#DBEAFE"]
-    },
-    "ProjektPhase::BudgetPhase" => {
-      accent: "#D97706",
-      accent_light: "#FEF3C7",
-      shades: ["#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#FDE68A", "#FEF3C7"]
-    },
-    "ProjektPhase::CommentPhase" => {
-      accent: "#7C3AED",
-      accent_light: "#EDE9FE",
-      shades: ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#EDE9FE"]
-    }
-  }
-  phase_palette.default = phase_palette["ProjektPhase::ProposalPhase"]
-
-  phase_type_partial = {
-    "ProjektPhase::ProposalPhase" => "proposal_phase_section",
-    "ProjektPhase::VotingPhase" => "voting_phase_section",
-    "ProjektPhase::BudgetPhase" => "budget_phase_section",
-    "ProjektPhase::CommentPhase" => "comment_phase_section"
-  }
-
-  phase_tab_config = {
-    "ProjektPhase::ProposalPhase" => {
-      kpi_key: "proposals_count",
-      kpi_label_key: "adm.projekts.projekts.evaluation.proposals"
-    },
-    "ProjektPhase::VotingPhase" => {
-      kpi_key: "participants_count",
-      kpi_label_key: "adm.projekts.projekts.evaluation.participants"
-    },
-    "ProjektPhase::BudgetPhase" => {
-      kpi_key: "investments_count",
-      kpi_label_key: "adm.projekts.projekts.evaluation.investments"
-    },
-    "ProjektPhase::CommentPhase" => {
-      kpi_key: "comments_count",
-      kpi_label_key: "adm.projekts.projekts.evaluation.comments"
-    }
-  }
+  phase_palette = evaluation_phase_palette
+  phase_type_partial = evaluation_phase_section_partial
 
   pdf_mode = local_assigns.fetch(:pdf_mode, false)
   selection = local_assigns.fetch(:selection, nil)
-  live_selection =
-    if !pdf_mode && selection.nil?
-      PdfServices::EvaluationPdfSelection.from_saved_visibilities(evaluation)
-    end
 
   include_report_section = selection.nil? || selection.include_report?
 
@@ -69,14 +17,9 @@
 
     selection.include_phase?(p["phase_id"])
   end
-
-  report_tab_material_icon = "summarize"
-  report_tab_fa_icon = "fa-file-alt"
 %>
 
-
 <div class="adm-projekt-evaluation-report <%= 'adm-projekt-evaluation-report--pdf' if pdf_mode %>">
-  <%# Hidden in admin (tabs) view; rendered for the PDF/share renderer which needs a self-contained header with badge, project title, and aggregate KPIs at the top. %>
   <% if pdf_mode %>
     <div class="er-header">
       <div>
@@ -110,7 +53,7 @@
     </div>
   <% end %>
 
-  <% if pdf_mode && include_report_section %>
+  <% if include_report_section %>
     <%= render "adm/projekts/projekts/evaluation/report_summary_section",
       evaluation: evaluation,
       projekt: projekt,
@@ -118,174 +61,19 @@
       pdf_mode: true %>
   <% end %>
 
-  <% if renderable_phases.any? %>
-    <% if pdf_mode %>
-      <% renderable_phases.each_with_index do |phase, idx| %>
-        <%
-          color = phase_palette[phase["phase_type"]]
-          partial = phase_type_partial[phase["phase_type"]]
-        %>
-        <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
-          locals: {
-            phase: phase,
-            accent_color: color[:accent],
-            accent_light_color: color[:accent_light],
-            accent_shades: color[:shades],
-            selection: selection,
-            pdf_mode: true
-          } %>
-      <% end %>
-    <% else %>
-      <%
-        radio_group_name = "evaluation-phase-group-#{evaluation.id}"
-        report_input_id = "evaluation-phase-radio-#{evaluation.id}-report"
-        report_accent = "#7C3AED"
-        report_accent_light = "#EDE9FE"
-
-        renderable_rows = evaluation.phase_rows.select do |row|
-          data = row.data || {}
-          next false unless phase_type_partial.key?(data["phase_type"])
-          next true if selection.nil?
-
-          selection.include_phase?(data["phase_id"])
-        end
-      %>
-
-      <div
-        class="evaluation-phase-tabs"
-        data-controller="adm--evaluation-phase-tabs"
-      >
-        <input
-          type="radio"
-          name="<%= radio_group_name %>"
-          id="<%= report_input_id %>"
-          class="evaluation-phase-tabs__radio"
-          data-adm--evaluation-phase-tabs-target="radio"
-          data-phase-id="report"
-          checked
-        >
-        <% renderable_rows.each do |row| %>
-          <%
-            phase = row.data || {}
-            input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
-          %>
-          <input
-            type="radio"
-            name="<%= radio_group_name %>"
-            id="<%= input_id %>"
-            class="evaluation-phase-tabs__radio"
-            data-adm--evaluation-phase-tabs-target="radio"
-            data-phase-id="<%= phase["phase_id"] %>"
-          >
-        <% end %>
-
-        <div class="evaluation-phase-tabs__nav" role="tablist">
-          <%
-            report_generated_at_text =
-              if evaluation.generated_at.present?
-                t("adm.projekts.projekts.evaluation.phase_tab.generated_at",
-                  date: l(evaluation.generated_at, format: :long))
-              else
-                t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
-              end
-          %>
-          <label
-            for="<%= report_input_id %>"
-            role="tab"
-            class="evaluation-phase-tab"
-            style="--tab-accent:<%= report_accent %>;--tab-accent-light:<%= report_accent_light %>"
-          >
-            <span class="evaluation-phase-tab__icon">
-              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= report_tab_material_icon %></span>
-              <i class="fas <%= report_tab_fa_icon %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
-            </span>
-            <span class="evaluation-phase-tab__body">
-              <span class="evaluation-phase-tab__name">
-                <%= t("adm.projekts.projekts.evaluation.report_tab.title") %>
-              </span>
-              <span class="evaluation-phase-tab__meta">
-                <span><%= t("adm.projekts.projekts.evaluation.report_tab.kpi_label") %></span>
-              </span>
-              <span class="evaluation-phase-tab__generated-at">
-                <%= report_generated_at_text %>
-              </span>
-            </span>
-          </label>
-
-          <% renderable_rows.each_with_index do |row, idx| %>
-            <%
-              phase = row.data || {}
-              color = phase_palette[phase["phase_type"]]
-              config = phase_tab_config[phase["phase_type"]]
-              kpi_value = (phase["stats"] || {})[config[:kpi_key]].to_i
-              kpi_label = t(config[:kpi_label_key])
-              input_id = "evaluation-phase-radio-#{evaluation.id}-#{phase["phase_id"]}"
-              generated_at_text =
-                if row.generated_at.present?
-                  t("adm.projekts.projekts.evaluation.phase_tab.generated_at",
-                    date: l(row.generated_at, format: :long))
-                else
-                  t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
-                end
-            %>
-            <label
-              for="<%= input_id %>"
-              role="tab"
-              class="evaluation-phase-tab"
-              style="--tab-accent:<%= color[:accent] %>;--tab-accent-light:<%= color[:accent_light] %>"
-            >
-              <span class="evaluation-phase-tab__icon">
-                <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= ProjektPhase.material_icon_for(phase["phase_type"]) %></span>
-                <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
-              </span>
-              <span class="evaluation-phase-tab__body">
-                <span class="evaluation-phase-tab__name"><%= phase["phase_title"] %></span>
-                <span class="evaluation-phase-tab__meta">
-                  <strong><%= kpi_value %></strong>
-                  <span><%= kpi_label %></span>
-                </span>
-                <span class="evaluation-phase-tab__generated-at">
-                  <%= generated_at_text %>
-                </span>
-              </span>
-            </label>
-          <% end %>
-        </div>
-
-        <div class="evaluation-phase-tabs__panels">
-          <div role="tabpanel" class="evaluation-phase-panel evaluation-phase-panel--report">
-            <%= render "adm/projekts/projekts/evaluation/report_summary_section",
-              evaluation: evaluation,
-              projekt: projekt,
-              phase_palette: phase_palette,
-              pdf_mode: false %>
-          </div>
-
-          <% renderable_rows.each_with_index do |row, idx| %>
-            <%
-              phase = row.data || {}
-              color = phase_palette[phase["phase_type"]]
-              partial = phase_type_partial[phase["phase_type"]]
-            %>
-            <%= render "adm/projekts/projekts/evaluation/phase_panel",
-              projekt: projekt,
-              row: row,
-              phase: phase,
-              partial_name: partial,
-              accent_color: color[:accent],
-              accent_light_color: color[:accent_light],
-              accent_shades: color[:shades],
-              selection: live_selection %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  <% elsif !pdf_mode %>
-    <%= render "adm/projekts/projekts/evaluation/report_summary_section",
-      evaluation: evaluation,
-      projekt: projekt,
-      phase_palette: phase_palette,
-      pdf_mode: false %>
+  <% renderable_phases.each do |phase| %>
+    <%
+      color = phase_palette[phase["phase_type"]]
+      partial = phase_type_partial[phase["phase_type"]]
+    %>
+    <%= render partial: "adm/projekts/projekts/evaluation/#{partial}",
+      locals: {
+        phase: phase,
+        accent_color: color[:accent],
+        accent_light_color: color[:accent_light],
+        accent_shades: color[:shades],
+        selection: selection,
+        pdf_mode: true
+      } %>
   <% end %>
-
 </div>

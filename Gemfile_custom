@@ -17,6 +17,9 @@ gem 'sd_notify', '~> 0.1.1'
 
 gem 'ruby-saml', '~> 1.16'
 
+# OpenID Connect Strategy for OmniAuth.
+gem 'omniauth_openid_connect', '0.8.0'
+
 gem 'geocoder', '~> 1.8', '>= 1.8.3'
 gem 'rgeo', '~> 3.0', '>= 3.0.1'
 gem 'rgeo-geojson', '~> 2.2'
@@ -49,6 +52,16 @@ gem 'ruby_llm', '1.14.1'
 gem 'pdf-reader', '2.15.1'
 
 gem 'docx', '0.10.0'
+
+# rubyzip is a ruby module for reading and writing zip files
+# Already resolved transitively through docx; declared explicitly because
+# DocumentImageExtractor uses Zip::File directly. Held at 2.3.2 rather than the
+# latest 3.4.1 because docx and selenium-webdriver both require rubyzip < 3.
+gem 'rubyzip', '2.3.2'
+
+group :test do
+  gem 'shoulda-matchers', '~> 6.0'
+end
 
 group :development, :test do
   gem 'pry', '~> 0.14'

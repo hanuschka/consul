@@ -1,0 +1,34 @@
+<%
+  accent = local_assigns.fetch(:accent)
+  accent_light = local_assigns.fetch(:accent_light)
+  title = local_assigns.fetch(:title)
+  count = local_assigns.fetch(:count)
+  show_label = local_assigns.fetch(:show_label)
+  hide_label = local_assigns.fetch(:hide_label)
+  icon_material = local_assigns.fetch(:icon_material)
+  icon_fa = local_assigns.fetch(:icon_fa)
+  open_by_default = local_assigns.fetch(:open_by_default, false)
+  extra_class = local_assigns.fetch(:extra_class, nil)
+%>
+
+<details
+  class="open-responses <%= extra_class %>"
+  style="--or-accent:<%= accent %>;--or-accent-light:<%= accent_light %>"
+  <%= "open" if open_by_default %>
+>
+  <summary class="open-responses-summary">
+    <span class="open-responses-summary-icon">
+      <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true"><%= icon_material %></span>
+      <i class="fas <%= icon_fa %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
+    </span>
+    <span class="open-responses-summary-title"><%= title %></span>
+    <span class="open-responses-summary-count"><%= count %></span>
+    <span class="open-responses-toggle">
+      <span class="open-responses-toggle-label-show"><%= show_label %></span>
+      <span class="open-responses-toggle-label-hide"><%= hide_label %></span>
+      <span class="material-symbols-outlined open-responses-toggle-icon projekt-evaluation-icon-material" aria-hidden="true">expand_more</span>
+      <i class="fas fa-chevron-down open-responses-toggle-icon projekt-evaluation-icon-fa" aria-hidden="true"></i>
+    </span>
+  </summary>
+  <%= yield %>
+</details>

@@ -12,6 +12,8 @@ de:
           allow_attached_image_description: Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Dieses Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht angezeigt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder die Moderation reduziert werden soll.
           labels: Labels
           labels_description: Aktiviert die Label-Funktion für Vorschläge, mit der Administratoren thematische Kategorien oder Schlagwörter vergeben können. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die Filterung. Nutzen Sie diese Funktion, um Projekte mit vielen Vorschlägen besser zu strukturieren.
+          use_masterportal_collections_as_labels: Masterportal-Sammlungen statt Labels verwenden
+          use_masterportal_collections_as_labels_description: Wenn aktiviert, wählen Nutzer:innen beim Erstellen eines Beitrags die importierten Masterportal-Sammlungen dieser Phase statt der manuell angelegten Labels.
           sentiments: Sentiments
           sentiments_description: Aktiviert die Sentiment-Funktion, mit der Nutzer ihre Gefühle oder Stimmungen zu einem Vorschlag ausdrücken können. Im Frontend werden farbige Markierungen angezeigt, die eine schnelle emotionale Einordnung ermöglichen. Nutzen Sie diese Funktion bei Projekten, in denen die Stimmungslage der Teilnehmer zusätzlich erfasst werden soll.
           show_map: Karte
@@ -44,7 +46,9 @@ de:
           show_comments: Kommentare
           show_comments_description: Aktiviert die Kommentarfunktion für Vorschläge in der Budgetphase. Im Frontend wird unterhalb jedes Vorschlags ein Kommentarbereich mit Antwortfunktion angezeigt. Aktivieren Sie diese Funktion, um den Dialog zwischen Nutzern und der Verwaltung zu ermöglichen. Deaktivieren Sie sie, wenn keine öffentliche Diskussion erwünscht ist.
           conditional_balloting: Vereinfachte Stimmabgabe
-          conditional_balloting_description: "Erlaubt Nutzern die Stimmabgabe bereits vor Abschluss der Verifizierung. Die Stimmen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Abstimmungsbutton sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die."
+          conditional_balloting_description: "Erlaubt Nutzern die Stimmabgabe bereits vor Abschluss der Verifizierung. Die Stimmen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Abstimmungsbutton sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die Verifizierung noch aussteht."
+          conditional_voting: Vereinfachte Unterstützung
+          conditional_voting_description: "Erlaubt Nutzern, Vorschläge in der Auswahlphase bereits vor Abschluss der Verifizierung zu unterstützen. Die Unterstützungen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Unterstützungs-Button sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die Verifizierung noch aussteht."
           show_video_as_link: Videos als Link
           show_video_as_link_description: Stellt hinzugefügte Videos nicht als eingebetteten Player, sondern als anklickbaren Link dar. Im Frontend erscheint statt des Video-Players ein Textlink, der zum externen Anbieter führt. Aktivieren Sie diese Option, um die Ladezeit der Seite zu reduzieren oder wenn eingebettete Videos aus datenschutzrechtlichen Gründen vermieden werden sollen.
           hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Vorschläge
@@ -53,6 +57,8 @@ de:
         resource:
           max_submissions_per_user: Maximale Einreichungen pro Nutzer
           max_submissions_per_user_description: Begrenzt die Anzahl der Investitionsvorschläge, die ein einzelner Nutzer in dieser Phase einreichen darf. Im Frontend wird nach Erreichen des Limits der Erstellen-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
+          max_supports_per_user: Maximale Unterstützungen pro Nutzer
+          max_supports_per_user_description: Begrenzt die Anzahl der Investitionsvorschläge, die ein einzelner Nutzer in dieser Phase unterstützen darf. Im Frontend wird nach Erreichen des Limits der Unterstützungs-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
         form:
           map_features_limit: Maximale Kartenmarkierungen
           map_features_limit_description: "Legt die maximale Anzahl an Kartenmarkierungen fest, die ein Nutzer innerhalb einer einzelnen Sitzung auf der Karte setzen kann. Im Frontend wird nach Erreichen des Limits das Setzen weiterer Pins blockiert. Nutzen Sie diesen Wert, um Missbrauch zu verhindern und die Kartenübersichtlichkeit zu wahren."
@@ -94,6 +100,9 @@ de:
         general:
           users_can_create_pins: Pins setzen
           users_can_create_pins_description: "Erlaubt es registrierten Nutzern, eigene Pins auf der Karte der Phase zu setzen und damit ortsbezogene Hinweise oder Vorschläge einzureichen. Im Frontend wird ein Erstellen-Button auf der Kartenansicht angezeigt. Deaktivieren Sie diese Option, wenn Pins ausschliesslich von der Verwaltung gesetzt werden sollen und keine Nutzereingaben auf der Karte."
+        form:
+          use_masterportal_collections_as_labels: Masterportal-Sammlungen statt Kategorien verwenden
+          use_masterportal_collections_as_labels_description: Wenn aktiviert, wählen Nutzer:innen beim Erstellen eines Pins die importierten Masterportal-Sammlungen dieser Phase statt der manuell angelegten Kategorien.
       option:
         form:
           map_features_limit: Maximale Kartenmarkierungen
@@ -134,6 +143,8 @@ de:
           allow_attached_image_description: "Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Das Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht dargestellt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder wenn der Moderationsaufwand für Bildprüfungen reduziert werden soll."
           labels: Labels
           labels_description: "Aktiviert die Label-Funktion für Vorschläge, mit der Administratoren thematische Kategorien oder Schlagwörter vergeben können. Labels werden im Frontend als Icons an den Vorschlägen angezeigt und erleichtern die thematische Filterung. Nutzen Sie diese Funktion, um Projekte mit vielen Vorschlägen besser zu strukturieren."
+          use_masterportal_collections_as_labels: Masterportal-Sammlungen statt Labels verwenden
+          use_masterportal_collections_as_labels_description: Wenn aktiviert, wählen Nutzer:innen beim Erstellen eines Beitrags die importierten Masterportal-Sammlungen dieser Phase statt der manuell angelegten Labels.
           sentiments: Sentiments
           sentiments_description: "Aktiviert die Sentiment-Funktion, mit der Nutzer ihre Stimmung oder Haltung zu einem Vorschlag ausdrücken können. Im Frontend werden farbige Markierungen angezeigt, die eine schnelle emotionale Einordnung ermöglichen. Nutzen Sie diese Funktion bei Projekten, in denen neben inhaltlichem Feedback auch die Stimmungslage der Teilnehmer erfasst werden."
           show_map: Karte
@@ -159,6 +170,8 @@ de:
           users_can_create_proposals_description: "Erlaubt es registrierten Nutzern, eigene Vorschläge in der Vorschlagsphase zu erstellen und einzureichen. Im Frontend wird ein Erstellen-Button angezeigt, über den das Formular aufgerufen wird. Deaktivieren Sie diese Option, wenn nur von der Verwaltung erstellte Vorschläge angezeigt werden sollen und keine Einreichungen durch Nutzer vorgesehen sind."
           allow_voting: Unterstützung
           allow_voting_description: "Aktiviert die Unterstützungsfunktion, mit der Nutzer Vorschläge durch eine positive Stimme unterstützen können. Im Frontend wird ein Unterstützungs-Button an jedem Vorschlag angezeigt. Aktivieren Sie diese Funktion, um die Relevanz von Vorschlägen durch die Gemeinschaft bewerten zu lassen."
+          conditional_voting: Vereinfachte Unterstützung
+          conditional_voting_description: "Erlaubt Nutzern, Vorschläge bereits vor Abschluss der Verifizierung zu unterstützen. Die Unterstützungen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Unterstützungs-Button sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die Verifizierung noch aussteht."
           quorum_for_proposals: Quorum
           quorum_for_proposals_description: "Aktiviert ein Mindestquorum für Vorschläge, das erreicht werden muss, damit ein Vorschlag als erfolgreich gilt. Im Frontend wird ein Fortschrittsbalken angezeigt, der den aktuellen Stand zum Quorum visualisiert. Aktivieren Sie diese Funktion bei Projekten, in denen eine Mindestbeteiligung erforderlich ist."
           enable_up_and_down_voting: Daumen hoch und runter
@@ -186,6 +199,8 @@ de:
           votes_for_proposal_success_description: "Legt die Anzahl der Unterstützungen fest, die ein Vorschlag erreichen muss, um als erfolgreich zu gelten. Nach Erreichen dieses Werts wird der Vorschlag im Frontend als erfolgreich markiert und kann nicht weiter unterstützt werden. Setzen Sie den Wert passend zum Projektumfang und zur erwarteten Teilnehmerzahl, um realistische Quoren zu gewährleisten."
           max_submissions_per_user: Maximale Einreichungen pro Nutzer
           max_submissions_per_user_description: Begrenzt die Anzahl der Vorschläge, die ein einzelner Nutzer in dieser Phase einreichen darf. Im Frontend wird nach Erreichen des Limits der Erstellen-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
+          max_supports_per_user: Maximale Unterstützungen pro Nutzer
+          max_supports_per_user_description: Begrenzt die Anzahl der Vorschläge, die ein einzelner Nutzer in dieser Phase unterstützen darf. Im Frontend wird nach Erreichen des Limits der Unterstützungs-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
       selectable_setting:
         general:
           default_order: Standardsortierung

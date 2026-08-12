@@ -22,6 +22,7 @@
               style: "margin-top:15px;",
               method: "delete",
               remote: true,
+              params: refresh_params,
               "aria-label": remove_support_aria_label do %>
             <%= t("budgets.investments.votes.remove_support") %>
           <% end %>
@@ -43,12 +44,19 @@
               title: t("budgets.investments.investment.support_title"),
               method: "post",
               remote: !display_support_alert?,
+              params: refresh_params,
               data:   ({ confirm: (confirm_vote_message if display_support_alert?) }),
               "aria-label": support_aria_label %>
         <% end %>
       <% end %>
     <% end %>
   </div>
+
+  <% if current_user && investment.should_show_votes? && investment.conditional_vote_cast_by?(current_user) %>
+    <div class="callout warning">
+      <%= t("custom.shared.conditional_vote_note") %>
+    </div>
+  <% end %>
 
   <%= render Shared::ParticipationNotAllowedComponent.new(investment, cannot_vote_text: cannot_vote_text) %>
 </div>

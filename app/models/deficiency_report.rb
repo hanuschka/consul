@@ -20,7 +20,8 @@ class DeficiencyReport < ApplicationRecord
   include ActsAsParanoidAliases
 
   audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down
-                   deficiency_report_status_id deficiency_report_category_id responsible_type responsible_id]
+                   deficiency_report_status_id deficiency_report_category_id
+                   deficiency_report_subcategory_id responsible_type responsible_id]
   has_associated_audits
   translation_class.class_eval do
     audited associated_with: :globalized_model,
@@ -36,9 +37,16 @@ class DeficiencyReport < ApplicationRecord
 
   belongs_to :category, class_name: "DeficiencyReport::Category", foreign_key: :deficiency_report_category_id
   belongs_to :status, class_name: "DeficiencyReport::Status", foreign_key: :deficiency_report_status_id
+  belongs_to :subcategory, class_name: "DeficiencyReport::Subcategory",
+    foreign_key: :deficiency_report_subcategory_id
+  belongs_to :intake_channel, class_name: "DeficiencyReport::IntakeChannel",
+    foreign_key: :deficiency_report_intake_channel_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
+  has_many :watches, class_name: "DeficiencyReport::Watch", dependent: :destroy,
+    inverse_of: :deficiency_report
+  has_many :watchers, through: :watches, source: :user
   has_one :feedback_form, class_name: "DeficiencyReport::FeedbackForm", dependent: :destroy
 
   delegate :approximated_address, to: :map_location, allow_nil: true
@@ -46,6 +54,10 @@ class DeficiencyReport < ApplicationRecord
   validates :deficiency_report_category_id, presence: true
   validates :author, presence: true
   validates :map_location, presence: true, on: :create, if: :map_location_required?
+  validates :deficiency_report_intake_channel_id, presence: true, on: :create, if: :intake_channel_required?
+
+  before_validation :assign_default_intake_channel, on: :create
+  before_validation :clear_mismatched_subcategory
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create #custom
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
@@ -56,6 +68,25 @@ class DeficiencyReport < ApplicationRecord
 
   scope :assigned, -> { where.not(responsible_type: nil, responsible_id: nil, assigned_at: nil) }
   scope :not_assigned, -> { where(responsible_type: nil).or(where(responsible_id: nil)) }
+
+  # A subquery rather than a join, so this stays structurally compatible with assigned_to_officer
+  # and the two can be combined with .or in the overview filter.
+  scope :watched_by, ->(user) {
+    return none if user.blank?
+
+    where(id: DeficiencyReport::Watch.where(user_id: user.id).select(:deficiency_report_id))
+  }
+
+  # The Anliegen an officer is responsible for, either in person or through one of their groups.
+  scope :assigned_to_officer, ->(officer) {
+    return none if officer.blank?
+
+    where(
+      "(responsible_type = ? AND responsible_id = ?) OR (responsible_type = ? AND responsible_id IN (?))",
+      "DeficiencyReport::Officer", officer.id,
+      "DeficiencyReport::OfficerGroup", officer.officer_groups.select(:id)
+    )
+  }
 
   scope :sort_by_most_commented,       -> { reorder(comments_count: :desc) }
   scope :sort_by_hot_score,            -> { reorder(hot_score: :desc) }
@@ -111,6 +142,11 @@ class DeficiencyReport < ApplicationRecord
       ch_attrs["deficiency_report_category_id"] = [old_category_name, category&.name]
     end
 
+    if super.has_key?("deficiency_report_subcategory_id")
+      old_subcategory_name = DeficiencyReport::Subcategory.find_by(id: deficiency_report_subcategory_id_was)&.name
+      ch_attrs["deficiency_report_subcategory_id"] = [old_subcategory_name, subcategory&.name]
+    end
+
     if super.has_key?("responsible_type") || super.has_key?("responsible_id")
       if responsible_type_was.present?
         old_responsible_name = responsible_type_was.constantize.find_by(id: responsible_id_was)&.name
@@ -154,6 +190,12 @@ class DeficiencyReport < ApplicationRecord
     "CONSUL-DF-#{created_at.strftime("%Y-%m")}-#{id}"
   end
 
+  def publicly_visible?
+    return false if hidden?
+
+    Setting["deficiency_reports.admin_acceptance_required"].blank? || admin_accepted?
+  end
+
   def total_votes
     cached_votes_total
   end
@@ -194,6 +236,14 @@ class DeficiencyReport < ApplicationRecord
     true
   end
 
+  # Block form rather than exists?, so a preloaded :watches association answers this in memory
+  # instead of one query per row in the overview.
+  def watched_by?(user)
+    return false if user.blank?
+
+    watches.any? { |watch| watch.user_id == user.id }
+  end
+
   def responsible_officers
     case responsible
     when DeficiencyReport::Officer
@@ -218,7 +268,9 @@ class DeficiencyReport < ApplicationRecord
   end
 
   def assign_default_responsible
-    default_responsible = district&.default_deficiency_report_responsible || category&.default_responsible
+    default_responsible = district&.default_deficiency_report_responsible ||
+                          subcategory&.default_responsible ||
+                          category&.default_responsible
 
     if default_responsible.present?
       update_columns(
@@ -233,4 +285,35 @@ class DeficiencyReport < ApplicationRecord
     setting = Setting["deficiency_reports.map_location_required"]
     setting.nil? || setting.present?
   end
+
+  # Staff filing for somebody else have to say how the report reached them; a citizen filing for
+  # themselves never sees the field and is stamped with the default channel instead.
+  #
+  # The channel check keeps this in step with the forms, which only render the select once channels
+  # exist: without it, turning the setting on before configuring any channel would block every
+  # on-behalf-of submission with a field nobody can fill.
+  def intake_channel_required?
+    Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"].present? &&
+      on_behalf_of.present? &&
+      DeficiencyReport::IntakeChannel.exists?
+  end
+
+  private
+
+    def assign_default_intake_channel
+      return if deficiency_report_intake_channel_id.present? || intake_channel_required?
+
+      self.intake_channel = DeficiencyReport::IntakeChannel.default
+    end
+
+    # A subcategory only means anything under its own category, so moving a report to a different
+    # category drops one that no longer belongs. Silent rather than an error on purpose: the
+    # cascading form and the inline editor never produce the pair, so the only way to arrive here
+    # is a stale form, where refusing the save would strand the user on a field they cannot see.
+    def clear_mismatched_subcategory
+      return if deficiency_report_subcategory_id.blank?
+      return if subcategory&.deficiency_report_category_id == deficiency_report_category_id
+
+      self.deficiency_report_subcategory_id = nil
+    end
 end

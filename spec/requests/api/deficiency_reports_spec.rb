@@ -4,6 +4,12 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+  let(:existing_deficiency_report) do
+    status, category, user = create_minimal_prereqs
+
+    create_deficiency_report(user, category, status)
+  end
+
   def create_minimal_prereqs
     status = DeficiencyReport::Status.create!(title: 'Open', color: 'red', icon: 'hourglass-start')
     category = DeficiencyReport::Category.create!(name: 'Road', color: 'blue', icon: 'road')
@@ -20,13 +26,14 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
     [status, category, user]
   end
 
-  def create_deficiency_report(author, category, status)
+  def create_deficiency_report(author, category, status, title: 'Existing Deficiency Report')
     report = DeficiencyReport.new(
       author: author,
       deficiency_report_category_id: category.id,
       deficiency_report_status_id: status.id,
       admin_accepted: true,
       resource_terms: true,
+      title: title,
       map_location_attributes: { latitude: 40.0, longitude: -3.0, zoom: 12 }
     )
     report.save!
@@ -494,7 +501,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_deficiency_report.id } }
     end
   end
 

@@ -2,6 +2,9 @@ class Adm::DeficiencyReports::IntakeChannelsController < Adm::DeficiencyReports:
   include Translatable
 
   def index
+    authorize DeficiencyReport::IntakeChannel, :index?,
+      policy_class: Adm::DeficiencyReports::IntakeChannelPolicy
+
     @intake_channels = policy_scope(DeficiencyReport::IntakeChannel,
       policy_scope_class: Adm::DeficiencyReports::IntakeChannelPolicy::Scope)
 

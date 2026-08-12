@@ -228,7 +228,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # anything yet" to someone whose account is full of submissions, and never
     # mentions that linking is the missing part.
     ACCOUNT_ONLY_ACTIONS = %i[
-      support support_prompt comment_prompt my_contributions
+      support support_instead support_prompt comment_prompt my_contributions
       notify_toggle notifications_done notifications_open
       unlink_confirm unlink_cancel unlink_start
     ].freeze
@@ -304,23 +304,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :restart
         restart_flow
       when :support
-        register_support(param)
+        Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
+      when :support_instead
+        support_instead_of_drafting(param)
       end
     end
 
-    # Supporting from the duplicate offer ends the submission it interrupted:
-    # the citizen chose an existing proposal over writing their own, so the flow
-    # has nothing left to do and the menu is what follows publishing too. Read
-    # before the support is registered, and supporting from anywhere else — a
-    # projekt card, the assistant — leaves the conversation exactly as it was.
-    def register_support(proposal_id)
-      from_duplicate_offer = conversation.step == "awaiting_duplicate_decision"
-
+    # The duplicate offer's own support pill: the citizen chose an existing
+    # proposal over writing their own, so the submission it interrupted is over
+    # and the menu is what follows publishing too.
+    def support_instead_of_drafting(proposal_id)
       registered = Whatsapp::Flows::RegisterSupportService.call(
         conversation:, proposal_id: proposal_id
       )
-
-      return if !from_duplicate_offer
 
       # Only once the support actually landed. A proposal retired between the
       # offer and the tap answers "that one is gone" — ending the flow there
@@ -342,18 +338,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::AskIdeaService.call(conversation:)
     end
 
-    # The text is re-read from the context rather than carried on the pill: an
-    # id holds one short parameter and an idea can be a paragraph. It was
-    # screened on the way in, so it goes straight to generation.
+    # The idea was screened on the way in, so it goes straight to generation.
+    # Nothing to draft from means the context was purged between the offer and
+    # the tap; asking again is the only way forward.
     def draft_despite_duplicates
-      last_idea_text = conversation.context["last_idea_text"]
-
-      if last_idea_text.blank?
+      if conversation.context["last_idea_text"].blank?
         return Whatsapp::Flows::AskIdeaService.call(conversation:)
       end
 
       Whatsapp::Flows::BuildDraftService.from_accepted_idea(
-        conversation:, idea_text: last_idea_text, inbound_message_id:
+        conversation:, inbound_message_id:
       )
     end
 

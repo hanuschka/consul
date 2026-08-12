@@ -40,10 +40,15 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   # phase already holds. Screening it a second time would buy the identical
   # answer, and inside the screening floor it would answer their tap with "one
   # moment, you are too fast".
-  def self.from_accepted_idea(conversation:, idea_text:, inbound_message_id: nil)
+  #
+  # The text is read from the conversation rather than passed in: the caller
+  # answers a tapped pill, which carries one short parameter and not a
+  # paragraph, so it would only be reading the same key back out to hand it
+  # over — and this service is where that key is written in the first place.
+  def self.from_accepted_idea(conversation:, inbound_message_id: nil)
     new(
-      conversation: conversation, idea_text: idea_text, copy: :first,
-      screened: true, inbound_message_id: inbound_message_id
+      conversation: conversation, idea_text: conversation.context["last_idea_text"],
+      copy: :first, screened: true, inbound_message_id: inbound_message_id
     ).call
   end
 
@@ -59,12 +64,8 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     return send_throttle_notice if throttled?
 
     # Stored before the gate because the retry button reads it back, and after
-    # a failed check it is the only copy of what the citizen wrote. The
-    # screening clock is armed in the same write: the call it guards is the
-    # next thing that happens.
-    @conversation.merge_context!(
-      last_idea_text: @idea_text, last_screened_at: Time.current.iso8601
-    )
+    # a failed check it is the only copy of what the citizen wrote.
+    @conversation.merge_context!(last_idea_text: @idea_text)
 
     # Screened before the "one moment" message rather than after it: a text
     # that is about to be refused should not first be promised a draft, and the
@@ -73,6 +74,11 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     Whatsapp::Outbound.typing(message_id: @inbound_message_id)
 
     if !@screened
+      # Armed inside the gate it guards rather than above it. Stamped
+      # unconditionally, an already-screened text would record a screening that
+      # never ran and re-arm the floor against the citizen's next real idea.
+      @conversation.merge_context!(last_screened_at: Time.current.iso8601)
+
       return send_safety_check_failed if !safety.success?
       return refuse_content if safety.reason.present?
       return if duplicates_offered?
@@ -169,13 +175,14 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # a card to read, a screening is the cheap one and may be followed straight
     # away by the rewrite its refusal asked for.
     #
-    # An already-screened text answers to the drafting clock alone: its
-    # screening stamp was written moments ago by the turn that offered the
-    # duplicates, so reading it here would refuse the tap that answered them.
+    # Each clock guards the call it belongs to, so the screening floor is read
+    # only when a screening is going to happen. Read unconditionally it would
+    # refuse the tap that answered the duplicate offer, moments after the turn
+    # that offered it stamped the clock.
     def throttled?
-      return within?("last_draft_at", DRAFT_INTERVAL) if @screened
+      return true if within?("last_draft_at", DRAFT_INTERVAL)
 
-      within?("last_draft_at", DRAFT_INTERVAL) || within?("last_screened_at", SCREENING_INTERVAL)
+      !@screened && within?("last_screened_at", SCREENING_INTERVAL)
     end
 
     def within?(context_key, interval)

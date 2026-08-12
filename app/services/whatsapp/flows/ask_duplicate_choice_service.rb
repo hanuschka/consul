@@ -10,7 +10,16 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
 
   # Asked for the first time, off the text the citizen just sent.
   def self.for_idea(conversation:, idea_text:)
-    new(conversation: conversation, similar_proposals: rank(conversation, idea_text)).call
+    candidates = Whatsapp::SimilarProposalsQuery.call(
+      projekt_phase: conversation.projekt_phase, text: idea_text
+    )
+
+    new(
+      conversation: conversation,
+      similar_proposals: Whatsapp::AiAssistant::SimilarProposalsRankService.call(
+        idea_text: idea_text, proposals: candidates
+      )
+    ).call
   end
 
   # Asked again because they wrote something instead of tapping. Rebuilt from
@@ -23,24 +32,17 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
   # their phase: every entry into a submission clears the whole context.
   def self.reask(conversation:)
     ids = conversation.context["duplicate_proposal_ids"].to_a.map(&:to_i)
-    proposals_by_id = ::Proposal.base_selection.where(id: ids).index_by(&:id)
+    proposals_by_id = ::Proposal
+      .base_selection
+      .includes(:translations)
+      .where(id: ids)
+      .index_by(&:id)
 
     new(
       conversation: conversation,
       similar_proposals: ids.filter_map { |id| proposals_by_id[id] }
     ).call
   end
-
-  def self.rank(conversation, idea_text)
-    candidates = Whatsapp::SimilarProposalsQuery.call(
-      projekt_phase: conversation.projekt_phase, text: idea_text
-    )
-
-    Whatsapp::AiAssistant::SimilarProposalsRankService.call(
-      idea_text: idea_text, proposals: candidates
-    )
-  end
-  private_class_method :rank
 
   def initialize(conversation:, similar_proposals:)
     super(conversation: conversation)
@@ -105,7 +107,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     def proposal_rows
       similar_proposals.map do |proposal|
         {
-          id: Whatsapp::FlowActions.id_for(action: :support, param: proposal.id),
+          id: Whatsapp::FlowActions.id_for(action: :support_instead, param: proposal.id),
           title: proposal.title,
           description: plain_description(proposal)
         }
@@ -125,16 +127,11 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
 
     def support_button(proposal)
       Whatsapp::FlowActions.button(
-        action: :support, label_key: "whatsapp.bot.buttons.support", param: proposal.id
+        action: :support_instead, label_key: "whatsapp.bot.buttons.support", param: proposal.id
       )
     end
 
-    # The descriptions are rich text from the portal's editor and WhatsApp
-    # renders no markup, so the row would otherwise open with a stray tag.
     def plain_description(proposal)
-      ActionController::Base.helpers
-        .strip_tags(proposal.description.to_s)
-        .squish
-        .truncate(ROW_DESCRIPTION_LENGTH)
+      ::Whatsapp.plain_text(proposal.description, length: ROW_DESCRIPTION_LENGTH)
     end
 end

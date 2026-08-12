@@ -43,10 +43,7 @@ class Whatsapp::AiAssistant::SimilarProposalsRankService < ApplicationService
 
     def response_content
       ::Ai::RubyLlmFactory
-        .chat_with_request_timeout(
-          REQUEST_TIMEOUT_SECONDS,
-          gpt_model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL
-        )
+        .fast_chat(REQUEST_TIMEOUT_SECONDS)
         .with_schema(output_schema)
         .with_instructions(instructions)
         .ask(user_prompt)
@@ -85,17 +82,12 @@ class Whatsapp::AiAssistant::SimilarProposalsRankService < ApplicationService
       @proposals.map { |proposal| proposal_line(proposal) }.join("\n\n")
     end
 
+    # Flattened because the model is being asked what each proposal requests,
+    # not how it is marked up — and the markup would be most of the tokens.
     def proposal_line(proposal)
-      "[id=#{proposal.id}] #{proposal.title}\n#{plain_description(proposal)}"
-    end
+      description = ::Whatsapp.plain_text(proposal.description, length: DESCRIPTION_PREVIEW_LENGTH)
 
-    # The descriptions are rich text from the portal's editor, and the model is
-    # being asked about what they request rather than how they are marked up.
-    def plain_description(proposal)
-      ActionController::Base.helpers
-        .strip_tags(proposal.description.to_s)
-        .squish
-        .truncate(DESCRIPTION_PREVIEW_LENGTH)
+      "[id=#{proposal.id}] #{proposal.title}\n#{description}"
     end
 
     def output_schema

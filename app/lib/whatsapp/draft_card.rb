@@ -24,12 +24,7 @@ module Whatsapp::DraftCard
     ].join("\n\n")
   end
 
-  # The description is rich text written by the drafting model and edited
-  # through the portal, and WhatsApp renders no markup at all.
   def plain_description(resource)
-    ActionController::Base.helpers
-      .strip_tags(resource.description.to_s)
-      .squish
-      .truncate(DESCRIPTION_PREVIEW_LENGTH)
+    ::Whatsapp.plain_text(resource.description, length: DESCRIPTION_PREVIEW_LENGTH)
   end
 end

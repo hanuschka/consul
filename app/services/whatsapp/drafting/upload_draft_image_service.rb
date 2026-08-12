@@ -15,10 +15,13 @@ class Whatsapp::Drafting::UploadDraftImageService < ApplicationService
   def call
     return if !::Whatsapp.usable_header_image?(attachment)
 
-    ::WhatsappApi::Client.new.media.upload(
-      bytes: attachment.blob.download,
-      mime_type: attachment.blob.content_type
-    )
+    blob = attachment.blob
+
+    # Streamed rather than downloaded whole: the picture can be several
+    # megabytes, and it is on its way to a file either way.
+    ::WhatsappApi::Client.new.media.upload(mime_type: blob.content_type) do |file|
+      blob.download { |chunk| file.write(chunk) }
+    end
   rescue StandardError => e
     Rails.logger.error("[Whatsapp] draft image upload failed: #{e.class} - #{e.message}")
 

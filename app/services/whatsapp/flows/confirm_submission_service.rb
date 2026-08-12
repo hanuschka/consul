@@ -14,16 +14,13 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
     # about this send depends on Meta being able to reach us — the draft is
     # unpublished, and on an access-restricted environment it cannot.
     #
-    # A nil id leaves the same message without the picture rather than risking
-    # the send: WhatsApp refuses the whole message over a header it cannot
-    # render.
-    if header_media_id.present?
-      return Whatsapp::Outbound.buttons_with_media_header(
-        account: account, body: body, buttons: buttons, header_media_id: header_media_id
-      )
-    end
-
-    Whatsapp::Outbound.buttons(account: account, body: body, buttons: buttons)
+    # A nil id sends the same message without the picture rather than risking
+    # the send — WhatsApp refuses the whole message over a header it cannot
+    # render — and the transport already drops an absent header, so there is
+    # nothing to branch on here.
+    Whatsapp::Outbound.buttons_with_media_header(
+      account: account, body: body, buttons: buttons, header_media_id: header_media_id
+    )
   end
 
   private
@@ -38,9 +35,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
     # whole picture to WhatsApp again. Cleared with the rest of the context
     # when the flow ends, so it cannot outlive the draft it belongs to.
     def header_media_id
-      return @header_media_id if defined?(@header_media_id)
-
-      @header_media_id = stored_media_id || upload_and_store
+      stored_media_id || upload_and_store
     end
 
     # Keyed by the blob it was made from. Revising a draft can replace the

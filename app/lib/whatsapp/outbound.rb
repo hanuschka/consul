@@ -123,28 +123,22 @@ module Whatsapp::Outbound
   # cannot answer that on its own — the assistant sends these while the
   # conversation is still idle. Whatsapp::Message carries no marker to read
   # instead: recovery buttons, projekt cards and lists are all "interactive".
-  def recovery(conversation:, body:, actions:)
-    conversation.merge_context!(pending_question: true)
-
-    buttons(
-      account: conversation.whatsapp_account,
-      body: body,
-      buttons: recovery_buttons(actions)
-    )
-  end
-
-  # Like `recovery`, for a message whose way out is one of the flow's own pills
-  # rather than a retry — so the buttons come from the caller instead of from
-  # the recovery list. The flag is set for the same reason and must not be left
-  # to the caller: without it, "abbrechen" typed instead of tapped is read as
-  # the opt-out keyword rather than as an answer to what was just asked, and
-  # nothing about the message says so.
+  #
+  # Every asking message goes through here, whatever its buttons are, so the
+  # flag is written in exactly one place. A second copy of this pairing is how
+  # a future asker ends up sending one without it.
   def question(conversation:, body:, buttons:)
     conversation.merge_context!(pending_question: true)
 
     ::Whatsapp::Outbound.buttons(
       account: conversation.whatsapp_account, body: body, buttons: buttons
     )
+  end
+
+  # The same question when its way out is a retry or a cancel rather than one of
+  # the flow's own pills.
+  def recovery(conversation:, body:, actions:)
+    question(conversation: conversation, body: body, buttons: recovery_buttons(actions))
   end
 
   def recovery_action_from(button_reply_id)

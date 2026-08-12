@@ -11,12 +11,14 @@ class Ai::Tools::WhatsappAiAssistant::ShowMainMenu < Ai::Tools::WhatsappAiAssist
               "do here — anything where the answer is the three starting points rather than a " \
               "particular one. This sends the message itself — do not write your own menu."
 
-  # Refused mid-submission rather than guarded inside the menu: greeting resets
-  # the flow, so sending it here would drop a draft the citizen is halfway
-  # through. The deterministic greeting path makes the same check before it
-  # answers "Hallo"; the model has no reason to know that, so it is told.
+  # Refused whenever anything is open, not only a draft: greeting resets the
+  # flow, so sending it here would drop whatever the citizen was part-way
+  # through. Any step other than idle counts — drafting? would let it through
+  # at "which phase?" and at the link and unlink questions, all of which the
+  # reset discards just as thoroughly. The deterministic greeting path declines
+  # on the same reading; the model has no way to know that, so it is told.
   def execute
-    return submission_in_progress_error if conversation.drafting?
+    return submission_in_progress_error if !conversation.idle?
 
     ::Whatsapp::Flows::MainMenuService.greeting(conversation: conversation)
 
@@ -26,7 +28,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowMainMenu < Ai::Tools::WhatsappAiAssist
   private
 
     def submission_in_progress_error
-      { error: "This citizen is in the middle of a submission, and the menu would discard it. " \
+      { error: "This citizen is in the middle of something, and the menu would discard it. " \
                "Call hand_to_flow instead so the flow can answer them." }
     end
 end

@@ -41,7 +41,13 @@ module Whatsapp::FlowActions
     restart
   ].freeze
 
-  ENGAGEMENT_ACTIONS = %i[support my_contributions].freeze
+  # `support_instead` is supporting from the duplicate offer, and it is its own
+  # action rather than a `support` tapped at the right moment: it also ends the
+  # submission it interrupted, and that consequence has to travel on the pill.
+  # Inferred from the step instead, an ordinary support pill — which the
+  # assistant can offer at any moment, including that one — would silently
+  # discard a half-written submission.
+  ENGAGEMENT_ACTIONS = %i[support support_instead my_contributions].freeze
 
   NOTIFICATION_ACTIONS = %i[notify_toggle notifications_done].freeze
 

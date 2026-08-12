@@ -96,8 +96,12 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
 
     # eligible? asks a budget phase for its heading, which is two more queries
     # per phase unless the chain comes along with the rest.
+    #
+    # Translations because every caller that lists these phases names them, and
+    # ProjektPhase#title reads the translated phase_tab_name — one query per row
+    # of a list that holds up to Whatsapp::MAX_LIST_ROWS.
     def preloads_for(phase_class)
-      preloads = [:settings, { projekt: :page }]
+      preloads = [:settings, :translations, { projekt: { page: :translations } }]
 
       return preloads if phase_class != ProjektPhase::BudgetPhase
 

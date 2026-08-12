@@ -26,6 +26,18 @@ module Whatsapp
   HEADER_IMAGE_CONTENT_TYPES = ["image/jpeg", "image/png"].freeze
   HEADER_IMAGE_MAX_BYTES = 5.megabytes
 
+  # Every description the bot quotes is rich text written in the portal's
+  # editor, and WhatsApp renders no markup at all — so each one is flattened
+  # the same way and cut to whatever the message it lands in has room for.
+  # Declared once because three messages now do it at three different lengths,
+  # and how portal HTML becomes chat text is one decision, not three.
+  def self.plain_text(html, length:)
+    ActionController::Base.helpers
+      .strip_tags(html.to_s)
+      .squish
+      .truncate(length)
+  end
+
   # Nil rather than a placeholder when the picture is missing or unusable:
   # every caller has a shape it falls back to, and a broken image is worse than
   # none.

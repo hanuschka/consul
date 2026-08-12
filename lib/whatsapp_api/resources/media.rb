@@ -29,14 +29,20 @@ class WhatsappApi::Resources::Media
   # from Meta's network while the send is in flight, which an access-restricted
   # environment is not.
   #
+  # The bytes arrive through a block rather than as a String: the caller's
+  # source is an Active Storage blob that can stream, and a picture is up to
+  # HEADER_IMAGE_MAX_BYTES — holding all of it in one Ruby String only to copy
+  # it into the tempfile is a whole spare copy per confirmation turn.
+  #
   # Returns the media id, or nil like every other refusal here.
-  def upload(bytes:, mime_type:)
-    return if bytes.blank?
+  def upload(mime_type:, &writer)
     return unsupported(mime_type) if !UPLOAD_EXTENSIONS.key?(mime_type)
 
-    file = tempfile_for(bytes, mime_type)
+    file = tempfile_for(mime_type, &writer)
 
     begin
+      return if file.size.zero?
+
       upload_file(file, mime_type)
     ensure
       file.close
@@ -83,12 +89,14 @@ class WhatsappApi::Resources::Media
       response.parsed_response.to_h["id"].presence
     end
 
-    # Written to disk rather than streamed from memory because HTTParty builds
-    # a multipart part from a file handle, and reads its filename off the path.
-    def tempfile_for(bytes, mime_type)
+    # Written to disk rather than kept in memory because HTTParty builds a
+    # multipart part from a file handle, and reads its filename off the path.
+    def tempfile_for(mime_type)
       file = Tempfile.new(["whatsapp-upload", UPLOAD_EXTENSIONS.fetch(mime_type)])
       file.binmode
-      file.write(bytes)
+
+      yield(file)
+
       file.rewind
 
       file

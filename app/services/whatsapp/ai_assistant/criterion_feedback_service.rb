@@ -37,10 +37,7 @@ class Whatsapp::AiAssistant::CriterionFeedbackService < ApplicationService
 
     def rephrased
       ::Ai::RubyLlmFactory
-        .chat_with_request_timeout(
-          REQUEST_TIMEOUT_SECONDS,
-          gpt_model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL
-        )
+        .fast_chat(REQUEST_TIMEOUT_SECONDS)
         .with_instructions(instructions)
         .ask(user_prompt)
         .content

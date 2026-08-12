@@ -239,4 +239,80 @@ describe DeficiencyReport do
       expect(report.assigned_at).to be_nil
     end
   end
+
+  describe "public visibility" do
+    describe "#publicly_visible?" do
+      context "while admin acceptance is not required" do
+        before { set_setting("deficiency_reports.admin_acceptance_required", false) }
+
+        it "is true for a report nobody accepted" do
+          expect(create(:deficiency_report).publicly_visible?).to be(true)
+        end
+
+        it "is false once the report is hidden" do
+          report = create(:deficiency_report)
+          report.hide
+
+          expect(report.publicly_visible?).to be(false)
+        end
+      end
+
+      context "while admin acceptance is required" do
+        before { set_setting("deficiency_reports.admin_acceptance_required", true) }
+
+        it "is false for a pending report" do
+          expect(create(:deficiency_report).publicly_visible?).to be(false)
+        end
+
+        it "is true for an accepted report" do
+          expect(create(:deficiency_report, admin_accepted: true).publicly_visible?).to be(true)
+        end
+
+        it "is false for an accepted report that was hidden afterwards" do
+          report = create(:deficiency_report, admin_accepted: true)
+          report.hide
+
+          expect(report.publicly_visible?).to be(false)
+        end
+      end
+    end
+
+    describe ".admin_accepted" do
+      let!(:pending)  { create(:deficiency_report) }
+      let!(:accepted) { create(:deficiency_report, admin_accepted: true) }
+
+      it "returns every report while acceptance is not required" do
+        set_setting("deficiency_reports.admin_acceptance_required", false)
+
+        expect(DeficiencyReport.admin_accepted).to include(pending, accepted)
+      end
+
+      it "returns only accepted reports once acceptance is required" do
+        set_setting("deficiency_reports.admin_acceptance_required", true)
+
+        expect(DeficiencyReport.admin_accepted).to include(accepted)
+        expect(DeficiencyReport.admin_accepted).not_to include(pending)
+      end
+
+      # The scope is what the public index narrows with, and it is chainable either way round.
+      it "combines with another scope in both directions" do
+        set_setting("deficiency_reports.admin_acceptance_required", true)
+
+        expect(DeficiencyReport.admin_accepted.not_archived).to eq([accepted])
+        expect(DeficiencyReport.not_archived.admin_accepted).to eq([accepted])
+      end
+    end
+
+    describe "hiding" do
+      it "takes the report out of the default scope for everybody" do
+        report = create(:deficiency_report)
+
+        report.hide
+
+        expect(DeficiencyReport.all).not_to include(report)
+        expect(DeficiencyReport.with_hidden).to include(report)
+        expect(DeficiencyReport.only_hidden).to include(report)
+      end
+    end
+  end
 end

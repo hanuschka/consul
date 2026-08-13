@@ -32,9 +32,19 @@ class Debate
   }
 
   scope :sort_by_alphabet, -> {
-    with_translations(I18n.locale).
-    select("debates.*, LOWER(debate_translations.title)").
-    reorder("LOWER(debate_translations.title) ASC")
+    title = "LOWER(COALESCE(current_translations.title, fallback_translations.title))"
+
+    joins(sanitize_sql_array([
+      "LEFT JOIN debate_translations current_translations " \
+        "ON current_translations.debate_id = debates.id " \
+        "AND current_translations.locale = ? AND current_translations.hidden_at IS NULL " \
+      "LEFT JOIN debate_translations fallback_translations " \
+        "ON fallback_translations.debate_id = debates.id " \
+        "AND fallback_translations.locale = ? AND fallback_translations.hidden_at IS NULL",
+      I18n.locale.to_s, I18n.default_locale.to_s
+    ])).
+    select("debates.*, #{title}").
+    reorder(Arel.sql("#{title} ASC"))
   }
   scope :sort_by_votes_total, -> { reorder(cached_votes_total: :desc) }
 

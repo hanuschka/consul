@@ -56,13 +56,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # Everything above the assistant is protocol rather than dialogue — the
-    # typed STOP word, the channel-intent reading, a tapped pill, a scanned QR
-    # code. The assistant sees only what is left, and hands back anything the
-    # flow owns.
+    # typed STOP word, a tapped pill, a scanned QR code. The assistant sees
+    # only what is left, and hands back anything the flow owns, together with
+    # what it made of the message.
     #
     # An unlinked guest submitter skips it: half its tools act on a Consul
     # account, and a guest reaching them would only produce errors it cannot
-    # explain. Their whole path is the deterministic drafting flow.
+    # explain. Their one model reading is the classifier's instead, so either
+    # way a message is read exactly once.
     def routed_by_assistant?
       return false if !::Ai::Settings.ai_available?
       return false if account.user.blank?
@@ -81,7 +82,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return false if !result.success?
 
-      result.outcome != :flow
+      # A hand-off is not "routed": the flow still answers. What it made of the
+      # message travels along, so the step below acts on the router's one
+      # reading instead of asking a second model what was just decided.
+      if result.outcome == :flow
+        @flow_handoff = { verdict: result.decision, correction: result.correction }
+
+        return false
+      end
+
+      true
     end
 
     # A tapped row or button already says exactly what it means, and the text
@@ -129,20 +139,22 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       true
     end
 
-    # Everything the keyword above does not decide is decided by one model
-    # reading: leaving the channel, coming back to it, or abandoning what is in
-    # progress, in whatever words the citizen chose. One call rather than one
-    # per question — the checks it replaced each paid their own completion on
-    # the same message.
+    # The channel-level requests — leaving the channel, coming back to it,
+    # abandoning what is in progress — decided by this message's one model
+    # reading. A linked, subscribed citizen's one reading is the router's,
+    # which carries stop_messages and abort_submission as tools, so the
+    # classifier is never asked as well; it answers for everyone the router
+    # does not serve.
     #
     # Never for a tapped pill, whose label the citizen did not write: those are
-    # routed by their ids two gates below. A verdict the conversation's state
-    # rules out is dropped rather than acted on — the model is told the state,
-    # but what it answers is still only a reading.
+    # routed by their ids two gates below. A verdict the account's state rules
+    # out is dropped rather than acted on — the model is told the state, but
+    # what it answers is still only a reading.
     def handle_message_intent
       return false if tapped_reply_id.present?
+      return false if !classifier_routes?
 
-      case message_intent
+      case message_intent.verdict
       when :opt_out
         return false if account.opt_out_at.present?
 
@@ -162,14 +174,41 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       true
     end
 
-    # Asked once per message; every branch of handle_message_intent consults
-    # the same verdict.
+    # Who this message's one model reading comes from. The router serves a
+    # linked, subscribed citizen; the classifier serves everyone it will not —
+    # guests and unlinked numbers, whose whole path is the deterministic flow,
+    # and opted-out numbers, whose only open question is opting back in.
+    def classifier_routes?
+      account.user.blank? || account.opt_out_at.present?
+    end
+
+    # Asked once per message: the gate above reads the channel verdicts off it,
+    # and the step handlers read the flow verdicts off the same result.
     def message_intent
       @message_intent ||= Whatsapp::AiAssistant::MessageIntentService.call(
+        conversation: conversation,
         inbound_text: inbound_text,
-        interaction_open: interaction_open?,
-        opted_out: account.opt_out_at.present?
+        interaction_open: interaction_open?
       )
+    end
+
+    # The verdict this message already got from its one reading — the router's
+    # hand-off for a linked citizen, the classifier for a guest — so no step
+    # ever pays a second completion to re-derive it. Every degraded path — AI
+    # switched off, a router turn that failed — reads as answer, which every
+    # step treats as "just the message" and answers by re-asking.
+    def flow_verdict
+      return @flow_handoff[:verdict] if @flow_handoff.present?
+      return message_intent.verdict if classifier_routes?
+
+      :answer
+    end
+
+    def flow_correction
+      return @flow_handoff[:correction] if @flow_handoff.present?
+      return message_intent.correction if classifier_routes?
+
+      nil
     end
 
     # A word that cannot mean "leave the channel" dismisses whatever the bot last
@@ -698,9 +737,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # offered the picture and the pin, not published straight past both. Both
     # questions answer for themselves when their phase has them switched off.
     def handle_draft_decision
-      case draft_decision.verdict
+      case flow_verdict
       when :publish then ask_image
-      when :revise then revise_with(draft_decision.correction)
+      when :revise then revise_with(flow_correction)
       else Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
       end
     end
@@ -710,25 +749,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # a revise pill of its own, so this is the typed shortcut rather than the
     # only way back into the loop.
     def handle_final_confirmation
-      case draft_decision.verdict
+      case flow_verdict
       when :publish then ask_location
-      when :revise then revise_with(draft_decision.correction)
+      when :revise then revise_with(flow_correction)
       else confirm_submission
       end
-    end
-
-    # Every typed answer at these steps is read by the model — "ja" pays the
-    # same completion as "passt so, aber der Titel ist zu lang". Before it
-    # existed, anything off a fixed list fell through to re-sending the same
-    # card, which reads as the bot ignoring what was written.
-    #
-    # Asked once per message. No two of the three steps that consult it are ever
-    # reached by one inbound message, so a second call could only pay for the
-    # same verdict.
-    def draft_decision
-      @draft_decision ||= Whatsapp::AiAssistant::DraftDecisionService.call(
-        conversation: conversation, inbound_text: inbound_text
-      )
     end
 
     # The change the citizen already named, applied at once rather than asked for
@@ -760,10 +785,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # The step exists to collect a correction, so the citizen's own words are
-    # taken as one and the model is asked only the narrower question of whether
-    # they changed their mind instead. "doch egal, passt so" and "ach, lass es
-    # wie es ist" used to be handed to the rewriter as instructions, spending a
-    # generation to alter a draft nobody had asked to alter.
+    # taken as one and the verdict answers only the narrower question of
+    # whether they changed their mind instead. "doch egal, passt so" and "ach,
+    # lass es wie es ist" used to be handed to the rewriter as instructions,
+    # spending a generation to alter a draft nobody had asked to alter.
     #
     # The extracted correction is deliberately not used here, only the verdict:
     # this step already asked "what should I change?", so the whole message is
@@ -773,7 +798,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       correction = inbound_text.to_s.strip
 
       return send_revision_question if correction.blank?
-      return resume_after_revision if draft_decision.verdict == :publish
+      return resume_after_revision if flow_verdict == :publish
 
       apply_revision(correction)
     end
@@ -855,19 +880,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # not be held for it.
     def handle_location
       return attach_location if inbound_location.present?
-      return publish if Whatsapp::AiAssistant::SkipIntentService.for_location(inbound_text:)
+      return publish if flow_verdict == :skip
       return publish if conversation.context["location_reminded"].present?
 
       Whatsapp::Flows::AskLocationService.remind(conversation:)
-    end
-
-    # Asked once per message. The two picture steps are never both reached by one
-    # inbound message, so a second call could only pay for the same answer.
-    def image_skipped_in_words?
-      return @image_skipped_in_words if defined?(@image_skipped_in_words)
-
-      @image_skipped_in_words =
-        Whatsapp::AiAssistant::SkipIntentService.for_image(inbound_text:)
     end
 
     def attach_location
@@ -898,7 +914,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # was answered by asking for the photo again — which is the one reply that
     # cannot be read as anything but a refusal.
     def handle_image_choice
-      return ask_location if image_skipped_in_words?
+      return ask_location if flow_verdict == :skip
 
       ask_image
     end
@@ -908,7 +924,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # rather than by silently publishing without the picture they said they
     # wanted to send.
     def handle_image_upload
-      return ask_location if inbound_image_id.blank? && image_skipped_in_words?
+      return ask_location if inbound_image_id.blank? && flow_verdict == :skip
 
       return send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt") if
         inbound_image_id.blank?

@@ -33,6 +33,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Citizen: #{citizen_name}",
         "- Account linked: #{account_linked?}",
         "- Conversation step: #{@conversation.step}",
+        "- Draft on the table: #{draft_description}",
         "- Active participation phase: #{active_phase_description}",
         "- Proposal this conversation is about: #{active_proposal_description}",
         "- Participation phases open portal-wide: #{open_phases_count}"
@@ -53,7 +54,14 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            awaiting_resume_decision or awaiting_phase_choice, unless the citizen
            is clearly asking you something instead of answering. Never paraphrase, summarise or
            answer such a message yourself, and never repeat it back: the flow needs the original
-           wording.
+           wording. Pass what the message does to the step as decision: publish when they
+           plainly agree the draft on the table should go in as it stands ("ja", "passt so");
+           revise when they want something changed, however they say it — also when they agree
+           and ask for a change in one breath ("ja, aber der Titel ist zu lang") — with the
+           change as correction when they named one; skip when they decline the optional photo
+           or location pin the step just asked for ("hab kein foto", "weiß die adresse nicht");
+           answer for everything else. Publishing cannot be taken back from the chat: when in
+           doubt, decision is never publish.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
            - see what is running, browse, look around -> show_projekts
@@ -72,6 +80,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            - unlink this number from their account -> start_unlink
            - stop all messages, however they phrase it -> stop_messages, immediately and without
              argument
+           - abandon the submission in progress, however they phrase it ("lass mal", "vergiss
+             es", "abbrechen") -> abort_submission. Declining one optional part is not
+             abandoning, and a wrong abort throws away everything they wrote
            - what can you do, how does this work -> show_help
            - a greeting, or anything that says nothing about what they want -> show_main_menu,
              which offers the three starting points. Never answer a bare "Hallo" with plain text
@@ -151,6 +162,18 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
     def citizen_name
       @conversation.user&.name.presence || "unknown"
+    end
+
+    # What the publish/revise decision is judged against. Flattened and cut
+    # because the model is deciding what the citizen meant, not re-reading the
+    # whole draft — the markup and the tail of a long description would be
+    # most of the tokens and none of the judgement.
+    def draft_description
+      draft = @conversation.draft_resource
+
+      return "none" if draft.blank?
+
+      "\"#{draft.title}\" — #{::Whatsapp.plain_text(draft.description, length: 300)}"
     end
 
     def active_phase_description

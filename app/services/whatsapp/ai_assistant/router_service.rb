@@ -35,7 +35,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     return ServiceResult.failure(error: EMPTY_ANSWER_ERROR) if outcome == :empty
 
-    ServiceResult.success(outcome: outcome)
+    # The hand-off's verdict rides on the result so the flow acts on the one
+    # reading this call already made instead of paying a second completion.
+    ServiceResult.success(
+      outcome: outcome,
+      decision: hand_to_flow.decision,
+      correction: hand_to_flow.correction
+    )
   rescue StandardError => e
     report(e)
 
@@ -139,6 +145,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::OpenNotificationSettings,
         ::Ai::Tools::WhatsappAiAssistant::StartUnlink,
         ::Ai::Tools::WhatsappAiAssistant::StopMessages,
+        ::Ai::Tools::WhatsappAiAssistant::AbortSubmission,
         ::Ai::Tools::WhatsappAiAssistant::ShowHelp,
         ::Ai::Tools::WhatsappAiAssistant::ShowMainMenu,
         ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,

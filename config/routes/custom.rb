@@ -140,9 +140,3 @@ get "projekts_map_embed", to: "projekt_map_embeds#index", as: :projekts_map_embe
 get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projekt_map_embed
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
-
-namespace :api do
-  namespace :masterportal do
-    resources :category_icons, only: [:create]
-  end
-end

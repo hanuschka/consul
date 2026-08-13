@@ -59,6 +59,10 @@ gem 'docx', '0.10.0'
 # latest 3.4.1 because docx and selenium-webdriver both require rubyzip < 3.
 gem 'rubyzip', '2.3.2'
 
+group :test do
+  gem 'shoulda-matchers', '~> 6.0'
+end
+
 group :development, :test do
   gem 'pry', '~> 0.14'
   gem 'pry-byebug', '~> 3.9'

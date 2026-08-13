@@ -279,9 +279,12 @@ class DeficiencyReportsController < ApplicationController
     end
 
     dr.responsible_officers.each do |officer|
-      DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      if dr.email_officers_individually?
+        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+        Activity.log(officer.user, "email", dr)
+      end
+
       Notification.add(officer.user, dr)
-      Activity.log(officer.user, "email", dr)
     end
   end
 end

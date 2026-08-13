@@ -94,7 +94,7 @@ class Projekts::GenerateBannerImageService < ApplicationService
     end
 
     def attach_image(base64_image)
-      result = AttachPageImageService.call(
+      result = ::Projekts::AttachPageImageService.call(
         projekt: @projekt,
         user: @user,
         data: Base64.decode64(base64_image),

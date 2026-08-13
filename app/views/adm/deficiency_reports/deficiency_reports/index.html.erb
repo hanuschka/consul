@@ -16,6 +16,7 @@
     id:             Kern::Table::HeaderComponent.new(:id, t(".table.id"), **@id_header_options.merge(data_field: "id")),
     title:          Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options.merge(data_field: "title")),
     author:         Kern::Table::HeaderComponent.new(:author, t(".table.author"), **@author_header_options.merge(data_field: "author")),
+    intake_channel: Kern::Table::HeaderComponent.new(:deficiency_report_intake_channel_id, t(".table.intake_channel"), **@intake_channel_header_options.merge(data_field: "intake_channel")),
     created_at:     Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options.merge(data_field: "created_at")),
     updated_at:     Kern::Table::HeaderComponent.new(:updated_at, t(".table.updated_at"), **@updated_at_header_options.merge(data_field: "updated_at")),
     status_changed_at: Kern::Table::HeaderComponent.new(:status_changed_at, t(".table.status_changed_at"), **@status_changed_at_header_options.merge(data_field: "status_changed_at")),
@@ -46,10 +47,10 @@
         records: @deficiency_reports,
         pagy: @pagy,
         headers: headers,
-        column_count: 17 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0),
+        column_count: 18 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0),
         column_selector: {
           storage_key: "adm-deficiency-reports-columns-v2",
-          defaults: "watch,id,image,title,created_at,status,responsible,archived_state,hidden_state"
+          defaults: "watch,id,image,title,created_at,intake_channel,status,responsible,archived_state,hidden_state"
         },
         empty_state: {
           title: t(".no_items_title"),
@@ -91,6 +92,7 @@
       <%= render headers[:updated_at] %>
       <%= render headers[:status_changed_at] %>
       <%= render headers[:author] %>
+      <%= render headers[:intake_channel] %>
       <%= render headers[:status] %>
       <%= render headers[:address] %>
       <%= render headers[:district] %>

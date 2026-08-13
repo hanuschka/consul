@@ -118,6 +118,16 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       [
         ::Ai::Tools::WhatsappAiAssistant::ListOpenPhases,
         ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
+        # The read half. Everything above answers "what can I do here" and
+        # everything below acts; these answer "what is this portal doing", which
+        # until they existed was refused as out of scope for want of a tool.
+        ::Ai::Tools::WhatsappAiAssistant::DescribeProjekt,
+        ::Ai::Tools::WhatsappAiAssistant::ListProjektResults,
+        ::Ai::Tools::WhatsappAiAssistant::ListMilestones,
+        ::Ai::Tools::WhatsappAiAssistant::ListEvents,
+        ::Ai::Tools::WhatsappAiAssistant::ListOpenPolls,
+        ::Ai::Tools::WhatsappAiAssistant::ListProjektContributions,
+        ::Ai::Tools::WhatsappAiAssistant::MyFollowedProjekts,
         ::Ai::Tools::WhatsappAiAssistant::ShowProjekts,
         ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,
         ::Ai::Tools::WhatsappAiAssistant::StartProposalSubmission,

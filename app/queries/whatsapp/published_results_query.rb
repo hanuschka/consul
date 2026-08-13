@@ -17,9 +17,11 @@ class Whatsapp::PublishedResultsQuery < ApplicationQuery
     @projekt = projekt
   end
 
+  # Translations because every caller names the phase, and ProjektPhase#title
+  # reads the translated phase_tab_name — one query per row otherwise.
   def call
     candidates
-      .includes(projekt: :page)
+      .includes(:translations, projekt: :page)
       .select { |projekt_phase| publicly_visible?(projekt_phase) }
       .first(::Whatsapp::MAX_LIST_ROWS)
   end

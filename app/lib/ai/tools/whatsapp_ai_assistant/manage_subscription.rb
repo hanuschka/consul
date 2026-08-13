@@ -10,7 +10,7 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
   end
 
   def execute(projekt_name:, action:)
-    return not_linked_error if user.blank?
+    return not_linked_error("follow a project yet") if user.blank?
 
     projekt = ::Whatsapp::ProjektByNameQuery.call(term: projekt_name)
 
@@ -35,18 +35,5 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
       ::Whatsapp::Flows::SubscriptionCommandService.unsubscribe(
         conversation: conversation, projekt: projekt
       )
-    end
-
-    # Deliberately not a guess: the name query only answers when it is certain,
-    # and subscribing someone to the wrong projekt is a silent wrong answer they
-    # would only notice weeks later.
-    def unknown_projekt_error
-      { error: "No single project matches that name. Call show_projekts so the citizen can " \
-               "pick one, or ask them to name it exactly." }
-    end
-
-    def not_linked_error
-      { error: "This number is not linked to an account, so it cannot follow a project yet. "\
-               "Offer to link the account first." }
     end
 end

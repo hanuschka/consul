@@ -13,11 +13,11 @@ class Ai::Tools::WhatsappAiAssistant::StartPhaseFlow < Ai::Tools::WhatsappAiAssi
 
     return unknown_phase_error if projekt_phase.blank?
 
-    conversation.start_flow!(projekt_phase)
-
     # Refuses on its own and resets the flow when the citizen may not take
     # part, so the permission rule stays in one place.
-    ::Whatsapp::Flows::AskIdeaService.call(conversation: conversation)
+    ::Whatsapp::Flows::StartPhaseFlowService.call(
+      conversation: conversation, projekt_phase: projekt_phase
+    )
 
     halt("Started the submission flow for projekt phase #{projekt_phase.id}.")
   end

@@ -9,9 +9,16 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
   ROW_DESCRIPTION_LENGTH = 72
 
   # Asked for the first time, off the text the citizen just sent.
+  #
+  # The search runs on their words and on the words a duplicate might have been
+  # written with instead: matching tokens alone, "Zebrastreifen" and
+  # "Fußgängerüberweg" are two unrelated proposals, and the ranking call below
+  # can only judge what the search hands it.
   def self.for_idea(conversation:, idea_text:)
     candidates = Whatsapp::SimilarProposalsQuery.call(
-      projekt_phase: conversation.projekt_phase, text: idea_text
+      projekt_phase: conversation.projekt_phase,
+      text: idea_text,
+      extra_terms: Whatsapp::AiAssistant::SearchTermsExpansionService.call(text: idea_text)
     )
 
     new(
@@ -128,7 +135,14 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
       )
     end
 
+    # 72 characters is a clause and a half of most contributions, so a truncated
+    # description told the citizen almost nothing about the proposal they are
+    # being asked to support instead of writing their own. Cached per proposal,
+    # which is what makes it affordable here: the same handful of proposals are
+    # offered to everyone who writes about the same thing.
     def plain_description(proposal)
-      ::Whatsapp.plain_text(proposal.description, length: ROW_DESCRIPTION_LENGTH)
+      ::Whatsapp::AiAssistant::DescriptionSummaryService.call(
+        resource: proposal, length: ROW_DESCRIPTION_LENGTH
+      )
     end
 end

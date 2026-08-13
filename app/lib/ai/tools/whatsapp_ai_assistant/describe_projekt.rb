@@ -13,7 +13,7 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
   def execute(projekt_name:)
     projekt = readable_projekt(projekt_name)
 
-    return unknown_projekt_error if projekt.blank?
+    return unknown_projekt_error(projekt_name) if projekt.blank?
 
     {
       projekt: projekt_title(projekt),

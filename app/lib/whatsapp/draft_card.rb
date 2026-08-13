@@ -24,7 +24,11 @@ module Whatsapp::DraftCard
     ].join("\n\n")
   end
 
+  # Summarised rather than cut, and cached per record, so the two sends of the
+  # same card cost one generation between them and read identically.
   def plain_description(resource)
-    ::Whatsapp.plain_text(resource.description, length: DESCRIPTION_PREVIEW_LENGTH)
+    ::Whatsapp::AiAssistant::DescriptionSummaryService.call(
+      resource: resource, length: DESCRIPTION_PREVIEW_LENGTH
+    )
   end
 end

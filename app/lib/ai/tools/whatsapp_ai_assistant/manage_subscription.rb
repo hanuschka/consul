@@ -14,7 +14,7 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
 
     projekt = ::Whatsapp::ProjektByNameQuery.call(term: projekt_name)
 
-    return unknown_projekt_error if projekt.blank?
+    return unknown_projekt_error(projekt_name) if projekt.blank?
 
     apply(projekt, action.to_s)
 

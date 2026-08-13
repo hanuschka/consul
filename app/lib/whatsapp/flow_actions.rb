@@ -41,6 +41,7 @@ module Whatsapp::FlowActions
     submit_final
     resume
     restart
+    abort_resume
   ].freeze
 
   # `support_instead` is supporting from the duplicate offer, and it is its own
@@ -75,6 +76,11 @@ module Whatsapp::FlowActions
   # Aborting a draft, not unsubscribing. Held apart from Whatsapp::OPT_OUT
   # keywords deliberately: the catalog uses the same word for both, and the
   # difference is whether a flow is open. See Inbound::ProcessMessageService.
+  #
+  # Acted on the moment one matches. Everything these four miss is read by
+  # AiAssistant::AbortIntentService, which confirms before discarding anything
+  # rather than acting outright — so this list is what a citizen types to abort
+  # in one message, not the whole of what the bot understands as aborting.
   ABORT_KEYWORDS = ["stop", "stopp", "abbrechen", "cancel"].freeze
 
   module_function

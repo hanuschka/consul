@@ -85,7 +85,7 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
       projekt = readable_projekt(projekt_name)
 
-      return unknown_projekt_error if projekt.blank?
+      return unknown_projekt_error(projekt_name) if projekt.blank?
 
       yield(projekt)
     end
@@ -97,10 +97,26 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     # Deliberately not a guess: the name query only answers when it is certain,
     # so an ambiguous name is a question for the citizen rather than a projekt
     # picked on their behalf.
-    def unknown_projekt_error
-      { error: "No single project matches that name. Call show_projekts so the citizen can " \
-               "pick one, or ask them to name it exactly." }
+    #
+    # What nearly matched travels with the refusal. Without it the model's only
+    # move is to list the whole portal back at someone who named their projekt
+    # almost correctly — the names are already resolved and ranked by then, and
+    # throwing them away costs the citizen the one question worth asking.
+    def unknown_projekt_error(projekt_name = nil)
+      suggestions = ::Whatsapp::ProjektByNameQuery.suggestions(term: projekt_name.to_s)
+
+      return { error: NO_PROJEKT_ERROR } if suggestions.blank?
+
+      {
+        error: NO_PROJEKT_ERROR,
+        did_you_mean: suggestions,
+        hint: "Ask the citizen whether they meant one of did_you_mean, naming them. Do not act " \
+              "on one without their answer."
+      }
     end
+
+    NO_PROJEKT_ERROR = "No single project matches that name. Call show_projekts so the citizen " \
+                       "can pick one, or ask them to name it exactly.".freeze
 
     # These reach the model, not the citizen, so one wording per rule matters
     # more than it looks: three phrasings of "this number is not linked" is

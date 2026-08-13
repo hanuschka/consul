@@ -107,8 +107,27 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
       Whatsapp::Flows::SendLoginLinkService.call(conversation: @conversation, intro: body)
     end
 
+    # The rule, then the way out of it. The refusal keeps its own exact wording —
+    # it is a permission statement and the one line here that must not vary —
+    # and only the sentence under it is written for this citizen's situation.
+    #
+    # Skipped where the message already ends in something to act on: the
+    # verification hint carries a link, and a refusal that sends the login link
+    # is followed by the link itself, so a third suggestion under either is one
+    # instruction too many.
     def message
-      [refusal_copy, verification_hint].compact.join("\n\n")
+      [refusal_copy, verification_hint, next_step].compact.join("\n\n")
+    end
+
+    def next_step
+      return if verification_hint.present?
+      return if login_required?
+
+      Whatsapp::AiAssistant::RefusalNextStepService.call(
+        reason: @reason,
+        projekt_phase: @conversation.projekt_phase,
+        user: @conversation.user
+      )
     end
 
     def refusal_copy

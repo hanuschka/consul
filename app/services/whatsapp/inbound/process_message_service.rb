@@ -35,6 +35,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return handle_unlinked(entry) if account.user.blank? && !guest_participation?
     return handle_entry(entry) if entry.present?
     return if handle_stale_flow
+    return if handle_abort_intent
     return if routed_by_assistant?
 
     dispatch_step
@@ -177,6 +178,113 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
 
       true
+    end
+
+    # Read after the opt-out fallback above, never before it: someone leaving the
+    # channel mid-submission has said the larger thing, and answering them with
+    # "shall I cancel the draft?" would leave the number subscribed.
+    #
+    # Only where the keyword path would also have acted — an interaction has to
+    # be open for there to be anything to abandon — and never for a tapped pill,
+    # whose label the citizen did not write.
+    def handle_abort_intent
+      return false if !interaction_open?
+      return false if tapped_reply_id.present?
+      return false if conversation.awaiting_abort_confirmation?
+      return false if !Whatsapp::AiAssistant::AbortIntentService.volunteered(inbound_text:)
+
+      ask_abort_confirmation
+
+      true
+    end
+
+    # Its own step rather than a question asked in passing. Left on the step it
+    # interrupted, a typed "ja" would be answered by that step instead — and at
+    # awaiting_draft_decision "ja" is the word that publishes, so the citizen
+    # would have published the very draft they were asking to throw away.
+    def ask_abort_confirmation
+      conversation.merge_context!(abort_origin: conversation.step)
+      conversation.update!(step: "awaiting_abort_confirmation")
+
+      Whatsapp::Outbound.question(
+        conversation: conversation,
+        body: Whatsapp.phrase("whatsapp.bot.abort_confirmation"),
+        buttons: [
+          Whatsapp::FlowActions.button(
+            action: :abort_resume, label_key: "whatsapp.bot.buttons.abort_resume"
+          ),
+          Whatsapp::Outbound.recovery_button(:cancel)
+        ]
+      )
+    end
+
+    # Typed instead of tapped. The question was put in the bot's own words, so
+    # the answer is read as an answer to it — a bare "ja" here means cancel,
+    # which is the opposite of what the same word means one step earlier.
+    def handle_abort_confirmation
+      return Whatsapp::Flows::CancelService.call(conversation:) if
+        Whatsapp::AiAssistant::AbortIntentService.answering_confirmation(inbound_text:)
+
+      resume_after_abort_question
+    end
+
+    # Back to the step the question interrupted, re-asked so the citizen is not
+    # left waiting on something the confirmation scrolled past. A missing origin
+    # can only mean the interaction was the assistant's own question rather than
+    # a flow step, and idle is where that already stood.
+    def resume_after_abort_question
+      conversation.update!(step: conversation.context["abort_origin"].presence || "idle")
+
+      reask_step
+    end
+
+    # Puts the step's question again rather than running the step over the
+    # message, which dispatch_step would: the citizen just wrote "nein", and at
+    # awaiting_idea that becomes a drafted proposal, at awaiting_comment a
+    # published comment. The steps whose question is a re-send either way share
+    # the branches dispatch_step gives them; the rest are the ones that read the
+    # message as content and must not see this one.
+    def reask_step
+      case conversation.step
+      when "awaiting_idea"
+        Whatsapp::Flows::AskIdeaService.call(conversation:)
+      when "awaiting_category"
+        Whatsapp::Flows::AskDraftChoiceService.category(conversation:)
+      when "awaiting_sentiment"
+        Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:)
+      when "awaiting_duplicate_decision"
+        reask_duplicate_choice
+      when "awaiting_draft_decision"
+        Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
+      when "awaiting_image_choice"
+        ask_image
+      when "awaiting_image_upload"
+        send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt")
+      when "awaiting_location"
+        Whatsapp::Flows::AskLocationService.ask(conversation:)
+      when "awaiting_final_confirmation"
+        confirm_submission
+      when "awaiting_revision"
+        send_revision_question
+      when "awaiting_comment"
+        reask_comment
+      when "awaiting_notification_settings"
+        Whatsapp::Flows::NotificationSettingsService.call(conversation:)
+      when "awaiting_resume_decision"
+        Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
+      else
+        handle_idle_message
+      end
+    end
+
+    # The prompt on its own. send_menu_prompt resets the flow before sending,
+    # which is right when the help list opens the step and wrong here, where the
+    # citizen has just said to carry on with it.
+    def reask_comment
+      Whatsapp::Outbound.text(
+        account:,
+        body: Whatsapp.phrase("whatsapp.bot.help_menu.prompts.comment")
+      )
     end
 
     # The keyword lists above have already decided everything they can, and this
@@ -330,6 +438,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         resume_flow
       when :restart
         restart_flow
+      when :abort_resume
+        resume_after_abort_question
       when :support
         Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
       when :support_instead
@@ -625,7 +735,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_image_choice"
-        ask_image
+        handle_image_choice
       when "awaiting_image_upload"
         handle_image_upload
       when "awaiting_location"
@@ -642,6 +752,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         Whatsapp::Flows::UnlinkService.ask(conversation:)
       when "awaiting_resume_decision"
         Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
+      when "awaiting_abort_confirmation"
+        handle_abort_confirmation
       else
         handle_idle_message
       end
@@ -726,8 +838,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # re-sending the same card — "passt so", "eigentlich lieber nicht" and "ja
     # aber der Titel ist zu lang" all answered as if nothing had been said.
     #
-    # Asked once per message. The two confirmation steps are never both reached by
-    # one inbound message, so a second call could only pay for the same verdict.
+    # Asked once per message. No two of the three steps that consult it are ever
+    # reached by one inbound message, so a second call could only pay for the
+    # same verdict.
     def draft_decision
       @draft_decision ||= Whatsapp::AiAssistant::DraftDecisionService.call(
         conversation: conversation, inbound_text: inbound_text
@@ -744,7 +857,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       apply_revision(correction)
     end
 
+    # The step it was asked from is recorded before it is overwritten. A citizen
+    # who answers the revision question with "doch, passt so" rejoins the flow
+    # where they left it, and the draft card and the preview leave it in
+    # different places — one still owes a picture, the other has already sent it.
     def ask_revision
+      conversation.merge_context!(revision_origin: conversation.step)
       conversation.update!(step: "awaiting_revision")
 
       send_revision_question
@@ -757,12 +875,34 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
+    # The step exists to collect a correction, so the citizen's own words are
+    # taken as one and the model is asked only the narrower question of whether
+    # they changed their mind instead. "doch egal, passt so" and "ach, lass es
+    # wie es ist" used to be handed to the rewriter as instructions, spending a
+    # generation to alter a draft nobody had asked to alter.
+    #
+    # The extracted correction is deliberately not used here, only the verdict:
+    # this step already asked "what should I change?", so the whole message is
+    # the answer, and narrowing it to what a model read out of it could drop half
+    # of what the citizen wrote.
     def handle_revision
       correction = inbound_text.to_s.strip
 
       return send_revision_question if correction.blank?
+      return resume_after_revision if draft_decision.verdict == :publish
 
       apply_revision(correction)
+    end
+
+    # Back where the revision question was asked from: the draft card owes the
+    # picture and the pin, the preview only the pin. A missing origin — a
+    # conversation that was already at this step when the recording was added —
+    # takes the longer way round, which can ask for a picture that is already
+    # attached but cannot publish anything the citizen has not seen.
+    def resume_after_revision
+      return ask_location if conversation.context["revision_origin"] == "awaiting_final_confirmation"
+
+      ask_image
     end
 
     # Shared by the answer to the revision question and the correction read out of
@@ -820,15 +960,30 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::AskLocationService.ask(conversation:)
     end
 
-    # A shared pin publishes. Anything else is the citizen answering with words
-    # where the picker was expected, so the picker is sent once more — and the
-    # second miss publishes without a pin, because the pin is optional and a
-    # finished submission must not be held for it.
+    # A shared pin publishes, and so does a citizen saying there will not be one:
+    # "die adresse weiß ich nicht" used to reach the same place by counting as
+    # the one permitted miss, which spent a reminder to arrive at the answer they
+    # had already given.
+    #
+    # Anything else is the citizen answering with words where the picker was
+    # expected, so the picker is sent once more — and the second miss publishes
+    # without a pin, because the pin is optional and a finished submission must
+    # not be held for it.
     def handle_location
       return attach_location if inbound_location.present?
+      return publish if Whatsapp::AiAssistant::SkipIntentService.for_location(inbound_text:)
       return publish if conversation.context["location_reminded"].present?
 
       Whatsapp::Flows::AskLocationService.remind(conversation:)
+    end
+
+    # Asked once per message. The two picture steps are never both reached by one
+    # inbound message, so a second call could only pay for the same answer.
+    def image_skipped_in_words?
+      return @image_skipped_in_words if defined?(@image_skipped_in_words)
+
+      @image_skipped_in_words =
+        Whatsapp::AiAssistant::SkipIntentService.for_image(inbound_text:)
     end
 
     def attach_location
@@ -854,10 +1009,23 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt")
     end
 
-    # A photo sent while the bot is waiting for one. Anything else at this step
-    # is answered by asking again rather than by silently publishing without the
-    # picture the citizen said they wanted to send.
+    # The picture question answered in words. Both this step and the upload step
+    # below carry a skip pill and understood nothing but the pill, so "kein foto"
+    # was answered by asking for the photo again — which is the one reply that
+    # cannot be read as anything but a refusal.
+    def handle_image_choice
+      return ask_location if image_skipped_in_words?
+
+      ask_image
+    end
+
+    # A photo sent while the bot is waiting for one, or the citizen saying there
+    # will not be one. Anything else at this step is answered by asking again
+    # rather than by silently publishing without the picture they said they
+    # wanted to send.
     def handle_image_upload
+      return ask_location if inbound_image_id.blank? && image_skipped_in_words?
+
       return send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt") if
         inbound_image_id.blank?
 

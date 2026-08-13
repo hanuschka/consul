@@ -59,6 +59,8 @@ en:
         default_3: How does submitting a contribution work?
         default_4: Stop receiving messages
       idea_missing: Please describe your idea as text or as a voice message.
+      abort_confirmation: >-
+        Should I discard the contribution you started? What you have written so far will be lost.
       no_projekt: >-
         There is no participation project accepting contributions at the moment. Write to me again when
         a new one starts, or scan the QR code of a project.
@@ -86,6 +88,7 @@ en:
         revise: Revise
         retry: Try again
         cancel: Cancel
+        abort_resume: Keep editing
         link_yes: Yes, link it
         link_later: Later
         link_switch: Switch account

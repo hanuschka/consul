@@ -30,11 +30,16 @@ class Whatsapp::Flows::SubscriptionCommandService < Whatsapp::Flows::BaseService
 
   private
 
+    # Writes the same ProjektSubscription row the website's follow button
+    # writes, so following in the chat and following on the site are one state
+    # rather than two that disagree. Rows are deactivated rather than
+    # destroyed, which is what the web side does and what keeps an unfollow
+    # reversible. The commands name the state they want rather than asking for
+    # a flip, so repeating one is a no-op instead of undoing what it just did.
     def write
-      return Whatsapp::ToggleProjektFollowService.follow(user: account.user, projekt: @projekt) if
-        @outcome == :followed
-
-      Whatsapp::ToggleProjektFollowService.unfollow(user: account.user, projekt: @projekt)
+      ::ProjektSubscription
+        .find_or_initialize_by(user: account.user, projekt: @projekt)
+        .update!(active: @outcome == :followed)
     end
 
     def body

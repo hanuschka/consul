@@ -1,6 +1,8 @@
 class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
-  # The two greetings an unlinked number can get, both ending in the same link
-  # question: the very first message ever, and every visit after a "Later".
+  # The new-number protocol: the two greetings an unlinked number can get —
+  # the very first message ever, and every visit after a "Later" — plus the
+  # standalone bot disclosure for a number greeted before the disclosure
+  # existed.
 
   def self.first_contact(conversation:)
     new(conversation: conversation).first_contact
@@ -8,6 +10,10 @@ class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
 
   def self.welcome_back(conversation:)
     new(conversation: conversation).welcome_back
+  end
+
+  def self.disclose(conversation:)
+    new(conversation: conversation).disclose
   end
 
   # Catalog A1. Four messages, in this order and as separate bubbles rather
@@ -50,6 +56,26 @@ class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
       body: welcome_back_body,
       buttons: welcome_back_buttons
     )
+  end
+
+  # Catalog E31. The bot has to say it is a bot, once per number ever —
+  # first_contact carries it for everyone new, so this is only for a number
+  # greeted before the disclosure existed. It used to repeat on every new
+  # 24-hour service window, which meant a regular reads the same sentence
+  # every day and stops seeing it — the thing the rule exists to prevent.
+  #
+  # Sent as its own message rather than prepended to whatever answer follows.
+  # A disclosure buried above three paragraphs of something else is just as
+  # invisible.
+  def disclose
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp.phrase(
+        "whatsapp.bot.compliance.disclosure", portal_name: Whatsapp::PortalLinks.portal_name
+      )
+    )
+
+    account.mark_ai_disclosed!
   end
 
   private

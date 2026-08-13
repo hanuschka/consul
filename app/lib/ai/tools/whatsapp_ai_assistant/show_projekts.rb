@@ -5,7 +5,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowProjekts < Ai::Tools::WhatsappAiAssist
               "message itself — do not write one as well."
 
   def execute
-    ::Whatsapp::Flows::DiscoveryService.call(conversation: conversation)
+    ::Whatsapp::Flows::DiscoveryService.linked(conversation: conversation)
 
     halt("Sent the list of open participation projects.")
   end

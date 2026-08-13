@@ -31,7 +31,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # anything below can reply. Once per number rather than once per 24-hour
     # window: a regular who reads it every day stops reading it at all. A first
     # contact is the exception, its own opening message already carries it.
-    Whatsapp::Flows::AiDisclosureService.call(conversation:) if !account.ai_disclosed?
+    Whatsapp::Flows::OnboardingGreetingService.disclose(conversation:) if !account.ai_disclosed?
 
     return if handle_recovery_action
     return if handle_flow_action
@@ -322,7 +322,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :discover
         dispatch_discovery
       when :discover_public
-        Whatsapp::Flows::PublicDiscoveryService.call(conversation:)
+        Whatsapp::Flows::DiscoveryService.unlinked(conversation:)
       when :submit_proposal
         Whatsapp::Flows::SubmitProposalService.call(conversation:)
       when :view_projekt
@@ -427,9 +427,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # an unlinked number is answered with, so the two cannot differ: the account
     # listing dead-ends for a guest and the public one does not.
     def dispatch_discovery
-      return Whatsapp::Flows::PublicDiscoveryService.call(conversation:) if account.user.blank?
+      return Whatsapp::Flows::DiscoveryService.unlinked(conversation:) if account.user.blank?
 
-      Whatsapp::Flows::DiscoveryService.call(conversation:)
+      Whatsapp::Flows::DiscoveryService.linked(conversation:)
     end
 
     def finish_notification_settings
@@ -459,7 +459,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def handle_entry(entry)
       return Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: :no_open_phase) if
         entry == :projekt_without_phase
-      return Whatsapp::Flows::DiscoveryService.call(conversation:, projekt: entry_projekt) if
+      return Whatsapp::Flows::DiscoveryService.linked(conversation:, projekt: entry_projekt) if
         entry == :projekt_choice
 
       return Whatsapp::Flows::ProposalPromptService.call(

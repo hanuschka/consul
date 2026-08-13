@@ -69,8 +69,33 @@ class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
     end
 
     def linked_rows
-      Whatsapp::PhaseListRows.build(
-        @projekt_phases || Whatsapp::EligiblePhasesQuery.call(projekt: @projekt)
+      phase_rows(@projekt_phases || Whatsapp::EligiblePhasesQuery.call(projekt: @projekt))
+    end
+
+    # One selectable row per open phase, titled by its projekt: a citizen
+    # recognises the projekt, not the phase, while the tap has to carry the
+    # phase. The linked list and the guest one differ only in which phases
+    # they are handed, so both build their rows here.
+    def phase_rows(projekt_phases)
+      projekt_phases.map do |projekt_phase|
+        {
+          id: Whatsapp::FlowActions.id_for(action: :idea_start, param: projekt_phase.id),
+          title: Whatsapp::ProjektLink.title(projekt_phase.projekt),
+          description: row_description(projekt_phase)
+        }
+      end
+    end
+
+    # `title` rather than `name`: a phase's name is its type identifier —
+    # ProposalPhase#name returns the literal "proposal_phase" — while `title` is
+    # the tab name an admin gave it, falling back to the model's human name.
+    def row_description(projekt_phase)
+      return projekt_phase.title if projekt_phase.end_date.blank?
+
+      I18n.t(
+        "whatsapp.bot.discovery.row_description",
+        phase: projekt_phase.title,
+        end_date: I18n.l(projekt_phase.end_date)
       )
     end
 
@@ -81,7 +106,7 @@ class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
     def send_guest_phases
       Whatsapp::Flows::SendListService.call(
         conversation: @conversation,
-        rows: Whatsapp::PhaseListRows.build(guest_phases),
+        rows: phase_rows(guest_phases),
         body: Whatsapp.phrase("whatsapp.bot.discovery.guest_body"),
         button_label: I18n.t("whatsapp.bot.discovery.button"),
         empty_body: empty_body

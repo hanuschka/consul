@@ -50,7 +50,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   # over — and this service is where that key is written in the first place.
   def self.from_accepted_idea(conversation:, inbound_message_id: nil)
     new(
-      conversation: conversation, idea_text: conversation.context["last_idea_text"],
+      conversation: conversation, idea_text: conversation.last_idea_text,
       copy: :first, screened: true, inbound_message_id: inbound_message_id
     ).call
   end
@@ -81,7 +81,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
       # Stored before the gate because the retry button reads it back, and after
       # a failed check it is the only copy of what the citizen wrote.
-      @conversation.merge_context!(stored_text)
+      store_inbound_text
 
       if !@screened
         # Screened before the "one moment" message rather than after it: a text
@@ -95,7 +95,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
         # Armed inside the gate it guards rather than above it. Stamped
         # unconditionally, an already-screened text would record a screening that
         # never ran and re-arm the floor against the citizen's next real idea.
-        @conversation.merge_context!(last_screened_at: Time.current.iso8601)
+        @conversation.stamp_screened!
 
         return send_safety_check_failed if !safety.success?
         return refuse_content if safety.reason.present?
@@ -112,19 +112,9 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       # millisecond before the wait rather than on the wait.
       Whatsapp::Send.typing(message_id: @inbound_message_id)
 
-      # The drafting clock is armed in the same write as the result rather than
-      # in one of its own: the advisory lock means no other message can read it
-      # while `generate` runs, so a second write beforehand buys nothing. The
-      # card summary rides under its own key because the stash is emptied when
-      # the record is written, while the cards that quote the summary are sent
-      # after.
-      draft = generate
-
-      @conversation.merge_context!(
-        draft_data: draft.except("card_summary"),
-        card_summary: draft["card_summary"],
-        last_draft_at: Time.current.iso8601
-      )
+      # One write under the advisory lock: the model batches the draft, its
+      # card summary, and the drafting clock (see store_generated_draft!).
+      @conversation.store_generated_draft!(generate)
 
       complete
     rescue StandardError => e
@@ -138,14 +128,10 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # there would replace the citizen's original idea with "make the title
     # shorter" — and the resume recap, which reads it back, would show them that
     # instead of what they came to submit.
-    #
-    # A first draft clears the correction rather than leaving it: the retry pill
-    # prefers it, and a stale one would answer a failed new idea by re-applying a
-    # change to a draft that no longer exists.
-    def stored_text
-      return { last_correction: @idea_text } if @copy == :revised
+    def store_inbound_text
+      return @conversation.store_correction!(@idea_text) if @copy == :revised
 
-      { last_idea_text: @idea_text, last_correction: nil }
+      @conversation.store_idea_text!(@idea_text)
     end
 
     # The card's own step cannot be reached before the record exists, but a
@@ -238,7 +224,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
         resource: @conversation.draft_resource,
         correction: @idea_text,
         projekt_phase: @conversation.projekt_phase,
-        card_summary: @conversation.context["card_summary"]
+        card_summary: @conversation.card_summary
       )
     end
 
@@ -262,14 +248,12 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # refuse the tap that answered the duplicate offer, moments after the turn
     # that offered it stamped the clock.
     def throttled?
-      return true if within?("last_draft_at", DRAFT_INTERVAL)
+      return true if within?(@conversation.last_draft_at, DRAFT_INTERVAL)
 
-      !@screened && within?("last_screened_at", SCREENING_INTERVAL)
+      !@screened && within?(@conversation.last_screened_at, SCREENING_INTERVAL)
     end
 
-    def within?(context_key, interval)
-      stamped_at = @conversation.context[context_key]
-
+    def within?(stamped_at, interval)
       return false if stamped_at.blank?
 
       Time.zone.parse(stamped_at) > interval.ago

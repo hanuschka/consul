@@ -28,7 +28,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     # start_flow!, and resuming moves the step without going through it. Left
     # alone, the resumed step would be found stale again by the citizen's very
     # next message and the same question asked forever.
-    @conversation.merge_context!(flow_started_at: Time.current.iso8601)
+    @conversation.stamp_flow_started!
 
     send_recap
 
@@ -110,7 +110,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     def idea_recap
       return if @conversation.draft_resource.present?
 
-      idea_text = @conversation.context["last_idea_text"].to_s.squish
+      idea_text = @conversation.last_idea_text.to_s.squish
 
       return if idea_text.blank?
 

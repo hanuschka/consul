@@ -105,7 +105,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
         Whatsapp::DraftCard.body(
           draft_resource,
           intro_key: "#{@copy_prefix}_intro",
-          summary: @conversation.context["card_summary"]
+          summary: @conversation.card_summary
         ),
         taxonomy_block,
         evaluation_line,

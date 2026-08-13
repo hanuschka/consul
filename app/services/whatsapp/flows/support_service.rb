@@ -22,7 +22,7 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
   end
 
   def prompt(proposal)
-    @conversation.merge_context!(support_proposal_id: proposal.id)
+    @conversation.store_support_proposal_id!(proposal.id)
 
     Whatsapp::Send.buttons(
       account: account,

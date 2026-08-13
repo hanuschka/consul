@@ -61,7 +61,7 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
     # persists the same draft a message later, and the citizen's original words
     # are what BuildDraftService already stored there to make a retry possible.
     def assign_content(resource)
-      resource.ai_idea_text = @conversation.context["last_idea_text"]
+      resource.ai_idea_text = @conversation.last_idea_text
       resource.ai_image_prompt = @draft_data["image_prompt"]
       resource.tag_list = @draft_data["tag_list"]
 

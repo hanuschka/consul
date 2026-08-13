@@ -38,7 +38,7 @@ class Whatsapp::Flows::AskRevisionService < Whatsapp::Flows::BaseService
   # different places — one still owes a picture, the other has already sent
   # it.
   def ask
-    @conversation.merge_context!(revision_origin: @conversation.step)
+    @conversation.record_revision_origin!
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 
     send_question
@@ -78,7 +78,7 @@ class Whatsapp::Flows::AskRevisionService < Whatsapp::Flows::BaseService
     # — takes the longer way round, which can ask for a picture that is
     # already attached but cannot publish anything the citizen has not seen.
     def resume_flow_position
-      if @conversation.context["revision_origin"] ==
+      if @conversation.revision_origin ==
          Whatsapp::Conversation::Step::AWAITING_FINAL_CONFIRMATION
         return Whatsapp::Flows::AskLocationService.ask(
           conversation: @conversation, inbound_message_id: @inbound_message_id

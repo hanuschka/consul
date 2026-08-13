@@ -43,7 +43,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # preview, so their answer resumes this publish instead of rewinding them
     # to the draft card.
     def repair_taxonomy(kind)
-      @conversation.merge_context!(publish_repair: true)
+      @conversation.mark_publish_repair!
 
       return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
         kind == :category

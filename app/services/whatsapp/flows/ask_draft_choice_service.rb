@@ -61,7 +61,7 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
 
     return call if !policy.assign!(@conversation.draft_resource, option_id)
 
-    return resume_publish(inbound_message_id) if publish_repair?
+    return resume_publish(inbound_message_id) if @conversation.publish_repair?
 
     complete_draft(inbound_message_id)
   end
@@ -117,30 +117,22 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     end
 
     def pre_creation_draft?
-      @conversation.draft_resource.blank? && @conversation.context["draft_data"].present?
+      @conversation.draft_resource.blank? && @conversation.draft_data.present?
     end
 
-    # Written back through the same key the generation call filled, so the
-    # policy re-validates the answer against the phase exactly as it validated
-    # the model's.
     def stash_draft_choice(option_id, inbound_message_id)
-      draft_data = @conversation.context["draft_data"].to_h.merge(policy.stash_for(option_id))
-      @conversation.merge_context!(draft_data: draft_data)
+      @conversation.stash_draft_choice!(policy.stash_for(option_id))
 
       complete_draft(inbound_message_id)
     end
 
-    # Set by PublishResultService when the question was asked mid-publish: the
-    # citizen had already confirmed the preview and answered the location
-    # question, so their answer resumes the publish instead of rewinding them
-    # to the draft card. A stale pill tapped in a later flow carries no marker
-    # and can never publish by surprise.
-    def publish_repair?
-      @conversation.context["publish_repair"].present?
-    end
-
+    # The marker means the question was asked mid-publish: the citizen had
+    # already confirmed the preview and answered the location question, so
+    # their answer resumes the publish instead of rewinding them to the draft
+    # card. A stale pill tapped in a later flow carries no marker and can
+    # never publish by surprise.
     def resume_publish(inbound_message_id)
-      @conversation.merge_context!(publish_repair: nil)
+      @conversation.clear_publish_repair!
 
       Whatsapp::Flows::PublishResultService.call(
         conversation: @conversation, inbound_message_id: inbound_message_id

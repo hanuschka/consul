@@ -75,9 +75,9 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
     # the photo they just changed.
     def stored_media_id
       return if blob_id.blank?
-      return if @conversation.context["preview_media_blob_id"] != blob_id
+      return if @conversation.preview_media_blob_id != blob_id
 
-      @conversation.context["preview_media_id"].presence
+      @conversation.preview_media_id.presence
     end
 
     def upload_and_store
@@ -85,7 +85,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
 
       return if media_id.blank?
 
-      @conversation.merge_context!(preview_media_id: media_id, preview_media_blob_id: blob_id)
+      @conversation.store_preview_media!(media_id: media_id, blob_id: blob_id)
 
       media_id
     end
@@ -101,7 +101,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
         Whatsapp::DraftCard.body(
           draft_resource,
           intro_key: "whatsapp.bot.proposal.preview_intro",
-          summary: @conversation.context["card_summary"]
+          summary: @conversation.card_summary
         ),
         Whatsapp.phrase("whatsapp.bot.proposal.preview_question")
       ].join("\n\n")

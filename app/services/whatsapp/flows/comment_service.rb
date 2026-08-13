@@ -19,7 +19,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
 
   def prompt(proposal)
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_COMMENT)
-    @conversation.merge_context!(comment_proposal_id: proposal.id)
+    @conversation.store_comment_proposal_id!(proposal.id)
 
     Whatsapp::Send.text(
       account: account,
@@ -57,7 +57,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     def proposal
       return @proposal if defined?(@proposal)
 
-      @proposal = Proposal.find_by(id: @conversation.context["comment_proposal_id"])
+      @proposal = Proposal.find_by(id: @conversation.comment_proposal_id)
     end
 
     def comments_allowed?

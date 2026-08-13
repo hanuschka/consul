@@ -67,7 +67,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
   # publishes instead of asking a third time — an optional field must not be
   # able to hold a finished submission.
   def remind
-    @conversation.merge_context!(location_reminded: true)
+    @conversation.mark_location_reminded!
 
     send_request("whatsapp.bot.proposal.location_retry")
   end
@@ -84,7 +84,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
   def handle_answer(location, verdict)
     return attach_and_publish(location) if location.present?
     return publish if verdict == :skip
-    return publish if @conversation.context["location_reminded"].present?
+    return publish if @conversation.location_reminded?
 
     remind
   end

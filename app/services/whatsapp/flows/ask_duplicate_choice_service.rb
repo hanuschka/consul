@@ -44,7 +44,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
   # match stays the first row it was the first time. The ids cannot outlive
   # their phase: every entry into a submission clears the whole context.
   def self.reask(conversation:)
-    ids = conversation.context["duplicate_proposal_ids"].to_a.map(&:to_i)
+    ids = conversation.duplicate_proposal_ids.to_a.map(&:to_i)
     proposals_by_id = ::Proposal
       .base_selection
       .includes(:translations)
@@ -54,7 +54,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     new(
       conversation: conversation,
       similar_proposals: ids.filter_map { |id| proposals_by_id[id] },
-      row_descriptions: conversation.context["duplicate_row_descriptions"].to_h
+      row_descriptions: conversation.duplicate_row_descriptions.to_h
     ).call
   end
 
@@ -71,7 +71,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
   # straight to generation. Nothing to draft from means the context was purged
   # between the offer and the tap; asking again is the only way forward.
   def self.submit_anyway(conversation:, inbound_message_id: nil)
-    if conversation.context["last_idea_text"].blank?
+    if conversation.last_idea_text.blank?
       return Whatsapp::Flows::AskIdeaService.call(conversation: conversation)
     end
 
@@ -110,9 +110,9 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     return false if similar_proposals.blank?
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_DUPLICATE_DECISION)
-    @conversation.merge_context!(
-      duplicate_proposal_ids: similar_proposals.map(&:id),
-      duplicate_row_descriptions: @row_descriptions
+    @conversation.store_duplicate_offer!(
+      proposal_ids: similar_proposals.map(&:id),
+      row_descriptions: @row_descriptions
     )
 
     return ask_about_one if similar_proposals.one?

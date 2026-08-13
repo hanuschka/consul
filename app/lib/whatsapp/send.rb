@@ -165,7 +165,7 @@ module Whatsapp::Send
   # flag is written in exactly one place. A second copy of this pairing is how
   # a future asker ends up sending one without it.
   def question(conversation:, body:, buttons:)
-    conversation.merge_context!(pending_question: true)
+    conversation.mark_question_pending!
 
     ::Whatsapp::Send.buttons(
       account: conversation.whatsapp_account, body: body, buttons: buttons

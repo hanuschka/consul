@@ -151,9 +151,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # it: without it in the prompt the model asks which proposal is meant even
     # when the bot has just asked about one.
     def active_proposal_description
-      proposal_id = @conversation.context["support_proposal_id"] ||
-                    @conversation.context["comment_proposal_id"]
-      proposal = ::Proposal.find_by(id: proposal_id)
+      proposal = ::Proposal.find_by(id: @conversation.active_proposal_id)
 
       return "none" if proposal.blank?
 

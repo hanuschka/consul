@@ -41,7 +41,7 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
     return present if draft_data.blank?
 
     @conversation.update!(draft_resource: persist)
-    @conversation.merge_context!(draft_data: nil)
+    @conversation.clear_draft_data!
 
     present
   end
@@ -49,7 +49,7 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
   private
 
     def draft_data
-      @draft_data ||= @conversation.context["draft_data"].to_h
+      @draft_data ||= @conversation.draft_data.to_h
     end
 
     # Only before the record exists. On a revision the record is already there,

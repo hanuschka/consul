@@ -6,18 +6,19 @@ module ActionView
     module TranslationHelper
       include TagHelper
 
-      def t(key, options = {})
+      def t(key, **options)
         current_locale = options[:locale].presence || I18n.locale
 
-         @i18n_content_translations ||= {}
-         @i18n_content_translations[current_locale] ||= I18nContent.translations_hash(current_locale)
+        Current.i18n_content_translations ||= {}
+        Current.i18n_content_translations[current_locale] ||=
+          I18nContent.translations_hash(current_locale) || {}
 
-         translation = @i18n_content_translations[current_locale][key]
+        translation = Current.i18n_content_translations[current_locale][key]
 
         if translation.present?
           translation % options
         else
-          translate(key, options)
+          translate(key, **options)
         end
       end
     end

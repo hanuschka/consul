@@ -39,8 +39,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_revision: "awaiting_revision",
     awaiting_comment: "awaiting_comment",
     awaiting_notification_settings: "awaiting_notification_settings",
-    awaiting_resume_decision: "awaiting_resume_decision",
-    awaiting_abort_confirmation: "awaiting_abort_confirmation"
+    awaiting_resume_decision: "awaiting_resume_decision"
   }
 
   # The steps that mean a submission is half-finished. "Stop" aborts one of
@@ -60,7 +59,6 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_revision
     awaiting_comment
     awaiting_resume_decision
-    awaiting_abort_confirmation
   ].freeze
 
   # A draft older than this is not resumed silently: the citizen is asked

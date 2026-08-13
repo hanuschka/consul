@@ -1,14 +1,13 @@
 class Whatsapp::AiAssistant::IntentCheckService < ApplicationService
-  # One yes-or-no reading of an inbound message. Three of these now sit in front
-  # of the flow — did they ask to leave the channel, to abandon the submission,
-  # to skip the picture or the pin — and each is the same call: a short judgement
-  # on a message the deterministic branches above it did not recognise.
+  # One yes-or-no reading of an inbound message. The skip checks sit on it —
+  # did they decline the picture, did they decline the pin — each the same
+  # call: a short judgement on a message at the step that asked the question.
   #
-  # They share this because they must share one failure contract. Every caller is
-  # a widening of something that already worked without it, so false is the only
-  # safe answer to a provider that did not respond, and one of three copies
-  # drifting into returning true on error is the failure nobody would see until a
-  # citizen was cancelled or unsubscribed by a timeout.
+  # They share this because they must share one failure contract. Every caller
+  # is a widening of something that already worked without it, so false is the
+  # only safe answer to a provider that did not respond, and one copy drifting
+  # into returning true on error is the failure nobody would see until a
+  # citizen's photo or pin was skipped by a timeout.
   #
   # Composed rather than inherited from: the callers hold their own prompts,
   # which is the whole of what makes them different, and pass them in.

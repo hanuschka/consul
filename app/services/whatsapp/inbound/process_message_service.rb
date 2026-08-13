@@ -1,8 +1,9 @@
 class Whatsapp::Inbound::ProcessMessageService < ApplicationService
+  # The one keyword list left. Every other typed message is read by a model,
+  # but a typed opt-out word must end messages whether or not a provider is
+  # reachable — an outage that keeps broadcasting to a number that asked us to
+  # stop is the failure nothing may allow.
   OPT_OUT_KEYWORDS = ["stop", "stopp", "abmelden", "unsubscribe"].freeze
-  OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
-  PUBLISH_KEYWORDS = ["veröffentlichen", "veroeffentlichen", "publish", "ja", "senden"].freeze
-  REVISE_KEYWORDS = ["ändern", "aendern", "korrigieren", "revise", "nein"].freeze
 
   def initialize(whatsapp_message:, raw_message: {})
     @whatsapp_message = whatsapp_message
@@ -17,6 +18,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     consume_pending_question
 
     return if handle_stop_keywords
+    return if handle_message_intent
     return if account.opt_out_at.present?
     return Whatsapp::Flows::FirstContactService.call(conversation:) if first_contact?
 
@@ -35,7 +37,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return handle_unlinked(entry) if account.user.blank? && !guest_participation?
     return handle_entry(entry) if entry.present?
     return if handle_stale_flow
-    return if handle_abort_intent
     return if routed_by_assistant?
 
     dispatch_step
@@ -54,9 +55,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       @submission_author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation:)
     end
 
-    # Everything above the assistant is protocol rather than dialogue — opting
-    # out, a tapped pill, a scanned QR code — and stays deterministic. The
-    # assistant sees only what is left, and hands back anything the flow owns.
+    # Everything above the assistant is protocol rather than dialogue — the
+    # typed STOP word, the channel-intent reading, a tapped pill, a scanned QR
+    # code. The assistant sees only what is left, and hands back anything the
+    # flow owns.
     #
     # An unlinked guest submitter skips it: half its tools act on a Consul
     # account, and a guest reaching them would only produce errors it cannot
@@ -115,17 +117,59 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # progress (C21), and "STOP" ends all messages for good (E34). Decided here
     # rather than inside either service — getting it wrong means a citizen who
     # wanted to cancel is silently unsubscribed instead.
-    def abort_interaction?
-      return false if !Whatsapp::FlowActions::ABORT_KEYWORDS.include?(normalized_text)
+    def handle_stop_keywords
+      return false if !OPT_OUT_KEYWORDS.include?(normalized_text)
 
-      # "stop" and "stopp" are also the opt-out words, and they are what someone
-      # types to leave the channel, so they abort only a submission actually in
-      # progress. Reading them any wider would answer a link invitation or a
-      # settings list with "cancelled" and never write opt_out_at, leaving us
-      # broadcasting to a number that asked us to stop.
-      return conversation.drafting? if OPT_OUT_KEYWORDS.include?(normalized_text)
+      if conversation.drafting?
+        Whatsapp::Flows::CancelService.call(conversation:)
+      else
+        Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
+      end
 
-      interaction_open?
+      true
+    end
+
+    # Everything the keyword above does not decide is decided by one model
+    # reading: leaving the channel, coming back to it, or abandoning what is in
+    # progress, in whatever words the citizen chose. One call rather than one
+    # per question — the checks it replaced each paid their own completion on
+    # the same message.
+    #
+    # Never for a tapped pill, whose label the citizen did not write: those are
+    # routed by their ids two gates below. A verdict the conversation's state
+    # rules out is dropped rather than acted on — the model is told the state,
+    # but what it answers is still only a reading.
+    def handle_message_intent
+      return false if tapped_reply_id.present?
+
+      case message_intent
+      when :opt_out
+        return false if account.opt_out_at.present?
+
+        Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
+      when :opt_in
+        return false if account.opt_out_at.blank?
+
+        Whatsapp::Flows::MessageDeliveryService.enable(conversation:)
+      when :abort
+        return false if !interaction_open?
+
+        Whatsapp::Flows::CancelService.call(conversation:)
+      else
+        return false
+      end
+
+      true
+    end
+
+    # Asked once per message; every branch of handle_message_intent consults
+    # the same verdict.
+    def message_intent
+      @message_intent ||= Whatsapp::AiAssistant::MessageIntentService.call(
+        inbound_text: inbound_text,
+        interaction_open: interaction_open?,
+        opted_out: account.opt_out_at.present?
+      )
     end
 
     # A word that cannot mean "leave the channel" dismisses whatever the bot last
@@ -152,155 +196,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if !@pending_question
 
       conversation.merge_context!(pending_question: nil)
-    end
-
-    def handle_stop_keywords
-      if abort_interaction?
-        Whatsapp::Flows::CancelService.call(conversation:)
-
-        return true
-      end
-
-      if OPT_OUT_KEYWORDS.include?(normalized_text)
-        Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
-
-        return true
-      end
-
-      if OPT_IN_KEYWORDS.include?(normalized_text)
-        Whatsapp::Flows::MessageDeliveryService.enable(conversation:)
-
-        return true
-      end
-
-      return false if !opt_out_asked_in_words?
-
-      Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
-
-      true
-    end
-
-    # Read after the opt-out fallback above, never before it: someone leaving the
-    # channel mid-submission has said the larger thing, and answering them with
-    # "shall I cancel the draft?" would leave the number subscribed.
-    #
-    # Only where the keyword path would also have acted — an interaction has to
-    # be open for there to be anything to abandon — and never for a tapped pill,
-    # whose label the citizen did not write.
-    def handle_abort_intent
-      return false if !interaction_open?
-      return false if tapped_reply_id.present?
-      return false if conversation.awaiting_abort_confirmation?
-      return false if !Whatsapp::AiAssistant::AbortIntentService.volunteered(inbound_text:)
-
-      ask_abort_confirmation
-
-      true
-    end
-
-    # Its own step rather than a question asked in passing. Left on the step it
-    # interrupted, a typed "ja" would be answered by that step instead — and at
-    # awaiting_draft_decision "ja" is the word that publishes, so the citizen
-    # would have published the very draft they were asking to throw away.
-    def ask_abort_confirmation
-      conversation.merge_context!(abort_origin: conversation.step)
-      conversation.update!(step: "awaiting_abort_confirmation")
-
-      Whatsapp::Outbound.question(
-        conversation: conversation,
-        body: Whatsapp.phrase("whatsapp.bot.abort_confirmation"),
-        buttons: [
-          Whatsapp::FlowActions.button(
-            action: :abort_resume, label_key: "whatsapp.bot.buttons.abort_resume"
-          ),
-          Whatsapp::Outbound.recovery_button(:cancel)
-        ]
-      )
-    end
-
-    # Typed instead of tapped. The question was put in the bot's own words, so
-    # the answer is read as an answer to it — a bare "ja" here means cancel,
-    # which is the opposite of what the same word means one step earlier.
-    def handle_abort_confirmation
-      return Whatsapp::Flows::CancelService.call(conversation:) if
-        Whatsapp::AiAssistant::AbortIntentService.answering_confirmation(inbound_text:)
-
-      resume_after_abort_question
-    end
-
-    # Back to the step the question interrupted, re-asked so the citizen is not
-    # left waiting on something the confirmation scrolled past. A missing origin
-    # can only mean the interaction was the assistant's own question rather than
-    # a flow step, and idle is where that already stood.
-    def resume_after_abort_question
-      conversation.update!(step: conversation.context["abort_origin"].presence || "idle")
-
-      reask_step
-    end
-
-    # Puts the step's question again rather than running the step over the
-    # message, which dispatch_step would: the citizen just wrote "nein", and at
-    # awaiting_idea that becomes a drafted proposal, at awaiting_comment a
-    # published comment. The steps whose question is a re-send either way share
-    # the branches dispatch_step gives them; the rest are the ones that read the
-    # message as content and must not see this one.
-    def reask_step
-      case conversation.step
-      when "awaiting_idea"
-        Whatsapp::Flows::AskIdeaService.call(conversation:)
-      when "awaiting_category"
-        Whatsapp::Flows::AskDraftChoiceService.category(conversation:)
-      when "awaiting_sentiment"
-        Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:)
-      when "awaiting_duplicate_decision"
-        reask_duplicate_choice
-      when "awaiting_draft_decision"
-        Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
-      when "awaiting_image_choice"
-        ask_image
-      when "awaiting_image_upload"
-        send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt")
-      when "awaiting_location"
-        Whatsapp::Flows::AskLocationService.ask(conversation:)
-      when "awaiting_final_confirmation"
-        confirm_submission
-      when "awaiting_revision"
-        send_revision_question
-      when "awaiting_comment"
-        reask_comment
-      when "awaiting_notification_settings"
-        Whatsapp::Flows::NotificationSettingsService.call(conversation:)
-      when "awaiting_resume_decision"
-        Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
-      else
-        handle_idle_message
-      end
-    end
-
-    # The prompt on its own. send_menu_prompt resets the flow before sending,
-    # which is right when the help list opens the step and wrong here, where the
-    # citizen has just said to carry on with it.
-    def reask_comment
-      Whatsapp::Outbound.text(
-        account:,
-        body: Whatsapp.phrase("whatsapp.bot.help_menu.prompts.comment")
-      )
-    end
-
-    # The keyword lists above have already decided everything they can, and this
-    # only ever adds an opt-out they missed — it is never asked whether a match
-    # was right, and never whether to opt someone back in. A citizen who wrote
-    # "STOP" is unsubscribed by the branch above whether or not a model is
-    # reachable.
-    #
-    # Not asked when there is nothing it could newly decide: a number already
-    # opted out is answered by the gate two lines below the caller, and a tapped
-    # pill carries only that row's own label, which the citizen did not write.
-    def opt_out_asked_in_words?
-      return false if account.opt_out_at.present?
-      return false if tapped_reply_id.present?
-
-      Whatsapp::AiAssistant::OptOutIntentService.call(inbound_text: inbound_text)
     end
 
     # Handled ahead of the step dispatcher: a tapped recovery button must not be
@@ -438,8 +333,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         resume_flow
       when :restart
         restart_flow
-      when :abort_resume
-        resume_after_abort_question
       when :support
         Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
       when :support_instead
@@ -752,8 +645,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         Whatsapp::Flows::UnlinkService.ask(conversation:)
       when "awaiting_resume_decision"
         Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
-      when "awaiting_abort_confirmation"
-        handle_abort_confirmation
       else
         handle_idle_message
       end
@@ -807,9 +698,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # offered the picture and the pin, not published straight past both. Both
     # questions answer for themselves when their phase has them switched off.
     def handle_draft_decision
-      return ask_image if PUBLISH_KEYWORDS.include?(normalized_text)
-      return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
-
       case draft_decision.verdict
       when :publish then ask_image
       when :revise then revise_with(draft_decision.correction)
@@ -822,9 +710,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # a revise pill of its own, so this is the typed shortcut rather than the
     # only way back into the loop.
     def handle_final_confirmation
-      return ask_location if PUBLISH_KEYWORDS.include?(normalized_text)
-      return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
-
       case draft_decision.verdict
       when :publish then ask_location
       when :revise then revise_with(draft_decision.correction)
@@ -832,11 +717,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       end
     end
 
-    # The two keyword lists above stay ahead of this: "ja" and "veröffentlichen"
-    # are unambiguous and free, and a citizen who types one should not wait on a
-    # completion to be understood. Everything else used to fall through to
-    # re-sending the same card — "passt so", "eigentlich lieber nicht" and "ja
-    # aber der Titel ist zu lang" all answered as if nothing had been said.
+    # Every typed answer at these steps is read by the model — "ja" pays the
+    # same completion as "passt so, aber der Titel ist zu lang". Before it
+    # existed, anything off a fixed list fell through to re-sending the same
+    # card, which reads as the bot ignoring what was written.
     #
     # Asked once per message. No two of the three steps that consult it are ever
     # reached by one inbound message, so a second call could only pay for the

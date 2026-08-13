@@ -68,9 +68,6 @@ de:
         default_3: Wie funktioniert das Einreichen?
         default_4: Keine Nachrichten mehr erhalten
       idea_missing: Bitte beschreiben Sie Ihre Idee als Text oder als Sprachnachricht.
-      abort_confirmation: >-
-        Soll ich den angefangenen Beitrag verwerfen? Was Sie bisher geschrieben haben, geht dabei
-        verloren.
       no_projekt: >-
         Gerade nimmt kein Beteiligungsprojekt Beiträge an. Schreiben Sie mir wieder, wenn ein neues
         startet, oder scannen Sie den QR-Code eines Projekts.
@@ -99,7 +96,6 @@ de:
         revise: Ändern
         retry: Nochmal versuchen
         cancel: Abbrechen
-        abort_resume: Weiter bearbeiten
         link_yes: Ja, verknüpfen
         link_later: Später
         link_switch: Konto wechseln

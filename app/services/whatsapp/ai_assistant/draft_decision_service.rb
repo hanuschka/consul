@@ -1,10 +1,10 @@
 class Whatsapp::AiAssistant::DraftDecisionService < ApplicationService
   # What a citizen meant by answering the draft card, or the preview before
-  # publishing, in words instead of tapping a pill. Both steps match a fixed list
-  # — "ja", "nein", "veröffentlichen", "ändern" — which covers only the citizens
-  # who answer in exactly those. "passt so", "ja aber der Titel ist zu lang" and
-  # "eigentlich lieber nicht" all fell through to re-sending the same card, which
-  # reads as the bot ignoring what they wrote.
+  # publishing, in words instead of tapping a pill. Every typed answer at those
+  # steps lands here — "ja" and "passt so" the same as "ja aber der Titel ist
+  # zu lang". Before it existed, anything off a fixed keyword list fell through
+  # to re-sending the same card, which reads as the bot ignoring what they
+  # wrote.
   #
   # The fast model, like the intent router: one short judgement on a turn the
   # citizen is already waiting through.

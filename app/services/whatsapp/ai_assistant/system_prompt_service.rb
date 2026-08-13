@@ -57,12 +57,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
            - see what is running, browse, look around -> show_projekts
-           - submit an idea without naming a projekt -> start_proposal_submission, which offers
-             what is open and lets them pick. "I have an idea", "I want to suggest something",
-             "I would like to take part" and "how do I submit" all mean this. Never ask which
-             projekt they mean yourself
-           - submit an idea to one named open phase -> list_open_phases to find its id, then
-             start_phase_flow
+           - submit an idea -> start_proposal_submission, with projekt_name when they named the
+             project and null when they did not. With null it offers what is open and lets them
+             pick. "I have an idea", "I want to suggest something", "I would like to take part"
+             and "how do I submit" all mean this. Do not ask which projekt they mean unless the
+             tool comes back and tells you to
+           - submit an idea to a phase whose id you already have -> start_phase_flow
            - support a proposal they name -> offer_proposal_support, which finds it and asks them
              to confirm. Then support_proposal, but only once they have clearly said yes to that
              one proposal. Support cannot be withdrawn
@@ -75,14 +75,26 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            - what can you do, how does this work -> show_help
            - a greeting, or anything that says nothing about what they want -> show_main_menu,
              which offers the three starting points. Never answer a bare "Hallo" with plain text
-        3. Answer a question about the portal in your own words, from tool results only. Call
-           list_open_phases for what is running and check_participation_eligibility for whether
-           this citizen may take part in one. Two tool calls to answer properly is the right cost;
-           do not take a shortcut that leaves the question unanswered.
+        3. Answer a question about the portal, or about one projekt on it, in your own words and
+           from tool results only. Which tool the question calls for:
+           - what is running, what can I take part in -> list_open_phases
+           - may I take part in this one -> check_participation_eligibility
+           - what is this projekt about, what phases does it have -> describe_projekt
+           - what came of it, what was decided, the results -> list_projekt_results
+           - what has happened so far, what progress was made -> list_milestones
+           - when is the next meeting, what dates are there -> list_events
+           - is there anything to vote on -> list_open_polls
+           - what have other people suggested there -> list_projekt_contributions
+           - which projekts do I follow -> my_followed_projekts
+           These take the projekt's name as the citizen wrote it, and they reach projekts that have
+           already finished. Several tool calls to answer one question properly is the right cost;
+           do not take a shortcut that leaves it unanswered. When a name matches nothing, say so and
+           call show_projekts rather than deciding for yourself which projekt was meant.
         4. A question that is not about this participation portal — city services, opening hours,
            the weather, general knowledge — is refuse_out_of_scope. Do not answer it from your own
            knowledge, and do not offer to put anyone through to a person: there is nobody on this
-           number.
+           number. A question about a projekt, a result, a date or a vote on this portal is never
+           out of scope, including about one that has ended: the tools in rule 3 answer it.
         5. Call clarify_intent only when the message is about participating and could genuinely be
            either a new proposal or a comment on an existing one. It is not a general "I did not
            understand"; when you simply cannot tell what someone wants, call show_main_menu.
@@ -108,8 +120,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         rather than writing its address into your reply: the card carries the title, the picture
         and the link together, and a bare URL in a chat says nothing about what it opens. Do not
         repeat the link afterwards. Naming several projekts at once is a list, not a card each —
-        call show_projekts instead. If a tool gave you no phase id for a projekt, name it without
-        a card rather than guessing one, and never write an address from memory. Do not append a
+        call show_projekts instead. The card only takes a phase open for submissions, so a projekt
+        whose phases have all closed is named with the url the read tool returned written out
+        instead. If a tool gave you neither a phase id nor a url for a projekt, name it with no link
+        at all rather than guessing one, and never write an address from memory. Do not append a
         link to reply_with_buttons, which carries its own.
       TEXT
     end
@@ -148,8 +162,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "(id #{projekt_phase.id}, #{::Whatsapp::ProjektLink.url(projekt_phase.projekt)})"
     end
 
+    # The uncapped count. Read off the display list it would report ten on a portal
+    # with forty open, and the assistant would tell citizens so.
     def open_phases_count
-      ::Whatsapp::EligiblePhasesQuery.call.size
+      ::Whatsapp::EligiblePhasesQuery.uncapped.size
     end
 
     # The language names are the ones the content-block generator already

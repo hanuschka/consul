@@ -48,6 +48,13 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     new(projekt: projekt, user_status: :guest).exists?
   end
 
+  # Everything open, for callers that resolve a projekt a citizen named or count
+  # what is running rather than filling a list. Costs nothing over #call, which
+  # is this set with the display cap applied to it.
+  def self.uncapped(projekt: nil)
+    new(projekt: projekt).uncapped
+  end
+
   def initialize(projekt: nil, user_status: nil)
     @projekt = projekt
     @user_status = user_status
@@ -58,9 +65,15 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
   # .eligible?, which is uncapped — otherwise the eleventh open phase would be
   # offered in a menu and then refused when tapped.
   def call
-    candidates
-      .select { |projekt_phase| self.class.eligible?(projekt_phase) }
-      .first(::Whatsapp::MAX_LIST_ROWS)
+    uncapped.first(::Whatsapp::MAX_LIST_ROWS)
+  end
+
+  # The same set without the display cap. Past the tenth row a list stops being
+  # an offer and becomes a truncation the citizen cannot page past, so anything
+  # that resolves a named projekt or reports how much is running reads this
+  # instead — the cap is about what fits in one message, not about what is open.
+  def uncapped
+    candidates.select { |projekt_phase| self.class.eligible?(projekt_phase) }
   end
 
   # Stops at the first eligible phase. The menus ask only whether anything is

@@ -72,24 +72,6 @@ module Whatsapp::FlowActions
   ID_PATTERN =
     /\A#{PREFIX}(?<action>[a-z_]+)(?:#{SEPARATOR}(?<param>[a-z0-9_]+))?\z/
 
-  # Words a citizen may type instead of tapping. Both languages are recognised
-  # regardless of the citizen's locale, for the same reason the command menu is:
-  # someone who saw the pill in German keeps typing "hilfe" after switching
-  # their phone to English.
-  HELP_KEYWORDS = ["help", "hilfe"].freeze
-
-  # A greeting and nothing else. Matched as the whole message, so "hallo, ich
-  # hätte da eine Idee" still reaches the assistant that can act on it — these
-  # are only the openers that say nothing about what the citizen wants.
-  GREETING_KEYWORDS = [
-    "hallo", "hallo!", "hi", "hey", "moin", "servus", "grüß gott", "gruess gott",
-    "guten tag", "guten morgen", "guten abend", "hello", "good morning", "good evening"
-  ].freeze
-
-  DISCOVERY_KEYWORDS = ["projects", "projekte"].freeze
-  NOTIFICATION_KEYWORDS = ["notifications", "benachrichtigungen"].freeze
-  UNLINK_KEYWORDS = ["unlink account", "konto trennen", "verknüpfung aufheben"].freeze
-
   # Aborting a draft, not unsubscribing. Held apart from Whatsapp::OPT_OUT
   # keywords deliberately: the catalog uses the same word for both, and the
   # difference is whether a flow is open. See Inbound::ProcessMessageService.

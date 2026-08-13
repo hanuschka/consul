@@ -3,8 +3,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
   PUBLISH_KEYWORDS = ["veröffentlichen", "veroeffentlichen", "publish", "ja", "senden"].freeze
   REVISE_KEYWORDS = ["ändern", "aendern", "korrigieren", "revise", "nein"].freeze
-  SUBSCRIBE_COMMAND = /\A(subscribe|abonnieren|folgen)\s+(?<name>.+)\z/i
-  UNSUBSCRIBE_COMMAND = /\A(unsubscribe|abbestellen|entfolgen)\s+(?<name>.+)\z/i
 
   def initialize(whatsapp_message:, raw_message: {})
     @whatsapp_message = whatsapp_message
@@ -30,7 +28,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     return if handle_recovery_action
     return if handle_flow_action
-    return if handle_command
     return if @whatsapp_message.audio? && inbound_text.blank?
 
     entry = capture_entry_token
@@ -175,7 +172,27 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         return true
       end
 
-      false
+      return false if !opt_out_asked_in_words?
+
+      Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
+
+      true
+    end
+
+    # The keyword lists above have already decided everything they can, and this
+    # only ever adds an opt-out they missed — it is never asked whether a match
+    # was right, and never whether to opt someone back in. A citizen who wrote
+    # "STOP" is unsubscribed by the branch above whether or not a model is
+    # reachable.
+    #
+    # Not asked when there is nothing it could newly decide: a number already
+    # opted out is answered by the gate two lines below the caller, and a tapped
+    # pill carries only that row's own label, which the citizen did not write.
+    def opt_out_asked_in_words?
+      return false if account.opt_out_at.present?
+      return false if tapped_reply_id.present?
+
+      Whatsapp::AiAssistant::OptOutIntentService.call(inbound_text: inbound_text)
     end
 
     # Handled ahead of the step dispatcher: a tapped recovery button must not be
@@ -385,71 +402,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::ProjektPhase.find_by(id: param)
     end
 
-    # A word a citizen types instead of tapping. Matched only as the whole
-    # message, so a sentence that happens to contain "help" still reaches the
-    # assistant.
-    def handle_command
-      return send_main_menu if Whatsapp::FlowActions::GREETING_KEYWORDS.include?(normalized_text)
-      return send_help if Whatsapp::FlowActions::HELP_KEYWORDS.include?(normalized_text)
-      return send_discovery if Whatsapp::FlowActions::DISCOVERY_KEYWORDS.include?(normalized_text)
-      return send_notification_settings if
-        Whatsapp::FlowActions::NOTIFICATION_KEYWORDS.include?(normalized_text)
-      return start_unlink if Whatsapp::FlowActions::UNLINK_KEYWORDS.include?(normalized_text)
-
-      handle_subscription_command
-    end
-
-    # The catalog manages subscriptions by typed command, with no menu to
-    # navigate. Matched deterministically first so the common, exactly-worded
-    # case costs no completion; anything looser falls through to the assistant,
-    # which resolves the name with its own tool.
-    def handle_subscription_command
-      subscribe = SUBSCRIBE_COMMAND.match(inbound_text.to_s.strip)
-      unsubscribe = UNSUBSCRIBE_COMMAND.match(inbound_text.to_s.strip)
-
-      return false if subscribe.blank? && unsubscribe.blank?
-      return false if account.user.blank?
-
-      run_subscription_command(subscribe, unsubscribe)
-
-      true
-    end
-
-    def run_subscription_command(subscribe, unsubscribe)
-      match = subscribe || unsubscribe
-      projekt = Whatsapp::ProjektByNameQuery.call(term: match[:name])
-
-      return Whatsapp::Flows::SubscriptionCommandService.subscribe(conversation:, projekt:) if
-        subscribe.present?
-
-      Whatsapp::Flows::SubscriptionCommandService.unsubscribe(conversation:, projekt:)
-    end
-
-    def send_help
-      Whatsapp::Flows::HelpService.call(conversation:)
-
-      true
-    end
-
-    # Answered here rather than by the assistant, which can only offer the
-    # recovery pills and so replies to "Hallo" with a lone Hilfe button. Costing
-    # no completion is the smaller reason; the menu being the same three buttons
-    # cancelling and publishing end in is the larger one.
-    #
-    # Returning false falls through to the rest of the pipeline. Two cases need
-    # that: a greeting typed mid-draft is not a request for the menu, and
-    # MainMenuService.greeting resets the flow, so answering it would drop a
-    # submission in progress. And an unlinked number is better served by the
-    # link invitation it still has to answer than by a menu of account actions.
-    def send_main_menu
-      return false if account.user.blank?
-      return false if interaction_open?
-
-      Whatsapp::Flows::MainMenuService.greeting(conversation:)
-
-      true
-    end
-
     # A help row that names something the assistant resolves rather than a flow
     # the bot owns. It asks the question and stops: the citizen's next message
     # is free text, and the assistant's own tools find the proposal in it.
@@ -462,39 +414,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
-    # Answered deterministically rather than left to the assistant so the
-    # command menu's own word still works on a portal with AI switched off.
-    def send_discovery
-      dispatch_discovery
-
-      true
-    end
-
-    # The same branch whether the citizen typed "projekte" or tapped a pill
-    # that offers it. The pill is on the help list, which is what an unlinked
-    # number is answered with, so the two cannot differ: the account listing
-    # dead-ends for a guest and the public one does not.
+    # The same branch whether the assistant called show_projekts or the citizen
+    # tapped a pill that offers it. The pill is on the help list, which is what
+    # an unlinked number is answered with, so the two cannot differ: the account
+    # listing dead-ends for a guest and the public one does not.
     def dispatch_discovery
       return Whatsapp::Flows::PublicDiscoveryService.call(conversation:) if account.user.blank?
 
       Whatsapp::Flows::DiscoveryService.call(conversation:)
-    end
-
-    def send_notification_settings
-      return Whatsapp::Flows::SendLoginLinkService.call(conversation:).then { true } if
-        account.user.blank?
-
-      Whatsapp::Flows::NotificationSettingsService.call(conversation:)
-
-      true
-    end
-
-    def start_unlink
-      return false if account.user.blank?
-
-      Whatsapp::Flows::UnlinkService.ask(conversation:)
-
-      true
     end
 
     def finish_notification_settings
@@ -601,9 +528,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: :phase_missing) if
         !Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
 
-      conversation.start_flow!(projekt_phase)
-
-      Whatsapp::Flows::AskIdeaService.call(conversation:)
+      Whatsapp::Flows::StartPhaseFlowService.call(conversation:, projekt_phase:)
     end
 
     # Before the record exists the answer goes into the stashed draft data,
@@ -655,9 +580,24 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # A failed publish leaves the draft intact, so retrying means publishing
     # again; a failed draft leaves nothing behind but the text it was built from.
+    #
+    # A stored correction is preferred over the original idea: what failed was the
+    # edit, and re-drafting from the idea instead would silently throw away the
+    # change the citizen asked for. Cleared whenever a first draft is built, so it
+    # cannot be re-applied to a draft it never belonged to.
     def retry_last_action
       return publish if conversation.step == "awaiting_draft_decision" &&
                         conversation.draft_resource.present?
+
+      last_correction = conversation.context["last_correction"]
+
+      if last_correction.present?
+        return if refuse_if_not_permitted
+
+        return Whatsapp::Flows::BuildDraftService.from_revision(
+          conversation:, correction: last_correction, inbound_message_id:
+        )
+      end
 
       last_idea_text = conversation.context["last_idea_text"]
 
@@ -758,7 +698,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return ask_image if PUBLISH_KEYWORDS.include?(normalized_text)
       return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
 
-      Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
+      case draft_decision.verdict
+      when :publish then ask_image
+      when :revise then revise_with(draft_decision.correction)
+      else Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
+      end
     end
 
     # The same "ja" that publishes from the draft card publishes from the
@@ -769,7 +713,35 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return ask_location if PUBLISH_KEYWORDS.include?(normalized_text)
       return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
 
-      confirm_submission
+      case draft_decision.verdict
+      when :publish then ask_location
+      when :revise then revise_with(draft_decision.correction)
+      else confirm_submission
+      end
+    end
+
+    # The two keyword lists above stay ahead of this: "ja" and "veröffentlichen"
+    # are unambiguous and free, and a citizen who types one should not wait on a
+    # completion to be understood. Everything else used to fall through to
+    # re-sending the same card — "passt so", "eigentlich lieber nicht" and "ja
+    # aber der Titel ist zu lang" all answered as if nothing had been said.
+    #
+    # Asked once per message. The two confirmation steps are never both reached by
+    # one inbound message, so a second call could only pay for the same verdict.
+    def draft_decision
+      @draft_decision ||= Whatsapp::AiAssistant::DraftDecisionService.call(
+        conversation: conversation, inbound_text: inbound_text
+      )
+    end
+
+    # The change the citizen already named, applied at once rather than asked for
+    # again: "ja aber der Titel ist zu lang" has said everything the revision
+    # needs, and answering it with "what should I change?" asks them to repeat
+    # themselves. Where they named none, that question is still the way forward.
+    def revise_with(correction)
+      return ask_revision if correction.blank?
+
+      apply_revision(correction)
     end
 
     def ask_revision
@@ -789,17 +761,26 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       correction = inbound_text.to_s.strip
 
       return send_revision_question if correction.blank?
+
+      apply_revision(correction)
+    end
+
+    # Shared by the answer to the revision question and the correction read out of
+    # a typed answer at the draft card: both are one change to apply, and the round
+    # counter and the permission re-check belong to the revision itself rather than
+    # to whichever step happened to collect it.
+    #
+    # The correction is passed on its own. It used to be appended to the citizen's
+    # original idea and the whole draft written again from the pair, which meant
+    # every round rewrote text they had already approved.
+    def apply_revision(correction)
       return if refuse_if_not_permitted
 
       conversation.update!(revisions_count: conversation.revisions_count + 1)
 
       Whatsapp::Flows::BuildDraftService.from_revision(
-        conversation:, idea_text: revised_idea_text(correction), inbound_message_id:
+        conversation:, correction: correction, inbound_message_id:
       )
-    end
-
-    def revised_idea_text(correction)
-      [conversation.draft_resource&.ai_idea_text, correction].compact.join("\n\n")
     end
 
     # The picture is offered between confirming the draft and publishing it, so

@@ -28,9 +28,12 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     ).call
   end
 
-  def self.from_revision(conversation:, idea_text:, inbound_message_id: nil)
+  # Takes the change the citizen asked for rather than an idea, because that is
+  # what it now is: the draft is edited in place from this instruction instead of
+  # being written again from the original idea with the correction appended to it.
+  def self.from_revision(conversation:, correction:, inbound_message_id: nil)
     new(
-      conversation: conversation, idea_text: idea_text,
+      conversation: conversation, idea_text: correction,
       copy: :revised, inbound_message_id: inbound_message_id
     ).call
   end
@@ -62,10 +65,11 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
   def call
     return send_throttle_notice if throttled?
+    return send_draft_failed if revising_without_draft?
 
     # Stored before the gate because the retry button reads it back, and after
     # a failed check it is the only copy of what the citizen wrote.
-    @conversation.merge_context!(last_idea_text: @idea_text)
+    @conversation.merge_context!(stored_text)
 
     # Screened before the "one moment" message rather than after it: a text
     # that is about to be refused should not first be promised a draft, and the
@@ -103,14 +107,41 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   rescue StandardError => e
     report(e, "draft generation")
 
-    Whatsapp::Outbound.recovery(
-      conversation: @conversation,
-      body: Whatsapp.phrase("whatsapp.bot.draft_failed"),
-      actions: [:retry, :cancel]
-    )
+    send_draft_failed
   end
 
   private
+
+    # A correction is stored under its own key. last_idea_text is what
+    # PersistDraftService writes to the record's ai_idea_text, so a correction put
+    # there would replace the citizen's original idea with "make the title
+    # shorter" — and the resume recap, which reads it back, would show them that
+    # instead of what they came to submit.
+    #
+    # A first draft clears the correction rather than leaving it: the retry pill
+    # prefers it, and a stale one would answer a failed new idea by re-applying a
+    # change to a draft that no longer exists.
+    def stored_text
+      return { last_correction: @idea_text } if @copy == :revised
+
+      { last_idea_text: @idea_text, last_correction: nil }
+    end
+
+    # The card's own step cannot be reached before the record exists, but a
+    # WhatsApp button stays tappable forever and the retry pill outlives the draft
+    # it belonged to. A revision with nothing to revise says so here rather than
+    # raising inside the edit call.
+    def revising_without_draft?
+      @copy == :revised && @conversation.draft_resource.blank?
+    end
+
+    def send_draft_failed
+      Whatsapp::Outbound.recovery(
+        conversation: @conversation,
+        body: Whatsapp.phrase("whatsapp.bot.draft_failed"),
+        actions: [:retry, :cancel]
+      )
+    end
 
     def safety
       @safety ||= ::ProposalAiDraft::EvaluateContentSafetyService.call(idea_text: @idea_text)
@@ -150,14 +181,32 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       )
     end
 
+    # A revision edits the record that exists; a first draft writes one from
+    # nothing. Both return the same complete draft_data, because
+    # CompleteDraftService and PersistDraftService downstream cannot tell — and
+    # must not have to tell — which of the two produced it.
+    def generate
+      return revise if @copy == :revised
+
+      generate_first_draft
+    end
+
     # Called direct rather than through a Whatsapp:: wrapper of the same name:
     # the wrapper was one delegation, and two GenerateDraftServices one namespace
     # apart is what made comments elsewhere describe the wrong one.
-    def generate
+    def generate_first_draft
       ::ProposalAiDraft::GenerateDraftService.call(
         idea_text: @idea_text,
         projekt_phase: @conversation.projekt_phase
       ).to_h
+    end
+
+    def revise
+      Whatsapp::AiAssistant::ReviseDraftService.call(
+        resource: @conversation.draft_resource,
+        correction: @idea_text,
+        projekt_phase: @conversation.projekt_phase
+      )
     end
 
     def complete

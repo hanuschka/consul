@@ -16,10 +16,15 @@ class Whatsapp::ProjektPhasesQuery < ApplicationQuery
 
   private
 
+    # Translations because every caller names the phase, and ProjektPhase#title
+    # reads the translated phase_tab_name; settings and the projekt's page
+    # because describe_projekt asks each row whether it is open for a
+    # submission, which is Whatsapp::EligiblePhasesQuery reading both.
     def scope
       @projekt
         .projekt_phases
         .where(hidden_at: nil, active: true)
+        .includes(:translations, :settings, projekt: :page)
         .order(:given_order, :id)
     end
 end

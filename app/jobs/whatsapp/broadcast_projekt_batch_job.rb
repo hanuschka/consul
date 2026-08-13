@@ -40,7 +40,7 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
     def deliver_to(account)
       return deliver_text(account) if !card_deliverable?
 
-      Whatsapp::Outbound.card_template(
+      Whatsapp::Send.card_template(
         account: account,
         name: card_template_name,
         image_url: card_image_url,
@@ -51,7 +51,7 @@ class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
     end
 
     def deliver_text(account)
-      Whatsapp::Outbound.template(
+      Whatsapp::Send.template(
         account: account,
         name: text_template_name,
         variables: [projekt_title, projekt_url],

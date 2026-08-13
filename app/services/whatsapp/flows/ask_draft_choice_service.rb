@@ -98,7 +98,7 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     end
 
     def send_buttons
-      Whatsapp::Outbound.buttons(account: account, body: body, buttons: rows)
+      Whatsapp::Send.buttons(account: account, body: body, buttons: rows)
     end
 
     def send_list

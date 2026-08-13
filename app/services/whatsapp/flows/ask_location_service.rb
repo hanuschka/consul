@@ -38,7 +38,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_LOCATION)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.ask_location"),
       buttons: buttons
@@ -95,7 +95,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
       attached = attach(location["latitude"], location["longitude"])
 
       if attached
-        Whatsapp::Outbound.text(
+        Whatsapp::Send.text(
           account: account,
           body: Whatsapp.phrase("whatsapp.bot.proposal.location_received")
         )
@@ -135,7 +135,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
     end
 
     def send_request(body_key)
-      Whatsapp::Outbound.location_request(
+      Whatsapp::Send.location_request(
         account: account,
         body: Whatsapp.phrase(body_key)
       )

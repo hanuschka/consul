@@ -24,7 +24,7 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
   def prompt(proposal)
     @conversation.merge_context!(support_proposal_id: proposal.id)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.support.prompt", title: proposal.title),
       buttons: prompt_buttons(proposal)
@@ -75,14 +75,14 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
     # cache is what the projekt page shows, and a number in the chat that
     # disagrees with the page is worse than no number at all.
     def send_thanks
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.support.thanks", count: proposal.reload.cached_votes_up)
       )
     end
 
     def send_already_supported
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.support.already")
       )
@@ -96,7 +96,7 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
     end
 
     def send_gone
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.support.gone")
       )

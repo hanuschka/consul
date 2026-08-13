@@ -25,7 +25,7 @@ class Whatsapp::Flows::SubscriptionCommandService < Whatsapp::Flows::BaseService
 
     write
 
-    Whatsapp::Outbound.text(account: account, body: body)
+    Whatsapp::Send.text(account: account, body: body)
   end
 
   private
@@ -47,7 +47,7 @@ class Whatsapp::Flows::SubscriptionCommandService < Whatsapp::Flows::BaseService
     end
 
     def send_unknown
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.subscription.unknown")
       )

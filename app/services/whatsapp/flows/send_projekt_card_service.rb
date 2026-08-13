@@ -26,7 +26,7 @@ class Whatsapp::Flows::SendProjektCardService < Whatsapp::Flows::BaseService
   private
 
     def send_with_buttons
-      Whatsapp::Outbound.buttons(
+      Whatsapp::Send.buttons(
         account: account,
         body: body,
         buttons: @buttons,
@@ -35,9 +35,9 @@ class Whatsapp::Flows::SendProjektCardService < Whatsapp::Flows::BaseService
     end
 
     def send_without_buttons
-      return Whatsapp::Outbound.text(account: account, body: body) if image_url.blank?
+      return Whatsapp::Send.text(account: account, body: body) if image_url.blank?
 
-      Whatsapp::Outbound.image(account: account, image_url: image_url, caption: body)
+      Whatsapp::Send.image(account: account, image_url: image_url, caption: body)
     end
 
     def image_url

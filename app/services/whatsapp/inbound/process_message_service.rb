@@ -246,7 +246,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # cannot collide with a flow one: the two are built by different modules from
     # different prefixes.
     def handle_recovery_action
-      action = Whatsapp::Outbound.recovery_action_from(tapped_reply_id)
+      action = Whatsapp::Send.recovery_action_from(tapped_reply_id)
 
       return false if action.blank?
 
@@ -416,7 +416,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def send_menu_prompt(body_key)
       conversation.reset_flow!
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account:,
         body: Whatsapp.phrase(body_key)
       )
@@ -435,7 +435,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def finish_notification_settings
       conversation.reset_flow!
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account:,
         body: Whatsapp.phrase("whatsapp.bot.notifications.saved")
       )
@@ -691,7 +691,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       transcript = Whatsapp::Inbound::TranscribeVoiceService.call(media_id: @raw_message.dig("audio", "id"))
 
       if transcript.blank?
-        Whatsapp::Outbound.recovery(
+        Whatsapp::Send.recovery(
           conversation:,
           body: Whatsapp.phrase("whatsapp.bot.transcription_failed"),
           actions: [:cancel]

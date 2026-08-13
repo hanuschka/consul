@@ -9,9 +9,9 @@ class Whatsapp::Flows::CriteriaFeedbackService < Whatsapp::Flows::BaseService
   def call
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 
-    # Not Outbound.recovery: that renders recovery pills only, and the way out
+    # Not Send.recovery: that renders recovery pills only, and the way out
     # of a failed criterion is the flow's own revise action rather than a retry.
-    Whatsapp::Outbound.question(
+    Whatsapp::Send.question(
       conversation: @conversation,
       body: body,
       buttons: Whatsapp::FlowActions.revise_decision_buttons

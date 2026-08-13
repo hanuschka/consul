@@ -33,7 +33,7 @@ class Whatsapp::NotifyProposalStatusJob < ApplicationJob
 
       return if account.blank?
 
-      Whatsapp::Outbound.template(
+      Whatsapp::Send.template(
         account: account,
         name: Whatsapp::NotificationTemplates.name_for("status_change"),
         variables: [Whatsapp::PublishedResourceUrl.call(proposal)],

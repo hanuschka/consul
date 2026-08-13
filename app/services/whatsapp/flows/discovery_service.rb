@@ -52,7 +52,7 @@ class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
     return send_guest_phases if guest_phases.any?
     return send_card if projekts.one?
 
-    Whatsapp::Outbound.text(account: account, body: digest_body)
+    Whatsapp::Send.text(account: account, body: digest_body)
   end
 
   private

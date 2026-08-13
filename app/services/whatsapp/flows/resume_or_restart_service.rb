@@ -53,7 +53,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
   def call
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_RESUME_DECISION)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.resume"),
       buttons: buttons
@@ -88,7 +88,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     def send_recap
       return if projekt.blank?
 
-      Whatsapp::Outbound.text(account: account, body: recap_body)
+      Whatsapp::Send.text(account: account, body: recap_body)
     end
 
     def projekt

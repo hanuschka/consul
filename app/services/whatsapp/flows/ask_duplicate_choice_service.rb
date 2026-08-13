@@ -130,7 +130,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     def ask_about_one
       proposal = similar_proposals.first
 
-      Whatsapp::Outbound.buttons(
+      Whatsapp::Send.buttons(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.proposal.duplicate.single", title: proposal.title,
           url: Whatsapp::PublishedResourceUrl.call(proposal)),
@@ -139,7 +139,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
           Whatsapp::FlowActions.button(
             action: :submit_anyway, label_key: "whatsapp.bot.buttons.submit_anyway"
           ),
-          Whatsapp::Outbound.recovery_button(:cancel)
+          Whatsapp::Send.recovery_button(:cancel)
         ]
       )
 
@@ -151,7 +151,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     # reason: a list carries no buttons beside it, so an escape that is not a
     # row is an escape the citizen has to know to type.
     def ask_about_several
-      Whatsapp::Outbound.list(
+      Whatsapp::Send.list(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.proposal.duplicate.multiple"),
         button_label: I18n.t("whatsapp.bot.proposal.duplicate.list_label"),
@@ -178,7 +178,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
           title: I18n.t("whatsapp.bot.buttons.submit_anyway"),
           description: I18n.t("whatsapp.bot.proposal.duplicate.submit_anyway_hint")
         },
-        Whatsapp::Outbound.recovery_button(:cancel)
+        Whatsapp::Send.recovery_button(:cancel)
       ]
     end
 

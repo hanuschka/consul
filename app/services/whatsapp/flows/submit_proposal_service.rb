@@ -38,7 +38,7 @@ class Whatsapp::Flows::SubmitProposalService < Whatsapp::Flows::BaseService
     def send_no_open_phase
       @conversation.reset_flow!
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.no_open_phase_notice")
       )

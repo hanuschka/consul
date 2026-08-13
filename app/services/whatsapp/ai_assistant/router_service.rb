@@ -26,7 +26,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     # After the chat is assembled, so the bubble covers the wait the citizen
     # actually experiences rather than the prompt building that precedes it.
-    ::Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+    ::Whatsapp::Send.typing(message_id: @inbound_message_id)
 
     response = chat.ask(@inbound_text)
     outcome = deliver(response)
@@ -90,7 +90,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       return :empty if body.blank?
 
-      ::Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: body)
+      ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
 
       :answered
     end

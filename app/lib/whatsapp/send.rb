@@ -1,4 +1,4 @@
-module Whatsapp::Outbound
+module Whatsapp::Send
   # Every dead end offers a way out, so a citizen never has to guess what the
   # bot expects next. Ids are global: they are handled before the step
   # dispatcher, so a button works from whatever state the flow is in.
@@ -167,7 +167,7 @@ module Whatsapp::Outbound
   def question(conversation:, body:, buttons:)
     conversation.merge_context!(pending_question: true)
 
-    ::Whatsapp::Outbound.buttons(
+    ::Whatsapp::Send.buttons(
       account: conversation.whatsapp_account, body: body, buttons: buttons
     )
   end

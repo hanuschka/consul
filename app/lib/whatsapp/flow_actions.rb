@@ -121,7 +121,7 @@ module Whatsapp::FlowActions
   def revise_decision_buttons
     [
       button(action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"),
-      ::Whatsapp::Outbound.recovery_button(:cancel)
+      ::Whatsapp::Send.recovery_button(:cancel)
     ]
   end
 

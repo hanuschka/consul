@@ -17,7 +17,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # Usually instant now that the draft card carries the evaluation, but not
     # always: a draft whose evaluation was unreachable at the time is evaluated
     # here instead, and that is a second LLM call.
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+    Whatsapp::Send.typing(message_id: @inbound_message_id)
 
     result = Whatsapp::Drafting::PublishDraftService.call(conversation: @conversation)
 
@@ -52,7 +52,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     def send_confirmation(resource)
       return send_pending(resource) if resource.is_a?(Proposal) && !resource.admin_accepted?
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase(
           "whatsapp.bot.proposal.published", url: Whatsapp::PublishedResourceUrl.call(resource)
@@ -64,7 +64,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # proposal while it waits for moderation. It asks them to log in first,
     # which the copy says rather than leaving them to discover it.
     def send_pending(resource)
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase(
           "whatsapp.bot.proposal.published_pending_moderation",
@@ -74,7 +74,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     end
 
     def send_failure
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.publish_failed"),
         actions: [:retry, :cancel]
@@ -92,7 +92,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     def send_invalid
       @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 
-      Whatsapp::Outbound.question(
+      Whatsapp::Send.question(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.draft_invalid", reason: validation_reason),
         buttons: Whatsapp::FlowActions.revise_decision_buttons

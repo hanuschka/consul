@@ -45,8 +45,8 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
     # uploaded media id when there is one, the blob's own URL as the second
     # chance, and the preview without a picture when neither survives. Which of
     # them works depends on what WhatsApp can reach, which is not something this
-    # step knows better than Outbound does.
-    Whatsapp::Outbound.buttons_with_picture(
+    # step knows better than Send does.
+    Whatsapp::Send.buttons_with_picture(
       account: account,
       body: body,
       buttons: buttons,
@@ -118,7 +118,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
         Whatsapp::FlowActions.button(
           action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"
         ),
-        Whatsapp::Outbound.recovery_button(:cancel)
+        Whatsapp::Send.recovery_button(:cancel)
       ]
     end
 end

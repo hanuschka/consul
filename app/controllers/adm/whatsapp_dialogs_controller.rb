@@ -28,7 +28,7 @@ module Adm
         return redirect_to adm_whatsapp_dialog_path(@account)
       end
 
-      message = ::Whatsapp::Outbound.text(account: @account, body: body)
+      message = ::Whatsapp::Send.text(account: @account, body: body)
 
       if message.blank?
         flash[:error] = t("adm.whatsapp.dialogs.reply_window_closed")

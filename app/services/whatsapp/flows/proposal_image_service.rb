@@ -49,7 +49,7 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IMAGE_CHOICE)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.ask_image"),
       buttons: choice_buttons
@@ -84,7 +84,7 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
 
     return send_upload_prompt("whatsapp.bot.proposal.image_failed") if !attach_upload(image_id)
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.image_received")
     )
@@ -96,14 +96,14 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
   # the typing bubble covers the wait. A failure goes on anyway: the picture
   # was optional, and losing the proposal over it would be the worse outcome.
   def generate
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.image_generating")
     )
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+    Whatsapp::Send.typing(message_id: @inbound_message_id)
 
     if !generate_image
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.proposal.image_generate_failed")
       )
@@ -147,7 +147,7 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
         I18n.t("whatsapp.bot.proposal.image_rights_notice")
       ].join("\n\n")
 
-      Whatsapp::Outbound.buttons(
+      Whatsapp::Send.buttons(
         account: account,
         body: body,
         buttons: [

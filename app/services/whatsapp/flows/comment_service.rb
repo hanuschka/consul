@@ -21,7 +21,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_COMMENT)
     @conversation.merge_context!(comment_proposal_id: proposal.id)
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
     )
@@ -71,21 +71,21 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     def send_confirmation(comment)
       copy_key = comment.hidden? ? "whatsapp.bot.comment.pending" : "whatsapp.bot.comment.published"
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase(copy_key)
       )
     end
 
     def send_empty
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
       )
     end
 
     def send_invalid
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.comment.invalid")
       )
@@ -94,7 +94,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     def send_not_allowed
       @conversation.reset_flow!
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.comment.closed")
       )
@@ -103,7 +103,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     def send_gone
       @conversation.reset_flow!
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.support.gone")
       )

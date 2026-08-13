@@ -26,9 +26,9 @@ class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
   # moment — the /adm field says so — and saying it here is what lets the main
   # menu stop repeating the introduction to citizens who have already read it.
   def first_contact
-    Whatsapp::Outbound.text(account: account, body: ::Whatsapp.onboarding_greeting)
-    Whatsapp::Outbound.text(account: account, body: disclosure)
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(account: account, body: ::Whatsapp.onboarding_greeting)
+    Whatsapp::Send.text(account: account, body: disclosure)
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.onboarding.link_question")
     )
@@ -36,7 +36,7 @@ class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
     account.mark_ai_disclosed!
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_LINK_DECISION)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: consent,
       buttons: Whatsapp::FlowActions.link_decision_buttons
@@ -51,7 +51,7 @@ class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
   def welcome_back
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_LINK_DECISION)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: welcome_back_body,
       buttons: welcome_back_buttons
@@ -68,7 +68,7 @@ class Whatsapp::Flows::OnboardingGreetingService < Whatsapp::Flows::BaseService
   # A disclosure buried above three paragraphs of something else is just as
   # invisible.
   def disclose
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase(
         "whatsapp.bot.compliance.disclosure", portal_name: Whatsapp::PortalLinks.portal_name

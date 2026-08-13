@@ -11,7 +11,7 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
   def call
     return send_empty if contributions.empty?
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: [
         Whatsapp.phrase("whatsapp.bot.contributions.intro"),
@@ -59,7 +59,7 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
     end
 
     def send_empty
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.contributions.empty")
       )

@@ -62,7 +62,7 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   end
 
   def call
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: @body,
       buttons: Whatsapp::FlowActions.main_menu_buttons

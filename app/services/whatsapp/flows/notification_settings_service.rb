@@ -33,7 +33,7 @@ class Whatsapp::Flows::NotificationSettingsService < Whatsapp::Flows::BaseServic
   def call
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_NOTIFICATION_SETTINGS)
 
-    Whatsapp::Outbound.list(
+    Whatsapp::Send.list(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.notifications.settings_title"),
       button_label: I18n.t("whatsapp.bot.buttons.choose_notifications"),

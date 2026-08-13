@@ -16,7 +16,7 @@ class Whatsapp::Flows::RefuseContentService < Whatsapp::Flows::BaseService
   def call
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IDEA)
 
-    Whatsapp::Outbound.recovery(conversation: @conversation, body: body, actions: [:cancel])
+    Whatsapp::Send.recovery(conversation: @conversation, body: body, actions: [:cancel])
   end
 
   private

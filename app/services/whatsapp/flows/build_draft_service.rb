@@ -87,7 +87,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       # that is about to be refused should not first be promised a draft, and the
       # generation call it would have paid for is the one thing worth skipping.
       # The bubble covers this call too — it is a completion like any other.
-      Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+      Whatsapp::Send.typing(message_id: @inbound_message_id)
 
       if !@screened
         # Armed inside the gate it guards rather than above it. Stamped
@@ -100,7 +100,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
         return if duplicates_offered?
       end
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.drafting")
       )
@@ -108,7 +108,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       # After the "one moment" message, not before it: sending any message
       # dismisses the bubble, so asking for it first would spend it on the
       # millisecond before the wait rather than on the wait.
-      Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+      Whatsapp::Send.typing(message_id: @inbound_message_id)
 
       # The drafting clock is armed in the same write as the result rather than
       # in one of its own: the advisory lock means no other message can read it
@@ -146,7 +146,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     end
 
     def send_draft_failed
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.draft_failed"),
         actions: [:retry, :cancel]
@@ -189,7 +189,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # published slur is not — the retry button re-runs this whole service with
     # the text the citizen already sent.
     def send_safety_check_failed
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.safety_check_failed"),
         actions: [:retry, :cancel]
@@ -259,7 +259,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     end
 
     def send_throttle_notice
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.too_fast"),
         actions: [:cancel]

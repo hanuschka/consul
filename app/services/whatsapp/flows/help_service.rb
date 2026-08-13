@@ -32,7 +32,7 @@ class Whatsapp::Flows::HelpService < Whatsapp::Flows::BaseService
   }.freeze
 
   def call
-    Whatsapp::Outbound.list(
+    Whatsapp::Send.list(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.help_menu.body"),
       button_label: I18n.t("whatsapp.bot.buttons.choose_help"),

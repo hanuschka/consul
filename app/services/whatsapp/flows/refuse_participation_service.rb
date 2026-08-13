@@ -51,7 +51,7 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
 
     return send_login_link(body) if login_required?
 
-    Whatsapp::Outbound.text(account: account, body: body)
+    Whatsapp::Send.text(account: account, body: body)
   end
 
   # A reason the phase raises under its own name, answered with copy written for

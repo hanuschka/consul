@@ -15,7 +15,7 @@ class Whatsapp::Flows::UnlinkService < Whatsapp::Flows::BaseService
   def ask
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_UNLINK_CONFIRMATION)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.onboarding.unlink_confirm"),
       buttons: buttons
@@ -27,7 +27,7 @@ class Whatsapp::Flows::UnlinkService < Whatsapp::Flows::BaseService
   # afterwards risks the citizen being told nothing at all about the thing they
   # just asked for.
   def confirm
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.onboarding.unlinked")
     )

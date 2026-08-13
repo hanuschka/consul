@@ -3,7 +3,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithButtons < Ai::Tools::WhatsappAiAs
   # rejects an unknown button id and refuses more than three buttons, and both
   # of those arrive as a failed send rather than as a validation error, so the
   # allow-list is enforced here instead.
-  ALLOWED_ACTIONS = ::Whatsapp::Outbound::RECOVERY_ACTION_IDS.keys.map(&:to_s).freeze
+  ALLOWED_ACTIONS = ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys.map(&:to_s).freeze
 
   description "Answers the citizen with a short text and up to three tappable buttons. " \
               "The buttons may only be: help (show what this bot can do), cancel (abandon " \
@@ -23,7 +23,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithButtons < Ai::Tools::WhatsappAiAs
 
     return unknown_actions_error if actions.empty?
 
-    ::Whatsapp::Outbound.recovery(
+    ::Whatsapp::Send.recovery(
       conversation: conversation,
       body: body,
       actions: actions.map(&:to_sym)

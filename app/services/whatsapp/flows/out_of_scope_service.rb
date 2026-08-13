@@ -3,7 +3,7 @@ class Whatsapp::Flows::OutOfScopeService < Whatsapp::Flows::BaseService
   # there is no human on this number, and implying otherwise would leave the
   # citizen waiting for an answer that never comes.
   def call
-    Whatsapp::Outbound.text(account: account, body: body)
+    Whatsapp::Send.text(account: account, body: body)
   end
 
   private

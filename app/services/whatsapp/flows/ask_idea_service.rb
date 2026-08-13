@@ -9,7 +9,7 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
 
   def call
     if projekt_phase.blank?
-      return Whatsapp::Outbound.text(
+      return Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.no_projekt")
       )
@@ -19,7 +19,7 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IDEA)
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.ask_idea")
     )
@@ -32,7 +32,7 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
     idea_text = text.to_s.strip
 
     if idea_text.blank?
-      return Whatsapp::Outbound.recovery(
+      return Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.idea_missing"),
         actions: [:cancel]

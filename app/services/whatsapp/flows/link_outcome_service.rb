@@ -34,12 +34,12 @@ class Whatsapp::Flows::LinkOutcomeService < Whatsapp::Flows::BaseService
   def confirmed
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.onboarding.linked")
     )
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.onboarding.discovery_offer"),
       buttons: discovery_buttons
@@ -52,7 +52,7 @@ class Whatsapp::Flows::LinkOutcomeService < Whatsapp::Flows::BaseService
   def declined
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.onboarding.declined"),
       buttons: declined_buttons
@@ -62,9 +62,9 @@ class Whatsapp::Flows::LinkOutcomeService < Whatsapp::Flows::BaseService
   def error(reason)
     @reason = ERROR_REASONS.include?(reason.to_s) ? reason.to_s : "expired"
 
-    return Whatsapp::Outbound.text(account: account, body: error_body) if error_buttons.empty?
+    return Whatsapp::Send.text(account: account, body: error_body) if error_buttons.empty?
 
-    Whatsapp::Outbound.buttons(account: account, body: error_body, buttons: error_buttons)
+    Whatsapp::Send.buttons(account: account, body: error_body, buttons: error_buttons)
   end
 
   private

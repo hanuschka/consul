@@ -59,7 +59,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_DRAFT_DECISION)
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: draft_summary,
       buttons: buttons
@@ -88,7 +88,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
       return draft_resource.ai_evaluation_result.to_h if
         draft_resource.ai_evaluation_result.present?
 
-      Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+      Whatsapp::Send.typing(message_id: @inbound_message_id)
 
       ::ProposalAiDraft::EvaluateTwoTierService.call(resource: draft_resource).to_h
     end
@@ -169,7 +169,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
         Whatsapp::FlowActions.button(
           action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"
         ),
-        Whatsapp::Outbound.recovery_button(:cancel)
+        Whatsapp::Send.recovery_button(:cancel)
       ]
     end
 end

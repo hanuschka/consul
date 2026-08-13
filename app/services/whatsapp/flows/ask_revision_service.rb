@@ -66,7 +66,7 @@ class Whatsapp::Flows::AskRevisionService < Whatsapp::Flows::BaseService
   private
 
     def send_question
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.proposal.ask_revision")
       )

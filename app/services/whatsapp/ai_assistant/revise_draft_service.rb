@@ -71,10 +71,9 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
       }.merge(current_taxonomy)
     end
 
-    # Only for the phases that offer them: a key the phase has no taxonomy for is
-    # discarded by DraftSentiment.valid_id and DraftCategory.valid_ids anyway, and
-    # asking the record for a column its resource may not carry is worse than not
-    # asking.
+    # Only for the phases that offer them: a key the phase has no taxonomy for
+    # is discarded by the DraftTaxonomy policies anyway, and asking the record
+    # for a column its resource may not carry is worse than not asking.
     def current_taxonomy
       chosen_sentiment = sentiments.any? ? { "sentiment_id" => @resource.sentiment_id } : {}
       chosen_labels = labels.any? ? { "projekt_label_ids" => @resource.projekt_label_ids } : {}
@@ -151,11 +150,11 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
     end
 
     def sentiments
-      @sentiments ||= ::Whatsapp::DraftSentiment.options_for(@projekt_phase)
+      @sentiments ||= ::Whatsapp::DraftTaxonomy.sentiment(@projekt_phase).options
     end
 
     def labels
-      @labels ||= ::Whatsapp::DraftCategory.options_for(@projekt_phase)
+      @labels ||= ::Whatsapp::DraftTaxonomy.category(@projekt_phase).options
     end
 
     def output_schema

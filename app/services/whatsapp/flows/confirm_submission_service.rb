@@ -101,7 +101,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
         Whatsapp::DraftCard.body(
           draft_resource,
           intro_key: "whatsapp.bot.proposal.preview_intro",
-          summary: @conversation.context.dig("draft_data", "card_summary")
+          summary: @conversation.context["card_summary"]
         ),
         Whatsapp.phrase("whatsapp.bot.proposal.preview_question")
       ].join("\n\n")

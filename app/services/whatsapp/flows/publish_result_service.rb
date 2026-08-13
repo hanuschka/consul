@@ -23,10 +23,8 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
 
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if
       result == :criteria_failed
-    return Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation) if
-      result == :sentiment_missing
-    return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
-      result == :category_missing
+    return repair_taxonomy(:sentiment) if result == :sentiment_missing
+    return repair_taxonomy(:category) if result == :category_missing
     return send_invalid if result == :invalid
     return send_failure if result.blank?
 
@@ -38,6 +36,20 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   end
 
   private
+
+    # A choice went missing between creation and here — an option deleted from
+    # the phase mid-flow, or a draft predating the completion gate. The marker
+    # tells AskDraftChoiceService that the citizen has already confirmed the
+    # preview, so their answer resumes this publish instead of rewinding them
+    # to the draft card.
+    def repair_taxonomy(kind)
+      @conversation.merge_context!(publish_repair: true)
+
+      return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
+        kind == :category
+
+      Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation)
+    end
 
     # Sent after the flow is completed, so the menu is offered from a
     # conversation with nothing open in it: all three of its buttons start

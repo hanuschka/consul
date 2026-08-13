@@ -17,8 +17,11 @@ class Whatsapp::Drafting::PublishDraftService < ApplicationService
 
     return if resource.blank?
     return resource if resource.published_at.present?
-    return :sentiment_missing if Whatsapp::DraftSentiment.missing?(resource, projekt_phase)
-    return :category_missing if category_missing?(resource)
+
+    missing = missing_requirement(resource)
+
+    return :category_missing if missing&.kind == :category
+    return :sentiment_missing if missing&.kind == :sentiment
 
     stage = evaluation_stage(resource)
 
@@ -38,14 +41,14 @@ class Whatsapp::Drafting::PublishDraftService < ApplicationService
       projekt_phase.feature?("general.require_admin_acceptance")
     end
 
-    # Labelable validates on create, so a draft written before the flow asked
-    # for a label can still be sitting here without one. Caught rather than
-    # saved past, and answered with the question instead of an error.
-    def category_missing?(resource)
-      return false if !resource.respond_to?(:projekt_labels)
-      return false if !projekt_phase.labels_selector_available?
-
-      resource.projekt_labels.empty?
+    # Labelable and Sentimentable validate on create, so a draft written before
+    # the flow asked for a choice can still be sitting here without one. Caught
+    # rather than saved past, and answered with the question instead of an
+    # error.
+    def missing_requirement(resource)
+      Whatsapp::DraftTaxonomy
+        .requirements(projekt_phase)
+        .find { |requirement| requirement.missing_on?(resource) }
     end
 
     # The same two steps the web takes, in the same order: save the record, then

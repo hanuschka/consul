@@ -77,27 +77,17 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
       # stored result as "already evaluated, do not pay for it twice".
       resource.ai_evaluation_result = nil
 
-      assign_sentiment(resource)
-      assign_labels(resource)
+      apply_taxonomy(resource)
     end
 
-    def assign_sentiment(resource)
-      sentiment_id = Whatsapp::DraftSentiment.valid_id(@draft_data, projekt_phase)
-
-      return if sentiment_id.blank?
-
-      resource.sentiment_id = sentiment_id
-    end
-
-    # Left alone rather than cleared when the model returned nothing usable: on
-    # a revision the citizen's own earlier choice is already on the record, and
-    # a rewrite of the text is not a reason to throw it away.
-    def assign_labels(resource)
-      label_ids = Whatsapp::DraftCategory.valid_ids(@draft_data, projekt_phase)
-
-      return if label_ids.empty?
-
-      resource.projekt_label_ids = label_ids
+    # Valid answers only; each policy leaves an unsatisfied requirement alone
+    # rather than clearing it: on a revision the citizen's own earlier choice
+    # is already on the record, and a rewrite of the text is not a reason to
+    # throw it away.
+    def apply_taxonomy(resource)
+      Whatsapp::DraftTaxonomy.requirements(projekt_phase).each do |requirement|
+        requirement.apply_to(resource, @draft_data)
+      end
     end
 
     # Only where the phase offers a map at all. The pin inferred from the

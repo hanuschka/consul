@@ -9,19 +9,21 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   # dropping the rest would hide options that exist.
   #
   # One service for both because the two questions differ in nothing but which
-  # taxonomy they read and which words they use. Those words are spelled out per
-  # kind rather than interpolated from it, so a locale key and a step name are
-  # still things you can grep for.
+  # taxonomy policy they read and which words they use. Those words are spelled
+  # out per kind rather than interpolated from it, so a locale key and a step
+  # name are still things you can grep for.
   CHOICES = {
     category: {
       step: Whatsapp::Conversation::Step::AWAITING_CATEGORY,
       body_key: "whatsapp.bot.proposal.ask_category",
-      button_label_key: "whatsapp.bot.buttons.choose_category"
+      button_label_key: "whatsapp.bot.buttons.choose_category",
+      policy: ->(projekt_phase) { Whatsapp::DraftTaxonomy.category(projekt_phase) }
     },
     sentiment: {
       step: Whatsapp::Conversation::Step::AWAITING_SENTIMENT,
       body_key: "whatsapp.bot.proposal.ask_sentiment",
-      button_label_key: "whatsapp.bot.buttons.choose_sentiment"
+      button_label_key: "whatsapp.bot.buttons.choose_sentiment",
+      policy: ->(projekt_phase) { Whatsapp::DraftTaxonomy.sentiment(projekt_phase) }
     }
   }.freeze
 
@@ -53,11 +55,13 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   # and the record cannot be written until it is satisfied. Afterwards it goes
   # onto the record, where the citizen is correcting a choice rather than
   # supplying a missing one. Either way CompleteDraftService decides what is
-  # still outstanding.
+  # still outstanding — except mid-publish, where the publish resumes instead.
   def assign(option_id, inbound_message_id)
     return stash_draft_choice(option_id, inbound_message_id) if pre_creation_draft?
 
-    return call if !assign_to_record(option_id)
+    return call if !policy.assign!(@conversation.draft_resource, option_id)
+
+    return resume_publish(inbound_message_id) if publish_repair?
 
     complete_draft(inbound_message_id)
   end
@@ -78,15 +82,12 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
       CHOICES.fetch(@kind)
     end
 
-    # The one place the two questions genuinely part company: each reads its own
-    # taxonomy off the phase.
+    def policy
+      @policy ||= choice.fetch(:policy).call(@conversation.projekt_phase)
+    end
+
     def options
-      @options ||=
-        if @kind == :category
-          Whatsapp::DraftCategory.options_for(@conversation.projekt_phase)
-        else
-          Whatsapp::DraftSentiment.options_for(@conversation.projekt_phase)
-        end
+      @options ||= policy.options
     end
 
     def body
@@ -115,37 +116,35 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
       Whatsapp::FlowActions.id_for(action: @kind, param: option.id)
     end
 
-    def assign_to_record(option_id)
-      if @kind == :category
-        Whatsapp::DraftCategory.assign(
-          @conversation.draft_resource, @conversation.projekt_phase, option_id
-        )
-      else
-        Whatsapp::DraftSentiment.assign(
-          @conversation.draft_resource, @conversation.projekt_phase, option_id
-        )
-      end
-    end
-
     def pre_creation_draft?
       @conversation.draft_resource.blank? && @conversation.context["draft_data"].present?
     end
 
-    # Written back through the same key the generation call filled, so
-    # DraftCategory and DraftSentiment re-validate the answer against the
-    # phase exactly as it validated the model's.
+    # Written back through the same key the generation call filled, so the
+    # policy re-validates the answer against the phase exactly as it validated
+    # the model's.
     def stash_draft_choice(option_id, inbound_message_id)
-      stashed_answer =
-        if @kind == :category
-          { "projekt_label_ids" => [option_id.to_i] }
-        else
-          { "sentiment_id" => option_id.to_i }
-        end
-
-      draft_data = @conversation.context["draft_data"].to_h.merge(stashed_answer)
+      draft_data = @conversation.context["draft_data"].to_h.merge(policy.stash_for(option_id))
       @conversation.merge_context!(draft_data: draft_data)
 
       complete_draft(inbound_message_id)
+    end
+
+    # Set by PublishResultService when the question was asked mid-publish: the
+    # citizen had already confirmed the preview and answered the location
+    # question, so their answer resumes the publish instead of rewinding them
+    # to the draft card. A stale pill tapped in a later flow carries no marker
+    # and can never publish by surprise.
+    def publish_repair?
+      @conversation.context["publish_repair"].present?
+    end
+
+    def resume_publish(inbound_message_id)
+      @conversation.merge_context!(publish_repair: nil)
+
+      Whatsapp::Flows::PublishResultService.call(
+        conversation: @conversation, inbound_message_id: inbound_message_id
+      )
     end
 
     def complete_draft(inbound_message_id)

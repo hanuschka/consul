@@ -155,6 +155,6 @@ class Whatsapp::Conversation < ApplicationRecord
   private
 
     def cleared_flow_attributes
-      { draft_resource: nil, revisions_count: 0, context: {}}
+      { draft_resource: nil, context: {}}
     end
 end

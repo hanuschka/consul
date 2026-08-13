@@ -83,13 +83,15 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       # a failed check it is the only copy of what the citizen wrote.
       @conversation.merge_context!(stored_text)
 
-      # Screened before the "one moment" message rather than after it: a text
-      # that is about to be refused should not first be promised a draft, and the
-      # generation call it would have paid for is the one thing worth skipping.
-      # The bubble covers this call too — it is a completion like any other.
-      Whatsapp::Send.typing(message_id: @inbound_message_id)
-
       if !@screened
+        # Screened before the "one moment" message rather than after it: a text
+        # that is about to be refused should not first be promised a draft, and
+        # the generation call it would have paid for is the one thing worth
+        # skipping. The bubble covers the screening call — it is a completion
+        # like any other — and an already-screened text has no call to cover,
+        # so the bubble is asked for inside the gate too.
+        Whatsapp::Send.typing(message_id: @inbound_message_id)
+
         # Armed inside the gate it guards rather than above it. Stamped
         # unconditionally, an already-screened text would record a screening that
         # never ran and re-arm the floor against the citizen's next real idea.
@@ -112,8 +114,17 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
       # The drafting clock is armed in the same write as the result rather than
       # in one of its own: the advisory lock means no other message can read it
-      # while `generate` runs, so a second write beforehand buys nothing.
-      @conversation.merge_context!(draft_data: generate, last_draft_at: Time.current.iso8601)
+      # while `generate` runs, so a second write beforehand buys nothing. The
+      # card summary rides under its own key because the stash is emptied when
+      # the record is written, while the cards that quote the summary are sent
+      # after.
+      draft = generate
+
+      @conversation.merge_context!(
+        draft_data: draft.except("card_summary"),
+        card_summary: draft["card_summary"],
+        last_draft_at: Time.current.iso8601
+      )
 
       complete
     rescue StandardError => e
@@ -211,10 +222,10 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # apart is what made comments elsewhere describe the wrong one.
     #
     # The required-taxonomy entry point, because the chat has no form to fall
-    # back to: a declined category or sentiment costs a repair completion or a
-    # question to the citizen. TaxonomyRetryService stays behind it for the
-    # answers a schema cannot force — an empty label list, an option removed
-    # between the two calls.
+    # back to: the schema forces a valid category and sentiment wherever the
+    # provider enforces schemas, and what a schema cannot force — a stray
+    # answer from a non-strict provider, an option removed between the two
+    # calls — falls to CompleteDraftService's question in the chat.
     def generate_first_draft
       ::ProposalAiDraft::GenerateDraftService.with_required_taxonomy(
         idea_text: @idea_text,
@@ -227,7 +238,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
         resource: @conversation.draft_resource,
         correction: @idea_text,
         projekt_phase: @conversation.projekt_phase,
-        card_summary: @conversation.context.dig("draft_data", "card_summary")
+        card_summary: @conversation.context["card_summary"]
       )
     end
 

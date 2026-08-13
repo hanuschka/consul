@@ -7,6 +7,11 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
   # need has to be in hand first. Until then the draft lives in the
   # conversation's context and this service asks for what is missing.
   #
+  # A missing choice is rare by construction: the drafting schema forces a
+  # valid pick wherever the provider enforces schemas, so the question below
+  # covers only what a schema cannot force — a non-strict provider's stray
+  # answer, or an option removed from the phase between the two calls.
+  #
   # Two entry points rather than one with a flag: the only thing that differs is
   # which copy the finished card carries.
   def self.for_first_draft(conversation:, inbound_message_id: nil)
@@ -24,12 +29,15 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
   end
 
   def call
-    retry_missing_requirements
+    missing = missing_requirement
 
-    return ask_for(missing_requirement) if ask_before_creating?
+    return ask_for(missing) if ask_before_creating?(missing)
 
     # Nothing new to write: the citizen corrected a choice on a record that
-    # already exists, and the stash was emptied when it was created.
+    # already exists, and the stash was emptied when it was created. The empty
+    # stash is the dirty flag — re-persisting here would drop the stored
+    # evaluation verdict, re-geocode the location, and re-apply the model's
+    # stale ids over the correction the citizen just made.
     return present if draft_data.blank?
 
     @conversation.update!(draft_resource: persist)
@@ -44,69 +52,11 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
       @draft_data ||= @conversation.context["draft_data"].to_h
     end
 
-    # Asked of the model once more before it is asked of the citizen: it was handed
-    # the phase's options as a closed enum in the same call that wrote the title,
-    # and a choice it could have made there is not worth a round trip in the chat.
-    #
-    # A loop because a phase can require both, and answering the category only
-    # uncovers the sentiment behind it. It terminates on the attempt record rather
-    # than on success: each requirement is marked before its call, so a second pass
-    # can never retry the same one.
-    def retry_missing_requirements
-      while ask_before_creating? && retriable?(missing_requirement)
-        retry_requirement(missing_requirement)
-      end
-    end
-
-    # Once per requirement per conversation, recorded in the context rather than on
-    # this instance: the service runs again on the citizen's next message, and
-    # without the record a phase whose options the model keeps refusing would pay
-    # for a retry on every message and still end at the same question.
-    def retriable?(requirement)
-      !retried_requirements.include?(requirement.to_s)
-    end
-
-    def retried_requirements
-      Array(@conversation.context["retried_taxonomy"])
-    end
-
-    def retry_requirement(requirement)
-      mark_retried(requirement)
-
-      answer = Whatsapp::AiAssistant::TaxonomyRetryService.call(
-        requirement: requirement,
-        draft_data: draft_data,
-        projekt_phase: @conversation.projekt_phase
-      )
-
-      return if answer.blank?
-
-      store(answer)
-    end
-
-    # Marked before the call rather than after it, so a provider that times out
-    # costs one attempt rather than one per message.
-    def mark_retried(requirement)
-      @conversation.merge_context!(
-        retried_taxonomy: retried_requirements + [requirement.to_s]
-      )
-    end
-
-    # Written back through the same key the generation call filled, so the answer
-    # is re-read by exactly the validation that rejected the first one. Both
-    # memoised reads are reassigned rather than left stale: the loop above and the
-    # branch after it both ask again immediately.
-    def store(answer)
-      @draft_data = draft_data.merge(answer)
-      @conversation.merge_context!(draft_data: @draft_data)
-      @missing_requirement = derived_missing_requirement
-    end
-
     # Only before the record exists. On a revision the record is already there,
     # so the on-create validations no longer run and a choice the citizen made
     # earlier is still on it — asking again would be asking twice.
-    def ask_before_creating?
-      @conversation.draft_resource.blank? && missing_requirement.present?
+    def ask_before_creating?(missing)
+      @conversation.draft_resource.blank? && missing.present?
     end
 
     # What the resource's on-create validations demand and the drafting model
@@ -114,26 +64,14 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
     # those validations run exactly once — at the first save — so there is no
     # record yet to ask.
     def missing_requirement
-      return @missing_requirement if defined?(@missing_requirement)
-
-      @missing_requirement = derived_missing_requirement
-    end
-
-    def derived_missing_requirement
-      projekt_phase = @conversation.projekt_phase
-
-      if Whatsapp::DraftCategory.required?(projekt_phase) &&
-         Whatsapp::DraftCategory.valid_ids(draft_data, projekt_phase).empty?
-        :category
-      elsif Whatsapp::DraftSentiment.required?(projekt_phase) &&
-            Whatsapp::DraftSentiment.valid_id(draft_data, projekt_phase).blank?
-        :sentiment
-      end
+      Whatsapp::DraftTaxonomy
+        .requirements(@conversation.projekt_phase)
+        .find { |requirement| !requirement.satisfied_by?(draft_data) }
     end
 
     def ask_for(requirement)
       return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
-        requirement == :category
+        requirement.kind == :category
 
       Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation)
     end

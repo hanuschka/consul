@@ -91,19 +91,13 @@ class Whatsapp::Flows::AskRevisionService < Whatsapp::Flows::BaseService
     end
 
     # Shared by the answer to the revision question and the correction read
-    # out of a typed answer at the draft card: both are one change to apply,
-    # and the round counter belongs to the revision itself rather than to
-    # whichever step happened to collect it.
+    # out of a typed answer at the draft card: both are one change to apply.
     #
     # The correction is passed on its own. It used to be appended to the
     # citizen's original idea and the whole draft written again from the pair,
     # which meant every round rewrote text they had already approved.
     def apply(correction)
-      # Checked here as well as inside the build, because the round counter
-      # below must not move for a revision the phase no longer permits.
       return if refuse_if_not_permitted
-
-      @conversation.update!(revisions_count: @conversation.revisions_count + 1)
 
       Whatsapp::Flows::BuildDraftService.from_revision(
         conversation: @conversation, correction: correction,

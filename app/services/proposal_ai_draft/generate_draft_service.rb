@@ -1,9 +1,10 @@
 class ProposalAiDraft::GenerateDraftService < ApplicationService
   # The chat path. A phase that offers categories or sentiments requires them
   # at create (Labelable, Sentimentable), and the bot has no form to fall back
-  # to — a declined choice costs a repair completion (TaxonomyRetryService) or
-  # a question to the citizen. The web keeps the plain .call: there the model
-  # may decline and a human picks from the form's own selector.
+  # to — so the schema forces a valid choice, and anything a schema cannot
+  # force falls to a question in the chat. The web keeps the plain .call:
+  # there the model may decline and a human picks from the form's own
+  # selector.
   def self.with_required_taxonomy(idea_text:, projekt_phase:)
     new(idea_text: idea_text, projekt_phase: projekt_phase, taxonomy_choice: :required).call
   end
@@ -25,7 +26,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-    response.content
+    normalized_content(response.content)
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] GenerateDraftService failed: #{e.class} - #{e.message}")
     Rails.logger.error("[ProposalAiDraft] Backtrace: #{e.backtrace.first(10).join("\n")}")
@@ -82,6 +83,23 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       @taxonomy_choice == :required
     end
 
+    # Collapses the required mode's two label keys back into the canonical
+    # projekt_label_ids every reader already uses, so the split is invisible
+    # outside the schema.
+    def normalized_content(content)
+      draft_data = content.to_h
+
+      return draft_data if !draft_data.key?("projekt_label_id")
+
+      primary_label_id = draft_data.delete("projekt_label_id")
+      additional_label_ids = Array(draft_data.delete("additional_projekt_label_ids"))
+
+      draft_data["projekt_label_ids"] =
+        ([primary_label_id] + additional_label_ids).map(&:to_i).uniq
+
+      draft_data
+    end
+
     def sentiment_choice_instruction
       if required_taxonomy?
         "you must choose the single closest-fitting id, even when none fits well"
@@ -92,15 +110,23 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
     def label_choice_instruction
       if required_taxonomy?
-        "choose the ids of all that apply — at least one, the closest fit even when none fits well"
+        "choose the single best-fitting id, even when none fits well, " \
+          "plus the ids of any further categories that also clearly apply"
       else
         "choose the ids of all that clearly apply, or an empty array if none fit"
       end
     end
 
+    # In required mode the options come from the same policies every
+    # downstream validator reads (Whatsapp::DraftTaxonomy), so the model can
+    # only be offered ids the create validation will accept. The optional/web
+    # mode keeps its own broader read: the form's selector shows
+    # projekt_labels, and its controller filters against the same set.
     def available_sentiments
       @available_sentiments ||=
-        if @projekt_phase.feature?("form.sentiments")
+        if required_taxonomy?
+          ::Whatsapp::DraftTaxonomy.sentiment(@projekt_phase).options
+        elsif @projekt_phase.feature?("form.sentiments")
           @projekt_phase.sentiments.includes(:translations).to_a
         else
           []
@@ -109,7 +135,9 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
     def available_labels
       @available_labels ||=
-        if @projekt_phase.feature?("form.labels")
+        if required_taxonomy?
+          ::Whatsapp::DraftTaxonomy.category(@projekt_phase).options
+        elsif @projekt_phase.feature?("form.labels")
           @projekt_phase.projekt_labels.includes(:translations).to_a
         else
           []
@@ -126,8 +154,14 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       end
 
       if available_labels.any?
-        properties[:projekt_label_ids] = labels_schema
-        required << "projekt_label_ids"
+        if required_taxonomy?
+          properties[:projekt_label_id] = primary_label_schema
+          properties[:additional_projekt_label_ids] = additional_labels_schema
+          required << "projekt_label_id" << "additional_projekt_label_ids"
+        else
+          properties[:projekt_label_ids] = labels_schema
+          required << "projekt_label_ids"
+        end
       end
 
       {
@@ -156,22 +190,35 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       end
     end
 
+    # The required mode splits the labels into a forced single choice plus an
+    # optional remainder: a strict provider enforces "integer from this enum"
+    # but has no way to enforce a non-empty array (minItems is not supported),
+    # so the scalar is the only shape that guarantees at least one valid label.
+    def primary_label_schema
+      {
+        type: "integer",
+        enum: available_labels.map(&:id),
+        description: "The id of the single closest-fitting category from the provided " \
+                     "list. One has to be chosen, even when none fits well."
+      }
+    end
+
+    def additional_labels_schema
+      {
+        type: "array",
+        items: { type: "integer", enum: available_labels.map(&:id) },
+        description: "Ids of any further categories that also clearly apply. Empty " \
+                     "array when only the one fits."
+      }
+    end
+
     def labels_schema
-      if required_taxonomy?
-        {
-          type: "array",
-          items: { type: "integer", enum: available_labels.map(&:id) },
-          description: "Ids of the categories that apply, from the provided list. At least " \
-                       "one — the closest fit, even when none fits well. Never empty."
-        }
-      else
-        {
-          type: "array",
-          items: { type: "integer", enum: available_labels.map(&:id) },
-          description: "Ids of the most relevant categories for the proposal from the " \
-                       "provided list. Empty array if none apply."
-        }
-      end
+      {
+        type: "array",
+        items: { type: "integer", enum: available_labels.map(&:id) },
+        description: "Ids of the most relevant categories for the proposal from the " \
+                     "provided list. Empty array if none apply."
+      }
     end
 
     def base_schema_properties

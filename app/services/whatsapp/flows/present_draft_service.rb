@@ -105,7 +105,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
         Whatsapp::DraftCard.body(
           draft_resource,
           intro_key: "#{@copy_prefix}_intro",
-          summary: @conversation.context.dig("draft_data", "card_summary")
+          summary: @conversation.context["card_summary"]
         ),
         taxonomy_block,
         evaluation_line,
@@ -120,7 +120,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
     # Omitted rather than printed empty when the phase has no categories at all:
     # a "Category:" line with nothing after it reads as a bug.
     def category_line
-      category = Whatsapp::DraftCategory.label_for(draft_resource)
+      category = Whatsapp::DraftTaxonomy.category(projekt_phase).display_name(draft_resource)
 
       return if category.blank?
 
@@ -131,7 +131,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
     # same model that wrote the text. Shown so the revise loop can correct it
     # before it is published rather than after.
     def sentiment_line
-      sentiment = Whatsapp::DraftSentiment.label_for(draft_resource)
+      sentiment = Whatsapp::DraftTaxonomy.sentiment(projekt_phase).display_name(draft_resource)
 
       return if sentiment.blank?
 

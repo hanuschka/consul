@@ -11,6 +11,8 @@ class PagesController < ApplicationController
   include GuestUsers
   include LandingPageResolvable
 
+  helper DeficiencyReportsHelper
+
   has_orders %w[most_voted newest oldest], only: :show
 
   before_action :set_random_seed

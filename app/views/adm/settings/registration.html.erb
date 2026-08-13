@@ -15,8 +15,8 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.verification.show_data_completeness_status"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extra_fields.verification.show_verification_status"), :value, :boolean) %>
 
-  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.sessions", I18n.locale), :body, :rich_text, wide: true) %>
-  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("sign_in_hint", I18n.locale), :body, :rich_text, wide: true) %>
-  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.registrations", I18n.locale), :body, :rich_text, wide: true) %>
-  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("registration_form_hint", I18n.locale), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.sessions"), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("sign_in_hint"), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("auth_page_legend.registrations"), :body, :rich_text, wide: true) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::ContentBlock.custom_block_for("registration_form_hint"), :body, :rich_text, wide: true) %>
 </div>

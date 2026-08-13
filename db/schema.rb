@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_27_180352) do
+ActiveRecord::Schema.define(version: 2026_08_11_090000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -224,6 +224,7 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.bigint "user_message_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "tool_activity", default: [], null: false
     t.index ["ai_chat_id", "created_at"], name: "index_ai_chat_messages_on_ai_chat_id_and_created_at"
     t.index ["ai_chat_id"], name: "index_ai_chat_messages_on_ai_chat_id"
     t.index ["user_message_id"], name: "index_ai_chat_messages_on_user_message_id"
@@ -788,6 +789,8 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.text "warning_text", default: ""
     t.string "default_responsible_type"
     t.bigint "default_responsible_id"
+    t.boolean "ai_fallback", default: false, null: false
+    t.text "ai_hint"
     t.index ["default_responsible_type", "default_responsible_id"], name: "index_deficiency_report_categories_on_default_responsible"
   end
 
@@ -830,6 +833,23 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
+  end
+
+  create_table "deficiency_report_intake_channel_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_intake_channel_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_3ee3fbfe2e51b97debe9275dca58a65df747c9da"
+    t.index ["locale"], name: "index_deficiency_report_intake_channel_translations_on_locale"
+  end
+
+  create_table "deficiency_report_intake_channels", force: :cascade do |t|
+    t.integer "given_order"
+    t.boolean "default", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_managers", force: :cascade do |t|
@@ -893,6 +913,28 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.integer "reminder_delay"
   end
 
+  create_table "deficiency_report_subcategories", force: :cascade do |t|
+    t.bigint "deficiency_report_category_id", null: false
+    t.integer "given_order"
+    t.string "default_responsible_type"
+    t.bigint "default_responsible_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "ai_hint"
+    t.index ["default_responsible_type", "default_responsible_id"], name: "index_dr_subcategories_on_default_responsible"
+    t.index ["deficiency_report_category_id"], name: "index_dr_subcategories_on_category_id"
+  end
+
+  create_table "deficiency_report_subcategory_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_subcategory_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_subcategory_id"], name: "index_5cceb5c9355a5d7ca9bee41d38d557369ce7db46"
+    t.index ["locale"], name: "index_deficiency_report_subcategory_translations_on_locale"
+  end
+
   create_table "deficiency_report_translations", force: :cascade do |t|
     t.bigint "deficiency_report_id", null: false
     t.string "locale", null: false
@@ -904,6 +946,15 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.text "official_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
+  end
+
+  create_table "deficiency_report_watches", force: :cascade do |t|
+    t.bigint "deficiency_report_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id", "user_id"], name: "index_dr_watches_on_report_and_user", unique: true
+    t.index ["user_id"], name: "index_dr_watches_on_user_id"
   end
 
   create_table "deficiency_reports", force: :cascade do |t|
@@ -933,14 +984,18 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.bigint "responsible_id"
     t.datetime "status_changed_at"
     t.datetime "archived_at"
+    t.bigint "deficiency_report_intake_channel_id"
+    t.bigint "deficiency_report_subcategory_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_deficiency_reports_on_intake_channel_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
+    t.index ["deficiency_report_subcategory_id"], name: "index_deficiency_reports_on_subcategory_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
     t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
@@ -2568,6 +2623,7 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["key", "value", "projekt_id"], name: "index_projekt_settings_on_key_and_value_and_projekt_id"
     t.index ["projekt_id", "key", "value"], name: "index_projekt_settings_on_projekt_id_key_value"
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
   end
@@ -2625,11 +2681,25 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.boolean "imported_by_ai", default: false, null: false
     t.string "banner_image_generation_status"
     t.datetime "content_updated_at"
+    t.boolean "activated", default: false, null: false
+    t.boolean "show_in_navigation", default: true, null: false
+    t.boolean "show_in_overview_page", default: true, null: false
+    t.boolean "show_in_overview_page_navigation", default: false, null: false
+    t.boolean "show_in_homepage", default: true, null: false
+    t.boolean "show_in_individual_list", default: false, null: false
+    t.boolean "show_in_sidebar_filter", default: true, null: false
+    t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
+    t.index ["show_in_homepage"], name: "index_projekts_on_show_in_homepage"
+    t.index ["show_in_individual_list"], name: "index_projekts_on_show_in_individual_list"
+    t.index ["show_in_navigation"], name: "index_projekts_on_show_in_navigation"
+    t.index ["show_in_overview_page"], name: "index_projekts_on_show_in_overview_page"
+    t.index ["show_in_overview_page_navigation"], name: "index_projekts_on_show_in_overview_page_navigation"
+    t.index ["show_in_sidebar_filter"], name: "index_projekts_on_show_in_sidebar_filter"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
@@ -3332,6 +3402,7 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
     t.text "keycloak_id_token", default: ""
     t.string "guest_user_agent"
     t.boolean "system_user", default: false, null: false
+    t.string "company_name"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -3510,9 +3581,14 @@ ActiveRecord::Schema.define(version: 2026_07_27_180352) do
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
+  add_foreign_key "deficiency_report_subcategories", "deficiency_report_categories"
+  add_foreign_key "deficiency_report_watches", "deficiency_reports"
+  add_foreign_key "deficiency_report_watches", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
+  add_foreign_key "deficiency_reports", "deficiency_report_intake_channels"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
+  add_foreign_key "deficiency_reports", "deficiency_report_subcategories"
   add_foreign_key "documents", "users"
   add_foreign_key "failed_census_calls", "poll_officers"
   add_foreign_key "failed_census_calls", "users"

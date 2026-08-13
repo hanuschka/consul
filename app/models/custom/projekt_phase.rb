@@ -35,12 +35,12 @@ class ProjektPhase < ApplicationRecord
   ALL_PHASE_TYPES = (PROJEKT_PHASES_TYPES + DEPRECATED_PHASE_TYPES).freeze
 
   SPECIAL_PROJEKT_PHASES = [
-    "ProjektPhase::LivestreamPhase",
     "ProjektPhase::MilestonePhase",
     "ProjektPhase::ProjektNotificationPhase",
     "ProjektPhase::EventPhase",
     "ProjektPhase::ArgumentPhase",
-    "ProjektPhase::NewsfeedPhase"
+    "ProjektPhase::NewsfeedPhase",
+    "ProjektPhase::MitmachboxPhase"
   ].freeze
 
   PHASE_MATERIAL_ICONS = {
@@ -196,6 +196,18 @@ class ProjektPhase < ApplicationRecord
     self
   end
 
+  def self.type_labels
+    PROJEKT_PHASES_TYPES.index_with { |phase_type| type_label_for(phase_type) }
+  end
+
+  def self.type_label_for(type)
+    label = I18n.t("activerecord.models.#{type.to_s.underscore}", default: nil)
+
+    return type.to_s.demodulize.titleize if !label.is_a?(String)
+
+    label
+  end
+
   def self.material_icon_for(type)
     PHASE_MATERIAL_ICONS[type.to_s] || DEFAULT_PHASE_MATERIAL_ICON
   end
@@ -259,15 +271,16 @@ class ProjektPhase < ApplicationRecord
     # return true if resource&.respond_to?(:author) && resource.author == user
     return false if selectable_by_admins_only? && !user.has_pm_permission_to?("manage", projekt)
 
-    permission_problem(user).blank?
+    permission_problem(user, location: :new_button_component).blank?
   end
 
   def votable_by?(user, resource = nil)
-    permission_problem(user).blank? || conditional_vote_possible_for?(user)
+    permission_problem(user, location: :votes_component).blank? || conditional_vote_possible_for?(user)
   end
 
   def conditional_vote_possible_for?(user)
-    permission_problem(user) == :not_verified && feature?("resource.conditional_voting")
+    permission_problem(user, location: :votes_component) == :not_verified &&
+      feature?("resource.conditional_voting")
   end
 
   def comments_allowed?(user, resource = nil)
@@ -296,37 +309,24 @@ class ProjektPhase < ApplicationRecord
   end
 
   def permission_problem(user, location: nil)
+    location = location&.to_sym
     @permission_problem_cache ||= {}
     cache_key = "#{user&.id}_#{location}"
 
-    return @permission_problem_cache[cache_key] if @permission_problem_cache.key?(cache_key)
-
-    @permission_problem_cache[cache_key] = begin
-      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
-
-      return :phase_not_active if not_active?
-
-      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
-        return :phase_expired if expired?
-        return :phase_not_current if not_current?
-      end
-
-      return :guest_not_logged_in if user_status == "guest" && !user
-      return if user_status == "guest"
-      return :not_logged_in if !user || user&.guest?
-      return :not_verified if user_status == "verified" && !user.level_three_verified?
-
-      if phase_specific_permission_problems(user, location).present?
-        return phase_specific_permission_problems(user, location)
-      end
-
-      return age_permission_problem(user) if age_permission_problem(user).present?
-      return geozone_permission_problem(user) if geozone_permission_problem(user)
-      return advanced_geozone_restriction_permission_problem(user) if advanced_geozone_restriction_permission_problem(user).present?
-      return individual_group_value_permission_problem(user) if individual_group_value_permission_problem(user).present?
-
-      nil
+    unless @permission_problem_cache.key?(cache_key)
+      @permission_problem_cache[cache_key] = uncached_permission_problem(user, location)
     end
+
+    @permission_problem_cache[cache_key]
+  end
+
+  # The cache above is a per-request read cache, and some answers depend on what the user has
+  # already submitted or supported. A request that *writes* one of those has to drop it before
+  # re-rendering anything, otherwise it reports the state from before its own write. Casting a
+  # support is the case that matters: register_selection asks the question on its way in, so the
+  # answer is cached while the vote row still does not exist.
+  def reset_permission_problem_cache!
+    @permission_problem_cache = nil
   end
 
   def geozone_allowed?(user)
@@ -463,6 +463,10 @@ class ProjektPhase < ApplicationRecord
     option("resource.max_submissions_per_user").to_i
   end
 
+  def max_supports_per_user
+    option("resource.max_supports_per_user").to_i
+  end
+
   def option(key)
     settings_by_key["option.#{key}"]
   end
@@ -563,6 +567,17 @@ class ProjektPhase < ApplicationRecord
     projekt.page.url + "?projekt_phase_id=#{id}#projekt-footer"
   end
 
+  # SiteCustomization::Page#url is path-only, which is enough inside a request
+  # but not for links written into stored content (content blocks, exports,
+  # anything a job generates).
+  def absolute_url
+    options = UrlOptions.default || {}
+    host = options[:host]
+    return url if host.blank?
+
+    "#{options[:protocol].presence || 'https'}://#{host}#{url}"
+  end
+
   def find_or_create_stats_version
     @find_or_create_stats_version ||= begin
       if stats_version.nil?
@@ -636,6 +651,36 @@ class ProjektPhase < ApplicationRecord
 
   private
 
+    def uncached_permission_problem(user, location)
+      return if user&.administrator? || user&.projekt_manager&.allowed_to?(:manage, projekt)
+
+      return :phase_not_active if not_active?
+
+      unless location == :officing && lock_on.present? && lock_on >= Time.zone.today
+        return :phase_expired if expired?
+        return :phase_not_current if not_current?
+      end
+
+      return :guest_not_logged_in if user_status == "guest" && !user
+      return if user_status == "guest"
+      return :not_logged_in if !user || user&.guest?
+      return :not_verified if user_status == "verified" && !user.level_three_verified?
+
+      phase_specific_problem = phase_specific_permission_problems(user, location)
+      return phase_specific_problem if phase_specific_problem.present?
+
+      return age_permission_problem(user) if age_permission_problem(user).present?
+      return geozone_permission_problem(user) if geozone_permission_problem(user)
+
+      advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
+      return advanced_geozone_problem if advanced_geozone_problem.present?
+
+      individual_group_problem = individual_group_value_permission_problem(user)
+      return individual_group_problem if individual_group_problem.present?
+
+      nil
+    end
+
     def phase_specific_permission_problems(user, location)
       nil
     end
@@ -681,7 +726,8 @@ class ProjektPhase < ApplicationRecord
     def age_permission_problem(user)
       return if age_restriction.nil?
       return :missing_user_data if user.age.blank?
-      return if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
+      return if age_restriction.effective_min_age <= user.age &&
+                user.age <= age_restriction.effective_max_age
 
       :only_specific_ages
     end

@@ -108,6 +108,7 @@
     data-default-margin-bottom="<%= SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>"
     data-ai-available="<%= Ai::Settings.ai_available? %>"
     <% if @custom_page.projekt.present? && show_admin_controls_for_projekt?(@projekt) %>
+      data-generate-url="<%= projekt_content_blocks_generate_url(@custom_page.projekt) %>"
       data-studio-projekt-phases="<%= studio_projekt_phases_data(@custom_page.projekt) %>"
     <% end %>
   >

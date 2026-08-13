@@ -229,6 +229,10 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget.investments.winners.pluck(:author_id).uniq
   end
 
+  def supports_limit_applies?
+    max_supports_per_user.positive?
+  end
+
   private
 
     def group_value_counts
@@ -238,13 +242,30 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization?
 
-      :submissions_limit_exceeded if submissions_limit_exceeded?(user)
+      if location == :new_button_component && submissions_limit_exceeded?(user)
+        :submissions_limit_exceeded
+      elsif location == :votes_component && supports_limit_exceeded?(user)
+        :supports_limit_exceeded
+      end
     end
 
     def submissions_limit_exceeded?(user)
       return false if max_submissions_per_user.zero?
 
       budget.investments.where(author: user).count >= max_submissions_per_user
+    end
+
+    def supports_limit_exceeded?(user)
+      return false unless supports_limit_applies?
+
+      supports_count_for(user) >= max_supports_per_user
+    end
+
+    # Conditional supports count too, otherwise an unverified user could cast any number of
+    # them and have them all confirmed at once.
+    def supports_count_for(user)
+      ActsAsVotable::Vote.where(voter: user, vote_flag: true, votable_type: "Budget::Investment",
+                                votable_id: budget.investments.select(:id)).count
     end
 
     def create_budget

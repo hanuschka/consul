@@ -119,17 +119,43 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.each(&:hide)
   end
 
+  # A "maximum number of supports" rule does not map onto agree/disagree voting: a dislike is not
+  # a support and is not counted, yet the gate behind the limit blocks every vote once it is
+  # reached - and that widget has no withdraw button, so the user would be frozen out of voting
+  # entirely with no way back under the limit. Phases using it are exempt, which means a limit
+  # configured on an up/down phase silently does nothing (as on guest phases).
+  def supports_limit_applies?
+    max_supports_per_user.positive? && !feature?("resource.enable_up_and_down_voting")
+  end
+
   private
 
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization? && location == :votes_component
 
-      :submissions_limit_exceeded if submissions_limit_exceeded?(user)
+      if location == :new_button_component && submissions_limit_exceeded?(user)
+        :submissions_limit_exceeded
+      elsif location == :votes_component && supports_limit_exceeded?(user)
+        :supports_limit_exceeded
+      end
     end
 
     def submissions_limit_exceeded?(user)
       return false if max_submissions_per_user.zero?
 
       proposals.where(author: user).count >= max_submissions_per_user
+    end
+
+    def supports_limit_exceeded?(user)
+      return false unless supports_limit_applies?
+
+      supports_count_for(user) >= max_supports_per_user
+    end
+
+    # Conditional supports count too, otherwise an unverified user could cast any number of
+    # them and have them all confirmed at once on verification.
+    def supports_count_for(user)
+      ActsAsVotable::Vote.where(voter: user, vote_flag: true,
+                                votable_type: "Proposal", votable_id: proposals.select(:id)).count
     end
 end

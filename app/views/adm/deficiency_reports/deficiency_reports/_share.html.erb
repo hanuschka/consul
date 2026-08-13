@@ -1,0 +1,42 @@
+<% watchers = deficiency_report.watchers.includes(:organization).to_a %>
+<% watcher_user_ids = watchers.map(&:id) %>
+<% officer_groups = DeficiencyReport::OfficerGroup.all.order(:name).to_a %>
+<%# Every officer is offered here rather than deficiency_report_assignable_officers: the "groups
+    only" setting narrows who an Anliegen may be assigned to, which is a different decision from
+    who may be looped in on it. %>
+<% shareable_officers = DeficiencyReport::Officer.joins(:user).includes(user: :organization)
+                                                 .order("users.username ASC") %>
+<% shareable_officers = shareable_officers.where.not(user_id: watcher_user_ids) if watcher_user_ids.any? %>
+<% shareable_officers = shareable_officers.to_a %>
+
+<% grouped_options = {} %>
+<% if officer_groups.any? %>
+  <% grouped_options[t(".officer_groups")] = officer_groups.map { |group| [group.name, "OfficerGroup:#{group.id}"] } %>
+<% end %>
+<% if shareable_officers.any? %>
+  <% grouped_options[t(".officers")] = shareable_officers.map { |officer| [officer.name, "Officer:#{officer.id}"] } %>
+<% end %>
+
+<h2 class="adm-detail-section-title mb-3"><%= t(".title") %></h2>
+
+<% if grouped_options.any? %>
+  <% visible_rows = (grouped_options.size + grouped_options.values.sum(&:size)).clamp(4, 10) %>
+  <%= form_with url: share_adm_deficiency_reports_deficiency_report_path(deficiency_report), method: :post do |form| %>
+    <%= form.select :recipients,
+      grouped_options_for_select(grouped_options),
+      { hint: t(".hint") },
+      { multiple: true,
+        size: visible_rows,
+        name: "recipients[]",
+        label: t(".label"),
+        style: "height: auto;" } %>
+    <%= form_submit_button(text: t(".submit"), icon: "share") %>
+  <% end %>
+<% else %>
+  <%= empty_state(title: t(".no_officers"), icon: "person_off") %>
+<% end %>
+
+<% if watchers.any? %>
+  <p class="kern-label mb-1"><%= t(".current_watchers") %></p>
+  <p class="kern-body mb-0"><%= watchers.map(&:name).join(", ") %></p>
+<% end %>

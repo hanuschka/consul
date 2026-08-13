@@ -508,6 +508,9 @@ as: :destroy_user_resource_criterion
       member do
         patch :update_inline
         patch :change_with_ai
+        post :generate_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
       end
     end
     delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",

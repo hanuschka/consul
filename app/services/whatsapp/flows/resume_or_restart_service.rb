@@ -8,7 +8,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: I18n.t("whatsapp.bot.proposal.resume"),
+      body: Whatsapp.phrase("whatsapp.bot.proposal.resume"),
       buttons: buttons
     )
   end

@@ -105,6 +105,26 @@ class WhatsappApi::Resources::Messages
     )
   end
 
+  # WhatsApp's own location picker: the citizen taps the button this message
+  # carries and shares a position from the map on their phone, so nothing on our
+  # side has to guess coordinates out of a description.
+  #
+  # It takes no reply buttons of its own — the picker is the only action — so the
+  # choice that leads here has to be an ordinary button message before it.
+  def send_location_request(to:, body:)
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "interactive",
+        interactive: {
+          type: "location_request_message",
+          body: { text: body },
+          action: { name: "send_location" }
+        }
+      )
+    )
+  end
+
   def send_cta_url(to:, body:, button_label:, url:)
     @client.post(
       BASE_PATH,

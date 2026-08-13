@@ -45,11 +45,10 @@ class Whatsapp::Flows::WelcomeBackService < Whatsapp::Flows::BaseService
     # changes, because someone who can take part without an account should be
     # told so rather than left to tap and find out.
     def body
-      return I18n.t("whatsapp.bot.onboarding.welcome_back") if !guest_participation_open?
+      greeting = Whatsapp.phrase("whatsapp.bot.onboarding.welcome_back")
 
-      [
-        I18n.t("whatsapp.bot.onboarding.welcome_back"),
-        I18n.t("whatsapp.bot.onboarding.welcome_back_guest_hint")
-      ].join("\n\n")
+      return greeting if !guest_participation_open?
+
+      [greeting, Whatsapp.phrase("whatsapp.bot.onboarding.welcome_back_guest_hint")].join("\n\n")
     end
 end

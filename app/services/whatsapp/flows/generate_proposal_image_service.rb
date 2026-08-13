@@ -24,10 +24,6 @@ class Whatsapp::Flows::GenerateProposalImageService < Whatsapp::Flows::BaseServi
 
   private
 
-    def draft_resource
-      @conversation.draft_resource
-    end
-
     def prompt
       draft_resource.ai_image_prompt.presence || draft_resource.title
     end

@@ -86,7 +86,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.text(
       account: account,
-      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.drafting")
+      body: Whatsapp.phrase("whatsapp.bot.drafting")
     )
 
     # After the "one moment" message, not before it: sending any message
@@ -105,7 +105,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.recovery(
       conversation: @conversation,
-      body: I18n.t("whatsapp.bot.draft_failed"),
+      body: Whatsapp.phrase("whatsapp.bot.draft_failed"),
       actions: [:retry, :cancel]
     )
   end
@@ -145,7 +145,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     def send_safety_check_failed
       Whatsapp::Outbound.recovery(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.safety_check_failed"),
+        body: Whatsapp.phrase("whatsapp.bot.safety_check_failed"),
         actions: [:retry, :cancel]
       )
     end
@@ -196,7 +196,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     def send_throttle_notice
       Whatsapp::Outbound.recovery(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.too_fast"),
+        body: Whatsapp.phrase("whatsapp.bot.too_fast"),
         actions: [:cancel]
       )
     end

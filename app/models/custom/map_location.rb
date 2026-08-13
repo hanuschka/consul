@@ -1,6 +1,48 @@
 require_dependency Rails.root.join("app", "models", "map_location").to_s
 
 class MapLocation < ApplicationRecord
+  # What a single dropped pin zooms to when the phase carries no map of its own
+  # to take the scale from.
+  DEFAULT_PIN_ZOOM = 15
+
+  # The one pin a drafting flow puts on a resource: geocoded from the citizen's
+  # own wording, or shared through WhatsApp's picker. Both used to assemble it
+  # themselves, which made the coordinate order, the zoom fallback and the
+  # replace-or-add question three things to keep in step across two namespaces.
+  #
+  # Updated in place rather than destroyed and re-created, because `mappable` is
+  # `touch: true` and audited: replacing the row would stamp the resource twice
+  # and file the citizen's correction as a deletion.
+  def self.create_pin!(mappable:, latitude:, longitude:)
+    pin = mappable.map_location || new(mappable: mappable)
+
+    pin.update!(
+      latitude: latitude,
+      longitude: longitude,
+      zoom: mappable.projekt_phase&.map_location&.zoom || DEFAULT_PIN_ZOOM,
+      features: point_feature_collection(latitude: latitude, longitude: longitude)
+    )
+
+    pin
+  end
+
+  # One pin as the GeoJSON the map renderers read. Written here rather than in
+  # each producer: two copies of a coordinate order are two chances to write it
+  # the wrong way round.
+  def self.point_feature_collection(latitude:, longitude:)
+    {
+      "type" => "FeatureCollection",
+      "features" => [{
+        "type" => "Feature",
+        "geometry" => {
+          "type" => "Point",
+          "coordinates" => [longitude.to_f, latitude.to_f]
+        },
+        "properties" => {}
+      }]
+    }
+  end
+
   def self.proposal_features(proposal_ids)
     return [] if proposal_ids.blank?
 

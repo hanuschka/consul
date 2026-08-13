@@ -31,9 +31,9 @@ class Whatsapp::Flows::RefuseContentService < Whatsapp::Flows::BaseService
     # be kept in step by hand.
     def body
       [
-        I18n.t("whatsapp.bot.refused_content.intro"),
-        I18n.t("whatsapp.bot.refused_content.reasons.#{@reason}"),
-        I18n.t("whatsapp.bot.refused_content.retry_hint")
+        Whatsapp.phrase("whatsapp.bot.refused_content.intro"),
+        Whatsapp.phrase("whatsapp.bot.refused_content.reasons.#{@reason}"),
+        Whatsapp.phrase("whatsapp.bot.refused_content.retry_hint")
       ].join("\n\n")
     end
 end

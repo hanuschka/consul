@@ -74,7 +74,9 @@ en:
       kinds:
         text: Text
         audio: Voice message
+        image: Image
         interactive: Choice
+        location: Location
         template: Notification template
         welcome: Chat opened
         unsupported: Unsupported

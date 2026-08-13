@@ -35,7 +35,7 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
 
     new(
       conversation: conversation,
-      body: Whatsapp::AiAssistant::PhrasingService.call(key: "whatsapp.bot.proposal.next_action")
+      body: Whatsapp.phrase("whatsapp.bot.proposal.next_action")
     ).call
   end
 
@@ -44,8 +44,15 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   end
   private_class_method :unlinked?
 
+  # Its own sentence rather than the portal's configured greeting. That one
+  # introduces the bot as an AI assistant, which is something to say once — at
+  # first contact, where it now stands — and not above every menu a returning
+  # citizen opens.
   def self.greeting_body
-    [::Whatsapp.welcome_greeting, I18n.t("whatsapp.bot.free_text_hint")].join("\n\n")
+    [
+      Whatsapp.phrase("whatsapp.bot.welcome_greeting"),
+      Whatsapp.phrase("whatsapp.bot.free_text_hint")
+    ].join("\n\n")
   end
   private_class_method :greeting_body
 

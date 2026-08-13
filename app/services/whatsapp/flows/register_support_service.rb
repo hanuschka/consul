@@ -43,12 +43,15 @@ class Whatsapp::Flows::RegisterSupportService < Whatsapp::Flows::BaseService
     def send_thanks
       Whatsapp::Outbound.text(
         account: account,
-        body: I18n.t("whatsapp.bot.support.thanks", count: proposal.reload.cached_votes_up)
+        body: Whatsapp.phrase("whatsapp.bot.support.thanks", count: proposal.reload.cached_votes_up)
       )
     end
 
     def send_already_supported
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.support.already"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.support.already")
+      )
     end
 
     def send_not_allowed
@@ -59,6 +62,9 @@ class Whatsapp::Flows::RegisterSupportService < Whatsapp::Flows::BaseService
     end
 
     def send_gone
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.support.gone"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.support.gone")
+      )
     end
 end

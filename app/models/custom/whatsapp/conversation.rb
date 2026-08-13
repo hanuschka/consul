@@ -34,6 +34,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_draft_decision: "awaiting_draft_decision",
     awaiting_image_choice: "awaiting_image_choice",
     awaiting_image_upload: "awaiting_image_upload",
+    awaiting_location: "awaiting_location",
     awaiting_final_confirmation: "awaiting_final_confirmation",
     awaiting_revision: "awaiting_revision",
     awaiting_comment: "awaiting_comment",
@@ -53,6 +54,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_draft_decision
     awaiting_image_choice
     awaiting_image_upload
+    awaiting_location
     awaiting_final_confirmation
     awaiting_revision
     awaiting_comment
@@ -67,6 +69,24 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def drafting?
     DRAFTING_STEPS.include?(step)
+  end
+
+  # What this phase collects besides the text, asked of the conversation because
+  # two places each need one of the answers and they must not drift: the step
+  # that offers a pin and the drafting service that infers one from the citizen's
+  # wording read the same predicate, as do the step that offers a picture and the
+  # step a stale conversation re-enters.
+  #
+  # `feature?` rather than ProjektPhase#resource_map_enabled?, which answers for
+  # rendering a map and treats a phase type without the setting as map-enabled.
+  # These two mirror the web submission form, where an absent setting collects
+  # nothing.
+  def location_question_available?
+    projekt_phase&.feature?("form.show_map")
+  end
+
+  def image_question_available?
+    projekt_phase&.feature?("form.allow_attached_image")
   end
 
   def stale_flow?

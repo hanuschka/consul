@@ -9,10 +9,7 @@ class Whatsapp::Flows::OutOfScopeService < Whatsapp::Flows::BaseService
   private
 
     def body
-      I18n.t(
-        "whatsapp.bot.compliance.out_of_scope",
-        portal_name: Whatsapp::PortalLinks.portal_name,
-        help_url: Whatsapp::PortalLinks.help_url
-      )
+      Whatsapp.phrase("whatsapp.bot.compliance.out_of_scope", portal_name: Whatsapp::PortalLinks.portal_name,
+        help_url: Whatsapp::PortalLinks.help_url)
     end
 end

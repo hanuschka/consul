@@ -23,7 +23,7 @@ class Whatsapp::Flows::ResumeRecapService < Whatsapp::Flows::BaseService
     end
 
     def body
-      recap = I18n.t(
+      recap = Whatsapp.phrase(
         "whatsapp.bot.proposal.resume_recap", projekt: Whatsapp::ProjektLink.title(projekt)
       )
 
@@ -41,9 +41,8 @@ class Whatsapp::Flows::ResumeRecapService < Whatsapp::Flows::BaseService
 
       return if idea_text.blank?
 
-      I18n.t(
-        "whatsapp.bot.proposal.resume_recap_idea",
-        idea: idea_text.truncate(IDEA_PREVIEW_LENGTH)
+      Whatsapp.phrase(
+        "whatsapp.bot.proposal.resume_recap_idea", idea: idea_text.truncate(IDEA_PREVIEW_LENGTH)
       )
     end
 end

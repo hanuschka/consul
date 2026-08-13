@@ -40,7 +40,7 @@ class Whatsapp::Flows::SubmitProposalService < Whatsapp::Flows::BaseService
 
       Whatsapp::Outbound.text(
         account: account,
-        body: I18n.t("whatsapp.bot.no_open_phase_notice")
+        body: Whatsapp.phrase("whatsapp.bot.no_open_phase_notice")
       )
     end
 end

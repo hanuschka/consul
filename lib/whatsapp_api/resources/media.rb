@@ -41,7 +41,7 @@ class WhatsappApi::Resources::Media
     file = tempfile_for(mime_type, &writer)
 
     begin
-      return if file.size.zero?
+      return empty(mime_type) if file.size.zero?
 
       upload_file(file, mime_type)
     ensure
@@ -84,7 +84,7 @@ class WhatsappApi::Resources::Media
         body: { messaging_product: "whatsapp", type: mime_type, file: file }
       )
 
-      return if !response.success?
+      return refused(response) if !response.success?
 
       response.parsed_response.to_h["id"].presence
     end
@@ -104,6 +104,22 @@ class WhatsappApi::Resources::Media
 
     def unsupported(mime_type)
       Rails.logger.info("[Whatsapp] media upload skipped: #{mime_type} is not uploadable")
+
+      nil
+    end
+
+    def empty(mime_type)
+      Rails.logger.info("[Whatsapp] media upload skipped: nothing was written for #{mime_type}")
+
+      nil
+    end
+
+    # The body too, not just the code: Meta answers a refused upload with the
+    # reason, and without it every failure reads as a bare 400.
+    def refused(response)
+      Rails.logger.error(
+        "[Whatsapp] media upload refused: #{response.code} - #{response.body.to_s.truncate(300)}"
+      )
 
       nil
     end

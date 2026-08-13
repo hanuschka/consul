@@ -27,11 +27,8 @@ class Whatsapp::Flows::CriteriaFeedbackService < Whatsapp::Flows::BaseService
     def body
       criterion = failed_criterion
 
-      I18n.t(
-        "whatsapp.bot.criteria_failed",
-        criterion: criterion["name"].to_s,
-        feedback: citizen_feedback(criterion["feedback"].to_s)
-      )
+      Whatsapp.phrase("whatsapp.bot.criteria_failed", criterion: criterion["name"].to_s,
+        feedback: citizen_feedback(criterion["feedback"].to_s))
     end
 
     # Said back to the citizen in their own terms rather than about a Beitrag

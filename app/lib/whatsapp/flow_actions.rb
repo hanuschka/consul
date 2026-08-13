@@ -36,6 +36,8 @@ module Whatsapp::FlowActions
     image_upload
     image_generate
     image_skip
+    location_share
+    location_skip
     submit_final
     resume
     restart

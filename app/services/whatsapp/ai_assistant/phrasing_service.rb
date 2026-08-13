@@ -1,20 +1,37 @@
 class Whatsapp::AiAssistant::PhrasingService < ApplicationService
-  # The bot's routine prose, said differently each time. A citizen who submits
-  # three ideas in a week used to read the same four sentences nine times, and
-  # a chat that repeats itself word for word reads as a form rather than an
-  # answer.
-  #
-  # Only prose goes through here. Buttons, list rows and anything carrying an
-  # interpolation stay fixed: a row title is matched against a tapped id, and a
-  # sentence the model rewrites is a sentence it can rewrite without the
-  # %{title} in it.
+  # The bot's prose, said differently each time. A citizen who submits three
+  # ideas in a week used to read the same four sentences nine times, and a chat
+  # that repeats itself word for word reads as a form rather than an answer.
   #
   # It is also where the portal's du/Sie setting reaches the fixed copy. The
-  # locale files are written formally, so on a portal set to "du" every
-  # sentence in PHRASED_KEYS is the informal one and the rest are not — which
-  # is the trade the setting makes, and the reason the list is worth extending
-  # rather than the copy worth duplicating per address form.
-  PHRASED_KEYS = %w[
+  # locale files are written formally, so on a portal set to "du" every sentence
+  # that goes through here is the informal one — which is why the set below is
+  # every prose line the bot sends rather than a shortlist of them: a
+  # conversation that mixes the two address forms reads as broken.
+  #
+  # What stays out of it, deliberately:
+  #   * button labels and list-row titles and descriptions — a row title is
+  #     matched against what the citizen tapped, and a reworded one matches
+  #     nothing;
+  #   * pure layout (`proposal.card`, the `*%{title}*` / URL entry lines) — the
+  #     citizen's own words in a frame, with no prose to reword;
+  #   * one-word status labels, the command menu and the ice breakers, which
+  #     WhatsApp itself renders as tappable suggestions;
+  #   * `onboarding.consent`, the one line whose exact wording is a legal
+  #     declaration rather than copy;
+  #   * `notifications.push.*`, which are not sent as prose at all — they are the
+  #     bodies of the broadcast templates Meta approves, and an approval says
+  #     nothing about text that varies per generation.
+  #
+  # Interpolated lines belong here too. A lookup with no arguments returns the
+  # sentence with its `%{...}` still in it, so GeneratePhrasesService reads the
+  # placeholders off the locale file itself and drops any variant that came back
+  # without them — nothing about them is restated here, where it could fall out
+  # of step with the copy.
+
+  # The lines said on every submission. They get more wordings than the rest
+  # because they are the ones a citizen reads repeatedly.
+  FREQUENT_KEYS = %w[
     whatsapp.bot.drafting
     whatsapp.bot.proposal.ask_idea
     whatsapp.bot.proposal.ask_revision
@@ -29,10 +46,141 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.proposal.next_action
   ].freeze
 
+  # Everything else the bot says in prose: seen once or twice by any one
+  # citizen, but part of the same conversation, so it follows the same address
+  # form.
+  OCCASIONAL_KEYS = %w[
+    whatsapp.bot.welcome_greeting
+    whatsapp.bot.free_text_hint
+    whatsapp.bot.no_open_phase_notice
+    whatsapp.bot.no_projekt
+    whatsapp.bot.idea_missing
+    whatsapp.bot.draft_failed
+    whatsapp.bot.transcription_failed
+    whatsapp.bot.publish_failed
+    whatsapp.bot.draft_invalid
+    whatsapp.bot.criteria_failed
+    whatsapp.bot.safety_check_failed
+    whatsapp.bot.too_fast
+    whatsapp.bot.opted_in
+    whatsapp.bot.verification_link
+    whatsapp.bot.contributions.intro
+    whatsapp.bot.contributions.more
+    whatsapp.bot.contributions.empty
+    whatsapp.bot.help_menu.body
+    whatsapp.bot.help_menu.prompts.support
+    whatsapp.bot.help_menu.prompts.comment
+    whatsapp.bot.refused_content.intro
+    whatsapp.bot.refused_content.retry_hint
+    whatsapp.bot.refused_content.reasons.generic
+    whatsapp.bot.refused_content.reasons.hate
+    whatsapp.bot.refused_content.reasons.violence
+    whatsapp.bot.refused_content.reasons.harassment
+    whatsapp.bot.refused_content.reasons.sexual
+    whatsapp.bot.refused_content.reasons.illegal
+    whatsapp.bot.refused_content.reasons.personal_data
+    whatsapp.bot.refused_content.reasons.spam
+    whatsapp.bot.refused.generic
+    whatsapp.bot.refused.phase_missing
+    whatsapp.bot.refused.phase_not_supported
+    whatsapp.bot.refused.budget_heading_missing
+    whatsapp.bot.refused.creation_disabled
+    whatsapp.bot.refused.ai_flow_disabled
+    whatsapp.bot.refused.phase_not_active
+    whatsapp.bot.refused.phase_expired
+    whatsapp.bot.refused.phase_not_current
+    whatsapp.bot.refused.not_verified
+    whatsapp.bot.refused.submissions_limit_exceeded
+    whatsapp.bot.refused.no_open_phase
+    whatsapp.bot.refused.not_logged_in
+    whatsapp.bot.refused.organization
+    whatsapp.bot.refused.missing_user_data
+    whatsapp.bot.refused.only_citizens
+    whatsapp.bot.refused.only_specific_geozones
+    whatsapp.bot.refused.no_registered_address
+    whatsapp.bot.refused.only_specific_streets
+    whatsapp.bot.refused.only_specific_registered_address_groupings
+    whatsapp.bot.refused.only_specific_ages
+    whatsapp.bot.refused.only_specific_individual_group_values
+    whatsapp.bot.onboarding.disclosure
+    whatsapp.bot.onboarding.link_question
+    whatsapp.bot.onboarding.login_prompt
+    whatsapp.bot.onboarding.login_prompt_with_url
+    whatsapp.bot.onboarding.linked
+    whatsapp.bot.onboarding.discovery_offer
+    whatsapp.bot.onboarding.declined
+    whatsapp.bot.onboarding.no_account
+    whatsapp.bot.onboarding.expired
+    whatsapp.bot.onboarding.already_linked
+    whatsapp.bot.onboarding.number_taken
+    whatsapp.bot.onboarding.unlink_confirm
+    whatsapp.bot.onboarding.unlinked
+    whatsapp.bot.onboarding.welcome_back
+    whatsapp.bot.onboarding.welcome_back_guest_hint
+    whatsapp.bot.discovery.body
+    whatsapp.bot.discovery.guest_body
+    whatsapp.bot.discovery.phase_body
+    whatsapp.bot.discovery.empty
+    whatsapp.bot.discovery.public_intro
+    whatsapp.bot.discovery.more
+    whatsapp.bot.notifications.settings_title
+    whatsapp.bot.notifications.saved
+    whatsapp.bot.proposal.ask_category
+    whatsapp.bot.proposal.ask_sentiment
+    whatsapp.bot.proposal.category_line
+    whatsapp.bot.proposal.sentiment_line
+    whatsapp.bot.proposal.evaluation_line
+    whatsapp.bot.proposal.published
+    whatsapp.bot.proposal.published_pending_moderation
+    whatsapp.bot.proposal.unclear
+    whatsapp.bot.proposal.resume
+    whatsapp.bot.proposal.resume_recap
+    whatsapp.bot.proposal.resume_recap_idea
+    whatsapp.bot.proposal.image_upload_prompt
+    whatsapp.bot.proposal.image_received
+    whatsapp.bot.proposal.image_failed
+    whatsapp.bot.proposal.image_generating
+    whatsapp.bot.proposal.image_generate_failed
+    whatsapp.bot.proposal.ask_location
+    whatsapp.bot.proposal.location_request
+    whatsapp.bot.proposal.location_retry
+    whatsapp.bot.proposal.location_received
+    whatsapp.bot.proposal.duplicate.single
+    whatsapp.bot.proposal.duplicate.multiple
+    whatsapp.bot.support.prompt
+    whatsapp.bot.support.thanks
+    whatsapp.bot.support.already
+    whatsapp.bot.support.gone
+    whatsapp.bot.comment.prompt
+    whatsapp.bot.comment.published
+    whatsapp.bot.comment.pending
+    whatsapp.bot.comment.invalid
+    whatsapp.bot.comment.closed
+    whatsapp.bot.subscription.followed
+    whatsapp.bot.subscription.unfollowed
+    whatsapp.bot.subscription.unknown
+    whatsapp.bot.compliance.disclosure
+    whatsapp.bot.compliance.out_of_scope
+    whatsapp.bot.compliance.opted_out
+  ].freeze
+
+  # One map, so a caller only has to ask whether a key is phrased at all. The
+  # split above is about how much variety each half is worth, not about which
+  # lines follow the setting — all of them do.
+  PHRASED_KEYS = (FREQUENT_KEYS + OCCASIONAL_KEYS).freeze
+
   # Enough that a run of messages does not repeat, few enough that one call
   # produces them all. They are generated together on purpose: asked one at a
   # time the model writes the same sentence twice.
-  VARIANT_COUNT = 5
+  FREQUENT_VARIANT_COUNT = 5
+
+  # Two is what the long tail is worth: a line a citizen sees once does not need
+  # five wordings, and the whole set is one generation the portal pays for.
+  OCCASIONAL_VARIANT_COUNT = 2
+
+  # Small enough that no single completion is asked for a hundred rewrites at
+  # once, which is where a model starts dropping entries and repeating itself.
+  OCCASIONAL_CHUNK_SIZE = 25
 
   # Long, because the alternative is paying for a completion on a message that
   # is otherwise instant. A portal that changes its address form waits this out
@@ -44,8 +192,16 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
   # this long instead of being asked again by every message.
   PENDING_TTL = 5.minutes
 
-  def initialize(key:)
+  # What a set stands for when a chunk failed. Longer than PENDING_TTL, which is
+  # sized for "a generation is already in flight": a retry regenerates all six
+  # chunks, so retrying a persistently failing one every five minutes re-pays the
+  # five that succeeded ~288 times a day to get the sixth. Short enough that a
+  # provider that recovers is picked up the same hour.
+  PARTIAL_TTL = 30.minutes
+
+  def initialize(key:, **interpolations)
     @key = key.to_s
+    @interpolations = interpolations
   end
 
   # Always returns something sendable, and never waits on a completion to do
@@ -59,18 +215,30 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
   def call
     return fixed_text if !phrasable?
 
-    variants.sample.presence || fixed_text
+    variant = variants.sample
+
+    return fixed_text if variant.blank?
+
+    interpolated(variant)
   rescue StandardError => e
     Rails.logger.error("[Whatsapp] phrasing failed for #{@key}: #{e.class} - #{e.message}")
 
     fixed_text
   end
 
+  # Part of the cache key, so changing which lines are phrased invalidates the
+  # stored sets by itself. An entry written before the change holds the old keys
+  # for up to CACHE_TTL, and every key that was added would answer from the
+  # formal locale file until it expired — half a deploy's worth of bot in the
+  # wrong register, with nothing to say why. Derived rather than a number to
+  # bump, because a number to bump is a number to forget.
+  KEY_SET_DIGEST = Digest::MD5.hexdigest(PHRASED_KEYS.join)[0, 8].freeze
+
   # The cache key is the whole identity of a phrase set: one entry per locale
   # and address form, holding every key at once. Exposed so the job that fills
   # it writes to exactly the entry the request looked in.
   def self.cache_key(locale:, address_form:)
-    ["whatsapp/phrasing", locale, address_form].join("/")
+    ["whatsapp/phrasing", KEY_SET_DIGEST, locale, address_form].join("/")
   end
 
   # Called from the job, off the inbound path. Returns the set it stored.
@@ -82,36 +250,90 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
   # expire on its own and the next miss schedules the new one.
   def self.refresh(locale:)
     I18n.with_locale(locale) do
-      phrases = new(key: PHRASED_KEYS.first).generate_phrases
+      generation = generate_phrase_set
+      phrases = generation[:phrases]
       key = cache_key(locale: locale, address_form: ::Whatsapp.address_form)
 
-      Rails.cache.write(key, phrases, expires_in: phrases.present? ? CACHE_TTL : PENDING_TTL)
+      Rails.cache.write(key, phrases, expires_in: generation[:complete] ? CACHE_TTL : PARTIAL_TTL)
+
+      log_generation(key, phrases)
 
       phrases
     end
   end
 
-  # Every key in one completion. Asked one at a time the model writes the same
-  # sentence twice anyway, so the batch is both cheaper and more varied.
-  # Public only so `refresh` can reach it; there is no other caller.
-  def generate_phrases
-    return {} if !::Ai::Settings.ai_available?
+  # The merged set, and whether every chunk came back — two answers because they
+  # decide different things: what to store, and how long to trust it.
+  #
+  # Written once, after every chunk, rather than chunk by chunk: nothing in a
+  # stored set distinguishes "half generated" from "these are all the phrased
+  # keys there are", so a partial write is read as complete.
+  def self.generate_phrase_set
+    return { phrases: {}, complete: false } if !::Ai::Settings.ai_available?
 
-    response_content["phrases"].to_a.each_with_object({}) do |phrase, phrases|
-      key = phrase["key"].to_s
+    chunk_results = generation_chunks.map { |chunk| generate_chunk(**chunk) }
 
-      next if !PHRASED_KEYS.include?(key)
+    {
+      phrases: chunk_results.compact.reduce({}, :merge),
+      complete: chunk_results.none?(&:nil?)
+    }
+  end
 
-      variants = phrase["variants"].to_a.map { |variant| variant.to_s.strip }.select(&:present?)
+  # A chunk that fails takes its own keys down and nothing else, and says so with
+  # nil: six completions fill this set, and letting one unreachable provider
+  # discard the five that came back would put the whole bot on the formal locale
+  # file over a failure that touched a fifth of it.
+  #
+  # Keys the model answered badly for are a different thing, and deliberately do
+  # not count as failure — a set missing one line whose variants were all dropped
+  # is still worth the full TTL. Treating that as incomplete would put the whole
+  # generation on a five-minute retry loop that never converges, because the next
+  # attempt drops the same line.
+  def self.generate_chunk(keys:, variant_count:)
+    Whatsapp::AiAssistant::GeneratePhrasesService.call(keys: keys, variant_count: variant_count)
+  rescue StandardError => e
+    Rails.logger.error("[Whatsapp] phrasing chunk failed: #{e.class} - #{e.message}")
 
-      phrases[key] = variants if variants.present?
+    nil
+  end
+
+  # The whole set is one cache value, and a store that refuses an oversized one
+  # fails the write silently — every message would fall back to the locale file
+  # with nothing to say why. The dropped keys are named rather than counted: a
+  # line that never survives generation is a line to fix in the copy, and a bare
+  # count gives nobody the means to find it. Block form because production logs
+  # at warn and the size is what costs.
+  def self.log_generation(key, phrases)
+    Rails.logger.info do
+      "[Whatsapp] phrasing #{key}: #{phrases.size} keys, " \
+        "#{Marshal.dump(phrases).bytesize} bytes, dropped: #{(PHRASED_KEYS - phrases.keys).inspect}"
     end
+  end
+
+  private_class_method :generate_chunk, :log_generation
+
+  # The frequent lines in one call at five wordings each, the tail in slices at
+  # two. Separate completions rather than one: the whole set in a single prompt
+  # is where a model starts answering for half the keys it was given.
+  def self.generation_chunks
+    tail_chunks = OCCASIONAL_KEYS.each_slice(OCCASIONAL_CHUNK_SIZE).map do |keys|
+      { keys: keys, variant_count: OCCASIONAL_VARIANT_COUNT }
+    end
+
+    [{ keys: FREQUENT_KEYS, variant_count: FREQUENT_VARIANT_COUNT }] + tail_chunks
   end
 
   private
 
     def fixed_text
-      I18n.t(@key)
+      I18n.t(@key, **@interpolations)
+    end
+
+    # A variant carries the same placeholders its original did — the generation
+    # drops any that does not — so it is rendered with the arguments the caller
+    # passed exactly as `I18n.t` would have.
+    def interpolated(variant)
+      I18n.interpolate(variant, @interpolations)
     end
 
     # Deliberately without the availability check: that one reads a credential
@@ -146,11 +368,25 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
       phrase_set[@key].to_a
     end
 
+    # Read once per message, not once per sentence. One entry now holds every
+    # phrased line, and a reply that produces a draft asks for six of them —
+    # six reads of the same 25 KB value, deserialized six times, for six short
+    # sentences. Memoized the way Setting does it, on Current, because the
+    # executor resets that around each job and the inbound path is a job rather
+    # than a request: nothing else in the process would clear it.
+    def phrase_set
+      sets = (Current.whatsapp_phrase_sets ||= {})
+
+      return sets[cache_key] if sets.key?(cache_key)
+
+      sets[cache_key] = read_phrase_set
+    end
+
     # `nil` means nothing is stored, which schedules a refresh and answers from
     # the locale file meanwhile. An empty hash means a refresh is already
     # scheduled, or its generation failed; it stands for PENDING_TTL so the
     # next message neither waits nor enqueues the same job again.
-    def phrase_set
+    def read_phrase_set
       cached = Rails.cache.read(cache_key)
 
       return cached if !cached.nil?
@@ -167,81 +403,5 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
       Rails.cache.write(cache_key, {}, expires_in: PENDING_TTL)
 
       Whatsapp::RefreshPhrasingJob.perform_later(I18n.locale.to_s)
-    end
-
-    def response_content
-      ::Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
-        .with_instructions(instructions)
-        .ask(user_prompt)
-        .content
-        .to_h
-    end
-
-    def instructions
-      <<~TEXT
-        You rewrite the short fixed lines a chatbot says to a citizen on WhatsApp. For every line
-        you are given, return #{VARIANT_COUNT} alternatives that mean exactly the same thing as
-        the original and could replace it without anything else in the conversation changing.
-
-        Rules:
-        - Write in #{output_language}, addressing the citizen #{address_form_instruction}.
-        - Keep each one to the length of its original, one or two short sentences at most.
-        - Keep whatever the original does: a question stays a question, a line ending in a colon
-          still introduces what follows it.
-        - No emoji, no markdown, no placeholders, no greeting or sign-off, no invented detail.
-        - Vary the wording, not the meaning or the register. Every line, and every alternative of
-          it, must read as the same bot.
-        - Return one entry per line you were given, echoing its key back unchanged.
-      TEXT
-    end
-
-    def user_prompt
-      lines = PHRASED_KEYS.map { |key| "#{key}\n\"#{I18n.t(key)}\"" }
-
-      <<~PROMPT
-        The lines, each as its key followed by the original:
-
-        #{lines.join("\n\n")}
-      PROMPT
-    end
-
-    def output_schema
-      {
-        type: "object",
-        properties: {
-          phrases: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                key: {
-                  type: "string",
-                  enum: PHRASED_KEYS,
-                  description: "The key of the line these rewordings replace."
-                },
-                variants: {
-                  type: "array",
-                  items: { type: "string" },
-                  description: "#{VARIANT_COUNT} interchangeable rewordings of that line."
-                }
-              },
-              required: %w[key variants],
-              additionalProperties: false
-            },
-            description: "One entry for each line given, in any order."
-          }
-        },
-        required: %w[phrases],
-        additionalProperties: false
-      }
-    end
-
-    def address_form_instruction
-      ::Whatsapp.address_form_instruction
-    end
-
-    def output_language
-      ::Ai::OutputLanguage.chat_name_for(I18n.locale)
     end
 end

@@ -24,10 +24,7 @@ class Whatsapp::Flows::LinkErrorService < Whatsapp::Flows::BaseService
   private
 
     def body
-      I18n.t(
-        "whatsapp.bot.onboarding.#{@reason}",
-        register_url: Whatsapp::PortalLinks.register_url
-      )
+      Whatsapp.phrase("whatsapp.bot.onboarding.#{@reason}", register_url: Whatsapp::PortalLinks.register_url)
     end
 
     # No account is the one branch with nothing to offer in the chat: the way on

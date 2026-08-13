@@ -5,11 +5,14 @@ class Whatsapp::Flows::LinkConfirmedService < Whatsapp::Flows::BaseService
   def call
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.onboarding.linked"))
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp.phrase("whatsapp.bot.onboarding.linked")
+    )
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: I18n.t("whatsapp.bot.onboarding.discovery_offer"),
+      body: Whatsapp.phrase("whatsapp.bot.onboarding.discovery_offer"),
       buttons: buttons
     )
   end

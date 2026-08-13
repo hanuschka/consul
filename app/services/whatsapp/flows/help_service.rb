@@ -34,7 +34,7 @@ class Whatsapp::Flows::HelpService < Whatsapp::Flows::BaseService
   def call
     Whatsapp::Outbound.list(
       account: account,
-      body: I18n.t("whatsapp.bot.help_menu.body"),
+      body: Whatsapp.phrase("whatsapp.bot.help_menu.body"),
       button_label: I18n.t("whatsapp.bot.buttons.choose_help"),
       rows: rows
     )

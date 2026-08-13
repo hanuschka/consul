@@ -22,6 +22,13 @@ class Whatsapp::Flows::BaseService < ApplicationService
       @conversation.whatsapp_account
     end
 
+    # The submission being worked on. Five flows had written the same one-liner
+    # by the time the location step arrived, which is where a lookup that may
+    # one day need a guard or a preload starts drifting.
+    def draft_resource
+      @conversation.draft_resource
+    end
+
     # One shape for every flow that swallows an exception rather than letting it
     # reach the citizen: the same log prefix, and the conversation id attached
     # so a Sentry issue can be traced back to the chat it happened in.

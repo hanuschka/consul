@@ -66,7 +66,7 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     end
 
     def body
-      I18n.t(choice.fetch(:body_key))
+      Whatsapp.phrase(choice.fetch(:body_key))
     end
 
     def rows

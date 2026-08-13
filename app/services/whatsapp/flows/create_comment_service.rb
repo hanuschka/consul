@@ -50,26 +50,41 @@ class Whatsapp::Flows::CreateCommentService < Whatsapp::Flows::BaseService
     def send_confirmation(comment)
       copy_key = comment.hidden? ? "whatsapp.bot.comment.pending" : "whatsapp.bot.comment.published"
 
-      Whatsapp::Outbound.text(account: account, body: I18n.t(copy_key))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase(copy_key)
+      )
     end
 
     def send_empty
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.comment.prompt"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
+      )
     end
 
     def send_invalid
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.comment.invalid"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.comment.invalid")
+      )
     end
 
     def send_not_allowed
       @conversation.reset_flow!
 
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.comment.closed"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.comment.closed")
+      )
     end
 
     def send_gone
       @conversation.reset_flow!
 
-      Whatsapp::Outbound.text(account: account, body: I18n.t("whatsapp.bot.support.gone"))
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.support.gone")
+      )
     end
 end

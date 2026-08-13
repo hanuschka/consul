@@ -5,7 +5,7 @@ class Whatsapp::Flows::ClarifyIntentService < Whatsapp::Flows::BaseService
   def call
     Whatsapp::Outbound.text(
       account: account,
-      body: I18n.t("whatsapp.bot.proposal.unclear")
+      body: Whatsapp.phrase("whatsapp.bot.proposal.unclear")
     )
   end
 end

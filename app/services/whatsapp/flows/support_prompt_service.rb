@@ -12,7 +12,7 @@ class Whatsapp::Flows::SupportPromptService < Whatsapp::Flows::BaseService
 
     Whatsapp::Outbound.buttons(
       account: account,
-      body: I18n.t("whatsapp.bot.support.prompt", title: @proposal.title),
+      body: Whatsapp.phrase("whatsapp.bot.support.prompt", title: @proposal.title),
       buttons: buttons
     )
   end

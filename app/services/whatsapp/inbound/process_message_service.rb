@@ -68,6 +68,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if account.user.blank?
       return false if tapped_reply_id.present?
 
+      # A shared location is an answer to the step that asked for it, and it
+      # carries no text at all — routing it would pay for a completion on an
+      # empty message and could answer a pin with conversation.
+      return false if inbound_location.present?
+
       result = Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
         inbound_text: inbound_text,
@@ -216,7 +221,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # account only when the phase they point at does.
     SUBMISSION_ACTIONS = %i[
       idea_start category sentiment draft_publish draft_revise resume restart
-      image_upload image_generate image_skip submit_final submit_anyway
+      image_upload image_generate image_skip location_share location_skip
+      submit_final submit_anyway
     ].freeze
 
     # Supporting a proposal, reading your own submissions, changing
@@ -294,6 +300,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :image_generate
         generate_image_then_confirm
       when :image_skip, :submit_final
+        ask_location
+      when :location_share
+        share_location
+      when :location_skip
         publish
       when :draft_revise
         ask_revision
@@ -345,6 +355,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       if conversation.context["last_idea_text"].blank?
         return Whatsapp::Flows::AskIdeaService.call(conversation:)
       end
+
+      return if refuse_if_not_permitted
 
       Whatsapp::Flows::BuildDraftService.from_accepted_idea(
         conversation:, inbound_message_id:
@@ -444,7 +456,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def send_menu_prompt(body_key)
       conversation.reset_flow!
 
-      Whatsapp::Outbound.text(account:, body: I18n.t(body_key))
+      Whatsapp::Outbound.text(
+        account:,
+        body: Whatsapp.phrase(body_key)
+      )
     end
 
     # Answered deterministically rather than left to the assistant so the
@@ -485,7 +500,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def finish_notification_settings
       conversation.reset_flow!
 
-      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.notifications.saved"))
+      Whatsapp::Outbound.text(
+        account:,
+        body: Whatsapp.phrase("whatsapp.bot.notifications.saved")
+      )
     end
 
     # Someone who scanned a QR code has just said what they want, and someone
@@ -644,6 +662,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       last_idea_text = conversation.context["last_idea_text"]
 
       if last_idea_text.present?
+        return if refuse_if_not_permitted
+
         return Whatsapp::Flows::BuildDraftService.from_idea(
           conversation:, idea_text: last_idea_text, inbound_message_id:
         )
@@ -665,9 +685,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when "awaiting_draft_decision"
         handle_draft_decision
       when "awaiting_image_choice"
-        Whatsapp::Flows::AskImageService.call(conversation:)
+        ask_image
       when "awaiting_image_upload"
         handle_image_upload
+      when "awaiting_location"
+        handle_location
       when "awaiting_final_confirmation"
         handle_final_confirmation
       when "awaiting_revision"
@@ -697,7 +719,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       if idea_text.blank?
         return Whatsapp::Outbound.recovery(
-          conversation:, body: I18n.t("whatsapp.bot.idea_missing"), actions: [:cancel]
+          conversation:,
+          body: Whatsapp.phrase("whatsapp.bot.idea_missing"),
+          actions: [:cancel]
         )
       end
 
@@ -726,8 +750,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       true
     end
 
+    # The typed form of the draft card's publish pill, and it has to enter the
+    # same steps: a citizen who writes "ja" instead of tapping must still be
+    # offered the picture and the pin, not published straight past both. Both
+    # questions answer for themselves when their phase has them switched off.
     def handle_draft_decision
-      return publish if PUBLISH_KEYWORDS.include?(normalized_text)
+      return ask_image if PUBLISH_KEYWORDS.include?(normalized_text)
       return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
 
       Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
@@ -738,7 +766,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # a revise pill of its own, so this is the typed shortcut rather than the
     # only way back into the loop.
     def handle_final_confirmation
-      return publish if PUBLISH_KEYWORDS.include?(normalized_text)
+      return ask_location if PUBLISH_KEYWORDS.include?(normalized_text)
       return ask_revision if REVISE_KEYWORDS.include?(normalized_text)
 
       confirm_submission
@@ -753,9 +781,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def send_revision_question
       Whatsapp::Outbound.text(
         account:,
-        body: Whatsapp::AiAssistant::PhrasingService.call(
-          key: "whatsapp.bot.proposal.ask_revision"
-        )
+        body: Whatsapp.phrase("whatsapp.bot.proposal.ask_revision")
       )
     end
 
@@ -763,6 +789,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       correction = inbound_text.to_s.strip
 
       return send_revision_question if correction.blank?
+      return if refuse_if_not_permitted
 
       conversation.update!(revisions_count: conversation.revisions_count + 1)
 
@@ -779,10 +806,65 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # the permission re-check moves here: refusing after a citizen has already
     # chosen and uploaded an image would waste the one thing they had to do
     # work for.
+    #
+    # A phase with title images switched off has nothing to ask, so it publishes
+    # on the spot — exactly what the skip pill does. Asking anyway would offer a
+    # picture the resource cannot carry.
     def ask_image
+      return ask_location if !conversation.image_question_available?
       return if refuse_if_not_permitted
 
       Whatsapp::Flows::AskImageService.call(conversation:)
+    end
+
+    # A WhatsApp button stays tappable forever, so this one is reachable long
+    # after the submission it belonged to was published. Opening the picker then
+    # would take a pin nothing is waiting for — it arrives at an idle step and is
+    # dropped — so a finished flow is restarted instead, the same answer
+    # confirm_submission gives a draft that is gone.
+    def share_location
+      return restart_flow if conversation.draft_resource.blank?
+
+      Whatsapp::Flows::AskLocationService.request(conversation:)
+    end
+
+    # The pin is the last thing asked, after the picture: a citizen who has just
+    # uploaded a photo should not be interrupted twice before their submission
+    # goes in. A phase with the map switched off publishes on the spot, exactly
+    # as it did before this step existed.
+    def ask_location
+      return publish if !conversation.location_question_available?
+      return if refuse_if_not_permitted
+
+      Whatsapp::Flows::AskLocationService.ask(conversation:)
+    end
+
+    # A shared pin publishes. Anything else is the citizen answering with words
+    # where the picker was expected, so the picker is sent once more — and the
+    # second miss publishes without a pin, because the pin is optional and a
+    # finished submission must not be held for it.
+    def handle_location
+      return attach_location if inbound_location.present?
+      return publish if conversation.context["location_reminded"].present?
+
+      Whatsapp::Flows::AskLocationService.remind(conversation:)
+    end
+
+    def attach_location
+      attached = Whatsapp::Flows::AttachSharedLocationService.call(
+        conversation:,
+        latitude: inbound_location["latitude"],
+        longitude: inbound_location["longitude"]
+      )
+
+      if attached
+        Whatsapp::Outbound.text(
+          account:,
+          body: Whatsapp.phrase("whatsapp.bot.proposal.location_received")
+        )
+      end
+
+      publish
     end
 
     def ask_image_upload
@@ -804,17 +886,30 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return send_upload_prompt("whatsapp.bot.proposal.image_failed") if !attached
 
-      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_received"))
+      Whatsapp::Outbound.text(
+        account:,
+        body: Whatsapp.phrase("whatsapp.bot.proposal.image_received")
+      )
 
       confirm_submission
     end
 
     # Every prompt at this step carries the same way out, so the citizen is
     # never stuck waiting to be asked for a photo they cannot send.
+    #
+    # The rights notice is joined here rather than written into each prompt, so
+    # the ask, the re-ask and the failure all carry it by construction. Plain
+    # I18n.t like the consent line: telling someone what they are responsible
+    # for is not a sentence to hand to the rephraser.
     def send_upload_prompt(body_key)
+      body = [
+        Whatsapp.phrase(body_key),
+        I18n.t("whatsapp.bot.proposal.image_rights_notice")
+      ].join("\n\n")
+
       Whatsapp::Outbound.buttons(
         account: account,
-        body: I18n.t(body_key),
+        body: body,
         buttons: [
           Whatsapp::FlowActions.button(
             action: :image_skip, label_key: "whatsapp.bot.buttons.image_skip"
@@ -827,13 +922,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # the typing bubble covers the wait. A failure goes on anyway: the picture
     # was optional, and losing the proposal over it would be the worse outcome.
     def generate_image_then_confirm
-      Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_generating"))
+      Whatsapp::Outbound.text(
+        account:,
+        body: Whatsapp.phrase("whatsapp.bot.proposal.image_generating")
+      )
       Whatsapp::Outbound.typing(message_id: inbound_message_id)
 
       generated = Whatsapp::Flows::GenerateProposalImageService.call(conversation:)
 
       if !generated
-        Whatsapp::Outbound.text(account:, body: I18n.t("whatsapp.bot.proposal.image_generate_failed"))
+        Whatsapp::Outbound.text(
+          account:,
+          body: Whatsapp.phrase("whatsapp.bot.proposal.image_generate_failed")
+        )
       end
 
       confirm_submission
@@ -930,6 +1031,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       @raw_message.dig("image", "id")
     end
 
+    # The coordinates as WhatsApp's picker sent them, alongside an optional name
+    # and address the flow has no use for — the pin is what a map renders.
+    def inbound_location
+      @raw_message["location"]
+    end
+
     def list_reply_id
       @raw_message.dig("interactive", "list_reply", "id")
     end
@@ -954,7 +1061,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       if transcript.blank?
         Whatsapp::Outbound.recovery(
-          conversation:, body: I18n.t("whatsapp.bot.transcription_failed"), actions: [:cancel]
+          conversation:,
+          body: Whatsapp.phrase("whatsapp.bot.transcription_failed"),
+          actions: [:cancel]
         )
 
         return nil

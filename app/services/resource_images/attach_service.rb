@@ -56,7 +56,13 @@ class ResourceImages::AttachService < ApplicationService
 
     return replace_attachment if @resource.image.present?
 
-    Image.new(attachment: uploaded_file, user: @user, imageable: @resource).save!
+    # Created through the resource's own association rather than as
+    # `Image.new(imageable: @resource)`. The `present?` above has already loaded
+    # `image` and cached it as nil, and `imageable` is a polymorphic belongs_to
+    # with no inverse — so building the record from the child side leaves every
+    # caller still holding a resource whose picture reads as missing. That is
+    # what left the WhatsApp preview without its image.
+    @resource.create_image!(attachment: uploaded_file, user: @user)
   end
 
   private

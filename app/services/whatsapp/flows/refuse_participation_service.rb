@@ -19,12 +19,14 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
 
     not_logged_in
     missing_user_data
+    organization
     only_citizens
     only_specific_geozones
     no_registered_address
     only_specific_streets
     only_specific_registered_address_groupings
     only_specific_ages
+    only_specific_individual_group_values
   ].freeze
 
   def initialize(conversation:, reason:)
@@ -35,34 +37,88 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
   # The catalog has no menu to return to, so a refusal ends in plain text rather
   # than in an invitation. What the citizen can do instead is in the copy: the
   # verification link where that is the blocker, the help command otherwise.
+  #
+  # One reason has an actual way out rather than an explanation, and it is the
+  # login link — sent with the refusal above it, so the citizen reads why and
+  # what to do in one message.
+  #
+  # The body is built before the reset, and the reset before the delegation.
+  # Both orders matter: the reset clears the phase one refusal names, and
+  # SendLoginLinkService sets a step the reset would otherwise wipe.
   def call
+    body = message
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.text(account: account, body: message)
+    return send_login_link(body) if login_required?
+
+    Whatsapp::Outbound.text(account: account, body: body)
   end
+
+  # A reason the phase raises under its own name, answered with copy written for
+  # another. The phase separates "a guest phase with nobody logged in" from
+  # "nobody logged in"; to a citizen both are the same sentence, so it is aliased
+  # rather than given a second identical line in every locale file.
+  COPY_ALIASES = { "guest_not_logged_in" => "not_logged_in" }.freeze
 
   # Also read by the assistant, which explains a refusal in its own words but
   # must not invent a second account of the same rule.
   def self.reason_key(reason)
-    return reason.to_s if REASONS_WITH_OWN_COPY.include?(reason.to_s)
+    key = COPY_ALIASES.fetch(reason.to_s, reason.to_s)
+
+    return key if REASONS_WITH_OWN_COPY.include?(key)
 
     "generic"
   end
 
+  # The refusal sentence on its own, without the verification link the flow
+  # appends under it. Shared with the assistant's eligibility tool rather than
+  # let it build the same lookup: one reason's copy names the groups it is
+  # restricted to, and a bare `I18n.t` of that key raises.
+  def self.copy_for(reason:, projekt_phase: nil)
+    key = reason_key(reason)
+
+    Whatsapp.phrase("whatsapp.bot.refused.#{key}", **interpolations_for(key, projekt_phase))
+  end
+
+  # Only one refusal names anything, and the phase already formats the groups
+  # for the web form. Answered per reason rather than at each `I18n.t` so a
+  # second interpolated reason is one more branch in one place, and so the
+  # groups are only read when they are what is being said.
+  def self.interpolations_for(key, projekt_phase)
+    return {} if key != "only_specific_individual_group_values"
+
+    { individual_group_values: projekt_phase&.individual_group_value_restriction_formatted.to_s }
+  end
+
+  private_class_method :interpolations_for
+
   private
 
-    def message
-      [I18n.t("whatsapp.bot.refused.#{reason_key}"), verification_hint].compact.join("\n\n")
+    # Read off the mapped key rather than the raw reason, so the phase reason
+    # aliased onto this one is answered the same way. The bot only ever reaches
+    # `not_logged_in` itself: ResourceCreationValidationService answers it for a
+    # blank author before the phase is consulted, and a guest phase always has a
+    # guest author to offer.
+    def login_required?
+      self.class.reason_key(@reason) == "not_logged_in"
     end
 
-    def reason_key
-      self.class.reason_key(@reason)
+    def send_login_link(body)
+      Whatsapp::Flows::SendLoginLinkService.call(conversation: @conversation, intro: body)
+    end
+
+    def message
+      [refusal_copy, verification_hint].compact.join("\n\n")
+    end
+
+    def refusal_copy
+      self.class.copy_for(reason: @reason, projekt_phase: @conversation.projekt_phase)
     end
 
     def verification_hint
       return if @reason != "not_verified"
 
-      I18n.t("whatsapp.bot.verification_link", url: verification_url)
+      Whatsapp.phrase("whatsapp.bot.verification_link", url: verification_url)
     end
 
     def verification_url

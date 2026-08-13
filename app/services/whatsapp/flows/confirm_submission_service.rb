@@ -10,23 +10,24 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
   def call
     @conversation.update!(step: "awaiting_final_confirmation")
 
-    # The picture goes up to WhatsApp first and travels as an id, so nothing
-    # about this send depends on Meta being able to reach us — the draft is
-    # unpublished, and on an access-restricted environment it cannot.
-    #
-    # A nil id sends the same message without the picture rather than risking
-    # the send — WhatsApp refuses the whole message over a header it cannot
-    # render — and the transport already drops an absent header, so there is
-    # nothing to branch on here.
-    Whatsapp::Outbound.buttons_with_media_header(
-      account: account, body: body, buttons: buttons, header_media_id: header_media_id
+    # Both routes to the picture are offered and the transport picks: the
+    # uploaded media id when there is one, the blob's own URL as the second
+    # chance, and the preview without a picture when neither survives. Which of
+    # them works depends on what WhatsApp can reach, which is not something this
+    # step knows better than Outbound does.
+    Whatsapp::Outbound.buttons_with_picture(
+      account: account,
+      body: body,
+      buttons: buttons,
+      media_id: header_media_id,
+      image_url: header_image_url
     )
   end
 
   private
 
-    def draft_resource
-      @conversation.draft_resource
+    def header_image_url
+      ::Whatsapp.header_image_url(draft_resource&.image&.attachment)
     end
 
     # Remembered on the conversation, not just for this send. Any message at
@@ -69,9 +70,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
         Whatsapp::DraftCard.body(
           draft_resource, intro_key: "whatsapp.bot.proposal.preview_intro"
         ),
-        Whatsapp::AiAssistant::PhrasingService.call(
-          key: "whatsapp.bot.proposal.preview_question"
-        )
+        Whatsapp.phrase("whatsapp.bot.proposal.preview_question")
       ].join("\n\n")
     end
 

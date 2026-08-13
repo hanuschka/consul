@@ -52,9 +52,8 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
 
       Whatsapp::Outbound.text(
         account: account,
-        body: I18n.t(
-          "whatsapp.bot.proposal.published",
-          url: Whatsapp::PublishedResourceUrl.call(resource)
+        body: Whatsapp.phrase(
+          "whatsapp.bot.proposal.published", url: Whatsapp::PublishedResourceUrl.call(resource)
         )
       )
     end
@@ -65,7 +64,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     def send_pending(resource)
       Whatsapp::Outbound.text(
         account: account,
-        body: I18n.t(
+        body: Whatsapp.phrase(
           "whatsapp.bot.proposal.published_pending_moderation",
           url: Whatsapp::PublishedResourceUrl.call(resource)
         )
@@ -75,7 +74,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     def send_failure
       Whatsapp::Outbound.recovery(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.publish_failed"),
+        body: Whatsapp.phrase("whatsapp.bot.publish_failed"),
         actions: [:retry, :cancel]
       )
     end
@@ -93,7 +92,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
 
       Whatsapp::Outbound.question(
         conversation: @conversation,
-        body: I18n.t("whatsapp.bot.draft_invalid", reason: validation_reason),
+        body: Whatsapp.phrase("whatsapp.bot.draft_invalid", reason: validation_reason),
         buttons: Whatsapp::FlowActions.revise_decision_buttons
       )
     end

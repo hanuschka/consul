@@ -12,6 +12,7 @@ class Whatsapp::Message < ApplicationRecord
     audio: "audio",
     image: "image",
     interactive: "interactive",
+    location: "location",
     template: "template",
     welcome: "welcome",
     unsupported: "unsupported"

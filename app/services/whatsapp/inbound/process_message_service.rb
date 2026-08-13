@@ -172,7 +172,27 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         return true
       end
 
-      false
+      return false if !opt_out_asked_in_words?
+
+      Whatsapp::Flows::MessageDeliveryService.disable(conversation:)
+
+      true
+    end
+
+    # The keyword lists above have already decided everything they can, and this
+    # only ever adds an opt-out they missed — it is never asked whether a match
+    # was right, and never whether to opt someone back in. A citizen who wrote
+    # "STOP" is unsubscribed by the branch above whether or not a model is
+    # reachable.
+    #
+    # Not asked when there is nothing it could newly decide: a number already
+    # opted out is answered by the gate two lines below the caller, and a tapped
+    # pill carries only that row's own label, which the citizen did not write.
+    def opt_out_asked_in_words?
+      return false if account.opt_out_at.present?
+      return false if tapped_reply_id.present?
+
+      Whatsapp::AiAssistant::OptOutIntentService.call(inbound_text: inbound_text)
     end
 
     # Handled ahead of the step dispatcher: a tapped recovery button must not be

@@ -29,7 +29,7 @@
 
   <% unless launch_page %>
     <li class="account-admin-items">
-      <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && placement == 'desktop' %>
+      <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && !extended_feature?("general.enable_google_translate") %>
 
       <% if user_signed_in? %>
         <ul class="account-admin-items-list">

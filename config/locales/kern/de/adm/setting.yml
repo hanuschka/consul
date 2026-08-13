@@ -165,6 +165,8 @@ de:
         two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
       general:
+        language_switcher_in_menu: Sprachumschalter in der Navigation
+        language_switcher_in_menu_description: "Zeigt in der Navigationsleiste eine Auswahl aller verfügbaren Sprachen an. Kann nicht gleichzeitig mit Google Translate verwendet werden – ist Google Translate aktiv, wird der Sprachumschalter ausgeblendet."
         enable_google_translate: Google Translate aktivieren
         enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
         show_guest_login_links: Zeige Gast-Login an

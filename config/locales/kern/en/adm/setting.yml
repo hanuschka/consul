@@ -163,6 +163,8 @@ en:
         two_click_iframe_solution: "Two-click solution for iframes"
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
+        language_switcher_in_menu: Language switcher in navigation
+        language_switcher_in_menu_description: "Shows a picker for all available languages in the navigation bar. Cannot be used together with Google Translate — if Google Translate is on, the switcher is hidden."
         enable_google_translate: Enable Google Translate
         enable_google_translate_description: "Before enabling Google Translate, please agree to the terms of use at the following link: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
         show_guest_login_links: Show guest login

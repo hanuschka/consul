@@ -1,24 +1,45 @@
-class Whatsapp::Flows::CreateCommentService < Whatsapp::Flows::BaseService
-  # Catalog D28. One message commits, like the support tap and unlike a
-  # proposal: a comment is short enough that showing it back for confirmation
-  # would cost more taps than writing it did.
-  #
-  # Which of the two confirmations the citizen gets is decided by the record
-  # that was just written, not by a setting: this portal publishes comments
-  # immediately and hides them afterwards, so telling everyone their comment is
-  # "being reviewed" would be false. If a moderation rule does hide it on
-  # creation, the reviewing copy is the true one and this asks the row.
-  def initialize(conversation:, body:)
-    super(conversation: conversation)
-    @body = body.to_s.strip
+class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
+  # Catalog D27 and D28 — the comment question and the message that answers
+  # it. One service because the prompt writes the context key the creation
+  # reads back.
+
+  # D27. No buttons: the reply the bot wants here is the comment itself, and a
+  # pill next to that question would only give the citizen something to tap
+  # instead of writing.
+  def self.prompt(conversation:, proposal:)
+    new(conversation: conversation).prompt(proposal)
   end
 
-  def call
-    return send_empty if @body.blank?
+  # D28. One message commits, like the support tap and unlike a proposal: a
+  # comment is short enough that showing it back for confirmation would cost
+  # more taps than writing it did.
+  def self.create(conversation:, body:)
+    new(conversation: conversation).create(body)
+  end
+
+  def prompt(proposal)
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_COMMENT)
+    @conversation.merge_context!(comment_proposal_id: proposal.id)
+
+    Whatsapp::Outbound.text(
+      account: account,
+      body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
+    )
+  end
+
+  # Which of the two confirmations the citizen gets is decided by the record
+  # that was just written, not by a setting: this portal publishes comments
+  # immediately and hides them afterwards, so telling everyone their comment
+  # is "being reviewed" would be false. If a moderation rule does hide it on
+  # creation, the reviewing copy is the true one and this asks the row.
+  def create(body)
+    comment_body = body.to_s.strip
+
+    return send_empty if comment_body.blank?
     return send_gone if proposal.blank?
     return send_not_allowed if !comments_allowed?
 
-    comment = Comment.build(proposal, user, @body)
+    comment = Comment.build(proposal, user, comment_body)
 
     return send_invalid if !comment.save
 

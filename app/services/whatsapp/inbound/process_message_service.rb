@@ -5,6 +5,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # stop is the failure nothing may allow.
   OPT_OUT_KEYWORDS = ["stop", "stopp", "abmelden", "unsubscribe"].freeze
 
+  # The model's own step map, aliased so every `when` below is a constant
+  # reference: a typo is a NameError at load rather than a case branch that
+  # never matches and reads as a silently ignored message.
+  Step = Whatsapp::Conversation::Step
+
   def initialize(whatsapp_message:, raw_message: {})
     @whatsapp_message = whatsapp_message
     @raw_message = raw_message || {}
@@ -20,7 +25,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_stop_keywords
     return if handle_message_intent
     return if account.opt_out_at.present?
-    return Whatsapp::Flows::FirstContactService.call(conversation:) if first_contact?
+    return Whatsapp::Flows::OnboardingGreetingService.first_contact(conversation:) if first_contact?
 
     # The disclosure heads the citizen's first message, so it is sent before
     # anything below can reply. Once per number rather than once per 24-hour
@@ -49,10 +54,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # the restrictions the phase carries — see ResourceCreationValidationService.
     def guest_participation?
       conversation.projekt_phase&.guest_participation?
-    end
-
-    def submission_author
-      @submission_author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation:)
     end
 
     # Everything above the assistant is protocol rather than dialogue — the
@@ -317,7 +318,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :link_switch
         Whatsapp::Flows::SendLoginLinkService.after_switch(conversation:)
       when :link_later
-        Whatsapp::Flows::LinkDeclinedService.call(conversation:)
+        Whatsapp::Flows::LinkOutcomeService.declined(conversation:)
       when :discover
         dispatch_discovery
       when :discover_public
@@ -343,83 +344,48 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       when :unlink_confirm
         Whatsapp::Flows::UnlinkService.confirm(conversation:)
       when :notify_toggle
-        Whatsapp::Flows::ToggleNotificationService.call(conversation:, type: param)
+        Whatsapp::Flows::NotificationSettingsService.toggle(conversation:, type: param)
       when :notifications_done
         finish_notification_settings
       when :idea_start
         start_phase_flow(param)
       when :category
-        assign_category(param)
+        Whatsapp::Flows::AskDraftChoiceService.assign_category(
+          conversation:, label_id: param, inbound_message_id:
+        )
       when :sentiment
-        assign_sentiment(param)
+        Whatsapp::Flows::AskDraftChoiceService.assign_sentiment(
+          conversation:, sentiment_id: param, inbound_message_id:
+        )
       when :draft_publish
-        ask_image
+        Whatsapp::Flows::ProposalImageService.ask(conversation:, inbound_message_id:)
       when :image_upload
-        ask_image_upload
+        Whatsapp::Flows::ProposalImageService.ask_upload(conversation:)
       when :image_generate
-        generate_image_then_confirm
+        Whatsapp::Flows::ProposalImageService.generate(conversation:, inbound_message_id:)
       when :image_skip, :submit_final
-        ask_location
+        Whatsapp::Flows::AskLocationService.ask(conversation:, inbound_message_id:)
       when :location_share
-        share_location
+        Whatsapp::Flows::AskLocationService.request(conversation:)
       when :location_skip
-        publish
+        Whatsapp::Flows::PublishResultService.call(conversation:, inbound_message_id:)
       when :draft_revise
-        ask_revision
+        Whatsapp::Flows::AskRevisionService.ask(conversation:)
       when :submit_anyway
-        draft_despite_duplicates
+        Whatsapp::Flows::AskDuplicateChoiceService.submit_anyway(
+          conversation:, inbound_message_id:
+        )
       when :resume
-        resume_flow
+        Whatsapp::Flows::ResumeOrRestartService.resume(conversation:)
       when :restart
-        restart_flow
+        Whatsapp::Flows::ResumeOrRestartService.restart(conversation:)
       when :support
-        Whatsapp::Flows::RegisterSupportService.call(conversation:, proposal_id: param)
+        Whatsapp::Flows::SupportService.register(conversation:, proposal_id: param)
       when :support_instead
-        support_instead_of_drafting(param)
+        Whatsapp::Flows::AskDuplicateChoiceService.support_instead(
+          conversation:, proposal_id: param
+        )
       end
-    end
-
-    # The duplicate offer's own support pill: the citizen chose an existing
-    # proposal over writing their own, so the submission it interrupted is over
-    # and the menu is what follows publishing too.
-    def support_instead_of_drafting(proposal_id)
-      registered = Whatsapp::Flows::RegisterSupportService.call(
-        conversation:, proposal_id: proposal_id
-      )
-
-      # Only once the support actually landed. A proposal retired between the
-      # offer and the tap answers "that one is gone" — ending the flow there
-      # would throw away the idea they were part-way through submitting, and
-      # they would have to type the whole thing again.
-      return if !registered
-
-      Whatsapp::Flows::MainMenuService.greeting(conversation:)
-    end
-
-    # A stale step with nothing left to offer — every proposal retired, the
-    # context purged — asks for the idea again rather than leaving the citizen
-    # on a question that can no longer be put.
-    def reask_duplicate_choice
-      asked = Whatsapp::Flows::AskDuplicateChoiceService.reask(conversation:)
-
-      return if asked
-
-      Whatsapp::Flows::AskIdeaService.call(conversation:)
-    end
-
-    # The idea was screened on the way in, so it goes straight to generation.
-    # Nothing to draft from means the context was purged between the offer and
-    # the tap; asking again is the only way forward.
-    def draft_despite_duplicates
-      if conversation.context["last_idea_text"].blank?
-        return Whatsapp::Flows::AskIdeaService.call(conversation:)
-      end
-
-      return if refuse_if_not_permitted
-
-      Whatsapp::Flows::BuildDraftService.from_accepted_idea(
-        conversation:, inbound_message_id:
-      )
     end
 
     def account_required?(action, param)
@@ -480,7 +446,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # in with neither has not asked for a link — it declined one earlier, or its
     # link went cold — so the question is put again instead.
     def handle_unlinked(entry)
-      return Whatsapp::Flows::WelcomeBackService.call(conversation:) if
+      return Whatsapp::Flows::OnboardingGreetingService.welcome_back(conversation:) if
         entry.blank? && !account.awaiting_link?
 
       Whatsapp::Flows::SendLoginLinkService.call(conversation:)
@@ -508,49 +474,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # is an answer to it rather than a second asking.
     def handle_stale_flow
       return false if !conversation.drafting?
-      return false if conversation.step == "awaiting_resume_decision"
+      return false if conversation.awaiting_resume_decision?
       return false if !conversation.stale_flow?
 
       Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
 
       true
-    end
-
-    # The recap goes first either way: hours or days passed since the draft was
-    # started, and the step being resumed says nothing about which projekt it
-    # belongs to. The draft can also be gone by then — retention purges, an admin
-    # deleting the phase — in which case the idea is asked for again inside the
-    # same phase rather than sending the citizen back to the entry question.
-    #
-    # A phase deleted outright leaves nothing to resume into and nothing for
-    # AskIdeaService to move the step with, so it restarts instead — otherwise
-    # every later message would re-ask the resume question it cannot answer.
-    def resume_flow
-      return restart_flow if conversation.projekt_phase.blank?
-
-      # The clock the staleness question is asked off is only stamped by
-      # start_flow!, and resuming moves the step without going through it. Left
-      # alone, the resumed step would be found stale again by the citizen's very
-      # next message and the same question asked forever.
-      conversation.merge_context!(flow_started_at: Time.current.iso8601)
-
-      Whatsapp::Flows::ResumeRecapService.call(conversation:)
-
-      return Whatsapp::Flows::PresentDraftService.first_draft(conversation:) if
-        conversation.draft_resource.present?
-
-      Whatsapp::Flows::AskIdeaService.call(conversation:)
-    end
-
-    # Starting over drops the draft and asks the entry question again rather than
-    # the idea question: by the time the resume prompt is answered the citizen may
-    # not remember which projekt the conversation was in, and "tell me your idea"
-    # names none. SubmitProposalService re-derives what is open, so a phase that
-    # closed in the meantime cannot be restarted into.
-    def restart_flow
-      conversation.reset_flow!
-
-      Whatsapp::Flows::SubmitProposalService.call(conversation:)
     end
 
     # The card on its own, for a citizen who wanted to look before deciding. No
@@ -573,53 +502,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::StartPhaseFlowService.call(conversation:, projekt_phase:)
     end
 
-    # Before the record exists the answer goes into the stashed draft data,
-    # because the validation it satisfies runs at creation and the record cannot
-    # be written until it is satisfied. Afterwards it goes onto the record,
-    # where the citizen is correcting a choice rather than supplying a missing
-    # one. Either way CompleteDraftService decides what is still outstanding.
-    def assign_category(label_id)
-      return stash_draft_choice(:projekt_label_ids, [label_id.to_i]) if pre_creation_draft?
-
-      assigned = Whatsapp::DraftCategory.assign(
-        conversation.draft_resource, conversation.projekt_phase, label_id
-      )
-
-      return Whatsapp::Flows::AskDraftChoiceService.category(conversation:) if !assigned
-
-      complete_draft
-    end
-
-    def assign_sentiment(sentiment_id)
-      return stash_draft_choice(:sentiment_id, sentiment_id.to_i) if pre_creation_draft?
-
-      assigned = Whatsapp::DraftSentiment.assign(
-        conversation.draft_resource, conversation.projekt_phase, sentiment_id
-      )
-
-      return Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:) if !assigned
-
-      complete_draft
-    end
-
-    def pre_creation_draft?
-      conversation.draft_resource.blank? && conversation.context["draft_data"].present?
-    end
-
-    # Written back through the same key the generation call filled, so
-    # DraftCategory and DraftSentiment re-validate the answer against the phase
-    # exactly as it validated the model's.
-    def stash_draft_choice(key, value)
-      draft_data = conversation.context["draft_data"].to_h.merge(key.to_s => value)
-      conversation.merge_context!(draft_data: draft_data)
-
-      complete_draft
-    end
-
-    def complete_draft
-      Whatsapp::Flows::CompleteDraftService.for_first_draft(conversation:, inbound_message_id:)
-    end
-
     # A failed publish leaves the draft intact, so retrying means publishing
     # again; a failed draft leaves nothing behind but the text it was built from.
     #
@@ -628,14 +510,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # change the citizen asked for. Cleared whenever a first draft is built, so it
     # cannot be re-applied to a draft it never belonged to.
     def retry_last_action
-      return publish if conversation.step == "awaiting_draft_decision" &&
-                        conversation.draft_resource.present?
+      return Whatsapp::Flows::PublishResultService.call(conversation:, inbound_message_id:) if
+        conversation.awaiting_draft_decision? && conversation.draft_resource.present?
 
       last_correction = conversation.context["last_correction"]
 
       if last_correction.present?
-        return if refuse_if_not_permitted
-
         return Whatsapp::Flows::BuildDraftService.from_revision(
           conversation:, correction: last_correction, inbound_message_id:
         )
@@ -644,8 +524,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       last_idea_text = conversation.context["last_idea_text"]
 
       if last_idea_text.present?
-        return if refuse_if_not_permitted
-
         return Whatsapp::Flows::BuildDraftService.from_idea(
           conversation:, idea_text: last_idea_text, inbound_message_id:
         )
@@ -656,33 +534,52 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     def dispatch_step
       case conversation.step
-      when "awaiting_idea"
-        handle_idea
-      when "awaiting_category"
+      when Step::AWAITING_IDEA
+        Whatsapp::Flows::AskIdeaService.handle_answer(
+          conversation:, text: inbound_text, inbound_message_id:
+        )
+      when Step::AWAITING_CATEGORY
         Whatsapp::Flows::AskDraftChoiceService.category(conversation:)
-      when "awaiting_sentiment"
+      when Step::AWAITING_SENTIMENT
         Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation:)
-      when "awaiting_duplicate_decision"
-        reask_duplicate_choice
-      when "awaiting_draft_decision"
-        handle_draft_decision
-      when "awaiting_image_choice"
-        handle_image_choice
-      when "awaiting_image_upload"
-        handle_image_upload
-      when "awaiting_location"
-        handle_location
-      when "awaiting_final_confirmation"
-        handle_final_confirmation
-      when "awaiting_revision"
-        handle_revision
-      when "awaiting_comment"
-        Whatsapp::Flows::CreateCommentService.call(conversation:, body: inbound_text)
-      when "awaiting_notification_settings"
+      when Step::AWAITING_DUPLICATE_DECISION
+        Whatsapp::Flows::AskDuplicateChoiceService.handle_answer(conversation:)
+      when Step::AWAITING_DRAFT_DECISION
+        Whatsapp::Flows::PresentDraftService.handle_decision(
+          conversation:, verdict: flow_verdict, correction: flow_correction,
+          inbound_message_id:
+        )
+      when Step::AWAITING_IMAGE_CHOICE
+        Whatsapp::Flows::ProposalImageService.handle_choice(
+          conversation:, verdict: flow_verdict, inbound_message_id:
+        )
+      when Step::AWAITING_IMAGE_UPLOAD
+        Whatsapp::Flows::ProposalImageService.handle_upload(
+          conversation:, image_id: inbound_image_id, verdict: flow_verdict,
+          inbound_message_id:
+        )
+      when Step::AWAITING_LOCATION
+        Whatsapp::Flows::AskLocationService.handle_answer(
+          conversation:, location: inbound_location, verdict: flow_verdict,
+          inbound_message_id:
+        )
+      when Step::AWAITING_FINAL_CONFIRMATION
+        Whatsapp::Flows::ConfirmSubmissionService.handle_decision(
+          conversation:, verdict: flow_verdict, correction: flow_correction,
+          inbound_message_id:
+        )
+      when Step::AWAITING_REVISION
+        Whatsapp::Flows::AskRevisionService.handle_answer(
+          conversation:, text: inbound_text, verdict: flow_verdict,
+          inbound_message_id:
+        )
+      when Step::AWAITING_COMMENT
+        Whatsapp::Flows::CommentService.create(conversation:, body: inbound_text)
+      when Step::AWAITING_NOTIFICATION_SETTINGS
         Whatsapp::Flows::NotificationSettingsService.call(conversation:)
-      when "awaiting_unlink_confirmation"
+      when Step::AWAITING_UNLINK_CONFIRMATION
         Whatsapp::Flows::UnlinkService.ask(conversation:)
-      when "awaiting_resume_decision"
+      when Step::AWAITING_RESUME_DECISION
         Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
       else
         handle_idle_message
@@ -694,321 +591,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # list rather than three buttons they mostly cannot use.
     def handle_idle_message
       Whatsapp::Flows::MainMenuService.greeting(conversation:)
-    end
-
-    def handle_idea
-      idea_text = inbound_text.to_s.strip
-
-      if idea_text.blank?
-        return Whatsapp::Outbound.recovery(
-          conversation:,
-          body: Whatsapp.phrase("whatsapp.bot.idea_missing"),
-          actions: [:cancel]
-        )
-      end
-
-      return if refuse_if_not_permitted
-
-      Whatsapp::Flows::BuildDraftService.from_idea(
-        conversation:, idea_text: idea_text, inbound_message_id:
-      )
-    end
-
-    # Checked again per action rather than once at flow entry: the same three
-    # steps can be minutes or days apart, and a phase that expires in between
-    # must stop an idea before it costs a draft and stop a draft before it
-    # becomes a proposal.
-    def refuse_if_not_permitted
-      permission_problem =
-        Whatsapp::Drafting::ResourceCreationValidationService.call(
-          projekt_phase: conversation.projekt_phase,
-          user: submission_author
-        )
-
-      return false if permission_problem.blank?
-
-      Whatsapp::Flows::RefuseParticipationService.call(conversation:, reason: permission_problem)
-
-      true
-    end
-
-    # The typed form of the draft card's publish pill, and it has to enter the
-    # same steps: a citizen who writes "ja" instead of tapping must still be
-    # offered the picture and the pin, not published straight past both. Both
-    # questions answer for themselves when their phase has them switched off.
-    def handle_draft_decision
-      case flow_verdict
-      when :publish then ask_image
-      when :revise then revise_with(flow_correction)
-      else Whatsapp::Flows::PresentDraftService.first_draft(conversation:)
-      end
-    end
-
-    # The same "ja" that publishes from the draft card publishes from the
-    # preview, and the same "nein" still means "change it". The preview carries
-    # a revise pill of its own, so this is the typed shortcut rather than the
-    # only way back into the loop.
-    def handle_final_confirmation
-      case flow_verdict
-      when :publish then ask_location
-      when :revise then revise_with(flow_correction)
-      else confirm_submission
-      end
-    end
-
-    # The change the citizen already named, applied at once rather than asked for
-    # again: "ja aber der Titel ist zu lang" has said everything the revision
-    # needs, and answering it with "what should I change?" asks them to repeat
-    # themselves. Where they named none, that question is still the way forward.
-    def revise_with(correction)
-      return ask_revision if correction.blank?
-
-      apply_revision(correction)
-    end
-
-    # The step it was asked from is recorded before it is overwritten. A citizen
-    # who answers the revision question with "doch, passt so" rejoins the flow
-    # where they left it, and the draft card and the preview leave it in
-    # different places — one still owes a picture, the other has already sent it.
-    def ask_revision
-      conversation.merge_context!(revision_origin: conversation.step)
-      conversation.update!(step: "awaiting_revision")
-
-      send_revision_question
-    end
-
-    def send_revision_question
-      Whatsapp::Outbound.text(
-        account:,
-        body: Whatsapp.phrase("whatsapp.bot.proposal.ask_revision")
-      )
-    end
-
-    # The step exists to collect a correction, so the citizen's own words are
-    # taken as one and the verdict answers only the narrower question of
-    # whether they changed their mind instead. "doch egal, passt so" and "ach,
-    # lass es wie es ist" used to be handed to the rewriter as instructions,
-    # spending a generation to alter a draft nobody had asked to alter.
-    #
-    # The extracted correction is deliberately not used here, only the verdict:
-    # this step already asked "what should I change?", so the whole message is
-    # the answer, and narrowing it to what a model read out of it could drop half
-    # of what the citizen wrote.
-    def handle_revision
-      correction = inbound_text.to_s.strip
-
-      return send_revision_question if correction.blank?
-      return resume_after_revision if flow_verdict == :publish
-
-      apply_revision(correction)
-    end
-
-    # Back where the revision question was asked from: the draft card owes the
-    # picture and the pin, the preview only the pin. A missing origin — a
-    # conversation that was already at this step when the recording was added —
-    # takes the longer way round, which can ask for a picture that is already
-    # attached but cannot publish anything the citizen has not seen.
-    def resume_after_revision
-      return ask_location if conversation.context["revision_origin"] == "awaiting_final_confirmation"
-
-      ask_image
-    end
-
-    # Shared by the answer to the revision question and the correction read out of
-    # a typed answer at the draft card: both are one change to apply, and the round
-    # counter and the permission re-check belong to the revision itself rather than
-    # to whichever step happened to collect it.
-    #
-    # The correction is passed on its own. It used to be appended to the citizen's
-    # original idea and the whole draft written again from the pair, which meant
-    # every round rewrote text they had already approved.
-    def apply_revision(correction)
-      return if refuse_if_not_permitted
-
-      conversation.update!(revisions_count: conversation.revisions_count + 1)
-
-      Whatsapp::Flows::BuildDraftService.from_revision(
-        conversation:, correction: correction, inbound_message_id:
-      )
-    end
-
-    # The picture is offered between confirming the draft and publishing it, so
-    # the permission re-check moves here: refusing after a citizen has already
-    # chosen and uploaded an image would waste the one thing they had to do
-    # work for.
-    #
-    # A phase with title images switched off has nothing to ask, so it publishes
-    # on the spot — exactly what the skip pill does. Asking anyway would offer a
-    # picture the resource cannot carry.
-    def ask_image
-      return ask_location if !conversation.image_question_available?
-      return if refuse_if_not_permitted
-
-      Whatsapp::Flows::AskImageService.call(conversation:)
-    end
-
-    # A WhatsApp button stays tappable forever, so this one is reachable long
-    # after the submission it belonged to was published. Opening the picker then
-    # would take a pin nothing is waiting for — it arrives at an idle step and is
-    # dropped — so a finished flow is restarted instead, the same answer
-    # confirm_submission gives a draft that is gone.
-    def share_location
-      return restart_flow if conversation.draft_resource.blank?
-
-      Whatsapp::Flows::AskLocationService.request(conversation:)
-    end
-
-    # The pin is the last thing asked, after the picture: a citizen who has just
-    # uploaded a photo should not be interrupted twice before their submission
-    # goes in. A phase with the map switched off publishes on the spot, exactly
-    # as it did before this step existed.
-    def ask_location
-      return publish if !conversation.location_question_available?
-      return if refuse_if_not_permitted
-
-      Whatsapp::Flows::AskLocationService.ask(conversation:)
-    end
-
-    # A shared pin publishes, and so does a citizen saying there will not be one:
-    # "die adresse weiß ich nicht" used to reach the same place by counting as
-    # the one permitted miss, which spent a reminder to arrive at the answer they
-    # had already given.
-    #
-    # Anything else is the citizen answering with words where the picker was
-    # expected, so the picker is sent once more — and the second miss publishes
-    # without a pin, because the pin is optional and a finished submission must
-    # not be held for it.
-    def handle_location
-      return attach_location if inbound_location.present?
-      return publish if flow_verdict == :skip
-      return publish if conversation.context["location_reminded"].present?
-
-      Whatsapp::Flows::AskLocationService.remind(conversation:)
-    end
-
-    def attach_location
-      attached = Whatsapp::Flows::AttachSharedLocationService.call(
-        conversation:,
-        latitude: inbound_location["latitude"],
-        longitude: inbound_location["longitude"]
-      )
-
-      if attached
-        Whatsapp::Outbound.text(
-          account:,
-          body: Whatsapp.phrase("whatsapp.bot.proposal.location_received")
-        )
-      end
-
-      publish
-    end
-
-    def ask_image_upload
-      conversation.update!(step: "awaiting_image_upload")
-
-      send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt")
-    end
-
-    # The picture question answered in words. Both this step and the upload step
-    # below carry a skip pill and understood nothing but the pill, so "kein foto"
-    # was answered by asking for the photo again — which is the one reply that
-    # cannot be read as anything but a refusal.
-    def handle_image_choice
-      return ask_location if flow_verdict == :skip
-
-      ask_image
-    end
-
-    # A photo sent while the bot is waiting for one, or the citizen saying there
-    # will not be one. Anything else at this step is answered by asking again
-    # rather than by silently publishing without the picture they said they
-    # wanted to send.
-    def handle_image_upload
-      return ask_location if inbound_image_id.blank? && flow_verdict == :skip
-
-      return send_upload_prompt("whatsapp.bot.proposal.image_upload_prompt") if
-        inbound_image_id.blank?
-
-      attached = Whatsapp::Flows::AttachUploadedImageService.call(
-        conversation:, media_id: inbound_image_id
-      )
-
-      return send_upload_prompt("whatsapp.bot.proposal.image_failed") if !attached
-
-      Whatsapp::Outbound.text(
-        account:,
-        body: Whatsapp.phrase("whatsapp.bot.proposal.image_received")
-      )
-
-      confirm_submission
-    end
-
-    # Every prompt at this step carries the same way out, so the citizen is
-    # never stuck waiting to be asked for a photo they cannot send.
-    #
-    # The rights notice is joined here rather than written into each prompt, so
-    # the ask, the re-ask and the failure all carry it by construction. Plain
-    # I18n.t like the consent line: telling someone what they are responsible
-    # for is not a sentence to hand to the rephraser.
-    def send_upload_prompt(body_key)
-      body = [
-        Whatsapp.phrase(body_key),
-        I18n.t("whatsapp.bot.proposal.image_rights_notice")
-      ].join("\n\n")
-
-      Whatsapp::Outbound.buttons(
-        account: account,
-        body: body,
-        buttons: [
-          Whatsapp::FlowActions.button(
-            action: :image_skip, label_key: "whatsapp.bot.buttons.image_skip"
-          )
-        ]
-      )
-    end
-
-    # Generation is a slow external call, so the citizen is told it started and
-    # the typing bubble covers the wait. A failure goes on anyway: the picture
-    # was optional, and losing the proposal over it would be the worse outcome.
-    def generate_image_then_confirm
-      Whatsapp::Outbound.text(
-        account:,
-        body: Whatsapp.phrase("whatsapp.bot.proposal.image_generating")
-      )
-      Whatsapp::Outbound.typing(message_id: inbound_message_id)
-
-      generated = Whatsapp::Flows::GenerateProposalImageService.call(conversation:)
-
-      if !generated
-        Whatsapp::Outbound.text(
-          account:,
-          body: Whatsapp.phrase("whatsapp.bot.proposal.image_generate_failed")
-        )
-      end
-
-      confirm_submission
-    end
-
-    # Only the two paths that produced a picture stop here. "Ohne Bild
-    # einreichen" says what it does and publishes on the tap: a preview of a
-    # draft the citizen approved two messages ago, with nothing new on it,
-    # would be a confirmation of nothing.
-    #
-    # A draft that is gone by the time the step is reached — a retention purge,
-    # an admin deleting the phase — restarts rather than being previewed. The
-    # preview reads the record's title and picture, so without this the step
-    # raises on every message and the conversation can never leave it.
-    def confirm_submission
-      return restart_flow if conversation.draft_resource.blank?
-      return if refuse_if_not_permitted
-
-      Whatsapp::Flows::ConfirmSubmissionService.call(conversation:)
-    end
-
-    def publish
-      return if refuse_if_not_permitted
-
-      Whatsapp::Flows::PublishResultService.call(conversation:, inbound_message_id:)
     end
 
     # Stores what a QR deep link points at without sending anything, so the

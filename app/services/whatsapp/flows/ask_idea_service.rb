@@ -3,6 +3,10 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
   # whatever opened the flow: the tap that got here may be minutes or days old,
   # and a phase that closed in between must stop the idea before it costs a
   # draft.
+  def self.handle_answer(conversation:, text:, inbound_message_id: nil)
+    new(conversation: conversation).handle_answer(text, inbound_message_id)
+  end
+
   def call
     if projekt_phase.blank?
       return Whatsapp::Outbound.text(
@@ -11,17 +15,9 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
       )
     end
 
-    permission_problem =
-      Whatsapp::Drafting::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: author)
+    return if refuse_if_not_permitted
 
-    if permission_problem.present?
-      return Whatsapp::Flows::RefuseParticipationService.call(
-        conversation: @conversation,
-        reason: permission_problem
-      )
-    end
-
-    @conversation.update!(step: "awaiting_idea")
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IDEA)
 
     Whatsapp::Outbound.text(
       account: account,
@@ -29,13 +25,29 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
     )
   end
 
+  # The message that answers the question. An empty one — a sticker, a
+  # transcription that came back blank — is asked again rather than handed to
+  # the drafting call.
+  def handle_answer(text, inbound_message_id)
+    idea_text = text.to_s.strip
+
+    if idea_text.blank?
+      return Whatsapp::Outbound.recovery(
+        conversation: @conversation,
+        body: Whatsapp.phrase("whatsapp.bot.idea_missing"),
+        actions: [:cancel]
+      )
+    end
+
+    Whatsapp::Flows::BuildDraftService.from_idea(
+      conversation: @conversation, idea_text: idea_text,
+      inbound_message_id: inbound_message_id
+    )
+  end
+
   private
 
     def projekt_phase
       @conversation.projekt_phase
-    end
-
-    def author
-      @author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation: @conversation)
     end
 end

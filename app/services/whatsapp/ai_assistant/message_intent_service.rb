@@ -145,11 +145,14 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
     end
 
     def step_verdicts
+      steps = Whatsapp::Conversation::Step
+
       case @conversation.step
-      when "awaiting_draft_decision", "awaiting_final_confirmation" then %w[publish revise]
-      when "awaiting_revision" then %w[publish]
-      when "awaiting_image_choice", "awaiting_image_upload" then %w[skip]
-      when "awaiting_location" then %w[skip]
+      when steps::AWAITING_DRAFT_DECISION, steps::AWAITING_FINAL_CONFIRMATION
+        %w[publish revise]
+      when steps::AWAITING_REVISION then %w[publish]
+      when steps::AWAITING_IMAGE_CHOICE, steps::AWAITING_IMAGE_UPLOAD then %w[skip]
+      when steps::AWAITING_LOCATION then %w[skip]
       else []
       end
     end
@@ -189,13 +192,13 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
     end
 
     def publish_guidance
-      return REVISION_GUIDANCE if @conversation.step == "awaiting_revision"
+      return REVISION_GUIDANCE if @conversation.awaiting_revision?
 
       DRAFT_DECISION_GUIDANCE
     end
 
     def skip_guidance
-      return LOCATION_SKIP_GUIDANCE if @conversation.step == "awaiting_location"
+      return LOCATION_SKIP_GUIDANCE if @conversation.awaiting_location?
 
       IMAGE_SKIP_GUIDANCE
     end

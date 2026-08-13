@@ -12,6 +12,8 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   end
 
   def call
+    return if refuse_if_not_permitted
+
     # Usually instant now that the draft card carries the evaluation, but not
     # always: a draft whose evaluation was unreachable at the time is evaluated
     # here instead, and that is a second LLM call.
@@ -88,7 +90,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # stands", and a citizen who met one and then the other would otherwise find
     # the way out in a different place each time.
     def send_invalid
-      @conversation.update!(step: "awaiting_revision")
+      @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 
       Whatsapp::Outbound.question(
         conversation: @conversation,

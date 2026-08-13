@@ -13,7 +13,7 @@ class Whatsapp::Flows::UnlinkService < Whatsapp::Flows::BaseService
   # Names what is lost, because the link is cleared immediately afterwards and
   # there is nothing to undo it with.
   def ask
-    @conversation.update!(step: "awaiting_unlink_confirmation")
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_UNLINK_CONFIRMATION)
 
     Whatsapp::Outbound.buttons(
       account: account,

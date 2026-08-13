@@ -13,8 +13,25 @@ class Whatsapp::Flows::NotificationSettingsService < Whatsapp::Flows::BaseServic
   OFF_GLYPH = "⬜".freeze
   DONE_ROW_ID = "#{Whatsapp::FlowActions::PREFIX}notifications_done".freeze
 
+  def self.toggle(conversation:, type:)
+    new(conversation: conversation).toggle(type)
+  end
+
+  # One tap on one row of the settings list. Flips the column and re-sends the
+  # list so the citizen sees the glyph they just changed — the list itself is
+  # the only feedback WhatsApp can give here.
+  def toggle(type)
+    notification_type = type.to_s.to_sym
+
+    return if !Whatsapp::Account::NOTIFICATION_TYPES.include?(notification_type)
+
+    account.toggle_notification!(notification_type)
+
+    call
+  end
+
   def call
-    @conversation.update!(step: "awaiting_notification_settings")
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_NOTIFICATION_SETTINGS)
 
     Whatsapp::Outbound.list(
       account: account,

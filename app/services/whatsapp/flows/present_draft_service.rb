@@ -28,6 +28,26 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
     ).call
   end
 
+  # The typed form of the draft card's publish pill, and it has to enter the
+  # same steps: a citizen who writes "ja" instead of tapping must still be
+  # offered the picture and the pin, not published straight past both. Both
+  # questions answer for themselves when their phase has them switched off.
+  def self.handle_decision(conversation:, verdict:, correction:, inbound_message_id: nil)
+    case verdict
+    when :publish
+      Whatsapp::Flows::ProposalImageService.ask(
+        conversation: conversation, inbound_message_id: inbound_message_id
+      )
+    when :revise
+      Whatsapp::Flows::AskRevisionService.enter(
+        conversation: conversation, correction: correction,
+        inbound_message_id: inbound_message_id
+      )
+    else
+      first_draft(conversation: conversation)
+    end
+  end
+
   def initialize(conversation:, copy_prefix:, inbound_message_id: nil)
     super(conversation: conversation)
     @copy_prefix = copy_prefix
@@ -37,7 +57,7 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
   def call
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if hard_failed?
 
-    @conversation.update!(step: "awaiting_draft_decision")
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_DRAFT_DECISION)
 
     Whatsapp::Outbound.buttons(
       account: account,
@@ -82,7 +102,11 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
     # lines reads as two unrelated statements.
     def draft_summary
       [
-        Whatsapp::DraftCard.body(draft_resource, intro_key: "#{@copy_prefix}_intro"),
+        Whatsapp::DraftCard.body(
+          draft_resource,
+          intro_key: "#{@copy_prefix}_intro",
+          summary: @conversation.context.dig("draft_data", "card_summary")
+        ),
         taxonomy_block,
         evaluation_line,
         Whatsapp.phrase("#{@copy_prefix}_question")

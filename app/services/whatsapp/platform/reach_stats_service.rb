@@ -122,11 +122,12 @@ class Whatsapp::Platform::ReachStatsService < ApplicationService
 
     def conversation_stats
       by_step = Whatsapp::Conversation.group(:step).count
+      in_flight = by_step.except(Whatsapp::Conversation::Step::IDLE)
 
       {
         total: by_step.values.sum,
-        in_flight: by_step.except("idle").values.sum,
-        by_step: by_step.except("idle")
+        in_flight: in_flight.values.sum,
+        by_step: in_flight
       }
     end
 end

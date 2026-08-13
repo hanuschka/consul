@@ -60,7 +60,8 @@ class ProposalAiDraft::EvaluateTwoTierService < ApplicationService
           "id" => first_failing_criterion_record&.id,
           "name" => first_failing_criterion_record&.name,
           "description" => first_failing_criterion_record&.description,
-          "feedback" => failing_feedback&.dig("feedback").to_s
+          "feedback" => failing_feedback&.dig("feedback").to_s,
+          "citizen_feedback" => failing_feedback&.dig("citizen_feedback").to_s
         },
         "hard" => hard_result,
         "soft" => nil

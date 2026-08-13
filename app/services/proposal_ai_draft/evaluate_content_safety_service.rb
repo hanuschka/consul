@@ -35,22 +35,40 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
   # instructions to the screener.
   DELIMITER = "-----CITIZEN TEXT-----".freeze
 
-  def initialize(idea_text:)
+  # The duplicate search is one OR branch per term and the phase's whole
+  # proposal set is behind it, so the widening is deliberately narrow: the
+  # words a duplicate would plausibly be filed under, not everything adjacent
+  # to the topic.
+  MAX_SEARCH_TERMS = 8
+
+  # The WhatsApp entry point. The words a duplicate of this request might be
+  # filed under ride the screening call: both questions read the same raw text
+  # before anything else runs, so asking them together costs one completion
+  # where two used to be paid. The plain entry point keeps the web callers'
+  # contract — and their token bill — exactly as it was.
+  def self.with_search_terms(idea_text:)
+    new(idea_text: idea_text, include_search_terms: true).call
+  end
+
+  def initialize(idea_text:, include_search_terms: false)
     @idea_text = idea_text
+    @include_search_terms = include_search_terms
   end
 
   # Success carries `reason`: nil when the text may be drafted, one of REASONS
-  # when it may not. A failure means the question could not be asked at all,
-  # which is not the same answer as "safe" and is left for the caller to decide
-  # about.
+  # when it may not — and `search_terms`, an empty list except for the entry
+  # point that asked for them. A failure means the question could not be asked
+  # at all, which is not the same answer as "safe" and is left for the caller
+  # to decide about.
   def call
-    return ServiceResult.success(reason: nil) if @idea_text.blank?
+    return ServiceResult.success(reason: nil, search_terms: []) if @idea_text.blank?
 
     content = response_content
 
-    return ServiceResult.success(reason: nil) if safe?(content)
+    return ServiceResult.success(reason: nil, search_terms: search_terms(content)) if
+      safe?(content)
 
-    ServiceResult.success(reason: refusal_reason(content))
+    ServiceResult.success(reason: refusal_reason(content), search_terms: [])
   rescue StandardError => e
     Rails.logger.error(
       "[ProposalAiDraft] EvaluateContentSafetyService failed: #{e.class} - #{e.message}"
@@ -70,6 +88,21 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
         .to_h
     end
 
+    # Single words only, because that is what the any-word search matches on: a
+    # returned phrase would be one branch that nothing contains. Split rather
+    # than dropped, so a model answering "sicherer Übergang" still contributes
+    # both halves.
+    def search_terms(content)
+      return [] if !@include_search_terms
+
+      content["search_terms"]
+        .to_a
+        .flat_map { |term| term.to_s.scan(/[[:alnum:]]+/) }
+        .map(&:downcase)
+        .uniq
+        .first(MAX_SEARCH_TERMS)
+    end
+
     # A refusal the model asks for but cannot name is still a refusal, so the
     # generic reason stands in rather than the text being let through on a
     # technicality.
@@ -85,11 +118,17 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
       GENERIC_REASON
     end
 
+    def instructions
+      return safety_instructions if !@include_search_terms
+
+      [safety_instructions, search_terms_instructions].join("\n")
+    end
+
     # Deliberately narrow. The citizen is describing a problem in their
     # neighbourhood, and anger, blunt criticism of the administration and
     # unrealistic demands are all normal participation — a filter that reads
     # them as unsafe would refuse the people the portal exists for.
-    def instructions
+    def safety_instructions
       <<~TEXT
         You screen what a citizen wrote to a participation portal before it is turned into a
         published contribution. Decide only whether publishing this text would break the law or
@@ -121,6 +160,37 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
       TEXT
     end
 
+    # Nouns, because that is what a proposal about the same thing is written
+    # with and what the search index holds. Asking for "related words" produces
+    # verbs and adjectives that match half the phase.
+    def search_terms_instructions
+      <<~TEXT
+        Separately from the safety verdict: someone else may already have asked for the same thing
+        on the portal in different words. List the words their version would most likely use, so a
+        duplicate can be searched for.
+
+        Return single nouns, in the language the citizen wrote in, in their base form (nominative
+        singular). Include:
+        - other names for the same thing ("Zebrastreifen" and "Fußgängerüberweg", "Spielplatz" and
+          "Spielgeräte", "Mülleimer" and "Abfallbehälter")
+        - the everyday word where they used an official one, and the official word where they used
+          an everyday one
+        - the object itself where they described only its problem ("es ist zu dunkel" is about
+          "Beleuchtung", "Straßenlaterne")
+
+        Do not include:
+        - words already in their message
+        - street names, place names, district names or any other proper noun — those are what
+          separates one request from another, and a similar-sounding street is not the same street
+        - generic civic words that would match most of the portal: "Stadt", "Bürger", "Antrag",
+          "Verbesserung", "Problem", "Maßnahme"
+
+        At most #{MAX_SEARCH_TERMS} words. Fewer is better than padded, and an empty list is
+        correct when the message is not about a thing at all — a greeting, an answer to something
+        else, or a text you refused.
+      TEXT
+    end
+
     # The delimiter is stripped out of the text itself, so it cannot be closed
     # early from the inside.
     def user_prompt
@@ -132,21 +202,34 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
     end
 
     def output_schema
+      properties = {
+        safe: {
+          type: "boolean",
+          description: "True when the text may be turned into a published contribution."
+        },
+        reason: {
+          type: "string",
+          enum: REASONS + [NO_REASON],
+          description: "The single policy the text breaks, or \"#{NO_REASON}\" when it is safe."
+        }
+      }
+
+      properties[:search_terms] = search_terms_schema if @include_search_terms
+
       {
         type: "object",
-        properties: {
-          safe: {
-            type: "boolean",
-            description: "True when the text may be turned into a published contribution."
-          },
-          reason: {
-            type: "string",
-            enum: REASONS + [NO_REASON],
-            description: "The single policy the text breaks, or \"#{NO_REASON}\" when it is safe."
-          }
-        },
-        required: %w[safe reason],
+        properties: properties,
+        required: properties.keys.map(&:to_s),
         additionalProperties: false
+      }
+    end
+
+    def search_terms_schema
+      {
+        type: "array",
+        items: { type: "string" },
+        description: "Single nouns a duplicate of this request would likely be written with. " \
+                     "Empty when the text is not about a thing, or when it was refused."
       }
     end
 end

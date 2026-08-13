@@ -24,7 +24,7 @@ class Whatsapp::Flows::SendLoginLinkService < Whatsapp::Flows::BaseService
   # the link is for without a button to name it.
   def call
     link_url = Whatsapp::Accounts::LinkTokenService.call(account: account)
-    @conversation.update!(step: "awaiting_link")
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_LINK)
 
     Whatsapp::Flows::SendLinkButtonService.call(
       conversation: @conversation,

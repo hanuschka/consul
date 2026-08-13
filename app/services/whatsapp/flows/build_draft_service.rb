@@ -63,54 +63,64 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     @inbound_message_id = inbound_message_id
   end
 
+  # The permission re-check guards every way in — a first idea, a retry, an
+  # accepted duplicate, a revision — because each can arrive minutes or days
+  # after the tap that opened the flow. It sits outside the rescue below:
+  # what it refuses is not a failed generation.
   def call
-    return send_throttle_notice if throttled?
-    return send_draft_failed if revising_without_draft?
+    return if refuse_if_not_permitted
 
-    # Stored before the gate because the retry button reads it back, and after
-    # a failed check it is the only copy of what the citizen wrote.
-    @conversation.merge_context!(stored_text)
-
-    # Screened before the "one moment" message rather than after it: a text
-    # that is about to be refused should not first be promised a draft, and the
-    # generation call it would have paid for is the one thing worth skipping.
-    # The bubble covers this call too — it is a completion like any other.
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
-
-    if !@screened
-      # Armed inside the gate it guards rather than above it. Stamped
-      # unconditionally, an already-screened text would record a screening that
-      # never ran and re-arm the floor against the citizen's next real idea.
-      @conversation.merge_context!(last_screened_at: Time.current.iso8601)
-
-      return send_safety_check_failed if !safety.success?
-      return refuse_content if safety.reason.present?
-      return if duplicates_offered?
-    end
-
-    Whatsapp::Outbound.text(
-      account: account,
-      body: Whatsapp.phrase("whatsapp.bot.drafting")
-    )
-
-    # After the "one moment" message, not before it: sending any message
-    # dismisses the bubble, so asking for it first would spend it on the
-    # millisecond before the wait rather than on the wait.
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
-
-    # The drafting clock is armed in the same write as the result rather than
-    # in one of its own: the advisory lock means no other message can read it
-    # while `generate` runs, so a second write beforehand buys nothing.
-    @conversation.merge_context!(draft_data: generate, last_draft_at: Time.current.iso8601)
-
-    complete
-  rescue StandardError => e
-    report(e, "draft generation")
-
-    send_draft_failed
+    build
   end
 
   private
+
+    def build
+      return send_throttle_notice if throttled?
+      return send_draft_failed if revising_without_draft?
+
+      # Stored before the gate because the retry button reads it back, and after
+      # a failed check it is the only copy of what the citizen wrote.
+      @conversation.merge_context!(stored_text)
+
+      # Screened before the "one moment" message rather than after it: a text
+      # that is about to be refused should not first be promised a draft, and the
+      # generation call it would have paid for is the one thing worth skipping.
+      # The bubble covers this call too — it is a completion like any other.
+      Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+
+      if !@screened
+        # Armed inside the gate it guards rather than above it. Stamped
+        # unconditionally, an already-screened text would record a screening that
+        # never ran and re-arm the floor against the citizen's next real idea.
+        @conversation.merge_context!(last_screened_at: Time.current.iso8601)
+
+        return send_safety_check_failed if !safety.success?
+        return refuse_content if safety.reason.present?
+        return if duplicates_offered?
+      end
+
+      Whatsapp::Outbound.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.drafting")
+      )
+
+      # After the "one moment" message, not before it: sending any message
+      # dismisses the bubble, so asking for it first would spend it on the
+      # millisecond before the wait rather than on the wait.
+      Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+
+      # The drafting clock is armed in the same write as the result rather than
+      # in one of its own: the advisory lock means no other message can read it
+      # while `generate` runs, so a second write beforehand buys nothing.
+      @conversation.merge_context!(draft_data: generate, last_draft_at: Time.current.iso8601)
+
+      complete
+    rescue StandardError => e
+      report(e, "draft generation")
+
+      send_draft_failed
+    end
 
     # A correction is stored under its own key. last_idea_text is what
     # PersistDraftService writes to the record's ai_idea_text, so a correction put
@@ -143,8 +153,12 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       )
     end
 
+    # The screening call also brings back the words the duplicate search should
+    # widen itself with: both questions read the same raw text, so asking them
+    # together costs one completion where two used to be paid.
     def safety
-      @safety ||= ::ProposalAiDraft::EvaluateContentSafetyService.call(idea_text: @idea_text)
+      @safety ||=
+        ::ProposalAiDraft::EvaluateContentSafetyService.with_search_terms(idea_text: @idea_text)
     end
 
     def refuse_content
@@ -165,7 +179,8 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       return false if @copy != :first
 
       Whatsapp::Flows::AskDuplicateChoiceService.for_idea(
-        conversation: @conversation, idea_text: @idea_text
+        conversation: @conversation, idea_text: @idea_text,
+        search_terms: safety.search_terms
       )
     end
 
@@ -205,7 +220,8 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       Whatsapp::AiAssistant::ReviseDraftService.call(
         resource: @conversation.draft_resource,
         correction: @idea_text,
-        projekt_phase: @conversation.projekt_phase
+        projekt_phase: @conversation.projekt_phase,
+        card_summary: @conversation.context.dig("draft_data", "card_summary")
       )
     end
 

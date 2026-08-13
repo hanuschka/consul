@@ -7,8 +7,39 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
   # Skipping straight to publishing was the old behaviour and cost the citizen
   # the only chance to catch either — a published proposal cannot be edited
   # from the chat.
+
+  # The same "ja" that publishes from the draft card publishes from the
+  # preview, and the same "nein" still means "change it". The preview carries
+  # a revise pill of its own, so this is the typed shortcut rather than the
+  # only way back into the loop.
+  def self.handle_decision(conversation:, verdict:, correction:, inbound_message_id: nil)
+    case verdict
+    when :publish
+      Whatsapp::Flows::AskLocationService.ask(
+        conversation: conversation, inbound_message_id: inbound_message_id
+      )
+    when :revise
+      Whatsapp::Flows::AskRevisionService.enter(
+        conversation: conversation, correction: correction,
+        inbound_message_id: inbound_message_id
+      )
+    else
+      call(conversation: conversation)
+    end
+  end
+
+  # A draft that is gone by the time the step is reached — a retention purge,
+  # an admin deleting the phase — restarts rather than being previewed. The
+  # preview reads the record's title and picture, so without this the step
+  # raises on every message and the conversation can never leave it.
   def call
-    @conversation.update!(step: "awaiting_final_confirmation")
+    if draft_resource.blank?
+      return Whatsapp::Flows::ResumeOrRestartService.restart(conversation: @conversation)
+    end
+
+    return if refuse_if_not_permitted
+
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_FINAL_CONFIRMATION)
 
     # Both routes to the picture are offered and the transport picks: the
     # uploaded media id when there is one, the blob's own URL as the second
@@ -68,7 +99,9 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
     def body
       [
         Whatsapp::DraftCard.body(
-          draft_resource, intro_key: "whatsapp.bot.proposal.preview_intro"
+          draft_resource,
+          intro_key: "whatsapp.bot.proposal.preview_intro",
+          summary: @conversation.context.dig("draft_data", "card_summary")
         ),
         Whatsapp.phrase("whatsapp.bot.proposal.preview_question")
       ].join("\n\n")

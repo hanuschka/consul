@@ -23,9 +23,9 @@ class Whatsapp::ConfirmLinkReplyJob < ApplicationJob
   private
 
     def reply(conversation, outcome)
-      return Whatsapp::Flows::LinkConfirmedService.call(conversation: conversation) if
+      return Whatsapp::Flows::LinkOutcomeService.confirmed(conversation: conversation) if
         outcome == "linked"
 
-      Whatsapp::Flows::LinkErrorService.call(conversation: conversation, reason: outcome)
+      Whatsapp::Flows::LinkOutcomeService.error(conversation: conversation, reason: outcome)
     end
 end

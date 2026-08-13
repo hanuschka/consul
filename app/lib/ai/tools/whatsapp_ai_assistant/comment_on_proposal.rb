@@ -11,7 +11,7 @@ class Ai::Tools::WhatsappAiAssistant::CommentOnProposal < Ai::Tools::WhatsappAiA
 
     return no_proposal_error("comment on") if proposal.blank?
 
-    ::Whatsapp::Flows::CommentPromptService.call(conversation: conversation, proposal: proposal)
+    ::Whatsapp::Flows::CommentService.prompt(conversation: conversation, proposal: proposal)
 
     halt("Asked the citizen for their comment.")
   end

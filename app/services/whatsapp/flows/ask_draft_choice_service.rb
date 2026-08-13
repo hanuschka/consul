@@ -14,12 +14,12 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   # still things you can grep for.
   CHOICES = {
     category: {
-      step: "awaiting_category",
+      step: Whatsapp::Conversation::Step::AWAITING_CATEGORY,
       body_key: "whatsapp.bot.proposal.ask_category",
       button_label_key: "whatsapp.bot.buttons.choose_category"
     },
     sentiment: {
-      step: "awaiting_sentiment",
+      step: Whatsapp::Conversation::Step::AWAITING_SENTIMENT,
       body_key: "whatsapp.bot.proposal.ask_sentiment",
       button_label_key: "whatsapp.bot.buttons.choose_sentiment"
     }
@@ -33,9 +33,33 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     new(conversation: conversation, kind: :sentiment).call
   end
 
+  def self.assign_category(conversation:, label_id:, inbound_message_id: nil)
+    new(conversation: conversation, kind: :category)
+      .assign(label_id, inbound_message_id)
+  end
+
+  def self.assign_sentiment(conversation:, sentiment_id:, inbound_message_id: nil)
+    new(conversation: conversation, kind: :sentiment)
+      .assign(sentiment_id, inbound_message_id)
+  end
+
   def initialize(conversation:, kind:)
     super(conversation: conversation)
     @kind = kind
+  end
+
+  # The tapped answer. Before the record exists the answer goes into the
+  # stashed draft data, because the validation it satisfies runs at creation
+  # and the record cannot be written until it is satisfied. Afterwards it goes
+  # onto the record, where the citizen is correcting a choice rather than
+  # supplying a missing one. Either way CompleteDraftService decides what is
+  # still outstanding.
+  def assign(option_id, inbound_message_id)
+    return stash_draft_choice(option_id, inbound_message_id) if pre_creation_draft?
+
+    return call if !assign_to_record(option_id)
+
+    complete_draft(inbound_message_id)
   end
 
   def call
@@ -89,5 +113,44 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
 
     def row_id(option)
       Whatsapp::FlowActions.id_for(action: @kind, param: option.id)
+    end
+
+    def assign_to_record(option_id)
+      if @kind == :category
+        Whatsapp::DraftCategory.assign(
+          @conversation.draft_resource, @conversation.projekt_phase, option_id
+        )
+      else
+        Whatsapp::DraftSentiment.assign(
+          @conversation.draft_resource, @conversation.projekt_phase, option_id
+        )
+      end
+    end
+
+    def pre_creation_draft?
+      @conversation.draft_resource.blank? && @conversation.context["draft_data"].present?
+    end
+
+    # Written back through the same key the generation call filled, so
+    # DraftCategory and DraftSentiment re-validate the answer against the
+    # phase exactly as it validated the model's.
+    def stash_draft_choice(option_id, inbound_message_id)
+      stashed_answer =
+        if @kind == :category
+          { "projekt_label_ids" => [option_id.to_i] }
+        else
+          { "sentiment_id" => option_id.to_i }
+        end
+
+      draft_data = @conversation.context["draft_data"].to_h.merge(stashed_answer)
+      @conversation.merge_context!(draft_data: draft_data)
+
+      complete_draft(inbound_message_id)
+    end
+
+    def complete_draft(inbound_message_id)
+      Whatsapp::Flows::CompleteDraftService.for_first_draft(
+        conversation: @conversation, inbound_message_id: inbound_message_id
+      )
     end
 end

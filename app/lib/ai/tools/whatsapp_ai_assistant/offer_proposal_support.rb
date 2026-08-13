@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::OfferProposalSupport <
     return no_match_error(title) if matches.empty?
     return { candidates: matches.map { |proposal| summary_of(proposal) }} if matches.size > 1
 
-    ::Whatsapp::Flows::SupportPromptService.call(conversation: conversation, proposal: matches.first)
+    ::Whatsapp::Flows::SupportService.prompt(conversation: conversation, proposal: matches.first)
 
     halt("Asked the citizen to confirm supporting this proposal.")
   end

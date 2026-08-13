@@ -27,9 +27,10 @@ class Whatsapp::SimilarProposalsQuery < ApplicationQuery
   MAX_TERMS = 20
 
   # `extra_terms` are the words a duplicate might be written with instead of the
-  # citizen's own — see AiAssistant::SearchTermsExpansionService, which is where
-  # they come from. Passed in rather than fetched here: this is a query object,
-  # and a completion hidden inside one is a cost its callers cannot see.
+  # citizen's own — they ride the screening call, see
+  # ProposalAiDraft::EvaluateContentSafetyService.with_search_terms. Passed in
+  # rather than fetched here: this is a query object, and a completion hidden
+  # inside one is a cost its callers cannot see.
   def initialize(projekt_phase:, text:, extra_terms: [])
     @projekt_phase = projekt_phase
     @text = text.to_s.strip

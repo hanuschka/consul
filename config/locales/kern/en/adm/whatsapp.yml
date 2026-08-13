@@ -255,6 +255,14 @@ en:
           As long as no approved message template is configured, nothing is sent even with the switch
           on. Enter the template above under "WhatsApp message template name" or submit one in the
           "Templates" tab.
+        draft_evaluation_title: AI draft check
+        draft_evaluation_body: >-
+          When a projekt phase defines evaluation criteria, the bot checks every draft against all
+          of them in a single AI call before the citizen decides on it: a failed hard criterion
+          rejects the draft with an explanation and invites a revision, soft criteria add a score
+          with feedback to the draft card. The criteria — and the instructions the AI applies —
+          are maintained per phase in the projekt's "AI flow assistant" tab.
+        draft_evaluation_link: Open projekt list
         template_missing_title: No message template configured
         template_missing_body: >-
           Without an approved 360dialog template no project notifications can be sent. Submit a template

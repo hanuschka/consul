@@ -1,5 +1,5 @@
 class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
-  MAX_SCORE_PER_CRITERION = ::ProposalAiDraft::EvaluateSoftCriteriaService::SCORE_MAX
+  MAX_SCORE_PER_CRITERION = ::ProposalAiDraft::EvaluateTwoTierService::SCORE_MAX
 
   # Catalog C16 and C18 — the same card, with different copy the second time so
   # a citizen who asked for a change can tell that the change landed. The draft

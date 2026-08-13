@@ -1,7 +1,17 @@
 class ProposalAiDraft::GenerateDraftService < ApplicationService
-  def initialize(idea_text:, projekt_phase:)
+  # The chat path. A phase that offers categories or sentiments requires them
+  # at create (Labelable, Sentimentable), and the bot has no form to fall back
+  # to — a declined choice costs a repair completion (TaxonomyRetryService) or
+  # a question to the citizen. The web keeps the plain .call: there the model
+  # may decline and a human picks from the form's own selector.
+  def self.with_required_taxonomy(idea_text:, projekt_phase:)
+    new(idea_text: idea_text, projekt_phase: projekt_phase, taxonomy_choice: :required).call
+  end
+
+  def initialize(idea_text:, projekt_phase:, taxonomy_choice: :optional)
     @idea_text = idea_text
     @projekt_phase = projekt_phase
+    @taxonomy_choice = taxonomy_choice
   end
 
   def call
@@ -59,13 +69,33 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
     def sentiments_prompt_section
       options = available_sentiments.map { |sentiment| "- #{sentiment.id}: #{sentiment.name}" }.join("\n")
 
-      "Available sentiments (choose the single best-matching id, or null if none fit):\n#{options}"
+      "Available sentiments (#{sentiment_choice_instruction}):\n#{options}"
     end
 
     def labels_prompt_section
       options = available_labels.map { |label| "- #{label.id}: #{label.name}" }.join("\n")
 
-      "Available categories (choose the ids of all that clearly apply, or an empty array if none fit):\n#{options}"
+      "Available categories (#{label_choice_instruction}):\n#{options}"
+    end
+
+    def required_taxonomy?
+      @taxonomy_choice == :required
+    end
+
+    def sentiment_choice_instruction
+      if required_taxonomy?
+        "you must choose the single closest-fitting id, even when none fits well"
+      else
+        "choose the single best-matching id, or null if none fit"
+      end
+    end
+
+    def label_choice_instruction
+      if required_taxonomy?
+        "choose the ids of all that apply — at least one, the closest fit even when none fits well"
+      else
+        "choose the ids of all that clearly apply, or an empty array if none fit"
+      end
     end
 
     def available_sentiments
@@ -91,20 +121,12 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       required = properties.keys.map(&:to_s)
 
       if available_sentiments.any?
-        properties[:sentiment_id] = {
-          type: ["integer", "null"],
-          enum: available_sentiments.map(&:id) + [nil],
-          description: "The id of the single most fitting sentiment for the proposal from the provided list, or null if none apply."
-        }
+        properties[:sentiment_id] = sentiment_schema
         required << "sentiment_id"
       end
 
       if available_labels.any?
-        properties[:projekt_label_ids] = {
-          type: "array",
-          items: { type: "integer", enum: available_labels.map(&:id) },
-          description: "Ids of the most relevant categories for the proposal from the provided list. Empty array if none apply."
-        }
+        properties[:projekt_label_ids] = labels_schema
         required << "projekt_label_ids"
       end
 
@@ -114,6 +136,42 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         required: required,
         additionalProperties: false
       }
+    end
+
+    def sentiment_schema
+      if required_taxonomy?
+        {
+          type: "integer",
+          enum: available_sentiments.map(&:id),
+          description: "The id of the single closest-fitting sentiment from the provided " \
+                       "list. One has to be chosen, even when none fits well."
+        }
+      else
+        {
+          type: ["integer", "null"],
+          enum: available_sentiments.map(&:id) + [nil],
+          description: "The id of the single most fitting sentiment for the proposal from " \
+                       "the provided list, or null if none apply."
+        }
+      end
+    end
+
+    def labels_schema
+      if required_taxonomy?
+        {
+          type: "array",
+          items: { type: "integer", enum: available_labels.map(&:id) },
+          description: "Ids of the categories that apply, from the provided list. At least " \
+                       "one — the closest fit, even when none fits well. Never empty."
+        }
+      else
+        {
+          type: "array",
+          items: { type: "integer", enum: available_labels.map(&:id) },
+          description: "Ids of the most relevant categories for the proposal from the " \
+                       "provided list. Empty array if none apply."
+        }
+      end
     end
 
     def base_schema_properties

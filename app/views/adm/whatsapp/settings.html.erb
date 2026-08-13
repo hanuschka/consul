@@ -26,4 +26,15 @@
       <% end %>
     </section>
   <% end %>
+
+  <section class="mb-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.draft_evaluation_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.draft_evaluation_body") %></p>
+
+    <%= kern_link_button(
+      adm_projekts_projekts_list_path,
+      icon: "checklist",
+      text: t("adm.whatsapp.show.draft_evaluation_link")
+    ) %>
+  </section>
 </div>

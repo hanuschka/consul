@@ -33,7 +33,7 @@ class Whatsapp::Flows::CriteriaFeedbackService < Whatsapp::Flows::BaseService
 
     # Said back to the citizen in their own terms rather than about a Beitrag
     # that may not exist yet. The wording rode the evaluation call itself —
-    # see EvaluateHardCriteriaService — so nothing is paid for here; an
+    # see EvaluateTwoTierService — so nothing is paid for here; an
     # evaluation stored before the field existed falls back to the
     # evaluator's own line, relabelled.
     def citizen_feedback(criterion)

@@ -209,8 +209,14 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # Called direct rather than through a Whatsapp:: wrapper of the same name:
     # the wrapper was one delegation, and two GenerateDraftServices one namespace
     # apart is what made comments elsewhere describe the wrong one.
+    #
+    # The required-taxonomy entry point, because the chat has no form to fall
+    # back to: a declined category or sentiment costs a repair completion or a
+    # question to the citizen. TaxonomyRetryService stays behind it for the
+    # answers a schema cannot force — an empty label list, an option removed
+    # between the two calls.
     def generate_first_draft
-      ::ProposalAiDraft::GenerateDraftService.call(
+      ::ProposalAiDraft::GenerateDraftService.with_required_taxonomy(
         idea_text: @idea_text,
         projekt_phase: @conversation.projekt_phase
       ).to_h

@@ -32,6 +32,17 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
       redirect_to new_user_session_path unless current_user
     end
 
+    # Everyone following this Anliegen except whoever caused the change — mailing somebody about their
+    # own edit is noise. The responsible officers are excluded too when they are already receiving the
+    # assignment mail for the same event.
+    def notify_watchers_about_change(dr, except: [])
+      excluded = ([current_user] + Array(except)).compact.map(&:id)
+
+      dr.watchers.where.not(id: excluded).find_each do |user|
+        DeficiencyReportMailer.notify_watcher_about_change(dr, user).deliver_later
+      end
+    end
+
     def scoped_deficiency_reports
       base = policy_scope(DeficiencyReport, policy_scope_class: Adm::DeficiencyReports::DeficiencyReportPolicy::Scope)
       filter_assigned_reports_only(base)

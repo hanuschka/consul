@@ -17,12 +17,14 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     respond_to do |format|
       format.html do
         preloaded = base_scope.preload(:status, :translations, :author, :category, :subcategory,
-                                       :responsible, :feedback_form, :watches, map_location: :district)
+                                       :intake_channel, :responsible, :feedback_form, :watches,
+                                       map_location: :district)
         @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params, current_user: current_user))
 
         @id_header_options = { search: true, sort: true }
         @title_header_options = { search: true }
         @author_header_options = { search: true }
+        @intake_channel_header_options = { filter_options: intake_channel_filter_options }
         @created_at_header_options = { sort: true, date_range: true }
         @updated_at_header_options = { sort: true, date_range: true }
         @status_changed_at_header_options = { sort: true, date_range: true }
@@ -287,7 +289,12 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
+    answer_was = @deficiency_report.official_answer.presence
+
     if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer))
+      answer_now = @deficiency_report.official_answer.presence
+
+      notify_watchers_about_change(@deficiency_report) if answer_now != answer_was
       flash.now[:success] = t(".success")
     end
 
@@ -320,17 +327,6 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       end
 
       users.uniq
-    end
-
-    # Everyone following this Anliegen except whoever caused the change — mailing somebody about their
-    # own edit is noise. The responsible officers are excluded too when they are already receiving the
-    # assignment mail for the same event.
-    def notify_watchers_about_change(dr, except: [])
-      excluded = ([current_user] + Array(except)).compact.map(&:id)
-
-      dr.watchers.where.not(id: excluded).find_each do |user|
-        DeficiencyReportMailer.notify_watcher_about_change(dr, user).deliver_later
-      end
     end
 
     # Only case workers get the three-way filter, and only while the visibility setting is on.
@@ -391,6 +387,10 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       DeficiencyReport::Status.all.map { |s| [s.id, s.title] }
     end
 
+    def intake_channel_filter_options
+      DeficiencyReport::IntakeChannel.all.map { |c| [c.id, c.name] }
+    end
+
     def responsible_filter_options
       deficiency_report_all_responsible_sorted.map do |r|
         ["#{r.class.name.demodulize}_#{r.id}", r.name]
@@ -425,12 +425,16 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           DeficiencyReportMailer.notify_default_officer_group_email(dr).deliver_later
         end
 
-        dr.responsible.officers.each do |officer|
-          DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+        if dr.email_officers_individually?
+          dr.responsible.officers.each do |officer|
+            DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+          end
         end
       end
 
-      notify_watchers_about_change(dr, except: dr.responsible_officers.filter_map(&:user))
+      mailed_users = dr.email_officers_individually? ? dr.responsible_officers.filter_map(&:user) : []
+
+      notify_watchers_about_change(dr, except: mailed_users)
     end
 
     def notify_author_about_status_change(dr)

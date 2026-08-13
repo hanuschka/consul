@@ -79,6 +79,7 @@ de:
             status_changed_at: Statusänderung
             title: Titel
             author: Autor
+            intake_channel: Eingangskanal
             status: Status
             location: Standort
             address: Adresse

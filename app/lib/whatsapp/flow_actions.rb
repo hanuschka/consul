@@ -125,6 +125,39 @@ module Whatsapp::FlowActions
     ]
   end
 
+  # The two pills that leave a step for AskLocationService, which either asks
+  # for a pin or publishes on the spot depending on whether the phase collects
+  # one. Labelled "Beitrag einreichen" and "Ohne Bild einreichen" they promised
+  # submission and were followed by another question — the one thing a citizen
+  # cannot trust a button about afterwards, because the next tap is the
+  # irreversible one.
+  #
+  # Both labels are fixed text; which of the pair is sent is a property of the
+  # phase, decided once here rather than per message. Two steps offer these
+  # pills, and a label that means "this submits" in one and "this continues" in
+  # the other is how the pair drifts.
+  def submit_final_button(conversation)
+    label_key =
+      if conversation.location_question_available?
+        "whatsapp.bot.buttons.submit_continue"
+      else
+        "whatsapp.bot.buttons.submit_final"
+      end
+
+    button(action: :submit_final, label_key: label_key)
+  end
+
+  def image_skip_button(conversation)
+    label_key =
+      if conversation.location_question_available?
+        "whatsapp.bot.buttons.image_skip_continue"
+      else
+        "whatsapp.bot.buttons.image_skip"
+      end
+
+    button(action: :image_skip, label_key: label_key)
+  end
+
   # The pair every "shall we link your account" message offers, whether it is
   # the first contact or a return visit. One definition so the two cannot drift
   # into offering different words for the same choice.

@@ -116,9 +116,11 @@ en:
         image_upload: Upload a photo
         image_generate: Create one for me
         image_skip: Submit without one
+        image_skip_continue: Continue, no photo
         location_share: Share location
         location_skip: Submit without one
         submit_final: Submit it now
+        submit_continue: Continue to place
         submit_anyway: Own contribution
       help_menu:
         body: 'Happy to help. Choose what I can help you with:'
@@ -177,7 +179,7 @@ en:
         phase_not_active: This participation phase is not active right now.
         phase_expired: This participation phase has already ended.
         phase_not_current: This participation phase is not running right now.
-        not_verified: Your account must be verified to submit a contribution.
+        not_verified: Your account must be verified for that.
         submissions_limit_exceeded: You have already submitted as many contributions to this project as
           are allowed.
         no_open_phase: This project currently has no phase that accepts contributions.
@@ -326,7 +328,8 @@ en:
         cancelled: OK, cancelled. Just message me again whenever you'd like.
         resume: You've been away a while — would you like to continue your earlier contribution or start
           over?
-        resume_recap: 'Picking up where you left off with “%{projekt}”.'
+        resume_projekt: "It's about “%{projekt}”."
+        resume_draft: 'Your draft: “%{title}”'
         resume_recap_idea: 'This is what you had written: “%{idea}”'
         ask_image: >-
           Would you like a picture for your contribution? You can send me one, or I can create one from
@@ -357,13 +360,22 @@ en:
           That was not a location yet. Tap "Send location" — or write me anything and I will submit
           your contribution without one.
         location_received: ✅ Location saved, thanks!
+        location_failed: >-
+          I couldn't save that location. Feel free to share it again — or submit your contribution
+          without a place.
       support:
         prompt: '👍 Would you like to support this contribution: "%{title}"?'
         thanks: ✅ Thanks for your support! (%{count} supporters so far)
         already: You've already supported this contribution.
         gone: That contribution is unfortunately no longer available.
+        refused_intro: Unfortunately you can't support this contribution.
       comment:
-        prompt: Would you like to add anything to this contribution?
+        prompt: >-
+          What would you like to write about this contribution? I'll publish your next message as
+          a comment.
+        confirmation_only: >-
+          Please write me the comment itself — that exact text is what I'll publish on the project
+          page.
         published: Thanks, your comment is now on the project page.
         pending: Thanks, your comment is being reviewed and will then appear on the project page.
         invalid: I couldn't save that comment. Try writing it a little differently.
@@ -374,6 +386,9 @@ en:
           You'll no longer receive notifications about "%{projekt}". You can resubscribe anytime with
           "Subscribe %{projekt}".
         unknown: I couldn't find a project with that name. Write "projects" to see what's running.
+      declined:
+        offer: Alright, I'll leave it at that.
+        unlink: Alright, your account stays connected.
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
         out_of_scope: I can't answer that here — this is only about %{portal_name}. More at %{help_url}.

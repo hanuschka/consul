@@ -40,7 +40,11 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
     # stale ids over the correction the citizen just made.
     return present if draft_data.blank?
 
-    @conversation.update!(draft_resource: persist)
+    resource = persist_or_refuse
+
+    return if resource.blank?
+
+    @conversation.update!(draft_resource: resource)
     @conversation.clear_draft_data!
 
     present
@@ -78,6 +82,40 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
 
     def persist
       Whatsapp::Drafting::PersistDraftService.call(conversation: @conversation, draft_data: draft_data)
+    end
+
+    # PersistDraftService saves with validations on, and the save is the last
+    # thing standing between a citizen and their submission. Unrescued it
+    # escaped the whole inbound job: nothing was sent, and the step never moved
+    # off the question that led here — so every further message re-asked it and
+    # the submission was gone with no reply. Returns nil once the citizen has
+    # been told, which is the caller's signal that there is no draft to present.
+    def persist_or_refuse
+      persist
+    rescue ActiveRecord::RecordInvalid => e
+      report(e, "draft persistence")
+
+      refuse_invalid_draft(e.record)
+
+      nil
+    end
+
+    # Back to the idea question rather than the revision step: nothing was
+    # written, so there is no record to revise and their own words are what has
+    # to change. Retrying it unchanged is the wrong offer — the text itself is
+    # the problem and a second identical save fails identically, which is what
+    # the publish path already decided one step further on (PublishResultService
+    # #send_invalid). Asking for the idea also moves the step, so the question
+    # that failed cannot be put a second time.
+    def refuse_invalid_draft(resource)
+      Whatsapp::Send.text(
+        account: account,
+        body: Whatsapp.phrase(
+          "whatsapp.bot.draft_invalid", reason: resource.errors.full_messages.first.to_s
+        )
+      )
+
+      Whatsapp::Flows::AskIdeaService.call(conversation: @conversation)
     end
 
     def present

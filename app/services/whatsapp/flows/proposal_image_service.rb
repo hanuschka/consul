@@ -128,9 +128,7 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
         Whatsapp::FlowActions.button(
           action: :image_generate, label_key: "whatsapp.bot.buttons.image_generate"
         ),
-        Whatsapp::FlowActions.button(
-          action: :image_skip, label_key: "whatsapp.bot.buttons.image_skip"
-        )
+        Whatsapp::FlowActions.image_skip_button(@conversation)
       ]
     end
 
@@ -150,11 +148,7 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
       Whatsapp::Send.buttons(
         account: account,
         body: body,
-        buttons: [
-          Whatsapp::FlowActions.button(
-            action: :image_skip, label_key: "whatsapp.bot.buttons.image_skip"
-          )
-        ]
+        buttons: [Whatsapp::FlowActions.image_skip_button(@conversation)]
       )
     end
 

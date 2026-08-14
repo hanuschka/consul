@@ -135,13 +135,35 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
     end
 
     # An unsubscribed number has exactly one live question; everyone else gets
-    # the channel requests plus whatever the current step can carry. abort is
-    # only offered while something is open — without that, "vergiss es" at a
-    # fresh start would be read as cancelling nothing.
+    # the channel requests plus whatever the current step can carry.
     def verdicts
       return %w[opt_in answer] if opted_out?
 
-      ["opt_out", (%w[abort] if @interaction_open), step_verdicts, "answer"].flatten.compact
+      [opt_out_verdict, abort_verdict, step_verdicts, "answer"].flatten.compact
+    end
+
+    # Offered only outside a submission. Inside one the citizen is writing the
+    # contribution itself, and a sentence like "ich möchte nicht mehr so viele
+    # Briefe von der Stadt bekommen" is its content rather than a request to be
+    # left alone — read as opt_out it dropped their draft and silenced the
+    # channel, with only a typed "Start" to undo it and nothing saying so.
+    #
+    # Leaving the channel is not made harder by this: the typed keyword ends
+    # messages from anywhere, mid-submission included, because
+    # ProcessMessageService checks OPT_OUT_KEYWORDS deterministically one gate
+    # before this service is ever asked.
+    def opt_out_verdict
+      return if @conversation.drafting?
+
+      "opt_out"
+    end
+
+    # Only while something is open — without that, "vergiss es" at a fresh
+    # start would be read as cancelling nothing.
+    def abort_verdict
+      return if !@interaction_open
+
+      "abort"
     end
 
     def step_verdicts

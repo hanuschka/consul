@@ -134,7 +134,8 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.proposal.published_pending_moderation
     whatsapp.bot.proposal.unclear
     whatsapp.bot.proposal.resume
-    whatsapp.bot.proposal.resume_recap
+    whatsapp.bot.proposal.resume_projekt
+    whatsapp.bot.proposal.resume_draft
     whatsapp.bot.proposal.resume_recap_idea
     whatsapp.bot.proposal.image_upload_prompt
     whatsapp.bot.proposal.image_received
@@ -145,17 +146,22 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.proposal.location_request
     whatsapp.bot.proposal.location_retry
     whatsapp.bot.proposal.location_received
+    whatsapp.bot.proposal.location_failed
     whatsapp.bot.proposal.duplicate.single
     whatsapp.bot.proposal.duplicate.multiple
     whatsapp.bot.support.prompt
     whatsapp.bot.support.thanks
     whatsapp.bot.support.already
     whatsapp.bot.support.gone
+    whatsapp.bot.support.refused_intro
     whatsapp.bot.comment.prompt
+    whatsapp.bot.comment.confirmation_only
     whatsapp.bot.comment.published
     whatsapp.bot.comment.pending
     whatsapp.bot.comment.invalid
     whatsapp.bot.comment.closed
+    whatsapp.bot.declined.offer
+    whatsapp.bot.declined.unlink
     whatsapp.bot.subscription.followed
     whatsapp.bot.subscription.unfollowed
     whatsapp.bot.subscription.unknown

@@ -112,9 +112,7 @@ class Whatsapp::Flows::ConfirmSubmissionService < Whatsapp::Flows::BaseService
     # photo here would otherwise have to abandon the submission to change it.
     def buttons
       [
-        Whatsapp::FlowActions.button(
-          action: :submit_final, label_key: "whatsapp.bot.buttons.submit_final"
-        ),
+        Whatsapp::FlowActions.submit_final_button(@conversation),
         Whatsapp::FlowActions.button(
           action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"
         ),

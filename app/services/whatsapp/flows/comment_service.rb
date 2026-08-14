@@ -3,12 +3,22 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
   # it. One service because the prompt writes the context key the creation
   # reads back.
 
-  # D27. No buttons: the reply the bot wants here is the comment itself, and a
-  # pill next to that question would only give the citizen something to tap
-  # instead of writing.
+  # D27. One pill beside the question, and it is the way out rather than an
+  # answer: the reply the bot wants here is the comment itself, so anything
+  # tappable that could pass for an answer is something to tap instead of
+  # writing — which is exactly what went wrong when the question was phrased
+  # as "möchten Sie etwas ergänzen?" and the word "Ja" was published under the
+  # citizen's name.
   def self.prompt(conversation:, proposal:)
     new(conversation: conversation).prompt(proposal)
   end
+
+  # Refused rather than published. The question now asks for the text itself,
+  # but the wording lives in a locale file that anyone can edit back, and what
+  # a mistake there costs is a citizen's name under the word "Ja" on a public
+  # page. Deliberately only the words that cannot be a contribution on their
+  # own — a short comment is still a comment.
+  CONFIRMATION_WORDS = %w[ja nein jo jep nee nö ok okay yes no yep nope].freeze
 
   # D28. One message commits, like the support tap and unlike a proposal: a
   # comment is short enough that showing it back for confirmation would cost
@@ -21,10 +31,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_COMMENT)
     @conversation.store_comment_proposal_id!(proposal.id)
 
-    Whatsapp::Send.text(
-      account: account,
-      body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
-    )
+    send_prompt("whatsapp.bot.comment.prompt")
   end
 
   # Which of the two confirmations the citizen gets is decided by the record
@@ -36,6 +43,7 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     comment_body = body.to_s.strip
 
     return send_empty if comment_body.blank?
+    return send_confirmation_only if confirmation_only?(comment_body)
     return send_gone if proposal.blank?
     return send_not_allowed if !comments_allowed?
 
@@ -77,11 +85,28 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
       )
     end
 
-    def send_empty
-      Whatsapp::Send.text(
+    def confirmation_only?(comment_body)
+      CONFIRMATION_WORDS.include?(comment_body.downcase.delete("!.,?"))
+    end
+
+    # The question and every re-asking of it carry the same single escape, so
+    # the step can always be left without commenting — the citizen who has
+    # nothing more to say must not have to abandon the conversation to get out
+    # of it.
+    def send_prompt(body_key)
+      Whatsapp::Send.buttons(
         account: account,
-        body: Whatsapp.phrase("whatsapp.bot.comment.prompt")
+        body: Whatsapp.phrase(body_key),
+        buttons: [Whatsapp::Send.recovery_button(:cancel)]
       )
+    end
+
+    def send_empty
+      send_prompt("whatsapp.bot.comment.prompt")
+    end
+
+    def send_confirmation_only
+      send_prompt("whatsapp.bot.comment.confirmation_only")
     end
 
     def send_invalid

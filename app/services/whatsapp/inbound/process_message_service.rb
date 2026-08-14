@@ -248,7 +248,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Flows::AskIdeaService.call(conversation:)
     end
 
-    # A draft older than the catalog's 3600 minutes is not resumed silently.
+    # A draft older than Conversation::STALE_FLOW_AFTER is not resumed silently.
     # Only asked once — the question itself moves the step, so the next message
     # is an answer to it rather than a second asking.
     def handle_stale_flow

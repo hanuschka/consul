@@ -90,10 +90,17 @@ class Whatsapp::Conversation < ApplicationRecord
   ].freeze
 
   # A draft older than this is not resumed silently: the citizen is asked
-  # whether to continue it or start over (catalog C23). Deliberately far longer
-  # than WhatsApp's 24-hour service window, so the question is always asked as a
-  # reply to the citizen writing in again, never pushed.
-  STALE_FLOW_AFTER = 3600.minutes
+  # whether to continue it or start over (catalog C23).
+  #
+  # Twelve hours rather than the 3600 minutes this was: at 60 hours someone who
+  # left a submission open, slept on it and wrote "Hallo" the next morning was
+  # resumed straight into the idea step, and the greeting became the text of
+  # their contribution. A night away has to reach the question.
+  #
+  # Asked as a reply and never pushed, which is a property of where it is read
+  # rather than of this number: handle_stale_flow sits in the inbound gate
+  # chain, so nothing consults it until the citizen writes in again.
+  STALE_FLOW_AFTER = 12.hours
 
   def drafting?
     DRAFTING_STEPS.include?(step)
@@ -242,6 +249,27 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def clear_draft_data!
     merge_context!(draft_data: nil)
+  end
+
+  # How often the taxonomy question has been put in a row without a usable
+  # answer. Written and read by AskDraftChoiceService, which gives up rather
+  # than ask again past its limit: the question re-asks itself on every message
+  # that is not a tapped option, so without a count a citizen who cannot answer
+  # it has no way out of the step at all.
+  #
+  # Consecutive, which is why an answered question clears it — the two
+  # questions of one submission share the counter, and a citizen who answered
+  # the first must not arrive at the second with it half spent.
+  def choice_reasks
+    context["choice_reasks"].to_i
+  end
+
+  def count_choice_reask!
+    merge_context!(choice_reasks: choice_reasks + 1)
+  end
+
+  def clear_choice_reasks!
+    merge_context!(choice_reasks: nil)
   end
 
   # The generation call's own shortening of the description, written beside

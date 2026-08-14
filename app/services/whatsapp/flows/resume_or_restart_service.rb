@@ -1,8 +1,9 @@
 class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
   # Catalog C23. Sent as a reply the next time the citizen writes in, never
-  # pushed: WhatsApp only carries a freeform message within 24 hours of their
-  # last one, and the staleness threshold is 3600 minutes — so by the time a
-  # draft is stale the bot could not reach out even if it wanted to.
+  # pushed: the staleness check sits in the inbound gate chain
+  # (Inbound::ProcessMessageService#handle_stale_flow), so nothing consults it
+  # until they write. That is what keeps the question inside WhatsApp's
+  # 24-hour service window whatever Conversation::STALE_FLOW_AFTER is set to.
   def self.resume(conversation:)
     new(conversation: conversation).resume
   end
@@ -30,8 +31,6 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     # next message and the same question asked forever.
     @conversation.stamp_flow_started!
 
-    send_recap
-
     if @conversation.draft_resource.present?
       return Whatsapp::Flows::PresentDraftService.first_draft(conversation: @conversation)
     end
@@ -55,7 +54,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
 
     Whatsapp::Send.buttons(
       account: account,
-      body: Whatsapp.phrase("whatsapp.bot.proposal.resume"),
+      body: question_body,
       buttons: buttons
     )
   end
@@ -76,40 +75,53 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
       ]
     end
 
-    # Sent before the step being resumed, never instead of it. The resume
-    # question is answered hours or days after the citizen left, so what they
-    # land back on has to say what it is about first.
-    #
-    # The draft is deliberately not repeated here: when one exists the resumed
-    # step is the draft card itself, which carries the title and description
-    # one message later, and only the projekt is missing from it. Without a
-    # draft nothing else would say what the citizen had already typed, so the
-    # idea comes back with the recap.
-    def send_recap
-      return if projekt.blank?
-
-      Whatsapp::Send.text(account: account, body: recap_body)
+    # This is the one question in the flow a citizen cannot answer without
+    # being told what it is about: hours or days have passed, and "your earlier
+    # contribution" names neither the projekt nor what they wrote. Both facts
+    # used to be sent — but in a recap after they had already chosen, which is
+    # exactly one message too late to help them choose.
+    def question_body
+      [
+        Whatsapp.phrase("whatsapp.bot.proposal.resume"),
+        projekt_line,
+        subject_line
+      ].compact_blank.join("\n\n")
     end
 
     def projekt
       @conversation.projekt_phase&.projekt
     end
 
-    def recap_body
-      recap = Whatsapp.phrase(
-        "whatsapp.bot.proposal.resume_recap", projekt: Whatsapp::ProjektLink.title(projekt)
-      )
+    def projekt_line
+      return if projekt.blank?
 
-      [recap, idea_recap].compact_blank.join("\n\n")
+      Whatsapp.phrase(
+        "whatsapp.bot.proposal.resume_projekt", projekt: Whatsapp::ProjektLink.title(projekt)
+      )
+    end
+
+    # What is on the table, quoted so the choice is about something. A draft
+    # that exists is named by its title — continuing sends the card with the
+    # whole thing one message later — and a submission that never reached one
+    # falls back to the citizen's own words, which is also the case where
+    # nothing else would ever show them again.
+    def subject_line
+      return draft_line if @conversation.draft_resource.present?
+
+      idea_line
+    end
+
+    def draft_line
+      Whatsapp.phrase(
+        "whatsapp.bot.proposal.resume_draft", title: @conversation.draft_resource.title.to_s
+      )
     end
 
     # The text the citizen sent before the generation call, kept by
     # BuildDraftService for its own retry path. Read rather than stored a second
     # time: a draft that failed to generate leaves exactly this behind, which is
     # the case the citizen most needs quoted back.
-    def idea_recap
-      return if @conversation.draft_resource.present?
-
+    def idea_line
       idea_text = @conversation.last_idea_text.to_s.squish
 
       return if idea_text.blank?

@@ -95,8 +95,10 @@ class Whatsapp::Inbound::FlowActionDispatch
         Whatsapp::Flows::NotificationSettingsService.call(conversation:)
       when :unlink_start
         Whatsapp::Flows::UnlinkService.ask(conversation:)
-      when :dismiss, :unlink_cancel
-        conversation.reset_flow!
+      when :dismiss
+        decline("whatsapp.bot.declined.offer")
+      when :unlink_cancel
+        decline("whatsapp.bot.declined.unlink")
       when :unlink_confirm
         Whatsapp::Flows::UnlinkService.confirm(conversation:)
       when :notify_toggle
@@ -164,6 +166,31 @@ class Whatsapp::Inbound::FlowActionDispatch
       return conversation.projekt_phase if action != :idea_start
 
       ::ProjektPhase.find_by(id: param)
+    end
+
+    # A tapped "no" is an answer, and it gets one back. Both of these did their
+    # work and sent nothing, so the citizen could not tell whether the thing
+    # they had just declined had happened anyway — which for unlinking is the
+    # difference between an account that is still connected and one that is
+    # not. The copy says what did *not* happen for exactly that reason.
+    def decline(body_key)
+      forget_offer
+
+      Whatsapp::Send.text(
+        account:,
+        body: Whatsapp.phrase(body_key)
+      )
+    end
+
+    # Only when nothing is open. Reset unconditionally — which is what both of
+    # these used to do — declining an offer that arrived mid-submission threw
+    # the whole draft away: the assistant can put the support question at any
+    # moment, so "Nein, danke" to it cost the citizen everything they had
+    # written.
+    def forget_offer
+      return if conversation.drafting?
+
+      conversation.reset_flow!
     end
 
     # A help row that names something the assistant resolves rather than a flow

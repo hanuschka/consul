@@ -92,16 +92,31 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
   private
 
     def attach_and_publish(location)
-      attached = attach(location["latitude"], location["longitude"])
+      return announce_attach_failure if !attach(location["latitude"], location["longitude"])
 
-      if attached
-        Whatsapp::Send.text(
-          account: account,
-          body: Whatsapp.phrase("whatsapp.bot.proposal.location_received")
-        )
-      end
+      Whatsapp::Send.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.proposal.location_received")
+      )
 
       publish
+    end
+
+    # A pin the citizen shared through the picker and believes is on the map,
+    # which could not be written. Publishing anyway put the contribution online
+    # without the one thing they had just deliberately added, and never said so
+    # — they only find out by looking at the map. Answered the way a photo that
+    # cannot be used already is: name the failure and offer the step again.
+    #
+    # The step is deliberately not moved and the reminder flag not spent. Both
+    # ways on are on this message — share again, or publish without a pin — so
+    # the choice is theirs rather than the next message's.
+    def announce_attach_failure
+      Whatsapp::Send.buttons(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.proposal.location_failed"),
+        buttons: buttons
+      )
     end
 
     # The pin the citizen shared through WhatsApp's own picker, written onto
@@ -111,8 +126,8 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
     # free text rather than joining it — a position the citizen chose outranks
     # one inferred from their wording — which is `MapLocation.create_pin!`'s
     # own behaviour, shared with the geocoder so the two cannot write
-    # different pins. Returns true when the pin was written, so the caller
-    # knows whether to say so before publishing.
+    # different pins. Returns true when the pin was written, which is what
+    # decides whether the caller publishes or reports the failure.
     def attach(latitude, longitude)
       return false if draft_resource.blank?
       return false if latitude.blank? || longitude.blank?

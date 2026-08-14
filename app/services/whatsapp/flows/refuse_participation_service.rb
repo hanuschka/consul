@@ -80,6 +80,32 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
     Whatsapp.phrase("whatsapp.bot.refused.#{key}", **interpolations_for(key, projekt_phase))
   end
 
+  # The rule, and under it the way out where there is one. Shared with the
+  # support path, which is refused by the same rules but must not go through
+  # `call`: that resets the flow, and a citizen refused a support was doing
+  # something else at the time — often with a submission of their own open.
+  def self.explanation_for(reason:, projekt_phase: nil)
+    [
+      copy_for(reason: reason, projekt_phase: projekt_phase),
+      verification_hint_for(reason)
+    ].compact_blank.join("\n\n")
+  end
+
+  # Only where verification is genuinely the blocker. Appended to every
+  # refusal it sends a citizen who lives outside the eligible area, or whose
+  # phase has closed, to a page that cannot unblock them.
+  def self.verification_hint_for(reason)
+    return if reason_key(reason) != "not_verified"
+
+    Whatsapp.phrase("whatsapp.bot.verification_link", url: verification_url)
+  end
+
+  def self.verification_url
+    Rails.application.routes.url_helpers.verification_url(**UrlOptions.default.to_h)
+  end
+
+  private_class_method :verification_url
+
   # Only one refusal names anything, and the phase already formats the groups
   # for the web form. Answered per reason rather than at each `I18n.t` so a
   # second interpolated reason is one more branch in one place, and so the
@@ -135,12 +161,6 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
     end
 
     def verification_hint
-      return if @reason != "not_verified"
-
-      Whatsapp.phrase("whatsapp.bot.verification_link", url: verification_url)
-    end
-
-    def verification_url
-      Rails.application.routes.url_helpers.verification_url(**UrlOptions.default.to_h)
+      self.class.verification_hint_for(@reason)
     end
 end

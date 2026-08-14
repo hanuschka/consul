@@ -57,6 +57,11 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
   # supplying a missing one. Either way CompleteDraftService decides what is
   # still outstanding — except mid-publish, where the publish resumes instead.
   def assign(option_id, inbound_message_id)
+    # A tapped option is an answer whatever happens to it below, so the re-ask
+    # count starts again here — the sentiment question that may follow is a
+    # question of its own and owes the citizen its own attempts.
+    @conversation.clear_choice_reasks!
+
     return stash_draft_choice(option_id, inbound_message_id) if pre_creation_draft?
 
     return call if !policy.assign!(@conversation.draft_resource, option_id)
@@ -66,9 +71,18 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     complete_draft(inbound_message_id)
   end
 
+  # How many times one question may be put before the flow gives up on it. The
+  # step re-asks on every message that is not a tapped option, so a citizen
+  # whose answer never lands — a list their client will not render, an option
+  # removed mid-flow — would otherwise be held on it forever, with the same
+  # question as the only reply to everything they write.
+  MAX_REASKS = 3
+
   def call
     return if options.empty?
+    return abandon if @conversation.choice_reasks >= MAX_REASKS
 
+    @conversation.count_choice_reask!
     @conversation.update!(step: choice.fetch(:step))
 
     return send_buttons if options.size <= ::Whatsapp::MAX_BUTTONS
@@ -114,6 +128,14 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
 
     def row_id(option)
       Whatsapp::FlowActions.id_for(action: @kind, param: option.id)
+    end
+
+    # The draft cannot be written without this answer, so there is nothing to
+    # hold the citizen on the step for. Cancelling ends it in the one place
+    # that says so and offers the way back, rather than in a fourth copy of a
+    # question they have already not been able to answer.
+    def abandon
+      Whatsapp::Flows::CancelService.call(conversation: @conversation)
     end
 
     def pre_creation_draft?

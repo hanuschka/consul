@@ -126,9 +126,11 @@ de:
         image_upload: Foto hochladen
         image_generate: Bild erzeugen
         image_skip: Ohne Bild einreichen
+        image_skip_continue: Ohne Bild weiter
         location_share: Standort teilen
         location_skip: Ohne Ort einreichen
         submit_final: Beitrag einreichen
+        submit_continue: Weiter zum Ort
         submit_anyway: Eigenen Beitrag
       help_menu:
         body: 'Ich helfe Ihnen gerne weiter. Wählen Sie aus, womit ich Ihnen helfen kann:'
@@ -190,7 +192,7 @@ de:
         phase_not_active: Diese Beteiligungsphase ist derzeit nicht aktiv.
         phase_expired: Diese Beteiligungsphase ist bereits beendet.
         phase_not_current: Diese Beteiligungsphase läuft derzeit nicht.
-        not_verified: Für die Einreichung muss Ihr Konto verifiziert sein.
+        not_verified: Dafür muss Ihr Konto verifiziert sein.
         submissions_limit_exceeded: >-
           Sie haben für dieses Projekt bereits so viele Beiträge eingereicht, wie erlaubt sind.
         no_open_phase: In diesem Projekt läuft derzeit keine Phase, in der Beiträge eingereicht
@@ -350,7 +352,8 @@ de:
         cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
         resume: >-
           Sie waren eine Weile weg — möchten Sie Ihren früheren Beitrag fortsetzen oder neu beginnen?
-        resume_recap: 'Wir machen weiter bei „%{projekt}“.'
+        resume_projekt: 'Es geht um „%{projekt}“.'
+        resume_draft: 'Ihr Entwurf: „%{title}“'
         resume_recap_idea: 'Das hatten Sie mir geschrieben: „%{idea}“'
         ask_image: >-
           Möchten Sie ein Bild zu Ihrem Beitrag? Sie können mir eines schicken, oder ich erstelle
@@ -384,13 +387,22 @@ de:
           Das war noch kein Standort. Tippen Sie auf „Standort senden“ — oder schreiben Sie mir
           irgendetwas, dann reiche ich Ihren Beitrag ohne Ort ein.
         location_received: ✅ Ort gespeichert, danke!
+        location_failed: >-
+          Den Ort konnte ich leider nicht speichern. Teilen Sie ihn gerne noch einmal — oder
+          reichen Sie Ihren Beitrag ohne Ortsangabe ein.
       support:
         prompt: '👍 Möchten Sie diesen Beitrag unterstützen: „%{title}“?'
         thanks: ✅ Danke für Ihre Unterstützung! (bisher %{count} Unterstützende)
         already: Sie haben diesen Beitrag bereits unterstützt.
         gone: Diesen Beitrag gibt es leider nicht mehr.
+        refused_intro: Diesen Beitrag können Sie leider nicht unterstützen.
       comment:
-        prompt: Möchten Sie zu diesem Beitrag noch etwas ergänzen?
+        prompt: >-
+          Was möchten Sie zu diesem Beitrag schreiben? Ihre nächste Nachricht veröffentliche ich
+          als Kommentar.
+        confirmation_only: >-
+          Schreiben Sie mir bitte den Kommentar selbst — genau diesen Text veröffentliche ich dann
+          auf der Projektseite.
         published: Danke, Ihr Kommentar steht jetzt auf der Projektseite.
         pending: Danke, Ihr Kommentar wird geprüft und erscheint dann auf der Projektseite.
         invalid: Diesen Kommentar konnte ich nicht speichern. Versuchen Sie es bitte etwas anders.
@@ -403,6 +415,9 @@ de:
         unknown: >-
           Ein Projekt mit diesem Namen habe ich nicht gefunden. Schreiben Sie „Projekte“, um zu sehen,
           was läuft.
+      declined:
+        offer: Alles klar, dann lasse ich das.
+        unlink: Alles klar, Ihr Konto bleibt verknüpft.
       compliance:
         disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
         out_of_scope: >-

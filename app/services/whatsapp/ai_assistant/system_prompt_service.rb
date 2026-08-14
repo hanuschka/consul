@@ -10,6 +10,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     [
       role_section,
       state_section,
+      dates_section,
       routing_section,
       style_section
     ].join("\n\n")
@@ -38,6 +39,31 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Proposal this conversation is about: #{active_proposal_description}",
         "- Participation phases open portal-wide: #{open_phases_count}"
       ].join("\n")
+    end
+
+    # The model has no clock, and every answer it works from carries dates: a
+    # phase end, an event, a milestone. Without today's date "wie lange kann ich
+    # noch mitmachen?" could only be answered by reading the deadline back out,
+    # which is not what was asked — and "ist das noch aktuell?" could not be
+    # answered at all.
+    #
+    # Rebuilt each turn like the rest of this prompt, and ChatState leaves the
+    # system message out of the stored history, so a conversation resumed days
+    # later cannot be reasoning from the date it started on.
+    def dates_section
+      <<~TEXT.strip
+        Dates: today is #{today}. Every date a tool gives you is ISO-8601, and you work it out
+        against today rather than repeating it: how long is left, whether something has already
+        passed, whether a deadline is today. Lead with the remaining time and give the date after
+        it, never the bare date. A milestone dated in the future is planned rather than done —
+        never report a planned step as progress that has already been made.
+      TEXT
+    end
+
+    # Written out with the weekday because "how long can I still take part" is
+    # routinely answered in days, and a bare number is easy to be a day out on.
+    def today
+      Time.zone.today.strftime("%Y-%m-%d (%A)")
     end
 
     # The one rule the whole design rests on. Everything the citizen writes as

@@ -26,7 +26,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     # After the chat is assembled, so the bubble covers the wait the citizen
     # actually experiences rather than the prompt building that precedes it.
-    ::Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+    ::Whatsapp::Send.typing(message_id: @inbound_message_id)
 
     response = chat.ask(@inbound_text)
     outcome = deliver(response)
@@ -35,7 +35,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     return ServiceResult.failure(error: EMPTY_ANSWER_ERROR) if outcome == :empty
 
-    ServiceResult.success(outcome: outcome)
+    # The hand-off's verdict rides on the result so the flow acts on the one
+    # reading this call already made instead of paying a second completion.
+    ServiceResult.success(
+      outcome: outcome,
+      decision: hand_to_flow.decision,
+      correction: hand_to_flow.correction
+    )
   rescue StandardError => e
     report(e)
 
@@ -84,7 +90,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       return :empty if body.blank?
 
-      ::Whatsapp::Outbound.text(account: @conversation.whatsapp_account, body: body)
+      ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
 
       :answered
     end
@@ -139,6 +145,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::OpenNotificationSettings,
         ::Ai::Tools::WhatsappAiAssistant::StartUnlink,
         ::Ai::Tools::WhatsappAiAssistant::StopMessages,
+        ::Ai::Tools::WhatsappAiAssistant::AbortSubmission,
         ::Ai::Tools::WhatsappAiAssistant::ShowHelp,
         ::Ai::Tools::WhatsappAiAssistant::ShowMainMenu,
         ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,

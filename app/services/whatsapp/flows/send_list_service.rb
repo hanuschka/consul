@@ -17,7 +17,7 @@ class Whatsapp::Flows::SendListService < Whatsapp::Flows::BaseService
   def call
     return send_empty if @rows.empty?
 
-    Whatsapp::Outbound.list(
+    Whatsapp::Send.list(
       account: account,
       body: @body,
       button_label: @button_label,
@@ -28,6 +28,6 @@ class Whatsapp::Flows::SendListService < Whatsapp::Flows::BaseService
   private
 
     def send_empty
-      Whatsapp::Outbound.text(account: account, body: @empty_body)
+      Whatsapp::Send.text(account: account, body: @empty_body)
     end
 end

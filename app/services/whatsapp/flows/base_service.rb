@@ -29,6 +29,27 @@ class Whatsapp::Flows::BaseService < ApplicationService
       @conversation.draft_resource
     end
 
+    # Checked again per action rather than once at flow entry: the same three
+    # steps can be minutes or days apart, and a phase that expires in between
+    # must stop an idea before it costs a draft and stop a draft before it
+    # becomes a proposal. Returns true after refusing, so the caller only has
+    # to stop.
+    def refuse_if_not_permitted
+      permission_problem =
+        Whatsapp::Drafting::ResourceCreationValidationService.call(
+          projekt_phase: @conversation.projekt_phase,
+          user: Whatsapp::Drafting::SubmissionAuthorService.call(conversation: @conversation)
+        )
+
+      return false if permission_problem.blank?
+
+      Whatsapp::Flows::RefuseParticipationService.call(
+        conversation: @conversation, reason: permission_problem
+      )
+
+      true
+    end
+
     # One shape for every flow that swallows an exception rather than letting it
     # reach the citizen: the same log prefix, and the conversation id attached
     # so a Sentry issue can be traced back to the chat it happened in.

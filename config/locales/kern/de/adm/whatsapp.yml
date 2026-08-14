@@ -260,6 +260,15 @@ de:
           Solange keine freigegebene Nachrichtenvorlage hinterlegt ist, wird auch bei aktivem Schalter
           nichts versendet. Vorlage oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen oder
           im Reiter „Vorlagen“ einreichen.
+        draft_evaluation_title: KI-Beitragsprüfung
+        draft_evaluation_body: >-
+          Definiert eine Projektphase Bewertungskriterien, prüft der Bot jeden Entwurf in einem
+          einzigen KI-Aufruf gegen alle Kriterien, bevor Bürger:innen darüber entscheiden: Ein
+          verfehltes hartes Kriterium weist den Entwurf mit Begründung zurück und lädt zur
+          Überarbeitung ein, weiche Kriterien ergänzen die Entwurfskarte um eine Bewertung mit
+          Feedback. Die Kriterien – und die Anweisungen, die die KI anwendet – werden je Phase im
+          Reiter „KI Textassistent“ des Projekts gepflegt.
+        draft_evaluation_link: Projektliste öffnen
         template_missing_title: Keine Nachrichtenvorlage hinterlegt
         template_missing_body: >-
           Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden.

@@ -13,7 +13,7 @@ class Whatsapp::Flows::MessageDeliveryService < Whatsapp::Flows::BaseService
   def turn_on
     account.opt_in!
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.opted_in")
     )
@@ -27,7 +27,7 @@ class Whatsapp::Flows::MessageDeliveryService < Whatsapp::Flows::BaseService
     account.opt_out!
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.compliance.opted_out")
     )

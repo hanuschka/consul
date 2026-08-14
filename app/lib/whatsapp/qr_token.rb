@@ -8,7 +8,8 @@ module Whatsapp::QrToken
   PROJEKT_PHASE_SCOPE = "phase".freeze
   PROJEKT_SCOPE = "projekt".freeze
 
-  DIGEST_PATTERN = "[0-9a-f]{#{Whatsapp::TokenDigest::LENGTH}}".freeze
+  DIGEST_LENGTH = 6
+  DIGEST_PATTERN = "[0-9a-f]{#{DIGEST_LENGTH}}".freeze
   PROJEKT_PHASE_PATTERN = /\b#{PROJEKT_PHASE_PREFIX}-(\d+)-(#{DIGEST_PATTERN})\b/i.freeze
   PROJEKT_PATTERN = /\b#{PROJEKT_PREFIX}-(\d+)-(#{DIGEST_PATTERN})\b/i.freeze
 
@@ -31,17 +32,27 @@ module Whatsapp::QrToken
   end
 
   def build(prefix, scope, record_id)
-    "#{prefix}-#{record_id}-#{Whatsapp::TokenDigest.for(scope, record_id)}"
+    "#{prefix}-#{record_id}-#{digest_for(scope, record_id)}"
   end
 
   def record_id_from(text, pattern, scope)
     match = pattern.match(text.to_s)
 
     return if match.blank?
-    return if !Whatsapp::TokenDigest.valid?(scope, match[1], match[2])
+    return if !valid_digest?(scope, match[1], match[2])
 
     match[1].to_i
   end
 
-  private_class_method :build, :record_id_from
+  def digest_for(scope, record_id)
+    OpenSSL::HMAC
+      .hexdigest("SHA256", Rails.application.secret_key_base, "whatsapp-#{scope}-#{record_id}")
+      .first(DIGEST_LENGTH)
+  end
+
+  def valid_digest?(scope, record_id, digest)
+    ActiveSupport::SecurityUtils.secure_compare(digest.to_s.downcase, digest_for(scope, record_id))
+  end
+
+  private_class_method :build, :record_id_from, :digest_for, :valid_digest?
 end

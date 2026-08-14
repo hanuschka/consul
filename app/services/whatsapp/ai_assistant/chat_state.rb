@@ -4,10 +4,9 @@ class Whatsapp::AiAssistant::ChatState
   # down. What is written down is the provider's own message shape — role,
   # text, tool calls, tool results — because replaying a summary instead lets
   # the model be talked into repeating a tool call it already made.
-  CONTEXT_KEY = "ai_chat".freeze
-
+  #
   # Bounded here rather than by the retention job: that one purges
-  # Whatsapp::Message rows and never looks at this column.
+  # Whatsapp::Message rows and never looks at the stored chat.
   MAX_MESSAGES = 24
 
   def initialize(conversation:)
@@ -21,13 +20,13 @@ class Whatsapp::AiAssistant::ChatState
   end
 
   def save!(chat)
-    @conversation.merge_context!(CONTEXT_KEY => dump(chat.messages))
+    @conversation.store_ai_chat!(dump(chat.messages))
   end
 
   private
 
     def stored_messages
-      Array(@conversation.context[CONTEXT_KEY])
+      Array(@conversation.stored_ai_chat)
     end
 
     # The system message is left out on purpose: it is rebuilt from live state

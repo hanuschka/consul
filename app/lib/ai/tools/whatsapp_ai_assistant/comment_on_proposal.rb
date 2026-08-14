@@ -5,13 +5,11 @@ class Ai::Tools::WhatsappAiAssistant::CommentOnProposal < Ai::Tools::WhatsappAiA
               "not call this if they have already written the comment — hand that to the flow."
 
   def execute
-    proposal_id = conversation.context["support_proposal_id"] ||
-                  conversation.context["comment_proposal_id"]
-    proposal = ::Proposal.find_by(id: proposal_id)
+    proposal = ::Proposal.find_by(id: conversation.active_proposal_id)
 
     return no_proposal_error("comment on") if proposal.blank?
 
-    ::Whatsapp::Flows::CommentPromptService.call(conversation: conversation, proposal: proposal)
+    ::Whatsapp::Flows::CommentService.prompt(conversation: conversation, proposal: proposal)
 
     halt("Asked the citizen for their comment.")
   end

@@ -51,7 +51,7 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
 
     return send_login_link(body) if login_required?
 
-    Whatsapp::Outbound.text(account: account, body: body)
+    Whatsapp::Send.text(account: account, body: body)
   end
 
   # A reason the phase raises under its own name, answered with copy written for
@@ -80,6 +80,32 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
     Whatsapp.phrase("whatsapp.bot.refused.#{key}", **interpolations_for(key, projekt_phase))
   end
 
+  # The rule, and under it the way out where there is one. Shared with the
+  # support path, which is refused by the same rules but must not go through
+  # `call`: that resets the flow, and a citizen refused a support was doing
+  # something else at the time — often with a submission of their own open.
+  def self.explanation_for(reason:, projekt_phase: nil)
+    [
+      copy_for(reason: reason, projekt_phase: projekt_phase),
+      verification_hint_for(reason)
+    ].compact_blank.join("\n\n")
+  end
+
+  # Only where verification is genuinely the blocker. Appended to every
+  # refusal it sends a citizen who lives outside the eligible area, or whose
+  # phase has closed, to a page that cannot unblock them.
+  def self.verification_hint_for(reason)
+    return if reason_key(reason) != "not_verified"
+
+    Whatsapp.phrase("whatsapp.bot.verification_link", url: verification_url)
+  end
+
+  def self.verification_url
+    Rails.application.routes.url_helpers.verification_url(**UrlOptions.default.to_h)
+  end
+
+  private_class_method :verification_url
+
   # Only one refusal names anything, and the phase already formats the groups
   # for the web form. Answered per reason rather than at each `I18n.t` so a
   # second interpolated reason is one more branch in one place, and so the
@@ -107,21 +133,45 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
       Whatsapp::Flows::SendLoginLinkService.call(conversation: @conversation, intro: body)
     end
 
+    # The rule, then the way out of it. The refusal keeps its own exact wording —
+    # it is a permission statement and the one line here that must not vary —
+    # and only the sentence under it is written for this citizen's situation.
+    #
+    # Skipped where the message already ends in something to act on: the
+    # verification hint carries a link, and a refusal that sends the login link
+    # is followed by the link itself, so a third suggestion under either is one
+    # instruction too many.
     def message
-      [refusal_copy, verification_hint].compact.join("\n\n")
+      [explanation, next_step].compact_blank.join("\n\n")
     end
 
-    def refusal_copy
-      self.class.copy_for(reason: @reason, projekt_phase: @conversation.projekt_phase)
+    # The same two lines the support path sends, assembled in the one place
+    # that owns their order — built here as well and this class had two copies
+    # of "rule, then verification hint", which is exactly the drift extracting
+    # it was meant to prevent.
+    def explanation
+      @explanation ||= self.class.explanation_for(
+        reason: @reason, projekt_phase: @conversation.projekt_phase
+      )
     end
 
+    def next_step
+      return if verification_hint.present?
+      return if login_required?
+
+      Whatsapp::AiAssistant::RefusalNextStepService.call(
+        reason: @reason,
+        projekt_phase: @conversation.projekt_phase,
+        user: @conversation.user
+      )
+    end
+
+    # Only asked as the guard above — whether the message already ends in
+    # something to act on. Memoized because that guard is the second time the
+    # hint is built for one refusal.
     def verification_hint
-      return if @reason != "not_verified"
+      return @verification_hint if defined?(@verification_hint)
 
-      Whatsapp.phrase("whatsapp.bot.verification_link", url: verification_url)
-    end
-
-    def verification_url
-      Rails.application.routes.url_helpers.verification_url(**UrlOptions.default.to_h)
+      @verification_hint = self.class.verification_hint_for(@reason)
     end
 end

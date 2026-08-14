@@ -26,9 +26,15 @@ class Whatsapp::SimilarProposalsQuery < ApplicationQuery
   # match time, because the dictionary reduces them to empty lexemes.
   MAX_TERMS = 20
 
-  def initialize(projekt_phase:, text:)
+  # `extra_terms` are the words a duplicate might be written with instead of the
+  # citizen's own — they ride the screening call, see
+  # ProposalAiDraft::EvaluateContentSafetyService.with_search_terms. Passed in
+  # rather than fetched here: this is a query object, and a completion hidden
+  # inside one is a cost its callers cannot see.
+  def initialize(projekt_phase:, text:, extra_terms: [])
     @projekt_phase = projekt_phase
     @text = text.to_s.strip
+    @extra_terms = extra_terms.to_a
   end
 
   def call
@@ -43,18 +49,41 @@ class Whatsapp::SimilarProposalsQuery < ApplicationQuery
     # Translations are preloaded because both consumers read title and
     # description off every row — the ranking prompt and the offer's own list —
     # and title is translated, so ten candidates would otherwise be ten queries.
-    Proposal
-      .base_selection
-      .where(projekt_phase_id: @projekt_phase.id)
-      .includes(:translations)
-      .pg_search_any_word(search_terms.join(" "))
-      .limit(CANDIDATE_LIMIT)
-      .to_a
+    (matches_for(search_terms) | matches_for(unused_extra_terms)).first(CANDIDATE_LIMIT)
   end
 
   private
 
+    # Two searches rather than one widened one, each with its own slots. Folded
+    # into a single any-word query the citizen's own words win on term frequency
+    # and fill the limit by themselves, which is the outcome the extra terms
+    # exist to avoid: they are there for the proposal that shares the subject and
+    # none of the vocabulary, and that proposal is last in a combined ranking or
+    # not in it at all.
+    def matches_for(terms)
+      return [] if terms.blank?
+
+      Proposal
+        .base_selection
+        .where(projekt_phase_id: @projekt_phase.id)
+        .includes(:translations)
+        .pg_search_any_word(terms.join(" "))
+        .limit(CANDIDATE_LIMIT)
+        .to_a
+    end
+
     def search_terms
-      @search_terms ||= @text.scan(/[[:alnum:]]+/).map(&:downcase).uniq.first(MAX_TERMS)
+      @search_terms ||= tokenize(@text).first(MAX_TERMS)
+    end
+
+    # A term the citizen already used is not a second search, it is the first one
+    # again — and dropping it here is what keeps the two result sets meaningfully
+    # different rather than one being a subset of the other.
+    def unused_extra_terms
+      @unused_extra_terms ||= (tokenize(@extra_terms.join(" ")) - search_terms).first(MAX_TERMS)
+    end
+
+    def tokenize(text)
+      text.to_s.scan(/[[:alnum:]]+/).map(&:downcase).uniq
     end
 end

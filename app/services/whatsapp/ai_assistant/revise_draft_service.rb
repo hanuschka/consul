@@ -14,17 +14,31 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
   # The prompt is local rather than fetched from the DT API like
   # ProposalAiDraft::GenerateDraftService's — there is no revise prompt on that
   # side to fetch, and this loop exists only in the chat.
-  def initialize(resource:, correction:, projekt_phase:)
+  # `card_summary` is the chat-card shortening of the current description,
+  # passed in because it lives in the conversation's context rather than on
+  # the record: null from the model means "still accurate", and only a
+  # revision that changes the description writes a new one.
+  def initialize(resource:, correction:, projekt_phase:, card_summary: nil)
     @resource = resource
     @correction = correction.to_s.strip
     @projekt_phase = projekt_phase
+    @card_summary = card_summary
   end
 
   # A complete draft_data hash, not only what changed:
   # Whatsapp::Drafting::PersistDraftService writes every field it reads, so a
   # hash missing the title would blank the title on the record.
   def call
-    current_draft_data.merge(applied_changes)
+    changes = applied_changes
+
+    # A revised description with no fresh summary must not keep the old one:
+    # the card would quote text the revision just replaced. Dropped instead,
+    # which sends the card down its truncation fallback.
+    if changes["description"].present? && changes["card_summary"].blank?
+      changes["card_summary"] = nil
+    end
+
+    current_draft_data.merge(changes)
   end
 
   private
@@ -52,14 +66,14 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
         "title" => @resource.title,
         "description" => @resource.description,
         "tag_list" => @resource.tag_list.to_s,
-        "image_prompt" => @resource.ai_image_prompt
+        "image_prompt" => @resource.ai_image_prompt,
+        "card_summary" => @card_summary
       }.merge(current_taxonomy)
     end
 
-    # Only for the phases that offer them: a key the phase has no taxonomy for is
-    # discarded by DraftSentiment.valid_id and DraftCategory.valid_ids anyway, and
-    # asking the record for a column its resource may not carry is worse than not
-    # asking.
+    # Only for the phases that offer them: a key the phase has no taxonomy for
+    # is discarded by the DraftTaxonomy policies anyway, and asking the record
+    # for a column its resource may not carry is worse than not asking.
     def current_taxonomy
       chosen_sentiment = sentiments.any? ? { "sentiment_id" => @resource.sentiment_id } : {}
       chosen_labels = labels.any? ? { "projekt_label_ids" => @resource.projekt_label_ids } : {}
@@ -92,6 +106,9 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
         - Write in the language the draft is written in.
         - The description is HTML and starts directly with a <p> paragraph. It must not repeat the
           title and must not begin with a heading.
+        - When and only when you return a revised description, also return card_summary: the
+          revised description shortened to at most 700 characters of plain text, whole sentences,
+          saying only what it says. Null whenever the description is untouched.
         - Return a location only when the change names a different place than the draft does.
         - When the change is not about the contribution at all, return null for every field.
       TEXT
@@ -133,11 +150,11 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
     end
 
     def sentiments
-      @sentiments ||= ::Whatsapp::DraftSentiment.options_for(@projekt_phase)
+      @sentiments ||= ::Whatsapp::DraftTaxonomy.sentiment(@projekt_phase).options
     end
 
     def labels
-      @labels ||= ::Whatsapp::DraftCategory.options_for(@projekt_phase)
+      @labels ||= ::Whatsapp::DraftTaxonomy.category(@projekt_phase).options
     end
 
     def output_schema
@@ -171,6 +188,12 @@ class Whatsapp::AiAssistant::ReviseDraftService < ApplicationService
           type: ["string", "null"],
           description: "The place the contribution is about, only when the change names a " \
                        "different one than the draft does. Null otherwise."
+        },
+        card_summary: {
+          type: ["string", "null"],
+          description: "Only when the description was revised: the revised description " \
+                       "shortened to at most 700 characters of plain text, whole sentences, in " \
+                       "its own language. Null when the description is untouched."
         }
       }
     end

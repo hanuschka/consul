@@ -3,29 +3,45 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
   # whatever opened the flow: the tap that got here may be minutes or days old,
   # and a phase that closed in between must stop the idea before it costs a
   # draft.
+  def self.handle_answer(conversation:, text:, inbound_message_id: nil)
+    new(conversation: conversation).handle_answer(text, inbound_message_id)
+  end
+
   def call
     if projekt_phase.blank?
-      return Whatsapp::Outbound.text(
+      return Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.no_projekt")
       )
     end
 
-    permission_problem =
-      Whatsapp::Drafting::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: author)
+    return if refuse_if_not_permitted
 
-    if permission_problem.present?
-      return Whatsapp::Flows::RefuseParticipationService.call(
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IDEA)
+
+    Whatsapp::Send.text(
+      account: account,
+      body: Whatsapp.phrase("whatsapp.bot.proposal.ask_idea")
+    )
+  end
+
+  # The message that answers the question. An empty one — a sticker, a
+  # transcription that came back blank — is asked again rather than handed to
+  # the drafting call.
+  def handle_answer(text, inbound_message_id)
+    idea_text = text.to_s.strip
+
+    if idea_text.blank?
+      return Whatsapp::Send.recovery(
         conversation: @conversation,
-        reason: permission_problem
+        body: Whatsapp.phrase("whatsapp.bot.idea_missing"),
+        actions: [:cancel]
       )
     end
 
-    @conversation.update!(step: "awaiting_idea")
-
-    Whatsapp::Outbound.text(
-      account: account,
-      body: Whatsapp.phrase("whatsapp.bot.proposal.ask_idea")
+    Whatsapp::Flows::BuildDraftService.from_idea(
+      conversation: @conversation, idea_text: idea_text,
+      inbound_message_id: inbound_message_id
     )
   end
 
@@ -33,9 +49,5 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
 
     def projekt_phase
       @conversation.projekt_phase
-    end
-
-    def author
-      @author ||= Whatsapp::Drafting::SubmissionAuthorService.call(conversation: @conversation)
     end
 end

@@ -13,7 +13,7 @@ class Whatsapp::Flows::CancelService < Whatsapp::Flows::BaseService
   def call
     @conversation.reset_flow!
 
-    Whatsapp::Outbound.buttons(
+    Whatsapp::Send.buttons(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.cancelled"),
       buttons: [

@@ -13,18 +13,27 @@ module Whatsapp::DraftCard
   # `intro_key` names the sentence above the card — the first draft, a revised
   # one, the preview before publishing. It is the one part the bot rephrases;
   # the card under it is the citizen's own words and is never touched.
-  def body(resource, intro_key:)
+  #
+  # `summary` is the shortening the generation call wrote alongside the
+  # description itself, so a caller that has one never pays a completion here.
+  # Without one — an older draft, a model that skipped the field — the summary
+  # service answers as before, cached per record so the two sends of the same
+  # card still cost at most one generation between them.
+  def body(resource, intro_key:, summary: nil)
     [
       Whatsapp.phrase(intro_key),
       I18n.t(
         "whatsapp.bot.proposal.card",
         title: resource.title,
-        description: plain_description(resource)
+        description: summary.presence&.truncate(DESCRIPTION_PREVIEW_LENGTH) ||
+                     plain_description(resource)
       )
     ].join("\n\n")
   end
 
   def plain_description(resource)
-    ::Whatsapp.plain_text(resource.description, length: DESCRIPTION_PREVIEW_LENGTH)
+    ::Whatsapp::AiAssistant::DescriptionSummaryService.call(
+      resource: resource, length: DESCRIPTION_PREVIEW_LENGTH
+    )
   end
 end

@@ -72,11 +72,6 @@ module Whatsapp::FlowActions
   ID_PATTERN =
     /\A#{PREFIX}(?<action>[a-z_]+)(?:#{SEPARATOR}(?<param>[a-z0-9_]+))?\z/
 
-  # Aborting a draft, not unsubscribing. Held apart from Whatsapp::OPT_OUT
-  # keywords deliberately: the catalog uses the same word for both, and the
-  # difference is whether a flow is open. See Inbound::ProcessMessageService.
-  ABORT_KEYWORDS = ["stop", "stopp", "abbrechen", "cancel"].freeze
-
   module_function
 
   def id_for(action:, param: nil)
@@ -126,8 +121,51 @@ module Whatsapp::FlowActions
   def revise_decision_buttons
     [
       button(action: :draft_revise, label_key: "whatsapp.bot.buttons.draft_revise"),
-      ::Whatsapp::Outbound.recovery_button(:cancel)
+      ::Whatsapp::Send.recovery_button(:cancel)
     ]
+  end
+
+  # The two pills that leave a step for AskLocationService, which either asks
+  # for a pin or publishes on the spot depending on whether the phase collects
+  # one. Labelled "Beitrag einreichen" and "Ohne Bild einreichen" they promised
+  # submission and were followed by another question — the one thing a citizen
+  # cannot trust a button about afterwards, because the next tap is the
+  # irreversible one.
+  #
+  # Both labels are fixed text; which of the pair is sent is a property of the
+  # phase, decided once here rather than per message. Two steps offer these
+  # pills, and a label that means "this submits" in one and "this continues" in
+  # the other is how the pair drifts.
+  def submit_final_button(conversation)
+    button(
+      action: :submit_final,
+      label_key: continuation_label_key(
+        conversation,
+        continue_key: "whatsapp.bot.buttons.submit_continue",
+        submit_key: "whatsapp.bot.buttons.submit_final"
+      )
+    )
+  end
+
+  def image_skip_button(conversation)
+    button(
+      action: :image_skip,
+      label_key: continuation_label_key(
+        conversation,
+        continue_key: "whatsapp.bot.buttons.image_skip_continue",
+        submit_key: "whatsapp.bot.buttons.image_skip"
+      )
+    )
+  end
+
+  # Both keys are spelled out at the call sites rather than derived from the
+  # action, so every label stays greppable — the property AskDraftChoiceService
+  # ::CHOICES protects for the same reason. What is shared is the one condition,
+  # so a third continuation pill cannot introduce a third copy of it.
+  def continuation_label_key(conversation, continue_key:, submit_key:)
+    return continue_key if conversation.location_question_available?
+
+    submit_key
   end
 
   # The pair every "shall we link your account" message offers, whether it is

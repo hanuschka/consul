@@ -3,7 +3,7 @@ class Whatsapp::Flows::ClarifyIntentService < Whatsapp::Flows::BaseService
   # want". Deliberately names the two things it could have been rather than
   # asking the citizen to rephrase blindly.
   def call
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: Whatsapp.phrase("whatsapp.bot.proposal.unclear")
     )

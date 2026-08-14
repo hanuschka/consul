@@ -64,7 +64,7 @@ class Whatsapp::NotifyPhaseDeadlineJob < ApplicationJob
 
       return if !claimed
 
-      Whatsapp::Outbound.template(
+      Whatsapp::Send.template(
         account: account,
         name: Whatsapp::NotificationTemplates.name_for(kind),
         variables: [url],

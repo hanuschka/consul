@@ -6,11 +6,11 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
               "should say you do not know which proposal they mean."
 
   def execute
-    proposal_id = conversation.context["support_proposal_id"]
+    proposal_id = conversation.support_proposal_id
 
     return no_proposal_error("support") if proposal_id.blank?
 
-    ::Whatsapp::Flows::RegisterSupportService.call(
+    ::Whatsapp::Flows::SupportService.register(
       conversation: conversation, proposal_id: proposal_id
     )
 

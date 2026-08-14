@@ -6,7 +6,7 @@ class Whatsapp::Flows::SubmitProposalService < Whatsapp::Flows::BaseService
   def call
     return send_no_open_phase if open_phases.empty?
 
-    return Whatsapp::Flows::DiscoveryService.call(
+    return Whatsapp::Flows::DiscoveryService.linked(
       conversation: @conversation, projekt_phases: open_phases
     ) if open_phases.size > 1
 
@@ -38,7 +38,7 @@ class Whatsapp::Flows::SubmitProposalService < Whatsapp::Flows::BaseService
     def send_no_open_phase
       @conversation.reset_flow!
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase("whatsapp.bot.no_open_phase_notice")
       )

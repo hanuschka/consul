@@ -50,7 +50,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
   # over — and this service is where that key is written in the first place.
   def self.from_accepted_idea(conversation:, inbound_message_id: nil)
     new(
-      conversation: conversation, idea_text: conversation.context["last_idea_text"],
+      conversation: conversation, idea_text: conversation.last_idea_text,
       copy: :first, screened: true, inbound_message_id: inbound_message_id
     ).call
   end
@@ -63,68 +63,75 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     @inbound_message_id = inbound_message_id
   end
 
+  # The permission re-check guards every way in — a first idea, a retry, an
+  # accepted duplicate, a revision — because each can arrive minutes or days
+  # after the tap that opened the flow. It sits outside the rescue below:
+  # what it refuses is not a failed generation.
   def call
-    return send_throttle_notice if throttled?
-    return send_draft_failed if revising_without_draft?
+    return if refuse_if_not_permitted
 
-    # Stored before the gate because the retry button reads it back, and after
-    # a failed check it is the only copy of what the citizen wrote.
-    @conversation.merge_context!(stored_text)
-
-    # Screened before the "one moment" message rather than after it: a text
-    # that is about to be refused should not first be promised a draft, and the
-    # generation call it would have paid for is the one thing worth skipping.
-    # The bubble covers this call too — it is a completion like any other.
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
-
-    if !@screened
-      # Armed inside the gate it guards rather than above it. Stamped
-      # unconditionally, an already-screened text would record a screening that
-      # never ran and re-arm the floor against the citizen's next real idea.
-      @conversation.merge_context!(last_screened_at: Time.current.iso8601)
-
-      return send_safety_check_failed if !safety.success?
-      return refuse_content if safety.reason.present?
-      return if duplicates_offered?
-    end
-
-    Whatsapp::Outbound.text(
-      account: account,
-      body: Whatsapp.phrase("whatsapp.bot.drafting")
-    )
-
-    # After the "one moment" message, not before it: sending any message
-    # dismisses the bubble, so asking for it first would spend it on the
-    # millisecond before the wait rather than on the wait.
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
-
-    # The drafting clock is armed in the same write as the result rather than
-    # in one of its own: the advisory lock means no other message can read it
-    # while `generate` runs, so a second write beforehand buys nothing.
-    @conversation.merge_context!(draft_data: generate, last_draft_at: Time.current.iso8601)
-
-    complete
-  rescue StandardError => e
-    report(e, "draft generation")
-
-    send_draft_failed
+    build
   end
 
   private
+
+    def build
+      return send_throttle_notice if throttled?
+      return send_draft_failed if revising_without_draft?
+
+      # Stored before the gate because the retry button reads it back, and after
+      # a failed check it is the only copy of what the citizen wrote.
+      store_inbound_text
+
+      if !@screened
+        # Screened before the "one moment" message rather than after it: a text
+        # that is about to be refused should not first be promised a draft, and
+        # the generation call it would have paid for is the one thing worth
+        # skipping. The bubble covers the screening call — it is a completion
+        # like any other — and an already-screened text has no call to cover,
+        # so the bubble is asked for inside the gate too.
+        Whatsapp::Send.typing(message_id: @inbound_message_id)
+
+        # Armed inside the gate it guards rather than above it. Stamped
+        # unconditionally, an already-screened text would record a screening that
+        # never ran and re-arm the floor against the citizen's next real idea.
+        @conversation.stamp_screened!
+
+        return send_safety_check_failed if !safety.success?
+        return refuse_content if safety.reason.present?
+        return if duplicates_offered?
+      end
+
+      Whatsapp::Send.text(
+        account: account,
+        body: Whatsapp.phrase("whatsapp.bot.drafting")
+      )
+
+      # After the "one moment" message, not before it: sending any message
+      # dismisses the bubble, so asking for it first would spend it on the
+      # millisecond before the wait rather than on the wait.
+      Whatsapp::Send.typing(message_id: @inbound_message_id)
+
+      # One write under the advisory lock: the model batches the draft, its
+      # card summary, and the drafting clock (see store_generated_draft!).
+      @conversation.store_generated_draft!(generate)
+
+      complete
+    rescue StandardError => e
+      report(e, "draft generation")
+
+      send_draft_failed
+    end
 
     # A correction is stored under its own key. last_idea_text is what
     # PersistDraftService writes to the record's ai_idea_text, so a correction put
     # there would replace the citizen's original idea with "make the title
     # shorter" — and the resume recap, which reads it back, would show them that
     # instead of what they came to submit.
-    #
-    # A first draft clears the correction rather than leaving it: the retry pill
-    # prefers it, and a stale one would answer a failed new idea by re-applying a
-    # change to a draft that no longer exists.
-    def stored_text
-      return { last_correction: @idea_text } if @copy == :revised
+    def store_inbound_text
+      return @conversation.store_correction!(@idea_text) if @copy == :revised
 
-      { last_idea_text: @idea_text, last_correction: nil }
+      @conversation.store_idea_text!(@idea_text)
     end
 
     # The card's own step cannot be reached before the record exists, but a
@@ -136,15 +143,19 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     end
 
     def send_draft_failed
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.draft_failed"),
         actions: [:retry, :cancel]
       )
     end
 
+    # The screening call also brings back the words the duplicate search should
+    # widen itself with: both questions read the same raw text, so asking them
+    # together costs one completion where two used to be paid.
     def safety
-      @safety ||= ::ProposalAiDraft::EvaluateContentSafetyService.call(idea_text: @idea_text)
+      @safety ||=
+        ::ProposalAiDraft::EvaluateContentSafetyService.with_search_terms(idea_text: @idea_text)
     end
 
     def refuse_content
@@ -165,7 +176,8 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       return false if @copy != :first
 
       Whatsapp::Flows::AskDuplicateChoiceService.for_idea(
-        conversation: @conversation, idea_text: @idea_text
+        conversation: @conversation, idea_text: @idea_text,
+        search_terms: safety.search_terms
       )
     end
 
@@ -174,7 +186,7 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # published slur is not — the retry button re-runs this whole service with
     # the text the citizen already sent.
     def send_safety_check_failed
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.safety_check_failed"),
         actions: [:retry, :cancel]
@@ -194,8 +206,14 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # Called direct rather than through a Whatsapp:: wrapper of the same name:
     # the wrapper was one delegation, and two GenerateDraftServices one namespace
     # apart is what made comments elsewhere describe the wrong one.
+    #
+    # The required-taxonomy entry point, because the chat has no form to fall
+    # back to: the schema forces a valid category and sentiment wherever the
+    # provider enforces schemas, and what a schema cannot force — a stray
+    # answer from a non-strict provider, an option removed between the two
+    # calls — falls to CompleteDraftService's question in the chat.
     def generate_first_draft
-      ::ProposalAiDraft::GenerateDraftService.call(
+      ::ProposalAiDraft::GenerateDraftService.with_required_taxonomy(
         idea_text: @idea_text,
         projekt_phase: @conversation.projekt_phase
       ).to_h
@@ -205,7 +223,8 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
       Whatsapp::AiAssistant::ReviseDraftService.call(
         resource: @conversation.draft_resource,
         correction: @idea_text,
-        projekt_phase: @conversation.projekt_phase
+        projekt_phase: @conversation.projekt_phase,
+        card_summary: @conversation.card_summary
       )
     end
 
@@ -229,21 +248,19 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
     # refuse the tap that answered the duplicate offer, moments after the turn
     # that offered it stamped the clock.
     def throttled?
-      return true if within?("last_draft_at", DRAFT_INTERVAL)
+      return true if within?(@conversation.last_draft_at, DRAFT_INTERVAL)
 
-      !@screened && within?("last_screened_at", SCREENING_INTERVAL)
+      !@screened && within?(@conversation.last_screened_at, SCREENING_INTERVAL)
     end
 
-    def within?(context_key, interval)
-      stamped_at = @conversation.context[context_key]
-
+    def within?(stamped_at, interval)
       return false if stamped_at.blank?
 
       Time.zone.parse(stamped_at) > interval.ago
     end
 
     def send_throttle_notice
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.too_fast"),
         actions: [:cancel]

@@ -12,19 +12,19 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   end
 
   def call
+    return if refuse_if_not_permitted
+
     # Usually instant now that the draft card carries the evaluation, but not
     # always: a draft whose evaluation was unreachable at the time is evaluated
     # here instead, and that is a second LLM call.
-    Whatsapp::Outbound.typing(message_id: @inbound_message_id)
+    Whatsapp::Send.typing(message_id: @inbound_message_id)
 
     result = Whatsapp::Drafting::PublishDraftService.call(conversation: @conversation)
 
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if
       result == :criteria_failed
-    return Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation) if
-      result == :sentiment_missing
-    return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
-      result == :category_missing
+    return repair_taxonomy(:sentiment) if result == :sentiment_missing
+    return repair_taxonomy(:category) if result == :category_missing
     return send_invalid if result == :invalid
     return send_failure if result.blank?
 
@@ -36,6 +36,20 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   end
 
   private
+
+    # A choice went missing between creation and here — an option deleted from
+    # the phase mid-flow, or a draft predating the completion gate. The marker
+    # tells AskDraftChoiceService that the citizen has already confirmed the
+    # preview, so their answer resumes this publish instead of rewinding them
+    # to the draft card.
+    def repair_taxonomy(kind)
+      @conversation.mark_publish_repair!
+
+      return Whatsapp::Flows::AskDraftChoiceService.category(conversation: @conversation) if
+        kind == :category
+
+      Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation)
+    end
 
     # Sent after the flow is completed, so the menu is offered from a
     # conversation with nothing open in it: all three of its buttons start
@@ -50,7 +64,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     def send_confirmation(resource)
       return send_pending(resource) if resource.is_a?(Proposal) && !resource.admin_accepted?
 
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase(
           "whatsapp.bot.proposal.published", url: Whatsapp::PublishedResourceUrl.call(resource)
@@ -62,7 +76,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # proposal while it waits for moderation. It asks them to log in first,
     # which the copy says rather than leaving them to discover it.
     def send_pending(resource)
-      Whatsapp::Outbound.text(
+      Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase(
           "whatsapp.bot.proposal.published_pending_moderation",
@@ -72,7 +86,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     end
 
     def send_failure
-      Whatsapp::Outbound.recovery(
+      Whatsapp::Send.recovery(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.publish_failed"),
         actions: [:retry, :cancel]
@@ -88,9 +102,9 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # stands", and a citizen who met one and then the other would otherwise find
     # the way out in a different place each time.
     def send_invalid
-      @conversation.update!(step: "awaiting_revision")
+      @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 
-      Whatsapp::Outbound.question(
+      Whatsapp::Send.question(
         conversation: @conversation,
         body: Whatsapp.phrase("whatsapp.bot.draft_invalid", reason: validation_reason),
         buttons: Whatsapp::FlowActions.revise_decision_buttons

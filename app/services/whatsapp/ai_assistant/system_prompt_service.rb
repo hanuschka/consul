@@ -10,6 +10,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     [
       role_section,
       state_section,
+      dates_section,
       routing_section,
       style_section
     ].join("\n\n")
@@ -33,10 +34,36 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Citizen: #{citizen_name}",
         "- Account linked: #{account_linked?}",
         "- Conversation step: #{@conversation.step}",
+        "- Draft on the table: #{draft_description}",
         "- Active participation phase: #{active_phase_description}",
         "- Proposal this conversation is about: #{active_proposal_description}",
         "- Participation phases open portal-wide: #{open_phases_count}"
       ].join("\n")
+    end
+
+    # The model has no clock, and every answer it works from carries dates: a
+    # phase end, an event, a milestone. Without today's date "wie lange kann ich
+    # noch mitmachen?" could only be answered by reading the deadline back out,
+    # which is not what was asked — and "ist das noch aktuell?" could not be
+    # answered at all.
+    #
+    # Rebuilt each turn like the rest of this prompt, and ChatState leaves the
+    # system message out of the stored history, so a conversation resumed days
+    # later cannot be reasoning from the date it started on.
+    def dates_section
+      <<~TEXT.strip
+        Dates: today is #{today}. Every date a tool gives you is ISO-8601, and you work it out
+        against today rather than repeating it: how long is left, whether something has already
+        passed, whether a deadline is today. Lead with the remaining time and give the date after
+        it, never the bare date. A milestone dated in the future is planned rather than done —
+        never report a planned step as progress that has already been made.
+      TEXT
+    end
+
+    # Written out with the weekday because "how long can I still take part" is
+    # routinely answered in days, and a bare number is easy to be a day out on.
+    def today
+      Time.zone.today.strftime("%Y-%m-%d (%A)")
     end
 
     # The one rule the whole design rests on. Everything the citizen writes as
@@ -53,7 +80,14 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            awaiting_resume_decision or awaiting_phase_choice, unless the citizen
            is clearly asking you something instead of answering. Never paraphrase, summarise or
            answer such a message yourself, and never repeat it back: the flow needs the original
-           wording.
+           wording. Pass what the message does to the step as decision: publish when they
+           plainly agree the draft on the table should go in as it stands ("ja", "passt so");
+           revise when they want something changed, however they say it — also when they agree
+           and ask for a change in one breath ("ja, aber der Titel ist zu lang") — with the
+           change as correction when they named one; skip when they decline the optional photo
+           or location pin the step just asked for ("hab kein foto", "weiß die adresse nicht");
+           answer for everything else. Publishing cannot be taken back from the chat: when in
+           doubt, decision is never publish.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
            - see what is running, browse, look around -> show_projekts
@@ -72,6 +106,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            - unlink this number from their account -> start_unlink
            - stop all messages, however they phrase it -> stop_messages, immediately and without
              argument
+           - abandon the submission in progress, however they phrase it ("lass mal", "vergiss
+             es", "abbrechen") -> abort_submission. Declining one optional part is not
+             abandoning, and a wrong abort throws away everything they wrote
            - what can you do, how does this work -> show_help
            - a greeting, or anything that says nothing about what they want -> show_main_menu,
              which offers the three starting points. Never answer a bare "Hallo" with plain text
@@ -140,9 +177,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # it: without it in the prompt the model asks which proposal is meant even
     # when the bot has just asked about one.
     def active_proposal_description
-      proposal_id = @conversation.context["support_proposal_id"] ||
-                    @conversation.context["comment_proposal_id"]
-      proposal = ::Proposal.find_by(id: proposal_id)
+      proposal = ::Proposal.find_by(id: @conversation.active_proposal_id)
 
       return "none" if proposal.blank?
 
@@ -151,6 +186,18 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
     def citizen_name
       @conversation.user&.name.presence || "unknown"
+    end
+
+    # What the publish/revise decision is judged against. Flattened and cut
+    # because the model is deciding what the citizen meant, not re-reading the
+    # whole draft — the markup and the tail of a long description would be
+    # most of the tokens and none of the judgement.
+    def draft_description
+      draft = @conversation.draft_resource
+
+      return "none" if draft.blank?
+
+      "\"#{draft.title}\" — #{::Whatsapp.plain_text(draft.description, length: 300)}"
     end
 
     def active_phase_description

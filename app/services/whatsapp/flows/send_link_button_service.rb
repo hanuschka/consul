@@ -11,7 +11,7 @@ class Whatsapp::Flows::SendLinkButtonService < Whatsapp::Flows::BaseService
   end
 
   def call
-    message = Whatsapp::Outbound.cta_url(
+    message = Whatsapp::Send.cta_url(
       account: account,
       body: @body,
       button_label: @button_label || I18n.t("whatsapp.bot.buttons.open_page"),
@@ -20,7 +20,7 @@ class Whatsapp::Flows::SendLinkButtonService < Whatsapp::Flows::BaseService
 
     return message if message&.status == "sent"
 
-    Whatsapp::Outbound.text(
+    Whatsapp::Send.text(
       account: account,
       body: @fallback_body || "#{@body}\n\n#{@url}"
     )

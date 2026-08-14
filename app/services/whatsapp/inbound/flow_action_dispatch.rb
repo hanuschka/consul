@@ -176,19 +176,21 @@ class Whatsapp::Inbound::FlowActionDispatch
     def decline(body_key)
       forget_offer
 
-      Whatsapp::Send.text(
-        account:,
-        body: Whatsapp.phrase(body_key)
-      )
+      send_phrase(body_key)
     end
 
-    # Only when nothing is open. Reset unconditionally — which is what both of
-    # these used to do — declining an offer that arrived mid-submission threw
-    # the whole draft away: the assistant can put the support question at any
-    # moment, so "Nein, danke" to it cost the citizen everything they had
-    # written.
+    # Only when there is no submission work to lose. Reset unconditionally —
+    # which is what both of these used to do — declining an offer that arrived
+    # mid-submission threw the whole draft away: the assistant can put the
+    # support question at any moment, so "Nein, danke" to it cost the citizen
+    # everything they had written.
+    #
+    # Guarded on unsaved_submission? rather than drafting?: the latter counts
+    # AWAITING_COMMENT, where there is no draft to protect, so a dismiss tapped
+    # there would skip the reset and leave the citizen pinned on a step whose
+    # next message gets published as a comment.
     def forget_offer
-      return if conversation.drafting?
+      return if conversation.unsaved_submission?
 
       conversation.reset_flow!
     end
@@ -199,6 +201,13 @@ class Whatsapp::Inbound::FlowActionDispatch
     def send_menu_prompt(body_key)
       conversation.reset_flow!
 
+      send_phrase(body_key)
+    end
+
+    # The one send in this dispatcher. Three arms had written it out, which is
+    # how the notification arm ended up being send_menu_prompt with a different
+    # name.
+    def send_phrase(body_key)
       Whatsapp::Send.text(
         account:,
         body: Whatsapp.phrase(body_key)
@@ -216,12 +225,7 @@ class Whatsapp::Inbound::FlowActionDispatch
     end
 
     def finish_notification_settings
-      conversation.reset_flow!
-
-      Whatsapp::Send.text(
-        account:,
-        body: Whatsapp.phrase("whatsapp.bot.notifications.saved")
-      )
+      send_menu_prompt("whatsapp.bot.notifications.saved")
     end
 
     # The card on its own, for a citizen who wanted to look before deciding. No

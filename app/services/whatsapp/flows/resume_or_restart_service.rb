@@ -12,12 +12,11 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     new(conversation: conversation).restart
   end
 
-  # The recap goes first either way: hours or days passed since the draft was
-  # started, and the step being resumed says nothing about which projekt it
-  # belongs to. The draft can also be gone by then — retention purges, an
-  # admin deleting the phase — in which case the idea is asked for again
-  # inside the same phase rather than sending the citizen back to the entry
-  # question.
+  # Straight into the step being resumed: the question that got here already
+  # named the projekt and quoted what was on the table, so there is nothing
+  # left to recap. The draft can be gone by now — retention purges, an admin
+  # deleting the phase — in which case the idea is asked for again inside the
+  # same phase rather than sending the citizen back to the entry question.
   #
   # A phase deleted outright leaves nothing to resume into and nothing for
   # AskIdeaService to move the step with, so it restarts instead — otherwise
@@ -59,7 +58,7 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     )
   end
 
-  # How much of the citizen's idea the recap quotes back.
+  # How much of the citizen's idea the resume question quotes back.
   IDEA_PREVIEW_LENGTH = 300
 
   private
@@ -106,15 +105,12 @@ class Whatsapp::Flows::ResumeOrRestartService < Whatsapp::Flows::BaseService
     # falls back to the citizen's own words, which is also the case where
     # nothing else would ever show them again.
     def subject_line
-      return draft_line if @conversation.draft_resource.present?
+      draft = @conversation.draft_resource
+
+      return Whatsapp.phrase("whatsapp.bot.proposal.resume_draft", title: draft.title.to_s) if
+        draft.present?
 
       idea_line
-    end
-
-    def draft_line
-      Whatsapp.phrase(
-        "whatsapp.bot.proposal.resume_draft", title: @conversation.draft_resource.title.to_s
-      )
     end
 
     # The text the citizen sent before the generation call, kept by

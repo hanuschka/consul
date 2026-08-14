@@ -148,10 +148,17 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
     # left alone — read as opt_out it dropped their draft and silenced the
     # channel, with only a typed "Start" to undo it and nothing saying so.
     #
-    # Leaving the channel is not made harder by this: the typed keyword ends
-    # messages from anywhere, mid-submission included, because
-    # ProcessMessageService checks OPT_OUT_KEYWORDS deterministically one gate
-    # before this service is ever asked.
+    # The way out mid-submission is the typed keyword, and it takes two
+    # messages rather than one: ProcessMessageService reads OPT_OUT_KEYWORDS
+    # deterministically one gate above this, and while a submission is open it
+    # routes them to CancelService — the catalog's one word for two things
+    # ("Stop" abandons what is in progress, "STOP" ends all messages). The
+    # cancel leaves the conversation idle, so the same word again opts out.
+    #
+    # That split predates this guard and is what "typed opt-out keywords still
+    # work as before" means. Do not read this as "typed STOP opts out from
+    # anywhere" — it does not, and a shared guard placed on
+    # MessageDeliveryService.disable on that assumption would break it.
     def opt_out_verdict
       return if @conversation.drafting?
 

@@ -137,25 +137,35 @@ module Whatsapp::FlowActions
   # pills, and a label that means "this submits" in one and "this continues" in
   # the other is how the pair drifts.
   def submit_final_button(conversation)
-    label_key =
-      if conversation.location_question_available?
-        "whatsapp.bot.buttons.submit_continue"
-      else
-        "whatsapp.bot.buttons.submit_final"
-      end
-
-    button(action: :submit_final, label_key: label_key)
+    button(
+      action: :submit_final,
+      label_key: continuation_label_key(
+        conversation,
+        continue_key: "whatsapp.bot.buttons.submit_continue",
+        submit_key: "whatsapp.bot.buttons.submit_final"
+      )
+    )
   end
 
   def image_skip_button(conversation)
-    label_key =
-      if conversation.location_question_available?
-        "whatsapp.bot.buttons.image_skip_continue"
-      else
-        "whatsapp.bot.buttons.image_skip"
-      end
+    button(
+      action: :image_skip,
+      label_key: continuation_label_key(
+        conversation,
+        continue_key: "whatsapp.bot.buttons.image_skip_continue",
+        submit_key: "whatsapp.bot.buttons.image_skip"
+      )
+    )
+  end
 
-    button(action: :image_skip, label_key: label_key)
+  # Both keys are spelled out at the call sites rather than derived from the
+  # action, so every label stays greppable — the property AskDraftChoiceService
+  # ::CHOICES protects for the same reason. What is shared is the one condition,
+  # so a third continuation pill cannot introduce a third copy of it.
+  def continuation_label_key(conversation, continue_key:, submit_key:)
+    return continue_key if conversation.location_question_available?
+
+    submit_key
   end
 
   # The pair every "shall we link your account" message offers, whether it is

@@ -142,7 +142,17 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
     # is followed by the link itself, so a third suggestion under either is one
     # instruction too many.
     def message
-      [refusal_copy, verification_hint, next_step].compact.join("\n\n")
+      [explanation, next_step].compact_blank.join("\n\n")
+    end
+
+    # The same two lines the support path sends, assembled in the one place
+    # that owns their order — built here as well and this class had two copies
+    # of "rule, then verification hint", which is exactly the drift extracting
+    # it was meant to prevent.
+    def explanation
+      @explanation ||= self.class.explanation_for(
+        reason: @reason, projekt_phase: @conversation.projekt_phase
+      )
     end
 
     def next_step
@@ -156,11 +166,12 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
       )
     end
 
-    def refusal_copy
-      self.class.copy_for(reason: @reason, projekt_phase: @conversation.projekt_phase)
-    end
-
+    # Only asked as the guard above — whether the message already ends in
+    # something to act on. Memoized because that guard is the second time the
+    # hint is built for one refusal.
     def verification_hint
-      self.class.verification_hint_for(@reason)
+      return @verification_hint if defined?(@verification_hint)
+
+      @verification_hint = self.class.verification_hint_for(@reason)
     end
 end

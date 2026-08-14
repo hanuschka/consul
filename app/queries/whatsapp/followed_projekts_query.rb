@@ -14,18 +14,32 @@ class Whatsapp::FollowedProjektsQuery < ApplicationQuery
     new(user: user).uncapped
   end
 
+  # Capped in SQL, not in Ruby: pages carry translated content, so loading a
+  # citizen's sixtieth followed projekt to render ten is sixty fat rows for
+  # fifty that are thrown away.
   def call
-    uncapped.first(::Whatsapp::MAX_LIST_ROWS)
+    return [] if @user.blank?
+
+    scope.limit(::Whatsapp::MAX_LIST_ROWS).to_a
   end
 
   def uncapped
     return [] if @user.blank?
 
-    Projekt
-      .joins(:subscriptions)
-      .where(projekt_subscriptions: { user_id: @user.id, active: true })
-      .includes(:page)
-      .order("projekts.created_at DESC")
-      .to_a
+    scope.to_a
   end
+
+  private
+
+    # The title every match is decided on is Globalize-translated, so the
+    # translations are preloaded with the page — without them each candidate
+    # costs its own page_translations SELECT, which name resolution pays per
+    # row.
+    def scope
+      Projekt
+        .joins(:subscriptions)
+        .where(projekt_subscriptions: { user_id: @user.id, active: true })
+        .includes(page: :translations)
+        .order("projekts.created_at DESC")
+    end
 end

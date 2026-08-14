@@ -106,6 +106,19 @@ class Whatsapp::Conversation < ApplicationRecord
     DRAFTING_STEPS.include?(step)
   end
 
+  # Whether a reset would cost the citizen something they cannot get back.
+  # Asked instead of `drafting?` by the paths that end a *side* conversation —
+  # declining an offer, cancelling an unlink — because those may be answered
+  # from inside a submission and must not take it with them.
+  #
+  # Deliberately narrower than `drafting?`, which is a set of steps rather than
+  # a statement about work: it counts AWAITING_COMMENT and
+  # AWAITING_RESUME_DECISION, where there is no draft to protect, so guarding
+  # on it would leave a citizen pinned on a step nothing can clear.
+  def unsaved_submission?
+    draft_resource.present? || draft_data.present?
+  end
+
   # What this phase collects besides the text, asked of the conversation because
   # two places each need one of the answers and they must not drift: the step
   # that offers a pin and the drafting service that infers one from the citizen's
@@ -180,7 +193,7 @@ class Whatsapp::Conversation < ApplicationRecord
 
   # The citizen's own words, written by BuildDraftService before the
   # generation gate so the retry pill can read them back after a failure.
-  # Read by the resume recap, the duplicate offer's "submit anyway", and
+  # Read by the resume question, the duplicate offer's "submit anyway", and
   # PersistDraftService (becomes the record's ai_idea_text).
   def last_idea_text
     context["last_idea_text"]
@@ -264,11 +277,19 @@ class Whatsapp::Conversation < ApplicationRecord
     context["choice_reasks"].to_i
   end
 
-  def count_choice_reask!
-    merge_context!(choice_reasks: choice_reasks + 1)
+  # The step and the count in one UPDATE, because asking is one moment. As two
+  # named writers it was two transactions per asking, both inside the inbound
+  # job's advisory lock — the batching this schema's header asks for.
+  def ask_choice!(step)
+    update!(step: step, context: context.merge("choice_reasks" => choice_reasks + 1))
   end
 
+  # Nothing to write on the overwhelmingly common path: the counter only exists
+  # once a question has gone unanswered, and a tapped option normally clears a
+  # key that was never set.
   def clear_choice_reasks!
+    return if context["choice_reasks"].blank?
+
     merge_context!(choice_reasks: nil)
   end
 

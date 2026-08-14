@@ -38,11 +38,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_LOCATION)
 
-    Whatsapp::Send.buttons(
-      account: account,
-      body: Whatsapp.phrase("whatsapp.bot.proposal.ask_location"),
-      buttons: buttons
-    )
+    send_choice("whatsapp.bot.proposal.ask_location")
   end
 
   # The picker itself. The step does not move: what this asks for is a
@@ -112,11 +108,7 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
     # ways on are on this message — share again, or publish without a pin — so
     # the choice is theirs rather than the next message's.
     def announce_attach_failure
-      Whatsapp::Send.buttons(
-        account: account,
-        body: Whatsapp.phrase("whatsapp.bot.proposal.location_failed"),
-        buttons: buttons
-      )
+      send_choice("whatsapp.bot.proposal.location_failed")
     end
 
     # The pin the citizen shared through WhatsApp's own picker, written onto
@@ -153,6 +145,17 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
       Whatsapp::Send.location_request(
         account: account,
         body: Whatsapp.phrase(body_key)
+      )
+    end
+
+    # The two messages that offer the pair of pills — the question, and the
+    # failure that puts it again. Parameterised so both provably carry the same
+    # two ways on, which is the whole point of the failure branch.
+    def send_choice(body_key)
+      Whatsapp::Send.buttons(
+        account: account,
+        body: Whatsapp.phrase(body_key),
+        buttons: buttons
       )
     end
 

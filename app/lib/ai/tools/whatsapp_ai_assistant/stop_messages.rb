@@ -23,15 +23,17 @@ class Ai::Tools::WhatsappAiAssistant::StopMessages < Ai::Tools::WhatsappAiAssist
     # channel and dropped the draft, and only a typed "Start" reopened it —
     # which nothing told them.
     #
-    # Refusing here does not make leaving the channel harder. The typed keyword
-    # is checked deterministically in Inbound::ProcessMessageService, before any
-    # model is asked, so it still ends messages mid-submission and during an
-    # outage; and a citizen who means it says so again once the submission is
-    # over.
+    # The way out is the typed keyword, read deterministically in
+    # Inbound::ProcessMessageService before any model is asked. Mid-submission
+    # it takes two messages: there it means "abandon what is in progress" and
+    # routes to CancelService, which leaves the conversation idle, so the same
+    # word again ends all messages. That two-step is the pre-existing catalog
+    # behaviour, not something this guard introduced — typed STOP does not opt
+    # out from inside a submission and never did.
     def mid_submission_error
       { error: "This citizen is part-way through a submission, so this message is part of what " \
                "they are writing rather than a request about this channel. Call hand_to_flow " \
-               "instead. If they truly want no more messages they can type STOPP, which is " \
-               "handled outside this conversation." }
+               "instead. If they truly want no more messages, typing STOPP is handled outside " \
+               "this conversation." }
     end
 end

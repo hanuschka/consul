@@ -41,7 +41,7 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
 
     return send_gone.then { false } if proposal.blank?
     return send_already_supported.then { false } if proposal.voted_up_by?(user)
-    return send_not_allowed.then { false } if !votable?
+    return send_not_allowed.then { false } if !proposal.votable_by?(user)
 
     proposal.register_vote(user, "yes")
 
@@ -88,27 +88,20 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
       )
     end
 
-    # The phase is the authority where there is one: its own votes_component
-    # rule already contains the portal-wide verification test, plus the
-    # conditional-voting exception that lets an unverified citizen support
-    # where the phase allows it. Asked of Proposal#votable_by? alone — which is
-    # a verification test and nothing else — a closed phase and an out-of-area
-    # citizen both reached register_vote, which declines silently.
-    def votable?
-      return projekt_phase.votable_by?(user) if projekt_phase.present?
-
-      proposal.votable_by?(user)
-    end
-
     def projekt_phase
-      proposal.projekt_phase
+      @projekt_phase ||= proposal.projekt_phase
     end
 
-    # In the phase's own vocabulary, so the copy written for each rule is the
-    # copy the citizen gets. Hardcoded :not_verified, someone refused because
-    # the phase had closed or because they live outside the eligible area was
-    # told their account needed verifying and handed a link that would not have
-    # unblocked them.
+    # Why the phase said no, in its own vocabulary — the same symbols
+    # RefuseParticipationService writes copy for. Read off the phase rather
+    # than assumed: hardcoded :not_verified, someone refused because the phase
+    # had closed or because they live outside the eligible area was told their
+    # account needed verifying and handed a link that would not have unblocked
+    # them.
+    #
+    # Costs nothing extra to ask a second time — Proposal#votable_by? delegates
+    # to this same phase, and ProjektPhase#permission_problem memoizes per user
+    # and location, so the refusal reads back the verdict that refused it.
     def refusal_reason
       projekt_phase&.permission_problem(user, location: :votes_component) || :not_verified
     end

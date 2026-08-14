@@ -82,8 +82,7 @@ class Whatsapp::Flows::AskDraftChoiceService < Whatsapp::Flows::BaseService
     return if options.empty?
     return abandon if @conversation.choice_reasks >= MAX_REASKS
 
-    @conversation.count_choice_reask!
-    @conversation.update!(step: choice.fetch(:step))
+    @conversation.ask_choice!(choice.fetch(:step))
 
     return send_buttons if options.size <= ::Whatsapp::MAX_BUTTONS
 

@@ -80,10 +80,6 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
       Whatsapp::Flows::AskDraftChoiceService.sentiment(conversation: @conversation)
     end
 
-    def persist
-      Whatsapp::Drafting::PersistDraftService.call(conversation: @conversation, draft_data: draft_data)
-    end
-
     # PersistDraftService saves with validations on, and the save is the last
     # thing standing between a citizen and their submission. Unrescued it
     # escaped the whole inbound job: nothing was sent, and the step never moved
@@ -91,7 +87,7 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
     # the submission was gone with no reply. Returns nil once the citizen has
     # been told, which is the caller's signal that there is no draft to present.
     def persist_or_refuse
-      persist
+      Whatsapp::Drafting::PersistDraftService.call(conversation: @conversation, draft_data: draft_data)
     rescue ActiveRecord::RecordInvalid => e
       report(e, "draft persistence")
 

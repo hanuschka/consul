@@ -23,14 +23,21 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
     new(conversation: conversation, body: greeting_body).call
   end
 
-  # After something was published. Deliberately no reset: publishing already
-  # completed the flow, and resetting would drop the projekt the citizen is
-  # most likely to submit to again.
+  # The menu as a message of its own, after a message that said something —
+  # a publish confirmation, a listing of the citizen's contributions.
+  # Deliberately no reset: the content message has already dealt with the flow,
+  # and resetting would drop the projekt the citizen is most likely to act on
+  # next.
   #
-  # A guest submitter gets the confirmation alone rather than the help list:
-  # they have just been answered, and following "you're online" with a menu
-  # they mostly cannot use reads as a condition attached after the fact.
-  def self.after_publishing(conversation:)
+  # A separate message rather than pills on the content itself, because an
+  # interactive body is capped at a quarter of what a text body holds and
+  # nothing truncates it — five contributions with long titles and URLs is
+  # enough to have the whole message refused.
+  #
+  # A guest submitter gets the content alone rather than the help list: they
+  # have just been answered, and following it with a menu they mostly cannot
+  # use reads as a condition attached after the fact.
+  def self.follow_up(conversation:)
     return if unlinked?(conversation)
 
     new(

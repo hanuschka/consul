@@ -143,6 +143,32 @@ class Whatsapp::Conversation < ApplicationRecord
     Time.zone.parse(flow_started_at) < STALE_FLOW_AFTER.ago
   end
 
+  # Ends a side conversation — a support offer, an unlink question — without
+  # ending the submission underneath it. The two wrong answers either side of
+  # this are both reachable: reset_flow! takes the draft with it, and leaving
+  # the step alone strands the citizen on a question that re-asks itself from
+  # StepDispatch on every message (AWAITING_UNLINK_CONFIRMATION is not one of
+  # the DRAFTING_STEPS, so nothing else clears it).
+  #
+  # The step moves to where the submission can be picked up again and the keys
+  # the side conversation owns are dropped; everything the draft needs stays.
+  def end_side_interaction!
+    update!(
+      step: resumable_step,
+      context: context.except("support_proposal_id", "comment_proposal_id")
+    )
+  end
+
+  # Both landing steps re-present themselves on the next message rather than
+  # acting on it blind — PresentDraftService#handle_decision falls back to
+  # showing the card, and AskIdeaService rebuilds from the citizen's own words
+  # — so neither can consume a message as an answer to a question it never saw.
+  def resumable_step
+    return Step::AWAITING_DRAFT_DECISION if draft_resource.present?
+
+    Step::AWAITING_IDEA
+  end
+
   # Completing keeps the phase so the next idea goes to the same one; resetting
   # drops it so the citizen is asked again.
   def reset_flow!

@@ -185,12 +185,12 @@ class Whatsapp::Inbound::FlowActionDispatch
     # support question at any moment, so "Nein, danke" to it cost the citizen
     # everything they had written.
     #
-    # Guarded on unsaved_submission? rather than drafting?: the latter counts
-    # AWAITING_COMMENT, where there is no draft to protect, so a dismiss tapped
-    # there would skip the reset and leave the citizen pinned on a step whose
-    # next message gets published as a comment.
+    # Either way the step has to move. Skipping the write entirely stranded a
+    # citizen who declined an unlink mid-draft: StepDispatch answers
+    # AWAITING_UNLINK_CONFIRMATION by asking again, so every later message
+    # re-put the question they had just said no to.
     def forget_offer
-      return if conversation.unsaved_submission?
+      return conversation.end_side_interaction! if conversation.unsaved_submission?
 
       conversation.reset_flow!
     end

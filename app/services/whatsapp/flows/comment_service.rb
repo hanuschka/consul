@@ -43,9 +43,14 @@ class Whatsapp::Flows::CommentService < Whatsapp::Flows::BaseService
     comment_body = body.to_s.strip
 
     return send_empty if comment_body.blank?
-    return send_confirmation_only if confirmation_only?(comment_body)
     return send_gone if proposal.blank?
     return send_not_allowed if !comments_allowed?
+
+    # Asked after the proposal and the permission, not before: a citizen who
+    # answers "ja" about a contribution that has since been deleted or closed
+    # is owed that news rather than an invitation to write a comment nothing
+    # would accept.
+    return send_confirmation_only if confirmation_only?(comment_body)
 
     comment = Comment.build(proposal, user, comment_body)
 

@@ -8,23 +8,28 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
   # there was nowhere at all to see them.
   MAX_SHOWN = 5
 
-  # Both messages end in the main menu's own three options. Neither used to
-  # carry anything: the listing simply stopped, and the empty one told the
-  # citizen to tap "Beitrag einreichen" on a message that had no buttons at
-  # all — which is also what makes that sentence true again rather than
-  # something to rewrite.
+  # Both answers now end in the main menu. Neither used to carry anything: the
+  # listing simply stopped, and the empty one told the citizen to tap "Beitrag
+  # einreichen" on a message that had no buttons at all — which is also what
+  # makes that sentence true again rather than something to rewrite.
+  #
+  # The listing keeps its text message and takes the menu as a second one. Five
+  # entries of title, status and URL is long enough to pass what an interactive
+  # body holds, and nothing truncates it, so pinning the pills to the list
+  # itself would trade a dead end for a message that does not arrive.
   def call
     return send_empty if contributions.empty?
 
-    Whatsapp::Send.buttons(
+    Whatsapp::Send.text(
       account: account,
       body: [
         Whatsapp.phrase("whatsapp.bot.contributions.intro"),
         *entries,
         more_line
-      ].compact_blank.join("\n\n"),
-      buttons: Whatsapp::FlowActions.main_menu_buttons
+      ].compact_blank.join("\n\n")
     )
+
+    Whatsapp::Flows::MainMenuService.follow_up(conversation: @conversation)
   end
 
   private

@@ -88,6 +88,15 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
   private
 
     def attach_and_publish(location)
+      # No draft left to pin — a retention purge, an admin deleting the phase.
+      # Restarted rather than reported as a failed pin: offering to share it
+      # again would be offering it for a submission that no longer exists, and
+      # the way out would land in a publish that has nothing to publish. Same
+      # answer #request already gives a tapped picker whose draft is gone.
+      if draft_resource.blank?
+        return Whatsapp::Flows::ResumeOrRestartService.restart(conversation: @conversation)
+      end
+
       return announce_attach_failure if !attach(location["latitude"], location["longitude"])
 
       Whatsapp::Send.text(

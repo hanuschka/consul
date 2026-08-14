@@ -56,7 +56,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # something new, and one of them starts another submission. A guest
     # submitter is left with the confirmation alone, which the menu decides.
     def send_next_actions
-      Whatsapp::Flows::MainMenuService.after_publishing(conversation: @conversation)
+      Whatsapp::Flows::MainMenuService.follow_up(conversation: @conversation)
     end
 
     # Only proposals can be held back for moderation — an investment has no

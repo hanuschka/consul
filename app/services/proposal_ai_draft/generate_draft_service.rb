@@ -22,7 +22,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
+        .chat_with_json_output(output_schema, feature: "proposal_ai_draft.generate_draft")
         .with_instructions(system_instructions)
         .ask(user_prompt)
 

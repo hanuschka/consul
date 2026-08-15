@@ -6,6 +6,7 @@ module Adm
       deficiency_report_category_id
       deficiency_report_subcategory_id
       deficiency_report_status_id
+      deficiency_report_intake_channel_id
       responsible
       archived_state
       hidden_state

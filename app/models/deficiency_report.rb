@@ -255,6 +255,13 @@ class DeficiencyReport < ApplicationRecord
     end
   end
 
+  def email_officers_individually?
+    return true unless responsible.is_a?(DeficiencyReport::OfficerGroup)
+
+    responsible.default_email.blank? ||
+      Setting["deficiency_reports.officer_groups_only_for_assignment"].blank?
+  end
+
   def archived?
     self.class.archived.exists?(id: id)
   end

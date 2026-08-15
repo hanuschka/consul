@@ -21,7 +21,7 @@ class AiAnalytics::Polls::Base < ApplicationService
   private
 
   def generate_analysis
-    chat = Ai::RubyLlmFactory.chat
+    chat = Ai::RubyLlmFactory.chat(feature: "ai_analytics.poll_#{@stat_key}")
       .with_schema(@output_schema)
       .with_instructions(system_instructions)
 

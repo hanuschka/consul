@@ -210,7 +210,7 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
 
   def get_ai_response(user_prompt)
     response = Ai::RubyLlmFactory
-      .chat
+      .chat(feature: "projekt_evaluations.phase_key_findings")
       .with_schema(output_schema)
       .with_instructions(system_instructions)
       .ask(user_prompt)

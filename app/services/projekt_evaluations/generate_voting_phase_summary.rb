@@ -119,7 +119,7 @@ class ProjektEvaluations::GenerateVotingPhaseSummary < ApplicationService
 
   def get_ai_response(user_prompt)
     response = Ai::RubyLlmFactory
-      .chat
+      .chat(feature: "projekt_evaluations.voting_phase_summary")
       .with_instructions(system_instructions)
       .ask(user_prompt)
 

@@ -79,6 +79,7 @@ en:
             status_changed_at: Status changed on
             title: Title
             author: Author
+            intake_channel: Intake channel
             status: Status
             location: Location
             address: Address

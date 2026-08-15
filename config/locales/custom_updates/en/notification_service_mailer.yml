@@ -8,6 +8,14 @@ en:
         hi: Dear Officer,
         p1_s: Two weeks ago you were assigned a deficiency report, which was not processed yet.
         p1_p: Two weeks ago you were assigned multiple deficiency reports, which were not processed yet.
+      overdue_deficiency_reports_overview:
+        subject: Overview of overdue reports
+        hi: Dear Officer,
+        p1_s: "one report has been left unprocessed. You receive this overview because you manage all reports:"
+        p1_p: "several reports have been left unprocessed. You receive this overview because you manage all reports:"
+        fresh_badge: NEW
+        fresh_hint: Reports marked "%{label}" became overdue today.
+        no_responsible: no officer assigned
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
         hi: Dear Officer.

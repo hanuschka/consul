@@ -129,7 +129,7 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   def call_ai(system_prompt:, schema:, message:)
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(schema)
+        .chat_with_json_output(schema, feature: "projekt_imports.process")
         .with_instructions(system_prompt)
         .ask(message)
 

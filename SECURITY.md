@@ -13,7 +13,7 @@ diese verantwortungsvoll und vertraulich zu melden, bevor Sie sie
 
 Bitte melden Sie Sicherheitslücken per E-Mail an:
 
-**security@demokratie.today** <!-- PLATZHALTER - gewünschte Kontaktadresse eintragen -->
+**info@demokratie.today** <!-- PLATZHALTER - gewünschte Kontaktadresse eintragen -->
 
 Bitte geben Sie in Ihrer Meldung nach Möglichkeit an:
 

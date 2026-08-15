@@ -53,7 +53,7 @@ module DeficiencyReports
 
       def chat
         Ai::RubyLlmFactory
-          .chat_with_json_output(output_schema)
+          .chat_with_json_output(output_schema, feature: "deficiency_reports.categorization")
           .with_instructions(system_instructions)
       end
 

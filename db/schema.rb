@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_11_090000) do
+ActiveRecord::Schema.define(version: 2026_08_15_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -239,6 +239,27 @@ ActiveRecord::Schema.define(version: 2026_08_11_090000) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["resource_type", "resource_id"], name: "index_ai_chats_on_resource_type_and_resource_id"
+  end
+
+  create_table "ai_usage_records", force: :cascade do |t|
+    t.date "period_month", null: false
+    t.string "feature", null: false
+    t.string "provider", null: false
+    t.string "model", null: false
+    t.integer "request_count", default: 0, null: false
+    t.integer "unpriced_request_count", default: 0, null: false
+    t.bigint "input_tokens", default: 0, null: false
+    t.bigint "output_tokens", default: 0, null: false
+    t.bigint "cache_read_tokens", default: 0, null: false
+    t.bigint "cache_write_tokens", default: 0, null: false
+    t.bigint "thinking_tokens", default: 0, null: false
+    t.float "audio_seconds", default: 0.0, null: false
+    t.decimal "cost_total", precision: 14, scale: 6, default: "0.0", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "version", default: 0, null: false
+    t.index ["period_month", "feature", "provider", "model"], name: "index_ai_usage_records_on_period_and_breakdown", unique: true
+    t.index ["period_month"], name: "index_ai_usage_records_on_period_month"
   end
 
   create_table "api_clients", force: :cascade do |t|

@@ -4,6 +4,9 @@ class Adm::DeficiencyReports::SubcategoriesController < Adm::DeficiencyReports::
   before_action :load_category
 
   def index
+    authorize DeficiencyReport::Subcategory, :index?,
+      policy_class: Adm::DeficiencyReports::SubcategoryPolicy
+
     @subcategories = policy_scope(@category.subcategories,
       policy_scope_class: Adm::DeficiencyReports::SubcategoryPolicy::Scope)
 

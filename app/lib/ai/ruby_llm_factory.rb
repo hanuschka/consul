@@ -1,30 +1,54 @@
 module Ai::RubyLlmFactory
-  def self.chat
-    build_chat(init)
+  def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
+    build_chat(init, feature: feature)
   end
 
-  def self.chat_with_request_timeout(seconds, gpt_model: nil)
-    build_chat(context_with_request_timeout(seconds), gpt_model: gpt_model)
+  def self.chat_with_request_timeout(seconds, feature: AiUsageRecord::UNKNOWN_FEATURE, gpt_model: nil)
+    build_chat(context_with_request_timeout(seconds), feature: feature, gpt_model: gpt_model)
   end
 
-  def self.chat_with_json_output(output_schema)
-    chat.with_schema(output_schema)
+  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE)
+    chat(feature: feature).with_schema(output_schema)
   end
 
   # The cheap model on a bounded clock, for the short judgements made while
   # someone is waiting on the other end of a chat — routing a message, ranking
   # a handful of titles, rewording one line. Three callers asked for exactly
   # this pairing by hand before it had a name.
-  def self.fast_chat(timeout_seconds)
-    chat_with_request_timeout(timeout_seconds, gpt_model: Ai::Settings::DEFAULT_GPT_FAST_MODEL)
+  def self.fast_chat(timeout_seconds, feature: AiUsageRecord::UNKNOWN_FEATURE)
+    chat_with_request_timeout(
+      timeout_seconds,
+      feature: feature,
+      gpt_model: Ai::Settings::DEFAULT_GPT_FAST_MODEL
+    )
   end
 
-  def self.build_chat(context, gpt_model: nil)
-    context.chat(
-      model: model_for(gpt_model),
-      provider: Ai::Settings.current_llm_provider.to_sym,
+  def self.build_chat(context, feature:, gpt_model: nil)
+    model = model_for(gpt_model)
+    provider = Ai::Settings.current_llm_provider
+
+    chat = context.chat(
+      model: model,
+      provider: provider.to_sym,
       assume_model_exists: true
     )
+
+    record_usage_from(chat, feature: feature, provider: provider, model: model)
+  end
+
+  def self.record_usage_from(chat, feature:, provider:, model:)
+    chat.after_message do |message|
+      AiUsageRecords::RecordChatUsage.call(
+        message: message,
+        feature: feature,
+        provider: provider,
+        requested_model: model
+      )
+    rescue => e
+      Rails.logger.error("[AiUsageRecord] Failed to record usage for #{feature}: #{e.message}")
+    end
+
+    chat
   end
 
   # A model id named for one provider means nothing to another, so a caller's

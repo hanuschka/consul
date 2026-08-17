@@ -43,6 +43,30 @@ module HtmlImageSlots
     { html: fragment.to_html, used: urls.size - remaining.size }
   end
 
+  # How many pictures this fragment has room for, counted by the same rule fill
+  # uses. Anything that counts slots separately — a prompt telling a model which
+  # templates can hold an image, for instance — drifts from what actually gets
+  # filled: counting only <img> misses the hero and full-width overlay templates
+  # that carry their picture as a background-image.
+  def self.count(html)
+    return 0 if html.blank?
+
+    Nokogiri::HTML::DocumentFragment
+      .parse(html)
+      .css("*")
+      .count { |node| slot?(node) }
+  end
+
+  def self.slot?(node)
+    return fillable?(node["src"], []) if node.name.casecmp("img").zero?
+
+    style = node["style"]
+    return false if style.blank?
+    return false if !style.match?(URL_IN_STYLE)
+
+    fillable?(style[URL_IN_STYLE, 2], [])
+  end
+
   def self.fill_element(node, remaining, replacements)
     if node.name.casecmp("img").zero?
       return fill_image(node, remaining, replacements)

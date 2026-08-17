@@ -19,8 +19,13 @@ class ProjektImports::ExtractSourceImagesService < ApplicationService
     @projekt_import = projekt_import
   end
 
+  # Each document and each picture inside it is isolated, because a single failure
+  # used to discard everything: one flat_map over all files meant a blob upload
+  # that raised on the second document threw away the descriptors for the first
+  # one's pictures, leaving them attached but invisible to the picker, the prompt
+  # and the projekt — reported to the admin as "no usable image was found".
   def call
-    descriptors = projekt_import.source_files.flat_map { |source_file| store_images_from(source_file) }
+    descriptors = projekt_import.source_files.flat_map { |source_file| images_from(source_file) }
 
     projekt_import.update!(
       source_images: descriptors,
@@ -29,13 +34,35 @@ class ProjektImports::ExtractSourceImagesService < ApplicationService
 
     ServiceResult.success(source_images: descriptors)
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ExtractSourceImagesService] failed: #{e.message}")
-    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "source_images" }) if defined?(Sentry)
+    report(e)
 
     ServiceResult.success(source_images: [])
   end
 
   private
+
+  def images_from(source_file)
+    store_images_from(source_file)
+  rescue StandardError => e
+    report(e, filename: source_file.blob.filename.to_s)
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.source_images_file_failed",
+             filename: source_file.blob.filename.to_s),
+      stage: ProjektImport::ANALYSIS_WARNING_STAGE
+    )
+
+    []
+  end
+
+  def report(error, filename: nil)
+    Rails.logger.error("[ProjektImports::ExtractSourceImagesService] failed: #{error.message}")
+    return if !defined?(Sentry)
+
+    Sentry.capture_exception(
+      error,
+      extra: { projekt_import_id: projekt_import.id, stage: "source_images", filename: filename }.compact
+    )
+  end
 
   def store_images_from(source_file)
     filename = source_file.blob.filename.to_s
@@ -47,9 +74,24 @@ class ProjektImports::ExtractSourceImagesService < ApplicationService
     warn_about_unextractable(filename) if result.data[:unextractable]
     result.data[:unreadable].each { |image| warn_about_unreadable(filename, image) }
 
-    ProjektImports::SourceImageFilter.usable(result.data[:images]).map do |image|
-      descriptor_for(image, filename)
+    ProjektImports::SourceImageFilter.usable(result.data[:images]).filter_map do |image|
+      stored_descriptor_for(image, filename)
     end
+  end
+
+  # One picture that cannot be stored costs that picture and says so, rather than
+  # the whole document's worth.
+  def stored_descriptor_for(image, filename)
+    descriptor_for(image, filename)
+  rescue StandardError => e
+    report(e, filename: filename)
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.source_image_store_failed",
+             image: image[:filename], message: e.message),
+      stage: ProjektImport::ANALYSIS_WARNING_STAGE
+    )
+
+    nil
   end
 
   def descriptor_for(image, source_filename)

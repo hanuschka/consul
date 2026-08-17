@@ -9,7 +9,9 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
   end
 
   def call
-    return ServiceResult.success(blocks: []) if blocks.blank?
+    if blocks.blank?
+      return ServiceResult.success(blocks: [], unused_image_urls: image_urls, templates_available: true)
+    end
 
     input_blocks = build_input_blocks(fetch_templates)
 
@@ -17,7 +19,7 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
       return ServiceResult.success(
         blocks: blocks.map { |block| { "html" => wrap_plain(block["content_data"]) } },
         unused_image_urls: image_urls,
-        templates_available: false
+        templates_available: @catalogue_reachable
       )
     end
 
@@ -47,11 +49,22 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
     @sanitizer ||= AdminWYSIWYGSanitizer.new
   end
 
+  # @catalogue_reachable is recorded separately from the result, because an empty
+  # match and an empty catalogue call for different things to be said: a model that
+  # named template ids nobody has is not a reason to tell the admin the templates
+  # "could not be loaded, try the import again later".
   def fetch_templates
     ids = blocks.map { |block| block["template_id"] }.compact.uniq
-    return {} if ids.empty?
 
-    ProjektImports::ReferencesBuilder.fetch_content_block_templates
+    if ids.empty?
+      @catalogue_reachable = true
+      return {}
+    end
+
+    catalogue = ProjektImports::ReferencesBuilder.fetch_content_block_templates
+    @catalogue_reachable = catalogue.present?
+
+    catalogue
       .select { |template| ids.include?(template["id"]) }
       .index_by { |template| template["id"] }
   end

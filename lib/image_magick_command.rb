@@ -75,10 +75,6 @@ module ImageMagickCommand
     (formats.map(&:downcase) + delegates).uniq
   end
 
-  def self.available?
-    convert_command.present?
-  end
-
   def self.identify_command
     return ["identify"] if ExternalTool.installed?("identify")
     return ["magick", "identify"] if ExternalTool.installed?("magick")

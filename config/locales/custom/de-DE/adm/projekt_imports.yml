@@ -253,9 +253,11 @@ de:
           source_image_undecodable: "Das Bild „%{image}\" in der Datei „%{filename}\" ist beschädigt oder keine echte Bilddatei und wurde nicht übernommen. Bitte laden Sie es manuell hoch."
           source_image_unsupported_format: "Das Bild „%{image}\" in der Datei „%{filename}\" liegt in einem Format vor, das dieser Server nicht lesen kann, und wurde nicht übernommen. Bitte speichern Sie es als JPG oder PNG und laden Sie es manuell hoch."
           source_image_conversion_failed: "Das Bild „%{image}\" in der Datei „%{filename}\" ist eine Zeichnung bzw. Metadatei und konnte nicht in ein Webbild umgewandelt werden. Es wurde nicht übernommen. Bitte speichern Sie es als JPG oder PNG und laden Sie es manuell hoch."
+          source_image_conversion_limit: "Die Datei „%{filename}\" enthält mehr Zeichnungen bzw. Metadateien, als beim Import umgewandelt werden können. Das Bild „%{image}\" wurde daher nicht übernommen — bitte laden Sie es als JPG oder PNG manuell hoch."
           source_image_too_large: "Das Bild „%{image}\" in der Datei „%{filename}\" ist zu groß für die Verarbeitung und wurde nicht übernommen. Bitte laden Sie eine kleinere Version manuell hoch."
           source_image_hero_rejected: "Das Bild „%{image}\" aus dem Dokument konnte nicht als Titelbild verwendet werden, da es die Anforderungen an Titelbilder nicht erfüllt. Es steht in der Bildergalerie des Projekts zur Verfügung."
           source_image_store_failed: "Das Bild „%{image}\" aus dem Dokument konnte nicht gespeichert werden: %{message}. Bitte laden Sie es manuell hoch."
+          source_images_file_failed: "Die Bilder der Datei „%{filename}\" konnten nicht übernommen werden. Bilder aus den übrigen Dateien wurden übernommen; bitte laden Sie die fehlenden manuell hoch."
           source_images_failed: "Die Bilder aus den hochgeladenen Dokumenten konnten nicht übernommen werden: %{message}. Bitte laden Sie sie manuell hoch."
           source_images_unplaced:
             one: "Ein Bild aus dem Dokument wurde in keinem Inhaltsblock platziert. Es steht in der Bildergalerie des Projekts zur Verfügung und kann über den Editor eingefügt werden."

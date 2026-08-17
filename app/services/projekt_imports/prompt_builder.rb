@@ -164,8 +164,11 @@ class ProjektImports::PromptBuilder
     image_slot_count(template).positive?
   end
 
+  # Counted by the filler's own rule rather than by grepping for <img>, so a hero
+  # or overlay template that carries its picture as a background-image is offered
+  # to the model instead of being marked as having no room for one.
   def image_slot_count(template)
-    (template["content"] || template["html"]).to_s.scan(/<img\b/i).size
+    HtmlImageSlots.count(template["content"] || template["html"])
   end
 
   def build_projekt_settings_section

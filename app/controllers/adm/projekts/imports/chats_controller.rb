@@ -278,7 +278,13 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     reply_with_title_image_message(user_message, helpers.import_title_image_confirmation(@projekt_import))
   end
 
+  # The reply is stamped as a command before anything is rendered. Without it
+  # ExecuteImportJob counts a plain user message that produced no tool call and
+  # warns "none of your chat changes were applied" on import — after applying the
+  # pick — which also suppresses the redirect to the finished projekt.
   def reply_with_title_image_message(user_message, content)
+    user_message.update!(custom_command: ProjektImport::TITLE_IMAGE_REPLY_COMMAND)
+
     confirmation = @ai_chat.ai_chat_messages.create!(
       role: "assistant",
       content: content,

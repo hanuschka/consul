@@ -49,6 +49,12 @@ class ProjektImport < ApplicationRecord
   # say what produced a message.
   TITLE_IMAGE_PICKER_COMMAND = "title_image_picker".freeze
 
+  # Stamped on a user message that was a bare option number rather than something
+  # to send to the model, for the same reason the Summarize and Regenerate buttons
+  # stamp theirs: it applied a change, so it must not be counted as an unanswered
+  # request when the projekt is created.
+  TITLE_IMAGE_REPLY_COMMAND = "title_image_reply".freeze
+
   IN_PROGRESS_STATUSES = %w[pending extracting processing chatting submitting].freeze
   ANALYZING_STATUSES = %w[pending extracting processing].freeze
 
@@ -100,13 +106,6 @@ class ProjektImport < ApplicationRecord
         attachment: attachments_by_blob_id[descriptor["blob_id"]]
       )
     end
-  end
-
-  def selected_source_image
-    return nil if !title_image_document?
-    return nil if title_image_index.blank?
-
-    Array(source_images)[title_image_index]
   end
 
   def created_projekts

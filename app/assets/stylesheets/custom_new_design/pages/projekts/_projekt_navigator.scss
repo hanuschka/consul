@@ -37,7 +37,7 @@ $nav-toggle-size: 20px;
         top: $nav-bullet-top;
         width: $nav-bullet;
         height: $nav-bullet;
-        background: $accent-blue;
+        background: var(--brand-color);
         border-radius: 50%;
         transition: background-color 150ms ease, width 150ms ease, height 150ms ease, top 150ms ease, left 150ms ease;
       }
@@ -55,13 +55,9 @@ $nav-toggle-size: 20px;
         }
       }
 
-      &:hover::before {
-        background: var(--brand-color);
-      }
-
       &.current-projekt {
         > a {
-          color: $accent-blue;
+          color: var(--brand-color);
           font-weight: 600;
         }
 

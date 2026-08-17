@@ -36,17 +36,23 @@
   <td class="kern-table__cell" data-field="start_date"><%= projekt.total_duration_start %></td>
   <td class="kern-table__cell" data-field="end_date"><%= projekt.total_duration_end %></td>
   <td class="kern-table__cell" data-field="status">
-    <%= render Adm::AttributeEditors::BooleanComponent.new(
-      projekt,
-      :activated?,
-      path: toggle_activated_adm_projekts_projekt_path(projekt),
-      disabled: !manage_allowed
-    ) %>
+    <% if projekt.copy_unfinished? %>
+      <%= render "adm/projekts/projekts/copy_status", projekt: projekt %>
+    <% else %>
+      <%= render Adm::AttributeEditors::BooleanComponent.new(
+        projekt,
+        :activated?,
+        path: toggle_activated_adm_projekts_projekt_path(projekt),
+        disabled: !manage_allowed
+      ) %>
+    <% end %>
   </td>
   <td class="kern-table__cell" data-field="actions">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t(".frontend_page"), url: projekt_path(projekt), icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
-      <% if manage_allowed %>
+      <% if !projekt.copy_unfinished? %>
+        <% actions.with_action(label: t(".frontend_page"), url: projekt_path(projekt), icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
+      <% end %>
+      <% if manage_allowed && !projekt.copy_unfinished? %>
         <% actions.with_action(label: t(".details"), url: details_adm_projekts_projekt_path(projekt), icon: "settings", data: { turbo_frame: "_top" }) %>
         <% actions.with_action(label: t(".visibility"), url: visibility_adm_projekts_projekt_path(projekt), icon: "visibility", data: { turbo_frame: "_top" }) %>
         <% actions.with_action(label: t(".projekt_managers"), url: projekt_managers_adm_projekts_projekt_path(projekt), icon: "supervisor_account", data: { turbo_frame: "_top" }) %>
@@ -56,6 +62,23 @@
         <% actions.with_action(label: t("adm.projekts.projekts.projekt.documents"), url: documents_adm_projekts_projekt_path(projekt), icon: "description", data: { turbo_frame: "_top" }) %>
         <% actions.with_action(label: t(".evaluation"), url: evaluation_adm_projekts_projekt_path(projekt), icon: "assessment", data: { turbo_frame: "_top" }) %>
 
+        <% actions.with_action(
+          label: t("adm.projekts.projekts.copy.action"),
+          url: copy_adm_projekts_projekt_path(projekt),
+          icon: "content_copy",
+          divider: true,
+          data: {
+            turbo_method: :post,
+            turbo_confirm: t("adm.projekts.projekts.copy.confirm"),
+            turbo_frame: "_top",
+            turbo_prefetch: false
+          }
+        ) %>
+      <% end %>
+
+      <%# A failed copy is half-built, so every action above is hidden -- but it
+          still has to be removable, otherwise the only way out is the console. %>
+      <% if manage_allowed && !projekt.copy_processing? %>
         <% actions.with_action(
           label: t(".delete"),
           url: adm_projekts_projekt_path(projekt),

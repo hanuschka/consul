@@ -79,6 +79,16 @@ de:
           create_projekt: Projekt erstellen
         create:
           success: Das Projekt wurde erfolgreich erstellt.
+        copy:
+          action: Projekt kopieren
+          copy_name: Kopie von %{name}
+          confirm: >
+            Möchten Sie dieses Projekt kopieren? Alle Phasen, Einstellungen, Inhalte und
+            von der Verwaltung angelegten Inhalte werden kopiert – Beiträge, Stimmen und
+            Abonnements der Teilnehmenden nicht. Die Kopie wird deaktiviert angelegt.
+          started: Die Kopie von „%{name}" wird erstellt. Das kann einen Moment dauern.
+          status_processing: Wird kopiert …
+          status_failed: Kopieren fehlgeschlagen
         projekt:
           top_level_projekt: Top-Level-Projekt
           frontend_page: Projektseite

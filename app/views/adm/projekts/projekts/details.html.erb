@@ -4,6 +4,28 @@
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t("adm.projekts.projekts.details.hint_text") %></p>
   <% end %>
+
+  <% if policy([:adm, :projekts, @projekt]).update? %>
+    <% header.with_actions do %>
+      <div class="ml-auto d-flex gap-2">
+        <% if @projekt.copy_unfinished? %>
+          <%= render "adm/projekts/projekts/copy_status", projekt: @projekt %>
+        <% else %>
+          <%= kern_link_button(
+            copy_adm_projekts_projekt_path(@projekt),
+            icon: "content_copy",
+            text: t("adm.projekts.projekts.copy.action"),
+            data: {
+              turbo_method: :post,
+              turbo_confirm: t("adm.projekts.projekts.copy.confirm"),
+              turbo_frame: "_top",
+              turbo_prefetch: false
+            }
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>

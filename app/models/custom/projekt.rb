@@ -103,6 +103,11 @@ class Projekt < ApplicationRecord
 
   belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
+  belongs_to :copied_from_projekt, class_name: "Projekt", optional: true,
+    inverse_of: :copies
+  has_many :copies, class_name: "Projekt", foreign_key: "copied_from_projekt_id",
+    inverse_of: :copied_from_projekt, dependent: :nullify
+
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
@@ -152,6 +157,18 @@ class Projekt < ApplicationRecord
     completed: "completed",
     failed: "failed"
   }, _prefix: true, _default: "never_run"
+
+  enum copy_status: {
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :copy
+
+  # A copy that never finished: its phases and content are missing or partial,
+  # so the admin screens hide everything that would act on them.
+  def copy_unfinished?
+    copy_processing? || copy_failed?
+  end
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }

@@ -79,6 +79,16 @@ en:
           create_projekt: Create project
         create:
           success: The project was created successfully.
+        copy:
+          action: Copy project
+          copy_name: Copy of %{name}
+          confirm: >
+            Copy this project? All phases, settings, content and admin-created
+            resources are copied — participant contributions, votes and subscriptions
+            are not. The copy is created deactivated.
+          started: The copy of "%{name}" is being created. This may take a moment.
+          status_processing: Copying …
+          status_failed: Copy failed
         projekt:
           top_level_projekt: Top-level project
           frontend_page: Project page

@@ -148,9 +148,11 @@ en:
         missing_tools:
           title: "Limited import functionality"
           package: "(missing system package \"%{package}\")"
-          contact: "Please contact the DT administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
+          requires_package: "Requires installing package:"
+          contact: "Please contact the DemokratieToday administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
           features:
-            pandoc: "ODT files cannot be read — an import using a .odt file will fail."
+            pandoc: "DOCX and ODT files cannot be read — an import using a .docx or .odt file will fail."
+            pdftotext: "Tables in PDF files lose their column structure — text is still extracted."
             pdfimages: "Images in PDF files are not carried over — text and structure are still extracted."
             imagemagick: "Images from documents cannot be processed or placed into content blocks."
         default_questions:

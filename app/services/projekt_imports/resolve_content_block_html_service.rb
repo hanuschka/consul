@@ -79,7 +79,7 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
 
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
+        .chat_with_json_output(output_schema, feature: "projekt_imports.resolve_content_block_html")
         .ask(message)
 
     Array(response.content["blocks"])

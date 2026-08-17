@@ -141,12 +141,6 @@ get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projek
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
 
-namespace :api do
-  namespace :masterportal do
-    resources :category_icons, only: [:create]
-  end
-end
-
 namespace :webhooks do
   post "brevo/member_events", to: "brevo#create", as: :brevo_member_events
 end

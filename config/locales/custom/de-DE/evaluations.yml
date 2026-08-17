@@ -293,3 +293,7 @@ de:
           download: PDF herunterladen
           downloading: PDF wird vorbereitet…
           ready: Bereit
+          renderer_unavailable:
+            title: PDF-Export nicht möglich
+            body: Die für die Erstellung von umfangreichen PDFs erforderlichen Backend-Bibliotheken fehlen auf dem Server. Bitte wenden Sie sich an die Administration von DemokratieToday.
+            close: Schließen

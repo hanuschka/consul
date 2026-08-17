@@ -119,6 +119,8 @@ class DeficiencyReportsController < ApplicationController
       )
     )
 
+    categorize_with_ai(@deficiency_report)
+
     if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
@@ -202,11 +204,33 @@ class DeficiencyReportsController < ApplicationController
     attributes = [:video_url, :on_behalf_of, :on_behalf_of_company_name, :on_behalf_of_email,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
+                  :deficiency_report_subcategory_id,
                   :notify_officer_about_new_comments,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
+
+    # Only staff filing for somebody else get to say how the report came in; for everybody else the
+    # field is not on the form and the default channel is stamped on by the model.
+    if helpers.allowed_to_post_on_behalf_of?(current_user, @deficiency_report || DeficiencyReport.new)
+      attributes << :deficiency_report_intake_channel_id
+    end
+
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
+  end
+
+  # Runs before validation because the category is mandatory and the public form does not offer one
+  # while AI categorization is on. Deliberately synchronous: the responsible officer is derived from
+  # the category right after save and notified immediately, so classifying afterwards in a job would
+  # mail the wrong department first and re-route them silently.
+  def categorize_with_ai(deficiency_report)
+    return unless DeficiencyReports::AiCategorizationService.enabled?
+    return if deficiency_report.deficiency_report_category_id.present?
+
+    result = DeficiencyReports::AiCategorizationService.call(deficiency_report)
+
+    deficiency_report.category = result.category
+    deficiency_report.subcategory = result.subcategory
   end
 
   def destroy_map_location_association
@@ -255,9 +279,12 @@ class DeficiencyReportsController < ApplicationController
     end
 
     dr.responsible_officers.each do |officer|
-      DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      if dr.email_officers_individually?
+        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+        Activity.log(officer.user, "email", dr)
+      end
+
       Notification.add(officer.user, dr)
-      Activity.log(officer.user, "email", dr)
     end
   end
 end

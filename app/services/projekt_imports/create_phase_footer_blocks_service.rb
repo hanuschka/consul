@@ -4,11 +4,10 @@ class ProjektImports::CreatePhaseFooterBlocksService < ApplicationService
     "outro_content" => "projekt_footer_tab_outro"
   }.freeze
 
-  attr_reader :phase_entries, :locale
+  attr_reader :phase_entries
 
-  def initialize(phase_entries:, locale:)
+  def initialize(phase_entries:)
     @phase_entries = Array(phase_entries)
-    @locale = locale
   end
 
   def call
@@ -31,13 +30,14 @@ class ProjektImports::CreatePhaseFooterBlocksService < ApplicationService
 
   # The footer partials read these rows through
   # SiteCustomization::ContentBlock.custom_block_for, which looks them up by
-  # name + key + locale alone and leaves projekt_id null. Setting projekt_id
-  # here would create a row the partials never find.
+  # name + key + canonical locale alone and leaves projekt_id null. Setting
+  # projekt_id, or writing the import's own locale, would create a row the
+  # partials never find.
   def upsert_block(key, body)
     block = ::SiteCustomization::ContentBlock.find_or_initialize_by(
       name: "custom",
       key: key,
-      locale: locale.to_s
+      locale: ::SiteCustomization::ContentBlock.canonical_locale
     )
     block.body = body
     block.save!

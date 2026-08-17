@@ -26,6 +26,8 @@ de:
           p1: >
             für Sie wurde ein Benutzerkonto mit der E-Mail-Adresse %{email} angelegt, weil ein
             Beitrag in Ihrem Namen eingereicht wurde. Das Konto ist bereits freigeschaltet.
+          resource: >
+            Hier finden Sie den betreffenden Beitrag: %{resource_link}.
           p2: >
             Um sich anzumelden, vergeben Sie bitte zunächst ein Passwort: %{password_link}.
           password_link_text: Passwort vergeben

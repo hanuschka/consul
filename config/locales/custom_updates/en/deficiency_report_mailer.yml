@@ -5,6 +5,19 @@ en:
         closing: Best regards
         signature: Your team
         contact_info: With any qustions please contact us at <a href="mailto:%{email}">%{email}</a>
+        unwatch_hint: "No longer want notifications about this report?"
+        unwatch_link_text: Unsubscribe from notifications for this report
+        notify_shared_report:
+          subject: A report was shared with you %{identifier}
+          hi: "Hello %{username},"
+          p1: "a report has been shared with you:"
+          p1_by: "%{name} shared a report with you:"
+          p2: You will now receive notifications about changes to this report.
+        notify_watcher_about_change:
+          subject: Change to a report you are watching %{identifier}
+          hi: "Hello %{username},"
+          p1: "there has been a change to a report you are watching:"
+          current_status: "Current status:"
         notify_author_about_status_change:
           subject: Status change of your deficiency report
           hi: Hi

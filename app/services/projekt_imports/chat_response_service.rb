@@ -10,7 +10,8 @@ class ProjektImports::ChatResponseService < ApplicationService
     prompt_result = ProjektImports::ChatSystemPromptService.call(projekt_import: projekt_import)
     return prompt_result if !prompt_result.success?
 
-    chat = Ai::RubyLlmFactory.chat.with_instructions(prompt_result.data[:prompt])
+    chat = Ai::RubyLlmFactory.chat(feature: "projekt_imports.chat_response")
+      .with_instructions(prompt_result.data[:prompt])
     chat.with_tools(*edit_tools)
     history = build_history
 

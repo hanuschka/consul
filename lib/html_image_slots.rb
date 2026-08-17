@@ -82,6 +82,31 @@ module HtmlImageSlots
     node["src"] = url
     node["data-src"] = url if node["data-src"].present?
     node.remove_attribute("srcset")
+    fill_lightbox_target(node, url, replacements)
+  end
+
+  # The gallery templates wrap each thumbnail in a GLightbox anchor whose href is
+  # the full-size picture the overlay opens. Substituting only the <img> leaves
+  # that href on the template's placeholder, so a visitor clicks a real photo and
+  # gets a placehold.co graphic full screen.
+  #
+  # It consumes no slot of its own and is not counted as one: it is the same
+  # picture as the thumbnail it wraps, at whatever size the variant gives us.
+  def self.fill_lightbox_target(image_node, url, replacements)
+    anchor = image_node.ancestors("a").find { |node| lightbox_anchor?(node) }
+    return if anchor.nil?
+    return if !fillable?(anchor["href"], replacements)
+
+    anchor["href"] = url
+  end
+
+  # Keyed on the lightbox markup rather than on "an <a> with a fillable href":
+  # plenty of templates wrap an image in a link that goes somewhere real, and
+  # overwriting those with an image URL would break the navigation.
+  def self.lightbox_anchor?(node)
+    return true if node["data-glightbox"].present?
+
+    node["class"].to_s.split.include?("glightbox")
   end
 
   def self.fill_background(node, remaining, replacements)
@@ -94,5 +119,6 @@ module HtmlImageSlots
     node["style"] = style.sub(URL_IN_STYLE, "url('#{url}')")
   end
 
-  private_class_method :fill_element, :fill_image, :fill_background
+  private_class_method :fill_element, :fill_image, :fill_background,
+                       :fill_lightbox_target, :lightbox_anchor?
 end

@@ -112,7 +112,6 @@ class Projekt < ApplicationRecord
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity, :assign_author_as_manager
 
-  after_update :sync_children_activated, if: :saved_change_to_activated?
   after_update :mirror_setting_columns_to_legacy_rows
 
   after_save :recalculate_subtree_levels, if: :saved_change_to_parent_id?
@@ -954,7 +953,7 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
+      MapLayer.default.each do |map_layer|
         map_layers << map_layer.dup
       end
     end
@@ -1046,12 +1045,6 @@ class Projekt < ApplicationRecord
       end
 
       ProjektSetting.insert_all(missing_rows) if missing_rows.present?
-    end
-
-    def sync_children_activated
-      all_children_projekts.each do |child|
-        child.update!(activated: activated)
-      end
     end
 
     def sync_for_global_overview_if_changed

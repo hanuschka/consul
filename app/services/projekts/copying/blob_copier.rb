@@ -11,18 +11,23 @@ class Projekts::Copying::BlobCopier
     copy_attached.attach(copy_blob(source_attached.blob))
   end
 
+  # Attached::Many#attach re-assigns the whole association on each call, so the
+  # blobs are collected first and attached in one go.
   def copy_many(source_attached, copy_attached)
     return if source_attached.blank?
 
-    source_attached.attachments.each do |attachment|
-      copy_attached.attach(copy_blob(attachment.blob))
-    end
+    copy_blobs = source_attached.attachments.map { |attachment| copy_blob(attachment.blob) }
+    return if copy_blobs.empty?
+
+    copy_attached.attach(*copy_blobs)
   end
 
   private
 
     attr_reader :id_map
 
+    # identify: false skips the Marcel content-type sniff -- the source blob
+    # already carries an identified content type.
     def copy_blob(source_blob)
       copy_blob =
         source_blob.open do |file|
@@ -30,7 +35,8 @@ class Projekts::Copying::BlobCopier
             io: file,
             filename: source_blob.filename,
             content_type: source_blob.content_type,
-            metadata: source_blob.metadata
+            metadata: source_blob.metadata,
+            identify: false
           )
         end
 

@@ -45,7 +45,7 @@ class Projekts::Copying::PhaseResourceCopier < ApplicationService
     def copy_milestones
       source_phase.milestones.each do |milestone|
         copy = record_copier.copy_record(milestone, attributes: { milestoneable: copy_phase })
-        copy_attachables(milestone, copy)
+        record_copier.copy_attachments(milestone, copy)
       end
     end
 
@@ -60,7 +60,7 @@ class Projekts::Copying::PhaseResourceCopier < ApplicationService
       PLAIN_RESOURCE_MODELS.each do |model|
         model.where(projekt_phase_id: source_phase.id).find_each do |resource|
           copy = record_copier.copy_record(resource, attributes: phase_attributes(model))
-          copy_attachables(resource, copy)
+          record_copier.copy_attachments(resource, copy)
         end
       end
     end
@@ -95,10 +95,5 @@ class Projekts::Copying::PhaseResourceCopier < ApplicationService
       end
 
       attributes
-    end
-
-    def copy_attachables(source_record, copy_record)
-      record_copier.copy_images(source_record, copy_record)
-      record_copier.copy_documents(source_record, copy_record)
     end
 end

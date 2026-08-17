@@ -15,15 +15,13 @@ class Projekts::Copying::FormularCopier < ApplicationService
 
     record_copier.copy_all(
       source_formular.formular_fields,
-      attributes: { formular_id: copy_formular.id },
-      except: %w[formular_id]
+      attributes: { formular_id: copy_formular.id }
     )
 
     # sent_at records a send that happened for the source's recipients.
     record_copier.copy_all(
       source_formular.formular_follow_up_letters,
-      attributes: { formular_id: copy_formular.id, sent_at: nil },
-      except: %w[formular_id sent_at]
+      attributes: { formular_id: copy_formular.id, sent_at: nil }
     )
   end
 

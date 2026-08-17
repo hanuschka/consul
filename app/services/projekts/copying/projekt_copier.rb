@@ -1,9 +1,11 @@
 class Projekts::Copying::ProjektCopier < ApplicationService
   # Rebuilt by the copy's own callbacks, tied to the source's participants, or
-  # unique per record -- none of them may be carried over. `name` and the
-  # copy columns are owned by the shell the controller created.
+  # unique per record -- none of them may be carried over. `name`, `order_number`
+  # and the copy columns are owned by the shell: taking the source's
+  # order_number over the one `set_order` assigned would leave two projekts
+  # sharing a position, which `sort_by_order_number` cannot break.
   EXCLUDED_COLUMNS = %w[
-    name preview_code published_at content_updated_at
+    name order_number preview_code published_at content_updated_at
     banner_image_generation_status copy_status copied_from_projekt_id
     import_file_status import_file_data imported_by_ai
     whatsapp_broadcast_sent_at whatsapp_broadcast_slug
@@ -46,6 +48,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
     copy_projekt_images
     copy_page
     copy_settings
+    copy_map
     copy_affiliations
     copy_tags
     copy_sdg_relations
@@ -132,6 +135,13 @@ class Projekts::Copying::ProjektCopier < ApplicationService
       copy.projekt_settings.find_by(key: ALLOW_INDEXING_KEY)&.update!(value: "")
     end
 
+    def copy_map
+      Projekts::Copying::MapCopier.call(
+        source: source, copy: copy,
+        record_copier: record_copier
+      )
+    end
+
     def copy_affiliations
       copy.geozone_affiliations = source.geozone_affiliations
       copy.registered_address_district_affiliations = source.registered_address_district_affiliations
@@ -161,8 +171,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
     def copy_milestones
       source.milestones.each do |milestone|
         milestone_copy = record_copier.copy_record(milestone, attributes: { milestoneable: copy })
-        record_copier.copy_images(milestone, milestone_copy)
-        record_copier.copy_documents(milestone, milestone_copy)
+        record_copier.copy_attachments(milestone, milestone_copy)
       end
     end
 
@@ -177,8 +186,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
         record_copier.persist(admin_image, admin_image_copy)
       end
 
-      record_copier.copy_images(source, copy)
-      record_copier.copy_documents(source, copy)
+      record_copier.copy_attachments(source, copy)
     end
 
     # parent_id still points at the source's items here; the rewiring pass

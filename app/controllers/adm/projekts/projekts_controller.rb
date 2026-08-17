@@ -54,8 +54,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def copy
     authorize [:adm, :projekts, @projekt], :update?
 
-    copy = ::Projekts::CreateCopyShellService.call(source: @projekt, user: current_user)
-    ::Projekts::CopyJob.perform_later(@projekt.id, copy.id)
+    ::Projekts::DispatchCopy.call(source: @projekt, user: current_user)
 
     redirect_to adm_projekts_projekts_list_path,
       notice: t("adm.projekts.projekts.copy.started", name: @projekt.title)
@@ -64,7 +63,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def copy_status
     authorize [:adm, :projekts, @projekt], :show?
 
-    render json: { status: @projekt.copy_status || "completed" }
+    render json: { status: @projekt.reported_copy_status }
   end
 
   def details

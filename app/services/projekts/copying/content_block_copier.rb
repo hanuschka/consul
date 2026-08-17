@@ -16,8 +16,7 @@ class Projekts::Copying::ContentBlockCopier < ApplicationService
           projekt_id: copy.id,
           key: copy_key_for(content_block.key),
           ai_generation_data: nil
-        },
-        except: %w[projekt_id key ai_generation_data]
+        }
       )
     end
   end

@@ -79,8 +79,7 @@ class Projekts::Copying::PhaseCopier < ApplicationService
     def copy_email_templates(copy)
       record_copier.copy_all(
         source_phase.email_templates,
-        attributes: { projekt_phase: copy },
-        except: %w[projekt_phase_id]
+        attributes: { projekt_phase: copy }
       )
     end
 end

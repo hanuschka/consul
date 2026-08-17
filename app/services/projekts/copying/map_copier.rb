@@ -1,6 +1,4 @@
 class Projekts::Copying::MapCopier < ApplicationService
-  EXCLUDED_LOCATION_COLUMNS = %w[mappable_type mappable_id].freeze
-
   def initialize(source:, copy:, record_copier:)
     @source = source
     @copy = copy
@@ -24,8 +22,7 @@ class Projekts::Copying::MapCopier < ApplicationService
 
       record_copier.overwrite_or_copy(
         source_location, copy.map_location,
-        attributes: { mappable: copy },
-        except: EXCLUDED_LOCATION_COLUMNS
+        attributes: { mappable: copy }
       )
     end
 

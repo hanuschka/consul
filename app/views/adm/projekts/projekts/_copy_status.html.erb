@@ -1,4 +1,7 @@
-<% if projekt.copy_failed? %>
+<%# Only rendered for an unfinished copy, so anything not still running is a
+    copy that will never finish -- failed outright, or stalled with its worker
+    gone. %>
+<% if !projekt.copy_in_progress? %>
   <span class="kern-badge kern-badge--danger">
     <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
     <span class="kern-label"><%= t("adm.projekts.projekts.copy.status_failed") %></span>

@@ -18,9 +18,7 @@ class Projekts::Copying::IdMap
     @record_ids[[model_class.base_class.name, source_id]]
   end
 
-  def blob_keys
-    @blob_keys
-  end
+  attr_reader :blob_keys
 
   private
 

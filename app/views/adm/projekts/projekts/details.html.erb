@@ -9,6 +9,7 @@
     <% header.with_actions do %>
       <div class="ml-auto d-flex gap-2">
         <% if @projekt.copy_unfinished? %>
+          <%# A stalled or failed copy renders as failed inside the partial. %>
           <%= render "adm/projekts/projekts/copy_status", projekt: @projekt %>
         <% else %>
           <%= kern_link_button(

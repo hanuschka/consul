@@ -164,10 +164,31 @@ class Projekt < ApplicationRecord
     failed: "failed"
   }, _prefix: :copy
 
+  # A worker killed mid-copy never reaches CopyJob's rescue, so the row keeps
+  # claiming "processing" with nothing left to finish it. Past this age it is
+  # reported as failed, which is what makes it deletable again.
+  COPY_STALE_AFTER = 30.minutes
+
   # A copy that never finished: its phases and content are missing or partial,
   # so the admin screens hide everything that would act on them.
   def copy_unfinished?
     copy_processing? || copy_failed?
+  end
+
+  def copy_stalled?
+    return false if !copy_processing?
+
+    updated_at < COPY_STALE_AFTER.ago
+  end
+
+  def copy_in_progress?
+    copy_processing? && !copy_stalled?
+  end
+
+  def reported_copy_status
+    return "failed" if copy_stalled?
+
+    copy_status || "completed"
   end
 
   scope :regular, -> { where(special: false) }

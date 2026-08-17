@@ -23,14 +23,6 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
 
     attr_reader :source, :copy, :id_map
 
-    def phase_ids
-      @phase_ids ||= copy.projekt_phases.ids
-    end
-
-    def copy_polls
-      @copy_polls ||= Poll.where(projekt_phase_id: phase_ids)
-    end
-
     # The rewiring reads from the SOURCE side: every reference below was left
     # null on the copy, so the copy has nothing to read back. Walking the source
     # and mapping forward also keeps this identical to how every other reference
@@ -38,7 +30,6 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
     def source_questions
       @source_questions ||= Poll::Question
         .where(poll_id: Poll.where(projekt_phase_id: source.projekt_phases.ids).select(:id))
-        .includes(:translations)
     end
 
     # Poll::Question rejects a parent from another poll, so these five columns
@@ -84,18 +75,31 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
       end
     end
 
+    # budget_id is excluded when the poll is copied (it is unique per poll), so
+    # the copy has nothing to read back -- the link has to come off the source.
     def rewire_polls
-      copy_polls.where.not(budget_id: nil).find_each do |poll|
-        poll.update_columns(budget_id: mapped(Budget, poll.budget_id))
-      end
+      Poll.where(projekt_phase_id: source.projekt_phases.ids)
+        .where.not(budget_id: nil)
+        .find_each do |source_poll|
+          copy_poll_id = mapped(Poll, source_poll.id)
+          copy_budget_id = mapped(Budget, source_poll.budget_id)
+          next if copy_poll_id.blank? || copy_budget_id.blank?
+
+          Poll.where(id: copy_poll_id).update_all(budget_id: copy_budget_id)
+        end
     end
 
+    # These were copied verbatim and hold real ids, so an unmapped one keeps
+    # pointing where the source pointed -- a navbar item may link to a global
+    # page or to another projekt's item, neither of which is part of this copy.
     def rewire_navbar_items
       NavbarItem.where(projekt_id: copy.id).find_each do |navbar_item|
         navbar_item.update_columns(
-          parent_id: mapped(NavbarItem, navbar_item.parent_id),
-          landing_page_id: mapped(SiteCustomization::Page, navbar_item.landing_page_id),
-          linked_page_id: mapped(SiteCustomization::Page, navbar_item.linked_page_id)
+          parent_id: mapped_or_source(NavbarItem, navbar_item.parent_id),
+          landing_page_id:
+            mapped_or_source(SiteCustomization::Page, navbar_item.landing_page_id),
+          linked_page_id:
+            mapped_or_source(SiteCustomization::Page, navbar_item.linked_page_id)
         )
       end
     end
@@ -157,5 +161,9 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
 
     def mapped(model_class, source_id)
       id_map.copy_id_for(model_class, source_id)
+    end
+
+    def mapped_or_source(model_class, source_id)
+      mapped(model_class, source_id) || source_id
     end
 end

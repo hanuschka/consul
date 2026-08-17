@@ -86,7 +86,7 @@ de:
             Möchten Sie dieses Projekt kopieren? Alle Phasen, Einstellungen, Inhalte und
             von der Verwaltung angelegten Inhalte werden kopiert – Beiträge, Stimmen und
             Abonnements der Teilnehmenden nicht. Die Kopie wird deaktiviert angelegt.
-          started: Die Kopie von „%{name}" wird erstellt. Das kann einen Moment dauern.
+          started: Die Kopie von „%{name}“ wird erstellt. Das kann einen Moment dauern.
           status_processing: Wird kopiert …
           status_failed: Kopieren fehlgeschlagen
         projekt:

@@ -50,8 +50,7 @@ class Projekts::Copying::PollCopier < ApplicationService
       )
 
       replace_scaffolded_image(source_poll, copy)
-      record_copier.copy_images(source_poll, copy)
-      record_copier.copy_documents(source_poll, copy)
+      record_copier.copy_attachments(source_poll, copy)
       record_copier.copy_all(source_poll.sdg_relations, attributes: { relatable: copy })
 
       source_poll.questions.each do |question|
@@ -79,8 +78,7 @@ class Projekts::Copying::PollCopier < ApplicationService
       copy.votation_type = built_votation_type(source_question)
       record_copier.persist(source_question, copy)
 
-      record_copier.copy_images(source_question, copy)
-      record_copier.copy_documents(source_question, copy)
+      record_copier.copy_attachments(source_question, copy)
 
       source_question.question_answers.each do |answer|
         copy_answer(answer, copy)
@@ -106,8 +104,7 @@ class Projekts::Copying::PollCopier < ApplicationService
         except: EXCLUDED_ANSWER_COLUMNS
       )
 
-      record_copier.copy_images(source_answer, copy)
-      record_copier.copy_documents(source_answer, copy)
+      record_copier.copy_attachments(source_answer, copy)
       record_copier.copy_all(source_answer.videos, attributes: { answer_id: copy.id })
     end
 end

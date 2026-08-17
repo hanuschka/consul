@@ -36,11 +36,6 @@ class Projekts::CopyService < ApplicationService
         source: source, copy: copy,
         record_copier: record_copier
       )
-
-      Projekts::Copying::MapCopier.call(
-        source: source, copy: copy,
-        record_copier: record_copier
-      )
     end
 
     def copy_phases

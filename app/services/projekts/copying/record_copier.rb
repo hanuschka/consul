@@ -24,10 +24,13 @@ class Projekts::Copying::RecordCopier
   # Split from `copy_record` for records whose attachment is validated for
   # presence (Image, Document): the blob has to be attached to the unsaved copy,
   # not added afterwards.
+  # `attributes` is applied last so it wins over both the copied columns and the
+  # copied translations -- otherwise naming a translated column there would be
+  # silently overwritten by the source's value.
   def build(source, attributes: {}, except: [])
     copy = source.class.new(copyable_attributes(source, except))
-    copy.assign_attributes(attributes)
     assign_translations(source, copy, except)
+    copy.assign_attributes(attributes)
 
     copy
   end
@@ -55,8 +58,8 @@ class Projekts::Copying::RecordCopier
   # instead of inserting a second one.
   def overwrite(source, copy, attributes: {}, except: [])
     copy.assign_attributes(copyable_attributes(source, except))
-    copy.assign_attributes(attributes)
     assign_translations(source, copy, except)
+    copy.assign_attributes(attributes)
     copy.save!
 
     id_map.register(source, copy)
@@ -72,6 +75,11 @@ class Projekts::Copying::RecordCopier
     copy_attachables(Document, :documentable, source, copy)
   end
 
+  def copy_attachments(source, copy)
+    copy_images(source, copy)
+    copy_documents(source, copy)
+  end
+
   private
 
     attr_reader :id_map
@@ -81,9 +89,10 @@ class Projekts::Copying::RecordCopier
     # the copy before it is saved -- and a source row without one is skipped
     # rather than raising. The owner is queried rather than reflected on: rows
     # exist for owner types that declare no association (Projekt carries Image
-    # rows without including Imageable).
+    # rows without including Imageable). Image already preloads its attachment
+    # through a default scope; Document does not, hence the explicit preload.
     def copy_attachables(model, owner_key, source, copy)
-      model.where(owner_key => source).find_each do |record|
+      model.where(owner_key => source).with_attached_attachment.find_each do |record|
         next if !record.attachment.attached?
 
         record_copy = build(record, attributes: { owner_key => copy })

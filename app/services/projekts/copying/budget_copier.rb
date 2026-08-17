@@ -44,8 +44,7 @@ class Projekts::Copying::BudgetCopier < ApplicationService
 
       group_copy = record_copier.overwrite_or_copy(
         source_group, copy_budget.group,
-        attributes: { budget_id: copy_budget.id, slug: nil },
-        except: %w[budget_id slug]
+        attributes: { budget_id: copy_budget.id, slug: nil }
       )
 
       source_heading = source_budget.heading
@@ -53,8 +52,7 @@ class Projekts::Copying::BudgetCopier < ApplicationService
 
       record_copier.overwrite_or_copy(
         source_heading, group_copy.heading,
-        attributes: { group_id: group_copy.id, slug: nil },
-        except: %w[group_id slug]
+        attributes: { group_id: group_copy.id, slug: nil }
       )
     end
 

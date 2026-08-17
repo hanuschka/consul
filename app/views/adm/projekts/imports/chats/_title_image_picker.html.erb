@@ -1,0 +1,80 @@
+<%
+  options = ProjektImports::TitleImageOptions.for(projekt_import)
+  image_count = options.count(&:document?)
+%>
+<div class="projekt-import-chat-bubble -ai"
+     data-projekt-imports--chat-target="message titleImagePicker"
+     data-message-id="<%= message.id %>"
+     data-status="<%= message.status %>">
+  <div class="projekt-import-chat-bubble--avatar" aria-hidden="true"><span>AI</span></div>
+
+  <div class="projekt-import-chat-bubble--wrapper">
+    <div class="projekt-import-chat-bubble--content">
+      <p class="projekt-import-chat--title-image-intro">
+        <%= image_count.positive? ?
+              t("adm.projekts.imports.title_image.intro", count: image_count) :
+              t("adm.projekts.imports.title_image.intro_without_images") %>
+      </p>
+
+      <ul class="projekt-import-chat--title-image-options">
+        <% options.each do |option| %>
+          <%
+            candidate = option.candidate
+            selected = import_title_image_selected?(projekt_import, option)
+            hint = candidate.present? ? import_title_image_ineligible_hint(candidate) : nil
+            tile_url = candidate.present? ? import_title_image_tile_url(candidate) : nil
+          %>
+          <li class="projekt-import-chat--title-image-option<%= " -selected" if selected %><%= " -unavailable" if !option.selectable? %>">
+            <span class="projekt-import-chat--title-image-number" aria-hidden="true"><%= option.number %></span>
+
+            <span class="projekt-import-chat--title-image-media">
+              <% if option.document? && tile_url.present? %>
+                <%= image_tag tile_url, alt: "", loading: "lazy" %>
+              <% else %>
+                <span class="material-symbols-outlined" aria-hidden="true">
+                  <%= import_title_image_option_icon(option) %>
+                </span>
+              <% end %>
+
+              <% if selected %>
+                <span class="projekt-import-chat--title-image-check" aria-hidden="true">
+                  <span class="material-symbols-outlined">check</span>
+                </span>
+              <% end %>
+            </span>
+
+            <span class="projekt-import-chat--title-image-text">
+              <span class="projekt-import-chat--title-image-name">
+                <%= import_title_image_option_title(option) %>
+              </span>
+              <span class="projekt-import-chat--title-image-meta<%= " -warning" if hint.present? %>">
+                <%= hint.presence || import_title_image_option_meta(option) %>
+              </span>
+            </span>
+
+            <% if selected %>
+              <span class="projekt-import-chat--title-image-state">
+                <%= t("adm.projekts.imports.title_image.selected") %>
+              </span>
+            <% elsif option.selectable? %>
+              <%= tag.button(
+                    type: "button",
+                    class: "projekt-import-chat--title-image-action",
+                    aria: { label: import_title_image_option_action_label(option) },
+                    data: {
+                      mode: option.mode,
+                      index: option.index,
+                      action: "click->projekt-imports--chat#selectTitleImage"
+                    }
+                  ) { t("adm.projekts.imports.title_image.use") } %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+
+      <p class="projekt-import-chat--title-image-reply-hint">
+        <%= t("adm.projekts.imports.title_image.reply_hint") %>
+      </p>
+    </div>
+  </div>
+</div>

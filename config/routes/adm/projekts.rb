@@ -250,10 +250,12 @@ namespace :adm do
 
       resource :chat, only: [:show], controller: "imports/chats" do
         get :messages
+        get :summary
         post :message
         post :command
         post :extract
         post :execute
+        post :title_image
       end
     end
 

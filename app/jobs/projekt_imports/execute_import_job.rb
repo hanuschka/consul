@@ -5,7 +5,13 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
   def perform(projekt_import_id)
     projekt_import = ProjektImport.find(projekt_import_id)
-    projekt_import.update!(status: "submitting", warnings: unapplied_chat_warnings(projekt_import))
+    # The previous submit attempt's warnings go, the analysis stage's stay: an
+    # image the uploaded document does not let us read is still unreadable on the
+    # second try, and the admin was told about it before the projekt existed.
+    projekt_import.update!(
+      status: "submitting",
+      warnings: projekt_import.analysis_warnings + unapplied_chat_warnings(projekt_import)
+    )
 
     create_result = ProjektImports::CreateProjektFromImportService.call(projekt_import: projekt_import)
     if !create_result.success?
@@ -88,6 +94,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
     [{
       "message" => I18n.t("adm.projekts.imports.warnings.chat_changes_not_applied"),
+      "stage" => ProjektImport::SUBMIT_WARNING_STAGE,
       "at" => Time.current.iso8601
     }]
   end
@@ -118,7 +125,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
   end
 
   def generate_image_if_requested(projekt_import, projekt)
-    if !projekt_import.generate_image
+    if !projekt_import.title_image_generated?
       projekt_import.update!(image_status: "skipped")
       return
     end

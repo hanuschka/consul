@@ -4,7 +4,6 @@ class ProposalsController
   include ProposalsHelper
   include ProjektControllerHelper
   include Takeable
-  include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
   include CustomHelper

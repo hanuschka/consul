@@ -5,7 +5,6 @@ class DebatesController < ApplicationController
   include ProjektControllerHelper
   include DocumentAttributes
   include Takeable
-  include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
   include LandingPageResolvable

@@ -693,18 +693,6 @@ class Projekt < ApplicationRecord
     end
   end
 
-  def all_ids_in_tree
-    all_parent_ids + [id] + all_children_ids
-  end
-
-  def all_projekt_labels
-    ProjektLabel.where(projekt_id: (all_parent_ids + [id]))
-  end
-
-  def all_projekt_labels_in_tree
-    ProjektLabel.where(projekt_id: all_ids_in_tree)
-  end
-
   def visible_for?(user = nil)
     Projekt.visible_projekt_ids_for(user).include?(id)
   end

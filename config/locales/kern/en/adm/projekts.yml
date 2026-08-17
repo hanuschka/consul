@@ -112,6 +112,9 @@ en:
           duration_description: Defines the period during which the project is visible and accessible on the platform — regardless of whether an active participation phase is running. The start and end date determine when the project appears in the public projects overview and can be accessed by users.
           landing_pages_label: Assignment to topic pages
           landing_pages_description: Optionally assigns the project to one or more topic pages. Topic pages bundle thematically related projects on their own entry page — e.g. for youth participation or urban development. A project can be assigned to multiple topic pages at once.
+          parent_projekt_label: Parent project
+          parent_projekt_description: Optionally assigns the project to a parent project. In the frontend the project then appears as a subpage below the assigned project, including navigation and breadcrumb display. Select a parent project to group sub-projects thematically under an overarching project.
+          no_parent_projekt: No parent project
           geo_restriction_label: Area assignment
           geo_restriction_description: Assigns the project to a geographic area. This assignment is shown on the projects overview page as a filter option, letting users search specifically for projects in particular neighborhoods or the whole city. The assignment does not affect the project's visibility.
           geo_restriction:

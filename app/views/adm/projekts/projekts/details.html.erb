@@ -18,6 +18,10 @@
       <%= render 'adm/projekts/projekts/details/landing_pages', projekt: @projekt %>
     <% end %>
 
+    <%= render Kern::FormFieldComponent.new(label: t('.parent_projekt_label'), hint: t('.parent_projekt_description')) do %>
+      <%= render 'adm/projekts/projekts/details/parent_projekt', projekt: @projekt %>
+    <% end %>
+
     <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>
       <%= render 'adm/projekts/projekts/details/geo_restriction', projekt: @projekt %>
     <% end %>

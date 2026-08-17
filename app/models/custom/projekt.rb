@@ -1,13 +1,5 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
-  PHASE_PRELOAD_FOR_CONTROLLER = {
-    "proposals" => { proposal_phases: [:individual_group_values, :settings] },
-    "debates" => { debate_phases: [:individual_group_values, :settings] },
-    "polls" => { voting_phases: [:individual_group_values, :settings, :polls] },
-    "processes" => {
-      legislation_phases: [:individual_group_values, :settings, :legislation_process]
-    }
-  }.freeze
 
   # The settings that SQL scopes filter on live as columns; every other
   # projekt setting stays a `projekt_settings` row.
@@ -152,6 +144,7 @@ class Projekt < ApplicationRecord
 
   validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
+  validate :hierarchy_should_not_exceed_two_levels
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
@@ -463,12 +456,6 @@ class Projekt < ApplicationRecord
       .where(site_customization_pages: { status: "published" })
   }
 
-  def self.includes_children_projekts_with(*sub_relations)
-    includes(
-      children: [*sub_relations, {children: [*sub_relations]}]
-    )
-  end
-
   def self.overview_page
     find_by(
       special_name: "projekt_overview_page",
@@ -486,25 +473,6 @@ class Projekt < ApplicationRecord
       projekt_manager.id,
       Array(permissions)
     )
-  end
-
-  def self.selectable_in_selector(controller_name, current_user, resource = nil)
-    phase_preload = PHASE_PRELOAD_FOR_CONTROLLER.fetch(controller_name)
-    sub_relations = [
-      :individual_group_values, :hard_individual_group_values, phase_preload
-    ]
-
-    includes(:individual_group_values, phase_preload)
-      .includes_children_projekts_with(*sub_relations)
-      .includes({ parent: :individual_group_values }, { top_level_projekt: :hard_individual_group_values })
-      .select do |projekt|
-        (!projekt.hidden_for?(current_user) || projekt.all_parent_projekts.none? { |p| p.hidden_for?(current_user) }) &&
-        (projekt.can_assign_resources?(controller_name, current_user, resource) ||
-          projekt.all_children_projekts.any? do |p|
-            p.can_assign_resources?(controller_name, current_user, resource)
-          end
-        )
-      end
   end
 
   def self.search(terms)
@@ -526,32 +494,6 @@ class Projekt < ApplicationRecord
 
   def published?
     page&.status == "published"
-  end
-
-  def can_assign_resources?(controller_name, user, resource = nil)
-    return false if user.nil?
-    return true if resource&.respond_to?(:author) && resource.author == user
-    return false if !activated? && controller_name != "polls"
-
-    case controller_name
-    when "proposals"
-      any_phase_selectable?(proposal_phases, user, resource)
-
-    when "debates"
-      any_phase_selectable?(debate_phases, user, resource)
-
-    when "polls"
-      any_phase_selectable?(voting_phases, user)
-
-    when "processes"
-      legislation_phases
-        .reject { |phase| phase.legislation_process.present? || !phase.selectable_by?(user) }
-        .any?
-    end
-  end
-
-  def any_phase_selectable?(phases, user, resource = nil)
-    phases.to_a.any? { |phase| phase.selectable_by?(user, resource) }
   end
 
   def top_level?
@@ -637,6 +579,15 @@ class Projekt < ApplicationRecord
   def children_tree_preloaded?
     children.loaded? &&
       children.all? { |child| child.association(:children).loaded? }
+  end
+
+  def assignable_parents
+    Projekt.regular
+      .where(parent_id: nil)
+      .or(Projekt.regular.where(id: parent_id))
+      .where.not(id: id)
+      .includes(page: :translations)
+      .order(:name)
   end
 
   def has_active_phase?(controller_name)
@@ -911,6 +862,18 @@ class Projekt < ApplicationRecord
   end
 
   private
+
+    def hierarchy_should_not_exceed_two_levels
+      return if parent_id.blank? || !parent_id_changed?
+
+      if parent_id == id
+        errors.add(:parent_id, :cannot_be_self)
+      elsif children.exists?
+        errors.add(:parent_id, :cannot_have_children)
+      elsif Projekt.with_hidden.where(id: parent_id).where.not(parent_id: nil).exists?
+        errors.add(:parent_id, :must_be_top_level)
+      end
+    end
 
     def create_corresponding_page
       create_page(

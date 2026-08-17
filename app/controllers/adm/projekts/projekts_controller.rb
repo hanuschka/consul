@@ -710,6 +710,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated,
         :landing_page_id,
+        :parent_id,
         :tag_list,
         geozone_affiliation_ids: [],
         registered_address_district_affiliation_ids: [],

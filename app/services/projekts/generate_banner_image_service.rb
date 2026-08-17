@@ -40,7 +40,7 @@ class Projekts::GenerateBannerImageService < ApplicationService
 
     def build_image_prompt
       Ai::RubyLlmFactory
-        .chat
+        .chat(feature: "projekts.banner_image_prompt")
         .with_instructions(prompt_instructions)
         .ask(projekt_context)
         .content

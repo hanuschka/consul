@@ -9,6 +9,19 @@ const MAX_POLL_ERRORS = 5
 // auto-scroll when the user is already near the bottom.
 const SCROLL_BOTTOM_THRESHOLD = 80
 
+// Final-import overlay bar. The import status endpoint only reports
+// completed/failed, so the bar creeps through these staged percents on a timer
+// to signal work is happening, then snaps to 100% on completion. Priming from
+// 0% happens after OVERLAY_PROGRESS_INITIAL_DELAY; later steps advance every
+// OVERLAY_PROGRESS_STEP_DELAY, holding at the last step until the import ends.
+const OVERLAY_PROGRESS_INITIAL_DELAY = 1200
+const OVERLAY_PROGRESS_STEP_DELAY = 2500
+const OVERLAY_PROGRESS_STEPS = [
+  { percent: 35, labelValue: "progressResolving" },
+  { percent: 65, labelValue: "progressCreating" },
+  { percent: 85, labelValue: "progressGeneratingImage" }
+]
+
 // Chat screen: polls /messages for new messages (after=:last_id) plus refreshed
 // state for messages still in progress (pending[]=:ids), so finished messages
 // are never re-rendered. Supports mid-chat document attach, four command
@@ -16,8 +29,9 @@ const SCROLL_BOTTOM_THRESHOLD = 80
 export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
-    "attachments", "typingIndicator", "overlay", "overlayLabel",
-    "importError", "importErrorMessage", "generateImage"
+    "attachments", "typingIndicator", "overlay", "overlayLabel", "overlayFill",
+    "importError", "importErrorMessage", "importWarning", "importWarningList",
+    "generateImage", "importButton"
   ]
 
   static values = {
@@ -30,7 +44,6 @@ export default class extends Controller {
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
     confirmStartOver: String,
-    progressFinalizing: String,
     progressResolving: String,
     progressCreating: String,
     progressGeneratingImage: String,
@@ -46,13 +59,16 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
+    this.shownWarningSignature = null
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
+    this.chatRunning = false
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
+    this.refreshBusyState()
     this.scheduleMessagesPoll()
 
     if (this.importStatusValue === "submitting") {
-      this.showOverlay(this.progressCreatingValue)
+      this.showOverlay()
       this.scheduleStatusPoll()
     }
   }
@@ -60,6 +76,7 @@ export default class extends Controller {
   disconnect() {
     this.clearPollTimer()
     this.clearStatusPollTimer()
+    this.clearOverlayStepTimer()
   }
 
   computeLastMessageId() {
@@ -167,6 +184,43 @@ export default class extends Controller {
   toggleTypingIndicator(running) {
     const redundant = this.pendingMessageIds().length > 0
     this.typingIndicatorTarget.classList.toggle("-hidden", !running || redundant)
+    this.chatRunning = running
+    this.refreshBusyState()
+  }
+
+  // The final import must not start while the assistant is still producing a
+  // message, so the primary button is gated whenever a reply is in flight:
+  // an optimistic user bubble is awaiting its response, a placeholder assistant
+  // bubble is scheduled/running, or the chat reports it is running.
+  isChatBusy() {
+    const hasOptimistic =
+      Boolean(this.messagesTarget.querySelector(".is-optimistic:not(.-failed)"))
+
+    return hasOptimistic || this.pendingMessageIds().length > 0 || this.chatRunning
+  }
+
+  // Reflects the in-flight reply on both actions. The import button uses
+  // aria-disabled + a state class (not the native attribute) so it stays
+  // hoverable and its rich tooltip can explain the wait; the send button is a
+  // plain submit, so native disabled (dimmed via its :disabled style) is fine.
+  refreshBusyState() {
+    const busy = this.isChatBusy()
+    this.element.classList.toggle("-import-busy", busy)
+
+    if (this.hasImportButtonTarget) {
+      this.importButtonTarget.setAttribute("aria-disabled", busy ? "true" : "false")
+    }
+
+    if (this.hasSendButtonTarget) {
+      this.sendButtonTarget.disabled = busy
+    }
+  }
+
+  guardImport(event) {
+    if (!this.isChatBusy()) return
+
+    event.preventDefault()
+    event.stopImmediatePropagation()
   }
 
   isNearBottom() {
@@ -179,8 +233,10 @@ export default class extends Controller {
   }
 
   handleImportState(state) {
+    this.renderImportWarnings(state.warnings)
+
     if (state.status === "submitting") {
-      this.showOverlay(this.progressCreatingValue)
+      this.showOverlay()
       this.scheduleStatusPoll()
       return
     }
@@ -202,6 +258,8 @@ export default class extends Controller {
   // When the import finishes live in this session (overlay showing), send the
   // user to the created projekt's frontend page. Revisiting an already-completed
   // import (guard) keeps the chat with its success state instead of redirecting.
+  // An import that produced warnings never redirects: leaving the page is the
+  // one thing that guarantees the admin never reads them.
   handleCompletion(redirectPath) {
     if (this.completionShown) {
       this.hideOverlay()
@@ -210,8 +268,9 @@ export default class extends Controller {
     }
 
     this.completionShown = true
+    this.completeOverlayProgress()
 
-    if (redirectPath) {
+    if (redirectPath && !this.hasVisibleWarnings()) {
       window.location.href = redirectPath
       return
     }
@@ -226,8 +285,44 @@ export default class extends Controller {
     this.importErrorTarget.classList.remove("-hidden")
   }
 
-  dismissImportError() {
+  // Both banners share markup and styling; the clicked button's own banner is
+  // the one to hide.
+  dismissBanner(event) {
+    event.currentTarget.closest(".projekt-import-chat--banner").classList.add("-hidden")
+  }
+
+  // Warnings accumulate server-side across the whole import, so the banner is
+  // rebuilt only when the set actually changes. Comparing rendered text rather
+  // than count catches a same-length set from a later run. A dismissal sticks
+  // until the set changes.
+  renderImportWarnings(warnings) {
+    const messages = (Array.isArray(warnings) ? warnings : []).map((w) => w.message || "")
+    const signature = JSON.stringify(messages)
+    if (signature === this.shownWarningSignature) return
+
+    this.shownWarningSignature = signature
+    this.importWarningListTarget.replaceChildren()
+
+    messages.forEach((message) => {
+      const item = document.createElement("li")
+      item.textContent = message
+      this.importWarningListTarget.appendChild(item)
+    })
+
+    this.importWarningTarget.classList.toggle("-hidden", messages.length === 0)
+  }
+
+  hasVisibleWarnings() {
+    return this.importWarningListTarget.children.length > 0
+  }
+
+  // A new import run clears warnings server-side, so the previous run's banners
+  // must not linger while it is in flight.
+  resetBanners() {
     this.importErrorTarget.classList.add("-hidden")
+    this.importWarningTarget.classList.add("-hidden")
+    this.importWarningListTarget.replaceChildren()
+    this.shownWarningSignature = null
   }
 
   scheduleStatusPoll() {
@@ -249,6 +344,8 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
+        this.renderImportWarnings(data.warnings)
+
         if (data.status === "completed") {
           this.handleCompletion(data.redirect_path)
           return
@@ -263,13 +360,65 @@ export default class extends Controller {
       .catch(() => this.scheduleStatusPoll())
   }
 
-  showOverlay(label) {
-    this.overlayLabelTarget.textContent = label
+  showOverlay() {
     this.overlayTarget.classList.remove("-hidden")
+    this.startOverlayProgress()
   }
 
   hideOverlay() {
     this.overlayTarget.classList.add("-hidden")
+    this.clearOverlayStepTimer()
+    this.overlayProgressStarted = false
+  }
+
+  startOverlayProgress() {
+    if (this.overlayProgressStarted) return
+
+    this.overlayProgressStarted = true
+    this.overlayStepIndex = 0
+    this.setOverlayProgress(0)
+    this.setOverlayLabel(OVERLAY_PROGRESS_STEPS[0].labelValue)
+    this.scheduleOverlayStep(OVERLAY_PROGRESS_INITIAL_DELAY)
+  }
+
+  scheduleOverlayStep(delay) {
+    this.clearOverlayStepTimer()
+    this.overlayStepTimer = setTimeout(() => this.advanceOverlayStep(), delay)
+  }
+
+  clearOverlayStepTimer() {
+    if (this.overlayStepTimer) {
+      clearTimeout(this.overlayStepTimer)
+      this.overlayStepTimer = null
+    }
+  }
+
+  advanceOverlayStep() {
+    const step = OVERLAY_PROGRESS_STEPS[this.overlayStepIndex]
+    if (!step) return
+
+    this.setOverlayProgress(step.percent)
+    this.setOverlayLabel(step.labelValue)
+    this.overlayStepIndex += 1
+
+    if (this.overlayStepIndex < OVERLAY_PROGRESS_STEPS.length) {
+      this.scheduleOverlayStep(OVERLAY_PROGRESS_STEP_DELAY)
+    }
+  }
+
+  completeOverlayProgress() {
+    this.clearOverlayStepTimer()
+    this.setOverlayProgress(100)
+  }
+
+  setOverlayProgress(percent) {
+    if (this.hasOverlayFillTarget) {
+      this.overlayFillTarget.style.width = `${Math.max(0, Math.min(100, percent))}%`
+    }
+  }
+
+  setOverlayLabel(labelValue) {
+    this.overlayLabelTarget.textContent = this[`${labelValue}Value`]
   }
 
   submit(event) {
@@ -282,6 +431,7 @@ export default class extends Controller {
     const optimisticAttachments = this.attachedDocuments.slice()
 
     this.appendOptimisticUserBubble(content, optimisticAttachments)
+    this.refreshBusyState()
     this.textareaTarget.value = ""
     this.textareaTarget.style.height = "auto"
     this.textareaTarget.classList.remove("-scrollable")
@@ -306,13 +456,12 @@ export default class extends Controller {
       .then((response) => response.json())
       .then((data) => {
         this.removeOptimisticBubbles()
-        this.sendButtonTarget.disabled = false
         this.renderImmediateMessages(data)
         this.scheduleMessagesPoll()
       })
       .catch(() => {
         this.markOptimisticAsFailed()
-        this.sendButtonTarget.disabled = false
+        this.refreshBusyState()
       })
   }
 
@@ -320,6 +469,7 @@ export default class extends Controller {
     if (!data || !Array.isArray(data.messages)) return
 
     data.messages.forEach((m) => this.appendOrUpdateMessage(m))
+    this.refreshBusyState()
   }
 
   appendOptimisticUserBubble(content, attachments) {
@@ -449,12 +599,12 @@ export default class extends Controller {
   // Invoked by the shared confirm dialog's "confirmed" event (not directly by
   // the import button), so the modal replaces the old window.confirm.
   startImport() {
-    this.dismissImportError()
+    this.resetBanners()
     this.lastImportStatus = null
     // A fresh import procedure starts now (incl. re-import of a completed one),
     // so its completion should redirect to the projekt even on a revisit.
     this.completionShown = false
-    this.showOverlay(this.progressCreatingValue)
+    this.showOverlay()
 
     const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
 

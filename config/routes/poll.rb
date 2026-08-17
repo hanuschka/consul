@@ -14,6 +14,7 @@ resources :polls, only: [:show, :index] do
 
   resources :questions, controller: "polls/questions", shallow: true do
     post :answer, on: :member
+    get :wizard_step, on: :member
     # resources :answers, controller: "polls/answers", only: :destroy, shallow: false
   end
 end

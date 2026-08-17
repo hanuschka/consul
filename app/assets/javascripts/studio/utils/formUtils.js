@@ -1,4 +1,4 @@
-ProjektStudio.utils.urlParamsToFormData = function(serializedUrlParams) {
+App.Studio.utils.urlParamsToFormData = function(serializedUrlParams) {
   const formData = new FormData()
   const searchParams = new URLSearchParams(serializedUrlParams);
   searchParams.forEach((value, key) => {
@@ -8,7 +8,7 @@ ProjektStudio.utils.urlParamsToFormData = function(serializedUrlParams) {
   return formData
 }
 
-ProjektStudio.utils.formElementToUrlObjectWithParams = function(form) {
+App.Studio.utils.formElementToUrlObjectWithParams = function(form) {
   const url = new URL(`${form.action}`)
   const queryParamsObject = formElementToObject(form)
   url.search = objectToQueryString(queryParamsObject)
@@ -16,7 +16,7 @@ ProjektStudio.utils.formElementToUrlObjectWithParams = function(form) {
   return url
 }
 
-ProjektStudio.utils.formElementToUrlParams = function(form) {
+App.Studio.utils.formElementToUrlParams = function(form) {
   const formData = new FormData(form)
   formData.delete('_method')
   formData.delete('authenticity_token')

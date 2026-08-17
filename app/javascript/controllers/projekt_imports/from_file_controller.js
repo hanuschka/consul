@@ -19,13 +19,18 @@ export default class extends Controller {
     progressExtracting: String,
     errorTooLarge: String,
     errorUnsupported: String,
-    errorNoFiles: String
+    errorNoFiles: String,
+    errorSessionExpired: String,
+    errorRequestFailed: String
   }
 
   connect() {
     this.files = []
     this.bindDragEvents()
+    this.renderFileList()
     this.updateVisibility()
+    this.hideProgress()
+    this.clearError()
   }
 
   disconnect() {
@@ -127,6 +132,8 @@ export default class extends Controller {
   }
 
   renderFileList() {
+    if (!this.hasFileListTarget) return
+
     this.fileListTarget.innerHTML = ""
 
     this.files.forEach((file, index) => {
@@ -206,9 +213,22 @@ export default class extends Controller {
       .catch((error) => {
         this.hideProgress()
         this.submitButtonTarget.disabled = false
-        const message = (error && error.data && error.data.error) || this.errorNoFilesValue
-        this.showError(message)
+        this.showError(this.uploadErrorMessage(error))
       })
+  }
+
+  uploadErrorMessage(error) {
+    const status = error && error.status
+    const serverMessage = error && error.data && error.data.error
+
+    if (serverMessage) return serverMessage
+    if (status === 401 || status === 403 || status === 422) return this.errorSessionExpiredValue
+
+    if (status) {
+      return this.errorRequestFailedValue.replace("%{status}", status)
+    }
+
+    return this.errorRequestFailedValue.replace("%{status}", "network")
   }
 
   showProgress() {
@@ -247,11 +267,15 @@ export default class extends Controller {
   }
 
   showError(message) {
+    if (!this.hasErrorTarget) return
+
     this.errorTarget.textContent = message
     this.errorTarget.hidden = false
   }
 
   clearError() {
+    if (!this.hasErrorTarget) return
+
     this.errorTarget.textContent = ""
     this.errorTarget.hidden = true
   }

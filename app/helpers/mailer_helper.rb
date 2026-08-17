@@ -1,7 +1,6 @@
 module MailerHelper
   def render_custom_content_block_content(key, default_content: '', custom_prefix: nil)
-    locale = I18n.default_locale
-    block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
+    block = SiteCustomization::ContentBlock.custom_block_for(key)
     block_body = block&.body.presence || default_content || ""
 
     if custom_prefix

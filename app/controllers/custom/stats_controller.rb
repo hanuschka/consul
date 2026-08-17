@@ -15,10 +15,10 @@ class StatsController < ApplicationController
     @comments = daily_cache("comments") { Comment.not_valuations.with_hidden.count }
 
     @debate_votes = daily_cache("debate_votes") { Vote.where(votable_type: "Debate").count }
-    @proposal_votes = daily_cache("proposal_votes") { Vote.where(votable_type: "Proposal").count }
+    @proposal_votes = daily_cache("proposal_votes") { Vote.where(votable_type: "Proposal", conditional: false).count }
     @comment_votes = daily_cache("comment_votes") { Vote.where(votable_type: "Comment").count }
-    @investment_votes = daily_cache("budget_investment_votes") { Vote.where(votable_type: "Budget::Investment").count }
-    @votes = daily_cache("votes") { Vote.count }
+    @investment_votes = daily_cache("budget_investment_votes") { Vote.where(votable_type: "Budget::Investment", conditional: false).count }
+    @votes = daily_cache("votes") { Vote.where(conditional: false).count }
 
     @verified_users = daily_cache("verified_users") { User.with_hidden.level_two_or_three_verified.count }
     @unverified_users = daily_cache("unverified_users") { User.with_hidden.unverified.count }

@@ -1,4 +1,4 @@
-ProjektStudio.utils.focusContentEditableElement = function(element, options = {}) {
+App.Studio.utils.focusContentEditableElement = function(element, options = {}) {
   element.focus({ preventScroll: options.preventScroll || true })
 
   const range = document.createRange();
@@ -9,15 +9,15 @@ ProjektStudio.utils.focusContentEditableElement = function(element, options = {}
   selection.addRange(range);
 }
 
-ProjektStudio.utils.htmlToDomElement = function(html) {
+App.Studio.utils.htmlToDomElement = function(html) {
   const div = document.createElement('div');
   div.innerHTML = html;
 
   return div
 }
 
-ProjektStudio.utils.htmlToSingleDomElement = function(html) {
-  return ProjektStudio.utils.htmlToDomElement(html).firstElementChild;
+App.Studio.utils.htmlToSingleDomElement = function(html) {
+  return App.Studio.utils.htmlToDomElement(html).firstElementChild;
 }
 
 const voidElements = [
@@ -26,7 +26,7 @@ const voidElements = [
   "source", "track", "wbr"
 ];
 
-ProjektStudio.utils.validateHTML = function(htmlContent) {
+App.Studio.utils.validateHTML = function(htmlContent) {
   const parser = new DOMParser();
   const parsedDoc = parser.parseFromString(htmlContent, 'text/html');
 
@@ -77,7 +77,7 @@ ProjektStudio.utils.validateHTML = function(htmlContent) {
   };
 }
 
-ProjektStudio.utils.removeChildHtmlAttributes = function(element, attributes = []) {
+App.Studio.utils.removeChildHtmlAttributes = function(element, attributes = []) {
   attributes.forEach((attribute) => {
     element
       .querySelectorAll(`[${attribute}]`)
@@ -85,7 +85,7 @@ ProjektStudio.utils.removeChildHtmlAttributes = function(element, attributes = [
   })
 }
 
-ProjektStudio.utils.hasBlockChildren = (element) => {
+App.Studio.utils.hasBlockChildren = (element) => {
   const blockSelectors = [
     "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
     "h1","h2","h3","h4","h5","h6", "blockquote", "pre", "img"
@@ -94,12 +94,12 @@ ProjektStudio.utils.hasBlockChildren = (element) => {
   return element.querySelector(blockSelectors.join(", ")) !== null;
 };
 
-ProjektStudio.utils.hasNoBlockChildren = (element) => {
-  return !ProjektStudio.utils.hasBlockChildren(element);
+App.Studio.utils.hasNoBlockChildren = (element) => {
+  return !App.Studio.utils.hasBlockChildren(element);
 };
 
 
-ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes = [] }) => {
+App.Studio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes = [] }) => {
   const ALLOWED_TAGS = new Set(allowedTags.map(tag => tag.toUpperCase())); // uppercase tagNames
   const ALLOWED_ATTRS = new Set(allowedAttributes); // only class allowed
   const URL_ATTRS = new Set(["href", "src", "action", "formaction", "xlink:href", "data"]);
@@ -145,7 +145,7 @@ ProjektStudio.utils.sanitizeHtml = (input, { allowedTags = [], allowedAttributes
 
 // Mirror of AdminWYSIWYGSanitizer (lib/admin_wysiwyg_sanitizer.rb + lib/wysiwyg_sanitizer.rb).
 // If you change these lists, update the Ruby class to match.
-ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
+App.Studio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
   allowedTags: [
     "div", "p", "ul", "ol", "li", "blockquote", "br", "hr", "a",
     "h1", "h2", "h3", "h4", "h5", "h6",
@@ -188,6 +188,7 @@ ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
     "data-map", "data-map-center-latitude", "data-map-center-longitude",
     "data-map-zoom", "data-admin-editor", "data-show-admin-shape",
     "data-admin-shape", "data-parent-class", "data-map-layers",
+    "data-map-resource", "data-map-phase-id",
     "data-show-more-text", "data-show-less-text",
     "data-pswp-width", "data-pswp-height",
     "data-turbolinks", "data-box-shadow", "data-glightbox",
@@ -195,22 +196,23 @@ ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
   ]
 };
 
-ProjektStudio.utils.sanitizeAdminHtml = function(html) {
-  return ProjektStudio.utils.sanitizeHtml(html, ProjektStudio.utils.ADMIN_WYSIWYG_ALLOWLIST);
+App.Studio.utils.sanitizeAdminHtml = function(html) {
+  return App.Studio.utils.sanitizeHtml(html, App.Studio.utils.ADMIN_WYSIWYG_ALLOWLIST);
 }
 
 // Map embeds are hydrated into live maps for display in the studio, but the
 // saved body must always keep the {{projekt_map}} token so the server
 // re-renders the map on each request. This strips any hydrated map markup and
 // restores the token before a content block is persisted.
-ProjektStudio.utils.resetMapEmbeds = function(html) {
+App.Studio.utils.resetMapEmbeds = function(html) {
   if (!html || html.indexOf("js-projekt-map-embed") === -1) return html;
 
-  const container = ProjektStudio.utils.htmlToDomElement(html);
+  const container = App.Studio.utils.htmlToDomElement(html);
 
   container.querySelectorAll(".js-projekt-map-embed").forEach((embed) => {
     embed.querySelectorAll(".projekt-map-shortcode").forEach((map) => map.remove());
     embed.querySelectorAll(".js-map-height-control").forEach((control) => control.remove());
+    embed.querySelectorAll(".js-map-source-control").forEach((control) => control.remove());
 
     if (embed.innerHTML.indexOf("{{projekt_map}}") === -1) {
       embed.appendChild(document.createTextNode("{{projekt_map}}"));
@@ -220,7 +222,7 @@ ProjektStudio.utils.resetMapEmbeds = function(html) {
   return container.innerHTML;
 }
 
-ProjektStudio.utils.formatHTML = function(html) {
+App.Studio.utils.formatHTML = function(html) {
   let formatted = '';
   let indent = 0;
   const indentString = '  '; // 2 spaces
@@ -258,7 +260,7 @@ ProjektStudio.utils.formatHTML = function(html) {
 // Updates the title text of the <rich-tooltip> that wraps a given trigger
 // element. Used by stateful toggle buttons whose tooltip text changes with
 // their state (e.g. show/hide phase, set/unset default phase, sidebar section).
-ProjektStudio.utils.updateRichTooltipTitle = function(trigger, newTitle) {
+App.Studio.utils.updateRichTooltipTitle = function(trigger, newTitle) {
   const tooltip = trigger.closest("rich-tooltip");
 
   if (!tooltip) return

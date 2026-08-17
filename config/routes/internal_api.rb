@@ -68,5 +68,9 @@ namespace :internal_api do
 
   get "connection/update_client_info", to: "connection#update_client_info"
 
+  patch "connection/sync_client_domain", to: "connection#sync_client_domain"
+
   get "stats", to: "stats#show"
+
+  get "ai_features", to: "ai_features#show"
 end

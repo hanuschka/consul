@@ -53,3 +53,28 @@
     }
   }
 }
+
+.comment-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+
+  .button {
+    margin-bottom: 0;
+  }
+
+  .checkbox-label {
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}
+
+.comment-form-actions--roles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px 15px;
+}

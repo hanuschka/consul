@@ -2,7 +2,7 @@
 // height control (studio/_map_controls.scss), keeping each button's colour
 // identity (green = save, blue = cancel). Border is colour-tinted to match the
 // button, not white.
-.projekt-content-block-wrapper.-in-edit-mode {
+.custom-content-block-wrapper.-in-edit-mode {
   // Shared frosted-glass surface for Save/Cancel — same glass treatment as the
   // toolbar and the map height control (studio/_map_controls.scss). Each
   // button's colour identity (green = save, blue = cancel) is set below; the
@@ -47,7 +47,7 @@
   }
 }
 
-.projekt-content-block--loader {
+.custom-content-block--loader {
   background-color: #ebebeb9c;
   position: absolute;
   top: -5px;
@@ -60,7 +60,7 @@
   z-index: 1;
 }
 
-.content-blocks-container:has(>.projekt-content-block-wrapper:only-child) {
+.content-blocks-container:has(>.custom-content-block-wrapper:only-child) {
   .add-new-content-block-button {
     font-size: 22px !important;
     min-width: 54px;
@@ -72,10 +72,10 @@
   }
 }
 
-.projekt-content-block-wrapper {
+.custom-content-block-wrapper {
   position: relative;
 
-  .projekt-content-block {
+  .custom-content-block {
     margin-bottom: 0px;
     position: relative;
     z-index: 2;
@@ -90,7 +90,7 @@
     /* outline: 1px dashed lightgray; */
     border-radius: 12px;
 
-    .projekt-content-block-wrapper {
+    .custom-content-block-wrapper {
       background-color: #ffffff7a;
       /* opacity: 0.8; */
     }
@@ -105,13 +105,13 @@
   opacity: 0.45;
 }
 
-.projekt-content-block-wrapper {
+.custom-content-block-wrapper {
   transition: 500ms ease background-color;
 
   &.-draft {
     opacity: 0.7;
 
-    .projekt-content-block--toolbar {
+    .custom-content-block--toolbar {
       pointer-events: none;
       opacity: 0.3;
       filter: grayscale(1);
@@ -119,18 +119,18 @@
   }
 
   &.-loading, &.-in-edit-mode {
-    .projekt-content-block-edit {
+    .custom-content-block-edit {
       border-bottom: none;
     }
 
-    .projekt-content-block--toolbar {
+    .custom-content-block--toolbar {
       // background-color: #F1F8FC;
       background-color: #f1f8fccc;
       backdrop-filter: blur(2px);
     }
   }
   &.-highlight-changed {
-    .projekt-content-block--overlay {
+    .custom-content-block--overlay {
       display: block;
       // animation: content-block-added-highlight 1500ms forwards;
       // animation: fade-in 0.3s ease-out forwards, pulse-highlight 1.1s ease-in;
@@ -138,35 +138,35 @@
     }
   }
   &.-loading {
-    .projekt-content-block-edit {
+    .custom-content-block-edit {
       border: none;
     }
 
-    .projekt-content-block-edit {
+    .custom-content-block-edit {
       filter: grayscale(1);
     }
-    .projekt-content-block--loader {
+    .custom-content-block--loader {
       display: block;
     }
   }
 
   &.-simple-edit-mode {
-    .projekt-content-block--overlay {
+    .custom-content-block--overlay {
       // background-color: #24a1d114;
       // outline: 1px solid #d6ecff;
     }
 
-    .projekt-content-block-edit {
+    .custom-content-block-edit {
       // background-color: #E2EEF9;
       // background-color: #24a1d114;
     }
 
-    .projekt-content-block-edit-main-controlls {
+    .custom-content-block-edit-main-controlls {
       display: flex;
       flex-shrink: 0;
     }
 
-    .projekt-content-block-edit--buttons-wrapper {
+    .custom-content-block-edit--buttons-wrapper {
       display: flex;
     }
 
@@ -186,13 +186,13 @@
       }
     }
 
-    .projekt-content-block {
+    .custom-content-block {
       &:focus-visible {
         outline: none;
       }
     }
 
-    .projekt-content-block [contenteditable="false"] {
+    .custom-content-block [contenteditable="false"] {
       user-select: none;
     }
   }
@@ -202,20 +202,20 @@
  /* */
 
   &.-html-edit-mode {
-    .projekt-content-block--overlay {
+    .custom-content-block--overlay {
       // background-color: #24a1d114;
       // outline: 1px solid #d6ecff;
     }
 
-    .projekt-content-block-edit {
+    .custom-content-block-edit {
       // background-color: #E2EEF9;
     }
 
-    .projekt-content-block-edit-main-controlls {
+    .custom-content-block-edit-main-controlls {
       display: flex;
     }
 
-    .projekt-content-block-edit--buttons-wrapper {
+    .custom-content-block-edit--buttons-wrapper {
       display: flex;
     }
 
@@ -235,20 +235,20 @@
   }
 
   &.-ai-edit-mode {
-    .projekt-content-block--overlay {
+    .custom-content-block--overlay {
       // background-color: #24a1d114;
       // outline: 1px solid #d6ecff;
     }
 
-    .projekt-content-block-edit {
+    .custom-content-block-edit {
       // background-color: #E2EEF9;
     }
 
-    .projekt-content-block-edit-main-controlls {
+    .custom-content-block-edit-main-controlls {
       display: flex;
     }
 
-    .projekt-content-block-edit--buttons-wrapper {
+    .custom-content-block-edit--buttons-wrapper {
       display: flex;
     }
 
@@ -263,11 +263,11 @@
   }
 
   &.-code-edit-mode {
-    .projekt-content-block-edit-main-controlls {
+    .custom-content-block-edit-main-controlls {
       display: flex;
     }
 
-    .projekt-content-block-edit--buttons-wrapper {
+    .custom-content-block-edit--buttons-wrapper {
       display: flex;
     }
 
@@ -285,13 +285,13 @@
       }
     }
 
-    .projekt-content-block {
+    .custom-content-block {
       display: none;
     }
   }
 }
 
-.projekt-content-block--overlay {
+.custom-content-block--overlay {
   position: absolute;
   top: -5px;
   left: -15px;
@@ -304,7 +304,7 @@
   transition: 100ms ease background-color;
 }
 
-.projekt-content-block-wrapper:not(.-in-edit-mode):not(.-ai-edit-mode):not(.-loading):has(.projekt-content-block-edit-main-controlls:hover) .projekt-content-block--overlay {
+.custom-content-block-wrapper:not(.-in-edit-mode):not(.-ai-edit-mode):not(.-loading):has(.custom-content-block-edit-main-controlls:hover) .custom-content-block--overlay {
   display: block;
   top: -10px;
   right: -10px;
@@ -315,7 +315,7 @@
   z-index: 2;
 }
 
-.projekt-content-block {
+.custom-content-block {
   min-height: 24px;
 
   ul {
@@ -335,9 +335,22 @@
 
 // Give content blocks a visible minimum height while editing in studio mode, so
 // short or empty blocks stay easy to see and click. Scoped to studio view only:
-// the .projekt-content-block-wrapper exists only when studio controls are
+// the .custom-content-block-wrapper exists only when studio controls are
 // rendered (never for regular users), and body.-preview-mode is excluded so the
-// min-height drops in user preview mode.
-body:not(.-preview-mode) .projekt-content-block-wrapper .projekt-content-block {
+// min-height drops in user preview mode. Limited to the projekt body and the
+// homepage main column; sidebar, footer, and projekt-footer blocks are left out
+// (compact-mode blocks live in a sidebar/footer, projekt-footer is its own
+// container) so short blocks there aren't forced tall.
+//
+// Excluded while the block is empty, i.e. while the admin empty-block hint is
+// the visible placeholder — the hint already gives the block its height, and
+// stacking 55px under it leaves a large dead gap. The `is-content-empty` marker
+// sits either on the wrapper itself (projekt-page blocks, wrapped client-side
+// by contentBlockHTML) or on a `.content-block-empty-hint-wrap` ancestor (site
+// blocks wrapped server-side), hence both the direct and the descendant
+// exclusion. The empty-state heights are owned by
+// custom_new_design/components/shared/_content_block_empty_hint.scss.
+body:not(.-preview-mode) #projekt-body .custom-content-block-wrapper:not(.-compact-mode):not(.is-content-empty):not(.is-content-empty *) .custom-content-block,
+body:not(.-preview-mode) .welcome-page .custom-content-block-wrapper:not(.-compact-mode):not(.is-content-empty):not(.is-content-empty *) .custom-content-block {
   min-height: 55px;
 }

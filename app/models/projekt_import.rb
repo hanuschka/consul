@@ -30,7 +30,7 @@ class ProjektImport < ApplicationRecord
   ANALYZING_STATUSES = %w[pending extracting processing].freeze
 
   FAILURE_STAGES = %w[
-    extract ai_processing finalize resolve_content_blocks
+    extract ai_processing resolve_content_blocks
     create_projekt image_generation unknown
   ].freeze
 
@@ -93,5 +93,17 @@ class ProjektImport < ApplicationRecord
 
   def terminal?
     status.in?(%w[completed failed abandoned])
+  end
+
+  def self.default_content_locale
+    Rails.env.development? ? I18n.locale.to_s : "de"
+  end
+
+  def import_locale
+    content_locale.presence || self.class.default_content_locale
+  end
+
+  def import_response_language
+    import_locale.to_s.start_with?("de") ? "German" : "English"
   end
 end

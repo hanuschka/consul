@@ -1,0 +1,178 @@
+de:
+  adm:
+    projekts:
+      phases:
+        mitmachbox_survey:
+          title: Umfrage
+          hint_text: >
+            Hier erstellen und verwalten Sie die Umfrage, die auf den Mitmachbox-Geräten ausgespielt wird.
+            Änderungen erfolgen an einem Entwurf und werden erst mit der Veröffentlichung auf die Geräte übertragen.
+          unconfigured_title: Mitmachbox nicht konfiguriert
+          unconfigured_text: Die Verbindung zur Mitmachbox-Plattform ist auf dieser Instanz nicht eingerichtet. Bitte wenden Sie sich an Ihren Administrator.
+          missing_title: Noch keine Umfrage angelegt
+          missing_text: Für diese Phase wurde noch keine Umfrage auf der Mitmachbox-Plattform angelegt.
+          lost_title: Umfrage nicht mehr vorhanden
+          lost_text: Die verknüpfte Umfrage existiert auf der Mitmachbox-Plattform nicht mehr. Sie können eine neue Umfrage anlegen.
+          create_survey_button: Umfrage jetzt anlegen
+          recreate_survey_button: Neue Umfrage anlegen
+          state_label: Status
+          open_button: Umfrage öffnen
+          close_button: Umfrage schließen
+          archive_button: Archivieren
+          reopen_button: Wieder öffnen
+          open_confirm: Die Umfrage wird für die Datenerfassung auf den Geräten geöffnet. Fortfahren?
+          close_confirm: Die Datenerfassung wird beendet. Bereits gesammelte Antworten bleiben erhalten. Fortfahren?
+          archive_confirm: Die Umfrage wird archiviert und aus aktiven Listen ausgeblendet. Fortfahren?
+          open_requires_published_hint: Die Umfrage kann erst geöffnet werden, wenn eine Version veröffentlicht wurde.
+          draft_section_title: Entwurf (Version %{number})
+          published_section_title: Veröffentlichte Version %{number}
+          no_published_version: Noch keine Version veröffentlicht.
+          responses_total: "Antworten insgesamt: %{count}"
+          add_question_button: Frage hinzufügen
+          publish_button: Entwurf veröffentlichen
+          publish_confirm: Nach der Veröffentlichung kann diese Version nicht mehr bearbeitet werden. Fortfahren?
+          new_draft_button: Neuen Entwurf erstellen
+          new_draft_hint: Die veröffentlichte Version wird in einen bearbeitbaren Entwurf kopiert. Die laufende Version bleibt bis zur nächsten Veröffentlichung unverändert auf den Geräten.
+          read_only_hint: Veröffentlichte Versionen können nicht bearbeitet werden. Erstellen Sie einen neuen Entwurf, um Änderungen vorzunehmen.
+          no_questions: Noch keine Fragen vorhanden.
+          table:
+            prompt: Frage
+            question_type: Fragetyp
+            required: Pflichtfrage
+            options: Antwortoptionen
+            actions: Aktionen
+          move_up: Nach oben
+          move_down: Nach unten
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Frage wirklich löschen?
+        mitmachbox_deployments:
+          title: Geräte
+          hint_text: >
+            Hier sehen Sie die Ihrer Kommune zugewiesenen Mitmachbox-Geräte und steuern,
+            in welchem Zeitraum die Umfrage dieser Phase darauf ausgespielt wird.
+          assignments_title: Verfügbare Geräte
+          assignments_empty: Ihrer Kommune sind derzeit keine Geräte zugewiesen.
+          deployments_title: Ausspielungen dieser Umfrage
+          deployments_empty: Diese Umfrage wird derzeit auf keinem Gerät ausgespielt.
+          assignment_table:
+            serial: Seriennummer
+            device_status: Gerätestatus
+            last_synced_at: Zuletzt synchronisiert
+            window: Ausleihzeitraum
+            status: Status
+            actions: Aktionen
+          deployment_table:
+            device: Gerät
+            location: Standort
+            status: Status
+            actions: Aktionen
+          deploy_button: Dieser Umfrage zuweisen
+          showing_this_survey: Zeigt bereits diese Umfrage
+          showing_other_survey: "Zeigt derzeit: %{title}"
+          adjust_button: Standort bearbeiten
+          end_button: Jetzt beenden
+          end_confirm: Die Ausspielung wird sofort beendet. Bereits gesammelte Antworten bleiben erhalten. Fortfahren?
+          open_ended: unbefristet
+          never_synced: noch nie
+          statuses:
+            scheduled: Geplant
+            active: Aktiv
+            ended: Beendet
+        mitmachbox_results:
+          title: Ergebnisse
+          latency_hint: Ergebnisse werden von den Geräten gebündelt übertragen und können bis zu einem Tag verzögert erscheinen.
+          responses_total: Antworten insgesamt
+          version_label: Veröffentlichte Version %{number}
+          published_at_label: veröffentlicht am %{date}
+          answered_label:
+            one: "%{count} Person hat diese Frage beantwortet"
+            other: "%{count} Personen haben diese Frage beantwortet"
+          count_label: Anzahl
+          option_label: Antwortoption
+          export_button: Als CSV herunterladen
+          empty_title: Noch keine Ergebnisse
+          empty_text: Es wurde noch keine Version veröffentlicht oder es liegen noch keine Antworten vor.
+      mitmachbox:
+        go_to_survey_tab: Zur Umfrage wechseln
+        survey:
+          created: Die Umfrage wurde angelegt.
+          state_changed: "Der Status der Umfrage wurde geändert: %{state}."
+          draft_created: Ein neuer Entwurf wurde erstellt.
+          published: Der Entwurf wurde veröffentlicht.
+          states:
+            draft: Entwurf
+            open: Geöffnet
+            closed: Geschlossen
+            archived: Archiviert
+        questions:
+          created: Die Frage wurde hinzugefügt.
+          updated: Die Frage wurde aktualisiert.
+          destroyed: Die Frage wurde gelöscht.
+          prompt_label: Fragetext
+          prompt_hint: Wird auf dem Display der Mitmachbox angezeigt. Formulieren Sie die Frage kurz und verständlich.
+          question_type_label: Fragetyp
+          question_type_hint: "Bestimmt, wie am Gerät geantwortet wird: eine Antwort, mehrere Antworten oder eine Bewertung auf einer Skala."
+          question_types:
+            single_choice: Einfachauswahl
+            multiple_choice: Mehrfachauswahl
+            rating: Bewertungsskala
+          required_label: Pflichtfrage
+          required_hint: Pflichtfragen müssen am Gerät beantwortet werden, bevor die nächste Frage angezeigt wird.
+          save_button: Speichern
+          options_title: Antwortoptionen
+          options_hint: Maximal 5 Antwortoptionen – die Mitmachbox hat 5 Auswahltasten.
+          add_option_button: Option hinzufügen
+          no_options: Noch keine Antwortoptionen vorhanden.
+        options:
+          created: Die Antwortoption wurde hinzugefügt.
+          updated: Die Antwortoption wurde aktualisiert.
+          destroyed: Die Antwortoption wurde gelöscht.
+          label_label: Beschriftung
+          label_hint: Wird auf dem Gerät neben der Auswahltaste angezeigt.
+          value_label: Punktwert
+          value_hint: Nur für Bewertungsskalen relevant, z. B. 1 bis 5.
+          save_button: Speichern
+          delete_confirm: Antwortoption wirklich löschen?
+          table:
+            label: Beschriftung
+            value: Punktwert
+            actions: Aktionen
+        deployments:
+          created: Die Umfrage wird auf dem Gerät ausgespielt.
+          updated: Der Standort wurde aktualisiert.
+          ended: Die Ausspielung wurde beendet.
+          assignment_label: Gerät
+          assignment_hint: Zur Auswahl stehen die Ihrer Kommune zugewiesenen Mitmachboxen mit ihrem Ausleihzeitraum.
+          location_label: Standort
+          location_hint: Optional. Wo steht die Box während dieser Umfrage, z. B. „Rathaus Eingang“?
+          save_button: Speichern
+          replace_warning: >
+            Achtung: Das Zuweisen ersetzt eine ggf. laufende andere Umfrage auf diesem Gerät.
+            Deren Zuweisung wird automatisch beendet.
+        errors:
+          connection: Die Mitmachbox-Plattform ist derzeit nicht erreichbar. Bitte versuchen Sie es später erneut.
+          auth: Die Anmeldung an der Mitmachbox-Plattform ist fehlgeschlagen. Bitte prüfen Sie die hinterlegten Zugangsdaten.
+          forbidden: Der Zugriff wurde von der Mitmachbox-Plattform abgelehnt. Bitte prüfen Sie die Konfiguration.
+          not_found: Der angeforderte Datensatz wurde auf der Mitmachbox-Plattform nicht gefunden.
+          conflict: "Die Aktion ist derzeit nicht möglich: %{message}"
+          validation: "Die Eingaben wurden von der Mitmachbox-Plattform nicht akzeptiert: %{message}"
+          generic: Bei der Kommunikation mit der Mitmachbox-Plattform ist ein Fehler aufgetreten.
+          no_draft: Es ist kein bearbeitbarer Entwurf vorhanden. Erstellen Sie zuerst einen neuen Entwurf.
+          max_options_reached: Es sind maximal 5 Antwortoptionen pro Frage möglich – die Mitmachbox hat 5 Auswahltasten.
+          not_configured: Die Mitmachbox-Integration ist auf dieser Instanz nicht konfiguriert.
+      mitmachbox_questions:
+        new:
+          title: Frage hinzufügen
+        edit:
+          title: Frage bearbeiten
+      mitmachbox_options:
+        new:
+          title: Option hinzufügen
+        edit:
+          title: Option bearbeiten
+      mitmachbox_deployments:
+        new:
+          title: Gerät dieser Umfrage zuweisen
+        edit:
+          title: Standort bearbeiten

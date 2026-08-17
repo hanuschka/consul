@@ -3,7 +3,7 @@
 
 $_chat-radius: 18px;
 $_chat-radius-sm: 12px;
-$_chat-content-max-width: 800px;
+$_chat-content-max-width: 880px;
 
 $_chat-text: #1a2332;
 $_chat-text-muted: #555;
@@ -14,6 +14,8 @@ $_chat-input-bg-hover: #e4e6ea;
 $_chat-input-bg-focus: #e8eaed;
 $_chat-error: #c0392b;
 $_chat-error-text: #7f1d1d;
+$_chat-warning: #b26a00;
+$_chat-warning-text: #6b4000;
 
 .projekt-import-chat {
   position: relative;
@@ -23,7 +25,7 @@ $_chat-error-text: #7f1d1d;
   min-height: 420px;
   background: #fff;
   overflow: hidden;
-  max-width: 800px;
+  // max-width: 900px;
   margin: auto;
 }
 
@@ -36,7 +38,7 @@ $_chat-error-text: #7f1d1d;
   }
 }
 
-.projekt-import-chat--error-banner {
+.projekt-import-chat--banner {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -44,9 +46,19 @@ $_chat-error-text: #7f1d1d;
   padding: 12px 16px;
   font-size: 14px;
   line-height: 1.45;
-  color: $_chat-error-text;
-  background: color-mix(in srgb, $_chat-error 8%, white);
-  border-bottom: 1px solid color-mix(in srgb, $_chat-error 25%, white);
+  color: var(--banner-text);
+  background: color-mix(in srgb, var(--banner-accent) 9%, white);
+  border-bottom: 1px solid color-mix(in srgb, var(--banner-accent) 26%, white);
+
+  &.-error {
+    --banner-accent: #{$_chat-error};
+    --banner-text: #{$_chat-error-text};
+  }
+
+  &.-warning {
+    --banner-accent: #{$_chat-warning};
+    --banner-text: #{$_chat-warning-text};
+  }
 
   &.-hidden {
     display: none;
@@ -54,17 +66,24 @@ $_chat-error-text: #7f1d1d;
 
   .material-symbols-outlined {
     font-size: 20px;
-    color: $_chat-error;
+    color: var(--banner-accent);
   }
 }
 
-.projekt-import-chat--error-banner-message {
+.projekt-import-chat--banner-body {
   flex: 1;
   min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   word-break: break-word;
+
+  li + li {
+    margin-top: 4px;
+  }
 }
 
-.projekt-import-chat--error-banner-dismiss {
+.projekt-import-chat--banner-dismiss {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +91,7 @@ $_chat-error-text: #7f1d1d;
   width: 26px;
   height: 26px;
   padding: 0;
-  color: $_chat-error;
+  color: var(--banner-accent);
   background: transparent;
   border: 0;
   border-radius: 6px;
@@ -80,7 +99,7 @@ $_chat-error-text: #7f1d1d;
   transition: background-color 120ms ease;
 
   &:hover {
-    background: color-mix(in srgb, $_chat-error 14%, white);
+    background: color-mix(in srgb, var(--banner-accent) 15%, white);
   }
 
   .material-symbols-outlined {
@@ -482,17 +501,26 @@ $_chat-error-text: #7f1d1d;
   }
 }
 
-.projekt-import-chat--topbar-import-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: auto;
+// Import is gated while a chat reply is in flight. aria-disabled (not the
+// native attribute) keeps the button hoverable so its tooltip can explain
+// the wait; the button keeps its primary color but is dimmed, and hover no
+// longer shifts.
+.projekt-import-chat.-import-busy .projekt-import-chat--topbar-button.-primary {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  &:hover {
+    background: #2e7d32;
+    color: #fff;
+  }
 }
 
 .projekt-import-chat--import-action {
   display: flex;
   flex-shrink: 0;
+  align-items: center;
   justify-content: center;
+  gap: 16px;
   width: 100%;
   max-width: $_chat-content-max-width;
   margin: 0 auto;
@@ -512,6 +540,20 @@ $_chat-error-text: #7f1d1d;
 
 .projekt-import-chat--tooltip-text {
   color: $_chat-text-muted;
+}
+
+// The import tooltip carries two texts; only one shows at a time depending on
+// whether the button is currently gated by an in-flight reply.
+.projekt-import-chat--tooltip-text-busy {
+  display: none;
+}
+
+.projekt-import-chat.-import-busy .projekt-import-chat--tooltip-text-default {
+  display: none;
+}
+
+.projekt-import-chat.-import-busy .projekt-import-chat--tooltip-text-busy {
+  display: block;
 }
 
 .projekt-import-chat--input-area {
@@ -689,7 +731,7 @@ $_chat-error-text: #7f1d1d;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, white 85%, transparent);
+  background: white;
   z-index: 10;
 
   &.-hidden {
@@ -701,39 +743,63 @@ $_chat-error-text: #7f1d1d;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  width: 100%;
+  max-width: 460px;
+  padding: 0 16px;
   text-align: center;
   margin-top: -20vh;
-
-  p {
-    margin: 0;
-    font-size: 16px;
-    color: $_chat-text;
-  }
 }
 
-.projekt-import-chat--overlay-spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid
-    color-mix(in srgb, var(--kern-color-action-default) 20%, white);
-  border-top-color: var(--kern-color-action-default);
-  border-radius: 50%;
-  animation: projekt-import-chat-spin 0.9s linear infinite;
+.projekt-import-chat--overlay-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: $_chat-text;
+  margin: 0 0 18px;
 }
 
-@keyframes projekt-import-chat-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.projekt-import-chat--overlay-progress {
+  width: 100%;
+}
+
+.projekt-import-chat--overlay-progress-bar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background:
+    color-mix(in srgb, var(--kern-color-action-default) 12%, white);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.projekt-import-chat--overlay-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--kern-color-action-default);
+  border-radius: 999px;
+  transition: width 350ms ease-out;
+}
+
+.projekt-import-chat--overlay-label {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $_chat-text-muted;
+}
+
+.projekt-import-chat--overlay-message {
+  margin: 20px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $_chat-text-muted;
 }
 
 .projekt-import-chat--created-banner {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin: 16px 0 4px;
-  padding: 14px 16px;
+  margin: 2px 0 0px;
+  padding: 8px 10px;
   color: #1a2332;
   background: color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 8%, white);
   border: 1px solid color-mix(in srgb, var(--kern-color-feedback-success, #1c7d3f) 30%, white);
@@ -857,11 +923,11 @@ $_chat-error-text: #7f1d1d;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 22px;
-  font-size: 16px;
+  padding: 7px 22px;
+  font-size: 15px;
   font-weight: 600;
   border: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 150ms ease, color 150ms ease;
 

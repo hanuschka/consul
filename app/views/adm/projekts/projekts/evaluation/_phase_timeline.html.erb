@@ -5,15 +5,23 @@
   comments = timeline["comments"] || { "labels" => [], "values" => [] }
   total_submissions = timeline["total_submissions"].to_i
   total_comments = timeline["total_comments"].to_i
+
+  # Submissions and comments share the same time buckets, so a single point
+  # count drives the layout. At half-width (~360px) a time axis stays legible
+  # up to ~12 points; beyond that the labels crowd, so give each chart the full
+  # row. Sparse timelines stay side by side.
+  timeline_points = [(submissions["labels"] || []).size, (comments["labels"] || []).size].max
+  timeline_dense = timeline_points > 12
 %>
 
 <% if total_submissions > 0 %>
-  <div class="phase-timeline-card" data-controller="adm-charts">
+  <div class="phase-timeline-card evaluation-stat-card" data-controller="adm-charts">
     <div class="phase-timeline-card__header">
-      <span class="material-symbols-outlined" aria-hidden="true">timeline</span>
+      <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">timeline</span>
+      <i class="fas fa-chart-line projekt-evaluation-icon-fa" aria-hidden="true"></i>
       <span class="phase-timeline-card__title"><%= t("adm.projekts.projekts.evaluation.timeline_title") %></span>
     </div>
-    <div class="phase-timeline-card__grid">
+    <div class="phase-timeline-card__grid<%= " -stacked" if timeline_dense %>">
       <div class="phase-timeline-card__panel">
         <div class="phase-timeline-card__panel-label">
           <%= t("adm.projekts.projekts.evaluation.timeline_submissions") %>

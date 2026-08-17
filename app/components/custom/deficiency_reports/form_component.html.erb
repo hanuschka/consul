@@ -2,9 +2,26 @@
   <%= render "shared/errors", resource: deficiency_report %>
 
   <fieldset class="required-fields">
+    <% unless ai_categorization? %>
     <div>
-      <%= f.select :deficiency_report_category_id, DeficiencyReport::Category.all.collect{ |category| [category.name, category.id] }, { prompt: t('custom.deficiency_reports.form.category.placeholder') } %>
+      <%= f.select :deficiency_report_category_id,
+            DeficiencyReport::Category.all.collect { |category| [category.name, category.id] },
+            { prompt: t('custom.deficiency_reports.form.category.placeholder') },
+            { class: "js-user-resource-select-category" } %>
     </div>
+
+    <% if DeficiencyReport::Subcategory.exists? %>
+      <div class="js-deficiency-report-subcategory-wrapper">
+        <%= f.select :deficiency_report_subcategory_id,
+              DeficiencyReport::Subcategory.includes(:category).map { |subcategory|
+                [subcategory.name, subcategory.id, { "data-category-id": subcategory.deficiency_report_category_id }]
+              },
+              { prompt: t("custom.deficiency_reports.form.subcategory.placeholder"),
+                label: t("custom.deficiency_reports.form.subcategory.title") },
+              { class: "js-deficiency-report-subcategory-select" } %>
+      </div>
+    <% end %>
+    <% end %>
 
     <%= render "shared/globalize_locales", resource: deficiency_report %>
     <%= f.translatable_fields do |translations_form| %>
@@ -42,6 +59,15 @@
     <div>
       <%= f.text_field :on_behalf_of %>
     </div>
+
+    <% if intake_channel_field? %>
+      <div>
+        <%= f.select :deficiency_report_intake_channel_id,
+              intake_channels.map { |channel| [channel.name, channel.id] },
+              { label: t("custom.deficiency_reports.form.intake_channel.label"),
+                include_blank: t("custom.deficiency_reports.form.intake_channel.placeholder") } %>
+      </div>
+    <% end %>
   <% end %>
 
   <fieldset>

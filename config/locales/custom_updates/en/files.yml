@@ -8,6 +8,7 @@ en:
           documents: Admin documents
           resource_images: Resource images
           resource_documents: Resource documents
+          file_settings: File settings
   files:
     allowed_types_note_html: "Allowed file types: %{types}"
     allowed_types_note_admin_html: "Allowed admin file types: %{types}"
@@ -149,3 +150,10 @@ en:
     fullsize_preview:
       button: Preview
       close: Close
+    show:
+      untitled: Untitled
+      view_details: View details
+      close: Close
+      loading: Loading…
+      open_file: Open file
+      download: Download

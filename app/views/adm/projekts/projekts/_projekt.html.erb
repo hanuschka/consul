@@ -1,11 +1,14 @@
 <% manage_allowed = policy([:adm, :projekts, projekt]).update? %>
-<% landing_path = manage_allowed ? details_adm_projekts_projekt_path(projekt) : phases_adm_projekts_projekt_path(projekt) %>
 <tr class="kern-table__row" id="<%= dom_id(projekt) %>">
   <th scope="row" class="kern-table__header" data-field="name">
     <div class="d-flex align-items-center gap-3">
       <%= link_to projekt_thumbnail(projekt), projekt_path(projekt), target: "_blank", data: { turbo: false }, title: t(".frontend_page") %>
       <div>
-        <%= link_to projekt.title, landing_path, class: "link strong", data: { turbo_frame: "_top" } %>
+        <% if manage_allowed %>
+          <%= link_to projekt.title, details_adm_projekts_projekt_path(projekt), class: "link strong", data: { turbo_frame: "_top" } %>
+        <% else %>
+          <span class="strong"><%= projekt.title %></span>
+        <% end %>
         <% if projekt.imported_by_ai %>
           <rich-tooltip delay="2200" body-class="-wide" class="ml-2">
             <span class="kern-badge kern-badge--info kern-badge--small">
@@ -48,11 +51,9 @@
         <% actions.with_action(label: t(".visibility"), url: visibility_adm_projekts_projekt_path(projekt), icon: "visibility", data: { turbo_frame: "_top" }) %>
         <% actions.with_action(label: t(".projekt_managers"), url: projekt_managers_adm_projekts_projekt_path(projekt), icon: "supervisor_account", data: { turbo_frame: "_top" }) %>
         <% actions.with_action(label: t(".map"), url: map_adm_projekts_projekt_path(projekt), icon: "map", data: { turbo_frame: "_top" }) %>
-      <% end %>
-      <% actions.with_action(label: t(".projekt_phases"), url: phases_adm_projekts_projekt_path(projekt), icon: "dashboard_customize", data: { turbo_frame: "_top" }) %>
-      <% actions.with_action(label: t("adm.projekts.projekts.projekt.images"), url: images_adm_projekts_projekt_path(projekt), icon: "image", data: { turbo_frame: "_top" }) %>
-      <% actions.with_action(label: t("adm.projekts.projekts.projekt.documents"), url: documents_adm_projekts_projekt_path(projekt), icon: "description", data: { turbo_frame: "_top" }) %>
-      <% if manage_allowed %>
+        <% actions.with_action(label: t(".projekt_phases"), url: phases_adm_projekts_projekt_path(projekt), icon: "dashboard_customize", data: { turbo_frame: "_top" }) %>
+        <% actions.with_action(label: t("adm.projekts.projekts.projekt.images"), url: images_adm_projekts_projekt_path(projekt), icon: "image", data: { turbo_frame: "_top" }) %>
+        <% actions.with_action(label: t("adm.projekts.projekts.projekt.documents"), url: documents_adm_projekts_projekt_path(projekt), icon: "description", data: { turbo_frame: "_top" }) %>
         <% actions.with_action(label: t(".evaluation"), url: evaluation_adm_projekts_projekt_path(projekt), icon: "assessment", data: { turbo_frame: "_top" }) %>
 
         <% actions.with_action(

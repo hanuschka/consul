@@ -6,7 +6,7 @@ module ContentBlocksHelper
   # up rendered outside the content block. Detect such bodies and wrap them in a
   # <div> instead, whatever tag was requested.
   BLOCK_LEVEL_BODY_REGEXP =
-    /<(div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
+    /<(p|div|section|article|aside|figure|figcaption|table|ul|ol|blockquote|iframe|hr|pre|h[1-6])[\s>]/i
 
   def render_custom_block(
     key,
@@ -18,8 +18,7 @@ module ContentBlocksHelper
     empty_hint: true,
     tag_name: "p"
   )
-    locale = current_user&.locale || I18n.default_locale
-    block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
+    block = SiteCustomization::ContentBlock.custom_block_for(key)
     block_body =
       if content_block_body_blank?(block&.body)
         default_content || ""
@@ -77,12 +76,14 @@ module ContentBlocksHelper
     if current_user&.administrator?
       {
         update_url: update_inline_admin_site_customization_content_block_path(block),
-        ai_url: change_with_ai_admin_site_customization_content_block_path(block)
+        ai_url: change_with_ai_admin_site_customization_content_block_path(block),
+        generate_url: generate_with_ai_admin_site_customization_content_block_path(block)
       }
     elsif current_user&.projekt_manager?
       {
         update_url: update_inline_projekt_management_site_customization_content_block_path(block),
-        ai_url: change_with_ai_projekt_management_site_customization_content_block_path(block)
+        ai_url: change_with_ai_projekt_management_site_customization_content_block_path(block),
+        generate_url: generate_with_ai_projekt_management_site_customization_content_block_path(block)
       }
     end
   end
@@ -94,6 +95,7 @@ module ContentBlocksHelper
     res << " data-content-block-id=\"#{block.id}\""
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
+    res << " data-generate-url=\"#{inline_urls[:generate_url]}\""
 
     if default_content.present?
       res << " data-default-content=\"#{ERB::Util.html_escape(default_content)}\""
@@ -166,8 +168,7 @@ module ContentBlocksHelper
   end
 
   def render_custom_content_block?(key)
-    locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: locale, key: key)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key)
 
     return true if content_block&.body.present?
 
@@ -175,8 +176,7 @@ module ContentBlocksHelper
   end
 
   def render_custom_projekt_content_block?(key, projekt)
-    locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_by(name: "custom", locale: locale, key: key)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key)
 
     return true if content_block&.body.present?
 
@@ -231,6 +231,10 @@ module ContentBlocksHelper
 
   def convert_br_to_paragraphs(html)
     return html if html.blank?
+
+    if html.match?(/<br\s*\/?>/) && !html.match?(BLOCK_LEVEL_BODY_REGEXP)
+      html = "<p>#{html}</p>"
+    end
 
     result = html.gsub(/<br\s*\/?>/, "</p><p>")
     result = result.gsub(/<p>\s*<\/p>/, "")

@@ -183,6 +183,8 @@ class Api::ProjektsController < Api::BaseController
     process_image_with_base64(@projekt.page, image_data)
 
     render json: { data: { projekt: ProjektSerializer.new(@projekt).serialize } }
+  rescue ForbiddenError, UnauthorizedError
+    raise
   rescue => e
     render json: { error: { messages: [e.message] } }, status: 422
   end
@@ -385,7 +387,7 @@ class Api::ProjektsController < Api::BaseController
     # Create a blank content block for projects created through the API
     projekt.content_blocks.create!(
       name: "custom",
-      locale: "de",
+      locale: SiteCustomization::ContentBlock.canonical_locale,
       body: "",
       key: "projekt_content_block_#{projekt.id}_1_#{Time.now.to_i}",
       position: 1

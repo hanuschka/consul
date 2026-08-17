@@ -24,7 +24,7 @@
 
 .pagination li a,
 .pagination li.current {
-  border: 1px solid #d9d9d9;
+  border: 1px solid #cecece;
   border-radius: 8px;
   cursor: pointer;
   display: inline-flex;
@@ -35,6 +35,7 @@
   min-height: 38px;
   color: #222;
   text-decoration: none !important;
+  background-color:  #dcdcdc;
 }
 
 .pagination li.current {

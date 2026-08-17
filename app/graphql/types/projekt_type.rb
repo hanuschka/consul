@@ -7,7 +7,7 @@ module Types
     field :ends_at, GraphQL::Types::ISO8601Date, null: true
 
     def active
-      ApplicationController.helpers.projekt_feature?(object, "main.activate")
+      object.activated?
     end
 
     def starts_at

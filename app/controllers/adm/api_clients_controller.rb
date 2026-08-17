@@ -118,7 +118,7 @@ class Adm::ApiClientsController < Adm::BaseController
       if @api_client.user.present?
         @api_client.user.update!(service_user_attributes)
       else
-        ApiClients::CreateServiceUserService.call(
+        ::ApiClients::CreateServiceUserService.call(
           api_client: @api_client,
           user_attributes: service_user_attributes
         )

@@ -12,7 +12,7 @@
       <div style="column-count:3;margin-top:10px;">
 
         <% checked_officer_id = @district.default_deficiency_report_responsible.id if @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::Officer) %>
-        <%= f.collection_radio_buttons :default_deficiency_report_officer_id, DeficiencyReport::Officer.all, :id, :name, { checked: checked_officer_id } do |rb| %>
+        <%= f.collection_radio_buttons :default_deficiency_report_officer_id, deficiency_report_assignable_officers(@district.default_deficiency_report_responsible), :id, :name, { checked: checked_officer_id } do |rb| %>
           <div>
             <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"default_deficiency_report_officer_group_id\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
           </div>

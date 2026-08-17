@@ -4,3 +4,8 @@ en:
       show:
         title: Features
         intro_text: "Global features that don't yet have a dedicated area in the new admin UI. Changes take effect immediately across the entire platform."
+        oauth_logins_title: "External login providers"
+        oauth_logins_intro: "Each provider adds a button to the sign-in and registration pages. A provider only works once its credentials are configured on the server."
+        kobil_title: "KOBIL authentication"
+        kobil_credentials_incomplete_title: "KOBIL credentials incomplete"
+        kobil_credentials_incomplete_body: "Until all required values are present in config/secrets.yml, signing in via KOBIL will fail — even when the feature below is enabled."

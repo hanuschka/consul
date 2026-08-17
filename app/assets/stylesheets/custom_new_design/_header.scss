@@ -1345,6 +1345,10 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 }
 
+#responsive-menu .header--responsive-menu--user-admin-button.button {
+  color: white;
+}
+
 // -- NavbarItem-driven navbar (scoped to [data-navbar]) -------------------
 
 [data-navbar] {

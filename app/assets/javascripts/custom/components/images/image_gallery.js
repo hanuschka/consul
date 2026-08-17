@@ -40,7 +40,7 @@
         this.lightbox.destroy();
       }
 
-      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht">
+      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht" tabindex="-1">
                                   <div class="gloader visible"></div>
                                   <div class="goverlay"></div>
                                   <div class="gcontainer">
@@ -83,10 +83,10 @@
         }
 
         setTimeout(() => {
-          var closeBtn = document.querySelector(".gclose");
+          var modal = this.getLightboxContainer();
 
-          if (closeBtn) {
-            closeBtn.focus();
+          if (modal) {
+            modal.focus();
           }
         }, 100);
 
@@ -162,7 +162,7 @@
       return document.querySelector(".glightbox-container.glightbox-clean");
     },
 
-    SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",
+    SLIDE_CAPTION_FALLBACK: "Vergrößerte Ansicht",
 
     applySlideAccessibility(data) {
       var slideEl = data.slideNode || data.slide;
@@ -173,7 +173,7 @@
 
       var sourceImg = this.getSourceImage(data.trigger);
 
-      slideImg.setAttribute("alt", this.resolveSlideAltText(data.trigger, sourceImg));
+      slideImg.setAttribute("alt", this.resolveSlideCaptionText(data.trigger, sourceImg));
     },
 
     getSourceImage(trigger) {

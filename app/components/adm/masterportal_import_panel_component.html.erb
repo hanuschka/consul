@@ -12,17 +12,6 @@
           <span class="material-symbols-outlined" aria-hidden="true">dataset</span>
           <%= t(".collections_label") %>
         </div>
-
-        <button
-          type="button"
-          class="masterportal-import-panel--load-button"
-          title="<%= t(".load_collections_tooltip") %>"
-          data-adm--masterportal-import-panel-target="loadCollectionsButton"
-          data-action="click->adm--masterportal-import-panel#loadCollections"
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">sync</span>
-          <span><%= t(".load_collections") %></span>
-        </button>
       </div>
 
       <p class="masterportal-import-panel--hint"><%= t(".collections_hint") %></p>
@@ -31,12 +20,42 @@
         class="masterportal-import-panel--tree"
         data-adm--masterportal-import-panel-target="tree"
       >
-        <div class="masterportal-import-panel--tree-empty">
+        <div
+          class="masterportal-import-panel--tree-empty"
+          data-adm--masterportal-import-panel-target="treeEmpty"
+        >
           <span class="material-symbols-outlined" aria-hidden="true">cloud_download</span>
-          <p class="masterportal-import-panel--hint"><%= t(".tree_hint") %></p>
+          <p
+            class="masterportal-import-panel--hint"
+            data-adm--masterportal-import-panel-target="treeEmptyText"
+          ><%= t(".tree_hint") %></p>
+
+          <button
+            type="button"
+            class="masterportal-import-panel--load-button"
+            title="<%= t(".load_collections_tooltip") %>"
+            data-adm--masterportal-import-panel-target="loadCollectionsButton"
+            data-action="click->adm--masterportal-import-panel#loadCollections"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+            <span><%= t(".load_collections") %></span>
+          </button>
         </div>
+
+        <div
+          class="masterportal-import-panel--tree-nodes"
+          data-adm--masterportal-import-panel-target="treeNodes"
+        ></div>
       </div>
     </div>
+
+    <div class="masterportal-import-panel--or-divider" aria-hidden="true">
+      <span class="masterportal-import-panel--or-divider-line"></span>
+      <span class="masterportal-import-panel--or-divider-text"><%= t(".or_divider") %></span>
+      <span class="masterportal-import-panel--or-divider-line"></span>
+    </div>
+
+    <%= render Adm::MasterportalFileUploadAreaComponent.new %>
 
     <div
       class="masterportal-import-panel--actions"

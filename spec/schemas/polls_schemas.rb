@@ -76,11 +76,9 @@ description: "Whether selecting this answer ends the poll" },
 example: 1 },
         total_votes: { type: :integer, description: "Total number of votes for this answer", example: 42 },
         total_votes_percentage: { type: :number, description: "Percentage of total votes", example: 35.5 },
-        videos: { type: :array, items: POLL_QUESTION_ANSWER_VIDEO_SCHEMA, description: "External videos" },
-        created_at: { type: :string, format: :date_time, description: "Created timestamp" },
-        updated_at: { type: :string, format: :date_time, description: "Updated timestamp" }
+        videos: { type: :array, items: POLL_QUESTION_ANSWER_VIDEO_SCHEMA, description: "External videos" }
       },
-      required: %w[id title created_at updated_at]
+      required: %w[id title]
     }.freeze
 
     POLL_QUESTION_TRANSLATIONS_ATTRIBUTES_CREATE = {

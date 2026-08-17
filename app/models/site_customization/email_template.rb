@@ -125,6 +125,14 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "DeficiencyReportMailer#send_feedback_form_link" => {
       variables: %w[username deficiency_report_title deficiency_report_url status_name feedback_form_url]
     },
+    "DeficiencyReportMailer#notify_shared_report" => {
+      variables: %w[username shared_by_name deficiency_report_id deficiency_report_title
+                    deficiency_report_url unwatch_url]
+    },
+    "DeficiencyReportMailer#notify_watcher_about_change" => {
+      variables: %w[username deficiency_report_id deficiency_report_title deficiency_report_url
+                    unwatch_url]
+    },
     "NotificationServiceMailer#new_deficiency_report" => {
       variables: %w[username deficiency_report_id deficiency_report_title deficiency_report_url]
     },
@@ -133,6 +141,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "NotificationServiceMailer#overdue_deficiency_reports" => {
       variables: %w[officer_name overdue_count]
+    },
+    "NotificationServiceMailer#overdue_deficiency_reports_overview" => {
+      variables: %w[officer_name overdue_count fresh_count]
     },
     "NotificationServiceMailer#not_assigned_deficiency_reports" => {
       variables: %w[admin_name not_assigned_count]
@@ -177,9 +188,12 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       ["NotificationServiceMailer", "new_deficiency_report"],
       ["DeficiencyReportMailer", "notify_officer"],
       ["DeficiencyReportMailer", "notify_default_officer_group_email"],
+      ["DeficiencyReportMailer", "notify_shared_report"],
+      ["DeficiencyReportMailer", "notify_watcher_about_change"],
       ["NotificationServiceMailer", "not_assigned_deficiency_reports"],
       ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
-      ["NotificationServiceMailer", "overdue_deficiency_reports"]
+      ["NotificationServiceMailer", "overdue_deficiency_reports"],
+      ["NotificationServiceMailer", "overdue_deficiency_reports_overview"]
     ]
   }.freeze
 

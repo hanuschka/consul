@@ -78,6 +78,9 @@ en:
             newsfeed:
               name: Newsfeed
               description: "Display of project news and status messages in chronological order. Works like a news feed, through which administrators can continuously report on developments and decisions. Suitable for longer-term projects in which participants should be regularly informed about the current status."
+            mitmachbox:
+              name: Mitmachbox
+              description: "Offline participation via Mitmachbox devices: battery-powered survey terminals with e-paper displays placed in public locations. The survey is authored here, deployed to borrowed devices, and the responses collected on site are transferred in batches. Results can be viewed and exported by administrators. Suitable for including people without online access."
           select_phase_type: Please choose...
           create_phase: Create phase
         create:
@@ -86,6 +89,8 @@ en:
           success: The participation phase was updated successfully.
         destroy:
           success: The participation phase and all its content have been deleted.
+        go_live:
+          success: The poll is now live. All test data has been deleted.
         duration:
           title: Duration
           dates_label: Phase duration
@@ -174,6 +179,9 @@ en:
           create_button: Create new label
           no_labels_title: No labels available
           no_labels_description: Create labels to thematically categorize proposals and improve clarity on the frontend. Labels are shown as icons on proposals and let users filter by specific topics. Each label can be given its own icon to make visual attribution easier.
+          tabs:
+            labels: Labels
+            collections: Masterportal collections
           table:
             icon: Icon
             name: Name
@@ -205,6 +213,11 @@ en:
           create_question: Create normal question
           create_bundle_question: Create question bundle
           download_individual_answers: Download individual answers
+          test_mode:
+            banner_title: Test mode
+            banner_text: This poll is in test mode. You can freely edit answers and questions and cast test votes. All test votes will be permanently deleted when you go live.
+            go_live: Publish poll
+            go_live_confirm: Publish this poll? All test votes will be permanently deleted and the poll becomes publicly available. This cannot be undone.
           intro_text_p1: >
             Here you manage the questions of this voting phase. There are two question types:
           intro_question_types:
@@ -269,6 +282,9 @@ en:
           no_categories: No categories available.
           no_categories_title: No categories available
           no_categories_description: Create categories to thematically group points of interest and provide them as filter options on the frontend. Each category can be given its own icon and a color to make visual distinction on the map easier. Categories help users search specifically for particular topics.
+          tabs:
+            categories: Categories
+            collections: Masterportal collections
           table:
             name: Name
             icon: Icon
@@ -576,3 +592,6 @@ en:
           user_resource_criteria: AI evaluation criteria
           comments: Comments
           email_templates: System emails
+          mitmachbox_survey: Survey
+          mitmachbox_deployments: Devices
+          mitmachbox_results: Results

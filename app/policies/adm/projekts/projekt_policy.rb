@@ -6,7 +6,7 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
   end
 
   def show?
-    manage_permitted? || moderate_permitted? || create_on_behalf_of_permitted? || review_permitted?
+    manage_permitted?
   end
 
   def create?

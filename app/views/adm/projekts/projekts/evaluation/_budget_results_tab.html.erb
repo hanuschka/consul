@@ -1,0 +1,35 @@
+<div
+  class="adm-budget-results"
+  data-controller="adm--budget-results"
+  data-adm--budget-results-show-label-value="<%= t("budgets.results.show_all_link") %>"
+  data-adm--budget-results-hide-label-value="<%= t("budgets.results.hide_discarded_link") %>"
+>
+  <%= render "budgets/results/results_table",
+    results_type: :compatible,
+    title: @heading.name,
+    heading_price: @heading.price,
+    investments: @budget_results_investments.compatible,
+    show_investment_stats_link: false %>
+
+  <% if @budget_results_investments.incompatible.present? %>
+    <%= render "budgets/results/results_table",
+      results_type: :incompatible,
+      title: t("budgets.results.incompatibles"),
+      heading_price: @heading.price,
+      investments: @budget_results_investments.incompatible,
+      show_investment_stats_link: false %>
+  <% end %>
+
+  <div class="adm-budget-results--actions">
+    <button
+      type="button"
+      class="kern-btn kern-btn--secondary kern-btn--compact"
+      data-action="click->adm--budget-results#toggle"
+      data-adm--budget-results-target="toggleButton"
+    >
+      <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">visibility</span>
+      <i class="kern-label fas fa-eye projekt-evaluation-icon-fa" aria-hidden="true"></i>
+      <span class="kern-label" data-adm--budget-results-target="toggleLabel"><%= t("budgets.results.show_all_link") %></span>
+    </button>
+  </div>
+</div>

@@ -16,6 +16,7 @@
     id:             Kern::Table::HeaderComponent.new(:id, t(".table.id"), **@id_header_options.merge(data_field: "id")),
     title:          Kern::Table::HeaderComponent.new(:title, t(".table.title"), **@title_header_options.merge(data_field: "title")),
     author:         Kern::Table::HeaderComponent.new(:author, t(".table.author"), **@author_header_options.merge(data_field: "author")),
+    intake_channel: Kern::Table::HeaderComponent.new(:deficiency_report_intake_channel_id, t(".table.intake_channel"), **@intake_channel_header_options.merge(data_field: "intake_channel")),
     created_at:     Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), **@created_at_header_options.merge(data_field: "created_at")),
     updated_at:     Kern::Table::HeaderComponent.new(:updated_at, t(".table.updated_at"), **@updated_at_header_options.merge(data_field: "updated_at")),
     status_changed_at: Kern::Table::HeaderComponent.new(:status_changed_at, t(".table.status_changed_at"), **@status_changed_at_header_options.merge(data_field: "status_changed_at")),
@@ -23,10 +24,21 @@
     address:        Kern::Table::HeaderComponent.new(:approximated_address, t(".table.address"), **@address_header_options.merge(data_field: "address")),
     district:       Kern::Table::HeaderComponent.new(:district, t(".table.district"), **@district_header_options.merge(data_field: "district")),
     category:       Kern::Table::HeaderComponent.new(:deficiency_report_category_id, t(".table.category"), **@category_header_options.merge(data_field: "category")),
+    subcategory:    Kern::Table::HeaderComponent.new(:deficiency_report_subcategory_id, t(".table.subcategory"), **@subcategory_header_options.merge(data_field: "subcategory")),
     responsible:    Kern::Table::HeaderComponent.new(:responsible, t(".table.responsible"), **@responsible_header_options.merge(data_field: "responsible")),
     archived_state: Kern::Table::HeaderComponent.new(:archived_state, t(".table.archived_state"), **@archived_state_header_options.merge(data_field: "archived_state")),
     hidden_state:   Kern::Table::HeaderComponent.new(:hidden_state, t(".table.hidden_state"), **@hidden_state_header_options.merge(data_field: "hidden_state"))
   }
+
+  # The bell column doubles as the home of the three-value filter, so the filter sits on the column
+  # it actually narrows. Without the visibility setting the column is still there — the bell works
+  # regardless — it just carries no filter.
+  if assignment_scope_filter?
+    headers[:watch] = Kern::Table::HeaderComponent.new(
+      :assignment_scope, t(".table.watch"),
+      **@assignment_scope_header_options.merge(data_field: "watch")
+    )
+  end
 %>
 
 <div class="kern-container my-5">
@@ -35,10 +47,10 @@
         records: @deficiency_reports,
         pagy: @pagy,
         headers: headers,
-        column_count: 15 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0),
+        column_count: 18 + (Setting["deficiency_reports.admin_acceptance_required"].present? ? 1 : 0),
         column_selector: {
           storage_key: "adm-deficiency-reports-columns-v2",
-          defaults: "id,image,title,created_at,status,responsible,archived_state,hidden_state"
+          defaults: "watch,id,image,title,created_at,intake_channel,status,responsible,archived_state,hidden_state"
         },
         empty_state: {
           title: t(".no_items_title"),
@@ -65,6 +77,11 @@
     <% end %>
 
     <% c.with_header_row do %>
+      <% if headers[:watch] %>
+        <%= render headers[:watch] %>
+      <% else %>
+        <th scope="col" class="kern-table__header" data-field="watch"><%= t(".table.watch") %></th>
+      <% end %>
       <%= render headers[:id] %>
       <th scope="col" class="kern-table__header" data-field="image"><%= t(".table.image") %></th>
       <%= render headers[:title] %>
@@ -75,10 +92,12 @@
       <%= render headers[:updated_at] %>
       <%= render headers[:status_changed_at] %>
       <%= render headers[:author] %>
+      <%= render headers[:intake_channel] %>
       <%= render headers[:status] %>
       <%= render headers[:address] %>
       <%= render headers[:district] %>
       <%= render headers[:category] %>
+      <%= render headers[:subcategory] %>
       <%= render headers[:responsible] %>
       <%= render headers[:archived_state] %>
       <%= render headers[:hidden_state] %>

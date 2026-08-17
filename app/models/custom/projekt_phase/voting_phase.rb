@@ -45,13 +45,14 @@ class ProjektPhase::VotingPhase < ProjektPhase
   end
 
   def poll
-    polls.order(:id).first
+    polls.min_by(&:id)
   end
 
   private
 
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization?
+      return :poll_not_live if !poll&.live? && location != :officing
     end
 
     def create_poll
@@ -61,7 +62,8 @@ class ProjektPhase::VotingPhase < ProjektPhase
 
       new_poll = polls.create!(
         name: [projekt.name, name_extension].compact.join(" "),
-        slug: [projekt.name.parameterize, name_extension].compact.join("-")
+        slug: [projekt.name.parameterize, name_extension].compact.join("-"),
+        live: false
       )
 
       copy_projekt_image_to(new_poll)

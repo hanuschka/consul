@@ -58,6 +58,10 @@ class DtApi::Client
     @consul_api_request_logs ||= DtApi::Resources::ConsulApiRequestLogs.new(self)
   end
 
+  def consul_ai_usage_records
+    @consul_ai_usage_records ||= DtApi::Resources::ConsulAiUsageRecords.new(self)
+  end
+
   def get(url, query: nil)
     if @use_cache
       return get_with_cache(url, query:)

@@ -34,7 +34,7 @@ class Shared::NewButtonComponent < ApplicationComponent
 
     def permission_problem_key
       if @projekt_phase.present?
-        @permission_problem_key ||= @projekt_phase.permission_problem(current_user, location: "new_button_component")
+        @permission_problem_key ||= @projekt_phase.permission_problem(current_user, location: :new_button_component)
       end
     end
 

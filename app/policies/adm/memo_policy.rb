@@ -1,6 +1,10 @@
 class Adm::MemoPolicy < ApplicationPolicy
+  # Not update?: writing an internal note is a weaker act than changing the resource, and a
+  # deficiency report officer who only holds the read-all visibility right is meant to be able to
+  # leave notes on an Anliegen they cannot otherwise touch. Policies that do not answer add_memo?
+  # keep the old behaviour through ApplicationPolicy#add_memo?.
   def create?
-    memoable_policy.update?
+    memoable_policy.add_memo?
   end
 
   def destroy?
@@ -24,7 +28,7 @@ class Adm::MemoPolicy < ApplicationPolicy
       when Budget::Investment
         Adm::Projekts::BudgetPolicy.new(@user, memoable)
       else
-        OpenStruct.new(update?: false)
+        OpenStruct.new(add_memo?: false)
       end
     end
 end

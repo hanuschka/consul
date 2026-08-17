@@ -35,7 +35,7 @@ export default class extends Controller {
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel", "overlayFill",
     "importError", "importErrorMessage", "importWarning", "importWarningList",
-    "importButton",
+    "importButton", "importSummary",
     "titleImagePicker", "titleImageSummary", "titleImageSummaryThumb"
   ]
 
@@ -45,6 +45,7 @@ export default class extends Controller {
     commandUrl: String,
     extractUrl: String,
     titleImageUrl: String,
+    summaryUrl: String,
     statusUrl: String,
     importId: Number,
     csrf: String,
@@ -54,6 +55,7 @@ export default class extends Controller {
     progressCreating: String,
     progressGeneratingImage: String,
     errorExtractFailed: String,
+    errorSummaryFailed: String,
     userInitials: { type: String, default: "" },
     userImageUrl: { type: String, default: "" },
     importStatus: { type: String, default: "" }
@@ -70,6 +72,7 @@ export default class extends Controller {
     this.pollErrorCount = 0
     this.chatRunning = false
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
+    this.importSummaryLoadingHtml = this.importSummaryTarget.innerHTML
     this.refreshBusyState()
     this.scheduleMessagesPoll()
 
@@ -604,6 +607,36 @@ export default class extends Controller {
 
   summarize() {
     this.sendCommand("summarize").then((data) => this.renderImmediateMessages(data))
+  }
+
+  // Runs after the dialog is already open, so the loading state is what the
+  // admin sees first. Fetched per open rather than rendered with the page: the
+  // chat keeps rewriting the projekt, and a stale summary here is worse than
+  // none — it is the last thing read before the projekt is created.
+  loadImportSummary() {
+    this.importSummaryTarget.innerHTML = this.importSummaryLoadingHtml
+
+    fetch(this.summaryUrlValue, {
+      credentials: "same-origin",
+      headers: { "Accept": "application/json" }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data || !data.html) return this.renderImportSummaryError()
+
+        this.importSummaryTarget.innerHTML = data.html
+      })
+      .catch(() => this.renderImportSummaryError())
+  }
+
+  renderImportSummaryError() {
+    const alert = document.createElement("div")
+    alert.className = "kern-alert kern-alert--warning"
+    alert.setAttribute("role", "status")
+    alert.textContent = this.errorSummaryFailedValue
+
+    this.importSummaryTarget.innerHTML = ""
+    this.importSummaryTarget.appendChild(alert)
   }
 
   // Invoked by the shared confirm dialog's "confirmed" event (not directly by

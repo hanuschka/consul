@@ -1,22 +1,40 @@
 module Adm::Projekts::ImportTitleImagesHelper
-  # Small enough to stay sharp in the tile and in the summary next to the import
-  # button, without asking Active Storage for a full-size variant of a print
-  # resolution photo.
-  TITLE_IMAGE_TILE_VARIANT = { resize_to_fill: [320, 200] }.freeze
+  # Small enough to stay sharp in the picker tile and in the confirm dialog's
+  # cover (128px wide, so 2x screens still get more pixels than they show),
+  # without asking Active Storage for a full-size variant of a print resolution
+  # photo. The 48px one is only ever drawn next to the import button.
+  TITLE_IMAGE_LARGE_VARIANT = { resize_to_fill: [320, 200] }.freeze
   TITLE_IMAGE_SUMMARY_VARIANT = { resize_to_fill: [48, 32] }.freeze
 
   def import_title_image_tile_url(candidate)
     return nil if candidate.attachment.blank?
 
-    rails_representation_url(candidate.attachment.variant(TITLE_IMAGE_TILE_VARIANT), only_path: true)
+    rails_representation_url(candidate.attachment.variant(TITLE_IMAGE_LARGE_VARIANT), only_path: true)
   end
 
   def import_title_image_summary_url(projekt_import)
+    import_selected_title_image_url(projekt_import, TITLE_IMAGE_SUMMARY_VARIANT)
+  end
+
+  def import_title_image_preview_url(projekt_import)
+    import_selected_title_image_url(projekt_import, TITLE_IMAGE_LARGE_VARIANT)
+  end
+
+  # Stands in for the picture that does not exist yet, so it says which of the
+  # three outcomes is coming — the same glyphs the picker rows use for them.
+  def import_title_image_preview_icon(projekt_import)
+    return "auto_awesome" if projekt_import.title_image_generated?
+    return "hide_image" if projekt_import.title_image_none?
+
+    "broken_image"
+  end
+
+  def import_selected_title_image_url(projekt_import, variant)
     candidate = import_selected_title_image_candidate(projekt_import)
     return nil if candidate.blank?
     return nil if candidate.attachment.blank?
 
-    rails_representation_url(candidate.attachment.variant(TITLE_IMAGE_SUMMARY_VARIANT), only_path: true)
+    rails_representation_url(candidate.attachment.variant(variant), only_path: true)
   end
 
   # What the import will actually do, said in one line so an admin about to press

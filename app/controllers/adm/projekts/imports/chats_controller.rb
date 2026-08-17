@@ -45,6 +45,26 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     }
   end
 
+  # Read when the confirm dialog opens rather than baked into the page: the chat
+  # rewrites ai_result, so a summary rendered at page load would describe a
+  # projekt the import no longer creates.
+  def summary
+    result = ProjektImports::BuildImportSummaryService.call(projekt_import: @projekt_import)
+
+    if !result.success?
+      render json: { error: result.error }, status: :unprocessable_entity
+      return
+    end
+
+    render json: {
+      html: render_to_string(
+        partial: "adm/projekts/imports/chats/import_summary",
+        locals: { summary: result.summary, projekt_import: @projekt_import },
+        formats: [:html]
+      )
+    }
+  end
+
   def message
     attached_documents = parse_attached_documents(params[:attached_documents])
 

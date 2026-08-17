@@ -32,10 +32,7 @@ class Projekt < ApplicationRecord
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
-  has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
-    inverse_of: :top_level_projekt, dependent: :nullify
   belongs_to :parent, class_name: "Projekt", optional: true
-  belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
@@ -116,7 +113,6 @@ class Projekt < ApplicationRecord
 
   after_save :recalculate_subtree_levels, if: :saved_change_to_parent_id?
 
-  before_save :assign_top_level_projekt_from_parent
   before_save :sync_published_at
 
   before_create :initialize_content_updated_at
@@ -557,11 +553,7 @@ class Projekt < ApplicationRecord
   end
 
   def all_parent_ids
-    all_parent_projekts.map(&:id)
-  end
-
-  def all_parent_projekts
-    [parent, top_level_projekt].compact.uniq
+    [parent_id].compact
   end
 
   def all_children_ids
@@ -979,14 +971,6 @@ class Projekt < ApplicationRecord
       assignment = projekt_manager_assignments.find_or_initialize_by(projekt_manager: projekt_manager)
       assignment.permissions |= ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS
       assignment.save!
-    end
-
-    def assign_top_level_projekt_from_parent
-      return unless parent_id_changed?
-
-      if parent&.parent_id.present?
-        self.top_level_projekt_id = parent.parent_id
-      end
     end
 
     def initialize_content_updated_at

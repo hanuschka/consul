@@ -13,6 +13,9 @@
 module HtmlImageSlots
   URL_IN_STYLE = /url\((['"]?)(.*?)\1\)/i
 
+  # GLightbox packs its options into one attribute as "key:value;key:value".
+  GLIGHTBOX_HREF = /href:[^;]*/i
+
   # Decoration rather than content: an icon, a data URI, or a picture already
   # pointing at one of the addresses being handed out.
   def self.fillable?(url, replacements)
@@ -57,68 +60,89 @@ module HtmlImageSlots
       .count { |node| slot?(node) }
   end
 
-  def self.slot?(node)
-    return fillable?(node["src"], []) if node.name.casecmp("img").zero?
+  # The single "does this element carry a fillable picture" rule, so counting and
+  # filling can never disagree about what a template has room for.
+  def self.slot?(node, replacements = [])
+    return fillable?(node["src"], replacements) if image?(node)
 
+    fillable?(background_url(node), replacements)
+  end
+
+  def self.image?(node)
+    node.name.casecmp("img").zero?
+  end
+
+  def self.background_url(node)
     style = node["style"]
-    return false if style.blank?
-    return false if !style.match?(URL_IN_STYLE)
+    return nil if style.blank?
 
-    fillable?(style[URL_IN_STYLE, 2], [])
+    style[URL_IN_STYLE, 2]
   end
 
   def self.fill_element(node, remaining, replacements)
-    if node.name.casecmp("img").zero?
-      return fill_image(node, remaining, replacements)
-    end
-
-    fill_background(node, remaining, replacements)
-  end
-
-  def self.fill_image(node, remaining, replacements)
-    return if !fillable?(node["src"], replacements)
+    return if !slot?(node, replacements)
 
     url = remaining.shift
+    return fill_image(node, url) if image?(node)
+
+    node["style"] = node["style"].sub(URL_IN_STYLE, "url('#{url}')")
+  end
+
+  def self.fill_image(node, url)
     node["src"] = url
     node["data-src"] = url if node["data-src"].present?
     node.remove_attribute("srcset")
-    fill_lightbox_target(node, url, replacements)
+    fill_lightbox_target(node, url)
   end
 
-  # The gallery templates wrap each thumbnail in a GLightbox anchor whose href is
-  # the full-size picture the overlay opens. Substituting only the <img> leaves
-  # that href on the template's placeholder, so a visitor clicks a real photo and
-  # gets a placehold.co graphic full screen.
+  # The gallery templates open the full-size picture in a GLightbox overlay, and
+  # the address it opens is not in the <img>. Substituting only the thumbnail
+  # leaves the overlay on the template's placeholder, so a visitor clicks a real
+  # photo and gets a placehold.co graphic full screen.
   #
-  # It consumes no slot of its own and is not counted as one: it is the same
-  # picture as the thumbnail it wraps, at whatever size the variant gives us.
-  def self.fill_lightbox_target(image_node, url, replacements)
-    anchor = image_node.ancestors("a").find { |node| lightbox_anchor?(node) }
+  # Two shapes are in the live catalogue and both are handled: an ancestor anchor
+  # whose href is the target (image-single, gallery-*), and a sibling overlay
+  # button with href="#" carrying the target inside
+  # data-glightbox="href:URL;type:image" (hero-slider). The "#" is deliberately
+  # left alone in the second shape — GLightbox reads the data attribute, and
+  # rewriting a no-op link would break it.
+  #
+  # It consumes no slot and is not counted as one: it is the same picture as the
+  # thumbnail, at whatever size the variant gives us.
+  def self.fill_lightbox_target(image_node, url)
+    anchor = lightbox_anchor_for(image_node)
     return if anchor.nil?
-    return if !fillable?(anchor["href"], replacements)
+    return if fill_lightbox_data(anchor, url)
 
-    anchor["href"] = url
+    anchor["href"] = url if fillable?(anchor["href"], [])
   end
 
-  # Keyed on the lightbox markup rather than on "an <a> with a fillable href":
+  # Keyed on the lightbox markup rather than on "an <a> with a replaceable href":
   # plenty of templates wrap an image in a link that goes somewhere real, and
   # overwriting those with an image URL would break the navigation.
+  def self.lightbox_anchor_for(image_node)
+    ancestor = image_node.ancestors("a").find { |node| lightbox_anchor?(node) }
+    return ancestor if ancestor.present?
+
+    image_node.parent&.css("a")&.find { |node| lightbox_anchor?(node) }
+  end
+
   def self.lightbox_anchor?(node)
     return true if node["data-glightbox"].present?
 
     node["class"].to_s.split.include?("glightbox")
   end
 
-  def self.fill_background(node, remaining, replacements)
-    style = node["style"]
-    return if style.blank?
-    return if !style.match?(URL_IN_STYLE)
-    return if !fillable?(style[URL_IN_STYLE, 2], replacements)
+  def self.fill_lightbox_data(anchor, url)
+    options = anchor["data-glightbox"]
+    return false if options.blank?
+    return false if !options.match?(GLIGHTBOX_HREF)
 
-    url = remaining.shift
-    node["style"] = style.sub(URL_IN_STYLE, "url('#{url}')")
+    anchor["data-glightbox"] = options.sub(GLIGHTBOX_HREF, "href:#{url}")
+    true
   end
 
-  private_class_method :fill_element, :fill_image, :fill_background,
-                       :fill_lightbox_target, :lightbox_anchor?
+  private_class_method :fill_element, :fill_image, :background_url, :image?,
+                       :fill_lightbox_target, :lightbox_anchor_for, :lightbox_anchor?,
+                       :fill_lightbox_data
 end

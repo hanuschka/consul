@@ -226,7 +226,6 @@ de:
             generated: "Das Titelbild wird beim Import mit KI erzeugt."
             none: "Das Projekt wird ohne Titelbild importiert."
           ineligible:
-            too_short: "Zu niedrig für ein Titelbild (mindestens %{minimum_height} px hoch)"
             content_type: "Dieses Bildformat ist für Titelbilder nicht zugelassen"
           summary:
             document: "Titelbild: aus dem Dokument (%{width} × %{height})"

@@ -105,7 +105,8 @@ class ProjektImports::PromptBuilder
 
     templates.each do |t|
       desc = t["description"].presence ? ": #{t['description']}" : ""
-      marker = image_template?(t) ? " [has #{image_slot_count(t)} image slot(s)]" : ""
+      slots = image_slot_count(t)
+      marker = slots.positive? ? " [has #{slots} image slot(s)]" : ""
       lines << "  #{t['id']} — #{t['name']}#{desc}#{marker}"
     end
 
@@ -158,10 +159,6 @@ class ProjektImports::PromptBuilder
 
   def source_files_count
     source_images.map { |image| image["source_filename"] }.uniq.size
-  end
-
-  def image_template?(template)
-    image_slot_count(template).positive?
   end
 
   # Counted by the filler's own rule rather than by grepping for <img>, so a hero

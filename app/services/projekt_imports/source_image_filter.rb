@@ -1,8 +1,5 @@
-# The one place that decides which of a document's images the import will use,
-# and which of them becomes the title image. Shared because the analysis stage
-# tells the model how many images it will get and the submit stage places them:
-# if the two stages disagreed, the model would reserve a slot for an image that
-# never arrives, or leave none for one that does.
+# Which of a document's images the import will use at all, and which of those can
+# additionally serve as the projekt's title image.
 module ProjektImports::SourceImageFilter
   # Pixel dimensions are the honest measure of "is this a content image or a
   # letterhead fragment", and by this point every image has them — the archive
@@ -17,25 +14,16 @@ module ProjektImports::SourceImageFilter
     end
   end
 
-  # Document order, because the author put the image that represents the project
-  # near the top — but only among images that can actually become a title image,
-  # which skips both the letterhead a municipal document opens with and the wide
-  # banner strip that ::Image would reject for being too short.
-  #
-  # Nothing is returned when no image qualifies. Falling back to the tallest of
-  # the rest would only produce a validation failure at attach time; the picker
-  # in the chat shows those tiles disabled with the reason instead.
-  def self.hero_candidate(images)
-    images.find { |image| hero_eligible?(image) }
-  end
-
-  def self.hero_eligible?(image)
-    hero_content_type?(image) && image[:height].to_i >= ::Image::MIN_IMAGE_HEIGHT
-  end
-
   # The title image is an ::Image, which accepts only the types the instance's
   # upload settings list — a narrower set than the content block gallery accepts,
   # so an AVIF has to stay a content block image.
+  #
+  # Content type is the only bar. ::Image::MIN_IMAGE_HEIGHT deliberately is not
+  # one: Image#validate_image_dimensions returns early for a
+  # SiteCustomization::Page, which is what a projekt's page is, so the height rule
+  # is never enforced on a hero. Enforcing it here would grey out a wide banner
+  # that Projekts::AttachPageImageService saves without complaint, and leave a
+  # document whose only picture is a banner with no title image at all.
   def self.hero_content_type?(image)
     ::Image.accepted_content_types.include?(image[:content_type])
   end

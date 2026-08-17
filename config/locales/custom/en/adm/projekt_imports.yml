@@ -226,7 +226,6 @@ en:
             generated: "The cover image will be created with AI during the import."
             none: "The projekt will be imported without a cover image."
           ineligible:
-            too_short: "Too low for a cover image (at least %{minimum_height} px high)"
             content_type: "This image format is not accepted for cover images"
           summary:
             document: "Cover image: from the document (%{width} × %{height})"

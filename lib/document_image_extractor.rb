@@ -24,8 +24,7 @@ class DocumentImageExtractor < ApplicationService
   # A slide deck exported to PDF can carry hundreds of objects; the import only
   # ever places a handful. The archive formats get the same ceiling: a picture
   # book saved as DOCX would otherwise mean one ImageMagick run per page.
-  MAX_PDF_IMAGES = 80
-  MAX_ARCHIVE_IMAGES = 80
+  MAX_IMAGES = 80
 
   # Guards the one step that is unbounded by the archive itself. An entry this
   # large is a print-resolution scan that no projekt page would use, and reading
@@ -146,7 +145,7 @@ class DocumentImageExtractor < ApplicationService
     archive
       .select { |entry| entry.file? && entry.name.match?(media_path) }
       .sort_by { |entry| [File.basename(entry.name)[/\d+/].to_i, entry.name] }
-      .first(MAX_ARCHIVE_IMAGES)
+      .first(MAX_IMAGES)
   end
 
   # Written to disk before anything is decided about it: ImageMagick needs a
@@ -180,7 +179,7 @@ class DocumentImageExtractor < ApplicationService
 
   def convert_archive_entry(entry, source_path, directory)
     entry_extension = File.extname(entry.name).downcase.delete(".")
-    return { reason: UNREADABLE_UNSUPPORTED } if decodable_formats.exclude?(entry_extension)
+    return { reason: UNREADABLE_UNSUPPORTED } if ImageMagickCommand.decodable_formats.exclude?(entry_extension)
 
     vector = VECTOR_EXTENSIONS.include?(entry_extension)
 
@@ -194,7 +193,16 @@ class DocumentImageExtractor < ApplicationService
     end
 
     converted_path = File.join(directory, "#{File.basename(entry.name, '.*')}.png")
-    converted = ImageMagickCommand.convert_to_png(source_path, converted_path, vector: vector)
+    converted =
+      if vector
+        ImageMagickCommand.convert_to_png(
+          source_path, converted_path,
+          timeout: ImageMagickCommand::VECTOR_CONVERT_TIMEOUT,
+          memory_limit: ImageMagickCommand::VECTOR_MEMORY_LIMIT
+        )
+      else
+        ImageMagickCommand.convert_to_png(source_path, converted_path)
+      end
     return { reason: UNREADABLE_CONVERSION_FAILED } if !converted
 
     dimensions = ImageMagickCommand.dimensions(converted_path)
@@ -212,7 +220,6 @@ class DocumentImageExtractor < ApplicationService
     {
       filename: filename,
       content_type: content_type,
-      size: File.size(path),
       width: dimensions.first,
       height: dimensions.last,
       data: File.binread(path)
@@ -221,12 +228,6 @@ class DocumentImageExtractor < ApplicationService
 
   def unreadable_entry(entry, reason)
     { filename: File.basename(entry.name), reason: reason }
-  end
-
-  # One listing per document rather than one per image: each call starts
-  # ImageMagick and prints a few hundred lines.
-  def decodable_formats
-    @decodable_formats ||= ImageMagickCommand.decodable_formats
   end
 
   def images_from_pdf
@@ -330,13 +331,12 @@ class DocumentImageExtractor < ApplicationService
       {
         filename: "pdf_image_#{number}.png",
         content_type: "image/png",
-        size: data.bytesize,
         width: entry[:width],
         height: entry[:height],
         data: data,
         number: number
       }
-    }.sort_by { |image| image[:number] }.first(MAX_PDF_IMAGES)
+    }.sort_by { |image| image[:number] }.first(MAX_IMAGES)
   end
 
   def warn_about_command(label, result)

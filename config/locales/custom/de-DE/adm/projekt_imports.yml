@@ -17,7 +17,6 @@ de:
             progress_preparing: "Vorbereitung…"
             instructions_label: "Zusätzlicher Kontext (optional)"
             instructions_placeholder: "Alles, was das Dokument nicht klärt — Zielgruppe, Umfang, Ziele…"
-            generate_image_label: "Titelbild mit KI generieren"
             submit_label: "Analyse starten"
             progress:
               extracting: "Text wird aus Ihren Dokumenten extrahiert…"
@@ -87,7 +86,6 @@ de:
               confirm: "Jetzt importieren"
               cancel: "Abbrechen"
             confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
-            generate_image_toggle: "Titelbild generieren"
             created_banner_title: "Dieser Import hat folgende Projekte erstellt:"
             tooltips:
               start_over:
@@ -99,9 +97,9 @@ de:
               summarize:
                 title: "Zusammenfassen"
                 text: "Erstellt eine kurze, verständliche Zusammenfassung des hochgeladenen Dokuments im Chat."
-              generate_image:
-                title: "Titelbild generieren"
-                text: "Wenn aktiviert, erzeugt die KI beim Import automatisch ein passendes Titelbild für das Projekt."
+              title_image:
+                title: "Titelbild"
+                text: "Zeigt, welches Titelbild das Projekt beim Import erhält. Zum Ändern anklicken — die Auswahl erfolgt im Chat."
               import:
                 title: "Projekt importieren"
                 text: "Erstellt das Projekt mit allen Phasen, Inhaltsblöcken und Einstellungen. Es bleibt zunächst deaktiviert und für Besucher unsichtbar, bis Sie es aktivieren."
@@ -186,6 +184,37 @@ de:
           create_projekt_failed: "Projekt konnte nicht erstellt werden: %{message}"
           missing_title: "Die KI hat keinen Projekttitel zurückgegeben."
           extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
+          unknown_title_image_mode: "Unbekannte Titelbild-Option."
+          unknown_title_image: "Dieses Bild steht für diesen Import nicht mehr zur Verfügung."
+          title_image_ineligible: "Dieses Bild kann nicht als Titelbild verwendet werden."
+        title_image:
+          intro:
+            one: "Ein Bild aus Ihrem Dokument kann als Titelbild des Projekts verwendet werden. Wählen Sie es hier aus, lassen Sie eines von der KI erzeugen oder lassen Sie das Projekt ohne Titelbild."
+            other: "%{count} Bilder aus Ihren Dokumenten können als Titelbild des Projekts verwendet werden. Wählen Sie eines hier aus, lassen Sie eines von der KI erzeugen oder lassen Sie das Projekt ohne Titelbild."
+          intro_without_images: "In Ihren Dokumenten wurde kein verwendbares Bild gefunden. Lassen Sie ein Titelbild von der KI erzeugen oder lassen Sie das Projekt ohne Titelbild."
+          dimensions: "%{width} × %{height} px"
+          use: "Auswählen"
+          use_option: "%{option} als Titelbild verwenden"
+          selected: "Ausgewählt"
+          reply_hint: "Sie können auch einfach mit der Nummer der gewünschten Option antworten."
+          options:
+            generated: "Titelbild mit KI erzeugen"
+            none: "Kein Titelbild"
+          option_hints:
+            generated: "Wird beim Import aus dem Projektinhalt erzeugt"
+            none: "Lässt sich später jederzeit hinzufügen"
+          confirmed:
+            document: "Bild %{number} (%{width} × %{height}) ist jetzt das Titelbild des Projekts."
+            generated: "Das Titelbild wird beim Import mit KI erzeugt."
+            none: "Das Projekt wird ohne Titelbild importiert."
+          ineligible:
+            too_short: "Zu niedrig für ein Titelbild (mindestens %{minimum_height} px hoch)"
+            content_type: "Dieses Bildformat ist für Titelbilder nicht zugelassen"
+          summary:
+            document: "Titelbild: aus dem Dokument (%{width} × %{height})"
+            generated: "Titelbild: mit KI erzeugt"
+            none: "Titelbild: keines"
+            unavailable: "Titelbild: keines verfügbar"
         applied_edits_message: "Ich habe folgende Änderungen an den Importdaten vorgenommen: %{edits}."
         applied_edits_message_unnamed: "Ich habe die Importdaten geändert. Bitte prüfen Sie die aktuellen Daten."
         applied_edits:
@@ -203,6 +232,17 @@ de:
           content_blocks_unresolved: "Das Projekt wurde mit allen Phasen angelegt, die Inhaltsblöcke konnten jedoch nicht erzeugt werden. Bitte ergänzen Sie sie manuell oder löschen Sie das Projekt und starten Sie den Import erneut."
           pdf_images_tool_missing: "Die PDF-Datei „%{filename}\" enthält Bilder, die nicht übernommen werden konnten: auf diesem Server fehlt das Systempaket „poppler-utils\". Bitte laden Sie die Bilder manuell hoch oder lassen Sie das Paket von der Administration installieren."
           pdf_images_unreadable: "Die Bilder der PDF-Datei „%{filename}\" konnten nicht ausgelesen werden. Bitte laden Sie sie manuell hoch."
+          source_image_undecodable: "Das Bild „%{image}\" in der Datei „%{filename}\" ist beschädigt oder keine echte Bilddatei und wurde nicht übernommen. Bitte laden Sie es manuell hoch."
+          source_image_unsupported_format: "Das Bild „%{image}\" in der Datei „%{filename}\" liegt in einem Format vor, das dieser Server nicht lesen kann, und wurde nicht übernommen. Bitte speichern Sie es als JPG oder PNG und laden Sie es manuell hoch."
+          source_image_conversion_failed: "Das Bild „%{image}\" in der Datei „%{filename}\" ist eine Zeichnung bzw. Metadatei und konnte nicht in ein Webbild umgewandelt werden. Es wurde nicht übernommen. Bitte speichern Sie es als JPG oder PNG und laden Sie es manuell hoch."
+          source_image_too_large: "Das Bild „%{image}\" in der Datei „%{filename}\" ist zu groß für die Verarbeitung und wurde nicht übernommen. Bitte laden Sie eine kleinere Version manuell hoch."
+          source_image_hero_rejected: "Das Bild „%{image}\" aus dem Dokument konnte nicht als Titelbild verwendet werden, da es die Anforderungen an Titelbilder nicht erfüllt. Es steht in der Bildergalerie des Projekts zur Verfügung."
+          source_image_store_failed: "Das Bild „%{image}\" aus dem Dokument konnte nicht gespeichert werden: %{message}. Bitte laden Sie es manuell hoch."
+          source_images_failed: "Die Bilder aus den hochgeladenen Dokumenten konnten nicht übernommen werden: %{message}. Bitte laden Sie sie manuell hoch."
+          source_images_unplaced:
+            one: "Ein Bild aus dem Dokument wurde in keinem Inhaltsblock platziert. Es steht in der Bildergalerie des Projekts zur Verfügung und kann über den Editor eingefügt werden."
+            other: "%{count} Bilder aus dem Dokument wurden in keinem Inhaltsblock platziert. Sie stehen in der Bildergalerie des Projekts zur Verfügung und können über den Editor eingefügt werden."
+          content_block_templates_unavailable: "Die Vorlagen für Inhaltsblöcke konnten nicht geladen werden, daher wurden alle Inhaltsblöcke als reiner Text ohne Layout und Bilder erstellt. Bitte prüfen Sie sie und wenden Sie ein Layout an, oder starten Sie den Import später erneut."
         failure_stages:
           extract: "Textextraktion"
           extracting: "Textextraktion"

@@ -9,6 +9,10 @@ const MAX_POLL_ERRORS = 5
 // auto-scroll when the user is already near the bottom.
 const SCROLL_BOTTOM_THRESHOLD = 80
 
+// How long the cover image picker stays highlighted after the summary button
+// scrolls it back into view.
+const TITLE_IMAGE_HIGHLIGHT_DURATION = 1600
+
 // Final-import overlay bar. The import status endpoint only reports
 // completed/failed, so the bar creeps through these staged percents on a timer
 // to signal work is happening, then snaps to 100% on completion. Priming from
@@ -31,7 +35,8 @@ export default class extends Controller {
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel", "overlayFill",
     "importError", "importErrorMessage", "importWarning", "importWarningList",
-    "generateImage", "importButton"
+    "importButton",
+    "titleImagePicker", "titleImageSummary", "titleImageSummaryThumb"
   ]
 
   static values = {
@@ -39,6 +44,7 @@ export default class extends Controller {
     sendUrl: String,
     commandUrl: String,
     extractUrl: String,
+    titleImageUrl: String,
     statusUrl: String,
     importId: Number,
     csrf: String,
@@ -77,6 +83,7 @@ export default class extends Controller {
     this.clearPollTimer()
     this.clearStatusPollTimer()
     this.clearOverlayStepTimer()
+    window.clearTimeout(this.titleImageHighlightTimer)
   }
 
   computeLastMessageId() {
@@ -457,6 +464,9 @@ export default class extends Controller {
       .then((data) => {
         this.removeOptimisticBubbles()
         this.renderImmediateMessages(data)
+        // A reply of just a number picks a cover image instead of going to the
+        // AI, and comes back with the new choice already applied.
+        this.renderTitleImageSummary(data)
         this.scheduleMessagesPoll()
       })
       .catch(() => {
@@ -606,9 +616,7 @@ export default class extends Controller {
     this.completionShown = false
     this.showOverlay()
 
-    const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
-
-    this.sendCommand("import", params).then((data) => {
+    this.sendCommand("import").then((data) => {
       if (data && data.status === "importing") {
         this.scheduleStatusPoll()
       }
@@ -622,6 +630,74 @@ export default class extends Controller {
         window.location.href = data.redirect_path
       }
     })
+  }
+
+  // The server owns the choice and re-renders the picker message, so the tiles'
+  // selected state is never maintained here — a rejected pick (an image that
+  // cannot be a cover image, an index from a stale page) simply comes back as the
+  // previous selection.
+  selectTitleImage(event) {
+    const input = event.currentTarget
+    const formData = new FormData()
+    formData.append("mode", input.dataset.mode)
+    if (input.dataset.index !== undefined) formData.append("index", input.dataset.index)
+
+    fetch(this.titleImageUrlValue, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": this.csrfValue
+      },
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.renderImmediateMessages(data)
+        this.renderTitleImageSummary(data)
+      })
+      .catch(() => {
+        console.log("selectTitleImage: request failed")
+      })
+  }
+
+  renderTitleImageSummary(data) {
+    if (!data || !data.title_image) return
+    if (this.hasTitleImageSummaryTarget) {
+      this.titleImageSummaryTarget.textContent = data.title_image.summary
+    }
+    if (!this.hasTitleImageSummaryThumbTarget) return
+
+    this.titleImageSummaryThumbTarget.innerHTML = ""
+    if (data.title_image.thumb_url) {
+      const thumb = document.createElement("img")
+      thumb.src = data.title_image.thumb_url
+      thumb.alt = ""
+      this.titleImageSummaryThumbTarget.appendChild(thumb)
+      return
+    }
+
+    const placeholder = document.createElement("span")
+    placeholder.className = "material-symbols-outlined"
+    placeholder.setAttribute("aria-hidden", "true")
+    placeholder.textContent = "image"
+    this.titleImageSummaryThumbTarget.appendChild(placeholder)
+  }
+
+  // The picker is a chat message, so it can be scrolled out of view. The summary
+  // button in the import bar brings it back rather than duplicating the control.
+  revealTitleImagePicker() {
+    if (!this.hasTitleImagePickerTarget) return
+
+    this.titleImagePickerTarget.scrollIntoView({ behavior: "smooth", block: "center" })
+    this.titleImagePickerTarget.classList.add("-highlighted")
+
+    window.clearTimeout(this.titleImageHighlightTimer)
+    this.titleImageHighlightTimer = window.setTimeout(() => {
+      if (this.hasTitleImagePickerTarget) {
+        this.titleImagePickerTarget.classList.remove("-highlighted")
+      }
+    }, TITLE_IMAGE_HIGHLIGHT_DURATION)
   }
 
   sendCommand(name, params = {}) {

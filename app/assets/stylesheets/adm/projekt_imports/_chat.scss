@@ -979,3 +979,294 @@ $_chat-warning-text: #6b4000;
     background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 78%, black);
   }
 }
+
+// ── Title image picker ───────────────────────────────────────────────────────
+// A regular assistant message whose body is the list of cover image choices:
+// every picture found in the documents, then "generate one" and "none". One row
+// shape for all of them — a grid of thumbnails plus two odd full-width rows read
+// as three unrelated controls, and a single image left the grid mostly empty.
+//
+// Nested inside the bubble content on purpose: the generic markdown list styles
+// above are `--content ul` / `--content li`, which outrank a single class, so a
+// layout declared at the top level silently loses to their flex column.
+
+$_title-image-row-radius: 10px;
+
+.projekt-import-chat-bubble--content {
+  .projekt-import-chat--title-image-intro {
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+
+  // One surface, rows separated by hairlines rather than each row being its own
+  // card inside the bubble.
+  .projekt-import-chat--title-image-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid $_chat-border;
+    border-radius: $_title-image-row-radius;
+    overflow: hidden;
+  }
+
+  .projekt-import-chat--title-image-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: #fff;
+    border-radius: 0;
+    border-top: 1px solid $_chat-border;
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    &.-selected {
+      background: color-mix(in srgb, var(--kern-color-action-default) 8%, white);
+    }
+
+    &.-unavailable {
+      background: $_chat-input-bg;
+    }
+  }
+
+  .projekt-import-chat--title-image-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: $_chat-text-muted;
+    background: $_chat-input-bg;
+  }
+
+  .projekt-import-chat--title-image-option.-selected .projekt-import-chat--title-image-number {
+    color: #fff;
+    background: var(--kern-color-action-default);
+  }
+
+  .projekt-import-chat--title-image-media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 104px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: $_chat-input-bg;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .material-symbols-outlined {
+      font-size: 26px;
+      color: $_chat-text-faint;
+    }
+  }
+
+  // The picture is where the eye lands, so the chosen one is marked on the picture
+  // itself — the same affordance any photo picker uses — rather than leaving the
+  // state to a label at the far end of the row.
+  .projekt-import-chat--title-image-option.-selected .projekt-import-chat--title-image-media {
+    box-shadow: 0 0 0 2px var(--kern-color-action-default);
+  }
+
+  .projekt-import-chat--title-image-check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: var(--kern-color-action-default);
+
+    // The white ring keeps it legible on a bright photo without a scrim.
+    .material-symbols-outlined {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+  }
+
+  .projekt-import-chat--title-image-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .projekt-import-chat--title-image-name {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: $_chat-text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .projekt-import-chat--title-image-meta {
+    font-size: 14px;
+    line-height: 1.4;
+    color: $_chat-text-muted;
+    font-variant-numeric: tabular-nums;
+
+    &.-warning {
+      color: $_chat-warning-text;
+    }
+  }
+
+  // Secondary by design: the page's primary action is "Projekt importieren" in the
+  // bar below, so a row of filled buttons here would compete with it.
+  // The action and the state share a footprint so the right-hand column keeps one
+  // vertical rhythm: a bordered box on one row and a bare label on the next left
+  // the edges ragged, and made the chosen row read as the weaker of the two.
+  .projekt-import-chat--title-image-action,
+  .projekt-import-chat--title-image-state {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 116px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .projekt-import-chat--title-image-action {
+    border: 1px solid var(--kern-color-action-default);
+    color: var(--kern-color-action-default);
+    background: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s ease-out, color 0.15s ease-out;
+
+    &:hover {
+      color: #fff;
+      background: var(--kern-color-action-default);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--kern-color-action-default);
+      outline-offset: 2px;
+    }
+  }
+
+  // Filled, because it answers the question the list exists to answer — but with a
+  // border matching the buttons' box rather than a heavier one, so it settles the
+  // row instead of shouting over the import button below.
+  .projekt-import-chat--title-image-state {
+    border: 1px solid var(--kern-color-action-default);
+    color: #fff;
+    background: var(--kern-color-action-default);
+  }
+
+  .projekt-import-chat--title-image-reply-hint {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: $_chat-text-muted;
+  }
+}
+
+// Highlight after the summary button scrolls the picker back into view. Drawn as a
+// ring on an overlay whose opacity animates, rather than animating the bubble's own
+// box-shadow — a shadow animation repaints the element on every frame.
+.projekt-import-chat-bubble.-highlighted .projekt-import-chat-bubble--content {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border: 3px solid color-mix(in srgb, var(--kern-color-action-default) 40%, transparent);
+    border-radius: $_chat-radius + 3px;
+    pointer-events: none;
+    animation: projekt-import-title-image-flash 1.6s ease-out forwards;
+  }
+}
+
+@keyframes projekt-import-title-image-flash {
+  0%,
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+// ── Title image summary (import bar) ─────────────────────────────────────────
+
+.projekt-import-chat--title-image-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid $_chat-border;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease-out;
+
+  &:hover {
+    border-color: var(--kern-color-action-default);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-chat--title-image-summary-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: $_chat-input-bg;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    color: $_chat-text-faint;
+  }
+}
+
+.projekt-import-chat--title-image-summary-label {
+  font-size: 14px;
+  color: $_chat-text-muted;
+  white-space: nowrap;
+}

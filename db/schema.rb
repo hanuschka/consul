@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_15_100000) do
+ActiveRecord::Schema.define(version: 2026_08_17_072546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2299,7 +2299,6 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.text "extracted_text"
     t.jsonb "ai_result"
     t.text "additional_user_instructions"
-    t.boolean "generate_image", default: false, null: false
     t.bigint "user_id", null: false
     t.bigint "projekt_id"
     t.text "error_message"
@@ -2312,6 +2311,9 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.string "failure_stage"
     t.jsonb "error_details", default: {}, null: false
     t.string "content_locale"
+    t.jsonb "source_images", default: [], null: false
+    t.string "title_image_mode", default: "document", null: false
+    t.integer "title_image_index"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
     t.index ["status"], name: "index_projekt_imports_on_status"

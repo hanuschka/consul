@@ -19,6 +19,9 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
     )
     return resolve_result if !resolve_result.success?
 
+    warn_about_missing_templates if !resolve_result.data[:templates_available]
+    warn_about_unused_images(resolve_result.data[:unused_image_urls])
+
     data["content_blocks"] = resolve_result.data[:blocks]
     projekt_import.update!(ai_result: data)
 
@@ -30,6 +33,24 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
   end
 
   private
+
+  # Every block falls back to escaped plain text when the template catalogue
+  # cannot be reached, which looks like a styling bug rather than an outage
+  # unless it is said out loud.
+  def warn_about_missing_templates
+    projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.content_block_templates_unavailable"))
+  end
+
+  # The images are stored and reachable from the projekt's image gallery, so the
+  # admin can place them by hand — but only if they are told the import did not.
+  def warn_about_unused_images(unused_image_urls)
+    count = Array(unused_image_urls).size
+    return if count.zero?
+
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.source_images_unplaced", count: count)
+    )
+  end
 
   # The phases already exist by the time blocks are rendered, so the model is
   # handed the real deep links instead of inventing a URL shape.

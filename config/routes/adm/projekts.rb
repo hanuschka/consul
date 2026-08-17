@@ -253,6 +253,7 @@ namespace :adm do
         post :command
         post :extract
         post :execute
+        post :title_image
       end
     end
 

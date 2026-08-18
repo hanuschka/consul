@@ -23,7 +23,8 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
     def row_for(poll)
       {
         title: poll.name,
-        closes_on: poll.ends_at&.to_date&.iso8601,
+        closes_on: ::Whatsapp::DatePhrase.absolute(poll.ends_at),
+        closes_in: ::Whatsapp::DatePhrase.relative(poll.ends_at),
         projekt: projekt_title(poll.projekt_phase.projekt),
         url: poll_url(poll)
       }.compact

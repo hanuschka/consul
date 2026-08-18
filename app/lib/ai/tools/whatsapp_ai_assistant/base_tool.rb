@@ -90,18 +90,22 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       yield(projekt)
     end
 
-    # What a proposal search hands back when it cannot decide on its own. Shared
-    # because two tools now resolve a proposal from what the citizen called it —
-    # supporting one and opening one — and a second wording of the same refusal
-    # is a second situation for the router to tell apart.
-    def proposal_candidate_summary(proposal)
-      projekt = proposal.projekt_phase&.projekt
+    # What a contribution search hands back when it cannot decide on its own.
+    # Shared because two tools now resolve one from what the citizen called it —
+    # supporting a proposal and opening any Beitrag — and a second wording of the
+    # same refusal is a second situation for the router to tell apart.
+    #
+    # Reads the same four things off a proposal and off a budget investment:
+    # Budget::Investment delegates projekt_phase to its budget, so neither the
+    # class nor the shape has to be branched on here.
+    def contribution_candidate_summary(contribution)
+      projekt = contribution.projekt_phase&.projekt
 
       {
-        proposal_id: proposal.id,
-        title: proposal.title,
+        contribution_id: contribution.id,
+        title: contribution.title,
         projekt: projekt.present? ? projekt_title(projekt) : nil,
-        supports: proposal.cached_votes_up
+        supports: contribution.cached_votes_up
       }.compact
     end
 
@@ -109,6 +113,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       {
         error: "No publicly listed proposal matches \"#{title}\". Tell the citizen you could not " \
                "find it and ask for the title as it appears on the projekt page."
+      }
+    end
+
+    # Its own wording rather than the one above: this search covered proposals
+    # and budget investments both, so naming proposals in the refusal would send
+    # the model asking after a kind of Beitrag that was already looked for.
+    def no_contribution_match_error(title)
+      {
+        error: "No publicly listed contribution matches \"#{title}\". Tell the citizen you could " \
+               "not find it and ask for the title as it appears on the projekt page."
       }
     end
 

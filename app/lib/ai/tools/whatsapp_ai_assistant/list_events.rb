@@ -25,7 +25,8 @@ class Ai::Tools::WhatsappAiAssistant::ListEvents < Ai::Tools::WhatsappAiAssistan
     def row_for(event)
       {
         title: event.title,
-        starts_at: event.datetime&.iso8601,
+        starts_at: ::Whatsapp::DatePhrase.absolute_with_time(event.datetime),
+        starts_in: ::Whatsapp::DatePhrase.relative(event.datetime),
         location: event.location.presence,
         projekt: projekt_title(event.projekt_phase.projekt),
         url: event.weblink.presence || ::Whatsapp::ProjektLink.phase_url(event.projekt_phase)

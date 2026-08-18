@@ -55,6 +55,7 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.no_open_phase_notice
     whatsapp.bot.no_projekt
     whatsapp.bot.idea_missing
+    whatsapp.bot.proposal.continue_or_restart
     whatsapp.bot.draft_failed
     whatsapp.bot.transcription_failed
     whatsapp.bot.publish_failed

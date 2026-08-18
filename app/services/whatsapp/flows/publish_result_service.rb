@@ -14,6 +14,17 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
   def call
     return if refuse_if_not_permitted
 
+    # The consent gate again, because AskIdeaService's does not cover a
+    # submission that was already past the idea step when the question was
+    # introduced: ResumeOrRestartService#resume goes straight to the draft card
+    # whenever a draft exists, PersistDraftService writes `resource_terms = true`
+    # on the record, and the models validate that on create only — so a draft in
+    # flight at deploy would publish carrying an acceptance nobody was shown.
+    # Asked here rather than backfilled, for the reason Account#terms_accepted?
+    # gives.
+    return Whatsapp::Flows::TermsConsentService.before_publish(conversation: @conversation) if
+      !account.terms_accepted?
+
     # Usually instant now that the draft card carries the evaluation, but not
     # always: a draft whose evaluation was unreachable at the time is evaluated
     # here instead, and that is a second LLM call.
@@ -99,6 +110,12 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # The same pair a failed criterion offers: both say "this cannot go in as it
     # stands", and a citizen who met one and then the other would otherwise find
     # the way out in a different place each time.
+    # No consent exemption here, unlike CompleteDraftService: every model
+    # validates `resource_terms` on create, this save is an update on a
+    # persisted draft, so the error cannot reach this branch. Routing it to the
+    # question anyway was worse than dead — accepting resumes the publish, which
+    # would fail on the same unreachable error and ask again. The consent the
+    # citizen owes is collected in #call, before anything is saved.
     def send_invalid
       @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 

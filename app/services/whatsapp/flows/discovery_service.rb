@@ -95,7 +95,7 @@ class Whatsapp::Flows::DiscoveryService < Whatsapp::Flows::BaseService
       I18n.t(
         "whatsapp.bot.discovery.row_description",
         phase: projekt_phase.title,
-        end_date: I18n.l(projekt_phase.end_date)
+        end_date: Whatsapp::DatePhrase.absolute(projekt_phase.end_date)
       )
     end
 

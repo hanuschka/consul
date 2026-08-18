@@ -11,6 +11,15 @@ class Whatsapp::Flows::AskRevisionService < Whatsapp::Flows::BaseService
     new(conversation: conversation, inbound_message_id: inbound_message_id).enter(correction)
   end
 
+  # The question again, for a citizen who was pulled off this step by the
+  # continue-or-restart question and chose to carry on. Deliberately not
+  # `ask`: that records the step it was asked from, and by now that step is
+  # the interruption's own rather than the draft card or the preview the
+  # origin has to name.
+  def self.re_ask(conversation:)
+    new(conversation: conversation).re_ask
+  end
+
   def self.handle_answer(conversation:, text:, verdict:, inbound_message_id: nil)
     new(conversation: conversation, inbound_message_id: inbound_message_id)
       .handle_answer(text, verdict)
@@ -39,6 +48,12 @@ class Whatsapp::Flows::AskRevisionService < Whatsapp::Flows::BaseService
   # it.
   def ask
     @conversation.record_revision_origin!
+    @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
+
+    send_question
+  end
+
+  def re_ask
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_REVISION)
 
     send_question

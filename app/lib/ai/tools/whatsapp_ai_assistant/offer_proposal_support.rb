@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::OfferProposalSupport <
     return no_proposal_match_error(title) if matches.empty?
 
     if matches.size > 1
-      return { candidates: matches.map { |proposal| proposal_candidate_summary(proposal) }}
+      return { candidates: matches.map { |proposal| contribution_candidate_summary(proposal) }}
     end
 
     ::Whatsapp::Flows::SupportService.prompt(conversation: conversation, proposal: matches.first)

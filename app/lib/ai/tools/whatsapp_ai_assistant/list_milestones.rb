@@ -28,9 +28,12 @@ class Ai::Tools::WhatsappAiAssistant::ListMilestones < Ai::Tools::WhatsappAiAssi
     # Not every milestone carries a translated title, so the date is what the
     # entry falls back to — an untitled entry is worse than a dated one.
     def row_for(milestone)
+      published_on = ::Whatsapp::DatePhrase.absolute(milestone.publication_date)
+
       {
-        title: milestone.title.presence || I18n.l(milestone.publication_date.to_date),
-        published_on: milestone.publication_date.to_date.iso8601,
+        title: milestone.title.presence || published_on,
+        published_on: published_on,
+        published_ago: ::Whatsapp::DatePhrase.relative(milestone.publication_date),
         description: milestone.description.to_s.squish.presence&.truncate(DESCRIPTION_LENGTH),
         projekt: projekt_title_for(milestone),
         url: phase_url_for(milestone)

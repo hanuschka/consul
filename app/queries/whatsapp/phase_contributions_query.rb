@@ -68,7 +68,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where("projekt_events.datetime >= ?", Time.current)
         .order(:datetime)
         .limit(::Whatsapp::MAX_LIST_ROWS)
-        .map { |event| row(event.title, event_url(event), I18n.l(event.datetime.to_date)) }
+        .map { |event| row(event.title, event_url(event), Whatsapp::DatePhrase.absolute(event.datetime)) }
     end
 
     def milestones
@@ -91,11 +91,9 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
     end
 
     def milestone_row(milestone)
-      row(
-        milestone.title.presence || I18n.l(milestone.publication_date.to_date),
-        phase_url,
-        I18n.l(milestone.publication_date.to_date)
-      )
+      published_on = Whatsapp::DatePhrase.absolute(milestone.publication_date)
+
+      row(milestone.title.presence || published_on, phase_url, published_on)
     end
 
     def row(title, url, description = nil)

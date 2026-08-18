@@ -23,11 +23,13 @@ module Whatsapp::FlowActions
     unlink_cancel
   ].freeze
 
-  DISCOVERY_ACTIONS = %i[discover discover_public dismiss view_projekt].freeze
+  DISCOVERY_ACTIONS = %i[discover discover_category discover_public dismiss view_projekt].freeze
 
   PROPOSAL_ACTIONS = %i[
     submit_proposal
     idea_start
+    terms_accept
+    terms_decline
     category
     sentiment
     draft_publish
@@ -41,6 +43,8 @@ module Whatsapp::FlowActions
     submit_final
     resume
     restart
+    continue_flow
+    start_over
   ].freeze
 
   # `support_instead` is supporting from the duplicate offer, and it is its own
@@ -183,6 +187,19 @@ module Whatsapp::FlowActions
     [
       button(action: :link_yes, label_key: "whatsapp.bot.buttons.link_yes"),
       button(action: :main_menu, label_key: "whatsapp.bot.buttons.back_to_menu")
+    ]
+  end
+
+  # The pair the consent question offers, shaped after link_request_buttons: one
+  # pill that resolves it and one that ends the attempt in the menu. Declining is
+  # its own action rather than a bare :main_menu, because it has a sentence to
+  # say first — that nothing can be submitted without the acceptance — and a
+  # citizen dropped into the menu with no explanation reads it as the tap having
+  # failed.
+  def terms_consent_buttons
+    [
+      button(action: :terms_accept, label_key: "whatsapp.bot.buttons.terms_accept"),
+      button(action: :terms_decline, label_key: "whatsapp.bot.buttons.back_to_menu")
     ]
   end
 end

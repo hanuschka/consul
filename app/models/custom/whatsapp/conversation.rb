@@ -33,6 +33,7 @@ class Whatsapp::Conversation < ApplicationRecord
     AWAITING_UNLINK_CONFIRMATION = "awaiting_unlink_confirmation".freeze
     AWAITING_PHASE_CHOICE = "awaiting_phase_choice".freeze
     AWAITING_PARTICIPATION_PROJEKT = "awaiting_participation_projekt".freeze
+    AWAITING_TERMS_CONSENT = "awaiting_terms_consent".freeze
     AWAITING_IDEA = "awaiting_idea".freeze
     AWAITING_DUPLICATE_DECISION = "awaiting_duplicate_decision".freeze
     AWAITING_CATEGORY = "awaiting_category".freeze
@@ -46,6 +47,7 @@ class Whatsapp::Conversation < ApplicationRecord
     AWAITING_COMMENT = "awaiting_comment".freeze
     AWAITING_NOTIFICATION_SETTINGS = "awaiting_notification_settings".freeze
     AWAITING_RESUME_DECISION = "awaiting_resume_decision".freeze
+    AWAITING_CONTINUE_DECISION = "awaiting_continue_decision".freeze
   end
 
   # The write-side half of the same guard: assigning a step the map does not
@@ -57,6 +59,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_unlink_confirmation: Step::AWAITING_UNLINK_CONFIRMATION,
     awaiting_phase_choice: Step::AWAITING_PHASE_CHOICE,
     awaiting_participation_projekt: Step::AWAITING_PARTICIPATION_PROJEKT,
+    awaiting_terms_consent: Step::AWAITING_TERMS_CONSENT,
     awaiting_idea: Step::AWAITING_IDEA,
     awaiting_duplicate_decision: Step::AWAITING_DUPLICATE_DECISION,
     awaiting_category: Step::AWAITING_CATEGORY,
@@ -69,7 +72,8 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_revision: Step::AWAITING_REVISION,
     awaiting_comment: Step::AWAITING_COMMENT,
     awaiting_notification_settings: Step::AWAITING_NOTIFICATION_SETTINGS,
-    awaiting_resume_decision: Step::AWAITING_RESUME_DECISION
+    awaiting_resume_decision: Step::AWAITING_RESUME_DECISION,
+    awaiting_continue_decision: Step::AWAITING_CONTINUE_DECISION
   }
 
   # The steps that mean a submission is half-finished. "Stop" aborts one of
@@ -77,6 +81,7 @@ class Whatsapp::Conversation < ApplicationRecord
   # readings of the catalog's one keyword are separated here rather than at each
   # call site.
   DRAFTING_STEPS = [
+    Step::AWAITING_TERMS_CONSENT,
     Step::AWAITING_IDEA,
     Step::AWAITING_DUPLICATE_DECISION,
     Step::AWAITING_CATEGORY,
@@ -88,7 +93,31 @@ class Whatsapp::Conversation < ApplicationRecord
     Step::AWAITING_FINAL_CONFIRMATION,
     Step::AWAITING_REVISION,
     Step::AWAITING_COMMENT,
-    Step::AWAITING_RESUME_DECISION
+    Step::AWAITING_RESUME_DECISION,
+    Step::AWAITING_CONTINUE_DECISION
+  ].freeze
+
+  # The steps where the bot is waiting on free text, and where a message with
+  # no substance of its own is therefore read as beginning again rather than
+  # as the answer: "hallo" at AWAITING_IDEA used to become the text of a
+  # contribution, draft generation and all (CON-2968).
+  #
+  # AWAITING_CONTINUE_DECISION is one of them because the question this set
+  # produces can itself be answered with another greeting, and the same
+  # reading has to be available there — bounded by
+  # Flows::ContinueOrRestartService rather than by withholding it.
+  #
+  # AWAITING_PHASE_CHOICE is listed for completeness of "waiting on free
+  # text"; nothing assigns that step today.
+  FRESH_START_STEPS = [
+    Step::AWAITING_IDEA,
+    Step::AWAITING_COMMENT,
+    Step::AWAITING_IMAGE_UPLOAD,
+    Step::AWAITING_REVISION,
+    Step::AWAITING_LOCATION,
+    Step::AWAITING_PARTICIPATION_PROJEKT,
+    Step::AWAITING_PHASE_CHOICE,
+    Step::AWAITING_CONTINUE_DECISION
   ].freeze
 
   # A draft older than this is not resumed silently: the citizen is asked
@@ -321,6 +350,38 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(choice_reasks: nil)
   end
 
+  # The step the continue-or-restart question interrupted, written by
+  # Flows::ContinueOrRestartService when it asks and read back by both
+  # answers: continuing restores it, starting over drops it with the flow.
+  # Cleared by resume_interrupted_step!.
+  def interrupted_step
+    context["interrupted_step"]
+  end
+
+  # The question's own step, the step it interrupted and the re-ask counter in
+  # one UPDATE, because asking is one moment. The counter is the same one the
+  # taxonomy questions use, so a citizen who keeps greeting is given up on
+  # rather than held on the question forever.
+  def ask_continue_decision!(interrupted)
+    update!(
+      step: Step::AWAITING_CONTINUE_DECISION,
+      context: context.merge(
+        "interrupted_step" => interrupted,
+        "choice_reasks" => choice_reasks + 1
+      )
+    )
+  end
+
+  # Back on the step the question interrupted, with everything already
+  # collected untouched — only the two keys the question itself owns are
+  # dropped. One UPDATE, for the same reason the asking is one.
+  def resume_interrupted_step!
+    update!(
+      step: interrupted_step,
+      context: context.except("interrupted_step", "choice_reasks")
+    )
+  end
+
   # The generation call's own shortening of the description, written beside
   # the stash by store_generated_draft! and read by the draft card and the
   # final preview — and by the revision prompt, whose "null = still
@@ -342,6 +403,30 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def clear_publish_repair!
     merge_context!(publish_repair: nil)
+  end
+
+  # Which step the terms question was put in front of, written by
+  # Flows::TermsConsentService when it asks and read back when the citizen
+  # accepts. The same question now guards two places — the content prompt and
+  # the publish — and they resume in different ones: accepting at the publish
+  # step used to be answered with "tell me your idea" while the finished draft
+  # sat in the conversation. The step and the origin in one UPDATE, because
+  # asking is one moment.
+  def ask_terms_consent!(origin)
+    update!(
+      step: Step::AWAITING_TERMS_CONSENT,
+      context: context.merge("terms_origin" => origin.to_s)
+    )
+  end
+
+  def terms_origin
+    context["terms_origin"]
+  end
+
+  def clear_terms_origin!
+    return if context["terms_origin"].blank?
+
+    merge_context!(terms_origin: nil)
   end
 
   # The duplicate offer, stored beside the step by AskDuplicateChoiceService

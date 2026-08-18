@@ -57,17 +57,11 @@ de:
         more: Und %{count} weitere.
         empty: >-
           Sie haben bisher nichts eingereicht. Tippen Sie auf „Beitrag einreichen“, um anzufangen.
-      projekt_contributions:
-        intro: 'Diese Beiträge gibt es zu „%{projekt}“:'
-        entry: |-
-          *%{title}*
-          %{age}
-          %{url}
-        entry_without_url: |-
-          *%{title}*
-          %{age}
-        age:
-          today: heute
+      date:
+        absolute_format: "%-d. %B %Y"
+        absolute_with_time_format: "%-d. %B %Y, %H:%M Uhr"
+        today: heute
+        past:
           days:
             one: vor einem Tag
             other: vor %{count} Tagen
@@ -77,6 +71,25 @@ de:
           years:
             one: vor einem Jahr
             other: vor %{count} Jahren
+        future:
+          days:
+            one: in einem Tag
+            other: in %{count} Tagen
+          months:
+            one: in einem Monat
+            other: in %{count} Monaten
+          years:
+            one: in einem Jahr
+            other: in %{count} Jahren
+      projekt_contributions:
+        intro: 'Diese Beiträge gibt es zu „%{projekt}“:'
+        entry: |-
+          *%{title}*
+          %{age}
+          %{url}
+        entry_without_url: |-
+          *%{title}*
+          %{age}
         more: Und %{count} weitere.
         empty: Zu „%{projekt}“ wurde bisher noch nichts eingereicht.
       commands:
@@ -114,6 +127,16 @@ de:
       too_fast: Einen Moment noch – ich arbeite gerade an Ihrem Beitrag.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       verification_link: 'Hier können Sie Ihr Konto verifizieren: %{url}'
+      terms_consent:
+        ask: |-
+          Bevor Sie einen Beitrag einreichen können, brauche ich noch Ihr Einverständnis: Ihr Beitrag
+          muss den Allgemeinen Nutzungsbedingungen und der Datenschutzbestimmung entsprechen.
+
+          Nutzungsbedingungen: %{conditions_url}
+          Datenschutzbestimmung: %{privacy_url}
+        declined: >-
+          Alles klar. Ohne dieses Einverständnis kann ich keinen Beitrag für Sie einreichen. Alles
+          andere können Sie weiterhin nutzen.
       buttons:
         publish: Veröffentlichen
         revise: Ändern
@@ -137,10 +160,13 @@ de:
         my_contributions: Meine Beiträge
         view_projekt: Projekt ansehen
         idea_start: Idee einreichen
+        terms_accept: Einverstanden
         draft_publish: Ja, passt
         draft_revise: Ändern
         resume: Fortsetzen
         restart: Neu beginnen
+        continue_flow: Weitermachen
+        start_over: Neu anfangen
         support: 👍 Unterstützen
         help: Hilfe
         main_menu: Hauptmenü
@@ -317,6 +343,17 @@ de:
           *%{title}*
           %{url}
         more: 'Und %{count} weitere: %{url}'
+        browse:
+          intro: 'Das sind die Beteiligungsprojekte auf diesem Portal:'
+          heading: '*%{category}*'
+          more: 'Noch %{count} weitere in dieser Kategorie.'
+          more_body: 'Welche Kategorie möchten Sie vollständig sehen?'
+          more_button: Mehr anzeigen
+          more_row: 'Noch %{count} weitere'
+          rest: 'Und %{count} weitere: %{url}'
+          empty: >-
+            Auf diesem Portal ist gerade kein Projekt veröffentlicht. Schreiben Sie mir wieder,
+            wenn ein neues Projekt startet.
       notifications:
         settings_title: 🔔 Worüber möchten Sie benachrichtigt werden?
         saved: ✅ Einstellungen gespeichert.
@@ -389,6 +426,8 @@ de:
         resume_projekt: 'Es geht um „%{projekt}“.'
         resume_draft: 'Ihr Entwurf: „%{title}“'
         resume_recap_idea: 'Das hatten Sie mir geschrieben: „%{idea}“'
+        continue_or_restart: >-
+          Möchten Sie mit Ihrer letzten Aktion weitermachen oder neu anfangen?
         ask_image: >-
           Möchten Sie ein Bild zu Ihrem Beitrag? Sie können mir eines schicken, oder ich erstelle
           eines aus Ihrem Text.

@@ -10,13 +10,17 @@ class Ai::Tools::WhatsappAiAssistant::SendProposalLink <
     string :title, description: "What the citizen called the contribution, in their own words"
   end
 
+  # Resolved through the openable search rather than the supportable one: what a
+  # citizen wants to open is any Beitrag, and a budget investment is one — the
+  # supportable search knows only proposals, because supporting an investment is
+  # budget voting rather than a support click.
   def execute(title:)
-    matches = ::Whatsapp::SupportableProposalsQuery.call(text: title)
+    matches = ::Whatsapp::OpenableContributionsQuery.call(text: title)
 
-    return no_proposal_match_error(title) if matches.empty?
+    return no_contribution_match_error(title) if matches.empty?
 
     if matches.size > 1
-      return { candidates: matches.map { |proposal| proposal_candidate_summary(proposal) }}
+      return { candidates: matches.map { |match| contribution_candidate_summary(match) }}
     end
 
     send_link(matches.first)
@@ -25,27 +29,27 @@ class Ai::Tools::WhatsappAiAssistant::SendProposalLink <
   private
 
     # The button carries the title, so the citizen reads what they are about to
-    # open rather than a bare address. A proposal retired between the search and
-    # here has no page to open; the model names it instead of being handed a
-    # link that answers with an error.
-    def send_link(proposal)
-      url = ::Whatsapp::PublishedResourceUrl.call(proposal)
+    # open rather than a bare address. A Beitrag retired or hidden between the
+    # search and here has no page to open; the model names it instead of being
+    # handed a link that answers with an error.
+    def send_link(contribution)
+      url = ::Whatsapp::PublishedResourceUrl.call(contribution)
 
-      return not_openable_error(proposal) if url.blank?
+      return not_openable_error(contribution) if url.blank?
 
       ::Whatsapp::Flows::SendLinkButtonService.call(
         conversation: conversation,
-        body: I18n.t("whatsapp.bot.proposal.link.body", title: proposal.title),
+        body: I18n.t("whatsapp.bot.proposal.link.body", title: contribution.title),
         url: url
       )
 
       halt("Sent the link to this contribution.")
     end
 
-    def not_openable_error(proposal)
+    def not_openable_error(contribution)
       {
-        error: "\"#{proposal.title}\" has no public page right now, so there is no link to send. " \
-               "Tell the citizen it cannot be opened at the moment."
+        error: "\"#{contribution.title}\" has no public page right now, so there is no link to " \
+               "send. Tell the citizen it cannot be opened at the moment."
       }
     end
 end

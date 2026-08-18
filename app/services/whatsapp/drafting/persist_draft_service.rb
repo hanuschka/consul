@@ -68,9 +68,15 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
       resource.title = @draft_data["title"]
       resource.description = @draft_data["description"]
 
-      # Proposals carry the terms acknowledgement the web form collects; an
-      # investment has no such column.
-      resource.resource_terms = true if !budget_phase?
+      # The terms acknowledgement the web form collects, and it is written for
+      # both models. It used to be skipped for an investment on the grounds that
+      # it "has no such column" — true, but so is a proposal: `resource_terms` is
+      # defined by the acceptance validator, not by the schema, and
+      # Budget::Investment declares that validator exactly as Proposal does. The
+      # guard therefore refused every budget submission after draft generation
+      # (CON-2969). What stands behind the value is TermsConsentService, which
+      # will not let the flow reach a content prompt without it.
+      resource.resource_terms = true
 
       # A verdict belongs to the text it was reached on, so a rewrite drops it.
       # That is what lets PresentDraftService and PublishDraftService treat a

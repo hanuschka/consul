@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_17_135136) do
+ActiveRecord::Schema.define(version: 2026_08_18_102725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3570,6 +3570,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.boolean "notify_moderation_decision", default: true, null: false
     t.datetime "ai_disclosed_at"
     t.bigint "guest_user_id"
+    t.datetime "terms_accepted_at"
     t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
     t.index ["guest_user_id"], name: "index_whatsapp_accounts_on_guest_user_id", unique: true
     t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"

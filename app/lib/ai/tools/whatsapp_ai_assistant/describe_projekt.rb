@@ -60,7 +60,8 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
         {
           projekt_phase_id: projekt_phase.id,
           phase: projekt_phase.title,
-          ends_on: projekt_phase.end_date&.to_date&.iso8601,
+          ends_on: ::Whatsapp::DatePhrase.absolute(projekt_phase.end_date),
+          ends_in: ::Whatsapp::DatePhrase.relative(projekt_phase.end_date),
           open_for_submission: ::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
         }.compact
       end

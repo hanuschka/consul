@@ -24,6 +24,14 @@ module Whatsapp::PortalLinks
     Rails.application.routes.url_helpers.root_url(**UrlOptions.default.to_h)
   end
 
+  # The overview tab a browsed category came from, so "and N more" lands on
+  # the same list the bot just quoted. `filter` rather than `order`: it is
+  # ProjektsController#index that reads the parameter, and it whitelists
+  # params[:filter] against its own INDEX_FILTERS.
+  def projekts_url(filter:)
+    Rails.application.routes.url_helpers.projekts_url(filter: filter, **UrlOptions.default.to_h)
+  end
+
   def register_url
     Rails.application.routes.url_helpers.new_user_registration_url(**UrlOptions.default.to_h)
   end
@@ -34,6 +42,10 @@ module Whatsapp::PortalLinks
 
   def help_url
     page_url(:help)
+  end
+
+  def conditions_url
+    page_url(:conditions)
   end
 
   # Falls back to the portal's front page rather than to a dead link: a consent

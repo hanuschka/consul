@@ -48,17 +48,11 @@ en:
           pending: under review
         more: And %{count} more.
         empty: You have not submitted anything yet. Tap "Submit a contribution" to get started.
-      projekt_contributions:
-        intro: 'Here is what has been submitted to "%{projekt}":'
-        entry: |-
-          *%{title}*
-          %{age}
-          %{url}
-        entry_without_url: |-
-          *%{title}*
-          %{age}
-        age:
-          today: today
+      date:
+        absolute_format: "%B %-d, %Y"
+        absolute_with_time_format: "%B %-d, %Y at %H:%M"
+        today: today
+        past:
           days:
             one: 1 day ago
             other: '%{count} days ago'
@@ -68,6 +62,25 @@ en:
           years:
             one: 1 year ago
             other: '%{count} years ago'
+        future:
+          days:
+            one: in 1 day
+            other: in %{count} days
+          months:
+            one: in 1 month
+            other: in %{count} months
+          years:
+            one: in 1 year
+            other: in %{count} years
+      projekt_contributions:
+        intro: 'Here is what has been submitted to "%{projekt}":'
+        entry: |-
+          *%{title}*
+          %{age}
+          %{url}
+        entry_without_url: |-
+          *%{title}*
+          %{age}
         more: And %{count} more.
         empty: Nothing has been submitted to "%{projekt}" yet.
       commands:
@@ -104,6 +117,16 @@ en:
       too_fast: One moment — I am still working on your contribution.
       opted_in: You will receive messages from us again.
       verification_link: 'You can verify your account here: %{url}'
+      terms_consent:
+        ask: |-
+          Before you can submit a contribution I need your agreement: your contribution must comply
+          with the General Terms of Use and the Privacy Policy.
+
+          Terms of Use: %{conditions_url}
+          Privacy Policy: %{privacy_url}
+        declined: >-
+          Understood. Without this agreement I cannot submit a contribution for you. Everything else
+          remains available to you.
       buttons:
         publish: Publish
         revise: Revise
@@ -127,10 +150,13 @@ en:
         my_contributions: My contributions
         view_projekt: View project
         idea_start: Yes, I have an idea
+        terms_accept: I agree
         draft_publish: Yes, that works
         draft_revise: Edit
         resume: Continue
         restart: Start over
+        continue_flow: Carry on
+        start_over: Start again
         support: 👍 Support
         help: Help
         main_menu: Main menu
@@ -294,6 +320,17 @@ en:
           *%{title}*
           %{url}
         more: 'And %{count} more: %{url}'
+        browse:
+          intro: 'These are the participation projects on this portal:'
+          heading: '*%{category}*'
+          more: '%{count} more in this category.'
+          more_body: 'Which category would you like to see in full?'
+          more_button: Show more
+          more_row: '%{count} more'
+          rest: 'And %{count} more: %{url}'
+          empty: >-
+            No project is published on this portal right now. Write to me again when a new
+            project starts.
       notifications:
         settings_title: 🔔 What would you like to be notified about?
         saved: ✅ Settings saved.
@@ -365,6 +402,8 @@ en:
         resume_projekt: "It's about “%{projekt}”."
         resume_draft: 'Your draft: “%{title}”'
         resume_recap_idea: 'This is what you had written: “%{idea}”'
+        continue_or_restart: >-
+          Would you like to carry on with what you were doing, or start again?
         ask_image: >-
           Would you like a picture for your contribution? You can send me one, or I can create one from
           your text.

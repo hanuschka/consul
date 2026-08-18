@@ -1,0 +1,144 @@
+<%= content_for :title, [@projekt_phase.title, @page_title].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: @page_title,
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+      compact: true
+    ) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.projekts.poll_question_imports.show.hint") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <div class="adm-poll-question-preview">
+    <% if @question_import.stalled? %>
+      <%= render "adm/projekts/poll_question_imports/status_panel",
+            tone: "warning",
+            icon: "hourglass_disabled",
+            title: t("adm.projekts.poll_question_imports.show.stalled"),
+            message: t("adm.projekts.poll_question_imports.show.stalled_description"),
+            show_regenerate: true,
+            note: t("adm.projekts.poll_question_imports.show.regenerate_hint"),
+            link_url: adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+            link_text: t("adm.projekts.poll_question_imports.show.back"),
+            link_icon: "arrow_back" %>
+
+    <% elsif @question_import.analyzing? %>
+      <div
+        class="adm-poll-question-preview__status"
+        role="status"
+        data-controller="shared--polling"
+        data-shared--polling-url-value="<%= status_adm_projekts_phase_poll_question_import_path(@projekt_phase, @question_import) %>"
+        data-shared--polling-terminal-states-value="completed failed stalled"
+        data-shared--polling-max-attempts-value="150"
+      >
+        <span class="kern-loader kern-loader--visible" aria-hidden="true"></span>
+
+        <div>
+          <p class="kern-body adm-poll-question-preview__status-title">
+            <%= t("adm.projekts.poll_question_imports.show.generating_title") %>
+          </p>
+
+          <p class="kern-body adm-poll-question-preview__status-message">
+            <%= t("adm.projekts.poll_question_imports.show.generating") %>
+          </p>
+
+          <% status_file_names = @question_import.source_files.map { |file| file.filename.to_s } %>
+          <% if status_file_names.any? %>
+            <ul class="adm-poll-question-preview__status-files">
+              <% status_file_names.each do |file_name| %>
+                <li class="adm-poll-question-preview__status-file">
+                  <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                  <span><%= file_name %></span>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+
+    <% elsif @question_import.failed? %>
+      <%= render "adm/projekts/poll_question_imports/status_panel",
+            tone: "danger",
+            icon: "error",
+            title: t("adm.projekts.poll_question_imports.show.failed"),
+            message: @question_import.error_message.presence ||
+              t("adm.projekts.poll_question_imports.errors.generation_unknown"),
+            show_regenerate: true,
+            note: t("adm.projekts.poll_question_imports.show.regenerate_hint"),
+            link_url: adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+            link_text: t("adm.projekts.poll_question_imports.show.back"),
+            link_icon: "arrow_back" %>
+
+    <% elsif @question_import.applied? %>
+      <%= render "adm/projekts/poll_question_imports/status_panel",
+            tone: "success",
+            icon: "check_circle",
+            title: t("adm.projekts.poll_question_imports.show.already_applied"),
+            message: t("adm.projekts.poll_question_imports.show.already_applied_description"),
+            link_url: poll_questions_adm_projekts_phase_path(@projekt_phase),
+            link_text: t("adm.projekts.poll_question_imports.show.to_questions"),
+            link_icon: "arrow_forward" %>
+
+    <% elsif @questions.empty? %>
+      <%= render "adm/projekts/poll_question_imports/status_panel",
+            tone: "neutral",
+            icon: "search_off",
+            title: t("adm.projekts.poll_question_imports.show.empty_title"),
+            message: t("adm.projekts.poll_question_imports.show.empty_description"),
+            show_regenerate: true,
+            note: t("adm.projekts.poll_question_imports.show.regenerate_hint"),
+            link_url: adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+            link_text: t("adm.projekts.poll_question_imports.show.back"),
+            link_icon: "arrow_back" %>
+
+    <% else %>
+      <div class="adm-poll-question-preview__intro">
+        <div>
+          <p class="kern-body">
+            <%= t("adm.projekts.poll_question_imports.show.found", count: @questions.size) %>
+          </p>
+
+          <% source_file_names = @question_import.source_files.map { |file| file.filename.to_s } %>
+          <% if source_file_names.any? %>
+            <p class="adm-poll-question-preview__source-files">
+              <%= t("adm.projekts.poll_question_imports.show.source_files",
+                    files: source_file_names.join(", ")) %>
+            </p>
+          <% end %>
+        </div>
+
+        <div class="adm-poll-question-preview__regenerate">
+          <%= render "adm/projekts/poll_question_imports/regenerate_form", style: :secondary %>
+
+          <p class="adm-poll-question-preview__regenerate-hint">
+            <%= t("adm.projekts.poll_question_imports.show.regenerate_hint") %>
+          </p>
+        </div>
+      </div>
+
+      <%= form_with url: apply_adm_projekts_phase_poll_question_import_path(@projekt_phase, @question_import),
+                    method: :post do %>
+        <%= render partial: "adm/projekts/poll_question_imports/question_fields",
+                   collection: @questions,
+                   as: :question,
+                   locals: { vote_type_options: PollQuestionImport.vote_type_options } %>
+
+        <div class="adm-poll-question-preview__actions">
+          <%= kern_button(
+                text: t("adm.projekts.poll_question_imports.show.apply"),
+                icon: "save",
+                type: "submit"
+              ) %>
+
+          <%= kern_link_button adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+                text: t("adm.projekts.poll_question_imports.show.discard"),
+                icon: "close",
+                style: :secondary %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

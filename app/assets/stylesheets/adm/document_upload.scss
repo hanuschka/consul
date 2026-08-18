@@ -13,7 +13,7 @@ $_import-input-bg: #f7f8fa;
 $_import-icon-bg-neutral: #f0f1f3;
 $_import-notice-border: oklch(0.84 0.06 66.98);
 
-.projekt-import-from-file {
+.adm-document-upload {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,14 +25,14 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--form {
+.adm-document-upload--form {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.projekt-import-from-file--upload-area {
+.adm-document-upload--upload-area {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,7 +66,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--upload-icon {
+.adm-document-upload--upload-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,7 +82,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--title {
+.adm-document-upload--title {
   font-size: 21px;
   font-weight: 500;
   color: $_import-text;
@@ -90,7 +90,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   letter-spacing: -0.2px;
 }
 
-.projekt-import-from-file--hint {
+.adm-document-upload--hint {
   font-size: 15px;
   line-height: 1.6;
   color: $_import-text-muted;
@@ -98,7 +98,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   max-width: 460px;
 }
 
-.projekt-import-from-file--select-button {
+.adm-document-upload--select-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -126,13 +126,13 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--drop-hint {
+.adm-document-upload--drop-hint {
   font-size: 14px;
   color: $_import-text-faint;
   margin: 22px 0 0;
 }
 
-.projekt-import-from-file--file-preview {
+.adm-document-upload--file-preview {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -156,7 +156,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--file-list {
+.adm-document-upload--file-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -164,7 +164,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   margin-bottom: 24px;
 }
 
-.projekt-import-from-file--file-info {
+.adm-document-upload--file-info {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -175,7 +175,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   border-radius: $_import-radius-sm;
 }
 
-.projekt-import-from-file--file-icon {
+.adm-document-upload--file-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,7 +192,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--file-details {
+.adm-document-upload--file-details {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -202,7 +202,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   text-align: left;
 }
 
-.projekt-import-from-file--file-name {
+.adm-document-upload--file-name {
   font-size: 15px;
   font-weight: 500;
   color: $_import-text;
@@ -211,13 +211,13 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   text-overflow: ellipsis;
 }
 
-.projekt-import-from-file--file-size {
+.adm-document-upload--file-size {
   font-size: 13px;
   font-weight: 400;
   color: $_import-text-muted;
 }
 
-.projekt-import-from-file--file-remove {
+.adm-document-upload--file-remove {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,7 +244,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--user-prompt {
+.adm-document-upload--user-prompt {
   width: 100%;
   margin-bottom: 20px;
   max-width: 640px;
@@ -283,13 +283,13 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--options {
+.adm-document-upload--options {
   width: 100%;
   margin-bottom: 28px;
   max-width: 640px;
 }
 
-.projekt-import-from-file--inline-error {
+.adm-document-upload--inline-error {
   width: 100%;
   max-width: 640px;
   margin-bottom: 16px;
@@ -301,7 +301,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   border-radius: $_import-radius-sm;
 }
 
-.projekt-import-from-file--actions {
+.adm-document-upload--actions {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -309,7 +309,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   width: 100%;
 }
 
-.projekt-import-from-file--submit-button {
+.adm-document-upload--submit-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -342,7 +342,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--ghost-button {
+.adm-document-upload--ghost-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -362,7 +362,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--loader {
+.adm-document-upload--loader {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -372,27 +372,27 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   padding-top: 70px;
 }
 
-.projekt-import-from-file--loader-title {
+.adm-document-upload--loader-title {
   font-size: 20px;
   font-weight: 600;
   color: $_import-text;
   margin: 0 0 18px;
 }
 
-.projekt-import-from-file--loader-message {
+.adm-document-upload--loader-message {
   font-size: 14px;
   line-height: 1.5;
   color: $_import-text-muted;
   margin: 0 0 20px;
 }
 
-.projekt-import-from-file--progress-wrapper {
+.adm-document-upload--progress-wrapper {
   width: 100%;
   max-width: 460px;
   margin: 0 auto 12px;
 }
 
-.projekt-import-from-file--progress-bar {
+.adm-document-upload--progress-bar {
   width: 100%;
   height: 8px;
   background:
@@ -401,7 +401,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   overflow: hidden;
 }
 
-.projekt-import-from-file--progress-bar-fill {
+.adm-document-upload--progress-bar-fill {
   height: 100%;
   width: 0%;
   background: var(--kern-color-action-default);
@@ -409,7 +409,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   transition: width 350ms ease-out;
 }
 
-.projekt-import-from-file--progress-label {
+.adm-document-upload--progress-label {
   display: block;
   margin-top: 12px;
   font-size: 14px;
@@ -417,7 +417,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   color: $_import-text-muted;
 }
 
-.projekt-import-from-file--loader-files {
+.adm-document-upload--loader-files {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -426,7 +426,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   margin: 16px auto 0;
 }
 
-.projekt-import-from-file--loader-file-item {
+.adm-document-upload--loader-file-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -443,7 +443,7 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   }
 }
 
-.projekt-import-from-file--loader-file-name {
+.adm-document-upload--loader-file-name {
   flex: 1;
   color: $_import-text;
   overflow: hidden;
@@ -451,15 +451,15 @@ $_import-notice-border: oklch(0.84 0.06 66.98);
   white-space: nowrap;
 }
 
-.projekt-import-from-file--loader-file-size {
+.adm-document-upload--loader-file-size {
   flex-shrink: 0;
   color: $_import-text-faint;
   font-size: 13px;
 }
 
-.projekt-import-from-file--upload-area,
-.projekt-import-from-file--file-preview,
-.projekt-import-from-file--loader {
+.adm-document-upload--upload-area,
+.adm-document-upload--file-preview,
+.adm-document-upload--loader {
   &.-hidden {
     display: none;
   }

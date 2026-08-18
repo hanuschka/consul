@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_17_135136) do
+ActiveRecord::Schema.define(version: 2026_08_18_091500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2048,6 +2048,21 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.string "more_info_iframe"
     t.boolean "terminates_poll", default: false, null: false
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
+  end
+
+  create_table "poll_question_imports", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "author_id"
+    t.text "extracted_text"
+    t.string "content_locale"
+    t.string "status", default: "pending", null: false
+    t.jsonb "result"
+    t.jsonb "created_question_ids", default: []
+    t.text "error_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_poll_question_imports_on_author_id"
+    t.index ["projekt_phase_id", "status"], name: "index_poll_question_imports_on_projekt_phase_id_and_status"
   end
 
   create_table "poll_question_translations", id: :serial, force: :cascade do |t|

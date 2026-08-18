@@ -2,7 +2,6 @@ publiccodeYmlVersion: '0.4'
 name: Öffentlichkeitsbeteiligung in der Stadt Regensburg
 url: 'https://gitlab.opencode.de/regensburg_next/mein.regensburg'
 landingURL: 'https://mein.regensburg.de'
-landingUrl: 'https://mein.regensburg.de'
 isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
 softwareVersion: '2026-08-12'
 releaseDate: '2026-08-12'
@@ -12,7 +11,6 @@ platforms:
 categories:
   - digital-citizenship
   - online-community
-  - smart-city
 developmentStatus: stable
 softwareType: standalone/web
 description:
@@ -46,6 +44,35 @@ description:
       - Geschützter Redaktions- und Moderationsbereich
     screenshots:
       - doc/publiccode/screenshot.png
+  en:
+    localisedName: Public participation in the city of Regensburg
+    genericName: Citizen participation platform
+    shortDescription: >-
+      Digital participation platform of the city of Regensburg for
+      participatory budgeting, proposals and further participation formats.
+    longDescription: >-
+      On the platform "Public participation in the city of Regensburg",
+      citizens can submit and discuss proposals and vote on participation
+      projects such as the participatory budget. Participation procedures are
+      modelled as projects with phases of their own - from collecting ideas
+      through discussion to voting and the administration's response.
+      Location-based concerns and projects can be placed on an interactive map.
+      A protected administration area serves editorial work, moderation and the
+      evaluation of the contributions received. The platform is based on a
+      customised version of the open source software Consul, comes
+      preconfigured in a privacy-friendly way and is operated, hosted and
+      further developed by demokratie.today.
+    documentation: 'https://gitlab.opencode.de/regensburg_next/mein.regensburg/-/blob/cli_reg_2/BETRIEBSHANDBUCH.md'
+    apiDocumentation: 'https://mein.regensburg.de/api/docs'
+    features:
+      - Citizen participation
+      - Participatory budgeting
+      - Proposals and voting
+      - Discussion forums
+      - Location-based participation on an interactive map
+      - Protected editorial and moderation area
+    screenshots:
+      - doc/publiccode/screenshot.png
 legal:
   license: AGPL-3.0
   mainCopyrightOwner: demokratie.today
@@ -61,6 +88,7 @@ localisation:
   localisationReady: true
   availableLanguages:
     - de
+    - en
 intendedAudience:
   countries:
     - de

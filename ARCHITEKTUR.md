@@ -1,16 +1,16 @@
 # Architektur
 
-Dieses Dokument gibt einen groben Überblick über den Aufbau des
-Mitmachportals. Es beschreibt die Komponenten und deren Zusammenspiel auf
-konzeptioneller Ebene und richtet sich an Personen, die verstehen möchten,
-wie die Plattform aufgebaut ist – ohne technische Vorkenntnisse
-vorauszusetzen. Es ersetzt keine detaillierte technische Dokumentation;
-Informationen zum laufenden Betrieb finden sich im
+Dieses Dokument gibt einen groben Überblick über den Aufbau der Plattform
+„Öffentlichkeitsbeteiligung in der Stadt Regensburg“. Es beschreibt die
+Komponenten und deren Zusammenspiel auf konzeptioneller Ebene und richtet
+sich an Personen, die verstehen möchten, wie die Plattform aufgebaut ist –
+ohne technische Vorkenntnisse vorauszusetzen. Es ersetzt keine detaillierte
+technische Dokumentation; Informationen zum laufenden Betrieb finden sich im
 [Betriebshandbuch](BETRIEBSHANDBUCH.md).
 
 ## Überblick
 
-Das Mitmachportal ist eine webbasierte Anwendung nach dem klassischen
+Die Plattform ist eine webbasierte Anwendung nach dem klassischen
 Client-Server-Modell: Nutzerinnen und Nutzer greifen mit einem gewöhnlichen
 Webbrowser auf die Plattform zu, die gesamte Verarbeitung findet auf den
 Servern statt. Es muss keine Software installiert werden, und die Plattform

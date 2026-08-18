@@ -7,7 +7,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   # The provider default is 300 seconds, written for a generation nobody waits
   # on. This one is waited on by a held advisory lock.
   REQUEST_TIMEOUT_SECONDS = 30
-  MAX_TOOL_CALLS = 5
+
+  # A question answered properly often costs several reads — what is open, what
+  # that projekt is about, what came of it — and the hand-off spends one more.
+  # Five was tight enough that a thorough answer hit the ceiling and raised
+  # instead of replying; this is a runaway guard, not a budget.
+  MAX_TOOL_CALLS = 10
 
   BLANK_MESSAGE_ERROR = "nothing to route".freeze
   EMPTY_ANSWER_ERROR = "assistant produced no reply".freeze
@@ -40,7 +45,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     ServiceResult.success(
       outcome: outcome,
       decision: hand_to_flow.decision,
-      correction: hand_to_flow.correction
+      correction: hand_to_flow.correction,
+      option_id: hand_to_flow.option_id
     )
   rescue StandardError => e
     report(e)
@@ -142,7 +148,31 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::AskContinueOrRestart.new(conversation: @conversation)
     end
 
+    # The tools that act on a Consul account, left out for a number that has
+    # none. Everything else — every read, the menus, browsing, and submitting
+    # to a phase that allows guests — is offered to linked and unlinked alike:
+    # before that, an unlinked number reached no assistant at all, so the whole
+    # of a first contact was answered by the deterministic flow.
+    #
+    # Opting out stays available to a guest on purpose. It is the one request
+    # that must be answerable by anyone the bot has ever messaged.
+    ACCOUNT_TOOLS = [
+      ::Ai::Tools::WhatsappAiAssistant::MyFollowedProjekts,
+      ::Ai::Tools::WhatsappAiAssistant::OfferProposalSupport,
+      ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
+      ::Ai::Tools::WhatsappAiAssistant::CommentOnProposal,
+      ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
+      ::Ai::Tools::WhatsappAiAssistant::OpenNotificationSettings,
+      ::Ai::Tools::WhatsappAiAssistant::StartUnlink
+    ].freeze
+
     def base_tools
+      return offerable_tools - ACCOUNT_TOOLS if @conversation.whatsapp_account.user_id.blank?
+
+      offerable_tools
+    end
+
+    def offerable_tools
       [
         ::Ai::Tools::WhatsappAiAssistant::ListOpenPhases,
         ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
@@ -173,7 +203,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::ShowMainMenu,
         ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,
         ::Ai::Tools::WhatsappAiAssistant::RefuseOutOfScope,
-        ::Ai::Tools::WhatsappAiAssistant::ReplyWithButtons
+        ::Ai::Tools::WhatsappAiAssistant::ReplyWithActions
       ]
     end
 

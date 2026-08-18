@@ -13,6 +13,11 @@ class Ai::Tools::WhatsappAiAssistant::StartPhaseFlow < Ai::Tools::WhatsappAiAssi
 
     return unknown_phase_error if projekt_phase.blank?
 
+    # Whatever was already open is set aside rather than replaced: entering a
+    # flow rewrites the whole context, so a citizen who changes projekt
+    # mid-submission used to lose the draft they had.
+    park_open_flow!
+
     # Refuses on its own and resets the flow when the citizen may not take
     # part, so the permission rule stays in one place.
     ::Whatsapp::Flows::StartPhaseFlowService.call(

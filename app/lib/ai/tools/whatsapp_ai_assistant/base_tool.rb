@@ -22,6 +22,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       account.user
     end
 
+    # Set the open submission aside rather than discard it. Called by the tools
+    # that take the citizen somewhere else — the menu, a new submission — where
+    # the alternative used to be refusing them ("you are in the middle of
+    # something") or silently dropping what they had written. Parked, the way
+    # back is one `resume_parked` pill, which the assistant is told about in its
+    # state.
+    #
+    # A no-op when there is nothing open, so a caller never has to ask first.
+    def park_open_flow!
+      conversation.park_flow!
+    end
+
     # Checked one phase at a time rather than by searching the ten-row display
     # list: an eleventh open phase is still open, and a model that guessed an id
     # is stopped by the eligibility rule itself, not by the list's length.

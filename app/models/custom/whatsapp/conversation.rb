@@ -210,6 +210,75 @@ class Whatsapp::Conversation < ApplicationRecord
     update!(cleared_flow_attributes.merge(step: Step::IDLE))
   end
 
+  # Set aside rather than thrown away. A citizen part-way through a submission
+  # who asks something else — or who was put into a flow the assistant picked
+  # wrongly — used to have two ways out, and both discarded everything they had
+  # written: cancelling, or the greeting's reset. Parking keeps the step, the
+  # phase, the draft and the whole context under one key, so the side trip costs
+  # nothing and the way back is one tap.
+  #
+  # Only one parked flow at a time, and a second park overwrites it: what the
+  # citizen would return to is what they were last doing, and a stack of
+  # abandoned submissions is not something a chat can offer them a choice
+  # between.
+  def park_flow!
+    return if idle? && draft_resource.blank?
+
+    parked = {
+      "step" => step,
+      "projekt_phase_id" => projekt_phase_id,
+      "draft_resource_type" => draft_resource_type,
+      "draft_resource_id" => draft_resource_id,
+      "context" => context.except("parked_flow", "ai_chat", "offered_options"),
+      "parked_at" => Time.current.iso8601
+    }
+
+    update!(
+      cleared_flow_attributes.merge(
+        step: Step::IDLE,
+        projekt_phase_id: nil,
+        context: context.slice("ai_chat", "offered_options").merge("parked_flow" => parked)
+      )
+    )
+  end
+
+  def parked_flow
+    context["parked_flow"]
+  end
+
+  def parked_flow?
+    parked_flow.present?
+  end
+
+  # Back to the message the side trip interrupted, with everything it collected
+  # intact. The staleness clock is re-armed rather than restored: the citizen is
+  # here now, and the resume question exists for a flow nobody has touched for
+  # hours, not for one they just came back to.
+  def resume_parked_flow!
+    parked = parked_flow
+
+    return if parked.blank?
+
+    update!(
+      step: parked["step"],
+      projekt_phase_id: parked["projekt_phase_id"],
+      draft_resource_type: parked["draft_resource_type"],
+      draft_resource_id: parked["draft_resource_id"],
+      context: parked
+        .fetch("context", {})
+        .merge(context.slice("ai_chat", "offered_options"))
+        .merge("flow_started_at" => Time.current.iso8601)
+    )
+
+    parked["step"]
+  end
+
+  def discard_parked_flow!
+    return if !parked_flow?
+
+    merge_context!(parked_flow: nil)
+  end
+
   # Stamped here rather than by the caller so every entry into a submission —
   # a QR scan, a tapped pill, an assistant tool — shares one clock for the
   # staleness question.
@@ -218,7 +287,7 @@ class Whatsapp::Conversation < ApplicationRecord
       cleared_flow_attributes.merge(
         step: Step::AWAITING_IDEA,
         projekt_phase: projekt_phase,
-        context: { "flow_started_at" => Time.current.iso8601 }
+        context: context.slice("parked_flow").merge("flow_started_at" => Time.current.iso8601)
       )
     )
   end
@@ -532,6 +601,34 @@ class Whatsapp::Conversation < ApplicationRecord
     support_proposal_id || comment_proposal_id
   end
 
+  # The tappable options the bot's last interactive message offered, as
+  # {"id" => pill id, "label" => what the citizen reads}. Written by
+  # Whatsapp::Send for every buttons/list send, so a step never has to declare
+  # its own options a second time and a new step is answerable in words the day
+  # it is written.
+  #
+  # Read for two things: the assistant is told what is on offer, and the id it
+  # names back is checked against this list before anything acts on it. That
+  # check is what makes the freedom safe — the model chooses among options the
+  # bot really sent, and cannot mint one.
+  #
+  # Overwritten rather than appended: the citizen answers the question in front
+  # of them, and a pill from four messages ago is a tap they can still make
+  # (FlowActions re-resolves it) but not an answer the assistant may infer.
+  def offered_options
+    Array(context["offered_options"])
+  end
+
+  def offered_option_ids
+    offered_options.filter_map { |option| option["id"] }
+  end
+
+  def remember_offered_options!(options)
+    return if options.blank? && context["offered_options"].blank?
+
+    merge_context!(offered_options: options)
+  end
+
   # The ruby_llm message history. Written and read only through
   # Whatsapp::AiAssistant::ChatState, which owns the message shape, the
   # trimming, and the replay.
@@ -552,7 +649,11 @@ class Whatsapp::Conversation < ApplicationRecord
       update!(context: context.merge(attributes.stringify_keys))
     end
 
+    # A parked submission outlives every one of the three wipes. It has to: the
+    # menu that offers it back is sent by MainMenuService.greeting, whose first
+    # act is reset_flow! — so a context wiped clean here would discard the flow
+    # one line before the row pointing at it was built.
     def cleared_flow_attributes
-      { draft_resource: nil, context: {}}
+      { draft_resource: nil, context: context.slice("parked_flow") }
     end
 end

@@ -31,8 +31,9 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
   # this question and answered again with a greeting is a loop the citizen
   # cannot leave by writing — AWAITING_CONTINUE_DECISION is itself a
   # fresh-start step, so the same reading is available on the question.
-  # Giving up cancels: the submission is what the greetings are not carrying
-  # on with, and CancelService leaves one button back to the menu.
+  # Giving up cancels rather than starting over: nobody chose to begin
+  # anything, the bot ran out of askings, and CancelService leaves one button
+  # back to the menu.
   def ask
     return abandon if @conversation.choice_reasks >= MAX_REASKS
 
@@ -65,12 +66,14 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
     re_send_prompt(interrupted)
   end
 
-  # Exactly what the citizen asked for: reset_flow! drops the pending draft and
-  # CancelService's one button is the way to the menu. The main menu is not
-  # sent unasked on top of it — a message and a tap is what starting over is
-  # worth, and the same service answers the typed "abbrechen".
+  # Starting over is a beginning, so the reply is the menu itself rather than
+  # the cancellation message and its one button back to it: a citizen who has
+  # just asked to begin should not have to read "abgebrochen" and tap again to
+  # get anywhere. The pending draft still goes — MainMenuService.start_over
+  # resets the flow — and the typed "abbrechen" is still CancelService, which
+  # is the ending this is not.
   def restart
-    abandon
+    Whatsapp::Flows::MainMenuService.start_over(conversation: @conversation)
   end
 
   private
@@ -104,47 +107,10 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
       Whatsapp::Flows::CancelService.call(conversation: @conversation)
     end
 
-    # Each step's own prompt, by the entry point that re-asks rather than the
-    # one that first arrives at the step: AskRevisionService.re_ask leaves the
-    # origin the draft card recorded alone, ProposalImageService.ask_upload
-    # asks for the photo instead of re-offering the choice the citizen already
-    # made, and AskLocationService.re_ask puts the pin question without
-    # spending the one miss #remind would.
-    #
-    # AWAITING_PHASE_CHOICE is absent because nothing assigns that step, and
-    # AWAITING_CONTINUE_DECISION cannot appear — the question records the step
-    # it interrupted, never its own. Anything unmapped is the menu, which is
-    # also where a comment whose proposal has since gone lands.
+    # The step's own question, from the one map three return paths share (see
+    # StepPromptService). AWAITING_CONTINUE_DECISION cannot appear — the
+    # question records the step it interrupted, never its own.
     def re_send_prompt(interrupted)
-      steps = Whatsapp::Conversation::Step
-
-      case interrupted
-      when steps::AWAITING_IDEA
-        Whatsapp::Flows::AskIdeaService.call(conversation: @conversation)
-      when steps::AWAITING_COMMENT
-        re_send_comment_prompt
-      when steps::AWAITING_IMAGE_UPLOAD
-        Whatsapp::Flows::ProposalImageService.ask_upload(conversation: @conversation)
-      when steps::AWAITING_REVISION
-        Whatsapp::Flows::AskRevisionService.re_ask(conversation: @conversation)
-      when steps::AWAITING_LOCATION
-        Whatsapp::Flows::AskLocationService.re_ask(conversation: @conversation)
-      when steps::AWAITING_PARTICIPATION_PROJEKT
-        Whatsapp::Flows::ProjektParticipationService.ask_projekt(conversation: @conversation)
-      else
-        Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation)
-      end
-    end
-
-    # The comment question needs the record it is about, and it can be gone by
-    # now — deleted, or its projekt closed. The menu is the honest answer then:
-    # asking for a comment again would invite one that nothing would accept.
-    def re_send_comment_prompt
-      proposal = Proposal.find_by(id: @conversation.comment_proposal_id)
-
-      return Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation) if
-        proposal.blank?
-
-      Whatsapp::Flows::CommentService.prompt(conversation: @conversation, proposal: proposal)
+      Whatsapp::Flows::StepPromptService.call(conversation: @conversation, step: interrupted)
     end
 end

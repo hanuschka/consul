@@ -10,7 +10,12 @@ class Whatsapp::Flows::CancelService < Whatsapp::Flows::BaseService
   # Reached only while a flow is open. The same word typed at any other moment
   # is the section E opt-out, and the two are separated in the gate chain rather
   # than here — see Inbound::ProcessMessageService.
+  # A submission set aside for a side trip is thrown away here too. Cancelling
+  # is the citizen saying they are done writing, and leaving the parked one
+  # behind would offer them a draft back a message after they asked to be rid of
+  # one — reset_flow! deliberately preserves it, so this is where it goes.
   def call
+    @conversation.discard_parked_flow!
     @conversation.reset_flow!
 
     Whatsapp::Send.buttons(

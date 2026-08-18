@@ -57,6 +57,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     conversation.update!(last_inbound_at: latest_inbound_at)
 
+    open_message_context
+
     consume_pending_question
     announce_unreadable_voice_note
 
@@ -86,6 +88,22 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   end
 
   private
+
+    # What the bot's own copy is written for. Everything below that says a
+    # sentence reaches it through Whatsapp.phrase, which rewrites the locale
+    # line for the message being answered when a context is open — so it is
+    # opened once here, for the whole turn, rather than passed down through
+    # every flow service.
+    #
+    # Set before any gate can reply, including the first-contact greeting: a
+    # citizen's opening message is exactly the one worth answering in its own
+    # terms. Nothing outside this path opens one, which is what keeps the
+    # broadcast jobs on their approved wording.
+    def open_message_context
+      Current.whatsapp_message_context = Whatsapp::AiAssistant::MessageContext.new(
+        conversation: conversation, inbound_text: reading.text
+      )
+    end
 
     # The one model reading of this message, shared between the channel gate,
     # the router gate, and the step dispatch (see AssistantRouting).
@@ -165,10 +183,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # The channel-level requests — leaving the channel, coming back to it,
     # abandoning what is in progress — decided by this message's one model
-    # reading. A linked, subscribed citizen's one reading is the router's,
-    # which carries stop_messages and abort_submission as tools, so the
-    # classifier is never asked as well; it answers for everyone the router
-    # does not serve.
+    # reading. Anyone still on the channel is read by the router, which carries
+    # stop_messages and abort_submission as tools, so the classifier is never
+    # asked as well; it answers for an opted-out number, whose one open
+    # question is whether it is opting back in.
     #
     # Never for a tapped pill, whose label the citizen did not write: those are
     # routed by their ids two gates below. A verdict the account's state rules

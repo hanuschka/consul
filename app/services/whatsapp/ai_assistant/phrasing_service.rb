@@ -72,6 +72,7 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.projekt_contributions.more
     whatsapp.bot.projekt_contributions.empty
     whatsapp.bot.main_menu.onboarding_body
+    whatsapp.bot.main_menu.start_over_body
     whatsapp.bot.participation.choose_projekt
     whatsapp.bot.participation.actions_body
     whatsapp.bot.participation.closed
@@ -231,7 +232,43 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
   # Every other failure — AI switched off, the key not on the list, an
   # unreachable provider, a reply that came back empty — lands on the same
   # fallback, which is the sentence the variants were generated from.
+  # The lines that are not messages of their own: fragments joined into one body
+  # by the caller, a recap line under a question, a reason under an intro. A
+  # live rewrite reads them without their neighbours and answers the citizen
+  # twice or contradicts the line above, so they keep the pre-generated wording
+  # — which was generated the same way, but as a set that fits together.
+  #
+  # `compliance.disclosure` is here for a different reason: it is the sentence
+  # that tells the citizen they are talking to an AI, and what that says must
+  # not itself be improvised.
+  LITERAL_KEYS = %w[
+    whatsapp.bot.free_text_hint
+    whatsapp.bot.compliance.disclosure
+    whatsapp.bot.proposal.category_line
+    whatsapp.bot.proposal.sentiment_line
+    whatsapp.bot.proposal.evaluation_line
+    whatsapp.bot.proposal.resume_projekt
+    whatsapp.bot.proposal.resume_draft
+    whatsapp.bot.proposal.resume_recap_idea
+    whatsapp.bot.contributions.intro
+    whatsapp.bot.contributions.more
+    whatsapp.bot.projekt_contributions.intro
+    whatsapp.bot.projekt_contributions.more
+    whatsapp.bot.discovery.more
+    whatsapp.bot.discovery.public_intro
+    whatsapp.bot.refused_content.retry_hint
+  ].freeze
+
+  # Three answers, in falling order of how much this conversation shaped them:
+  # a line written for the message being answered right now, one of the wordings
+  # generated for this portal's address form, or the locale file. Each step down
+  # is a fallback, so nothing here can leave the bot without something to send.
   def call
+    return fixed_text if !prose?
+
+    live_text = live_rewrite
+
+    return live_text if live_text.present?
     return fixed_text if !phrasable?
 
     variant = variants.sample
@@ -348,6 +385,26 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
       I18n.t(@key, **@interpolations)
     end
 
+    # The line written for this exact message, or nil — which is every case the
+    # rewriter will not vouch for, and every case outside the inbound path,
+    # where there is no citizen mid-sentence to write for.
+    #
+    # The fixed sentence is what gets rewritten, not a generated variant: the
+    # variants exist to keep repeated copy from reading as a form, and a
+    # paraphrase of a paraphrase drifts further from the meaning the locale file
+    # is the record of.
+    def live_rewrite
+      return if LITERAL_KEYS.include?(@key)
+
+      context = Current.whatsapp_message_context
+
+      return if context.blank?
+
+      Whatsapp::AiAssistant::WriteMessageService.call(
+        fixed_text: fixed_text, context: context
+      )
+    end
+
     # A variant carries the same placeholders its original did — the generation
     # drops any that does not — so it is rendered with the arguments the caller
     # passed exactly as `I18n.t` would have.
@@ -355,11 +412,20 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
       I18n.interpolate(variant, @interpolations)
     end
 
-    # Deliberately without the availability check: that one reads a credential
-    # out of the database, and the request path never generates anything, so
-    # the question belongs in the job. Both checks here are free.
+    # Whether this key is one of the bot's sentences at all, as opposed to a
+    # button label, a layout line or the consent declaration. It gates both the
+    # live rewrite and the stored variants, because what may be reworded is a
+    # property of the line rather than of who is doing the rewording.
+    def prose?
+      PHRASED_KEYS.include?(@key)
+    end
+
+    # The stored-variant path only. Deliberately without the availability
+    # check: that one reads a credential out of the database, and the request
+    # path never generates anything, so the question belongs in the job. Both
+    # checks here are free.
     def phrasable?
-      PHRASED_KEYS.include?(@key) && cacheable?
+      prose? && cacheable?
     end
 
     # Without a cache this is a completion on every message the bot sends,

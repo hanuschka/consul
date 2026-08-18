@@ -170,6 +170,10 @@ de:
         support: 👍 Unterstützen
         help: Hilfe
         main_menu: Hauptmenü
+        participate: Mitmachen
+        notifications_open: Benachrichtigungen
+        unlink_start: Konto trennen
+        terms_decline: Nicht einverstanden
         back_to_menu: Zurück zum Menü
         choose_menu: Auswählen
         choose_projekt: Projekt wählen
@@ -187,7 +191,11 @@ de:
         submit_anyway: Eigenen Beitrag
       main_menu:
         onboarding_body: 'Womit möchten Sie starten?'
+        start_over_body: 'Alles klar, wir fangen neu an. Was möchten Sie tun?'
         rows:
+          resume_parked:
+            title: Weiter beim Beitrag
+            description: Zum begonnenen Beitrag zurückkehren
           projekts:
             title: Projekte durchsuchen
             description: Alle Beteiligungsprojekte ansehen

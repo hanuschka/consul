@@ -53,11 +53,19 @@ module Whatsapp::FlowActions
 
   NOTIFICATION_ACTIONS = %i[notify_toggle notifications_done].freeze
 
-  # The rows of the help list and the button every dead end now ends in. They
+  # The rows of the main menu and the button every dead end now ends in. They
   # are their own group because none of them does anything on its own: each
   # only puts the citizen where typing the same words would have.
+  #
+  # support_prompt and comment_prompt are no longer menu rows — the menu offers
+  # `participate` instead, and the project chosen there is what decides which
+  # of the three appears. They stay registered because the assistant still
+  # reaches them from free text, and because a pill sent before this change is
+  # still sitting in someone's chat history.
   MENU_ACTIONS = %i[
     main_menu
+    participate
+    participate_projekt
     support_prompt
     comment_prompt
     notifications_open
@@ -98,16 +106,15 @@ module Whatsapp::FlowActions
     { id: id_for(action: action, param: param), title: I18n.t(label_key) }
   end
 
-  # The three things a citizen can start from nothing. Defined once because
-  # three separate messages now offer them — the greeting, the cancellation and
-  # the confirmation after publishing — and a set that drifts between them
-  # reads as three different menus.
-  def main_menu_buttons
-    [
-      button(action: :submit_proposal, label_key: "whatsapp.bot.buttons.submit_proposal"),
-      button(action: :discover, label_key: "whatsapp.bot.buttons.show_projekts"),
-      button(action: :my_contributions, label_key: "whatsapp.bot.buttons.my_contributions")
-    ]
+  # One selectable row, for the menus that are lists rather than button sets.
+  # A list row carries a description a button has no room for, which is what
+  # lets the menu name four capabilities without a sentence above each.
+  def row(action:, title_key:, description_key:, param: nil)
+    {
+      id: id_for(action: action, param: param),
+      title: I18n.t(title_key),
+      description: I18n.t(description_key)
+    }
   end
 
   # The pair every "this cannot go in as it stands" message offers. Two of them
@@ -168,13 +175,14 @@ module Whatsapp::FlowActions
     submit_key
   end
 
-  # The pair every "shall we link your account" message offers, whether it is
-  # the first contact or a return visit. One definition so the two cannot drift
-  # into offering different words for the same choice.
-  def link_decision_buttons
+  # The pair every "this one needs an account" message offers. Declining is the
+  # menu rather than a "later": the citizen asked for something specific and
+  # the answer to a refused account is the rest of what they can still do, not
+  # the end of the conversation.
+  def link_request_buttons
     [
       button(action: :link_yes, label_key: "whatsapp.bot.buttons.link_yes"),
-      button(action: :link_later, label_key: "whatsapp.bot.buttons.link_later")
+      button(action: :main_menu, label_key: "whatsapp.bot.buttons.back_to_menu")
     ]
   end
 end

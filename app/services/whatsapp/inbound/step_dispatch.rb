@@ -4,6 +4,13 @@ class Whatsapp::Inbound::StepDispatch
   # reading — it never asks a model itself. The assistant's own button
   # replies leave the step at idle, which is why idle falls through to the
   # main menu.
+  #
+  # AWAITING_LINK is answered here rather than by an unlinked gate above.
+  # There is no such gate any more, and without this branch a citizen waiting
+  # on their login link would be answered with the menu instead of the link
+  # they are waiting for. AWAITING_LINK_DECISION deliberately has no branch:
+  # a citizen who writes instead of tapping has declined, and the menu is
+  # exactly what declining should land on.
 
   # The model's own step map, aliased so every `when` below is a constant
   # reference: a typo is a NameError at load rather than a case branch that
@@ -18,6 +25,10 @@ class Whatsapp::Inbound::StepDispatch
 
   def call
     case conversation.step
+    when Step::AWAITING_LINK
+      Whatsapp::Flows::SendLoginLinkService.call(conversation:)
+    when Step::AWAITING_PARTICIPATION_PROJEKT
+      Whatsapp::Flows::ProjektParticipationService.ask_projekt(conversation:)
     when Step::AWAITING_IDEA
       Whatsapp::Flows::AskIdeaService.handle_answer(
         conversation:, text: inbound_text, inbound_message_id:

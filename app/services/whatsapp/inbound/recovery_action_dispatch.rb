@@ -17,7 +17,7 @@ class Whatsapp::Inbound::RecoveryActionDispatch
     return false if action.blank?
 
     case action
-    when :help then Whatsapp::Flows::HelpService.call(conversation: @conversation)
+    when :help then Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation)
     when :cancel then Whatsapp::Flows::CancelService.call(conversation: @conversation)
     when :retry then retry_last_action
     end
@@ -56,6 +56,6 @@ class Whatsapp::Inbound::RecoveryActionDispatch
         )
       end
 
-      Whatsapp::Flows::HelpService.call(conversation: @conversation)
+      Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation)
     end
 end

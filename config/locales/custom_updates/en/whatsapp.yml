@@ -134,7 +134,11 @@ en:
         support: 👍 Support
         help: Help
         main_menu: Main menu
-        choose_help: Choose
+        back_to_menu: Back to menu
+        choose_menu: Choose
+        choose_projekt: Choose project
+        support_prompt: Support one
+        comment_prompt: Comment
         open_page: Open page
         image_upload: Upload a photo
         image_generate: Create one for me
@@ -145,21 +149,17 @@ en:
         submit_final: Submit it now
         submit_continue: Continue to place
         submit_anyway: Own contribution
-      help_menu:
-        body: 'Happy to help. Choose what I can help you with:'
+      main_menu:
+        onboarding_body: 'What would you like to start with?'
         rows:
-          submit:
-            description: Contribute an idea to a running project
-          support:
-            title: Support one
-            description: Support an existing contribution
-          comment:
-            title: Comment
-            description: Add a comment to a contribution
           projekts:
             title: Browse projects
-            description: See the running participation projects
+            description: See all participation projects
+          participate:
+            title: Take part in a project
+            description: Submit, support or comment on a contribution
           contributions:
+            title: My contributions
             description: See what you have submitted
           notifications:
             title: Notifications
@@ -167,9 +167,13 @@ en:
           unlink:
             title: Unlink account
             description: Release the link to your account
-          link:
-            title: Link account
-            description: Connect this number to your account
+      participation:
+        choose_projekt: 'Which project would you like to take part in?'
+        row_description: Participation open
+        actions_body: '"%{projekt}" — what would you like to do there?'
+        closed: >-
+          Taking part in "%{projekt}" isn't possible right now — participation has either ended or
+          has not started yet. You can still look at the project here: %{url}
         prompts:
           support: >-
             Which contribution would you like to support? Send me its title or a few words from
@@ -177,6 +181,17 @@ en:
           comment: >-
             Which contribution would you like to comment on? Send me its title or a few words
             from it.
+      link_request:
+        contributions: >-
+          To see your own contributions, you need to link this number to your account.
+        notifications: >-
+          To change your notification settings, you need to link this number to your account.
+        participation: >-
+          For this step you need to link this number to your account.
+        support: >-
+          To support a contribution, you need to link this number to your account.
+        comment: >-
+          To write a comment, you need to link this number to your account.
       refused_content:
         intro: I'm afraid I cannot submit that.
         retry_hint: >-
@@ -240,12 +255,9 @@ en:
         disclosure: >-
           👋 Welcome to %{portal_name}! I'm an AI bot that helps you submit contributions, support them,
           and stay up to date.
-        link_question: >-
-          Would you like to link your account? Then you can participate directly here and get personal
-          notifications.
         consent: >-
-          By tapping "Yes" you consent to the processing of your phone number under our privacy policy:
-          %{privacy_url}
+          By using this chat you consent to the processing of your phone number under our privacy
+          policy: %{privacy_url}
         login_prompt: 'Tap below to log in:'
         login_prompt_with_url: 'Tap the link to log in: %{url}'
         linked: >-
@@ -267,9 +279,6 @@ en:
         unlinked: >-
           ✅ Account unlinked. This number is no longer tied to an account. The number and the chat
           history are kept for the usual retention period. You can link again at any time.
-        welcome_back: 👋 Welcome back! This number isn't linked yet — would you like to link it (again)?
-        welcome_back_guest_hint: >-
-          At least one project also accepts submissions without an account.
       discovery:
         body: These are the projects you can contribute to right now. Which one would you like?
         guest_body: >-

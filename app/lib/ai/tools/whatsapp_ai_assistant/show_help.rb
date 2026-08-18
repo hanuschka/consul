@@ -4,7 +4,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowHelp < Ai::Tools::WhatsappAiAssistant:
               "the message itself — do not write your own list of capabilities."
 
   def execute
-    ::Whatsapp::Flows::HelpService.call(conversation: conversation)
+    ::Whatsapp::Flows::MainMenuService.greeting(conversation: conversation)
 
     halt("Sent the help overview.")
   end

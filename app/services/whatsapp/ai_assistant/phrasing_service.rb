@@ -70,9 +70,17 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.projekt_contributions.intro
     whatsapp.bot.projekt_contributions.more
     whatsapp.bot.projekt_contributions.empty
-    whatsapp.bot.help_menu.body
-    whatsapp.bot.help_menu.prompts.support
-    whatsapp.bot.help_menu.prompts.comment
+    whatsapp.bot.main_menu.onboarding_body
+    whatsapp.bot.participation.choose_projekt
+    whatsapp.bot.participation.actions_body
+    whatsapp.bot.participation.closed
+    whatsapp.bot.participation.prompts.support
+    whatsapp.bot.participation.prompts.comment
+    whatsapp.bot.link_request.contributions
+    whatsapp.bot.link_request.notifications
+    whatsapp.bot.link_request.participation
+    whatsapp.bot.link_request.support
+    whatsapp.bot.link_request.comment
     whatsapp.bot.refused_content.intro
     whatsapp.bot.refused_content.retry_hint
     whatsapp.bot.refused_content.reasons.generic
@@ -106,7 +114,6 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.refused.only_specific_ages
     whatsapp.bot.refused.only_specific_individual_group_values
     whatsapp.bot.onboarding.disclosure
-    whatsapp.bot.onboarding.link_question
     whatsapp.bot.onboarding.login_prompt
     whatsapp.bot.onboarding.login_prompt_with_url
     whatsapp.bot.onboarding.linked
@@ -118,8 +125,6 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.onboarding.number_taken
     whatsapp.bot.onboarding.unlink_confirm
     whatsapp.bot.onboarding.unlinked
-    whatsapp.bot.onboarding.welcome_back
-    whatsapp.bot.onboarding.welcome_back_guest_hint
     whatsapp.bot.discovery.body
     whatsapp.bot.discovery.guest_body
     whatsapp.bot.discovery.phase_body

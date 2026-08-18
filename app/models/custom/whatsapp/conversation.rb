@@ -32,6 +32,7 @@ class Whatsapp::Conversation < ApplicationRecord
     AWAITING_LINK_DECISION = "awaiting_link_decision".freeze
     AWAITING_UNLINK_CONFIRMATION = "awaiting_unlink_confirmation".freeze
     AWAITING_PHASE_CHOICE = "awaiting_phase_choice".freeze
+    AWAITING_PARTICIPATION_PROJEKT = "awaiting_participation_projekt".freeze
     AWAITING_IDEA = "awaiting_idea".freeze
     AWAITING_DUPLICATE_DECISION = "awaiting_duplicate_decision".freeze
     AWAITING_CATEGORY = "awaiting_category".freeze
@@ -55,6 +56,7 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_link_decision: Step::AWAITING_LINK_DECISION,
     awaiting_unlink_confirmation: Step::AWAITING_UNLINK_CONFIRMATION,
     awaiting_phase_choice: Step::AWAITING_PHASE_CHOICE,
+    awaiting_participation_projekt: Step::AWAITING_PARTICIPATION_PROJEKT,
     awaiting_idea: Step::AWAITING_IDEA,
     awaiting_duplicate_decision: Step::AWAITING_DUPLICATE_DECISION,
     awaiting_category: Step::AWAITING_CATEGORY,

@@ -85,10 +85,11 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
     end
 
     def send_empty
-      Whatsapp::Send.buttons(
+      Whatsapp::Send.text(
         account: account,
-        body: Whatsapp.phrase("whatsapp.bot.contributions.empty"),
-        buttons: Whatsapp::FlowActions.main_menu_buttons
+        body: Whatsapp.phrase("whatsapp.bot.contributions.empty")
       )
+
+      Whatsapp::Flows::MainMenuService.follow_up(conversation: @conversation)
     end
 end

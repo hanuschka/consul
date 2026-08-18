@@ -686,6 +686,14 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
+        // A refused pick (an image that cannot be a cover image, an index from a
+        // tab left open while the choice moved) comes back as an error and no
+        // messages. Saying so beats a click that appears to do nothing at all.
+        if (data && data.error) {
+          this.showImportError(data.error)
+          return
+        }
+
         this.renderImmediateMessages(data)
         this.renderTitleImageSummary(data)
       })

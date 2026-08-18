@@ -190,14 +190,6 @@ class MapLocation < ApplicationRecord
         self.features          ||= mappable.projekt.map_location.features
         self.rendering_library ||= mappable.projekt.map_location.rendering_library
 
-      elsif mappable.is_a?(Projekt) && mappable.parent.present?
-        self.latitude          ||= mappable.parent.map_location.latitude
-        self.longitude         ||= mappable.parent.map_location.longitude
-        self.zoom              ||= mappable.parent.map_location.zoom
-        self.altitude          ||= mappable.parent.map_location.altitude
-        self.features          ||= mappable.parent.map_location.features
-        self.rendering_library ||= mappable.parent.map_location.rendering_library
-
       elsif mappable.is_a?(Projekt) || mappable.is_a?(RegisteredAddress::District)
         self.latitude          ||= MapLocation.default.latitude
         self.longitude         ||= MapLocation.default.longitude

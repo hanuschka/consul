@@ -2,7 +2,7 @@
 <% if message.custom_command == ProjektImport::TITLE_IMAGE_PICKER_COMMAND %>
   <%= render "adm/projekts/imports/chats/title_image_picker",
         message: message,
-        projekt_import: @projekt_import %>
+        projekt_import: projekt_import %>
 <% else %>
   <%= render "adm/projekts/imports/chats/text_message", message: message, user: user %>
 <% end %>

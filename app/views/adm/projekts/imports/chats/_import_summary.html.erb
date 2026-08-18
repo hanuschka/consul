@@ -7,7 +7,7 @@
         <%= image_tag cover_url, alt: "" %>
       <% else %>
         <span class="material-symbols-outlined" aria-hidden="true">
-          <%= import_title_image_preview_icon(projekt_import) %>
+          <%= import_title_image_icon(projekt_import.title_image_mode) %>
         </span>
       <% end %>
     </span>

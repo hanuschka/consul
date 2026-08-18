@@ -12,8 +12,6 @@ resources :projekts, only: [:index, :show] do
   end
 end
 
-post "update_selected_parent_projekt", to: "projekts#update_selected_parent_projekt"
-
 get :events, to: "projekt_events#index", as: :projekt_events
 
 resources :projekt_events, only: [] do

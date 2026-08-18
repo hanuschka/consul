@@ -829,17 +829,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @assistant_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
-    if InternalApiClient.active_dt?
-      @ai_assistant_config_response =
-        DtApi::Client.new(use_cache: true)
-          .ai_assistant_configs
-          .get(
-            codename: @assistant_codename,
-            consul_projekt_phase_id: @projekt_phase.id
-          )
-
-      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
-    end
+    load_ai_assistant_config if InternalApiClient.active_dt?
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -928,6 +918,23 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   end
 
   private
+
+    # DtApi::Client raises CacheMissError when the DT service is unreachable
+    # and no cached response exists yet. The page still renders the phase's
+    # local voice-assistant setting, so degrade to an alert instead of a 500.
+    def load_ai_assistant_config
+      @ai_assistant_config_response =
+        DtApi::Client.new(use_cache: true)
+          .ai_assistant_configs
+          .get(
+            codename: @assistant_codename,
+            consul_projekt_phase_id: @projekt_phase.id
+          )
+
+      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
+    rescue DtApi::CacheMissError
+      @dt_api_unavailable = true
+    end
 
     def moderation_filter_options
       ProposalsQuery::MODERATION_STATUSES.map do |status|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_17_072546) do
+ActiveRecord::Schema.define(version: 2026_08_17_135136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2713,7 +2713,10 @@ ActiveRecord::Schema.define(version: 2026_08_17_072546) do
     t.boolean "show_in_sidebar_filter", default: true, null: false
     t.datetime "whatsapp_broadcast_sent_at"
     t.string "whatsapp_broadcast_slug"
+    t.string "copy_status"
+    t.bigint "copied_from_projekt_id"
     t.index ["activated"], name: "index_projekts_on_activated"
+    t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"

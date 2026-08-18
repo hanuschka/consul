@@ -549,6 +549,12 @@ de:
         service_api_token: Service-API-Token
     errors:
       models:
+        projekt:
+          attributes:
+            parent_id:
+              cannot_be_self: "Ein Projekt kann nicht sich selbst übergeordnet sein"
+              cannot_have_children: "Ein Projekt mit untergeordneten Projekten kann keinem übergeordneten Projekt zugeordnet werden"
+              must_be_top_level: "Als übergeordnetes Projekt kann nur ein Projekt der obersten Ebene ausgewählt werden"
         user:
           attributes:
             email:

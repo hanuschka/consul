@@ -36,7 +36,7 @@ class ProjektImports::SelectTitleImageService < ApplicationService
     candidate = projekt_import.source_image_candidates[index.to_i]
     return unknown_image_failure if candidate.blank?
 
-    if !candidate.eligible
+    if !candidate.eligible?
       return ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.title_image_ineligible"))
     end
 

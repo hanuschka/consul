@@ -12,7 +12,7 @@ module ProjektImports::TitleImageOptions
     end
 
     def selectable?
-      return candidate.eligible if document?
+      return candidate.eligible? if document?
 
       true
     end

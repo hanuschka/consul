@@ -81,8 +81,12 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       attached_documents: attached_documents
     )
 
-    picked_option = title_image_option_from(user_message, attached_documents)
-    return if picked_option.present? && apply_title_image_reply(user_message, picked_option)
+    reply = title_image_reply_for(user_message.content, attached_documents)
+
+    if reply.present?
+      render_title_image_reply(user_message, reply)
+      return
+    end
 
     assistant_message = create_assistant_placeholder(user_message)
     ProjektImports::ChatMessageJob.perform_later(user_message.id)
@@ -245,40 +249,44 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     end
   end
 
-  # A reply of nothing but a number picks that option out of the picker message
-  # instead of being sent to the AI, which would answer about it in prose and
-  # change nothing. Only while a picker exists, and never together with an
-  # attachment — that is a document to analyse, not an answer.
-  def title_image_option_from(user_message, attached_documents)
+  # A message of nothing but a number picks that option out of the picker instead
+  # of being sent to the AI, which would answer about it in prose and change
+  # nothing. Only while a picker exists, and never together with an attachment —
+  # that is a document to analyse, not an answer.
+  #
+  # Returns the assistant's reply text, or nil when the message is not a pick and
+  # belongs to the model. Deciding and rendering are kept apart so the action has
+  # one render per path; returning a rendered/not-rendered boolean instead made a
+  # forgotten return value a double render.
+  def title_image_reply_for(content, attached_documents)
     return nil if attached_documents.present?
     return nil if title_image_picker_message.blank?
 
-    ProjektImports::TitleImageOptions.from_message(@projekt_import, user_message.content)
-  end
+    option = ProjektImports::TitleImageOptions.from_message(@projekt_import, content)
+    return nil if option.blank?
 
-  # Returns false when the number could not be turned into a choice at all, so the
-  # message falls through to the assistant. A number that names a picture which
-  # cannot be a title image is answered here instead, with the reason — sending it
-  # to the model would get prose about an image it knows nothing about.
-  def apply_title_image_reply(user_message, option)
-    if !option.selectable?
-      return reply_with_title_image_message(
-        user_message,
-        helpers.import_title_image_ineligible_hint(option.candidate)
-      )
-    end
+    # A number naming a picture that cannot be a title image is answered here with
+    # the reason: sending it to the model would get prose about an image it knows
+    # nothing about.
+    return helpers.import_title_image_ineligible_hint(option.candidate) if !option.selectable?
 
     result = ProjektImports::SelectTitleImageService.call(
       projekt_import: @projekt_import,
       mode: option.mode,
       index: option.index
     )
-    return false if !result.success?
+    return nil if !result.success?
 
-    reply_with_title_image_message(user_message, helpers.import_title_image_confirmation(@projekt_import))
+    helpers.import_title_image_confirmation(@projekt_import)
   end
 
-  def reply_with_title_image_message(user_message, content)
+  # The reply is stamped as a command before anything is rendered. Without it
+  # ExecuteImportJob counts a plain user message that produced no tool call and
+  # warns "none of your chat changes were applied" on import — after applying the
+  # pick — which also suppresses the redirect to the finished projekt.
+  def render_title_image_reply(user_message, content)
+    user_message.update!(custom_command: ProjektImport::TITLE_IMAGE_REPLY_COMMAND)
+
     confirmation = @ai_chat.ai_chat_messages.create!(
       role: "assistant",
       content: content,
@@ -306,7 +314,9 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   end
 
   def title_image_picker_message
-    @ai_chat
+    return @title_image_picker_message if defined?(@title_image_picker_message)
+
+    @title_image_picker_message = @ai_chat
       .ai_chat_messages
       .where(custom_command: ProjektImport::TITLE_IMAGE_PICKER_COMMAND)
       .order(created_at: :asc)
@@ -361,7 +371,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       created_at: message.created_at.iso8601,
       html: render_to_string(
         partial: "adm/projekts/imports/chats/message",
-        locals: { message: message, user: @projekt_import.user },
+        locals: { message: message, user: @projekt_import.user, projekt_import: @projekt_import },
         formats: [:html]
       )
     }

@@ -73,7 +73,8 @@
          aria-live="polite"
          data-projekt-imports--chat-target="messages">
       <% @messages.each do |message| %>
-        <%= render "adm/projekts/imports/chats/message", message: message, user: @chat_user %>
+        <%= render "adm/projekts/imports/chats/message",
+              message: message, user: @chat_user, projekt_import: @projekt_import %>
       <% end %>
 
       <% if @created_projekts.any? %>

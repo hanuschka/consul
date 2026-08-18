@@ -87,6 +87,8 @@ en:
             resources are copied — participant contributions, votes and subscriptions
             are not. The copy is created deactivated.
           started: The copy of "%{name}" is being created. This may take a moment.
+          finished: The copy "%{name}" was created.
+          failed_notice: The copy "%{name}" could not be created.
           status_processing: Copying …
           status_failed: Copy failed
         projekt:

@@ -15,15 +15,25 @@ class Projekts::Copying::ProjektCopier < ApplicationService
   # The page slug and footer key are unique; the slug was generated for the copy
   # by Projekt#create_corresponding_page and the footer key belongs to whichever
   # page already claimed it.
-  EXCLUDED_PAGE_COLUMNS = %w[projekt_id slug footer_key published_at].freeze
+  EXCLUDED_PAGE_COLUMNS = %w[projekt_id slug footer_key].freeze
 
   # Forced on the copy regardless of the source, so a copy never appears in
-  # public navigation or search results before an admin publishes it.
+  # public navigation or search results before an admin publishes it. `activated`
+  # is what the admin dashboard counts as a draft.
   HIDDEN_DRAFT_COLUMNS = {
     activated: false,
     show_in_navigation: false,
     show_in_overview_page: false,
     show_in_homepage: false
+  }.freeze
+
+  # The page carries the app's own draft/published flag: it is what
+  # Projekt#published?, the public page controller and the global-overview
+  # export all read. A copy of a live projekt would otherwise inherit
+  # "published" while its projekt sits deactivated.
+  DRAFT_PAGE_COLUMNS = {
+    status: "draft",
+    published_at: nil
   }.freeze
 
   ALLOW_INDEXING_KEY = "projekt_feature.general.allow_indexing".freeze
@@ -76,7 +86,11 @@ class Projekts::Copying::ProjektCopier < ApplicationService
       return if source_page.blank? || copy_page.blank?
 
       copy_name = copy.name
-      record_copier.overwrite(source_page, copy_page, except: EXCLUDED_PAGE_COLUMNS)
+      record_copier.overwrite(
+        source_page, copy_page,
+        attributes: DRAFT_PAGE_COLUMNS,
+        except: EXCLUDED_PAGE_COLUMNS
+      )
       restore_copy_title(copy_page, copy_name)
 
       # The projekt's banner lives as a polymorphic Image on the page, not on

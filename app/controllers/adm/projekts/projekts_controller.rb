@@ -27,6 +27,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     base_scope = ProjektsQuery.call(policy_scope([:adm, :projekts, Projekt]).reorder(default_order), params)
     @pagy, @projekts = pagy(base_scope, limit: 10)
 
+    flash_finished_copy
+
     @name_header_options = { sort: true, search: true }
     @start_date_header_options = { sort: true }
     @end_date_header_options = { sort: true }
@@ -63,7 +65,10 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   def copy_status
     authorize [:adm, :projekts, @projekt], :show?
 
-    render json: { status: @projekt.reported_copy_status }
+    render json: {
+      status: @projekt.reported_copy_status,
+      redirect_url: finished_copy_url
+    }
   end
 
   def details
@@ -659,6 +664,26 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
 
     def find_projekt
       @projekt = Projekt.find(params[:id])
+    end
+
+    # The poller navigates here once a copy reaches a terminal state, because a
+    # plain reload cannot carry a message.
+    def finished_copy_url
+      return nil if @projekt.copy_in_progress?
+
+      adm_projekts_projekts_list_path(finished_copy: @projekt.id)
+    end
+
+    def flash_finished_copy
+      copy = policy_scope([:adm, :projekts, Projekt]).find_by(id: params[:finished_copy])
+      return if copy.blank? || copy.copied_from_projekt_id.blank?
+      return if copy.copy_in_progress?
+
+      if copy.copy_unfinished?
+        flash.now[:alert] = t("adm.projekts.projekts.copy.failed_notice", name: copy.title)
+      else
+        flash.now[:notice] = t("adm.projekts.projekts.copy.finished", name: copy.title)
+      end
     end
 
     def poll_answer

@@ -87,6 +87,8 @@ de:
             von der Verwaltung angelegten Inhalte werden kopiert – Beiträge, Stimmen und
             Abonnements der Teilnehmenden nicht. Die Kopie wird deaktiviert angelegt.
           started: Die Kopie von „%{name}“ wird erstellt. Das kann einen Moment dauern.
+          finished: Die Kopie „%{name}“ wurde erstellt.
+          failed_notice: Die Kopie „%{name}“ konnte nicht erstellt werden.
           status_processing: Wird kopiert …
           status_failed: Kopieren fehlgeschlagen
         projekt:

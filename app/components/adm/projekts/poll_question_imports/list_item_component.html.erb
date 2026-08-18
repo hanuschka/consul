@@ -1,0 +1,68 @@
+<tr class="kern-table__row">
+  <td class="kern-table__cell adm-poll-question-import__files-cell">
+    <%= link_to show_url, class: "kern-link adm-poll-question-import__files" do %>
+      <span class="material-symbols-outlined" aria-hidden="true">description</span>
+      <span><%= files_summary %></span>
+    <% end %>
+
+    <% if show_all_file_names? %>
+      <p class="adm-poll-question-import__files-note"><%= file_names.join(", ") %></p>
+    <% end %>
+
+    <% if show_error? %>
+      <p class="adm-poll-question-import__error"><%= error_preview %></p>
+    <% end %>
+
+    <% if stalled? %>
+      <p class="adm-poll-question-import__note">
+        <%= t("adm.projekts.poll_question_imports.list.stalled_note") %>
+      </p>
+    <% end %>
+  </td>
+
+  <td class="kern-table__cell">
+    <span class="kern-badge kern-badge--<%= badge_style %>">
+      <% if analyzing? %>
+        <span class="kern-loader kern-loader--visible" aria-hidden="true"></span>
+      <% end %>
+      <%= state_label %>
+    </span>
+  </td>
+
+  <td class="kern-table__cell">
+    <% if applied? %>
+      <%= link_to t("adm.projekts.poll_question_imports.list.applied_questions", count: applied_questions_count),
+            poll_questions_url,
+            class: "kern-link" %>
+    <% elsif question_import.completed? %>
+      <%= t("adm.projekts.poll_question_imports.list.generated_questions", count: generated_questions_count) %>
+    <% else %>
+      <span aria-hidden="true">—</span>
+    <% end %>
+  </td>
+
+  <td class="kern-table__cell">
+    <span><%= created_label %></span>
+    <% if author_name.present? %>
+      <br>
+      <span class="adm-poll-question-import__author"><%= author_name %></span>
+    <% end %>
+  </td>
+
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(
+           label: t("adm.projekts.poll_question_imports.list.actions.open"),
+           url: show_url,
+           icon: "visibility"
+         ) %>
+      <% actions.with_action(
+           label: t("adm.projekts.poll_question_imports.list.actions.delete"),
+           url: delete_url,
+           style: :delete,
+           method: :delete,
+           data: { turbo_confirm: t("adm.projekts.poll_question_imports.list.actions.delete_confirm") }
+         ) %>
+    <% end %>
+  </td>
+</tr>

@@ -27,6 +27,19 @@
     <%= kern_link_button new_adm_projekts_phase_poll_question_path(@projekt_phase, bundle_question: true),
           text: t(".create_bundle_question"), icon: "add", style: :secondary %>
 
+    <% if @poll.present? && Ai::Settings.ai_available? %>
+      <%= render Shared::AiFeatureTooltipComponent.new(
+            feature_title: t("adm.projekts.poll_question_imports.index.title"),
+            feature_text: t("adm.ai_action_button.feature_description"),
+            requires_ai: false
+          ) do %>
+        <%= kern_link_button adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+              text: t("adm.projekts.poll_question_imports.trigger.button"),
+              icon: "auto_awesome",
+              style: :secondary %>
+      <% end %>
+    <% end %>
+
     <% if @poll.present? && !@poll.live? %>
       <%= form_with url: go_live_adm_projekts_phase_path(@projekt_phase), method: :patch,
             data: { turbo_confirm: t(".test_mode.go_live_confirm") } do %>

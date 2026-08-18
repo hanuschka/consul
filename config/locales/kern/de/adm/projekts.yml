@@ -89,6 +89,13 @@ de:
           started: Die Kopie von „%{name}“ wird erstellt. Das kann einen Moment dauern.
           finished: Die Kopie „%{name}“ wurde erstellt.
           failed_notice: Die Kopie „%{name}“ konnte nicht erstellt werden.
+          tooltip:
+            title: Projekt kopieren
+            text: >
+              Erstellt eine deaktivierte Kopie dieses Projekts mit allen Phasen,
+              Einstellungen, Inhalten, Karten und von der Verwaltung angelegten Inhalten.
+            note_label: 'Nicht kopiert:'
+            note: Beiträge, Stimmen, Kommentare und Abonnements der Teilnehmenden.
           status_processing: Wird kopiert …
           status_failed: Kopieren fehlgeschlagen
         projekt:

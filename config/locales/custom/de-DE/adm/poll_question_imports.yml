@@ -1,0 +1,147 @@
+de:
+  adm:
+    projekts:
+      poll_question_imports:
+        trigger:
+          button: Fragen aus Dokument importieren
+        index:
+          title: Fragenimport aus Dokumenten
+          hint: >-
+            Laden Sie ein Dokument mit den Fragen dieser Abstimmung hoch. Die
+            erkannten Fragen können Sie prüfen und bearbeiten, bevor sie der
+            Abstimmung hinzugefügt werden.
+          new_import: Neuer Import
+          empty_title: Noch kein Dokument importiert
+          empty_description: >-
+            Laden Sie ein PDF-, Word- oder Textdokument mit den Fragen hoch, um
+            zu beginnen.
+          filters:
+            aria: Importe filtern
+            all: Alle
+            in_progress: In Arbeit
+            failed: Fehlgeschlagen
+            finished: Abgeschlossen
+          columns:
+            files: Dokument
+            status: Status
+            questions: Fragen
+            created: Hochgeladen
+        new:
+          title: Dokument hochladen
+          dropzone_title: Dokument mit den Fragen hochladen
+          dropzone_hint: "Unterstützte Formate: %{types}. Maximal %{size} insgesamt."
+          select_file: Datei auswählen
+          drop_hint: Sie können Dateien auch per Drag-and-drop hierher ziehen.
+          choose_other_file: Andere Datei wählen
+          remove_file: Datei entfernen
+          submit: Fragen auslesen
+          progress: Dokument wird gelesen …
+          processing_title: Das Dokument wird ausgewertet
+          processing_message: >-
+            Das dauert je nach Umfang des Dokuments in der Regel unter einer
+            Minute. Sie können die Seite offen lassen.
+        show:
+          title: Erkannte Fragen
+          title_processing: Dokument wird ausgewertet
+          title_neutral: Fragenimport
+          hint: >-
+            Prüfen und bearbeiten Sie die erkannten Fragen. Erst beim Übernehmen
+            werden sie als echte Fragen der Abstimmung hinzugefügt.
+          generating_title: Das Dokument wird ausgewertet
+          generating: >-
+            Die Fragen werden gerade aus dem Dokument gelesen. Das dauert in der
+            Regel unter einer Minute. Diese Seite aktualisiert sich von selbst.
+          found:
+            one: Eine Frage wurde erkannt.
+            other: "%{count} Fragen wurden erkannt."
+          source_files: "Aus: %{files}"
+          failed: Die Fragen konnten nicht ausgelesen werden
+          stalled: Die Auswertung hängt fest
+          stalled_description: >-
+            Seit mehreren Minuten gibt es keinen Fortschritt. In der Regel
+            liegt das an der Hintergrundverarbeitung. Starten Sie die
+            Auswertung neu oder wenden Sie sich an den technischen Support.
+          empty_title: Keine Fragen im Dokument gefunden
+          empty_description: >-
+            Im hochgeladenen Dokument ließen sich keine Fragen erkennen. Prüfen
+            Sie, ob das Dokument die Fragen als Text enthält und nicht nur als
+            Bild.
+          already_applied: Dieser Import wurde bereits übernommen
+          already_applied_description: >-
+            Die Fragen befinden sich in der Fragenliste der Abstimmung und
+            werden dort weiter bearbeitet.
+          back: Zurück zur Übersicht
+          to_questions: Zu den Fragen
+          apply: Fragen importieren
+          discard: Verwerfen
+          regenerate: Erneut auslesen
+          regenerate_hint: >-
+            Wertet dasselbe Dokument noch einmal aus. Ein erneutes Hochladen ist
+            nicht nötig.
+          regenerate_confirm: >-
+            Die aktuelle Vorschau wird dabei verworfen. Fortfahren?
+        question:
+          label: Frage
+          include: Übernehmen
+          title_description: Der Text, den die Teilnehmenden als Frage lesen.
+          description_description: Optionaler Erläuterungstext unterhalb der Frage.
+          vote_type: Fragetyp
+          vote_type_description: Bestimmt, wie die Teilnehmenden antworten können.
+          rating_scale_labels: Beschriftung der Bewertungsskala
+          rating_scale_labels_description: >-
+            Wird nur bei Fragen vom Typ Bewertungsskala angezeigt und dort
+            benötigt.
+          answers: Antwortoptionen
+          answers_description: >-
+            Jede Frage benötigt mindestens zwei Antwortoptionen. Antworten mit
+            leerem Titel werden nicht übernommen.
+          add_answer: Antwort hinzufügen
+          remove_answer: Antwort entfernen
+        list:
+          no_files: Ohne Datei
+          files_summary: "%{first} und %{count} weitere"
+          stalled_note: >-
+            Seit mehreren Minuten kein Fortschritt. Öffnen Sie den Import, um
+            die Auswertung neu zu starten.
+          generated_questions:
+            one: Eine Frage erkannt
+            other: "%{count} Fragen erkannt"
+          applied_questions:
+            one: Eine Frage übernommen
+            other: "%{count} Fragen übernommen"
+          actions:
+            open: Öffnen
+            delete: Löschen
+            delete_confirm: >-
+              Diesen Import löschen? Bereits übernommene Fragen bleiben in der
+              Abstimmung erhalten.
+        states:
+          pending: In Warteschlange
+          extracting: Dokument wird gelesen
+          processing: Fragen werden erkannt
+          stalled: Hängt fest
+          completed: Bereit zur Prüfung
+          applied: Übernommen
+          failed: Fehlgeschlagen
+        apply:
+          success:
+            one: Eine Frage wurde der Abstimmung hinzugefügt.
+            other: "%{count} Fragen wurden der Abstimmung hinzugefügt."
+        errors:
+          no_files: Bitte wählen Sie mindestens eine Datei aus.
+          too_large: Die ausgewählten Dateien sind zusammen zu groß.
+          unsupported_type: "Das Format der Datei %{filename} wird nicht unterstützt."
+          session_expired: Ihre Sitzung ist abgelaufen. Bitte laden Sie die Seite neu.
+          request_failed: "Der Upload ist fehlgeschlagen (%{status})."
+          extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
+          no_text: Aus dem Dokument ließ sich kein Text auslesen.
+          ai_malformed: >-
+            Im Dokument ließen sich keine verwertbaren Fragen erkennen. Prüfen
+            Sie das Dokument und versuchen Sie es erneut.
+          generation_failed: "Die Fragen konnten nicht ausgelesen werden: %{message}"
+          generation_unknown: Unbekannter Fehler beim Auslesen.
+          poll_missing: >-
+            Zu dieser Phase existiert keine Abstimmung, der Fragen hinzugefügt
+            werden könnten.
+          nothing_selected: Es wurde keine Frage zum Übernehmen ausgewählt.
+          apply_failed: "Die Fragen konnten nicht gespeichert werden: %{message}"

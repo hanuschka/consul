@@ -12,17 +12,29 @@
           <%# A stalled or failed copy renders as failed inside the partial. %>
           <%= render "adm/projekts/projekts/copy_status", projekt: @projekt %>
         <% else %>
-          <%= kern_link_button(
-            copy_adm_projekts_projekt_path(@projekt),
-            icon: "content_copy",
-            text: t("adm.projekts.projekts.copy.action"),
-            data: {
-              turbo_method: :post,
-              turbo_confirm: t("adm.projekts.projekts.copy.confirm"),
-              turbo_frame: "_top",
-              turbo_prefetch: false
-            }
-          ) %>
+          <rich-tooltip delay="550" body-class="-wide">
+            <%= kern_link_button(
+              copy_adm_projekts_projekt_path(@projekt),
+              icon: "content_copy",
+              text: t("adm.projekts.projekts.copy.action"),
+              data: {
+                turbo_method: :post,
+                turbo_confirm: t("adm.projekts.projekts.copy.confirm"),
+                turbo_frame: "_top",
+                turbo_prefetch: false
+              }
+            ) %>
+            <template>
+              <span class="rich-tooltip-content">
+                <span class="rich-tooltip-content--title"><%= t("adm.projekts.projekts.copy.tooltip.title") %></span>
+                <span class="rich-tooltip-content--text"><%= t("adm.projekts.projekts.copy.tooltip.text") %></span>
+                <span class="rich-tooltip-content--note">
+                  <span class="rich-tooltip-content--note-label"><%= t("adm.projekts.projekts.copy.tooltip.note_label") %></span>
+                  <%= t("adm.projekts.projekts.copy.tooltip.note") %>
+                </span>
+              </span>
+            </template>
+          </rich-tooltip>
         <% end %>
       </div>
     <% end %>

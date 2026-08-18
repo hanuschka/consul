@@ -21,6 +21,10 @@ class Projekts::ListItemComponent < ApplicationComponent
     }
   end
 
+  def sorted_tags
+    @sorted_tags ||= projekt.tags.sort_by { |tag| [tag.name.to_s, tag.id] }
+  end
+
   def active_and_visible_projekt_phases
     @active_and_visible_projekt_phases ||= projekt.active_and_visible_projekt_phases
   end

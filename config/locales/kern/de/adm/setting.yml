@@ -1,10 +1,18 @@
 de:
   setting:
     feature:
+      bund_id_login: "BundID-Anmeldung aktivieren"
+      bund_id_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine BundID-Schaltfläche. Nutzer können sich dann mit ihrem BundID-Konto anmelden und registrieren."
+      twitter_login: "Twitter-Anmeldung aktivieren"
+      twitter_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Twitter-Konto. Erfordert hinterlegte Twitter-Zugangsdaten in der Serverkonfiguration."
+      facebook_login: "Facebook-Anmeldung aktivieren"
+      facebook_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Facebook-Konto. Erfordert hinterlegte Facebook-Zugangsdaten in der Serverkonfiguration."
+      google_login: "Google-Anmeldung aktivieren"
+      google_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Google-Konto. Erfordert hinterlegte Google-Zugangsdaten in der Serverkonfiguration."
+      wordpress_login: "Wordpress-Anmeldung aktivieren"
+      wordpress_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Wordpress-Konto. Erfordert hinterlegte Wordpress-Zugangsdaten in der Serverkonfiguration."
       kobil_login: "KOBIL-Anmeldung aktivieren"
       kobil_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine Schaltfläche „Mit KOBIL anmelden“. Nutzer können sich dann über ihr KOBIL-Konto (OpenID Connect) anmelden und registrieren. Erfordert hinterlegte KOBIL-Zugangsdaten in der Serverkonfiguration."
-      kobil_single_logout: "KOBIL Single Logout"
-      kobil_single_logout_description: "Meldet den Nutzer beim Abmelden auch aus seinem KOBIL-Konto ab (Single Logout). Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
       kobil_address_verification: "KOBIL Adressverifizierung"
       kobil_address_verification_description: "Übernimmt die vom KOBIL-Konto bereitgestellte Adresse (Straße, PLZ, Ort) in das Nutzerprofil. Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
     projekt_option:
@@ -29,6 +37,8 @@ de:
     brand_color_description: "Die Markenfarbe wird als Akzentfarbe auf der gesamten Plattform verwendet – unter anderem für Buttons, Links und Hervorhebungen. Auf einzelnen Landingpages kann diese Farbe individuell überschrieben werden. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe aus dem Stylesheet der Plattform verwendet."
     newsletter_brand_color: "Newsletter-Markenfarbe"
     newsletter_brand_color_description: "Diese Farbe wird als Akzentfarbe im Kopf- und Fußbereich der Newsletter-E-Mails verwendet, z. B. für Buttons, Links und dekorative Elemente. Sie kann unabhängig von der Plattform-Markenfarbe gewählt werden, um ein eigenständiges Newsletter-Design zu ermöglichen. Wenn kein Wert gesetzt ist, wird die Standard-Markenfarbe der Plattform verwendet."
+    direct_message_max_per_day: "Maximale Anzahl direkter Nachrichten pro Tag"
+    direct_message_max_per_day_description: "Begrenzt, wie viele direkte Nachrichten eine Person pro Tag an andere Nutzer*innen senden kann. Die Begrenzung schützt vor Spam und Belästigung. Lassen Sie das Feld leer oder tragen Sie 0 ein, wenn die Anzahl nicht begrenzt werden soll."
     meta_keywords: "Stichwörter (Suchmaschinenoptimierung)"
     meta_keywords_description: "Optionale Stichwörter, die den Inhalt der Seite thematisch beschreiben. Sie werden im HTML-Quelltext als Meta-Keywords eingebunden. Obwohl Suchmaschinen diesen Tag kaum noch auswerten, kann er für interne Zwecke nützlich sein. Trennen Sie Begriffe durch Kommas, z. B. Bürgerbeteiligung, Stadtentwicklung, Projekte."
     facebook_handle: "Facebook-Nutzername"
@@ -261,6 +271,18 @@ de:
       admins_must_assign_officer: Pflicht-Zuweisung an Sachbearbeiter
       admins_must_assign_officer_description: >
         Wenn aktiviert, müssen Administratoren jede neue Mangelmeldung manuell einer zuständigen Sachbearbeiterin oder einem Sachbearbeiter zuweisen. Ohne Zuweisung kann die Meldung nicht bearbeitet werden. Dies stellt sicher, dass jede Meldung eine verantwortliche Person erhält und keine Meldung ohne Zuständigkeit bleibt.
+      officers_see_all_reports: Sichtbarkeit für Sachbearbeitende/-gruppen
+      officers_see_all_reports_description: >
+        Ermöglicht es, Sachbearbeitenden oder Sachbearbeitergruppen Leserechte auf alle Anliegen zu geben, nicht nur auf die eigenen zugewiesenen. Ist die Einstellung aktiviert, erscheint in der Meldungsübersicht ein Filter mit den Werten „Mir zugewiesen“, „Unter Beobachtung“ und „Alle Anliegen“. Aktivieren Sie diese Funktion, wenn Sachbearbeitende einen Überblick über alle eingehenden Anliegen benötigen, auch außerhalb ihrer eigenen Zuständigkeit.
+      ai_categorization: KI-Kategorisierung im Meldeformular
+      ai_categorization_description: >
+        Bestimmt automatisch Haupt- und Unterkategorie einer Meldung anhand von Titel, Beschreibung und – sofern vorhanden – einer KI-Bildanalyse des hochgeladenen Fotos. Ist die Einstellung aktiviert, werden die Kategoriefelder der meldenden Person im öffentlichen Formular nicht angezeigt; ist sie deaktiviert, wählt die meldende Person Haupt- und Unterkategorie selbst über eine kaskadierende Auswahl. Aktivieren Sie diese Funktion, um die Kategorisierung eingehender Meldungen zu automatisieren und Sachbearbeitende zu entlasten.
+      officer_groups_only_for_assignment: Nur Sachbearbeitergruppen bei Zuweisung
+      officer_groups_only_for_assignment_description: >
+        Schränkt die Auswahl bei der Zuweisung einer Zuständigkeit (Meldung, Kategorie, Unterkategorie) auf Sachbearbeitergruppen ein; einzelne Personen stehen dann nicht mehr zur Auswahl. Im Verwaltungsbereich zeigt das Zuweisungsfeld nur noch Gruppen an. Aktivieren Sie diese Einstellung, wenn Anliegen konsequent über die vorgesehenen Gruppenprozesse bearbeitet werden sollen statt über einzelne Personen.
+      intake_channel_required_for_on_behalf_of: Pflichtfeld Eingangskanal bei Fremdmeldung
+      intake_channel_required_for_on_behalf_of_description: >
+        Macht die Angabe des Eingangskanals (z. B. Telefon, E-Mail, persönlich) verpflichtend, wenn eine Meldung im Namen einer dritten Person erfasst wird. Im Formular – sowohl öffentlich als auch im Verwaltungsbereich – erscheint das Auswahlfeld dann als Pflichtfeld mit den konfigurierten Kanal-Optionen und einem Standardwert. Aktivieren Sie diese Einstellung, wenn nachvollziehbar sein soll, auf welchem Weg Fremdmeldungen eingegangen sind.
       allow_voting: Nutzer-Bewertung pro Mangel
       allow_voting_description: >
         Aktiviert eine Bewertungsfunktion, mit der Nutzer einzelne Mangelmeldungen unterstützen oder priorisieren können. Die Anzahl der Bewertungen wird öffentlich angezeigt und hilft der Verwaltung, häufig gemeldete oder besonders dringende Mängel schneller zu erkennen und zu priorisieren.

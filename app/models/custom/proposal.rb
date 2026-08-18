@@ -133,13 +133,16 @@ class Proposal < ApplicationRecord
       ).select(:id)
   end
 
-  # TODO: REFACTOR FOR NEW DESIGN
-  def self.scoped_projekt_ids_for_footer(projekt)
-    projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      ProjektSetting.find_by(projekt:, key: "projekt_feature.main.activate").value.present? &&
-        projekt.all_children_projekts.unshift(projekt).any? do |p|
- p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? end
-    end.pluck(:id)
+  # Batched equivalent of user.voted_up_for?(proposal), for rendering a list
+  # without a query per row.
+  def self.up_voted_ids_by(user, proposals)
+    return Set.new if user.blank? || proposals.blank?
+
+    user.votes
+      .where(votable_type: "Proposal", votable_id: proposals.map(&:id),
+             vote_flag: true, vote_scope: nil)
+      .pluck(:votable_id)
+      .to_set
   end
 
   def successful?
@@ -147,13 +150,20 @@ class Proposal < ApplicationRecord
   end
 
   def self.successful
-    ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal
+      .includes(projekt_phase: :settings)
+      .select { |proposal| proposal.cached_votes_up >= proposal.custom_votes_needed_for_success }
+      .pluck(:id)
+
     Proposal.where(id: ids)
   end
 
   def self.unsuccessful
-    ids = Proposal.includes([:projekt_phase]).select do |p|
- p.cached_votes_up < p.custom_votes_needed_for_success end.pluck(:id)
+    ids = Proposal
+      .includes(projekt_phase: :settings)
+      .select { |proposal| proposal.cached_votes_up < proposal.custom_votes_needed_for_success }
+      .pluck(:id)
+
     Proposal.where(id: ids)
   end
 

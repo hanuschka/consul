@@ -79,7 +79,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
       response =
         Ai::RubyLlmFactory
-          .chat
+          .chat(feature: "ai_analytics.phase_stat_question")
           .with_instructions(system_instructions)
           .ask(user_prompt)
 

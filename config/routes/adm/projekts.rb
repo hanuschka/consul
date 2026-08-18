@@ -249,10 +249,12 @@ namespace :adm do
 
       resource :chat, only: [:show], controller: "imports/chats" do
         get :messages
+        get :summary
         post :message
         post :command
         post :extract
         post :execute
+        post :title_image
       end
     end
 
@@ -282,6 +284,8 @@ namespace :adm do
       get :phase_evaluation_status, on: :member
       get :evaluation_pdf_options, on: :member
       get :evaluation_pdf, on: :member
+      post :copy, on: :member
+      get :copy_status, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member

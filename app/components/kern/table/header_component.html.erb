@@ -1,6 +1,6 @@
 <%= content_tag :th, scope: "col",
                      class: "kern-table__header",
-                     data: { controller: 'table-header', 'table-header-column-value': @column, field: @data_field }.compact,
+                     data: { controller: 'table-header', 'table-header-column-value': @column, 'table-header-keep-empty-value': @default.present? || nil, field: @data_field }.compact,
                      aria: { sort: aria_sort } do %>
   <div class="d-flex">
     <span class="mr-3" id="<%= @column %>-label"><%= @label %></span>

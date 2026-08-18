@@ -12,6 +12,9 @@
 
     handlePromptTrigger(e) {
       e.preventDefault();
+
+      if (App.Studio.Projekt.isAiTriggerDisabled(e.currentTarget)) return;
+
       $(".js-projekt-content-start-buttons").hide();
       $(".js-content-start-section--title").hide();
       $(".js-projekt-start-with-prompt-form").show();
@@ -42,7 +45,7 @@
 
       App.Ajax
         .request({
-          url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/generate_from_prompt`,
+          url: `/${App.routeNamespace}/projekts/${projektId}/projekt_content_blocks/ai_generate_with_prompt`,
           type: "POST",
           dataType: "json",
           data: { prompt }

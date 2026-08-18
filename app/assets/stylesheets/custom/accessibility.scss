@@ -220,6 +220,10 @@ input[type="date"]:focus-visible {
 // ring is drawn inside the title and not clipped by the accordion item
 // borders / the surrounding ul overflow:hidden.
 
+.accordion-title:focus {
+  outline: none;
+}
+
 .accordion-title:focus-visible {
   outline: $outline-focus !important;
   outline-offset: -3px !important;

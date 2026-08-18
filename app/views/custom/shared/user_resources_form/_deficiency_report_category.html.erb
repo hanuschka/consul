@@ -1,3 +1,7 @@
+<%# AI categorization derives both fields from title, description and photo, so the reporting
+    person is not asked for them at all. %>
+<% unless DeficiencyReports::AiCategorizationService.enabled? %>
+
 <h2 class="rich-form-label">
   <i class="fas fa-th-large"></i>
   <%= t("custom.deficiency_reports.form.category.title") %>
@@ -20,3 +24,23 @@
   },
   { prompt: t("custom.deficiency_reports.form.category.placeholder"), label: false },
   { class: "js-user-resource-select-category js-map-change-feature-style-on-select", onChange: "var warningPopupId = this.options[this.selectedIndex].getAttribute('data-warning-popup');if (warningPopupId) { $('#' + warningPopupId).foundation('open'); }" } %>
+
+<% if DeficiencyReport::Subcategory.exists? %>
+  <div class="js-deficiency-report-subcategory-wrapper margin-top">
+    <h2 class="rich-form-label">
+      <i class="fas fa-list"></i>
+      <%= t("custom.deficiency_reports.form.subcategory.title") %>
+      <span class="small" style="margin-left:0.25rem;margin-right:0.25rem">|</span>
+      <span class="small"><%= t("custom.deficiency_reports.form.subcategory.description") %></span>
+    </h2>
+
+    <%= f.select :deficiency_report_subcategory_id,
+      DeficiencyReport::Subcategory.includes(:category).map { |subcategory|
+        [subcategory.name, subcategory.id, { "data-category-id": subcategory.deficiency_report_category_id }]
+      },
+      { prompt: t("custom.deficiency_reports.form.subcategory.placeholder"), label: false },
+      { class: "js-deficiency-report-subcategory-select" } %>
+  </div>
+<% end %>
+
+<% end %>

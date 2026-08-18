@@ -29,6 +29,8 @@ class Whatsapp::Inbound::StepDispatch
       Whatsapp::Flows::SendLoginLinkService.call(conversation:)
     when Step::AWAITING_PARTICIPATION_PROJEKT
       Whatsapp::Flows::ProjektParticipationService.ask_projekt(conversation:)
+    when Step::AWAITING_TERMS_CONSENT
+      Whatsapp::Flows::TermsConsentService.re_ask(conversation:)
     when Step::AWAITING_IDEA
       Whatsapp::Flows::AskIdeaService.handle_answer(
         conversation:, text: inbound_text, inbound_message_id:
@@ -76,6 +78,8 @@ class Whatsapp::Inbound::StepDispatch
       Whatsapp::Flows::UnlinkService.ask(conversation:)
     when Step::AWAITING_RESUME_DECISION
       Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
+    when Step::AWAITING_CONTINUE_DECISION
+      resume_interrupted_step
     else
       handle_idle_message
     end
@@ -107,6 +111,25 @@ class Whatsapp::Inbound::StepDispatch
 
     def flow_correction
       @routing.correction
+    end
+
+    # A message that reaches here while the continue-or-restart question is
+    # open carries substance — a message that did not was read as a fresh
+    # start two gates above and re-asked the question instead. Substance is
+    # the citizen carrying on, so the step the question interrupted is
+    # restored and this same message dispatched to it: what they wrote answers
+    # the step rather than being spent on the question.
+    #
+    # Dispatching again rather than mapping each step to its handler a second
+    # time — the map is right above, and the restored step is never
+    # AWAITING_CONTINUE_DECISION, so this recurses exactly once.
+    def resume_interrupted_step
+      return Whatsapp::Flows::MainMenuService.greeting(conversation:) if
+        conversation.interrupted_step.blank?
+
+      conversation.resume_interrupted_step!
+
+      call
     end
 
     # Nothing in progress and nothing the assistant could route. An unlinked

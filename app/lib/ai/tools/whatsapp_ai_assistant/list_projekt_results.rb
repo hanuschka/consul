@@ -31,7 +31,8 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektResults < Ai::Tools::WhatsappAi
         {
           projekt: projekt_title(projekt_phase.projekt),
           phase: projekt_phase.title,
-          ended_on: projekt_phase.end_date&.to_date&.iso8601,
+          ended_on: ::Whatsapp::DatePhrase.absolute(projekt_phase.end_date),
+          ended_ago: ::Whatsapp::DatePhrase.relative(projekt_phase.end_date),
           url: ::Whatsapp::ProjektLink.evaluation_url(projekt_phase)
         }.compact
       end

@@ -17,6 +17,14 @@ class Whatsapp::Flows::AskIdeaService < Whatsapp::Flows::BaseService
 
     return if refuse_if_not_permitted
 
+    # The consent gate, and it sits here rather than at any of the six callers
+    # because this is the one method all of them reach: the phase pill, the
+    # assistant's two tools, the QR entry token, the resume path and the
+    # duplicate offer. Below the permission check on purpose — a closed phase is
+    # refused before the citizen is asked to accept anything for it.
+    return Whatsapp::Flows::TermsConsentService.before_idea(conversation: @conversation) if
+      !account.terms_accepted?
+
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IDEA)
 
     Whatsapp::Send.text(

@@ -18,6 +18,10 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
     new(conversation: conversation).remind
   end
 
+  def self.re_ask(conversation:)
+    new(conversation: conversation).re_ask
+  end
+
   def self.handle_answer(conversation:, location:, verdict:, inbound_message_id: nil)
     new(conversation: conversation, inbound_message_id: inbound_message_id)
       .handle_answer(location, verdict)
@@ -66,6 +70,15 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
     @conversation.mark_location_reminded!
 
     send_request("whatsapp.bot.proposal.location_retry")
+  end
+
+  # The question put again after something interrupted it, which is not the
+  # same thing as a miss. #remind spends the one reminder an optional field is
+  # allowed, so resuming through it left the citizen's next non-pin message
+  # publishing without a location — and said "that was not a location" about a
+  # greeting. Neither the flag nor the step is touched here.
+  def re_ask
+    send_choice("whatsapp.bot.proposal.ask_location")
   end
 
   # A shared pin publishes, and so does a citizen saying there will not be

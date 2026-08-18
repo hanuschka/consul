@@ -43,6 +43,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   participation reach their own answers instead (CON-2971).
   # - Staleness before the assistant: the resume question is asked once, and
   #   the question itself moves the step.
+  # - The fresh start sits between the assistant and the step dispatch, and
+  #   nowhere else: it acts on the verdict of the one reading this message
+  #   already got, which for a linked citizen is only decided once the router
+  #   has run — and it has to be read before the step can take the message as
+  #   the thing it was waiting for.
   # - The assistant sees only what the protocol gates left — never taps,
   #   never location pins, never guests — and its one reading travels on the
   #   routing object into the step dispatch instead of being re-derived by a
@@ -75,6 +80,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return handle_entry(entry) if entry.present?
     return if handle_stale_flow
     return if routed_by_assistant?
+    return if handle_fresh_start
 
     dispatch_step
   end
@@ -243,6 +249,23 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if !conversation.stale_flow?
 
       Whatsapp::Flows::ResumeOrRestartService.call(conversation:)
+
+      true
+    end
+
+    # A message with no substance of its own, while the bot is waiting on free
+    # text, is the citizen beginning again rather than the answer to the step
+    # — "hallo" at the idea step used to become the text of a contribution,
+    # draft generation and all (CON-2968). They are asked which they meant.
+    #
+    # Only the classifier's verdict reaches here. A linked citizen's reading is
+    # the router's, and there the same decision is a tool that has already
+    # asked the question and halted the turn, so this gate never sees it.
+    def handle_fresh_start
+      return false if !Whatsapp::Conversation::FRESH_START_STEPS.include?(conversation.step)
+      return false if routing.verdict != :fresh_start
+
+      Whatsapp::Flows::ContinueOrRestartService.ask(conversation:)
 
       true
     end

@@ -52,26 +52,32 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # later cannot be reasoning from the date it started on.
     #
     # The dotted-date ban is not cosmetic: WhatsApp reads 13.08.2026 as a phone
-    # number, renders it tappable, and offers to place a call from it. Stated as
-    # a rule here because the dates reach the citizen through the model's own
-    # prose, where no formatting decision of ours applies.
+    # number, renders it tappable, and offers to place a call from it.
+    #
+    # Kept as a rule even though Whatsapp::DatePhrase now writes every date a
+    # tool hands over: what the model receives is already safe and already
+    # phrased both ways, so the rule only has to stop it rewriting one — not
+    # carry the formatting on its own, which is what it was doing before.
     def dates_section
       <<~TEXT.strip
-        Dates: today is #{today}. Every date a tool gives you is ISO-8601, and you work it out
-        against today rather than repeating it: how long is left, whether something has already
-        passed, whether a deadline is today. Lead with the remaining time and give the date after
-        it, never the bare date. Never write a date as digits separated by dots — 13.08.2026 is
-        rendered as a phone number and offers to call it. Spell the month out when you name a
-        date at all, and for something that has already happened give the age alone ("vor 5
-        Tagen") with no date beside it. A milestone dated in the future is planned rather than
-        done — never report a planned step as progress that has already been made.
+        Dates: today is #{today}. Every date a tool gives you comes written out for you to copy
+        word for word, next to a plain statement of how far off it is ("in 5 Tagen", "vor 3
+        Monaten"). Lead with that relative statement and give the written-out date after it,
+        and answer what was asked — how long is left, whether something has already passed,
+        whether a deadline is today. Never rewrite a date into digits: 13.08.2026 is rendered
+        as a phone number and offers to call it. For something that has already happened give
+        the age alone ("vor 5 Tagen") with no date beside it. A milestone dated in the future is
+        planned rather than done — never report a planned step as progress that has already been
+        made.
       TEXT
     end
 
     # Written out with the weekday because "how long can I still take part" is
     # routinely answered in days, and a bare number is easy to be a day out on.
+    # Written through the same formatter as the tool payloads, so there is no
+    # digits-and-separators date anywhere in the model's input to copy from.
     def today
-      Time.zone.today.strftime("%Y-%m-%d (%A)")
+      "#{::Whatsapp::DatePhrase.absolute(Time.zone.today)} (#{I18n.l(Time.zone.today, format: "%A")})"
     end
 
     # The one rule the whole design rests on. Everything the citizen writes as
@@ -85,10 +91,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            awaiting_idea, awaiting_category, awaiting_sentiment, awaiting_duplicate_decision,
            awaiting_draft_decision, awaiting_image_choice, awaiting_image_upload,
            awaiting_location, awaiting_final_confirmation, awaiting_revision, awaiting_comment,
-           awaiting_resume_decision or awaiting_phase_choice, unless the citizen
-           is clearly asking you something instead of answering. Never paraphrase, summarise or
-           answer such a message yourself, and never repeat it back: the flow needs the original
-           wording. Pass what the message does to the step as decision: publish when they
+           awaiting_resume_decision, awaiting_continue_decision or awaiting_phase_choice, unless
+           the citizen is clearly asking you something instead of answering. Never paraphrase,
+           summarise or answer such a message yourself, and never repeat it back: the flow needs
+           the original wording. Pass what the message does to the step as decision: publish when they
            plainly agree the draft on the table should go in as it stands ("ja", "passt so");
            revise when they want something changed, however they say it — also when they agree
            and ask for a change in one breath ("ja, aber der Titel ist zu lang") — with the
@@ -96,6 +102,16 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            or location pin the step just asked for ("hab kein foto", "weiß die adresse nicht");
            answer for everything else. Publishing cannot be taken back from the chat: when in
            doubt, decision is never publish.
+        1b. The one exception to rule 1. While the step is awaiting_idea, awaiting_comment,
+           awaiting_image_upload, awaiting_revision, awaiting_location,
+           awaiting_participation_projekt or awaiting_continue_decision, the bot is waiting for
+           free text — and a message with no substance of its own is the citizen beginning again
+           rather than the answer: a bare greeting, a question about you, a request for the menu.
+           Call ask_continue_or_restart for those, never hand_to_flow: handed on, the greeting
+           becomes the text of their contribution. A greeting that carries substance with it
+           ("Hallo, ich möchte mehr Bänke am Rummelgang") is the contribution and stays
+           hand_to_flow, and so does any short answer that says what the step asked for. When in
+           doubt, hand_to_flow.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
            - see what is running, browse, look around -> show_projekts

@@ -56,36 +56,9 @@ class Whatsapp::Flows::ProjektContributionsService < Whatsapp::Flows::BaseServic
       I18n.t(
         key,
         title: contribution[:title],
-        age: relative_age(contribution[:created_at]),
+        age: Whatsapp::DatePhrase.relative(contribution[:created_at]),
         url: contribution[:url]
       )
-    end
-
-    # Bucketed here rather than through distance_of_time_in_words, whose German
-    # is nominative: wrapping its "5 Tage" in a "vor %{time}" line reads "vor 5
-    # Tage". The dative belongs to the copy, so each unit is its own pluralised
-    # key — the same shape the projekt countdowns use.
-    #
-    # Days up to a month, then months, then years: this dates a Beitrag in a
-    # chat message, where nothing turns on the difference between five and six
-    # weeks.
-    def relative_age(created_at)
-      key, count = age_key_and_count(created_at)
-
-      I18n.t("whatsapp.bot.projekt_contributions.age.#{key}", count: count)
-    end
-
-    def age_key_and_count(created_at)
-      days = (Time.current.to_date - created_at.to_date).to_i
-
-      return [:today, 0] if days < 1
-      return [:days, days] if days < 31
-
-      months = days / 30
-
-      return [:months, months] if months < 12
-
-      [:years, months / 12]
     end
 
     def more_line

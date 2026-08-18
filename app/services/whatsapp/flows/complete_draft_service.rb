@@ -104,6 +104,15 @@ class Whatsapp::Flows::CompleteDraftService < Whatsapp::Flows::BaseService
     # #send_invalid). Asking for the idea also moves the step, so the question
     # that failed cannot be put a second time.
     def refuse_invalid_draft(resource)
+      # A missing acceptance is not a problem with the text, and saying so with
+      # the record's own message is what made the original bug unanswerable: the
+      # citizen was told their Beitrag was wrong and asked to write it again.
+      # Routed to the question instead, whatever put the error there — the gate
+      # in AskIdeaService makes this unreachable today, and a phase type added to
+      # the drafting flow later must not be able to bring the loop back.
+      return Whatsapp::Flows::TermsConsentService.before_idea(conversation: @conversation) if
+        resource.errors[:resource_terms].any?
+
       Whatsapp::Send.text(
         account: account,
         body: Whatsapp.phrase(

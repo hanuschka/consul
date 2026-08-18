@@ -96,6 +96,12 @@ de:
       year: Jahr
   errors:
     format: "%{attribute} %{message}"
+    # Der Attributname ist ein Plural ("Die AGB und die Datenschutzbestimmung"),
+    # das globale "muss akzeptiert werden" ergibt damit keinen korrekten Satz.
+    # Ein Schlüssel hier gilt für alle Modelle, die resource_terms validieren.
+    attributes:
+      resource_terms:
+        accepted: müssen akzeptiert werden
     messages:
       accepted: muss akzeptiert werden
       blank: darf nicht leer sein

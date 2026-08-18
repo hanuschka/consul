@@ -62,6 +62,7 @@ FLOW_STUBS = {
   "SendLoginLinkService" => [:call, :after_switch],
   "LinkOutcomeService" => [:declined],
   "DiscoveryService" => [:linked, :unlinked],
+  "BrowseProjektsService" => [:call, :category],
   "SubmitProposalService" => [:call],
   "ContributionsService" => [:call],
   "MainMenuService" => [:greeting],
@@ -69,18 +70,17 @@ FLOW_STUBS = {
   "UnlinkService" => [:ask, :confirm],
   "AskDraftChoiceService" => [:category, :sentiment, :assign_category, :assign_sentiment],
   "ProposalImageService" => [:ask, :ask_upload, :generate, :handle_choice, :handle_upload],
-  "AskLocationService" => [:ask, :request, :handle_answer],
+  "AskLocationService" => [:ask, :request, :remind, :handle_answer],
   "PublishResultService" => [:call],
-  "AskRevisionService" => [:ask, :handle_answer],
+  "AskRevisionService" => [:ask, :re_ask, :handle_answer],
   "AskDuplicateChoiceService" => [:submit_anyway, :support_instead, :handle_answer],
   "ResumeOrRestartService" => [:call, :resume, :restart],
   "SupportService" => [:register],
   "AskIdeaService" => [:call, :handle_answer],
   "PresentDraftService" => [:handle_decision],
   "ConfirmSubmissionService" => [:handle_decision],
-  "CommentService" => [:create],
+  "CommentService" => [:prompt, :create],
   "BuildDraftService" => [:from_idea, :from_revision, :from_accepted_idea],
-  "HelpService" => [:call],
   "CancelService" => [:call],
   "MessageDeliveryService" => [:disable, :enable],
   "SendProjektCardService" => [:call],
@@ -89,6 +89,11 @@ FLOW_STUBS = {
   "ProposalPromptService" => [:call]
 }.freeze
 
+# const_get rather than a rescue: a service renamed out from under this list is
+# the harness silently losing a stub, and a lost stub means the real service runs
+# and the case is measuring something else. HelpService was exactly that — it had
+# been folded into MainMenuService.greeting and the list still named it, which
+# aborted every run.
 FLOW_STUBS.each do |name, entry_points|
   klass = Whatsapp::Flows.const_get(name)
 
@@ -119,7 +124,12 @@ Whatsapp::EligiblePhasesQuery.define_singleton_method(:eligible?) do |projekt_ph
   SCRIPT.fetch(:eligible, true) && projekt_phase.present?
 end
 
-Whatsapp::EligiblePhasesQuery.define_singleton_method(:call) do |projekt:|
+# `**` rather than a named keyword: the query is called both with a projekt and
+# without one (ProjektParticipationService#open_phases), and a stub that made the
+# keyword required turned every participation case into "missing keyword: :projekt"
+# instead of a dispatch. A stub's arity has to be at least as permissive as the
+# method it stands in for.
+Whatsapp::EligiblePhasesQuery.define_singleton_method(:call) do |**|
   SCRIPT.fetch(:eligible_phases, [])
 end
 
@@ -150,25 +160,48 @@ LINKED_USER = User.order(:id).first || raise("need a user")
 $sequence = 0
 ACCOUNTS = {}
 
+# The linked slot takes over whatever account already owns LINKED_USER instead of
+# adding a second one. whatsapp_accounts.user_id is unique, so on any database
+# where that user has been linked before — a smoke test, a manual walkthrough —
+# creating one raised RecordNotUnique and every `linked` case in the matrix
+# reported the violation in place of a dispatch. Taking it over is safe: the run
+# is one rolled-back transaction.
+def find_or_create_account(linked)
+  return Whatsapp::Account.find_or_create_by!(user_id: LINKED_USER.id) do |account|
+    account.wa_id = next_parity_wa_id
+    account.phone = "+#{account.wa_id}"
+    account.opt_in_at = Time.current
+  end if linked
+
+  wa_id = next_parity_wa_id
+
+  Whatsapp::Account.create!(
+    wa_id: wa_id, phone: "+#{wa_id}", opt_in_at: Time.current, user: nil
+  )
+end
+
+def next_parity_wa_id
+  $sequence += 1
+
+  "49900#{format('%06d', $sequence)}"
+end
+
 # One account per linkage kind (the user_id unique index allows only one
 # linked account); trait columns are reset per case.
 def build_account(traits)
   key = traits[:linked] ? :linked : :unlinked
 
-  account = ACCOUNTS[key] ||= begin
-    $sequence += 1
+  account = ACCOUNTS[key] ||= find_or_create_account(traits[:linked])
 
-    Whatsapp::Account.create!(
-      wa_id: "49900#{format('%06d', $sequence)}",
-      phone: "+49900#{format('%06d', $sequence)}",
-      opt_in_at: Time.current,
-      user: traits[:linked] ? LINKED_USER : nil
-    )
-  end
-
+  # Reset every column a flow can stamp, not just the ones a trait names: the
+  # account rows are memoized across cases, so a column left alone carries one
+  # case's side effect into every case after it and the run stops being
+  # reproducible. terms_accepted_at is stamped by TermsConsentService#accept and
+  # belongs to that set for the same reason ai_disclosed_at does.
   account.update!(
     ai_disclosed_at: traits[:undisclosed] ? nil : Time.current,
-    opt_out_at: traits[:opted_out] ? 1.day.ago : nil
+    opt_out_at: traits[:opted_out] ? 1.day.ago : nil,
+    terms_accepted_at: traits[:consented] ? Time.current : nil
   )
 
   account
@@ -424,6 +457,48 @@ ActiveRecord::Base.transaction do
     account_traits: { linked: true, undisclosed: true },
     script: { router: ServiceResult.success(outcome: :answered) })
 
+  # CON-2969. The consent gate itself lives inside AskIdeaService#call, which is
+  # stubbed here like every other flow entry point — what these cases pin is the
+  # dispatch either side of it: which service each new pill reaches, and that a
+  # message arriving on the new step re-asks the question instead of being read
+  # as the Beitrag. The gate's own branch is verified against the unstubbed
+  # service, not here.
+  [["no_consent", {}], ["consented", { consented: true }]].each do |label, consent_traits|
+    [:terms_accept, :terms_decline].each do |action|
+      run_case("consent:pill:#{action}:#{label}",
+        kind: "interactive", body: "x",
+        raw: tap_raw(Whatsapp::FlowActions.id_for(action: action)),
+        account_traits: { linked: true }.merge(consent_traits),
+        conversation_traits: {
+          step: "awaiting_terms_consent", projekt_phase: PHASE,
+          context: { "flow_started_at" => Time.current.iso8601 }
+        })
+    end
+
+    run_case("consent:step:text:#{label}",
+      kind: "text", body: "mehr baenke am rummelgang",
+      raw: { "text" => { "body" => "mehr baenke am rummelgang" } },
+      account_traits: { linked: true }.merge(consent_traits),
+      conversation_traits: {
+        step: "awaiting_terms_consent", projekt_phase: PHASE,
+        context: { "flow_started_at" => Time.current.iso8601 }
+      },
+      script: { router: ServiceResult.success(outcome: :flow, decision: :answer, correction: nil) })
+  end
+
+  # Accepting with no phase on the conversation: AskIdeaService is what refuses
+  # it, so the pill must still be dispatched rather than guarded here.
+  run_case("consent:pill:terms_accept:no_phase", kind: "interactive", body: "x",
+    raw: tap_raw(Whatsapp::FlowActions.id_for(action: :terms_accept)),
+    account_traits: { linked: true },
+    conversation_traits: { step: "awaiting_terms_consent" })
+
+  # Declining from an unlinked number: terms_decline is deliberately outside
+  # SUBMISSION_ACTIONS, so it must reach the service instead of a link request.
+  run_case("consent:pill:terms_decline:unlinked", kind: "interactive", body: "x",
+    raw: tap_raw(Whatsapp::FlowActions.id_for(action: :terms_decline)),
+    conversation_traits: { step: "awaiting_terms_consent", projekt_phase: PHASE })
+
   run_case("stale:drafting", kind: "text", body: "hallo",
     raw: { "text" => { "body" => "hallo" } }, account_traits: { linked: true },
     conversation_traits: {
@@ -436,6 +511,94 @@ ActiveRecord::Base.transaction do
       step: "awaiting_resume_decision", projekt_phase: PHASE,
       context: { "flow_started_at" => 4000.minutes.ago.iso8601 }
     })
+
+  # CON-2968. A message with no substance while the bot waits on free text is the
+  # citizen beginning again rather than the answer: "hallo" at awaiting_idea used
+  # to reach AskIdeaService.handle_answer and cost a draft generation. What these
+  # cases pin is the dispatch around that reading — the question instead of the
+  # content, where each of its two pills lands, and that the question gives up
+  # rather than asking forever. ContinueOrRestartService is deliberately not
+  # stubbed: which prompt it re-sends is the behavior under test.
+  %w[
+    awaiting_idea awaiting_comment awaiting_image_upload awaiting_revision awaiting_location
+    awaiting_participation_projekt
+  ].each do |step|
+    run_case("fresh_start:classifier:#{step}",
+      kind: "text", body: "hallo", raw: { "text" => { "body" => "hallo" } },
+      conversation_traits: {
+        step: step, projekt_phase: PHASE,
+        context: { "flow_started_at" => Time.current.iso8601 }
+      },
+      script: { guest: true, intent: ServiceResult.success(verdict: :fresh_start, correction: nil) })
+  end
+
+  # The other half of the same reading: a greeting that carries substance is the
+  # contribution, and nothing about this gate may touch it.
+  run_case("fresh_start:classifier:substance_stays_content",
+    kind: "text", body: "hallo, ich moechte mehr baenke am rummelgang",
+    raw: { "text" => { "body" => "hallo, ich moechte mehr baenke am rummelgang" } },
+    conversation_traits: {
+      step: "awaiting_idea", projekt_phase: PHASE,
+      context: { "flow_started_at" => Time.current.iso8601 }
+    },
+    script: { guest: true, intent: ServiceResult.success(verdict: :answer, correction: nil) })
+
+  run_case("fresh_start:reask_exhausted",
+    kind: "text", body: "hallo", raw: { "text" => { "body" => "hallo" } },
+    conversation_traits: {
+      step: "awaiting_continue_decision", projekt_phase: PHASE,
+      context: {
+        "flow_started_at" => Time.current.iso8601, "interrupted_step" => "awaiting_idea",
+        "choice_reasks" => 3
+      }
+    },
+    script: { guest: true, intent: ServiceResult.success(verdict: :fresh_start, correction: nil) })
+
+  [
+    ["awaiting_idea", {}],
+    ["awaiting_revision", {}],
+    ["awaiting_image_upload", {}],
+    ["awaiting_location", {}],
+    ["awaiting_participation_projekt", {}],
+    ["awaiting_comment", { "comment_proposal_id" => PROPOSAL.id }],
+    ["awaiting_comment_gone", { "comment_proposal_id" => 999_999 }]
+  ].each do |interrupted, extra_context|
+    [:continue_flow, :start_over].each do |action|
+      run_case("fresh_start:pill:#{action}:#{interrupted}",
+        kind: "interactive", body: "x",
+        raw: tap_raw(Whatsapp::FlowActions.id_for(action: action)),
+        account_traits: { linked: true },
+        conversation_traits: {
+          step: "awaiting_continue_decision", projekt_phase: PHASE, draft_resource: PROPOSAL,
+          context: {
+            "flow_started_at" => Time.current.iso8601,
+            "interrupted_step" => interrupted.delete_suffix("_gone")
+          }.merge(extra_context)
+        })
+    end
+  end
+
+  run_case("fresh_start:pill:continue_flow:no_interrupted_step",
+    kind: "interactive", body: "x",
+    raw: tap_raw(Whatsapp::FlowActions.id_for(action: :continue_flow)),
+    account_traits: { linked: true },
+    conversation_traits: {
+      step: "awaiting_continue_decision", projekt_phase: PHASE,
+      context: { "flow_started_at" => Time.current.iso8601 }
+    })
+
+  # Written rather than tapped, with substance: the step the question
+  # interrupted is restored and this message answers it (StepDispatch).
+  run_case("fresh_start:written_answer_resumes_step",
+    kind: "text", body: "mehr baenke am rummelgang",
+    raw: { "text" => { "body" => "mehr baenke am rummelgang" } },
+    conversation_traits: {
+      step: "awaiting_continue_decision", projekt_phase: PHASE,
+      context: {
+        "flow_started_at" => Time.current.iso8601, "interrupted_step" => "awaiting_idea"
+      }
+    },
+    script: { guest: true, intent: ServiceResult.success(verdict: :answer, correction: nil) })
 
   raise ActiveRecord::Rollback
 end

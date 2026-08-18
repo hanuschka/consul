@@ -97,6 +97,21 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
       question and not a refusal of it — that is answer.
   TEXT
 
+  # Lopsided towards answer like the rest, and for the same kind of reason: a
+  # missed fresh start costs one drafted greeting the citizen can cancel, a
+  # wrong one interrupts someone who was answering the question with a
+  # question about their own contribution.
+  FRESH_START_GUIDANCE = <<~TEXT.freeze
+    - fresh_start: the message carries no substance of its own and reads as beginning again
+      rather than as the answer the bot is waiting for — a bare greeting ("hallo", "guten
+      morgen", "hi", "hallo, sind Sie da?"), a question about the bot itself ("was kannst du?",
+      "wer bist du?"), or a request for the menu ("menü", "was gibt es hier?", "von vorne"). A
+      message that carries substance alongside the greeting is not fresh_start: "Hallo, ich
+      möchte mehr Bänke am Rummelgang" is the contribution itself. Neither is a short answer —
+      "mehr Bänke", "am Bahnhof", "kein Foto" each say the thing the step asked for. When in
+      doubt between fresh_start and answer, answer.
+  TEXT
+
   CLOSING = <<~TEXT.freeze
     - answer: everything else.
 
@@ -139,7 +154,9 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
     def verdicts
       return %w[opt_in answer] if opted_out?
 
-      [opt_out_verdict, abort_verdict, step_verdicts, "answer"].flatten.compact
+      [
+        opt_out_verdict, abort_verdict, fresh_start_verdict, step_verdicts, "answer"
+      ].flatten.compact
     end
 
     # Offered only outside a submission. Inside one the citizen is writing the
@@ -171,6 +188,17 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
       return if !@interaction_open
 
       "abort"
+    end
+
+    # Offered wherever the bot is waiting on free text, and on the question
+    # that asks about it: a greeting answered with another greeting is the
+    # same reading, and giving up on it is the flow's job — the question
+    # counts its own re-asks — rather than something to arrange by withholding
+    # the verdict here.
+    def fresh_start_verdict
+      return if !Whatsapp::Conversation::FRESH_START_STEPS.include?(@conversation.step)
+
+      "fresh_start"
     end
 
     def step_verdicts
@@ -214,6 +242,7 @@ class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
         when "opt_out" then OPT_OUT_GUIDANCE
         when "opt_in" then OPT_IN_GUIDANCE
         when "abort" then ABORT_GUIDANCE
+        when "fresh_start" then FRESH_START_GUIDANCE
         when "publish", "revise" then publish_guidance
         when "skip" then skip_guidance
         end

@@ -120,7 +120,29 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       @state ||= ::Whatsapp::AiAssistant::ChatState.new(conversation: @conversation)
     end
 
+    # The fresh-start question is appended rather than listed, because it is
+    # the one tool whose availability depends on the step: anywhere the bot is
+    # not waiting on free text a greeting is answered by the menu, and there is
+    # nothing half-written to carry on with. The classifier assembles its
+    # verdict set from the same constant, so both readings offer the decision
+    # in exactly the same moments.
     def tools
+      instances = base_tools.map { |tool_class| tool_class.new(conversation: @conversation) }
+
+      instances << fresh_start_tool if fresh_start_available?
+
+      instances + [hand_to_flow]
+    end
+
+    def fresh_start_available?
+      ::Whatsapp::Conversation::FRESH_START_STEPS.include?(@conversation.step)
+    end
+
+    def fresh_start_tool
+      ::Ai::Tools::WhatsappAiAssistant::AskContinueOrRestart.new(conversation: @conversation)
+    end
+
+    def base_tools
       [
         ::Ai::Tools::WhatsappAiAssistant::ListOpenPhases,
         ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
@@ -152,7 +174,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::ClarifyIntent,
         ::Ai::Tools::WhatsappAiAssistant::RefuseOutOfScope,
         ::Ai::Tools::WhatsappAiAssistant::ReplyWithButtons
-      ].map { |tool_class| tool_class.new(conversation: @conversation) } + [hand_to_flow]
+      ]
     end
 
     # Held rather than built inline: whether it ran is the only way the caller

@@ -97,6 +97,26 @@ class Whatsapp::Account < ApplicationRecord
     update!(ai_disclosed_at: Time.current)
   end
 
+  # Whether this number has accepted the terms and the privacy policy. Held here
+  # for the same reason the disclosure is: `resource_terms` is a virtual
+  # attribute on each submission with nowhere to persist, the web form's
+  # `terms_general` and `terms_data_protection` are too, and a guest phase has no
+  # durable User to hang it on either. The account row is the only thing that
+  # outlives both the flow and the guest.
+  #
+  # Not backfilled: an implicit `resource_terms = true` written by an earlier
+  # version of the bot is not consent anybody gave, so a returning number is
+  # asked once rather than credited with an answer it never made.
+  def terms_accepted?
+    terms_accepted_at.present?
+  end
+
+  def mark_terms_accepted!
+    return if terms_accepted?
+
+    update!(terms_accepted_at: Time.current)
+  end
+
   # Mid-login: a token was minted and has not lapsed. Both halves are the
   # account's own facts, so the combination lives here rather than being
   # re-spelled by each flow that has to tell "waiting on the link" apart from

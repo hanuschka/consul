@@ -10,8 +10,16 @@ class Whatsapp::Inbound::FlowActionDispatch
 
   # Making a submission, which a guest phase does allow: these need an
   # account only when the phase they point at does.
+  # terms_accept belongs here and terms_decline deliberately does not: accepting
+  # continues into the submission and needs whatever the phase needs, while
+  # declining only says a sentence and opens the menu — gating that behind an
+  # account would answer a citizen who just refused with a login request.
+  # continue_flow and start_over split on the same line: carrying on returns to
+  # the step that needs whatever the phase needs, while starting over only
+  # discards and opens the menu.
   SUBMISSION_ACTIONS = %i[
-    idea_start category sentiment draft_publish draft_revise resume restart
+    idea_start terms_accept category sentiment draft_publish draft_revise resume restart
+    continue_flow
     image_upload image_generate image_skip location_share location_skip
     submit_final submit_anyway
   ].freeze
@@ -90,7 +98,9 @@ class Whatsapp::Inbound::FlowActionDispatch
       when :link_later
         Whatsapp::Flows::LinkOutcomeService.declined(conversation:)
       when :discover
-        dispatch_discovery
+        Whatsapp::Flows::BrowseProjektsService.call(conversation:)
+      when :discover_category
+        Whatsapp::Flows::BrowseProjektsService.category(conversation:, key: param)
       when :discover_public
         Whatsapp::Flows::DiscoveryService.unlinked(conversation:)
       when :submit_proposal
@@ -125,6 +135,10 @@ class Whatsapp::Inbound::FlowActionDispatch
         finish_notification_settings
       when :idea_start
         start_phase_flow(param)
+      when :terms_accept
+        Whatsapp::Flows::TermsConsentService.accept(conversation:)
+      when :terms_decline
+        Whatsapp::Flows::TermsConsentService.decline(conversation:)
       when :category
         Whatsapp::Flows::AskDraftChoiceService.assign_category(
           conversation:, label_id: param, inbound_message_id:
@@ -155,6 +169,10 @@ class Whatsapp::Inbound::FlowActionDispatch
         Whatsapp::Flows::ResumeOrRestartService.resume(conversation:)
       when :restart
         Whatsapp::Flows::ResumeOrRestartService.restart(conversation:)
+      when :continue_flow
+        Whatsapp::Flows::ContinueOrRestartService.continue(conversation:)
+      when :start_over
+        Whatsapp::Flows::ContinueOrRestartService.restart(conversation:)
       when :support
         Whatsapp::Flows::SupportService.register(conversation:, proposal_id: param)
       when :support_instead
@@ -183,8 +201,15 @@ class Whatsapp::Inbound::FlowActionDispatch
     # Read from the phase the action points at rather than the conversation's:
     # idea_start carries its own phase id, and it is the tap that opens the flow
     # in the first place.
+    # continue_flow is the one gated action that need not be about a submission
+    # at all: it carries on whichever step was interrupted, and an unlinked
+    # number reaches the participation listing — which needs no account — with
+    # no phase chosen yet. Gated on the phase it does not have, "Weitermachen"
+    # answered that citizen with a login request instead of the list they were
+    # reading. Where a phase is set, the phase decides as it does for the rest.
     def guest_action?(action, param)
       return false if !GUEST_ELIGIBLE_ACTIONS.include?(action)
+      return true if action == :continue_flow && conversation.projekt_phase.blank?
 
       target_phase_for(action, param)&.guest_participation?
     end
@@ -239,16 +264,6 @@ class Whatsapp::Inbound::FlowActionDispatch
         account:,
         body: Whatsapp.phrase(body_key)
       )
-    end
-
-    # The same branch whether the assistant called show_projekts or the citizen
-    # tapped a pill that offers it. The pill is on the main menu, which every
-    # number is answered with, so the two cannot differ: the account listing
-    # dead-ends for a guest and the public one does not.
-    def dispatch_discovery
-      return Whatsapp::Flows::DiscoveryService.unlinked(conversation:) if account.user.blank?
-
-      Whatsapp::Flows::DiscoveryService.linked(conversation:)
     end
 
     def finish_notification_settings

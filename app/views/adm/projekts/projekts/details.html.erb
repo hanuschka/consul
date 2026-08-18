@@ -4,6 +4,29 @@
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t("adm.projekts.projekts.details.hint_text") %></p>
   <% end %>
+
+  <% if policy([:adm, :projekts, @projekt]).update? %>
+    <% header.with_actions do %>
+      <div class="ml-auto d-flex gap-2">
+        <% if @projekt.copy_unfinished? %>
+          <%# A stalled or failed copy renders as failed inside the partial. %>
+          <%= render "adm/projekts/projekts/copy_status", projekt: @projekt %>
+        <% else %>
+          <%= kern_link_button(
+            copy_adm_projekts_projekt_path(@projekt),
+            icon: "content_copy",
+            text: t("adm.projekts.projekts.copy.action"),
+            data: {
+              turbo_method: :post,
+              turbo_confirm: t("adm.projekts.projekts.copy.confirm"),
+              turbo_frame: "_top",
+              turbo_prefetch: false
+            }
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= render Adm::Projekts::ProjektTabsComponent.new(projekt: @projekt) %>
@@ -26,6 +49,10 @@
 
     <%= render Kern::FormFieldComponent.new(label: t('.landing_pages_label'), hint: t('.landing_pages_description')) do %>
       <%= render 'adm/projekts/projekts/details/landing_pages', projekt: @projekt %>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(label: t('.parent_projekt_label'), hint: t('.parent_projekt_description')) do %>
+      <%= render 'adm/projekts/projekts/details/parent_projekt', projekt: @projekt %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(label: t('.geo_restriction_label'), hint: t('.geo_restriction_description')) do %>

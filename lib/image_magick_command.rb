@@ -38,7 +38,8 @@ module ImageMagickCommand
     parse_dimensions(result.stdout)
   end
 
-  def self.convert_to_png(source_path, destination_path, vector: false)
+  def self.convert_to_png(source_path, destination_path, timeout: CONVERT_TIMEOUT,
+                         memory_limit: GuardedCommand::DEFAULT_MEMORY_LIMIT)
     command = convert_command
     return false if command.blank?
 
@@ -47,8 +48,8 @@ module ImageMagickCommand
     result = GuardedCommand.run(
       *command, "#{source_path}#{FIRST_FRAME}",
       "-background", "white", "-flatten", "png:#{destination_path}",
-      timeout: vector ? VECTOR_CONVERT_TIMEOUT : CONVERT_TIMEOUT,
-      memory_limit: vector ? VECTOR_MEMORY_LIMIT : GuardedCommand::DEFAULT_MEMORY_LIMIT
+      timeout: timeout,
+      memory_limit: memory_limit
     )
 
     if !result.success?
@@ -67,16 +68,16 @@ module ImageMagickCommand
   # A delegate entry is no promise that the program behind it is installed, so
   # the conversion itself still has to be allowed to fail.
   def self.decodable_formats
+    @decodable_formats ||= read_decodable_formats
+  end
+
+  def self.read_decodable_formats
     listing = run_listing("-list", "format")
     formats = listing.to_s.scan(/^\s*([A-Z0-9]+)\*?\s+[A-Z0-9]+\s+[r-][w-]/).flatten
 
     delegates = run_listing("-list", "delegate").to_s.scan(/^\s*([a-z0-9]+)\s*=>/).flatten
 
     (formats.map(&:downcase) + delegates).uniq
-  end
-
-  def self.available?
-    convert_command.present?
   end
 
   def self.identify_command
@@ -110,5 +111,5 @@ module ImageMagickCommand
     [width, height]
   end
 
-  private_class_method :run_listing, :parse_dimensions
+  private_class_method :run_listing, :read_decodable_formats, :parse_dimensions
 end

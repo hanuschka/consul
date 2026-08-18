@@ -49,6 +49,12 @@ class ProjektImport < ApplicationRecord
   # say what produced a message.
   TITLE_IMAGE_PICKER_COMMAND = "title_image_picker".freeze
 
+  # Stamped on a user message that was a bare option number rather than something
+  # to send to the model, for the same reason the Summarize and Regenerate buttons
+  # stamp theirs: it applied a change, so it must not be counted as an unanswered
+  # request when the projekt is created.
+  TITLE_IMAGE_REPLY_COMMAND = "title_image_reply".freeze
+
   IN_PROGRESS_STATUSES = %w[pending extracting processing chatting submitting].freeze
   ANALYZING_STATUSES = %w[pending extracting processing].freeze
 
@@ -76,37 +82,46 @@ class ProjektImport < ApplicationRecord
   # can legally become a title image, and the attachment to render it from.
   SourceImageCandidate = Struct.new(
     :index, :filename, :source_filename, :width, :height,
-    :eligible, :ineligible_reason, :attachment,
+    :ineligible_reason, :attachment,
     keyword_init: true
-  )
+  ) do
+    # Derived, never stored alongside the reason: one fact, one place.
+    def eligible?
+      ineligible_reason.blank?
+    end
+  end
 
   # The attachments are loaded in one query rather than one per tile, and matched
   # to their descriptor by blob id so a purged attachment yields a candidate
   # without a picture instead of shifting every later tile onto the wrong image.
+  # ||= rather than a present? guard: an import whose documents held no usable
+  # image is the common case, and a present? guard never memoizes the empty result,
+  # so every caller on the page re-queries the attachments.
   def source_image_candidates
-    return @source_image_candidates if @source_image_candidates.present?
+    @source_image_candidates ||= begin
+      attachments_by_blob_id = extracted_images.includes(:blob).index_by(&:blob_id)
 
-    attachments_by_blob_id = extracted_images.includes(:blob).index_by(&:blob_id)
-
-    @source_image_candidates = Array(source_images).each_with_index.map do |descriptor, index|
-      SourceImageCandidate.new(
-        index: index,
-        filename: descriptor["filename"],
-        source_filename: descriptor["source_filename"],
-        width: descriptor["width"],
-        height: descriptor["height"],
-        eligible: descriptor["eligible"],
-        ineligible_reason: descriptor["ineligible_reason"],
-        attachment: attachments_by_blob_id[descriptor["blob_id"]]
-      )
+      Array(source_images).each_with_index.map do |descriptor, index|
+        SourceImageCandidate.new(
+          index: index,
+          filename: descriptor["filename"],
+          source_filename: descriptor["source_filename"],
+          width: descriptor["width"],
+          height: descriptor["height"],
+          ineligible_reason: descriptor["ineligible_reason"],
+          attachment: attachments_by_blob_id[descriptor["blob_id"]]
+        )
+      end
     end
   end
 
-  def selected_source_image
+  # The one place that answers "which candidate is the chosen title image", so a
+  # later change to how the choice is stored has one call site to follow.
+  def selected_source_image_candidate
     return nil if !title_image_document?
     return nil if title_image_index.blank?
 
-    Array(source_images)[title_image_index]
+    source_image_candidates[title_image_index]
   end
 
   def created_projekts

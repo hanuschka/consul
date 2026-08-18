@@ -226,7 +226,6 @@ en:
             generated: "The cover image will be created with AI during the import."
             none: "The projekt will be imported without a cover image."
           ineligible:
-            too_short: "Too low for a cover image (at least %{minimum_height} px high)"
             content_type: "This image format is not accepted for cover images"
           summary:
             document: "Cover image: from the document (%{width} × %{height})"
@@ -253,9 +252,11 @@ en:
           source_image_undecodable: "The image \"%{image}\" in the file \"%{filename}\" is damaged or not a real image file and was not carried over. Please upload it manually."
           source_image_unsupported_format: "The image \"%{image}\" in the file \"%{filename}\" is stored in a format this server cannot read and was not carried over. Please save it as JPG or PNG and upload it manually."
           source_image_conversion_failed: "The image \"%{image}\" in the file \"%{filename}\" is a drawing or metafile that could not be converted into a web image and was not carried over. Please save it as JPG or PNG and upload it manually."
+          source_image_conversion_limit: "The file \"%{filename}\" contains more drawings or metafiles than can be converted during one import, so the image \"%{image}\" was not carried over. Please save it as JPG or PNG and upload it manually."
           source_image_too_large: "The image \"%{image}\" in the file \"%{filename}\" is too large to process and was not carried over. Please upload a smaller version manually."
           source_image_hero_rejected: "The image \"%{image}\" from the document could not be used as the title image, because it does not meet the requirements for title images. It is available in the projekt's image gallery."
           source_image_store_failed: "The image \"%{image}\" from the document could not be saved: %{message}. Please upload it manually."
+          source_images_file_failed: "The images in the file \"%{filename}\" could not be carried over. Images from the other files were carried over; please upload the missing ones manually."
           source_images_failed: "The images in the uploaded documents could not be carried over: %{message}. Please upload them manually."
           source_images_unplaced:
             one: "One image from the document was not placed in any content block. It is available in the projekt's image gallery and can be inserted with the editor."

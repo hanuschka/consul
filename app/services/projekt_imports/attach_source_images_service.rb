@@ -40,8 +40,9 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
     return nil if !projekt_import.title_image_document?
     return nil if projekt.page&.image.present?
 
-    hero = candidates.find { |candidate| candidate.index == projekt_import.title_image_index }
+    hero = projekt_import.selected_source_image_candidate
     return nil if hero.blank?
+    return nil if hero.attachment.blank?
 
     result = ::Projekts::AttachPageImageService.call(
       projekt: projekt,
@@ -61,35 +62,24 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
     hero
   end
 
+  # Streamed through AttachmentUpload rather than read with blob.download: these are
+  # un-resized document originals, and download would hold the whole picture on the
+  # heap while a second copy is written to the tempfile.
   def store_admin_image(candidate)
-    blob = candidate.attachment.blob
-    file = Tempfile.new(["projekt_import_image", File.extname(candidate.filename)], binmode: true)
+    admin_image = ::AdminImage.new(user: projekt_import.user, projekt: projekt)
 
-    begin
-      file.write(blob.download)
-      file.rewind
-
-      admin_image = ::AdminImage.new(user: projekt_import.user, projekt: projekt)
-      admin_image.attach_processed_upload(
-        ActionDispatch::Http::UploadedFile.new(
-          tempfile: file,
-          filename: candidate.filename,
-          type: blob.content_type
-        )
-      )
-      admin_image.save!
-
-      # Path, not URL: these land in content blocks rendered on the projekt
-      # page itself, the same as an editor upload.
-      admin_image.url_content
-    rescue StandardError => e
-      projekt_import.add_warning!(
-        I18n.t("adm.projekts.imports.warnings.source_image_store_failed", image: candidate.filename, message: e.message)
-      )
-      nil
-    ensure
-      file.close
-      file.unlink
+    ::AttachmentUpload.open(candidate.attachment) do |upload|
+      admin_image.attach_processed_upload(upload)
     end
+    admin_image.save!
+
+    # Path, not URL: these land in content blocks rendered on the projekt page
+    # itself, the same as an editor upload.
+    admin_image.url_content
+  rescue StandardError => e
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.source_image_store_failed", image: candidate.filename, message: e.message)
+    )
+    nil
   end
 end

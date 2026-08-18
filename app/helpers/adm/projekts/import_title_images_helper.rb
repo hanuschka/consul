@@ -9,7 +9,27 @@ module Adm::Projekts::ImportTitleImagesHelper
   def import_title_image_tile_url(candidate)
     return nil if candidate.attachment.blank?
 
-    rails_representation_url(candidate.attachment.variant(TITLE_IMAGE_LARGE_VARIANT), only_path: true)
+    import_title_image_representation_url(candidate.attachment, TITLE_IMAGE_LARGE_VARIANT)
+  end
+
+  # Not every picture a document can hold is one Active Storage will resize. An
+  # AVIF sits outside variable_content_types and raises InvariableError, and an
+  # animated GIF would be resized frame by frame — which is why AdminImage
+  # excludes it too. Both are served whole instead.
+  #
+  # Raising here would not cost a thumbnail, it would cost the import: the picker
+  # is re-rendered by every message serialization, so the chat page and the
+  # polling endpoint would both 500, with no way back except deleting the import.
+  def import_title_image_representation_url(attachment, variant)
+    return rails_blob_path(attachment, only_path: true) if !import_title_image_resizable?(attachment)
+
+    rails_representation_url(attachment.variant(variant), only_path: true)
+  end
+
+  def import_title_image_resizable?(attachment)
+    return false if ::AdminImage::UNPROCESSED_CONTENT_TYPES.include?(attachment.blob.content_type)
+
+    attachment.blob.variable?
   end
 
   def import_title_image_summary_url(projekt_import)
@@ -20,21 +40,12 @@ module Adm::Projekts::ImportTitleImagesHelper
     import_selected_title_image_url(projekt_import, TITLE_IMAGE_LARGE_VARIANT)
   end
 
-  # Stands in for the picture that does not exist yet, so it says which of the
-  # three outcomes is coming — the same glyphs the picker rows use for them.
-  def import_title_image_preview_icon(projekt_import)
-    return "auto_awesome" if projekt_import.title_image_generated?
-    return "hide_image" if projekt_import.title_image_none?
-
-    "broken_image"
-  end
-
   def import_selected_title_image_url(projekt_import, variant)
-    candidate = import_selected_title_image_candidate(projekt_import)
+    candidate = projekt_import.selected_source_image_candidate
     return nil if candidate.blank?
     return nil if candidate.attachment.blank?
 
-    rails_representation_url(candidate.attachment.variant(variant), only_path: true)
+    import_title_image_representation_url(candidate.attachment, variant)
   end
 
   # What the import will actually do, said in one line so an admin about to press
@@ -43,19 +54,11 @@ module Adm::Projekts::ImportTitleImagesHelper
     return t("adm.projekts.imports.title_image.summary.generated") if projekt_import.title_image_generated?
     return t("adm.projekts.imports.title_image.summary.none") if projekt_import.title_image_none?
 
-    candidate = import_selected_title_image_candidate(projekt_import)
+    candidate = projekt_import.selected_source_image_candidate
     return t("adm.projekts.imports.title_image.summary.unavailable") if candidate.blank?
 
     t("adm.projekts.imports.title_image.summary.document",
       width: candidate.width, height: candidate.height)
-  end
-
-  def import_selected_title_image_candidate(projekt_import)
-    return nil if !projekt_import.title_image_document?
-
-    projekt_import
-      .source_image_candidates
-      .find { |candidate| candidate.index == projekt_import.title_image_index }
   end
 
   # Written back into the chat as the assistant's reply, so the admin sees which
@@ -64,7 +67,7 @@ module Adm::Projekts::ImportTitleImagesHelper
     return t("adm.projekts.imports.title_image.confirmed.generated") if projekt_import.title_image_generated?
     return t("adm.projekts.imports.title_image.confirmed.none") if projekt_import.title_image_none?
 
-    candidate = import_selected_title_image_candidate(projekt_import)
+    candidate = projekt_import.selected_source_image_candidate
     return t("adm.projekts.imports.title_image.confirmed.none") if candidate.blank?
 
     t("adm.projekts.imports.title_image.confirmed.document",
@@ -89,11 +92,13 @@ module Adm::Projekts::ImportTitleImagesHelper
     t("adm.projekts.imports.title_image.option_hints.#{option.mode}")
   end
 
-  def import_title_image_option_icon(option)
-    return "broken_image" if option.document?
-    return "auto_awesome" if option.mode == "generated"
+  # One mapper for both the picker rows and the confirm dialog's stand-in cover, so
+  # a glyph cannot be changed in one and missed in the other.
+  def import_title_image_icon(mode)
+    return "auto_awesome" if mode == "generated"
+    return "hide_image" if mode == "none"
 
-    "hide_image"
+    "broken_image"
   end
 
   # The visible label is short so every row reads the same width; the full sentence
@@ -114,9 +119,8 @@ module Adm::Projekts::ImportTitleImagesHelper
   end
 
   def import_title_image_ineligible_hint(candidate)
-    return nil if candidate.eligible
+    return nil if candidate.eligible?
 
-    t("adm.projekts.imports.title_image.ineligible.#{candidate.ineligible_reason}",
-      minimum_height: ::Image::MIN_IMAGE_HEIGHT)
+    t("adm.projekts.imports.title_image.ineligible.#{candidate.ineligible_reason}")
   end
 end

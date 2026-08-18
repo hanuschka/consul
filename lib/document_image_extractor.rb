@@ -14,11 +14,6 @@
 # through poppler's pdfimages. Where that binary is absent the images are
 # reported as present but unextractable, so the caller can tell the user to
 # upload them by hand.
-#
-# Two entry points, because the import needs the same answer at two very
-# different prices. `.inventory` says what is in the document and whether it can
-# be read, which is all the analysis stage needs and costs a listing; `.call`
-# also hands back the bytes, which for a PDF means decoding every image.
 class DocumentImageExtractor < ApplicationService
   MAX_XOBJECT_DEPTH = 5
 
@@ -29,8 +24,7 @@ class DocumentImageExtractor < ApplicationService
   # A slide deck exported to PDF can carry hundreds of objects; the import only
   # ever places a handful. The archive formats get the same ceiling: a picture
   # book saved as DOCX would otherwise mean one ImageMagick run per page.
-  MAX_PDF_IMAGES = 80
-  MAX_ARCHIVE_IMAGES = 80
+  MAX_IMAGES = 80
 
   # Guards the one step that is unbounded by the archive itself. An entry this
   # large is a print-resolution scan that no projekt page would use, and reading
@@ -76,16 +70,13 @@ class DocumentImageExtractor < ApplicationService
   UNREADABLE_CONVERSION_FAILED = "conversion_failed".freeze
   UNREADABLE_UNSUPPORTED = "unsupported_format".freeze
   UNREADABLE_TOO_LARGE = "too_large".freeze
+  UNREADABLE_CONVERSION_LIMIT = "conversion_limit".freeze
 
   # Deliberately not memoized: a PATH lookup is a handful of stat calls, and
   # caching a negative would keep every long-running worker reporting "not
   # installed" after the package is added, until someone restarts it.
   def self.pdfimages_available?
     ExternalTool.installed?("pdfimages")
-  end
-
-  def self.inventory(file:)
-    new(file: file).inventory
   end
 
   attr_reader :file, :file_path, :extension
@@ -99,27 +90,9 @@ class DocumentImageExtractor < ApplicationService
   def call
     case extension
     when "docx", "odt"
-      archive_result(with_data: true)
+      archive_result
     when "pdf"
       images_from_pdf
-    else
-      empty_result
-    end
-  rescue StandardError => e
-    log_failure(e)
-    empty_result
-  end
-
-  # The PDF branch is the reason this exists separately: pdfimages reports every
-  # image's dimensions from the object table without decoding any of them, so
-  # the analysis stage learns what is in a 13 MB PDF for the price of one
-  # listing.
-  def inventory
-    case extension
-    when "docx", "odt"
-      archive_result(with_data: false)
-    when "pdf"
-      pdf_inventory
     else
       empty_result
     end
@@ -138,7 +111,7 @@ class DocumentImageExtractor < ApplicationService
     Rails.logger.warn("[DocumentImageExtractor] #{extension} failed: #{error.message}")
   end
 
-  def archive_result(with_data:)
+  def archive_result
     images = []
     unreadable = []
 
@@ -149,7 +122,7 @@ class DocumentImageExtractor < ApplicationService
           next
         end
 
-        image = read_archive_entry(entry, with_data: with_data)
+        image = read_archive_entry(entry)
 
         if image[:reason].present?
           unreadable << unreadable_entry(entry, image[:reason])
@@ -172,13 +145,13 @@ class DocumentImageExtractor < ApplicationService
     archive
       .select { |entry| entry.file? && entry.name.match?(media_path) }
       .sort_by { |entry| [File.basename(entry.name)[/\d+/].to_i, entry.name] }
-      .first(MAX_ARCHIVE_IMAGES)
+      .first(MAX_IMAGES)
   end
 
   # Written to disk before anything is decided about it: ImageMagick needs a
   # path, and for a metafile the bytes that end up being kept are the converted
   # ones rather than the ones the archive held.
-  def read_archive_entry(entry, with_data:)
+  def read_archive_entry(entry)
     entry_extension = File.extname(entry.name).downcase.delete(".")
     content_type = CONTENT_TYPES[entry_extension]
 
@@ -190,7 +163,7 @@ class DocumentImageExtractor < ApplicationService
       source_path = File.join(directory, File.basename(entry.name))
       entry.extract(source_path)
 
-      next convert_archive_entry(entry, source_path, directory, with_data: with_data) if content_type.blank?
+      next convert_archive_entry(entry, source_path, directory) if content_type.blank?
 
       dimensions = ImageMagickCommand.dimensions(source_path)
       next { reason: UNREADABLE_UNDECODABLE } if dimensions.blank?
@@ -199,26 +172,37 @@ class DocumentImageExtractor < ApplicationService
         filename: File.basename(entry.name),
         content_type: content_type,
         path: source_path,
-        dimensions: dimensions,
-        with_data: with_data
+        dimensions: dimensions
       )
     end
   end
 
-  def convert_archive_entry(entry, source_path, directory, with_data:)
+  def convert_archive_entry(entry, source_path, directory)
     entry_extension = File.extname(entry.name).downcase.delete(".")
-    return { reason: UNREADABLE_UNSUPPORTED } if decodable_formats.exclude?(entry_extension)
+    return { reason: UNREADABLE_UNSUPPORTED } if ImageMagickCommand.decodable_formats.exclude?(entry_extension)
 
     vector = VECTOR_EXTENSIONS.include?(entry_extension)
 
     if vector
-      return { reason: UNREADABLE_CONVERSION_FAILED } if @vector_conversions.to_i >= MAX_VECTOR_CONVERSIONS
+      # Its own reason: the file is fine, the server simply stopped converting.
+      # Reporting it as a failed conversion tells the admin to re-save a picture
+      # that would have converted perfectly well.
+      return { reason: UNREADABLE_CONVERSION_LIMIT } if @vector_conversions.to_i >= MAX_VECTOR_CONVERSIONS
 
       @vector_conversions = @vector_conversions.to_i + 1
     end
 
     converted_path = File.join(directory, "#{File.basename(entry.name, '.*')}.png")
-    converted = ImageMagickCommand.convert_to_png(source_path, converted_path, vector: vector)
+    converted =
+      if vector
+        ImageMagickCommand.convert_to_png(
+          source_path, converted_path,
+          timeout: ImageMagickCommand::VECTOR_CONVERT_TIMEOUT,
+          memory_limit: ImageMagickCommand::VECTOR_MEMORY_LIMIT
+        )
+      else
+        ImageMagickCommand.convert_to_png(source_path, converted_path)
+      end
     return { reason: UNREADABLE_CONVERSION_FAILED } if !converted
 
     dimensions = ImageMagickCommand.dimensions(converted_path)
@@ -228,56 +212,22 @@ class DocumentImageExtractor < ApplicationService
       filename: "#{File.basename(entry.name, '.*')}.png",
       content_type: "image/png",
       path: converted_path,
-      dimensions: dimensions,
-      with_data: with_data
+      dimensions: dimensions
     )
   end
 
-  def descriptor(filename:, content_type:, path:, dimensions:, with_data:)
-    image = {
+  def descriptor(filename:, content_type:, path:, dimensions:)
+    {
       filename: filename,
       content_type: content_type,
-      size: File.size(path),
       width: dimensions.first,
-      height: dimensions.last
+      height: dimensions.last,
+      data: File.binread(path)
     }
-    return image if !with_data
-
-    image.merge(data: File.binread(path))
   end
 
   def unreadable_entry(entry, reason)
     { filename: File.basename(entry.name), reason: reason }
-  end
-
-  # One listing per document rather than one per image: each call starts
-  # ImageMagick and prints a few hundred lines.
-  def decodable_formats
-    @decodable_formats ||= ImageMagickCommand.decodable_formats
-  end
-
-  def pdf_inventory
-    if !self.class.pdfimages_available?
-      return ServiceResult.success(images: [], unextractable: pdf_contains_images?, unreadable: [])
-    end
-
-    listing = pdf_listing
-
-    if listing.nil?
-      return ServiceResult.success(images: [], unextractable: pdf_contains_images?, unreadable: [])
-    end
-
-    images = large_enough_entries(listing).first(MAX_PDF_IMAGES).map do |entry|
-      {
-        filename: "pdf_image_#{entry[:number]}.png",
-        content_type: "image/png",
-        size: nil,
-        width: entry[:width],
-        height: entry[:height]
-      }
-    end
-
-    ServiceResult.success(images: images, unextractable: false, unreadable: [])
   end
 
   def images_from_pdf
@@ -381,13 +331,12 @@ class DocumentImageExtractor < ApplicationService
       {
         filename: "pdf_image_#{number}.png",
         content_type: "image/png",
-        size: data.bytesize,
         width: entry[:width],
         height: entry[:height],
         data: data,
         number: number
       }
-    }.sort_by { |image| image[:number] }.first(MAX_PDF_IMAGES)
+    }.sort_by { |image| image[:number] }.first(MAX_IMAGES)
   end
 
   def warn_about_command(label, result)

@@ -40,11 +40,14 @@ class Whatsapp::ProjektContributionsQuery < ApplicationQuery
         .limit(::Whatsapp::MAX_LIST_ROWS)
     end
 
+    # created_at travels as the timestamp rather than as a formatted date: it is
+    # what the rows are sorted on, and the message that shows them states the
+    # age relative to today instead of the date. A German absolute date is
+    # rendered by WhatsApp as a tappable phone number.
     def row(resource)
       {
         title: resource.title.to_s,
         url: Whatsapp::PublishedResourceUrl.call(resource),
-        description: I18n.l(resource.created_at.to_date),
         created_at: resource.created_at
       }
     end

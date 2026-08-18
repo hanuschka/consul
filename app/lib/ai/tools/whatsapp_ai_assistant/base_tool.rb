@@ -90,6 +90,28 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       yield(projekt)
     end
 
+    # What a proposal search hands back when it cannot decide on its own. Shared
+    # because two tools now resolve a proposal from what the citizen called it —
+    # supporting one and opening one — and a second wording of the same refusal
+    # is a second situation for the router to tell apart.
+    def proposal_candidate_summary(proposal)
+      projekt = proposal.projekt_phase&.projekt
+
+      {
+        proposal_id: proposal.id,
+        title: proposal.title,
+        projekt: projekt.present? ? projekt_title(projekt) : nil,
+        supports: proposal.cached_votes_up
+      }.compact
+    end
+
+    def no_proposal_match_error(title)
+      {
+        error: "No publicly listed proposal matches \"#{title}\". Tell the citizen you could not " \
+               "find it and ask for the title as it appears on the projekt page."
+      }
+    end
+
     def unknown_phase_error
       { error: "No open participation phase with that id. Call list_open_phases first." }
     end

@@ -97,6 +97,11 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     Whatsapp::Flows::MainMenuService.greeting(conversation: conversation)
   end
 
+  # How much of a title the link block above the list keeps. An interactive
+  # body holds a thousand characters and the three URLs take a third of it, so
+  # the titles are what has to give rather than the links they belong to.
+  LINK_TITLE_LENGTH = 60
+
   def initialize(conversation:, similar_proposals:, row_descriptions: {})
     super(conversation: conversation)
     @similar_proposals = similar_proposals
@@ -132,8 +137,7 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
 
       Whatsapp::Send.buttons(
         account: account,
-        body: Whatsapp.phrase("whatsapp.bot.proposal.duplicate.single", title: proposal.title,
-          url: Whatsapp::PublishedResourceUrl.call(proposal)),
+        body: single_body(proposal),
         buttons: [
           support_button(proposal),
           Whatsapp::FlowActions.button(
@@ -153,12 +157,55 @@ class Whatsapp::Flows::AskDuplicateChoiceService < Whatsapp::Flows::BaseService
     def ask_about_several
       Whatsapp::Send.list(
         account: account,
-        body: Whatsapp.phrase("whatsapp.bot.proposal.duplicate.multiple"),
+        body: multiple_body,
         button_label: I18n.t("whatsapp.bot.proposal.duplicate.list_label"),
         rows: proposal_rows + escape_rows
       )
 
       true
+    end
+
+    # The search only returns publicly listed proposals, so the fallback is for
+    # one retired between the search and the send rather than for moderation —
+    # and a proposal named without a link is still one the citizen can support
+    # from the pill beside it.
+    def single_body(proposal)
+      url = Whatsapp::PublishedResourceUrl.call(proposal)
+
+      if url.blank?
+        return Whatsapp.phrase(
+          "whatsapp.bot.proposal.duplicate.single_without_url", title: proposal.title
+        )
+      end
+
+      Whatsapp.phrase("whatsapp.bot.proposal.duplicate.single", title: proposal.title, url: url)
+    end
+
+    # A list row cannot hold a link — WhatsApp renders neither markup nor URLs
+    # inside one, and its description is capped at 72 characters — so the links
+    # go into the body above it, numbered in row order. The titles are cut
+    # because three long ones plus three full URLs approach the limit an
+    # interactive body has.
+    def multiple_body
+      [
+        Whatsapp.phrase("whatsapp.bot.proposal.duplicate.multiple"),
+        link_lines.join("\n")
+      ].compact_blank.join("\n\n")
+    end
+
+    def link_lines
+      similar_proposals.each_with_index.filter_map do |proposal, index|
+        url = Whatsapp::PublishedResourceUrl.call(proposal)
+
+        next if url.blank?
+
+        I18n.t(
+          "whatsapp.bot.proposal.duplicate.link_entry",
+          index: index + 1,
+          title: proposal.title.to_s.truncate(LINK_TITLE_LENGTH),
+          url: url
+        )
+      end
     end
 
     def proposal_rows

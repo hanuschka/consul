@@ -28,15 +28,23 @@ class Whatsapp::NotifyProposalStatusJob < ApplicationJob
 
   private
 
+    # The link is the template's only variable, so a proposal the public cannot
+    # open has nothing to push about: a moderation decision fires this on a
+    # rejected proposal too, and an approved template sent with an empty
+    # variable is a notification that says nothing at all.
     def deliver(proposal, type)
       account = audience(proposal, type)
 
       return if account.blank?
 
+      url = Whatsapp::PublishedResourceUrl.call(proposal)
+
+      return if url.blank?
+
       Whatsapp::Send.template(
         account: account,
         name: Whatsapp::NotificationTemplates.name_for("status_change"),
-        variables: [Whatsapp::PublishedResourceUrl.call(proposal)],
+        variables: [url],
         projekt_id: proposal.projekt_phase&.projekt_id
       )
     end

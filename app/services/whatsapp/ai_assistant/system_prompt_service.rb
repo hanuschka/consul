@@ -50,13 +50,21 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # Rebuilt each turn like the rest of this prompt, and ChatState leaves the
     # system message out of the stored history, so a conversation resumed days
     # later cannot be reasoning from the date it started on.
+    #
+    # The dotted-date ban is not cosmetic: WhatsApp reads 13.08.2026 as a phone
+    # number, renders it tappable, and offers to place a call from it. Stated as
+    # a rule here because the dates reach the citizen through the model's own
+    # prose, where no formatting decision of ours applies.
     def dates_section
       <<~TEXT.strip
         Dates: today is #{today}. Every date a tool gives you is ISO-8601, and you work it out
         against today rather than repeating it: how long is left, whether something has already
         passed, whether a deadline is today. Lead with the remaining time and give the date after
-        it, never the bare date. A milestone dated in the future is planned rather than done —
-        never report a planned step as progress that has already been made.
+        it, never the bare date. Never write a date as digits separated by dots — 13.08.2026 is
+        rendered as a phone number and offers to call it. Spell the month out when you name a
+        date at all, and for something that has already happened give the age alone ("vor 5
+        Tagen") with no date beside it. A milestone dated in the future is planned rather than
+        done — never report a planned step as progress that has already been made.
       TEXT
     end
 
@@ -121,7 +129,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            - what has happened so far, what progress was made -> list_milestones
            - when is the next meeting, what dates are there -> list_events
            - is there anything to vote on -> list_open_polls
-           - what have other people suggested there -> list_projekt_contributions
+           - what have other people suggested there -> list_projekt_contributions, which sends
+             the list with a link on every entry
+           - open, show me, let me read one contribution they name -> send_proposal_link, which
+             sends the link to it. Supporting or commenting on one is not this
            - which projekts do I follow -> my_followed_projekts
            These take the projekt's name as the citizen wrote it, and they reach projekts that have
            already finished. Several tool calls to answer one question properly is the right cost;

@@ -8,6 +8,7 @@ class DeficiencyReportsController < ApplicationController
   include Search
   include OnBehalfOfAccountLinking
 
+  before_action :ensure_submissions_open, only: [:new, :create]
   before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
   before_action :load_categories
   before_action :set_view, only: :index
@@ -189,6 +190,13 @@ class DeficiencyReportsController < ApplicationController
   end
 
   private
+
+  def ensure_submissions_open
+    return if DeficiencyReport.submissions_open?
+
+    redirect_to deficiency_reports_path,
+      notice: t("custom.deficiency_reports.submissions_closed")
+  end
 
   def filter_by_my_posts
     return unless params[:my_posts_filter] == 'true'

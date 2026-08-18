@@ -26,7 +26,7 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
 
     Whatsapp::Send.buttons(
       account: account,
-      body: Whatsapp.phrase("whatsapp.bot.support.prompt", title: proposal.title),
+      body: prompt_body(proposal),
       buttons: prompt_buttons(proposal)
     )
   end
@@ -60,6 +60,20 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
       @proposal = Proposal.not_retired.find_by(id: @proposal_id)
     end
 
+    # The link so the citizen can read the proposal before backing it: support
+    # cannot be withdrawn, and a title alone is thin ground for a decision that
+    # final. The link-less wording covers a proposal reached from a card sent
+    # days ago whose page has since gone.
+    def prompt_body(proposal)
+      url = Whatsapp::PublishedResourceUrl.call(proposal)
+
+      if url.blank?
+        return Whatsapp.phrase("whatsapp.bot.support.prompt_without_url", title: proposal.title)
+      end
+
+      Whatsapp.phrase("whatsapp.bot.support.prompt", title: proposal.title, url: url)
+    end
+
     def prompt_buttons(proposal)
       [
         Whatsapp::FlowActions.button(
@@ -75,9 +89,19 @@ class Whatsapp::Flows::SupportService < Whatsapp::Flows::BaseService
     # cache is what the projekt page shows, and a number in the chat that
     # disagrees with the page is worse than no number at all.
     def send_thanks
+      count = proposal.reload.cached_votes_up
+      url = Whatsapp::PublishedResourceUrl.call(proposal)
+
+      if url.blank?
+        return Whatsapp::Send.text(
+          account: account,
+          body: Whatsapp.phrase("whatsapp.bot.support.thanks_without_url", count: count)
+        )
+      end
+
       Whatsapp::Send.text(
         account: account,
-        body: Whatsapp.phrase("whatsapp.bot.support.thanks", count: proposal.reload.cached_votes_up)
+        body: Whatsapp.phrase("whatsapp.bot.support.thanks", count: count, url: url)
       )
     end
 

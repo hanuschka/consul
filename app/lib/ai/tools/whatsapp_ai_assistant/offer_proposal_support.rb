@@ -14,31 +14,14 @@ class Ai::Tools::WhatsappAiAssistant::OfferProposalSupport <
   def execute(title:)
     matches = ::Whatsapp::SupportableProposalsQuery.call(text: title)
 
-    return no_match_error(title) if matches.empty?
-    return { candidates: matches.map { |proposal| summary_of(proposal) }} if matches.size > 1
+    return no_proposal_match_error(title) if matches.empty?
+
+    if matches.size > 1
+      return { candidates: matches.map { |proposal| proposal_candidate_summary(proposal) }}
+    end
 
     ::Whatsapp::Flows::SupportService.prompt(conversation: conversation, proposal: matches.first)
 
     halt("Asked the citizen to confirm supporting this proposal.")
   end
-
-  private
-
-    def summary_of(proposal)
-      projekt = proposal.projekt_phase&.projekt
-
-      {
-        proposal_id: proposal.id,
-        title: proposal.title,
-        projekt: projekt.present? ? projekt_title(projekt) : nil,
-        supports: proposal.cached_votes_up
-      }.compact
-    end
-
-    def no_match_error(title)
-      {
-        error: "No publicly listed proposal matches \"#{title}\". Tell the citizen you could not " \
-               "find it and ask for the title as it appears on the projekt page."
-      }
-    end
 end

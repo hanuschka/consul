@@ -42,11 +42,34 @@ en:
         entry: |-
           *%{title}* (%{status})
           %{url}
+        entry_without_url: '*%{title}* (%{status})'
         status:
           published: online
           pending: under review
         more: And %{count} more.
         empty: You have not submitted anything yet. Tap "Submit a contribution" to get started.
+      projekt_contributions:
+        intro: 'Here is what has been submitted to "%{projekt}":'
+        entry: |-
+          *%{title}*
+          %{age}
+          %{url}
+        entry_without_url: |-
+          *%{title}*
+          %{age}
+        age:
+          today: today
+          days:
+            one: 1 day ago
+            other: '%{count} days ago'
+          months:
+            one: 1 month ago
+            other: '%{count} months ago'
+          years:
+            one: 1 year ago
+            other: '%{count} years ago'
+        more: And %{count} more.
+        empty: Nothing has been submitted to "%{projekt}" yet.
       commands:
         default: |-
           help|What this chat can do
@@ -322,7 +345,9 @@ en:
         published_pending_moderation: |-
           Thanks! Your contribution is now being reviewed, we'll get back to you.
 
-          You can view it here once you are logged in to the portal: %{url}
+          You will be able to open it on the portal as soon as it is approved.
+        link:
+          body: 'You can open "%{title}" on the participation portal here:'
         unclear: I didn't quite understand that — do you mean a new contribution or a comment on an existing
           one?
         cancelled: OK, cancelled. Just message me again whenever you'd like.
@@ -345,9 +370,14 @@ en:
             %{url}
 
             Would you like to support it, or submit your own contribution?
+          single_without_url: |-
+            There is already a contribution about this: "%{title}"
+
+            Would you like to support it, or submit your own contribution?
           multiple: >-
             There are already contributions about this. Would you like to support one of them, or
             submit your own?
+          link_entry: '%{index}. *%{title}* — %{url}'
           list_label: Choose
           submit_anyway_hint: Submit your own contribution anyway
         image_generating: Alright, I'm creating an image — one moment.
@@ -364,8 +394,16 @@ en:
           I couldn't save that location. Feel free to share it again — or submit your contribution
           without a place.
       support:
-        prompt: '👍 Would you like to support this contribution: "%{title}"?'
-        thanks: ✅ Thanks for your support! (%{count} supporters so far)
+        prompt: |-
+          👍 Would you like to support this contribution: "%{title}"?
+
+          %{url}
+        prompt_without_url: '👍 Would you like to support this contribution: "%{title}"?'
+        thanks: |-
+          ✅ Thanks for your support! (%{count} supporters so far)
+
+          %{url}
+        thanks_without_url: ✅ Thanks for your support! (%{count} supporters so far)
         already: You've already supported this contribution.
         gone: That contribution is unfortunately no longer available.
         refused_intro: Unfortunately you can't support this contribution.

@@ -62,7 +62,7 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     # Only proposals can be held back for moderation — an investment has no
     # admin_accepted column, and the web budget flow publishes it outright.
     def send_confirmation(resource)
-      return send_pending(resource) if resource.is_a?(Proposal) && !resource.admin_accepted?
+      return send_pending if resource.is_a?(Proposal) && !resource.admin_accepted?
 
       Whatsapp::Send.text(
         account: account,
@@ -72,16 +72,14 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
       )
     end
 
-    # The link is back, and now leads somewhere: the author may open their own
-    # proposal while it waits for moderation. It asks them to log in first,
-    # which the copy says rather than leaving them to discover it.
-    def send_pending(resource)
+    # Named without a link: until moderation accepts it the proposal has no
+    # public page, and a link that answers with an error or a login wall reads
+    # as a submission that went wrong. The copy says when it becomes openable
+    # instead, and the moderation-decision push carries the link once it is.
+    def send_pending
       Whatsapp::Send.text(
         account: account,
-        body: Whatsapp.phrase(
-          "whatsapp.bot.proposal.published_pending_moderation",
-          url: Whatsapp::PublishedResourceUrl.call(resource)
-        )
+        body: Whatsapp.phrase("whatsapp.bot.proposal.published_pending_moderation")
       )
     end
 

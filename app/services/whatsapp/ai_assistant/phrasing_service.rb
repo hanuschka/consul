@@ -67,6 +67,9 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.contributions.intro
     whatsapp.bot.contributions.more
     whatsapp.bot.contributions.empty
+    whatsapp.bot.projekt_contributions.intro
+    whatsapp.bot.projekt_contributions.more
+    whatsapp.bot.projekt_contributions.empty
     whatsapp.bot.help_menu.body
     whatsapp.bot.help_menu.prompts.support
     whatsapp.bot.help_menu.prompts.comment
@@ -148,9 +151,13 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     whatsapp.bot.proposal.location_received
     whatsapp.bot.proposal.location_failed
     whatsapp.bot.proposal.duplicate.single
+    whatsapp.bot.proposal.duplicate.single_without_url
     whatsapp.bot.proposal.duplicate.multiple
+    whatsapp.bot.proposal.link.body
     whatsapp.bot.support.prompt
+    whatsapp.bot.support.prompt_without_url
     whatsapp.bot.support.thanks
+    whatsapp.bot.support.thanks_without_url
     whatsapp.bot.support.already
     whatsapp.bot.support.gone
     whatsapp.bot.support.refused_intro

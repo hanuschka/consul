@@ -42,12 +42,27 @@ class Whatsapp::Flows::ContributionsService < Whatsapp::Flows::BaseService
       contributions.first(MAX_SHOWN).map { |resource| entry_for(resource) }
     end
 
+    # A submission still awaiting moderation has no public page, so it is named
+    # with its status and no link — the status line is what tells the author why
+    # there is nothing to open yet.
     def entry_for(resource)
+      url = Whatsapp::PublishedResourceUrl.call(resource)
+
+      return entry_without_url(resource) if url.blank?
+
       I18n.t(
         "whatsapp.bot.contributions.entry",
         title: resource.title,
         status: status_for(resource),
-        url: Whatsapp::PublishedResourceUrl.call(resource)
+        url: url
+      )
+    end
+
+    def entry_without_url(resource)
+      I18n.t(
+        "whatsapp.bot.contributions.entry_without_url",
+        title: resource.title,
+        status: status_for(resource)
       )
     end
 

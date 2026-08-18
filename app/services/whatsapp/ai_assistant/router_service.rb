@@ -133,6 +133,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         ::Ai::Tools::WhatsappAiAssistant::ListEvents,
         ::Ai::Tools::WhatsappAiAssistant::ListOpenPolls,
         ::Ai::Tools::WhatsappAiAssistant::ListProjektContributions,
+        ::Ai::Tools::WhatsappAiAssistant::SendProposalLink,
         ::Ai::Tools::WhatsappAiAssistant::MyFollowedProjekts,
         ::Ai::Tools::WhatsappAiAssistant::ShowProjekts,
         ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,

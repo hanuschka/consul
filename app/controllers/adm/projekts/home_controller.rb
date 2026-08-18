@@ -2,6 +2,8 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
   def show
     authorize Projekt, :index?, policy_class: Adm::Projekts::ProjektPolicy
 
+    flash_finished_copy
+
     @team_members = scoped_team_members
 
     @intro_text = Setting["adm.projekts.intro_text"].presence ||
@@ -40,6 +42,20 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
   end
 
   private
+
+    # The copy poller sends the admin here once a copy reaches a terminal state,
+    # so this is where its outcome gets announced.
+    def flash_finished_copy
+      copy = policy_scope([:adm, :projekts, Projekt]).find_by(id: params[:finished_copy])
+      return if copy.blank? || copy.copied_from_projekt_id.blank?
+      return if copy.copy_in_progress?
+
+      if copy.copy_unfinished?
+        flash.now[:alert] = t("adm.projekts.projekts.copy.failed_notice", name: copy.title)
+      else
+        flash.now[:notice] = t("adm.projekts.projekts.copy.finished", name: copy.title)
+      end
+    end
 
     def scoped_team_members
       base = ProjektManager.includes(user: :image).order(:id)

@@ -32,10 +32,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   any step can mistake a tapped button for idea text.
   # - A text-less voice note halts only after the tap gates — a tap is never
   #   audio — and everything below needs text.
-  # - Entry tokens are captured before the unlinked gate (a scanned QR gets
-  #   the login link first, the captured flow survives for after linking) and
-  #   before the staleness gate: start_flow! restarts the flow clock, so a
-  #   fresh scan is never interrupted by a resume question.
+  # - Entry tokens are captured before the staleness gate: start_flow!
+  #   restarts the flow clock, so a fresh scan is never interrupted by a
+  #   resume question.
+  # - There is no unlinked gate. There was one, and it answered every message
+  #   from a number with no account with the linking question, before the
+  #   citizen could say what they wanted. An account is asked for by whichever
+  #   action turns out to need one — FlowActionDispatch for a pill,
+  #   RefuseParticipationService for a phase — so browsing and guest
+  #   participation reach their own answers instead (CON-2971).
   # - Staleness before the assistant: the resume question is asked once, and
   #   the question itself moves the step.
   # - The assistant sees only what the protocol gates left — never taps,
@@ -67,7 +72,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     entry = capture_entry_token
 
-    return handle_unlinked(entry) if account.user.blank? && !guest_participation?
     return handle_entry(entry) if entry.present?
     return if handle_stale_flow
     return if routed_by_assistant?
@@ -76,13 +80,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   end
 
   private
-
-    # A phase that takes guest submissions on the web takes them here too, so an
-    # unlinked number is not stopped at the door. It is still stopped later, by
-    # the restrictions the phase carries — see ResourceCreationValidationService.
-    def guest_participation?
-      conversation.projekt_phase&.guest_participation?
-    end
 
     # The one model reading of this message, shared between the channel gate,
     # the router gate, and the step dispatch (see AssistantRouting).
@@ -218,17 +215,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       Whatsapp::Inbound::FlowActionDispatch.new(
         conversation: conversation, account: account, reading: reading
       ).call
-    end
-
-    # Someone who scanned a QR code has just said what they want, and someone
-    # mid-login is waiting on the link itself: both get it. A number that wrote
-    # in with neither has not asked for a link — it declined one earlier, or its
-    # link went cold — so the question is put again instead.
-    def handle_unlinked(entry)
-      return Whatsapp::Flows::OnboardingGreetingService.welcome_back(conversation:) if
-        entry.blank? && !account.awaiting_link?
-
-      Whatsapp::Flows::SendLoginLinkService.call(conversation:)
     end
 
     # A phase QR code names the phase, so the citizen has already chosen and is

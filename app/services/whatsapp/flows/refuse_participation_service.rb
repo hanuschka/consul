@@ -38,18 +38,18 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
   # than in an invitation. What the citizen can do instead is in the copy: the
   # verification link where that is the blocker, the help command otherwise.
   #
-  # One reason has an actual way out rather than an explanation, and it is the
-  # login link — sent with the refusal above it, so the citizen reads why and
-  # what to do in one message.
+  # One reason has an actual way out rather than an explanation, and it is
+  # linking — asked with the refusal above it, so the citizen reads why and
+  # what to do in one message, and can decline it back to the menu.
   #
   # The body is built before the reset, and the reset before the delegation.
   # Both orders matter: the reset clears the phase one refusal names, and
-  # SendLoginLinkService sets a step the reset would otherwise wipe.
+  # LinkRequestService sets a step the reset would otherwise wipe.
   def call
     body = message
     @conversation.reset_flow!
 
-    return send_login_link(body) if login_required?
+    return request_link(body) if login_required?
 
     Whatsapp::Send.text(account: account, body: body)
   end
@@ -129,8 +129,8 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
       self.class.reason_key(@reason) == "not_logged_in"
     end
 
-    def send_login_link(body)
-      Whatsapp::Flows::SendLoginLinkService.call(conversation: @conversation, intro: body)
+    def request_link(body)
+      Whatsapp::Flows::LinkRequestService.for_refusal(conversation: @conversation, refusal: body)
     end
 
     # The rule, then the way out of it. The refusal keeps its own exact wording —
@@ -138,9 +138,9 @@ class Whatsapp::Flows::RefuseParticipationService < Whatsapp::Flows::BaseService
     # and only the sentence under it is written for this citizen's situation.
     #
     # Skipped where the message already ends in something to act on: the
-    # verification hint carries a link, and a refusal that sends the login link
-    # is followed by the link itself, so a third suggestion under either is one
-    # instruction too many.
+    # verification hint carries a link, and a refusal that asks for linking is
+    # followed by the two pills that answer it, so a third suggestion under
+    # either is one instruction too many.
     def message
       [explanation, next_step].compact_blank.join("\n\n")
     end

@@ -20,15 +20,30 @@ class Whatsapp::Inbound::FlowActionDispatch
   # notification settings and unlinking all act on a Consul account, and a
   # guest has nothing to stand in for it with.
   #
-  # my_contributions is here because the help list offers it to unlinked
-  # numbers too: without the check it answers "you have not submitted
-  # anything yet" to someone whose account is full of submissions, and never
-  # mentions that linking is the missing part.
+  # my_contributions is here because the menu offers it to unlinked numbers
+  # too: without the check it answers "you have not submitted anything yet" to
+  # someone whose account is full of submissions, and never mentions that
+  # linking is the missing part.
   ACCOUNT_ONLY_ACTIONS = %i[
     support support_instead support_prompt comment_prompt my_contributions
     notify_toggle notifications_done notifications_open
     unlink_confirm unlink_cancel unlink_start
   ].freeze
+
+  # Which of them the citizen tapped, in the words the linking request uses to
+  # name it. An action with no entry here is named by the generic reason —
+  # every pill worth naming is one the citizen chose from a menu, and the rest
+  # are mid-flow taps whose reason the message above them already gave.
+  LINK_REQUEST_REASONS = {
+    my_contributions: :contributions,
+    notifications_open: :notifications,
+    notify_toggle: :notifications,
+    notifications_done: :notifications,
+    support: :support,
+    support_instead: :support,
+    support_prompt: :support,
+    comment_prompt: :comment
+  }.freeze
 
   # Derived from the two groups rather than listed a third time. The union is
   # what account_required? gates on, so an action named in only one of the
@@ -65,8 +80,7 @@ class Whatsapp::Inbound::FlowActionDispatch
     end
 
     def dispatch(action, param)
-      return Whatsapp::Flows::SendLoginLinkService.call(conversation:) if
-        account_required?(action, param)
+      return request_link(action) if account_required?(action, param)
 
       case action
       when :link_yes, :link_retry
@@ -81,6 +95,10 @@ class Whatsapp::Inbound::FlowActionDispatch
         Whatsapp::Flows::DiscoveryService.unlinked(conversation:)
       when :submit_proposal
         Whatsapp::Flows::SubmitProposalService.call(conversation:)
+      when :participate
+        Whatsapp::Flows::ProjektParticipationService.ask_projekt(conversation:)
+      when :participate_projekt
+        offer_projekt_actions(param)
       when :view_projekt
         send_projekt_card(param)
       when :my_contributions
@@ -88,9 +106,9 @@ class Whatsapp::Inbound::FlowActionDispatch
       when :main_menu
         Whatsapp::Flows::MainMenuService.greeting(conversation:)
       when :support_prompt
-        send_menu_prompt("whatsapp.bot.help_menu.prompts.support")
+        send_menu_prompt("whatsapp.bot.participation.prompts.support")
       when :comment_prompt
-        send_menu_prompt("whatsapp.bot.help_menu.prompts.comment")
+        send_menu_prompt("whatsapp.bot.participation.prompts.comment")
       when :notifications_open
         Whatsapp::Flows::NotificationSettingsService.call(conversation:)
       when :unlink_start
@@ -144,6 +162,15 @@ class Whatsapp::Inbound::FlowActionDispatch
           conversation:, proposal_id: param
         )
       end
+    end
+
+    # Named rather than bare. The citizen chose something a moment ago, and a
+    # login link on its own answers a question they did not ask — with no way
+    # back to what they did (CON-2971).
+    def request_link(action)
+      Whatsapp::Flows::LinkRequestService.for_action(
+        conversation:, reason: LINK_REQUEST_REASONS.fetch(action, :participation)
+      )
     end
 
     def account_required?(action, param)
@@ -215,9 +242,9 @@ class Whatsapp::Inbound::FlowActionDispatch
     end
 
     # The same branch whether the assistant called show_projekts or the citizen
-    # tapped a pill that offers it. The pill is on the help list, which is what
-    # an unlinked number is answered with, so the two cannot differ: the account
-    # listing dead-ends for a guest and the public one does not.
+    # tapped a pill that offers it. The pill is on the main menu, which every
+    # number is answered with, so the two cannot differ: the account listing
+    # dead-ends for a guest and the public one does not.
     def dispatch_discovery
       return Whatsapp::Flows::DiscoveryService.unlinked(conversation:) if account.user.blank?
 
@@ -234,9 +261,21 @@ class Whatsapp::Inbound::FlowActionDispatch
     def send_projekt_card(projekt_id)
       projekt = ::Projekt.find_by(id: projekt_id)
 
-      return Whatsapp::Flows::HelpService.call(conversation:) if projekt.blank?
+      return Whatsapp::Flows::MainMenuService.greeting(conversation:) if projekt.blank?
 
       Whatsapp::Flows::SendProjektCardService.call(conversation:, projekt: projekt)
+    end
+
+    # A projekt named by a tap on the participation list. Re-resolved rather
+    # than trusted: the list may have been sent days ago, and a projekt that
+    # has since closed has to reach the answer that says so.
+    def offer_projekt_actions(projekt_id)
+      projekt = ::Projekt.find_by(id: projekt_id)
+
+      return Whatsapp::Flows::ProjektParticipationService.ask_projekt(conversation:) if
+        projekt.blank?
+
+      Whatsapp::Flows::ProjektParticipationService.offer_actions(conversation:, projekt: projekt)
     end
 
     def start_phase_flow(projekt_phase_id)

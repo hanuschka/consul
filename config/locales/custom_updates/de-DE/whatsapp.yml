@@ -144,7 +144,11 @@ de:
         support: 👍 Unterstützen
         help: Hilfe
         main_menu: Hauptmenü
-        choose_help: Auswählen
+        back_to_menu: Zurück zum Menü
+        choose_menu: Auswählen
+        choose_projekt: Projekt wählen
+        support_prompt: Beitrag unterstützen
+        comment_prompt: Kommentieren
         open_page: Seite öffnen
         image_upload: Foto hochladen
         image_generate: Bild erzeugen
@@ -155,21 +159,17 @@ de:
         submit_final: Beitrag einreichen
         submit_continue: Weiter zum Ort
         submit_anyway: Eigenen Beitrag
-      help_menu:
-        body: 'Ich helfe Ihnen gerne weiter. Wählen Sie aus, womit ich Ihnen helfen kann:'
+      main_menu:
+        onboarding_body: 'Womit möchten Sie starten?'
         rows:
-          submit:
-            description: Idee zu einem laufenden Projekt einreichen
-          support:
-            title: Beitrag unterstützen
-            description: Einen bestehenden Beitrag unterstützen
-          comment:
-            title: Kommentieren
-            description: Einen Kommentar zu einem Beitrag hinzufügen
           projekts:
             title: Projekte durchsuchen
-            description: Laufende Beteiligungsprojekte ansehen
+            description: Alle Beteiligungsprojekte ansehen
+          participate:
+            title: Am Projekt beteiligen
+            description: Beitrag einreichen, unterstützen oder kommentieren
           contributions:
+            title: Meine Beiträge
             description: Eigene eingereichte Beiträge ansehen
           notifications:
             title: Benachrichtigungen
@@ -177,9 +177,13 @@ de:
           unlink:
             title: Konto trennen
             description: Verknüpfung mit Ihrem Konto aufheben
-          link:
-            title: Konto verknüpfen
-            description: Diese Nummer mit Ihrem Konto verbinden
+      participation:
+        choose_projekt: 'An welchem Projekt möchten Sie sich beteiligen?'
+        row_description: Beteiligung möglich
+        actions_body: '„%{projekt}“ — was möchten Sie dort tun?'
+        closed: >-
+          Bei „%{projekt}“ ist eine Beteiligung gerade nicht möglich — sie ist entweder beendet
+          oder hat noch nicht begonnen. Ansehen können Sie das Projekt hier: %{url}
         prompts:
           support: >-
             Welchen Beitrag möchten Sie unterstützen? Schreiben Sie mir den Titel oder ein paar
@@ -187,6 +191,18 @@ de:
           comment: >-
             Zu welchem Beitrag möchten Sie etwas schreiben? Schreiben Sie mir den Titel oder ein
             paar Worte daraus.
+      link_request:
+        contributions: >-
+          Um Ihre eigenen Beiträge zu sehen, müssen Sie diese Nummer mit Ihrem Konto verknüpfen.
+        notifications: >-
+          Für Ihre Benachrichtigungseinstellungen müssen Sie diese Nummer mit Ihrem Konto
+          verknüpfen.
+        participation: >-
+          Für diesen Schritt müssen Sie diese Nummer mit Ihrem Konto verknüpfen.
+        support: >-
+          Um einen Beitrag zu unterstützen, müssen Sie diese Nummer mit Ihrem Konto verknüpfen.
+        comment: >-
+          Um einen Kommentar zu schreiben, müssen Sie diese Nummer mit Ihrem Konto verknüpfen.
       refused_content:
         intro: So kann ich das leider nicht einreichen.
         retry_hint: >-
@@ -257,12 +273,9 @@ de:
         disclosure: >-
           👋 Willkommen bei %{portal_name}! Ich bin ein KI-Bot und helfe Ihnen dabei, Beiträge einzureichen,
           sie zu unterstützen und auf dem Laufenden zu bleiben.
-        link_question: >-
-          Möchten Sie Ihr Konto verknüpfen? Dann können Sie hier direkt mitmachen und persönliche
-          Benachrichtigungen erhalten.
         consent: >-
-          Mit „Ja“ willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß unserer Datenschutzerklärung
-          ein: %{privacy_url}
+          Mit der Nutzung dieses Chats willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß
+          unserer Datenschutzerklärung ein: %{privacy_url}
         login_prompt: 'Zum Anmelden hier tippen:'
         login_prompt_with_url: 'Zum Anmelden diesen Link öffnen: %{url}'
         linked: >-
@@ -288,10 +301,6 @@ de:
           ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer und
           Chatverlauf bleiben für die übliche Speicherdauer erhalten. Sie können jederzeit erneut
           verknüpfen.
-        welcome_back: 👋 Willkommen zurück! Diese Nummer ist noch nicht verknüpft — möchten Sie das
-          (wieder) tun?
-        welcome_back_guest_hint: >-
-          Bei mindestens einem Projekt können Sie auch ohne Konto etwas einreichen.
       discovery:
         body: Bei diesen Projekten können Sie gerade mitmachen. Welches interessiert Sie?
         guest_body: >-

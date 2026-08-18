@@ -1,26 +1,43 @@
 class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
-  # The three things a citizen can start from nothing, under whichever sentence
-  # the moment calls for. It replaced IdleGreetingService, which offered the
-  # same three buttons and was reachable from one place only — the cancellation
-  # and the confirmation after publishing now end in the same menu, and three
-  # copies of one button set is what drifts.
+  # Everything a citizen can start from nothing, under whichever sentence the
+  # moment calls for. One list rather than the three buttons it was: none of
+  # "submit", "support" and "comment" can be carried out without a projekt, so
+  # each was a detour ending at the same choice — they are one row now, and the
+  # projekt decides which of the three it leads to.
   #
-  # Two of the three buttons act on a Consul account, so an unlinked number is
-  # answered with the help list instead — which offers the same submission
-  # entry point plus the invitation to link. Decided here rather than at each
-  # call site: three callers wrote the check three ways, and the fourth would
-  # have inherited nothing.
+  # It replaced HelpService as well. The two had grown into the same thing said
+  # twice: a list of what the bot does, adapting to whether the number is
+  # linked. Keeping both meant a citizen could be shown two different menus
+  # depending on which of them answered.
   #
-  # Two entry points rather than one with a mode: the only thing that differs
-  # is the sentence above the buttons and whether an unfinished submission is
+  # The account row is the only difference between linked and unlinked. An
+  # unlinked number is not shown a linking row: linking is asked for at the
+  # action that needs it, never as a standing invitation (CON-2971).
+  ROWS = {
+    projekts: :discover,
+    participate: :participate,
+    contributions: :my_contributions,
+    notifications: :notifications_open
+  }.freeze
+
+  LINKED_ROW = { unlink: :unlink_start }.freeze
+
+  # Three entry points rather than one with a mode: the only thing that differs
+  # is the sentence above the rows and whether an unfinished submission is
   # dropped first, and a caller reading `MainMenuService.call(..., :greeting)`
   # could tell you neither.
   def self.greeting(conversation:)
     conversation.reset_flow!
 
-    return Whatsapp::Flows::HelpService.call(conversation: conversation) if unlinked?(conversation)
-
     new(conversation: conversation, body: greeting_body).call
+  end
+
+  # The menu that closes the first contact. Its own sentence because the
+  # greeting's says "welcome back", which is false for a number three messages
+  # old — and the disclosure directly above has already introduced the bot, so
+  # there is nothing left to say but the question.
+  def self.onboarding(conversation:)
+    new(conversation: conversation, body: onboarding_body).call
   end
 
   # The menu as a message of its own, after a message that said something —
@@ -33,23 +50,12 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   # interactive body is capped at a quarter of what a text body holds and
   # nothing truncates it — five contributions with long titles and URLs is
   # enough to have the whole message refused.
-  #
-  # A guest submitter gets the content alone rather than the help list: they
-  # have just been answered, and following it with a menu they mostly cannot
-  # use reads as a condition attached after the fact.
   def self.follow_up(conversation:)
-    return if unlinked?(conversation)
-
     new(
       conversation: conversation,
       body: Whatsapp.phrase("whatsapp.bot.proposal.next_action")
     ).call
   end
-
-  def self.unlinked?(conversation)
-    conversation.whatsapp_account.user_id.blank?
-  end
-  private_class_method :unlinked?
 
   # Its own sentence rather than the portal's configured greeting. That one
   # introduces the bot as an AI assistant, which is something to say once — at
@@ -63,16 +69,45 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   end
   private_class_method :greeting_body
 
+  def self.onboarding_body
+    [
+      Whatsapp.phrase("whatsapp.bot.main_menu.onboarding_body"),
+      Whatsapp.phrase("whatsapp.bot.free_text_hint")
+    ].join("\n\n")
+  end
+  private_class_method :onboarding_body
+
   def initialize(conversation:, body:)
     super(conversation: conversation)
     @body = body
   end
 
   def call
-    Whatsapp::Send.buttons(
+    Whatsapp::Send.list(
       account: account,
       body: @body,
-      buttons: Whatsapp::FlowActions.main_menu_buttons
+      button_label: I18n.t("whatsapp.bot.buttons.choose_menu"),
+      rows: rows
     )
   end
+
+  private
+
+    def rows
+      ROWS.merge(account_rows).map { |key, action| menu_row(key, action) }
+    end
+
+    def account_rows
+      return LINKED_ROW if account.user_id.present?
+
+      {}
+    end
+
+    def menu_row(key, action)
+      Whatsapp::FlowActions.row(
+        action: action,
+        title_key: "whatsapp.bot.main_menu.rows.#{key}.title",
+        description_key: "whatsapp.bot.main_menu.rows.#{key}.description"
+      )
+    end
 end

@@ -89,6 +89,13 @@ en:
           started: The copy of "%{name}" is being created. This may take a moment.
           finished: The copy "%{name}" was created.
           failed_notice: The copy "%{name}" could not be created.
+          tooltip:
+            title: Copy project
+            text: >
+              Creates a deactivated copy of this project with all phases, settings,
+              content, maps and admin-created resources.
+            note_label: 'Not copied:'
+            note: Participant contributions, votes, comments and subscriptions.
           status_processing: Copying …
           status_failed: Copy failed
         projekt:

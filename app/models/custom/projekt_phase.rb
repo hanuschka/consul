@@ -175,6 +175,8 @@ class ProjektPhase < ApplicationRecord
            foreign_key: :projekt_phase_id,
            dependent: :destroy
 
+  has_many :poll_question_imports, dependent: :destroy
+
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy

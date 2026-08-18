@@ -1,9 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 import AjaxFetch from "../../shared/ajax_fetch"
 
-// Upload screen: validates files, POSTs multipart to create, then hands off to
-// the dedicated loading screen (import show), which polls status and redirects to
-// the chat. Navigating to a real URL keeps in-flight analysis reload-safe.
+// Document upload screen, shared by every /adm import that starts from files:
+// validates the picked files, POSTs them multipart to the create URL, then
+// follows the import_url the response names. Navigating to a real URL rather
+// than staying put keeps in-flight analysis reload-safe.
+//
+// Everything endpoint-specific arrives as a Stimulus value, so the same
+// controller drives the projekt import and the poll question import. The
+// instructions textarea is optional: an upload page that collects no extra
+// input simply omits the target.
 export default class extends Controller {
   static targets = [
     "form", "dropzone", "fileInput", "fileList", "secondary",
@@ -21,7 +27,8 @@ export default class extends Controller {
     errorUnsupported: String,
     errorNoFiles: String,
     errorSessionExpired: String,
-    errorRequestFailed: String
+    errorRequestFailed: String,
+    removeFileLabel: String
   }
 
   connect() {
@@ -138,10 +145,10 @@ export default class extends Controller {
 
     this.files.forEach((file, index) => {
       const row = document.createElement("div")
-      row.className = "projekt-import-from-file--file-info"
+      row.className = "adm-document-upload--file-info"
 
       const icon = document.createElement("span")
-      icon.className = "projekt-import-from-file--file-icon"
+      icon.className = "adm-document-upload--file-icon"
       icon.setAttribute("aria-hidden", "true")
       const iconGlyph = document.createElement("span")
       iconGlyph.className = "material-symbols-outlined"
@@ -149,22 +156,22 @@ export default class extends Controller {
       icon.appendChild(iconGlyph)
 
       const details = document.createElement("div")
-      details.className = "projekt-import-from-file--file-details"
+      details.className = "adm-document-upload--file-details"
       const name = document.createElement("span")
-      name.className = "projekt-import-from-file--file-name"
+      name.className = "adm-document-upload--file-name"
       name.textContent = file.name
       const size = document.createElement("span")
-      size.className = "projekt-import-from-file--file-size"
+      size.className = "adm-document-upload--file-size"
       size.textContent = this.humanSize(file.size)
       details.appendChild(name)
       details.appendChild(size)
 
       const remove = document.createElement("button")
       remove.type = "button"
-      remove.className = "projekt-import-from-file--file-remove"
+      remove.className = "adm-document-upload--file-remove"
       remove.dataset.index = index.toString()
-      remove.dataset.action = "click->projekt-imports--from-file#removeFile"
-      remove.setAttribute("aria-label", "Remove")
+      remove.dataset.action = "click->shared--document-upload#removeFile"
+      remove.setAttribute("aria-label", this.removeFileLabelValue)
       remove.textContent = "×"
 
       row.appendChild(icon)
@@ -199,7 +206,7 @@ export default class extends Controller {
     const formData = new FormData()
     this.files.forEach((file) => formData.append("files[]", file))
 
-    if (this.instructionsTarget.value) {
+    if (this.hasInstructionsTarget && this.instructionsTarget.value) {
       formData.append("additional_user_instructions", this.instructionsTarget.value)
     }
 
@@ -248,16 +255,16 @@ export default class extends Controller {
     this.loaderFilesTarget.innerHTML = ""
     this.files.forEach((file) => {
       const row = document.createElement("div")
-      row.className = "projekt-import-from-file--loader-file-item"
+      row.className = "adm-document-upload--loader-file-item"
       const icon = document.createElement("span")
       icon.className = "material-symbols-outlined"
       icon.setAttribute("aria-hidden", "true")
       icon.textContent = "description"
       const name = document.createElement("span")
-      name.className = "projekt-import-from-file--loader-file-name"
+      name.className = "adm-document-upload--loader-file-name"
       name.textContent = file.name
       const size = document.createElement("span")
-      size.className = "projekt-import-from-file--loader-file-size"
+      size.className = "adm-document-upload--loader-file-size"
       size.textContent = this.humanSize(file.size)
       row.appendChild(icon)
       row.appendChild(name)

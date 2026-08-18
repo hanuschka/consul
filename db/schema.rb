@@ -2050,6 +2050,21 @@ ActiveRecord::Schema.define(version: 2026_08_18_102725) do
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
+  create_table "poll_question_imports", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "author_id"
+    t.text "extracted_text"
+    t.string "content_locale"
+    t.string "status", default: "pending", null: false
+    t.jsonb "result"
+    t.jsonb "created_question_ids", default: []
+    t.text "error_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_poll_question_imports_on_author_id"
+    t.index ["projekt_phase_id", "status"], name: "index_poll_question_imports_on_projekt_phase_id_and_status"
+  end
+
   create_table "poll_question_translations", id: :serial, force: :cascade do |t|
     t.integer "poll_question_id", null: false
     t.string "locale", null: false

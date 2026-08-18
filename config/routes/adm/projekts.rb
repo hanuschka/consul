@@ -208,6 +208,14 @@ namespace :adm do
           put :recalculate_winners
         end
       end
+      resources :poll_question_imports, only: %i[index new create show destroy] do
+        member do
+          get :status
+          post :apply
+          post :regenerate
+        end
+      end
+
       resources :poll_questions, only: [:new, :create, :show, :edit, :update, :destroy] do
         patch :order_questions, on: :collection
         resources :poll_question_answers, only: [:new, :create, :edit, :update, :destroy] do

@@ -3,6 +3,8 @@ de:
     projekts:
       imports:
         title: "Projektimport"
+        upload:
+          remove_file: "Datei entfernen"
         from_files:
           new:
             title: "Projekt aus Dokument importieren"

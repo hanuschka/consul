@@ -205,39 +205,13 @@ module Whatsapp
     Setting["whatsapp.welcome_message_enabled"].present?
   end
 
-  # Every line of prose the bot sends, read through here. The contract is
-  # `I18n.t`'s — same key, same interpolations, a string back — and for a key
-  # that is not phrased it is literally that, so this is a drop-in replacement at
-  # a call site rather than a second way of doing the same thing.
-  #
-  # Named on the facade rather than at each of the ninety call sites: a flow
-  # service needs "the line for this key", and nothing about it should have to
-  # name the service that rewords it, let alone that an LLM is involved.
-  def self.phrase(key, **interpolations)
-    ::Whatsapp::AiAssistant::PhrasingService.call(key: key, **interpolations)
-  end
-
-  # Body of the list message the bot answers a first chat opening with. Admins
-  # override it per portal; the translation is the fallback copy.
+  # The greeting an admin writes per portal. It heads the WhatsApp welcome message
+  # the phone number itself sends before any conversation exists, which is why it
+  # is a setting rather than something the assistant writes: nothing has been said
+  # yet for it to be written in answer to.
   def self.welcome_greeting
-    Setting["whatsapp.welcome_greeting"].presence || phrase("whatsapp.bot.welcome_greeting")
-  end
-
-  # The same admin-written text, at the one moment it is meant for: the very
-  # first message a citizen ever gets. Its own fallback because the one above
-  # says "Willkommen zurück", which is the wrong sentence to open with, and its
-  # own reader because the returning-citizen greeting must keep the wording the
-  # menu asks for even after this one changes.
-  def self.onboarding_greeting
     Setting["whatsapp.welcome_greeting"].presence ||
       I18n.t("whatsapp.bot.onboarding.welcome_greeting")
-  end
-
-  # The same admin-written greeting heads the central menu, which offers more
-  # than submitting — only the fallback copy differs, because the default
-  # greeting asks which projekt to contribute to and the menu does not.
-  def self.menu_greeting
-    Setting["whatsapp.welcome_greeting"].presence || I18n.t("whatsapp.archive.menu.body")
   end
 
   def self.ice_breakers

@@ -11,28 +11,26 @@ module Whatsapp::AiAssistant::DecisionLog
   TAG = "[Whatsapp][assistant]".freeze
 
   # Rejections mean nothing without the denominator, so the accepted cases are
-  # counted too: two compositions thrown out is a bug at ten a day and a working
-  # guardrail at ten thousand.
+  # counted too: two dropped pills is a bug at ten a day and a working guardrail
+  # at ten thousand.
   #
-  # The compose_* trio is the shipped signal for CON-2982: it is what answers
-  # "how often is the bot still falling back to the fixed copy", which is the one
-  # question a read of any single conversation cannot settle. Applied is the
-  # numerator, rejected is a guardrail doing its job, failed is a provider that
-  # did not answer — three different problems that all look like an ordinary
-  # reply from the outside.
+  # `irreversible_offered` is the one event that exists for the record rather
+  # than for a rate. Publishing a draft, registering support and confirming an
+  # unlink cannot be taken back from a chat, and the reply that offered the pill
+  # reads perfectly reasonably whether the offer was right or wrong — so a
+  # mis-offer is only findable if the offer itself was written down.
+  #
+  # `tap_unhandled` is a pill from an older deploy, still sitting in someone's
+  # chat history and still tappable forever. It rising is how a vocabulary change
+  # is noticed from the outside.
   EVENTS = %i[
     tool_called
-    option_chosen
-    option_dropped
     action_dropped
     actions_unusable
-    compose_applied
-    compose_rejected
-    compose_failed
-    flow_parked
-    flow_resumed
-    fresh_start_routed
-    fresh_start_fallback
+    irreversible_offered
+    tap_dispatched
+    tap_unhandled
+    assistant_unavailable
   ].freeze
 
   COUNTER_TTL = 40.days

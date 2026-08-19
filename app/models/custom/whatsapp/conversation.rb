@@ -2,13 +2,13 @@ class Whatsapp::Conversation < ApplicationRecord
   belongs_to :whatsapp_account, class_name: "Whatsapp::Account", inverse_of: :whatsapp_conversation
   belongs_to :projekt_phase, class_name: "::ProjektPhase", optional: true
 
-  # Every step and tool needs the account, and most of them only need the
-  # citizen behind it. Nil until the number is linked, which is the state each
-  # caller already has to answer for.
+  # Every tool needs the account, and most of them only need the citizen behind
+  # it. Nil until the number is linked, which is the state each caller already has
+  # to answer for.
   delegate :user, to: :whatsapp_account
 
   # A proposal in a proposal phase, a Budget::Investment in a budget phase. The
-  # bot flow is the same either way, so the draft it is working on is held in
+  # submission works the same either way, so the draft it is working on is held in
   # one slot rather than a column per resource.
   #
   # The `draft` condition has to be unscoped: both models carry
@@ -21,11 +21,20 @@ class Whatsapp::Conversation < ApplicationRecord
     polymorphic: true,
     optional: true
 
-  # Every step the bot can leave a conversation on, as constants so the flow
-  # that writes one and the dispatcher that routes on it read the same
-  # definition. A typo'd constant raises NameError when its file loads —
-  # a typo'd string literal in a `case` never matches and reads as a silently
-  # ignored message instead.
+  # ── The step column is a diagnostic, not control flow ───────────────────
+  # Nothing reads this to decide what to do any more: the assistant owns the
+  # order of the conversation, and what it does next follows from the tools it is
+  # given and the state it is told. What the column still answers is "what was
+  # this conversation doing when it broke", which is the only cheap answer to
+  # that question — and it is what the /adm dialog view renders and what every
+  # log line already written says. It is stamped from the last tool that ran (see
+  # Ai::Tools::WhatsappAiAssistant::BaseTool#diagnostic_step).
+  #
+  # Kept as an enum so a value nothing translates cannot be persisted, and every
+  # value stays declared even where no tool stamps one any more: rows written by
+  # the scripted flow still hold them, /adm looks each one up under
+  # adm.whatsapp.steps, and the dialog filter offers the whole map. Retiring a
+  # value would break the reading of conversations that already happened.
   module Step
     IDLE = "idle".freeze
     AWAITING_LINK = "awaiting_link".freeze
@@ -50,8 +59,6 @@ class Whatsapp::Conversation < ApplicationRecord
     AWAITING_CONTINUE_DECISION = "awaiting_continue_decision".freeze
   end
 
-  # The write-side half of the same guard: assigning a step the map does not
-  # carry raises ArgumentError instead of persisting it.
   enum step: {
     idle: Step::IDLE,
     awaiting_link: Step::AWAITING_LINK,
@@ -76,101 +83,32 @@ class Whatsapp::Conversation < ApplicationRecord
     awaiting_continue_decision: Step::AWAITING_CONTINUE_DECISION
   }
 
-  # The steps that mean a submission is half-finished. "Stop" aborts one of
-  # these; typed at any other moment the same word is the opt-out, so the two
-  # readings of the catalog's one keyword are separated here rather than at each
-  # call site.
-  DRAFTING_STEPS = [
-    Step::AWAITING_TERMS_CONSENT,
-    Step::AWAITING_IDEA,
-    Step::AWAITING_DUPLICATE_DECISION,
-    Step::AWAITING_CATEGORY,
-    Step::AWAITING_SENTIMENT,
-    Step::AWAITING_DRAFT_DECISION,
-    Step::AWAITING_IMAGE_CHOICE,
-    Step::AWAITING_IMAGE_UPLOAD,
-    Step::AWAITING_LOCATION,
-    Step::AWAITING_FINAL_CONFIRMATION,
-    Step::AWAITING_REVISION,
-    Step::AWAITING_COMMENT,
-    Step::AWAITING_RESUME_DECISION,
-    Step::AWAITING_CONTINUE_DECISION
-  ].freeze
+  # Written after a tool has run, never before and never read back. Silently
+  # ignores anything the enum does not carry: a diagnostic that can raise is a
+  # diagnostic that costs the citizen their reply.
+  def record_step!(diagnostic_step)
+    return if diagnostic_step.blank?
+    return if !self.class.steps.key?(diagnostic_step.to_s)
+    return if step == diagnostic_step.to_s
 
-  # The steps where the bot is waiting on free text, and where a message with
-  # no substance of its own is therefore read as beginning again rather than
-  # as the answer: "hallo" at AWAITING_IDEA used to become the text of a
-  # contribution, draft generation and all (CON-2968).
-  #
-  # AWAITING_CONTINUE_DECISION is one of them because the question this set
-  # produces can itself be answered with another greeting, and the same
-  # reading has to be available there — bounded by
-  # Flows::ContinueOrRestartService rather than by withholding it.
-  #
-  # AWAITING_PHASE_CHOICE is listed for completeness of "waiting on free
-  # text"; nothing assigns that step today.
-  FRESH_START_STEPS = [
-    Step::AWAITING_IDEA,
-    Step::AWAITING_COMMENT,
-    Step::AWAITING_IMAGE_UPLOAD,
-    Step::AWAITING_REVISION,
-    Step::AWAITING_LOCATION,
-    Step::AWAITING_PARTICIPATION_PROJEKT,
-    Step::AWAITING_PHASE_CHOICE,
-    Step::AWAITING_CONTINUE_DECISION
-  ].freeze
+    update!(step: diagnostic_step)
+  rescue StandardError => e
+    Rails.logger.info("[Whatsapp] step diagnostic failed: #{e.class} - #{e.message}")
 
-  # A draft older than this is not resumed silently: the citizen is asked
-  # whether to continue it or start over (catalog C23).
-  #
-  # Twelve hours rather than the 3600 minutes this was: at 60 hours someone who
-  # left a submission open, slept on it and wrote "Hallo" the next morning was
-  # resumed straight into the idea step, and the greeting became the text of
-  # their contribution. A night away has to reach the question.
-  #
-  # Asked as a reply and never pushed, which is a property of where it is read
-  # rather than of this number: handle_stale_flow sits in the inbound gate
-  # chain, so nothing consults it until the citizen writes in again.
-  STALE_FLOW_AFTER = 12.hours
-
-  def drafting?
-    DRAFTING_STEPS.include?(step)
+    nil
   end
 
-  # Whether a reset would cost the citizen something they cannot get back.
-  # Asked instead of `drafting?` by the paths that end a *side* conversation —
-  # declining an offer, cancelling an unlink — because those may be answered
-  # from inside a submission and must not take it with them.
-  #
-  # Deliberately narrower than `drafting?`, which is a set of steps rather than
-  # a statement about work: it counts AWAITING_COMMENT and
-  # AWAITING_RESUME_DECISION, where there is no draft to protect, so guarding
-  # on it would leave a citizen pinned on a step nothing can clear.
+  # Whether a reset would cost the citizen something they cannot get back. This is
+  # the one predicate the write tools guard on: the stashed draft data before the
+  # record exists, the record itself afterwards.
   def unsaved_submission?
     draft_resource.present? || draft_data.present?
   end
 
-  # Whether the continue-or-restart question has anything to be about. Read by
-  # both readings of a message with no substance of its own — the classifier
-  # gate in Inbound::ProcessMessageService and the router's tool list — because
-  # a greeting arriving with nothing half-written was answered with a choice
-  # where both answers were empty: "weitermachen" had nothing to return to and
-  # ended at the menu anyway, and "neu anfangen" had nothing to discard
-  # (CON-2981).
-  #
-  # Wider than `unsaved_submission?` by the parked flow: a submission set aside
-  # for a side trip is unfinished work the citizen can still be carried back
-  # into, and it is what Flows::ContinueOrRestartService#continue returns to
-  # when the step the question interrupted holds nothing of its own.
-  def unfinished_contribution?
-    unsaved_submission? || parked_flow?
-  end
-
   # What this phase collects besides the text, asked of the conversation because
-  # two places each need one of the answers and they must not drift: the step
-  # that offers a pin and the drafting service that infers one from the citizen's
-  # wording read the same predicate, as do the step that offers a picture and the
-  # step a stale conversation re-enters.
+  # two places each need one of the answers and they must not drift: the tool that
+  # offers a pin and the drafting call that infers one from the citizen's wording
+  # read the same predicate, as does the tool that offers a picture.
   #
   # `feature?` rather than ProjektPhase#resource_map_enabled?, which answers for
   # rendering a map and treats a phase type without the setting as map-enabled.
@@ -184,13 +122,9 @@ class Whatsapp::Conversation < ApplicationRecord
     projekt_phase&.feature?("form.allow_attached_image")
   end
 
-  # Whether the step will actually put the question — the phase collects it *and*
-  # the citizen has not already answered it unasked. Two readers each need this
-  # one answer and must not drift: the step that decides whether to ask, and the
-  # label on the pill before it, which says "weiter" when something follows and
-  # "absenden" when nothing does. Answered here for the same reason the two
-  # predicates above are, which is the mistake this pairing replaced — the guards
-  # skipped the question while the pill still promised it.
+  # Whether the question is still worth putting — the phase collects it *and* the
+  # citizen has not already answered it unasked in the message that opened the
+  # submission.
   def image_question_pending?
     image_question_available? && !photo_declined?
   end
@@ -199,173 +133,60 @@ class Whatsapp::Conversation < ApplicationRecord
     location_question_available? && !location_stated?
   end
 
-  def stale_flow?
-    return false if flow_started_at.blank?
-
-    Time.zone.parse(flow_started_at) < STALE_FLOW_AFTER.ago
-  end
-
-  # Ends a side conversation — a support offer, an unlink question — without
-  # ending the submission underneath it. The two wrong answers either side of
-  # this are both reachable: reset_flow! takes the draft with it, and leaving
-  # the step alone strands the citizen on a question that re-asks itself from
-  # StepDispatch on every message (AWAITING_UNLINK_CONFIRMATION is not one of
-  # the DRAFTING_STEPS, so nothing else clears it).
+  # Everything the submission collected, dropped. The phase goes with it, so the
+  # next idea is asked about again.
   #
-  # The step moves to where the submission can be picked up again and the keys
-  # the side conversation owns are dropped; everything the draft needs stays.
-  def end_side_interaction!
+  # The assistant's stored history survives all three of these wipes, and that is
+  # the change the step machine's retirement forces: the history is now the only
+  # thing carrying continuity between two turns, so a citizen who abandons one
+  # submission and starts talking about something else must not find the bot with
+  # no memory of the last ten minutes. It used to be wiped here, which the step
+  # column made survivable.
+  def discard_draft!
+    update!(draft_resource: nil, projekt_phase_id: nil, context: retained_context)
+  end
+
+  # The same, keeping the phase: a citizen who just published usually has their
+  # next idea for the same projekt.
+  def complete_draft!
+    update!(draft_resource: nil, context: retained_context)
+  end
+
+  # Entering a submission. The context is replaced rather than merged — a new
+  # submission has settled nothing — except for the assistant's own stored
+  # history, which is the conversation and outlives any one draft in it.
+  def start_draft!(new_projekt_phase)
     update!(
-      step: resumable_step,
-      context: context.except("support_proposal_id", "comment_proposal_id")
+      draft_resource: nil,
+      projekt_phase: new_projekt_phase,
+      context: retained_context
     )
   end
 
-  # Both landing steps re-present themselves on the next message rather than
-  # acting on it blind — PresentDraftService#handle_decision falls back to
-  # showing the card, and AskIdeaService rebuilds from the citizen's own words
-  # — so neither can consume a message as an answer to a question it never saw.
-  def resumable_step
-    return Step::AWAITING_DRAFT_DECISION if draft_resource.present?
-
-    Step::AWAITING_IDEA
-  end
-
-  # Completing keeps the phase so the next idea goes to the same one; resetting
-  # drops it so the citizen is asked again.
-  def reset_flow!
-    update!(cleared_flow_attributes.merge(step: Step::IDLE, projekt_phase_id: nil))
-  end
-
-  def complete_flow!
-    update!(cleared_flow_attributes.merge(step: Step::IDLE))
-  end
-
-  # Set aside rather than thrown away. A citizen part-way through a submission
-  # who asks something else — or who was put into a flow the assistant picked
-  # wrongly — used to have two ways out, and both discarded everything they had
-  # written: cancelling, or the greeting's reset. Parking keeps the step, the
-  # phase, the draft and the whole context under one key, so the side trip costs
-  # nothing and the way back is one tap.
-  #
-  # Only one parked flow at a time, and a second park overwrites it: what the
-  # citizen would return to is what they were last doing, and a stack of
-  # abandoned submissions is not something a chat can offer them a choice
-  # between.
-  def park_flow!
-    return if idle? && draft_resource.blank?
-
-    parked = {
-      "step" => step,
-      "projekt_phase_id" => projekt_phase_id,
-      "draft_resource_type" => draft_resource_type,
-      "draft_resource_id" => draft_resource_id,
-      "context" => context.except("parked_flow", "ai_chat", "offered_options"),
-      "parked_at" => Time.current.iso8601
-    }
-
-    update!(
-      cleared_flow_attributes.merge(
-        step: Step::IDLE,
-        projekt_phase_id: nil,
-        context: context.slice("ai_chat", "offered_options").merge("parked_flow" => parked)
-      )
-    )
-  end
-
-  def parked_flow
-    context["parked_flow"]
-  end
-
-  def parked_flow?
-    parked_flow.present?
-  end
-
-  # Back to the message the side trip interrupted, with everything it collected
-  # intact. The staleness clock is re-armed rather than restored: the citizen is
-  # here now, and the resume question exists for a flow nobody has touched for
-  # hours, not for one they just came back to.
-  def resume_parked_flow!
-    parked = parked_flow
-
-    return if parked.blank?
-
-    update!(
-      step: parked["step"],
-      projekt_phase_id: parked["projekt_phase_id"],
-      draft_resource_type: parked["draft_resource_type"],
-      draft_resource_id: parked["draft_resource_id"],
-      context: parked
-        .fetch("context", {})
-        .merge(context.slice("ai_chat", "offered_options"))
-        .merge("flow_started_at" => Time.current.iso8601)
-    )
-
-    parked["step"]
-  end
-
-  def discard_parked_flow!
-    return if !parked_flow?
-
-    merge_context!(parked_flow: nil)
-  end
-
-  # Stamped here rather than by the caller so every entry into a submission —
-  # a QR scan, a tapped pill, an assistant tool — shares one clock for the
-  # staleness question.
-  def start_flow!(projekt_phase)
-    update!(
-      cleared_flow_attributes.merge(
-        step: Step::AWAITING_IDEA,
-        projekt_phase: projekt_phase,
-        context: context.slice("parked_flow").merge("flow_started_at" => Time.current.iso8601)
-      )
-    )
-  end
-
-  # ── Flow context schema ─────────────────────────────────────────────────
-  # Every key the `context` jsonb holds, as named accessors — the one place
-  # that answers what a key means, who writes it, who reads it, and when it
-  # is cleared. Two invariants:
-  # - Readers never memoize: reset_flow!/complete_flow!/start_flow! replace
+  # ── Draft context schema ────────────────────────────────────────────────
+  # Every key the `context` jsonb holds, as named accessors — the one place that
+  # answers what a key means, who writes it, who reads it, and when it is
+  # cleared. Two invariants:
+  # - Readers never memoize: discard_draft!/complete_draft!/start_draft! replace
   #   the whole hash, and a cached value would survive the wipe.
-  # - Each writer is exactly one merge_context! call, preserving today's
-  #   write batching (one UPDATE per moment; keys that must travel together
-  #   say why).
-  # Every key dies with the flow (the three wipes above) unless its comment
-  # names an explicit clear.
+  # - Each writer is exactly one merge_context! call, preserving one UPDATE per
+  #   moment; keys that must travel together say why.
 
-  # The staleness clock. Stamped by start_flow! and re-armed on resume
-  # (stamp_flow_started!); read by stale_flow? for the C23 resume question.
-  def flow_started_at
-    context["flow_started_at"]
-  end
-
-  # Resuming moves the step without going through start_flow!, so
-  # ResumeOrRestartService re-arms the clock here — otherwise the resumed
-  # step would be found stale again by the citizen's very next message.
-  def stamp_flow_started!
-    merge_context!(flow_started_at: Time.current.iso8601)
-  end
-
-  # The citizen's own words, written by BuildDraftService before the
-  # generation gate so the retry pill can read them back after a failure.
-  # Read by the resume question, the duplicate offer's "submit anyway", and
-  # PersistDraftService (becomes the record's ai_idea_text).
+  # The citizen's own words, written before the drafting call so a retry can read
+  # them back after a failure. Read by PersistDraftService, which makes them the
+  # record's ai_idea_text.
   def last_idea_text
     context["last_idea_text"]
   end
 
-  # One batched write: a first draft clears the stored correction with the
-  # idea, because the retry pill prefers a correction and a stale one would
-  # re-apply a change to a draft that no longer exists.
+  # One batched write: a first draft clears the stored correction with the idea,
+  # because a stale one would re-apply a change to a draft that no longer exists.
   def store_idea_text!(text)
     merge_context!(last_idea_text: text, last_correction: nil)
   end
 
-  # The change the citizen asked for, written by BuildDraftService on a
-  # revision. Read by the retry pill, which prefers it over the original
-  # idea: what failed was the edit. Cleared by store_idea_text!.
+  # The change the citizen asked for. Preferred over the idea when a generation
+  # is retried: what failed was the edit. Cleared by store_idea_text!.
   def last_correction
     context["last_correction"]
   end
@@ -374,10 +195,10 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(last_correction: text)
   end
 
-  # The two throttle clocks, read back by BuildDraftService#within?. The
-  # draft clock is written by store_generated_draft! in the same UPDATE as
-  # the draft itself; the screening clock is stamped inside the gate it
-  # guards, so an already-screened text never re-arms it.
+  # The two throttle clocks, read back by the drafting tool. The draft clock is
+  # written by store_generated_draft! in the same UPDATE as the draft itself; the
+  # screening clock is stamped inside the gate it guards, so an already-screened
+  # text never re-arms it.
   def last_draft_at
     context["last_draft_at"]
   end
@@ -390,37 +211,30 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(last_screened_at: Time.current.iso8601)
   end
 
-  # The generated draft awaiting persistence — the stash CompleteDraftService
-  # reads, asks about, and writes to the record. Its emptiness is the dirty
-  # flag: cleared at persist (clear_draft_data!) so a tapped correction on
-  # the existing record cannot re-run PersistDraftService.
+  # The generated draft awaiting persistence — the stash the completion gate
+  # reads, asks about, and writes to the record. Its emptiness is the dirty flag:
+  # cleared at persist so a later taxonomy correction on the existing record
+  # cannot re-run PersistDraftService.
   def draft_data
     context["draft_data"]
   end
 
   # What the citizen answered before being asked, read off their own words by the
-  # drafting call (ProposalAiDraft::GenerateDraftService). Written by
-  # store_generated_draft!; read by the two steps that would otherwise ask again
-  # (Flows::ProposalImageService, Flows::AskLocationService). Dies with the flow
-  # like every other key here, which is correct: a new submission has settled
-  # nothing.
+  # drafting call. Written by store_generated_draft!; read by the two tools that
+  # would otherwise ask again.
   SETTLED_SLOT_KEYS = %w[photo_declined location_stated].freeze
 
   # One batched write, under the inbound job's advisory lock: the draft, its
-  # chat-card summary, the questions the citizen already answered unasked, and
-  # the drafting throttle clock. The summary rides under its own key because the
-  # stash is emptied at persist while the cards that quote the summary are sent
-  # after — and the settled slots ride under theirs for the same reason, only
-  # more so: the photo and location questions are asked after the record exists,
-  # by which point clear_draft_data! has emptied the stash they arrived in.
+  # chat-card summary, the questions the citizen already answered unasked, and the
+  # drafting throttle clock. The summary rides under its own key because the stash
+  # is emptied at persist while the cards that quote the summary are sent after —
+  # and the settled slots ride under theirs for the same reason, only more so: the
+  # photo and location questions are asked after the record exists.
   #
-  # Replaced rather than merged, which matters on a revision: that generates
-  # through ReviseDraftService, which reports no slots, so the slots clear. That
-  # is deliberate. Carried over, a declined photo would hold for the life of the
-  # flow — and the upload pill is only ever offered by Flows::ProposalImageService
-  # #ask, the very step the flag skips, so a citizen who changed their mind while
-  # revising ("doch, ein Foto habe ich") would have had no way to send one at all.
-  # What they said about the previous draft does not bind the new one.
+  # Replaced rather than merged, which matters on a revision: a revision reports
+  # no slots, so the slots clear. That is deliberate — carried over, a declined
+  # photo would hold for the life of the submission, and a citizen who changed
+  # their mind while revising would have had no way to send one at all.
   def store_generated_draft!(generated)
     merge_context!(
       draft_data: generated.except("card_summary", *SETTLED_SLOT_KEYS),
@@ -434,11 +248,10 @@ class Whatsapp::Conversation < ApplicationRecord
     context["settled_slots"].to_h
   end
 
-  # Both default false on every path that cannot answer — an older conversation
-  # written before these keys existed, a revision, a provider that returned
-  # nothing. False is the flow exactly as it behaved before, which is the safe
-  # direction: asking a question twice costs a message, skipping one the citizen
-  # never answered costs them the photo they meant to send.
+  # Both default false on every path that cannot answer — a revision, a provider
+  # that returned nothing. False is the safe direction: asking a question twice
+  # costs a message, skipping one the citizen never answered costs them the photo
+  # they meant to send.
   def photo_declined?
     settled_slots["photo_declined"] == true
   end
@@ -447,9 +260,9 @@ class Whatsapp::Conversation < ApplicationRecord
     settled_slots["location_stated"] == true
   end
 
-  # A tapped category/sentiment answer, merged into the stash through the
-  # same key the generation call filled so the taxonomy policies re-validate
-  # it exactly as they validated the model's.
+  # A taxonomy answer merged into the stash through the same key the generation
+  # call filled, so the policies re-validate it exactly as they validated the
+  # model's.
   def stash_draft_choice!(attributes)
     merge_context!(draft_data: draft_data.to_h.merge(attributes))
   end
@@ -458,158 +271,62 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(draft_data: nil)
   end
 
-  # How often the taxonomy question has been put in a row without a usable
-  # answer. Written and read by AskDraftChoiceService, which gives up rather
-  # than ask again past its limit: the question re-asks itself on every message
-  # that is not a tapped option, so without a count a citizen who cannot answer
-  # it has no way out of the step at all.
-  #
-  # Consecutive, which is why an answered question clears it — the two
-  # questions of one submission share the counter, and a citizen who answered
-  # the first must not arrive at the second with it half spent.
-  def choice_reasks
-    context["choice_reasks"].to_i
-  end
-
-  # The step and the count in one UPDATE, because asking is one moment. As two
-  # named writers it was two transactions per asking, both inside the inbound
-  # job's advisory lock — the batching this schema's header asks for.
-  def ask_choice!(step)
-    update!(step: step, context: context.merge("choice_reasks" => choice_reasks + 1))
-  end
-
-  # Nothing to write on the overwhelmingly common path: the counter only exists
-  # once a question has gone unanswered, and a tapped option normally clears a
-  # key that was never set.
-  def clear_choice_reasks!
-    return if context["choice_reasks"].blank?
-
-    merge_context!(choice_reasks: nil)
-  end
-
-  # The step the continue-or-restart question interrupted, written by
-  # Flows::ContinueOrRestartService when it asks and read back by both
-  # answers: continuing restores it, starting over drops it with the flow.
-  # Cleared by resume_interrupted_step!.
-  def interrupted_step
-    context["interrupted_step"]
-  end
-
-  # The question's own step, the step it interrupted and the re-ask counter in
-  # one UPDATE, because asking is one moment. The counter is the same one the
-  # taxonomy questions use, so a citizen who keeps greeting is given up on
-  # rather than held on the question forever.
-  def ask_continue_decision!(interrupted)
-    update!(
-      step: Step::AWAITING_CONTINUE_DECISION,
-      context: context.merge(
-        "interrupted_step" => interrupted,
-        "choice_reasks" => choice_reasks + 1
-      )
-    )
-  end
-
-  # Back on the step the question interrupted, with everything already
-  # collected untouched — only the two keys the question itself owns are
-  # dropped. One UPDATE, for the same reason the asking is one.
-  def resume_interrupted_step!
-    update!(
-      step: interrupted_step,
-      context: context.except("interrupted_step", "choice_reasks")
-    )
-  end
-
-  # The generation call's own shortening of the description, written beside
-  # the stash by store_generated_draft! and read by the draft card and the
-  # final preview — and by the revision prompt, whose "null = still
-  # accurate" contract needs the current one.
+  # The generation call's own shortening of the description, written beside the
+  # stash and read by the draft card and the final preview.
   def card_summary
     context["card_summary"]
   end
 
-  # Set by PublishResultService when a taxonomy question is asked
-  # mid-publish; tells AskDraftChoiceService to resume the publish instead
-  # of rewinding to the draft card. Cleared on the resume.
-  def publish_repair?
-    context["publish_repair"].present?
+  # The same after a revision, where the record is already persisted and only the
+  # shortening is out of date. The settled slots clear with it, and deliberately: a
+  # declined photo carried over would hold for the life of the submission, so a
+  # citizen who changed their mind while revising ("doch, ein Foto habe ich") would
+  # have had no way to send one at all. What they said about the previous text does
+  # not bind the new one.
+  def store_revised_summary!(summary)
+    merge_context!(card_summary: summary, settled_slots: {})
   end
 
-  def mark_publish_repair!
-    merge_context!(publish_repair: true)
+  # The pin the citizen shared through WhatsApp's own picker, parked here by the
+  # inbound protocol layer because a location message carries no text and so
+  # cannot be described to the assistant without losing precision. The tool that
+  # writes it onto the draft reads it from here and clears it, so a pin can never
+  # be attached twice or attached to a submission it did not arrive for.
+  def shared_location
+    context["shared_location"]
   end
 
-  def clear_publish_repair!
-    merge_context!(publish_repair: nil)
+  def store_shared_location!(latitude:, longitude:)
+    merge_context!(shared_location: { "latitude" => latitude, "longitude" => longitude })
   end
 
-  # Which step the terms question was put in front of, written by
-  # Flows::TermsConsentService when it asks and read back when the citizen
-  # accepts. The same question now guards two places — the content prompt and
-  # the publish — and they resume in different ones: accepting at the publish
-  # step used to be answered with "tell me your idea" while the finished draft
-  # sat in the conversation. The step and the origin in one UPDATE, because
-  # asking is one moment.
-  def ask_terms_consent!(origin)
-    update!(
-      step: Step::AWAITING_TERMS_CONSENT,
-      context: context.merge("terms_origin" => origin.to_s)
-    )
+  def clear_shared_location!
+    return if context["shared_location"].blank?
+
+    merge_context!(shared_location: nil)
   end
 
-  def terms_origin
-    context["terms_origin"]
+  # The photo the citizen sent, parked for the same reason: an image arrives as a
+  # WhatsApp media id, and a media id copied by a model is one character away from
+  # fetching nothing. The tool that attaches it reads it from here and clears it,
+  # so one picture cannot be attached to two drafts.
+  def shared_image_id
+    context["shared_image_id"]
   end
 
-  def clear_terms_origin!
-    return if context["terms_origin"].blank?
-
-    merge_context!(terms_origin: nil)
+  def store_shared_image!(media_id)
+    merge_context!(shared_image_id: media_id)
   end
 
-  # The duplicate offer, stored beside the step by AskDuplicateChoiceService
-  # so a stray typed message re-asks from context instead of re-paying the
-  # search and the ranking call. One batched write.
-  def duplicate_proposal_ids
-    context["duplicate_proposal_ids"]
+  def clear_shared_image!
+    return if context["shared_image_id"].blank?
+
+    merge_context!(shared_image_id: nil)
   end
 
-  def duplicate_row_descriptions
-    context["duplicate_row_descriptions"]
-  end
-
-  def store_duplicate_offer!(proposal_ids:, row_descriptions:)
-    merge_context!(
-      duplicate_proposal_ids: proposal_ids,
-      duplicate_row_descriptions: row_descriptions
-    )
-  end
-
-  # The step the revision question was asked from, recorded by
-  # AskRevisionService before it overwrites the step — the draft card and
-  # the preview owe different steps afterwards. Writes its own step so it
-  # can never record anything but the truth.
-  def revision_origin
-    context["revision_origin"]
-  end
-
-  def record_revision_origin!
-    merge_context!(revision_origin: step)
-  end
-
-  # Whether the location picker was already re-sent once. The second miss
-  # publishes: an optional field must not hold a finished submission.
-  def location_reminded?
-    context["location_reminded"].present?
-  end
-
-  def mark_location_reminded!
-    merge_context!(location_reminded: true)
-  end
-
-  # The uploaded preview picture, remembered by ConfirmSubmissionService
-  # keyed by the blob it was made from, so re-sends of the preview do not
-  # re-upload — and a revised picture (new blob) invalidates it. One
-  # batched write.
+  # The uploaded preview picture, remembered keyed by the blob it was made from,
+  # so re-sends of the preview do not re-upload — and a revised picture (new blob)
+  # invalidates it. One batched write.
   def preview_media_id
     context["preview_media_id"]
   end
@@ -622,31 +339,8 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(preview_media_id: media_id, preview_media_blob_id: blob_id)
   end
 
-  # Whether the bot's last message was a question. Written by every asking
-  # send (Whatsapp::Send.question/recovery); consumed — read and cleared in
-  # the same breath — at the top of the inbound gate chain, so no branch can
-  # leave it set and turn an "abbrechen" days later into a cancellation.
-  def pending_question?
-    context["pending_question"].present?
-  end
-
-  def mark_question_pending!
-    merge_context!(pending_question: true)
-  end
-
-  # Returns whether a question was pending; writes only when one was, so a
-  # message with nothing pending costs no UPDATE — exactly the old inline
-  # behaviour.
-  def consume_pending_question!
-    return false if !pending_question?
-
-    merge_context!(pending_question: nil)
-
-    true
-  end
-
-  # The proposal the bot last asked about, written by the support/comment
-  # prompts and read back by their answer paths and the assistant's tools.
+  # The proposal the bot last asked about, written by the tools that resolve one
+  # from what the citizen called it and read back by the ones that act on it.
   def support_proposal_id
     context["support_proposal_id"]
   end
@@ -663,65 +357,83 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(comment_proposal_id: proposal_id)
   end
 
-  # Whichever of the two the bot last asked about, for the assistant's tools
-  # and system prompt — the verbatim two-key fallback both used to spell out.
+  # Whichever of the two the bot last spoke about, for the tools and the system
+  # prompt.
   def active_proposal_id
     support_proposal_id || comment_proposal_id
   end
 
-  # The tappable options the bot's last interactive message offered, as
-  # {"id" => pill id, "label" => what the citizen reads}. Written by
-  # Whatsapp::Send for every buttons/list send, so a step never has to declare
-  # its own options a second time and a new step is answerable in words the day
-  # it is written.
+  # The irreversible actions the bot's last interactive message offered, written by
+  # Whatsapp::Send for every buttons or list send. Read by the tools that must not
+  # act without having asked first: an assistant is perfectly capable of deciding it
+  # has already confirmed something it never mentioned, and unlinking cannot be
+  # taken back once it has.
   #
-  # Read for two things: the assistant is told what is on offer, and the id it
-  # names back is checked against this list before anything acts on it. That
-  # check is what makes the freedom safe — the model chooses among options the
-  # bot really sent, and cannot mint one.
-  #
-  # Overwritten rather than appended: the citizen answers the question in front
-  # of them, and a pill from four messages ago is a tap they can still make
-  # (FlowActions re-resolves it) but not an answer the assistant may infer.
-  def offered_options
-    Array(context["offered_options"])
+  # Overwritten rather than appended — it names what the citizen is looking at now,
+  # not everything they have ever been offered.
+  def pending_confirmations
+    Array(context["pending_confirmations"])
   end
 
-  def offered_option_ids
-    offered_options.filter_map { |option| option["id"] }
+  def confirmation_offered?(action)
+    pending_confirmations.include?(action.to_s)
   end
 
-  def remember_offered_options!(options)
-    return if options.blank? && context["offered_options"].blank?
+  # Nothing to write on the common path: most messages offer nothing irreversible,
+  # and clearing a key that was never set would cost an UPDATE per reply.
+  def remember_confirmations!(action_ids)
+    return if action_ids.blank? && context["pending_confirmations"].blank?
 
-    merge_context!(offered_options: options)
+    merge_context!(pending_confirmations: action_ids)
   end
 
   # The ruby_llm message history. Written and read only through
-  # Whatsapp::AiAssistant::ChatState, which owns the message shape, the
-  # trimming, and the replay.
+  # Whatsapp::AiAssistant::ChatState, which owns the message shape, the trimming,
+  # and the replay.
+  #
+  # With the step machine gone this is the only thing carrying continuity between
+  # two turns, which makes it considerably more load-bearing than it was.
   def stored_ai_chat
     context["ai_chat"]
   end
 
   def store_ai_chat!(messages)
-    merge_context!(ai_chat: messages)
+    update!(context: context.except("ai_chain").merge("ai_chat" => messages))
+  end
+
+  # The Responses chain, for the transport that keeps the history at the provider
+  # instead of here. Written and read only through
+  # Whatsapp::AiAssistant::ChatChain, which owns the shape, the turn ceiling, and
+  # what a chain the provider has forgotten means.
+  #
+  # Exclusive with the ruby_llm history above, and each writer drops the other
+  # key: flipping the transport setting mid-conversation would otherwise replay a
+  # history with a hole in it, or chain onto a response the other path never
+  # continued.
+  def stored_ai_chain
+    context["ai_chain"]
+  end
+
+  def store_ai_chain!(chain)
+    update!(context: context.except("ai_chat").merge("ai_chain" => chain))
+  end
+
+  def clear_ai_chain!
+    update!(context: context.except("ai_chain"))
   end
 
   private
 
-    # Private on purpose: every context write goes through a named accessor
-    # above, so a new key cannot be introduced without declaring what it
-    # means, who reads it, and when it clears.
+    # Private on purpose: every context write goes through a named accessor above,
+    # so a new key cannot be introduced without declaring what it means, who reads
+    # it, and when it clears.
     def merge_context!(attributes)
       update!(context: context.merge(attributes.stringify_keys))
     end
 
-    # A parked submission outlives every one of the three wipes. It has to: the
-    # menu that offers it back is sent by MainMenuService.greeting, whose first
-    # act is reset_flow! — so a context wiped clean here would discard the flow
-    # one line before the row pointing at it was built.
-    def cleared_flow_attributes
-      { draft_resource: nil, context: context.slice("parked_flow") }
+    # What outlives a submission: the assistant's history, whichever transport
+    # wrote it. Everything else in the context belongs to one draft.
+    def retained_context
+      context.slice("ai_chat", "ai_chain")
     end
 end

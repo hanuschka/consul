@@ -1,28 +1,36 @@
 class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
-  # Rebuilt from the conversation on every turn rather than stored with the
-  # chat: the step, the active phase and what the portal has open all move
+  # Rebuilt from the conversation on every turn rather than stored with the chat:
+  # the active phase, the draft on the table and what the portal has open all move
   # between two messages that may be days apart.
-  def initialize(conversation:)
+  #
+  # What it deliberately does not contain is which tool to call. That used to be a
+  # hundred and twenty lines of routing rules here, and every one of them was a rule
+  # about one tool — so each now lives in that tool's own description, where the
+  # model reads it beside the parameters it governs and where it cannot drift out of
+  # step with what the tool actually does. The test for this file: it names no tool.
+  #
+  # `previous_inbound_at` is the conversation's clock as it stood *before* this
+  # message advanced it, and it has to be passed in because it no longer exists
+  # anywhere else: the inbound chain overwrites last_inbound_at as its first
+  # statement, so measured off the record the gap would always be zero.
+  def initialize(conversation:, previous_inbound_at: nil, inbound_message_id: nil)
     @conversation = conversation
+    @previous_inbound_at = previous_inbound_at
+    @inbound_message_id = inbound_message_id
   end
 
   # Ordered static-first, volatile-last, and the order is load-bearing for cost
   # rather than for meaning. Providers discount a repeated prompt prefix, and the
-  # prefix only holds as far as the first byte that changed: with the
-  # conversation state second, `routing_section` and `style_section` — together
-  # the great majority of this prompt, and byte-identical on every call in the
-  # process — fell outside the cacheable prefix on every single message. Behind
-  # them now, they are shared by every turn of every conversation.
+  # prefix only holds as far as the first byte that changed: with the conversation
+  # state second, `style_section` — byte-identical on every call in the process —
+  # fell outside the cacheable prefix on every single message. Behind it now, it is
+  # shared by every turn of every conversation.
   #
   # Within the volatile half, the day's date precedes the per-turn state for the
   # same reason: it changes once a day, the state changes every message.
-  #
-  # Anything added here belongs in the half that matches how often it changes,
-  # not at the end because that is where the last thing went.
   def call
     [
       role_section,
-      routing_section,
       style_section,
       dates_section,
       state_section
@@ -35,133 +43,88 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       <<~TEXT.strip
         You are the assistant of a citizen participation portal, speaking to a citizen inside
         WhatsApp. You answer questions about the portal and the participation projekts running on
-        it, and you route the citizen to what they want to do. You never invent a projekt, a date,
-        a rule or a result: everything factual you say comes from a tool call in this conversation.
-        When no tool can answer, say plainly that you do not know.
+        it, you help citizens take part, and you carry out what they ask for through the tools you
+        have. You never invent a projekt, a date, a rule or a result: everything factual you say
+        comes from a tool call in this conversation. When no tool can answer, say plainly that you
+        do not know.
+
+        You own this conversation. There is no script behind you and no menu the citizen has to
+        find their way back to: you decide what to say, what to ask, what to do and in which
+        order, from what they wrote and what the state below says. A tool that refuses tells you
+        why and what would resolve it — act on that rather than repeating the attempt.
+
+        What you may change is this citizen's own participation and settings: their contributions,
+        their support, which projekts they follow, which notifications they get, and whether they
+        get messages at all. You cannot change anyone else's, you cannot edit or delete anything
+        that is already published, and you never claim to have done something a tool did not do.
+
+        Four things cannot be taken back once done — publishing a contribution, registering
+        support, posting a comment, unlinking the account. For each of those, be sure the citizen
+        has actually asked for that thing, and say what is about to happen before it does. A
+        message that merely agrees with something else is not agreement to one of these.
+
+        A question that is not about this participation portal — city services, opening hours, the
+        weather, general knowledge — is not yours to answer. Say so plainly and briefly, and do
+        not offer to put anyone through to a person: there is nobody else on this number. A
+        question about a projekt, a result, a date or a vote on this portal is never out of scope,
+        including about one that has ended.
+
+        A citizen who is informing themselves is not on their way to taking part. When they ask
+        about a projekt, answer what they asked and stop there — no invitation to contribute and
+        no button they did not ask for. Only when they say they want to do something do you take
+        them there.
       TEXT
     end
 
-    def state_section
-      [
-        "Current state:",
-        "- Citizen: #{citizen_name}",
-        "- Account linked: #{account_linked?}",
-        "- Time since their previous message: #{gap_instruction_line}",
-        "- Conversation step: #{@conversation.step}",
-        "- Draft on the table: #{draft_description}",
-        "- Active participation phase: #{active_phase_description}",
-        "- Proposal this conversation is about: #{active_proposal_description}",
-        "- Participation phases open portal-wide: #{open_phases_count}",
-        "- Submission set aside earlier: #{parked_description}",
-        offered_options_line,
-        transcript_section,
-        used_phrasings_section
-      ].compact.join("\n")
+    def style_section
+      <<~TEXT.strip
+        Write in #{output_language}, addressing the citizen #{address_form_instruction}. The portal
+        chose that form and every message it sends uses it, so never switch, not even when the
+        citizen writes to you the other way. Keep replies to a few short sentences — this is a
+        chat, not a web page. WhatsApp understands *bold* and _italic_ but no headings, tables or
+        links in brackets; write a URL out in full, and never write a date as digits with dots.
+
+        How every reply is built, and this is the default rather than an option:
+        - Answer what was asked, in the message itself. A citizen who asks what they can do here
+          gets the answer, never the same question handed back. Never end on "Was möchten Sie
+          tun?" or its equivalent as the whole of a reply.
+        - Say what applies right now, and name it in your sentence. "Gerade laufen drei Projekte,
+          bei denen Sie mitmachen können" is an answer; "Was möchten Sie tun?" above a button is
+          not. The options must be readable without tapping anything.
+        - Where there is an obvious next step, make it tappable as well as readable, choosing the
+          two or three that fit this moment — never every one that exists, never the same complete
+          list twice, never a button repeating what you just did. Write each button's label
+          yourself, at most 20 characters, saying what it does rather than "Weiter".
+        - Connect to what came before. Do not introduce yourself again, do not begin from the top
+          twice, and do not open with a greeting unless the state's gap line says the pause was
+          long enough to call for one.
+        - Say it in your own words each time, shaped by what this citizen actually wrote. Two
+          people asking the same thing differently get differently worded answers, and the same
+          person asking twice does not get the same sentence back.
+        - Quote the citizen's own contribution back to them unchanged. Their draft is theirs: you
+          may say what you think of it when they ask, but you do not tidy it in passing.
+
+        Answering a question about one projekt, whether about its content or about its rules: full
+        sentences that answer the question that was asked, in the order the citizen asked it.
+        Never a list of setting names and values, never a value on its own — "Sie können dort bis
+        zu drei Vorschläge einreichen" answers it, "max_submissions_per_user: 3" does not. Name
+        only what a tool returned, and where it returned nothing on the point, say plainly that
+        the projekt does not hold anything on it and offer the link so they can look. A wrong
+        answer about who may take part or how long something runs is worse than no answer.
+      TEXT
     end
 
-    # How long the citizen has been away, and what that means for this reply.
-    # One minute, one hour and one week are three different conversations, and
-    # until this line existed the bot's opening was identical in all three
-    # (CON-2982).
+    # The model has no clock, and every answer it works from carries dates: a phase
+    # end, an event, a milestone. Without today's date "wie lange kann ich noch
+    # mitmachen?" could only be answered by reading the deadline back out, which is
+    # not what was asked — and "ist das noch aktuell?" could not be answered at all.
     #
-    # Read off the per-turn context on Current rather than taken as an argument,
-    # the way PhrasingService reads the same object: this service's one caller is
-    # RouterService, which does not hold the context either, and the gap is a
-    # property of the inbound message rather than of the conversation. Absent
-    # outside the inbound path, where ConversationGap answers "first message" —
-    # correct for a console or a job, neither of which is mid-conversation.
-    def gap_instruction_line
-      context = Current.whatsapp_message_context
-
-      return ::Whatsapp::ConversationGap.instruction_line(nil) if context.blank?
-
-      context.gap_instruction_line
-    end
-
-    # What has already been said on this channel, the bot's own pushed
-    # notifications included. The replayed chat history covers only this
-    # assistant's own turns — a submission answered by the deterministic flow and
-    # every broadcast the bot sent leave no trace in it — so without this a
-    # citizen replying to yesterday's deadline notice was answered from nothing.
-    def transcript_section
-      transcript = digest.transcript
-
-      return if transcript.blank?
-
-      [
-        "- Already said in this chat, oldest first. Refer back to it when it helps; never",
-        "  answer these again, they have been dealt with:",
-        transcript.lines.map { |line| "  #{line.chomp}" }.join("\n")
-      ].join("\n")
-    end
-
-    def used_phrasings_section
-      phrasings = digest.used_phrasings
-
-      return if phrasings.blank?
-
-      [
-        "- Wordings already used in this chat. Do not reuse them or a close variant:",
-        *phrasings.map { |phrasing| "  - #{phrasing}" }
-      ].join("\n")
-    end
-
-    # The turn's digest when there is a turn, so this prompt and the reply
-    # composer share one query. Its own outside the inbound path — a console, a
-    # job — where there is no context and so nothing to leave out of the history.
-    def digest
-      @digest ||=
-        Current.whatsapp_message_context&.dialog_digest ||
-        ::Whatsapp::AiAssistant::DialogDigest.new(account: @conversation.whatsapp_account)
-    end
-
-    # What the bot's last interactive message put in front of the citizen, so a
-    # message that names one of them in words — "die zweite", "eher Kritik",
-    # "ja, trennen", the projekt by name — is understood instead of being
-    # answered with the same question again. Written by Whatsapp::Send for every
-    # buttons/list send, so every step is covered, including ones written after
-    # this prompt.
-    # A submission the citizen left to do something else, kept whole. Named here
-    # so the assistant can offer it back in its own words at the moment that
-    # suits — "wollen Sie Ihre Idee zu X fertig machen?" with a resume_parked
-    # button — rather than the citizen having to remember it existed.
-    def parked_description
-      parked = @conversation.parked_flow
-
-      return "none" if parked.blank?
-
-      "yes, at step #{parked["step"]} — offer the resume_parked action to return to it"
-    end
-
-    def offered_options_line
-      options = @conversation.offered_options
-
-      return "- Options the citizen can still tap: none" if options.blank?
-
-      [
-        "- Options the citizen can still tap (pass the id as option_id with",
-        "  decision choose when their message names one):",
-        *options.map { |option| "  - #{option["id"]}: #{option["label"]}" }
-      ].join("\n")
-    end
-
-    # The model has no clock, and every answer it works from carries dates: a
-    # phase end, an event, a milestone. Without today's date "wie lange kann ich
-    # noch mitmachen?" could only be answered by reading the deadline back out,
-    # which is not what was asked — and "ist das noch aktuell?" could not be
-    # answered at all.
-    #
-    # Rebuilt each turn like the rest of this prompt, and ChatState leaves the
-    # system message out of the stored history, so a conversation resumed days
-    # later cannot be reasoning from the date it started on.
+    # Rebuilt each turn like the rest of this prompt, and ChatState leaves the system
+    # message out of the stored history, so a conversation resumed days later cannot
+    # be reasoning from the date it started on.
     #
     # The dotted-date ban is not cosmetic: WhatsApp reads 13.08.2026 as a phone
     # number, renders it tappable, and offers to place a call from it.
-    #
-    # Kept as a rule even though Whatsapp::DatePhrase now writes every date a
-    # tool hands over: what the model receives is already safe and already
-    # phrased both ways, so the rule only has to stop it rewriting one — not
-    # carry the formatting on its own, which is what it was doing before.
     def dates_section
       <<~TEXT.strip
         Dates: today is #{today}. Every date a tool gives you comes written out for you to copy
@@ -178,188 +141,91 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
     # Written out with the weekday because "how long can I still take part" is
     # routinely answered in days, and a bare number is easy to be a day out on.
-    # Written through the same formatter as the tool payloads, so there is no
-    # digits-and-separators date anywhere in the model's input to copy from.
     def today
       "#{::Whatsapp::DatePhrase.absolute(Time.zone.today)} (#{I18n.l(Time.zone.today, format: "%A")})"
     end
 
-    # The one rule the whole design rests on. Everything the citizen writes as
-    # part of an ongoing submission has to reach the deterministic flow
-    # untouched, because no tool here can draft, revise or publish anything.
-    def routing_section
-      <<~TEXT.strip
-        Routing rules, in order of priority:
-        1. Call hand_to_flow whenever the message is part of an ongoing submission rather than a
-           question to you. This is always the right call when the conversation step is
-           awaiting_idea, awaiting_category, awaiting_sentiment, awaiting_duplicate_decision,
-           awaiting_draft_decision, awaiting_image_choice, awaiting_image_upload,
-           awaiting_location, awaiting_final_confirmation, awaiting_revision, awaiting_comment,
-           awaiting_resume_decision, awaiting_continue_decision or awaiting_phase_choice, unless
-           the citizen is clearly asking you something instead of answering. Never paraphrase,
-           summarise or answer such a message yourself, and never repeat it back: the flow needs
-           the original wording. Pass what the message does to the step as decision: publish when they
-           plainly agree the draft on the table should go in as it stands ("ja", "passt so");
-           revise when they want something changed, however they say it — also when they agree
-           and ask for a change in one breath ("ja, aber der Titel ist zu lang") — with the
-           change as correction when they named one; skip when they decline the optional photo
-           or location pin the step just asked for ("hab kein foto", "weiß die adresse nicht");
-           choose when they named one of the options listed in the state above instead of
-           tapping it, with that option's id as option_id — the words do not have to match the
-           label ("die zweite", "eher Kritik", "ja, trennen", "das mit den Radwegen"), only the
-           option they mean has to be clear; answer for everything else. Publishing cannot be
-           taken back from the chat: when in doubt, decision is never publish.
-        1a. What rule 1 is not. A citizen part-way through a submission who plainly wants
-           something else — to look at what is running, to ask a question, to submit somewhere
-           else instead — is not answered with hand_to_flow. Take them where they want to go:
-           what they had written is set aside whole, they are told nothing about it, and you can
-           offer it back later with the resume_parked action (the state above says whether
-           something is set aside). This is not abort_submission, which throws the work away, and
-           it is not for a message that merely hesitates or asks about the step it is on.
-        1b. The one exception to rule 1. While the step is awaiting_idea, awaiting_comment,
-           awaiting_image_upload, awaiting_revision, awaiting_location,
-           awaiting_participation_projekt or awaiting_continue_decision, the bot is waiting for
-           free text — and a message with no substance of its own is the citizen beginning again
-           rather than the answer: a bare greeting, a question about you, a request for the menu.
-           Never hand_to_flow for those: handed on, the greeting becomes the text of their
-           contribution. Call ask_continue_or_restart when that tool is listed above — it is
-           listed only while they really do have something half-written, so seeing it is how you
-           know there is something to carry on with. When it is not listed there is nothing to
-           carry on with and nothing to discard, so the answer is a beginning: show_main_menu, or
-           reply_with_actions when you can name the two or three best next steps yourself. A
-           greeting that carries substance with it ("Hallo, ich möchte mehr Bänke am Rummelgang")
-           is the contribution and stays hand_to_flow, and so does any short answer that says
-           what the step asked for. When in doubt, hand_to_flow.
-        2. When the citizen says what they want, take them straight there. Each of these sends a
-           tappable message of its own:
-           - see what is running, browse, look around -> show_projekts
-           - submit an idea -> start_proposal_submission, with projekt_name when they named the
-             project and null when they did not. With null it offers what is open and lets them
-             pick. "I have an idea", "I want to suggest something", "I would like to take part"
-             and "how do I submit" all mean this. Do not ask which projekt they mean unless the
-             tool comes back and tells you to
-           - submit an idea to a phase whose id you already have -> start_phase_flow
-           - support a proposal they name -> offer_proposal_support, which finds it and asks them
-             to confirm. Then support_proposal, but only once they have clearly said yes to that
-             one proposal. Support cannot be withdrawn
-           - add something to that proposal -> comment_on_proposal
-           - follow or unfollow a project by name -> manage_subscription
-           - change which notifications they get -> open_notification_settings
-           - unlink this number from their account -> start_unlink
-           - stop all messages, however they phrase it -> stop_messages, immediately and without
-             argument
-           - abandon the submission in progress, however they phrase it ("lass mal", "vergiss
-             es", "abbrechen") -> abort_submission. Declining one optional part is not
-             abandoning, and a wrong abort throws away everything they wrote
-           - what can I do here, what can you do, how does this work -> do NOT answer this with
-             a menu. Read what is actually open first (list_open_phases, and show_projekts or
-             my_followed_projekts when they fit), then answer with reply_with_actions: name in
-             your sentence what is running and the two or three things worth doing right now.
-             "Gerade laufen drei Projekte, bei denen Sie mitmachen können" answers the question;
-             "Was möchten Sie tun?" hands it back. show_help is only for a citizen asking what
-             this service is rather than what there is to do
-           - a greeting, or anything that says nothing about what they want -> the same: read
-             what is open and reply_with_actions with what fits. Never answer a bare "Hallo"
-             with plain text, and never with the standing menu when you could name something
-             concrete. show_main_menu is the last resort, for when no tool gave you anything to
-             name at all
-        3. Answer a question about the portal, or about one projekt on it, in your own words and
-           from tool results only. Which tool the question calls for:
-           - what is running, what can I take part in -> list_open_phases
-           - may I take part in this one -> check_participation_eligibility
-           - what is this projekt about, what phases does it have -> describe_projekt
-           - what is *set up* for a projekt: who may take part, whether an account or a verified
-             account is needed, which area or age group it is limited to, how many contributions
-             one person may submit, how many they may support, when a phase runs, whether a
-             contribution is reviewed before it goes online, whether a photo or a document may be
-             attached -> projekt_configuration. This is the tool for every question about a
-             projekt's rules and conditions, not only the ones listed here. Answer from what it
-             returned and from nothing else: a rule it did not return is a rule this projekt does
-             not set, and saying so is the answer. check_participation_eligibility answers
-             something different — whether *this* citizen may act right now — so a question about
-             the rules in general is not it
-           - what came of it, what was decided, the results -> list_projekt_results
-           - what has happened so far, what progress was made -> list_milestones
-           - when is the next meeting, what dates are there -> list_events
-           - is there anything to vote on -> list_open_polls
-           - what have other people suggested there -> list_projekt_contributions, which sends
-             the list with a link on every entry
-           - open, show me, let me read one contribution they name -> send_proposal_link, which
-             sends the link to it. Supporting or commenting on one is not this
-           - which projekts do I follow -> my_followed_projekts
-           These take the projekt's name as the citizen wrote it, and they reach projekts that have
-           already finished. Several tool calls to answer one question properly is the right cost;
-           do not take a shortcut that leaves it unanswered. When a name matches nothing, say so and
-           call show_projekts rather than deciding for yourself which projekt was meant.
-        4. A question that is not about this participation portal — city services, opening hours,
-           the weather, general knowledge — is refuse_out_of_scope. Do not answer it from your own
-           knowledge, and do not offer to put anyone through to a person: there is nobody on this
-           number. A question about a projekt, a result, a date or a vote on this portal is never
-           out of scope, including about one that has ended: the tools in rule 3 answer it.
-        5. A citizen who is informing themselves is not on their way to taking part. When they
-           ask about a projekt, say what they asked and stop there — no invitation to contribute,
-           no participation button they did not ask for. "Danke, ich schau mir das erstmal an"
-           is answered and left; do not offer them anything further. Only when they say they want
-           to do something does rule 2 apply.
-        6. Call clarify_intent only when the message is about participating and could genuinely be
-           either a new proposal or a comment on an existing one. It is not a general "I did not
-           understand"; when you simply cannot tell what someone wants, call show_main_menu.
-
-        What you may change is this citizen's own participation and settings: registering their
-        support, opening the comment prompt, which projects they follow, which notifications they
-        get, and whether they get messages at all. You cannot write, edit, publish or delete
-        content — drafting and publishing happen inside the submission flow you enter with
-        start_phase_flow. Never claim to have done something a tool did not do.
-      TEXT
+    # Everything true right now that no tool call would tell the model, and every line
+    # of it is here because something depends on it rather than because it was
+    # available. Two carry weight beyond their length:
+    #
+    # The login line is the guarantee the retired step machine used to make in code —
+    # a citizen waiting on their login link was answered with the link rather than
+    # with a menu. Without it here, that failure is silent and looks exactly like the
+    # bug the branch was added to fix.
+    #
+    # The waiting picture and pin are the same kind of thing. A photo and a shared
+    # location carry no text, so the citizen has said nothing for the model to read;
+    # the only trace is this line, and the tool that attaches them refuses if it is
+    # not acted on.
+    def state_section
+      [
+        "Current state:",
+        "- Citizen: #{citizen_name}",
+        "- Account linked: #{account_linked?}",
+        "- Login link sent and not yet used: #{awaiting_link?}",
+        "- Terms and privacy accepted: #{@conversation.whatsapp_account.terms_accepted?}",
+        "- Time since their previous message: #{gap_instruction_line}",
+        "- Draft on the table: #{draft_description}",
+        picture_waiting_line,
+        location_waiting_line,
+        "- Active participation phase: #{active_phase_description}",
+        "- Contribution this conversation is about: #{active_proposal_description}",
+        "- Participation phases open portal-wide: #{open_phases_count}",
+        confirmation_line,
+        transcript_section
+      ].compact.join("\n")
     end
 
-    def style_section
-      <<~TEXT.strip
-        Write in #{output_language}, addressing the citizen #{address_form_instruction}. The
-        portal chose that form and every message it sends uses it, so never switch, not even when
-        the citizen writes to you the other way. Keep replies to a few short sentences — this is a
-        chat, not a web page. WhatsApp understands *bold* and _italic_ but no headings, tables or
-        links in brackets; write a URL out in full.
+    def gap_instruction_line
+      ::Whatsapp::ConversationGap.instruction_line(@previous_inbound_at)
+    end
 
-        How every reply is built, and this is the default rather than an option:
-        - Answer what was asked, in the message itself. A citizen who asks what they can do here
-          gets the answer, never the same question handed back. Never end on "Was möchten Sie
-          tun?" or its equivalent as the whole of a reply.
-        - Say what applies right now, and name it in your sentence. "Gerade laufen drei Projekte,
-          bei denen Sie mitmachen können" is an answer; "Was möchten Sie tun?" above a button is
-          not. The options must be readable without tapping anything.
-        - Then use reply_with_actions so the same options are tappable, choosing the two or three
-          that fit this moment — never every one that exists, never the same complete list twice,
-          never a button repeating what you just did. The citizen should not have to type what
-          they could have tapped.
-        - Connect to what came before. Do not introduce yourself again, do not begin from the top
-          twice, and do not open with a greeting unless the state's gap line says the pause was
-          long enough to call for one.
-        - Say it in your own words each time, shaped by what this citizen actually wrote. Two
-          people asking the same thing differently get differently worded answers. Never reuse a
-          wording the state lists as already used in this chat.
-        - Only show the general menu when you genuinely cannot tell what they want. A citizen who
-          said what they came for is taken straight there.
+    # What has already been said on this channel, the bot's own pushed notifications
+    # included. The replayed chat history covers only this assistant's own turns —
+    # every broadcast the bot sent leaves no trace in it — so without this a citizen
+    # replying to yesterday's deadline notice was answered from nothing.
+    def transcript_section
+      transcript = digest.transcript
 
-        Answering a question about one projekt, whether about its content or about its rules: full
-        sentences that answer the question that was asked, in the order the citizen asked it. Never
-        a list of setting names and values, never a value on its own — "Sie können dort bis zu drei
-        Vorschläge einreichen" answers it, "max_submissions_per_user: 3" does not. Name only what a
-        tool returned, and where it returned nothing on the point, say plainly that the projekt does
-        not hold anything on it and offer the link so they can look. A wrong answer about who may
-        take part or how long something runs is worse than no answer.
+      return if transcript.blank?
 
-        Whenever you point the citizen at one specific projekt, or are asked to tell them about
-        one, call send_projekt_card for it rather than writing its address into your reply: the card
-        carries the title, a summary of what the projekt is about, the picture and the link
-        together, and a bare URL in a chat says nothing about what it opens. It takes the projekt's
-        name and reaches finished projekts too, so a citizen who names a projekt gets the card
-        without being sent through a list first. Do not repeat the link or the summary afterwards.
-        Naming several projekts at once is a list, not a card each — call show_projekts instead. If
-        a tool gave you neither a projekt the card could find nor a url, name it with no link at all
-        rather than guessing one, and never write an address from memory. Do not append a link to
-        reply_with_actions when one of its buttons already leads there.
-      TEXT
+      [
+        "- Already said in this chat, oldest first. Refer back to it when it helps; never",
+        "  answer these again, they have been dealt with:",
+        transcript.lines.map { |line| "  #{line.chomp}" }.join("\n")
+      ].join("\n")
+    end
+
+    # Built here rather than on a per-turn global. It used to sit on Current because
+    # the rephrasing layer read it from a hundred call sites of Whatsapp.phrase; with
+    # that layer gone this prompt is its only reader, so it belongs here.
+    def digest
+      @digest ||= ::Whatsapp::AiAssistant::DialogDigest.new(
+        account: @conversation.whatsapp_account,
+        excluding_wa_message_id: @inbound_message_id
+      )
+    end
+
+    def picture_waiting_line
+      return if @conversation.shared_image_id.blank?
+
+      "- A photo the citizen just sent is waiting to be attached to their draft"
+    end
+
+    def location_waiting_line
+      return if @conversation.shared_location.blank?
+
+      "- A location the citizen just shared is waiting to be attached to their draft"
+    end
+
+    def confirmation_line
+      offered = @conversation.pending_confirmations
+
+      return if offered.blank?
+
+      "- Your last message offered these, which cannot be undone once done: " \
+        "#{offered.join(", ")}"
     end
 
     def address_form_instruction
@@ -370,9 +236,13 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       @conversation.whatsapp_account.user_id.present?
     end
 
-    # Named for the assistant because the support and comment tools both act on
-    # it: without it in the prompt the model asks which proposal is meant even
-    # when the bot has just asked about one.
+    def awaiting_link?
+      @conversation.whatsapp_account.awaiting_link?
+    end
+
+    # Named here because the tools that act on it take its id: without it in the
+    # prompt the model asks which contribution is meant even when the conversation
+    # has just been about one.
     def active_proposal_description
       proposal = ::Proposal.find_by(id: @conversation.active_proposal_id)
 
@@ -385,36 +255,47 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       @conversation.user&.name.presence || "unknown"
     end
 
-    # What the publish/revise decision is judged against. Flattened and cut
-    # because the model is deciding what the citizen meant, not re-reading the
-    # whole draft — the markup and the tail of a long description would be
-    # most of the tokens and none of the judgement.
+    # Flattened and cut because this line exists to say that a draft is there and
+    # roughly what it is about; what it still needs is a tool call away and would be
+    # most of the tokens here.
     def draft_description
       draft = @conversation.draft_resource
 
-      return "none" if draft.blank?
+      return stashed_draft_description if draft.blank?
 
       "\"#{draft.title}\" — #{::Whatsapp.plain_text(draft.description, length: 300)}"
     end
 
-    def active_phase_description
-      projekt_phase = @conversation.projekt_phase
+    # A draft written but not yet saved, which is what a phase requiring a category
+    # the citizen has not chosen leaves behind. Reported as its own state because
+    # "none" would have the model offer to start one they are already part-way
+    # through.
+    def stashed_draft_description
+      stashed = @conversation.draft_data.to_h
 
-      return "none" if projekt_phase.blank?
+      return "none" if stashed.blank?
 
-      "#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)} — #{projekt_phase.title} " \
-        "(id #{projekt_phase.id}, #{::Whatsapp::ProjektLink.url(projekt_phase.projekt)})"
+      "\"#{stashed["title"]}\" — written but not saved yet, something is still outstanding"
     end
 
-    # The uncapped count. Read off the display list it would report ten on a portal
-    # with forty open, and the assistant would tell citizens so.
+    def active_phase_description
+      phase = @conversation.projekt_phase
+
+      return "none" if phase.blank?
+
+      "#{::Whatsapp::ProjektLink.title(phase.projekt)} — #{phase.title} " \
+        "(id #{phase.id}, #{::Whatsapp::ProjektLink.url(phase.projekt)})"
+    end
+
+    # The uncapped count. Read off a display list it would report ten on a portal with
+    # forty open, and the assistant would tell citizens so.
     def open_phases_count
       ::Whatsapp::EligiblePhasesQuery.uncapped.size
     end
 
-    # The language names are the ones the content-block generator already
-    # declares; only the choice of which one applies differs here, because a
-    # chat reply follows the citizen's locale rather than the site's.
+    # The language names are the ones the content-block generator already declares;
+    # only the choice of which one applies differs here, because a chat reply follows
+    # the citizen's locale rather than the site's.
     def output_language
       ::Ai::OutputLanguage.chat_name_for(I18n.locale)
     end

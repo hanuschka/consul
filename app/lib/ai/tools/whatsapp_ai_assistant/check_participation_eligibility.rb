@@ -1,33 +1,35 @@
 class Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility <
   Ai::Tools::WhatsappAiAssistant::BaseTool
-
   description "Checks whether this citizen may submit something to an open participation phase " \
-              "right now, and why not when they may not — for example because their account is " \
-              "not verified or the phase does not accept submissions. Call this before telling " \
-              "the citizen they can contribute, and before start_phase_flow when in doubt."
+              "right now, and which rule stops them when they may not — an unverified account, a " \
+              "phase that has closed, a district or age limit, a submission allowance already " \
+              "spent. Call it before telling them they can contribute. It returns the rule for " \
+              "you to explain in your own words and sends nothing itself; where it names a way " \
+              "forward, offer that rather than leaving them at a refusal."
 
   params do
     integer :projekt_phase_id, description: "Id of an open participation phase"
   end
 
   def execute(projekt_phase_id:)
-    projekt_phase = eligible_phase(projekt_phase_id)
+    candidate = eligible_phase(projekt_phase_id)
 
-    return unknown_phase_error if projekt_phase.blank?
+    return unknown_phase_error if candidate.blank?
 
-    permission_problem =
-      ::Whatsapp::Drafting::ResourceCreationValidationService.call(projekt_phase: projekt_phase, user: user)
+    problem = ::Whatsapp::Drafting::ResourceCreationValidationService.call(
+      projekt_phase: candidate, user: user
+    )
 
-    return { eligible: true } if permission_problem.blank?
+    return { eligible: true } if problem.blank?
 
     {
       eligible: false,
-      reason: permission_problem.to_s,
-      # The same copy the deterministic refusal sends, so the two paths never
-      # give the citizen two different accounts of the same rule.
-      explanation: ::Whatsapp::Flows::RefuseParticipationService.copy_for(
-        reason: permission_problem, projekt_phase: projekt_phase
-      )
+      reason: problem.to_s,
+      # The rule rather than the sentence. Both paths that refuse a citizen read
+      # this one explanation, so the answer to "may I take part" and the answer to
+      # an attempt that was stopped cannot give two different accounts of the same
+      # rule.
+      rule: ::Whatsapp::ParticipationRules.explain(reason: problem, projekt_phase: candidate)
     }
   end
 end

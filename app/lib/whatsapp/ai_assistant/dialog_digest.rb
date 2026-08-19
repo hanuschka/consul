@@ -1,15 +1,8 @@
 class Whatsapp::AiAssistant::DialogDigest
-  # Two readings of the same tail of the chat, because two criteria need one
-  # query between them (CON-2982):
-  #
-  #   * #transcript — what has been said on this channel, so a reply can refer
-  #     back to it. Covers what the assistant's own stored history cannot: turns
-  #     answered by the deterministic submission flow, and notifications the bot
-  #     pushed on its own initiative.
-  #   * #used_phrasings — the bot's own recent sentences, handed to the composer
-  #     as wordings not to reach for again. Nothing tracked this before, so
-  #     "within a conversation the bot does not repeat the same phrasing" had no
-  #     input at all: PhrasingService picked a variant at random.
+  # What has been said on this channel, so a reply can refer back to it. It covers
+  # what the assistant's own stored history cannot: the notifications the bot pushed
+  # on its own initiative, and every turn from before this conversation had a stored
+  # history at all.
   #
   # Deliberately overlapping the replayed router history rather than trying to
   # subtract it. Knowing which rows the stored chat already accounts for would
@@ -24,20 +17,10 @@ class Whatsapp::AiAssistant::DialogDigest
   # several hundred characters of title and URL, and none of it helps here.
   MAX_BODY_LENGTH = 160
 
-  # Only the bot's prose is worth avoiding twice. Interactive bodies are counted
-  # too — a menu's sentence is exactly the one that reads as a form when it comes
-  # back unchanged — but templates are not: their wording is Meta-approved and
-  # unchangeable, so listing them would ask the composer to avoid something it
-  # cannot influence.
-  PHRASING_KINDS = %w[text interactive].freeze
-
-  MAX_USED_PHRASINGS = 6
-
   # `excluding_wa_message_id` is the message being answered, which must not appear
-  # in a list both prompts introduce as already dealt with — see
+  # in a list the prompt introduces as already dealt with — see
   # Whatsapp::RecentDialogQuery, where the ordering that makes it necessary is
-  # documented. Built once per turn and memoized on the turn's MessageContext, so
-  # the two prompts that read it share one query.
+  # documented.
   def initialize(account:, excluding_wa_message_id: nil)
     @account = account
     @excluding_wa_message_id = excluding_wa_message_id
@@ -51,13 +34,6 @@ class Whatsapp::AiAssistant::DialogDigest
     messages.map { |message| line_for(message) }.join("\n")
   end
 
-  def used_phrasings
-    outbound
-      .select { |message| PHRASING_KINDS.include?(message[:kind]) }
-      .last(MAX_USED_PHRASINGS)
-      .map { |message| truncated(message[:body]) }
-  end
-
   private
 
     def messages
@@ -66,10 +42,6 @@ class Whatsapp::AiAssistant::DialogDigest
         limit: MAX_MESSAGES,
         excluding_wa_message_id: @excluding_wa_message_id
       )
-    end
-
-    def outbound
-      messages.select { |message| message[:direction] == "outbound" }
     end
 
     # A notification is marked as one. Without that the model reads a broadcast

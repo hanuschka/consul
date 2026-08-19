@@ -1,13 +1,20 @@
 class Ai::Tools::WhatsappAiAssistant::ListProjektContributions <
   Ai::Tools::WhatsappAiAssistant::BaseTool
-  description "Sends the citizen what other people have already submitted to one project — its " \
-              "published proposals and budget investments, newest first, each with the link to " \
-              "open it. Use it for questions like what have people suggested or what is already " \
-              "in there. These are everyone's contributions, not this citizen's own. This sends " \
-              "the message itself — do not write one as well."
+  # What other people have submitted to one projekt. A read now rather than a
+  # sender: it used to build its own list message, which made it the same tool
+  # twice over — a query, and a hardcoded rendering of the query. The rendering is
+  # send_list's, and what goes in the rows is the model's.
+  MAX_SHOWN = ::Whatsapp::MAX_LIST_ROWS
+
+  description "Returns what other people have already submitted to one projekt — its published " \
+              "proposals and budget investments, newest first, each with its id, its age and the " \
+              "link to open it. Use it for questions like what have people suggested or what is " \
+              "already in there. These are everyone's contributions, not this citizen's own — " \
+              "that is my_contributions. Sends nothing: name a few of them in your reply, and " \
+              "use send_list or send_link when they want to open one."
 
   params do
-    string :projekt_name, description: "The project name as the citizen wrote it"
+    string :projekt_name, description: "The projekt name as the citizen wrote it"
   end
 
   def execute(projekt_name:)
@@ -15,10 +22,22 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektContributions <
 
     return unknown_projekt_error(projekt_name) if projekt.blank?
 
-    ::Whatsapp::Flows::ProjektContributionsService.call(
-      conversation: conversation, projekt: projekt
-    )
+    contributions = ::Whatsapp::ProjektContributionsQuery.call(projekt: projekt)
 
-    halt("Sent what has been submitted to this project.")
+    {
+      projekt: projekt_title(projekt),
+      total: contributions.size,
+      contributions: contributions.first(MAX_SHOWN).map { |entry| row_for(entry) }
+    }
   end
+
+  private
+
+    def row_for(entry)
+      {
+        title: entry[:title],
+        submitted: ::Whatsapp::DatePhrase.relative(entry[:created_at]),
+        url: entry[:url]
+      }.compact
+    end
 end

@@ -75,18 +75,9 @@ class Whatsapp::Account < ApplicationRecord
     update!(opt_out_at: Time.current)
   end
 
-  # Whether this number has ever been written to. What separates a genuine
-  # first contact — which gets the catalog's three opening messages — from
-  # someone writing in again after a quiet week, who gets only the AI
-  # disclosure. Asked of the messages rather than of a flag on the conversation
-  # because resetting a flow clears the conversation's context.
-  def greeted?
-    Whatsapp::Message.exists?(whatsapp_account_id: id, direction: "outbound")
-  end
-
-  # Whether this number has been told it is talking to a bot. Held on the
-  # account rather than derived from #greeted?, which is already true for every
-  # number a broadcast reached without a word of disclosure in it.
+  # Whether this number has been told it is talking to a bot. Held on the account
+  # rather than derived from whether it has ever been written to, which is already
+  # true for every number a broadcast reached without a word of disclosure in it.
   def ai_disclosed?
     ai_disclosed_at.present?
   end

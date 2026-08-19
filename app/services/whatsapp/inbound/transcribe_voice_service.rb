@@ -26,6 +26,17 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
       tempfile.write(media[:body])
       tempfile.flush
 
+      transcribed_text(tempfile)
+    ensure
+      if tempfile.present?
+        tempfile.close
+        tempfile.unlink
+      end
+    end
+
+    def transcribed_text(tempfile)
+      return sdk_transcribed_text(tempfile) if ::Ai::OpenaiSdk.enabled?
+
       transcription = RubyLLM.transcribe(
         tempfile.path,
         model: ::Whatsapp.transcription_model,
@@ -36,11 +47,24 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
       )
 
       transcription.text.presence
-    ensure
-      if tempfile.present?
-        tempfile.close
-        tempfile.unlink
-      end
+    end
+
+    # Handed a Pathname rather than the open Tempfile: the SDK reads the file
+    # itself and wants the name to derive the upload's content type from, which an
+    # already-positioned handle would not give it.
+    def sdk_transcribed_text(tempfile)
+      transcription =
+        ::Ai::OpenaiSdk::Client
+          .build
+          .audio
+          .transcriptions
+          .create(
+            file: Pathname.new(tempfile.path),
+            model: ::Whatsapp.transcription_model,
+            language: I18n.locale.to_s.first(2)
+          )
+
+      transcription.text.presence
     end
 
     def extension_for(mime_type)

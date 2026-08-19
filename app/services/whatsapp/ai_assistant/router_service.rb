@@ -186,6 +186,9 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         # everything below acts; these answer "what is this portal doing", which
         # until they existed was refused as out of scope for want of a tool.
         ::Ai::Tools::WhatsappAiAssistant::DescribeProjekt,
+        # Offered to an unlinked number as well: what the rules of a phase are is
+        # a question anyone may ask, and answering it is not taking part in it.
+        ::Ai::Tools::WhatsappAiAssistant::ProjektConfiguration,
         ::Ai::Tools::WhatsappAiAssistant::ListProjektResults,
         ::Ai::Tools::WhatsappAiAssistant::ListMilestones,
         ::Ai::Tools::WhatsappAiAssistant::ListEvents,

@@ -1,6 +1,6 @@
 class Whatsapp::Flows::SendProjektCardService < Whatsapp::Flows::BaseService
-  # The one shape the bot names a projekt in: title, subtitle, link and the
-  # projekt's own header picture. Every reply that points at a single projekt
+  # The one shape the bot names a projekt in: title, a summary of what it is
+  # about, link and the projekt's own header picture. Every reply that points at a single projekt
   # goes through here, so a projekt named in passing looks the same as one
   # offered by the submission flow.
   #
@@ -46,21 +46,28 @@ class Whatsapp::Flows::SendProjektCardService < Whatsapp::Flows::BaseService
       @image_url = Whatsapp::ProjektCard.image_url(@projekt)
     end
 
-    # Title and link are what the citizen cannot do without, so the subtitle is
+    # Title and link are what the citizen cannot do without, so the summary is
     # the part that gives way when the three of them do not fit.
     def body
-      @body ||= [title_line, subtitle, url].compact_blank.join(SEPARATOR)
+      @body ||= [title_line, summary, url].compact_blank.join(SEPARATOR)
     end
 
     def title_line
       "*#{Whatsapp::ProjektLink.title(@projekt)}*"
     end
 
-    def subtitle
-      Whatsapp::ProjektCard.subtitle(@projekt, max_length: subtitle_budget)
+    # Generated from the projekt's whole context rather than read off the page,
+    # so a citizen who is pointed at a projekt is told what it is about before
+    # being asked anything. ProjektCard.subtitle is still the shape
+    # underneath — it is what the summary service falls back to, and it stays the
+    # broadcast template's variable untouched.
+    def summary
+      Whatsapp::AiAssistant::ProjektSummaryService.call(
+        projekt: @projekt, length: summary_budget
+      )
     end
 
-    def subtitle_budget
+    def summary_budget
       BODY_MAX_LENGTH - title_line.length - url.to_s.length - (SEPARATOR.length * 2)
     end
 

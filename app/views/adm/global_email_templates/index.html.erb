@@ -3,6 +3,12 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container mb-5">
+  <div class="mb-5">
+    <%= render Adm::AttributeEditorComponent.new(
+      Setting.find_by!(key: "proposals.email_on_official_answer"), :value, :boolean
+    ) %>
+  </div>
+
   <% @email_templates.each do |template| %>
     <%= render Adm::EmailTemplateComponent.new(template) %>
   <% end %>

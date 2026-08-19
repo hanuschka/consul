@@ -32,6 +32,10 @@ de:
       title: Bestätigung nach Einreichung
       description: Wird an den Autor gesendet, wenn ein Vorschlag erfolgreich eingereicht wurde.
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    proposal_official_answer:
+      title: Offizielle Antwort zum Vorschlag
+      description: 'Wird an den Autor gesendet, sobald zu seinem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Der Versand muss zusätzlich über die Einstellung „E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)" auf dieser Seite aktiviert sein.'
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     formular_answer_created:
       title: Bestätigung nach Formulareinsendung
       description: Wird an eingeloggte Nutzer gesendet, wenn sie ein Formular erfolgreich ausgefüllt und abgesendet haben.

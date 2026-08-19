@@ -329,8 +329,9 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::AbortSubmission
     ].freeze
 
-    # The five WhatsApp message types text cannot express. A plain-text reply needs
-    # no tool at all — this service sends the model's own words when it calls
+    # What plain text cannot express: the four interactive message types, and the one
+    # ordinary sentence that must carry a legal notice with it. A plain-text reply
+    # needs no tool at all — this service sends the model's own words when it calls
     # nothing.
     SEND_TOOLS = [
       ::Ai::Tools::WhatsappAiAssistant::ReplyWithActions,
@@ -338,7 +339,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::SendLink,
       ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,
       ::Ai::Tools::WhatsappAiAssistant::SendDraftCard,
-      ::Ai::Tools::WhatsappAiAssistant::RequestLocation
+      ::Ai::Tools::WhatsappAiAssistant::RequestLocation,
+      ::Ai::Tools::WhatsappAiAssistant::RequestPhoto
     ].freeze
 
     def report(exception)

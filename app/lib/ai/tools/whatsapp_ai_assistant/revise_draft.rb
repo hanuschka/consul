@@ -26,26 +26,19 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
                    "current one. Must not repeat the title." do
       string
     end
-    optional :instruction,
-      description: "What the citizen asked for, in their own words. Recorded so a failed " \
-                   "revision can be retried; it does not itself change anything." do
-      string
-    end
   end
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::AWAITING_DRAFT_DECISION
   end
 
-  def execute(title: nil, text: nil, instruction: nil)
+  def execute(title: nil, text: nil)
     return no_draft_error if draft_resource.blank?
 
     refusal = refuse_if_not_permitted
 
     return refusal if refusal.present?
     return nothing_to_change_error if title.blank? && text.blank?
-
-    conversation.store_correction!(instruction) if instruction.present?
 
     apply(title, text)
   end

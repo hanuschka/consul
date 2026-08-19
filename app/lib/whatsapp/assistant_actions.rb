@@ -2,10 +2,9 @@ module Whatsapp::AssistantActions
   # Which pills the assistant may put under a reply, and nothing about what they
   # are called: the label is the model's sentence, the same way the reply above it
   # is. What stays bounded is the id, because WhatsApp returns the *id* to the
-  # webhook and Inbound::TapDispatch is what turns that id into an effect.
-  # An id the model invented has nothing behind it — the citizen taps and nothing
-  # happens, with no error anywhere — so the set of ids is closed while the words
-  # on them are not.
+  # webhook and the inbound side is what turns that id back into an action. An id the
+  # model invented has nothing behind it — the citizen taps and nothing happens, with
+  # no error anywhere — so the set of ids is closed while the words on them are not.
   #
   # The set is every id the dispatcher handles, irreversible ones included. What
   # keeps that safe is not an allowlist here: it is that the dispatcher

@@ -1,10 +1,18 @@
 class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
-  # The question asked when a message carries no substance of its own and the
-  # bot was waiting on free text: "hallo" at the idea step used to become the
-  # text of a contribution, draft generation and all (CON-2968). Reached from
-  # the classifier gate (Inbound::ProcessMessageService#handle_fresh_start) and
-  # from the router's AskContinueOrRestart tool, which are the same reading
-  # arriving by the two paths a message can take.
+  # The question asked when a message carries no substance of its own, the bot
+  # was waiting on free text, and there is something half-written to carry on
+  # with: "hallo" at the idea step used to become the text of a contribution,
+  # draft generation and all (CON-2968). Reached from the classifier gate
+  # (Inbound::ProcessMessageService#handle_fresh_start) and from the router's
+  # AskContinueOrRestart tool, which are the same reading arriving by the two
+  # paths a message can take.
+  #
+  # Both paths ask Conversation#unfinished_contribution? first, and neither
+  # arrives here without it. A greeting with nothing half-written used to reach
+  # this question too, where both answers were empty — "weitermachen" had
+  # nothing to return to and ended at the menu anyway, "neu anfangen" had
+  # nothing to discard (CON-2981). That greeting is now answered by
+  # Flows::FreshStartAnswerService with what the citizen can start from.
   #
   # The sibling of ResumeOrRestartService, and deliberately not it: that one
   # asks about a flow abandoned hours ago and has to quote the projekt and the
@@ -63,8 +71,19 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
   # The step is restored before the prompt is sent, not after: every service
   # below writes its own step, and one that also reads the conversation's
   # state must see the restored one.
+  #
+  # The parked flow first, because it is the only thing there is to carry on
+  # with in that case. The question is asked whenever anything is unfinished,
+  # and a submission set aside for a side trip counts
+  # (Conversation#unfinished_contribution?) — so a citizen can be on a fresh
+  # step holding nothing while their half-written contribution sits parked.
+  # Restoring the interrupted step there would answer "weitermachen" with the
+  # empty prompt they were already reading.
   def continue
     interrupted = @conversation.interrupted_step
+
+    return Whatsapp::Flows::ParkedFlowService.resume(conversation: @conversation) if
+      resume_parked_instead?
 
     return Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation) if
       interrupted.blank?
@@ -82,24 +101,11 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
   # fixed list of three rows either. The typed "abbrechen" is still
   # CancelService, which is the ending this is not.
   #
-  # The discard runs first and unconditionally. It is the half of this the
-  # citizen asked for, so it cannot wait on a model call that may time out or
-  # come back empty — reset_flow! has already happened by the time the router
-  # is asked for a sentence.
-  #
-  # This is the one tapped pill that reaches the assistant.
-  # Inbound::AssistantRouting refuses every tap on purpose (a pill already says
-  # what it means, and a completion would only add latency), so the exception
-  # lives here, in the flow that wants prose, rather than as a hole in that
-  # rule.
+  # The answer itself lives in Flows::FreshStartAnswerService, which the
+  # greeting that never reaches this question shares: the discard is the only
+  # part of it that belongs to the tap.
   def restart
-    abandoned_phase = phase_description
-
-    @conversation.reset_flow!
-
-    return if assistant_answered?(abandoned_phase)
-
-    fixed_menu
+    Whatsapp::Flows::FreshStartAnswerService.after_discard(conversation: @conversation)
   end
 
   private
@@ -118,6 +124,15 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
       @conversation.step
     end
 
+    # A parked flow with nothing on the current step is the one case where
+    # "carry on" means something other than the step the question interrupted.
+    # Read from the conversation rather than passed in, because both readings
+    # that ask the question already agreed there is unfinished work — this only
+    # decides which of the two kinds it is.
+    def resume_parked_instead?
+      @conversation.parked_flow? && !@conversation.unsaved_submission?
+    end
+
     def buttons
       [
         Whatsapp::FlowActions.button(
@@ -129,91 +144,11 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
       ]
     end
 
-    # The fixed list menu. The answer whenever the assistant cannot be the one
-    # to give it — AI switched off for the portal, a number that has opted out,
-    # a router turn that failed or that answered with nothing — and the answer
-    # when the question itself ran out of askings. It resets the flow on the
-    # way, which on the restart path is the second reset: one idle write, and
-    # the fallback stays correct on its own rather than depending on what ran
-    # before it.
+    # The fixed list menu, for the question that ran out of askings (see #ask).
+    # The other fallback — when the assistant cannot answer a beginning — lives
+    # with the beginning it belongs to, in Flows::FreshStartAnswerService.
     def fixed_menu
       Whatsapp::Flows::MainMenuService.start_over(conversation: @conversation)
-    end
-
-    # True only when the citizen has actually been sent something. A hand-off
-    # sends nothing — the router hands the message back for the flow to answer —
-    # so it counts as no reply here, the same as a failure. Named after
-    # Inbound::AssistantRouting#router_answered?, which asks the same question
-    # of the path this one is the exception to.
-    def assistant_answered?(abandoned_phase)
-      return false if !::Ai::Settings.ai_available?
-      return false if account.opt_out_at.present?
-
-      result = route(abandoned_phase)
-      answered = result.success? && result.outcome != :flow
-
-      log_outcome(answered: answered, result: result)
-
-      answered
-    end
-
-    def route(abandoned_phase)
-      ::Whatsapp::AiAssistant::RouterService.call(
-        conversation: @conversation, inbound_text: start_over_directive(abandoned_phase)
-      )
-    end
-
-    # Not the citizen's words: they tapped a pill, and the router only takes
-    # text. Written as a note about what happened rather than as something they
-    # said, because a bare "neu anfangen" is a message with no substance of its
-    # own — which the routing rules answer with show_main_menu, the fixed list
-    # this exists to replace.
-    #
-    # The phase they were in is named because reset_flow! has just dropped it:
-    # "start over" usually means start over here, and without the line the
-    # assistant would be offering the whole portal to someone who had already
-    # chosen a corner of it.
-    def start_over_directive(abandoned_phase)
-      [
-        "[System note about what just happened. Not a message from the citizen: do not quote it, "\
-        "do not answer it as text.]",
-        "The citizen tapped \"start over\" on the question whether to carry on or begin again. "\
-        "Whatever they had unfinished is already discarded — never offer it back, never mention "\
-        "it, and never say anything was cancelled.",
-        abandoned_phase_line(abandoned_phase),
-        "Answer with reply_with_actions: one short sentence that puts them at a beginning, and "\
-        "the two or three actions that are the best next step from here. Do not call "\
-        "show_main_menu — a reply of your own is the point."
-      ].compact.join("\n")
-    end
-
-    def abandoned_phase_line(abandoned_phase)
-      return if abandoned_phase.blank?
-
-      "They were taking part in #{abandoned_phase}, which is the likeliest place they want to "\
-        "begin again."
-    end
-
-    # Read before the reset, because reset_flow! nils the phase. Blank for a
-    # citizen who had not got as far as choosing one.
-    def phase_description
-      projekt_phase = @conversation.projekt_phase
-
-      return if projekt_phase.blank?
-
-      "#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)} — #{projekt_phase.title}"
-    end
-
-    # A fallback is not a failure worth reporting, but it is worth counting: the
-    # menu going out instead of a sentence is the feature not happening, and
-    # nothing else in the log says so.
-    def log_outcome(answered:, result:)
-      ::Whatsapp::AiAssistant::DecisionLog.record(
-        event: answered ? :start_over_routed : :start_over_fallback,
-        conversation: @conversation,
-        outcome: result.success? ? result.outcome : nil,
-        error: result.success? ? nil : result.error
-      )
     end
 
     # The step's own question, from the one map three return paths share (see

@@ -24,8 +24,8 @@ module Whatsapp::AiAssistant::DecisionLog
     rewrite_failed
     flow_parked
     flow_resumed
-    start_over_routed
-    start_over_fallback
+    fresh_start_routed
+    fresh_start_fallback
   ].freeze
 
   COUNTER_TTL = 40.days

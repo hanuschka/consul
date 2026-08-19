@@ -126,11 +126,11 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     end
 
     # The fresh-start question is appended rather than listed, because it is
-    # the one tool whose availability depends on the step: anywhere the bot is
-    # not waiting on free text a greeting is answered by the menu, and there is
-    # nothing half-written to carry on with. The classifier assembles its
-    # verdict set from the same constant, so both readings offer the decision
-    # in exactly the same moments.
+    # the one tool whose availability depends on the conversation: anywhere the
+    # bot is not waiting on free text a greeting is answered by the menu, and
+    # there is nothing half-written to carry on with. The classifier gate asks
+    # the same two questions of the same conversation, so both readings offer
+    # the decision in exactly the same moments.
     def tools
       instances = base_tools.map { |tool_class| tool_class.new(conversation: @conversation) }
 
@@ -139,8 +139,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       instances + [hand_to_flow]
     end
 
+    # Withheld with nothing to carry on with, rather than left to the model to
+    # decline: offered, it was called — the description said to, and the
+    # question then asked itself with both answers empty (CON-2981). Withheld,
+    # the greeting lands on show_main_menu or reply_with_actions, which is the
+    # answer it was owed.
     def fresh_start_available?
-      ::Whatsapp::Conversation::FRESH_START_STEPS.include?(@conversation.step)
+      return false if !::Whatsapp::Conversation::FRESH_START_STEPS.include?(@conversation.step)
+
+      @conversation.unfinished_contribution?
     end
 
     def fresh_start_tool

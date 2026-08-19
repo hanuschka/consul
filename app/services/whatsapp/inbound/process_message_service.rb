@@ -288,7 +288,17 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # A message with no substance of its own, while the bot is waiting on free
     # text, is the citizen beginning again rather than the answer to the step
     # — "hallo" at the idea step used to become the text of a contribution,
-    # draft generation and all (CON-2968). They are asked which they meant.
+    # draft generation and all (CON-2968).
+    #
+    # Which of the two answers it gets turns on whether there is anything to
+    # carry on with. Asked which they meant only when there is: the question
+    # reached a greeting with nothing half-written too, where "weitermachen" had
+    # nothing to return to and "neu anfangen" nothing to discard (CON-2981).
+    # With nothing unfinished the greeting is answered as a beginning instead.
+    #
+    # Either way the gate has answered the message and returns true: falling
+    # through to dispatch_step is the CON-2968 bug, which does not care which
+    # branch let it happen.
     #
     # Only the classifier's verdict reaches here. A linked citizen's reading is
     # the router's, and there the same decision is a tool that has already
@@ -297,7 +307,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if !Whatsapp::Conversation::FRESH_START_STEPS.include?(conversation.step)
       return false if routing.verdict != :fresh_start
 
-      Whatsapp::Flows::ContinueOrRestartService.ask(conversation:)
+      if conversation.unfinished_contribution?
+        Whatsapp::Flows::ContinueOrRestartService.ask(conversation:)
+      else
+        Whatsapp::Flows::FreshStartAnswerService.nothing_unfinished(conversation:)
+      end
 
       true
     end

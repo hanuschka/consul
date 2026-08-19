@@ -150,6 +150,22 @@ class Whatsapp::Conversation < ApplicationRecord
     draft_resource.present? || draft_data.present?
   end
 
+  # Whether the continue-or-restart question has anything to be about. Read by
+  # both readings of a message with no substance of its own — the classifier
+  # gate in Inbound::ProcessMessageService and the router's tool list — because
+  # a greeting arriving with nothing half-written was answered with a choice
+  # where both answers were empty: "weitermachen" had nothing to return to and
+  # ended at the menu anyway, and "neu anfangen" had nothing to discard
+  # (CON-2981).
+  #
+  # Wider than `unsaved_submission?` by the parked flow: a submission set aside
+  # for a side trip is unfinished work the citizen can still be carried back
+  # into, and it is what Flows::ContinueOrRestartService#continue returns to
+  # when the step the question interrupted holds nothing of its own.
+  def unfinished_contribution?
+    unsaved_submission? || parked_flow?
+  end
+
   # What this phase collects besides the text, asked of the conversation because
   # two places each need one of the answers and they must not drift: the step
   # that offers a pin and the drafting service that infers one from the citizen's

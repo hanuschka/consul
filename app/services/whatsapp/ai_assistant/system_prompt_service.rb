@@ -149,11 +149,15 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            awaiting_participation_projekt or awaiting_continue_decision, the bot is waiting for
            free text — and a message with no substance of its own is the citizen beginning again
            rather than the answer: a bare greeting, a question about you, a request for the menu.
-           Call ask_continue_or_restart for those, never hand_to_flow: handed on, the greeting
-           becomes the text of their contribution. A greeting that carries substance with it
-           ("Hallo, ich möchte mehr Bänke am Rummelgang") is the contribution and stays
-           hand_to_flow, and so does any short answer that says what the step asked for. When in
-           doubt, hand_to_flow.
+           Never hand_to_flow for those: handed on, the greeting becomes the text of their
+           contribution. Call ask_continue_or_restart when that tool is listed above — it is
+           listed only while they really do have something half-written, so seeing it is how you
+           know there is something to carry on with. When it is not listed there is nothing to
+           carry on with and nothing to discard, so the answer is a beginning: show_main_menu, or
+           reply_with_actions when you can name the two or three best next steps yourself. A
+           greeting that carries substance with it ("Hallo, ich möchte mehr Bänke am Rummelgang")
+           is the contribution and stays hand_to_flow, and so does any short answer that says
+           what the step asked for. When in doubt, hand_to_flow.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
            - see what is running, browse, look around -> show_projekts

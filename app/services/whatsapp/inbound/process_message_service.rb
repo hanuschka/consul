@@ -115,7 +115,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # broadcast jobs on their approved wording.
     def open_message_context
       Current.whatsapp_message_context = Whatsapp::AiAssistant::MessageContext.new(
-        conversation: conversation, inbound_text: reading.text
+        conversation: conversation,
+        inbound_text: reading.text,
+        previous_inbound_at: previous_inbound_at,
+        inbound_message_id: reading.message_id
       )
     end
 
@@ -167,8 +170,23 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # Only ever forwards: a retried or out-of-order delivery must not rewind the
     # conversation's clock.
+    #
+    # Reads the previous timestamp through the memo below rather than off the
+    # record, which is what guarantees the memo is filled before the write that
+    # destroys it: this method is the argument to that write.
     def latest_inbound_at
-      [@whatsapp_message.sent_at || Time.current, conversation.last_inbound_at].compact.max
+      [@whatsapp_message.sent_at || Time.current, previous_inbound_at].compact.max
+    end
+
+    # The conversation's clock as it stood before this message, kept because
+    # nothing else can recover it: the write above moves last_inbound_at to now
+    # as the first statement of the gate chain, so every reply downstream would
+    # measure the gap since the citizen's last message as zero. That gap is what
+    # decides whether a reply greets, continues, or re-orients (CON-2982).
+    def previous_inbound_at
+      return @previous_inbound_at if defined?(@previous_inbound_at)
+
+      @previous_inbound_at = conversation.last_inbound_at
     end
 
     def account

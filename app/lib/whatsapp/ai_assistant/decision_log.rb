@@ -11,17 +11,24 @@ module Whatsapp::AiAssistant::DecisionLog
   TAG = "[Whatsapp][assistant]".freeze
 
   # Rejections mean nothing without the denominator, so the accepted cases are
-  # counted too: two rewrites thrown out is a bug at ten a day and a working
+  # counted too: two compositions thrown out is a bug at ten a day and a working
   # guardrail at ten thousand.
+  #
+  # The compose_* trio is the shipped signal for CON-2982: it is what answers
+  # "how often is the bot still falling back to the fixed copy", which is the one
+  # question a read of any single conversation cannot settle. Applied is the
+  # numerator, rejected is a guardrail doing its job, failed is a provider that
+  # did not answer — three different problems that all look like an ordinary
+  # reply from the outside.
   EVENTS = %i[
     tool_called
     option_chosen
     option_dropped
     action_dropped
     actions_unusable
-    rewrite_applied
-    rewrite_rejected
-    rewrite_failed
+    compose_applied
+    compose_rejected
+    compose_failed
     flow_parked
     flow_resumed
     fresh_start_routed

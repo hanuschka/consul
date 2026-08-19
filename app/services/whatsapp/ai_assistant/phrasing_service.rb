@@ -234,16 +234,27 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
   # fallback, which is the sentence the variants were generated from.
   # The lines that are not messages of their own: fragments joined into one body
   # by the caller, a recap line under a question, a reason under an intro. A
-  # live rewrite reads them without their neighbours and answers the citizen
+  # live composition reads them without their neighbours and answers the citizen
   # twice or contradicts the line above, so they keep the pre-generated wording
   # — which was generated the same way, but as a set that fits together.
   #
   # `compliance.disclosure` is here for a different reason: it is the sentence
   # that tells the citizen they are talking to an AI, and what that says must
   # not itself be improvised.
+  #
+  # `drafting` and `proposal.image_generating` are here for a third: they are
+  # holding messages — "einen Moment" — sent immediately before the real reply of
+  # the same turn. They say nothing about the conversation, so there is nothing
+  # for a composition to connect to, and MessageContext::MAX_COMPOSITIONS is one
+  # per turn: composed, the filler spends the budget and the message that
+  # actually matters — the draft card and its question — falls back to fixed copy.
+  # The least informative line in the turn must not be the one that gets written
+  # for the moment.
   LITERAL_KEYS = %w[
     whatsapp.bot.free_text_hint
     whatsapp.bot.compliance.disclosure
+    whatsapp.bot.drafting
+    whatsapp.bot.proposal.image_generating
     whatsapp.bot.proposal.category_line
     whatsapp.bot.proposal.sentiment_line
     whatsapp.bot.proposal.evaluation_line
@@ -266,7 +277,7 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
   def call
     return fixed_text if !prose?
 
-    live_text = live_rewrite
+    live_text = live_composition
 
     return live_text if live_text.present?
     return fixed_text if !phrasable?
@@ -386,21 +397,21 @@ class Whatsapp::AiAssistant::PhrasingService < ApplicationService
     end
 
     # The line written for this exact message, or nil — which is every case the
-    # rewriter will not vouch for, and every case outside the inbound path,
+    # composer will not vouch for, and every case outside the inbound path,
     # where there is no citizen mid-sentence to write for.
     #
-    # The fixed sentence is what gets rewritten, not a generated variant: the
+    # The fixed sentence is what gets composed from, not a generated variant: the
     # variants exist to keep repeated copy from reading as a form, and a
     # paraphrase of a paraphrase drifts further from the meaning the locale file
     # is the record of.
-    def live_rewrite
+    def live_composition
       return if LITERAL_KEYS.include?(@key)
 
       context = Current.whatsapp_message_context
 
       return if context.blank?
 
-      Whatsapp::AiAssistant::WriteMessageService.call(
+      Whatsapp::AiAssistant::ComposeReplyService.call(
         fixed_text: fixed_text, context: context
       )
     end

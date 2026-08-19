@@ -53,8 +53,24 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
         The citizen described their idea as:
         "#{@idea_text}"
-        #{taxonomy_prompt_section}
+        #{taxonomy_prompt_section}#{submission_slots_prompt_section}
       PROMPT
+    end
+
+    # Carried in the user prompt because the system prompt is not ours to edit:
+    # build_system_instructions fetches it over DtApi from the consul_ai_prompts
+    # store, so anything the local schema asks for has to be explained locally or
+    # it is asked for with no instruction behind it.
+    def submission_slots_prompt_section
+      return "" if !required_taxonomy?
+
+      <<~SECTION
+
+        This idea arrived by chat, where the photo and the location are asked for one after the
+        other in later messages. Report whether the citizen already settled either of them in
+        the message above, so they are not asked again for something they have already said.
+        Judge only their words: when they did not mention it, the answer is false.
+      SECTION
     end
 
     def taxonomy_prompt_section
@@ -144,9 +160,30 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         end
     end
 
+    # The two questions the chat flow asks after the draft, answered here when the
+    # citizen already answered them unasked. Someone who writes "eine Idee zum
+    # Projekt Radwege: mehr Fahrradbügel am Bahnhof, ein Foto habe ich nicht" was
+    # still asked for a photo and a location afterwards, one message each
+    # (CON-2982).
+    #
+    # Confined to the required-taxonomy path, which is the chat's. The web's
+    # `.call` shares this service but not its steps — it has a form, where every
+    # field is on screen at once and nothing is asked in sequence — and its
+    # system prompt is fetched from the remote consul_ai_prompts store, so a
+    # property added to its schema is one nothing has told the model about. Every
+    # property here is required, so that would be a demand with no instruction
+    # behind it.
+    SUBMISSION_SLOT_KEYS = %w[photo_declined location_stated].freeze
+
     def output_schema
       properties = base_schema_properties
       required = properties.keys.map(&:to_s)
+
+      if required_taxonomy?
+        properties[:photo_declined] = photo_declined_schema
+        properties[:location_stated] = location_stated_schema
+        required.push(*SUBMISSION_SLOT_KEYS)
+      end
 
       if available_sentiments.any?
         properties[:sentiment_id] = sentiment_schema
@@ -169,6 +206,30 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         properties: properties,
         required: required,
         additionalProperties: false
+      }
+    end
+
+    # Read strictly off what the citizen wrote, never inferred from the subject
+    # matter: a proposal about a photo exhibition does not mean they declined to
+    # send one, and skipping a question they never answered is worse than asking
+    # it. Both default false, which is the flow exactly as it behaved before.
+    def photo_declined_schema
+      {
+        type: "boolean",
+        description: "True only if the citizen's own words say they have no photo or do not " \
+                     "want to send one (\"ein Foto habe ich nicht\", \"ohne Bild\"). False " \
+                     "whenever they did not mention a photo at all. Never infer this from " \
+                     "what the proposal is about."
+      }
+    end
+
+    def location_stated_schema
+      {
+        type: "boolean",
+        description: "True only if the citizen named where this is, in their own words (\"am " \
+                     "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"), or said there is no " \
+                     "particular place. False whenever they did not say where. Never infer " \
+                     "this from the projekt's own name or area."
       }
     end
 

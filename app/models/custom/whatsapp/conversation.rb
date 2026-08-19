@@ -184,6 +184,21 @@ class Whatsapp::Conversation < ApplicationRecord
     projekt_phase&.feature?("form.allow_attached_image")
   end
 
+  # Whether the step will actually put the question — the phase collects it *and*
+  # the citizen has not already answered it unasked. Two readers each need this
+  # one answer and must not drift: the step that decides whether to ask, and the
+  # label on the pill before it, which says "weiter" when something follows and
+  # "absenden" when nothing does. Answered here for the same reason the two
+  # predicates above are, which is the mistake this pairing replaced — the guards
+  # skipped the question while the pill still promised it.
+  def image_question_pending?
+    image_question_available? && !photo_declined?
+  end
+
+  def location_question_pending?
+    location_question_available? && !location_stated?
+  end
+
   def stale_flow?
     return false if flow_started_at.blank?
 
@@ -383,16 +398,53 @@ class Whatsapp::Conversation < ApplicationRecord
     context["draft_data"]
   end
 
+  # What the citizen answered before being asked, read off their own words by the
+  # drafting call (ProposalAiDraft::GenerateDraftService). Written by
+  # store_generated_draft!; read by the two steps that would otherwise ask again
+  # (Flows::ProposalImageService, Flows::AskLocationService). Dies with the flow
+  # like every other key here, which is correct: a new submission has settled
+  # nothing.
+  SETTLED_SLOT_KEYS = %w[photo_declined location_stated].freeze
+
   # One batched write, under the inbound job's advisory lock: the draft, its
-  # chat-card summary, and the drafting throttle clock. The summary rides
-  # under its own key because the stash is emptied at persist while the
-  # cards that quote the summary are sent after.
+  # chat-card summary, the questions the citizen already answered unasked, and
+  # the drafting throttle clock. The summary rides under its own key because the
+  # stash is emptied at persist while the cards that quote the summary are sent
+  # after — and the settled slots ride under theirs for the same reason, only
+  # more so: the photo and location questions are asked after the record exists,
+  # by which point clear_draft_data! has emptied the stash they arrived in.
+  #
+  # Replaced rather than merged, which matters on a revision: that generates
+  # through ReviseDraftService, which reports no slots, so the slots clear. That
+  # is deliberate. Carried over, a declined photo would hold for the life of the
+  # flow — and the upload pill is only ever offered by Flows::ProposalImageService
+  # #ask, the very step the flag skips, so a citizen who changed their mind while
+  # revising ("doch, ein Foto habe ich") would have had no way to send one at all.
+  # What they said about the previous draft does not bind the new one.
   def store_generated_draft!(generated)
     merge_context!(
-      draft_data: generated.except("card_summary"),
+      draft_data: generated.except("card_summary", *SETTLED_SLOT_KEYS),
       card_summary: generated["card_summary"],
+      settled_slots: generated.slice(*SETTLED_SLOT_KEYS),
       last_draft_at: Time.current.iso8601
     )
+  end
+
+  def settled_slots
+    context["settled_slots"].to_h
+  end
+
+  # Both default false on every path that cannot answer — an older conversation
+  # written before these keys existed, a revision, a provider that returned
+  # nothing. False is the flow exactly as it behaved before, which is the safe
+  # direction: asking a question twice costs a message, skipping one the citizen
+  # never answered costs them the photo they meant to send.
+  def photo_declined?
+    settled_slots["photo_declined"] == true
+  end
+
+  def location_stated?
+    settled_slots["location_stated"] == true
   end
 
   # A tapped category/sentiment answer, merged into the stash through the

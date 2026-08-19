@@ -118,6 +118,16 @@ Whatsapp::Inbound::TranscribeVoiceService.define_singleton_method(:call) do |**|
   SCRIPT[:transcript]
 end
 
+# Nil is "the composer would not vouch for this", which every caller answers by
+# sending the fixed locale copy — so the bodies below stay the deterministic ones
+# this harness diffs. Stubbed rather than left to ai_available?, which defaults to
+# true here: unstubbed, every one of the ~200 cases pays a live completion for a
+# wording no assertion reads. Conversation quality is the other harness's job
+# (script/whatsapp_conversation_scenarios.rb), which exists to run these for real.
+Whatsapp::AiAssistant::ComposeReplyService.define_singleton_method(:call) do |**|
+  SCRIPT[:composed]
+end
+
 Ai::Settings.define_singleton_method(:ai_available?) { SCRIPT.fetch(:ai, true) }
 
 Whatsapp::EligiblePhasesQuery.define_singleton_method(:eligible?) do |projekt_phase|

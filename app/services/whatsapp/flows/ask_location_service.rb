@@ -36,8 +36,15 @@ class Whatsapp::Flows::AskLocationService < Whatsapp::Flows::BaseService
   # uploaded a photo should not be interrupted twice before their submission
   # goes in. A phase with the map switched off publishes on the spot, exactly
   # as it did before this step existed.
+  #
+  # So does a submission whose location the citizen already gave in words — "am
+  # Bahnhof", "Hauptstraße 14" — or said had no particular place. Asking for a
+  # pin then is asking a question they answered in their first message
+  # (CON-2982), and their words are not lost by skipping it:
+  # Drafting::PersistDraftService geocodes the free text, which is the same
+  # position the picker would have produced.
   def ask
-    return publish if !@conversation.location_question_available?
+    return publish if !@conversation.location_question_pending?
     return if refuse_if_not_permitted
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_LOCATION)

@@ -6,13 +6,26 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     @conversation = conversation
   end
 
+  # Ordered static-first, volatile-last, and the order is load-bearing for cost
+  # rather than for meaning. Providers discount a repeated prompt prefix, and the
+  # prefix only holds as far as the first byte that changed: with the
+  # conversation state second, `routing_section` and `style_section` — together
+  # the great majority of this prompt, and byte-identical on every call in the
+  # process — fell outside the cacheable prefix on every single message. Behind
+  # them now, they are shared by every turn of every conversation.
+  #
+  # Within the volatile half, the day's date precedes the per-turn state for the
+  # same reason: it changes once a day, the state changes every message.
+  #
+  # Anything added here belongs in the half that matches how often it changes,
+  # not at the end because that is where the last thing went.
   def call
     [
       role_section,
-      state_section,
-      dates_section,
       routing_section,
-      style_section
+      style_section,
+      dates_section,
+      state_section
     ].join("\n\n")
   end
 
@@ -33,14 +46,73 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "Current state:",
         "- Citizen: #{citizen_name}",
         "- Account linked: #{account_linked?}",
+        "- Time since their previous message: #{gap_instruction_line}",
         "- Conversation step: #{@conversation.step}",
         "- Draft on the table: #{draft_description}",
         "- Active participation phase: #{active_phase_description}",
         "- Proposal this conversation is about: #{active_proposal_description}",
         "- Participation phases open portal-wide: #{open_phases_count}",
         "- Submission set aside earlier: #{parked_description}",
-        offered_options_line
+        offered_options_line,
+        transcript_section,
+        used_phrasings_section
+      ].compact.join("\n")
+    end
+
+    # How long the citizen has been away, and what that means for this reply.
+    # One minute, one hour and one week are three different conversations, and
+    # until this line existed the bot's opening was identical in all three
+    # (CON-2982).
+    #
+    # Read off the per-turn context on Current rather than taken as an argument,
+    # the way PhrasingService reads the same object: this service's one caller is
+    # RouterService, which does not hold the context either, and the gap is a
+    # property of the inbound message rather than of the conversation. Absent
+    # outside the inbound path, where ConversationGap answers "first message" —
+    # correct for a console or a job, neither of which is mid-conversation.
+    def gap_instruction_line
+      context = Current.whatsapp_message_context
+
+      return ::Whatsapp::ConversationGap.instruction_line(nil) if context.blank?
+
+      context.gap_instruction_line
+    end
+
+    # What has already been said on this channel, the bot's own pushed
+    # notifications included. The replayed chat history covers only this
+    # assistant's own turns — a submission answered by the deterministic flow and
+    # every broadcast the bot sent leave no trace in it — so without this a
+    # citizen replying to yesterday's deadline notice was answered from nothing.
+    def transcript_section
+      transcript = digest.transcript
+
+      return if transcript.blank?
+
+      [
+        "- Already said in this chat, oldest first. Refer back to it when it helps; never",
+        "  answer these again, they have been dealt with:",
+        transcript.lines.map { |line| "  #{line.chomp}" }.join("\n")
       ].join("\n")
+    end
+
+    def used_phrasings_section
+      phrasings = digest.used_phrasings
+
+      return if phrasings.blank?
+
+      [
+        "- Wordings already used in this chat. Do not reuse them or a close variant:",
+        *phrasings.map { |phrasing| "  - #{phrasing}" }
+      ].join("\n")
+    end
+
+    # The turn's digest when there is a turn, so this prompt and the reply
+    # composer share one query. Its own outside the inbound path — a console, a
+    # job — where there is no context and so nothing to leave out of the history.
+    def digest
+      @digest ||=
+        Current.whatsapp_message_context&.dialog_digest ||
+        ::Whatsapp::AiAssistant::DialogDigest.new(account: @conversation.whatsapp_account)
     end
 
     # What the bot's last interactive message put in front of the citizen, so a
@@ -179,9 +251,18 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            - abandon the submission in progress, however they phrase it ("lass mal", "vergiss
              es", "abbrechen") -> abort_submission. Declining one optional part is not
              abandoning, and a wrong abort throws away everything they wrote
-           - what can you do, how does this work -> show_help
-           - a greeting, or anything that says nothing about what they want -> show_main_menu,
-             which offers the three starting points. Never answer a bare "Hallo" with plain text
+           - what can I do here, what can you do, how does this work -> do NOT answer this with
+             a menu. Read what is actually open first (list_open_phases, and show_projekts or
+             my_followed_projekts when they fit), then answer with reply_with_actions: name in
+             your sentence what is running and the two or three things worth doing right now.
+             "Gerade laufen drei Projekte, bei denen Sie mitmachen können" answers the question;
+             "Was möchten Sie tun?" hands it back. show_help is only for a citizen asking what
+             this service is rather than what there is to do
+           - a greeting, or anything that says nothing about what they want -> the same: read
+             what is open and reply_with_actions with what fits. Never answer a bare "Hallo"
+             with plain text, and never with the standing menu when you could name something
+             concrete. show_main_menu is the last resort, for when no tool gave you anything to
+             name at all
         3. Answer a question about the portal, or about one projekt on it, in your own words and
            from tool results only. Which tool the question calls for:
            - what is running, what can I take part in -> list_open_phases
@@ -223,11 +304,27 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         portal chose that form and every message it sends uses it, so never switch, not even when
         the citizen writes to you the other way. Keep replies to a few short sentences — this is a
         chat, not a web page. WhatsApp understands *bold* and _italic_ but no headings, tables or
-        links in brackets; write a URL out in full. Use reply_with_actions instead of plain text
-        whenever there is an obvious next step: it carries your own sentence and up to three
-        buttons chosen from the portal's own actions, which saves the citizen typing and shows
-        them what can happen next. Offer the two or three that fit the moment, not every one
-        that exists, and never a button that repeats what you just did.
+        links in brackets; write a URL out in full.
+
+        How every reply is built, and this is the default rather than an option:
+        - Answer what was asked, in the message itself. A citizen who asks what they can do here
+          gets the answer, never the same question handed back. Never end on "Was möchten Sie
+          tun?" or its equivalent as the whole of a reply.
+        - Say what applies right now, and name it in your sentence. "Gerade laufen drei Projekte,
+          bei denen Sie mitmachen können" is an answer; "Was möchten Sie tun?" above a button is
+          not. The options must be readable without tapping anything.
+        - Then use reply_with_actions so the same options are tappable, choosing the two or three
+          that fit this moment — never every one that exists, never the same complete list twice,
+          never a button repeating what you just did. The citizen should not have to type what
+          they could have tapped.
+        - Connect to what came before. Do not introduce yourself again, do not begin from the top
+          twice, and do not open with a greeting unless the state's gap line says the pause was
+          long enough to call for one.
+        - Say it in your own words each time, shaped by what this citizen actually wrote. Two
+          people asking the same thing differently get differently worded answers. Never reuse a
+          wording the state lists as already used in this chat.
+        - Only show the general menu when you genuinely cannot tell what they want. A citizen who
+          said what they came for is taken straight there.
 
         Whenever you point the citizen at one specific projekt, call send_projekt_card for it
         rather than writing its address into your reply: the card carries the title, the picture

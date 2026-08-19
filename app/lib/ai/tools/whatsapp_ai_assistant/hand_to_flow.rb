@@ -93,6 +93,22 @@ class Ai::Tools::WhatsappAiAssistant::HandToFlow < Ai::Tools::WhatsappAiAssistan
     def offered_option_id(option_id)
       return if option_id.blank?
 
-      conversation.offered_option_ids.find { |offered| offered == option_id.to_s }
+      offered = conversation.offered_option_ids.find { |candidate| candidate == option_id.to_s }
+
+      if offered.blank?
+        ::Whatsapp::AiAssistant::DecisionLog.record(
+          event: :option_dropped, conversation: conversation, option_id: option_id,
+          step: conversation.step, offered: conversation.offered_option_ids.size
+        )
+
+        return
+      end
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :option_chosen, conversation: conversation, option_id: offered,
+        step: conversation.step
+      )
+
+      offered
     end
 end

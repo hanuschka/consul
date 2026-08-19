@@ -81,6 +81,13 @@ module Whatsapp::AssistantActions
     STATIC_LABEL_KEYS.keys.map(&:to_s)
   end
 
+  # Whether the action exists in this vocabulary at all, either shape of it.
+  # Asked before the label is built so an invented name is reported as one
+  # rather than as a record that could not be found.
+  def offerable?(action)
+    STATIC_LABEL_KEYS.key?(action) || PARAMETERISED_ACTIONS.include?(action)
+  end
+
   def parameterised_action_names
     PARAMETERISED_ACTIONS.map(&:to_s)
   end
@@ -92,14 +99,29 @@ module Whatsapp::AssistantActions
   def button(spec:, conversation:)
     action, param = parse(spec)
 
-    return if action.blank?
-    return if FORBIDDEN_ACTIONS.include?(action)
+    return dropped(spec, conversation, :unparseable) if action.blank?
+    return dropped(spec, conversation, :forbidden) if FORBIDDEN_ACTIONS.include?(action)
+
+    return dropped(spec, conversation, :unknown_action) if !offerable?(action)
 
     label = label_for(action: action, param: param, conversation: conversation)
 
-    return if label.blank?
+    return dropped(spec, conversation, :unresolvable) if label.blank?
 
     { id: id_for(action: action, param: param), title: label.truncate(MAX_LABEL_LENGTH) }
+  end
+
+  # Nil with a line saying why. Which reason it was decides what to do about it:
+  # `forbidden` is the model reaching for a pill it may never offer and
+  # `unknown_action` a name that is not one at all — both belong in the prompt —
+  # while `unresolvable` is a record id it invented or one that has since gone,
+  # and `unparseable` an empty or malformed spec.
+  def dropped(spec, conversation, reason)
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :action_dropped, conversation: conversation, spec: spec, reason: reason
+    )
+
+    nil
   end
 
   def parse(spec)

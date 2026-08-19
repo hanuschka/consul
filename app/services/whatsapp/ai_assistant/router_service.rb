@@ -29,10 +29,6 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     chat = build_chat
 
-    # After the chat is assembled, so the bubble covers the wait the citizen
-    # actually experiences rather than the prompt building that precedes it.
-    ::Whatsapp::Send.typing(message_id: @inbound_message_id)
-
     response = chat.ask(@inbound_text)
     outcome = deliver(response)
 
@@ -73,11 +69,14 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # Logged per call because which tool the model picked is the only way to see
     # a misroute after the fact: the citizen's reply looks reasonable either way,
     # and nothing else records that "show me the projekts" ended in the menu.
+    # On DecisionLog's tag with every other assistant decision, so one
+    # grep over a day's logs reads as one table.
     def track_tool_call(tool_call)
       @tool_calls_made += 1
 
-      Rails.logger.info(
-        "[Whatsapp] assistant conversation=#{@conversation.id} tool=#{tool_call.name}"
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :tool_called, conversation: @conversation, tool: tool_call.name,
+        step: @conversation.step
       )
 
       return if @tool_calls_made <= MAX_TOOL_CALLS

@@ -38,12 +38,21 @@ class Whatsapp::AiAssistant::WriteMessageService < ApplicationService
 
     rewritten = ask
 
-    return if rewritten.blank?
-    return if !acceptable?(rewritten)
+    return record_rejection(:empty) if rewritten.blank?
+
+    refusal = refusal_reason(rewritten)
+
+    return record_rejection(refusal) if refusal.present?
+
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :rewrite_applied, conversation: conversation, length: rewritten.length
+    )
 
     rewritten
   rescue StandardError => e
-    Rails.logger.info("[Whatsapp] live rewrite failed: #{e.class} - #{e.message}")
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :rewrite_failed, conversation: @context&.conversation, error: e.class.name
+    )
 
     nil
   end
@@ -112,16 +121,31 @@ class Whatsapp::AiAssistant::WriteMessageService < ApplicationService
       TEXT
     end
 
+    # Which guardrail this rewrite broke, or nil when it broke none. Named
+    # rather than a boolean so the rejection is worth reading: a rewrite thrown
+    # out for length is a prompt to tighten, one thrown out for a mangled URL is
+    # the model rewriting an address it was told to copy.
+    #
     # Every URL in the source has to survive verbatim, because the line is often
     # the only place the citizen is given it. A rewrite that drops one is
     # allowed — the rule above says it may — but one that mangles or invents one
     # is thrown away.
-    def acceptable?(rewritten)
-      return false if rewritten.length > max_length
-      return false if rewritten.match?(MARKDOWN_LINK)
-      return false if rewritten.match?(DIGIT_DATE) && !@fixed_text.match?(DIGIT_DATE)
+    def refusal_reason(rewritten)
+      return :too_long if rewritten.length > max_length
+      return :markdown_link if rewritten.match?(MARKDOWN_LINK)
+      return :digit_date if rewritten.match?(DIGIT_DATE) && !@fixed_text.match?(DIGIT_DATE)
+      return :url_mangled if rewritten.scan(URL).any? { |url| @fixed_text.exclude?(url) }
 
-      rewritten.scan(URL).all? { |url| @fixed_text.include?(url) }
+      nil
+    end
+
+    def record_rejection(reason)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :rewrite_rejected, conversation: conversation, reason: reason,
+        source_length: @fixed_text.length
+      )
+
+      nil
     end
 
     def max_length

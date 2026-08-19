@@ -57,6 +57,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     conversation.update!(last_inbound_at: latest_inbound_at)
 
+    # Every message is acknowledged, tapped ones included: a tap that produces
+    # no bubble reads as a tap that did not arrive, and the citizen taps again
+    # (CON-2979). It heads the chain rather than sitting on the slow paths that
+    # used to ask for it one by one — nothing below can then be reached without
+    # it — and it precedes open_message_context because reading the text of a
+    # voice note transcribes it, which is itself a wait worth covering.
+    ::Whatsapp::Send.typing(message_id: reading.message_id)
+
     open_message_context
 
     consume_pending_question
@@ -71,7 +79,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # anything below can reply. Once per number rather than once per 24-hour
     # window: a regular who reads it every day stops reading it at all. A first
     # contact is the exception, its own opening message already carries it.
-    Whatsapp::Flows::OnboardingGreetingService.disclose(conversation:) if !account.ai_disclosed?
+    if !account.ai_disclosed?
+      Whatsapp::Flows::OnboardingGreetingService.disclose(conversation:)
+
+      # Sending it dismissed the bubble asked for above, and the branches below
+      # still have their wait ahead of them.
+      ::Whatsapp::Send.typing(message_id: reading.message_id)
+    end
 
     return if handle_recovery_action
     return if handle_flow_action

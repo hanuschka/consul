@@ -15,6 +15,10 @@ class Whatsapp::Flows::ParkedFlowService < Whatsapp::Flows::BaseService
   def resume
     restored_step = @conversation.resume_parked_flow!
 
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :flow_resumed, conversation: @conversation, step: restored_step || "none"
+    )
+
     return Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation) if
       restored_step.blank?
 

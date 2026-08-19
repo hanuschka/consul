@@ -61,7 +61,15 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     # Names what was wrong without listing the whole vocabulary again — it is
     # already in the parameter's description, and repeating it here is how a
     # retry turns into a third of the turn's tool budget.
+    #
+    # Recorded as its own event as well as the per-pill drops: every pill in one
+    # reply being unusable is the model working from a wrong idea of the
+    # vocabulary, which is a prompt problem rather than a stale record.
     def unusable_actions_error
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :actions_unusable, conversation: conversation, step: conversation.step
+      )
+
       {
         error: "None of those buttons can be offered: an unknown action, one that is never " \
                "offered from here, or a record id that does not exist. Answer with plain text " \

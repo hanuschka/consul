@@ -31,6 +31,12 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     #
     # A no-op when there is nothing open, so a caller never has to ask first.
     def park_open_flow!
+      return if conversation.idle? && conversation.draft_resource.blank?
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :flow_parked, conversation: conversation, step: conversation.step, by: name
+      )
+
       conversation.park_flow!
     end
 

@@ -57,6 +57,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     conversation.update!(last_inbound_at: latest_inbound_at)
 
+    # Every message is acknowledged, tapped ones included: a tap that produces
+    # no bubble reads as a tap that did not arrive, and the citizen taps again
+    # (CON-2979). It heads the chain rather than sitting on the slow paths that
+    # used to ask for it one by one — nothing below can then be reached without
+    # it — and it precedes open_message_context because reading the text of a
+    # voice note transcribes it, which is itself a wait worth covering.
+    ::Whatsapp::Send.typing(message_id: reading.message_id)
+
+    open_message_context
+
     consume_pending_question
     announce_unreadable_voice_note
 
@@ -69,7 +79,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # anything below can reply. Once per number rather than once per 24-hour
     # window: a regular who reads it every day stops reading it at all. A first
     # contact is the exception, its own opening message already carries it.
-    Whatsapp::Flows::OnboardingGreetingService.disclose(conversation:) if !account.ai_disclosed?
+    if !account.ai_disclosed?
+      Whatsapp::Flows::OnboardingGreetingService.disclose(conversation:)
+
+      # Sending it dismissed the bubble asked for above, and the branches below
+      # still have their wait ahead of them.
+      ::Whatsapp::Send.typing(message_id: reading.message_id)
+    end
 
     return if handle_recovery_action
     return if handle_flow_action
@@ -86,6 +102,22 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   end
 
   private
+
+    # What the bot's own copy is written for. Everything below that says a
+    # sentence reaches it through Whatsapp.phrase, which rewrites the locale
+    # line for the message being answered when a context is open — so it is
+    # opened once here, for the whole turn, rather than passed down through
+    # every flow service.
+    #
+    # Set before any gate can reply, including the first-contact greeting: a
+    # citizen's opening message is exactly the one worth answering in its own
+    # terms. Nothing outside this path opens one, which is what keeps the
+    # broadcast jobs on their approved wording.
+    def open_message_context
+      Current.whatsapp_message_context = Whatsapp::AiAssistant::MessageContext.new(
+        conversation: conversation, inbound_text: reading.text
+      )
+    end
 
     # The one model reading of this message, shared between the channel gate,
     # the router gate, and the step dispatch (see AssistantRouting).
@@ -165,10 +197,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # The channel-level requests — leaving the channel, coming back to it,
     # abandoning what is in progress — decided by this message's one model
-    # reading. A linked, subscribed citizen's one reading is the router's,
-    # which carries stop_messages and abort_submission as tools, so the
-    # classifier is never asked as well; it answers for everyone the router
-    # does not serve.
+    # reading. Anyone still on the channel is read by the router, which carries
+    # stop_messages and abort_submission as tools, so the classifier is never
+    # asked as well; it answers for an opted-out number, whose one open
+    # question is whether it is opting back in.
     #
     # Never for a tapped pill, whose label the citizen did not write: those are
     # routed by their ids two gates below. A verdict the account's state rules
@@ -256,7 +288,17 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # A message with no substance of its own, while the bot is waiting on free
     # text, is the citizen beginning again rather than the answer to the step
     # — "hallo" at the idea step used to become the text of a contribution,
-    # draft generation and all (CON-2968). They are asked which they meant.
+    # draft generation and all (CON-2968).
+    #
+    # Which of the two answers it gets turns on whether there is anything to
+    # carry on with. Asked which they meant only when there is: the question
+    # reached a greeting with nothing half-written too, where "weitermachen" had
+    # nothing to return to and "neu anfangen" nothing to discard (CON-2981).
+    # With nothing unfinished the greeting is answered as a beginning instead.
+    #
+    # Either way the gate has answered the message and returns true: falling
+    # through to dispatch_step is the CON-2968 bug, which does not care which
+    # branch let it happen.
     #
     # Only the classifier's verdict reaches here. A linked citizen's reading is
     # the router's, and there the same decision is a tool that has already
@@ -265,7 +307,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if !Whatsapp::Conversation::FRESH_START_STEPS.include?(conversation.step)
       return false if routing.verdict != :fresh_start
 
-      Whatsapp::Flows::ContinueOrRestartService.ask(conversation:)
+      if conversation.unfinished_contribution?
+        Whatsapp::Flows::ContinueOrRestartService.ask(conversation:)
+      else
+        Whatsapp::Flows::FreshStartAnswerService.nothing_unfinished(conversation:)
+      end
 
       true
     end

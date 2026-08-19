@@ -4,31 +4,26 @@ class Ai::Tools::WhatsappAiAssistant::ShowMainMenu < Ai::Tools::WhatsappAiAssist
   # flow sends after cancelling and after publishing — a greeting that landed
   # somewhere else would read as a fourth, different menu.
   #
-  # It exists because reply_with_buttons cannot offer it: that tool is limited
-  # to the recovery pills, so the best button it had for "Hallo" was Hilfe.
+  # Kept alongside reply_with_actions, which can offer a `main_menu` pill but
+  # not the menu itself: this one is a list, and a list row carries the
+  # description that lets four capabilities be named without a sentence each.
   description "Sends the main menu: submit a contribution, browse projects, my contributions. " \
               "Use it when the citizen greets you, says nothing specific, or asks what they can " \
               "do here — anything where the answer is the three starting points rather than a " \
               "particular one. This sends the message itself — do not write your own menu."
 
-  # Refused whenever anything is open, not only a draft: greeting resets the
-  # flow, so sending it here would drop whatever the citizen was part-way
-  # through. Any step other than idle counts — drafting? would let it through
-  # at "which phase?" and at the link and unlink questions, all of which the
-  # reset discards just as thoroughly. The deterministic greeting path declines
-  # on the same reading; the model has no way to know that, so it is told.
+  # An open submission is parked rather than refused. This used to answer the
+  # model with "they are in the middle of something, hand it to the flow",
+  # because the greeting resets the flow and the reset discarded a half-written
+  # contribution — so a citizen who genuinely wanted to start again had to
+  # cancel first, and one the assistant had misrouted was stuck. Parking keeps
+  # the step, the phase and the draft under one key, and the citizen is offered
+  # `resume_parked` when they want it back.
   def execute
-    return submission_in_progress_error if !conversation.idle?
+    park_open_flow!
 
     ::Whatsapp::Flows::MainMenuService.greeting(conversation: conversation)
 
     halt("Sent the main menu.")
   end
-
-  private
-
-    def submission_in_progress_error
-      { error: "This citizen is in the middle of something, and the menu would discard it. " \
-               "Call hand_to_flow instead so the flow can answer them." }
-    end
 end

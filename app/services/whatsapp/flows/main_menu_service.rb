@@ -22,6 +22,13 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
 
   LINKED_ROW = { unlink: :unlink_start }.freeze
 
+  # The way back into a submission set aside for a side trip, first because it
+  # is the one row about something the citizen already started. The assistant is
+  # told about a parked flow and can offer it in its own words at a better
+  # moment; this is the net under that, for the citizen who ends up at the menu
+  # instead — without it, a parked submission is kept and unreachable.
+  PARKED_ROW = { resume_parked: :resume_parked }.freeze
+
   # Three entry points rather than one with a mode: the only thing that differs
   # is the sentence above the rows and whether an unfinished submission is
   # dropped first, and a caller reading `MainMenuService.call(..., :greeting)`
@@ -30,6 +37,17 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
     conversation.reset_flow!
 
     new(conversation: conversation, body: greeting_body).call
+  end
+
+  # The menu after the citizen taps "start over" on the fresh-start question.
+  # Its own sentence rather than the greeting's: that one welcomes a returning
+  # number back, and this moment is a tap inside a conversation already under
+  # way. It used to answer with the cancellation message instead, which read as
+  # an ending to someone who had just asked to begin.
+  def self.start_over(conversation:)
+    conversation.reset_flow!
+
+    new(conversation: conversation, body: start_over_body).call
   end
 
   # The menu that closes the first contact. Its own sentence because the
@@ -77,6 +95,14 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   end
   private_class_method :onboarding_body
 
+  def self.start_over_body
+    [
+      Whatsapp.phrase("whatsapp.bot.main_menu.start_over_body"),
+      Whatsapp.phrase("whatsapp.bot.free_text_hint")
+    ].join("\n\n")
+  end
+  private_class_method :start_over_body
+
   def initialize(conversation:, body:)
     super(conversation: conversation)
     @body = body
@@ -94,7 +120,13 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   private
 
     def rows
-      ROWS.merge(account_rows).map { |key, action| menu_row(key, action) }
+      parked_rows.merge(ROWS).merge(account_rows).map { |key, action| menu_row(key, action) }
+    end
+
+    def parked_rows
+      return PARKED_ROW if @conversation.parked_flow?
+
+      {}
     end
 
     def account_rows

@@ -1,10 +1,18 @@
 class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
-  # The question asked when a message carries no substance of its own and the
-  # bot was waiting on free text: "hallo" at the idea step used to become the
-  # text of a contribution, draft generation and all (CON-2968). Reached from
-  # the classifier gate (Inbound::ProcessMessageService#handle_fresh_start) and
-  # from the router's AskContinueOrRestart tool, which are the same reading
-  # arriving by the two paths a message can take.
+  # The question asked when a message carries no substance of its own, the bot
+  # was waiting on free text, and there is something half-written to carry on
+  # with: "hallo" at the idea step used to become the text of a contribution,
+  # draft generation and all (CON-2968). Reached from the classifier gate
+  # (Inbound::ProcessMessageService#handle_fresh_start) and from the router's
+  # AskContinueOrRestart tool, which are the same reading arriving by the two
+  # paths a message can take.
+  #
+  # Both paths ask Conversation#unfinished_contribution? first, and neither
+  # arrives here without it. A greeting with nothing half-written used to reach
+  # this question too, where both answers were empty — "weitermachen" had
+  # nothing to return to and ended at the menu anyway, "neu anfangen" had
+  # nothing to discard (CON-2981). That greeting is now answered by
+  # Flows::FreshStartAnswerService with what the citizen can start from.
   #
   # The sibling of ResumeOrRestartService, and deliberately not it: that one
   # asks about a flow abandoned hours ago and has to quote the projekt and the
@@ -31,10 +39,19 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
   # this question and answered again with a greeting is a loop the citizen
   # cannot leave by writing — AWAITING_CONTINUE_DECISION is itself a
   # fresh-start step, so the same reading is available on the question.
-  # Giving up cancels: the submission is what the greetings are not carrying
-  # on with, and CancelService leaves one button back to the menu.
+  #
+  # Running out of askings ends where the "start over" tap ends, not in the
+  # cancellation message. It used to be CancelService, which told a citizen who
+  # had only said hello three times that something was "abgebrochen" — the one
+  # word that has to stay reserved for someone who asked for it (CON-2980).
+  # The menu is also what breaks the loop: reset_flow! clears choice_reasks.
+  #
+  # The fixed menu rather than the assistant. Three messages the bot could not
+  # read is the wrong moment to spend a completion on a fourth, and a
+  # submission set aside earlier survives reset_flow! — so the menu offers it
+  # back on a row, where cancelling used to throw it away.
   def ask
-    return abandon if @conversation.choice_reasks >= MAX_REASKS
+    return fixed_menu if @conversation.choice_reasks >= MAX_REASKS
 
     @conversation.ask_continue_decision!(interrupted_step)
 
@@ -54,8 +71,19 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
   # The step is restored before the prompt is sent, not after: every service
   # below writes its own step, and one that also reads the conversation's
   # state must see the restored one.
+  #
+  # The parked flow first, because it is the only thing there is to carry on
+  # with in that case. The question is asked whenever anything is unfinished,
+  # and a submission set aside for a side trip counts
+  # (Conversation#unfinished_contribution?) — so a citizen can be on a fresh
+  # step holding nothing while their half-written contribution sits parked.
+  # Restoring the interrupted step there would answer "weitermachen" with the
+  # empty prompt they were already reading.
   def continue
     interrupted = @conversation.interrupted_step
+
+    return Whatsapp::Flows::ParkedFlowService.resume(conversation: @conversation) if
+      resume_parked_instead?
 
     return Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation) if
       interrupted.blank?
@@ -65,12 +93,19 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
     re_send_prompt(interrupted)
   end
 
-  # Exactly what the citizen asked for: reset_flow! drops the pending draft and
-  # CancelService's one button is the way to the menu. The main menu is not
-  # sent unasked on top of it — a message and a tap is what starting over is
-  # worth, and the same service answers the typed "abbrechen".
+  # Starting over is a beginning, so the reply is a beginning too: what the
+  # citizen can start next, said by the assistant in its own words with its own
+  # pills, rather than the cancellation message and its one button back to the
+  # menu. A citizen who has just asked to begin should not have to read
+  # "abgebrochen" and tap again to get anywhere, and should not have to read a
+  # fixed list of three rows either. The typed "abbrechen" is still
+  # CancelService, which is the ending this is not.
+  #
+  # The answer itself lives in Flows::FreshStartAnswerService, which the
+  # greeting that never reaches this question shares: the discard is the only
+  # part of it that belongs to the tap.
   def restart
-    abandon
+    Whatsapp::Flows::FreshStartAnswerService.after_discard(conversation: @conversation)
   end
 
   private
@@ -89,6 +124,15 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
       @conversation.step
     end
 
+    # A parked flow with nothing on the current step is the one case where
+    # "carry on" means something other than the step the question interrupted.
+    # Read from the conversation rather than passed in, because both readings
+    # that ask the question already agreed there is unfinished work — this only
+    # decides which of the two kinds it is.
+    def resume_parked_instead?
+      @conversation.parked_flow? && !@conversation.unsaved_submission?
+    end
+
     def buttons
       [
         Whatsapp::FlowActions.button(
@@ -100,51 +144,17 @@ class Whatsapp::Flows::ContinueOrRestartService < Whatsapp::Flows::BaseService
       ]
     end
 
-    def abandon
-      Whatsapp::Flows::CancelService.call(conversation: @conversation)
+    # The fixed list menu, for the question that ran out of askings (see #ask).
+    # The other fallback — when the assistant cannot answer a beginning — lives
+    # with the beginning it belongs to, in Flows::FreshStartAnswerService.
+    def fixed_menu
+      Whatsapp::Flows::MainMenuService.start_over(conversation: @conversation)
     end
 
-    # Each step's own prompt, by the entry point that re-asks rather than the
-    # one that first arrives at the step: AskRevisionService.re_ask leaves the
-    # origin the draft card recorded alone, ProposalImageService.ask_upload
-    # asks for the photo instead of re-offering the choice the citizen already
-    # made, and AskLocationService.re_ask puts the pin question without
-    # spending the one miss #remind would.
-    #
-    # AWAITING_PHASE_CHOICE is absent because nothing assigns that step, and
-    # AWAITING_CONTINUE_DECISION cannot appear — the question records the step
-    # it interrupted, never its own. Anything unmapped is the menu, which is
-    # also where a comment whose proposal has since gone lands.
+    # The step's own question, from the one map three return paths share (see
+    # StepPromptService). AWAITING_CONTINUE_DECISION cannot appear — the
+    # question records the step it interrupted, never its own.
     def re_send_prompt(interrupted)
-      steps = Whatsapp::Conversation::Step
-
-      case interrupted
-      when steps::AWAITING_IDEA
-        Whatsapp::Flows::AskIdeaService.call(conversation: @conversation)
-      when steps::AWAITING_COMMENT
-        re_send_comment_prompt
-      when steps::AWAITING_IMAGE_UPLOAD
-        Whatsapp::Flows::ProposalImageService.ask_upload(conversation: @conversation)
-      when steps::AWAITING_REVISION
-        Whatsapp::Flows::AskRevisionService.re_ask(conversation: @conversation)
-      when steps::AWAITING_LOCATION
-        Whatsapp::Flows::AskLocationService.re_ask(conversation: @conversation)
-      when steps::AWAITING_PARTICIPATION_PROJEKT
-        Whatsapp::Flows::ProjektParticipationService.ask_projekt(conversation: @conversation)
-      else
-        Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation)
-      end
-    end
-
-    # The comment question needs the record it is about, and it can be gone by
-    # now — deleted, or its projekt closed. The menu is the honest answer then:
-    # asking for a comment again would invite one that nothing would accept.
-    def re_send_comment_prompt
-      proposal = Proposal.find_by(id: @conversation.comment_proposal_id)
-
-      return Whatsapp::Flows::MainMenuService.greeting(conversation: @conversation) if
-        proposal.blank?
-
-      Whatsapp::Flows::CommentService.prompt(conversation: @conversation, proposal: proposal)
+      Whatsapp::Flows::StepPromptService.call(conversation: @conversation, step: interrupted)
     end
 end

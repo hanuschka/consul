@@ -160,6 +160,10 @@ en:
         support: 👍 Support
         help: Help
         main_menu: Main menu
+        participate: Take part
+        notifications_open: Notifications
+        unlink_start: Unlink account
+        terms_decline: I do not agree
         back_to_menu: Back to menu
         choose_menu: Choose
         choose_projekt: Choose project
@@ -177,7 +181,11 @@ en:
         submit_anyway: Own contribution
       main_menu:
         onboarding_body: 'What would you like to start with?'
+        start_over_body: 'All right, we are starting fresh. What would you like to do?'
         rows:
+          resume_parked:
+            title: Back to your draft
+            description: Return to the contribution you started
           projekts:
             title: Browse projects
             description: See all participation projects

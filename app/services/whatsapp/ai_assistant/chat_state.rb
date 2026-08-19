@@ -7,7 +7,12 @@ class Whatsapp::AiAssistant::ChatState
   #
   # Bounded here rather than by the retention job: that one purges
   # Whatsapp::Message rows and never looks at the stored chat.
-  MAX_MESSAGES = 24
+  #
+  # Counted in provider messages rather than in turns, and one turn of tool
+  # calls spends several: at 24 a citizen who had asked a handful of questions
+  # was already talking to a bot that could not remember the beginning of the
+  # conversation.
+  MAX_MESSAGES = 48
 
   def initialize(conversation:)
     @conversation = conversation

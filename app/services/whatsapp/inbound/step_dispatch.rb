@@ -24,6 +24,8 @@ class Whatsapp::Inbound::StepDispatch
   end
 
   def call
+    return if dispatch_named_option
+
     case conversation.step
     when Step::AWAITING_LINK
       Whatsapp::Flows::SendLoginLinkService.call(conversation:)
@@ -88,6 +90,42 @@ class Whatsapp::Inbound::StepDispatch
   private
 
     attr_reader :conversation
+
+    # The citizen answered a question in words that the bot asked with pills —
+    # "die zweite", "eher Kritik", "ja, trennen", the projekt by name. The
+    # assistant resolved which option they meant against the ones this
+    # conversation really offered, and it is dispatched here exactly as the tap
+    # would have been: same catalog dispatcher, same account gating, same
+    # re-resolution of the record behind the id.
+    #
+    # Ahead of the step map rather than inside it, because that is the whole
+    # point — before this, every step below answered a typed message by asking
+    # its question again, and after three of those the submission was cancelled.
+    #
+    # Returns whether anything was dispatched. An id whose action the catalog no
+    # longer knows falls through to the step, which re-asks as it always did.
+    def dispatch_named_option
+      option_id = @routing.option_id
+
+      return false if option_id.blank?
+
+      return true if recovery_dispatch(option_id)
+
+      flow_dispatch(option_id)
+    end
+
+    def recovery_dispatch(option_id)
+      Whatsapp::Inbound::RecoveryActionDispatch.new(
+        conversation: conversation, reading: @reading, action_id: option_id
+      ).call
+    end
+
+    def flow_dispatch(option_id)
+      Whatsapp::Inbound::FlowActionDispatch.new(
+        conversation: conversation, account: conversation.whatsapp_account,
+        reading: @reading, action_id: option_id
+      ).call
+    end
 
     def inbound_text
       @reading.text

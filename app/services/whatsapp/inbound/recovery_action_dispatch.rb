@@ -5,14 +5,19 @@ class Whatsapp::Inbound::RecoveryActionDispatch
   # to be active, and the two tap-id namespaces are built by different
   # modules from different prefixes, so reading this one first can never
   # swallow a catalog pill.
-  def initialize(conversation:, reading:)
+  #
+  # `action_id` is the escape the citizen named in words rather than tapped —
+  # see FlowActionDispatch for why a named option is dispatched here instead
+  # of somewhere of its own.
+  def initialize(conversation:, reading:, action_id: nil)
     @conversation = conversation
     @reading = reading
+    @action_id = action_id
   end
 
   # True when a recovery pill was handled.
   def call
-    action = Whatsapp::Send.recovery_action_from(@reading.tapped_reply_id)
+    action = Whatsapp::Send.recovery_action_from(@action_id || @reading.tapped_reply_id)
 
     return false if action.blank?
 

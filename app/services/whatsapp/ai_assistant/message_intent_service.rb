@@ -1,9 +1,9 @@
 class Whatsapp::AiAssistant::MessageIntentService < ApplicationService
   # The one model reading a message gets when the router does not serve its
-  # sender: guests and unlinked numbers, whose whole path is the deterministic
-  # flow, and numbers that opted out, whose only open question is whether they
-  # are opting back in. Linked, subscribed citizens never come here — their one
-  # reading is the router's, which carries the same decisions as tools.
+  # sender: numbers that opted out, whose only open question is whether they are
+  # opting back in and who must not be answered by an assistant at all. Everyone
+  # still on the channel — linked or guest — is read by the router instead,
+  # which carries the same decisions as tools.
   #
   # One call answers everything at once: the channel-level requests (leaving
   # the channel, abandoning what is in progress) and what the message does to

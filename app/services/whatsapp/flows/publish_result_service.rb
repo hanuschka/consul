@@ -25,11 +25,6 @@ class Whatsapp::Flows::PublishResultService < Whatsapp::Flows::BaseService
     return Whatsapp::Flows::TermsConsentService.before_publish(conversation: @conversation) if
       !account.terms_accepted?
 
-    # Usually instant now that the draft card carries the evaluation, but not
-    # always: a draft whose evaluation was unreachable at the time is evaluated
-    # here instead, and that is a second LLM call.
-    Whatsapp::Send.typing(message_id: @inbound_message_id)
-
     result = Whatsapp::Drafting::PublishDraftService.call(conversation: @conversation)
 
     return Whatsapp::Flows::CriteriaFeedbackService.call(conversation: @conversation) if

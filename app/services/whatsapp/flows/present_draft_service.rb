@@ -88,8 +88,6 @@ class Whatsapp::Flows::PresentDraftService < Whatsapp::Flows::BaseService
       return draft_resource.ai_evaluation_result.to_h if
         draft_resource.ai_evaluation_result.present?
 
-      Whatsapp::Send.typing(message_id: @inbound_message_id)
-
       ::ProposalAiDraft::EvaluateTwoTierService.call(resource: draft_resource).to_h
     end
 

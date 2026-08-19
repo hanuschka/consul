@@ -22,7 +22,9 @@ module Whatsapp::Send
   end
 
   def buttons(account:, body:, buttons:, header_image_url: nil)
-    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: body
+    ) do |messages|
       messages.send_buttons(
         to: account.wa_id,
         body: body,
@@ -30,13 +32,17 @@ module Whatsapp::Send
         header_image_url: header_image_url
       )
     end
+
+    remember_offered(account: account, entries: buttons, message: message)
   end
 
   # For a picture that exists only on an unpublished record. Uploading it to
   # WhatsApp first means nothing about the send depends on Meta being able to
   # reach us, which on an access-restricted environment it cannot.
   def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
-    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: body
+    ) do |messages|
       messages.send_buttons_with_media_header(
         to: account.wa_id,
         body: body,
@@ -44,6 +50,8 @@ module Whatsapp::Send
         header_media_id: header_media_id
       )
     end
+
+    remember_offered(account: account, entries: buttons, message: message)
   end
 
   # A message that carries a picture, and what to do when WhatsApp will not take
@@ -84,19 +92,31 @@ module Whatsapp::Send
   end
 
   def list(account:, body:, button_label:, rows:)
-    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: body
+    ) do |messages|
       messages.send_list(to: account.wa_id, body: body, button_label: button_label, rows: rows)
     end
+
+    remember_offered(account: account, entries: rows, message: message)
   end
 
   # For a list long enough that ungrouped rows read as a wall. Sections are
   # {title:, rows:}; the ten-row limit is shared across all of them.
   def sectioned_list(account:, body:, button_label:, sections:)
-    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: body
+    ) do |messages|
       messages.send_sectioned_list(
         to: account.wa_id, body: body, button_label: button_label, sections: sections
       )
     end
+
+    remember_offered(
+      account: account,
+      entries: Array(sections).flat_map { |section| Array(section[:rows]) },
+      message: message
+    )
   end
 
   # The native location picker. Recorded as an interactive message like every
@@ -219,6 +239,54 @@ module Whatsapp::Send
     nil
   end
 
+  # How many of an interactive message's options are remembered as answerable
+  # in words. Ten is the list cap, so this only ever bites a sectioned list
+  # built past it — and there the first ten are the ones the citizen read.
+  MAX_REMEMBERED_OPTIONS = ::Whatsapp::MAX_LIST_ROWS
+
+  # Every tappable option the bot sends is also written onto the conversation,
+  # so the assistant can be told what is on offer and a citizen who answers in
+  # words — "die zweite", "ja, trennen", "eher Kritik" — is understood instead
+  # of being re-asked the same question. The pill's own dispatcher still does
+  # the work: an id named back by the model travels the identical path a tap
+  # would have, account gating and record re-resolution included.
+  #
+  # Written here rather than by each step because here is where the options
+  # exist: one hook covers the whole catalog, every menu, and every step
+  # written from now on. Only ids the inbound side can actually dispatch are
+  # kept — a row whose id belongs to neither namespace (there are none today)
+  # would otherwise be offered to the model as an answer nothing would accept.
+  #
+  # A send that never happened offers nothing: outside the service window
+  # `deliver_within_service_window` returns nil, and a refused send comes back
+  # as a failed message. Either way the previous options stand, because the
+  # citizen's screen still shows them.
+  def remember_offered(account:, entries:, message:)
+    return message if message.blank? || message.status == "failed"
+
+    conversation = account.conversation
+
+    return message if conversation.blank?
+
+    conversation.remember_offered_options!(dispatchable_options(entries))
+
+    message
+  end
+
+  def dispatchable_options(entries)
+    Array(entries)
+      .select { |entry| dispatchable_id?(entry[:id]) }
+      .first(MAX_REMEMBERED_OPTIONS)
+      .map { |entry| { "id" => entry[:id].to_s, "label" => entry[:title].to_s } }
+  end
+
+  def dispatchable_id?(reply_id)
+    return false if reply_id.blank?
+    return true if recovery_action_from(reply_id).present?
+
+    ::Whatsapp::FlowActions.parse(reply_id).present?
+  end
+
   def deliver_within_service_window(account:, kind:, body:, &block)
     return if !Whatsapp::ServiceWindow.deliverable?(account, kind)
 
@@ -238,4 +306,5 @@ module Whatsapp::Send
   end
 
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
+  private_class_method :remember_offered, :dispatchable_options, :dispatchable_id?
 end

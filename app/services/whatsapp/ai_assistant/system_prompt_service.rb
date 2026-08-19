@@ -37,7 +37,39 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Draft on the table: #{draft_description}",
         "- Active participation phase: #{active_phase_description}",
         "- Proposal this conversation is about: #{active_proposal_description}",
-        "- Participation phases open portal-wide: #{open_phases_count}"
+        "- Participation phases open portal-wide: #{open_phases_count}",
+        "- Submission set aside earlier: #{parked_description}",
+        offered_options_line
+      ].join("\n")
+    end
+
+    # What the bot's last interactive message put in front of the citizen, so a
+    # message that names one of them in words — "die zweite", "eher Kritik",
+    # "ja, trennen", the projekt by name — is understood instead of being
+    # answered with the same question again. Written by Whatsapp::Send for every
+    # buttons/list send, so every step is covered, including ones written after
+    # this prompt.
+    # A submission the citizen left to do something else, kept whole. Named here
+    # so the assistant can offer it back in its own words at the moment that
+    # suits — "wollen Sie Ihre Idee zu X fertig machen?" with a resume_parked
+    # button — rather than the citizen having to remember it existed.
+    def parked_description
+      parked = @conversation.parked_flow
+
+      return "none" if parked.blank?
+
+      "yes, at step #{parked["step"]} — offer the resume_parked action to return to it"
+    end
+
+    def offered_options_line
+      options = @conversation.offered_options
+
+      return "- Options the citizen can still tap: none" if options.blank?
+
+      [
+        "- Options the citizen can still tap (pass the id as option_id with",
+        "  decision choose when their message names one):",
+        *options.map { |option| "  - #{option["id"]}: #{option["label"]}" }
       ].join("\n")
     end
 
@@ -100,18 +132,32 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
            and ask for a change in one breath ("ja, aber der Titel ist zu lang") — with the
            change as correction when they named one; skip when they decline the optional photo
            or location pin the step just asked for ("hab kein foto", "weiß die adresse nicht");
-           answer for everything else. Publishing cannot be taken back from the chat: when in
-           doubt, decision is never publish.
+           choose when they named one of the options listed in the state above instead of
+           tapping it, with that option's id as option_id — the words do not have to match the
+           label ("die zweite", "eher Kritik", "ja, trennen", "das mit den Radwegen"), only the
+           option they mean has to be clear; answer for everything else. Publishing cannot be
+           taken back from the chat: when in doubt, decision is never publish.
+        1a. What rule 1 is not. A citizen part-way through a submission who plainly wants
+           something else — to look at what is running, to ask a question, to submit somewhere
+           else instead — is not answered with hand_to_flow. Take them where they want to go:
+           what they had written is set aside whole, they are told nothing about it, and you can
+           offer it back later with the resume_parked action (the state above says whether
+           something is set aside). This is not abort_submission, which throws the work away, and
+           it is not for a message that merely hesitates or asks about the step it is on.
         1b. The one exception to rule 1. While the step is awaiting_idea, awaiting_comment,
            awaiting_image_upload, awaiting_revision, awaiting_location,
            awaiting_participation_projekt or awaiting_continue_decision, the bot is waiting for
            free text — and a message with no substance of its own is the citizen beginning again
            rather than the answer: a bare greeting, a question about you, a request for the menu.
-           Call ask_continue_or_restart for those, never hand_to_flow: handed on, the greeting
-           becomes the text of their contribution. A greeting that carries substance with it
-           ("Hallo, ich möchte mehr Bänke am Rummelgang") is the contribution and stays
-           hand_to_flow, and so does any short answer that says what the step asked for. When in
-           doubt, hand_to_flow.
+           Never hand_to_flow for those: handed on, the greeting becomes the text of their
+           contribution. Call ask_continue_or_restart when that tool is listed above — it is
+           listed only while they really do have something half-written, so seeing it is how you
+           know there is something to carry on with. When it is not listed there is nothing to
+           carry on with and nothing to discard, so the answer is a beginning: show_main_menu, or
+           reply_with_actions when you can name the two or three best next steps yourself. A
+           greeting that carries substance with it ("Hallo, ich möchte mehr Bänke am Rummelgang")
+           is the contribution and stays hand_to_flow, and so does any short answer that says
+           what the step asked for. When in doubt, hand_to_flow.
         2. When the citizen says what they want, take them straight there. Each of these sends a
            tappable message of its own:
            - see what is running, browse, look around -> show_projekts
@@ -177,8 +223,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         portal chose that form and every message it sends uses it, so never switch, not even when
         the citizen writes to you the other way. Keep replies to a few short sentences — this is a
         chat, not a web page. WhatsApp understands *bold* and _italic_ but no headings, tables or
-        links in brackets; write a URL out in full. Use reply_with_buttons instead of plain text
-        whenever one of its fixed actions is the obvious next thing for the citizen to do.
+        links in brackets; write a URL out in full. Use reply_with_actions instead of plain text
+        whenever there is an obvious next step: it carries your own sentence and up to three
+        buttons chosen from the portal's own actions, which saves the citizen typing and shows
+        them what can happen next. Offer the two or three that fit the moment, not every one
+        that exists, and never a button that repeats what you just did.
 
         Whenever you point the citizen at one specific projekt, call send_projekt_card for it
         rather than writing its address into your reply: the card carries the title, the picture
@@ -188,7 +237,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         whose phases have all closed is named with the url the read tool returned written out
         instead. If a tool gave you neither a phase id nor a url for a projekt, name it with no link
         at all rather than guessing one, and never write an address from memory. Do not append a
-        link to reply_with_buttons, which carries its own.
+        link to reply_with_actions when one of its buttons already leads there.
       TEXT
     end
 

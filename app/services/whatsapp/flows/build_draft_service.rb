@@ -87,11 +87,9 @@ class Whatsapp::Flows::BuildDraftService < Whatsapp::Flows::BaseService
         # Screened before the "one moment" message rather than after it: a text
         # that is about to be refused should not first be promised a draft, and
         # the generation call it would have paid for is the one thing worth
-        # skipping. The bubble covers the screening call — it is a completion
-        # like any other — and an already-screened text has no call to cover,
-        # so the bubble is asked for inside the gate too.
-        Whatsapp::Send.typing(message_id: @inbound_message_id)
-
+        # skipping. The screening call is covered by the bubble the inbound gate
+        # chain already asked for (see Inbound::ProcessMessageService).
+        #
         # Armed inside the gate it guards rather than above it. Stamped
         # unconditionally, an already-screened text would record a screening that
         # never ran and re-arm the floor against the citizen's next real idea.

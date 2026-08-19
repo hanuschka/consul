@@ -17,9 +17,15 @@ class Ai::Tools::WhatsappAiAssistant::StartProposalSubmission <
     end
   end
 
+  # A submission already open is parked first. Entering a flow calls start_flow!,
+  # which replaces the whole context — so before parking existed, a citizen who
+  # said "actually I want to suggest something for the other projekt" lost the
+  # draft they were part-way through, silently and with no way back.
   def execute(projekt_name: nil)
     return start_named_submission(projekt_name) if projekt_name.present?
     return too_many_to_list_error if all_open_projekt_phases.size > ::Whatsapp::MAX_LIST_ROWS
+
+    park_open_flow!
 
     ::Whatsapp::Flows::SubmitProposalService.call(conversation: conversation)
 
@@ -35,6 +41,8 @@ class Ai::Tools::WhatsappAiAssistant::StartProposalSubmission <
       projekt_phase = named_open_phase(projekt_name)
 
       return unknown_open_projekt_error if projekt_phase.blank?
+
+      park_open_flow!
 
       ::Whatsapp::Flows::StartPhaseFlowService.call(
         conversation: conversation, projekt_phase: projekt_phase

@@ -45,6 +45,7 @@ module Whatsapp::FlowActions
     restart
     continue_flow
     start_over
+    resume_parked
   ].freeze
 
   # `support_instead` is supporting from the duplicate offer, and it is its own

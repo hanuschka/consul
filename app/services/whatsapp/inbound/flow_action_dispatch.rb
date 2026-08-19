@@ -19,7 +19,7 @@ class Whatsapp::Inbound::FlowActionDispatch
   # discards and opens the menu.
   SUBMISSION_ACTIONS = %i[
     idea_start terms_accept category sentiment draft_publish draft_revise resume restart
-    continue_flow
+    continue_flow resume_parked
     image_upload image_generate image_skip location_share location_skip
     submit_final submit_anyway
   ].freeze
@@ -62,15 +62,24 @@ class Whatsapp::Inbound::FlowActionDispatch
 
   GUEST_ELIGIBLE_ACTIONS = SUBMISSION_ACTIONS
 
-  def initialize(conversation:, account:, reading:)
+  # `action_id` is the pill the citizen named in words instead of tapping,
+  # resolved by the assistant against the options the bot really offered
+  # (Conversation#offered_options). It travels this same dispatcher rather
+  # than a path of its own: the account gating and the record re-resolution
+  # below are exactly what a typed answer needs too, and a second
+  # implementation of them is how a typed "unterstützen" ends up skipping a
+  # check a tapped one passes.
+  def initialize(conversation:, account:, reading:, action_id: nil)
     @conversation = conversation
     @account = account
     @reading = reading
+    @action_id = action_id
   end
 
-  # True when the tap was one of the catalog's pills and was handled.
+  # True when the tap — or the named option — was one of the catalog's pills
+  # and was handled.
   def call
-    flow_action = Whatsapp::FlowActions.parse(@reading.tapped_reply_id)
+    flow_action = Whatsapp::FlowActions.parse(@action_id || @reading.tapped_reply_id)
 
     return false if flow_action.blank?
 
@@ -115,6 +124,8 @@ class Whatsapp::Inbound::FlowActionDispatch
         Whatsapp::Flows::ContributionsService.call(conversation:)
       when :main_menu
         Whatsapp::Flows::MainMenuService.greeting(conversation:)
+      when :resume_parked
+        Whatsapp::Flows::ParkedFlowService.resume(conversation:)
       when :support_prompt
         send_menu_prompt("whatsapp.bot.participation.prompts.support")
       when :comment_prompt

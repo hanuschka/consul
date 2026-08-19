@@ -17,9 +17,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   the one thing unsubscribing asked us not to do.
   # - A voice note is transcribed just ahead of the keyword gate, the first text
   #   consumer. The "could not read it" reply goes out there, but the chain runs on.
-  # - A tap is dispatched before anything reads text, because a tapped pill's label
-  #   is not something the citizen wrote — and a text-less voice note halts only
-  #   after that gate, because a tap is never audio.
+  # - Cancelling is read before anything else can act on the message, for the same
+  #   reason as the stop keyword: leaving a half-written submission must not depend
+  #   on a provider being reachable. A text-less voice note halts only after that
+  #   gate, because a tap is never audio.
   # - The AI disclosure precedes any reply the assistant could make. It is a legal
   #   declaration rather than a sentence the bot chooses, which is why it is here and
   #   on the locale copy.
@@ -42,6 +43,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     conversation.update!(last_inbound_at: latest_inbound_at)
 
+    # Before anything can send: the tools that must not act on an irreversible offer
+    # they made themselves read this rather than the record.
+    conversation.hold_offered_confirmations!
+
     # Every message is acknowledged, tapped ones included: a tap that produces no
     # bubble reads as a tap that did not arrive, and the citizen taps again.
     ::Whatsapp::Send.typing(message_id: reading.message_id)
@@ -53,16 +58,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     disclose_ai
 
-    tapped = dispatch_tap
-
-    return if tapped == :handled
-    return if tapped.blank? && reading.unreadable_voice_note?
+    return if handle_cancel_tap
+    return if reading.tapped_reply_id.blank? && reading.unreadable_voice_note?
 
     entry = capture_entry_token
 
     park_media
 
-    answer(tapped || entry_note(entry) || reading.text.presence || media_note)
+    answer(tap_note || entry_note(entry) || reading.text.presence || media_note)
   end
 
   private
@@ -173,8 +176,105 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Send.typing(message_id: reading.message_id)
     end
 
-    def dispatch_tap
-      ::Whatsapp::Inbound::TapDispatch.new(conversation: conversation, reading: reading).call
+    # ── Turning a tap into something to read ────────────────────────────────
+    # A tapped button says nothing this service can pass on as it stands, so it
+    # becomes one line of fact beside the two below it. What it deliberately does not
+    # become is an instruction: the assistant wrote that button's label one message
+    # ago and the tool descriptions say what each action is for, so a second account
+    # of either here would be a copy that drifts from both.
+    #
+    # The id is the part that has to travel. WhatsApp returns the button's *id*, and
+    # since the assistant writes its own labels the label is no longer a key — a
+    # sentiment pill labelled "Finde ich gut" names id 9 and nothing else in the
+    # exchange does.
+    def tap_note
+      tapped_id = reading.tapped_reply_id
+
+      return if tapped_id.blank?
+
+      recovery = ::Whatsapp::Send.recovery_action_from(tapped_id)
+
+      return tapped_line(action: recovery) if recovery.present?
+
+      flow_action = ::Whatsapp::FlowActions.parse(tapped_id)
+
+      return unhandled_tap_note(tapped_id) if flow_action.blank?
+
+      record_tap(flow_action[:action], flow_action[:param])
+      settle_slot_for(flow_action[:action])
+
+      tapped_line(action: flow_action[:action], param: flow_action[:param])
+    end
+
+    # The label the citizen actually read, taken from the webhook rather than from
+    # anything remembered here: WhatsApp sends the title back beside the id.
+    def tapped_line(action:, param: nil)
+      label = reading.tapped_reply_title.to_s.squish
+      named = label.present? ? " \"#{label}\"" : ""
+      identified = param.present? ? ", id #{param}" : ""
+
+      "The citizen tapped the button#{named} (action #{action}#{identified})."
+    end
+
+    # Cancelling is the one tap that does its own work, and its gate is up in the
+    # chain with the stop keyword for the same reason: abandoning a submission must
+    # not depend on a provider being reachable. Recovery ids are read before catalog
+    # ones — the two namespaces are built by different modules from different
+    # prefixes, so this can never swallow a catalog pill.
+    def handle_cancel_tap
+      return false if ::Whatsapp::Send.recovery_action_from(reading.tapped_reply_id) != :cancel
+
+      record_tap(:cancel, nil)
+
+      conversation.discard_draft!
+
+      ::Whatsapp::Send.text(account: account, body: I18n.t("whatsapp.bot.cancelled"))
+
+      true
+    end
+
+    # The two taps that are an answer rather than a request: the citizen saying they
+    # have no photo, or no particular place. Recorded so draft_status reports the
+    # question as answered — the alternative is the assistant having to remember across
+    # turns that it already asked, and asking someone for a photo they have just
+    # declined reads as not having listened.
+    #
+    # No precondition and nothing irreversible: this writes down what they said, which
+    # is why it is here rather than behind a tool of its own.
+    SETTLED_BY_TAP = {
+      image_skip: "photo_declined",
+      location_skip: "location_stated"
+    }.freeze
+
+    def settle_slot_for(action)
+      slot = SETTLED_BY_TAP[action]
+
+      return if slot.blank?
+
+      conversation.settle_slot!(slot)
+    end
+
+    # A pill from an older deploy, still sitting in someone's chat history and still
+    # tappable forever. Answered rather than dropped: a tap that produces nothing at
+    # all reads as a bot that has stopped working, and the citizen taps again. That it
+    # no longer works is a fact the assistant needs, because otherwise the likeliest
+    # reply is one that acts as though it had.
+    def unhandled_tap_note(tapped_id)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :tap_unhandled, conversation: conversation, tapped: tapped_id
+      )
+
+      label = reading.tapped_reply_title.to_s.squish
+      named = label.present? ? " \"#{label}\"" : ""
+
+      "The citizen tapped a button#{named} from an earlier version of this bot, which no longer " \
+        "does anything."
+    end
+
+    def record_tap(action, param)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :tap_dispatched, conversation: conversation, action: action, param: param
+      )
     end
 
     # A photo and a shared pin carry no text at all, so the citizen has said nothing

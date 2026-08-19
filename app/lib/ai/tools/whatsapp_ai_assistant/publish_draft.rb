@@ -43,9 +43,31 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
 
     # Consent before permission, because the two refusals ask for different things
     # and the citizen should not be sent to accept terms for a phase that has closed.
+    # The confirmation comes last: it is the only one of the three the citizen can
+    # resolve in a single message, so it is worth asking for only once the rest holds.
     def precondition_refusal
-      refuse_if_not_permitted || refuse_without_consent
+      refuse_if_not_permitted || refuse_without_consent || refuse_without_confirmation
     end
+
+    # The guarantee the retired step machine made structurally: it had two steps that
+    # could only be answered once a card had been sent, so nothing could be published
+    # that the citizen had not seen. Nothing about the tools reproduces that — a model
+    # could go from an idea to a published contribution inside one turn — so it is a
+    # precondition here, and checked against what the bot really put in front of them
+    # rather than against the model's account of the conversation.
+    def refuse_without_confirmation
+      return if PUBLISH_ACTIONS.any? { |action| conversation.confirmation_offered?(action) }
+
+      {
+        error: "The citizen has not been shown this draft and asked whether it should go in, so " \
+               "it was not published.",
+        hint: "Show them the draft as it stands — send_draft_card when it has a picture, " \
+              "reply_with_actions otherwise — with a button whose label says it submits. Call " \
+              "this again once they have answered that question."
+      }
+    end
+
+    PUBLISH_ACTIONS = %i[draft_publish submit_final].freeze
 
     def publish
       result = ::Whatsapp::Drafting::PublishDraftService.call(conversation: conversation)

@@ -179,20 +179,8 @@ class Whatsapp::Conversation < ApplicationRecord
     context["last_idea_text"]
   end
 
-  # One batched write: a first draft clears the stored correction with the idea,
-  # because a stale one would re-apply a change to a draft that no longer exists.
   def store_idea_text!(text)
-    merge_context!(last_idea_text: text, last_correction: nil)
-  end
-
-  # The change the citizen asked for. Preferred over the idea when a generation
-  # is retried: what failed was the edit. Cleared by store_idea_text!.
-  def last_correction
-    context["last_correction"]
-  end
-
-  def store_correction!(text)
-    merge_context!(last_correction: text)
+    merge_context!(last_idea_text: text)
   end
 
   # The two throttle clocks, read back by the drafting tool. The draft clock is
@@ -252,6 +240,16 @@ class Whatsapp::Conversation < ApplicationRecord
   # that returned nothing. False is the safe direction: asking a question twice
   # costs a message, skipping one the citizen never answered costs them the photo
   # they meant to send.
+
+  # The same slot answered by a tapped button rather than by the citizen's opening
+  # message. Written by Inbound::ProcessMessageService, read by draft_status, and
+  # cleared with the rest of the slots on the next draft or revision.
+  def settle_slot!(slot)
+    return if !SETTLED_SLOT_KEYS.include?(slot.to_s)
+
+    merge_context!(settled_slots: settled_slots.merge(slot.to_s => true))
+  end
+
   def photo_declined?
     settled_slots["photo_declined"] == true
   end
@@ -375,8 +373,21 @@ class Whatsapp::Conversation < ApplicationRecord
     Array(context["pending_confirmations"])
   end
 
+  # Whether the bot had offered this before the citizen's message arrived — which is
+  # the whole question, and not the same as whether it has been offered at all. Read
+  # off the record, a tool could offer the pill and act on it inside one turn, which
+  # is exactly the ceremony the offer exists to prevent. So the inbound chain holds
+  # the value as it stood on arrival (#hold_offered_confirmations!) and a send later
+  # in the same turn cannot talk its way into it.
   def confirmation_offered?(action)
-    pending_confirmations.include?(action.to_s)
+    offered = defined?(@held_confirmations) ? @held_confirmations : pending_confirmations
+
+    offered.include?(action.to_s)
+  end
+
+  # Called once at the top of the inbound chain, before anything can send.
+  def hold_offered_confirmations!
+    @held_confirmations = pending_confirmations
   end
 
   # Nothing to write on the common path: most messages offer nothing irreversible,

@@ -91,6 +91,13 @@ de:
       compliance:
         disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
         opted_out: Verstanden, Sie erhalten keine Nachrichten mehr von uns.
+      proposal:
+        # A legal notice rather than the bot's voice, which is why it survived the copy
+        # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
+        # request for a photo so the assistant cannot write one without it.
+        image_rights_notice: >-
+          Bitte senden Sie nur Bilder, für die Sie die Rechte haben und auf denen keine
+          Personen erkennbar sind, die damit nicht einverstanden sind.
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!
         login_prompt: >-

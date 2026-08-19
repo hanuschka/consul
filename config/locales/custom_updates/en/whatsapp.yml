@@ -83,6 +83,13 @@ en:
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
         opted_out: Understood, you won't receive any more messages from us.
+      proposal:
+        # A legal notice rather than the bot's voice, which is why it survived the copy
+        # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
+        # request for a photo so the assistant cannot write one without it.
+        image_rights_notice: >-
+          Please only send pictures you hold the rights to, and none showing people who
+          have not agreed to it.
       onboarding:
         welcome_greeting: 👋 Good to have you here!
         login_prompt: >-

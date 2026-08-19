@@ -2,8 +2,8 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   # The assistant's own message with the way onward attached. Both halves are its
   # words: the sentence and the labels on the buttons. What it does not choose is
   # the *id* behind a button, because WhatsApp returns the id to the webhook and
-  # Inbound::TapDispatch is what turns one into an effect — an invented id
-  # has nothing behind it, so the citizen taps and nothing happens, with no error
+  # the inbound side is what turns one back into an action — an invented id has
+  # nothing behind it, so the citizen taps and nothing happens, with no error
   # anywhere.
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 

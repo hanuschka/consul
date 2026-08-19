@@ -18,8 +18,8 @@ module Whatsapp::FlowActions
   # does nothing — the citizen taps, sees no reply, and taps again.
   #
   # What the ids no longer carry is behaviour. Each one used to enter a scripted flow
-  # of its own, which is why there are so many of them; now Inbound::TapDispatch turns
-  # a tap into a note saying which button was pressed, and the assistant answers it
+  # of its own, which is why there are so many of them; now the inbound side turns a
+  # tap into one line saying which button was pressed, and the assistant answers it
   # with whichever tool the words behind the label call for. That leaves exactly one
   # implementation of every write — the tool — which is what keeps the preconditions
   # on a publish or an unlink from having to exist in two places and drift apart.

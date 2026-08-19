@@ -45,8 +45,14 @@ class ProjektPhaseSetting < ApplicationRecord
     end
   end
 
+  # Nil rather than "translation missing" when a setting has no label yet: the
+  # WhatsApp assistant reads these to answer a citizen's question about the
+  # phase, and a missing label there has to fall back to the key rather than be
+  # read out as prose.
   def translated_name
-    I18n.t("custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}")
+    I18n.t(
+      "custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}", default: nil
+    )
   end
 
   class << self

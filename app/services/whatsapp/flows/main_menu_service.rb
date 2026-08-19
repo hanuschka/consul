@@ -13,6 +13,14 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   # The account row is the only difference between linked and unlinked. An
   # unlinked number is not shown a linking row: linking is asked for at the
   # action that needs it, never as a standing invitation (CON-2971).
+  #
+  # The body is composed against the rows it is about to carry, which is what
+  # this service is for now as much as the rows themselves. WhatsApp renders a
+  # list as body text plus a single "Auswählen" button and hides every row behind
+  # it, so "Willkommen zurück! Was möchten Sie tun?" put the question back to the
+  # citizen and filed the answer out of sight — the exact complaint CON-2982
+  # opens with. Composed, the sentence names the two or three that fit and the
+  # rows stay tappable underneath.
   ROWS = {
     projekts: :discover,
     participate: :participate,
@@ -29,33 +37,53 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   # instead — without it, a parked submission is kept and unreachable.
   PARKED_ROW = { resume_parked: :resume_parked }.freeze
 
-  # Three entry points rather than one with a mode: the only thing that differs
-  # is the sentence above the rows and whether an unfinished submission is
-  # dropped first, and a caller reading `MainMenuService.call(..., :greeting)`
-  # could tell you neither.
+  # Its own sentence rather than the portal's configured greeting. That one
+  # introduces the bot as an AI assistant, which is something to say once — at
+  # first contact, where it now stands — and not above every menu a returning
+  # citizen opens.
+  GREETING_KEYS = %w[
+    whatsapp.bot.welcome_greeting
+    whatsapp.bot.free_text_hint
+  ].freeze
+
+  # Its own sentence because the greeting's says "welcome back", which is false
+  # for a number three messages old — and the disclosure directly above has
+  # already introduced the bot, so there is nothing left to say but the question.
+  ONBOARDING_KEYS = %w[
+    whatsapp.bot.main_menu.onboarding_body
+    whatsapp.bot.free_text_hint
+  ].freeze
+
+  # The menu after the citizen taps "start over". Its own sentence rather than
+  # the greeting's: that one welcomes a returning number back, and this moment is
+  # a tap inside a conversation already under way. It used to answer with the
+  # cancellation message instead, which read as an ending to someone who had just
+  # asked to begin.
+  START_OVER_KEYS = %w[
+    whatsapp.bot.main_menu.start_over_body
+    whatsapp.bot.free_text_hint
+  ].freeze
+
+  FOLLOW_UP_KEYS = %w[whatsapp.bot.proposal.next_action].freeze
+
+  # Four entry points rather than one with a mode: what differs is the sentence
+  # above the rows and whether an unfinished submission is dropped first, and a
+  # caller reading `MainMenuService.call(..., :greeting)` could tell you neither.
   def self.greeting(conversation:)
     conversation.reset_flow!
 
-    new(conversation: conversation, body: greeting_body).call
+    new(conversation: conversation, body_keys: GREETING_KEYS).call
   end
 
-  # The menu after the citizen taps "start over" on the fresh-start question.
-  # Its own sentence rather than the greeting's: that one welcomes a returning
-  # number back, and this moment is a tap inside a conversation already under
-  # way. It used to answer with the cancellation message instead, which read as
-  # an ending to someone who had just asked to begin.
   def self.start_over(conversation:)
     conversation.reset_flow!
 
-    new(conversation: conversation, body: start_over_body).call
+    new(conversation: conversation, body_keys: START_OVER_KEYS).call
   end
 
-  # The menu that closes the first contact. Its own sentence because the
-  # greeting's says "welcome back", which is false for a number three messages
-  # old — and the disclosure directly above has already introduced the bot, so
-  # there is nothing left to say but the question.
+  # The menu that closes the first contact.
   def self.onboarding(conversation:)
-    new(conversation: conversation, body: onboarding_body).call
+    new(conversation: conversation, body_keys: ONBOARDING_KEYS).call
   end
 
   # The menu as a message of its own, after a message that said something —
@@ -69,55 +97,79 @@ class Whatsapp::Flows::MainMenuService < Whatsapp::Flows::BaseService
   # nothing truncates it — five contributions with long titles and URLs is
   # enough to have the whole message refused.
   def self.follow_up(conversation:)
-    new(
-      conversation: conversation,
-      body: Whatsapp.phrase("whatsapp.bot.proposal.next_action")
-    ).call
+    new(conversation: conversation, body_keys: FOLLOW_UP_KEYS).call
   end
 
-  # Its own sentence rather than the portal's configured greeting. That one
-  # introduces the bot as an AI assistant, which is something to say once — at
-  # first contact, where it now stands — and not above every menu a returning
-  # citizen opens.
-  def self.greeting_body
-    [
-      Whatsapp.phrase("whatsapp.bot.welcome_greeting"),
-      Whatsapp.phrase("whatsapp.bot.free_text_hint")
-    ].join("\n\n")
-  end
-  private_class_method :greeting_body
-
-  def self.onboarding_body
-    [
-      Whatsapp.phrase("whatsapp.bot.main_menu.onboarding_body"),
-      Whatsapp.phrase("whatsapp.bot.free_text_hint")
-    ].join("\n\n")
-  end
-  private_class_method :onboarding_body
-
-  def self.start_over_body
-    [
-      Whatsapp.phrase("whatsapp.bot.main_menu.start_over_body"),
-      Whatsapp.phrase("whatsapp.bot.free_text_hint")
-    ].join("\n\n")
-  end
-  private_class_method :start_over_body
-
-  def initialize(conversation:, body:)
+  def initialize(conversation:, body_keys:)
     super(conversation: conversation)
-    @body = body
+    @body_keys = body_keys
   end
 
   def call
+    menu_rows = rows
+
     Whatsapp::Send.list(
       account: account,
-      body: @body,
+      body: body(menu_rows),
       button_label: I18n.t("whatsapp.bot.buttons.choose_menu"),
-      rows: rows
+      rows: menu_rows
     )
   end
 
   private
+
+    def body(menu_rows)
+      composed(menu_rows).presence || phrased_body
+    end
+
+    # The one composition this reply is allowed, spent here rather than by the
+    # first of the body's phrases: only here are the rows known, and naming them
+    # in the sentence is the whole point. Nil outside the inbound path — a
+    # broadcast has no citizen mid-sentence to write for — and nil whenever the
+    # composer will not vouch for what came back.
+    def composed(menu_rows)
+      context = Current.whatsapp_message_context
+
+      return if context.blank?
+
+      Whatsapp::AiAssistant::ComposeReplyService.call(
+        fixed_text: locale_body,
+        context: context,
+        offered_labels: offered_labels(menu_rows)
+      )
+    end
+
+    # Title and description together, because the description is where a row says
+    # what it actually does — "Ihre eigenen Beiträge ansehen" is composable
+    # material, "Beiträge" on its own is a heading. The labels themselves are
+    # never sent as written: they are the tappable rows, which the criteria
+    # require to stay unchanged.
+    def offered_labels(menu_rows)
+      menu_rows.map do |row|
+        [row[:title], row[:description]].compact_blank.join(" — ")
+      end
+    end
+
+    # What the composition is written from: the plain locale lines, deliberately
+    # not routed through Whatsapp.phrase. Reading them through it would attempt a
+    # composition per key before this service had assembled the rows, spending
+    # the turn's one budgeted call on a greeting that could not name a single
+    # option.
+    def locale_body
+      @body_keys.map { |key| I18n.t(key) }.join("\n\n")
+    end
+
+    # The fallback, and the whole of what this method used to be. Reached when
+    # composition is off, refused or unavailable — so it still answers, in the
+    # portal's address form and with the pre-generated variety, rather than
+    # staying silent.
+    #
+    # Its own per-key composition attempts are no-ops by then: the budget above
+    # is already spent, which is what keeps the fallback from paying a second
+    # time for the reply it is rescuing.
+    def phrased_body
+      @body_keys.map { |key| Whatsapp.phrase(key) }.join("\n\n")
+    end
 
     def rows
       parked_rows.merge(ROWS).merge(account_rows).map { |key, action| menu_row(key, action) }

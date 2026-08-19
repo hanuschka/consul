@@ -46,11 +46,18 @@ class Whatsapp::Flows::ProjektParticipationService < Whatsapp::Flows::BaseServic
   # A projekt whose phases permit nothing is answered rather than offered an
   # empty button set: participation is over or has not started, and the link is
   # the only thing left to give (CON-2967).
+  #
+  # The card comes first, and it is not decoration: a citizen who picked a name
+  # off a list was asked how they wanted to take part without ever being told
+  # what they had picked. It also carries the link, which this path
+  # otherwise gave only when nothing was open.
   def offer_actions(projekt)
     @projekt = projekt
     @conversation.reset_flow!
 
     return send_closed if action_buttons.empty?
+
+    send_projekt_card
 
     Whatsapp::Send.buttons(
       account: account,
@@ -62,6 +69,15 @@ class Whatsapp::Flows::ProjektParticipationService < Whatsapp::Flows::BaseServic
   end
 
   private
+
+    # The one shape the bot names a projekt in, summary and link included, so a
+    # projekt reached through this list looks the same as one reached by name or
+    # by QR code.
+    def send_projekt_card
+      Whatsapp::Flows::SendProjektCardService.call(
+        conversation: @conversation, projekt: @projekt
+      )
+    end
 
     # One projekt is a projekt the bot is already pointing at: asking which of
     # one is a question with a single answer, so it is skipped.

@@ -31,16 +31,35 @@ class Whatsapp::ProjektByNameQuery < ApplicationQuery
   # finished one, which index_order_underway excludes by construction. Hence the
   # wider set here rather than a second query object with the same matching rules
   # in it.
+  #
+  # Everything reachable on the portal, which is the same two conditions
+  # ProjektPhase.of_publicly_visible_projekt applies — deliberately not
+  # index_order_all, whose third condition is `show_in_overview_page`. That flag
+  # decides whether a projekt is *listed*, not whether it can be opened, and a
+  # projekt reached by its own address or by QR code is answerable like any other:
+  # keyed on the overview flag, the bot would take a submission into a phase it
+  # could not then say one word about.
   def self.readable(term:)
-    new(term: term, candidates: Projekt.index_order_all.includes(:page)).call
+    new(term: term, candidates: readable_candidates).call
+  end
+
+  # Shared with .suggestions, so a name that nearly matches an unlisted projekt is
+  # offered back rather than reported as matching nothing at all.
+  def self.readable_candidates
+    Projekt.activated.with_published_custom_page.order("projekts.created_at DESC").includes(:page)
   end
 
   # The titles that nearly matched, for a caller with nothing to report. The
   # assistant is told "no single projekt matches"; handing it these lets it ask
   # "did you mean X?" instead of listing the whole portal back at someone who
   # named their projekt almost correctly.
+  # Against the readable set unless the caller names its own, rather than against
+  # the underway default: "did you mean X?" is a question, not an action, and a
+  # near-miss on a projekt that is finished or unlisted is exactly the one worth
+  # asking about — reported as matching nothing, it reads as the portal having
+  # lost it.
   def self.suggestions(term:, candidates: nil)
-    new(term: term, candidates: candidates).near_titles
+    new(term: term, candidates: candidates || readable_candidates).near_titles
   end
 
   # `candidates` takes anything enumerable of projekts, so a caller that has

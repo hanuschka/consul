@@ -175,7 +175,7 @@ module Whatsapp::FlowActions
   # ::CHOICES protects for the same reason. What is shared is the one condition,
   # so a third continuation pill cannot introduce a third copy of it.
   def continuation_label_key(conversation, continue_key:, submit_key:)
-    return continue_key if conversation.location_question_available?
+    return continue_key if conversation.location_question_pending?
 
     submit_key
   end

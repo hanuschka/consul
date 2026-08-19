@@ -25,28 +25,17 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
 
   private
 
-    # Read through Projekt#page_content rather than off the page: a projekt in
-    # content-block mode leaves pages.content empty, and reading the column
-    # directly described every modern projekt as having nothing to say.
-    #
-    # The result is editorial HTML of any length, so what reaches the model is
-    # the readable opening of it rather than the whole document.
+    # The same summary the card sends, not the page's own text. This tool used to
+    # hand back the subtitle and the opening of the page joined together, which is
+    # the one thing a summary may not be — a copy of it: the model then either
+    # repeated it verbatim or rewrote editorial prose it had no other account of
+    # the projekt to check against. Shared with SendProjektCardService, so the
+    # projekt the citizen reads about and the projekt the model reasons about are
+    # described in one voice — and cached once for both.
     def summary_of(projekt)
-      return if projekt.page.blank?
-
-      text = [projekt.page.subtitle, strip_markup(projekt.page_content)]
-        .compact_blank
-        .join("\n\n")
-        .squish
-
-      text.presence&.truncate(SUMMARY_LENGTH)
-    end
-
-    # Content blocks carry {{projekt_map}}-style placeholders the page expands
-    # at render time. Left in, the model reads them as text and can repeat one
-    # at a citizen.
-    def strip_markup(content)
-      ActionController::Base.helpers.strip_tags(content.to_s).gsub(/\{\{.*?\}\}/, " ")
+      ::Whatsapp::AiAssistant::ProjektSummaryService.call(
+        projekt: projekt, length: SUMMARY_LENGTH
+      )
     end
 
     # Every phase a citizen may look at, not only the ones the bot can submit to:

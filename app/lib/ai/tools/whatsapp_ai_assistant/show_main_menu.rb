@@ -7,10 +7,13 @@ class Ai::Tools::WhatsappAiAssistant::ShowMainMenu < Ai::Tools::WhatsappAiAssist
   # Kept alongside reply_with_actions, which can offer a `main_menu` pill but
   # not the menu itself: this one is a list, and a list row carries the
   # description that lets four capabilities be named without a sentence each.
-  description "Sends the main menu: submit a contribution, browse projects, my contributions. " \
-              "Use it when the citizen greets you, says nothing specific, or asks what they can " \
-              "do here — anything where the answer is the three starting points rather than a " \
-              "particular one. This sends the message itself — do not write your own menu."
+  description "Sends the portal's standing menu as a list. The LAST RESORT for an opening " \
+              "message, not the usual answer to one: use it only when you cannot name anything " \
+              "more specific — no tool told you what is running, or the citizen's message says " \
+              "nothing you can act on at all. \"What can I do here?\" is NOT this: answer it by " \
+              "reading what is actually open and replying with reply_with_actions, so the answer " \
+              "is in the message rather than behind a button. This sends the message itself — " \
+              "do not write your own menu."
 
   # An open submission is parked rather than refused. This used to answer the
   # model with "they are in the middle of something, hand it to the flow",

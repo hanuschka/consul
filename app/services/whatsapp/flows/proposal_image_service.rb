@@ -43,8 +43,15 @@ class Whatsapp::Flows::ProposalImageService < Whatsapp::Flows::BaseService
   # A phase with title images switched off has nothing to ask, so it moves on
   # on the spot — exactly what the skip pill does. Asking anyway would offer a
   # picture the resource cannot carry.
+  #
+  # A citizen who already said they have no photo is the same situation for a
+  # different reason: the question has an answer, so putting it reads as not
+  # having listened. They said so in the message that opened the submission and
+  # the drafting call recorded it (CON-2982). Only a declined photo skips —
+  # someone who merely mentioned a photo they are about to send still gets the
+  # step, because the upload has to happen somewhere.
   def ask
-    return ask_location if !@conversation.image_question_available?
+    return ask_location if !@conversation.image_question_pending?
     return if refuse_if_not_permitted
 
     @conversation.update!(step: Whatsapp::Conversation::Step::AWAITING_IMAGE_CHOICE)

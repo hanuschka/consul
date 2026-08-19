@@ -24,8 +24,8 @@ module Whatsapp::ConversationGap
   MINUTES_UNTIL_HOURS = 30.minutes
 
   # Six hours rather than a calendar day: a morning conversation picked up in the
-  # evening is a return, and Conversation::STALE_FLOW_AFTER already treats a
-  # night away as long enough to stop resuming a draft silently.
+  # evening is a return rather than a continuation, and the reply that greets is
+  # the one the citizen is owed.
   HOURS_UNTIL_DAYS = 6.hours
 
   LABELS = {

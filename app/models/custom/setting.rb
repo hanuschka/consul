@@ -249,6 +249,7 @@ class Setting < ApplicationRecord
         "ai.llm_model": nil,
         "ai.llm_api_endpoint": nil,
         "ai.llm_custom_model": nil,
+        "ai.whatsapp_transport": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",

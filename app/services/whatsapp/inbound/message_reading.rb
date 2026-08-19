@@ -21,6 +21,13 @@ class Whatsapp::Inbound::MessageReading
     list_reply_id.presence || button_reply_id.presence
   end
 
+  # The label the citizen actually read on the button they tapped. WhatsApp returns
+  # it beside the id, which is the only reason it can be quoted at all: the assistant
+  # wrote that label a message ago and nothing here stored it.
+  def tapped_reply_title
+    list_reply_title.presence || button_reply_title.presence
+  end
+
   def text
     return @text if defined?(@text)
 
@@ -81,6 +88,15 @@ class Whatsapp::Inbound::MessageReading
 
     def list_reply_id
       @raw_message.dig("interactive", "list_reply", "id")
+    end
+
+    def button_reply_title
+      @raw_message.dig("interactive", "button_reply", "title") ||
+        @raw_message.dig("button", "text")
+    end
+
+    def list_reply_title
+      @raw_message.dig("interactive", "list_reply", "title")
     end
 
     # What was read is recorded: the /adm dialog history shows the message

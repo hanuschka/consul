@@ -7,7 +7,7 @@ class Whatsapp::Inbound::EntryTokenCapture
   #
   # Its gate runs before the unlinked gate (a scanned QR gets the login link
   # first, and the captured flow survives for after linking) and before the
-  # staleness gate: start_flow! restarts the flow clock, so a fresh scan is
+  # staleness gate: start_draft! restarts the flow clock, so a fresh scan is
   # never interrupted by a resume question about the draft it just replaced.
   def initialize(conversation:, reading:)
     @conversation = conversation
@@ -34,7 +34,7 @@ class Whatsapp::Inbound::EntryTokenCapture
 
       return if projekt_phase.blank?
 
-      @conversation.start_flow!(projekt_phase)
+      @conversation.start_draft!(projekt_phase)
 
       :phase
     end
@@ -60,12 +60,12 @@ class Whatsapp::Inbound::EntryTokenCapture
       return :projekt_without_phase if eligible_phases.empty?
 
       if eligible_phases.one?
-        @conversation.start_flow!(eligible_phases.first)
+        @conversation.start_draft!(eligible_phases.first)
 
         return :projekt
       end
 
-      @conversation.reset_flow!
+      @conversation.discard_draft!
       @projekt = scanned_projekt
 
       :projekt_choice

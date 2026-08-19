@@ -71,6 +71,10 @@ en:
         awaiting_comment: Writing a comment
         awaiting_notification_settings: Changing notifications
         awaiting_resume_decision: Deciding whether to continue
+        awaiting_terms_consent: Accepting the terms
+        awaiting_participation_projekt: Choosing a projekt
+        awaiting_location: Sharing a location
+        awaiting_continue_decision: Deciding whether to carry on
       kinds:
         text: Text
         audio: Voice message

@@ -71,6 +71,10 @@ de:
         awaiting_comment: Schreibt einen Kommentar
         awaiting_notification_settings: Ändert Benachrichtigungen
         awaiting_resume_decision: Entscheidet über Fortsetzung
+        awaiting_terms_consent: Bestätigt die Nutzungsbedingungen
+        awaiting_participation_projekt: Wählt ein Projekt
+        awaiting_location: Teilt einen Standort
+        awaiting_continue_decision: Entscheidet über Weitermachen
       kinds:
         text: Text
         audio: Sprachnachricht

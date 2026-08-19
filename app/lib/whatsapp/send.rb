@@ -33,7 +33,7 @@ module Whatsapp::Send
       )
     end
 
-    remember_offered(account: account, entries: buttons, message: message)
+    remember_confirmations(account: account, entries: buttons, message: message)
   end
 
   # For a picture that exists only on an unpublished record. Uploading it to
@@ -51,7 +51,7 @@ module Whatsapp::Send
       )
     end
 
-    remember_offered(account: account, entries: buttons, message: message)
+    remember_confirmations(account: account, entries: buttons, message: message)
   end
 
   # A message that carries a picture, and what to do when WhatsApp will not take
@@ -98,7 +98,7 @@ module Whatsapp::Send
       messages.send_list(to: account.wa_id, body: body, button_label: button_label, rows: rows)
     end
 
-    remember_offered(account: account, entries: rows, message: message)
+    remember_confirmations(account: account, entries: rows, message: message)
   end
 
   # For a list long enough that ungrouped rows read as a wall. Sections are
@@ -112,7 +112,7 @@ module Whatsapp::Send
       )
     end
 
-    remember_offered(
+    remember_confirmations(
       account: account,
       entries: Array(sections).flat_map { |section| Array(section[:rows]) },
       message: message
@@ -174,41 +174,24 @@ module Whatsapp::Send
     end
   end
 
-  # Recorded on the conversation as well as sent: these buttons are the bot
-  # asking something, and "abbrechen" typed instead of tapping Cancel has to be
-  # read as cancelling that question rather than as the opt-out keyword. The step
-  # cannot answer that on its own — the assistant sends these while the
-  # conversation is still idle. Whatsapp::Message carries no marker to read
-  # instead: recovery buttons, projekt cards and lists are all "interactive".
-  #
-  # Every asking message goes through here, whatever its buttons are, so the
-  # flag is written in exactly one place. A second copy of this pairing is how
-  # a future asker ends up sending one without it.
-  def question(conversation:, body:, buttons:)
-    conversation.mark_question_pending!
-
-    ::Whatsapp::Send.buttons(
-      account: conversation.whatsapp_account, body: body, buttons: buttons
-    )
-  end
-
-  # The same question when its way out is a retry or a cancel rather than one of
-  # the flow's own pills.
+  # The same shape when the way out is a retry or a cancel rather than a pill of the
+  # bot's own. It is the whole deterministic surface left: everything else the
+  # citizen reads is written by the assistant, and this is what speaks when the
+  # assistant cannot.
   def recovery(conversation:, body:, actions:)
-    question(conversation: conversation, body: body, buttons: recovery_buttons(actions))
+    buttons(
+      account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
+    )
   end
 
   def recovery_action_from(button_reply_id)
     RECOVERY_ACTION_IDS.key(button_reply_id.to_s)
   end
 
-  # One recovery pill to put beside flow buttons of a different kind. The
-  # handler is the same global one either way, which is the point: a "Cancel"
-  # sitting next to two catalog pills must not need its own step to be read.
-  #
-  # Unlike `recovery`, this sets no pending_question: the callers that use it
-  # are already on a step of their own, so "abbrechen" typed instead of tapped
-  # is read by the step rather than by the flag.
+  # One recovery pill on its own, for the deterministic messages that offer a way
+  # out. Its label is locale copy rather than the assistant's, which is the whole
+  # point of the recovery namespace: these are the buttons that have to be readable
+  # when nothing else is.
   def recovery_button(action)
     { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
   end
@@ -239,52 +222,43 @@ module Whatsapp::Send
     nil
   end
 
-  # How many of an interactive message's options are remembered as answerable
-  # in words. Ten is the list cap, so this only ever bites a sectioned list
-  # built past it — and there the first ten are the ones the citizen read.
-  MAX_REMEMBERED_OPTIONS = ::Whatsapp::MAX_LIST_ROWS
-
-  # Every tappable option the bot sends is also written onto the conversation,
-  # so the assistant can be told what is on offer and a citizen who answers in
-  # words — "die zweite", "ja, trennen", "eher Kritik" — is understood instead
-  # of being re-asked the same question. The pill's own dispatcher still does
-  # the work: an id named back by the model travels the identical path a tap
-  # would have, account gating and record re-resolution included.
+  # Which of an interactive message's buttons offered something that cannot be taken
+  # back — publishing, registering support, severing the account link. Written onto
+  # the conversation for every interactive send, so the tools that must not act
+  # without having asked first can tell whether they asked: an assistant is
+  # perfectly capable of deciding it has already confirmed something it never
+  # mentioned.
   #
-  # Written here rather than by each step because here is where the options
-  # exist: one hook covers the whole catalog, every menu, and every step
-  # written from now on. Only ids the inbound side can actually dispatch are
-  # kept — a row whose id belongs to neither namespace (there are none today)
-  # would otherwise be offered to the model as an answer nothing would accept.
+  # Overwritten rather than appended, which is the point: it names what the bot's
+  # last message put in front of the citizen. A pill from four messages ago is a tap
+  # they can still make — the dispatcher re-resolves it — but not a confirmation the
+  # assistant may infer from words.
   #
   # A send that never happened offers nothing: outside the service window
-  # `deliver_within_service_window` returns nil, and a refused send comes back
-  # as a failed message. Either way the previous options stand, because the
-  # citizen's screen still shows them.
-  def remember_offered(account:, entries:, message:)
+  # `deliver_within_service_window` returns nil, and a refused send comes back as a
+  # failed message. Either way the previous offer stands, because the citizen's
+  # screen still shows it.
+  def remember_confirmations(account:, entries:, message:)
     return message if message.blank? || message.status == "failed"
 
     conversation = account.conversation
 
     return message if conversation.blank?
 
-    conversation.remember_offered_options!(dispatchable_options(entries))
+    conversation.remember_confirmations!(irreversible_ids(entries))
 
     message
   end
 
-  def dispatchable_options(entries)
-    Array(entries)
-      .select { |entry| dispatchable_id?(entry[:id]) }
-      .first(MAX_REMEMBERED_OPTIONS)
-      .map { |entry| { "id" => entry[:id].to_s, "label" => entry[:title].to_s } }
-  end
+  def irreversible_ids(entries)
+    Array(entries).filter_map do |entry|
+      action = ::Whatsapp::FlowActions.parse(entry[:id])&.fetch(:action)
 
-  def dispatchable_id?(reply_id)
-    return false if reply_id.blank?
-    return true if recovery_action_from(reply_id).present?
+      next if action.blank?
+      next if !::Whatsapp::AssistantActions::IRREVERSIBLE_ACTIONS.include?(action)
 
-    ::Whatsapp::FlowActions.parse(reply_id).present?
+      action.to_s
+    end
   end
 
   def deliver_within_service_window(account:, kind:, body:, &block)
@@ -306,5 +280,5 @@ module Whatsapp::Send
   end
 
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
-  private_class_method :remember_offered, :dispatchable_options, :dispatchable_id?
+  private_class_method :remember_confirmations, :irreversible_ids
 end

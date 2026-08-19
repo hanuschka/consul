@@ -10,6 +10,14 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     self.class.name.demodulize.underscore
   end
 
+  # Which step this tool leaves the conversation looking like, for the diagnostic
+  # column and nothing else — no tool reads it back, and the assistant decides
+  # what comes next from the state it is told rather than from this. Nil for the
+  # reads, which leave the conversation where they found it.
+  def diagnostic_step
+    nil
+  end
+
   private
 
     attr_reader :conversation
@@ -22,34 +30,24 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       account.user
     end
 
-    # Set the open submission aside rather than discard it. Called by the tools
-    # that take the citizen somewhere else — the menu, a new submission — where
-    # the alternative used to be refusing them ("you are in the middle of
-    # something") or silently dropping what they had written. Parked, the way
-    # back is one `resume_parked` pill, which the assistant is told about in its
-    # state.
-    #
-    # A no-op when there is nothing open, so a caller never has to ask first.
-    def park_open_flow!
-      return if conversation.idle? && conversation.draft_resource.blank?
+    def projekt_phase
+      conversation.projekt_phase
+    end
 
-      ::Whatsapp::AiAssistant::DecisionLog.record(
-        event: :flow_parked, conversation: conversation, step: conversation.step, by: name
-      )
-
-      conversation.park_flow!
+    def draft_resource
+      conversation.draft_resource
     end
 
     # Checked one phase at a time rather than by searching the ten-row display
     # list: an eleventh open phase is still open, and a model that guessed an id
     # is stopped by the eligibility rule itself, not by the list's length.
     def eligible_phase(projekt_phase_id)
-      projekt_phase =
+      candidate =
         ::ProjektPhase.includes(:settings, projekt: :page).find_by(id: projekt_phase_id.to_i)
 
-      return if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+      return if !::Whatsapp::EligiblePhasesQuery.eligible?(candidate)
 
-      projekt_phase
+      candidate
     end
 
     # Everything open, so a projekt a citizen names is still found when it sits
@@ -75,7 +73,7 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
       return if projekt.blank?
 
-      all_open_projekt_phases.find { |projekt_phase| projekt_phase.projekt_id == projekt.id }
+      all_open_projekt_phases.find { |phase| phase.projekt_id == projekt.id }
     end
 
     def projekt_title(projekt)
@@ -109,9 +107,9 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     end
 
     # What a contribution search hands back when it cannot decide on its own.
-    # Shared because two tools now resolve one from what the citizen called it —
-    # supporting a proposal and opening any Beitrag — and a second wording of the
-    # same refusal is a second situation for the router to tell apart.
+    # Shared because several tools resolve one from what the citizen called it,
+    # and a second wording of the same refusal is a second situation for the model
+    # to tell apart.
     #
     # Reads the same four things off a proposal and off a budget investment:
     # Budget::Investment delegates projekt_phase to its budget, so neither the
@@ -127,6 +125,13 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       }.compact
     end
 
+    # ── Refusals ────────────────────────────────────────────────────────────
+    # These reach the model, not the citizen, so one wording per rule matters
+    # more than it looks: three phrasings of "this number is not linked" is three
+    # chances for it to treat them as three different situations. Each says what
+    # is wrong and what would fix it, because the model's next move is a sentence
+    # to the citizen and it has nothing else to write it from.
+
     def no_proposal_match_error(title)
       {
         error: "No publicly listed proposal matches \"#{title}\". Tell the citizen you could not " \
@@ -134,9 +139,9 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       }
     end
 
-    # Its own wording rather than the one above: this search covered proposals
-    # and budget investments both, so naming proposals in the refusal would send
-    # the model asking after a kind of Beitrag that was already looked for.
+    # Its own wording rather than the one above: this search covered proposals and
+    # budget investments both, so naming proposals in the refusal would send the
+    # model asking after a kind of Beitrag that was already looked for.
     def no_contribution_match_error(title)
       {
         error: "No publicly listed contribution matches \"#{title}\". Tell the citizen you could " \
@@ -148,14 +153,13 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       { error: "No open participation phase with that id. Call list_open_phases first." }
     end
 
-    # Deliberately not a guess: the name query only answers when it is certain,
-    # so an ambiguous name is a question for the citizen rather than a projekt
-    # picked on their behalf.
+    # Deliberately not a guess: the name query only answers when it is certain, so
+    # an ambiguous name is a question for the citizen rather than a projekt picked
+    # on their behalf.
     #
     # What nearly matched travels with the refusal. Without it the model's only
     # move is to list the whole portal back at someone who named their projekt
-    # almost correctly — the names are already resolved and ranked by then, and
-    # throwing them away costs the citizen the one question worth asking.
+    # almost correctly — the names are already resolved and ranked by then.
     def unknown_projekt_error(projekt_name = nil)
       suggestions = ::Whatsapp::ProjektByNameQuery.suggestions(term: projekt_name.to_s)
 
@@ -169,19 +173,140 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       }
     end
 
-    NO_PROJEKT_ERROR = "No single project matches that name. Call show_projekts so the citizen " \
-                       "can pick one, or ask them to name it exactly.".freeze
+    NO_PROJEKT_ERROR = "No single project matches that name. Call send_list with the projekts " \
+                       "so the citizen can pick one, or ask them to name it exactly.".freeze
 
-    # These reach the model, not the citizen, so one wording per rule matters
-    # more than it looks: three phrasings of "this number is not linked" is
-    # three chances for the router to treat them as three different situations.
     def not_linked_error(action)
-      { error: "This number is not linked to an account, so it cannot #{action}. Offer to " \
-               "link the account first." }
+      { error: "This number is not linked to an account, so it cannot #{action}. Tell the " \
+               "citizen an account is needed and call send_login_link when they want one." }
     end
 
     def no_proposal_error(verb)
       { error: "This conversation is not about a specific proposal, so there is nothing to " \
                "#{verb}. Ask which proposal they mean." }
+    end
+
+    # Two situations, and telling them apart matters more than it looks. A draft that
+    # has been written but not saved is waiting on something the phase requires, and
+    # there is no record for these tools to act on — but answering that with "there is
+    # no draft" sends the model back to draft_proposal, which regenerates from scratch
+    # and throws away the answers the citizen has already given.
+    def no_draft_error
+      return unsaved_draft_error if conversation.unsaved_submission?
+
+      { error: "There is no draft in this conversation. Ask the citizen what they want to " \
+               "contribute and call draft_proposal with their own words." }
+    end
+
+    def unsaved_draft_error
+      { error: "The draft is written but not saved yet, because something this phase requires is " \
+               "still outstanding — so there is no record to act on. Call draft_status for what " \
+               "is missing and record it. Do not call draft_proposal again: that would write a " \
+               "new draft and lose what the citizen has already answered." }
+    end
+
+    def no_phase_error
+      { error: "No participation phase has been chosen for this submission. Call " \
+               "list_open_phases and then start_draft before working on a draft." }
+    end
+
+    # The gate the retired step machine enforced by sequence and that now has to be
+    # enforced by every tool that would violate it. Terms and privacy acceptance is
+    # the same checkbox the web form collects, so it is a refusal rather than an
+    # instruction: a sentence in the prompt is something a model can talk itself
+    # past, and what is on the other side of this one is an unconsented submission
+    # published under a citizen's name.
+    def refuse_without_consent
+      return if account.terms_accepted?
+
+      {
+        error: "This citizen has not accepted the terms and the privacy policy, which is a legal " \
+               "requirement before anything may be submitted. Show them the two links returned " \
+               "here, ask them to accept, and offer the terms_accept button. Nothing can be " \
+               "drafted or published until they have.",
+        conditions_url: ::Whatsapp::PortalLinks.conditions_url,
+        privacy_url: ::Whatsapp::PortalLinks.privacy_url
+      }
+    end
+
+    # Re-checked per action rather than once when the submission began: the same
+    # three tools can be minutes or days apart, and a phase that expires in
+    # between must stop an idea before it costs a draft and stop a draft before it
+    # becomes a proposal.
+    #
+    # Returns nil when the citizen may act. The reason travels with the refusal —
+    # it is the same symbol the web form's refusal reads — so the model can say
+    # which rule stopped them rather than that something did.
+    def refuse_if_not_permitted
+      return no_phase_error if projekt_phase.blank?
+
+      problem = ::Whatsapp::Drafting::ResourceCreationValidationService.call(
+        projekt_phase: projekt_phase,
+        user: ::Whatsapp::Drafting::SubmissionAuthorService.call(conversation: conversation)
+      )
+
+      return if problem.blank?
+
+      participation_refused_error(problem)
+    end
+
+    # What the two taxonomy tools answer with. Shared here rather than written twice
+    # because the two differ in nothing but the word: a second wording of "that
+    # option is not one this phase offers" is a second situation for the model to
+    # tell apart, and the pair would drift the first time one of them was edited.
+    def draft_choice_answer(outcome, kind)
+      return draft_choice_rejected(outcome.rejected, kind) if outcome.rejected?
+      return invalid_draft_error(outcome.errors) if outcome.invalid?
+      return draft_choice_incomplete(outcome.missing, kind) if outcome.missing?
+
+      {
+        recorded: kind,
+        draft_saved: true,
+        hint: "Nothing is outstanding. Show them the draft and ask whether it can go in."
+      }
+    end
+
+    def draft_choice_incomplete(missing, kind)
+      {
+        recorded: kind,
+        still_needed: missing.to_s,
+        hint: "The draft still cannot be saved. Ask the citizen for the #{missing} too, offering " \
+              "the options draft_status returns."
+      }
+    end
+
+    def draft_choice_rejected(reason, kind)
+      return no_draft_error if reason == :no_draft
+
+      if reason == :not_collected
+        return {
+          error: "This phase does not collect a #{kind}, so there is nothing to record. Do not " \
+                 "ask the citizen about it."
+        }
+      end
+
+      {
+        error: "That is not a #{kind} this phase offers. Call draft_status for the options it " \
+               "really has and ask the citizen again — never guess an id."
+      }
+    end
+
+    def invalid_draft_error(errors)
+      {
+        error: "The portal refused to save the draft.",
+        reason: Array(errors).first.to_s,
+        hint: "Their own words are what has to change, so say what the problem is and ask them " \
+              "to put it differently. Retrying the same text fails identically."
+      }
+    end
+
+    def participation_refused_error(reason)
+      {
+        error: "This citizen may not submit to this phase right now.",
+        reason: reason.to_s,
+        rule: ::Whatsapp::ParticipationRules.explain(
+          reason: reason, projekt_phase: projekt_phase
+        )
+      }.compact
     end
 end

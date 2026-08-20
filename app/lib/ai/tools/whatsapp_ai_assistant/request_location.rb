@@ -5,8 +5,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
               "optional: never hold a finished draft for a pin, and never ask twice. When they " \
               "have already named the place in words there is nothing to ask, and when they say " \
               "they do not know it, publish without one. This sends the picker itself — do not " \
-              "write a message as well, and note that the picker carries no buttons, so anything " \
-              "else you want to offer has to be a separate message."
+              "write a message as well. The picker can carry no buttons of its own, so a second " \
+              "short message follows it with the way to go on without a pin; that is sent for " \
+              "you and you do not write it either."
 
   params do
     string :body,
@@ -25,10 +26,37 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
 
     ::Whatsapp::Send.location_request(account: account, body: body.strip)
 
-    halt("Opened the location picker.")
+    offer_to_continue_without
+
+    halt("Opened the location picker, with a second message offering to go on without a pin.")
   end
 
   private
+
+    # The picker is the one message WhatsApp lets us send with nothing tappable
+    # beside it, and it used to be the end of the turn: a citizen with no pin to give
+    # — which the phase explicitly allows — had to work out that typing something was
+    # their way out. So the offer follows in a message of its own.
+    #
+    # Its own send rather than a line appended above the picker, because the picker's
+    # body is the assistant's question and this is the answer to it. Send puts the
+    # main menu beside location_skip, so the second message carries two.
+    def offer_to_continue_without
+      ::Whatsapp::Send.buttons(
+        account: account,
+        body: ::Whatsapp::AiAssistant::BotCopyService.line(
+          account: account, body: I18n.t("whatsapp.bot.proposal.location_optional")
+        ),
+        buttons: [
+          {
+            id: ::Whatsapp::FlowActions.id_for(action: :location_skip),
+            title: I18n.t(
+              "whatsapp.bot.buttons.location_skip", locale: ::Whatsapp.locale_for(account)
+            )
+          }
+        ]
+      )
+    end
 
     def not_collected_error
       { error: "This phase does not collect a location, so there is nowhere to put a pin. Go on " \

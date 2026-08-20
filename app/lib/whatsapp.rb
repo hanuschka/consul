@@ -14,10 +14,20 @@ module Whatsapp
   # edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
+  # The same reservation on a list: its last row is the way to the main menu.
+  MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS - 1
+
   # A WhatsApp interactive message holds three reply buttons; anything longer
   # becomes a list instead. Declared beside the row cap for the same reason —
   # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
   MAX_BUTTONS = 3
+
+  # What a caller may fill of those, because Whatsapp::Send reserves the last slot
+  # for the main-menu pill it puts on every interactive message. Declared here so a
+  # tool reports the number it actually sent rather than the number it composed —
+  # trimming a fourth button silently is how a halt line comes to name a pill the
+  # citizen never saw.
+  MAX_OFFERED_BUTTONS = MAX_BUTTONS - 1
 
   # WhatsApp fetches a header or card picture itself, from us, while the send is
   # in flight, and rejects the whole message over anything it cannot render. Any

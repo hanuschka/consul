@@ -98,6 +98,7 @@ de:
         image_rights_notice: >-
           Bitte senden Sie nur Bilder, für die Sie die Rechte haben und auf denen keine
           Personen erkennbar sind, die damit nicht einverstanden sind.
+        location_optional: Ein Ort ist freiwillig. Sie können auch ohne weitermachen.
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!
         login_prompt: >-
@@ -126,6 +127,11 @@ de:
         login: 🔗 Anmelden
         open_page: Seite öffnen
         choose: Auswählen
+        take_part: Jetzt mitmachen
+        view_projekt: Projekt ansehen
+        my_contributions: Meine Beiträge
+        location_skip: Ohne Ort weiter
+        main_menu: Hauptmenü
         show_more: Weitere anzeigen
         image_upload: Foto hinzufügen
         image_generate: Bild erzeugen
@@ -135,10 +141,6 @@ de:
           deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.
           deadline_passed: Die Frist ist abgelaufen. Sie können sich ansehen, was eingegangen ist.
           status_change: Bei Ihrem Beitrag hat sich etwas getan.
-          buttons:
-            take_part: Jetzt mitmachen
-            view_projekt: Projekt ansehen
-            my_contributions: Meine Beiträge
         types:
           new_projekt:
             short: Neues Projekt

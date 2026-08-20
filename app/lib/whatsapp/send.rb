@@ -33,36 +33,40 @@ module Whatsapp::Send
   end
 
   def buttons(account:, body:, buttons:, header_image_url: nil)
+    offered = with_main_menu(account: account, buttons: buttons)
+
     message = deliver_within_service_window(
       account: account, kind: "interactive", body: body
     ) do |messages|
       messages.send_buttons(
         to: account.wa_id,
         body: body,
-        buttons: buttons,
+        buttons: offered,
         header_image_url: header_image_url
       )
     end
 
-    remember_confirmations(account: account, entries: buttons, message: message)
+    remember_confirmations(account: account, entries: offered, message: message)
   end
 
   # For a picture that exists only on an unpublished record. Uploading it to
   # WhatsApp first means nothing about the send depends on Meta being able to
   # reach us, which on an access-restricted environment it cannot.
   def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
+    offered = with_main_menu(account: account, buttons: buttons)
+
     message = deliver_within_service_window(
       account: account, kind: "interactive", body: body
     ) do |messages|
       messages.send_buttons_with_media_header(
         to: account.wa_id,
         body: body,
-        buttons: buttons,
+        buttons: offered,
         header_media_id: header_media_id
       )
     end
 
-    remember_confirmations(account: account, entries: buttons, message: message)
+    remember_confirmations(account: account, entries: offered, message: message)
   end
 
   # A message that carries a picture, and what to do when WhatsApp will not take
@@ -103,29 +107,33 @@ module Whatsapp::Send
   end
 
   def list(account:, body:, button_label:, rows:)
+    listed = with_main_menu_row(account: account, rows: rows)
+
     message = deliver_within_service_window(
       account: account, kind: "interactive", body: body
     ) do |messages|
-      messages.send_list(to: account.wa_id, body: body, button_label: button_label, rows: rows)
+      messages.send_list(to: account.wa_id, body: body, button_label: button_label, rows: listed)
     end
 
-    remember_confirmations(account: account, entries: rows, message: message)
+    remember_confirmations(account: account, entries: listed, message: message)
   end
 
   # For a list long enough that ungrouped rows read as a wall. Sections are
   # {title:, rows:}; the ten-row limit is shared across all of them.
   def sectioned_list(account:, body:, button_label:, sections:)
+    listed = with_main_menu_section(account: account, sections: sections)
+
     message = deliver_within_service_window(
       account: account, kind: "interactive", body: body
     ) do |messages|
       messages.send_sectioned_list(
-        to: account.wa_id, body: body, button_label: button_label, sections: sections
+        to: account.wa_id, body: body, button_label: button_label, sections: listed
       )
     end
 
     remember_confirmations(
       account: account,
-      entries: Array(sections).flat_map { |section| Array(section[:rows]) },
+      entries: Array(listed).flat_map { |section| Array(section[:rows]) },
       message: message
     )
   end
@@ -224,6 +232,86 @@ module Whatsapp::Send
     )
   end
 
+  # ── The main-menu pill every interactive message carries ────────────────
+  # Injected here rather than at each caller, and that is the whole point: "every
+  # reply has a way out of it" is a property of the transport, so a tool added next
+  # month inherits it without knowing it exists. Nine callers each remembering to
+  # append one is nine chances for the one message a citizen is stuck on to be the
+  # one that forgot.
+  #
+  # It costs the last slot, so a caller may fill only MAX_OFFERED_BUTTONS of the
+  # three — trimming its list here instead would drop whichever pill it thought
+  # least important without saying so. The trim below is the backstop for a caller
+  # that ignores the cap, and it keeps the caller's own pills: the menu is the least
+  # of what a message offers, so it is what gives way when there is no room.
+  #
+  # The label is read at the account's own locale rather than translated through
+  # BotCopyService. Two reasons: this runs on the path that must survive the model
+  # being unreachable, and it is one fixed word — a citizen writing a language the
+  # portal has no copy for reads the menu pill in the portal's language and every
+  # other line of the message in their own, which is the cheap half of the trade.
+  def with_main_menu(account:, buttons:)
+    offered = Array(buttons).compact
+
+    return offered if offered.any? { |button| main_menu_button?(button) }
+
+    offered.first(::Whatsapp::MAX_OFFERED_BUTTONS) + [main_menu_pill(account)]
+  end
+
+  def with_main_menu_row(account:, rows:)
+    listed = Array(rows).compact
+
+    return listed if listed.any? { |row| main_menu_button?(row) }
+
+    listed.first(::Whatsapp::MAX_OFFERED_LIST_ROWS) + [main_menu_pill(account)]
+  end
+
+  # A section of its own rather than a row appended to the last one: the sections
+  # carry titles saying what their rows have in common, and the way out belongs to
+  # none of them.
+  def with_main_menu_section(account:, sections:)
+    listed = Array(sections).compact
+    rows = listed.flat_map { |section| Array(section[:rows]) }
+
+    return listed if rows.any? { |row| main_menu_button?(row) }
+
+    trimmed_sections(listed) + [{ rows: [main_menu_pill(account)] }]
+  end
+
+  # Trimmed from the end, one row at a time, because the ten-row cap is shared
+  # across every section and the last section is the least prominent.
+  def trimmed_sections(sections)
+    rows = sections.sum { |section| Array(section[:rows]).size }
+
+    return sections if rows <= ::Whatsapp::MAX_OFFERED_LIST_ROWS
+
+    over = rows - ::Whatsapp::MAX_OFFERED_LIST_ROWS
+
+    sections.reverse.map do |section|
+      kept = Array(section[:rows])
+      dropping = [over, kept.size].min
+      over -= dropping
+
+      section.merge(rows: kept.first(kept.size - dropping))
+    end.reverse.reject { |section| Array(section[:rows]).empty? }
+  end
+
+  def main_menu_pill(account)
+    {
+      id: ::Whatsapp::FlowActions.id_for(action: :main_menu),
+      title: I18n.t(
+        "whatsapp.bot.buttons.main_menu", locale: ::Whatsapp.locale_for(account)
+      )
+    }
+  end
+
+  # Matched on the id rather than the label, because a caller that offered the menu
+  # in the model's own words must not have a second one stacked under it.
+  def main_menu_button?(button)
+    button.is_a?(Hash) &&
+      button[:id].to_s == ::Whatsapp::FlowActions.id_for(action: :main_menu)
+  end
+
   def recovery_action_from(button_reply_id)
     RECOVERY_ACTION_IDS.key(button_reply_id.to_s)
   end
@@ -320,5 +408,7 @@ module Whatsapp::Send
   end
 
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
+  private_class_method :with_main_menu, :with_main_menu_row, :with_main_menu_section
+  private_class_method :trimmed_sections, :main_menu_pill, :main_menu_button?
   private_class_method :remember_confirmations, :irreversible_ids
 end

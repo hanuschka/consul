@@ -1,5 +1,5 @@
 class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssistant::BaseTool
-  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
+  MAX_ACTIONS = ::Whatsapp::MAX_OFFERED_BUTTONS
 
   description "Shows the citizen their draft with its picture attached, and up to three buttons " \
               "whose labels you write. This is the only way to show them a picture that only " \

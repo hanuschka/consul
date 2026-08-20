@@ -13,7 +13,9 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "address into your reply. Identified by name rather than by id, so it reaches " \
               "finished projekts too. Write the summary from what describe_projekt returned, in " \
               "the citizen's language, and do not repeat it or the link in a reply afterwards. " \
-              "Naming several projekts at once is send_list, not a card each."
+              "Naming several projekts at once is send_list, not a card each. The card carries " \
+              "its own buttons — the projekt and, where its phase is open, taking part in it — " \
+              "so do not offer those again yourself."
 
   params do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
@@ -38,13 +40,45 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
   private
 
+    # Buttons rather than a caption on its own, which is what this sent before: a
+    # card is the one message where the next step is never in doubt — the citizen is
+    # looking at one projekt — and it was the only tappable-looking thing in the chat
+    # that could not be tapped.
+    #
+    # Routed through buttons_with_picture rather than image, so the picture and the
+    # pills arrive on one message and the ladder that gives the picture up when
+    # WhatsApp will not take it is the transport's rather than this tool's.
     def send_card(projekt, summary)
-      image_url = ::Whatsapp::ProjektCard.image_url(projekt)
-      body = card_body(projekt, summary)
+      ::Whatsapp::Send.buttons_with_picture(
+        account: account,
+        body: card_body(projekt, summary),
+        buttons: card_buttons(projekt),
+        image_url: ::Whatsapp::ProjektCard.image_url(projekt)
+      )
+    end
 
-      return ::Whatsapp::Send.text(account: account, body: body) if image_url.blank?
+    # Two at most, because Send reserves the third for the main menu, and the phase
+    # pill only where a phase is actually open — offering a submission into a closed
+    # projekt is the one thing the ticket's rule about reachability forbids.
+    #
+    # Labelled from the locale copy rather than the record: the title is already the
+    # first line of the card, so a pill repeating it says nothing, and the projekt's
+    # own name is routinely longer than a label holds.
+    def card_buttons(projekt)
+      open_phase = ::Whatsapp::EligiblePhasesQuery.new(projekt: projekt).call.first
 
-      ::Whatsapp::Send.image(account: account, image_url: image_url, caption: body)
+      pills = [pill(:view_projekt, projekt.id, "view_projekt")]
+
+      return pills if open_phase.blank?
+
+      pills + [pill(:idea_start, open_phase.id, "take_part")]
+    end
+
+    def pill(action, param, label)
+      {
+        id: ::Whatsapp::FlowActions.id_for(action: action, param: param),
+        title: I18n.t("whatsapp.bot.buttons.#{label}")
+      }
     end
 
     # The summary is what gives when the budget runs out, never the link: a projekt

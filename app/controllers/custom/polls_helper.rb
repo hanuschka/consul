@@ -11,8 +11,10 @@ module PollsHelper
       end
   end
 
-  def poll_answer_order_seed
-    session[:guest_user_id].presence || current_user&.id || session.id.to_s
+  def poll_participant_order_seed
+    session[:guest_user_id].presence ||
+      current_user&.id ||
+      (session[:poll_order_seed] ||= SecureRandom.hex(8))
   end
 
   def any_answer_with_image?(question)

@@ -31,9 +31,21 @@ class Poll::Question < ApplicationRecord
 
   validates :votation_type, presence: true
   validate :validate_parent_question_id
+  before_validation :clear_randomize_position_if_impossible
 
   scope :root_questions, -> {
     where(parent_question_id: nil)
+  }
+
+  scope :in_configured_order, -> {
+    joins(
+      "LEFT JOIN poll_questions contexted_templates " \
+      "ON contexted_templates.id = poll_questions.contexted_clone_of_poll_question_id"
+    ).reorder(
+      Arel.sql(
+        "COALESCE(contexted_templates.given_order, poll_questions.given_order) ASC, poll_questions.id ASC"
+      )
+    )
   }
 
   def self.order_questions(ordered_array)
@@ -65,6 +77,32 @@ class Poll::Question < ApplicationRecord
     open_answers, regular_answers = answers.partition(&:open_answer)
 
     regular_answers.sort_by { |answer| Digest::SHA256.hexdigest("#{seed}:#{id}:#{answer.id}") } + open_answers
+  end
+
+  def randomize_position_possible?
+    randomize_position_block_reason.nil?
+  end
+
+  def randomize_position_block_reason
+    return :bundle if bundle_question? || parent_question_id.present?
+
+    if contextualize_by_poll_question_id.present? || context_id.present? ||
+        contexted_clone_of_poll_question_id.present?
+      return :contextualization
+    end
+
+    return nil unless persisted?
+    return :contextualization if contextualized_dependents.exists?
+    return :branching if question_answers.where.not(next_question_id: nil).exists?
+    return :branching if Poll::Question::Answer.where(next_question_id: id).exists?
+
+    nil
+  end
+
+  def clear_randomize_position_if_impossible
+    return unless randomize_position?
+
+    self.randomize_position = false unless randomize_position_possible?
   end
 
   def allows_multiple_answers?

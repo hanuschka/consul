@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_19_160000) do
+ActiveRecord::Schema.define(version: 2026_08_20_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2103,6 +2103,7 @@ ActiveRecord::Schema.define(version: 2026_08_19_160000) do
     t.bigint "contexted_clone_of_poll_question_id"
     t.bigint "context_id"
     t.boolean "randomize_answers", default: false, null: false
+    t.boolean "randomize_position", default: false, null: false
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["context_id"], name: "index_poll_questions_on_context_id"
     t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"

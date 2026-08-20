@@ -52,6 +52,17 @@
     <% end %>
   <% end %>
 
+  <% unless is_bundle %>
+    <% randomize_position_blocked = question.randomize_position_block_reason %>
+    <%= render Kern::FormFieldComponent.new(
+      label: Poll::Question.human_attribute_name(:randomize_position),
+      hint: randomize_position_blocked ?
+              t(".randomize_position_blocked.#{randomize_position_blocked}") :
+              t(".randomize_position_hint")) do %>
+      <%= f.check_box :randomize_position, disabled: randomize_position_blocked.present? %>
+    <% end %>
+  <% end %>
+
   <% if @context_sources.any? && question.parent_question.blank? %>
     <%= render Kern::FormFieldComponent.new(
       label: Poll::Question.human_attribute_name(:contextualize_by_poll_question_id),

@@ -10,7 +10,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def question_answers
-    question.answers_in_participant_order(question.question_answers, helpers.poll_answer_order_seed)
+    question.answers_in_participant_order(question.question_answers, helpers.poll_participant_order_seed)
   end
 
   def poll_question_answers_class

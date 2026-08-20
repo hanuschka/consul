@@ -8,7 +8,7 @@ class Polls::Questions::RegularAnswersComponent < Polls::Questions::AnswersCompo
     ordered = answers.reject(&:open_answer)
     ordered += [open_answer] if open_answer
 
-    question.answers_in_participant_order(ordered, helpers.poll_answer_order_seed)
+    question.answers_in_participant_order(ordered, helpers.poll_participant_order_seed)
   end
 
   def answer_scope

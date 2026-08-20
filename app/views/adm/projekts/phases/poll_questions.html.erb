@@ -74,6 +74,10 @@
                   <br>
                   <small><%= t(".table.contextualized_by") %> <%= question.contextualize_by_question.title %></small>
                 <% end %>
+                <% if question.randomize_position? %>
+                  <br>
+                  <small><%= t(".table.randomized_position") %></small>
+                <% end %>
               </th>
               <td class="kern-table__cell">
                 <% if question.bundle_question? %>

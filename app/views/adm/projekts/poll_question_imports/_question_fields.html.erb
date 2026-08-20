@@ -9,14 +9,24 @@
     <div class="adm-poll-question-card__head">
       <span class="adm-poll-question-card__number" aria-hidden="true"><%= position %></span>
 
-      <p class="adm-poll-question-card__label">
-        <%= t("adm.projekts.poll_question_imports.question.label") %>
-      </p>
+      <div class="adm-poll-question-card__heading">
+        <p class="adm-poll-question-card__label">
+          <%= t("adm.projekts.poll_question_imports.question.label") %>
+        </p>
+
+        <p
+          class="adm-poll-question-card__title"
+          aria-hidden="true"
+          data-poll-question-imports--preview-target="titleOutput"
+        ></p>
+      </div>
 
       <div class="adm-poll-question-card__include">
-        <%= question_fields.check_box :include,
+        <%= render Kern::SwitchComponent.new(
               label: t("adm.projekts.poll_question_imports.question.include"),
-              checked: true %>
+              name: "questions[#{question_counter}][include]",
+              id: "poll-question-import-include-#{question_counter}",
+              checked: true) %>
       </div>
     </div>
 
@@ -24,7 +34,11 @@
       <%= question_fields.text_field :title,
             value: question["title"],
             label: Poll::Question.human_attribute_name(:title),
-            hint: t("adm.projekts.poll_question_imports.question.title_description") %>
+            hint: t("adm.projekts.poll_question_imports.question.title_description"),
+            data: {
+              "poll-question-imports--preview-target": "titleInput",
+              action: "input->poll-question-imports--preview#updateTitle"
+            } %>
 
       <%= question_fields.text_area :description,
             value: question["description"],
@@ -59,7 +73,7 @@
       </div>
 
       <div
-        class="adm-poll-question-card__section -answers"
+        class="adm-poll-question-card__section"
         data-controller="poll-question-imports--answer-fields"
         data-poll-question-imports--answer-fields-next-index-value="<%= answers.size %>"
       >

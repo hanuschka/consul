@@ -1,5 +1,8 @@
 en:
   setting:
+    proposals:
+      email_on_official_answer: "Email notification on official answer (proposals)"
+      email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
     feature:
       bund_id_login: "Enable BundID login"
       bund_id_login_description: "Shows a BundID button on the sign-in and registration pages. Users can then sign in and register with their BundID account."

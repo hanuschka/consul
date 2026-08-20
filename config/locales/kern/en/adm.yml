@@ -1,6 +1,7 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    not_authorized_edit: You are not authorized to edit this content.
     title: Administration
     sidebar:
       toggle: Toggle sidebar

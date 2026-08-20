@@ -11,6 +11,8 @@ export default class LeafletAdapter extends BaseAdapter {
   static scriptsLoaded = false
   static scriptsLoading = false
   static loadQueue = []
+  static searchCountryCodes = "de"
+  static searchBiasDegrees = 0.3
 
   // ===========================================================================
   // 1. INITIALIZATION & CONFIGURATION
@@ -451,8 +453,15 @@ export default class LeafletAdapter extends BaseAdapter {
     const L = window.L
     const GeoSearch = window.GeoSearch
 
+    const provider = new GeoSearch.OpenStreetMapProvider({
+      params: { countrycodes: LeafletAdapter.searchCountryCodes }
+    })
+
+    this.updateSearchViewbox(provider)
+    this.map.on("moveend", () => this.updateSearchViewbox(provider))
+
     const searchControl = new GeoSearch.GeoSearchControl({
-      provider: new GeoSearch.OpenStreetMapProvider(),
+      provider: provider,
       style: "bar",
       showMarker: false,
       searchLabel: "Nach Adresse suchen",
@@ -466,6 +475,19 @@ export default class LeafletAdapter extends BaseAdapter {
       searchInput.setAttribute("title", "Nach Adresse suchen")
       searchInput.setAttribute("aria-label", "Nach Adresse suchen")
     }
+  }
+
+  updateSearchViewbox(provider) {
+    const center = this.map.getCenter()
+    const latitudeDelta = LeafletAdapter.searchBiasDegrees
+    const longitudeDelta = latitudeDelta / Math.max(Math.cos(center.lat * Math.PI / 180), 0.1)
+
+    provider.options.params.viewbox = [
+      center.lng - longitudeDelta,
+      center.lat + latitudeDelta,
+      center.lng + longitudeDelta,
+      center.lat - latitudeDelta
+    ].map((coordinate) => coordinate.toFixed(6)).join(",")
   }
 
   setupClustering() {

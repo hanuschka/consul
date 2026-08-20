@@ -23,23 +23,27 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
   end
 
   def confirmed
-    ::Whatsapp::Send.text(
-      account: account, body: I18n.t("whatsapp.bot.onboarding.linked")
-    )
+    send_bot_line(I18n.t("whatsapp.bot.onboarding.linked"))
   end
 
   def error(reason)
     key = ERROR_REASONS.include?(reason.to_s) ? reason.to_s : "expired"
 
-    ::Whatsapp::Send.text(
-      account: account,
-      body: I18n.t(
+    send_bot_line(
+      I18n.t(
         "whatsapp.bot.onboarding.#{key}", register_url: ::Whatsapp::PortalLinks.register_url
       )
     )
   end
 
   private
+
+    # No inbound message is being answered here, but there is a conversation behind the
+    # number and it has a language: someone who has only ever written Turkish to this
+    # bot is not told in German that their link worked.
+    def send_bot_line(body)
+      ::Whatsapp::Send.locale_text(account: account, body: body)
+    end
 
     def account
       @conversation.whatsapp_account

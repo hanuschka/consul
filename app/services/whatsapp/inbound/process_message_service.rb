@@ -99,7 +99,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         event: :assistant_unavailable, conversation: conversation
       )
 
-      ::Whatsapp::Send.recovery(
+      ::Whatsapp::Send.recovery_without_assistant(
         conversation: conversation,
         body: I18n.t("whatsapp.bot.assistant_unavailable"),
         actions: [:cancel]
@@ -143,7 +143,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       if conversation.unsaved_submission?
         conversation.discard_draft!
 
-        ::Whatsapp::Send.text(account: account, body: I18n.t("whatsapp.bot.cancelled"))
+        send_bot_line(I18n.t("whatsapp.bot.cancelled"))
       else
         ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
       end
@@ -165,9 +165,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def disclose_ai
       return if account.ai_disclosed?
 
-      ::Whatsapp::Send.text(
-        account: account,
-        body: I18n.t(
+      send_bot_line(
+        I18n.t(
           "whatsapp.bot.compliance.disclosure", portal_name: ::Whatsapp::PortalLinks.portal_name
         )
       )
@@ -228,9 +227,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       conversation.discard_draft!
 
-      ::Whatsapp::Send.text(account: account, body: I18n.t("whatsapp.bot.cancelled"))
+      send_bot_line(I18n.t("whatsapp.bot.cancelled"))
 
       true
+    end
+
+    def send_bot_line(body)
+      ::Whatsapp::Send.locale_text(account: account, body: body)
     end
 
     # The two taps that are an answer rather than a request: the citizen saying they

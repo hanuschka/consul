@@ -18,14 +18,19 @@ class Ai::Tools::WhatsappAiAssistant::SendLoginLink < Ai::Tools::WhatsappAiAssis
 
     return unavailable_error if link_url.blank?
 
-    ::Whatsapp::Send.cta_url(
+    prompt, button_label = ::Whatsapp::AiAssistant::BotCopyService.call(
       account: account,
-      body: I18n.t(
-        "whatsapp.bot.onboarding.login_prompt",
-        privacy_url: ::Whatsapp::PortalLinks.privacy_url
-      ),
-      button_label: I18n.t("whatsapp.bot.buttons.login"),
-      url: link_url
+      lines: [
+        I18n.t(
+          "whatsapp.bot.onboarding.login_prompt",
+          privacy_url: ::Whatsapp::PortalLinks.privacy_url
+        ),
+        I18n.t("whatsapp.bot.buttons.login")
+      ]
+    )
+
+    ::Whatsapp::Send.cta_url(
+      account: account, body: prompt, button_label: button_label, url: link_url
     )
 
     halt("Sent the login link. The citizen is told when they have followed it, so there is " \
@@ -44,7 +49,9 @@ class Ai::Tools::WhatsappAiAssistant::SendLoginLink < Ai::Tools::WhatsappAiAssis
 
     # The link and the sentence around it stay on the locale copy for one reason: it
     # carries the privacy declaration that following the link accepts, which is not a
-    # sentence to be rewritten per message.
+    # sentence to be rewritten per message. Written once and translated whole is not
+    # the same thing as written afresh each time, which is why the citizen's language
+    # is still allowed to reach it.
     def unavailable_error
       { error: "A login link could not be produced. Tell the citizen it did not work and offer to " \
                "try again shortly." }

@@ -25,6 +25,7 @@ class AiUsageRecord < ApplicationRecord
     proposal_ai_draft.generate_draft
     proposal_ai_draft.hard_criteria
     proposal_ai_draft.soft_criteria
+    whatsapp.bot_copy
   ].push(UNKNOWN_FEATURE).freeze
 
   COUNTER_COLUMNS = %i[

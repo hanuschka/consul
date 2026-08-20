@@ -21,6 +21,17 @@ module Whatsapp::Send
     end
   end
 
+  # The bot's own locale copy, put into the citizen's language on its way out. Only
+  # ever for the fixed lines: what the assistant writes is already in the language it
+  # was asked to answer in, and a round trip through a second model could only lose
+  # it.
+  def locale_text(account:, body:)
+    text(
+      account: account,
+      body: ::Whatsapp::AiAssistant::BotCopyService.line(account: account, body: body)
+    )
+  end
+
   def buttons(account:, body:, buttons:, header_image_url: nil)
     message = deliver_within_service_window(
       account: account, kind: "interactive", body: body
@@ -178,7 +189,30 @@ module Whatsapp::Send
   # bot's own. It is the whole deterministic surface left: everything else the
   # citizen reads is written by the assistant, and this is what speaks when the
   # assistant cannot.
+  #
+  # The sentence and the labels under it are put into the citizen's language in one
+  # call rather than three, so a body and its buttons can never come back in two
+  # different ones.
   def recovery(conversation:, body:, actions:)
+    pills = recovery_buttons(actions)
+    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+      account: conversation.whatsapp_account,
+      lines: [body, *pills.map { |pill| pill[:title] }]
+    )
+
+    buttons(
+      account: conversation.whatsapp_account,
+      body: lines.first,
+      buttons: pills.zip(lines.drop(1)).map { |pill, title| pill.merge(title: title) }
+    )
+  end
+
+  # The one message that cannot be put into the citizen's language, because it is sent
+  # precisely when the assistant did not answer: asking the same provider to translate
+  # it would spend a second timeout on the reply that exists to survive the first one.
+  # It goes out in the portal's own language, which is the point of there being fixed
+  # copy at all.
+  def recovery_without_assistant(conversation:, body:, actions:)
     buttons(
       account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
     )

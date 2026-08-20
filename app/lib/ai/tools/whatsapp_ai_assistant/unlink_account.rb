@@ -22,7 +22,7 @@ class Ai::Tools::WhatsappAiAssistant::UnlinkAccount < Ai::Tools::WhatsappAiAssis
     # Sent before the account row is cleared, not after: an unlinked number is
     # outside the service window's notion of a linked citizen, and sending afterwards
     # risks the citizen being told nothing at all about the thing they just asked for.
-    ::Whatsapp::Send.text(
+    ::Whatsapp::Send.locale_text(
       account: account, body: I18n.t("whatsapp.bot.onboarding.unlinked")
     )
 

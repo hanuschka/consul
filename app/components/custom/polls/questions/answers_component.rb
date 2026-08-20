@@ -9,6 +9,10 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
     @open_answer_updated = open_answer_updated
   end
 
+  def question_answers
+    question.answers_in_participant_order(question.question_answers, helpers.poll_answer_order_seed)
+  end
+
   def poll_question_answers_class
     classes = ["poll-question-answers"]
 

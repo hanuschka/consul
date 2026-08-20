@@ -11,6 +11,10 @@ module PollsHelper
       end
   end
 
+  def poll_answer_order_seed
+    session[:guest_user_id].presence || current_user&.id || session.id.to_s
+  end
+
   def any_answer_with_image?(question)
     question.question_answers.any? { |answer| answer.images.any? }
   end

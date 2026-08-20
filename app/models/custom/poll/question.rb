@@ -55,6 +55,18 @@ class Poll::Question < ApplicationRecord
     @open_question_answer = question_answers.select(&:open_answer).last
   end
 
+  def randomize_answers_possible?
+    !votation_type&.rating_scale?
+  end
+
+  def answers_in_participant_order(answers, seed)
+    return answers.to_a unless randomize_answers? && randomize_answers_possible?
+
+    open_answers, regular_answers = answers.partition(&:open_answer)
+
+    regular_answers.sort_by { |answer| Digest::SHA256.hexdigest("#{seed}:#{id}:#{answer.id}") } + open_answers
+  end
+
   def allows_multiple_answers?
     VotationType.allowing_multiple_answers.include?(votation_type.vote_type)
   end

@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
 class Polls::Questions::RegularAnswersComponent < Polls::Questions::AnswersComponent
-  def question_answers
-    answers = question.question_answers
-    answers = answers.includes(:translations, :images, :documents, :videos) unless answers.loaded?
+  def displayed_answers
+    answers = answer_scope.to_a
+    open_answer = answers.select(&:open_answer).last
 
-    answers.reject(&:open_answer)
+    ordered = answers.reject(&:open_answer)
+    ordered += [open_answer] if open_answer
+
+    question.answers_in_participant_order(ordered, helpers.poll_answer_order_seed)
+  end
+
+  def answer_scope
+    answers = question.question_answers
+    return answers if answers.loaded?
+
+    answers.includes(:translations, :images, :documents, :videos)
   end
 
   def answer_form_class(question_answer)

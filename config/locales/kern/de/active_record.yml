@@ -53,6 +53,7 @@ de:
         description: Beschreibung
         answer_mandatory: Pflichtfrage
         show_images: Bilder bei Antwortoptionen
+        randomize_answers: Antwortreihenfolge randomisieren
         contextualize_by_poll_question_id: Kontextualisierung
       votation_type:
         vote_type: Abstimmungsmodus

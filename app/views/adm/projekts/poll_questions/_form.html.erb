@@ -102,6 +102,14 @@
           <% end %>
         </div>
 
+        <div data-adm-poll-questions--votation-type-target="randomizeAnswers" style="<%= 'display:none' if votation_type.vote_type == 'rating_scale' %>">
+          <%= render Kern::FormFieldComponent.new(
+            label: Poll::Question.human_attribute_name(:randomize_answers),
+            hint: t(".randomize_answers_hint")) do %>
+            <%= f.check_box :randomize_answers %>
+          <% end %>
+        </div>
+
         <% unless question.parent_question_id.present? %>
           <%= render Kern::FormFieldComponent.new(
             label: VotationType.human_attribute_name(:show_hint_callout),

@@ -53,6 +53,7 @@ en:
         description: Description
         answer_mandatory: Required question
         show_images: Show images on answer options
+        randomize_answers: Randomize answer order
         contextualize_by_poll_question_id: Contextualization
       votation_type:
         vote_type: Voting mode

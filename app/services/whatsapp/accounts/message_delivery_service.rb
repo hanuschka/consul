@@ -19,10 +19,16 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
     @conversation = conversation
   end
 
+  # Coming back is the one of the two that has somewhere to go next, so it carries
+  # the way in. Its label is the recovery copy's rather than the assistant's for the
+  # same reason the sentence is: the opt-in is written before the send and this path
+  # sits above the assistant, so there is no turn whose words the label could be.
   def turn_on
     account.opt_in!
 
-    send_bot_line(I18n.t("whatsapp.bot.opted_in"))
+    ::Whatsapp::Send.recovery(
+      conversation: @conversation, body: I18n.t("whatsapp.bot.opted_in"), actions: [:help]
+    )
   end
 
   # Opting out also drops whatever draft was open: a citizen asking not to be

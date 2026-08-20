@@ -2,8 +2,9 @@ class Whatsapp::FollowedProjektsQuery < ApplicationQuery
   # The same ProjektSubscription rows the website's follow button writes, so a
   # projekt followed on the web is followed in the chat and unfollowing in
   # either place is the same act.
-  def initialize(user:)
+  def initialize(user:, from: 0)
     @user = user
+    @from = from
   end
 
   # Everything the citizen follows, for resolving a name rather than showing a
@@ -20,7 +21,13 @@ class Whatsapp::FollowedProjektsQuery < ApplicationQuery
   def call
     return [] if @user.blank?
 
-    scope.limit(::Whatsapp::MAX_LIST_ROWS).to_a
+    scope.offset(::Whatsapp::ListWindow.offset(@from)).limit(::Whatsapp::ListWindow::ROWS).to_a
+  end
+
+  def total
+    return 0 if @user.blank?
+
+    scope.count
   end
 
   def uncapped

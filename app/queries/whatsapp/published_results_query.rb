@@ -13,17 +13,26 @@ class Whatsapp::PublishedResultsQuery < ApplicationQuery
     "ai" => "ai_evaluation"
   }.freeze
 
-  def initialize(projekt: nil)
+  def initialize(projekt: nil, from: 0)
     @projekt = projekt
+    @from = from
   end
 
   # Translations because every caller names the phase, and ProjektPhase#title
   # reads the translated phase_tab_name — one query per row otherwise.
+  #
+  # Paged after the filter for the same reason it is filtered in Ruby at all:
+  # whether an evaluation is public is a per-record decision, so the rows before
+  # the window are only knowable once they have been tested.
   def call
-    candidates
-      .includes(:translations, projekt: :page)
-      .select { |projekt_phase| publicly_visible?(projekt_phase) }
-      .first(::Whatsapp::MAX_LIST_ROWS)
+    ::Whatsapp::ListWindow.page(publicly_visible, from: @from)
+  end
+
+  # Bounded by CANDIDATE_LIMIT rather than by the portal, which is what the
+  # constant is for: past sixty the count stops being exact and the citizen is
+  # better served by naming a projekt than by paging.
+  def total
+    publicly_visible.size
   end
 
   # Answers the menus without the projekt pages the rows themselves need, and
@@ -46,6 +55,13 @@ class Whatsapp::PublishedResultsQuery < ApplicationQuery
   end
 
   private
+
+    def publicly_visible
+      @publicly_visible ||=
+        candidates
+          .includes(:translations, projekt: :page)
+          .select { |projekt_phase| publicly_visible?(projekt_phase) }
+    end
 
     def candidates
       scope = ProjektPhase

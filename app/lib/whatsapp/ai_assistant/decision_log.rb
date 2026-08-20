@@ -23,10 +23,18 @@ module Whatsapp::AiAssistant::DecisionLog
   # `tap_unhandled` is a pill from an older deploy, still sitting in someone's
   # chat history and still tappable forever. It rising is how a vocabulary change
   # is noticed from the outside.
+  #
+  # `actions_missed` is the only event here that records what the assistant did
+  # *not* do: a reply that went out as plain text where next steps existed. It is
+  # measured rather than prevented, because the alternative is code deciding a
+  # reply must carry a pill — and some replies genuinely end the exchange. A rate
+  # is what tells those apart from the ones where the citizen was left typing;
+  # a single line never could.
   EVENTS = %i[
     tool_called
     action_dropped
     actions_unusable
+    actions_missed
     irreversible_offered
     tap_dispatched
     tap_unhandled

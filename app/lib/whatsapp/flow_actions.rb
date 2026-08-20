@@ -64,7 +64,14 @@ module Whatsapp::FlowActions
     link_yes
     link_later
     link_retry
+    show_more
   ].freeze
+
+  # The three ways to answer the picture question, in the order they are offered.
+  # Declared here rather than in the tool that sends them because the order is what
+  # pairs each id with its label, and a set built twice is a set that can pair them
+  # differently.
+  IMAGE_ANSWERS = %i[image_upload image_generate image_skip].freeze
 
   # The ids that point at one record or setting. Their parameter is what the
   # dispatcher re-resolves, and it is also what names the pill when the assistant
@@ -72,7 +79,21 @@ module Whatsapp::FlowActions
   # paraphrase of it.
   PARAMETERISED_ACTIONS = %i[
     view_projekt participate_projekt idea_start category sentiment notify_toggle
-    discover_category support
+    discover_category support show_more
+  ].freeze
+
+  # `show_more`'s parameter names a list rather than a record: which of the capped
+  # lists the citizen wants the rest of. Every list the bot can send is capped at
+  # ten rows and none of them could say what was left out, so this is the one
+  # parameter that is a scope name — which is also why it is an allowlist rather
+  # than something read off the id. A scope name arriving from a chat message is
+  # the shape that reaches a query nobody meant to expose.
+  MORE_SCOPES = %w[
+    eligible_phases
+    my_contributions
+    results
+    polls
+    followed_projekts
   ].freeze
 
   ID_PATTERN =

@@ -14,7 +14,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
               "you ask for a photo — never write the request yourself, because the notice would " \
               "be missing. draft_status says whether this phase takes pictures at all and whether " \
               "the citizen has already declined one; do not ask again if they have. A photo is " \
-              "always optional. This sends the message itself."
+              "always optional, and the three ways to answer — send one, have one made, go on " \
+              "without — arrive as buttons of their own, so do not offer them again in your " \
+              "sentence. This sends the message itself."
 
   params do
     string :body,
@@ -30,22 +32,61 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     return not_collected_error if !conversation.image_question_available?
     return blank_body_error if body.to_s.strip.blank?
 
-    ::Whatsapp::Send.text(account: account, body: with_rights_notice(body.strip))
+    ask, notice, *labels = translated_lines(body.strip)
 
-    halt("Asked for a photo, with the picture-rights notice appended.")
+    ::Whatsapp::Send.buttons(
+      account: account,
+      body: [ask, notice].join("\n\n"),
+      buttons: image_answer_buttons(labels)
+    )
+
+    halt("Asked for a photo, with the picture-rights notice and the three ways to answer.")
   end
 
   private
 
-    # The ask is the assistant's and already in the citizen's language; the notice is
-    # the locale copy's and has to be brought to the same one, or a Turkish request
-    # for a photo carries a German declaration about who owns it.
-    def with_rights_notice(body)
-      notice = ::Whatsapp::AiAssistant::BotCopyService.line(
-        account: account, body: I18n.t("whatsapp.bot.proposal.image_rights_notice")
+    # The labels are locale copy rather than the model's, for the same reason the
+    # notice below them is: the citizen must always be able to decline a picture, and
+    # a set of options the model writes fresh each turn is a set it can also write its
+    # way out of. Three of them is what a message holds, and the phase either collects
+    # pictures or this tool has already refused, so all three always apply.
+    #
+    # The ask is the assistant's and already in the citizen's language; the notice and
+    # the labels are the locale copy's and have to be brought to the same one, or a
+    # Turkish request for a photo carries a German declaration about who owns it. One
+    # call for the whole message, because a body and the labels under it are one thing
+    # the citizen reads.
+    #
+    def translated_lines(body)
+      ::Whatsapp::AiAssistant::BotCopyService.call(
+        account: account,
+        lines: [body, I18n.t("whatsapp.bot.proposal.image_rights_notice"), *written_labels]
       )
+    end
 
-      [body, notice].join("\n\n")
+    # The fit is decided after the translation, because the length that fits is a
+    # property of the label as sent rather than as written: eighteen characters in
+    # German is not eighteen in every language it is put into. Where the translation
+    # can only arrive cut mid-word, fitting_label falls back to the written copy —
+    # the one thing the citizen must be able to read here in full is the option to
+    # go on without a picture.
+    def image_answer_buttons(labels)
+      ::Whatsapp::FlowActions::IMAGE_ANSWERS.zip(labels, written_labels).map do |answer|
+        action, translated, written = answer
+
+        {
+          id: ::Whatsapp::FlowActions.id_for(action: action),
+          title: ::Whatsapp::AssistantActions.fitting_label(
+            translated: translated, original: written
+          )
+        }
+      end
+    end
+
+    def written_labels
+      @written_labels ||= ::Whatsapp::FlowActions::IMAGE_ANSWERS.map do |action|
+        I18n.t("whatsapp.bot.buttons.#{action}")
+      end
     end
 
     def not_collected_error

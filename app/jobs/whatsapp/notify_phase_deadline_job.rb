@@ -70,5 +70,9 @@ class Whatsapp::NotifyPhaseDeadlineJob < ApplicationJob
         variables: [url],
         projekt_id: projekt_phase.projekt_id
       )
+
+      Whatsapp::NotificationFollowUp.phase_deadline(
+        account: account, projekt_phase: projekt_phase, kind: kind
+      )
     end
 end

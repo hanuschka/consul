@@ -47,6 +47,8 @@ class Whatsapp::NotifyProposalStatusJob < ApplicationJob
         variables: [url],
         projekt_id: proposal.projekt_phase&.projekt_id
       )
+
+      Whatsapp::NotificationFollowUp.proposal_status(account: account, proposal: proposal)
     end
 
     # The author, and only when they are the linked citizen who switched this

@@ -53,6 +53,7 @@ module Whatsapp::AssistantActions
 
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
+    return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
 
     title = title_for(action: action, param: param, label: label, conversation: conversation)
 
@@ -61,6 +62,17 @@ module Whatsapp::AssistantActions
     record_irreversible_offer(action, conversation)
 
     { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
+  end
+
+  # The one parameter checked before the label rather than through it. Every other
+  # parameterised pill points at a record, and a label the model wrote is accepted
+  # without reading that record because the dispatcher resolves it again on the tap.
+  # `show_more`'s parameter is a scope name instead: nothing resolves it later, so an
+  # invented one is a pill that is tapped and does nothing.
+  def known_scope?(action, param)
+    return true if action != :show_more
+
+    ::Whatsapp::FlowActions::MORE_SCOPES.include?(param.to_s)
   end
 
   # A recovery pill keeps its own id namespace — the inbound side reads those
@@ -103,6 +115,43 @@ module Whatsapp::AssistantActions
     text.truncate(MAX_LABEL_LENGTH, separator: " ", omission: "")
   end
 
+  # The label of a translated fixed line, as it will actually arrive. Preferring the
+  # translation, but not at the price of arriving cut mid-word.
+  #
+  # #truncated finds a word boundary only when there is a space inside the limit.
+  # A single compound longer than it has none, and Rails falls back to a hard cut —
+  # so "Benachrichtigungseinstellungen" ships as "Benachrichtigungsein", which no
+  # cut can fix because no cut of it fits. German and Turkish generate exactly those.
+  #
+  # Where the written copy does fit whole, that is the readable answer: a label in
+  # the portal's own language beats a fragment in the citizen's, and it is the same
+  # trade BotCopyService already makes whenever a translation cannot be had. A
+  # translation cut on a real word boundary is not a fragment and is kept.
+  # Blank is answered by the written copy rather than by nil: BotCopyService cannot
+  # hand back a blank line — a mismatched count falls the whole message back to the
+  # copy as written — but a blank title is the one value WhatsApp refuses the message
+  # over, so this never returns one while the copy behind it has words.
+  def fitting_label(translated:, original:)
+    text = translated.to_s.squish
+    written = original.to_s.squish
+    cut = truncated(text)
+
+    return truncated(written) if cut.blank?
+    return cut if cut == text || ended_on_boundary?(text, cut)
+    return cut if truncated(written) != written
+
+    written
+  end
+
+  # Whether the cut fell between words rather than inside one. Asked of the
+  # character the cut stopped before, not of the cut's own contents: #truncated
+  # consumes the separator, so a boundary cut that leaves one short word — "Ab" out
+  # of "Ab cdefghij…" — holds no space and would read as a fragment while being
+  # nothing of the kind.
+  def ended_on_boundary?(text, cut)
+    text[cut.length] == " "
+  end
+
   # The label read off the thing the pill points at. A projekt that does not
   # exist, a taxonomy option the phase does not offer and a notification type
   # nobody has heard of all come back blank, and a blank pill is not offered —
@@ -121,6 +170,7 @@ module Whatsapp::AssistantActions
       taxonomy_label(::Whatsapp::DraftTaxonomy.sentiment(conversation.projekt_phase), param)
     when :notify_toggle then notification_label(param)
     when :discover_category then browse_category_label(param)
+    when :show_more then I18n.t("whatsapp.bot.buttons.show_more")
     end
   end
 
@@ -180,7 +230,8 @@ module Whatsapp::AssistantActions
   # Nil with a line saying why. Which reason it was decides what to do about it:
   # `unknown_action` is a name that is not one at all and belongs in the tool
   # description, `unlabelled` is a pill the model wrote no words for and whose
-  # record could not name it either, and `unparseable` an empty or malformed spec.
+  # record could not name it either, `unparseable` an empty or malformed spec, and
+  # `unknown_scope` a `show_more` naming a list the bot does not keep.
   def dropped(spec, conversation, reason)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :action_dropped, conversation: conversation, spec: spec, reason: reason

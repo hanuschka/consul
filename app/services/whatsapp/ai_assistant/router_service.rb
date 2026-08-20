@@ -192,9 +192,31 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       return :empty if body.blank?
 
+      record_missed_actions
+
       ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
 
       :answered
+    end
+
+    # Reaching here is a reply with nothing to tap: every tool that sends an
+    # interactive message halts the turn, so plain text is the only thing this path
+    # delivers. Some of those are right — a question that was not the bot's to
+    # answer, a goodbye — which is why this counts rather than intervenes. What it
+    # buys is the denominator: the same reply reads as a considered full stop and as
+    # a citizen left working out what to write, and only the rate tells them apart.
+    #
+    # The last tool that ran is carried along because it is the one thing that says
+    # whether options were on the table: a plain reply after a listing tool is a list
+    # of names nobody can tap, while one after no tool at all is usually a
+    # conversation ending.
+    def record_missed_actions
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :actions_missed,
+        conversation: @conversation,
+        after_tool: @last_tool_name,
+        step: @conversation.step
+      )
     end
 
     # Kept out of the turn's own rescue. By the time state is written the citizen

@@ -126,7 +126,19 @@ de:
         login: 🔗 Anmelden
         open_page: Seite öffnen
         choose: Auswählen
+        show_more: Weitere anzeigen
+        image_upload: Foto hinzufügen
+        image_generate: Bild erzeugen
+        image_skip: Ohne Foto weiter
       notifications:
+        follow_up:
+          deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.
+          deadline_passed: Die Frist ist abgelaufen. Sie können sich ansehen, was eingegangen ist.
+          status_change: Bei Ihrem Beitrag hat sich etwas getan.
+          buttons:
+            take_part: Jetzt mitmachen
+            view_projekt: Projekt ansehen
+            my_contributions: Meine Beiträge
         types:
           new_projekt:
             short: Neues Projekt

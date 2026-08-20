@@ -143,7 +143,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       if conversation.unsaved_submission?
         conversation.discard_draft!
 
-        send_bot_line(I18n.t("whatsapp.bot.cancelled"))
+        send_cancelled_line
       else
         ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
       end
@@ -227,13 +227,29 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       conversation.discard_draft!
 
-      send_bot_line(I18n.t("whatsapp.bot.cancelled"))
+      send_cancelled_line
 
       true
     end
 
     def send_bot_line(body)
       ::Whatsapp::Send.locale_text(account: account, body: body)
+    end
+
+    # A cancellation is the emptiest message the bot sends: the draft is gone, the
+    # citizen asked for that, and what is left is a sentence with nothing to do after
+    # it. The way back in goes under it rather than being left for them to type.
+    #
+    # The pill is a recovery one rather than one of the assistant's because both
+    # callers sit above the assistant in the inbound chain: there is no turn here for
+    # a model to have written a label in. The draft is discarded before this line
+    # either way, so the translation the send makes on its way out can fail without
+    # costing the cancellation — it costs the wording, which is what
+    # BotCopyService falls back to the written copy for.
+    def send_cancelled_line
+      ::Whatsapp::Send.recovery(
+        conversation: conversation, body: I18n.t("whatsapp.bot.cancelled"), actions: [:help]
+      )
     end
 
     # The two taps that are an answer rather than a request: the citizen saying they

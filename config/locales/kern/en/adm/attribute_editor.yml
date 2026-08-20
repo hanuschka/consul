@@ -98,6 +98,14 @@ en:
         logo_header_for_transparent_description: "This logo is shown in the top navigation bar while the background is transparent — e.g. over the header image. It should be readable on varying backgrounds. Ideally use a light PNG with a transparent background. Recommended format: max. 80 × 80 pixels."
         logo_newsletter_email_label: Newsletter logo
         logo_newsletter_email_description: "This logo is shown in the header of every newsletter email and serves as a visual identifier for your platform. Ideally use a PNG with a transparent background that is readable on a light background. The logo should ensure recognition of your municipality or platform. Recommended format: 130 × 45 pixels."
+        logo_email_label: Email logo
+        logo_email_description: "This logo is shown in the header of every system email — for example registration confirmations, comment notifications, or password emails. Ideally use a PNG with a transparent background that is readable on a light background. Required size: exactly 400 × 80 pixels. Allowed formats: JPG or PNG. Leave empty to use the platform's default logo."
+        social_media_icon_label: Social media preview image
+        social_media_icon_description: "This image is shown as the preview when a link to the platform is shared in social networks or messengers. Use a landscape image with a clear, centered subject that stays recognizable at small sizes. Avoid small text. Required size: exactly 470 × 246 pixels. Allowed formats: JPG or PNG."
+        social_media_icon_twitter_label: Preview image for X (Twitter)
+        social_media_icon_twitter_description: "This image is shown as the preview when a link to the platform is shared on X (formerly Twitter). Use a square image with a clear, centered subject. Required size: exactly 246 × 246 pixels. Allowed formats: JPG or PNG."
+        apple-touch-icon-200_label: App icon
+        apple-touch-icon-200_description: "This icon is used when people add the platform to the home screen of their phone or tablet, and additionally as the browser-tab icon. Use a square subject without text that stays recognizable at small sizes. Required size: exactly 200 × 200 pixels. Allowed formats: JPG or PNG. Leave empty to use the platform's default icon."
       site_customization/video:
         header_video_label: Background video for desktop
         header_video_description: "Optional video shown at the top of the homepage on desktop devices instead of the background image. The video plays automatically, muted, and loops. Use a short, calm landscape video. Recommended format: 1920 × 760 pixels. If you have uploaded both an image and a video, the video always takes precedence. Allowed formats: MP4, WebM. Maximum size: 50 MB."

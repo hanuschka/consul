@@ -35,7 +35,8 @@
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         deficiency_report,
         :admin_accepted,
-        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report)
+        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        disabled: !Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report).update?
       ) %>
     </td>
   <% end %>

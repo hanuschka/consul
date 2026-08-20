@@ -55,25 +55,38 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     new(projekt: projekt).uncapped
   end
 
-  def initialize(projekt: nil, user_status: nil)
+  def initialize(projekt: nil, user_status: nil, from: 0)
     @projekt = projekt
     @user_status = user_status
+    @from = from
   end
 
   # A display cap, not an eligibility rule: #call is what fills a ten-row
   # WhatsApp list. Whether one particular phase may be submitted to is
   # .eligible?, which is uncapped — otherwise the eleventh open phase would be
   # offered in a menu and then refused when tapped.
+  #
+  # `from` is which page of that list, so the eleventh open phase is one tap away
+  # rather than absent. Paged in Ruby because eligibility is decided in Ruby: the
+  # rows before the window have to be tested to be skipped.
   def call
-    uncapped.first(::Whatsapp::MAX_LIST_ROWS)
+    ::Whatsapp::ListWindow.page(uncapped, from: @from)
+  end
+
+  # How many are open altogether, so a capped page can say what it left out.
+  def total
+    uncapped.size
   end
 
   # The same set without the display cap. Past the tenth row a list stops being
   # an offer and becomes a truncation the citizen cannot page past, so anything
   # that resolves a named projekt or reports how much is running reads this
   # instead — the cap is about what fits in one message, not about what is open.
+  # Memoised because #call and #total both read it, and it is the most expensive
+  # question the bot asks: every candidate phase materialised with its settings and
+  # its page before eligible? can decide. One instance answering both is one pass.
   def uncapped
-    candidates.select { |projekt_phase| self.class.eligible?(projekt_phase) }
+    @uncapped ||= candidates.select { |projekt_phase| self.class.eligible?(projekt_phase) }
   end
 
   # Stops at the first eligible phase. The menus ask only whether anything is

@@ -1,4 +1,10 @@
 class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
+  # Written once for the five tools that page a capped list. The wording is the
+  # whole contract for how a citizen reaches row eleven, so five copies of it are
+  # five chances for one of them to describe a different offset.
+  FROM_DESCRIPTION = "Which ten of the list to return: leave empty for the first ten, or pass " \
+                     "the next_from a previous call returned for the ten after those.".freeze
+
   def initialize(conversation:)
     @conversation = conversation
   end
@@ -57,8 +63,8 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       @all_open_projekt_phases ||= ::Whatsapp::EligiblePhasesQuery.uncapped
     end
 
-    def open_projekt_phases
-      all_open_projekt_phases.first(::Whatsapp::MAX_LIST_ROWS)
+    def open_projekt_phases(from: 0)
+      ::Whatsapp::ListWindow.page(all_open_projekt_phases, from: from)
     end
 
     # The phase whose projekt the citizen named, resolved against everything open

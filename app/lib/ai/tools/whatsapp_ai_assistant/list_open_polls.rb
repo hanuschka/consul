@@ -3,18 +3,32 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
               "closes. Name a project for its own, or pass null for the whole portal. The link is " \
               "how a citizen votes: you cannot cast a vote for them and there is no tool that " \
               "does. Returns facts for you to answer in your own words — it sends nothing to the " \
-              "citizen itself."
+              "citizen itself. Ten at a time: where there are more, say how many and offer " \
+              "more_action_id as a button."
+
+  MORE_SCOPE = "polls".freeze
 
   params do
     optional :projekt_name,
       description: "The project name as the citizen wrote it, or null for the whole portal" do
       string
     end
+    optional :from, description: FROM_DESCRIPTION do
+      integer
+    end
   end
 
-  def execute(projekt_name: nil)
+  def execute(projekt_name: nil, from: 0)
     for_named_projekt(projekt_name) do |projekt|
-      { polls: ::Whatsapp::OpenPollsQuery.call(projekt: projekt).map { |poll| row_for(poll) }}
+      query = ::Whatsapp::OpenPollsQuery.new(projekt: projekt, from: from)
+      polls = query.call
+
+      {
+        polls: polls.map { |poll| row_for(poll) },
+        **::Whatsapp::ListWindow.report(
+          scope: MORE_SCOPE, from: from, shown: polls.size, total: query.total
+        )
+      }
     end
   end
 

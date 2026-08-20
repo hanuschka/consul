@@ -1,10 +1,19 @@
 class Whatsapp::OpenPollsQuery < ApplicationQuery
-  def initialize(projekt: nil)
+  def initialize(projekt: nil, from: 0)
     @projekt = projekt
+    @from = from
   end
 
   def call
-    scope.includes(projekt_phase: { projekt: :page }).limit(::Whatsapp::MAX_LIST_ROWS).to_a
+    scope
+      .includes(projekt_phase: { projekt: :page })
+      .offset(::Whatsapp::ListWindow.offset(@from))
+      .limit(::Whatsapp::ListWindow::ROWS)
+      .to_a
+  end
+
+  def total
+    scope.count
   end
 
   def exists?

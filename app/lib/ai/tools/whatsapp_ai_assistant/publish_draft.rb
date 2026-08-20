@@ -84,9 +84,15 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # The phase is kept so the citizen's next idea goes to the same one; everything
     # about the draft is dropped, because it is a published record now and nothing
     # about it is still a draft.
+    # The phase id is reported because the reply is asked to offer taking part in the
+    # same phase again, and that pill is parameterised: without the id here the model
+    # has nothing to build it from and the offer is dropped as a record that does not
+    # exist. Read before complete_draft! for the same reason the comment below gives —
+    # the phase survives, but nothing else about the draft does.
     def published_answer(resource)
       url = ::Whatsapp::PublishedResourceUrl.call(resource)
       awaiting_review = resource.is_a?(::Proposal) && !resource.admin_accepted?
+      projekt_phase_id = conversation.projekt_phase_id
 
       conversation.complete_draft!
 
@@ -94,6 +100,7 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
         published: true,
         awaiting_review: awaiting_review,
         url: awaiting_review ? nil : url,
+        projekt_phase_id: projekt_phase_id,
         hint: awaiting_review ? AWAITING_REVIEW_HINT : PUBLISHED_HINT
       }.compact
     end
@@ -102,8 +109,21 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
                            "that plainly, say they will hear when it is decided, and do not " \
                            "offer a link.".freeze
 
-    PUBLISHED_HINT = "Tell them it is online and give them the link with send_link. Do not " \
-                     "invite them to submit something else unless they ask.".freeze
+    # What plausibly follows a submission, which is not the same as an invitation to
+    # submit again: the contribution they just made, the phase they made it in, and
+    # the list of their own. Offering those is not pushiness — they have just acted,
+    # and the alternative is a citizen reading "it is online" with nothing to do but
+    # type. What stays out is anything unrelated to the thing they just did.
+    #
+    # The link goes in the reply's text rather than on a button of its own, because a
+    # URL button is the only thing on the message it sits on: taking it would cost the
+    # other two offers. WhatsApp makes a written-out address tappable anyway, so all
+    # three arrive tappable in one message.
+    PUBLISHED_HINT = "Tell them it is online, with the address written out in the text so they " \
+                     "can open it. Offer what follows from what they just did — taking part in " \
+                     "this same phase again, and their own contributions — as buttons beside it. " \
+                     "Do not invite them to anything unrelated to the contribution they just " \
+                     "submitted.".freeze
 
     def draft_errors
       conversation.draft_resource&.errors&.full_messages

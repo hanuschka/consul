@@ -203,7 +203,13 @@ module Whatsapp::Send
     buttons(
       account: conversation.whatsapp_account,
       body: lines.first,
-      buttons: pills.zip(lines.drop(1)).map { |pill, title| pill.merge(title: title) }
+      buttons: pills.zip(lines.drop(1)).map do |pill, title|
+        pill.merge(
+          title: ::Whatsapp::AssistantActions.fitting_label(
+            translated: title, original: pill[:title]
+          )
+        )
+      end
     )
   end
 

@@ -5,9 +5,11 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
   # message here for an assistant to be answering, and the citizen is standing in
   # a browser waiting to be told whether it worked.
   #
-  # Plain text and no pills. What follows a successful link is whatever the
-  # citizen writes next, and that reaches the assistant with the account already
-  # attached.
+  # The pills are the recovery ones rather than the assistant's, for the same
+  # reason the sentence is the locale copy's: there is no turn here for a model to
+  # be answering, and a citizen standing in a browser being told the link failed is
+  # exactly who must not be left working out what to type. A link that worked
+  # offers the way in; one that did not offers another attempt beside it.
   ERROR_REASONS = %w[no_account expired already_linked number_taken].freeze
 
   def self.confirmed(conversation:)
@@ -23,7 +25,7 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
   end
 
   def confirmed
-    send_bot_line(I18n.t("whatsapp.bot.onboarding.linked"))
+    send_bot_line(I18n.t("whatsapp.bot.onboarding.linked"), actions: [:help])
   end
 
   def error(reason)
@@ -32,7 +34,8 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
     send_bot_line(
       I18n.t(
         "whatsapp.bot.onboarding.#{key}", register_url: ::Whatsapp::PortalLinks.register_url
-      )
+      ),
+      actions: %i[retry help]
     )
   end
 
@@ -40,12 +43,10 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
 
     # No inbound message is being answered here, but there is a conversation behind the
     # number and it has a language: someone who has only ever written Turkish to this
-    # bot is not told in German that their link worked.
-    def send_bot_line(body)
-      ::Whatsapp::Send.locale_text(account: account, body: body)
-    end
-
-    def account
-      @conversation.whatsapp_account
+    # bot is not told in German that their link worked. The body and the labels under
+    # it travel in one call, so the sentence and the buttons cannot end up in two
+    # different languages.
+    def send_bot_line(body, actions:)
+      ::Whatsapp::Send.recovery(conversation: @conversation, body: body, actions: actions)
     end
 end

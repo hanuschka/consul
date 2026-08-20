@@ -114,7 +114,19 @@ en:
         login: 🔗 Log in
         open_page: Open page
         choose: Choose
+        show_more: Show more
+        image_upload: Add a photo
+        image_generate: Generate a picture
+        image_skip: Continue without
       notifications:
+        follow_up:
+          deadline_approaching: You can still take part here until the deadline passes.
+          deadline_passed: The deadline has passed. You can look at what came in.
+          status_change: Something has happened to your contribution.
+          buttons:
+            take_part: Take part now
+            view_projekt: View project
+            my_contributions: My contributions
         types:
           new_projekt:
             short: New project

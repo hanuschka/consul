@@ -3,6 +3,11 @@
 # it. The tools themselves are still RubyLLM::Tool subclasses — this only
 # replaces the transport around them, so their schemas, argument validation and
 # halt contract are unchanged.
+#
+# Takes the tools twice over, because the two uses are not the same thing: the
+# objects in `tools` are what a call is dispatched to, and `tool_definitions` is
+# what the provider is told they are. Building the second from the first is the
+# caller's job, so nothing in this transport has to know ruby_llm's schema DSL.
 class OpenaiApi::ToolLoop
   # How one turn ended. `halt` carries the RubyLLM::Tool::Halt a tool returns
   # when it has already spoken to the citizen itself, so a caller tells the two
@@ -37,11 +42,12 @@ class OpenaiApi::ToolLoop
   class RunawayError < StandardError; end
 
   def initialize(
-    tools:, model:, instructions:, input:, feature:, timeout_seconds:,
-    previous_response_id: nil, reasoning_effort: nil, &on_tool_call
+    tools:, tool_definitions:, model:, instructions:, input:, feature:,
+    timeout_seconds:, previous_response_id: nil, reasoning_effort: nil,
+    &on_tool_call
   )
     @tools_by_name = tools.index_by(&:name)
-    @tool_definitions = ::OpenaiApi::ToolDefinitions.build(tools)
+    @tool_definitions = tool_definitions
     @model = model
     @instructions = instructions
     @input = input

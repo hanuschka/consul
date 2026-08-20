@@ -125,6 +125,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     def run_tool_loop
       tool_loop = ::OpenaiApi::ToolLoop.new(
         tools: tools,
+        tool_definitions: tool_definitions,
         model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL,
         instructions: instructions,
         input: chain.input_for(@inbound_text),
@@ -241,6 +242,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # should not throw it away between two calls of one turn.
     def tools
       @tools ||= tool_classes.map { |tool_class| tool_class.new(conversation: @conversation) }
+    end
+
+    # Built once a turn and only for the transport that needs them: the ruby_llm
+    # path hands the tool objects straight to the chat, which describes them to
+    # the provider itself.
+    def tool_definitions
+      @tool_definitions ||= ::RubyLlmToolToOpenAiConverter.definitions_for(tools)
     end
 
     # The tools that act on a Consul account, left out for a number that has none.

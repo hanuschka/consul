@@ -29,8 +29,8 @@
 
     <% if @poll.present? && Ai::Settings.ai_available? %>
       <%= render Shared::AiFeatureTooltipComponent.new(
-            feature_title: t("adm.projekts.poll_question_imports.index.title"),
-            feature_text: t("adm.ai_action_button.feature_description"),
+            feature_title: t("adm.projekts.poll_question_imports.trigger.title"),
+            feature_text: t("adm.projekts.poll_question_imports.trigger.tooltip"),
             requires_ai: false
           ) do %>
         <%= kern_link_button adm_projekts_phase_poll_question_imports_path(@projekt_phase),

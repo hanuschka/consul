@@ -1,4 +1,4 @@
-module Ai::OpenaiSdk::ToolDefinitions
+module OpenaiApi::ToolDefinitions
   # A tool that takes no arguments still owes the provider an object schema.
   NO_PARAMETERS = {
     "type" => "object",

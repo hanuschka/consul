@@ -35,7 +35,7 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
     end
 
     def transcribed_text(tempfile)
-      return sdk_transcribed_text(tempfile) if ::Ai::OpenaiSdk.enabled?
+      return openai_api_transcribed_text(tempfile) if ::OpenaiApi::Transport.enabled?
 
       transcription = RubyLLM.transcribe(
         tempfile.path,
@@ -49,12 +49,12 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
       transcription.text.presence
     end
 
-    # Handed a Pathname rather than the open Tempfile: the SDK reads the file
+    # Handed a Pathname rather than the open Tempfile: the client reads the file
     # itself and wants the name to derive the upload's content type from, which an
     # already-positioned handle would not give it.
-    def sdk_transcribed_text(tempfile)
+    def openai_api_transcribed_text(tempfile)
       transcription =
-        ::Ai::OpenaiSdk::Client
+        ::OpenaiApi::ClientFactory
           .build
           .audio
           .transcriptions

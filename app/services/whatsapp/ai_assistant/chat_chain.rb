@@ -20,9 +20,17 @@ class Whatsapp::AiAssistant::ChatChain
   # that has gone quiet for good.
   STALE_CHAIN_MESSAGE = /previous_response/i
 
+  # A chain the provider no longer holds is refused two ways: gone outright is a
+  # 404, and an id it will not accept any more is a 400 that says so in the
+  # message. Every other status is a failure of this turn rather than of the
+  # chain, and is left to be reported.
+  GONE_STATUS = 404
+  REFUSED_STATUS = 400
+
   def self.stale?(error)
-    return true if error.is_a?(::OpenAI::Errors::NotFoundError)
-    return false if !error.is_a?(::OpenAI::Errors::BadRequestError)
+    return false if !error.is_a?(::OpenaiApi::Error)
+    return true if error.status == GONE_STATUS
+    return false if error.status != REFUSED_STATUS
 
     error.message.to_s.match?(STALE_CHAIN_MESSAGE)
   end

@@ -3,7 +3,7 @@
 # it. The tools themselves are still RubyLLM::Tool subclasses — this only
 # replaces the transport around them, so their schemas, argument validation and
 # halt contract are unchanged.
-class Ai::OpenaiSdk::ToolLoop
+class OpenaiApi::ToolLoop
   # How one turn ended. `halt` carries the RubyLLM::Tool::Halt a tool returns
   # when it has already spoken to the citizen itself, so a caller tells the two
   # endings apart exactly as it did before.
@@ -25,7 +25,6 @@ class Ai::OpenaiSdk::ToolLoop
   # that passes no counter at all.
   MAX_ITERATIONS = 12
 
-  FUNCTION_CALL = "function_call".freeze
   FUNCTION_CALL_OUTPUT = "function_call_output".freeze
 
   # Every call in a batch owes the provider an output, so the ones after a halt
@@ -42,7 +41,7 @@ class Ai::OpenaiSdk::ToolLoop
     previous_response_id: nil, reasoning_effort: nil, &on_tool_call
   )
     @tools_by_name = tools.index_by(&:name)
-    @tool_definitions = ::Ai::OpenaiSdk::ToolDefinitions.build(tools)
+    @tool_definitions = ::OpenaiApi::ToolDefinitions.build(tools)
     @model = model
     @instructions = instructions
     @input = input
@@ -88,7 +87,7 @@ class Ai::OpenaiSdk::ToolLoop
     # left to the chain: they are rebuilt from live conversation state each turn,
     # and the provider scopes them to the one response anyway.
     def request(input)
-      ::Ai::OpenaiSdk::Responses.create(
+      ::OpenaiApi::Responses.create(
         feature: @feature,
         requested_model: @model,
         timeout_seconds: @timeout_seconds,
@@ -109,7 +108,7 @@ class Ai::OpenaiSdk::ToolLoop
     end
 
     def function_calls_in(response)
-      Array(response.output).select { |item| item.type.to_s == FUNCTION_CALL }
+      response.output.select(&:function_call?)
     end
 
     # Sets @halt rather than returning it, because the outputs still have to be

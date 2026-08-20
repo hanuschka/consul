@@ -37,8 +37,15 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
 
   private
 
+    # The ask is the assistant's and already in the citizen's language; the notice is
+    # the locale copy's and has to be brought to the same one, or a Turkish request
+    # for a photo carries a German declaration about who owns it.
     def with_rights_notice(body)
-      [body, I18n.t("whatsapp.bot.proposal.image_rights_notice")].join("\n\n")
+      notice = ::Whatsapp::AiAssistant::BotCopyService.line(
+        account: account, body: I18n.t("whatsapp.bot.proposal.image_rights_notice")
+      )
+
+      [body, notice].join("\n\n")
     end
 
     def not_collected_error

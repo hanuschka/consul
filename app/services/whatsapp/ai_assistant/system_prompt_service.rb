@@ -78,9 +78,16 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
     def style_section
       <<~TEXT.strip
-        Write in #{output_language}, addressing the citizen #{address_form_instruction}. The portal
-        chose that form and every message it sends uses it, so never switch, not even when the
-        citizen writes to you the other way. Keep replies to a few short sentences — this is a
+        Write in the language the citizen writes to you in. Read it off their latest message and
+        answer in that same language, whatever it is — not only the ones the portal itself is
+        translated into. A tapped button, a photo and a voice note nobody could transcribe carry
+        no language of their own: there, stay with the language this exchange has been held in so
+        far, and write #{output_language} when there is nothing at all to go on. Never change
+        language for a reason of your own — only because they did.
+
+        Address the citizen #{address_form_instruction}. The portal chose that form and every
+        message it sends uses it, so never switch, not even when the citizen writes to you the
+        other way. Keep replies to a few short sentences — this is a
         chat, not a web page. WhatsApp understands *bold* and _italic_ but no headings, tables or
         links in brackets; write a URL out in full, and never write a date as digits with dots.
 
@@ -293,9 +300,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       ::Whatsapp::EligiblePhasesQuery.uncapped.size
     end
 
-    # The language names are the ones the content-block generator already declares;
-    # only the choice of which one applies differs here, because a chat reply follows
-    # the citizen's locale rather than the site's.
+    # No longer the language of the reply — only the answer for a turn that carries no
+    # language to read: a first message that is a tapped ice breaker, a photo, a voice
+    # note that failed. Everything else follows what the citizen actually wrote, which
+    # is a wider set than this: the model writes languages the portal has no locale
+    # for, and a citizen who has one gets a stored preference that may not be the
+    # language of the message in front of them.
     def output_language
       ::Ai::OutputLanguage.chat_name_for(I18n.locale)
     end

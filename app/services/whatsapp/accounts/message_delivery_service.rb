@@ -22,7 +22,7 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
   def turn_on
     account.opt_in!
 
-    ::Whatsapp::Send.text(account: account, body: I18n.t("whatsapp.bot.opted_in"))
+    send_bot_line(I18n.t("whatsapp.bot.opted_in"))
   end
 
   # Opting out also drops whatever draft was open: a citizen asking not to be
@@ -33,12 +33,17 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
     account.opt_out!
     @conversation.discard_draft!
 
-    ::Whatsapp::Send.text(
-      account: account, body: I18n.t("whatsapp.bot.compliance.opted_out")
-    )
+    send_bot_line(I18n.t("whatsapp.bot.compliance.opted_out"))
   end
 
   private
+
+    # The sentence stays the locale copy's rather than the assistant's, for the reason
+    # above; which language it reaches the citizen in is a separate question, and the
+    # answer to it is the one they wrote in.
+    def send_bot_line(body)
+      ::Whatsapp::Send.locale_text(account: account, body: body)
+    end
 
     def account
       @conversation.whatsapp_account

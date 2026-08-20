@@ -19,6 +19,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
   EMPTY_ANSWER_ERROR = "assistant produced no reply".freeze
 
+  # Deliberately says what to do and not why: it is stored in the conversation like
+  # any other line, so the next turn reads it too, and a paragraph of reasoning here
+  # would be a paragraph the model re-reads on every message for the rest of the
+  # conversation.
+  RETRY_FOR_ACTIONS = "That reply had nothing for the citizen to tap. Send it again with " \
+                      "reply_with_actions — the same answer, plus the one or two things that " \
+                      "can plausibly happen next from here. If there is genuinely no next " \
+                      "step, answer in plain text again.".freeze
+
   # The reason this service can be worth moving to the Responses API at all:
   # from GPT-5.4 onward Chat Completions will not call tools with reasoning
   # switched off, so on that transport every routing decision — which of these
@@ -191,12 +200,53 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       body = turn.text.to_s.strip
 
       return :empty if body.blank?
+      return :tool if retried_with_actions(turn)
 
       record_missed_actions
 
-      ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
+      # Through buttons rather than text, even with nothing of its own to offer:
+      # Whatsapp::Send puts the main menu on every interactive message, so this is
+      # what makes "every reply has something to tap" true of the one path that
+      # composes no buttons at all.
+      ::Whatsapp::Send.buttons(
+        account: @conversation.whatsapp_account, body: body, buttons: []
+      )
 
       :answered
+    end
+
+    # Handed its own answer back and asked to send it again with the buttons on it.
+    # One more request, because which two options fit this moment is the one thing
+    # only the model knows, and a reply the citizen can read but not act on is the
+    # whole of what this work is about. A tool call is the success signal:
+    # reply_with_actions halts the turn, so a halt here means the message went out
+    # tappable and the plain text above was never sent.
+    #
+    # Only on the transport that can continue a turn in place. `chat` is the same
+    # object the answer came from, so re-asking costs one request and keeps the
+    # history. The Responses chain advances only when this turn is persisted, which
+    # happens after delivery — re-entering the tool loop before that would have the
+    # retry answering from a state that does not exist yet. There it falls through to
+    # the send above, which still carries the main menu.
+    #
+    # The halt is written back onto the turn so persistence sees it: the state writer
+    # records a halted turn's note, and without this the retry's tool call would be
+    # stored as a turn that answered with nothing.
+    def retried_with_actions(turn)
+      return false if turn.chat.blank?
+      return false if @tool_calls_made >= MAX_TOOL_CALLS
+
+      response = turn.chat.ask(RETRY_FOR_ACTIONS)
+
+      return false if !response.is_a?(::RubyLLM::Tool::Halt)
+
+      turn.halt = response
+
+      true
+    rescue StandardError => e
+      report(e)
+
+      false
     end
 
     # Reaching here is a reply with nothing to tap: every tool that sends an

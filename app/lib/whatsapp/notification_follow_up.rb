@@ -67,7 +67,7 @@ module Whatsapp::NotificationFollowUp
   def pill(action, label:, param: nil)
     {
       id: ::Whatsapp::FlowActions.id_for(action: action, param: param),
-      title: I18n.t("whatsapp.bot.notifications.follow_up.buttons.#{label}")
+      title: I18n.t("whatsapp.bot.buttons.#{label}")
     }
   end
 

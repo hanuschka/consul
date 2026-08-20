@@ -67,11 +67,18 @@ module Whatsapp::FlowActions
     show_more
   ].freeze
 
-  # The three ways to answer the picture question, in the order they are offered.
+  # The ways to answer the picture question, in the order they are offered.
   # Declared here rather than in the tool that sends them because the order is what
   # pairs each id with its label, and a set built twice is a set that can pair them
   # differently.
-  IMAGE_ANSWERS = %i[image_upload image_generate image_skip].freeze
+  #
+  # Two, not three: Whatsapp::Send keeps the last of a message's three slots for the
+  # main menu. Sending a photo and going on without one are the two answers the
+  # citizen must be able to give by tapping — a photo is always optional, and that
+  # is the pill that makes it so. Having one generated is offered in words instead,
+  # which the generate tool's own description already asks for when they say they
+  # have no picture of their own.
+  IMAGE_ANSWERS = %i[image_upload image_skip].freeze
 
   # The ids that point at one record or setting. Their parameter is what the
   # dispatcher re-resolves, and it is also what names the pill when the assistant

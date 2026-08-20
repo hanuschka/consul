@@ -14,9 +14,10 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
               "you ask for a photo — never write the request yourself, because the notice would " \
               "be missing. draft_status says whether this phase takes pictures at all and whether " \
               "the citizen has already declined one; do not ask again if they have. A photo is " \
-              "always optional, and the three ways to answer — send one, have one made, go on " \
-              "without — arrive as buttons of their own, so do not offer them again in your " \
-              "sentence. This sends the message itself."
+              "always optional, and the two answers — send one, or go on without — arrive as " \
+              "buttons of their own, so do not offer them again in your sentence. Having a " \
+              "picture generated is not one of them: offer that in words when they say they " \
+              "have none of their own. This sends the message itself."
 
   params do
     string :body,
@@ -48,8 +49,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     # The labels are locale copy rather than the model's, for the same reason the
     # notice below them is: the citizen must always be able to decline a picture, and
     # a set of options the model writes fresh each turn is a set it can also write its
-    # way out of. Three of them is what a message holds, and the phase either collects
-    # pictures or this tool has already refused, so all three always apply.
+    # way out of. Two of them, because the message's third slot is the main menu's,
+    # and the phase either collects pictures or this tool has already refused, so
+    # both always apply.
     #
     # The ask is the assistant's and already in the citizen's language; the notice and
     # the labels are the locale copy's and have to be brought to the same one, or a

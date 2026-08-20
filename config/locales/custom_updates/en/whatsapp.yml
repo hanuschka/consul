@@ -90,6 +90,7 @@ en:
         image_rights_notice: >-
           Please only send pictures you hold the rights to, and none showing people who
           have not agreed to it.
+        location_optional: A location is optional. You can also carry on without one.
       onboarding:
         welcome_greeting: 👋 Good to have you here!
         login_prompt: >-
@@ -114,6 +115,11 @@ en:
         login: 🔗 Log in
         open_page: Open page
         choose: Choose
+        take_part: Take part now
+        view_projekt: View project
+        my_contributions: My contributions
+        location_skip: Continue without
+        main_menu: Main menu
         show_more: Show more
         image_upload: Add a photo
         image_generate: Generate a picture
@@ -123,10 +129,6 @@ en:
           deadline_approaching: You can still take part here until the deadline passes.
           deadline_passed: The deadline has passed. You can look at what came in.
           status_change: Something has happened to your contribution.
-          buttons:
-            take_part: Take part now
-            view_projekt: View project
-            my_contributions: My contributions
         types:
           new_projekt:
             short: New project

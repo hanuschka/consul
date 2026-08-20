@@ -4,18 +4,21 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   # the taxonomy picker. What goes in it is the model's; what stays bounded is the
   # id on each row, for the same reason a button's is.
   #
-  # A list earns a tool over buttons on two counts: it holds ten rows rather than
-  # three, and each row carries a description, which is what lets ten options be
-  # named without a sentence above each.
-  MAX_ROWS = ::Whatsapp::MAX_LIST_ROWS
+  # A list earns a tool over buttons on two counts: it holds nine rows rather than
+  # two, and each row carries a description, which is what lets nine options be
+  # named without a sentence above each. The tenth row, the way to the main menu,
+  # is Whatsapp::Send's and arrives on every list without this tool composing it.
+  MAX_ROWS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
 
   # WhatsApp truncates a row description past this without saying so.
   MAX_DESCRIPTION_LENGTH = 72
 
-  description "Sends the citizen a selectable list — up to ten rows, each with a label you write " \
+  description "Sends the citizen a selectable list — up to nine rows, each with a label you write " \
               "and an optional one-line description. Use it instead of buttons whenever there " \
               "are more than three things to choose between, or when each option needs a line " \
-              "explaining it. Every row needs an action_id from the same vocabulary as " \
+              "explaining it. The list carries a tenth row of its own, the way to the main " \
+              "menu, which you never write and never mention. Every row needs an action_id " \
+              "from the same vocabulary as " \
               "reply_with_actions; a row whose action is unknown or whose record no longer " \
               "exists is dropped. A list carries no buttons beside it, so any way out of the " \
               "question has to be a row of its own. Rows cannot hold links or markup — put a URL " \
@@ -29,7 +32,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
                    "(\"Projekt wählen\", \"Auswählen\")."
     array :rows,
       of: :object,
-      description: "Up to ten rows, most useful first. Each is {\"action_id\": ..., " \
+      description: "Up to nine rows, most useful first. Each is {\"action_id\": ..., " \
                    "\"label\": ..., \"description\": ...}, where description is optional. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \

@@ -217,8 +217,14 @@ application.register("shared--polling", SharedPollingController)
 import SharedDocumentUploadController from "./shared/document_upload_controller"
 application.register("shared--document-upload", SharedDocumentUploadController)
 
+import SharedScrollToTopController from "./shared/scroll_to_top_controller"
+application.register("shared--scroll-to-top", SharedScrollToTopController)
+
 import PollQuestionImportsAnswerFieldsController from "./poll_question_imports/answer_fields_controller"
 application.register("poll-question-imports--answer-fields", PollQuestionImportsAnswerFieldsController)
+
+import PollQuestionImportsPreviewController from "./poll_question_imports/preview_controller"
+application.register("poll-question-imports--preview", PollQuestionImportsPreviewController)
 
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)

@@ -6,7 +6,11 @@
       breadcrumbs: @breadcrumbs,
       back_button_url: adm_projekts_phase_poll_question_imports_path(@projekt_phase),
       compact: true
-    ) %>
+    ) do |header| %>
+  <% header.with_after_title do %>
+    <p><%= t("adm.projekts.poll_question_imports.new.description") %></p>
+  <% end %>
+<% end %>
 
 <div class="kern-container my-5">
   <div

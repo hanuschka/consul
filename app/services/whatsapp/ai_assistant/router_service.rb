@@ -73,7 +73,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # Which transport answers is a setting, so that a turn that goes wrong on the
     # newer one is a setting away from the older rather than a deploy away.
     def ask
-      return sdk_turn if ::Ai::OpenaiSdk.enabled?
+      return openai_api_turn if ::OpenaiApi::Transport.enabled?
 
       ruby_llm_turn
     end
@@ -97,7 +97,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       state.replay_into(chat)
     end
 
-    def sdk_turn
+    def openai_api_turn
       loop_turn = run_tool_loop_with_stale_retry
 
       Turn.new(halt: loop_turn.halt, text: loop_turn.text, chain_turn: loop_turn)
@@ -123,8 +123,9 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # ruby_llm path uses: only the transport around them changes, so a misroute
     # reads the same in DecisionLog whichever one answered.
     def run_tool_loop
-      tool_loop = ::Ai::OpenaiSdk::ToolLoop.new(
+      tool_loop = ::OpenaiApi::ToolLoop.new(
         tools: tools,
+        tool_definitions: tool_definitions,
         model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL,
         instructions: instructions,
         input: chain.input_for(@inbound_text),
@@ -241,6 +242,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # should not throw it away between two calls of one turn.
     def tools
       @tools ||= tool_classes.map { |tool_class| tool_class.new(conversation: @conversation) }
+    end
+
+    # Built once a turn and only for the transport that needs them: the ruby_llm
+    # path hands the tool objects straight to the chat, which describes them to
+    # the provider itself.
+    def tool_definitions
+      @tool_definitions ||= ::RubyLlmToolToOpenAiConverter.definitions_for(tools)
     end
 
     # The tools that act on a Consul account, left out for a number that has none.

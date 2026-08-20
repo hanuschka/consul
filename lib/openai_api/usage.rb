@@ -1,4 +1,4 @@
-module Ai::OpenaiSdk::Usage
+module OpenaiApi::Usage
   PROVIDER = "openai".freeze
 
   # Recorded through the same service the ruby_llm path records through, off a
@@ -17,9 +17,6 @@ module Ai::OpenaiSdk::Usage
     Rails.logger.error("[AiUsageRecord] Failed to record usage for #{feature}: #{e.message}")
   end
 
-  # Reasoning tokens are billed as output tokens and reported inside the output
-  # detail, so they are passed on their own key rather than added to the total:
-  # the usage table counts them separately.
   def self.message_for(response)
     usage = response.usage
 
@@ -29,8 +26,8 @@ module Ai::OpenaiSdk::Usage
       model_id: response.model,
       input_tokens: usage&.input_tokens,
       output_tokens: usage&.output_tokens,
-      cached_tokens: usage&.input_tokens_details&.cached_tokens,
-      reasoning_tokens: usage&.output_tokens_details&.reasoning_tokens
+      cached_tokens: usage&.cached_tokens,
+      reasoning_tokens: usage&.reasoning_tokens
     )
   end
 end

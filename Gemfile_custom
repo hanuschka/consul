@@ -47,16 +47,14 @@ gem 'pagy', '~> 9.4'
 
 gem 'liquid'
 
+# No openai gem here: the WhatsApp assistant's Responses transport
+# (OpenaiApi::Transport) talks to the two endpoints it needs through OpenaiApi
+# (lib/openai_api), built on the Faraday and faraday-multipart this pinned
+# ruby_llm already carries. The official SDK is not an option to begin with —
+# every released version requires Ruby >= 3.2.0 and this app runs 3.1.4 — and
+# declaring it would fail `bundle install` for everyone rather than only the
+# code that uses it.
 gem 'ruby_llm', '1.16.0'
-
-# Official Ruby SDK for the OpenAI API — the Responses transport for the
-# WhatsApp assistant (Ai::OpenaiSdk). Left commented out because every
-# released version requires Ruby >= 3.2.0 and this app runs 3.1.4, so
-# declaring it fails `bundle install` for everyone rather than only the code
-# that uses it. Uncomment with the Ruby upgrade; until then
-# Setting["ai.whatsapp_transport"] has nothing to switch to and the assistant
-# stays on ruby_llm.
-# gem 'openai', '0.80.0'
 
 gem 'pdf-reader', '2.15.1'
 

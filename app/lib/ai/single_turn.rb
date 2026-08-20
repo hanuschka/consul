@@ -9,8 +9,8 @@ module Ai::SingleTurn
     schema:, instructions:, input:, timeout_seconds:,
     feature: ::AiUsageRecord::UNKNOWN_FEATURE
   )
-    if ::Ai::OpenaiSdk.enabled?
-      return ::Ai::OpenaiSdk::Responses.json(
+    if ::OpenaiApi::Transport.enabled?
+      return ::OpenaiApi::Responses.json(
         schema: schema,
         instructions: instructions,
         input: input,
@@ -33,8 +33,8 @@ module Ai::SingleTurn
     schema:, instructions:, input:,
     feature: ::AiUsageRecord::UNKNOWN_FEATURE
   )
-    if ::Ai::OpenaiSdk.enabled?
-      return ::Ai::OpenaiSdk::Responses.json(
+    if ::OpenaiApi::Transport.enabled?
+      return ::OpenaiApi::Responses.json(
         schema: schema,
         instructions: instructions,
         input: input,
@@ -55,8 +55,8 @@ module Ai::SingleTurn
     instructions:, input:, timeout_seconds:,
     feature: ::AiUsageRecord::UNKNOWN_FEATURE
   )
-    if ::Ai::OpenaiSdk.enabled?
-      return ::Ai::OpenaiSdk::Responses.text(
+    if ::OpenaiApi::Transport.enabled?
+      return ::OpenaiApi::Responses.text(
         instructions: instructions,
         input: input,
         model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL,

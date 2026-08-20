@@ -1,4 +1,4 @@
-module Ai::OpenaiSdk::Responses
+module OpenaiApi::Responses
   # One name for every structured answer on this transport. The provider wants a
   # name for the schema and nothing reads it back, so a per-caller one would only
   # be a second thing to keep in step with the schema itself.
@@ -10,15 +10,15 @@ module Ai::OpenaiSdk::Responses
   # loop spends — each is a billed request.
   def self.create(feature:, requested_model:, timeout_seconds: nil, **params)
     response =
-      ::Ai::OpenaiSdk::Client
+      ::OpenaiApi::ClientFactory
         .build
         .responses
         .create(
           **params.compact,
-          **::Ai::OpenaiSdk::Client.request_options(timeout_seconds)
+          **::OpenaiApi::ClientFactory.request_options(timeout_seconds)
         )
 
-    ::Ai::OpenaiSdk::Usage.record(
+    ::OpenaiApi::Usage.record(
       response: response, feature: feature, requested_model: requested_model
     )
 
@@ -80,7 +80,7 @@ module Ai::OpenaiSdk::Responses
   def self.parsed(output_text)
     JSON.parse(output_text.to_s)
   rescue JSON::ParserError => e
-    Rails.logger.error("[Ai::OpenaiSdk] structured answer was not JSON: #{e.message}")
+    Rails.logger.error("[OpenaiApi] structured answer was not JSON: #{e.message}")
 
     {}
   end

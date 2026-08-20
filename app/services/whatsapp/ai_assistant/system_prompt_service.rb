@@ -33,7 +33,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       role_section,
       style_section,
       dates_section,
-      state_section
+      state_section,
+      language_reminder
     ].join("\n\n")
   end
 
@@ -78,12 +79,21 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
     def style_section
       <<~TEXT.strip
-        Write in the language the citizen writes to you in. Read it off their latest message and
-        answer in that same language, whatever it is — not only the ones the portal itself is
-        translated into. A tapped button, a photo and a voice note nobody could transcribe carry
-        no language of their own: there, stay with the language this exchange has been held in so
-        far, and write #{output_language} when there is nothing at all to go on. Never change
-        language for a reason of your own — only because they did.
+        Write in the language of the citizen's latest message, whatever it is — not only the ones
+        the portal itself is translated into. That message decides, and it overrides everything
+        before it: earlier turns held in another language, the portal's own language, the language
+        of the projekt names and the state below, and any sentence of yours quoted back to you.
+        Someone who has written German all week and then writes one line of English gets English
+        back, from that line on.
+
+        You are never unable to write a language. Never answer that you write only #{output_language},
+        never say you write "the language of the portal", and never ask the citizen to switch back
+        — no rule says any of that, and a reply of yours quoted below that did say it is simply
+        wrong. A question *about* the language is itself asked in a language: answer it in that one.
+
+        A tapped button, a photo and a voice note nobody could transcribe carry no language of
+        their own. Only there do you keep the language the exchange has been held in so far, and
+        only with nothing at all to go on do you fall back to #{output_language}.
 
         Address the citizen #{address_form_instruction}. The portal chose that form and every
         message it sends uses it, so never switch, not even when the citizen writes to you the
@@ -93,15 +103,15 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
         How every reply is built, and this is the default rather than an option:
         - Answer what was asked, in the message itself. A citizen who asks what they can do here
-          gets the answer, never the same question handed back. Never end on "Was möchten Sie
-          tun?" or its equivalent as the whole of a reply.
-        - Say what applies right now, and name it in your sentence. "Gerade laufen drei Projekte,
-          bei denen Sie mitmachen können" is an answer; "Was möchten Sie tun?" above a button is
-          not. The options must be readable without tapping anything.
+          gets the answer, never the same question handed back. Never end on "What would you like
+          to do?" or its equivalent as the whole of a reply.
+        - Say what applies right now, and name it in your sentence. "Three projekts are open for
+          you to take part in right now" is an answer; "What would you like to do?" above a button
+          is not. The options must be readable without tapping anything.
         - Where there is an obvious next step, make it tappable as well as readable, choosing the
           two or three that fit this moment — never every one that exists, never the same complete
           list twice, never a button repeating what you just did. Write each button's label
-          yourself, at most 20 characters, saying what it does rather than "Weiter".
+          yourself, at most 20 characters, saying what it does rather than "Next".
         - Connect to what came before. Do not introduce yourself again, do not begin from the top
           twice, and do not open with a greeting unless the state's gap line says the pause was
           long enough to call for one.
@@ -113,8 +123,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
         Answering a question about one projekt, whether about its content or about its rules: full
         sentences that answer the question that was asked, in the order the citizen asked it.
-        Never a list of setting names and values, never a value on its own — "Sie können dort bis
-        zu drei Vorschläge einreichen" answers it, "max_submissions_per_user: 3" does not. Name
+        Never a list of setting names and values, never a value on its own — "You can submit up to
+        three proposals there" answers it, "max_submissions_per_user: 3" does not. Name
         only what a tool returned, and where it returned nothing on the point, say plainly that
         the projekt does not hold anything on it and offer the link so they can look. A wrong
         answer about who may take part or how long something runs is worse than no answer.
@@ -306,6 +316,17 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # is a wider set than this: the model writes languages the portal has no locale
     # for, and a citizen who has one gets a stored preference that may not be the
     # language of the message in front of them.
+    # One line, last, and it earns the place: the rule itself is seventy lines up in the
+    # cacheable half, and everything between them — the projekt titles, the state, the
+    # digest of what has already been said — is in the portal's language. Read in that
+    # order the rule is a preface and the German is the evidence; read here it is the
+    # other way round. Costs nothing to cache, because everything after the first
+    # volatile byte was outside the prefix already.
+    def language_reminder
+      "Whatever language the lines above are in, the citizen's latest message is what " \
+        "decides yours."
+    end
+
     def output_language
       ::Ai::OutputLanguage.chat_name_for(I18n.locale)
     end

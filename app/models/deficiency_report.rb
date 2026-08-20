@@ -169,6 +169,10 @@ class DeficiencyReport < ApplicationRecord
     closed_to_archive.update_all(archived_at: Time.zone.now)
   end
 
+  def self.submissions_open?
+    Setting["deficiency_reports.show_create_report_button"].present?
+  end
+
   def searchable_values
     {
       id.to_s               => "A",

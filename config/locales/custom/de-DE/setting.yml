@@ -326,9 +326,9 @@ de:
         send_feedback_form_link: Feedback-Formular versenden
         send_feedback_form_link_description: >
           Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
-        show_create_report_button: Button zum Einreichen anzeigen
+        show_create_report_button: Einreichung neuer Mängelmeldungen
         show_create_report_button_description: >
-          Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
+          Steuert, ob Nutzende neue Mängelmeldungen einreichen können. Ist die Option deaktiviert, werden alle Schaltflächen zum Einreichen ausgeblendet und das Meldeformular ist auch über einen direkten Link nicht mehr erreichbar; bereits eingegangene Meldungen bleiben weiterhin öffentlich sichtbar. Deaktivieren Sie diese Option, wenn vorübergehend keine neuen Meldungen entgegengenommen werden sollen, etwa während einer Betriebspause.
       ideas:
         show_in_main_menu: Ideen in Navigation anzeigen
         show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an

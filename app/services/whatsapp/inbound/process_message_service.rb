@@ -65,10 +65,31 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     park_media
 
-    answer(tap_note || entry_note(entry) || reading.text.presence || media_note)
+    inbound_note = tap_note || entry_note(entry) || reading.text.presence || media_note
+
+    return answer_tap(inbound_note) if reading.tapped_reply_id.present?
+
+    answer(inbound_note)
   end
 
   private
+
+    # The same turn as any other, with the waiting marked on the tapped message
+    # for the whole of it. Only taps take this route: the typing bubble covers
+    # every other kind of message and covers none of theirs.
+    #
+    # The mark is withdrawn however the turn ended — answered, degraded to the
+    # recovery line, or raised — because an hourglass left on a message that has
+    # already been replied to says the opposite of what it is for.
+    def answer_tap(inbound_text)
+      ::Whatsapp::Send.acknowledge_tap(account: account, message_id: reading.message_id)
+
+      answer(inbound_text)
+    ensure
+      ::Whatsapp::Send.withdraw_tap_acknowledgement(
+        account: account, message_id: reading.message_id
+      )
+    end
 
     # The one place the assistant is asked anything, whether what reaches it is the
     # citizen's own words, a note saying which button they tapped, or a note saying

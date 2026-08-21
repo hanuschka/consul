@@ -393,6 +393,42 @@ module Whatsapp::Send
     nil
   end
 
+  # What a tapped button gets instead of the bubble. The indicator is accepted
+  # for a button reply and rendered for none of them — verified against the
+  # gateway, which answers the identical request with success for a tap and
+  # shows nothing — so a tap that starts a turn several seconds long would
+  # otherwise look exactly like a tap that never arrived.
+  #
+  # The mark goes on the citizen's own message rather than into a line of its
+  # own: a "one moment" reply would sit in the dialog history forever, and the
+  # history is read by admins to find out what was said.
+  WORKING_REACTION = "⏳".freeze
+
+  def acknowledge_tap(account:, message_id:)
+    react(account: account, message_id: message_id, emoji: WORKING_REACTION)
+  end
+
+  # Once the reply is out the mark has said everything it had to say, and one
+  # left behind reads as a turn still running.
+  def withdraw_tap_acknowledgement(account:, message_id:)
+    react(account: account, message_id: message_id, emoji: "")
+  end
+
+  # Never raises, and no whatsapp_messages row, for the same reasons as
+  # `typing`: it is feedback rather than something that was said, and someone
+  # who does not see it waits exactly as long.
+  def react(account:, message_id:, emoji:)
+    return if message_id.blank?
+
+    WhatsappApi::Client.new.messages.send_reaction(
+      to: account.wa_id, message_id: message_id, emoji: emoji
+    )
+  rescue StandardError => e
+    Rails.logger.info("[Whatsapp] reaction failed: #{e.class} - #{e.message}")
+
+    nil
+  end
+
   # Which of an interactive message's buttons offered something that cannot be taken
   # back — publishing, registering support, severing the account link. Written onto
   # the conversation for every interactive send, so the tools that must not act

@@ -21,6 +21,7 @@ en:
           projekts: Projects
           managers: Team
           inspiration: Project inspirations
+          instance_import: Copy external projekt
           landing_pages: Topic pages
           settings: Configuration
       inspiration:
@@ -103,10 +104,13 @@ en:
           pending_name: Imported project (in progress)
           url_label: Reuse a project from another platform
           url_hint: >
-            Paste the address of a project you found in the overview above. Its
-            phases, settings, content and maps are copied into a new deactivated
-            draft on this platform. Images, videos and participant contributions
-            are not copied — pictures arrive as placeholders you can replace.
+            Paste the address of a project you found under Project
+            inspirations. Its phases, settings, content and maps are copied into
+            a new deactivated draft on this platform. Images, videos and
+            participant contributions are not copied — pictures arrive as
+            placeholders you can replace.
+          browse_inspiration: Browse project inspirations
+          url_field_label: Project address
           url_placeholder: e.g. https://app.demokratie.today/beteiligung-innenstadt
           invalid_url: Please paste a complete project address, including https://.
           started: The project is being imported. This may take a moment.

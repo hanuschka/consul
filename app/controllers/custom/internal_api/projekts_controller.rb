@@ -4,7 +4,7 @@ class InternalApi::ProjektsController < InternalApi::BaseController
 
   before_action :process_tags, only: [:update]
   before_action :find_projekt, only: [
-    :update, :update_page, :update_title_image, :import
+    :update, :update_page, :update_title_image, :import, :export
   ]
 
   skip_authorization_check
@@ -118,6 +118,18 @@ class InternalApi::ProjektsController < InternalApi::BaseController
     else
       render json: { errors: @projekt.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  # Publishing a projekt to the global overview is what makes it reusable by
+  # another instance, so it is also what gates the export.
+  def export
+    if !@projekt.on_dt_global_overview?
+      render json: { error: "Projekt is not available for reuse" }, status: :not_found
+
+      return
+    end
+
+    render json: { export: Projekts::SerializeForExport.call(source: @projekt) }
   end
 
   private

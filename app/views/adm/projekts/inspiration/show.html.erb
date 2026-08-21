@@ -5,6 +5,28 @@
 
   <div class="kern-container-fluid">
     <% if @embed_url.present? %>
+      <div class="adm-projekts-inspiration-import">
+        <%= render Kern::FormFieldComponent.new(
+              label: t("adm.projekts.projekts.instance_import.url_label"),
+              hint: t("adm.projekts.projekts.instance_import.url_hint")
+            ) do %>
+          <%= form_with(
+            url: adm_projekts_instance_imports_path,
+            method: :post,
+            class: "adm-projekts-inspiration-import__form"
+          ) do |f| %>
+            <%= f.url_field :source_url,
+              class: "kern-form-input",
+              label: false,
+              placeholder: t("adm.projekts.projekts.instance_import.url_placeholder") %>
+
+            <%= form_submit_button(
+              text: t("adm.projekts.projekts.instance_import.action")
+            ) %>
+          <% end %>
+        <% end %>
+      </div>
+
       <%= render Shared::AdminIframeComponent.new(
             src: @embed_url,
             css_class: "adm-projekts-inspiration-frame",

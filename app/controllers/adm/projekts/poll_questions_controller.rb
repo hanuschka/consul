@@ -135,6 +135,8 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
         :parent_question_id,
         :bundle_question,
         :answer_mandatory,
+        :randomize_answers,
+        :randomize_position,
         :contextualize_by_poll_question_id,
         votation_type_attributes: [
           :id, :vote_type, :max_votes, :max_votes_per_answer,

@@ -1,15 +1,25 @@
 class Projekts::Copying::ReferenceRewirer < ApplicationService
   MAP_EMBED_SELECTOR = ".js-projekt-map-embed[data-map-phase-id]".freeze
 
-  def initialize(source:, copy:, id_map:)
-    @source = source
+  # The model each poll-question reference points at, so a source id is only
+  # ever looked up against the right half of the IdMap.
+  QUESTION_REFERENCE_MODELS = {
+    "parent_question_id" => Poll::Question,
+    "next_question_id" => Poll::Question,
+    "contextualize_by_poll_question_id" => Poll::Question,
+    "contexted_clone_of_poll_question_id" => Poll::Question,
+    "context_id" => Poll::Question::Answer
+  }.freeze
+
+  def initialize(bundle:, copy:, id_map:)
+    @bundle = bundle
     @copy = copy
     @id_map = id_map
   end
 
-  # Every reference below was copied verbatim and still points into the source
-  # projekt. They can only be resolved once the whole graph exists, so they are
-  # rewritten in one pass at the end.
+  # Every reference below named a record of the source and was left null while
+  # the graph was rebuilt. They can only be resolved once the whole graph
+  # exists, so they are written in one pass at the end.
   def call
     rewire_poll_questions
     rewire_poll_answers
@@ -21,85 +31,75 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
 
   private
 
-    attr_reader :source, :copy, :id_map
+    attr_reader :bundle, :copy, :id_map
 
-    # The rewiring reads from the SOURCE side: every reference below was left
-    # null on the copy, so the copy has nothing to read back. Walking the source
-    # and mapping forward also keeps this identical to how every other reference
-    # here is resolved.
-    def source_questions
-      @source_questions ||= Poll::Question
-        .where(poll_id: Poll.where(projekt_phase_id: source.projekt_phases.ids).select(:id))
+    def poll_nodes
+      @poll_nodes ||= Array(bundle["phases"])
+        .flat_map { |node| Array(node.dig("resources", "polls")) }
+    end
+
+    def question_nodes
+      @question_nodes ||= poll_nodes.flat_map { |node| Array(node["questions"]) }
     end
 
     # Poll::Question rejects a parent from another poll, so these five columns
     # were left null when the copy was inserted and are written here instead.
-    # update_columns skips validation on purpose: the resulting graph is valid,
-    # only the intermediate state was not.
+    # update_all skips validation on purpose: the resulting graph is valid, only
+    # the intermediate state was not.
     def rewire_poll_questions
-      source_questions.each do |source_question|
-        references = question_references(source_question)
+      question_nodes.each do |node|
+        references = QUESTION_REFERENCE_MODELS.each_with_object({}) do |(name, model), result|
+          result[name] = mapped(model, node.dig("references", name))
+        end
         next if references.values.all?(&:blank?)
 
-        copy_question_id = mapped(Poll::Question, source_question.id)
+        copy_question_id = mapped(Poll::Question, node["source_id"])
         next if copy_question_id.blank?
 
         Poll::Question.where(id: copy_question_id).update_all(references)
       end
     end
 
-    def question_references(source_question)
-      {
-        parent_question_id: mapped(Poll::Question, source_question.parent_question_id),
-        next_question_id: mapped(Poll::Question, source_question.next_question_id),
-        contextualize_by_poll_question_id:
-          mapped(Poll::Question, source_question.contextualize_by_poll_question_id),
-        contexted_clone_of_poll_question_id:
-          mapped(Poll::Question, source_question.contexted_clone_of_poll_question_id),
-        context_id: mapped(Poll::Question::Answer, source_question.context_id)
-      }
-    end
-
     def rewire_poll_answers
-      source_answers = Poll::Question::Answer
-        .where(question_id: source_questions.map(&:id))
-        .where.not(next_question_id: nil)
+      question_nodes.flat_map { |node| Array(node["answers"]) }.each do |node|
+        next_question_id = mapped(Poll::Question, node.dig("references", "next_question_id"))
+        next if next_question_id.blank?
 
-      source_answers.each do |source_answer|
-        copy_answer_id = mapped(Poll::Question::Answer, source_answer.id)
+        copy_answer_id = mapped(Poll::Question::Answer, node["source_id"])
         next if copy_answer_id.blank?
 
-        Poll::Question::Answer.where(id: copy_answer_id).update_all(
-          next_question_id: mapped(Poll::Question, source_answer.next_question_id)
-        )
+        Poll::Question::Answer.where(id: copy_answer_id)
+          .update_all(next_question_id: next_question_id)
       end
     end
 
     # budget_id is excluded when the poll is copied (it is unique per poll), so
-    # the copy has nothing to read back -- the link has to come off the source.
+    # the copy has nothing to read back -- the link comes off the bundle.
     def rewire_polls
-      Poll.where(projekt_phase_id: source.projekt_phases.ids)
-        .where.not(budget_id: nil)
-        .find_each do |source_poll|
-          copy_poll_id = mapped(Poll, source_poll.id)
-          copy_budget_id = mapped(Budget, source_poll.budget_id)
-          next if copy_poll_id.blank? || copy_budget_id.blank?
+      poll_nodes.each do |node|
+        copy_budget_id = mapped(Budget, node.dig("references", "budget_id"))
+        next if copy_budget_id.blank?
 
-          Poll.where(id: copy_poll_id).update_all(budget_id: copy_budget_id)
-        end
+        copy_poll_id = mapped(Poll, node["source_id"])
+        next if copy_poll_id.blank?
+
+        Poll.where(id: copy_poll_id).update_all(budget_id: copy_budget_id)
+      end
     end
 
-    # These were copied verbatim and hold real ids, so an unmapped one keeps
-    # pointing where the source pointed -- a navbar item may link to a global
-    # page or to another projekt's item, neither of which is part of this copy.
+    # A link into this copy is mapped. A link to anything else -- a global page,
+    # another projekt's item -- can only keep the id it had, which is an answer
+    # within this instance and nowhere else, so the fallback comes out of
+    # local_references and an imported item simply arrives unlinked.
     def rewire_navbar_items
-      NavbarItem.where(projekt_id: copy.id).find_each do |navbar_item|
-        navbar_item.update_columns(
-          parent_id: mapped_or_source(NavbarItem, navbar_item.parent_id),
-          landing_page_id:
-            mapped_or_source(SiteCustomization::Page, navbar_item.landing_page_id),
-          linked_page_id:
-            mapped_or_source(SiteCustomization::Page, navbar_item.linked_page_id)
+      Array(bundle["navbar_items"]).each do |node|
+        copy_navbar_item_id = mapped(NavbarItem, node["source_id"])
+        next if copy_navbar_item_id.blank?
+
+        NavbarItem.where(id: copy_navbar_item_id).update_all(
+          parent_id: mapped_or_local(NavbarItem, node, "parent_id"),
+          landing_page_id: mapped_or_local(SiteCustomization::Page, node, "landing_page_id"),
+          linked_page_id: mapped_or_local(SiteCustomization::Page, node, "linked_page_id")
         )
       end
     end
@@ -127,7 +127,8 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
 
     # Two things inside stored HTML point at the source: the phase id a map
     # embed renders (HasEmbeddableShortcodes reads data-map-phase-id) and the
-    # storage key of every image URL.
+    # storage key of every image URL. An imported bundle duplicates no blob, so
+    # its key map is empty and only the embeds are rewritten.
     def rewrite_html(html)
       return html if html.blank?
 
@@ -163,7 +164,7 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
       id_map.copy_id_for(model_class, source_id)
     end
 
-    def mapped_or_source(model_class, source_id)
-      mapped(model_class, source_id) || source_id
+    def mapped_or_local(model_class, node, name)
+      mapped(model_class, node.dig("references", name)) || node.dig("local_references", name)
     end
 end

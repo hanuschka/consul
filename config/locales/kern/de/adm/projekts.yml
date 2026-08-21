@@ -98,6 +98,24 @@ de:
             note: Beiträge, Stimmen, Kommentare und Abonnements der Teilnehmenden.
           status_processing: Wird kopiert …
           status_failed: Kopieren fehlgeschlagen
+        instance_import:
+          action: Projekt importieren
+          pending_name: Importiertes Projekt (in Arbeit)
+          url_label: Projekt einer anderen Plattform übernehmen
+          url_hint: >
+            Fügen Sie die Adresse eines Projekts ein, das Sie in der Übersicht
+            oben gefunden haben. Phasen, Einstellungen, Inhalte und Karten
+            werden als neuer, deaktivierter Entwurf auf dieser Plattform
+            angelegt. Bilder, Videos und Beiträge der Teilnehmenden werden nicht
+            übernommen – Bilder kommen als Platzhalter an und können ersetzt
+            werden.
+          url_placeholder: z.B. https://app.demokratie.today/beteiligung-innenstadt
+          invalid_url: Bitte fügen Sie eine vollständige Projektadresse inklusive https:// ein.
+          started: Das Projekt wird importiert. Das kann einen Moment dauern.
+          finished: Das importierte Projekt „%{name}“ wurde erstellt.
+          failed_notice: >
+            Das Projekt konnte nicht importiert werden. Bitte prüfen Sie die
+            Adresse und ob das Projekt auf app.demokratie.today veröffentlicht ist.
         projekt:
           top_level_projekt: Top-Level-Projekt
           frontend_page: Projektseite

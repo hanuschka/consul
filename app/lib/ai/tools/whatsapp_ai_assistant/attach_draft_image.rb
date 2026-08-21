@@ -43,10 +43,15 @@ class Ai::Tools::WhatsappAiAssistant::AttachDraftImage < Ai::Tools::WhatsappAiAs
 
       return attach_failed_error if !attached
 
+      # A picture is part of what the citizen confirms and none of it is in the text,
+      # so a yes given before this photo arrived was a yes to a contribution without
+      # it.
+      conversation.revoke_draft_preview_digest!
+
       {
         attached: true,
-        hint: "Show them the draft with the picture using send_draft_card, and ask whether it " \
-              "can go in."
+        hint: "Show them the contribution with the picture using show_draft_for_confirmation, " \
+              "and ask whether it can go in."
       }
     end
 

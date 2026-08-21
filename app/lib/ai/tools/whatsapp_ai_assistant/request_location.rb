@@ -41,17 +41,25 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
     # Its own send rather than a line appended above the picker, because the picker's
     # body is the assistant's question and this is the answer to it. Send puts the
     # main menu beside location_skip, so the second message carries two.
+    #
+    # The sentence and the label go through one translation call, not two and not one
+    # of each: a body in the citizen's language over a button in the portal's is the
+    # split every other send here exists to avoid.
     def offer_to_continue_without
+      written_label = I18n.t("whatsapp.bot.buttons.location_skip")
+      body, label = ::Whatsapp::AiAssistant::BotCopyService.call(
+        account: account,
+        lines: [I18n.t("whatsapp.bot.proposal.location_optional"), written_label]
+      )
+
       ::Whatsapp::Send.buttons(
         account: account,
-        body: ::Whatsapp::AiAssistant::BotCopyService.line(
-          account: account, body: I18n.t("whatsapp.bot.proposal.location_optional")
-        ),
+        body: body,
         buttons: [
           {
             id: ::Whatsapp::FlowActions.id_for(action: :location_skip),
-            title: I18n.t(
-              "whatsapp.bot.buttons.location_skip", locale: ::Whatsapp.locale_for(account)
+            title: ::Whatsapp::AssistantActions.fitting_label(
+              translated: label, original: written_label
             )
           }
         ]

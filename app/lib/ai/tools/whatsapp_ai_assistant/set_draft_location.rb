@@ -41,9 +41,14 @@ class Ai::Tools::WhatsappAiAssistant::SetDraftLocation <
 
       conversation.clear_shared_location!
 
+      # The pin is named in the block the citizen confirms, so a yes given before it
+      # was written was a yes to a contribution without a place on the map.
+      conversation.revoke_draft_preview_digest!
+
       {
         attached: true,
-        hint: "Say the place has been noted and ask whether the contribution can go in."
+        hint: "Say the place has been noted, then show them the contribution with " \
+              "show_draft_for_confirmation and ask whether it can go in."
       }
     rescue StandardError => e
       conversation.clear_shared_location!

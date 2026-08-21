@@ -24,10 +24,14 @@ class Ai::Tools::WhatsappAiAssistant::GenerateDraftImage <
 
     return generation_failed_error if !generated
 
+    # A generated picture is the part of the contribution nobody has seen, so a yes
+    # given before it existed cannot stand for the contribution carrying it.
+    conversation.revoke_draft_preview_digest!
+
     {
       attached: true,
-      hint: "Show them the picture with send_draft_card and ask whether the contribution can go " \
-            "in with it."
+      hint: "Show them the picture with show_draft_for_confirmation and ask whether the " \
+            "contribution can go in with it."
     }
   end
 

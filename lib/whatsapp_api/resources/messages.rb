@@ -42,13 +42,15 @@ class WhatsappApi::Resources::Messages
   # an interactive message must have at least one, so the two shapes cannot be
   # the same call.
   def send_image(to:, image_url:, caption: nil)
-    @client.post(
-      BASE_PATH,
-      body: envelope(to).merge(
-        type: "image",
-        image: { link: image_url, caption: caption }.compact
-      )
-    )
+    send_image_message(to: to, image: image_by_link(image_url), caption: caption)
+  end
+
+  # The same picture where it exists only on an unpublished record: uploaded to
+  # WhatsApp first, so nothing about the send depends on Meta being able to reach
+  # us. The button-header route already had this pair; a captioned picture needs
+  # it for the same reason.
+  def send_image_by_media_id(to:, media_id:, caption: nil)
+    send_image_message(to: to, image: image_by_id(media_id), caption: caption)
   end
 
   def send_template(to:, name:, language:, variables: [])
@@ -255,6 +257,16 @@ class WhatsappApi::Resources::Messages
             body: { text: body },
             action: { buttons: interactive_buttons(buttons) }
           }
+        )
+      )
+    end
+
+    def send_image_message(to:, image:, caption:)
+      @client.post(
+        BASE_PATH,
+        body: envelope(to).merge(
+          type: "image",
+          image: image.to_h.merge({ caption: caption }.compact)
         )
       )
     end

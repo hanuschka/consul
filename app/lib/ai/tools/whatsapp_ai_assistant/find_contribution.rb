@@ -8,7 +8,7 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
               "however roughly. Returns its id, its title, how many supports it has, whether it " \
               "can be supported and the link to open it — or several candidates when more than " \
               "one matches, so you can ask which they mean rather than guessing. Call it before " \
-              "support_proposal, comment_on_proposal or send_link for a contribution; each of " \
+              "support_proposal, draft_comment or send_link for a contribution; each of " \
               "those needs the id this returns. Sends nothing."
 
   params do

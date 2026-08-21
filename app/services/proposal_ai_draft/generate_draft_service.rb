@@ -305,14 +305,6 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         location: {
           type: ["string", "null"],
           description: "The geographic location relevant to the proposal (e.g. street, district, city). Null if not location-specific."
-        },
-        card_summary: {
-          type: "string",
-          description: "The description shortened to at most 700 characters of plain text (no " \
-                       "HTML), for a chat preview card. Whole sentences that end properly, in " \
-                       "the description's own language, saying only what the description says " \
-                       "— what is asked for and where. When the description is already that " \
-                       "short, the same text without markup."
         }
       }
     end

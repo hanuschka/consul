@@ -29,6 +29,14 @@ module Whatsapp
   # citizen never saw.
   MAX_OFFERED_BUTTONS = MAX_BUTTONS - 1
 
+  # What one message will hold, which the preview has to answer to rather than
+  # truncate: a plain text message takes far more than a picture's caption or an
+  # interactive message's body, so a block that fits none of the three is split
+  # across several rather than cut. Declared beside the other protocol caps.
+  MAX_TEXT_BODY_LENGTH = 4096
+  MAX_CAPTION_LENGTH = 1024
+  MAX_INTERACTIVE_BODY_LENGTH = 1024
+
   # WhatsApp fetches a header or card picture itself, from us, while the send is
   # in flight, and rejects the whole message over anything it cannot render. Any
   # caller that puts one on a message answers to these two numbers, so they are
@@ -41,10 +49,24 @@ module Whatsapp
   # the same way and cut to whatever the message it lands in has room for.
   # Declared once because three messages now do it at three different lengths,
   # and how portal HTML becomes chat text is one decision, not three.
+  #
+  # The block boundaries become the breaks before the tags go, because stripping
+  # them first is not a lost blank line but a lost word boundary: strip_tags
+  # turns "<p>fehlen Bügel.</p><p>Zweiter Absatz</p>" into
+  # "fehlen Bügel.Zweiter Absatz", and a citizen reading that in the block they
+  # are asked to confirm is reading something the portal does not hold.
+  PARAGRAPH_END = %r{</(?:p|div|li|h[1-6]|blockquote|tr)>}i
+  LINE_BREAK = %r{<br\s*/?>}i
+
   def self.plain_text(html, length:)
+    broken = html.to_s.gsub(PARAGRAPH_END, "\n\n").gsub(LINE_BREAK, "\n")
+
     ActionController::Base.helpers
-      .strip_tags(html.to_s)
-      .squish
+      .strip_tags(broken)
+      .gsub(/[^\S\n]+/, " ")
+      .gsub(/ *\n */, "\n")
+      .gsub(/\n{3,}/, "\n\n")
+      .strip
       .truncate(length)
   end
 

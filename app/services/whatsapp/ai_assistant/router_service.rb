@@ -200,7 +200,16 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       body = turn.text.to_s.strip
 
       return :empty if body.blank?
-      return :tool if retried_with_actions(turn)
+
+      retried = retry_for_actions(turn)
+
+      return :tool if retried == :sent
+
+      # The retry's own answer when it produced one, never the first. Both are in the
+      # stored history by then, and sending the earlier one would leave the last thing
+      # the history says the bot said as something the citizen was never shown — which
+      # the next turn reads back as fact.
+      body = retried.presence || body
 
       record_missed_actions
 
@@ -232,21 +241,26 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # The halt is written back onto the turn so persistence sees it: the state writer
     # records a halted turn's note, and without this the retry's tool call would be
     # stored as a turn that answered with nothing.
-    def retried_with_actions(turn)
-      return false if turn.chat.blank?
-      return false if @tool_calls_made >= MAX_TOOL_CALLS
+    # :sent when the retry put a tappable message out itself, the retry's own text
+    # when it answered in words again, nil when there was no retry to make. The three
+    # are distinguished because only the first means the citizen has been answered.
+    def retry_for_actions(turn)
+      return if turn.chat.blank?
+      return if @tool_calls_made >= MAX_TOOL_CALLS
 
       response = turn.chat.ask(RETRY_FOR_ACTIONS)
 
-      return false if !response.is_a?(::RubyLLM::Tool::Halt)
+      if response.is_a?(::RubyLLM::Tool::Halt)
+        turn.halt = response
 
-      turn.halt = response
+        return :sent
+      end
 
-      true
+      response.content.to_s.strip
     rescue StandardError => e
       report(e)
 
-      false
+      nil
     end
 
     # Reaching here is a reply with nothing to tap: every tool that sends an
@@ -336,7 +350,9 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::MyNotificationSettings,
       ::Ai::Tools::WhatsappAiAssistant::ToggleNotification,
       ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
-      ::Ai::Tools::WhatsappAiAssistant::CommentOnProposal,
+      ::Ai::Tools::WhatsappAiAssistant::DraftComment,
+      ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
+      ::Ai::Tools::WhatsappAiAssistant::PostComment,
       ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount
     ].freeze
@@ -381,7 +397,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # Each mutates something and owns the preconditions for doing so.
     WRITE_TOOLS = [
       ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
-      ::Ai::Tools::WhatsappAiAssistant::CommentOnProposal,
+      ::Ai::Tools::WhatsappAiAssistant::DraftComment,
+      ::Ai::Tools::WhatsappAiAssistant::PostComment,
       ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
       ::Ai::Tools::WhatsappAiAssistant::ToggleNotification,
       ::Ai::Tools::WhatsappAiAssistant::SendLoginLink,
@@ -418,7 +435,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::SendList,
       ::Ai::Tools::WhatsappAiAssistant::SendLink,
       ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,
-      ::Ai::Tools::WhatsappAiAssistant::SendDraftCard,
+      ::Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation,
+      ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::RequestLocation,
       ::Ai::Tools::WhatsappAiAssistant::RequestPhoto
     ].freeze

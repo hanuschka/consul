@@ -21,7 +21,7 @@ module Whatsapp::AssistantActions
   # a pill that publishes or registers support has to be findable afterwards, and
   # "the assistant offered this" is not otherwise distinguishable from "the
   # citizen asked for it".
-  IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final support unlink_confirm].freeze
+  IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final support comment_post unlink_confirm].freeze
 
   module_function
 

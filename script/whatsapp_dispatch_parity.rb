@@ -47,7 +47,8 @@ Whatsapp.define_singleton_method(:enabled?) { true }
 
 # Leaf senders record; question/recovery stay REAL so the pending-question
 # write still happens and shows up in the ctx suffix.
-[:text, :buttons, :buttons_with_media_header, :buttons_with_picture, :list, :typing].each do |sender|
+[:text, :buttons, :buttons_with_media_header, :buttons_with_picture, :picture, :image,
+ :image_from_media, :list, :typing].each do |sender|
   Whatsapp::Send.define_singleton_method(sender) do |**kwargs|
     ids = Array(kwargs[:buttons] || kwargs[:rows]).map { |row| row[:id] }.join(",")
 

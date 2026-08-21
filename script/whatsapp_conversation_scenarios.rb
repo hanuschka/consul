@@ -89,6 +89,7 @@ class FakeMessages
     send_location_request: :location_request,
     send_cta_url: :cta_url,
     send_image: :image,
+    send_image_by_media_id: :image,
     send_template: :template,
     send_card_template: :template
   }.freeze
@@ -362,6 +363,81 @@ SCENARIOS = {
       say("was läuft grad?", gap: 2.minutes)
       say("und was noch?", gap: 1.minute)
       say("sonst noch was?", gap: 1.minute)
+    }
+  ],
+  11 => [
+    "Preview before submitting — the contribution itself must be in front of them (CON-2992)",
+    -> {
+      reset_conversation!
+
+      next if !drafting_available?
+
+      conversation.start_draft!(open_phase)
+      say("Ich möchte eine Idee einreichen: mehr Fahrradbügel am Bahnhof", gap: 3.minutes)
+      say("Ja, zeig mir das nochmal bevor es rausgeht", gap: 1.minute)
+
+      # What the scenario is actually reading: whether the title and the text the
+      # citizen was shown are the record's own, and whether the yes is bound to
+      # them. A block composed by the model would pass the eye test and fail this.
+      puts "  -- draft title: #{conversation.draft_resource&.title.inspect}"
+      puts "  -- preview digest stored: #{conversation.draft_preview_digest.present?}"
+      puts "  -- matches the record now: " \
+           "#{conversation.draft_preview_digest == Whatsapp::DraftPreview.digest(conversation: conversation)}"
+    }
+  ],
+  12 => [
+    "Correction after the preview — the yes must not carry over to the new text (CON-2992)",
+    -> {
+      reset_conversation!
+
+      next if !drafting_available?
+
+      conversation.start_draft!(open_phase)
+      say("Idee: mehr Fahrradbügel in der Bahnhofstraße", gap: 3.minutes)
+      say("Ja, so kann das rein", gap: 1.minute)
+      say("Halt, es ist die Bahnhofsstraße mit zwei s", gap: 1.minute)
+
+      # The hazard this ticket exists for: a revision leaves the publish pill on
+      # the record, so only the digest separates a yes to this text from a yes to
+      # the one before it. Empty here means the bot has to ask again.
+      puts "  -- preview digest after the correction: #{conversation.draft_preview_digest.inspect}"
+      puts "  -- still an unsaved submission: #{conversation.unsaved_submission?}"
+    }
+  ],
+  13 => [
+    "Comment on someone else's proposal — the words must be shown before they are posted",
+    -> {
+      reset_conversation!
+
+      proposal = Proposal.base_selection.first
+
+      next puts "  -- skipped: no publicly listed proposal in this dev DB" if proposal.blank?
+
+      say("Ich möchte etwas zu \"#{proposal.title}\" sagen", gap: 3.minutes)
+      say("Genau an dieser Ecke fehlt seit Jahren eine Bank", gap: 1.minute)
+
+      # The old single call took the text as a parameter and posted it, so what
+      # went under the citizen's name was whichever words the model passed. What
+      # this reads is whether the words are written down and bound to a proposal
+      # before anything reaches the page.
+      puts "  -- pending comment: #{conversation.pending_comment.inspect}"
+      puts "  -- comment digest stored: #{conversation.comment_preview_digest.present?}"
+    }
+  ],
+  14 => [
+    "Support — the offer has to name the proposal it was shown for",
+    -> {
+      reset_conversation!
+
+      proposal = Proposal.base_selection.first
+
+      next puts "  -- skipped: no publicly listed proposal in this dev DB" if proposal.blank?
+
+      say("Ich möchte \"#{proposal.title}\" unterstützen", gap: 3.minutes)
+
+      # Reads the pill as recorded rather than the reply: "support" on its own used
+      # to satisfy a call made with any proposal id at all.
+      puts "  -- offers recorded: #{conversation.pending_confirmations.inspect}"
     }
   ]
 }.freeze

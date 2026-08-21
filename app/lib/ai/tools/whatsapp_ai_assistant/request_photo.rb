@@ -41,7 +41,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
       buttons: image_answer_buttons(labels)
     )
 
-    halt("Asked for a photo, with the picture-rights notice and the three ways to answer.")
+    halt("Asked for a photo, with the picture-rights notice and the two ways to answer.")
   end
 
   private

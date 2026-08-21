@@ -79,8 +79,8 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
       resource.resource_terms = true
 
       # A verdict belongs to the text it was reached on, so a rewrite drops it.
-      # That is what lets PresentDraftService and PublishDraftService treat a
-      # stored result as "already evaluated, do not pay for it twice".
+      # That is what lets PublishDraftService treat a stored result as "already
+      # evaluated, do not pay for it twice".
       resource.ai_evaluation_result = nil
 
       apply_taxonomy(resource)

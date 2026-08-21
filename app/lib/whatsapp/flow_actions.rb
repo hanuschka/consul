@@ -54,6 +54,7 @@ module Whatsapp::FlowActions
     support
     support_prompt
     comment_prompt
+    comment_post
     category
     sentiment
     image_upload

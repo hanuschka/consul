@@ -1,14 +1,17 @@
 class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssistant::BaseTool
   MAX_ACTIONS = ::Whatsapp::MAX_OFFERED_BUTTONS
 
-  description "Shows the citizen their draft with its picture attached, and up to three buttons " \
-              "whose labels you write. This is the only way to show them a picture that only " \
+  description "Shows the citizen their draft with its picture attached, and up to two buttons " \
+              "whose labels you write — the message carries a third of its own, the way to the " \
+              "main menu, which you never write and never mention. This is the only way to show them a picture that only " \
               "exists on an unpublished draft, so use it for the last look before publishing — " \
               "an uploaded photo may be the wrong one, and a generated picture is the part " \
               "nobody has seen. Quote the draft's own title and text in the body, unchanged: it " \
               "is the citizen's contribution, not yours to improve. When the draft has no " \
               "picture, reply_with_actions says the same thing more cheaply. Publishing cannot " \
-              "be undone, so a button that publishes must say so. This sends the message itself."
+              "be undone, so a button that publishes must say so — and put that button first, " \
+              "because only the first two are sent and a draft nobody can submit by tapping is " \
+              "the one thing this message must not be. This sends the message itself."
 
   params do
     string :body,
@@ -16,7 +19,8 @@ class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssis
                    "plus your question. At most 1000 characters."
     array :buttons,
       of: :object,
-      description: "Up to three buttons, each {\"action_id\": ..., \"label\": ...}. " \
+      description: "Up to two buttons, most useful first — the one that submits before any " \
+                   "other. Each is {\"action_id\": ..., \"label\": ...}. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end

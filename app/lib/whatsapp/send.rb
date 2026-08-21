@@ -11,7 +11,9 @@ module Whatsapp::Send
     help: "whatsapp_help"
   }.freeze
 
-  MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_BUTTONS
+  # The reservation applies here too: with_main_menu trims past it, so building
+  # three recovery pills would silently lose the last one.
+  MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_OFFERED_BUTTONS
 
   module_function
 
@@ -104,6 +106,42 @@ module Whatsapp::Send
     deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
       messages.send_image(to: account.wa_id, image_url: image_url, caption: caption)
     end
+  end
+
+  def image_from_media(account:, media_id:, caption: nil)
+    deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
+      messages.send_image_by_media_id(to: account.wa_id, media_id: media_id, caption: caption)
+    end
+  end
+
+  # A captioned picture and what to do when WhatsApp will not take it — the same
+  # ladder buttons_with_picture walks, and for the same reasons: the uploaded media
+  # id first because it travels with the send, the blob URL second because WhatsApp
+  # has to fetch it from a host its network may not reach.
+  #
+  # Nil when neither route arrived, which is the caller's signal to say the same
+  # thing in text. Unlike the button card there is nothing to re-send without the
+  # picture: a picture message without its picture is not a message.
+  def picture(account:, media_id: nil, image_url: nil, caption: nil)
+    uploaded =
+      if media_id.present?
+        image_from_media(account: account, media_id: media_id, caption: caption)
+      end
+
+    return uploaded if delivered?(uploaded)
+    return if image_url.blank?
+
+    fetched = image(account: account, image_url: image_url, caption: caption)
+
+    return fetched if delivered?(fetched)
+
+    Rails.logger.info("[Whatsapp] picture refused by both routes, nothing sent")
+
+    nil
+  end
+
+  def delivered?(message)
+    message.present? && message.status != "failed"
   end
 
   def list(account:, body:, button_label:, rows:)
@@ -268,14 +306,19 @@ module Whatsapp::Send
 
   # A section of its own rather than a row appended to the last one: the sections
   # carry titles saying what their rows have in common, and the way out belongs to
-  # none of them.
+  # none of them. Titled, because WhatsApp requires a title on every section of a
+  # multi-section list and rejects the whole message without one — and the protocol
+  # edge drops a blank title rather than refusing, so an untitled section here would
+  # have failed as the entire list.
   def with_main_menu_section(account:, sections:)
     listed = Array(sections).compact
     rows = listed.flat_map { |section| Array(section[:rows]) }
 
     return listed if rows.any? { |row| main_menu_button?(row) }
 
-    trimmed_sections(listed) + [{ rows: [main_menu_pill(account)] }]
+    menu = main_menu_pill(account)
+
+    trimmed_sections(listed) + [{ title: menu[:title], rows: [menu] }]
   end
 
   # Trimmed from the end, one row at a time, because the ten-row cap is shared
@@ -378,14 +421,20 @@ module Whatsapp::Send
     message
   end
 
+  # The record the irreversible tools read back to answer "did we actually ask
+  # them this". A parameterised action keeps its parameter, because for those the
+  # question is not whether the bot asked but *what about*: "support" recorded
+  # bare is satisfied by an offer for any proposal, so a pill shown for one and a
+  # tool called with another looked identical from here.
   def irreversible_ids(entries)
     Array(entries).filter_map do |entry|
-      action = ::Whatsapp::FlowActions.parse(entry[:id])&.fetch(:action)
+      parsed = ::Whatsapp::FlowActions.parse(entry[:id])
+      action = parsed&.fetch(:action)
 
       next if action.blank?
       next if !::Whatsapp::AssistantActions::IRREVERSIBLE_ACTIONS.include?(action)
 
-      action.to_s
+      [action, parsed[:param]].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
     end
   end
 
@@ -410,5 +459,5 @@ module Whatsapp::Send
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
   private_class_method :with_main_menu, :with_main_menu_row, :with_main_menu_section
   private_class_method :trimmed_sections, :main_menu_pill, :main_menu_button?
-  private_class_method :remember_confirmations, :irreversible_ids
+  private_class_method :remember_confirmations, :irreversible_ids, :delivered?
 end

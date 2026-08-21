@@ -212,12 +212,11 @@ class Whatsapp::Conversation < ApplicationRecord
   # would otherwise ask again.
   SETTLED_SLOT_KEYS = %w[photo_declined location_stated].freeze
 
-  # One batched write, under the inbound job's advisory lock: the draft, its
-  # chat-card summary, the questions the citizen already answered unasked, and the
-  # drafting throttle clock. The summary rides under its own key because the stash
-  # is emptied at persist while the cards that quote the summary are sent after —
-  # and the settled slots ride under theirs for the same reason, only more so: the
-  # photo and location questions are asked after the record exists.
+  # One batched write, under the inbound job's advisory lock: the draft, the
+  # questions the citizen already answered unasked, and the drafting throttle
+  # clock. The settled slots ride under their own key because the stash is emptied
+  # at persist while the photo and location questions are asked after the record
+  # exists.
   #
   # Replaced rather than merged, which matters on a revision: a revision reports
   # no slots, so the slots clear. That is deliberate — carried over, a declined
@@ -225,8 +224,7 @@ class Whatsapp::Conversation < ApplicationRecord
   # their mind while revising would have had no way to send one at all.
   def store_generated_draft!(generated)
     merge_context!(
-      draft_data: generated.except("card_summary", *SETTLED_SLOT_KEYS),
-      card_summary: generated["card_summary"],
+      draft_data: generated.except(*SETTLED_SLOT_KEYS),
       settled_slots: generated.slice(*SETTLED_SLOT_KEYS),
       last_draft_at: Time.current.iso8601
     )
@@ -269,20 +267,13 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(draft_data: nil)
   end
 
-  # The generation call's own shortening of the description, written beside the
-  # stash and read by the draft card and the final preview.
-  def card_summary
-    context["card_summary"]
-  end
-
-  # The same after a revision, where the record is already persisted and only the
-  # shortening is out of date. The settled slots clear with it, and deliberately: a
+  # Cleared on a revision, where the record is already persisted. Deliberately: a
   # declined photo carried over would hold for the life of the submission, so a
   # citizen who changed their mind while revising ("doch, ein Foto habe ich") would
   # have had no way to send one at all. What they said about the previous text does
   # not bind the new one.
-  def store_revised_summary!(summary)
-    merge_context!(card_summary: summary, settled_slots: {})
+  def reset_settled_slots!
+    merge_context!(settled_slots: {})
   end
 
   # The pin the citizen shared through WhatsApp's own picker, parked here by the
@@ -335,6 +326,67 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def store_preview_media!(media_id:, blob_id:)
     merge_context!(preview_media_id: media_id, preview_media_blob_id: blob_id)
+  end
+
+  # The draft as it stood in the block the citizen was last shown, digested by
+  # Whatsapp::DraftPreview. Written when that block is sent and read by
+  # Ai::Tools::WhatsappAiAssistant::PublishDraft, which refuses when the draft has
+  # moved on since.
+  #
+  # An offered publish button on its own is not enough to answer "have they seen
+  # this": the button is offered against a message, and the draft can be revised
+  # after it without the offer going anywhere. So consent is held against the text
+  # rather than against the message, and every tool that changes something the
+  # block displays revokes it.
+  #
+  # Nothing clears any of the four keys below on completion or abandonment: the
+  # whole context is replaced by retained_context, which keeps only the
+  # assistant's history.
+  def draft_preview_digest
+    context["draft_preview_digest"]
+  end
+
+  def store_draft_preview_digest!(digest)
+    merge_context!(draft_preview_digest: digest)
+  end
+
+  def revoke_draft_preview_digest!
+    return if context["draft_preview_digest"].blank?
+
+    merge_context!(draft_preview_digest: nil)
+  end
+
+  # The comment a citizen has written and not yet posted: their words and the
+  # proposal they are meant for. Held here rather than as an unsaved record
+  # because nothing may be written to a public page before they have seen it and
+  # said yes — and because the tool that posts it must read the words from
+  # somewhere the model cannot retype them in between.
+  def pending_comment
+    context["pending_comment"]
+  end
+
+  def store_pending_comment!(proposal_id:, text:)
+    merge_context!(pending_comment: { "proposal_id" => proposal_id, "text" => text })
+  end
+
+  # Both keys in one write: the words are gone, so a digest of them is a digest of
+  # nothing, and leaving it behind would let the next comment inherit a yes.
+  def clear_pending_comment!
+    return if context["pending_comment"].blank? && context["comment_preview_digest"].blank?
+
+    merge_context!(pending_comment: nil, comment_preview_digest: nil)
+  end
+
+  # The comment as it stood in the block the citizen was last shown. Its own key
+  # rather than the draft's, because a citizen can perfectly well have a
+  # contribution half-written and be commenting on someone else's at the same
+  # time.
+  def comment_preview_digest
+    context["comment_preview_digest"]
+  end
+
+  def store_comment_preview_digest!(digest)
+    merge_context!(comment_preview_digest: digest)
   end
 
   # The proposal the bot last asked about, written by the tools that resolve one

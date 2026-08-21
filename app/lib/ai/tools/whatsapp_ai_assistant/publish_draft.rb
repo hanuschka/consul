@@ -14,10 +14,12 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
               "draft_status first if you are not certain nothing is outstanding. It refuses on " \
               "its own when the terms have not been accepted, when the phase no longer allows " \
               "the citizen to contribute, when a category or sentiment is missing, or when the " \
-              "phase's criteria reject the text; each refusal says what would resolve it. On " \
-              "success tell them where the contribution is, or that it is waiting to be " \
-              "reviewed — a contribution waiting for review has no public page yet, so do not " \
-              "offer a link to one."
+              "phase's criteria reject the text; each refusal says what would resolve it. It also " \
+              "refuses when the citizen has not been shown the contribution as it now stands: " \
+              "call show_draft_for_confirmation, and call it again after any change to the draft. " \
+              "On success the contribution is repeated to them for you, with its address or with " \
+              "the sentence that it is waiting to be reviewed — so do not write it out again and " \
+              "never offer a link of your own."
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::IDLE
@@ -46,7 +48,8 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # The confirmation comes last: it is the only one of the three the citizen can
     # resolve in a single message, so it is worth asking for only once the rest holds.
     def precondition_refusal
-      refuse_if_not_permitted || refuse_without_consent || refuse_without_confirmation
+      refuse_if_not_permitted || refuse_without_consent || refuse_without_confirmation ||
+        refuse_on_stale_preview
     end
 
     # The guarantee the retired step machine made structurally: it had two steps that
@@ -61,13 +64,35 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       {
         error: "The citizen has not been shown this draft and asked whether it should go in, so " \
                "it was not published.",
-        hint: "Show them the draft as it stands — send_draft_card when it has a picture, " \
-              "reply_with_actions otherwise — with a button whose label says it submits. Call " \
-              "this again once they have answered that question."
+        hint: "Show them the contribution with show_draft_for_confirmation, offering a button " \
+              "whose label says it submits. Call this again once they have answered that " \
+              "question."
       }
     end
 
     PUBLISH_ACTIONS = %i[draft_publish submit_final].freeze
+
+    # The second half of the same guarantee, and the half an offered button cannot
+    # make. A button is offered against a message; the draft can be revised after
+    # that message without the offer going anywhere, so the pill alone would let a
+    # corrected contribution be published on a yes given to the version before the
+    # correction — the citizen's own correction, published unread.
+    #
+    # So consent is held against the text rather than against the message: what was
+    # rendered is digested when it is sent, and anything that changes what the block
+    # shows revokes it.
+    def refuse_on_stale_preview
+      shown = conversation.draft_preview_digest
+
+      return if shown.present? && shown == ::Whatsapp::DraftPreview.digest(conversation: conversation)
+
+      {
+        error: "The draft has changed since the citizen was last shown it, so their yes was " \
+               "given to a different version and it was not published.",
+        hint: "Call show_draft_for_confirmation so they see it as it now stands, and call this " \
+              "again once they have answered."
+      }
+    end
 
     def publish
       result = ::Whatsapp::Drafting::PublishDraftService.call(conversation: conversation)
@@ -94,6 +119,8 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       awaiting_review = resource.is_a?(::Proposal) && !resource.admin_accepted?
       projekt_phase_id = conversation.projekt_phase_id
 
+      send_recap(url: awaiting_review ? nil : url)
+
       conversation.complete_draft!
 
       {
@@ -105,9 +132,31 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       }.compact
     end
 
-    AWAITING_REVIEW_HINT = "It is in, but held for review, so it has no public page yet. Say " \
-                           "that plainly, say they will hear when it is decided, and do not " \
-                           "offer a link.".freeze
+    # The contribution shown once more, composed from the record by the same renderer
+    # that showed it before it went in — which is the point: a recap the model writes
+    # is a recap that can differ from the preview it is meant to repeat, and the
+    # citizen would have no way to tell which of the two the platform holds.
+    #
+    # Sent before complete_draft!, which drops the draft the renderer reads.
+    def send_recap(url:)
+      block =
+        if url.present?
+          ::Whatsapp::DraftPreview.published_block(conversation: conversation, url: url)
+        else
+          ::Whatsapp::DraftPreview.awaiting_review_block(conversation: conversation)
+        end
+
+      return if block.blank?
+
+      ::Whatsapp::MessageBlock.chunks(block).each do |part|
+        ::Whatsapp::Send.text(account: account, body: part)
+      end
+    end
+
+    AWAITING_REVIEW_HINT = "It is in, but held for review. The contribution and the sentence " \
+                           "saying it is waiting have already been sent to them, so do not " \
+                           "repeat either and do not offer a link. Offer what follows: taking " \
+                           "part in this same phase again, and their own contributions.".freeze
 
     # What plausibly follows a submission, which is not the same as an invitation to
     # submit again: the contribution they just made, the phase they made it in, and
@@ -115,15 +164,15 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # and the alternative is a citizen reading "it is online" with nothing to do but
     # type. What stays out is anything unrelated to the thing they just did.
     #
-    # The link goes in the reply's text rather than on a button of its own, because a
-    # URL button is the only thing on the message it sits on: taking it would cost the
-    # other two offers. WhatsApp makes a written-out address tappable anyway, so all
-    # three arrive tappable in one message.
-    PUBLISHED_HINT = "Tell them it is online, with the address written out in the text so they " \
-                     "can open it. Offer what follows from what they just did — taking part in " \
-                     "this same phase again, and their own contributions — as buttons beside it. " \
-                     "Do not invite them to anything unrelated to the contribution they just " \
-                     "submitted.".freeze
+    # The address has already gone out written into the recap rather than on a button
+    # of its own, because a URL button is the only thing on the message it sits on:
+    # taking it would cost the other two offers. WhatsApp makes a written-out address
+    # tappable anyway.
+    PUBLISHED_HINT = "The contribution and its address have already been sent to them, so do not " \
+                     "repeat either and do not write a link. Say briefly that it is online and " \
+                     "offer what follows from what they just did — taking part in this same " \
+                     "phase again, and their own contributions — as buttons. Do not invite them " \
+                     "to anything unrelated to the contribution they just submitted.".freeze
 
     def draft_errors
       conversation.draft_resource&.errors&.full_messages

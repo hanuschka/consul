@@ -63,23 +63,28 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
 
       return invalid_revision_error if !draft_resource.save
 
-      # The stored shortening belonged to the previous text. Left in place it would be
-      # quoted back beside a draft it no longer describes.
-      store_revised_summary if text.present?
+      # What the citizen last confirmed was the text before this one, so their yes
+      # does not carry over to it. Revoked here rather than checked for staleness at
+      # publish time only, so the assistant is told to show it again by the same
+      # tool call that changed it.
+      conversation.revoke_draft_preview_digest!
+
+      # A revision reports no slots, so the ones the opening message settled clear
+      # with the text they were read from: a citizen who changed their mind while
+      # revising ("doch, ein Foto habe ich") would otherwise have had no way to send
+      # one at all.
+      if text.present?
+        conversation.reset_settled_slots!
+      end
 
       {
         draft: {
           title: draft_resource.title,
           text: ::Whatsapp.plain_text(draft_resource.description, length: DESCRIPTION_LENGTH)
         },
-        hint: "Show them the revised draft and ask whether it can go in now."
+        hint: "Show them the revised draft with show_draft_for_confirmation and ask whether it " \
+              "can go in now — nothing can be published until they have seen this version."
       }
-    end
-
-    def store_revised_summary
-      conversation.store_revised_summary!(
-        ::Whatsapp.plain_text(draft_resource.description, length: DESCRIPTION_LENGTH)
-      )
     end
 
     def nothing_to_change_error

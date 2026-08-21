@@ -1,13 +1,17 @@
 class Adm::Projekts::InstanceImportsController < Adm::Projekts::BaseController
+  before_action :authorize_instance_import
+
+  def new
+    @breadcrumbs = [{ name: t("adm.projekts.menu.items.instance_import"), icon: "move_down" }]
+  end
+
   # The admin browses app.demokratie.today in the inspiration frame and pastes
   # the address of a projekt worth reusing. Only its shape is checked here --
   # which instance it belongs to and whether it may be reused is resolved by
   # DT, which is the only party that knows every connected instance.
   def create
-    authorize [:adm, :projekts, Projekt], :create?
-
     if !valid_source_url?
-      redirect_to adm_projekts_inspiration_path,
+      redirect_to new_adm_projekts_instance_import_path,
         alert: t("adm.projekts.projekts.instance_import.invalid_url")
 
       return
@@ -22,6 +26,10 @@ class Adm::Projekts::InstanceImportsController < Adm::Projekts::BaseController
   end
 
   private
+
+    def authorize_instance_import
+      authorize [:adm, :projekts, Projekt], :create?
+    end
 
     def source_url
       @source_url ||= params[:source_url].to_s.strip

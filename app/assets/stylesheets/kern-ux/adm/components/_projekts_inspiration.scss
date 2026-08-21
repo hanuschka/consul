@@ -34,22 +34,3 @@
     margin-top: 0;
   }
 }
-
-// The paste field sits above the frame: the admin copies an address out of the
-// embedded overview and drops it here without leaving the page.
-.adm-projekts-inspiration-import {
-  flex: 0 0 auto;
-  margin-top: var(--kern-metric-space-default);
-
-  &__form {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: var(--kern-metric-space-small);
-
-    .kern-form-input {
-      flex: 1 1 24rem;
-      min-width: 0;
-    }
-  }
-}

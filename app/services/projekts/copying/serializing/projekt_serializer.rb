@@ -8,6 +8,8 @@ class Projekts::Copying::Serializing::ProjektSerializer < ApplicationService
 
   PAGE_ATTACHMENTS = Projekts::Copying::ProjektCopier::PAGE_ATTACHMENTS
 
+  NAVBAR_REFERENCES = %w[parent_id landing_page_id linked_page_id].freeze
+
   def initialize(source:)
     @source = source
   end
@@ -65,14 +67,19 @@ class Projekts::Copying::Serializing::ProjektSerializer < ApplicationService
       }
     end
 
-    # parent_id, landing_page_id and linked_page_id all point at real rows, so
-    # they travel as references: within one instance an unmapped one still
-    # resolves, and an export drops them along with every other raw id.
+    # A navbar item's three links are mapped through the IdMap where the target
+    # is part of this projekt. Where it is not -- a global page, another
+    # projekt's item -- the raw id is the only answer, and it is only an answer
+    # within this instance. It goes under local_references so an export drops
+    # it and the imported item is left unlinked rather than pointed at whatever
+    # sits at that id over there.
     def navbar_item_nodes
       source.navbar_items.map do |navbar_item|
-        Projekts::Copying::Serializing::RecordSerializer.call(
-          navbar_item, references: %w[parent_id landing_page_id linked_page_id]
-        )
+        Projekts::Copying::Serializing::RecordSerializer
+          .call(navbar_item, references: NAVBAR_REFERENCES)
+          .merge("local_references" => NAVBAR_REFERENCES.index_with do |name|
+            navbar_item.read_attribute(name)
+          end.compact)
       end
     end
 

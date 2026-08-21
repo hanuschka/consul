@@ -69,7 +69,7 @@ class Projekts::Copying::AttributeReader
 
   def attributes(node, except: [])
     model = model(node)
-    attributes = (node["attributes"] || {}).except(*except.map(&:to_s))
+    attributes = known_columns_only(node, model).except(*except.map(&:to_s))
     return attributes if !model.column_names.include?("author_id")
     return attributes if attributes["author_id"].present?
 
@@ -85,4 +85,29 @@ class Projekts::Copying::AttributeReader
   private
 
     attr_reader :author
+
+    # Two instances are rarely on the same deploy, so a bundle can name a column
+    # this one has not migrated yet. Dropping it costs that one value; letting
+    # ActiveRecord raise costs the whole import at its first record.
+    def known_columns_only(node, model)
+      attributes = node["attributes"] || {}
+      unknown = attributes.keys - model.column_names - translated_names(model)
+      return attributes if unknown.empty?
+
+      Rails.logger.warn(
+        "[Projekts::Copying::AttributeReader] #{model.name} has no column " \
+        "#{unknown.join(", ")} -- dropped from the copy"
+      )
+
+      attributes.except(*unknown)
+    end
+
+    # A serialized node keeps translated attributes in `translations`, but a
+    # hand-built one may not, and Globalize defines a setter for each -- so they
+    # are known even though they are not columns.
+    def translated_names(model)
+      return [] if !model.respond_to?(:translated_attribute_names)
+
+      model.translated_attribute_names.map(&:to_s)
+    end
 end

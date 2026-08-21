@@ -1,10 +1,14 @@
 # What stored HTML says about files that do not travel.
 #
-# An export carries no binary, so every address in it points at a file only the
-# source instance has. Pictures become placeholders, because a visible stand-in
-# tells the admin what to replace. Links to a stored file lose their address
-# instead: their text says what the file was, and a dead link that still looks
-# like a link is worse than one that plainly does nothing.
+# An export carries no binary, so any address in it that points into this
+# instance's storage points at a file the target does not have -- and a signed
+# blob id does not even verify over there. Pictures become placeholders, because
+# a visible stand-in tells the admin what to replace. Everything else loses its
+# address instead: an inert link or frame is honest, a broken one is not.
+#
+# What is NOT touched: an address that is not ours. A YouTube or Vimeo embed in
+# a content block works the same on any instance, and replacing it would break
+# something that was never local in the first place.
 class Projekts::Exporting::StoredFileRewriter
   # The host the AI import already writes its image slots against, so an
   # imported projekt shows the same kind of stand-in an AI-generated one does.
@@ -17,20 +21,31 @@ class Projekts::Exporting::StoredFileRewriter
   # attribute, or a length in the element's own inline style.
   INLINE_LENGTH_FORMAT = '(?:\A|;)\s*%s\s*:\s*(\d+(?:\.\d+)?)px'.freeze
 
-  MEDIA_SELECTOR = "img, source, video, audio, embed, iframe, object".freeze
-  BACKGROUND_SELECTOR = "[style*='url(']".freeze
+  # Elements that render as a picture, so a placeholder image reads as one.
+  # A `source` only counts when it is not feeding a video or audio player.
+  PICTURE_SELECTOR = "img, source".freeze
+  PLAYER_PARENTS = %w[video audio].freeze
+
+  # A poster frame is an image whatever carries it, so it becomes a placeholder
+  # even on a player whose own address is left alone.
+  POSTER_SELECTOR = "[poster]".freeze
+
+  # Elements that play or embed a file. A placeholder image in one of these
+  # renders as nothing, so a local address is removed and a remote one kept.
+  EMBED_SELECTOR = "video, audio, iframe, embed, object".freeze
+
   LINK_SELECTOR = "a[href]".freeze
+  BACKGROUND_SELECTOR = "[style*='url(']".freeze
   BACKGROUND_URL = /url\(\s*(['"]?)([^)'"]*)\1\s*\)/i
 
-  # Where this app serves stored files from. A link to one of these is a link
-  # to a blob of the source instance -- on the target the signed id does not
-  # even verify, so it cannot resolve to anything.
+  # Where this app serves stored files from.
   STORED_FILE_PATH = %r{/(?:rails/active_storage|rails/representations|uploads|system)/}
 
   # Attributes that can carry an address. `srcset` and `sizes` are dropped
   # rather than rewritten: a placeholder has one resolution, so a responsive
   # set would keep pointing at the source instance for every viewport but one.
-  ADDRESS_ATTRIBUTES = %w[src poster data-src data-original data-large-src].freeze
+  PICTURE_ATTRIBUTES = %w[src data-src data-original data-large-src].freeze
+  EMBED_ATTRIBUTES = %w[src data].freeze
   DROPPED_ATTRIBUTES = %w[srcset data-srcset sizes].freeze
 
   def self.call(html)
@@ -41,18 +56,17 @@ class Projekts::Exporting::StoredFileRewriter
     @html = html
   end
 
-  # Every media address is replaced, not just the ones that look local: the
-  # export travels to another instance where no address of ours resolves, and
-  # an admin who sees a placeholder knows to replace it.
   def call
     return html if html.blank?
     return html if !rewritable?
 
     fragment = Nokogiri::HTML::DocumentFragment.parse(html)
 
-    fragment.css(MEDIA_SELECTOR).each { |element| rewrite_media(element) }
+    fragment.css(PICTURE_SELECTOR).each { |element| rewrite_picture(element) }
+    fragment.css(POSTER_SELECTOR).each { |element| rewrite_poster(element) }
+    fragment.css(EMBED_SELECTOR).each { |element| strip_stored_embed(element) }
+    fragment.css(LINK_SELECTOR).each { |element| strip_stored_link(element) }
     fragment.css(BACKGROUND_SELECTOR).each { |element| rewrite_background(element) }
-    fragment.css(LINK_SELECTOR).each { |element| rewrite_link(element) }
 
     fragment.to_html
   end
@@ -66,16 +80,50 @@ class Projekts::Exporting::StoredFileRewriter
         html.include?("url(")
     end
 
-    def rewrite_media(element)
+    # Every picture address is replaced, not only the ones that look local: a
+    # remote image the source instance chose is still that instance's choice,
+    # and the admin who sees a placeholder knows to make their own.
+    def rewrite_picture(element)
+      return if player_source?(element)
+
       placeholder = placeholder_url(element)
 
-      ADDRESS_ATTRIBUTES.each do |attribute|
+      PICTURE_ATTRIBUTES.each do |attribute|
         next if element[attribute].blank?
 
         element[attribute] = placeholder
       end
 
       DROPPED_ATTRIBUTES.each { |attribute| element.remove_attribute(attribute) }
+    end
+
+    def rewrite_poster(element)
+      element["poster"] = placeholder_url(element)
+    end
+
+    def player_source?(element)
+      element.name == "source" && PLAYER_PARENTS.include?(element.parent&.name)
+    end
+
+    # A player's own `source` children are stripped here rather than by
+    # rewrite_picture, which skips them for exactly this reason.
+    def strip_stored_embed(element)
+      (element.css("source").to_a + [element]).each do |target|
+        EMBED_ATTRIBUTES.each do |attribute|
+          next if !target[attribute].to_s.match?(STORED_FILE_PATH)
+
+          target.remove_attribute(attribute)
+        end
+
+        DROPPED_ATTRIBUTES.each { |attribute| target.remove_attribute(attribute) }
+      end
+    end
+
+    def strip_stored_link(element)
+      return if !element["href"].to_s.match?(STORED_FILE_PATH)
+
+      element.remove_attribute("href")
+      element.remove_attribute("target")
     end
 
     def rewrite_background(element)
@@ -85,13 +133,6 @@ class Projekts::Exporting::StoredFileRewriter
       element["style"] = style.gsub(BACKGROUND_URL) do
         "url('#{placeholder_url(element)}')"
       end
-    end
-
-    def rewrite_link(element)
-      return if !element["href"].to_s.match?(STORED_FILE_PATH)
-
-      element.remove_attribute("href")
-      element.remove_attribute("target")
     end
 
     def placeholder_url(element)

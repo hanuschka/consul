@@ -17,7 +17,7 @@ class Projekts::CrossInstanceImport::ImportService < ApplicationService
     adopt_source_name
 
     Projekts::Copying::CopyRunner.call(
-      bundle: bundle,
+      bundle: sanitized_bundle,
       copy: target,
       record_copier: record_copier,
       id_map: id_map
@@ -29,6 +29,15 @@ class Projekts::CrossInstanceImport::ImportService < ApplicationService
   private
 
     attr_reader :bundle, :target, :id_map
+
+    # Sanitized again on arrival. The sending instance already did it, but that
+    # is the wrong side of the trust boundary to be the only one enforcing it:
+    # the bundle passed through DT and came from a machine this one does not
+    # control, and the copier assigns whatever columns it is handed. On a
+    # well-formed export this pass changes nothing.
+    def sanitized_bundle
+      @sanitized_bundle ||= Projekts::Exporting::SanitizeBundle.call(bundle: bundle)
+    end
 
     def record_copier
       Projekts::Copying::RecordCopier.new(
@@ -52,7 +61,7 @@ class Projekts::CrossInstanceImport::ImportService < ApplicationService
     # shell first is what lets both share one copier: the page title is restored
     # from the shell's name either way.
     def adopt_source_name
-      name = bundle.dig("projekt", "attributes", "name")
+      name = sanitized_bundle.dig("projekt", "attributes", "name")
       return if name.blank?
 
       target.update!(name: name)

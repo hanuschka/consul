@@ -87,23 +87,19 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
       end
     end
 
-    # These held real ids, so within one instance an unmapped one keeps pointing
-    # where the source pointed -- a navbar item may link to a global page or to
-    # another projekt's item, neither of which is part of this copy. An imported
-    # bundle carries none of them, so there they arrive null and stay null.
+    # A link into this copy is mapped. A link to anything else -- a global page,
+    # another projekt's item -- can only keep the id it had, which is an answer
+    # within this instance and nowhere else, so the fallback comes out of
+    # local_references and an imported item simply arrives unlinked.
     def rewire_navbar_items
       Array(bundle["navbar_items"]).each do |node|
         copy_navbar_item_id = mapped(NavbarItem, node["source_id"])
         next if copy_navbar_item_id.blank?
 
-        references = node["references"] || {}
-
         NavbarItem.where(id: copy_navbar_item_id).update_all(
-          parent_id: mapped_or_source(NavbarItem, references["parent_id"]),
-          landing_page_id:
-            mapped_or_source(SiteCustomization::Page, references["landing_page_id"]),
-          linked_page_id:
-            mapped_or_source(SiteCustomization::Page, references["linked_page_id"])
+          parent_id: mapped_or_local(NavbarItem, node, "parent_id"),
+          landing_page_id: mapped_or_local(SiteCustomization::Page, node, "landing_page_id"),
+          linked_page_id: mapped_or_local(SiteCustomization::Page, node, "linked_page_id")
         )
       end
     end
@@ -168,7 +164,7 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
       id_map.copy_id_for(model_class, source_id)
     end
 
-    def mapped_or_source(model_class, source_id)
-      mapped(model_class, source_id) || source_id
+    def mapped_or_local(model_class, node, name)
+      mapped(model_class, node.dig("references", name)) || node.dig("local_references", name)
     end
 end

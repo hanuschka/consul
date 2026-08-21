@@ -98,6 +98,22 @@ en:
             note: Participant contributions, votes, comments and subscriptions.
           status_processing: Copying …
           status_failed: Copy failed
+        instance_import:
+          action: Import project
+          pending_name: Imported project (in progress)
+          url_label: Reuse a project from another platform
+          url_hint: >
+            Paste the address of a project you found in the overview above. Its
+            phases, settings, content and maps are copied into a new deactivated
+            draft on this platform. Images, videos and participant contributions
+            are not copied — pictures arrive as placeholders you can replace.
+          url_placeholder: e.g. https://app.demokratie.today/beteiligung-innenstadt
+          invalid_url: Please paste a complete project address, including https://.
+          started: The project is being imported. This may take a moment.
+          finished: The imported project "%{name}" was created.
+          failed_notice: >
+            The project could not be imported. Please check the address and make
+            sure the project is published on app.demokratie.today.
         projekt:
           top_level_projekt: Top-level project
           frontend_page: Project page

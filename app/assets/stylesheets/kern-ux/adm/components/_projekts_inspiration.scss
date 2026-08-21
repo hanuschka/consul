@@ -2,6 +2,23 @@
   .kern-container {
     max-width: none;
   }
+
+  // Desktop: the page itself never scrolls, so the frame takes whatever height
+  // is left once the import field above it has been laid out. Measuring it in
+  // the layout rather than subtracting a guessed offset keeps the two in step
+  // when the field's label or hint wraps.
+  @media (min-width: 992px) {
+    .kern-container-fluid {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - var(--kern-adm-header-height) - 57px);
+    }
+
+    .shared-admin-iframe--wrapper {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  }
 }
 
 .adm-projekts-inspiration-frame {
@@ -11,10 +28,28 @@
   background-color: #e9ebee;
   background-size: 64px 64px;
 
-  // Desktop: fit within the viewport so the page itself never scrolls.
-  // Offset = adm header + breadcrumb nav (~55px) + dividers.
   @media (min-width: 992px) {
-    height: calc(100vh - var(--kern-adm-header-height) - 57px);
+    height: 100%;
     min-height: 0;
+    margin-top: 0;
+  }
+}
+
+// The paste field sits above the frame: the admin copies an address out of the
+// embedded overview and drops it here without leaving the page.
+.adm-projekts-inspiration-import {
+  flex: 0 0 auto;
+  margin-top: var(--kern-metric-space-default);
+
+  &__form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--kern-metric-space-small);
+
+    .kern-form-input {
+      flex: 1 1 24rem;
+      min-width: 0;
+    }
   }
 }

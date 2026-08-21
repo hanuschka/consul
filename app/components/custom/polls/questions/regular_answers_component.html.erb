@@ -1,4 +1,7 @@
-<% question_answers.each do |question_answer| %>
+<% displayed_answers.each do |question_answer| %>
+  <% if question_answer.open_answer %>
+    <%= render Polls::Questions::OpenAnswerComponent.new(question) %>
+  <% else %>
 
   <div class="<%= poll_answer_group_class %>">
 
@@ -53,6 +56,5 @@
     <% end %>
 
   </div>
+  <% end %>
 <% end %>
-
-<%= render Polls::Questions::OpenAnswerComponent.new(question) %>

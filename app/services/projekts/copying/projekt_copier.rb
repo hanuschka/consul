@@ -17,6 +17,17 @@ class Projekts::Copying::ProjektCopier < ApplicationService
   # page already claimed it.
   EXCLUDED_PAGE_COLUMNS = %w[projekt_id slug footer_key].freeze
 
+  # Attachments the landing page carries directly, rather than through an Image
+  # or Document row.
+  PAGE_ATTACHMENTS = %i[
+    landing_desktop_header_image
+    landing_mobile_header_image
+    landing_desktop_header_video
+    landing_mobile_header_video
+    landing_site_logo_for_transparent_background
+    landing_site_logo_for_white_background
+  ].freeze
+
   # Forced on the copy regardless of the source, so a copy never appears in
   # public navigation or search results before an admin publishes it. `activated`
   # is what the admin dashboard counts as a draft.
@@ -38,11 +49,10 @@ class Projekts::Copying::ProjektCopier < ApplicationService
 
   ALLOW_INDEXING_KEY = "projekt_feature.general.allow_indexing".freeze
 
-  def initialize(source:, copy:, record_copier:)
-    @source = source
+  def initialize(bundle:, copy:, record_copier:)
+    @bundle = bundle
     @copy = copy
     @record_copier = record_copier
-    @blob_copier = record_copier.blob_copier
   end
 
   # The copy already exists as an empty shell, so its own after_create callbacks
@@ -50,7 +60,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
   # step below overwrites those rather than adding to them.
   def call
     record_copier.overwrite(
-      source, copy,
+      projekt_node, copy,
       attributes: HIDDEN_DRAFT_COLUMNS,
       except: EXCLUDED_COLUMNS
     )
@@ -73,21 +83,29 @@ class Projekts::Copying::ProjektCopier < ApplicationService
 
   private
 
-    attr_reader :source, :copy, :record_copier, :blob_copier
+    attr_reader :bundle, :copy, :record_copier
+
+    def projekt_node
+      bundle["projekt"] || {}
+    end
+
+    def local_references
+      bundle["local_references"] || {}
+    end
 
     def copy_projekt_images
-      blob_copier.copy_one(source.greeting_image, copy.greeting_image)
-      blob_copier.copy_many(source.images, copy.images)
+      record_copier.copy_attachment(projekt_node, :greeting_image, copy.greeting_image)
+      record_copier.copy_attachment_list(projekt_node, :images, copy.images)
     end
 
     def copy_page
-      source_page = source.page
+      page_node = bundle["page"]
       copy_page = copy.page
-      return if source_page.blank? || copy_page.blank?
+      return if page_node.blank? || copy_page.blank?
 
       copy_name = copy.name
       record_copier.overwrite(
-        source_page, copy_page,
+        page_node, copy_page,
         attributes: DRAFT_PAGE_COLUMNS,
         except: EXCLUDED_PAGE_COLUMNS
       )
@@ -95,20 +113,11 @@ class Projekts::Copying::ProjektCopier < ApplicationService
 
       # The projekt's banner lives as a polymorphic Image on the page, not on
       # the projekt.
-      record_copier.copy_images(source_page, copy_page)
+      record_copier.copy_images(page_node, copy_page)
 
-      blob_copier.copy_one(source_page.landing_desktop_header_image,
-        copy_page.landing_desktop_header_image)
-      blob_copier.copy_one(source_page.landing_mobile_header_image,
-        copy_page.landing_mobile_header_image)
-      blob_copier.copy_one(source_page.landing_desktop_header_video,
-        copy_page.landing_desktop_header_video)
-      blob_copier.copy_one(source_page.landing_mobile_header_video,
-        copy_page.landing_mobile_header_video)
-      blob_copier.copy_one(source_page.landing_site_logo_for_transparent_background,
-        copy_page.landing_site_logo_for_transparent_background)
-      blob_copier.copy_one(source_page.landing_site_logo_for_white_background,
-        copy_page.landing_site_logo_for_white_background)
+      PAGE_ATTACHMENTS.each do |name|
+        record_copier.copy_attachment(page_node, name, copy_page.public_send(name))
+      end
     end
 
     # SiteCustomization::Page#sync_projekt_name writes the page title back onto
@@ -134,15 +143,16 @@ class Projekts::Copying::ProjektCopier < ApplicationService
       column_backed_keys = Projekt::KEY_TO_COLUMN.keys
       existing_settings = copy.projekt_settings.index_by(&:key)
 
-      source.projekt_settings.each do |setting|
-        next if column_backed_keys.include?(setting.key)
+      Array(bundle["projekt_settings"]).each do |setting|
+        key = setting["key"]
+        next if column_backed_keys.include?(key)
 
-        existing = existing_settings[setting.key]
+        existing = existing_settings[key]
 
         if existing.present?
-          existing.update!(value: setting.value)
+          existing.update!(value: setting["value"])
         else
-          copy.projekt_settings.create!(key: setting.key, value: setting.value)
+          copy.projekt_settings.create!(key: key, value: setting["value"])
         end
       end
 
@@ -151,61 +161,76 @@ class Projekts::Copying::ProjektCopier < ApplicationService
 
     def copy_map
       Projekts::Copying::MapCopier.call(
-        source: source, copy: copy,
+        node: bundle["map"], copy: copy,
         record_copier: record_copier
       )
     end
 
+    # Empty on an imported bundle: geozones, address districts and individual
+    # groups are rows of this instance, and a projekt re-attached to a
+    # same-named row elsewhere would admit or exclude the wrong people.
     def copy_affiliations
-      copy.geozone_affiliations = source.geozone_affiliations
-      copy.registered_address_district_affiliations = source.registered_address_district_affiliations
-      copy.individual_group_values = source.individual_group_values
+      copy.geozone_affiliations =
+        Geozone.where(id: local_references["geozone_affiliation_ids"])
+      copy.registered_address_district_affiliations =
+        RegisteredAddress::District.where(
+          id: local_references["registered_address_district_affiliation_ids"]
+        )
+      copy.individual_group_values =
+        IndividualGroupValue.where(id: local_references["individual_group_value_ids"])
     end
 
     def copy_tags
-      copy.tag_list = source.tag_list
-      copy.ml_tag_list = source.ml_tag_list
-      copy.milestone_tag_list = source.milestone_tag_list
+      tag_lists = bundle["tags"] || {}
+
+      copy.tag_list = Array(tag_lists["tag_list"])
+      copy.ml_tag_list = Array(tag_lists["ml_tag_list"])
+      copy.milestone_tag_list = Array(tag_lists["milestone_tag_list"])
       copy.save!
     end
 
     def copy_sdg_relations
-      record_copier.copy_all(source.sdg_relations, attributes: { relatable: copy })
+      related_sdgs = Projekts::Copying::Serializing::SdgCodeSerializer
+        .resolve(bundle["sdg_relations"])
+
+      related_sdgs.each do |related_sdg|
+        copy.sdg_relations.find_or_create_by!(related_sdg: related_sdg)
+      end
     end
 
     def copy_manager_assignments
-      source.projekt_manager_assignments.each do |assignment|
+      Array(local_references["projekt_manager_assignments"]).each do |assignment|
         existing = copy.projekt_manager_assignments
-          .find_or_initialize_by(projekt_manager_id: assignment.projekt_manager_id)
-        existing.permissions |= assignment.permissions
+          .find_or_initialize_by(projekt_manager_id: assignment["projekt_manager_id"])
+        existing.permissions |= Array(assignment["permissions"])
         existing.save!
       end
     end
 
     def copy_milestones
-      source.milestones.each do |milestone|
-        milestone_copy = record_copier.copy_record(milestone, attributes: { milestoneable: copy })
-        record_copier.copy_attachments(milestone, milestone_copy)
+      Array(bundle["milestones"]).each do |node|
+        milestone_copy = record_copier.copy_record(node, attributes: { milestoneable: copy })
+        record_copier.copy_attachments(node, milestone_copy)
       end
     end
 
     def copy_progress_bars
-      record_copier.copy_all(source.progress_bars, attributes: { progressable: copy })
+      record_copier.copy_all(bundle["progress_bars"], attributes: { progressable: copy })
     end
 
     def copy_media_library
-      AdminImage.where(projekt_id: source.id).find_each do |admin_image|
-        admin_image_copy = record_copier.build(admin_image, attributes: { projekt_id: copy.id })
-        blob_copier.copy_one(admin_image.storage_data, admin_image_copy.storage_data)
-        record_copier.persist(admin_image, admin_image_copy)
+      Array(bundle["admin_images"]).each do |node|
+        admin_image_copy = record_copier.build(node, attributes: { projekt_id: copy.id })
+        record_copier.copy_attachment(node, :storage_data, admin_image_copy.storage_data)
+        record_copier.persist(node, admin_image_copy)
       end
 
-      record_copier.copy_attachments(source, copy)
+      record_copier.copy_attachments(projekt_node, copy)
     end
 
     # parent_id still points at the source's items here; the rewiring pass
     # resolves it once every item has a copy.
     def copy_navbar_items
-      record_copier.copy_all(source.navbar_items, attributes: { projekt_id: copy.id })
+      record_copier.copy_all(bundle["navbar_items"], attributes: { projekt_id: copy.id })
     end
 end

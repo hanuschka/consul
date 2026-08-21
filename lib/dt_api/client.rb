@@ -24,6 +24,10 @@ class DtApi::Client
     @projekts ||= DtApi::Resources::Projekts.new(self)
   end
 
+  def projekt_exports
+    @projekt_exports ||= DtApi::Resources::ProjektExports.new(self)
+  end
+
   def clients
     @clients ||= DtApi::Resources::Clients.new(self)
   end

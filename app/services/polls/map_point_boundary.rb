@@ -20,7 +20,18 @@ class Polls::MapPointBoundary
     attr_reader :question
 
     def polygons
-      @polygons ||= decoded_geometries.select { |geometry| geometry.dimension == 2 }
+      @polygons ||= decoded_geometries.filter_map { |geometry| usable_polygon(geometry) }
+    end
+
+    def usable_polygon(geometry)
+      return nil unless geometry.dimension == 2
+      return geometry if geometry.invalid_reason.nil?
+
+      repaired = geometry.make_valid
+
+      repaired if repaired.dimension == 2
+    rescue RGeo::Error::RGeoError
+      nil
     end
 
     def decoded_geometries

@@ -163,6 +163,21 @@ class Whatsapp::Conversation < ApplicationRecord
     )
   end
 
+  # Leaving the projekt without abandoning anything. The phase stops being the
+  # one the conversation is about and nothing else moves: the draft stash, the
+  # proposal the bot last spoke about, a waiting photo or pin and the offers the
+  # last message made all stay. That is deliberate — this is the way out of a
+  # projekt that sits on every single message the bot sends, so it may not be a
+  # path that destroys a half-written contribution. Whoever calls it has already
+  # established there is nothing to lose (#unsaved_submission?), and discarding,
+  # where that is what the citizen meant, stays the one implementation in
+  # AbortSubmission.
+  def leave_projekt!
+    return if projekt_phase_id.blank?
+
+    update!(projekt_phase_id: nil)
+  end
+
   # ── Draft context schema ────────────────────────────────────────────────
   # Every key the `context` jsonb holds, as named accessors — the one place that
   # answers what a key means, who writes it, who reads it, and when it is
@@ -265,6 +280,27 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def clear_draft_data!
     merge_context!(draft_data: nil)
+  end
+
+  # That the citizen asked to be put back at the beginning while a contribution
+  # was still in the way. Written by the inbound layer, which resets nothing on
+  # that turn because throwing away what they wrote cannot be taken back, and
+  # read by AbortSubmission once they have said to discard — so the reply that
+  # follows the discard is the fresh start they asked for rather than a full stop.
+  #
+  # Nothing clears it explicitly, and nothing needs to: discard_draft!,
+  # complete_draft! and start_draft! each replace the whole context, and every way
+  # out of having a draft goes through one of them, so the key cannot outlive the
+  # submission it was written for. What it does outlive is a change of mind — ask
+  # to start over, carry on with the draft instead, abandon it an hour later, and
+  # the overview comes with the discard. They did ask for it, so that is the
+  # harmless direction for this to be wrong in.
+  def start_over_requested?
+    context["start_over_requested"] == true
+  end
+
+  def request_start_over!
+    merge_context!(start_over_requested: true)
   end
 
   # Cleared on a revision, where the record is already persisted. Deliberately: a
@@ -440,6 +476,23 @@ class Whatsapp::Conversation < ApplicationRecord
   # Called once at the top of the inbound chain, before anything can send.
   def hold_offered_confirmations!
     @held_confirmations = pending_confirmations
+  end
+
+  # That the citizen has just asked to start over, held in memory rather than
+  # written down: it is true for the reply being composed and gone by the next
+  # message. The inbound chain sets it and the system prompt reads it off the
+  # same object, so there is nothing for a column or a context key to carry —
+  # the same arrangement the held confirmations above use.
+  #
+  # It exists because the phase going nil is not on its own enough to stop the
+  # projekt being offered again: the replayed history still has it, so the reply
+  # needs telling as well as the state needs clearing.
+  def note_start_over!
+    @starting_over = true
+  end
+
+  def starting_over?
+    @starting_over == true
   end
 
   # Nothing to write on the common path: most messages offer nothing irreversible,

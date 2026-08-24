@@ -28,22 +28,6 @@ class WhatsappApi::Resources::Messages
     )
   end
 
-  # An emoji on one message the citizen already sent, which is the only
-  # feedback left when the typing indicator is not an option: WhatsApp accepts
-  # the indicator for a tapped button and renders nothing for it.
-  #
-  # Removing one is the same call with no emoji, so the empty string is the
-  # documented erase rather than a missing argument.
-  def send_reaction(to:, message_id:, emoji:)
-    @client.post(
-      BASE_PATH,
-      body: envelope(to).merge(
-        type: "reaction",
-        reaction: { message_id: message_id, emoji: emoji }
-      )
-    )
-  end
-
   def send_text(to:, body:)
     @client.post(
       BASE_PATH,

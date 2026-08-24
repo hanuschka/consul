@@ -208,6 +208,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Draft on the table: #{draft_description}",
         picture_waiting_line,
         location_waiting_line,
+        start_over_line,
         "- Active participation phase: #{active_phase_description}",
         "- Contribution this conversation is about: #{active_proposal_description}",
         "- Participation phases open portal-wide: #{open_phases_count}",
@@ -250,6 +251,18 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       return if @conversation.shared_image_id.blank?
 
       "- A photo the citizen just sent is waiting to be attached to their draft"
+    end
+
+    # Only on the turn the citizen asked to start over, and it earns its place
+    # beside the cleared phase rather than instead of it: the phase line now reads
+    # "none", which is indistinguishable from a conversation that never had one, so
+    # on its own it says nothing about the projekt that has just been left. The
+    # replayed history still has that projekt all through it.
+    def start_over_line
+      return if !@conversation.starting_over?
+
+      "- The citizen has just asked to start over: nothing is selected any more, and no " \
+        "projekt named earlier in this conversation applies to what follows"
     end
 
     def location_waiting_line

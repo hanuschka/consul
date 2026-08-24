@@ -168,11 +168,22 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         step: @conversation.step
       )
 
+      keep_waiting_visible
+
       @last_tool_name = tool_call.name
 
       return if @tool_calls_made <= MAX_TOOL_CALLS
 
       raise ToolLoopError, "assistant called more than #{MAX_TOOL_CALLS} tools in one turn"
+    end
+
+    # Asked again on every tool call, because both things that end the bubble happen
+    # inside the loop: a tool that speaks to the citizen dismisses it, and a turn
+    # still running after TYPING_INDICATOR_SECONDS has had it expire. Unthrottled on
+    # purpose — MAX_TOOL_CALLS bounds it, and `typing` swallows its own failures, so
+    # the cost of asking once too often is a log line the citizen never sees.
+    def keep_waiting_visible
+      ::Whatsapp::Send.typing(message_id: @inbound_message_id)
     end
 
     # The step column's whole remaining job: a diagnostic saying what the conversation

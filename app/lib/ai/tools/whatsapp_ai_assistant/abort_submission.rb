@@ -14,7 +14,12 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
   def execute
     return nothing_open_answer if !conversation.unsaved_submission?
 
+    # Read before the discard, which replaces the context the request lives in.
+    starting_over = conversation.start_over_requested?
+
     conversation.discard_draft!
+
+    return start_over_answer if starting_over
 
     {
       discarded: true,
@@ -24,6 +29,22 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
   end
 
   private
+
+    # The discard was the price of a request to go back to the beginning, made
+    # before this turn and waiting on the citizen's yes — so this is not the end of
+    # the exchange, and stopping at "it is gone" would leave them exactly where the
+    # menu pill used to: nowhere, with nothing to tap. The line above deliberately
+    # says the opposite for every other abandonment, where somebody who has just
+    # given up is not owed a list of what else there is.
+    def start_over_answer
+      {
+        discarded: true,
+        started_over: true,
+        hint: "Say in one line that it is gone, then give them the fresh start they asked " \
+              "for: what is open to take part in right now, what they have already done, " \
+              "what there is to read. Do not offer the projekt they have just left."
+      }
+    end
 
     def nothing_open_answer
       {

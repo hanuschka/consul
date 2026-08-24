@@ -123,7 +123,8 @@ class Kern::MapComponent < ApplicationComponent
       layers = if mappable.respond_to?(:map_layers)
                  mappable.map_layers
                else
-                 mappable.try(:projekt_phase)&.map_layers ||
+                 mappable.try(:inherited_map_layers) ||
+                   mappable.try(:projekt_phase)&.map_layers ||
                    mappable.try(:projekt)&.map_layers ||
                    MapLayer.default
                end

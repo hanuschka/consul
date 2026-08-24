@@ -78,11 +78,13 @@ class Poll::Question < ApplicationRecord
   end
 
   def map_rendering_library
-    phase = poll&.projekt_phase
-    inherited = phase&.map_location || phase&.projekt&.map_location || MapLocation.default
-    library = inherited&.rendering_library
+    library = (poll&.projekt&.map_location || MapLocation.default)&.rendering_library
 
     MAP_RENDERING_LIBRARIES.include?(library) ? library : MAP_RENDERING_LIBRARIES.first
+  end
+
+  def inherited_map_layers
+    poll&.projekt&.map_layers.presence || MapLayer.default
   end
 
   def randomize_answers_possible?

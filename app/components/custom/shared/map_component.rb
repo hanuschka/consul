@@ -183,7 +183,8 @@ class Shared::MapComponent < ApplicationComponent
       base = if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
                @mappable.map_layers
              else
-               @mappable.try(:projekt_phase)&.map_layers ||
+               @mappable.try(:inherited_map_layers) ||
+                 @mappable.try(:projekt_phase)&.map_layers ||
                  @mappable.try(:projekt)&.map_layers ||
                  MapLayer.default
              end

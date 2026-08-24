@@ -109,7 +109,8 @@
           <% end %>
         </div>
 
-        <% boundary_location = question.map_location || question.build_map_location(rendering_library: :leaflet) %>
+        <% boundary_library = question.map_rendering_library %>
+        <% boundary_location = question.map_location || question.build_map_location(rendering_library: boundary_library) %>
         <div data-adm-poll-questions--votation-type-target="boundary"
              data-controller="adm-poll-questions--boundary-map"
              data-action="map:ready->adm-poll-questions--boundary-map#configureMap"
@@ -141,12 +142,13 @@
             hint: t(".boundary_hint"),
             stacked: true) do %>
             <% f.fields_for :map_location, boundary_location do |ml_form| %>
-              <%= ml_form.hidden_field :rendering_library, value: "leaflet" %>
+              <%= ml_form.hidden_field :rendering_library, value: boundary_library %>
               <%= render Kern::MapComponent.new(
                 map_location: boundary_location,
                 form: ml_form,
                 editable: true,
                 admin_editor: false,
+                rendering_library: boundary_library,
                 height: 450) %>
             <% end %>
           <% end %>

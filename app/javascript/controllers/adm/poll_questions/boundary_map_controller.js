@@ -1,8 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
-const DRAW_TOOL = "Polygon"
+const LEAFLET_DRAW_TOOL = "Polygon"
+const MAPBOX_DRAW_MODE = "draw_polygon"
 const POLYGON_TYPES = ["Polygon", "MultiPolygon"]
 const MAX_POLYGONS = 250
+const FIT_PADDING = 20
 
 export default class extends Controller {
   static targets = ["file", "status"]
@@ -12,13 +14,14 @@ export default class extends Controller {
     messages: Object
   }
 
-  configureMap(event) {
+  async configureMap(event) {
     this.adapter = event.detail.adapter
     if (!this.adapter) return
 
+    await this.mapReady()
+
     this.adapter.featuresLimit = Infinity
-    this.adapter.map.pm.disableDraw()
-    this.adapter.map.pm.enableDraw(DRAW_TOOL)
+    this.armPolygonTool()
   }
 
   async importFile() {
@@ -54,7 +57,7 @@ export default class extends Controller {
       return
     }
 
-    this.replaceFeatures({ type: "FeatureCollection", features: polygons })
+    await this.replaceFeatures({ type: "FeatureCollection", features: polygons })
     this.reset(this.messagesValue.imported)
   }
 
@@ -74,15 +77,91 @@ export default class extends Controller {
       .map((feature) => ({ type: "Feature", properties: {}, geometry: feature.geometry }))
   }
 
-  replaceFeatures(collection) {
+  async replaceFeatures(collection) {
     this.adapter.clearEditableFeatures()
     this.adapter.addFeatures(collection, { editable: true })
+
+    await this.mapReady()
 
     const input = this.element.querySelector("[data-map-target='features']")
     if (input) input.value = JSON.stringify(this.adapter.getEditableFeatures())
 
-    const bounds = window.L.geoJSON(collection).getBounds()
-    if (bounds.isValid()) this.adapter.map.fitBounds(bounds, { padding: [20, 20] })
+    this.fitTo(collection)
+  }
+
+  /**
+   * Mapbox builds its map and draw controls behind a promise; Leaflet is
+   * synchronous and exposes no such promise, so this resolves immediately there.
+   */
+  mapReady() {
+    return Promise.resolve(this.adapter && this.adapter.mapLoaded)
+  }
+
+  get usesMapbox() {
+    const container = this.adapter && this.adapter.container
+
+    return !!container && container._mapLibrary === "mapbox"
+  }
+
+  armPolygonTool() {
+    const map = this.adapter.map
+    if (!map) return
+
+    if (this.usesMapbox) {
+      if (this.adapter.draw) this.adapter.draw.changeMode(MAPBOX_DRAW_MODE)
+    } else if (map.pm) {
+      map.pm.disableDraw()
+      map.pm.enableDraw(LEAFLET_DRAW_TOOL)
+    }
+  }
+
+  fitTo(collection) {
+    const map = this.adapter.map
+    const bounds = this.boundsOf(collection)
+
+    if (!map || !bounds) return
+
+    const [[minLng, minLat], [maxLng, maxLat]] = bounds
+
+    if (this.usesMapbox) {
+      map.fitBounds([[minLng, minLat], [maxLng, maxLat]], { padding: FIT_PADDING })
+    } else {
+      map.fitBounds([[minLat, minLng], [maxLat, maxLng]], { padding: [FIT_PADDING, FIT_PADDING] })
+    }
+  }
+
+  /**
+   * Bounding box of a polygon collection as [[minLng, minLat], [maxLng, maxLat]],
+   * computed here so neither map library has to be loaded to frame an import.
+   */
+  boundsOf(collection) {
+    let minLng = Infinity
+    let minLat = Infinity
+    let maxLng = -Infinity
+    let maxLat = -Infinity
+
+    const visit = (coordinates) => {
+      if (typeof coordinates[0] === "number") {
+        const [lng, lat] = coordinates
+
+        if (!isFinite(lng) || !isFinite(lat)) return
+
+        minLng = Math.min(minLng, lng)
+        minLat = Math.min(minLat, lat)
+        maxLng = Math.max(maxLng, lng)
+        maxLat = Math.max(maxLat, lat)
+
+        return
+      }
+
+      coordinates.forEach(visit)
+    }
+
+    collection.features.forEach((feature) => visit(feature.geometry.coordinates))
+
+    if (minLng === Infinity) return null
+
+    return [[minLng, minLat], [maxLng, maxLat]]
   }
 
   reset(message) {

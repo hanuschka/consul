@@ -12,9 +12,11 @@ class Kern::MapComponent < ApplicationComponent
     zoom: nil,
     resources: nil,
     feature_collection: nil,
+    rendering_library: nil,
     error: nil
   )
     @map_location = map_location
+    @rendering_library_override = rendering_library
     @form = form
     @editable = editable
     @admin_editor = admin_editor
@@ -30,6 +32,10 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   attr_reader :map_location, :form, :editable, :admin_editor, :height, :width, :error
+
+  def rendering_library
+    @rendering_library_override || map_location.rendering_library || "leaflet"
+  end
 
   def rendering_library_options
     MapLocation.rendering_libraries.keys.map do |key|
@@ -76,10 +82,6 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   private
-
-    def rendering_library
-      map_location.rendering_library || "leaflet"
-    end
 
     def features_json
       if @feature_collection.present?
@@ -180,7 +182,7 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def mapbox_public_token
-      Rails.application.secrets.dig(:mapbox, :public_token)
+      ExternalApiKey.mapbox_public_token
     end
 
     def mapbox_style_id

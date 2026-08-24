@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Polls::Questions::MapPointsAnswersComponent < Polls::Questions::AnswersComponent
-  RENDERING_LIBRARY = "leaflet"
+  def rendering_library
+    question.map_rendering_library
+  end
 
   def user_map_points
     @user_map_points ||= user_map_points_answer&.map_points&.to_a || []

@@ -1,6 +1,12 @@
 (function() {
   "use strict";
 
+  // Leaflet anchors the 30px marker 40px below its top edge, so the circle floats
+  // 10px above the actual coordinate. Mapbox markers are offset to match.
+  var MARKER_LIFT = 10;
+  var MAP_WAIT_INTERVAL = 50;
+  var MAP_WAIT_ATTEMPTS = 200;
+
   App.PollMapPoints = {
     initialize: function() {
       document.querySelectorAll(".js-poll-map-points").forEach(function(wrapper) {
@@ -13,25 +19,33 @@
       if (!container) return;
 
       var instance = App.PollMapPoints.mapInstanceFor(container);
-      if (!instance || !instance.map || instance.pollMapPointsBound) return;
+      if (!instance || instance.pollMapPointsBound) return;
 
       instance.pollMapPointsBound = true;
 
+      App.PollMapPoints.whenMapReady(instance, function(map) {
+        App.PollMapPoints.start(wrapper, container, map);
+      });
+    },
+
+    start: function(wrapper, container, map) {
       var state = {
         wrapper: wrapper,
-        instance: instance,
-        layer: L.layerGroup().addTo(instance.map),
+        map: map,
+        renderer: container.classList.contains("mapbox") ? App.PollMapPoints.mapbox : App.PollMapPoints.leaflet,
         maxMapPoints: parseInt(wrapper.dataset.maxMapPoints, 10) || 1,
         canPlace: wrapper.dataset.canPlaceMapPoints === "true",
         features: App.PollMapPoints.parseFeatures(wrapper.dataset.mapPoints)
       };
 
+      state.renderer.create(state);
+
       App.PollMapPoints.render(state);
 
       if (!state.canPlace) return;
 
-      instance.map.on("click", function(event) {
-        App.PollMapPoints.place(state, event.latlng);
+      state.renderer.bindMapClick(state, function(latitude, longitude) {
+        App.PollMapPoints.place(state, latitude, longitude);
       });
     },
 
@@ -43,6 +57,131 @@
       })[0];
     },
 
+    // Leaflet builds its map in the constructor; Mapbox only after its scripts
+    // have loaded, so the instance can be registered before it has a map.
+    whenMapReady: function(instance, callback) {
+      if (instance.map) {
+        callback(instance.map);
+        return;
+      }
+
+      var attempts = 0;
+
+      var timer = setInterval(function() {
+        attempts += 1;
+
+        var registered = ((App.Map && App.Map.maps) || []).indexOf(instance) !== -1;
+
+        if (!registered || attempts >= MAP_WAIT_ATTEMPTS) {
+          clearInterval(timer);
+        } else if (instance.map) {
+          clearInterval(timer);
+          callback(instance.map);
+        }
+      }, MAP_WAIT_INTERVAL);
+    },
+
+    leaflet: {
+      create: function(state) {
+        state.layer = L.layerGroup().addTo(state.map);
+      },
+
+      clear: function(state) {
+        state.layer.clearLayers();
+      },
+
+      addMarker: function(state, latitude, longitude, hint, onRemove) {
+        var marker = L.marker([latitude, longitude], {
+          icon: App.Utils.getLeafletMarkerHTML(null, null, hint),
+          keyboard: true,
+          title: hint
+        });
+
+        if (onRemove) {
+          marker.on("click", function(event) {
+            L.DomEvent.stopPropagation(event);
+            onRemove();
+          });
+        }
+
+        marker.addTo(state.layer);
+      },
+
+      bindMapClick: function(state, callback) {
+        state.map.on("click", function(event) {
+          callback(event.latlng.lat, event.latlng.lng);
+        });
+      }
+    },
+
+    mapbox: {
+      create: function(state) {
+        state.markers = [];
+      },
+
+      clear: function(state) {
+        state.markers.forEach(function(marker) {
+          marker.remove();
+        });
+
+        state.markers = [];
+      },
+
+      addMarker: function(state, latitude, longitude, hint, onRemove) {
+        var element = App.PollMapPoints.markerElement(hint, !!onRemove);
+
+        if (onRemove) {
+          element.addEventListener("click", function(event) {
+            event.stopPropagation();
+            onRemove();
+          });
+
+          element.addEventListener("keydown", function(event) {
+            if (event.key !== "Enter" && event.key !== " ") return;
+
+            event.preventDefault();
+            onRemove();
+          });
+        }
+
+        var marker = new mapboxgl.Marker({
+          element: element,
+          anchor: "bottom",
+          offset: [0, -MARKER_LIFT]
+        }).setLngLat([longitude, latitude]).addTo(state.map);
+
+        state.markers.push(marker);
+      },
+
+      bindMapClick: function(state, callback) {
+        state.map.on("click", function(event) {
+          callback(event.lngLat.lat, event.lngLat.lng);
+        });
+      }
+    },
+
+    markerElement: function(hint, removable) {
+      var element = document.createElement("div");
+      element.className = "map-marker";
+
+      var icon = document.createElement("div");
+      icon.className = "map-icon icon-circle";
+      icon.style.backgroundColor = App.Utils.getBrandColor();
+      element.appendChild(icon);
+
+      if (removable) {
+        element.setAttribute("role", "button");
+        element.setAttribute("tabindex", "0");
+        element.setAttribute("aria-label", hint);
+        element.setAttribute("title", hint);
+      } else {
+        element.setAttribute("role", "img");
+        element.setAttribute("aria-label", hint || "Kartenmarkierung");
+      }
+
+      return element;
+    },
+
     parseFeatures: function(value) {
       try {
         return JSON.parse(value || "[]");
@@ -52,28 +191,21 @@
     },
 
     render: function(state) {
-      state.layer.clearLayers();
+      state.renderer.clear(state);
+
+      var hint = state.canPlace ? state.wrapper.dataset.removeHintText : null;
 
       state.features.forEach(function(feature) {
         var coordinates = feature.geometry && feature.geometry.coordinates;
         if (!coordinates) return;
 
-        var hint = state.canPlace ? state.wrapper.dataset.removeHintText : null;
+        var mapPointId = feature.properties && feature.properties.id;
 
-        var marker = L.marker([coordinates[1], coordinates[0]], {
-          icon: App.Utils.getLeafletMarkerHTML(null, null, hint),
-          keyboard: true,
-          title: hint
-        });
+        var onRemove = state.canPlace ? function() {
+          App.PollMapPoints.remove(state, mapPointId);
+        } : null;
 
-        if (state.canPlace) {
-          marker.on("click", function(event) {
-            L.DomEvent.stopPropagation(event);
-            App.PollMapPoints.remove(state, feature.properties && feature.properties.id);
-          });
-        }
-
-        marker.addTo(state.layer);
+        state.renderer.addMarker(state, coordinates[1], coordinates[0], hint, onRemove);
       });
 
       App.PollMapPoints.updateCounter(state);
@@ -112,15 +244,15 @@
       if (status) status.textContent = message || "";
     },
 
-    place: function(state, latlng) {
+    place: function(state, latitude, longitude) {
       if (state.features.length >= state.maxMapPoints) {
         App.PollMapPoints.setStatus(state, state.wrapper.dataset.limitReachedText);
         return;
       }
 
       App.PollMapPoints.request(state, state.wrapper.dataset.addMapPointUrl, "POST", {
-        latitude: latlng.lat,
-        longitude: latlng.lng
+        latitude: latitude,
+        longitude: longitude
       }, state.wrapper.dataset.placedText);
     },
 

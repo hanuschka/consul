@@ -18,7 +18,7 @@
          data-heat-points="<%= collection.coordinates.to_json %>">
       <%= render Shared::MapComponent.new(mappable: record,
                                           features: features,
-                                          rendering_library: "leaflet") %>
+                                          rendering_library: record.map_rendering_library) %>
     </div>
   <% elsif pin_count.positive? %>
     <p class="poll-question-meta">

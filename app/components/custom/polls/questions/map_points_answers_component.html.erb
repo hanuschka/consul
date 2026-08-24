@@ -16,7 +16,7 @@
 
   <%= render Shared::MapComponent.new(mappable: question,
                                       features: boundary_collection,
-                                      rendering_library: RENDERING_LIBRARY) %>
+                                      rendering_library: rendering_library) %>
 
   <p class="poll-map-points--counter js-poll-map-points-counter">
     <%= counter_text %>

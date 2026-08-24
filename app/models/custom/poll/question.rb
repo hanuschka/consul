@@ -3,6 +3,8 @@ require_dependency Rails.root.join("app", "models", "poll", "question").to_s
 class Poll::Question < ApplicationRecord
   include Mappable
 
+  MAP_RENDERING_LIBRARIES = %w[leaflet mapbox].freeze
+
   accepts_nested_attributes_for :map_location, allow_destroy: true, update_only: true
 
   translates :description, :min_rating_scale_label, :max_rating_scale_label, :intro, touch: true
@@ -73,6 +75,14 @@ class Poll::Question < ApplicationRecord
 
   def max_map_points
     votation_type&.max_votes.presence || 1
+  end
+
+  def map_rendering_library
+    phase = poll&.projekt_phase
+    inherited = phase&.map_location || phase&.projekt&.map_location || MapLocation.default
+    library = inherited&.rendering_library
+
+    MAP_RENDERING_LIBRARIES.include?(library) ? library : MAP_RENDERING_LIBRARIES.first
   end
 
   def randomize_answers_possible?

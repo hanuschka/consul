@@ -12,6 +12,9 @@ en:
         generate_tooltip_text: "Automatically creates a matching banner image based on the projekt content."
         generate_disabled_tooltip_title: "AI image generation not available"
         generate_disabled_tooltip_text: "DT AI is not enabled. Enable the AI features in the settings to generate banner images."
+        ai_marker_failed: "The marker could not be saved. Please reload the page."
+        ai_marker_tooltip_title: "Mark banner as an AI image"
+        ai_marker_tooltip_text: "Adds the \"AI-generated image\" notice to the banner. Turn it on for pictures created or edited with AI."
       banner_generate_modal:
         title: "Generate banner image with AI"
         description: "Creates a banner image based on the projekt title, subtitle and optionally the projekt content. Use a custom prompt to describe the desired image more precisely."

@@ -35,6 +35,18 @@ class Projekts::BannerComponent < ApplicationComponent
     I18n.t("custom.projekts.banner_upload.min_image_size_hint", width: 590, height: 355)
   end
 
+  def banner_ai_generated?
+    @custom_page.image&.ai_generated? == true
+  end
+
+  def ai_marker_tooltip_title
+    I18n.t("custom.projekts.banner_upload.ai_marker_tooltip_title")
+  end
+
+  def ai_marker_tooltip_text
+    I18n.t("custom.projekts.banner_upload.ai_marker_tooltip_text")
+  end
+
   def banner_wrapper_class
     classes = ["custom-page--banner-wrapper"]
     classes << "-compact" if @compact

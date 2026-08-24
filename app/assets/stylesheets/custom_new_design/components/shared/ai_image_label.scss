@@ -1,0 +1,53 @@
+// EU AI Act disclosure badge. Deliberately unscoped: the same markup is built
+// by App.MapPopup inside a Mapbox popup, which renders outside
+// .custom-new-design. Takes the banner-chip family's radius, gap and weight,
+// but keeps an opaque scrim instead of the chip's translucent white, because it
+// sits on arbitrary photography rather than on the banner background. Anchored
+// top-left: the bottom strip already carries the projekt-label overlay on cards
+// and the studio upload controls on banners.
+.ai-image-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 24px);
+  padding: 6px 12px 6px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: left;
+  pointer-events: none;
+}
+
+.ai-image-label--icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.ai-image-label--text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Card thumbs and map popups render the same badge far smaller than a banner
+// does, so the text is dropped once it stops being readable. The wrapper keeps
+// its aria-label, so the icon alone stays announced.
+@container resource-image (max-width: 260px) {
+  .ai-image-label {
+    top: 8px;
+    left: 8px;
+    padding: 4px;
+  }
+
+  .ai-image-label--text {
+    display: none;
+  }
+}

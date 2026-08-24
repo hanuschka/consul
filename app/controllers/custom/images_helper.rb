@@ -28,4 +28,17 @@ module ImagesHelper
   def show_image_thumbnail?(resource)
     resource.image.present? && !resource.image.concealed? && resource.image.attachment&.attached?
   end
+
+  # Map popups are assembled in App.MapPopup, so the disclosure badge cannot be
+  # rendered by Shared::AiImageLabelComponent there. The icon path and the
+  # translated wording travel with the popup payload instead of being hardcoded
+  # in the JS.
+  def ai_image_label_payload(image)
+    return nil if image.blank? || !image.ai_generated?
+
+    {
+      text: I18n.t(Shared::AiImageLabelComponent::TEXT_KEY),
+      icon_url: asset_path("ai_disclosure/eu_ai_generated_icon.svg")
+    }
+  end
 end

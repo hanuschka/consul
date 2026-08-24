@@ -1,0 +1,21 @@
+// Disclosure checkbox shipped with every Image upload form. Unscoped for the
+// same reason as .ai-image-label: it also renders in forms outside
+// .custom-new-design.
+.ai-generated-image-field {
+  margin-top: 10px;
+
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    margin: 2px 0 0;
+    flex: 0 0 auto;
+  }
+}

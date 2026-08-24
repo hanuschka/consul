@@ -149,14 +149,7 @@ class DebatesController < ApplicationController
   end
 
   def update
-    custom_debate_params =
-      if debate_params["image_attributes"]["cached_attachment"].blank?
-        debate_params.except("image_attributes")
-      else
-        debate_params
-      end
-
-    if resource.update(custom_debate_params)
+    if resource.update(debate_params_without_blank_image_upload)
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
       load_geozones
@@ -218,6 +211,20 @@ class DebatesController < ApplicationController
   end
 
   private
+
+    # A submitted image_attributes hash with no file in it still carries the
+    # existing image's own fields -- its title, credits and AI marker -- so only
+    # the upload keys are dropped. Keeping them would replace the attachment
+    # with nothing.
+    def debate_params_without_blank_image_upload
+      submitted = debate_params
+      image_params = submitted["image_attributes"]
+
+      return submitted if image_params.blank?
+      return submitted if image_params["cached_attachment"].present?
+
+      submitted.merge("image_attributes" => image_params.except("attachment", "cached_attachment"))
+    end
 
     def debate_params
       attributes = [:tag_list, :projekt_id, :projekt_phase_id, :related_sdg_list, :on_behalf_of,

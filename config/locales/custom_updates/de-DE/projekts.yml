@@ -12,6 +12,9 @@ de:
         generate_tooltip_text: "Erstellt automatisch ein passendes Titelbild auf Basis der Projektinhalte."
         generate_disabled_tooltip_title: "KI-Bildgenerierung nicht verfügbar"
         generate_disabled_tooltip_text: "DT AI ist nicht aktiviert. Aktivieren Sie die KI-Funktionen in den Einstellungen, um Titelbilder generieren zu lassen."
+        ai_marker_failed: "Die Kennzeichnung konnte nicht gespeichert werden. Bitte laden Sie die Seite neu."
+        ai_marker_tooltip_title: "Titelbild als KI-Bild kennzeichnen"
+        ai_marker_tooltip_text: "Setzt den Hinweis „KI-generiertes Bild“ auf dem Titelbild. Aktivieren Sie ihn für Bilder, die mit KI erstellt oder bearbeitet wurden."
       banner_generate_modal:
         title: "Titelbild mit KI generieren"
         description: "Erstellt ein Titelbild auf Basis von Projekttitel, Untertitel und optional den Projektinhalten. Mit einem eigenen Prompt können Sie das gewünschte Motiv genauer beschreiben."

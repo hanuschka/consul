@@ -109,6 +109,7 @@
               ),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page,
+              ai_generated: @custom_page.image&.ai_generated?,
               placeholder_hint: show_admin_controls? ? banner_image_size_hint : nil
             )
           ) %>
@@ -122,6 +123,9 @@
             data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"
             data-generate-url="<%= generate_image_adm_projekts_projekt_path(@projekt) %>"
             data-generate-status-url="<%= generate_image_status_adm_projekts_projekt_path(@projekt) %>"
+            data-ai-generated-url="<%= update_image_ai_generated_adm_projekts_projekt_path(@projekt) %>"
+            data-ai-label-text="<%= t('components.shared.ai_image_label_component.text') %>"
+            data-ai-label-icon-url="<%= asset_path('ai_disclosure/eu_ai_generated_icon.svg') %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
             data-placeholder-hint="<%= banner_image_size_hint %>"
@@ -138,6 +142,7 @@
                 class="projekt-banner-upload-error--message js-projekt-banner-upload-error-message"
                 data-fallback-text="<%= t('custom.projekts.banner_upload.upload_failed') %>"
                 data-generate-failed-text="<%= t('custom.projekts.banner_upload.generate_failed') %>"
+                data-ai-marker-failed-text="<%= t('custom.projekts.banner_upload.ai_marker_failed') %>"
               ></span>
             </div>
             <%= banner_image %>
@@ -192,6 +197,21 @@
               class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
+            <%= studio_rich_tooltip(
+              title: ai_marker_tooltip_title,
+              text: ai_marker_tooltip_text,
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %>"
+                      aria-label="<%= ai_marker_tooltip_title %>"
+                      aria-pressed="<%= banner_ai_generated? %>"
+                      <%= "disabled" if @custom_page.image.blank? %>
+                      tabindex="-1">
+                <%= image_tag "ai_disclosure/eu_ai_generated_icon.svg",
+                      class: "projekt-image-ai-marker-button--icon", alt: "", "aria-hidden": "true" %>
+              </button>
+            <% end %>
             <%= studio_rich_tooltip(
               title: "Titelbild entfernen",
               text: "Entfernt das aktuelle Titelbild. Die Seite wird anschließend ohne Banner angezeigt.",

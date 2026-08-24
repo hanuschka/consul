@@ -1489,8 +1489,32 @@ span.projekt-backlink:before {
   }
 }
 
-.projekt-image-delete-button {
+.projekt-image-ai-marker-button {
   left: 115px;
+  padding: 0;
+
+  &:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  &.-active {
+    background-color: color(srgb 1 1 1 / 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.projekt-image-ai-marker-button--icon {
+  width: 22px;
+  height: 22px;
+  // The official icon is a white disc with dark letters, so it needs its own
+  // dark ground to stay legible on the translucent control.
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.projekt-image-delete-button {
+  left: 165px;
 }
 
 rich-tooltip:has(.projekt-image-generate-button:disabled) {

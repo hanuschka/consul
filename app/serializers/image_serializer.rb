@@ -20,6 +20,7 @@ class ImageSerializer
       id: image.id,
       title: image.title,
       credits: image.credits,
+      ai_generated: image.ai_generated,
       url: rails_blob_url(image.attachment, **image_url_options)
     }
 

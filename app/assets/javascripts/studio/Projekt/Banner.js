@@ -26,6 +26,7 @@ App.Studio.Projekt.Banner = {
     $document.on("click", ".js-projekt-banner--image-delete-button", this.deleteTitleImage.bind(this));
     $document.on("click", ".js-projekt-banner--image-generate-button", this.openGenerateImageModal.bind(this));
     $document.on("click", ".js-projekt-banner-generate-submit", this.submitGenerateImage.bind(this));
+    $document.on("click", ".js-projekt-banner--ai-marker-button", this.toggleAiMarker.bind(this));
   },
 
   turnOnTextEdit(e) {
@@ -303,16 +304,85 @@ App.Studio.Projekt.Banner = {
     if (glightbox) glightbox.setAttribute("href", previewUrl);
 
     this.toggleImageActionButtons(container, true);
+    this.applyAiMarkerState(container, false);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },
 
   toggleImageActionButtons(container, imagePresent) {
     const deleteButton = container.querySelector(".js-projekt-banner--image-delete-button");
+    const aiMarkerButton = container.querySelector(".js-projekt-banner--ai-marker-button");
 
     // The generate button stays visible whether or not an image is set, so an
     // existing banner can be regenerated; only the delete button toggles.
     if (deleteButton) deleteButton.classList.toggle("d-none", !imagePresent);
+    if (aiMarkerButton) aiMarkerButton.disabled = !imagePresent;
+  },
+
+  // The marker belongs to the file: uploading a new banner clears it server-side
+  // (Image#clear_ai_generated_on_replaced_attachment) and generating one sets
+  // it, so the badge is re-rendered from that state rather than left as it was.
+  async toggleAiMarker(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const container = button.closest(".js-projekt-image-uploader");
+    if (!container) return;
+
+    const nextState = button.getAttribute("aria-pressed") !== "true";
+
+    button.disabled = true;
+    this.clearUploadError(container);
+
+    try {
+      await App.Ajax.request({
+        url: container.dataset.aiGeneratedUrl,
+        method: "PATCH",
+        dataType: "json",
+        data: { ai_generated: nextState }
+      });
+
+      this.applyAiMarkerState(container, nextState);
+    } catch (xhr) {
+      // The banner may have been deleted in another session, in which case the
+      // marker has nothing to attach to -- say so instead of leaving the button
+      // silently showing the old state.
+      this.showUploadError(container, this.aiMarkerErrorMessage(container));
+    } finally {
+      button.disabled = false;
+    }
+  },
+
+  aiMarkerErrorMessage(container) {
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message");
+
+    return messageElement ? messageElement.dataset.aiMarkerFailedText : "";
+  },
+
+  applyAiMarkerState(container, aiGenerated) {
+    const button = container.querySelector(".js-projekt-banner--ai-marker-button");
+
+    if (button) {
+      button.setAttribute("aria-pressed", String(aiGenerated));
+      button.classList.toggle("-active", aiGenerated);
+    }
+
+    const resourceImage = container.querySelector(".resource-image");
+    if (!resourceImage) return;
+
+    const existingLabel = resourceImage.querySelector(".ai-image-label");
+
+    if (!aiGenerated) {
+      if (existingLabel) existingLabel.remove();
+      return;
+    }
+
+    if (existingLabel) return;
+
+    const text = container.dataset.aiLabelText || "";
+    const iconUrl = container.dataset.aiLabelIconUrl || "";
+
+    resourceImage.insertAdjacentHTML("beforeend", App.AiImageLabel.markup(text, iconUrl));
   },
 
   handleUploadError(container, imagePreview, previewUrl, xhr) {
@@ -426,6 +496,7 @@ App.Studio.Projekt.Banner = {
     if (glightbox) glightbox.removeAttribute("href");
 
     this.toggleImageActionButtons(container, false);
+    this.applyAiMarkerState(container, false);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },
@@ -531,6 +602,7 @@ App.Studio.Projekt.Banner = {
     this.hideUploadProgress(container);
     this.resetGenerateButton(container);
     this.toggleImageActionButtons(container, true);
+    this.applyAiMarkerState(container, true);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },

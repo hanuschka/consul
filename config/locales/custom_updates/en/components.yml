@@ -8,5 +8,10 @@ en:
       image_with_lightbox_component:
         download_original: "Download original"
     images:
+      ai_generated_field_component:
+        label: "This image was created or edited with AI"
       direct_upload_component:
         generating_image: "Generating image, please wait…"
+    shared:
+      ai_image_label_component:
+        text: "AI-generated image"

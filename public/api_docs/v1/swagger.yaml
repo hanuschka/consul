@@ -493,6 +493,12 @@ paths:
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         _destroy:
                           type: boolean
                           nullable: true
@@ -687,6 +693,12 @@ paths:
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         _destroy:
                           type: boolean
                           nullable: true
@@ -1118,6 +1130,12 @@ paths:
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -1491,6 +1509,12 @@ paths:
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice. Properly credits original creators.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -2320,6 +2344,12 @@ paths:
                           type: string
                           nullable: true
                           description: Image source attribution or copyright
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -2561,6 +2591,12 @@ paths:
                           type: string
                           nullable: true
                           description: Image source attribution or copyright
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -3369,6 +3405,12 @@ paths:
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -3631,6 +3673,12 @@ paths:
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice. Properly credits original creators.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -3880,6 +3928,12 @@ paths:
                           nullable: true
                           description: Image source attribution, photographer name,
                             or copyright information.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -4109,6 +4163,12 @@ paths:
                           nullable: true
                           description: Image source attribution, photographer name,
                             or copyright information.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -5480,6 +5540,12 @@ paths:
                           description: Image source attribution, photographer/artist
                             name, or copyright information. Displayed with the image
                             to give proper credit.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -5706,6 +5772,12 @@ paths:
                           nullable: true
                           description: Updated image source attribution, photographer/artist
                             name, or copyright notice. Properly credits original creators.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -11978,6 +12050,12 @@ paths:
                           type: string
                           nullable: true
                           description: Image source attribution or copyright information.
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         _destroy:
                           type: boolean
                           nullable: true
@@ -12672,6 +12750,12 @@ paths:
                           type: string
                           nullable: true
                           description: Image source attribution
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -13092,6 +13176,12 @@ paths:
                           type: string
                           nullable: true
                           description: Image source attribution
+                        ai_generated:
+                          type: boolean
+                          nullable: true
+                          description: Set to true when the image was created or edited
+                            with AI; the public page then shows the AI disclosure
+                            label
                         user_id:
                           type: integer
                           nullable: true
@@ -14549,6 +14639,11 @@ components:
           nullable: true
           description: Image attribution or credits
           example: Photo by John Doe
+        ai_generated:
+          type: boolean
+          description: True when the image was created or edited with AI. Drives the
+            visible AI disclosure label on public pages.
+          example: false
         url:
           type: string
           description: URL to the original full-size image
@@ -14618,6 +14713,14 @@ components:
           nullable: true
           description: Attribution/credits for the image. Optional.
           example: Photo by John Doe
+        ai_generated:
+          type: boolean
+          nullable: true
+          default: false
+          description: 'Set to true when the image was created or edited with AI.
+            The public page then shows the AI disclosure label. Resets to false when
+            the attachment is replaced without passing it again. Default: false.'
+          example: false
         _destroy:
           type: boolean
           nullable: true
@@ -16182,6 +16285,11 @@ components:
           type: string
           nullable: true
           description: Attribution or credits for the image
+        ai_generated:
+          type: boolean
+          nullable: true
+          description: Set to true when the image was created or edited with AI; the
+            public page then shows the AI disclosure label
         _destroy:
           type: boolean
           nullable: true
@@ -16538,6 +16646,11 @@ components:
           nullable: true
           description: Image attribution or credits
           example: Photo by John Doe
+        ai_generated:
+          type: boolean
+          description: True when the image was created or edited with AI. Drives the
+            visible AI disclosure label on public pages.
+          example: false
         url:
           type: string
           description: Full URL to the image

@@ -49,6 +49,7 @@
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
                     <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
+                    <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
                   <% end %>
                 </div>
               <% end %>

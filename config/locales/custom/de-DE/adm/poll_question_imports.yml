@@ -2,8 +2,14 @@ de:
   adm:
     projekts:
       poll_question_imports:
+        source_files_label: Quelldokumente
         trigger:
+          title: KI-Fragenimport
           button: Fragen aus Dokument importieren
+          tooltip: >-
+            Laden Sie ein PDF-, Word- oder Textdokument hoch – die KI liest
+            daraus Fragen, Antwortoptionen und Fragetypen aus. Sie prüfen und
+            bearbeiten alles, bevor es dieser Abstimmung hinzugefügt wird.
         index:
           title: Fragenimport aus Dokumenten
           hint: >-
@@ -27,22 +33,25 @@ de:
             questions: Fragen
             created: Hochgeladen
         new:
-          title: Dokument hochladen
+          title: Fragen aus einem Dokument importieren
+          description: >-
+            Laden Sie ein Dokument mit den Fragen hoch. Sie können sie prüfen
+            und bearbeiten, bevor sie der Abstimmung hinzugefügt werden.
           dropzone_title: Dokument mit den Fragen hochladen
           dropzone_hint: "Unterstützte Formate: %{types}. Maximal %{size} insgesamt."
           select_file: Datei auswählen
           drop_hint: Sie können Dateien auch per Drag-and-drop hierher ziehen.
           choose_other_file: Andere Datei wählen
           remove_file: Datei entfernen
-          submit: Fragen auslesen
+          submit: Fragen importieren
           progress: Dokument wird gelesen …
           processing_title: Das Dokument wird ausgewertet
           processing_message: >-
             Das dauert je nach Umfang des Dokuments in der Regel unter einer
             Minute. Sie können die Seite offen lassen.
         show:
-          title: Erkannte Fragen
-          title_processing: Dokument wird ausgewertet
+          title: Fragenentwurf
+          title_processing: Import läuft …
           title_neutral: Fragenimport
           hint: >-
             Prüfen und bearbeiten Sie die erkannten Fragen. Erst beim Übernehmen
@@ -52,9 +61,15 @@ de:
             Die Fragen werden gerade aus dem Dokument gelesen. Das dauert in der
             Regel unter einer Minute. Diese Seite aktualisiert sich von selbst.
           found:
-            one: Eine Frage wurde erkannt.
-            other: "%{count} Fragen wurden erkannt."
-          source_files: "Aus: %{files}"
+            one: Eine Frage steht zur Prüfung bereit
+            other: "%{count} Fragen stehen zur Prüfung bereit"
+          summary_answers:
+            one: >-
+              Insgesamt eine Antwortoption – schalten Sie Fragen aus, die nicht
+              importiert werden sollen.
+            other: >-
+              Insgesamt %{count} Antwortoptionen – schalten Sie Fragen aus, die
+              nicht importiert werden sollen.
           failed: Die Fragen konnten nicht ausgelesen werden
           stalled: Die Auswertung hängt fest
           stalled_description: >-
@@ -73,13 +88,20 @@ de:
           back: Zurück zur Übersicht
           to_questions: Zu den Fragen
           apply: Fragen importieren
+          apply_tooltip: >-
+            Übernimmt alle eingeschalteten Fragen in die Abstimmung. Hier
+            ausgeschaltete Fragen bleiben außen vor.
           discard: Verwerfen
-          regenerate: Erneut auslesen
+          discard_tooltip: >-
+            Zurück zur Übersicht, ohne Fragen zur Abstimmung hinzuzufügen. Der
+            Entwurf bleibt erhalten und kann erneut geöffnet werden.
+          regenerate: Fragen erneut auslesen
           regenerate_hint: >-
-            Wertet dasselbe Dokument noch einmal aus. Ein erneutes Hochladen ist
-            nicht nötig.
+            Wertet dasselbe Dokument erneut aus – ein neuer Upload ist nicht
+            nötig.
           regenerate_confirm: >-
             Die aktuelle Vorschau wird dabei verworfen. Fortfahren?
+          to_top: Nach oben
         question:
           label: Frage
           include: Übernehmen

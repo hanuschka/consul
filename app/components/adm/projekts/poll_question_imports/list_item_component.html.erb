@@ -1,23 +1,38 @@
 <tr class="kern-table__row">
   <td class="kern-table__cell adm-poll-question-import__files-cell">
-    <%= link_to show_url, class: "kern-link adm-poll-question-import__files" do %>
-      <span class="material-symbols-outlined" aria-hidden="true">description</span>
-      <span><%= files_summary %></span>
-    <% end %>
+    <div class="adm-poll-question-import__file">
+      <span class="adm-poll-question-import__file-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">description</span>
+      </span>
 
-    <% if show_all_file_names? %>
-      <p class="adm-poll-question-import__files-note"><%= file_names.join(", ") %></p>
-    <% end %>
+      <div class="adm-poll-question-import__file-text">
+        <%= link_to files_summary, show_url, class: "kern-link adm-poll-question-import__files" %>
 
-    <% if show_error? %>
-      <p class="adm-poll-question-import__error"><%= error_preview %></p>
-    <% end %>
+        <% if show_all_file_names? %>
+          <ul
+            class="adm-poll-question-import__files-note"
+            aria-label="<%= t("adm.projekts.poll_question_imports.source_files_label") %>"
+          >
+            <% file_names.each do |file_name| %>
+              <li class="adm-poll-question-file-chip">
+                <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                <span><%= file_name %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
 
-    <% if stalled? %>
-      <p class="adm-poll-question-import__note">
-        <%= t("adm.projekts.poll_question_imports.list.stalled_note") %>
-      </p>
-    <% end %>
+        <% if show_error? %>
+          <p class="adm-poll-question-import__error"><%= error_preview %></p>
+        <% end %>
+
+        <% if stalled? %>
+          <p class="adm-poll-question-import__note">
+            <%= t("adm.projekts.poll_question_imports.list.stalled_note") %>
+          </p>
+        <% end %>
+      </div>
+    </div>
   </td>
 
   <td class="kern-table__cell">
@@ -29,7 +44,7 @@
     </span>
   </td>
 
-  <td class="kern-table__cell">
+  <td class="kern-table__cell adm-poll-question-import__count">
     <% if applied? %>
       <%= link_to t("adm.projekts.poll_question_imports.list.applied_questions", count: applied_questions_count),
             poll_questions_url,
@@ -42,9 +57,9 @@
   </td>
 
   <td class="kern-table__cell">
-    <span><%= created_label %></span>
+    <span class="adm-poll-question-import__created"><%= created_label %></span>
+
     <% if author_name.present? %>
-      <br>
       <span class="adm-poll-question-import__author"><%= author_name %></span>
     <% end %>
   </td>

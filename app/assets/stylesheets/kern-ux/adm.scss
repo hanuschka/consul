@@ -28,6 +28,7 @@
 @use "adm/components/column_selector";
 @use "adm/components/icon_rail";
 @use "adm/components/table";
+@use "adm/components/scroll_to_top";
 @use "adm/components/email_template_component";
 @use "adm/components/recipient_group_filter_card_component";
 @use "adm/components/name_autosave_status";
@@ -79,6 +80,7 @@
 @use "adm/components/newsletter_email_preview";
 @use "adm/components/image_cropper_dialog";
 @use "adm/components/projekts_inspiration";
+@use "adm/components/projekts_instance_import";
 @use "adm/components/budget_results_tab";
 @use "adm/components/loader";
 @use "adm/components/poll_question_imports";

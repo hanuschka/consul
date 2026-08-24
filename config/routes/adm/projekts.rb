@@ -14,6 +14,8 @@ namespace :adm do
 
     resource :inspiration, only: [:show], controller: "inspiration"
 
+    resource :instance_import, only: [:new, :create], controller: "instance_imports"
+
     resources :contact_persons, controller: "/adm/section_contact_people",
               only: [:new, :create, :edit, :update, :destroy],
               path: "settings/contact_persons",

@@ -1,20 +1,21 @@
 class Projekts::Copying::ContentBlockCopier < ApplicationService
-  def initialize(source:, copy:, record_copier:)
-    @source = source
+  def initialize(bundle:, copy:, record_copier:)
+    @bundle = bundle
     @copy = copy
     @record_copier = record_copier
     @keys_by_source_key = {}
   end
 
-  # The block body still holds the source's phase ids and image URLs here; the
-  # rewiring pass rewrites it once every phase and blob has a copy.
+  # The block body still holds the source's phase ids and, within one instance,
+  # its image URLs; the rewiring pass rewrites both once every phase and blob
+  # has a copy. An imported body arrives with placeholders already in place.
   def call
-    source.content_blocks.order(:position, :id).each do |content_block|
+    Array(bundle["content_blocks"]).each do |node|
       record_copier.copy_record(
-        content_block,
+        node,
         attributes: {
           projekt_id: copy.id,
-          key: copy_key_for(content_block.key),
+          key: copy_key_for(node["source_key"]),
           ai_generation_data: nil
         }
       )
@@ -23,7 +24,7 @@ class Projekts::Copying::ContentBlockCopier < ApplicationService
 
   private
 
-    attr_reader :source, :copy, :record_copier, :keys_by_source_key
+    attr_reader :bundle, :copy, :record_copier, :keys_by_source_key
 
     # The key cannot be carried over verbatim. The same source key always maps
     # to the same copy key, which is what keeps a block's per-locale rows

@@ -1,0 +1,30 @@
+<div class="poll-map-points js-poll-map-points <%= "js-question-answered" if user_map_points.any? %>"
+     data-add-map-point-url="<%= add_map_point_question_path(question) %>"
+     data-remove-map-point-url="<%= remove_map_point_question_path(question) %>"
+     data-max-map-points="<%= question.max_map_points %>"
+     data-can-place-map-points="<%= can_place_map_points? %>"
+     data-map-points="<%= map_points_json %>"
+     data-remaining-zero="<%= map_points_t("remaining.zero") %>"
+     data-remaining-one="<%= map_points_t("remaining.one") %>"
+     data-remaining-other="<%= map_points_t("remaining.other") %>"
+     data-limit-reached-text="<%= map_points_t("limit_reached") %>"
+     data-outside-boundary-text="<%= map_points_t("outside_boundary") %>"
+     data-error-text="<%= map_points_t("error") %>"
+     data-removed-text="<%= map_points_t("removed") %>"
+     data-remove-hint-text="<%= map_points_t("remove_hint") %>"
+     data-placed-text="<%= map_points_t("placed") %>">
+
+  <%= render Shared::MapComponent.new(mappable: question,
+                                      features: boundary_collection,
+                                      rendering_library: RENDERING_LIBRARY) %>
+
+  <p class="poll-map-points--counter js-poll-map-points-counter">
+    <%= counter_text %>
+  </p>
+
+  <% if can_place_map_points? %>
+    <p class="poll-map-points--hint"><%= map_points_t("hint") %></p>
+  <% end %>
+
+  <div class="poll-map-points--status js-poll-map-points-status" role="status" aria-live="polite"></div>
+</div>

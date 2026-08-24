@@ -8,6 +8,7 @@ class Shared::MapComponent < ApplicationComponent
     editable: false,
     process: nil,
     placement: nil,
+    rendering_library: nil,
     map_data_url: nil,
     lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false,
@@ -19,6 +20,7 @@ class Shared::MapComponent < ApplicationComponent
     @editable = editable
     @process = process
     @placement = placement
+    @rendering_library_override = rendering_library
     @map_data_url = map_data_url
     @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
@@ -162,7 +164,7 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def rendering_library
-      lib = map_location&.rendering_library || "leaflet"
+      lib = @rendering_library_override || map_location&.rendering_library || "leaflet"
       @rendering_library ||= lib == "leaflet_plus_masterportal" ? "leaflet" : lib
     end
 

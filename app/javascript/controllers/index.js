@@ -139,6 +139,9 @@ application.register("adm--form--image", AdmFormImageController)
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
+import AdmPollQuestionsBoundaryMapController from "./adm/poll_questions/boundary_map_controller"
+application.register("adm-poll-questions--boundary-map", AdmPollQuestionsBoundaryMapController)
+
 import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
 application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
 

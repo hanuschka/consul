@@ -1,6 +1,10 @@
 require_dependency Rails.root.join("app", "models", "poll", "question").to_s
 
 class Poll::Question < ApplicationRecord
+  include Mappable
+
+  accepts_nested_attributes_for :map_location, allow_destroy: true, update_only: true
+
   translates :description, :min_rating_scale_label, :max_rating_scale_label, :intro, touch: true
   has_many :nested_questions, -> { order "given_order asc" },
     class_name: "Poll::Question", dependent: :destroy, foreign_key: :parent_question_id
@@ -67,8 +71,12 @@ class Poll::Question < ApplicationRecord
     @open_question_answer = question_answers.select(&:open_answer).last
   end
 
+  def max_map_points
+    votation_type&.max_votes.presence || 1
+  end
+
   def randomize_answers_possible?
-    !votation_type&.rating_scale?
+    !rating_scale? && !map_points?
   end
 
   def answers_in_participant_order(answers, seed)

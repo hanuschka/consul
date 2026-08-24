@@ -30,6 +30,10 @@ module Whatsapp::AiAssistant::DecisionLog
   # reply must carry a pill — and some replies genuinely end the exchange. A rate
   # is what tells those apart from the ones where the citizen was left typing;
   # a single line never could.
+  # `start_over` is the citizen asking to be put back at the beginning, and it is
+  # counted for what it says about the replies before it: a bot that answers well
+  # is one nobody has to escape from, so this rising is the readable sign that
+  # they are being led somewhere they did not want to go.
   EVENTS = %i[
     tool_called
     action_dropped
@@ -38,6 +42,7 @@ module Whatsapp::AiAssistant::DecisionLog
     irreversible_offered
     tap_dispatched
     tap_unhandled
+    start_over
     assistant_unavailable
   ].freeze
 

@@ -21,6 +21,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   reason as the stop keyword: leaving a half-written submission must not depend
   #   on a provider being reachable. A text-less voice note halts only after that
   #   gate, because a tap is never audio.
+  # - The two pills that mean "back to the beginning" are read here for that reason
+  #   as well, and theirs is the one gate that does not halt: clearing the phase is
+  #   only half of what the citizen asked for, and the other half is the reply,
+  #   which is the overview of what applies now and so the assistant's to write.
   # - The AI disclosure precedes any reply the assistant could make. It is a legal
   #   declaration rather than a sentence the bot chooses, which is why it is here and
   #   on the locale copy.
@@ -59,6 +63,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     disclose_ai
 
     return if handle_cancel_tap
+
+    apply_start_over_tap
+
     return if reading.tapped_reply_id.blank? && reading.unreadable_voice_note?
 
     entry = capture_entry_token
@@ -193,6 +200,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return if tapped_id.blank?
 
+      return start_over_note if start_over_tap?
+
       recovery = ::Whatsapp::Send.recovery_action_from(tapped_id)
 
       return tapped_line(action: recovery) if recovery.present?
@@ -216,6 +225,83 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       "The citizen tapped the button#{named} (action #{action}#{identified})."
     end
+
+    # ── Back to the beginning ───────────────────────────────────────────────
+    # The pill that sits on every interactive message the bot sends, and the one
+    # offered under every cancellation and every line saying the assistant could
+    # not be reached. Both mean the same thing and so are read the same way: it
+    # used to be neither, and a tap on either left the conversation exactly where
+    # it was — the phase still active, the state block still naming the projekt,
+    # and so a reply that said "back in the main menu" and offered a contribution
+    # to that projekt in the next sentence.
+    #
+    # The phase is all it clears. Everything else in the context belongs to one
+    # submission, and this pill is on every message: a citizen who taps it must
+    # not thereby lose text they have written. Where there is something to lose,
+    # the reset waits for them to say so and AbortSubmission does it — one
+    # implementation of the discard, and the tap alone is not consent to it.
+    #
+    # What is written down there is the request itself, because the confirmation
+    # arrives in a later turn than the asking: without it the discard would end
+    # the exchange on "it is gone", which is not what they asked for.
+    def apply_start_over_tap
+      return if !start_over_tap?
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :start_over,
+        conversation: conversation,
+        unsaved: conversation.unsaved_submission?
+      )
+
+      conversation.note_start_over!
+
+      if conversation.unsaved_submission?
+        conversation.request_start_over!
+      else
+        conversation.leave_projekt!
+      end
+    end
+
+    # One id from each namespace, which is why both are read here: the menu pill is
+    # built from the catalog and keeps its catalog id, because every one already
+    # sent is still sitting in a chat history and still tappable.
+    START_OVER_ACTIONS = %i[main_menu help].freeze
+
+    def start_over_tap?
+      tapped_id = reading.tapped_reply_id
+
+      return false if tapped_id.blank?
+
+      action = ::Whatsapp::Send.recovery_action_from(tapped_id) ||
+        ::Whatsapp::FlowActions.parse(tapped_id)&.fetch(:action)
+
+      START_OVER_ACTIONS.include?(action)
+    end
+
+    # Said rather than left to the cleared state, because the state is not the only
+    # thing the model reads: the stored history is replayed every turn and still has
+    # the projekt in it, so a nil phase on its own is one line of evidence against
+    # ten. This note is the newest message in the turn, which is the only place a
+    # correction outweighs what came before it.
+    def start_over_note
+      return START_OVER_WITH_DRAFT_NOTE if conversation.unsaved_submission?
+
+      START_OVER_NOTE
+    end
+
+    START_OVER_NOTE = "The citizen asked to go back to the start. No projekt and no phase " \
+                      "is selected any more, and nothing said earlier in this conversation " \
+                      "about one carries into what follows: do not offer that projekt, its " \
+                      "phases or a contribution to it unless they name it again themselves. " \
+                      "Send them what applies right now — what is open to take part in, what " \
+                      "they have already done, what there is to read.".freeze
+
+    START_OVER_WITH_DRAFT_NOTE = "The citizen asked to go back to the start while part-way " \
+                                 "through a contribution. Nothing has been discarded and the " \
+                                 "projekt is still selected, because throwing away what they " \
+                                 "wrote cannot be taken back. Say in one line what is " \
+                                 "unsaved, and ask whether to discard it or carry on with " \
+                                 "it. Call abort_submission only if they say to discard.".freeze
 
     # Cancelling is the one tap that does its own work, and its gate is up in the
     # chain with the stop keyword for the same reason: abandoning a submission must

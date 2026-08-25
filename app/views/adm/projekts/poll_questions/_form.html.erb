@@ -99,6 +99,61 @@
           <% end %>
         </div>
 
+        <div data-adm-poll-questions--votation-type-target="maxMapPoints" style="<%= 'display:none' unless votation_type.vote_type == 'map_points' %>">
+          <%= render Kern::FormFieldComponent.new(
+            label: t(".max_map_points_label"),
+            hint: t(".max_map_points_hint")) do %>
+            <%= vf.number_field :max_votes, min: 1, max: 99,
+                  id: "poll_question_max_map_points",
+                  value: (votation_type.max_votes.presence || 1), label: false %>
+          <% end %>
+        </div>
+
+        <% boundary_library = question.map_rendering_library %>
+        <% boundary_location = question.map_location || question.build_map_location(rendering_library: boundary_library) %>
+        <div data-adm-poll-questions--votation-type-target="boundary"
+             data-controller="adm-poll-questions--boundary-map"
+             data-action="map:ready->adm-poll-questions--boundary-map#configureMap"
+             data-adm-poll-questions--boundary-map-max-file-size-value="<%= MapLayer::GEOJSON_MAX_SIZE %>"
+             data-adm-poll-questions--boundary-map-messages-value="<%= t(".boundary_import.messages").merge(
+               too_large: t(".boundary_import.messages.too_large", size: MapLayer::GEOJSON_MAX_SIZE / 1.megabyte)
+             ).to_json %>"
+             style="<%= 'display:none' unless votation_type.vote_type == 'map_points' %>">
+          <div class="mb-4">
+            <div class="kern-title kern-title--small mb-1"><%= t(".boundary_import.title") %></div>
+            <p class="kern-body kern-body--small mb-3"><%= t(".boundary_import.hint") %></p>
+
+            <div class="kern-form-input">
+              <label class="kern-label" for="poll_question_boundary_file">
+                <%= t(".boundary_import.file_label") %>
+              </label>
+              <input type="file" id="poll_question_boundary_file" class="kern-form-input__input"
+                     accept=".geojson,application/geo+json,application/json"
+                     data-adm-poll-questions--boundary-map-target="file"
+                     data-action="change->adm-poll-questions--boundary-map#importFile">
+            </div>
+
+            <p class="kern-body kern-body--small mt-2" role="status"
+               data-adm-poll-questions--boundary-map-target="status"></p>
+          </div>
+
+          <%= render Kern::FormFieldComponent.new(
+            label: t(".boundary_label"),
+            hint: t(".boundary_hint"),
+            stacked: true) do %>
+            <% f.fields_for :map_location, boundary_location do |ml_form| %>
+              <%= ml_form.hidden_field :rendering_library, value: boundary_library %>
+              <%= render Kern::MapComponent.new(
+                map_location: boundary_location,
+                form: ml_form,
+                editable: true,
+                admin_editor: false,
+                rendering_library: boundary_library,
+                height: 450) %>
+            <% end %>
+          <% end %>
+        </div>
+
         <div data-adm-poll-questions--votation-type-target="ratingScaleLabels" style="<%= 'display:none' unless votation_type.vote_type == 'rating_scale' %>">
           <%= render Kern::FormFieldComponent.new(
             label: VotationType.human_attribute_name(:min_rating_scale_label),

@@ -164,6 +164,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the budget investment. Does not affect other investment properties.' }
                 }
@@ -530,6 +531,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the budget investment while preserving the investment text and other properties.' }
                 }

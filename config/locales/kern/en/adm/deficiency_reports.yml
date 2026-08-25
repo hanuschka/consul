@@ -43,14 +43,20 @@ en:
         settings:
           page_hint: Configure the sender address and the shared footer used in all deficiency-report emails.
       deficiency_reports:
+        action_row:
+          website: Website
+          edit: Edit
+          pdf: PDF
         watch:
           start: Turn on notifications for this report
           stop: Turn off notifications for this report
+          label: Watch
         unwatch:
           success: You will no longer receive notifications for this report.
         share:
           title: Share report
-          hint: Share this report with other case workers or officer groups. The people you select receive an email and will get notifications about changes to this report.
+          trigger: Share
+          hint: The people you select receive an email and notifications about changes to this report.
           label: Recipients
           submit: Share
           officers: Case workers

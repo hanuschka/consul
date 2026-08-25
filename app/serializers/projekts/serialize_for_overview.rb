@@ -52,6 +52,7 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_images
     {
+      image_ai_generated: @projekt.image.ai_generated,
       image_url: Rails.application.routes.url_helpers.polymorphic_url(
         @projekt.image.attachment.variant(
           resize_to_fill: [298, 180],

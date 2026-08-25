@@ -174,6 +174,34 @@ describe Adm::DeficiencyReports::DeficiencyReportsController do
     end
   end
 
+  describe "PATCH #accept authorization" do
+    let(:officer) { create(:deficiency_report_officer) }
+
+    before do
+      set_setting("deficiency_reports.admin_acceptance_required", true)
+      set_setting("deficiency_reports.admins_must_assign_officer", true)
+      report.update!(responsible: officer)
+    end
+
+    it "refuses the officer the report is assigned to" do
+      sign_in officer.user
+
+      patch :accept, params: { id: report.id, deficiency_report: { admin_accepted: true }},
+                     format: :turbo_stream
+
+      expect(report.reload.admin_accepted).to be_falsey
+    end
+
+    it "lets a manager release the report" do
+      sign_in manager
+
+      patch :accept, params: { id: report.id, deficiency_report: { admin_accepted: true }},
+                     format: :turbo_stream
+
+      expect(report.reload.admin_accepted).to be(true)
+    end
+  end
+
   describe "GET #index scoping" do
     # No rails-controller-testing in this suite, so the scoped collection is read off the controller.
     def listed_reports

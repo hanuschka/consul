@@ -307,6 +307,7 @@ namespace :adm do
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
       patch :update_image, on: :member
+      patch :update_image_ai_generated, on: :member
       delete :delete_image, on: :member
       post :generate_image, on: :member
       get :generate_image_status, on: :member

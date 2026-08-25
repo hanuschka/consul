@@ -171,8 +171,9 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       projekt: projekt,
       user: projekt.author,
       data: Base64.decode64(base64),
-      filename: "projekt_#{projekt.id}_hero.jpg",
-      content_type: "image/jpeg"
+      filename: "projekt_#{projekt.id}_ai_hero.jpg",
+      content_type: "image/jpeg",
+      ai_generated: true
     )
 
     return if result.success?

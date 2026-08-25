@@ -79,6 +79,7 @@ en:
         multiple: Multiple votes
         multiple_with_weight: Multiple weighted votes
         rating_scale: Rating scale
+        map_points: Map question (place pins)
       individual_group:
         visible: Visible
       newsletter:

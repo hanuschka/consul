@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
 const LEAFLET_JS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-const LEAFLET_HEAT_JS = "https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"
 
 const DEFAULT_CENTER = [51.163, 10.447]
 const DEFAULT_ZOOM = 12
@@ -53,7 +52,7 @@ const loadLeaflet = () => {
 
   scriptsPromise = (async () => {
     if (typeof window.L === "undefined") await loadScript(LEAFLET_JS)
-    if (typeof window.L.heatLayer !== "function") await loadScript(LEAFLET_HEAT_JS)
+    if (typeof window.L.heatLayer !== "function") await import("leaflet.heat/dist/leaflet-heat")
   })()
 
   return scriptsPromise

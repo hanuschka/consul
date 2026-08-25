@@ -13,6 +13,10 @@ FactoryBot.define do
     trait :bundle do
       bundle_question { true }
     end
+
+    trait :map_points do
+      votation_type { VotationType.new(vote_type: :map_points, max_votes: 3) }
+    end
   end
 
   factory :poll_question_answer, class: "Poll::Question::Answer" do

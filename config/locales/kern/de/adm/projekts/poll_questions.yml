@@ -15,6 +15,14 @@ de:
           edit_bundle: Fragenbündel bearbeiten
           answers_title: Antworten
           add_answer: Neue Antwort erstellen
+          map_points:
+            title: Kartenfrage
+            description: "Diese Frage wird auf einer Karte beantwortet. Teilnehmende setzen Pins statt vorgegebene Antwortoptionen zu wählen, daher gibt es hier keine Antwortliste. Pin-Anzahl und Gebietsbegrenzung stellen Sie in den Fragen-Einstellungen ein."
+            pin_count:
+              zero: Keine Pins gesetzt
+              one: 1 Pin gesetzt
+              other: "%{count} Pins gesetzt"
+            download_geojson: Pins als GeoJSON herunterladen
           no_answers_title: Keine Antwortoptionen vorhanden
           no_answers_description: Erstellen Sie Antwortoptionen, aus denen Nutzer bei dieser Frage wählen können.
           nested_questions_title: Unterfragen
@@ -75,6 +83,21 @@ de:
           show_images_hint: Aktiviert die Darstellung von Bildern bei den Antwortoptionen. Im Frontend werden die Bilder oberhalb der jeweiligen Antwortoption angezeigt und helfen Nutzern, die Optionen visuell zu erfassen. Besonders geeignet bei Gestaltungsfragen, Standortvergleichen oder Entwurfsabstimmungen, bei denen visuelle Eindrücke die Entscheidung unterstützen.
           randomize_answers_hint: Zeigt die Antwortoptionen dieser Frage den Teilnehmenden in zufälliger statt fester Reihenfolge an. Im Frontend erscheinen die Antwortmöglichkeiten für jede:n Teilnehmer:in in individueller, aber gleichbleibender Reihenfolge; eine offene Antwortoption bleibt immer an letzter Stelle. Aktivieren Sie diese Option, um Positionseffekte bei sensiblen oder umkämpften Fragen zu vermeiden.
           randomize_position_hint: Erlaubt, dass diese Frage ihre Position innerhalb der Umfrage mit anderen ebenfalls randomisierten Fragen zufällig tauscht, statt immer an der fest eingestellten Stelle zu erscheinen. Im Frontend sehen unterschiedliche Teilnehmende die randomisierten Fragen in unterschiedlicher, aber für sie selbst gleichbleibender Reihenfolge. Aktivieren Sie diese Option nur bei Fragen ohne Verzweigungslogik, um Reihenfolgeeffekte bei unabhängigen Fragen zu reduzieren.
+          max_map_points_label: "Kartenfrage: Maximale Pin-Anzahl"
+          max_map_points_hint: "Legt fest, wie viele Pins ein:e Teilnehmer:in bei dieser Kartenfrage maximal setzen darf. Im Frontend wird das Setzen weiterer Pins gesperrt, sobald das Limit erreicht ist. Setzen Sie diesen Wert passend zur gewünschten Antworttiefe, z.B. 1 für eine einzelne Standortangabe oder mehrere für Sammlungen von Orten."
+          boundary_import:
+            title: Gebietsbegrenzung aus einer GeoJSON-Datei importieren
+            hint: Übernimmt die Flächen einer GeoJSON-Datei als Gebietsbegrenzung, zum Beispiel einen Stadtteil oder ein Bebauungsplangebiet aus Ihrem Geoportal. Die importierten Polygone ersetzen die aktuell eingezeichnete Fläche und werden mit der Frage gespeichert.
+            file_label: GeoJSON-Datei
+            messages:
+              imported: Begrenzung übernommen. Prüfen Sie die Karte und speichern Sie die Frage.
+              no_polygons: Diese Datei enthält keine Flächengeometrien.
+              too_many: Diese Datei enthält zu viele Flächen für eine Gebietsbegrenzung. Bitte wählen Sie eine Datei mit weniger Flächen.
+              too_large: "Diese Datei ist größer als %{size} MB."
+              invalid_file: Diese Datei konnte nicht als GeoJSON gelesen werden.
+              map_missing: Die Karte ist noch nicht bereit. Bitte laden Sie die Seite neu.
+          boundary_label: "Kartenfrage: Gebietsbegrenzung"
+          boundary_hint: "Begrenzt den Bereich, in dem Teilnehmende bei dieser Kartenfrage Pins setzen können, auf ein eingezeichnetes Gebietspolygon. Zeichnen Sie das Gebiet mit den Zeichenwerkzeugen der Karte ein; Pins außerhalb werden abgelehnt. Ohne eingezeichnetes Gebiet bleibt die Karte unbegrenzt."
           randomize_position_blocked:
             branching: Nicht möglich, weil diese Frage an einer Verzweigung beteiligt ist – entweder springt eine ihrer Antworten zu einer anderen Frage oder eine Antwort einer anderen Frage springt zu dieser Frage. Entfernen Sie die Sprungziele, um die Position randomisieren zu können.
             contextualization: Nicht möglich, weil diese Frage kontextualisiert wird oder selbst als Kontextquelle für eine andere Frage dient. Die Position dieser Fragen ist an ihre Kontextfrage gebunden.

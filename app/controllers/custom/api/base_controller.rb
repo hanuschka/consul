@@ -196,7 +196,7 @@ class Api::BaseController < ActionController::API
 
   # Processes base64-encoded image data and creates/updates an Image resource
   # @param resource [Object] The imageable resource (Project, Proposal, etc.)
-  # @param image_data [Hash] Hash containing :title, :attachment, :credits, :_destroy
+  # @param image_data [Hash] Hash containing :title, :attachment, :credits, :ai_generated, :_destroy
   # @return [Image, nil] The updated/created Image object or nil if destroyed
   # @raises [StandardError] If base64 decoding or image operations fail
     def process_image_with_base64(resource, image_data)
@@ -211,7 +211,13 @@ class Api::BaseController < ActionController::API
         return update_image_with_attachment(resource, image_data)
       end
 
-      nil
+      image = resource.image
+      return nil if image.blank?
+
+      assign_image_fields(image, image_data)
+      image.save!
+
+      image
     end
 
   private
@@ -229,21 +235,37 @@ class Api::BaseController < ActionController::API
         type: content_type
       )
 
-      if resource.image.nil?
-        image = Image.new(
-          attachment: uploaded_file,
-          user: User.administrators.first || User.first,
-          imageable: resource
-        )
-        image.save!
-      else
-        resource.image.attachment.attach(uploaded_file)
-      end
+      image = resource.image || Image.new(
+        user: User.administrators.first || User.first,
+        imageable: resource
+      )
+
+      # Assigned and saved through the record rather than attached directly:
+      # attachment.attach writes immediately and skips the model callbacks, so
+      # the AI marker of the picture being replaced would survive onto the new
+      # file.
+      image.attachment = uploaded_file
+      assign_image_fields(image, image_attrs)
+      image.save!
+
+      image
 
     ensure
       if new_temp_file
         new_temp_file.close
         new_temp_file.unlink
+      end
+    end
+
+    # The image's own fields travel in the same hash as the attachment, and are
+    # documented as writable, so a payload that carries only them still has to
+    # land on the existing image.
+    def assign_image_fields(image, image_attrs)
+      image.title = image_attrs[:title] if image_attrs.key?(:title)
+      image.credits = image_attrs[:credits] if image_attrs.key?(:credits)
+
+      if image_attrs.key?(:ai_generated)
+        image.ai_generated = ActiveModel::Type::Boolean.new.cast(image_attrs[:ai_generated]) == true
       end
     end
 end

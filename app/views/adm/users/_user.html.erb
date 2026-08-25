@@ -1,6 +1,10 @@
 <tr id="<%= dom_id(user) %>" class="kern-table__row">
   <th scope="row" class="kern-table__header" data-field="username"><%= user.username %></th>
   <td class="kern-table__cell" data-field="email"><%= user.email %></td>
+  <td class="kern-table__cell" data-field="status">
+    <% status_key, badge_variant = adm_user_status_badge(user) %>
+    <span class="kern-badge <%= badge_variant %> kern-badge--small"><%= t("adm.users.index.table.statuses.#{status_key}") %></span>
+  </td>
   <td class="kern-table__cell" data-field="first_name"><%= user.first_name %></td>
   <td class="kern-table__cell" data-field="last_name"><%= user.last_name %></td>
   <td class="kern-table__cell" data-field="city_name"><%= user.city_name %></td>

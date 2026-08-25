@@ -14,6 +14,8 @@ namespace :adm do
 
     resource :inspiration, only: [:show], controller: "inspiration"
 
+    resource :instance_import, only: [:new, :create], controller: "instance_imports"
+
     resources :contact_persons, controller: "/adm/section_contact_people",
               only: [:new, :create, :edit, :update, :destroy],
               path: "settings/contact_persons",
@@ -208,6 +210,14 @@ namespace :adm do
           put :recalculate_winners
         end
       end
+      resources :poll_question_imports, only: %i[index new create show destroy] do
+        member do
+          get :status
+          post :apply
+          post :regenerate
+        end
+      end
+
       resources :poll_questions, only: [:new, :create, :show, :edit, :update, :destroy] do
         patch :order_questions, on: :collection
         resources :poll_question_answers, only: [:new, :create, :edit, :update, :destroy] do
@@ -249,10 +259,12 @@ namespace :adm do
 
       resource :chat, only: [:show], controller: "imports/chats" do
         get :messages
+        get :summary
         post :message
         post :command
         post :extract
         post :execute
+        post :title_image
       end
     end
 
@@ -282,6 +294,8 @@ namespace :adm do
       get :phase_evaluation_status, on: :member
       get :evaluation_pdf_options, on: :member
       get :evaluation_pdf, on: :member
+      post :copy, on: :member
+      get :copy_status, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member

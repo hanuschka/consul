@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_15_100000) do
+ActiveRecord::Schema.define(version: 2026_08_24_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1936,6 +1936,15 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 
+  create_table "poll_answer_map_points", force: :cascade do |t|
+    t.bigint "poll_answer_id", null: false
+    t.float "latitude", null: false
+    t.float "longitude", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["poll_answer_id"], name: "index_poll_answer_map_points_on_poll_answer_id"
+  end
+
   create_table "poll_answers", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "author_id"
@@ -1948,6 +1957,7 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
     t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
+    t.index ["question_id", "author_id"], name: "index_poll_answers_unique_map_point_answer", unique: true, where: "(answer IS NULL)"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
 
@@ -2050,6 +2060,21 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
+  create_table "poll_question_imports", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "author_id"
+    t.text "extracted_text"
+    t.string "content_locale"
+    t.string "status", default: "pending", null: false
+    t.jsonb "result"
+    t.jsonb "created_question_ids", default: []
+    t.text "error_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_poll_question_imports_on_author_id"
+    t.index ["projekt_phase_id", "status"], name: "index_poll_question_imports_on_projekt_phase_id_and_status"
+  end
+
   create_table "poll_question_translations", id: :serial, force: :cascade do |t|
     t.integer "poll_question_id", null: false
     t.string "locale", null: false
@@ -2087,6 +2112,8 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.bigint "contextualize_by_poll_question_id"
     t.bigint "contexted_clone_of_poll_question_id"
     t.bigint "context_id"
+    t.boolean "randomize_answers", default: false, null: false
+    t.boolean "randomize_position", default: false, null: false
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["context_id"], name: "index_poll_questions_on_context_id"
     t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
@@ -2299,7 +2326,6 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.text "extracted_text"
     t.jsonb "ai_result"
     t.text "additional_user_instructions"
-    t.boolean "generate_image", default: false, null: false
     t.bigint "user_id", null: false
     t.bigint "projekt_id"
     t.text "error_message"
@@ -2312,6 +2338,9 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.string "failure_stage"
     t.jsonb "error_details", default: {}, null: false
     t.string "content_locale"
+    t.jsonb "source_images", default: [], null: false
+    t.string "title_image_mode", default: "document", null: false
+    t.integer "title_image_index"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
     t.index ["status"], name: "index_projekt_imports_on_status"
@@ -2711,7 +2740,10 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
     t.boolean "show_in_sidebar_filter", default: true, null: false
     t.datetime "whatsapp_broadcast_sent_at"
     t.string "whatsapp_broadcast_slug"
+    t.string "copy_status"
+    t.bigint "copied_from_projekt_id"
     t.index ["activated"], name: "index_projekts_on_activated"
+    t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
@@ -3747,6 +3779,7 @@ ActiveRecord::Schema.define(version: 2026_08_15_100000) do
   add_foreign_key "ogc_import_runs", "projekt_phases"
   add_foreign_key "organizations", "users"
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
+  add_foreign_key "poll_answer_map_points", "poll_answers", on_delete: :cascade
   add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"

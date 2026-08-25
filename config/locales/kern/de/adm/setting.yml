@@ -1,5 +1,8 @@
 de:
   setting:
+    proposals:
+      email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
+      email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
     feature:
       bund_id_login: "BundID-Anmeldung aktivieren"
       bund_id_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine BundID-Schaltfläche. Nutzer können sich dann mit ihrem BundID-Konto anmelden und registrieren."
@@ -322,9 +325,9 @@ de:
       send_feedback_form_link: Feedback-Formular versenden
       send_feedback_form_link_description: >
         Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
-      show_create_report_button: Einreichen-Button für Mängelmeldungen
+      show_create_report_button: Einreichung neuer Mängelmeldungen
       show_create_report_button_description: >
-        Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
+        Steuert, ob Nutzende neue Mängelmeldungen einreichen können. Ist die Option deaktiviert, werden alle Schaltflächen zum Einreichen ausgeblendet und das Meldeformular ist auch über einen direkten Link nicht mehr erreichbar; bereits eingegangene Meldungen bleiben weiterhin öffentlich sichtbar. Deaktivieren Sie diese Option, wenn vorübergehend keine neuen Meldungen entgegengenommen werden sollen, etwa während einer Betriebspause.
       show_homepage_cta: Melde-Schaltfläche auf der Startseite
       show_homepage_cta_description: >
         Zeigt im Kopfbereich der Startseite eine zusätzliche Schaltfläche unterhalb der Haupt-Schaltfläche an, die Nutzer direkt zum Formular für ein neues Anliegen führt. Die Beschriftung wird aus der Einstellung "Beschriftung der Melde-Schaltfläche" übernommen. Setzt voraus, dass das Anliegenmanagement aktiviert ist.

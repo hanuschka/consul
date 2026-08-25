@@ -16,7 +16,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     consider_underway
   ].freeze
 
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_answer_participation, :poll_answer_crossectional, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :toggle_evaluation_tab_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :regenerate_phase_regular_stats, :regenerate_phase_ai_stats, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_answer_participation, :poll_answer_crossectional, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :toggle_evaluation_tab_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :regenerate_phase_regular_stats, :regenerate_phase_ai_stats, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status, :copy, :copy_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
   before_action :process_tags, only: [:update]
 
@@ -49,6 +49,24 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     else
       redirect_to new_adm_projekts_projekt_path, alert: @projekt.errors.full_messages.join(", ")
     end
+  end
+
+  def copy
+    authorize [:adm, :projekts, @projekt], :update?
+
+    ::Projekts::DispatchCopy.call(source: @projekt, user: current_user)
+
+    redirect_to adm_projekts_root_path,
+      notice: t("adm.projekts.projekts.copy.started", name: @projekt.title)
+  end
+
+  def copy_status
+    authorize [:adm, :projekts, @projekt], :show?
+
+    render json: {
+      status: @projekt.reported_copy_status,
+      redirect_url: finished_copy_url
+    }
   end
 
   def details
@@ -646,6 +664,14 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       @projekt = Projekt.find(params[:id])
     end
 
+    # Where the poller sends the admin once the copy ends, succeeded or not --
+    # a plain reload cannot carry a message.
+    def finished_copy_url
+      return nil if @projekt.copy_in_progress?
+
+      adm_projekts_root_path(finished_copy: @projekt.id)
+    end
+
     def poll_answer
       Poll::Question::Answer
         .eager_load(question: { poll: :projekt_phase })
@@ -710,6 +736,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         :show_start_date_in_frontend, :show_end_date_in_frontend,
         :geozone_affiliated,
         :landing_page_id,
+        :parent_id,
         :tag_list,
         geozone_affiliation_ids: [],
         registered_address_district_affiliation_ids: [],

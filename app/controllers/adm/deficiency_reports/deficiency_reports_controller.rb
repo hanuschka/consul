@@ -203,7 +203,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     render turbo_stream: turbo_stream.replace(
       helpers.dom_id(@deficiency_report, :watch_toggle),
       partial: "adm/deficiency_reports/deficiency_reports/watch_toggle",
-      locals: { deficiency_report: @deficiency_report.reload }
+      locals: { deficiency_report: @deficiency_report.reload, labeled: params[:labeled].present? }
     )
   end
 
@@ -259,7 +259,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
   def accept
     @deficiency_report = DeficiencyReport.find(params[:id])
-    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+    authorize @deficiency_report, :accept?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     accepted = ActiveModel::Type::Boolean.new.cast(params[:deficiency_report][:admin_accepted])
     @deficiency_report.update!(admin_accepted: accepted)

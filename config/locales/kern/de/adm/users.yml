@@ -11,6 +11,11 @@ de:
         total_hint: Anzahl der Nutzer in der aktuellen Ansicht (inkl. aktiver Filter).
         table:
           email: E-Mail
+          status: Status
+          statuses:
+            confirmed: Bestätigt
+            unconfirmed: Nicht bestätigt
+            hidden: Verborgen
           first_name: Vorname
           last_name: Nachname
           city_name: Stadt

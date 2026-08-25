@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_24_120000) do
+ActiveRecord::Schema.define(version: 2026_08_25_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1007,6 +1007,7 @@ ActiveRecord::Schema.define(version: 2026_08_24_120000) do
     t.datetime "archived_at"
     t.bigint "deficiency_report_intake_channel_id"
     t.bigint "deficiency_report_subcategory_id"
+    t.bigint "recorded_by_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1019,6 +1020,7 @@ ActiveRecord::Schema.define(version: 2026_08_24_120000) do
     t.index ["deficiency_report_subcategory_id"], name: "index_deficiency_reports_on_subcategory_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
+    t.index ["recorded_by_id"], name: "index_deficiency_reports_on_recorded_by_id"
     t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
     t.index ["tsv"], name: "index_deficiency_reports_on_tsv", using: :gin
   end

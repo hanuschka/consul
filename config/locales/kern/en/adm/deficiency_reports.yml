@@ -85,6 +85,8 @@ en:
             status_changed_at: Status changed on
             title: Title
             author: Author
+            on_behalf_of: On behalf of
+            recorded_by: Recorded by
             intake_channel: Intake channel
             status: Status
             location: Location
@@ -132,7 +134,10 @@ en:
           category: Category
           subcategory: Subcategory
           map_label: Map
+          recorded_by_label: Recorded by
           on_behalf_of_label: On behalf of
+          on_behalf_of_company_label: Company
+          on_behalf_of_email_label: Email
           intake_channel_label: Intake channel
           video_url: Video URL
           address: Address

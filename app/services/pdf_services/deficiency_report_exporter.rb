@@ -47,12 +47,16 @@ module PdfServices
           rows << [I18n.t("#{scope}.author"), @deficiency_report.author.username]
         end
 
-        if @deficiency_report.category.present?
-          rows << [I18n.t("#{scope}.category"), @deficiency_report.category.name]
+        if @deficiency_report.on_behalf_of_differs_from_author?
+          rows << [I18n.t("#{scope}.on_behalf_of_label"), @deficiency_report.on_behalf_of]
         end
 
-        if @deficiency_report.on_behalf_of.present?
-          rows << [I18n.t("#{scope}.on_behalf_of_label"), @deficiency_report.on_behalf_of]
+        if @deficiency_report.on_behalf_of_account_linked?
+          rows << [I18n.t("#{scope}.recorded_by_label"), @deficiency_report.recorded_by.username]
+        end
+
+        if @deficiency_report.category.present?
+          rows << [I18n.t("#{scope}.category"), @deficiency_report.category.name]
         end
 
         if @deficiency_report.video_url.present?

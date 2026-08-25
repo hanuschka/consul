@@ -75,14 +75,29 @@
         additional_rows = []
 
         additional_rows << { label: t(".author"), value: @deficiency_report.author.username }
+
+        if @deficiency_report.on_behalf_of_differs_from_author?
+          additional_rows << { label: t(".on_behalf_of_label"), value: @deficiency_report.on_behalf_of }
+        end
+
+        if @deficiency_report.on_behalf_of_account_linked?
+          if @deficiency_report.author.company_name.present?
+            additional_rows << { label: t(".on_behalf_of_company_label"), value: @deficiency_report.author.company_name }
+          end
+
+          if @deficiency_report.author.email.present?
+            additional_rows << { label: t(".on_behalf_of_email_label"), value: @deficiency_report.author.email }
+          end
+        end
+
+        if @deficiency_report.on_behalf_of_account_linked?
+          additional_rows << { label: t(".recorded_by_label"), value: @deficiency_report.recorded_by.username }
+        end
+
         additional_rows << { label: t(".created_at"), value: l(@deficiency_report.created_at, format: :long) }
 
         if @deficiency_report.approximated_address.present?
           additional_rows << { label: t(".address"), value: @deficiency_report.approximated_address }
-        end
-
-        if @deficiency_report.on_behalf_of.present?
-          additional_rows << { label: t(".on_behalf_of_label"), value: @deficiency_report.on_behalf_of }
         end
 
         if @deficiency_report.intake_channel.present?

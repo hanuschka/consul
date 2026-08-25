@@ -16,7 +16,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     respond_to do |format|
       format.html do
-        preloaded = base_scope.preload(:status, :translations, :author, :category, :subcategory,
+        preloaded = base_scope.preload(:status, :translations, :author, :recorded_by, :category, :subcategory,
                                        :intake_channel, :responsible, :feedback_form, :watches,
                                        map_location: :district)
         @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params, current_user: current_user))
@@ -24,6 +24,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         @id_header_options = { search: true, sort: true }
         @title_header_options = { search: true }
         @author_header_options = { search: true }
+        @on_behalf_of_header_options = { search: true }
         @intake_channel_header_options = { filter_options: intake_channel_filter_options }
         @created_at_header_options = { sort: true, date_range: true }
         @updated_at_header_options = { sort: true, date_range: true }
@@ -42,7 +43,8 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       end
 
       format.csv do
-        scope = Adm::DeficiencyReportsQuery.call(base_scope, params, current_user: current_user)
+        scope = Adm::DeficiencyReportsQuery.call(base_scope.preload(:author, :recorded_by), params,
+                                                 current_user: current_user)
         send_data CsvServices::DeficiencyReportsExporter.call(scope),
           filename: "deficiency_reports-#{Time.zone.today}.csv",
           type: "text/csv"
@@ -70,6 +72,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   def create
     @deficiency_report = DeficiencyReport.new(create_params.merge(
       author: current_user,
+      recorded_by: current_user,
       status: DeficiencyReport::Status.default,
       status_changed_at: Time.zone.now,
       resource_terms: "1"

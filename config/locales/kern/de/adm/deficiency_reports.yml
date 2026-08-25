@@ -85,6 +85,8 @@ de:
             status_changed_at: Statusänderung
             title: Titel
             author: Autor
+            on_behalf_of: Im Auftrag von
+            recorded_by: Erfasst von
             intake_channel: Eingangskanal
             status: Status
             location: Standort
@@ -132,7 +134,10 @@ de:
           category: Kategorie
           subcategory: Unterkategorie
           map_label: Karte
+          recorded_by_label: Erfasst von
           on_behalf_of_label: Im Auftrag von
+          on_behalf_of_company_label: Firma
+          on_behalf_of_email_label: E-Mail
           intake_channel_label: Eingangskanal
           video_url: Video-URL
           address: Adresse

@@ -6,7 +6,6 @@ class DeficiencyReportsController < ApplicationController
   include DocumentAttributes
   include DeficiencyReportsHelper
   include Search
-  include OnBehalfOfAccountLinking
 
   before_action :ensure_submissions_open, only: [:new, :create]
   before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
@@ -122,7 +121,7 @@ class DeficiencyReportsController < ApplicationController
 
     categorize_with_ai(@deficiency_report)
 
-    if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
+    if @deficiency_report.valid? && @deficiency_report.save
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
@@ -209,7 +208,7 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def deficiency_report_params
-    attributes = [:video_url, :on_behalf_of, :on_behalf_of_company_name, :on_behalf_of_email,
+    attributes = [:video_url,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
                   :deficiency_report_subcategory_id,
@@ -217,12 +216,6 @@ class DeficiencyReportsController < ApplicationController
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
-
-    # Only staff filing for somebody else get to say how the report came in; for everybody else the
-    # field is not on the form and the default channel is stamped on by the model.
-    if helpers.allowed_to_post_on_behalf_of?(current_user, @deficiency_report || DeficiencyReport.new)
-      attributes << :deficiency_report_intake_channel_id
-    end
 
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
   end

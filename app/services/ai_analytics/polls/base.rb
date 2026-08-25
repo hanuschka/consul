@@ -21,7 +21,7 @@ class AiAnalytics::Polls::Base < ApplicationService
   private
 
   def generate_analysis
-    chat = Ai::RubyLlmFactory.chat
+    chat = Ai::RubyLlmFactory.chat(feature: "ai_analytics.poll_#{@stat_key}")
       .with_schema(@output_schema)
       .with_instructions(system_instructions)
 
@@ -73,18 +73,23 @@ class AiAnalytics::Polls::Base < ApplicationService
       .root_questions
       .where(contextualize_by_poll_question_id: nil)
       .order(given_order: :asc, id: :asc)
-      .includes(:question_answers, :nested_questions)
+      .includes(:context, :question_answers, nested_questions: [:context, :question_answers])
       .map { |q| build_question_data(q) }
   end
 
   def build_question_data(question)
+    answers = question.question_answers.to_a
+    vote_totals = answers.map(&:total_votes)
+    answers_total_votes = vote_totals.sum
+
     data = {
       title: question_title(question),
-      answers: question.question_answers.map do |answer|
+      answers: answers.each_with_index.map do |answer, index|
+        votes = vote_totals[index]
         {
           title: answer.title,
-          votes: answer.total_votes,
-          percentage: answer.total_votes_percentage.round(2)
+          votes: votes,
+          percentage: (answers_total_votes.zero? ? 0 : (votes * 100.0 / answers_total_votes)).round(2)
         }
       end
     }
@@ -110,11 +115,16 @@ class AiAnalytics::Polls::Base < ApplicationService
   end
 
   def comments_data
-    @comments_data ||= @poll.comments.includes(:user).map { |c| c.body&.truncate(300) }.compact
+    @comments_data ||= @poll.comments
+      .order(:created_at)
+      .limit(20)
+      .pluck(:body)
+      .map { |body| body&.truncate(300) }
+      .compact
   end
 
   def formatted_comments
     return "No comments" if comments_data.empty?
-    comments_data.first(20).join("\n- ")
+    comments_data.join("\n- ")
   end
 end

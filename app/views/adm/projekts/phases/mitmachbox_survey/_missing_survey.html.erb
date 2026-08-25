@@ -1,0 +1,20 @@
+<% if lost %>
+  <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.lost_title"),
+                  description: t("adm.projekts.phases.mitmachbox_survey.lost_text"),
+                  icon: "ballot") %>
+<% else %>
+  <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.missing_title"),
+                  description: t("adm.projekts.phases.mitmachbox_survey.missing_text"),
+                  icon: "ballot") %>
+<% end %>
+
+<div class="d-flex justify-content-center mt-4">
+  <%= form_with url: mitmachbox_create_survey_adm_projekts_phase_path(@projekt_phase) do %>
+    <% if lost %>
+      <%= hidden_field_tag :reset, 1 %>
+    <% end %>
+    <%= kern_button type: :submit,
+          text: t("adm.projekts.phases.mitmachbox_survey.#{lost ? "recreate_survey_button" : "create_survey_button"}"),
+          icon: "add" %>
+  <% end %>
+</div>

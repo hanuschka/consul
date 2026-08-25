@@ -10,7 +10,7 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
 
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
+        .chat_with_json_output(output_schema, feature: "proposal_ai_draft.evaluate_criteria")
         .with_instructions(system_instructions)
         .ask(user_prompt)
 

@@ -1,6 +1,6 @@
 <% navbar_scope = defined?(landing_page) && landing_page.present? ? NavbarItem.for_landing_page(landing_page.id) : NavbarItem.global %>
 <% navbar_scope.top_level.includes(:landing_page, :projekt, children: [:landing_page, :projekt, children: [:landing_page, :projekt, :children]]).select { |item| navbar_item_visible?(item) }.each do |item| %>
-  <% visible_children = item.children.order(:position).select { |child| navbar_item_visible?(child) } %>
+  <% visible_children = item.children.sort_by { |child| [child.position.to_i, child.id] }.select { |child| navbar_item_visible?(child) } %>
   <% has_children = visible_children.any? %>
   <% submenu_id = "navbar-submenu-#{item.id}" if has_children %>
   <li class="nav-element top-level-item"<%= ' aria-expanded="false"'.html_safe if has_children %>>

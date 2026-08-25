@@ -3,6 +3,9 @@
     <%= image_tag(@image_url, class: "resource-image--main", alt: alt_text,
           srcset: @image_url_2x.present? ? "#{url_for(@image_url)} 1x, #{url_for(@image_url_2x)} 2x" : nil) %>
     <%= image_tag(@image_url, class: "resource-image--blur", "aria-hidden": "true") %>
+    <% if @ai_generated %>
+      <%= render Shared::AiImageLabelComponent.new %>
+    <% end %>
   <% else %>
     <div class="resource-image--missing-image-placeholder" role="img" aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>">
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>" aria-hidden="true"></i>

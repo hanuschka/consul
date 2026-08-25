@@ -6,13 +6,14 @@
 
 <div class="phase-tone-grid">
   <% if tone_participation.present? %>
-    <div class="phase-tone-pill">
+    <div class="phase-tone-pill evaluation-stat-card">
       <div
         class="phase-tone-pill__icon"
         style="color:<%= accent %>;background:<%= accent_light %>"
         aria-hidden="true"
       >
-        <span class="material-symbols-outlined">groups</span>
+        <span class="material-symbols-outlined projekt-evaluation-icon-material">groups</span>
+        <i class="fas fa-users projekt-evaluation-icon-fa"></i>
       </div>
       <div class="phase-tone-pill__content">
         <div class="phase-tone-pill__label">
@@ -26,13 +27,14 @@
   <% end %>
 
   <% if tone_comments.present? %>
-    <div class="phase-tone-pill">
+    <div class="phase-tone-pill evaluation-stat-card">
       <div
         class="phase-tone-pill__icon"
         style="color:<%= accent %>;background:<%= accent_light %>"
         aria-hidden="true"
       >
-        <span class="material-symbols-outlined">forum</span>
+        <span class="material-symbols-outlined projekt-evaluation-icon-material">forum</span>
+        <i class="fas fa-comments projekt-evaluation-icon-fa"></i>
       </div>
       <div class="phase-tone-pill__content">
         <div class="phase-tone-pill__label">

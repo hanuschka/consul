@@ -48,7 +48,10 @@
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                  <div class="image-upload-meta-row">
+                    <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
                     <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
+                  </div>
                   <% end %>
                 </div>
               <% end %>
@@ -61,12 +64,12 @@
               class: "html-area #{ck_editor_class(current_user)} js-user-resource-form-description" %>
           <% end %>
 
-          <% if (projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any?) ||
+          <% if investment.projekt_phase.labels_selector_available? ||
                 (projekt_phase_feature?(investment.projekt_phase, "form.sentiments") && investment.projekt_phase.sentiments.any?) ||
                  projekt_phase_feature?(investment.projekt_phase, "form.show_map") %>
             <div class="new-card" id='map-container'>
 
-              <% if projekt_phase_feature?(investment.projekt_phase, "form.labels") && investment.projekt_phase.projekt_labels.any? %>
+              <% if investment.projekt_phase.labels_selector_available? %>
                 <div class="margin-bottom">
                   <%= render partial: "shared/user_resources_form/projekt_labels", locals: { f: f, projekt_phase: investment.projekt_phase, model: investment } %>
                 </div>
@@ -165,13 +168,22 @@
             <% end %>
           <% end %>
 
-          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment.projekt_phase.projekt) %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, investment) %>
             <%= render Shared::SidebarCardComponent.new(
                           title: t("custom.budgets.investments.form.on_behalf_of.title"),
                           description: t("custom.budgets.investments.form.on_behalf_of.description"),
                           icon_name: "user"
                        ) do |c| %>
                 <%= f.text_field :on_behalf_of, label: false, placeholder: t("custom.budgets.investments.form.on_behalf_of.placeholder"), class: "light-input" %>
+                <%= f.text_field :on_behalf_of_company_name,
+                      label: t("custom.on_behalf_of_account.company_name.label"),
+                      placeholder: t("custom.on_behalf_of_account.company_name.placeholder"),
+                      class: "light-input" %>
+                <%= f.email_field :on_behalf_of_email,
+                      label: t("custom.on_behalf_of_account.email.label"),
+                      placeholder: t("custom.on_behalf_of_account.email.placeholder"),
+                      class: "light-input" %>
+                <p><%= t("custom.on_behalf_of_account.email.description") %></p>
             <% end %>
           <% end %>
 

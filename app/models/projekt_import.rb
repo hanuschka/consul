@@ -5,6 +5,12 @@ class ProjektImport < ApplicationRecord
   has_one :ai_chat, as: :resource, dependent: :destroy
   has_many_attached :source_files
 
+  # The pictures found inside the source documents, extracted once during
+  # analysis so the admin can look at them and choose a title image before the
+  # projekt exists. Ordered by attachment id, which is the document order they
+  # were attached in, and described in the source_images column alongside.
+  has_many_attached :extracted_images
+
   enum status: {
     pending: "pending",
     extracting: "extracting",
@@ -24,13 +30,36 @@ class ProjektImport < ApplicationRecord
     image_skipped: "skipped"
   }
 
+  # What the projekt's title image will be. "document" is the default and means
+  # one of the pictures in the uploaded files — which one is title_image_index,
+  # preset to the best candidate and overridable by the admin in the chat.
+  enum title_image_mode: {
+    document: "document",
+    generated: "generated",
+    none: "none"
+  }, _prefix: :title_image
+
   ANALYSIS_STALL_AFTER = 15.minutes
+
+  ANALYSIS_WARNING_STAGE = "analysis".freeze
+  SUBMIT_WARNING_STAGE = "submit".freeze
+
+  # Marks the one chat message that renders the title image picker instead of
+  # text, reusing the column the Summarize and Regenerate buttons already use to
+  # say what produced a message.
+  TITLE_IMAGE_PICKER_COMMAND = "title_image_picker".freeze
+
+  # Stamped on a user message that was a bare option number rather than something
+  # to send to the model, for the same reason the Summarize and Regenerate buttons
+  # stamp theirs: it applied a change, so it must not be counted as an unanswered
+  # request when the projekt is created.
+  TITLE_IMAGE_REPLY_COMMAND = "title_image_reply".freeze
 
   IN_PROGRESS_STATUSES = %w[pending extracting processing chatting submitting].freeze
   ANALYZING_STATUSES = %w[pending extracting processing].freeze
 
   FAILURE_STAGES = %w[
-    extract ai_processing finalize resolve_content_blocks
+    extract ai_processing resolve_content_blocks
     create_projekt image_generation unknown
   ].freeze
 
@@ -47,6 +76,52 @@ class ProjektImport < ApplicationRecord
     return false if !analyzing?
 
     updated_at < ANALYSIS_STALL_AFTER.ago
+  end
+
+  # One tile in the chat's title image picker: what the picture is, whether it
+  # can legally become a title image, and the attachment to render it from.
+  SourceImageCandidate = Struct.new(
+    :index, :filename, :source_filename, :width, :height,
+    :ineligible_reason, :attachment,
+    keyword_init: true
+  ) do
+    # Derived, never stored alongside the reason: one fact, one place.
+    def eligible?
+      ineligible_reason.blank?
+    end
+  end
+
+  # The attachments are loaded in one query rather than one per tile, and matched
+  # to their descriptor by blob id so a purged attachment yields a candidate
+  # without a picture instead of shifting every later tile onto the wrong image.
+  # ||= rather than a present? guard: an import whose documents held no usable
+  # image is the common case, and a present? guard never memoizes the empty result,
+  # so every caller on the page re-queries the attachments.
+  def source_image_candidates
+    @source_image_candidates ||= begin
+      attachments_by_blob_id = extracted_images.includes(:blob).index_by(&:blob_id)
+
+      Array(source_images).each_with_index.map do |descriptor, index|
+        SourceImageCandidate.new(
+          index: index,
+          filename: descriptor["filename"],
+          source_filename: descriptor["source_filename"],
+          width: descriptor["width"],
+          height: descriptor["height"],
+          ineligible_reason: descriptor["ineligible_reason"],
+          attachment: attachments_by_blob_id[descriptor["blob_id"]]
+        )
+      end
+    end
+  end
+
+  # The one place that answers "which candidate is the chosen title image", so a
+  # later change to how the choice is stored has one call site to follow.
+  def selected_source_image_candidate
+    return nil if !title_image_document?
+    return nil if title_image_index.blank?
+
+    source_image_candidates[title_image_index]
   end
 
   def created_projekts
@@ -83,15 +158,36 @@ class ProjektImport < ApplicationRecord
     update!(status: "abandoned")
   end
 
-  def add_warning!(message)
+  def add_warning!(message, stage: SUBMIT_WARNING_STAGE)
     self.warnings = (warnings || []) + [{
       "message" => message.to_s,
+      "stage" => stage,
       "at" => Time.current.iso8601
     }]
     save!
   end
 
+  # A warning raised while the documents were being analysed is about the
+  # uploaded files themselves — an image that cannot be read stays unreadable
+  # however often the projekt is submitted — so it survives the reset that clears
+  # the previous submit attempt's warnings.
+  def analysis_warnings
+    Array(warnings).select { |warning| warning["stage"] == ANALYSIS_WARNING_STAGE }
+  end
+
   def terminal?
     status.in?(%w[completed failed abandoned])
+  end
+
+  def self.default_content_locale
+    Rails.env.development? ? I18n.locale.to_s : "de"
+  end
+
+  def import_locale
+    content_locale.presence || self.class.default_content_locale
+  end
+
+  def import_response_language
+    import_locale.to_s.start_with?("de") ? "German" : "English"
   end
 end

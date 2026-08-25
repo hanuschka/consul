@@ -3,7 +3,7 @@
   <span class="adm-files-allowed-types--lines">
     <%
       settings_edit_path = local_assigns[:settings_edit_path].presence ||
-        admin_settings_path(anchor: "tab-images-and-documents")
+        file_settings_adm_settings_path
       settings_link =
         if local_assigns.fetch(:show_settings_link, false) && current_user&.administrator?
           link_to(t("files.allowed_types_settings_link"),

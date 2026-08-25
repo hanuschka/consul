@@ -1,7 +1,17 @@
 .phase-key-metrics-card__icon-material.material-symbols-outlined {
-  display: inline-block;
+  display: none;
 }
 
 .phase-key-metrics-card__icon-fa.fas {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phase-key-metrics-card {
+  background: var(--er-bg, #f8fafc);
+}
+
+.evaluation-stat-card .phase-key-metrics-card {
+  background: white;
 }

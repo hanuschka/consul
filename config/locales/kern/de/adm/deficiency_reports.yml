@@ -22,6 +22,7 @@ de:
           deficiency_reports: Meldungen
           categories: Kategorien
           statuses: Status
+          intake_channels: Eingangskanäle
           settings: Konfiguration
           official_answer_templates: Antwortvorlagen
           email_templates: System-E-Mails
@@ -42,6 +43,30 @@ de:
         settings:
           page_hint: Legen Sie die Absenderadresse und die gemeinsame Fußzeile fest, die in allen Mängelmelder-E-Mails verwendet werden.
       deficiency_reports:
+        action_row:
+          website: Website
+          edit: Bearbeiten
+          pdf: PDF
+        watch:
+          start: Benachrichtigungen für dieses Anliegen einschalten
+          stop: Benachrichtigungen für dieses Anliegen ausschalten
+          label: Beobachten
+        unwatch:
+          success: Sie erhalten für dieses Anliegen keine Benachrichtigungen mehr.
+        share:
+          title: Anliegen teilen
+          trigger: Teilen
+          hint: Die ausgewählten Personen erhalten eine E-Mail und Benachrichtigungen zu Änderungen an diesem Anliegen.
+          label: Empfänger
+          submit: Teilen
+          officers: Sachbearbeitende
+          officer_groups: Sachbearbeitergruppen
+          success:
+            zero: Es wurden keine neuen Empfänger hinzugefügt.
+            one: Das Anliegen wurde mit einer Person geteilt.
+            other: Das Anliegen wurde mit %{count} Personen geteilt.
+          current_watchers: Beobachten dieses Anliegen bereits
+          no_officers: Es sind keine Sachbearbeitenden angelegt, mit denen Sie dieses Anliegen teilen könnten.
         index:
           title: Meldungen
           page_hint: "Hier sehen Sie alle eingereichten Mängelmelder-Meldungen. Die Tabelle zeigt Titel, Status, Kategorie, Bezirk und den zugewiesenen Sachbearbeiter. Über die Spaltenköpfe können Sie die Liste sortieren. Klicken Sie auf eine Meldung, um Details einzusehen, den Status zu ändern oder eine offizielle Antwort zu verfassen."
@@ -60,14 +85,23 @@ de:
             status_changed_at: Statusänderung
             title: Titel
             author: Autor
+            on_behalf_of: Im Auftrag von
+            recorded_by: Erfasst von
+            intake_channel: Eingangskanal
             status: Status
             location: Standort
             address: Adresse
+            watch: Beobachtung
             district: Bezirk
             category: Kategorie
+            subcategory: Unterkategorie
             responsible: Sachbearbeiter
             archived_state: Archiv
             hidden_state: Herausmoderiert
+          assignment_scope:
+            assigned_to_me: Mir zugewiesen
+            watching: Unter Beobachtung
+            all: Alle Anliegen
           archived_state:
             active: Aktiv
             archived: Archiviert
@@ -98,8 +132,13 @@ de:
           image_label: Bild
           documents_label: Dokumente
           category: Kategorie
+          subcategory: Unterkategorie
           map_label: Karte
+          recorded_by_label: Erfasst von
           on_behalf_of_label: Im Auftrag von
+          on_behalf_of_company_label: Firma
+          on_behalf_of_email_label: E-Mail
+          intake_channel_label: Eingangskanal
           video_url: Video-URL
           address: Adresse
           responsible_label: Sachbearbeiter
@@ -123,6 +162,10 @@ de:
             title: Titel der Meldung
             video_url: https://www.youtube.com/watch?v=...
             on_behalf_of: z. B. Maria Musterfrau
+            on_behalf_of_company_name: z. B. Musterbau GmbH
+            on_behalf_of_email: z. B. maria.musterfrau@example.com
+            intake_channel: Bitte wählen
+            subcategory: Keine Unterkategorie
           labels:
             title: Titel der Meldung
             description: Beschreibung
@@ -132,6 +175,10 @@ de:
             category: Kategorie
             map_location: Kartenstandort
             on_behalf_of: Im Auftrag von
+            on_behalf_of_company_name: Firma
+            on_behalf_of_email: E-Mail-Adresse
+            intake_channel: Eingangskanal
+            subcategory: Unterkategorie
           hints:
             title: Der Titel des Beitrags wird in der Listenansicht und als Überschrift auf der Detailseite angezeigt. Er sollte das gemeldete Anliegen kurz und präzise beschreiben, damit Sachbearbeiter und Bürger den Inhalt auf einen Blick erfassen können.
             description: Die Beschreibung enthält alle relevanten Details zum gemeldeten Anliegen, wie den genauen Zustand, mögliche Ursachen und Auswirkungen. Dieser Text wird - je nach gewählter Voreinstellung - öffentlich auf der Detailseite des Beitrags angezeigt. Eine präzise Beschreibung erleichtert den Sachbearbeitern die Einschätzung und beschleunigt die Bearbeitung erheblich.
@@ -139,7 +186,11 @@ de:
             documents: Hier können ergänzende Dokumente wie Gutachten, Pläne oder Berichte zum Beitrag hinzugefügt werden. Die Dateien werden auf der Detailseite zum Download bereitgestellt und sind für alle Nutzer sichtbar. Mehrere Dokumente können gleichzeitig hochgeladen werden, um den Sachverhalt umfassend zu dokumentieren.
             video_url: Geben Sie die URL eines Videos ein, das das gemeldete Anliegen dokumentiert. Das Video wird auf der öffentlichen Detailseite des Beitrags eingebettet angezeigt. Unterstützt werden Links von gängigen Videoplattformen wie YouTube oder Vimeo. Ein Video kann den Sachverhalt besser veranschaulichen als Fotos allein.
             on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag der Beitrag erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator einen Beitrag stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung des Beitrags.
+            on_behalf_of_company_name: Optional. Die Firma oder Organisation, für die die Person das Anliegen meldet. Der Eintrag wird im Profil des verknüpften Benutzerkontos gespeichert, nicht am Anliegen selbst, und nur übernommen, wenn im Konto noch keine Firma hinterlegt ist.
+            on_behalf_of_email: Optional. Wenn Sie eine E-Mail-Adresse angeben, wird das Anliegen dem dahinterliegenden Benutzerkonto zugeordnet. Existiert für die Adresse noch kein Konto, wird eines angelegt und erhält eine Bestätigungs-E-Mail (Double-Opt-In). Ein bereits vorhandenes Konto wird nur verknüpft und erhält keine Bestätigungs-E-Mail. Lassen Sie das Feld leer, bleibt das Anliegen Ihnen zugeordnet.
             category: Die Kategorie ordnet den Beitrag einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
+            intake_channel: Der Weg, auf dem das Anliegen bei der Verwaltung eingegangen ist, z. B. Telefon, E-Mail oder persönlich. Die Angabe ist verpflichtend, sobald Sie ein Anliegen im Namen einer dritten Person erfassen. Anliegen, die Bürgerinnen und Bürger selbst über die Plattform einreichen, erhalten automatisch den konfigurierten Standardkanal.
+            subcategory: Die Unterkategorie gliedert das Anliegen innerhalb der gewählten Kategorie feiner, z. B. „Schlaglöcher” unter „Bau & Verkehr”. Zur Auswahl stehen nur Unterkategorien der oben gewählten Kategorie; Kategorien ohne Unterkategorien zeigen kein Auswahlfeld an. Hat die Unterkategorie eine eigene Standard-Zuständigkeit, wird das Anliegen automatisch dorthin zugewiesen.
         administer:
           title: Administrieren
           status: Status
@@ -160,6 +211,40 @@ de:
           title: Feedback-Formular
           created_at: Erstellt am
           for_report: Für
+      subcategories:
+        index:
+          title: Unterkategorien
+          title_for_category: "Unterkategorien von „%{category}”"
+          page_hint: "Hier verwalten Sie die Unterkategorien dieser Kategorie, z. B. „Schlaglöcher” unter „Bau & Verkehr”. Jede Unterkategorie kann eine eigene Standard-Zuständigkeit haben, die bei der Zuweisung neuer Anliegen Vorrang vor der Zuständigkeit der Hauptkategorie hat. Per Drag & Drop bestimmen Sie die Reihenfolge in der Auswahlliste. Kategorien ohne Unterkategorien zeigen im Meldeformular keine Auswahl an."
+          new_subcategory: Neue Unterkategorie
+          no_items_title: Keine Unterkategorien vorhanden
+          no_items_description: Erstellen Sie eine Unterkategorie, um Anliegen innerhalb dieser Kategorie feiner zu gliedern.
+          table:
+            name: Bezeichnung
+            default_responsible: Standard-Zuständigkeit
+        new:
+          title: Neue Unterkategorie
+        create:
+          success: Unterkategorie wurde erfolgreich erstellt.
+        edit:
+          title: Unterkategorie bearbeiten
+        update:
+          success: Unterkategorie wurde erfolgreich aktualisiert.
+        destroy:
+          success: Unterkategorie wurde erfolgreich gelöscht.
+          cannot_destroy: Unterkategorie kann nicht gelöscht werden, da ihr noch Anliegen zugeordnet sind.
+        form:
+          name_label: Bezeichnung
+          name_hint: Die Bezeichnung der Unterkategorie, wie sie im Meldeformular und in der Anliegenübersicht angezeigt wird, z. B. „Schlaglöcher”, „Straßenbeleuchtung” oder „Wilder Müll”. Wählen Sie Bezeichnungen, die Bürgerinnen und Bürger ohne Vorwissen verstehen.
+          ai_hint_label: Abgrenzungshinweis für die KI-Kategorisierung
+          ai_hint_hint: "Dieser Hinweis wird ausschließlich an die KI-Kategorisierung übergeben und ist für Bürgerinnen und Bürger nicht sichtbar. Grenzen Sie die Unterkategorie in ein bis zwei Sätzen gegen die übrigen Unterkategorien derselben Kategorie ab – hier entstehen die meisten Fehlzuordnungen. Beispiel: „Löcher, Risse und Absackungen in der Fahrbahn. Nicht: lose Schachtdeckel, die gehören zu Kanal und Entwässerung.” Ohne Angabe entscheidet die KI allein anhand der Bezeichnung."
+          ai_hint_placeholder: "z. B. Löcher, Risse und Absackungen in der Fahrbahn. Nicht: lose Schachtdeckel (Kanal und Entwässerung)."
+          default_responsible_label: Standard-Zuständigkeit
+          default_responsible_hint: Die Sachbearbeitergruppe oder Person, der Anliegen dieser Unterkategorie automatisch zugewiesen werden. Diese Angabe hat Vorrang vor der Standard-Zuständigkeit der Hauptkategorie, greift aber nur, wenn für das Gebiet des Anliegens keine eigene Zuständigkeit hinterlegt ist. Ohne Angabe gilt die Zuständigkeit der Hauptkategorie.
+          officer_groups: Sachbearbeitergruppen
+          officers: Sachbearbeitende
+          no_responsible: Keine Zuständigkeit
+          submit: Speichern
       categories:
         index:
           title: Kategorien
@@ -173,8 +258,14 @@ de:
             color: Farbe
             icon: Symbol
             default_responsible: Standard-Sachbearbeiter
+            subcategories: Unterkategorien
             warning_text: Popup
             actions: Aktionen
+          subcategories_link:
+            one: 1 Unterkategorie
+            other: "%{count} Unterkategorien"
+            zero: Keine
+          manage_subcategories: Unterkategorien verwalten
         new:
           title: Neue Kategorie
         create:
@@ -189,6 +280,9 @@ de:
         form:
           name_label: Name
           name_hint: Der Name der Kategorie wird im Frontend bei der Meldungserstellung als Auswahlmöglichkeit angezeigt und dient der thematischen Zuordnung. Wählen Sie einen kurzen, allgemein verständlichen Begriff wie Straßenschäden, Beleuchtung oder Grünflächen. Der Name erscheint auch in der Verwaltungsübersicht und in Statistiken als Filtermerkmal.
+          ai_hint_label: Abgrenzungshinweis für die KI-Kategorisierung
+          ai_hint_hint: "Dieser Hinweis wird ausschließlich an die KI-Kategorisierung übergeben und ist für Bürgerinnen und Bürger nicht sichtbar. Beschreiben Sie in ein bis zwei Sätzen, welche Anliegen in diese Kategorie gehören – und vor allem, welche nicht. Gerade die Abgrenzung zu ähnlichen Kategorien verbessert die Trefferquote spürbar. Beispiel: „Schäden an Fahrbahnen, Geh- und Radwegen. Nicht: defekte Straßenlaternen, die gehören zu Beleuchtung.” Ohne Angabe entscheidet die KI allein anhand des Namens."
+          ai_hint_placeholder: "z. B. Schäden an Fahrbahnen, Geh- und Radwegen. Nicht: Straßenlaternen (Beleuchtung), Verkehrsschilder (Beschilderung)."
           color_label: Farbe
           color_hint: Die Farbe wird als visuelle Kennzeichnung der Kategorie in der Listenansicht und auf der Karte verwendet. Sie hilft Bürgern und Sachbearbeitern, Meldungen verschiedener Kategorien auf einen Blick zu unterscheiden. Wählen Sie kontrastreiche Farben, die sich gut voneinander abheben, um die Übersichtlichkeit zu gewährleisten.
           icon_label: Symbol
@@ -198,6 +292,8 @@ de:
           officer_groups: Sachbearbeitergruppen
           officers: Sachbearbeiter
           no_responsible: "-- Kein Sachbearbeiter --"
+          ai_fallback_label: Rückfallkategorie der KI-Kategorisierung
+          ai_fallback_hint: Anliegen landen in dieser Kategorie, wenn die KI-Kategorisierung aktiviert ist, aber keine sichere Zuordnung treffen kann oder der KI-Dienst nicht erreichbar ist. Sachbearbeitende korrigieren die Kategorie dann manuell. Es kann immer nur eine Kategorie als Rückfallkategorie markiert sein; die Markierung wechselt automatisch, sobald Sie eine andere Kategorie festlegen. Ohne Markierung wird die erste Kategorie der Reihenfolge verwendet.
           warning_text_label: Popup
           warning_text_hint: Der Popup-Text wird Bürgern als Hinweismeldung angezeigt, wenn sie diese Kategorie bei der Erstellung einer neuen Meldung auswählen. Nutzen Sie dieses Feld, um wichtige Informationen oder Warnungen zu übermitteln, z. B. Hinweise auf alternative Meldewege oder spezielle Zuständigkeiten. Das Popup erscheint direkt nach der Kategorieauswahl.
           submit: Speichern
@@ -241,6 +337,33 @@ de:
           archive_reports_hint: Wenn diese Option aktiviert ist, werden Meldungen automatisch archiviert, sobald sie in diesen Status versetzt werden. Archivierte Meldungen erscheinen nicht mehr in der aktiven Listenansicht, bleiben aber im System gespeichert und können über die Archivansicht eingesehen werden. Typisch für Endstatus wie „Erledigt" oder „Abgelehnt".
           notice_text_label: E-Mail-Benachrichtigungstext
           notice_text_hint: Dieser Text wird als Inhalt der E-Mail-Benachrichtigung an den Ersteller der Meldung gesendet, wenn die Meldung in diesen Status wechselt. Formulieren Sie den Text bürgerfreundlich und informativ, damit der Melder den aktuellen Stand seiner Meldung nachvollziehen kann. Lassen Sie das Feld leer, um keine Benachrichtigung zu senden.
+          submit: Speichern
+      intake_channels:
+        index:
+          title: Eingangskanäle
+          page_hint: "Hier verwalten Sie die Eingangskanäle, über die Anliegen die Verwaltung erreichen – z. B. Telefon, E-Mail oder persönlich. Der als Standard markierte Kanal wird automatisch allen Anliegen zugewiesen, die Bürgerinnen und Bürger selbst über die Plattform einreichen. Per Drag & Drop bestimmen Sie die Reihenfolge in der Auswahlliste."
+          new_intake_channel: Neuer Eingangskanal
+          no_items_title: Keine Eingangskanäle vorhanden
+          no_items_description: Erstellen Sie einen Eingangskanal, um festzuhalten, auf welchem Weg Anliegen eingegangen sind.
+          table:
+            name: Bezeichnung
+            default: Standard
+        new:
+          title: Neuer Eingangskanal
+        create:
+          success: Eingangskanal wurde erfolgreich erstellt.
+        edit:
+          title: Eingangskanal bearbeiten
+        update:
+          success: Eingangskanal wurde erfolgreich aktualisiert.
+        destroy:
+          success: Eingangskanal wurde erfolgreich gelöscht.
+          cannot_destroy: Eingangskanal kann nicht gelöscht werden, da er noch Anliegen zugeordnet ist.
+        form:
+          name_label: Bezeichnung
+          name_hint: Die Bezeichnung des Eingangskanals, wie sie Sachbearbeitenden im Auswahlfeld angezeigt wird, z. B. „Telefon", „E-Mail", „Persönlich" oder „Brief". Wählen Sie kurze, eindeutige Bezeichnungen, damit der Weg des Anliegens auf einen Blick erkennbar ist.
+          default_label: Standardkanal
+          default_hint: Der Standardkanal wird automatisch allen Anliegen zugewiesen, die Bürgerinnen und Bürger selbst über die Plattform einreichen – üblicherweise „Plattform". Es kann immer nur ein Kanal als Standard markiert sein; die Markierung wechselt automatisch, sobald Sie einen anderen Kanal als Standard festlegen.
           submit: Speichern
       officers:
         index:

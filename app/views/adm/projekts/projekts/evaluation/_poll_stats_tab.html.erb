@@ -1,0 +1,103 @@
+<%
+  entries = local_assigns.fetch(:entries, [])
+%>
+
+<div class="adm-poll-stats" data-controller="adm-charts">
+  <% entries.each do |entry| %>
+    <%
+      poll = entry[:poll]
+      stats = entry[:stats]
+      gender = Stats::GenderStatsComponent.new(stats: stats)
+      age = Stats::AgeStatsComponent.new(stats: stats)
+      geozone = Stats::GeozoneStatsComponent.new(stats: stats)
+      individual_groups = stats.individual_group_breakdown
+      has_charts = gender.render? || age.render? || geozone.render?
+      has_individual = individual_groups.any?
+      channels = stats.channels
+      has_demographics = has_charts || has_individual
+    %>
+
+    <div class="adm-poll-stats--poll">
+      <% if entries.size > 1 %>
+        <div class="adm-poll-stats--poll-title"><%= poll.name %></div>
+      <% end %>
+
+      <% if has_demographics %>
+        <div class="evaluation-stat-card">
+          <div class="phase-segments-card__header">
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">groups_3</span>
+            <i class="fas fa-user-friends projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <span class="phase-segments-card__title">
+              <%= t("adm.projekts.projekts.evaluation.user_segments_title") %>
+            </span>
+          </div>
+
+          <% if has_charts %>
+            <div class="phase-segments-card__grid">
+              <% if age.render? %>
+                <div class="phase-segments-card__panel">
+                  <div class="phase-segments-card__panel-label"><%= t("stats.by_age") %></div>
+                  <div
+                    class="phase-segments-card__chart"
+                    data-bar-chart
+                    data-chart-orientation="vertical"
+                    data-chart-labels="<%= age.labels.to_json %>"
+                    data-chart-values="<%= age.values.to_json %>"
+                    data-chart-colors="<%= age.colors.to_json %>"
+                  >
+                    <canvas></canvas>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if geozone.render? %>
+                <div class="phase-segments-card__panel">
+                  <div class="phase-segments-card__panel-label"><%= t("stats.by_geozone") %></div>
+                  <div
+                    class="phase-segments-card__chart"
+                    data-pie-chart
+                    data-chart-labels="<%= geozone.labels.to_json %>"
+                    data-chart-values="<%= geozone.values.to_json %>"
+                    data-chart-colors="<%= evaluation_chart_colors(geozone.values).to_json %>"
+                  >
+                    <canvas></canvas>
+                  </div>
+                </div>
+              <% end %>
+
+              <% if gender.render? %>
+                <div class="phase-segments-card__panel">
+                  <div class="phase-segments-card__panel-label"><%= t("stats.by_gender") %></div>
+                  <div
+                    class="phase-segments-card__chart"
+                    data-pie-chart
+                    data-chart-labels="<%= gender.labels.to_json %>"
+                    data-chart-values="<%= gender.values.to_json %>"
+                    data-chart-colors="<%= gender.colors.to_json %>"
+                  >
+                    <canvas></canvas>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if has_individual %>
+            <%= render "adm/projekts/projekts/evaluation/individual_group_charts",
+              groups: individual_groups %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if channels.any? %>
+        <%= render "adm/projekts/projekts/evaluation/poll_channel_charts", stats: stats %>
+      <% end %>
+
+      <% unless has_demographics || channels.any? %>
+        <div class="adm-poll-stats--empty">
+          <%= t("adm.projekts.projekts.evaluation.poll_stats_tab.empty") %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

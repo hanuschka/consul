@@ -40,7 +40,8 @@ class AiAnalytics::TopicClustering < ApplicationService
 
       response =
         Ai::RubyLlmFactory
-          .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema)
+          .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema,
+                                 feature: "ai_analytics.topic_clustering")
           .with_instructions(system_instructions)
           .ask(user_prompt)
 

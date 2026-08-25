@@ -1,74 +1,73 @@
 <div class="<%= banner_wrapper_class %>">
   <div class="custom-page--banner">
     <div class="custom-page--banner-text-section-wrapper">
-      <div class="custom-page--banner-text-section">
-        <div class="custom-page--banner-title-wrapper">
-          <% if show_admin_controls? %>
-            <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :title, kind: :string) do %>
-              <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
-            <% end %>
-          <% else %>
-            <h1 class="custom-page--banner-title">
-              <% if @compact %>
-                <%= link_to @custom_page.title, page_path(@custom_page.slug) %>
-              <% else %>
-                <%= @custom_page.title %>
-              <% end %>
-            </h1>
+      <div class="custom-page--banner-title-wrapper">
+        <% if show_admin_controls? %>
+          <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :title, kind: :string) do %>
+            <h1 class="custom-page--banner-title"><%= @custom_page.title %></h1>
           <% end %>
-        </div>
-
-        <% if (@custom_page.subtitle.present? || show_admin_controls?) %>
-          <% if show_admin_controls? %>
-            <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :subtitle, kind: :string, allow_br_tags: true) do %>
-              <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
+        <% else %>
+          <h1 class="custom-page--banner-title">
+            <% if @compact %>
+              <%= link_to @custom_page.title, page_path(@custom_page.slug) %>
+            <% else %>
+              <%= @custom_page.title %>
             <% end %>
-          <% else %>
-            <div class="custom-page--banner-description">
-              <p style="font-size:inherit;"><%= sanitize(@custom_page.subtitle, tags: ["br"]) %> </p>
-            </div>
-          <% end %>
-        <% end %>
-
-        <% if show_meta_chips? %>
-          <div class="custom-page--banner-chips">
-            <% if start_date_chip_text.present? %>
-              <span class="custom-page--banner-chip">
-                <i class="far fa-clock" aria-hidden="true"></i>
-                <%= start_date_chip_text %>
-              </span>
-            <% end %>
-            <% if end_date_chip_text.present? %>
-              <span class="custom-page--banner-chip">
-                <i class="far fa-clock" aria-hidden="true"></i>
-                <%= end_date_chip_text %>
-              </span>
-            <% end %>
-            <% status_chips.each do |chip| %>
-              <% if chip[:phase].present? %>
-                <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
-                  class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",
-                  onclick: "$('#footer-content').addClass('show-loader');",
-                  title: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]),
-                  aria: { label: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]) },
-                  data: {
-                    index: chip[:index],
-                    remote: true,
-                    "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: chip[:phase].id, anchor: "projekt-footer")
-                  } do %>
-                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
-                  <%= chip[:text] %>
-                <% end %>
-              <% else %>
-                <span class="custom-page--banner-chip <%= chip[:modifier] %>">
-                  <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
-                  <%= chip[:text] %>
-                </span>
-              <% end %>
-            <% end %>
-          </div>
+          </h1>
         <% end %>
       </div>
+
+      <% if (@custom_page.subtitle.present? || show_admin_controls?) %>
+        <% if show_admin_controls? %>
+          <%= render Admin::FieldEditComponent.new(record: @custom_page, attribute: :subtitle, kind: :string, allow_br_tags: true) do %>
+            <div class="custom-page--banner-description"><%= sanitize((@custom_page.subtitle.presence || " "), tags: ["br"]) %> </div>
+          <% end %>
+        <% else %>
+          <div class="custom-page--banner-description">
+            <p style="font-size:inherit;"><%= sanitize(@custom_page.subtitle, tags: ["br"]) %> </p>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if show_meta_chips? %>
+        <div class="custom-page--banner-chips">
+          <% if start_date_chip_text.present? %>
+            <span class="custom-page--banner-chip">
+              <i class="far fa-clock" aria-hidden="true"></i>
+              <%= start_date_chip_text %>
+            </span>
+          <% end %>
+          <% if end_date_chip_text.present? %>
+            <span class="custom-page--banner-chip">
+              <i class="far fa-clock" aria-hidden="true"></i>
+              <%= end_date_chip_text %>
+            </span>
+          <% end %>
+          <% status_chips.each do |chip| %>
+            <% if chip[:phase].present? %>
+              <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
+                class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",
+                onclick: "$('#footer-content').addClass('show-loader');",
+                title: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]),
+                aria: { label: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]) },
+                data: {
+                  index: chip[:index],
+                  remote: true,
+                  "footer-tab-back-url": page_path(@projekt.page.slug, projekt_phase_id: chip[:phase].id, anchor: "projekt-footer")
+                } do %>
+                <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                <%= chip[:text] %>
+              <% end %>
+            <% else %>
+              <span class="custom-page--banner-chip <%= chip[:modifier] %>">
+                <i class="<%= chip[:icon_style] %> fa-<%= chip[:icon] %>" aria-hidden="true"></i>
+                <%= chip[:text] %>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
 
     </div>
 
@@ -110,7 +109,8 @@
               ),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page,
-              placeholder_hint: show_admin_controls? ? t("custom.projekts.banner_upload.min_image_size_hint", width: 590, height: 355) : nil
+              ai_generated: @custom_page.image&.ai_generated?,
+              placeholder_hint: show_admin_controls? ? banner_image_size_hint : nil
             )
           ) %>
         <% end %>
@@ -121,11 +121,30 @@
           <div
             data-update-url="<%= update_image_adm_projekts_projekt_path(@projekt) %>"
             data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"
+            data-generate-url="<%= generate_image_adm_projekts_projekt_path(@projekt) %>"
+            data-generate-status-url="<%= generate_image_status_adm_projekts_projekt_path(@projekt) %>"
+            data-ai-generated-url="<%= update_image_ai_generated_adm_projekts_projekt_path(@projekt) %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
+            data-placeholder-hint="<%= banner_image_size_hint %>"
             data-delete-confirm="<%= t('custom.accessibility.banner-image.delete-confirm') %>"
             class="projekt-image-upload-wrapper js-projekt-image-uploader">
+            <div
+              class="projekt-banner-upload-error js-projekt-banner-upload-error"
+              role="alert"
+              aria-label="<%= t('custom.accessibility.banner-image.upload-error-label') %>"
+              hidden
+            >
+              <i class="fas fa-exclamation-circle projekt-banner-upload-error--icon" aria-hidden="true"></i>
+              <span
+                class="projekt-banner-upload-error--message js-projekt-banner-upload-error-message"
+                data-fallback-text="<%= t('custom.projekts.banner_upload.upload_failed') %>"
+                data-generate-failed-text="<%= t('custom.projekts.banner_upload.generate_failed') %>"
+                data-ai-marker-failed-text="<%= t('custom.projekts.banner_upload.ai_marker_failed') %>"
+              ></span>
+            </div>
             <%= banner_image %>
+            <template class="js-projekt-banner--ai-label-template"><%= render Shared::AiImageLabelComponent.new %></template>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
             <div
               class="projekt-banner-upload-progress js-projekt-banner-upload-progress"
@@ -140,6 +159,7 @@
                 class="projekt-banner-upload-progress--message js-projekt-banner-upload-progress-message"
                 data-uploading-text="<%= t('custom.projekts.banner_upload.uploading') %>"
                 data-processing-text="<%= t('custom.projekts.banner_upload.processing') %>"
+                data-generating-text="<%= t('custom.projekts.banner_upload.generating') %>"
               >
                 <%= t('custom.projekts.banner_upload.uploading') %>
               </div>
@@ -153,6 +173,22 @@
                 <i class="fas fa-pencil-alt"></i>
               </label>
             <% end %>
+            <%= studio_rich_tooltip(
+              title: generate_image_tooltip_title,
+              text: generate_image_tooltip_text,
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-generate-button js-projekt-banner--image-generate-button js-studio-hide-on-preview"
+                      aria-label="<%= t('custom.accessibility.banner-image.generate-aria-label') %>"
+                      <%= "disabled" if !ai_available? %>
+                      tabindex="-1">
+                <i class="fas fa-magic"></i>
+              </button>
+            <% end %>
+            <% if ai_available? %>
+              <%= render Projekts::BannerImageGenerateModalComponent.new(custom_page: @custom_page) %>
+            <% end %>
             <input
               id="projektImageUploadInput"
               type="file"
@@ -160,6 +196,20 @@
               class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
+            <%= studio_rich_tooltip(
+              title: ai_marker_tooltip_title,
+              text: ai_marker_tooltip_text,
+              note: ai_marker_tooltip_note,
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %> <%= 'd-none' if @custom_page.image.blank? %>"
+                      aria-label="<%= ai_marker_tooltip_title %>"
+                      aria-pressed="<%= banner_ai_generated? %>"
+                      tabindex="-1">
+                <span class="projekt-image-ai-marker-button--text" aria-hidden="true">AI</span>
+              </button>
+            <% end %>
             <%= studio_rich_tooltip(
               title: "Titelbild entfernen",
               text: "Entfernt das aktuelle Titelbild. Die Seite wird anschließend ohne Banner angezeigt.",

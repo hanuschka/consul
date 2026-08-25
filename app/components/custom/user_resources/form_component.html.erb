@@ -57,7 +57,7 @@
 
           <%= f.invisible_captcha :subtitle %>
 
-          <% if show_post_on_behalf_of_input? %>
+          <% if helpers.allowed_to_post_on_behalf_of?(current_user, resource) %>
             <%= render(Shared::SidebarCardComponent.new(
               title: "Veröffentlichen für",
               opened_on_mobile: true,
@@ -66,6 +66,16 @@
               dieses Feld sehen nur Admin. Sie können hier eine Diskussion im Namen von jemandem erstellen.
               </p>
               <%= f.text_field :on_behalf_of, label: false, placeholder: "Namen eingeben...", class: "light-input" %>
+
+              <%= f.text_field :on_behalf_of_company_name,
+                    label: t("custom.on_behalf_of_account.company_name.label"),
+                    placeholder: t("custom.on_behalf_of_account.company_name.placeholder"),
+                    class: "light-input" %>
+              <%= f.email_field :on_behalf_of_email,
+                    label: t("custom.on_behalf_of_account.email.label"),
+                    placeholder: t("custom.on_behalf_of_account.email.placeholder"),
+                    class: "light-input" %>
+              <p><%= t("custom.on_behalf_of_account.email.description") %></p>
             <% end %>
           <% end %>
         </fieldset>
@@ -119,7 +129,10 @@
                   <% f.object.build_image if f.object.image.nil? %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                  <div class="image-upload-meta-row">
+                    <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
                     <%= image_builder.text_field :credits, label: false, placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"), class: "light-input image-upload-credits-input" %>
+                  </div>
                   <% end %>
                 </div>
               <% end %>

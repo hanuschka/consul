@@ -2,14 +2,18 @@
 
 <% if show_ai_flow_link? %>
   <% if ai_flow_disabled? %>
-    <button
-      class="button expanded new-resource-button ai-flow-button ai-feature-disabled"
-      disabled
-      data-tooltip
-      title="<%= t('ai.disabled_tooltip') %>"
-    >
-      <%= t("ai_proposal_flow.entry_button") %>
-    </button>
+    <%= render Shared::AiFeatureTooltipComponent.new(
+      feature_title: t("ai_proposal_flow.entry_button"),
+      feature_text: t("ai_proposal_flow.entry_button_admin_hint"),
+      layout_class: "-block"
+    ) do %>
+      <button
+        class="button expanded new-resource-button ai-flow-button"
+        disabled
+      >
+        <%= t("ai_proposal_flow.entry_button") %>
+      </button>
+    <% end %>
   <% else %>
     <%= link_to t("ai_proposal_flow.entry_button"), ai_flow_link_path,
           class: "button expanded new-resource-button ai-flow-button",

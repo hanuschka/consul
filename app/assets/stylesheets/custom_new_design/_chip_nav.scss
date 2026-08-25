@@ -1,0 +1,64 @@
+.custom-new-design .chip-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.custom-new-design .chip-nav--chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  font-size: 15px;
+  line-height: 1.4;
+  text-decoration: none;
+  color: $main-text-color;
+  background-color: color-mix(in srgb, var(--brand-color) 6%, white);
+  border-radius: 38px;
+  transition: background-color 0.1s ease;
+
+  &:hover,
+  &:focus {
+    color: $main-text-color;
+    background-color: color-mix(in srgb, var(--brand-color) 3%, white);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--brand-color) 1%, white);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--focus-outline-color);
+    outline-offset: 2px;
+  }
+
+  &.is-active {
+    font-weight: bold;
+    color: white;
+    background-color: var(--brand-color);
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: white;
+      background-color: var(--brand-color);
+    }
+  }
+
+  &.-disabled {
+    color: $medium-gray-3;
+    background-color: $light-gray-2;
+    cursor: not-allowed;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $medium-gray-3;
+      background-color: $light-gray-2;
+    }
+  }
+
+  &.-hidden-from-public {
+    opacity: 0.5;
+  }
+}

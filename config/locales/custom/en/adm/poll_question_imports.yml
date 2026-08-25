@@ -1,0 +1,163 @@
+en:
+  adm:
+    projekts:
+      poll_question_imports:
+        source_files_label: Source documents
+        trigger:
+          title: AI question import
+          button: Import questions from document
+          tooltip: >-
+            Upload a PDF, Word or text document and the AI reads the questions,
+            answer options and question types out of it. You review and edit
+            everything before it is added to this vote.
+        index:
+          title: Question import from documents
+          hint: >-
+            Upload a document holding this vote's questions. The questions found
+            in it can be reviewed and edited before they are added to the vote.
+          new_import: New import
+          empty_title: No document imported yet
+          empty_description: >-
+            Upload a PDF, Word or text document holding the questions to get
+            started.
+          filters:
+            aria: Filter imports
+            all: All
+            in_progress: In progress
+            failed: Failed
+            finished: Finished
+          columns:
+            files: Document
+            status: Status
+            questions: Questions
+            created: Uploaded
+        new:
+          title: Import questions from a document
+          description: >-
+            Upload a document holding the questions. They can be checked and
+            edited before they are added to the vote.
+          dropzone_title: Upload the document holding the questions
+          dropzone_hint: "Supported formats: %{types}. At most %{size} in total."
+          select_file: Select file
+          drop_hint: You can also drag and drop files here.
+          choose_other_file: Choose another file
+          remove_file: Remove file
+          submit: Import questions
+          progress: Reading the document …
+          processing_title: The document is being analysed
+          processing_message: >-
+            Depending on the size of the document this usually takes less than a
+            minute. You can leave this page open.
+        show:
+          title: Questions draft
+          title_processing: Import in progress …
+          title_neutral: Question import
+          hint: >-
+            Review and edit the questions found in the document. They are only
+            added to the vote as real questions once you apply them.
+          generating_title: The document is being analysed
+          generating: >-
+            The questions are being read out of the document. This usually takes
+            less than a minute. This page refreshes itself.
+          found:
+            one: One question is ready for review
+            other: "%{count} questions are ready for review"
+          summary_answers:
+            one: >-
+              One answer option in total — switch off any question that should
+              not be imported.
+            other: >-
+              %{count} answer options in total — switch off any question that
+              should not be imported.
+          failed: The questions could not be read
+          stalled: The analysis is stuck
+          stalled_description: >-
+            There has been no progress for several minutes. This is usually
+            the background processing. Start the analysis again, or contact
+            technical support.
+          empty_title: No questions found in the document
+          empty_description: >-
+            No questions could be recognised in the uploaded document. Check
+            that it holds the questions as text rather than only as an image.
+          already_applied: This import has already been applied
+          already_applied_description: >-
+            The questions are in the vote's question list and are edited there
+            from now on.
+          back: Back to the overview
+          to_questions: Go to the questions
+          apply: Import questions
+          apply_tooltip: >-
+            Adds every switched-on question to the vote. Questions switched off
+            here are left out.
+          discard: Discard
+          discard_tooltip: >-
+            Returns to the import overview without adding anything to the vote.
+            The draft stays and can be opened again.
+          regenerate: Re-read document questions
+          regenerate_hint: >-
+            Analyses the same document again — no new upload needed.
+          regenerate_confirm: >-
+            The current preview will be discarded. Continue?
+          to_top: To the top
+        question:
+          label: Question
+          include: Apply
+          title_description: The text participants read as the question.
+          description_description: Optional explanatory text below the question.
+          vote_type: Question type
+          vote_type_description: Determines how participants can answer.
+          rating_scale_labels: Rating scale captions
+          rating_scale_labels_description: >-
+            Only shown for and needed by questions of the rating scale type.
+          answers: Answer options
+          answers_description: >-
+            Every question needs at least two answer options. Answers with an
+            empty title are left out.
+          add_answer: Add answer
+          remove_answer: Remove answer
+        list:
+          no_files: Without file
+          files_summary: "%{first} and %{count} more"
+          stalled_note: >-
+            No progress for several minutes. Open the import to start the
+            analysis again.
+          generated_questions:
+            one: One question found
+            other: "%{count} questions found"
+          applied_questions:
+            one: One question applied
+            other: "%{count} questions applied"
+          actions:
+            open: Open
+            delete: Delete
+            delete_confirm: >-
+              Delete this import? Questions already applied stay in the vote.
+        states:
+          pending: Queued
+          extracting: Reading the document
+          processing: Finding questions
+          stalled: Stuck
+          completed: Ready for review
+          applied: Applied
+          failed: Failed
+        apply:
+          success:
+            one: One question was added to the vote.
+            other: "%{count} questions were added to the vote."
+        errors:
+          no_files: Please select at least one file.
+          too_large: The selected files are too large in total.
+          unsupported_type: "The format of the file %{filename} is not supported."
+          session_expired: Your session has expired. Please reload the page.
+          request_failed: "The upload failed (%{status})."
+          extract_file_failed: "The file %{filename} could not be read: %{message}"
+          no_text: No text could be read out of the document.
+          ai_malformed: >-
+            No usable questions could be recognised in the document. Check the
+            document and try again.
+          generation_failed: "The questions could not be read: %{message}"
+          generation_unknown: Unknown error while reading the document.
+          poll_missing: >-
+            This phase has no vote that questions could be added to.
+          nothing_selected: No question was selected to be applied.
+          apply_failed: "The questions could not be saved: %{message}"

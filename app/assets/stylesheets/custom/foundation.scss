@@ -13,16 +13,37 @@
   }
 }
 
+.accordion {
+  border-radius: 7px;
+}
+
 .accordion-title {
   color: black;
   font-size: 18px;
 
   &::before {
-    font-size: 22px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    font-size: 30px;
+    line-height: 1rem;
+    height: 1rem;
+    width: 1rem;
+    color: var(--medium-gray-3);
+    transform: translatey(-3px);
   }
+
 }
 
-.projekt-content-block {
+.accordion-title:focus {
+  background-color: unset;
+}
+
+.accordion-title:hover, .accordion-title:focus-within {
+  background-color: #e8e8e8;
+}
+
+.custom-content-block {
   .column:last-child:not(:first-child), .columns:last-child:not(:first-child) {
     float: left;
   }

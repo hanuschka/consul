@@ -42,6 +42,26 @@ module PollsHelper
     controller_name == "polls" && action_name == "evaluation"
   end
 
+  def ai_analysis_menu?
+    controller_name == "polls" && action_name == "ai_analysis"
+  end
+
+  def poll_evaluation_stats_visible?(poll)
+    return true if poll_evaluation_admin?(poll)
+
+    poll.projekt_phase.evaluation_tab_publicly_visible?("poll_stats")
+  end
+
+  def poll_ai_analysis_visible?(poll)
+    return true if poll_evaluation_admin?(poll)
+
+    poll.projekt_phase.feature?("general.public_ai_stats")
+  end
+
+  def poll_evaluation_admin?(poll)
+    current_user&.administrator? || can?(:edit, poll.projekt)
+  end
+
   def show_polls_description?
     @active_poll.present? && @current_filter == "current"
   end

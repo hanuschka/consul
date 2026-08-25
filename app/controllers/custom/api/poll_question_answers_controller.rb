@@ -1,16 +1,25 @@
 class Api::PollQuestionAnswersController < Api::BaseController
   include Translatable
 
+  DEFAULT_ANSWERS_PER_PAGE = 100
+
   before_action :find_question, only: [:index, :create, :order_answers]
   before_action :find_answer, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
 
-    answers = @question.question_answers.order(given_order: :asc)
+    answers = @question.question_answers
+      .order(given_order: :asc)
+      .page(params[:page])
+      .per(params[:per_page] || DEFAULT_ANSWERS_PER_PAGE)
+
     serialized_answers = Poll::Question::AnswerSerializer.serialize_collection(answers)
 
-    render json: { data: { answers: serialized_answers }}
+    render json: {
+      data: { answers: serialized_answers },
+      pagination: pagination_meta(answers)
+    }
   end
 
   def create
@@ -89,5 +98,14 @@ class Api::PollQuestionAnswersController < Api::BaseController
 
     def find_answer
       @answer = Poll::Question::Answer.find(params[:id])
+    end
+
+    def pagination_meta(collection)
+      {
+        current_page: collection.current_page,
+        total_pages: collection.total_pages,
+        total_count: collection.total_count,
+        per_page: collection.limit_value
+      }
     end
 end

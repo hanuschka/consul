@@ -119,7 +119,7 @@ module Budgets
     end
 
     def destroy
-      @investment.destroy!
+      @investment.hide
       redirect_to user_path(current_user, filter: "budget_investments"), notice: t("flash.actions.destroy.budget_investment")
     end
 
@@ -142,7 +142,8 @@ module Budgets
         id: investment.id,
         title: investment.title,
         budget_id: investment.budget.id,
-        image_url: image_url
+        image_url: image_url,
+        image_ai_label_html: helpers.ai_image_label_html(investment.image)
       }.to_json
 
       respond_to do |format|

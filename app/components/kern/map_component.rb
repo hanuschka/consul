@@ -12,9 +12,11 @@ class Kern::MapComponent < ApplicationComponent
     zoom: nil,
     resources: nil,
     feature_collection: nil,
+    rendering_library: nil,
     error: nil
   )
     @map_location = map_location
+    @rendering_library_override = rendering_library
     @form = form
     @editable = editable
     @admin_editor = admin_editor
@@ -30,6 +32,10 @@ class Kern::MapComponent < ApplicationComponent
   end
 
   attr_reader :map_location, :form, :editable, :admin_editor, :height, :width, :error
+
+  def rendering_library
+    @rendering_library_override || map_location.rendering_library || "leaflet"
+  end
 
   def rendering_library_options
     MapLocation.rendering_libraries.keys.map do |key|
@@ -70,15 +76,12 @@ class Kern::MapComponent < ApplicationComponent
       map_layers_value: layers_json,
       map_mapbox_public_token_value: mapbox_public_token,
       map_mapbox_style_id_value: mapbox_style_id,
+      map_masterportal_default_icon_url_value: masterportal_default_icon_url,
       map_vc_map_module_url_value: vc_map_module_url
     }
   end
 
   private
-
-    def rendering_library
-      map_location.rendering_library || "leaflet"
-    end
 
     def features_json
       if @feature_collection.present?
@@ -120,7 +123,8 @@ class Kern::MapComponent < ApplicationComponent
       layers = if mappable.respond_to?(:map_layers)
                  mappable.map_layers
                else
-                 mappable.try(:projekt_phase)&.map_layers ||
+                 mappable.try(:inherited_map_layers) ||
+                   mappable.try(:projekt_phase)&.map_layers ||
                    mappable.try(:projekt)&.map_layers ||
                    MapLayer.default
                end
@@ -174,8 +178,12 @@ class Kern::MapComponent < ApplicationComponent
       }]
     end
 
+    def masterportal_default_icon_url
+      helpers.image_path("masterportal/pins/default_pin.svg")
+    end
+
     def mapbox_public_token
-      Rails.application.secrets.dig(:mapbox, :public_token)
+      ExternalApiKey.mapbox_public_token
     end
 
     def mapbox_style_id

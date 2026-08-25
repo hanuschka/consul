@@ -70,7 +70,7 @@
 
 <h3><%= t("custom.admin.newsletters.settings.footer") %></h2>
 <% content_block_key = 'newsletter_email_footer_block_1' %>
-<% block = SiteCustomization::ContentBlock.custom_block_for(content_block_key, I18n.default_locale) %>
+<% block = SiteCustomization::ContentBlock.custom_block_for(content_block_key) %>
 <% return_path = settings_admin_newsletters_path %>
 
 <%= form_for [:admin, block], html: { class: "edit_page" } do |f| %>

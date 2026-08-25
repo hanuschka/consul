@@ -7,6 +7,13 @@
 #
 set :output, { error: "log/cron_errors.log", standard: "log/cron.log" }
 set :job_template, "/bin/bash -lc 'export EXECJS_RUNTIME=Disabled && :job'"
+
+# Every instance shares one cron tick, so anything that talks to a service
+# outside this box uses this template instead: it sleeps a random 0-15 minutes
+# in bash, before Rails boots, so the fleet arrives spread out rather than all
+# at once. Whenever escapes the % for crontab itself, so it is written plain.
+staggered_job_template =
+  "/bin/bash -lc 'export EXECJS_RUNTIME=Disabled && sleep $((RANDOM % 900)) && :job'"
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"
@@ -34,8 +41,12 @@ every 2.hours do
   rake "-s stats:generate"
 end
 
-every 1.day, at: "4:00 am", roles: [:cron] do
+every 1.hour, roles: [:cron] do
   rake "-s projekt_phase_stats:refresh"
+end
+
+every 6.hours, roles: [:cron] do
+  runner "AiUsageRecords::PushCurrentMonths.call", job_template: staggered_job_template
 end
 
 # Temporally not send dashboard's notifications

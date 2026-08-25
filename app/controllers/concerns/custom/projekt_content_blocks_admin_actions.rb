@@ -5,7 +5,7 @@ module ProjektContentBlocksAdminActions
   included do
     before_action :set_namespace
     before_action :find_projekt, only: [
-      :create, :import_document, :generate_from_prompt, :import_status, :destroy_all,
+      :create, :ai_generate_with_file, :ai_generate_with_prompt, :import_status, :destroy_all,
       :generate_with_ai
     ]
     before_action :find_content_block, only: [
@@ -23,7 +23,7 @@ module ProjektContentBlocksAdminActions
       name: "custom",
       body: params[:html],
       key: "projekt_content_block_#{@projekt.id}_#{@projekt.content_blocks.count + 1}_#{DateTime.now.to_i}",
-      locale: "de"
+      locale: SiteCustomization::ContentBlock.canonical_locale
     )
 
     if @content_block.save
@@ -104,12 +104,12 @@ module ProjektContentBlocksAdminActions
     end
   end
 
-  def import_document
+  def ai_generate_with_file
     authorize!(:update, @projekt)
 
     unless params[:file].present?
       return render(
-        json: { error: { message: I18n.t("custom.projekt_content_blocks.import.no_file") }},
+        json: { error: { message: I18n.t("custom.projekt_content_blocks.ai_generate_with_file.no_file") }},
         status: :unprocessable_entity
       )
     end
@@ -133,12 +133,12 @@ module ProjektContentBlocksAdminActions
     render json: { status_url: status_url }
   end
 
-  def generate_from_prompt
+  def ai_generate_with_prompt
     authorize!(:update, @projekt)
 
     unless params[:prompt].present?
       return render(
-        json: { error: { message: I18n.t("custom.projekt_content_blocks.generate_from_prompt.no_prompt") }},
+        json: { error: { message: I18n.t("custom.projekt_content_blocks.ai_generate_with_prompt.no_prompt") }},
         status: :unprocessable_entity
       )
     end
@@ -188,7 +188,7 @@ module ProjektContentBlocksAdminActions
     end
 
     result =
-      ProjektContentBlocks::DispatchCreateWithAi.call(
+      ProjektContentBlocks::Services::DispatchCreateWithAi.call(
         projekt: @projekt,
         prompt: params[:prompt],
         mode: params[:mode].presence || "add",

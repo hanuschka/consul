@@ -11,7 +11,7 @@
 
   <div class="adm-icon-rail__items">
     <% items.each do |item| %>
-      <rich-tooltip placement="right" delay="0" trigger-only shadow="heavy" class="adm-icon-rail__item-tooltip">
+      <rich-tooltip placement="right" instant trigger-only shadow="heavy" class="adm-icon-rail__item-tooltip">
         <%= link_to item[:path], class: ["adm-icon-rail__item", ("active" if active?(item))].compact.join(" "), "aria-label": Setting["#{item[:key]}.feature_name"].presence || t(".#{item[:key]}"), data: { turbo: false } do %>
           <span class="material-symbols-outlined" aria-hidden="true"><%= item[:icon] %></span>
         <% end %>

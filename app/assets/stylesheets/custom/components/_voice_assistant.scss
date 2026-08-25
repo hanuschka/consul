@@ -3,6 +3,7 @@
 $va-capsule-bottom: 24px;
 $va-capsule-height: 54px;
 $va-stack-gap: 8px;
+$va-notice-delay: 1200ms;
 
 // Docked state: a narrow strip at the page edge holding just the dock button.
 .voice-assistant-standard {
@@ -55,11 +56,20 @@ $va-stack-gap: 8px;
   line-height: 1.35;
   text-align: center;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.46), 0 1px 4px rgba(0, 0, 0, 0.30);
-  animation: voice-assistant-rise 280ms ease-out;
   width: max-content;
+  max-width: calc(100vw - 24px);
   margin: auto;
   opacity: 1;
   transition: opacity 400ms ease;
+  // `backwards` holds the from-state through the delay only. `forwards`/`both`
+  // would keep overriding opacity after the run and block the fade-out below.
+  animation: voice-assistant-notice-rise 320ms ease-out $va-notice-delay backwards;
+}
+
+// Floor on the delay above: the moment the session goes live, speech becomes
+// possible, so the notice is forced up even if the connection beat the delay.
+.voice-assistant-standard:has(.voice-assistant-widget.-active.-va-notice-shown) .voice-assistant-widget--ai-notice {
+  animation: none;
 }
 
 // Faded rather than pulled from the flow: the capsule is the last child of a
@@ -69,9 +79,43 @@ $va-stack-gap: 8px;
   pointer-events: none;
 }
 
-.voice-assistant-widget--ai-notice i {
+// Matches the tooltip trigger's box on the other end, so the sentence sits
+// centred in the pill rather than pushed left by the wider trailing button.
+.voice-assistant-widget--ai-notice > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
+  width: 22px;
   color: var(--x-muted);
+}
+
+.voice-assistant-widget--ai-notice-tip {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.voice-assistant-widget--ai-notice-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--x-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 160ms ease-out, color 160ms ease-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--x-ink);
+  }
+
+  &:focus-visible { outline: 2px solid #8e8e93; outline-offset: 2px; }
 }
 
 // Geocoding feedback from the assistant. Floats above the stack so a message
@@ -321,6 +365,19 @@ $va-stack-gap: 8px;
   to {
     opacity: 1;
     transform: translate(0, 0) scale(1);
+  }
+}
+
+// Notice enters a beat behind the capsule so the two read as one stack
+// assembling, rather than both landing at once.
+@keyframes voice-assistant-notice-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

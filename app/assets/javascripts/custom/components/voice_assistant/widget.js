@@ -5,9 +5,12 @@
   // yields the space once the conversation is under way.
   const NOTICE_VISIBLE_MS = 10000;
 
+  // One conversation at a time: deactivateAll closes any other widget before a
+  // new one opens, so a single session and a single notice timer are enough.
   App.VoiceAssistantWidget = {
-    sessions: null,
-    noticeTimers: null,
+    session: null,
+    sessionWidget: null,
+    noticeTimer: null,
     defaultWaveColor: "#97d8ff",
 
     initialize() {
@@ -15,8 +18,9 @@
 
       if (!document.querySelector(".js-va-widget")) { return; }
 
-      this.sessions = new WeakMap();
-      this.noticeTimers = new WeakMap();
+      this.session = null;
+      this.sessionWidget = null;
+      this.noticeTimer = null;
 
       $document.on("click", ".js-va-toggle", this.handleToggle.bind(this));
       $document.on("click", ".js-va-start", this.handleStart.bind(this));
@@ -48,12 +52,9 @@
       const widget = event.currentTarget.closest(".js-va-widget");
 
       if (!widget) { return; }
+      if (this.sessionWidget !== widget) { return; }
 
-      const session = this.sessions.get(widget);
-
-      if (session) {
-        session.pauseToggle();
-      }
+      this.session.pauseToggle();
     },
 
     handleClose(event) {
@@ -63,7 +64,7 @@
     },
 
     startSession(widget) {
-      if (this.sessions.get(widget)) { return; }
+      if (this.sessionWidget === widget) { return; }
       if (typeof App.VoiceAssistantSession === "undefined") { return; }
 
       const container = widget.closest(".js-va-container");
@@ -73,7 +74,7 @@
         App.AssistantUserResourceForm.initialize(container);
       }
 
-      const session = new App.VoiceAssistantSession({
+      this.session = new App.VoiceAssistantSession({
         widget: widget,
         vizContainer: widget.querySelector(".js-va-viz"),
         waveColor: this.getWaveColor(widget),
@@ -83,9 +84,16 @@
         onStatusChange: (status) => this.handleStatusChange(widget, status),
         onError: (message) => this.handleError(widget, message)
       });
+      this.sessionWidget = widget;
 
-      this.sessions.set(widget, session);
-      session.start();
+      this.session.start();
+    },
+
+    forgetSession(widget) {
+      if (this.sessionWidget !== widget) { return; }
+
+      this.session = null;
+      this.sessionWidget = null;
     },
 
     handleStatusChange(widget, status) {
@@ -101,34 +109,32 @@
       this.updateMuteTooltip(widget, status === "paused" ? "unmute" : "mute");
 
       if (status === "running") {
+        widget.classList.add("-va-notice-shown");
         this.scheduleNoticeHide(widget);
       }
 
       if (status === "initialized") {
-        this.sessions.delete(widget);
+        this.forgetSession(widget);
       }
     },
 
     scheduleNoticeHide(widget) {
       if (widget.classList.contains("-va-notice-hidden")) { return; }
-      if (this.noticeTimers.get(widget)) { return; }
+      if (this.noticeTimer) { return; }
 
-      const timer = setTimeout(() => {
+      this.noticeTimer = setTimeout(() => {
         widget.classList.add("-va-notice-hidden");
-        this.noticeTimers.delete(widget);
+        this.noticeTimer = null;
       }, NOTICE_VISIBLE_MS);
-
-      this.noticeTimers.set(widget, timer);
     },
 
-    cancelNoticeHide(widget) {
-      const timer = this.noticeTimers.get(widget);
-
-      if (timer) {
-        clearTimeout(timer);
-        this.noticeTimers.delete(widget);
+    resetNotice(widget) {
+      if (this.noticeTimer) {
+        clearTimeout(this.noticeTimer);
+        this.noticeTimer = null;
       }
 
+      widget.classList.remove("-va-notice-shown");
       widget.classList.remove("-va-notice-hidden");
     },
 
@@ -162,11 +168,9 @@
     deactivate(widget) {
       if (!widget) { return; }
 
-      const session = this.sessions.get(widget);
-
-      if (session) {
-        session.stop();
-        this.sessions.delete(widget);
+      if (this.sessionWidget === widget) {
+        this.session.stop();
+        this.forgetSession(widget);
       }
 
       widget.classList.remove("-active");
@@ -176,7 +180,7 @@
       widget.classList.remove("-va-starting");
       widget.dataset.state = "idle";
 
-      this.cancelNoticeHide(widget);
+      this.resetNotice(widget);
     },
 
     deactivateAll(except) {

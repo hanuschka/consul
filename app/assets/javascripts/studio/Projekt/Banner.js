@@ -26,6 +26,7 @@ App.Studio.Projekt.Banner = {
     $document.on("click", ".js-projekt-banner--image-delete-button", this.deleteTitleImage.bind(this));
     $document.on("click", ".js-projekt-banner--image-generate-button", this.openGenerateImageModal.bind(this));
     $document.on("click", ".js-projekt-banner-generate-submit", this.submitGenerateImage.bind(this));
+    $document.on("click", ".js-projekt-banner--ai-marker-button", this.toggleAiMarker.bind(this));
   },
 
   turnOnTextEdit(e) {
@@ -303,16 +304,82 @@ App.Studio.Projekt.Banner = {
     if (glightbox) glightbox.setAttribute("href", previewUrl);
 
     this.toggleImageActionButtons(container, true);
+    this.applyAiMarkerState(container, false);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },
 
   toggleImageActionButtons(container, imagePresent) {
     const deleteButton = container.querySelector(".js-projekt-banner--image-delete-button");
+    const aiMarkerButton = container.querySelector(".js-projekt-banner--ai-marker-button");
 
     // The generate button stays visible whether or not an image is set, so an
-    // existing banner can be regenerated; only the delete button toggles.
+    // existing banner can be regenerated; the delete button and the AI marker
+    // both need a picture to act on.
     if (deleteButton) deleteButton.classList.toggle("d-none", !imagePresent);
+    if (aiMarkerButton) aiMarkerButton.classList.toggle("d-none", !imagePresent);
+  },
+
+  async toggleAiMarker(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const container = button.closest(".js-projekt-image-uploader");
+    if (!container) return;
+
+    const nextState = button.getAttribute("aria-pressed") !== "true";
+
+    button.disabled = true;
+    this.clearUploadError(container);
+
+    try {
+      await App.Ajax.request({
+        url: container.dataset.aiGeneratedUrl,
+        method: "PATCH",
+        dataType: "json",
+        data: { ai_generated: nextState }
+      });
+
+      this.applyAiMarkerState(container, nextState);
+    } catch (xhr) {
+      // The banner may have been deleted in another session, in which case the
+      // marker has nothing to attach to -- say so instead of leaving the button
+      // silently showing the old state.
+      this.showUploadError(container, this.errorText(container, "aiMarkerFailedText"));
+    } finally {
+      button.disabled = false;
+    }
+  },
+
+  errorText(container, datasetKey) {
+    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message");
+
+    return messageElement ? messageElement.dataset[datasetKey] : "";
+  },
+
+  // Reflects what the server just decided: generating a banner marks it,
+  // uploading or deleting one leaves nothing marked
+  // (Image#clear_ai_generated_on_replaced_attachment).
+  applyAiMarkerState(container, aiGenerated) {
+    const button = container.querySelector(".js-projekt-banner--ai-marker-button");
+
+    if (button) {
+      button.setAttribute("aria-pressed", String(aiGenerated));
+      button.classList.toggle("-active", aiGenerated);
+    }
+
+    const resourceImage = container.querySelector(".resource-image");
+    if (!resourceImage) return;
+
+    const existingLabel = resourceImage.querySelector(".ai-image-label-tooltip");
+    if (existingLabel) existingLabel.remove();
+
+    if (!aiGenerated) return;
+
+    const template = container.querySelector(".js-projekt-banner--ai-label-template");
+    if (!template) return;
+
+    resourceImage.appendChild(template.content.cloneNode(true));
   },
 
   handleUploadError(container, imagePreview, previewUrl, xhr) {
@@ -328,8 +395,7 @@ App.Studio.Projekt.Banner = {
 
     if (response && response.errors && response.errors.length > 0) return response.errors.join(" ")
 
-    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message")
-    return messageElement ? messageElement.dataset.fallbackText : ""
+    return this.errorText(container, "fallbackText")
   },
 
   showUploadError(container, message) {
@@ -426,6 +492,7 @@ App.Studio.Projekt.Banner = {
     if (glightbox) glightbox.removeAttribute("href");
 
     this.toggleImageActionButtons(container, false);
+    this.applyAiMarkerState(container, false);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },
@@ -482,6 +549,11 @@ App.Studio.Projekt.Banner = {
 
     if (!overlay) return
 
+    // With no banner yet, the only thing behind the overlay is the empty-state
+    // icon and its hint, which the backdrop blur smears rather than hides.
+    const bannerPresent = !!container.querySelector(".resource-image--main");
+    overlay.classList.toggle("-flat-ground", !bannerPresent);
+
     this.setUploadProgressMessage(container, "generating");
     overlay.hidden = false;
   },
@@ -531,6 +603,7 @@ App.Studio.Projekt.Banner = {
     this.hideUploadProgress(container);
     this.resetGenerateButton(container);
     this.toggleImageActionButtons(container, true);
+    this.applyAiMarkerState(container, true);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },
@@ -548,7 +621,6 @@ App.Studio.Projekt.Banner = {
   },
 
   generationErrorMessage(container) {
-    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message");
-    return messageElement ? messageElement.dataset.generateFailedText : "";
+    return this.errorText(container, "generateFailedText");
   }
 };

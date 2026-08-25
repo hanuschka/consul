@@ -6,32 +6,17 @@
 
 <div class="kern-container mb-5">
 
-  <%# === Section 1: Meldung === %>
+  <%= render "adm/deficiency_reports/deficiency_reports/action_row", deficiency_report: @deficiency_report %>
+
+  <%# === Section 1: Interne Notizen === %>
+  <section class="adm-detail-section">
+    <%= render "adm/memos/memos", memoable: @deficiency_report %>
+  </section>
+
+  <%# === Section 2: Meldung === %>
   <section class="adm-detail-section">
     <%= turbo_frame_tag "deficiency_report_content" do %>
-      <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
-        <h2 class="adm-detail-section-title m-0"><%= t(".section_content") %></h2>
-
-        <div class="d-flex align-items-center justify-content-end gap-3 mt-1 mb-4">
-          <span class="adm-detail-meta__item">
-            <%= link_to deficiency_report_path(@deficiency_report), target: "_blank", rel: "noopener" do %>
-              <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: text-bottom;" aria-hidden="true">open_in_new</span>
-              <%= t(".view_on_site") %>
-            <% end %>
-          </span>
-          <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle", deficiency_report: @deficiency_report %>
-          <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).edit? %>
-            <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-                                 text: t(".edit"), icon: "edit", style: :secondary, data: { turbo_frame: "deficiency_report_content" })
-            %>
-          <% end %>
-          <%= render Adm::DownloadPdfButtonComponent.new(
-            url: adm_deficiency_reports_deficiency_report_path(@deficiency_report, format: :pdf),
-            map_location: @deficiency_report.map_location,
-            map_container_id: dom_id(@deficiency_report, "map")
-          ) %>
-        </div>
-      </div>
+      <h2 class="adm-detail-section-title mb-3"><%= t(".section_content") %></h2>
 
       <%# === Title + Description in card === %>
       <div class="adm-content-card mb-4">
@@ -161,7 +146,7 @@
     <% end %>
   </section>
 
-  <%# === Section 2: Verwaltung === %>
+  <%# === Section 3: Verwaltung === %>
   <%# Officers who only hold the read-all visibility right see the current values instead of the
       editors: they may follow an Anliegen outside their own remit, but not restatus or reassign it. %>
   <% may_administer = Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).update? %>
@@ -183,16 +168,9 @@
         <p class="adm-detail-value m-0"><%= @deficiency_report.responsible&.name %></p>
       <% end %>
     <% end %>
-
-    <% if Setting["deficiency_reports.admin_acceptance_required"].present? &&
-          Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).accept? %>
-      <%= render Kern::FormFieldComponent.new(label: t(".admin_accepted_status"), hint: t(".admin_accepted_status_hint")) do %>
-        <%= render "admin_accepted_toggle", deficiency_report: @deficiency_report %>
-      <% end %>
-    <% end %>
   </section>
 
-  <%# === Section 3: Offizielle Antwort === %>
+  <%# === Section 4: Offizielle Antwort === %>
   <section class="adm-detail-section">
     <h2 class="adm-detail-section-title mb-3"><%= t(".official_answer") %></h2>
 
@@ -226,18 +204,6 @@
         <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.official_answer) %>
       </div>
     <% end %>
-  </section>
-
-  <%# === Section 4: Anliegen teilen === %>
-  <% if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, @deficiency_report).share? %>
-    <section class="adm-detail-section">
-      <%= render "adm/deficiency_reports/deficiency_reports/share", deficiency_report: @deficiency_report %>
-    </section>
-  <% end %>
-
-  <%# === Section 5: Interne Notizen === %>
-  <section class="adm-detail-section">
-    <%= render "adm/memos/memos", memoable: @deficiency_report %>
   </section>
 
 </div>

@@ -74,6 +74,7 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the image', example: 1 },
         title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
         credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' },
+        ai_generated: { type: :boolean, description: 'True when the image was created or edited with AI. Drives the visible AI disclosure label on public pages.', example: false },
         url: { type: :string, description: 'URL to the original full-size image', example: 'https://example.com/images/page-image.jpg' },
         variants: {
           type: :object,
@@ -113,6 +114,13 @@ module Schemas
           nullable: true,
           description: 'Attribution/credits for the image. Optional.',
           example: 'Photo by John Doe'
+        },
+        ai_generated: {
+          type: :boolean,
+          nullable: true,
+          default: false,
+          description: 'Set to true when the image was created or edited with AI. The public page then shows the AI disclosure label. Resets to false when the attachment is replaced without passing it again. Default: false.',
+          example: false
         },
         _destroy: {
           type: :boolean,

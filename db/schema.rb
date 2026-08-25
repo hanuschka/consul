@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_20_100000) do
+ActiveRecord::Schema.define(version: 2026_08_24_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1339,6 +1339,7 @@ ActiveRecord::Schema.define(version: 2026_08_20_100000) do
     t.boolean "concealed", default: false
     t.string "credits"
     t.boolean "admin", default: false, null: false
+    t.boolean "ai_generated", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
@@ -1936,6 +1937,15 @@ ActiveRecord::Schema.define(version: 2026_08_20_100000) do
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 
+  create_table "poll_answer_map_points", force: :cascade do |t|
+    t.bigint "poll_answer_id", null: false
+    t.float "latitude", null: false
+    t.float "longitude", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["poll_answer_id"], name: "index_poll_answer_map_points_on_poll_answer_id"
+  end
+
   create_table "poll_answers", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "author_id"
@@ -1948,6 +1958,7 @@ ActiveRecord::Schema.define(version: 2026_08_20_100000) do
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
     t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
+    t.index ["question_id", "author_id"], name: "index_poll_answers_unique_map_point_answer", unique: true, where: "(answer IS NULL)"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
 
@@ -3770,6 +3781,7 @@ ActiveRecord::Schema.define(version: 2026_08_20_100000) do
   add_foreign_key "ogc_import_runs", "projekt_phases"
   add_foreign_key "organizations", "users"
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
+  add_foreign_key "poll_answer_map_points", "poll_answers", on_delete: :cascade
   add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"

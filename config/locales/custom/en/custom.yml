@@ -1,5 +1,22 @@
 en:
   custom:
+    polls:
+      questions:
+        map_points:
+          hint: Click on the map to place a pin. Click a placed pin to remove it again.
+          remaining:
+            zero: You have placed all your pins.
+            one: You can place one more pin.
+            other: You can place %{count} more pins.
+          placed: Pin placed.
+          removed: Pin removed.
+          remove_hint: Remove pin
+          csv_pin_count:
+            one: 1 pin placed
+            other: "%{count} pins placed"
+          limit_reached: You have placed the maximum number of pins. Remove one to place another.
+          outside_boundary: This point lies outside the permitted area.
+          error: The pin could not be saved. Please try again.
     content_blocks:
       code_editor_modal:
         title: "Code Editor"

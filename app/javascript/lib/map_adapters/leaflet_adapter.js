@@ -36,10 +36,13 @@ export default class LeafletAdapter extends BaseAdapter {
       this.addResetViewControl()
       this.setupPlugins()
       this.configureGeoman()
+      this.observeContainerResize()
     })
   }
 
   destroy() {
+    this.stopObservingContainerResize()
+
     if (this._geojsonLegends) {
       this._geojsonLegends.forEach(legend => legend.remove())
       this._geojsonLegends = []

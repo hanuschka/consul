@@ -57,6 +57,14 @@
   }
 }
 
+// Wraps the popup image so the AI disclosure badge can position against it and
+// query its width, the way .resource-image does on server-rendered surfaces.
+.resource-map-popup-image-wrap {
+  position: relative;
+  display: block;
+  container: resource-image / inline-size;
+}
+
 .resource-map-popup-image {
   margin-bottom: 7px;
   min-height:170px !important;

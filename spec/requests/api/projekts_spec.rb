@@ -790,6 +790,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                   attachment: { type: :string, description: 'Base64-encoded image file. Required. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
                   title: { type: :string, nullable: true, description: 'Image caption or alt text used for accessibility.' },
                   credits: { type: :string, nullable: true, description: 'Image source attribution or copyright information.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current page image.' }
                 },
                 required: ['attachment']

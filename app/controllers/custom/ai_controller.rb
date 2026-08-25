@@ -110,6 +110,8 @@ class AiController < ApplicationController
       ResourceImages::AttachService.from_base64(
         resource: resource, user: current_user, base64: base64_image
       )
+
+      resource.image&.update!(ai_generated: true)
     end
 
     def image_url(attachment)

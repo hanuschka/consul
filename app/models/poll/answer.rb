@@ -1,16 +1,22 @@
 class Poll::Answer < ApplicationRecord
+  audited if: :audit_changes?
+
   belongs_to :question, -> { with_hidden }, inverse_of: :answers
   belongs_to :author, ->   { with_hidden }, class_name: "User", inverse_of: :poll_answers
 
+  has_many :map_points, class_name: "Poll::Answer::MapPoint", foreign_key: :poll_answer_id,
+                        inverse_of: :answer, dependent: :destroy
+
   delegate :poll, :poll_id, to: :question
+  delegate :map_points?, to: :question, allow_nil: true
 
   validates :question, presence: true
   validates :author, presence: true
-  validates :answer, presence: true
+  validates :answer, presence: true, unless: :map_points?
   validate :max_votes
 
   validates :answer, inclusion: { in: ->(a) { a.question.possible_answers }},
-                     unless: ->(a) { a.question.blank? }
+                     unless: ->(a) { a.question.blank? || a.map_points? }
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }
   scope :by_question, ->(question_id) { where(question_id: question_id) }
@@ -36,13 +42,20 @@ class Poll::Answer < ApplicationRecord
   private
 
     def max_votes
-      return if !question || question&.unique? || persisted?
-      return if question.votation_type&.rating_scale? #custom line
+      return if !question || question&.unique? || question.votation_type&.rating_scale?
+      return if map_points?
 
+      author.save! if author.guest? && author.changed == ["locale"]
       author.lock!
 
-      if question.answers.by_author(author).count >= question.max_votes
-        errors.add(:answer, "Maximum number of votes per user exceeded")
+      available_weight = [ (question.max_votes - question.answers.by_author(author).where.not(answer: answer).sum(:answer_weight)), question.votation_type.max_votes_per_answer].compact.min
+
+      if answer_weight > available_weight
+        raise "Maximum number of votes per user exceeded"
       end
+    end
+
+    def audit_changes?
+      officing_manager_id.present?
     end
 end

@@ -522,6 +522,7 @@ en:
             reports_per_month: Reports per month
             by_status: Distribution by status
             by_category: Distribution by category (Top 10)
+            by_intake_channel: Distribution by intake channel
           periods:
             week: Week
             month: Month
@@ -530,6 +531,7 @@ en:
             status: Status
             category: Category
             responsible: Officer
+            intake_channel: Intake channel
           total: Total time
           this_week: This week
           last_week: Last week
@@ -540,7 +542,11 @@ en:
           satisfaction: Satisfaction
           response_time: Response time
           communication: Courtesy
-          without_status: Without status
+          without:
+            status: Without status
+            category: Without category
+            responsible: Unassigned
+            intake_channel: Without intake channel
           total_row: Total
       ai_settings:
         show:

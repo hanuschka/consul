@@ -1,0 +1,14 @@
+de:
+  custom:
+    voice_assistant:
+      title: "KI-Sprachassistent"
+      dock_name: "KI-Sprachassistent"
+      open: "KI-Sprachassistent öffnen"
+      ai_notice: "Sie sprechen mit einem KI-Assistenten."
+      starting: "Verbinden…"
+      listening: "Hört zu…"
+      muted: "Mikrofon stummgeschaltet"
+      mic_start: "Gespräch starten"
+      mic_stop: "Mikrofon stummschalten"
+      mic_unmute: "Stummschaltung aufheben"
+      close: "Schließen"

@@ -1,4 +1,42 @@
-<div class="voice-assistant-widget--ai-notice" role="status">
+<div class="voice-assistant-widget--ai-notice">
   <i class="fas fa-microchip" aria-hidden="true"></i>
-  <span><%= notice_text %></span>
+  <span role="status"><%= notice_text %></span>
+
+  <rich-tooltip
+    class="voice-assistant-widget--ai-notice-tip"
+    placement="top"
+    delay="200"
+    size="big"
+    shadow="heavy"
+    body-class="-dark -wide"
+  >
+    <button
+      type="button"
+      class="voice-assistant-widget--ai-notice-info"
+      aria-label="<%= details_label %>"
+    >
+      <i class="fas fa-info-circle" aria-hidden="true"></i>
+    </button>
+    <template>
+      <span class="rich-tooltip-content">
+        <span class="rich-tooltip-content--title"><%= details[:title] %></span>
+        <span class="rich-tooltip-content--text"><%= details[:text] %></span>
+
+        <span class="rich-tooltip-content--row">
+          <span class="rich-tooltip-content--term"><%= details[:voice_term] %></span>
+          <span class="rich-tooltip-content--text"><%= details[:voice_text] %></span>
+        </span>
+
+        <span class="rich-tooltip-content--row">
+          <span class="rich-tooltip-content--term"><%= details[:draft_term] %></span>
+          <span class="rich-tooltip-content--text"><%= details[:draft_text] %></span>
+        </span>
+
+        <span class="rich-tooltip-content--note">
+          <span class="rich-tooltip-content--note-label"><%= details[:note_label] %></span>
+          <%= details[:note_text] %>
+        </span>
+      </span>
+    </template>
+  </rich-tooltip>
 </div>

@@ -34,8 +34,9 @@ $va-stack-gap: 8px;
   gap: $va-stack-gap;
 }
 
-// The EU AI Act disclosure. Shown for the whole conversation, from the moment
-// the panel opens until it closes, and never dismissable.
+// The EU AI Act disclosure. Up from the moment the panel opens, held well past
+// what a slow reader needs, then faded once the conversation is under way.
+// Never dismissable by hand, and back again on the next open.
 .voice-assistant-widget--ai-notice {
   display: none;
 }
@@ -55,6 +56,17 @@ $va-stack-gap: 8px;
   text-align: center;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.46), 0 1px 4px rgba(0, 0, 0, 0.30);
   animation: voice-assistant-rise 280ms ease-out;
+  width: max-content;
+  margin: auto;
+  opacity: 1;
+  transition: opacity 400ms ease;
+}
+
+// Faded rather than pulled from the flow: the capsule is the last child of a
+// bottom-anchored stack, so it holds its place either way and nothing jumps.
+.voice-assistant-standard:has(.voice-assistant-widget.-active.-va-notice-hidden) .voice-assistant-widget--ai-notice {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .voice-assistant-widget--ai-notice i {

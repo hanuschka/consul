@@ -1,8 +1,13 @@
 (function() {
   "use strict";
 
+  // The EU AI Act notice stays up well past what a slow reader needs, then
+  // yields the space once the conversation is under way.
+  const NOTICE_VISIBLE_MS = 10000;
+
   App.VoiceAssistantWidget = {
     sessions: null,
+    noticeTimers: null,
     defaultWaveColor: "#97d8ff",
 
     initialize() {
@@ -11,6 +16,7 @@
       if (!document.querySelector(".js-va-widget")) { return; }
 
       this.sessions = new WeakMap();
+      this.noticeTimers = new WeakMap();
 
       $document.on("click", ".js-va-toggle", this.handleToggle.bind(this));
       $document.on("click", ".js-va-start", this.handleStart.bind(this));
@@ -94,9 +100,36 @@
 
       this.updateMuteTooltip(widget, status === "paused" ? "unmute" : "mute");
 
+      if (status === "running") {
+        this.scheduleNoticeHide(widget);
+      }
+
       if (status === "initialized") {
         this.sessions.delete(widget);
       }
+    },
+
+    scheduleNoticeHide(widget) {
+      if (widget.classList.contains("-va-notice-hidden")) { return; }
+      if (this.noticeTimers.get(widget)) { return; }
+
+      const timer = setTimeout(() => {
+        widget.classList.add("-va-notice-hidden");
+        this.noticeTimers.delete(widget);
+      }, NOTICE_VISIBLE_MS);
+
+      this.noticeTimers.set(widget, timer);
+    },
+
+    cancelNoticeHide(widget) {
+      const timer = this.noticeTimers.get(widget);
+
+      if (timer) {
+        clearTimeout(timer);
+        this.noticeTimers.delete(widget);
+      }
+
+      widget.classList.remove("-va-notice-hidden");
     },
 
     handleError(widget, message) {
@@ -142,6 +175,8 @@
       widget.classList.remove("-va-live");
       widget.classList.remove("-va-starting");
       widget.dataset.state = "idle";
+
+      this.cancelNoticeHide(widget);
     },
 
     deactivateAll(except) {

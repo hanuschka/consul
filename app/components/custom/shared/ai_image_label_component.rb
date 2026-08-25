@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class Shared::AiImageLabelComponent < ApplicationComponent
-  TEXT_KEY = "components.shared.ai_image_label_component.text"
-
   def label_text
-    t(TEXT_KEY)
+    t("components.shared.ai_image_label_component.text")
+  end
+
+  def tooltip_text
+    t("components.shared.ai_image_label_component.tooltip")
   end
 end

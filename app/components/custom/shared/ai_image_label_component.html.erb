@@ -1,5 +1,8 @@
-<span class="ai-image-label" role="img" aria-label="<%= label_text %>">
-  <%= image_tag "ai_disclosure/eu_ai_generated_icon.svg",
-        class: "ai-image-label--icon", alt: "", "aria-hidden": "true" %>
-  <span class="ai-image-label--text"><%= label_text %></span>
-</span>
+<rich-tooltip class="ai-image-label-tooltip" placement="top" delay="300" trigger-only shadow="heavy" size="big">
+  <span class="ai-image-label" role="img" aria-label="<%= label_text %>">
+    <%= image_tag "ai_disclosure/eu_ai_generated_icon.svg",
+          class: "ai-image-label--icon", alt: "", "aria-hidden": "true" %>
+    <span class="ai-image-label--text"><%= label_text %></span>
+  </span>
+  <template><%= tooltip_text %></template>
+</rich-tooltip>

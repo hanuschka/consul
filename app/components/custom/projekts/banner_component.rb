@@ -47,6 +47,10 @@ class Projekts::BannerComponent < ApplicationComponent
     I18n.t("custom.projekts.banner_upload.ai_marker_tooltip_text")
   end
 
+  def ai_marker_tooltip_note
+    I18n.t("custom.projekts.banner_upload.ai_marker_tooltip_note")
+  end
+
   def banner_wrapper_class
     classes = ["custom-page--banner-wrapper"]
     classes << "-compact" if @compact

@@ -25,12 +25,6 @@ App.MapPopup = {
     return "<div class='map-popup--source-caption'>" + text + "</div>";
   },
 
-  aiImageLabel: function(label) {
-    if (!label) return "";
-
-    return App.AiImageLabel.markup(label.text, label.icon_url);
-  },
-
   getPopupDataUrl: function(resourceType, properties) {
     if (resourceType == "proposal") {
       return "/proposals/" + properties.id + "/json_data";
@@ -87,7 +81,7 @@ App.MapPopup = {
     if (data.image_url) {
       popupHtml += "<span class='resource-map-popup-image-wrap'>";
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
-      popupHtml += this.aiImageLabel(data.image_ai_label);
+      popupHtml += data.image_ai_label_html || "";
       popupHtml += "</span>";
     }
 

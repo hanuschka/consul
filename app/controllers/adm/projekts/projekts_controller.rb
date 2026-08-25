@@ -590,8 +590,8 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     end
   end
 
-  # The banner bypasses every nested image form, so marking an uploaded banner
-  # as AI-generated needs its own write path.
+  # The banner is uploaded straight to update_image with no form around it, so
+  # declaring an externally generated picture needs its own write path.
   def update_image_ai_generated
     authorize [:adm, :projekts, @projekt], :update?
 

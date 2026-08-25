@@ -143,7 +143,7 @@ module Budgets
         title: investment.title,
         budget_id: investment.budget.id,
         image_url: image_url,
-        image_ai_label: helpers.ai_image_label_payload(investment.image)
+        image_ai_label_html: helpers.ai_image_label_html(investment.image)
       }.to_json
 
       respond_to do |format|

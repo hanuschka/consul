@@ -2,13 +2,15 @@
 // by App.MapPopup inside a Mapbox popup, which renders outside
 // .custom-new-design. Takes the banner-chip family's radius, gap and weight,
 // but keeps an opaque scrim instead of the chip's translucent white, because it
-// sits on arbitrary photography rather than on the banner background. Anchored
-// top-left: the bottom strip already carries the projekt-label overlay on cards
-// and the studio upload controls on banners.
+// sits on arbitrary photography rather than on the banner background.
+//
+// The placement sits on the badge, not on its <rich-tooltip> wrapper: a
+// trigger-only tooltip host is `display: contents`, so the trigger positions
+// against .resource-image exactly as if it were not wrapped at all.
 .ai-image-label {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 8px;
+  right: 8px;
   z-index: 20;
   display: inline-flex;
   align-items: center;
@@ -21,8 +23,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
-  text-align: left;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 .ai-image-label--icon {
@@ -38,16 +39,35 @@
 }
 
 // Card thumbs and map popups render the same badge far smaller than a banner
-// does, so the text is dropped once it stops being readable. The wrapper keeps
-// its aria-label, so the icon alone stays announced.
+// does, so the text is dropped once it stops being readable. The badge keeps
+// its aria-label, so the icon alone stays announced, and the tooltip carries
+// the wording.
 @container resource-image (max-width: 260px) {
   .ai-image-label {
-    top: 8px;
-    left: 8px;
-    padding: 4px;
+    top: 6px;
+    right: 6px;
+    padding: 3px;
   }
 
   .ai-image-label--text {
     display: none;
+  }
+}
+
+// Card thumbs give the badge far less room than a banner and are read at a
+// glance, so it shrinks and hugs the corner while the wording stays legible.
+.resource-item {
+  .ai-image-label {
+    top: 6px;
+    right: 6px;
+    gap: 5px;
+    max-width: calc(100% - 12px);
+    padding: 4px 10px 4px 4px;
+    font-size: 14px;
+  }
+
+  .ai-image-label--icon {
+    width: 18px;
+    height: 18px;
   }
 }

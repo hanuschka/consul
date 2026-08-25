@@ -124,8 +124,6 @@
             data-generate-url="<%= generate_image_adm_projekts_projekt_path(@projekt) %>"
             data-generate-status-url="<%= generate_image_status_adm_projekts_projekt_path(@projekt) %>"
             data-ai-generated-url="<%= update_image_ai_generated_adm_projekts_projekt_path(@projekt) %>"
-            data-ai-label-text="<%= t('components.shared.ai_image_label_component.text') %>"
-            data-ai-label-icon-url="<%= asset_path('ai_disclosure/eu_ai_generated_icon.svg') %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
             data-placeholder-hint="<%= banner_image_size_hint %>"
@@ -146,6 +144,7 @@
               ></span>
             </div>
             <%= banner_image %>
+            <template class="js-projekt-banner--ai-label-template"><%= render Shared::AiImageLabelComponent.new %></template>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
             <div
               class="projekt-banner-upload-progress js-projekt-banner-upload-progress"
@@ -200,16 +199,15 @@
             <%= studio_rich_tooltip(
               title: ai_marker_tooltip_title,
               text: ai_marker_tooltip_text,
+              note: ai_marker_tooltip_note,
               delay: 1200
             ) do %>
               <button type="button"
-                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %>"
+                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %> <%= 'd-none' if @custom_page.image.blank? %>"
                       aria-label="<%= ai_marker_tooltip_title %>"
                       aria-pressed="<%= banner_ai_generated? %>"
-                      <%= "disabled" if @custom_page.image.blank? %>
                       tabindex="-1">
-                <%= image_tag "ai_disclosure/eu_ai_generated_icon.svg",
-                      class: "projekt-image-ai-marker-button--icon", alt: "", "aria-hidden": "true" %>
+                <span class="projekt-image-ai-marker-button--text" aria-hidden="true">AI</span>
               </button>
             <% end %>
             <%= studio_rich_tooltip(

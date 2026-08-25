@@ -10,8 +10,13 @@ en:
     images:
       ai_generated_field_component:
         label: "This image was created or edited with AI"
+        switch_label: "AI"
+        tooltip_title: "AI disclosure"
+        tooltip_text: "Please turn this on if the image was created or edited with artificial intelligence, in whole or in part."
+        tooltip_note: "The image then publicly carries the notice \"AI-generated image\". This disclosure is required by law."
       direct_upload_component:
         generating_image: "Generating image, please wait…"
     shared:
       ai_image_label_component:
         text: "AI-generated image"
+        tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."

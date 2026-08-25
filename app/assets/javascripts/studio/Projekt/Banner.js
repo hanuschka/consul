@@ -314,14 +314,12 @@ App.Studio.Projekt.Banner = {
     const aiMarkerButton = container.querySelector(".js-projekt-banner--ai-marker-button");
 
     // The generate button stays visible whether or not an image is set, so an
-    // existing banner can be regenerated; only the delete button toggles.
+    // existing banner can be regenerated; the delete button and the AI marker
+    // both need a picture to act on.
     if (deleteButton) deleteButton.classList.toggle("d-none", !imagePresent);
-    if (aiMarkerButton) aiMarkerButton.disabled = !imagePresent;
+    if (aiMarkerButton) aiMarkerButton.classList.toggle("d-none", !imagePresent);
   },
 
-  // The marker belongs to the file: uploading a new banner clears it server-side
-  // (Image#clear_ai_generated_on_replaced_attachment) and generating one sets
-  // it, so the badge is re-rendered from that state rather than left as it was.
   async toggleAiMarker(e) {
     e.preventDefault();
 
@@ -347,18 +345,21 @@ App.Studio.Projekt.Banner = {
       // The banner may have been deleted in another session, in which case the
       // marker has nothing to attach to -- say so instead of leaving the button
       // silently showing the old state.
-      this.showUploadError(container, this.aiMarkerErrorMessage(container));
+      this.showUploadError(container, this.errorText(container, "aiMarkerFailedText"));
     } finally {
       button.disabled = false;
     }
   },
 
-  aiMarkerErrorMessage(container) {
+  errorText(container, datasetKey) {
     const messageElement = container.querySelector(".js-projekt-banner-upload-error-message");
 
-    return messageElement ? messageElement.dataset.aiMarkerFailedText : "";
+    return messageElement ? messageElement.dataset[datasetKey] : "";
   },
 
+  // Reflects what the server just decided: generating a banner marks it,
+  // uploading or deleting one leaves nothing marked
+  // (Image#clear_ai_generated_on_replaced_attachment).
   applyAiMarkerState(container, aiGenerated) {
     const button = container.querySelector(".js-projekt-banner--ai-marker-button");
 
@@ -370,19 +371,15 @@ App.Studio.Projekt.Banner = {
     const resourceImage = container.querySelector(".resource-image");
     if (!resourceImage) return;
 
-    const existingLabel = resourceImage.querySelector(".ai-image-label");
+    const existingLabel = resourceImage.querySelector(".ai-image-label-tooltip");
+    if (existingLabel) existingLabel.remove();
 
-    if (!aiGenerated) {
-      if (existingLabel) existingLabel.remove();
-      return;
-    }
+    if (!aiGenerated) return;
 
-    if (existingLabel) return;
+    const template = container.querySelector(".js-projekt-banner--ai-label-template");
+    if (!template) return;
 
-    const text = container.dataset.aiLabelText || "";
-    const iconUrl = container.dataset.aiLabelIconUrl || "";
-
-    resourceImage.insertAdjacentHTML("beforeend", App.AiImageLabel.markup(text, iconUrl));
+    resourceImage.appendChild(template.content.cloneNode(true));
   },
 
   handleUploadError(container, imagePreview, previewUrl, xhr) {
@@ -398,8 +395,7 @@ App.Studio.Projekt.Banner = {
 
     if (response && response.errors && response.errors.length > 0) return response.errors.join(" ")
 
-    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message")
-    return messageElement ? messageElement.dataset.fallbackText : ""
+    return this.errorText(container, "fallbackText")
   },
 
   showUploadError(container, message) {
@@ -553,6 +549,11 @@ App.Studio.Projekt.Banner = {
 
     if (!overlay) return
 
+    // With no banner yet, the only thing behind the overlay is the empty-state
+    // icon and its hint, which the backdrop blur smears rather than hides.
+    const bannerPresent = !!container.querySelector(".resource-image--main");
+    overlay.classList.toggle("-flat-ground", !bannerPresent);
+
     this.setUploadProgressMessage(container, "generating");
     overlay.hidden = false;
   },
@@ -620,7 +621,6 @@ App.Studio.Projekt.Banner = {
   },
 
   generationErrorMessage(container) {
-    const messageElement = container.querySelector(".js-projekt-banner-upload-error-message");
-    return messageElement ? messageElement.dataset.generateFailedText : "";
+    return this.errorText(container, "generateFailedText");
   }
 };

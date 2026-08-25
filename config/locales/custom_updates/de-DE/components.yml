@@ -10,8 +10,13 @@ de:
     images:
       ai_generated_field_component:
         label: "Dieses Bild wurde mit KI erstellt oder bearbeitet"
+        switch_label: "KI"
+        tooltip_title: "KI-Kennzeichnung"
+        tooltip_text: "Bitte aktivieren, wenn dieses Bild ganz oder teilweise mit künstlicher Intelligenz erstellt oder bearbeitet wurde."
+        tooltip_note: "Das Bild erhält dann öffentlich den Hinweis „KI-generiertes Bild“. Diese Kennzeichnung ist gesetzlich vorgeschrieben."
       direct_upload_component:
         generating_image: "Bild wird erstellt, bitte warten…"
     shared:
       ai_image_label_component:
         text: "KI-generiertes Bild"
+        tooltip: "Dieses Bild wurde mit künstlicher Intelligenz erstellt oder bearbeitet und zeigt keine reale Aufnahme. Der Hinweis ist gesetzlich vorgeschrieben."

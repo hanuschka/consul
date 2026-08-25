@@ -177,7 +177,13 @@ class Api::BaseController < ActionController::API
         return update_image_with_attachment(resource, image_data)
       end
 
-      update_image_fields(resource.image, image_data)
+      image = resource.image
+      return nil if image.blank?
+
+      assign_image_fields(image, image_data)
+      image.save!
+
+      image
     end
 
   private
@@ -220,15 +226,6 @@ class Api::BaseController < ActionController::API
     # The image's own fields travel in the same hash as the attachment, and are
     # documented as writable, so a payload that carries only them still has to
     # land on the existing image.
-    def update_image_fields(image, image_attrs)
-      return nil if image.blank?
-
-      assign_image_fields(image, image_attrs)
-      image.save! if image.changed?
-
-      image
-    end
-
     def assign_image_fields(image, image_attrs)
       image.title = image_attrs[:title] if image_attrs.key?(:title)
       image.credits = image_attrs[:credits] if image_attrs.key?(:credits)

@@ -2,7 +2,6 @@ require_dependency Rails.root.join("app", "models", "image").to_s
 
 class Image
   before_save :clear_ai_generated_on_replaced_attachment
-  after_save :forget_ai_generated_assignment
 
   # Writers that mean to keep or set the marker assign it in the same save; a
   # path that only swaps the file (the /adm banner upload, an API update that
@@ -16,16 +15,16 @@ class Image
   private
 
     def clear_ai_generated_on_replaced_attachment
-      return if @ai_generated_assigned
-      return if !persisted? || !ai_generated?
+      # The declaration counts for one save, so it is consumed here rather than
+      # left for the next save of the same in-memory record to inherit.
+      declared = @ai_generated_assigned
+      @ai_generated_assigned = false
+
+      return if declared
+      return if !ai_generated?
       return if attachment_changes["attachment"].blank?
 
       self.ai_generated = false
-    end
-
-    # The assignment counts for one save only, so a second save of the same
-    # in-memory record does not inherit the first save's declaration.
-    def forget_ai_generated_assignment
       @ai_generated_assigned = false
     end
 end

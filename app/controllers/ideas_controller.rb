@@ -95,7 +95,7 @@ class IdeasController < ApplicationController
       resource_type: "idea",
       id: @idea.id,
       image_url: image_url,
-      image_ai_label: helpers.ai_image_label_payload(@idea.image),
+      image_ai_label_html: helpers.ai_image_label_html(@idea.image),
       title: @idea.title
     }.to_json
 

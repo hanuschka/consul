@@ -48,7 +48,9 @@
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
-                    <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
+                    <div class="image-upload-meta-row">
+                      <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
+                    </div>
                   <% end %>
                 </div>
               <% end %>

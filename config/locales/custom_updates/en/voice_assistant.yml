@@ -1,0 +1,14 @@
+en:
+  custom:
+    voice_assistant:
+      title: "AI Voice Assistant"
+      dock_name: "AI Voice Assistant"
+      open: "Open AI voice assistant"
+      ai_notice: "You are speaking with an AI assistant."
+      starting: "Connecting…"
+      listening: "Listening…"
+      muted: "Microphone muted"
+      mic_start: "Start conversation"
+      mic_stop: "Mute microphone"
+      mic_unmute: "Unmute microphone"
+      close: "Close"

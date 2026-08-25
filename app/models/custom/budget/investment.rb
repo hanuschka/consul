@@ -75,8 +75,8 @@ to: :budget
       (total_ballot_votes.to_f / heading.total_ballot_votes.to_f) * 100.0
     end
 
-    def permission_problem(user)
-      budget.projekt_phase.permission_problem(user)
+    def permission_problem(user, location: nil)
+      budget.projekt_phase.permission_problem(user, location:)
     end
 
     def conditional_vote_confirmable_for?(user)

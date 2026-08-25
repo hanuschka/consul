@@ -4,33 +4,39 @@ class InternalApi::ProjektsController < InternalApi::BaseController
 
   before_action :process_tags, only: [:update]
   before_action :find_projekt, only: [
-    :update, :update_page, :update_title_image, :import
+    :update, :update_page, :update_title_image, :import, :export
   ]
 
   skip_authorization_check
 
-  def overview
-    current_visible_projekts =
-      Projekt
-        .activated
-        .with_published_custom_page
-        .show_in_overview_page
-        .regular
+  OVERVIEW_DEFAULT_PER_PAGE = 100
+  OVERVIEW_MAX_PER_PAGE = 500
+  OVERVIEW_PRELOADS = [
+    :map_location,
+    :projekt_settings,
+    :hard_individual_group_values,
+    :tags,
+    :sdg_goals,
+    :translations,
+    :projekt_phases,
+    { page: [:image, :translations] },
+    { active_and_visible_projekt_phases: :translations },
+    { sdg_relations: :related_sdg }
+  ].freeze
 
-    current_visible_projekts
-      .where(on_dt_global_overview: false)
-      .update_all(on_dt_global_overview: true)
+  def overview
+    stamp_currently_visible_projekts
 
     projekts_on_dt_global_overview =
       Projekt
         .where(on_dt_global_overview: true)
-        .includes(:page, :projekt_phases, :map_location)
+        .order(:id)
 
-    render json: {
-      projekts: projekts_on_dt_global_overview.map do |projekt|
-        Projekts::SerializeForOverview.call(projekt)
-      end
-    }
+    if params[:page].present?
+      render json: paginated_overview_payload(projekts_on_dt_global_overview)
+    else
+      render json: { projekts: serialize_for_overview(projekts_on_dt_global_overview) }
+    end
   end
 
   def create
@@ -114,7 +120,59 @@ class InternalApi::ProjektsController < InternalApi::BaseController
     end
   end
 
+  # Publishing a projekt to the global overview is what makes it reusable by
+  # another instance, so it is also what gates the export.
+  def export
+    if !@projekt.on_dt_global_overview?
+      render json: { error: "Projekt is not available for reuse" }, status: :not_found
+
+      return
+    end
+
+    render json: { export: Projekts::SerializeForExport.call(source: @projekt) }
+  end
+
   private
+
+  def stamp_currently_visible_projekts
+    Projekt
+      .activated
+      .with_published_custom_page
+      .show_in_overview_page
+      .regular
+      .where(on_dt_global_overview: false)
+      .update_all(on_dt_global_overview: true)
+  end
+
+  def paginated_overview_payload(projekts)
+    per_page = overview_per_page
+    page = [params[:page].to_i, 1].max
+    total_count = projekts.count
+    page_of_projekts = projekts.offset((page - 1) * per_page).limit(per_page)
+
+    {
+      projekts: serialize_for_overview(page_of_projekts),
+      pagination: {
+        page: page,
+        per_page: per_page,
+        total_count: total_count,
+        total_pages: (total_count.to_f / per_page).ceil
+      }
+    }
+  end
+
+  def overview_per_page
+    requested_per_page = params[:per_page].to_i
+    return OVERVIEW_DEFAULT_PER_PAGE if requested_per_page <= 0
+
+    [requested_per_page, OVERVIEW_MAX_PER_PAGE].min
+  end
+
+  def serialize_for_overview(projekts)
+    projekts.includes(OVERVIEW_PRELOADS).map do |projekt|
+      Projekts::SerializeForOverview.call(projekt)
+    end
+  end
 
   def find_projekt
     @projekt = Projekt.find(params[:id])

@@ -18,8 +18,7 @@ module ContentBlocksHelper
     empty_hint: true,
     tag_name: "p"
   )
-    locale = current_user&.locale || I18n.default_locale
-    block = SiteCustomization::ContentBlock.custom_block_for(key, locale)
+    block = SiteCustomization::ContentBlock.custom_block_for(key)
     block_body =
       if content_block_body_blank?(block&.body)
         default_content || ""
@@ -169,8 +168,7 @@ module ContentBlocksHelper
   end
 
   def render_custom_content_block?(key)
-    locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_custom_block(key, locale)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key)
 
     return true if content_block&.body.present?
 
@@ -178,8 +176,7 @@ module ContentBlocksHelper
   end
 
   def render_custom_projekt_content_block?(key, projekt)
-    locale = current_user&.locale || I18n.default_locale
-    content_block = SiteCustomization::ContentBlock.find_custom_block(key, locale)
+    content_block = SiteCustomization::ContentBlock.find_custom_block(key)
 
     return true if content_block&.body.present?
 

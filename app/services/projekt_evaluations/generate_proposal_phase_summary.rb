@@ -76,7 +76,7 @@ class ProjektEvaluations::GenerateProposalPhaseSummary < ApplicationService
 
   def get_ai_response(user_prompt)
     response = Ai::RubyLlmFactory
-      .chat
+      .chat(feature: "projekt_evaluations.proposal_phase_summary")
       .with_instructions(system_instructions)
       .ask(user_prompt)
 

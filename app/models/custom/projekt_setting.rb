@@ -17,10 +17,10 @@ class ProjektSetting < ApplicationRecord
 
   default_scope { order(id: :asc) }
 
-  after_update :sync_related_projekt_children_active_setting, if: Proc.new { |setting| setting.key == "projekt_feature.main.activate" }
   after_update :touch_projekt_content_updated_at,
     if: Proc.new { |setting| setting.key.in?(CONTENT_TIMESTAMP_KEYS) && setting.saved_change_to_value? }
   after_update :trigger_sync_for_global_overview_related_projekt
+  after_save :sync_promoted_projekt_column, if: Proc.new { |setting| Projekt::KEY_TO_COLUMN.key?(setting.key) }
   after_save :reset_visible_projekt_ids_cache
   after_destroy :reset_visible_projekt_ids_cache
 
@@ -103,19 +103,26 @@ class ProjektSetting < ApplicationRecord
     I18n.t("custom.settings.#{self.key}")
   end
 
-  def sync_related_projekt_children_active_setting
-    projekt.all_children_projekts.map do |child_projekt|
-      child_projekt.projekt_settings.find_by( key: 'projekt_feature.main.activate' ).
-        update(value: self.value)
-    end
-  end
-
   def touch_projekt_content_updated_at
     projekt.touch(:content_updated_at)
   end
 
   def trigger_sync_for_global_overview_related_projekt
     projekt.perform_sync_update_for_global_overview
+  end
+
+  # Seven settings are also columns on `projekts`, which the scopes filter on.
+  # Writers still update these rows, so mirror the value onto the column
+  # without re-firing Projekt's callbacks.
+  def sync_promoted_projekt_column
+    # A soft-deleted projekt is out of the association's default scope.
+    return if projekt.blank?
+
+    column = Projekt::KEY_TO_COLUMN[key]
+    column_value = Projekt.cast_legacy_setting_value(value)
+    return if projekt[column] == column_value
+
+    projekt.update_columns(column => column_value)
   end
 
   def reset_visible_projekt_ids_cache

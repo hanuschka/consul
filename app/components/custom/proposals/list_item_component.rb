@@ -2,12 +2,13 @@
 
 class Proposals::ListItemComponent < ApplicationComponent
   delegate :projekt_phase_feature?, to: :helpers
-  attr_reader :proposal
+  attr_reader :proposal, :proposal_ids
 
-  def initialize(proposal:, voted: nil)
+  def initialize(proposal:, voted: nil, proposal_ids: nil)
     @proposal = proposal
     @sentiment = proposal.sentiment
     @voted = voted
+    @proposal_ids = proposal_ids
   end
 
   def component_attributes

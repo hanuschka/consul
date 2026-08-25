@@ -18,7 +18,7 @@ namespace :adm do
       post :search, on: :collection
     end
 
-    resources :landing_pages, only: [:new, :create, :edit, :update], path: "" do
+    resources :landing_pages, only: [:new, :create, :edit, :update, :destroy], path: "" do
       patch :toggle_active, on: :member
       patch :update_navigation_link_color, on: :member
       patch :reorder, on: :collection

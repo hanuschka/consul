@@ -13,11 +13,17 @@ import { Controller } from "@hotwired/stimulus"
 //   data-shared--polling-interval-value="4000"           (optional, default 4000ms)
 //   data-shared--polling-status-field-value="status"     (optional, default "status")
 //   data-shared--polling-terminal-states-value="completed failed"  (optional, space-separated)
-//   data-shared--polling-on-terminal-value="reload"      (optional: "reload" | "event")
+//   data-shared--polling-on-terminal-value="reload"      (optional: "reload" | "event" | "redirect")
+//   data-shared--polling-redirect-field-value="redirect_url" (optional, for "redirect")
 //   data-shared--polling-max-attempts-value="450"        (optional, 0 = unlimited)
 //
 // When on-terminal="event", a `shared--polling:terminal` event is dispatched
 // from the controller element with `detail: { status, data }`.
+//
+// When on-terminal="redirect", the browser navigates to the URL the payload
+// carries in the redirect field — which lets the server hand back a URL that
+// renders a flash message, something a plain reload cannot do. Falls back to a
+// reload when the payload carries no URL.
 export default class extends Controller {
   static values = {
     url: String,
@@ -25,6 +31,7 @@ export default class extends Controller {
     statusField: { type: String, default: "status" },
     terminalStates: { type: String, default: "completed failed" },
     onTerminal: { type: String, default: "reload" },
+    redirectField: { type: String, default: "redirect_url" },
     maxAttempts: { type: Number, default: 0 }
   }
 
@@ -92,11 +99,18 @@ export default class extends Controller {
   }
 
   terminate(status, data) {
-    if (this.onTerminalValue === "reload") {
-      window.location.reload()
+    const redirectUrl = data[this.redirectFieldValue]
+
+    if (this.onTerminalValue === "redirect" && redirectUrl) {
+      window.location.assign(redirectUrl)
       return
     }
 
-    this.dispatch("terminal", { detail: { status, data } })
+    if (this.onTerminalValue === "event") {
+      this.dispatch("terminal", { detail: { status, data } })
+      return
+    }
+
+    window.location.reload()
   }
 }

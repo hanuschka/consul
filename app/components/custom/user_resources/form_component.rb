@@ -116,12 +116,6 @@ class UserResources::FormComponent < ApplicationComponent
     projekt_phase_feature?(projekt_phase, "form.enable_external_video")
   end
 
-  def show_post_on_behalf_of_input?
-    return true if resource.is_a?(Idea)
-
-    helpers.allowed_to_post_on_behalf_of?(current_user, projekt_phase.projekt)
-  end
-
   def show_image_input?
     return true if resource.is_a?(Idea)
 

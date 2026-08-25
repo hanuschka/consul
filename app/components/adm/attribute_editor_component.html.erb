@@ -4,7 +4,7 @@
        role="group"
        aria-labelledby="<%= aria_options[:labelledby] %>"
        aria-describedby="<%= aria_options[:describedby] %>"
-       aria-disabled="<%= disabled? %>">
+       aria-disabled="<%= input_disabled? %>">
     <% if inline? %>
       <div class="kern-row">
         <div class="kern-col-12 kern-col-md-3">
@@ -16,7 +16,7 @@
         </div>
         <div class="kern-col-12 kern-col-md-5">
           <div class="attribute-form <%= @kind %>">
-            <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+            <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options).merge(disabled: input_disabled?)) %>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="kern-row">
           <div class="kern-col-12 kern-col-md-10">
             <div class="attribute-form <%= @kind %>">
-              <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+              <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options).merge(disabled: input_disabled?)) %>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
           </div>
           <div class="kern-col-12 kern-col-md-5">
             <div class="attribute-form <%= @kind %>">
-              <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options)) %>
+              <%= render component_for_type.new(@record, @attribute, **@options.merge(aria_options).merge(disabled: input_disabled?)) %>
             </div>
           </div>
         </div>

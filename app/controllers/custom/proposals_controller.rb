@@ -4,13 +4,17 @@ class ProposalsController
   include ProposalsHelper
   include ProjektControllerHelper
   include Takeable
-  include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
   include CustomHelper
   include LandingPageResolvable
+  include OnBehalfOfAccountLinking
 
   MAP_PINS_LAZY_LOAD_THRESHOLD = 50
+
+  # A page shows 24 cards; the cap only stops a hand-rolled request from asking us to re-render
+  # every proposal in the phase.
+  MAX_REFRESHED_CARDS = 50
 
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
@@ -113,9 +117,9 @@ class ProposalsController
   def new
     @projekt_phase = ProjektPhase::ProposalPhase.find_by(id: params[:projekt_phase_id])
 
-    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
+    if @projekt_phase.blank?
       redirect_to proposals_path
-    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+    elsif !@projekt_phase.selectable_by?(current_user)
       redirect_to page_path(@projekt_phase.projekt.page.slug,
                             projekt_phase_id: @projekt_phase.id,
                             anchor: "filter-subnav")
@@ -156,16 +160,18 @@ class ProposalsController
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
-    if params[:save_draft].present? && @proposal.save
-      redirect_to proposal_path(@proposal),
-        notice: I18n.t("flash.actions.create.proposal")
+    if @proposal.valid? && link_on_behalf_of_account(@proposal) && @proposal.save
+      if params[:save_draft].present?
+        redirect_to proposal_path(@proposal),
+          notice: I18n.t("flash.actions.create.proposal")
 
-    elsif @proposal.save
-      @proposal.publish
+      else
+        @proposal.publish
 
-      Mailer.proposal_created(@proposal).deliver_later
+        Mailer.proposal_created(@proposal).deliver_later
 
-      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+        redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+      end
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
@@ -202,7 +208,13 @@ class ProposalsController
       return
     end
 
-    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+    # Acceptance is gated here rather than in CanCan, so the signed link from an on-behalf-of account
+    # mail has to be admitted here too — otherwise that mail sends its recipient to a page that turns
+    # them away. :preview rather than :show because every proposal is :read-able to everyone, so only
+    # an action nothing else grants can single out the record that link names.
+    if !@proposal.admin_accepted? &&
+        !current_user&.has_pm_permission_to?(:manage, @projekt) &&
+        !can?(:preview, @proposal)
       redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
@@ -241,6 +253,8 @@ class ProposalsController
       @follow = Follow.find_or_create_by!(user: voting_user, followable: @proposal)
       @voted = @proposal.register_vote(voting_user, "yes")
     end
+
+    prepare_cards_to_refresh
   end
 
   def unvote
@@ -249,6 +263,8 @@ class ProposalsController
     @follow.destroy! if @follow
 
     @voted = !@proposal.unvote_by(voting_user)
+
+    prepare_cards_to_refresh
   end
 
   def created
@@ -272,6 +288,37 @@ class ProposalsController
 
   private
 
+    # The support and withdraw buttons carry the ids of the cards that were on screen, so the
+    # response can refresh all of them. Only the clicked card is re-rendered otherwise, and
+    # crossing the phase's supports limit changes what every other card in the phase shows.
+    #
+    # Mirrors Budgets::Ballot::LinesController#load_investments, which solves the same
+    # interdependency for ballot lines. Scoped to the phase the vote happened in, both because
+    # that is the only phase whose cards can have changed and because it keeps a caller from
+    # asking for arbitrary proposals. Phases without a supports limit keep re-rendering a single
+    # card, as they did before the limit existed.
+    #
+    # Runs after the vote is written, never as a before_action: the answers being re-rendered
+    # depend on it. All the cards reach the same ProjektPhase instance, so resetting its cache
+    # once is enough for the whole response.
+    def prepare_cards_to_refresh
+      projekt_phase = @proposal.projekt_phase
+      projekt_phase&.reset_permission_problem_cache!
+
+      # The card sends this back so the re-render keeps the share popup it had. Only list cards
+      # carry one; the show page renders the same component without it.
+      @show_share_popup = params[:show_share_popup] == "true"
+
+      return if params[:proposals_ids].blank?
+      return unless projekt_phase&.supports_limit_applies?
+
+      @proposal_ids = Array(params[:proposals_ids]).first(MAX_REFRESHED_CARDS)
+      @proposals = projekt_phase.proposals
+                                .where(id: @proposal_ids)
+                                .where.not(id: @proposal.id)
+                                .includes(:votes_for)
+    end
+
     def load_draft_proposal_for_admin
       return if current_user.blank?
       return if !current_user.administrator?
@@ -285,6 +332,7 @@ class ProposalsController
 
     def proposal_params
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,
+                    :on_behalf_of_company_name, :on_behalf_of_email,
                     :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                     :sentiment_id,

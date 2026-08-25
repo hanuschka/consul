@@ -41,6 +41,18 @@ de:
         total_duration_start_description: Startdatum
         total_duration_end_label: Enddatum
         total_duration_end_description: Enddatum
+        show_in_overview_page_label: Projekt auf Projektübersichtsseite
+        show_in_overview_page_description: Steuert, ob dieses Projekt auf der allgemeinen Projektübersichtsseite angezeigt wird. Die Projektübersichtsseite listet alle öffentlichen Projekte der Plattform auf und ist für Nutzer der zentrale Einstiegspunkt, um laufende und abgeschlossene Beteiligungsprojekte zu entdecken und zu filtern.
+        show_in_homepage_label: Projekt auf der Startseite
+        show_in_homepage_description: Blendet das Projekt auf der Startseite der Plattform ein, z. B. im Bereich „Aktuelle Projekte” oder unter weiterführenden Ressourcen. So erhalten besonders relevante oder aktuelle Projekte zusätzliche Aufmerksamkeit direkt beim ersten Besuch der Plattform – unabhängig von der Projektübersichtsseite.
+        show_in_individual_list_label: Projekt in individueller Liste
+        show_in_individual_list_description: Zeigt das Projekt auf der Projektübersichtsseite in einer eigenständigen, individuellen Liste an – getrennt von den automatisch generierten Listen wie „Laufende Projekte” oder „Abgeschlossene Projekte”. Diese Option eignet sich z. B. für hervorgehobene oder dauerhaft sichtbare Projekte.
+        show_in_navigation_label: Projekt im Navigationsmenü
+        show_in_navigation_description: Zeigt das Projekt als eigenen Eintrag im Hauptnavigationsmenü der Plattform an. Geeignet für dauerhaft wichtige Projekte, die Nutzer von jeder Seite aus direkt erreichen sollen. Das Navigationsmenü sollte übersichtlich bleiben – nehmen Sie nur wenige, zentrale Projekte auf.
+        show_in_overview_page_navigation_label: Projekt in der Dropdown-Navigation
+        show_in_overview_page_navigation_description: Zeigt das Projekt in der Dropdownliste des Navigationsmenüs an, die alle Projekte der Übersichtsseite bündelt. So bleibt das Hauptmenü schlank, während das Projekt trotzdem über die Navigation erreichbar ist.
+        show_in_sidebar_filter_label: Projekt im Seitenleisten-Filter
+        show_in_sidebar_filter_description: Nimmt das Projekt in den Projektfilter der Seitenleiste auf, mit dem Nutzer Vorschläge, Debatten und Abstimmungen nach Projekt einschränken können. Deaktivieren Sie die Option, wenn das Projekt in diesen Filterlisten nicht erscheinen soll.
       image:
         attachment_label: Bild
         attachment_description: "Das Bild wird im oberen Bereich des Newsletters als visueller Aufmacher angezeigt, direkt unterhalb des Logos und oberhalb des Titels. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zum Newsletter-Inhalt passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG. Das Bild ist ein Pflichtfeld und muss vor dem Versand hochgeladen werden."
@@ -99,6 +111,14 @@ de:
         logo_header_for_transparent_description: "Dieses Logo wird in der oberen Navigationsleiste angezeigt, solange der Hintergrund transparent ist – also z. B. über dem Headerbild. Es sollte gut auf wechselnden Hintergründen erkennbar sein. Verwenden Sie idealerweise ein helles PNG mit transparentem Hintergrund. Empfohlenes Format: max. 80 × 80 Pixel."
         logo_newsletter_email_label: Newsletter-Logo
         logo_newsletter_email_description: "Dieses Logo wird im Kopfbereich jeder Newsletter-E-Mail angezeigt und dient als visuelles Erkennungsmerkmal Ihrer Plattform. Verwenden Sie idealerweise ein PNG mit transparentem Hintergrund, das auf hellem Hintergrund gut lesbar ist. Das Logo sollte die Wiedererkennung Ihrer Kommune oder Plattform sicherstellen. Empfohlenes Format: 130 × 45 Pixel."
+        logo_email_label: E-Mail-Logo
+        logo_email_description: "Dieses Logo wird im Kopfbereich aller System-E-Mails angezeigt, zum Beispiel bei Registrierungsbestätigungen, Kommentar-Benachrichtigungen oder Passwort-E-Mails. Verwenden Sie idealerweise ein PNG mit transparentem Hintergrund, das auf hellem Hintergrund gut lesbar ist. Erforderliche Größe: genau 400 × 80 Pixel. Erlaubte Formate: JPG oder PNG. Bleibt das Feld leer, wird das Standardlogo der Plattform verwendet."
+        social_media_icon_label: Vorschaubild für Social Media
+        social_media_icon_description: "Dieses Bild wird als Vorschau angezeigt, wenn ein Link zur Plattform in sozialen Netzwerken oder Messengern geteilt wird. Verwenden Sie ein Querformat-Bild mit klarem, zentriertem Motiv, das auch in kleiner Darstellung erkennbar bleibt. Vermeiden Sie kleine Schrift. Erforderliche Größe: genau 470 × 246 Pixel. Erlaubte Formate: JPG oder PNG."
+        social_media_icon_twitter_label: Vorschaubild für X (Twitter)
+        social_media_icon_twitter_description: "Dieses Bild wird als Vorschau angezeigt, wenn ein Link zur Plattform auf X (vormals Twitter) geteilt wird. Verwenden Sie ein quadratisches Bild mit klarem, zentriertem Motiv. Erforderliche Größe: genau 246 × 246 Pixel. Erlaubte Formate: JPG oder PNG."
+        apple-touch-icon-200_label: App-Icon
+        apple-touch-icon-200_description: "Dieses Icon wird verwendet, wenn Nutzer die Plattform auf dem Startbildschirm ihres Smartphones oder Tablets ablegen, und dient zusätzlich als Symbol im Browser-Tab. Verwenden Sie ein quadratisches Motiv ohne Text, das auch in kleiner Darstellung gut erkennbar ist. Erforderliche Größe: genau 200 × 200 Pixel. Erlaubte Formate: JPG oder PNG. Bleibt das Feld leer, wird das Standard-Icon der Plattform verwendet."
       site_customization/video:
         header_video_label: Hintergrundvideo für Desktop
         header_video_description: "Optionales Video, das im oberen Bereich der Startseite auf Desktop-Geräten anstelle des Hintergrundbilds abgespielt wird. Das Video startet automatisch, ist stumm geschaltet und läuft in Endlosschleife. Verwenden Sie ein kurzes, ruhiges Video im Querformat. Empfohlenes Format: 1920 × 760 Pixel. Wenn Sie sowohl ein Bild als auch ein Video hinzugefügt haben, dann hat das Video immer Vorrang. Erlaubte Formate: MP4, WebM. Maximale Größe: 50 MB."

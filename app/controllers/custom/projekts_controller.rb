@@ -1,17 +1,37 @@
 class ProjektsController < ApplicationController
-  # The index materialises every filtered projekt (categories, phases and SDG
-  # facets are computed in Ruby before pagination), so the list item's and the
-  # facet builders' associations are loaded in bulk rather than per row.
-  INDEX_PRELOAD_ASSOCIATIONS = [
+  # Attached only to the paginated page, so this graph is built for the 24
+  # rendered projekts rather than for every match. The category and phase
+  # facets no longer walk the records at all (ProjektIndexFacetsQuery).
+  LIST_ITEM_PRELOADS = [
     :projekt_settings,
     :tags,
-    :sdg_goals,
-    :sdg_global_targets,
-    :sdg_local_targets,
     { page: [:image, :translations] },
     { active_and_visible_projekt_phases: [:translations, :settings] },
     { sdg_relations: :related_sdg }
   ].freeze
+
+  # The SDG facets are still derived in Ruby, so they remain the one part of
+  # the request that loads every matching projekt. They stay this way because
+  # the target dropdown renders them in projekt order, which an aggregate
+  # query would not reproduce. Preloading only these three keeps that ordering
+  # without also pulling the list-item graph for every match.
+  SDG_FACET_PRELOADS = [:sdg_goals, :sdg_global_targets, :sdg_local_targets].freeze
+
+  # Maps each filter name to the scope that applies it. Insertion order is the
+  # order the filter chips render in. Kept as explicit lambdas so no filter is
+  # ever reached through `send` on a param.
+  INDEX_FILTERS = {
+    "index_order_all" => ->(projekts) { projekts.index_order_all },
+    "index_order_underway" => ->(projekts) { projekts.index_order_underway },
+    "index_order_ongoing" => ->(projekts) { projekts.index_order_ongoing },
+    "index_order_upcoming" => ->(projekts) { projekts.index_order_upcoming },
+    "index_order_expired" => ->(projekts) { projekts.index_order_expired },
+    "index_order_individual_list" => ->(projekts) { projekts.index_order_individual_list }
+  }.freeze
+
+  DRAFTS_INDEX_FILTER = {
+    "index_order_drafts" => ->(projekts) { projekts.index_order_drafts }
+  }.freeze
 
   include CustomHelper
   include ProposalsHelper
@@ -33,7 +53,7 @@ class ProjektsController < ApplicationController
         Projekt.all
       end
 
-    @projekts = base_projekts.regular.preload(INDEX_PRELOAD_ASSOCIATIONS)
+    @projekts = base_projekts.regular
     @projekts = @projekts.search(@search_terms) if @search_terms.present?
 
     @all_projekts = @projekts.index_order_all
@@ -41,33 +61,32 @@ class ProjektsController < ApplicationController
 
     @resource_name = "projekt"
 
-    valid_filters = %w[index_order_all index_order_underway index_order_ongoing index_order_upcoming index_order_expired index_order_individual_list]
-    valid_filters.push("index_order_drafts") if current_user&.administrator? || current_user&.projekt_manager?
-    @active_projekts_filters = valid_filters.select { |filter| @projekts.send(filter).count > 0 }.presence || ["index_order_all"]
-    @current_projekts_filter = valid_filters.include?(params[:filter]) ? params[:filter] : "index_order_all"
-    @projekts = @projekts.send(@current_projekts_filter)
+    index_filters = available_index_filters
+    @active_projekts_filters = index_filters.select { |_name, filter| filter.call(@projekts).exists? }.keys.presence || ["index_order_all"]
+    @current_projekts_filter = index_filters.key?(params[:filter]) ? params[:filter] : "index_order_all"
+    @projekts = index_filters.fetch(@current_projekts_filter).call(@projekts)
 
     @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)
     @geozones = @districts.empty? ? Geozone.order(:name).to_a : []
     @selected_geozone_affiliation = params[:geozone_affiliation] || "all_resources"
     @affiliated_districts = (params[:affiliated_districts] || "").split(",").map(&:to_i)
     @affiliated_geozones = (params[:affiliated_geozones] || "").split(",").map(&:to_i)
-    take_by_geozone_affiliations unless @search_terms.present?
+    take_by_geozone_affiliations if @search_terms.blank?
 
-    @categories = @projekts.flat_map { |p| p.tags.select(&:category?) }.uniq.compact.sort
-    @tag_cloud = tag_cloud
-    take_only_by_tag_names unless @search_terms.present?
+    @categories = ProjektIndexFacetsQuery.category_tags(@projekts)
+    take_only_by_tag_names if @search_terms.blank?
 
-    @used_phases = @projekts.flat_map(&:active_and_visible_projekt_phases).map(&:type).uniq.compact
+    @used_phases = ProjektIndexFacetsQuery.phase_types(@projekts)
     @phases = ProjektPhase.where(type: @used_phases).group_by(&:type).map { |type, phases| phases.first }.reject { |p| p.type == "ProjektPhase::DebatePhase" }.sort_by { |p| ProjektPhase::PROJEKT_PHASES_TYPES.index(p.type) || 999 }
     @selected_phase_type = params[:phase_type] || 'all_phases'
-    take_by_phase_type unless @search_terms.present?
+    take_by_phase_type if @search_terms.blank?
 
-    @sdgs = (@projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
-    @sdg_targets = (@projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
+    sdg_facet_projekts = @projekts.preload(SDG_FACET_PRELOADS).to_a
+    @sdgs = (sdg_facet_projekts.map(&:sdg_goals).flatten.uniq.compact + SDG::Goal.where(code: @filtered_goals).to_a).uniq
+    @sdg_targets = (sdg_facet_projekts.map(&:sdg_targets).flatten.uniq.compact + SDG::Target.where(code: @filtered_targets).to_a).uniq
     @filtered_goals = params[:sdg_goals].present? ? params[:sdg_goals].split(',').map{ |code| code.to_i } : nil
     @filtered_targets = params[:sdg_targets].present? ? params[:sdg_targets].split(',')[0] : nil
-    take_by_sdgs unless @search_terms.present?
+    take_by_sdgs if @search_terms.blank?
 
     @show_comments = Setting["extended_feature.projekts_overview_page_footer.show_in_#{@current_projekts_filter}"].present?
 
@@ -81,7 +100,7 @@ class ProjektsController < ApplicationController
 
     @projekts = @projekts.visible_for(current_user).reorder("projekts.created_at DESC").sort_by_order_number
     @map_coordinates = all_projekts_map_locations(@projekts.pluck(:id).uniq)
-    @projekts = @projekts.distinct.page(params[:page]).per(24)
+    @projekts = @projekts.distinct.page(params[:page]).per(24).preload(LIST_ITEM_PRELOADS)
 
     respond_to do |format|
       format.html do
@@ -104,11 +123,6 @@ class ProjektsController < ApplicationController
     redirect_to page_path(projekt.page.slug) if projekt.present?
   rescue
     head 404, content_type: "text/html"
-  end
-
-  def update_selected_parent_projekt
-    selected_parent_projekt_id = get_highest_unique_parent_projekt_id(params[:selected_projekts_ids])
-    render json: {selected_parent_projekt_id: selected_parent_projekt_id }
   end
 
   def json_data
@@ -139,6 +153,12 @@ class ProjektsController < ApplicationController
   end
 
   private
+
+  def available_index_filters
+    return INDEX_FILTERS.merge(DRAFTS_INDEX_FILTER) if current_user&.administrator? || current_user&.projekt_manager?
+
+    INDEX_FILTERS
+  end
 
   def take_only_by_tag_names
     if params[:tags].present?
@@ -191,10 +211,6 @@ class ProjektsController < ApplicationController
 
     projekt_ids = @projekts.joins(:active_and_visible_projekt_phases).where(projekt_phases: { type: @selected_phase_type }).pluck(:id).uniq
     @projekts = @projekts.where(id: projekt_ids)
-  end
-
-  def tag_cloud
-    TagCloud.new(Projekt.all, params[:tags])
   end
 
   def raise_flag_feature_disabled

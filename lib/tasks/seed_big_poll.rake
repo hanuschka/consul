@@ -88,7 +88,7 @@ namespace :generate_data do
           color: "#7C3AED",
           icon: "insights"
         )
-        projekt.projekt_settings.find_by(key: "projekt_feature.main.activate")&.update!(value: "active")
+        projekt.update!(activated: true)
         projekt.page.update!(status: "published", title: projekt_name,
                              content: "Performance-Testdaten für Umfrage-Statistiken", locale: "de")
         log.call "Created projekt ##{projekt.id} (slug=#{projekt.page.slug})"

@@ -24,13 +24,9 @@ RSpec.describe "Poll Questions API", type: :request, openapi_spec: "v1/swagger.y
         let(:poll_id) { poll.id }
 
         before do
-          author = User.administrators.first || User.create!(
-            username: "admin_user", email: "admin_spec@example.com",
-            password: "12345678", terms_of_service: "1",
-            confirmed_at: Time.current
-          )
-          poll.questions.create!(title: "Question 1", author:)
-          poll.questions.create!(title: "Question 2", author:)
+          author = create_admin_user
+          create_poll_question(poll, title: "Question 1", author: author)
+          create_poll_question(poll, title: "Question 2", author: author)
           api_client.update!(access_level: :public_data)
           api_client.update!(access_level: :public_data)
           api_client.update!(access_level: :public_data)
@@ -75,6 +71,7 @@ RSpec.describe "Poll Questions API", type: :request, openapi_spec: "v1/swagger.y
 schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
 
       response "201", "question created" do
+        let!(:administrator) { create_admin_user }
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
@@ -107,6 +104,7 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
       end
 
       response "201", "bundle question created" do
+        let!(:administrator) { create_admin_user }
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
@@ -164,6 +162,10 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
       end
 
       response "403", "forbidden - admin access required" do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
@@ -212,14 +214,8 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: "admin_user", email: "admin_spec@example.com",
-            password: "12345678", terms_of_service: "1",
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: "Test Question", author:) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: "Test Question", author: author) }
         let(:id) { poll_question.id }
 
         schema type: :object,
@@ -260,14 +256,8 @@ schema: Schemas::Polls::POLL_QUESTION_UPDATE_PARAMS
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: "admin_user", email: "admin_spec@example.com",
-            password: "12345678", terms_of_service: "1",
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: "Original Title", author:) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: "Original Title", author: author) }
         let(:id) { poll_question.id }
         let(:question) do
           {
@@ -293,17 +283,15 @@ schema: Schemas::Polls::POLL_QUESTION_UPDATE_PARAMS
       end
 
       response "403", "forbidden - admin access required" do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: "admin_user", email: "admin_spec@example.com",
-            password: "12345678", terms_of_service: "1",
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: "Test", author:) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: "Test", author: author) }
         let(:id) { poll_question.id }
         let(:question) do
           { question: { multiple: true }}
@@ -339,14 +327,8 @@ schema: Schemas::Polls::POLL_QUESTION_UPDATE_PARAMS
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: "admin_user", email: "admin_spec@example.com",
-            password: "12345678", terms_of_service: "1",
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: "To Delete", author:) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: "To Delete", author: author) }
         let(:id) { poll_question.id }
 
         schema type: :object,
@@ -365,17 +347,15 @@ schema: Schemas::Polls::POLL_QUESTION_UPDATE_PARAMS
       end
 
       response "403", "forbidden - admin access required" do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
         let(:projekt) { Projekt.create!(name: "Projekt") }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: "admin_user", email: "admin_spec@example.com",
-            password: "12345678", terms_of_service: "1",
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: "Test", author:) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: "Test", author: author) }
         let(:id) { poll_question.id }
 
         schema type: :object,

@@ -38,7 +38,8 @@
             Shared::ResourceImageComponent.new(
               image_url: image_url,
               image_placeholder_icon_class: "fa-comments",
-              resource: @custom_page
+              resource: @custom_page,
+              ai_generated: @custom_page.image&.ai_generated?
             )
           ) %>
         <% end %>

@@ -1489,8 +1489,25 @@ span.projekt-backlink:before {
   }
 }
 
-.projekt-image-delete-button {
+.projekt-image-ai-marker-button {
   left: 115px;
+  padding: 0;
+
+  &.-active {
+    background-color: color(srgb 1 1 1 / 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.projekt-image-ai-marker-button--text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.projekt-image-delete-button {
+  left: 165px;
 }
 
 rich-tooltip:has(.projekt-image-generate-button:disabled) {

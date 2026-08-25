@@ -1341,6 +1341,7 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.boolean "concealed", default: false
     t.string "credits"
     t.boolean "admin", default: false, null: false
+    t.boolean "ai_generated", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end

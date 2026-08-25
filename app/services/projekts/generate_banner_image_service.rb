@@ -99,7 +99,8 @@ class Projekts::GenerateBannerImageService < ApplicationService
         user: @user,
         data: Base64.decode64(base64_image),
         filename: "projekt_#{@projekt.id}_ai_banner.jpg",
-        content_type: "image/jpeg"
+        content_type: "image/jpeg",
+        ai_generated: true
       )
 
       if !result.success?

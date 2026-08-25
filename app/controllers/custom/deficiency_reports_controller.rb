@@ -180,6 +180,7 @@ class DeficiencyReportsController < ApplicationController
       resource_type: "deficiency_report",
       id: @deficiency_report.id,
       image_url: image_url,
+      image_ai_label_html: helpers.ai_image_label_html(@deficiency_report.image),
       title: @deficiency_report.title
     }.to_json
 

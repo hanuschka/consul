@@ -2,12 +2,9 @@
   <% if !@embbeded_in_ai_flow && projekt_phase_feature?(projekt_phase, "form.voice_assistant") && Ai::Settings.voice_assistant_allowed? %>
     <%= render Dt::VoiceAssistantComponent.new(
       assistant_codename: "proposal_voice_assistant",
-      projekt_phase: projekt_phase,
-      custom_data: { collapsible: true, collapsed: true }
+      projekt_phase: projekt_phase
     ) %>
   <% end %>
-
-  <%= render Dt::VoiceAssistant::PreviewListComponent.new(variant: :vertical, projekt_phase_id: projekt_phase&.id) %>
 
   <%= translatable_form_for(resource, url: @url, html: { class: "js-rich-text-form user-resource-form", id: dom_id(resource, :form) }) do |f| %>
     <% if show_back_button? %>

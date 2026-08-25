@@ -18,10 +18,6 @@ class DeficiencyReports::NewComponent < ApplicationComponent
     @districts ||= RegisteredAddress::District.joins(:map_location).order(id: :asc)
   end
 
-  def categories_serialized
-    DeficiencyReport::Category.all.as_json(only: [:name, :id, :warning_text])
-  end
-
   def intake_channel_field?
     Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"].present? &&
       intake_channels.any?

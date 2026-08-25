@@ -9360,6 +9360,16 @@ paths:
                       type: integer
                       nullable: true
                       description: Display order (auto-assigned if omitted)
+                    randomize_answers:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the answer options per participant (ignored
+                        for rating_scale and map_points)
+                    randomize_position:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the question position (cleared for bundle,
+                        contextualized or branching questions)
                     votation_type_attributes:
                       type: object
                       properties:
@@ -9559,6 +9569,16 @@ paths:
                       type: integer
                       nullable: true
                       description: Display order of the question
+                    randomize_answers:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the answer options per participant (ignored
+                        for rating_scale and map_points)
+                    randomize_position:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the question position (cleared for bundle,
+                        contextualized or branching questions)
                     votation_type_attributes:
                       type: object
                       properties:
@@ -16762,6 +16782,16 @@ components:
           nullable: true
           description: Display order of the question
           example: 1
+        randomize_answers:
+          type: boolean
+          nullable: true
+          description: Shuffle the answer options per participant (ignored for rating_scale
+            and map_points)
+        randomize_position:
+          type: boolean
+          nullable: true
+          description: Shuffle the question position (cleared for bundle, contextualized
+            or branching questions)
         created_at:
           type: string
           format: date_time

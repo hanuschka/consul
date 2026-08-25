@@ -85,6 +85,8 @@ class Api::PollQuestionsController < Api::BaseController
         :answer_mandatory,
         :bundle_question,
         :parent_question_id,
+        :randomize_answers,
+        :randomize_position,
         translation_params(Poll::Question, only: [:title, :description, :intro]),
         votation_type_attributes: [:id, :vote_type, :max_votes, :max_votes_per_answer, :show_hint_callout]
       )

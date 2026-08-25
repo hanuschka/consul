@@ -103,6 +103,78 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
         run_test!
       end
 
+      response "201", "question created with randomized answers and position" do
+        let!(:administrator) { create_admin_user }
+        let(:projekt) { Projekt.create!(name: "Projekt") }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
+        let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
+        let(:poll_id) { poll.id }
+        let(:question) do
+          {
+            question: {
+              translations_attributes: [
+                { locale: "en", title: "Randomized question" },
+                { locale: "de", title: "Zufaellige Frage" }
+              ],
+              randomize_answers: true,
+              randomize_position: true
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     question: { "$ref" => "#/components/schemas/PollQuestion" }
+                   },
+                   required: ["question"]
+                 }
+               },
+               required: ["data"]
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data["data"]["question"]["randomize_answers"]).to eq(true)
+          expect(data["data"]["question"]["randomize_position"]).to eq(true)
+        end
+      end
+
+      response "201", "randomize_position refused on a bundle question" do
+        let!(:administrator) { create_admin_user }
+        let(:projekt) { Projekt.create!(name: "Projekt") }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
+        let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
+        let(:poll_id) { poll.id }
+        let(:question) do
+          {
+            question: {
+              translations_attributes: [{ locale: "en", title: "Bundle question" }],
+              bundle_question: true,
+              randomize_position: true
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     question: { "$ref" => "#/components/schemas/PollQuestion" }
+                   },
+                   required: ["question"]
+                 }
+               },
+               required: ["data"]
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data["data"]["question"]["randomize_position"]).to eq(false)
+        end
+      end
+
       response "201", "bundle question created" do
         let!(:administrator) { create_admin_user }
         let(:projekt) { Projekt.create!(name: "Projekt") }

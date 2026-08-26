@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_24_120000) do
+ActiveRecord::Schema.define(version: 2026_08_26_075751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1340,8 +1340,10 @@ ActiveRecord::Schema.define(version: 2026_08_24_120000) do
     t.string "credits"
     t.boolean "admin", default: false, null: false
     t.boolean "ai_generated", default: false, null: false
+    t.string "watermark_identifier"
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
+    t.index ["watermark_identifier"], name: "index_images_on_watermark_identifier", unique: true, where: "(watermark_identifier IS NOT NULL)"
   end
 
   create_table "individual_group_values", force: :cascade do |t|

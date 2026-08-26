@@ -65,7 +65,14 @@ class AiController < ApplicationController
       return
     end
 
-    attach_generated_image(resource, image_response.parsed_response["image"])
+    begin
+      attach_generated_image(resource, image_response.parsed_response["image"])
+    rescue Images::EmbedAiWatermarkService::MarkingFailedError
+      render json: { error: I18n.t("custom.ai.errors.watermarking_unavailable") },
+             status: :service_unavailable
+      return
+    end
+
     resource.update_column(:generated_image, true)
     resource.reload
 
@@ -107,17 +114,32 @@ class AiController < ApplicationController
     end
 
     def attach_generated_image(resource, base64_image)
-      new_temp_file = Base64ImageUtils.decode_to_tempfile(base64_image)
-      uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: new_temp_file,
-        filename: "ai_generated_#{Time.current.to_i}.jpg",
-        type: "image/jpeg"
+      filename = "ai_generated_#{Time.current.to_i}.jpg"
+      image = resource.image || Image.new(user: current_user, imageable: resource)
+      generated_file = Base64ImageUtils.decode_to_tempfile(base64_image)
+
+      marking = Images::EmbedAiWatermarkService.call(
+        image: image,
+        data: File.binread(generated_file.path),
+        filename: filename,
+        content_type: "image/jpeg"
       )
 
-      image = resource.image || Image.new(user: current_user, imageable: resource)
-      image.attachment = uploaded_file
+      image.attachment = ActionDispatch::Http::UploadedFile.new(
+        tempfile: attachment_tempfile(marking.data[:image_data]),
+        filename: filename,
+        type: "image/jpeg"
+      )
       image.ai_generated = true
       image.save!
+    end
+
+    def attachment_tempfile(data)
+      file = Tempfile.new(["ai_generated", ".jpg"], binmode: true)
+      file.write(data)
+      file.rewind
+
+      file
     end
 
     def image_url(attachment)

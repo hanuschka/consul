@@ -1,5 +1,7 @@
 class MachineTranslation::ChromeWriter
   MAX_COUNT_PROBE = 200
+  MARKUP = %r{<[a-zA-Z/!]}
+  RETRY_MODE = { plain: :xml }.freeze
 
   attr_reader :locale, :limit
 
@@ -23,6 +25,10 @@ class MachineTranslation::ChromeWriter
     entries
   end
 
+  def mode_for(entry)
+    entry[:html] || entry[:source].match?(MARKUP) ? :html : :plain
+  end
+
   def call
     entries = pending_entries
     return empty_result if entries.empty?
@@ -30,18 +36,18 @@ class MachineTranslation::ChromeWriter
     written = 0
     rejected = []
 
-    entries.group_by { |entry| entry[:html] }.each do |html, group|
-      translated = translate(group.map { |entry| entry[:source] }, html: html)
+    entries.group_by { |entry| mode_for(entry) }.each do |mode, group|
+      translated = translate(group.map { |entry| entry[:source] }, mode)
 
       group.each_with_index do |entry, index|
-        output = translated[index]
+        output = accept(entry, translated[index], mode) || retry_entry(entry, mode)
 
-        if output.blank? || !placeholders_intact?(entry[:source], unwrap(output))
+        if output.blank?
           rejected << entry[:key]
           next
         end
 
-        store(entry[:key], unwrap(output))
+        store(entry[:key], output)
         written += 1
       end
     end
@@ -59,13 +65,64 @@ class MachineTranslation::ChromeWriter
       { written: 0, rejected: [], characters: 0 }
     end
 
-    def translate(texts, html:)
-      options = html ? { tag_handling: "html" } : { tag_handling: "xml", ignore_tags: "x" }
+    def accept(entry, raw, mode)
+      return if raw.blank?
 
-      Deepl::Client.new.translate(texts.map { |text| html ? text : wrap(text) },
+      value = restore(raw, mode)
+
+      value if placeholders_intact?(entry[:source], value)
+    end
+
+    def retry_entry(entry, mode)
+      fallback = RETRY_MODE[mode]
+      return if fallback.nil?
+
+      accept(entry, translate([entry[:source]], fallback).first, fallback)
+    end
+
+    def translate(texts, mode)
+      prepared = texts.map { |text| prepare(text, mode) }
+
+      send_texts(prepared, mode)
+    rescue Deepl::Error
+      prepared.map do |text|
+        begin
+          send_texts([text], mode).first
+        rescue Deepl::Error
+          nil
+        end
+      end
+    end
+
+    def send_texts(texts, mode)
+      Deepl::Client.new.translate(texts,
                                   target_locale: locale,
                                   source_locale: MachineTranslation.source_locale,
-                                  **options)
+                                  **translate_options(mode))
+    end
+
+    def translate_options(mode)
+      case mode
+      when :html then { tag_handling: "html", ignore_tags: "x" }
+      when :xml then { tag_handling: "xml", ignore_tags: "x" }
+      else {}
+      end
+    end
+
+    def prepare(text, mode)
+      case mode
+      when :html then wrap(text)
+      when :xml then wrap(CGI.escapeHTML(text))
+      else text
+      end
+    end
+
+    def restore(text, mode)
+      case mode
+      when :html then unwrap(text)
+      when :xml then CGI.unescapeHTML(unwrap(text))
+      else text
+      end
     end
 
     def store(key, value)

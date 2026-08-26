@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_25_100000) do
+ActiveRecord::Schema.define(version: 2026_08_26_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3162,10 +3162,20 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.string "postal_code"
   end
 
+  create_table "site_customization_content_block_translations", force: :cascade do |t|
+    t.integer "site_customization_content_block_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "body"
+    t.index ["locale"], name: "index_scb_translations_on_locale"
+    t.index ["site_customization_content_block_id", "locale"], name: "index_scb_translations_on_content_block_id_and_locale", unique: true
+    t.index ["site_customization_content_block_id"], name: "index_scb_translations_on_content_block_id"
+  end
+
   create_table "site_customization_content_blocks", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "locale"
-    t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key"

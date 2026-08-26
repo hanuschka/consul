@@ -3,10 +3,7 @@
   <main class="user-resources-form <%= " -no-image" unless Setting["deficiency_reports.image_upload"].present? %>">
     <% if Setting["deficiency_reports.voice_assistant"].present? && Ai::Settings.ai_available? %>
       <%= render Dt::VoiceAssistantComponent.new(
-        assistant_codename: "deficiency_report_voice_assistant",
-        custom_data: {
-          categories: categories_serialized
-        }
+        assistant_codename: "deficiency_report_voice_assistant"
       ) %>
     <% end %>
 

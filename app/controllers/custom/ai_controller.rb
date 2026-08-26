@@ -65,7 +65,14 @@ class AiController < ApplicationController
       return
     end
 
-    attach_generated_image(resource, image_response.parsed_response["image"])
+    begin
+      attach_generated_image(resource, image_response.parsed_response["image"])
+    rescue Images::EmbedAiWatermarkService::MarkingFailedError
+      render json: { error: I18n.t("custom.ai.errors.watermarking_unavailable") },
+             status: :service_unavailable
+      return
+    end
+
     resource.update_column(:generated_image, true)
     resource.reload
 
@@ -107,11 +114,9 @@ class AiController < ApplicationController
     end
 
     def attach_generated_image(resource, base64_image)
-      ResourceImages::AttachService.from_base64(
+      ResourceImages::AttachService.from_generated_base64(
         resource: resource, user: current_user, base64: base64_image
       )
-
-      resource.image&.update!(ai_generated: true)
     end
 
     def image_url(attachment)

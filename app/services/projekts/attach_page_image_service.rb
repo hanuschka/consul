@@ -22,13 +22,15 @@ class Projekts::AttachPageImageService < ApplicationService
       return ServiceResult.failure(error: "projekt has no page to attach the image to")
     end
 
+    image = page.image || ::Image.new(imageable: page)
+    attachment_data = ai_generated ? watermarked_data(image) : data
+
     file = Tempfile.new(["projekt_page_image", File.extname(filename)], binmode: true)
 
     begin
-      file.write(data)
+      file.write(attachment_data)
       file.rewind
 
-      image = page.image || ::Image.new(imageable: page)
       image.attachment = ActionDispatch::Http::UploadedFile.new(
         tempfile: file,
         filename: filename,
@@ -48,4 +50,15 @@ class Projekts::AttachPageImageService < ApplicationService
     Rails.logger.error("[Projekts::AttachPageImageService] failed: #{e.message}")
     ServiceResult.failure(error: e.message)
   end
+
+  private
+
+    def watermarked_data(image)
+      ::Images::EmbedAiWatermarkService.call(
+        image: image,
+        data: data,
+        filename: filename,
+        content_type: content_type
+      ).data[:image_data]
+    end
 end

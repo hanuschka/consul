@@ -20,6 +20,50 @@ class ResourceImages::AttachService < ApplicationService
     ).call
   end
 
+  # A generated picture reaches the same place by a different route. The mark is
+  # mandatory and re-encodes the file, so it has to be embedded before the bytes
+  # are attached, and the marking service stages a source copy and the
+  # identifier onto the Image record — which is why the record is prepared here
+  # and saved once, at the end, rather than built inside `call`.
+  def self.from_generated_base64(resource:, user:, base64:)
+    return if resource.blank? || user.blank?
+
+    tempfile = Base64ImageUtils.decode_to_tempfile(base64)
+
+    return if tempfile.blank?
+
+    filename = "ai_generated_#{Time.current.to_i}.jpg"
+    image = resource.image || resource.build_image(user: user)
+
+    marking = ::Images::EmbedAiWatermarkService.call(
+      image: image,
+      data: File.binread(tempfile.path),
+      filename: filename,
+      content_type: "image/jpeg"
+    )
+
+    image.attachment = ActionDispatch::Http::UploadedFile.new(
+      tempfile: marked_tempfile(marking.data[:image_data]),
+      filename: filename,
+      type: "image/jpeg"
+    )
+    image.ai_generated = true
+    image.save!
+
+    resource.association(:image).reset
+
+    image
+  end
+
+  def self.marked_tempfile(data)
+    file = Tempfile.new(["ai_generated", ".jpg"], binmode: true)
+    file.write(data)
+    file.rewind
+
+    file
+  end
+  private_class_method :marked_tempfile
+
   # For bytes already in memory, which is what a downloaded WhatsApp media
   # object is.
   def self.from_bytes(resource:, user:, bytes:, content_type:)

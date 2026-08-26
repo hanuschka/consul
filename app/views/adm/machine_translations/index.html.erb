@@ -73,27 +73,33 @@
 
   <div class="kern-title kern-title--small mb-3"><%= t(".locales.title") %></div>
   <% if @target_locales.any? %>
-    <div class="adm-table-wrapper mb-4">
+    <div class="kern-table-responsive mb-4" tabindex="0">
       <table class="kern-table">
-        <thead>
-          <tr>
-            <th scope="col"><%= t(".locales.locale") %></th>
-            <th scope="col"><%= t(".locales.rows") %></th>
-            <th scope="col"><%= t(".locales.chrome_rows") %></th>
-            <th scope="col"><span class="kern-visually-hidden"><%= t(".locales.actions") %></span></th>
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t(".locales.locale") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".locales.rows") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".locales.chrome_rows") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".locales.actions") %></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="kern-table__body">
           <% @target_locales.each do |locale| %>
-            <tr>
-              <td><%= t("locale.#{locale}", default: locale.to_s) %> <span class="kern-body">(<%= locale %>)</span></td>
-              <td><%= number_with_delimiter(@rows_per_locale[locale.to_s].to_i) %></td>
-              <td><%= number_with_delimiter(@chrome_rows_per_locale[locale.to_s].to_i) %></td>
-              <td>
-                <%= link_to t(".locales.purge"),
-                      adm_machine_translation_path(locale),
-                      class: "kern-button kern-button--outline kern-button--small",
-                      data: { turbo_method: :delete, turbo_confirm: t(".locales.purge_confirm", language: locale) } %>
+            <tr class="kern-table__row">
+              <td scope="row" class="kern-table__header">
+                <%= t("locale.#{locale}", default: locale.to_s) %> (<%= locale %>)
+              </td>
+              <td class="kern-table__cell"><%= number_with_delimiter(@rows_per_locale[locale.to_s].to_i) %></td>
+              <td class="kern-table__cell"><%= number_with_delimiter(@chrome_rows_per_locale[locale.to_s].to_i) %></td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% actions.with_action(
+                    label: t(".locales.purge"),
+                    url: adm_machine_translation_path(locale),
+                    icon: "delete", style: :delete,
+                    data: { turbo_method: :delete, turbo_confirm: t(".locales.purge_confirm", language: locale) }
+                  ) %>
+                <% end %>
               </td>
             </tr>
           <% end %>
@@ -107,23 +113,25 @@
 
   <div class="kern-title kern-title--small mb-3"><%= t(".failures.title") %></div>
   <% if @failures.any? %>
-    <div class="adm-table-wrapper">
+    <div class="kern-table-responsive" tabindex="0">
       <table class="kern-table">
-        <thead>
-          <tr>
-            <th scope="col"><%= t(".failures.resource") %></th>
-            <th scope="col"><%= t(".failures.locale") %></th>
-            <th scope="col"><%= t(".failures.error") %></th>
-            <th scope="col"><%= t(".failures.updated_at") %></th>
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= t(".failures.resource") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".failures.locale") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".failures.error") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".failures.updated_at") %></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="kern-table__body">
           <% @failures.each do |failure| %>
-            <tr>
-              <td><%= failure.remote_translatable_type %> #<%= failure.remote_translatable_id %></td>
-              <td><%= failure.locale %></td>
-              <td><%= truncate(failure.error_message.to_s, length: 160) %></td>
-              <td><%= l(failure.updated_at, format: :short) %></td>
+            <tr class="kern-table__row">
+              <td scope="row" class="kern-table__header">
+                <%= failure.remote_translatable_type %> #<%= failure.remote_translatable_id %>
+              </td>
+              <td class="kern-table__cell"><%= failure.locale %></td>
+              <td class="kern-table__cell"><%= truncate(failure.error_message.to_s, length: 160) %></td>
+              <td class="kern-table__cell"><%= l(failure.updated_at, format: :short) %></td>
             </tr>
           <% end %>
         </tbody>

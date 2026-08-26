@@ -194,8 +194,29 @@
           })
           .then((imageData) => {
             App.AssistantUserResourceForm.updateImage(imageData.image);
+          })
+          .catch((request) => {
+            App.AssistantUserResourceForm.hideImageGeneratingAnimation();
+            App.AssistantUserResourceForm.showImageError(
+              request.responseJSON && request.responseJSON.error
+            );
           });
       }, 100);
+    },
+
+    hideImageGeneratingAnimation: function() {
+      App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
+    },
+
+    showImageError: function(message) {
+      const messagebar = this.getMessagebar();
+
+      if (!messagebar || !message) return;
+
+      messagebar.innerHTML = message;
+      messagebar.title = message;
+      messagebar.classList.add("-error");
+      messagebar.classList.add("-visible");
     },
 
     toggleLabels: function(labelIds, checked, shouldScroll) {

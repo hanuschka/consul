@@ -1,6 +1,12 @@
 require_dependency Rails.root.join("app", "models", "image").to_s
 
 class Image
+  # The generator's own bytes, kept verbatim beside the delivered attachment
+  # for AI-generated pictures. Watermarking re-encodes the file and destroys
+  # the signed provenance manifest the image service embedded, so this is the
+  # only copy of that manifest once a picture has been marked.
+  has_one_attached :source_attachment
+
   before_save :clear_ai_generated_on_replaced_attachment
 
   # Writers that mean to keep or set the marker assign it in the same save; a

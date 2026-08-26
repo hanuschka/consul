@@ -26,6 +26,7 @@ class Projekt < ApplicationRecord
 
   translates :description
   include Globalizable
+  include MachineTranslatable
 
   has_secure_token :preview_code
 

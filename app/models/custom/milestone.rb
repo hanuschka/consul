@@ -1,6 +1,7 @@
 require_dependency Rails.root.join("app", "models", "milestone").to_s
 
 class Milestone < ApplicationRecord
+include MachineTranslatable
   def self.order_by_publication_date(sorting_order = nil)
     sorting_order ||= :asc
     order(publication_date: sorting_order, created_at: :asc)

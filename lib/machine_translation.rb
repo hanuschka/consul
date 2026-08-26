@@ -23,10 +23,25 @@ module MachineTranslation
     target_locales.select { |locale| Deepl::Languages.supported?(locale) }
   end
 
+  SETTING_KEY = "extended_feature.general.machine_translation".freeze
+  SUPPRESSION_KEY = :machine_translation_suppressed
+
   def self.enabled?
-    Deepl.configured?
+    Deepl.configured? && Setting[SETTING_KEY].present?
   rescue StandardError
     false
+  end
+
+  def self.suppress
+    previous = Thread.current[SUPPRESSION_KEY]
+    Thread.current[SUPPRESSION_KEY] = true
+    yield
+  ensure
+    Thread.current[SUPPRESSION_KEY] = previous
+  end
+
+  def self.suppressed?
+    Thread.current[SUPPRESSION_KEY].present?
   end
 
   def self.flat_key(key, scope, separator)

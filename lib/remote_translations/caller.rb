@@ -8,7 +8,9 @@ class RemoteTranslations::Caller
   end
 
   def call
-    written = ActiveRecord::Base.no_touching { write_translation }
+    written = MachineTranslation.suppress do
+      ActiveRecord::Base.no_touching { write_translation }
+    end
 
     resource.touch if written && !backfill?
     remote_translation.destroy
@@ -23,6 +25,8 @@ class RemoteTranslations::Caller
     end
 
     def write_translation
+      return false if hidden_resource?
+
       row = existing_row
       return false if row&.hidden_at.present?
 
@@ -36,6 +40,10 @@ class RemoteTranslations::Caller
 
       row.save!
       true
+    end
+
+    def hidden_resource?
+      resource.respond_to?(:hidden?) && resource.hidden?
     end
 
     def existing_row

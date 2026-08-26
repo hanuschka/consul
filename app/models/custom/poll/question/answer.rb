@@ -1,6 +1,7 @@
 require_dependency Rails.root.join("app", "models", "poll", "question", "answer").to_s
 
 class Poll::Question::Answer < ApplicationRecord
+include MachineTranslatable
   belongs_to :next_question, class_name: "Poll::Question", optional: true,
     foreign_key: "next_question_id", inverse_of: "previous_question"
 

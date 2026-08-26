@@ -2,7 +2,7 @@ module MachineTranslation
   DENIED_KEY_PREFIXES = %w[adm admin date datetime time number i18n support].freeze
   DENIED_KEYS = %w[errors.format activerecord.errors.format].freeze
   STRFTIME_DIRECTIVE = /%[-_0^#]?\d*[a-zA-Z]/.freeze
-  INTERPOLATION = /%[{<][^}>]*[}>]s?/.freeze
+  INTERPOLATION = /%\{[^{}]*\}|%<\w+>[a-zA-Z]/.freeze
   URL_ONLY = %r{\Ahttps?://\S+\z}.freeze
 
   def self.source_locale

@@ -29,6 +29,10 @@ describe MachineTranslation::ChromeWriter do
       expect(intact?("%{count}x", "%{count}x")).to be true
     end
 
+    it "does not mistake a percent sign before markup for a placeholder" do
+      expect(intact?("36 Prozent im Jahr 1990", "36 %</a> en 1990")).to be true
+    end
+
     it "accepts printf-style placeholders" do
       expect(intact?("Hallo %<name>s", "Hello %<name>s")).to be true
     end

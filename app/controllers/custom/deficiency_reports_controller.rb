@@ -6,8 +6,8 @@ class DeficiencyReportsController < ApplicationController
   include DocumentAttributes
   include DeficiencyReportsHelper
   include Search
-  include OnBehalfOfAccountLinking
 
+  before_action :ensure_submissions_open, only: [:new, :create]
   before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
   before_action :load_categories
   before_action :set_view, only: :index
@@ -121,7 +121,7 @@ class DeficiencyReportsController < ApplicationController
 
     categorize_with_ai(@deficiency_report)
 
-    if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
+    if @deficiency_report.valid? && @deficiency_report.save
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
@@ -180,6 +180,7 @@ class DeficiencyReportsController < ApplicationController
       resource_type: "deficiency_report",
       id: @deficiency_report.id,
       image_url: image_url,
+      image_ai_label_html: helpers.ai_image_label_html(@deficiency_report.image),
       title: @deficiency_report.title
     }.to_json
 
@@ -189,6 +190,13 @@ class DeficiencyReportsController < ApplicationController
   end
 
   private
+
+  def ensure_submissions_open
+    return if DeficiencyReport.submissions_open?
+
+    redirect_to deficiency_reports_path,
+      notice: t("custom.deficiency_reports.submissions_closed")
+  end
 
   def filter_by_my_posts
     return unless params[:my_posts_filter] == 'true'
@@ -201,7 +209,7 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def deficiency_report_params
-    attributes = [:video_url, :on_behalf_of, :on_behalf_of_company_name, :on_behalf_of_email,
+    attributes = [:video_url,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
                   :deficiency_report_subcategory_id,
@@ -209,12 +217,6 @@ class DeficiencyReportsController < ApplicationController
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
-
-    # Only staff filing for somebody else get to say how the report came in; for everybody else the
-    # field is not on the form and the default channel is stamped on by the model.
-    if helpers.allowed_to_post_on_behalf_of?(current_user, @deficiency_report || DeficiencyReport.new)
-      attributes << :deficiency_report_intake_channel_id
-    end
 
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
   end
@@ -279,9 +281,12 @@ class DeficiencyReportsController < ApplicationController
     end
 
     dr.responsible_officers.each do |officer|
-      DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      if dr.email_officers_individually?
+        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+        Activity.log(officer.user, "email", dr)
+      end
+
       Notification.add(officer.user, dr)
-      Activity.log(officer.user, "email", dr)
     end
   end
 end

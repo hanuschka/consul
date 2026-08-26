@@ -114,15 +114,10 @@ class AiController < ApplicationController
         type: "image/jpeg"
       )
 
-      if resource.image.nil?
-        Image.new(
-          attachment: uploaded_file,
-          user: current_user,
-          imageable: resource
-        ).save!
-      else
-        resource.image.attachment.attach(uploaded_file)
-      end
+      image = resource.image || Image.new(user: current_user, imageable: resource)
+      image.attachment = uploaded_file
+      image.ai_generated = true
+      image.save!
     end
 
     def image_url(attachment)

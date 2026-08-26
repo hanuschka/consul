@@ -61,7 +61,7 @@ class PagesController < ApplicationController
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
       end
 
-      if @projekt.projekt_phases.active.any? || helpers.show_admin_controls_for_projekt?(@projekt)
+      if @projekt.projekt_phases.active.frontend_visible.any? || helpers.show_admin_controls_for_projekt?(@projekt)
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
 
         if @default_projekt_phase.present?
@@ -526,11 +526,17 @@ class PagesController < ApplicationController
     end
 
     def get_default_projekt_phase(default_phase_id = nil)
+      scope =
+        if helpers.show_admin_controls_for_projekt?(@projekt)
+          @projekt.projekt_phases
+        else
+          @projekt.projekt_phases.active.frontend_visible
+        end
+
       default_phase_id ||= ProjektSetting.find_by(projekt: @projekt,
-  key: "projekt_custom_feature.default_footer_tab").value
-      @default_projekt_phase = ProjektPhase.find_by(id: default_phase_id) ||
-        @projekt.projekt_phases.active.first ||
-        @projekt.projekt_phases.first
+        key: "projekt_custom_feature.default_footer_tab")&.value
+
+      @default_projekt_phase = scope.find_by(id: default_phase_id) || scope.first
     end
 
     def set_resources(resource_model)

@@ -125,11 +125,6 @@ class ProjektsController < ApplicationController
     head 404, content_type: "text/html"
   end
 
-  def update_selected_parent_projekt
-    selected_parent_projekt_id = get_highest_unique_parent_projekt_id(params[:selected_projekts_ids])
-    render json: {selected_parent_projekt_id: selected_parent_projekt_id }
-  end
-
   def json_data
     @projekt = Projekt.find(params[:id])
 
@@ -144,6 +139,7 @@ class ProjektsController < ApplicationController
       id: @projekt.id,
       title: @projekt.title,
       image_url: image_url,
+      image_ai_label_html: helpers.ai_image_label_html(@projekt.image),
       tags: @projekt.tags.pluck(:name),
       sdg_goals: @projekt.sdg_goals.map { |goal| { code: goal.code, title: goal.title, image: "sdg/goal_#{goal.code}.png"} }
     }.to_json

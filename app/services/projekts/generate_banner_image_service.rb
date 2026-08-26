@@ -40,7 +40,7 @@ class Projekts::GenerateBannerImageService < ApplicationService
 
     def build_image_prompt
       Ai::RubyLlmFactory
-        .chat
+        .chat(feature: "projekts.banner_image_prompt")
         .with_instructions(prompt_instructions)
         .ask(projekt_context)
         .content
@@ -99,7 +99,8 @@ class Projekts::GenerateBannerImageService < ApplicationService
         user: @user,
         data: Base64.decode64(base64_image),
         filename: "projekt_#{@projekt.id}_ai_banner.jpg",
-        content_type: "image/jpeg"
+        content_type: "image/jpeg",
+        ai_generated: true
       )
 
       if !result.success?

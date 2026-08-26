@@ -43,14 +43,20 @@ de:
         settings:
           page_hint: Legen Sie die Absenderadresse und die gemeinsame Fußzeile fest, die in allen Mängelmelder-E-Mails verwendet werden.
       deficiency_reports:
+        action_row:
+          website: Website
+          edit: Bearbeiten
+          pdf: PDF
         watch:
           start: Benachrichtigungen für dieses Anliegen einschalten
           stop: Benachrichtigungen für dieses Anliegen ausschalten
+          label: Beobachten
         unwatch:
           success: Sie erhalten für dieses Anliegen keine Benachrichtigungen mehr.
         share:
           title: Anliegen teilen
-          hint: Teilen Sie dieses Anliegen mit weiteren Sachbearbeitenden oder Sachbearbeitergruppen. Die ausgewählten Personen erhalten eine E-Mail und ab sofort Benachrichtigungen zu Änderungen an diesem Anliegen.
+          trigger: Teilen
+          hint: Die ausgewählten Personen erhalten eine E-Mail und Benachrichtigungen zu Änderungen an diesem Anliegen.
           label: Empfänger
           submit: Teilen
           officers: Sachbearbeitende
@@ -79,6 +85,9 @@ de:
             status_changed_at: Statusänderung
             title: Titel
             author: Autor
+            on_behalf_of: Im Auftrag von
+            recorded_by: Erfasst von
+            intake_channel: Eingangskanal
             status: Status
             location: Standort
             address: Adresse
@@ -125,7 +134,10 @@ de:
           category: Kategorie
           subcategory: Unterkategorie
           map_label: Karte
+          recorded_by_label: Erfasst von
           on_behalf_of_label: Im Auftrag von
+          on_behalf_of_company_label: Firma
+          on_behalf_of_email_label: E-Mail
           intake_channel_label: Eingangskanal
           video_url: Video-URL
           address: Adresse

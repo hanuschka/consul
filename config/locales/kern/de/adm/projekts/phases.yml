@@ -261,6 +261,7 @@ de:
             title: Fragen
             type: Abstimmungsmodus
             contextualized_by: "Kontextualisiert durch:"
+            randomized_position: Position randomisiert
             bundle_question: Fragenbündel
             edit_answers: Antwortliste
             edit_questions: Fragenliste

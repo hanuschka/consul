@@ -95,6 +95,7 @@ end
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer name, or copyright information.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current event image.' }
                 }
@@ -275,6 +276,7 @@ end
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Provide to replace the current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer name, or copyright information.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current event image.' }
                 }

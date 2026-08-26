@@ -1,0 +1,12 @@
+<% button_style = local_assigns.fetch(:style, :primary) %>
+
+<%= form_with url: regenerate_adm_projekts_phase_poll_question_import_path(@projekt_phase, @question_import),
+              method: :post,
+              data: { turbo_confirm: t("adm.projekts.poll_question_imports.show.regenerate_confirm") } do %>
+  <%= kern_button(
+        text: t("adm.projekts.poll_question_imports.show.regenerate"),
+        icon: "refresh",
+        style: button_style,
+        type: "submit"
+      ) %>
+<% end %>

@@ -20,11 +20,19 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   end
 
   def description
+    return nil if update_not_permitted?
+
     @options[:description].presence || I18n.t(i18n_key(:description), default: nil)
   end
 
   def note
-    @options[:note].presence || ai_gated_note
+    @options[:note].presence || ai_gated_note || not_permitted_note
+  end
+
+  def update_not_permitted?
+    return false if update_policy.nil?
+
+    !update_policy.update?
   end
 
   def ai_gated?
@@ -71,6 +79,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:disabled] == true || ai_gated_disabled?
   end
 
+  def input_disabled?
+    disabled? || update_not_permitted?
+  end
+
   def wide?
     @options[:wide] == true
   end
@@ -93,6 +105,13 @@ class Adm::AttributeEditorComponent < ApplicationComponent
 
   private
 
+    def update_policy
+      return @update_policy if defined?(@update_policy)
+
+      policy_class = @options[:policy_class] || Adm::PolicyLookup.policy_class_if_known(@record)
+      @update_policy = policy_class&.new(current_user, @record)
+    end
+
     def ai_gated_disabled?
       ai_gated? && !Ai::Settings.ai_available?
     end
@@ -101,6 +120,12 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       return nil if !ai_gated_disabled?
 
       I18n.t("adm.ai_required_note")
+    end
+
+    def not_permitted_note
+      return nil if !update_not_permitted?
+
+      I18n.t("adm.not_authorized_edit")
     end
 
     def i18n_key(type)

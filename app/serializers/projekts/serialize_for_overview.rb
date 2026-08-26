@@ -36,11 +36,11 @@ class Projekts::SerializeForOverview < ApplicationService
     end
 
     if @projekt.related_sdgs.present?
-      base.merge!({ sdg_codes: @projekt.sdg_goals.pluck(:code) })
+      base.merge!({ sdg_codes: @projekt.sdg_goals.map(&:code).sort })
     end
 
     if @projekt.tags.present?
-      base.merge!({ tags: @projekt.tags.pluck(:name) })
+      base.merge!({ tags: @projekt.tags.map(&:name) })
     end
 
     if @projekt.image.present?
@@ -52,6 +52,7 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_images
     {
+      image_ai_generated: @projekt.image.ai_generated,
       image_url: Rails.application.routes.url_helpers.polymorphic_url(
         @projekt.image.attachment.variant(
           resize_to_fill: [298, 180],

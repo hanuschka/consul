@@ -1,5 +1,8 @@
 en:
   setting:
+    proposals:
+      email_on_official_answer: "Email notification on official answer (proposals)"
+      email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
     feature:
       bund_id_login: "Enable BundID login"
       bund_id_login_description: "Shows a BundID button on the sign-in and registration pages. Users can then sign in and register with their BundID account."
@@ -321,9 +324,9 @@ en:
       send_feedback_form_link: Send feedback form
       send_feedback_form_link_description: >
         When enabled, users receive an email with a link to a feedback form after their deficiency report is closed. They can rate the processing of their concern and give feedback on their satisfaction with the workflow. This helps administration monitor and improve the quality of deficiency processing.
-      show_create_report_button: Submit button for deficiency reports
+      show_create_report_button: Submission of new deficiency reports
       show_create_report_button_description: >
-        Shows a clearly visible button for submitting new deficiency reports in the sidebar of the deficiency overview page. The button makes it easier for users to report a new deficiency. Disable this option if submission should happen through other channels or if no new reports should be accepted temporarily.
+        Controls whether users can submit new deficiency reports. When this option is disabled, all submit buttons are hidden and the report form can no longer be reached through a direct link either; reports already received stay publicly visible. Disable this option when no new reports should be accepted temporarily, for example during a break in operations.
       show_homepage_cta: Report button on the homepage
       show_homepage_cta_description: >
         Shows an additional button in the homepage hero, below the main call-to-action, that takes users straight to the new deficiency report form. The button label is taken from the "Label of the report button" naming setting. Requires the deficiency reports feature to be enabled.

@@ -18,12 +18,17 @@ class ProjektImports::FromFileJob < ApplicationJob
       content_locale: ProjektImport.default_content_locale
     )
 
-    warn_about_unreadable_pdf_images(projekt_import)
+    # Before the analysis call on purpose: the model can only reserve a content
+    # block with an image slot for images it knows about, and an image that
+    # cannot be carried over is worth reporting while the admin is still in the
+    # chat and can upload it by hand.
+    images_result = ProjektImports::ExtractSourceImagesService.call(projekt_import: projekt_import)
 
     ai_result = ProjektImports::ProcessWithAiService.call(
       text: extract_result.data[:text],
       additional_user_instructions: projekt_import.additional_user_instructions,
-      response_language: projekt_import.import_response_language
+      response_language: projekt_import.import_response_language,
+      source_images: images_result.data[:source_images]
     )
 
     if !ai_result.success?
@@ -37,7 +42,8 @@ class ProjektImports::FromFileJob < ApplicationJob
 
     if text_truncated
       projekt_import.add_warning!(
-        "input_truncated: analyzed #{ai_result.data[:analyzed_text_length]} of #{ai_result.data[:original_text_length]} chars"
+        "input_truncated: analyzed #{ai_result.data[:analyzed_text_length]} of #{ai_result.data[:original_text_length]} chars",
+        stage: ProjektImport::ANALYSIS_WARNING_STAGE
       )
     end
 
@@ -77,29 +83,6 @@ class ProjektImports::FromFileJob < ApplicationJob
     end
   end
 
-  # Raised at extraction time rather than only when the projekt is created: the
-  # admin is still in the chat here, so there is time to upload the images by
-  # hand before anything is built.
-  def warn_about_unreadable_pdf_images(projekt_import)
-    return if ::DocumentImageExtractor.pdfimages_available?
-
-    projekt_import.source_files.each do |source_file|
-      filename = source_file.blob.filename.to_s
-      next if File.extname(filename).downcase != ".pdf"
-      next if !pdf_carries_images?(source_file)
-
-      projekt_import.add_warning!(
-        I18n.t("adm.projekts.imports.warnings.pdf_images_tool_missing", filename: filename)
-      )
-    end
-  end
-
-  def pdf_carries_images?(source_file)
-    ::AttachmentUpload.open(source_file) do |file|
-      ::DocumentImageExtractor.call(file: file).data[:unextractable]
-    end
-  end
-
   def transition_to_chat(projekt_import, text_truncated: false)
     ai_chat = AiChat.create!(resource: projekt_import)
 
@@ -116,6 +99,22 @@ class ProjektImports::FromFileJob < ApplicationJob
       )
     end
 
+    post_title_image_picker(ai_chat)
+
     projekt_import.update!(status: "chatting")
+  end
+
+  # A message rather than a control in the chrome: the choice is part of what the
+  # assistant reports back about the uploaded documents, and it belongs next to
+  # the summary of what it found in them. The message carries no text of its own —
+  # the partial renders the candidates from the import's stored images, so it keeps
+  # showing the current choice however often it is re-rendered.
+  def post_title_image_picker(ai_chat)
+    ai_chat.ai_chat_messages.create!(
+      role: "assistant",
+      content: "",
+      status: "completed",
+      custom_command: ProjektImport::TITLE_IMAGE_PICKER_COMMAND
+    )
   end
 end

@@ -44,7 +44,7 @@ class ProjektEvaluations::GenerateProjectContentSummary < ApplicationService
 
     def get_ai_response(content)
       response = Ai::RubyLlmFactory
-        .chat
+        .chat(feature: "projekt_evaluations.project_content_summary")
         .with_instructions(system_instructions)
         .ask(content)
 

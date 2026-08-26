@@ -1,5 +1,6 @@
 class Adm::BaseController < ActionController::Base
   include Pundit::Authorization
+  include Adm::PolicyLookup
   include Pagy::Backend
   include LocaleSwitching
 
@@ -14,8 +15,7 @@ class Adm::BaseController < ActionController::Base
   after_action :verify_policy_scoped, only: :index
 
   rescue_from Pundit::NotAuthorizedError do |exception|
-    Sentry.capture_exception(exception, level: :warning)
-    redirect_to root_path, alert: t("adm.not_authorized")
+    handle_not_authorized(exception, root_path)
   end
 
   helper KernHelper
@@ -32,6 +32,23 @@ class Adm::BaseController < ActionController::Base
   }.freeze
 
   private
+
+    def handle_not_authorized(exception, fallback_path)
+      Sentry.capture_exception(exception, level: :warning)
+
+      if turbo_frame_request_id.present?
+        render turbo_stream: turbo_stream.replace(
+          turbo_frame_request_id,
+          not_authorized_frame_message
+        ), status: :forbidden
+      else
+        redirect_to fallback_path, alert: t("adm.not_authorized")
+      end
+    end
+
+    def not_authorized_frame_message
+      request.get? ? t("adm.not_authorized") : t("adm.not_authorized_edit")
+    end
 
     # Adm::BaseController inherits from ActionController::Base, so it doesn't run
     # ApplicationController#set_return_url. Without it, an unauthenticated user
@@ -70,60 +87,5 @@ class Adm::BaseController < ActionController::Base
       section_key = namespace.demodulize.underscore
       Setting["#{section_key}.feature_name"].presence ||
         I18n.t("#{namespace.gsub('::', '.').underscore}.title")
-    end
-
-    def policy_class_for(record)
-      record_class = record.is_a?(Class) ? record : record.class.base_class
-
-      case record_class.name
-      when "Setting"
-        Adm::SettingPolicy
-      when "Projekt"
-        Adm::Projekts::ProjektPolicy
-      when "ProjektSetting"
-        Adm::Projekts::ProjektSettingPolicy
-      when "ProjektPhase", "ProjektPhaseSetting"
-        Adm::Projekts::ProjektPhasePolicy
-      when "ProjektManager"
-        Adm::Projekts::ProjektManagerPolicy
-      when "Idea"
-        Adm::Ideas::IdeaPolicy
-      when "DeficiencyReport"
-        Adm::DeficiencyReports::DeficiencyReportPolicy
-      when "Poll::Question"
-        Adm::Projekts::PollQuestionPolicy
-      when "Budget::Phase", "Budget", "Budget::Investment", "Budget::Heading"
-        Adm::Projekts::BudgetPolicy
-      when "ExternalApiKey"
-        Adm::ExternalApiKeyPolicy
-      when "ApiClient"
-        Adm::ApiClientPolicy
-      when "ApiRequestLog"
-        Adm::ApiRequestLogPolicy
-      when "SiteCustomization::EmailTemplate"
-        Adm::SiteCustomization::EmailTemplatePolicy
-      when "SiteCustomization::Page"
-        Adm::SiteCustomization::PagePolicy
-      when "SiteCustomization::Image"
-        Adm::SiteCustomization::ImagePolicy
-      when "SiteCustomization::Video"
-        Adm::SiteCustomization::VideoPolicy
-      when "SiteCustomization::ContentBlock"
-        Adm::SiteCustomization::ContentBlockPolicy
-      when "Newsletter"
-        Adm::NewsletterPolicy
-      when "Image"
-        Adm::ImagePolicy
-      when "Document"
-        Adm::DocumentPolicy
-      when "AdminAsset"
-        Adm::AdminAssetPolicy
-      when "AdminImage"
-        Adm::AdminImagePolicy
-      when "Poll"
-        Adm::Projekts::PollPolicy
-      else
-        raise ArgumentError, "No policy class defined for #{record_class.name}"
-      end
     end
 end

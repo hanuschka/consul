@@ -19,7 +19,7 @@ class DeficiencyReport < ApplicationRecord
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases
 
-  audited only: %i[video_url on_behalf_of cached_votes_up cached_votes_down
+  audited only: %i[video_url on_behalf_of recorded_by_id cached_votes_up cached_votes_down
                    deficiency_report_status_id deficiency_report_category_id
                    deficiency_report_subcategory_id responsible_type responsible_id]
   has_associated_audits
@@ -42,6 +42,7 @@ class DeficiencyReport < ApplicationRecord
   belongs_to :intake_channel, class_name: "DeficiencyReport::IntakeChannel",
     foreign_key: :deficiency_report_intake_channel_id
   belongs_to :author, -> { with_hidden }, class_name: "User", inverse_of: :deficiency_reports
+  belongs_to :recorded_by, -> { with_hidden }, class_name: "User", optional: true, inverse_of: false
   belongs_to :responsible, polymorphic: true
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   has_many :watches, class_name: "DeficiencyReport::Watch", dependent: :destroy,
@@ -169,6 +170,10 @@ class DeficiencyReport < ApplicationRecord
     closed_to_archive.update_all(archived_at: Time.zone.now)
   end
 
+  def self.submissions_open?
+    Setting["deficiency_reports.show_create_report_button"].present?
+  end
+
   def searchable_values
     {
       id.to_s               => "A",
@@ -188,6 +193,14 @@ class DeficiencyReport < ApplicationRecord
 
   def code
     "CONSUL-DF-#{created_at.strftime("%Y-%m")}-#{id}"
+  end
+
+  def on_behalf_of_differs_from_author?
+    on_behalf_of.present? && on_behalf_of != author.username
+  end
+
+  def on_behalf_of_account_linked?
+    recorded_by.present? && recorded_by_id != author_id
   end
 
   def publicly_visible?
@@ -253,6 +266,13 @@ class DeficiencyReport < ApplicationRecord
     else
       []
     end
+  end
+
+  def email_officers_individually?
+    return true unless responsible.is_a?(DeficiencyReport::OfficerGroup)
+
+    responsible.default_email.blank? ||
+      Setting["deficiency_reports.officer_groups_only_for_assignment"].blank?
   end
 
   def archived?

@@ -15,7 +15,11 @@
 %>
 
 <% questions.each do |question| %>
-  <% if (question["nested_questions"] || []).any? %>
+  <% if question["vote_type"] == "map_points" %>
+    <%= render partial: "adm/projekts/projekts/evaluation/poll_question_map",
+      locals: { question: question, pdf_mode: pdf_mode } %>
+
+  <% elsif (question["nested_questions"] || []).any? %>
     <%= render partial: "adm/projekts/projekts/evaluation/poll_question_bundle",
       locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable, pdf_mode: pdf_mode } %>
   <% else %>

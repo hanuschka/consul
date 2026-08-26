@@ -59,6 +59,37 @@ namespace :machine_translation do
     puts "  run machine_translation:clear_cache once the queue has drained"
   end
 
+  desc "Estimate the DeepL characters needed to translate UI chrome into a target locale"
+  task :chrome_estimate, [:locale] => :environment do |_task, args|
+    locale = MachineTranslation::Tasks.validate_locale!(args[:locale])
+    entries = MachineTranslation::ChromeWriter.new(locale).pending_entries
+    characters = entries.sum { |entry| entry[:source].length }
+
+    puts format("  %-28s %6d keys %10d chars (~EUR %.2f at 22/1M)", locale, entries.size,
+                characters, characters / 1_000_000.0 * 22)
+  end
+
+  desc "Translate missing UI chrome into a target locale and store it in I18nContent"
+  task :chrome, [:locale, :limit] => :environment do |_task, args|
+    locale = MachineTranslation::Tasks.validate_locale!(args[:locale])
+
+    unless MachineTranslation.enabled?
+      abort "machine translation is disabled (needs a DeepL key and " \
+            "#{MachineTranslation::SETTING_KEY})"
+    end
+
+    result = MachineTranslation::ChromeWriter.new(locale, limit: args[:limit].presence&.to_i).call
+
+    puts "  wrote #{result[:written]} keys into #{locale} (#{result[:characters]} chars sent)"
+
+    if result[:rejected].any?
+      puts "  rejected #{result[:rejected].size} keys whose placeholders did not survive:"
+      result[:rejected].first(20).each { |key| puts "    #{key}" }
+    end
+
+    MachineTranslation::ChromeStore.reset!
+  end
+
   desc "Clear the fragment cache after a backfill (backfill writes skip the parent touch)"
   task clear_cache: :environment do
     Rails.cache.clear

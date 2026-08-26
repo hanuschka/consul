@@ -25,6 +25,10 @@ module MachineTranslation
       end
     end
 
+    def chrome_rows_per_locale
+      I18nContent.translation_class.unscoped.group(:locale).count.transform_keys(&:to_s)
+    end
+
     def pending_count
       RemoteTranslation.where(error_message: nil).count
     end

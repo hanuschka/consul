@@ -79,6 +79,7 @@
           <tr>
             <th scope="col"><%= t(".locales.locale") %></th>
             <th scope="col"><%= t(".locales.rows") %></th>
+            <th scope="col"><%= t(".locales.chrome_rows") %></th>
             <th scope="col"><span class="kern-visually-hidden"><%= t(".locales.actions") %></span></th>
           </tr>
         </thead>
@@ -87,6 +88,7 @@
             <tr>
               <td><%= t("locale.#{locale}", default: locale.to_s) %> <span class="kern-body">(<%= locale %>)</span></td>
               <td><%= number_with_delimiter(@rows_per_locale[locale.to_s].to_i) %></td>
+              <td><%= number_with_delimiter(@chrome_rows_per_locale[locale.to_s].to_i) %></td>
               <td>
                 <%= link_to t(".locales.purge"),
                       adm_machine_translation_path(locale),

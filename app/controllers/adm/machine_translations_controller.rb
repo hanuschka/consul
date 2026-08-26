@@ -6,6 +6,7 @@ class Adm::MachineTranslationsController < Adm::BaseController
 
     @usage = MachineTranslation::Stats.usage
     @rows_per_locale = MachineTranslation::Stats.rows_per_locale
+    @chrome_rows_per_locale = MachineTranslation::Stats.chrome_rows_per_locale
     @pending_count = MachineTranslation::Stats.pending_count
     failures = policy_scope(MachineTranslation::Stats.failures,
                             policy_scope_class: Adm::MachineTranslationPolicy::Scope)

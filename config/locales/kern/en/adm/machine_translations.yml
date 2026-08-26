@@ -42,13 +42,15 @@ en:
         locales:
           title: Stored translations
           locale: Language
-          rows: Records
+          rows: Content
+          chrome_rows: Interface text
           actions: Actions
           purge: Delete
           purge_confirm: Delete all machine translations for %{language}? Human-written content is kept.
           purge_hint: >
-            Only machine-generated translations are deleted. The oldest record for each item counts
-            as the original and is always kept.
+            Only machine-generated content translations are deleted. The oldest record for each item
+            counts as the original and is always kept. Interface text is never deleted, because it
+            may have been corrected by hand.
           none: No target languages are enabled.
         failures:
           title: Failed translations

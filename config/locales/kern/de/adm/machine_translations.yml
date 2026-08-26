@@ -43,15 +43,17 @@ de:
         locales:
           title: Gespeicherte Übersetzungen
           locale: Sprache
-          rows: Datensätze
+          rows: Inhalte
+          chrome_rows: Oberflächentexte
           actions: Aktionen
           purge: Löschen
           purge_confirm: >
             Alle maschinellen Übersetzungen für %{language} löschen? Von Personen verfasste Inhalte
             bleiben erhalten.
           purge_hint: >
-            Gelöscht werden nur maschinell erzeugte Übersetzungen. Der jeweils zuerst angelegte
-            Datensatz gilt als Originalfassung und bleibt immer erhalten.
+            Gelöscht werden nur maschinell erzeugte Übersetzungen von Inhalten. Der jeweils zuerst
+            angelegte Datensatz gilt als Originalfassung und bleibt immer erhalten.
+            Oberflächentexte werden nicht gelöscht, da sie auch von Hand korrigiert sein können.
           none: Es sind keine Zielsprachen aktiviert.
         failures:
           title: Fehlgeschlagene Übersetzungen

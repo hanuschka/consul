@@ -36,7 +36,7 @@ module LocaleSwitching
     end
 
     def persist_user_locale(locale)
-      return if current_user.blank?
+      return unless current_user&.persisted?
       return if current_user.locale == locale.to_s
 
       current_user.update_column(:locale, locale.to_s)

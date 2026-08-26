@@ -10,6 +10,15 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   translates :body, touch: true
   include MachineTranslatable
 
+  def _assign_attributes(new_attributes)
+    super
+
+    return unless new_attributes.respond_to?(:stringify_keys)
+
+    given_locale = new_attributes.stringify_keys["locale"]
+    self[:locale] = given_locale if given_locale.present?
+  end
+
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
 
   # The key is unique across the whole table (locale_key_name_index) and encodes

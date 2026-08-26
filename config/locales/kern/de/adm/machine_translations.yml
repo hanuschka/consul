@@ -1,0 +1,63 @@
+de:
+  adm:
+    machine_translations:
+      flash:
+        unknown_locale: Unbekannte Sprache.
+        purged:
+          one: "%{count} maschinelle Übersetzung für %{language} gelöscht."
+          other: "%{count} maschinelle Übersetzungen für %{language} gelöscht."
+      index:
+        title: Maschinelle Übersetzung
+        intro: >
+          Übersicht über den DeepL-Verbrauch, die Warteschlange und die gespeicherten Übersetzungen.
+        warnings:
+          not_configured:
+            title: DeepL ist nicht eingerichtet
+            body: >
+              In der Serverkonfiguration ist kein DeepL-API-Schlüssel hinterlegt. Es werden keine
+              Inhalte übersetzt, bis der Schlüssel eingetragen ist.
+          feature_disabled:
+            title: Funktion nicht aktiviert
+            body: >
+              Ein DeepL-Schlüssel ist vorhanden, die Funktion "Maschinelle Übersetzung" ist aber
+              abgeschaltet. Neue Inhalte werden nicht übersetzt.
+          circuit_open:
+            title: Verbindung zu DeepL unterbrochen
+            body: >
+              Nach mehreren Fehlern in Folge werden für kurze Zeit keine Anfragen mehr an DeepL
+              gesendet. Der Versand wird automatisch wieder aufgenommen.
+        usage:
+          title: DeepL-Verbrauch
+          used: Verbrauchte Zeichen
+          limit: Kontingent
+          share: Ausgelastet
+          unlimited: Unbegrenzt
+          unavailable: Der Verbrauch konnte nicht von DeepL abgerufen werden.
+        queue:
+          title: Warteschlange
+          pending: Offene Übersetzungen
+          failed: Fehlgeschlagen
+          circuit: Verbindung
+          circuit_open: Unterbrochen
+          circuit_closed: In Ordnung
+        locales:
+          title: Gespeicherte Übersetzungen
+          locale: Sprache
+          rows: Datensätze
+          actions: Aktionen
+          purge: Löschen
+          purge_confirm: >
+            Alle maschinellen Übersetzungen für %{language} löschen? Von Personen verfasste Inhalte
+            bleiben erhalten.
+          purge_hint: >
+            Gelöscht werden nur maschinell erzeugte Übersetzungen. Der jeweils zuerst angelegte
+            Datensatz gilt als Originalfassung und bleibt immer erhalten.
+          none: Es sind keine Zielsprachen aktiviert.
+        failures:
+          title: Fehlgeschlagene Übersetzungen
+          resource: Inhalt
+          locale: Sprache
+          error: Fehler
+          updated_at: Zuletzt versucht
+          none_title: Keine Fehler
+          none_body: Alle Übersetzungen wurden bisher erfolgreich verarbeitet.

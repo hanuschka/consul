@@ -1,0 +1,133 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, compact: true) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".intro") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container">
+  <% unless configured? %>
+    <div class="mb-3">
+      <%= kern_alert(title: t(".warnings.not_configured.title"), style: :warning) do %>
+        <p class="kern-body"><%= t(".warnings.not_configured.body") %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if configured? && !feature_enabled? %>
+    <div class="mb-3">
+      <%= kern_alert(title: t(".warnings.feature_disabled.title"), style: :info) do %>
+        <p class="kern-body"><%= t(".warnings.feature_disabled.body") %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @circuit_open %>
+    <div class="mb-3">
+      <%= kern_alert(title: t(".warnings.circuit_open.title"), style: :error) do %>
+        <p class="kern-body"><%= t(".warnings.circuit_open.body") %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="kern-title kern-title--small mb-3"><%= t(".usage.title") %></div>
+  <% if @usage.present? %>
+    <% limit = @usage["character_limit"].to_i %>
+    <% used = @usage["character_count"].to_i %>
+    <div class="kern-row mb-4">
+      <div class="kern-col-12 kern-col-md-4">
+        <p class="kern-body mb-1"><%= t(".usage.used") %></p>
+        <p class="kern-title"><%= number_with_delimiter(used) %></p>
+      </div>
+      <div class="kern-col-12 kern-col-md-4">
+        <p class="kern-body mb-1"><%= t(".usage.limit") %></p>
+        <p class="kern-title"><%= limit.positive? ? number_with_delimiter(limit) : t(".usage.unlimited") %></p>
+      </div>
+      <div class="kern-col-12 kern-col-md-4">
+        <p class="kern-body mb-1"><%= t(".usage.share") %></p>
+        <p class="kern-title">
+          <%= limit.positive? ? number_to_percentage(used * 100.0 / limit, precision: 1) : "—" %>
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <p class="kern-body mb-4"><%= t(".usage.unavailable") %></p>
+  <% end %>
+
+  <div class="kern-title kern-title--small mb-3"><%= t(".queue.title") %></div>
+  <div class="kern-row mb-4">
+    <div class="kern-col-12 kern-col-md-4">
+      <p class="kern-body mb-1"><%= t(".queue.pending") %></p>
+      <p class="kern-title"><%= number_with_delimiter(@pending_count) %></p>
+    </div>
+    <div class="kern-col-12 kern-col-md-4">
+      <p class="kern-body mb-1"><%= t(".queue.failed") %></p>
+      <p class="kern-title"><%= number_with_delimiter(@failures_count) %></p>
+    </div>
+    <div class="kern-col-12 kern-col-md-4">
+      <p class="kern-body mb-1"><%= t(".queue.circuit") %></p>
+      <p class="kern-title"><%= @circuit_open ? t(".queue.circuit_open") : t(".queue.circuit_closed") %></p>
+    </div>
+  </div>
+
+  <div class="kern-title kern-title--small mb-3"><%= t(".locales.title") %></div>
+  <% if @target_locales.any? %>
+    <div class="adm-table-wrapper mb-4">
+      <table class="kern-table">
+        <thead>
+          <tr>
+            <th scope="col"><%= t(".locales.locale") %></th>
+            <th scope="col"><%= t(".locales.rows") %></th>
+            <th scope="col"><span class="kern-visually-hidden"><%= t(".locales.actions") %></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @target_locales.each do |locale| %>
+            <tr>
+              <td><%= t("locale.#{locale}", default: locale.to_s) %> <span class="kern-body">(<%= locale %>)</span></td>
+              <td><%= number_with_delimiter(@rows_per_locale[locale.to_s].to_i) %></td>
+              <td>
+                <%= link_to t(".locales.purge"),
+                      adm_machine_translation_path(locale),
+                      class: "kern-button kern-button--outline kern-button--small",
+                      data: { turbo_method: :delete, turbo_confirm: t(".locales.purge_confirm", language: locale) } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <p class="kern-body mb-4"><%= t(".locales.purge_hint") %></p>
+  <% else %>
+    <p class="kern-body mb-4"><%= t(".locales.none") %></p>
+  <% end %>
+
+  <div class="kern-title kern-title--small mb-3"><%= t(".failures.title") %></div>
+  <% if @failures.any? %>
+    <div class="adm-table-wrapper">
+      <table class="kern-table">
+        <thead>
+          <tr>
+            <th scope="col"><%= t(".failures.resource") %></th>
+            <th scope="col"><%= t(".failures.locale") %></th>
+            <th scope="col"><%= t(".failures.error") %></th>
+            <th scope="col"><%= t(".failures.updated_at") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @failures.each do |failure| %>
+            <tr>
+              <td><%= failure.remote_translatable_type %> #<%= failure.remote_translatable_id %></td>
+              <td><%= failure.locale %></td>
+              <td><%= truncate(failure.error_message.to_s, length: 160) %></td>
+              <td><%= l(failure.updated_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= empty_state(title: t(".failures.none_title"), description: t(".failures.none_body"), icon: "check_circle") %>
+  <% end %>
+</div>

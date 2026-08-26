@@ -1,0 +1,60 @@
+en:
+  adm:
+    machine_translations:
+      flash:
+        unknown_locale: Unknown language.
+        purged:
+          one: "Deleted %{count} machine translation for %{language}."
+          other: "Deleted %{count} machine translations for %{language}."
+      index:
+        title: Machine translation
+        intro: DeepL usage, the translation queue, and stored translations.
+        warnings:
+          not_configured:
+            title: DeepL is not set up
+            body: >
+              No DeepL API key is present in the server configuration. Nothing will be translated
+              until the key is added.
+          feature_disabled:
+            title: Feature is switched off
+            body: >
+              A DeepL key is present, but machine translation is switched off. New content will not
+              be translated.
+          circuit_open:
+            title: DeepL connection paused
+            body: >
+              After several consecutive failures, requests to DeepL are paused for a short while.
+              They resume automatically.
+        usage:
+          title: DeepL usage
+          used: Characters used
+          limit: Allowance
+          share: Used
+          unlimited: Unlimited
+          unavailable: Usage could not be retrieved from DeepL.
+        queue:
+          title: Queue
+          pending: Pending
+          failed: Failed
+          circuit: Connection
+          circuit_open: Paused
+          circuit_closed: OK
+        locales:
+          title: Stored translations
+          locale: Language
+          rows: Records
+          actions: Actions
+          purge: Delete
+          purge_confirm: Delete all machine translations for %{language}? Human-written content is kept.
+          purge_hint: >
+            Only machine-generated translations are deleted. The oldest record for each item counts
+            as the original and is always kept.
+          none: No target languages are enabled.
+        failures:
+          title: Failed translations
+          resource: Content
+          locale: Language
+          error: Error
+          updated_at: Last attempt
+          none_title: No failures
+          none_body: Every translation has been processed successfully so far.

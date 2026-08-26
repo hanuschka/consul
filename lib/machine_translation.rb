@@ -15,6 +15,14 @@ module MachineTranslation
     locale != source_locale && I18n.available_locales.include?(locale)
   end
 
+  def self.target_locales
+    I18n.available_locales.map(&:to_sym) - [source_locale]
+  end
+
+  def self.translatable_locales
+    target_locales.select { |locale| Deepl::Languages.supported?(locale) }
+  end
+
   def self.enabled?
     Deepl.configured?
   rescue StandardError

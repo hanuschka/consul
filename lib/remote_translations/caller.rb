@@ -1,8 +1,9 @@
 class RemoteTranslations::Caller
   attr_reader :remote_translation
 
-  def initialize(remote_translation)
+  def initialize(remote_translation, source_locale: nil)
     @remote_translation = remote_translation
+    @source_locale = source_locale
   end
 
   def call
@@ -35,16 +36,31 @@ class RemoteTranslations::Caller
     end
 
     def translations
-      @translations ||= RemoteTranslations::Microsoft::Client.new.call(fields_values, locale)
+      @translations ||= Deepl::Client.new.translate(fields_values,
+                                                    target_locale: locale,
+                                                    source_locale: deepl_source_locale,
+                                                    tag_handling: "html")
     end
 
     def fields_values
-      resource.translated_attribute_names.map do |field|
-        WYSIWYGSanitizer.new.sanitize(resource.send(field))
+      Globalize.with_locale(source_locale) do
+        resource.translated_attribute_names.map { |field| resource.send(field) }
       end
     end
 
     def locale
       remote_translation.locale
+    end
+
+    def source_locale
+      @source_locale.presence || authored_locale || MachineTranslation.source_locale
+    end
+
+    def authored_locale
+      resource.translations.order(:created_at, :id).first&.locale
+    end
+
+    def deepl_source_locale
+      source_locale if Deepl::Languages.supported?(source_locale)
     end
 end

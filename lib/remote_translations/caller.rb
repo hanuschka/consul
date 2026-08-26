@@ -28,7 +28,7 @@ class RemoteTranslations::Caller
       return false if hidden_resource?
 
       row = existing_row
-      return false if row&.hidden_at.present?
+      return false if row && MachineTranslation.hidden_row?(row)
 
       row ||= resource.translations.new(locale: locale)
 
@@ -47,7 +47,7 @@ class RemoteTranslations::Caller
     end
 
     def existing_row
-      resource.translations.with_deleted.find_by(locale: locale)
+      MachineTranslation.all_translations(resource).find_by(locale: locale)
     end
 
     def resource
@@ -76,7 +76,7 @@ class RemoteTranslations::Caller
     end
 
     def authored_locale
-      resource.translations.order(:created_at, :id).first&.locale
+      MachineTranslation.all_translations(resource).order(:created_at, :id).first&.locale
     end
 
     def deepl_source_locale

@@ -8,10 +8,11 @@ class RemoteTranslation < ApplicationRecord
   validate :translating_into_source_locale
   after_create :enqueue_remote_translation
 
-  attr_accessor :source_locale
+  attr_accessor :source_locale, :backfill
 
   def enqueue_remote_translation
-    RemoteTranslations::Caller.new(self, source_locale: source_locale).delay.call
+    RemoteTranslations::Caller.new(self, source_locale: source_locale, backfill: backfill.present?)
+                             .delay.call
   end
 
   def self.remote_translation_enqueued?(remote_translation)

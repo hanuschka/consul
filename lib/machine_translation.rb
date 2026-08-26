@@ -23,6 +23,7 @@ module MachineTranslation
     target_locales.select { |locale| Deepl::Languages.supported?(locale) }
   end
 
+  PLURAL_CATEGORIES = %i[zero one two few many other].freeze
   SETTING_KEY = "extended_feature.general.machine_translation".freeze
   SUPPRESSION_KEY = :machine_translation_suppressed
 
@@ -54,6 +55,19 @@ module MachineTranslation
     end.sort_by(&:name)
   end
 
+  def self.plural_category(locale, count)
+    backend = I18n.backend
+
+    if backend.respond_to?(:pluralizer, true)
+      rule = backend.send(:pluralizer, locale)
+      return rule.call(count) if rule.respond_to?(:call)
+    end
+
+    count == 1 ? :one : :other
+  rescue StandardError
+    count == 1 ? :one : :other
+  end
+
   def self.suppress
     previous = Thread.current[SUPPRESSION_KEY]
     Thread.current[SUPPRESSION_KEY] = true
@@ -82,6 +96,19 @@ module MachineTranslation
     ApplicationRecord.descendants.select do |model|
       model.include?(MachineTranslatable) && model.name.present? && model.base_class == model
     end.sort_by(&:name)
+  end
+
+  def self.plural_category(locale, count)
+    backend = I18n.backend
+
+    if backend.respond_to?(:pluralizer, true)
+      rule = backend.send(:pluralizer, locale)
+      return rule.call(count) if rule.respond_to?(:call)
+    end
+
+    count == 1 ? :one : :other
+  rescue StandardError
+    count == 1 ? :one : :other
   end
 
   def self.suppressed?

@@ -2,7 +2,6 @@ class Adm::BaseController < ActionController::Base
   include Pundit::Authorization
   include Pagy::Backend
   include LocaleSwitching
-  include GlobalizeFallbacks
 
   default_form_builder KernFormBuilder
 

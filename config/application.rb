@@ -83,17 +83,13 @@ module Consul
       "zh-CN",
       "zh-TW"]
     config.i18n.available_locales = available_locales
-    config.i18n.fallbacks = [:de]
+    config.i18n.fallbacks = [:en, :de]
 
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**[^custom]*", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom_updates", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "cli", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "kern", "**", "*.{rb,yml}")]
-
-    config.after_initialize do
-      Globalize.set_fallbacks_to_all_available_locales
-    end
 
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
     config.assets.paths << Rails.root.join("vendor", "assets", "fonts")

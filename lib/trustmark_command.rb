@@ -70,10 +70,16 @@ module TrustmarkCommand
 
   PROBE_TIMEOUT = 30.seconds
 
-  # Memoised: the answer cannot change without the process being restarted, and
-  # every generated image would otherwise pay for the probe.
+  # Only a healthy result is memoised. A working runtime cannot stop working
+  # under a running process, so that answer is worth keeping, and every
+  # generated image would otherwise pay for the probe. A failure is re-probed
+  # because the usual cause is a box that has not been provisioned yet: once
+  # the packages arrive it recovers on the next attempt rather than waiting for
+  # a restart, and the extra subprocess only runs on a path already failing.
   def self.runtime_status
-    @runtime_status ||= probe_runtime
+    return @runtime_status if @runtime_status == READY
+
+    @runtime_status = probe_runtime
   end
 
   def self.available?

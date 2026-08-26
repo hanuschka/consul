@@ -38,6 +38,10 @@ module MachineTranslation
     scope.respond_to?(:with_deleted) ? scope.with_deleted : scope
   end
 
+  def self.authored_locale(record)
+    all_translations(record).order(:created_at, :id).first&.locale
+  end
+
   def self.hidden_row?(row)
     row.respond_to?(:hidden_at) && row.hidden_at.present?
   end
@@ -62,6 +66,10 @@ module MachineTranslation
     scope = record.translations
 
     scope.respond_to?(:with_deleted) ? scope.with_deleted : scope
+  end
+
+  def self.authored_locale(record)
+    all_translations(record).order(:created_at, :id).first&.locale
   end
 
   def self.hidden_row?(row)

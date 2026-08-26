@@ -76,7 +76,7 @@ class RemoteTranslations::Caller
     end
 
     def authored_locale
-      MachineTranslation.all_translations(resource).order(:created_at, :id).first&.locale
+      MachineTranslation.authored_locale(resource)
     end
 
     def deepl_source_locale

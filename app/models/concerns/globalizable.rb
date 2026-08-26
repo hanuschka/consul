@@ -70,12 +70,21 @@ module Globalizable
 
       def searchable_globalized_values
         values = {}
-        translations.each do |translation|
-          Globalize.with_locale(translation.locale) do
+        searchable_locales.each do |locale|
+          Globalize.with_locale(locale) do
             values.merge! searchable_translations_definitions
           end
         end
         values
+      end
+
+      # Machine-translated rows are excluded from the tsvector: merging ten
+      # locales into one document risks Postgres' 1 MB index limit, which
+      # fails the save rather than just degrading search.
+      def searchable_locales
+        return translations.map(&:locale) unless MachineTranslation.enabled?
+
+        [MachineTranslation.authored_locale(self)].compact
       end
   end
 

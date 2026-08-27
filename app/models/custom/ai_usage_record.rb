@@ -12,6 +12,7 @@ class AiUsageRecord < ApplicationRecord
     content_blocks.generate
     content_blocks.generate_with_prompt
     deficiency_reports.categorization
+    projekt_evaluations.ai_project_summary
     projekt_evaluations.phase_key_findings
     projekt_evaluations.phase_short_summary
     projekt_evaluations.project_content_summary

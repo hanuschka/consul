@@ -23,6 +23,7 @@ class Image
   end
 
   before_save :clear_generated_flags_on_replaced_attachment
+  before_save :confirm_in_app_marking
 
   # Writers that mean to keep or set a flag assign it in the same save; a path
   # that only swaps the file (the /adm banner upload, an API update that omits
@@ -43,6 +44,67 @@ class Image
   end
 
   private
+
+    # A form can declare that a picture is AI-generated, which is a claim about
+    # disclosure and safe to take at face value. It cannot be trusted to set
+    # ai_generated_in_app, since that exempts the file from the EXIF strip and
+    # would publish an uploader's camera GPS. So the claim is checked against
+    # the bytes: only a picture that actually carries this app's marker gets
+    # the exemption.
+    #
+    # Read from the pending upload rather than the stored blob: Active Storage
+    # uploads in an after_commit, so at any earlier point the blob is not yet
+    # readable from the service.
+    def confirm_in_app_marking
+      return if ai_generated_in_app? || !ai_generated?
+
+      pending_attachment = attachment_changes["attachment"]
+      return if pending_attachment.blank?
+
+      if generated_marker?(pending_attachment.attachable)
+        self.ai_generated_in_app = true
+      end
+    end
+
+    def generated_marker?(attachable)
+      case attachable
+      when ActionDispatch::Http::UploadedFile
+        marker_at?(attachable.tempfile.path)
+      when ActiveStorage::Blob
+        marker_in?(attachable.download)
+      when String
+        blob = ActiveStorage::Blob.find_signed(attachable)
+
+        blob.present? && marker_in?(blob.download)
+      else
+        false
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[Image] marker check failed: #{e.message}")
+
+      false
+    end
+
+    def marker_in?(bytes)
+      file = Tempfile.new(["marker_check", ".jpg"], binmode: true)
+
+      begin
+        file.write(bytes)
+        file.flush
+
+        marker_at?(file.path)
+      ensure
+        file.close
+        file.unlink
+      end
+    end
+
+    def marker_at?(path)
+      ::ExiftoolCommand.read_tag(
+        path,
+        ::Images::MarkAiGeneratedService::DIGITAL_SOURCE_TYPE_TAG
+      ) == ::Images::MarkAiGeneratedService::TRAINED_ALGORITHMIC_MEDIA
+    end
 
     def clear_generated_flags_on_replaced_attachment
       # The declarations count for one save, so they are consumed here rather

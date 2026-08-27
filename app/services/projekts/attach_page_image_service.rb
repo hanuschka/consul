@@ -4,15 +4,19 @@
 # an image generator, reset the association so the caller sees the new
 # attachment.
 class Projekts::AttachPageImageService < ApplicationService
-  attr_reader :projekt, :user, :data, :filename, :content_type, :ai_generated
+  attr_reader :projekt, :user, :data, :filename, :content_type, :ai_generated,
+              :ai_system, :ai_system_version
 
-  def initialize(projekt:, user:, data:, filename:, content_type:, ai_generated: false)
+  def initialize(projekt:, user:, data:, filename:, content_type:, ai_generated: false,
+                 ai_system: nil, ai_system_version: nil)
     @projekt = projekt
     @user = user
     @data = data
     @filename = filename
     @content_type = content_type
     @ai_generated = ai_generated
+    @ai_system = ai_system
+    @ai_system_version = ai_system_version
   end
 
   def call
@@ -60,7 +64,9 @@ class Projekts::AttachPageImageService < ApplicationService
         image: image,
         data: data,
         filename: filename,
-        content_type: content_type
+        content_type: content_type,
+        ai_system: ai_system.presence || ::DtApi::Resources::Ai::PROVIDER_NAME,
+        ai_system_version: ai_system_version
       ).data[:image_data]
     end
 end

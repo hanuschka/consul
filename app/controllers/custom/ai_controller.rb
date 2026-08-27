@@ -75,7 +75,7 @@ class AiController < ApplicationController
     end
 
     begin
-      attach_generated_image(resource, image_response.parsed_response["image"])
+      attach_generated_image(resource, image_response.parsed_response)
     rescue Images::MarkAiGeneratedService::MarkingFailedError
       render json: { error: I18n.t("custom.ai.errors.marking_unavailable") },
              status: :service_unavailable
@@ -122,10 +122,16 @@ class AiController < ApplicationController
       resource.update_column(:generated_image, true)
     end
 
-    def attach_generated_image(resource, base64_image)
+    def attach_generated_image(resource, response_body)
       filename = "ai_generated_#{Time.current.to_i}.jpg"
       image = resource.image || Image.new(user: current_user, imageable: resource)
-      file = attachment_tempfile(marked_image_data(base64_image, filename: filename, image: image))
+      marked_data = marked_image_data(
+        response_body["image"],
+        filename: filename,
+        image: image,
+        response_body: response_body
+      )
+      file = attachment_tempfile(marked_data)
 
       begin
         image.attachment = ActionDispatch::Http::UploadedFile.new(
@@ -148,13 +154,14 @@ class AiController < ApplicationController
       marked_data = marked_image_data(
         base64_image,
         filename: "ai_generated_#{Time.current.to_i}.jpg",
-        image: ::Image.new
+        image: ::Image.new,
+        response_body: parsed_response
       )
 
       parsed_response.merge("image" => Base64.strict_encode64(marked_data))
     end
 
-    def marked_image_data(base64_image, filename:, image:)
+    def marked_image_data(base64_image, filename:, image:, response_body: {})
       generated_file = Base64ImageUtils.decode_to_tempfile(base64_image)
 
       begin
@@ -162,7 +169,9 @@ class AiController < ApplicationController
           image: image,
           data: File.binread(generated_file.path),
           filename: filename,
-          content_type: "image/jpeg"
+          content_type: "image/jpeg",
+          ai_system: DtApi::Resources::Ai.reported_provider(response_body),
+          ai_system_version: DtApi::Resources::Ai.reported_model(response_body)
         ).data[:image_data]
       ensure
         generated_file.close

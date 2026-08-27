@@ -32,11 +32,21 @@ class Images::MarkAiGeneratedService < ApplicationService
   TRAINED_ALGORITHMIC_MEDIA =
     "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia".freeze
 
-  def initialize(image:, data:, filename:, content_type:)
+  # Named the generating system rather than only the fact of generation: the
+  # source type answers "was this generated", these answer "by what", which is
+  # the next question every reader of the first answer has. Both are omitted
+  # when the generator does not report a model, so the file never claims a
+  # system it cannot name.
+  AI_SYSTEM_TAG = "XMP-iptcExt:AISystemUsed".freeze
+  AI_SYSTEM_VERSION_TAG = "XMP-iptcExt:AISystemVersionUsed".freeze
+
+  def initialize(image:, data:, filename:, content_type:, ai_system: nil, ai_system_version: nil)
     @image = image
     @data = data
     @filename = filename
     @content_type = content_type
+    @ai_system = ai_system
+    @ai_system_version = ai_system_version
   end
 
   def call
@@ -77,6 +87,19 @@ class Images::MarkAiGeneratedService < ApplicationService
       raise MarkingFailedError.new("marking runtime unavailable (#{status})", reason: status)
     end
 
+    def marking_arguments
+      arguments = [
+        "-overwrite_original",
+        "-jumbf:all=",
+        "-#{DIGITAL_SOURCE_TYPE_TAG}=#{TRAINED_ALGORITHMIC_MEDIA}"
+      ]
+
+      arguments << "-#{AI_SYSTEM_TAG}=#{@ai_system}" if @ai_system.present?
+      arguments << "-#{AI_SYSTEM_VERSION_TAG}=#{@ai_system_version}" if @ai_system_version.present?
+
+      arguments
+    end
+
     def mark
       file = Tempfile.new(["ai_marking", File.extname(@filename)], binmode: true)
 
@@ -84,12 +107,7 @@ class Images::MarkAiGeneratedService < ApplicationService
         file.write(@data)
         file.flush
 
-        result = ::ExiftoolCommand.run(
-          "-overwrite_original",
-          "-jumbf:all=",
-          "-#{DIGITAL_SOURCE_TYPE_TAG}=#{TRAINED_ALGORITHMIC_MEDIA}",
-          file.path
-        )
+        result = ::ExiftoolCommand.run(*marking_arguments, file.path)
 
         if !result.success?
           Rails.logger.warn(

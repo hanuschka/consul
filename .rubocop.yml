@@ -16,7 +16,6 @@ Consul/ImageAttachmentVariant:
   Enabled: true
   Include:
     - "app/**/*.rb"
-    - "app/**/*.erb"
     - "lib/**/*.rb"
   Exclude:
     # Declare the API the rest of the app must go through, so they are the one

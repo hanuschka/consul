@@ -16,16 +16,30 @@
     initialize() {
       const $document = $(document);
 
+      this.destroy();
+
       if (!document.querySelector(".js-va-widget")) { return; }
+
+      $document.on("click.vaWidget", ".js-va-toggle", this.handleToggle.bind(this));
+      $document.on("click.vaWidget", ".js-va-start", this.handleStart.bind(this));
+      $document.on("click.vaWidget", ".js-va-mute", this.handleMute.bind(this));
+      $document.on("click.vaWidget", ".js-va-close", this.handleClose.bind(this));
+    },
+
+    destroy() {
+      $(document).off(".vaWidget");
+
+      if (this.session) {
+        this.session.stop();
+      }
+
+      if (this.noticeTimer) {
+        clearTimeout(this.noticeTimer);
+      }
 
       this.session = null;
       this.sessionWidget = null;
       this.noticeTimer = null;
-
-      $document.on("click", ".js-va-toggle", this.handleToggle.bind(this));
-      $document.on("click", ".js-va-start", this.handleStart.bind(this));
-      $document.on("click", ".js-va-mute", this.handleMute.bind(this));
-      $document.on("click", ".js-va-close", this.handleClose.bind(this));
     },
 
     handleToggle(event) {

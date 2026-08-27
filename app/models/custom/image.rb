@@ -15,6 +15,13 @@ class Image
     attachment.variant(**options, strip: true)
   end
 
+  def variant(style)
+    return attachment if style.blank?
+    return if !attachment.attached?
+
+    attachment_variant(**self.class.styles[style])
+  end
+
   before_save :clear_generated_flags_on_replaced_attachment
 
   # Writers that mean to keep or set a flag assign it in the same save; a path

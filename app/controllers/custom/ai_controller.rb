@@ -31,6 +31,15 @@ class AiController < ApplicationController
 
     if response.success?
       mark_resource_generated_image
+
+      begin
+        render json: marked_payload(response.parsed_response), status: response.code
+      rescue Images::MarkAiGeneratedService::MarkingFailedError
+        render json: { error: I18n.t("custom.ai.errors.marking_unavailable") },
+               status: :service_unavailable
+      end
+
+      return
     end
 
     render json: response.parsed_response, status: response.code
@@ -116,22 +125,49 @@ class AiController < ApplicationController
     def attach_generated_image(resource, base64_image)
       filename = "ai_generated_#{Time.current.to_i}.jpg"
       image = resource.image || Image.new(user: current_user, imageable: resource)
+      file = attachment_tempfile(marked_image_data(base64_image, filename: filename, image: image))
+
+      begin
+        image.attachment = ActionDispatch::Http::UploadedFile.new(
+          tempfile: file,
+          filename: filename,
+          type: "image/jpeg"
+        )
+        image.ai_generated = true
+        image.save!
+      ensure
+        file.close
+        file.unlink
+      end
+    end
+
+    def marked_payload(parsed_response)
+      base64_image = parsed_response["image"]
+      return parsed_response if base64_image.blank?
+
+      marked_data = marked_image_data(
+        base64_image,
+        filename: "ai_generated_#{Time.current.to_i}.jpg",
+        image: ::Image.new
+      )
+
+      parsed_response.merge("image" => Base64.strict_encode64(marked_data))
+    end
+
+    def marked_image_data(base64_image, filename:, image:)
       generated_file = Base64ImageUtils.decode_to_tempfile(base64_image)
 
-      marking = Images::MarkAiGeneratedService.call(
-        image: image,
-        data: File.binread(generated_file.path),
-        filename: filename,
-        content_type: "image/jpeg"
-      )
-
-      image.attachment = ActionDispatch::Http::UploadedFile.new(
-        tempfile: attachment_tempfile(marking.data[:image_data]),
-        filename: filename,
-        type: "image/jpeg"
-      )
-      image.ai_generated = true
-      image.save!
+      begin
+        Images::MarkAiGeneratedService.call(
+          image: image,
+          data: File.binread(generated_file.path),
+          filename: filename,
+          content_type: "image/jpeg"
+        ).data[:image_data]
+      ensure
+        generated_file.close
+        generated_file.unlink
+      end
     end
 
     def attachment_tempfile(data)

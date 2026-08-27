@@ -46,6 +46,8 @@ class Projekts::AttachPageImageService < ApplicationService
       file.close
       file.unlink
     end
+  rescue ::Images::MarkAiGeneratedService::MarkingFailedError
+    ServiceResult.failure(error: I18n.t("custom.ai.errors.marking_unavailable"))
   rescue StandardError => e
     Rails.logger.error("[Projekts::AttachPageImageService] failed: #{e.message}")
     ServiceResult.failure(error: e.message)

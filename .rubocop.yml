@@ -2,6 +2,7 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
+  - ./.rubocop/cops/image_attachment_variant.rb
 
 AllCops:
   DisplayCopNames: true
@@ -10,6 +11,21 @@ AllCops:
     - "db/schema.rb"
     - "lib/ckeditor/backend/active_storage.rb"
   DisabledByDefault: true
+
+Consul/ImageAttachmentVariant:
+  Enabled: true
+  Include:
+    - "app/**/*.rb"
+    - "app/**/*.erb"
+    - "lib/**/*.rb"
+  Exclude:
+    # Declare the API the rest of the app must go through, so they are the one
+    # place allowed to reach the attachment.
+    - "app/models/image.rb"
+    - "app/models/custom/image.rb"
+    # A different model with its own named-style API. It never holds a
+    # generated picture, so the AI marking does not apply to it.
+    - "app/models/custom/formular_answer_image.rb"
 
 Bundler/DuplicatedGem:
   Enabled: true

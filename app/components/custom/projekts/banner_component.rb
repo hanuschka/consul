@@ -39,6 +39,17 @@ class Projekts::BannerComponent < ApplicationComponent
     @custom_page.image&.ai_generated? == true
   end
 
+  # An image this app's generator produced is marked in its own bytes at attach
+  # time, so its marker is a fact rather than a declaration the admin may
+  # revoke.
+  def banner_ai_generated_in_app?
+    @custom_page.image&.ai_generated_in_app? == true
+  end
+
+  def ai_marker_button_hidden?
+    @custom_page.image.blank? || banner_ai_generated_in_app?
+  end
+
   def ai_marker_tooltip_title
     I18n.t("custom.projekts.banner_upload.ai_marker_tooltip_title")
   end

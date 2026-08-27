@@ -67,8 +67,8 @@ class AiController < ApplicationController
 
     begin
       attach_generated_image(resource, image_response.parsed_response["image"])
-    rescue Images::EmbedAiWatermarkService::MarkingFailedError
-      render json: { error: I18n.t("custom.ai.errors.watermarking_unavailable") },
+    rescue Images::MarkAiGeneratedService::MarkingFailedError
+      render json: { error: I18n.t("custom.ai.errors.marking_unavailable") },
              status: :service_unavailable
       return
     end
@@ -118,7 +118,7 @@ class AiController < ApplicationController
       image = resource.image || Image.new(user: current_user, imageable: resource)
       generated_file = Base64ImageUtils.decode_to_tempfile(base64_image)
 
-      marking = Images::EmbedAiWatermarkService.call(
+      marking = Images::MarkAiGeneratedService.call(
         image: image,
         data: File.binread(generated_file.path),
         filename: filename,

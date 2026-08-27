@@ -23,7 +23,7 @@ class Projekts::AttachPageImageService < ApplicationService
     end
 
     image = page.image || ::Image.new(imageable: page)
-    attachment_data = ai_generated ? watermarked_data(image) : data
+    attachment_data = ai_generated ? marked_data(image) : data
 
     file = Tempfile.new(["projekt_page_image", File.extname(filename)], binmode: true)
 
@@ -53,8 +53,8 @@ class Projekts::AttachPageImageService < ApplicationService
 
   private
 
-    def watermarked_data(image)
-      ::Images::EmbedAiWatermarkService.call(
+    def marked_data(image)
+      ::Images::MarkAiGeneratedService.call(
         image: image,
         data: data,
         filename: filename,

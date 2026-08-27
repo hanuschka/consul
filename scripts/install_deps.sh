@@ -7,13 +7,14 @@
 #   chrome      shared libraries headless Chrome needs to start
 #               (headless_browser_libraries) -- without these the evaluation
 #               PDF export fails with renderer_unavailable
-#   watermark   python venv with torch + trustmark (image_watermarking) --
-#               AI image generation fails outright without it
+#   marking     exiftool (image_ai_marking) -- AI image generation fails
+#               outright without it, because a generated picture that cannot
+#               be marked as AI-generated is not attached at all
 #
 # Run with no arguments to install everything, or name the groups to install:
 #
 #   scripts/install_deps.sh
-#   scripts/install_deps.sh watermark
+#   scripts/install_deps.sh marking
 #   scripts/install_deps.sh import chrome
 #
 # Ubuntu/Debian and macOS. Safe to re-run: every step skips work already done.
@@ -24,9 +25,6 @@
 # change that has not actually taken effect.
 
 set -euo pipefail
-
-readonly LINUX_TRUSTMARK_PREFIX="/opt/trustmark"
-readonly MACOS_TRUSTMARK_PREFIX="${HOME}/.local/share/trustmark"
 
 # Sonames rather than package names, because this is what the app itself looks
 # for when it decides whether Chrome can start.
@@ -138,76 +136,16 @@ install_chrome_libraries() {
   apt_install "${packages[@]}"
 }
 
-trustmark_prefix() {
+# A prefix under /opt needs root; one in a home directory does not.
+install_ai_marking() {
+  log "AI image marking (exiftool)"
+
   if [ "$OS" = "macos" ]; then
-    printf '%s' "$MACOS_TRUSTMARK_PREFIX"
-  else
-    printf '%s' "$LINUX_TRUSTMARK_PREFIX"
-  fi
-}
-
-# /opt needs root, a home directory does not.
-trustmark_sudo() {
-  if [ "$OS" = "linux" ]; then
-    printf '%s' "$SUDO"
-  fi
-}
-
-install_watermarking() {
-  log "Image watermarking runtime (torch + trustmark)"
-
-  local prefix python as_root
-  prefix="$(trustmark_prefix)"
-  python="${prefix}/bin/python"
-  as_root="$(trustmark_sudo)"
-
-  if [ "$OS" = "linux" ]; then
-    # python3 -m venv fails without this package even though the venv module
-    # itself imports fine -- ensurepip ships separately on Debian and Ubuntu.
-    apt_install python3-venv
+    brew_install exiftool
+    return
   fi
 
-  if [ ! -x "$python" ]; then
-    log "Creating virtualenv at ${prefix}"
-    $as_root python3 -m venv "$prefix"
-  else
-    info "virtualenv already present at ${prefix}"
-  fi
-
-  if "$python" -c "import torch, trustmark" >/dev/null 2>&1; then
-    info "torch and trustmark already installed"
-  else
-    log "Installing torch and trustmark (this downloads several hundred MB)"
-
-    if [ "$OS" = "linux" ]; then
-      # The CPU wheel index is not optional on Linux: resolving torch from
-      # PyPI installs the CUDA build, which costs an extra 250 MB resident and
-      # gigabytes of unused NVIDIA libraries on a box with no GPU. macOS has
-      # no CUDA build to avoid.
-      $as_root "$python" -m pip install --quiet --upgrade pip
-      $as_root "$python" -m pip install --quiet \
-        --index-url https://download.pytorch.org/whl/cpu \
-        torch torchvision
-    else
-      "$python" -m pip install --quiet --upgrade pip
-    fi
-
-    $as_root "$python" -m pip install --quiet trustmark
-  fi
-
-  warm_trustmark_models "$python" "$as_root"
-}
-
-# The model weights are roughly 143 MB and download on first use, which takes
-# longer than the encode deadline allows. Without this, the first AI image
-# generated on a fresh box fails in front of whoever happened to try it.
-warm_trustmark_models() {
-  local python=$1 as_root=$2
-
-  log "Warming the TrustMark model cache"
-  $as_root "$python" -c "from trustmark import TrustMark; TrustMark(model_type='Q')" \
-    >/dev/null 2>&1 ||
-    warn "model warm-up failed -- the first generated image may time out"
+  apt_install libimage-exiftool-perl
 }
 
 check_command() {
@@ -248,29 +186,6 @@ check_chrome_libraries() {
   fi
 }
 
-check_watermarking() {
-  local python
-  python="$(trustmark_prefix)/bin/python"
-
-  if [ ! -x "$python" ]; then
-    printf '  MISSING  image watermarking (no interpreter at %s)\n' "$python"
-    return
-  fi
-
-  local missing
-  missing="$("$python" -c "
-import importlib.util
-print(','.join(n for n in ('torch', 'trustmark')
-                if importlib.util.find_spec(n) is None))
-" 2>/dev/null || printf 'torch,trustmark')"
-
-  if [ -z "$missing" ]; then
-    printf '  ok       image watermarking (%s)\n' "$python"
-  else
-    printf '  MISSING  image watermarking packages: %s\n' "$missing"
-  fi
-}
-
 verify() {
   log "Verification"
 
@@ -279,12 +194,12 @@ verify() {
   check_command "pdfimages (poppler)" pdfimages
   check_command "imagemagick" magick convert
   check_chrome_libraries
-  check_watermarking
+  check_command "exiftool" exiftool
 
   printf '\n'
   info "The app reports the same checks under features.ai in the internal"
-  info "API stats endpoint. On a server, export TRUSTMARK_PYTHON only if the"
-  info "virtualenv lives somewhere other than $(trustmark_prefix)."
+  info "API stats endpoint. On a server, export EXIFTOOL_PATH only if the"
+  info "binary lives somewhere outside PATH."
 }
 
 usage() {
@@ -294,7 +209,7 @@ Usage: scripts/install_deps.sh [group...]
 Groups:
   import      pandoc, poppler, imagemagick
   chrome      headless Chrome shared libraries (Linux only)
-  watermark   python venv with torch and trustmark
+  marking     exiftool, used to mark generated images as AI-generated
   verify      report what is installed without changing anything
 
 With no group, installs all three and then verifies.
@@ -311,7 +226,7 @@ main() {
   detect_os
 
   if [ ${#groups[@]} -eq 0 ]; then
-    groups=(import chrome watermark verify)
+    groups=(import chrome marking verify)
   fi
 
   local group
@@ -319,7 +234,7 @@ main() {
     case "$group" in
       import)    install_import_tools ;;
       chrome)    install_chrome_libraries ;;
-      watermark) install_watermarking ;;
+      marking)   install_ai_marking ;;
       verify)    verify ;;
       *)         usage; die "unknown group: $group" ;;
     esac

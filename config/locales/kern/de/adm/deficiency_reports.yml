@@ -522,6 +522,7 @@ de:
             reports_per_month: Meldungen pro Monat
             by_status: Verteilung nach Status
             by_category: Verteilung nach Kategorie (Top 10)
+            by_intake_channel: Verteilung nach Eingangskanal
           periods:
             week: Woche
             month: Monat
@@ -530,6 +531,7 @@ de:
             status: Status
             category: Kategorie
             responsible: Sachbearbeiter
+            intake_channel: Eingangskanal
           total: Gesamtzeit
           this_week: Diese Woche
           last_week: Letzte Woche
@@ -540,7 +542,11 @@ de:
           satisfaction: Zufriedenheit
           response_time: Reaktionszeit
           communication: Höflichkeit
-          without_status: Ohne Status
+          without:
+            status: Ohne Status
+            category: Ohne Kategorie
+            responsible: Nicht zugewiesen
+            intake_channel: Ohne Eingangskanal
           total_row: Gesamt
       ai_settings:
         show:

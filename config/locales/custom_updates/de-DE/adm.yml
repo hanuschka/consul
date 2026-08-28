@@ -86,17 +86,19 @@ de:
           update_button: Aktualisieren
           not_connected: KI-App ist nicht verbunden
           not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
+          unavailable: KI-Dienst zurzeit nicht erreichbar
+          unavailable_description: Die Einstellungen des KI-Sprachassistenten können gerade nicht geladen werden. Bitte laden Sie die Seite später erneut. Die Einstellung oberhalb kann weiterhin geändert werden.
         projekt_phase:
           ai_user_flow: KI Textassistent
           ai_settings: KI Sprachassistent
           evaluation_visibility: Auswertungs-Sichtbarkeit
         evaluation_visibility:
           title: Auswertungs-Sichtbarkeit
-          heading: Sichtbarkeit für reguläre Nutzer:innen konfigurieren
+          heading: Sichtbarkeit der Auswertung konfigurieren
           description: >
-            Wählen Sie aus, welche Auswertungsabschnitte reguläre Nutzer:innen
-            im Projekt-Footer für diese Phase sehen können. Admins und
-            Projektmanager:innen sehen immer alle Abschnitte.
+            Wählen Sie aus, welche Auswertungsabschnitte für diese Phase im
+            Projekt-Footer angezeigt werden. Ausgeblendete Abschnitte werden
+            niemandem angezeigt – auch nicht Admins und Projektmanager:innen.
           save: Speichern
           cancel: Abbrechen
         update_evaluation_visibility:
@@ -130,6 +132,10 @@ de:
           success: Der Pin wurde gelöscht.
         masterportal_pins_summary:
           loading: Karte wird geladen…
+        update_masterportal_collection:
+          missing_file: Die hochgeladene Datei dieses Datensatzes ist nicht mehr verfügbar. Laden Sie sie erneut hoch, um neu zu importieren.
+        update_masterportal_collection_color:
+          invalid_color: "Ungültige Farbe. Bitte einen Hex-Farbwert wie #2e7d32 angeben."
   projekt_phase_setting:
     proposal_phase:
       feature:

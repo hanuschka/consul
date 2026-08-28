@@ -5,6 +5,19 @@ de:
         closing: Freundliche Grüße
         signature: Euer Anliegenmanagement
         contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="mailto:%{email}">%{email}</a>
+        unwatch_hint: "Sie möchten zu diesem Anliegen keine Benachrichtigungen mehr erhalten?"
+        unwatch_link_text: Benachrichtigungen für dieses Anliegen abbestellen
+        notify_shared_report:
+          subject: Anliegen mit Ihnen geteilt %{identifier}
+          hi: "Hallo %{username},"
+          p1: "ein Anliegen wurde mit Ihnen geteilt:"
+          p1_by: "%{name} hat ein Anliegen mit Ihnen geteilt:"
+          p2: Sie erhalten ab sofort Benachrichtigungen zu Änderungen an diesem Anliegen.
+        notify_watcher_about_change:
+          subject: Änderung an einem beobachteten Anliegen %{identifier}
+          hi: "Hallo %{username},"
+          p1: "es gibt eine Änderung an einem Anliegen, das Sie beobachten:"
+          current_status: "Aktueller Status:"
         notify_author_about_status_change:
           subject: Statusänderung Ihres Mangels
           hi: Hallo
@@ -13,6 +26,10 @@ de:
           subject: Neue Meldung %{identifier}
           hi: Liebe/r Sachbearbeiter*in,
           p1: Ihnen wurde eine Meldung vom Admin zugewiesen.
+          adm_page: "Zur Bearbeitung gelangen Sie hier:"
+          adm_page_link_text: Meldung im Verwaltungsbereich öffnen
+          public_page: "Das Anliegen ist öffentlich einsehbar:"
+          public_page_link_text: Öffentliche Ansicht
         send_feedback_form_link:
           subject: Feedback zu Ihrem Anliegen
           hi: Guten Tag %{username},

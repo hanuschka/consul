@@ -13,8 +13,10 @@ en:
           In the Search Engine Optimization area you configure the title, description, and keywords
           used by search engines to index your platform. You can also link your social media profiles:
           each filled-in field automatically produces a matching icon with a link in the platform footer.
-        uploads_title: Images and documents
-        uploads_intro: >
+      file_settings:
+        title: File settings
+        intro_title: About file settings
+        intro_text: >
           Define what images and documents users may upload: the maximum file size, permitted file formats,
           and title lengths for images, and the maximum number and size of documents. These rules apply
           platform-wide to every contribution that allows file uploads.

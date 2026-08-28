@@ -7,12 +7,13 @@ import { Controller } from "@hotwired/stimulus"
 // regenerate button's target/label, toggling per-tab actions, and nudging the
 // charts to re-measure.
 export default class extends Controller {
-  static targets = ["bar", "regenerateButton", "regenerateLabel", "statsAction", "aiAction"]
+  static targets = ["bar", "regenerateButton", "regenerateLabel", "regenerateAiDisabled", "statsAction", "aiAction"]
   static values = {
     regularUrl: String,
     aiUrl: String,
     regularLabel: String,
-    aiLabel: String
+    aiLabel: String,
+    aiRegenBlocked: Boolean
   }
 
   connect() {
@@ -26,6 +27,10 @@ export default class extends Controller {
   }
 
   initialTab() {
+    const aiTab = this.element.querySelector('custom-tab[for="ai"]')
+
+    if (aiTab && aiTab.hasAttribute("disabled")) return "stats"
+
     const tab = new URLSearchParams(window.location.search).get("tab")
 
     return tab === "ai" ? "ai" : "stats"
@@ -40,6 +45,14 @@ export default class extends Controller {
 
   updateRegenerateButton(isAi) {
     if (!this.hasRegenerateButtonTarget) return
+
+    const blockAi = isAi && this.aiRegenBlockedValue
+
+    this.regenerateButtonTarget.hidden = blockAi
+
+    if (this.hasRegenerateAiDisabledTarget) this.regenerateAiDisabledTarget.hidden = !blockAi
+
+    if (blockAi) return
 
     this.regenerateButtonTarget.href = isAi ? this.aiUrlValue : this.regularUrlValue
 

@@ -22,6 +22,7 @@ en:
           deficiency_reports: Reports
           categories: Categories
           statuses: Statuses
+          intake_channels: Intake channels
           settings: Configuration
           official_answer_templates: Response templates
           email_templates: System emails
@@ -42,6 +43,30 @@ en:
         settings:
           page_hint: Configure the sender address and the shared footer used in all deficiency-report emails.
       deficiency_reports:
+        action_row:
+          website: Website
+          edit: Edit
+          pdf: PDF
+        watch:
+          start: Turn on notifications for this report
+          stop: Turn off notifications for this report
+          label: Watch
+        unwatch:
+          success: You will no longer receive notifications for this report.
+        share:
+          title: Share report
+          trigger: Share
+          hint: The people you select receive an email and notifications about changes to this report.
+          label: Recipients
+          submit: Share
+          officers: Case workers
+          officer_groups: Officer groups
+          success:
+            zero: No new recipients were added.
+            one: The report was shared with one person.
+            other: The report was shared with %{count} people.
+          current_watchers: Already watching this report
+          no_officers: There are no case workers to share this report with.
         index:
           title: Reports
           page_hint: "Here you see all submitted deficiency reports. The table shows title, status, category, district, and the assigned officer. Use the column headers to sort the list. Click a report to view details, change the status, or write an official response."
@@ -60,14 +85,23 @@ en:
             status_changed_at: Status changed on
             title: Title
             author: Author
+            on_behalf_of: On behalf of
+            recorded_by: Recorded by
+            intake_channel: Intake channel
             status: Status
             location: Location
             address: Address
+            watch: Watching
             district: District
             category: Category
+            subcategory: Subcategory
             responsible: Officer
             archived_state: Archive
             hidden_state: Hidden by moderation
+          assignment_scope:
+            assigned_to_me: Assigned to me
+            watching: Watching
+            all: All reports
           archived_state:
             active: Active
             archived: Archived
@@ -98,8 +132,13 @@ en:
           image_label: Image
           documents_label: Documents
           category: Category
+          subcategory: Subcategory
           map_label: Map
+          recorded_by_label: Recorded by
           on_behalf_of_label: On behalf of
+          on_behalf_of_company_label: Company
+          on_behalf_of_email_label: Email
+          intake_channel_label: Intake channel
           video_url: Video URL
           address: Address
           responsible_label: Officer
@@ -112,8 +151,14 @@ en:
           answer_template_prompt: "— Select template —"
           official_answer: Official response
           official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
+          official_answer_documents: Documents for the response
+          official_answer_documents_hint: >-
+            Allowed file types: %{types}. Up to %{count} documents, each no larger than %{size} MB.
+            Attached documents are publicly visible.
         update_official_answer:
           success: Official response updated successfully.
+        remove_official_answer_document:
+          success: Document removed.
         new:
           title: Create new report
         edit:
@@ -123,6 +168,10 @@ en:
             title: e.g. Broken street light on Main Street
             video_url: https://www.youtube.com/watch?v=...
             on_behalf_of: e.g. Jane Doe
+            on_behalf_of_company_name: e.g. Doe Construction Ltd.
+            on_behalf_of_email: e.g. jane.doe@example.com
+            intake_channel: Please select
+            subcategory: No subcategory
           labels:
             title: Title
             description: Description
@@ -132,6 +181,10 @@ en:
             category: Category
             map_location: Map location
             on_behalf_of: On behalf of
+            on_behalf_of_company_name: Company
+            on_behalf_of_email: Email address
+            intake_channel: Intake channel
+            subcategory: Subcategory
           hints:
             title: The title of the entry is shown in the list view and as the heading on the detail page. It should briefly and precisely describe the reported deficiency so officers and citizens can grasp the content at a glance. Changes to the title become visible on the public page immediately.
             description: The description contains all relevant details about the reported deficiency, such as its exact state, possible causes, and impact. This text is displayed publicly on the detail page of the entry. A precise description makes it easier for officers to assess the issue and significantly speeds up processing.
@@ -139,7 +192,11 @@ en:
             documents: Here you can add supplementary documents like expert reports, plans, or reports to the entry. The files are made available for download on the detail page and are visible to all users. Multiple documents can be uploaded at once to document the matter comprehensively.
             video_url: Enter the URL of a video documenting the reported deficiency. The video is embedded on the public detail page of the entry. Links from common video platforms like YouTube or Vimeo are supported. A video can illustrate the matter better than photos alone.
             on_behalf_of: Enter the name of the person on whose behalf the entry was created. This field is used when an officer or administrator records an entry on behalf of a citizen. The name is shown on the detail page and helps with attribution of the entry.
+            on_behalf_of_company_name: Optional. The company or organisation the person is reporting for. It is stored on the profile of the linked account, not on the report itself, and is only saved when the account has no company on file yet.
+            on_behalf_of_email: Optional. If you enter an email address, the report is assigned to the account behind it. If no account exists for the address, one is created and receives a confirmation email (double opt-in). An existing account is only linked and receives no confirmation email. Leave empty to keep the report attributed to yourself.
             category: The category assigns the entry to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
+            intake_channel: The route by which the report reached the administration, e.g. phone, email, or in person. It is mandatory as soon as you file a report on behalf of a third person. Reports citizens submit themselves via the platform automatically receive the configured default channel.
+            subcategory: The subcategory breaks the report down further within the chosen category, e.g. "Potholes" under "Construction & traffic". Only subcategories of the category selected above are offered; categories without subcategories show no select at all. If the subcategory carries its own default responsibility, the report is assigned there automatically.
         administer:
           title: Administer
           status: Status
@@ -160,6 +217,40 @@ en:
           title: Feedback form
           created_at: Created on
           for_report: For
+      subcategories:
+        index:
+          title: Subcategories
+          title_for_category: "Subcategories of \"%{category}\""
+          page_hint: "Manage the subcategories of this category, e.g. \"Potholes\" under \"Construction & traffic\". Each subcategory can carry its own default responsibility, which takes precedence over the main category's when new reports are assigned. Drag and drop to set the order of the select list. Categories without subcategories show no selection in the report form."
+          new_subcategory: New subcategory
+          no_items_title: No subcategories available
+          no_items_description: Create a subcategory to break reports within this category down further.
+          table:
+            name: Name
+            default_responsible: Default responsibility
+        new:
+          title: New subcategory
+        create:
+          success: Subcategory was created successfully.
+        edit:
+          title: Edit subcategory
+        update:
+          success: Subcategory was updated successfully.
+        destroy:
+          success: Subcategory was deleted successfully.
+          cannot_destroy: Subcategory cannot be deleted because reports are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the subcategory as shown in the report form and the report overview, e.g. "Potholes", "Street lighting" or "Illegal dumping". Choose names citizens understand without prior knowledge.
+          ai_hint_label: AI categorization hint
+          ai_hint_hint: "This hint goes to the AI categorization only and is never shown to citizens. In one or two sentences, mark the boundary against the other subcategories of the same category — that is where most misclassifications happen. Example: “Holes, cracks and subsidence in the road surface. Not: loose manhole covers, those belong to Sewers and drainage.” Without a hint the AI decides from the name alone."
+          ai_hint_placeholder: "e.g. Holes, cracks and subsidence in the road surface. Not: loose manhole covers (Sewers and drainage)."
+          default_responsible_label: Default responsibility
+          default_responsible_hint: The officer group or person reports in this subcategory are assigned to automatically. It takes precedence over the main category's default, but only applies when the report's district carries no responsibility of its own. Without a value the main category's responsibility applies.
+          officer_groups: Officer groups
+          officers: Officers
+          no_responsible: No responsibility
+          submit: Save
       categories:
         index:
           title: Categories
@@ -173,8 +264,14 @@ en:
             color: Color
             icon: Icon
             default_responsible: Default officer
+            subcategories: Subcategories
             warning_text: Popup
             actions: Actions
+          subcategories_link:
+            one: 1 subcategory
+            other: "%{count} subcategories"
+            zero: None
+          manage_subcategories: Manage subcategories
         new:
           title: New category
         create:
@@ -189,6 +286,9 @@ en:
         form:
           name_label: Name
           name_hint: The category name is shown on the frontend as a selectable option when creating a report and serves as thematic assignment. Choose a short, commonly understood term like road damage, lighting, or green spaces. The name also appears in the administration overview and in statistics as a filter.
+          ai_hint_label: AI categorization hint
+          ai_hint_hint: "This hint goes to the AI categorization only and is never shown to citizens. In one or two sentences, describe which reports belong in this category — and above all which do not. Drawing the boundary against similar categories is what improves accuracy most. Example: “Damage to roads, pavements and cycle paths. Not: broken street lamps, those belong to Lighting.” Without a hint the AI decides from the name alone."
+          ai_hint_placeholder: "e.g. Damage to roads, pavements and cycle paths. Not: street lamps (Lighting), traffic signs (Signage)."
           color_label: Color
           color_hint: The color is used as a visual marker of the category in the list view and on the map. It helps citizens and officers distinguish reports of different categories at a glance. Choose high-contrast colors that stand out clearly from one another to keep the list view readable.
           icon_label: Icon
@@ -198,6 +298,8 @@ en:
           officer_groups: Officer groups
           officers: Officers
           no_responsible: "-- No officer --"
+          ai_fallback_label: AI categorization fallback
+          ai_fallback_hint: Reports land in this category when AI categorization is enabled but cannot make a confident match, or the AI service is unreachable. Case workers then correct the category manually. Only one category can be the fallback at a time; the marker moves automatically as soon as you mark another one. Without a marker the first category in the order is used.
           warning_text_label: Popup
           warning_text_hint: The popup text is shown to citizens as a notice when they select this category while creating a new report. Use this field to convey important information or warnings, e.g. notes about alternative reporting channels or special responsibilities. The popup appears directly after category selection.
           submit: Save
@@ -241,6 +343,33 @@ en:
           archive_reports_hint: When this option is enabled, reports are automatically archived as soon as they're moved to this status. Archived reports no longer appear in the active list view but remain stored in the system and can be viewed via the archive view. Typical for end statuses like "Done" or "Rejected".
           notice_text_label: Email notification text
           notice_text_hint: This text is sent as the content of the email notification to the report creator when the report transitions to this status. Phrase the text in a citizen-friendly and informative way so the reporter can understand the current state of their report. Leave the field empty to send no notification.
+          submit: Save
+      intake_channels:
+        index:
+          title: Intake channels
+          page_hint: "Manage the channels through which reports reach the administration — e.g. phone, email or in person. The channel marked as default is assigned automatically to every report citizens submit themselves via the platform. Drag and drop to set the order of the select list."
+          new_intake_channel: New intake channel
+          no_items_title: No intake channels available
+          no_items_description: Create an intake channel to record how reports came in.
+          table:
+            name: Name
+            default: Default
+        new:
+          title: New intake channel
+        create:
+          success: Intake channel was created successfully.
+        edit:
+          title: Edit intake channel
+        update:
+          success: Intake channel was updated successfully.
+        destroy:
+          success: Intake channel was deleted successfully.
+          cannot_destroy: Intake channel cannot be deleted because reports are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the intake channel as shown to case workers in the select field, e.g. "Phone", "Email", "In person" or "Letter". Choose short, unambiguous names so the route a report took is recognizable at a glance.
+          default_label: Default channel
+          default_hint: The default channel is assigned automatically to every report citizens submit themselves via the platform — usually "Platform". Only one channel can be the default at a time; the marker moves automatically as soon as you mark another channel as default.
           submit: Save
       officers:
         index:
@@ -399,6 +528,7 @@ en:
             reports_per_month: Reports per month
             by_status: Distribution by status
             by_category: Distribution by category (Top 10)
+            by_intake_channel: Distribution by intake channel
           periods:
             week: Week
             month: Month
@@ -407,6 +537,7 @@ en:
             status: Status
             category: Category
             responsible: Officer
+            intake_channel: Intake channel
           total: Total time
           this_week: This week
           last_week: Last week
@@ -417,7 +548,11 @@ en:
           satisfaction: Satisfaction
           response_time: Response time
           communication: Courtesy
-          without_status: Without status
+          without:
+            status: Without status
+            category: Without category
+            responsible: Unassigned
+            intake_channel: Without intake channel
           total_row: Total
       ai_settings:
         show:

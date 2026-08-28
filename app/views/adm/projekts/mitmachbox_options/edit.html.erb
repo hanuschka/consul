@@ -1,0 +1,9 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, narrow: true, back_button_url: edit_adm_projekts_phase_mitmachbox_question_path(@projekt_phase, @question["id"])) %>
+
+<div class="kern-container my-5">
+  <%= render "form",
+        url: adm_projekts_phase_mitmachbox_question_mitmachbox_option_path(@projekt_phase, @question["id"], @option["id"]),
+        method: :patch %>
+</div>

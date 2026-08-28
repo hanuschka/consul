@@ -4,6 +4,7 @@
   </td>
   <th scope="row" class="kern-table__header"><%= landing_page.title %></th>
   <td class="kern-table__cell"><%= link_to landing_page.slug, page_path(landing_page.slug), target: "_blank" %></td>
+  <td class="kern-table__cell"><%= projekt_counts[landing_page.id].to_i %></td>
   <td class="kern-table__cell">
     <%= render Adm::AttributeEditors::BooleanComponent.new(
       landing_page,
@@ -12,8 +13,25 @@
     ) %>
   </td>
   <td class="kern-table__cell">
-    <%= link_to edit_adm_landing_pages_landing_page_path(landing_page), class: "round-icon-button" do %>
-      <%= tag.span(class: "material-symbols-outlined") { "edit" } %>
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(
+        label: t("shared.edit"),
+        url: edit_adm_landing_pages_landing_page_path(landing_page),
+        style: :edit
+      ) %>
+
+      <% if Adm::LandingPages::LandingPagePolicy.new(current_user, landing_page).destroy? %>
+        <% actions.with_action(
+          label: t("shared.delete"),
+          url: adm_landing_pages_landing_page_path(landing_page),
+          style: :delete,
+          divider: true,
+          data: {
+            turbo_method: :delete,
+            turbo_confirm: t("adm.landing_pages.landing_pages.destroy.confirm", title: landing_page.title)
+          }
+        ) %>
+      <% end %>
     <% end %>
   </td>
 </tr>

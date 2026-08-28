@@ -3,12 +3,13 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
   MAX_INPUT_CHARS = 200_000
 
-  attr_reader :text, :additional_user_instructions
+  attr_reader :text, :additional_user_instructions, :source_images
 
-  def initialize(text:, additional_user_instructions: nil, response_language: nil)
+  def initialize(text:, additional_user_instructions: nil, response_language: nil, source_images: [])
     @text = text
     @additional_user_instructions = additional_user_instructions
     @response_language = response_language
+    @source_images = Array(source_images)
   end
 
   def call
@@ -19,7 +20,8 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     system_prompt = ProjektImports::PromptBuilder.new(
       base_prompt: base_prompt,
       refs: refs,
-      response_language: @response_language
+      response_language: @response_language,
+      source_images: source_images
     ).call
 
     schema = ProjektImports::OutputSchemaBuilder.build(refs)
@@ -129,7 +131,7 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   def call_ai(system_prompt:, schema:, message:)
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(schema)
+        .chat_with_json_output(schema, feature: "projekt_imports.process")
         .with_instructions(system_prompt)
         .ask(message)
 

@@ -10,7 +10,7 @@
         <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report[officer_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
       </div>
     <% end %>
-    <%= f.collection_radio_buttons :officer_id, DeficiencyReport::Officer.joins(:user).order("users.username ASC"), :id, :name do |rb| %>
+    <%= f.collection_radio_buttons :officer_id, deficiency_report_assignable_officers(deficiency_report.responsible), :id, :name do |rb| %>
       <div>
         <%= rb.radio_button(onclick: "$('input[type=\"radio\"][name=\"deficiency_report[officer_group_id]\"]').prop('checked', false);") + rb.label(style: "margin-right:1rem;") { rb.text } %>
       </div>

@@ -20,6 +20,7 @@ namespace :adm do
     get :metadata, on: :collection
     get :gdpr, on: :collection
     get :registration, on: :collection
+    get :file_settings, on: :collection
   end
   resource :features, controller: "features", only: [:show]
   resources :registered_addresses, only: [:index]
@@ -38,6 +39,7 @@ namespace :adm do
     resources :individual_group_values, as: :values, only: [:show, :new, :create, :edit, :update, :destroy] do
       post :search_user, on: :member
       post :add_user, on: :member
+      post :add_email, on: :member
       post :add_from_csv, on: :member
       delete :remove_user, on: :member
       delete :remove_email_from_auto_join_emails, on: :member
@@ -141,8 +143,10 @@ namespace :adm do
   end
 
   namespace :site_customization do
-    get "pages/:slug/edit", to: "pages#edit", as: :edit_page_by_slug
-    patch "pages/:slug", to: "pages#update", as: :update_page_by_slug
+    resources :pages, only: [:index, :edit, :update] do
+      patch :toggle_status, on: :member
+      patch :reorder, on: :collection
+    end
 
     resources :content_cards, only: [:edit, :update] do
       patch :toggle_active, on: :member

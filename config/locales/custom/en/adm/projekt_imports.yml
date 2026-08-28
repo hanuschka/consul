@@ -3,6 +3,8 @@ en:
     projekts:
       imports:
         title: "Projekt import"
+        upload:
+          remove_file: "Remove file"
         from_files:
           new:
             title: "Import projekt from document"
@@ -17,7 +19,6 @@ en:
             progress_preparing: "Preparing…"
             instructions_label: "Additional context (optional)"
             instructions_placeholder: "Anything the document doesn't make clear — audience, scope, goals…"
-            generate_image_label: "Generate a title image with AI"
             submit_label: "Start analysis"
             progress:
               extracting: "Extracting text from your documents…"
@@ -27,6 +28,8 @@ en:
               no_files: "Please select at least one file."
               too_large: "The selected files exceed the 500 MB limit."
               unsupported_type: "The file %{filename} is not a supported format."
+              session_expired: "Your session has expired. Please reload the page, sign in again and retry."
+              request_failed: "The upload failed (error %{status}). Please try again or contact support."
           show:
             title: "Import progress"
             failed_title: "Import failed"
@@ -84,8 +87,8 @@ en:
               title: "Import projekt?"
               confirm: "Import now"
               cancel: "Cancel"
+              summary_loading: "Loading the projekt summary…"
             confirm_start_over: "Discard this import and start over?"
-            generate_image_toggle: "Generate title image"
             created_banner_title: "This import created the following projekts:"
             tooltips:
               start_over:
@@ -97,9 +100,9 @@ en:
               summarize:
                 title: "Summarize"
                 text: "Creates a short, readable summary of the uploaded document in the chat."
-              generate_image:
-                title: "Generate cover image"
-                text: "When enabled, the AI automatically creates a matching cover image for the projekt during import."
+              title_image:
+                title: "Cover image"
+                text: "Shows which cover image the projekt will get on import. Click to change it — the choice is made in the chat."
               import:
                 title: "Import projekt"
                 text: "Creates the projekt with all phases, content blocks, and settings. It stays deactivated and hidden from visitors until you activate it."
@@ -116,14 +119,30 @@ en:
             import_overlay_title: "Import in progress…"
             import_overlay_message: "The projekt is being created. This can take a moment."
             progress:
-              finalizing_data: "Finalizing your changes…"
               resolving_content_blocks: "Building content blocks…"
               creating_projekt: "Creating projekt, phases, and resources…"
               generating_image: "Generating title image…"
             errors:
               extract_failed: "We could not read one or more of the attached files."
               import_failed: "The import could not be completed."
+              summary_failed: "The projekt summary could not be loaded. You can still start the import."
               dismiss: "Dismiss"
+        summary:
+          untitled: "Untitled projekt"
+          period: "Period"
+          categories: "Categories"
+          content_blocks: "Content blocks"
+          source_files: "Source files"
+          none: "Not set"
+          no_phases: "No phases were extracted."
+          content_blocks_count:
+            zero: "None"
+            one: "1 block"
+            other: "%{count} blocks"
+          phases_count:
+            zero: "Phases"
+            one: "1 phase"
+            other: "%{count} phases"
         initial_message:
           analysis_complete: "Document analysis complete"
           analysis_intro: "Here is what I extracted from your document. Review the fields below — anything that doesn't look right, just tell me."
@@ -136,9 +155,24 @@ en:
           phases: "Phases"
           content_blocks: "Content blocks"
           created: "created"
+          poll_questions_count:
+            zero: "no questions"
+            one: "1 question"
+            other: "%{count} questions"
+          no_poll_questions_notice: "I could not derive any poll questions from the document, so the voting phase would be created empty. Tell me which questions it should contain, or ask me to build them from the document before importing."
           questions_intro: "A few questions to confirm:"
           questions_outro: "Once everything looks right, click \"Import projekt\" above."
           review_outro: "Click \"Import projekt\" above when you're ready."
+        missing_tools:
+          title: "Limited import functionality"
+          package: "(missing system package \"%{package}\")"
+          requires_package: "Requires installing package:"
+          contact: "Please contact the DemokratieToday administrators so the missing packages get installed on this server. Every other import feature keeps working normally."
+          features:
+            pandoc: "DOCX and ODT files cannot be read — an import using a .docx or .odt file will fail."
+            pdftotext: "Tables in PDF files lose their column structure — text is still extracted."
+            pdfimages: "Images in PDF files are not carried over — text and structure are still extracted."
+            imagemagick: "Images from documents cannot be processed or placed into content blocks."
         default_questions:
           title_correct: 'Is the project title "%{title}" correct?'
           phases_missing: "What participation phases should this projekt include?"
@@ -166,18 +200,77 @@ en:
           ai_malformed: "AI returned an invalid response. Please try again."
           dt_prompt_missing: "Configuration error: the AI prompt could not be loaded from DT."
           no_ai_result: "No AI result is available yet."
-          finalize_failed: "Failed to finalize data: %{message}"
           resolve_content_blocks_failed: "Failed to resolve content blocks: %{message}"
           create_projekt_failed: "Failed to create the projekt: %{message}"
           missing_title: "AI did not return a projekt title."
           extract_file_failed: "Could not read file %{filename}: %{message}"
+          unknown_title_image_mode: "Unknown cover image option."
+          unknown_title_image: "This image is no longer available for this import."
+          title_image_ineligible: "This image cannot be used as a cover image."
+        title_image:
+          intro:
+            one: "One image from your document can be used as the projekt's cover image. Choose it here, have the AI create one, or leave the projekt without a cover image."
+            other: "%{count} images from your documents can be used as the projekt's cover image. Choose one here, have the AI create one, or leave the projekt without a cover image."
+          intro_without_images: "No usable image was found in your documents. Have the AI create a cover image, or leave the projekt without one."
+          dimensions: "%{width} × %{height} px"
+          use: "Select"
+          use_option: "Use %{option} as the cover image"
+          selected: "Selected"
+          reply_hint: "You can also just reply with the number of the option you want."
+          options:
+            generated: "Create a cover image with AI"
+            none: "No cover image"
+          option_hints:
+            generated: "Generated from the projekt content during import"
+            none: "Can be added at any time later"
+          confirmed:
+            document: "Image %{number} (%{width} × %{height}) is now the projekt's cover image."
+            generated: "The cover image will be created with AI during the import."
+            none: "The projekt will be imported without a cover image."
+          ineligible:
+            content_type: "This image format is not accepted for cover images"
+          summary:
+            document: "Cover image: from the document (%{width} × %{height})"
+            generated: "Cover image: created with AI"
+            none: "Cover image: none"
+            unavailable: "Cover image: none available"
+        applied_edits_message: "I applied the following changes to the import data: %{edits}."
+        applied_edits_message_unnamed: "I changed the import data. Please review the current values."
+        applied_edits:
+          update_fields: "updated %{fields}"
+          replace_phase: "replaced phase %{index}"
+          add_phase: "added phase %{index} (%{type})"
+          remove_phase: "removed phase (%{type})"
+          replace_content_blocks: "replaced the content blocks (now %{count})"
+        warnings:
+          unknown_categories: "These categories do not exist on this platform and were not applied: %{categories}. Create them if needed and assign them to the projekt manually."
+          unknown_sdg_codes: "These SDG codes do not exist on this platform and were not applied: %{codes}."
+          voting_phase_without_questions: "The voting phase \"%{phase}\" was created without any questions, because none could be derived from the document."
+          chat_changes_not_applied: "None of the changes discussed in the chat were applied to the import data, so the projekt was created from the original document analysis. Please check it and correct anything that is missing."
+          form_feature_unsupported: "The phase \"%{phase}\" does not support the setting \"%{feature}\". The entries created for it are not visible on the citizen form."
+          content_blocks_unresolved: "The projekt was created with all its phases, but the content blocks could not be generated. Please add them manually, or delete the projekt and run the import again."
+          pdf_images_tool_missing: "The PDF file \"%{filename}\" contains images that could not be carried over: this server is missing the \"poppler-utils\" system package. Please upload the images manually, or ask an administrator to install the package."
+          pdf_images_unreadable: "The images in the PDF file \"%{filename}\" could not be read. Please upload them manually."
+          source_image_undecodable: "The image \"%{image}\" in the file \"%{filename}\" is damaged or not a real image file and was not carried over. Please upload it manually."
+          source_image_unsupported_format: "The image \"%{image}\" in the file \"%{filename}\" is stored in a format this server cannot read and was not carried over. Please save it as JPG or PNG and upload it manually."
+          source_image_conversion_failed: "The image \"%{image}\" in the file \"%{filename}\" is a drawing or metafile that could not be converted into a web image and was not carried over. Please save it as JPG or PNG and upload it manually."
+          source_image_conversion_limit: "The file \"%{filename}\" contains more drawings or metafiles than can be converted during one import, so the image \"%{image}\" was not carried over. Please save it as JPG or PNG and upload it manually."
+          source_image_too_large: "The image \"%{image}\" in the file \"%{filename}\" is too large to process and was not carried over. Please upload a smaller version manually."
+          source_image_hero_rejected: "The image \"%{image}\" from the document could not be used as the title image, because it does not meet the requirements for title images. It is available in the projekt's image gallery."
+          source_image_store_failed: "The image \"%{image}\" from the document could not be saved: %{message}. Please upload it manually."
+          source_images_file_failed: "The images in the file \"%{filename}\" could not be carried over. Images from the other files were carried over; please upload the missing ones manually."
+          source_images_failed: "The images in the uploaded documents could not be carried over: %{message}. Please upload them manually."
+          source_images_unplaced:
+            one: "One image from the document was not placed in any content block. It is available in the projekt's image gallery and can be inserted with the editor."
+            other: "%{count} images from the document were not placed in any content block. They are available in the projekt's image gallery and can be inserted with the editor."
+          content_block_templates_unavailable: "The content block templates could not be loaded, so all content blocks were created as plain text without layout or images. Please check them and apply a layout, or run the import again later."
         failure_stages:
           extract: "Text extraction"
           extracting: "Text extraction"
           ai_processing: "AI analysis"
           processing: "AI analysis"
-          finalize: "Data finalization"
           resolve_content_blocks: "Content blocks"
+          create_content_blocks: "Content blocks"
           create_projekt: "Projekt creation"
           submitting: "Projekt creation"
           image_generation: "Title image generation"

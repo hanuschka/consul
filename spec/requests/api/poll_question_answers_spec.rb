@@ -6,6 +6,13 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+  let(:existing_poll_question) do
+    voting_phase = create_projekt_phase('ProjektPhase::VotingPhase')
+    poll = voting_phase.polls.create!(name: 'Existing Poll')
+
+    create_poll_question(poll, title: 'Existing Question')
+  end
+
   path '/api/poll_questions/{poll_question_id}/answers' do
     parameter name: :poll_question_id, in: :path, type: :integer, description: 'Poll Question ID'
 
@@ -13,20 +20,16 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
       tags 'Poll Question Answers'
       produces 'application/json'
       security [bearer_auth: []]
-      description "List all answers for a specific poll question. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "List all answers for a specific poll question, paginated with pagination metadata. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
 
       response '200', 'answers found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_question_id) { poll_question.id }
 
         before do
@@ -45,7 +48,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
                      }
                    },
                    required: ['answers']
-                 }
+                 },
+                 pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
                },
                required: ['data']
 
@@ -74,14 +78,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_question_id) { poll_question.id }
         let(:answer) do
           {
@@ -114,14 +112,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_question_id) { poll_question.id }
         let(:answer) do
           { answer: { translations_attributes: [{ locale: 'en', title: '' }] } }
@@ -148,14 +140,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_question_id) { poll_question.id }
         let(:answer) do
           {
@@ -213,14 +199,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_question_id) { poll_question.id }
         let(:answer1) { poll_question.question_answers.create!(title: 'First', given_order: 1) }
         let(:answer2) { poll_question.question_answers.create!(title: 'Second', given_order: 2) }
@@ -237,7 +217,7 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         run_test!
       end
 
-      forbidden_response { let(:poll_question_id) { 1 } }
+      forbidden_response { let(:poll_question_id) { existing_poll_question.id } }
 
       unauthorized_response { let(:poll_question_id) { 1 } }
     end
@@ -256,14 +236,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_answer) { poll_question.question_answers.create!(title: 'Test Answer', given_order: 1) }
         let(:id) { poll_answer.id }
 
@@ -304,14 +278,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_answer) { poll_question.question_answers.create!(title: 'Original', given_order: 1) }
         let(:id) { poll_answer.id }
         let(:answer) do
@@ -345,14 +313,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test', author: author) }
         let(:poll_answer) { poll_question.question_answers.create!(title: 'Test', given_order: 1) }
         let(:id) { poll_answer.id }
         let(:answer) do
@@ -389,14 +351,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test Question', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: author) }
         let(:poll_answer) { poll_question.question_answers.create!(title: 'To Delete', given_order: 1) }
         let(:id) { poll_answer.id }
 
@@ -423,14 +379,8 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
-        let(:author) do
-          User.administrators.first || User.create!(
-            username: 'admin_user', email: 'admin_spec@example.com',
-            password: '12345678', terms_of_service: '1',
-            confirmed_at: Time.current
-          )
-        end
-        let(:poll_question) { poll.questions.create!(title: 'Test', author: author) }
+        let(:author) { create_admin_user }
+        let(:poll_question) { create_poll_question(poll, title: 'Test', author: author) }
         let(:poll_answer) { poll_question.question_answers.create!(title: 'Test', given_order: 1) }
         let(:id) { poll_answer.id }
 

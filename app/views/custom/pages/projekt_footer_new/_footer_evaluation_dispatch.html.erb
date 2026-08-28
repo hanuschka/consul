@@ -1,19 +1,22 @@
 <% eval_tab = params[:section] == "ai_evaluation" ? "ai" : "stats" %>
 
-<% if footer_render_frozen_evaluation?(@projekt_phase) %>
-  <%= render "custom/pages/projekt_footer_new/evaluation_content", only_tab: eval_tab %>
-
-<% elsif eval_tab == "ai" %>
-  <% if footer_evaluation_tab_visible?(@projekt_phase, "ai") && Ai::Settings.ai_available? %>
-    <div class="<%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'ai') %>">
-      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
+<% if params[:section] == "poll_stats" %>
+  <% if footer_evaluation_tab_available?(@projekt_phase, "poll_stats") && @poll_stats_entries.present? %>
+    <div
+      class="js-footer-tab-content <%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'poll_stats') %>"
+      data-visibility-group="poll_stats"
+    >
+      <%= render "custom/pages/projekt_footer_new/poll_stats_content" %>
     </div>
   <% end %>
 
 <% else %>
-  <% if footer_evaluation_tab_visible?(@projekt_phase, "stats") %>
-    <div class="<%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, 'stats') %>">
-      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
+  <% if footer_evaluation_tab_available?(@projekt_phase, eval_tab) %>
+    <div
+      class="js-footer-tab-content <%= 'js-studio-hide-on-preview' if !footer_evaluation_tab_public_visible?(@projekt_phase, eval_tab) %>"
+      data-visibility-group="<%= eval_tab %>"
+    >
+      <%= render "custom/pages/projekt_footer_new/evaluation_content", only_tab: eval_tab %>
     </div>
   <% end %>
 <% end %>

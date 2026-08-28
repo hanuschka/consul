@@ -10,6 +10,7 @@ en:
         collections_label: Available datasets
         collections_hint: Select the datasets to import as pins into this project phase.
         tree_hint: Click "Load collections" to see available datasets.
+        or_divider: OR
         create_resource_label: "Create %{resource_name}"
         create_resource_description: A module entry will be created from each imported dataset.
         create_resource_categories_note: Matching categories are created automatically from the dataset categories.

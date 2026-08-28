@@ -33,14 +33,14 @@ class Projekts::GenerateBannerImageService < ApplicationService
       raise GenerationFailedError, "DT returned no image"
     end
 
-    attach_image(base64_image)
+    attach_image(base64_image, response.parsed_response)
   end
 
   private
 
     def build_image_prompt
       Ai::RubyLlmFactory
-        .chat
+        .chat(feature: "projekts.banner_image_prompt")
         .with_instructions(prompt_instructions)
         .ask(projekt_context)
         .content
@@ -93,31 +93,22 @@ class Projekts::GenerateBannerImageService < ApplicationService
       ActionController::Base.helpers.strip_tags(text.to_s).squish
     end
 
-    def attach_image(base64_image)
-      page = @projekt.page
+    def attach_image(base64_image, response_body)
+      result = ::Projekts::AttachPageImageService.call(
+        projekt: @projekt,
+        user: @user,
+        data: Base64.decode64(base64_image),
+        filename: "projekt_#{@projekt.id}_ai_banner.jpg",
+        content_type: "image/jpeg",
+        ai_generated: true,
+        ai_system: ::DtApi::Resources::Ai.reported_provider(response_body),
+        ai_system_version: ::DtApi::Resources::Ai.reported_model(response_body)
+      )
 
-      if page.blank?
-        raise GenerationFailedError, "Projekt has no page to attach the image to"
+      if !result.success?
+        raise GenerationFailedError, result.error
       end
 
-      file = Tempfile.new(["projekt_banner_ai_image", ".jpg"], binmode: true)
-
-      begin
-        file.write(Base64.decode64(base64_image))
-        file.rewind
-
-        image = page.image || ::Image.new(imageable: page)
-        image.attachment = ActionDispatch::Http::UploadedFile.new(
-          tempfile: file,
-          filename: "projekt_#{@projekt.id}_ai_banner.jpg",
-          type: "image/jpeg"
-        )
-        image.user = @user
-        image.save!
-        page.association(:image).reset
-      ensure
-        file.close
-        file.unlink
-      end
+      result.data[:image]
     end
 end

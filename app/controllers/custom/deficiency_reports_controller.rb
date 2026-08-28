@@ -7,6 +7,7 @@ class DeficiencyReportsController < ApplicationController
   include DeficiencyReportsHelper
   include Search
 
+  before_action :ensure_submissions_open, only: [:new, :create]
   before_action :authenticate_user!, except: [:index, :show, :json_data, :blocked]
   before_action :load_categories
   before_action :set_view, only: :index
@@ -118,7 +119,9 @@ class DeficiencyReportsController < ApplicationController
       )
     )
 
-    if @deficiency_report.save
+    categorize_with_ai(@deficiency_report)
+
+    if @deficiency_report.valid? && @deficiency_report.save
       @deficiency_report.assign_default_responsible
       NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
       notify_responsible(@deficiency_report)
@@ -167,16 +170,17 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def json_data
-    image_url = url_for @deficiency_report.image.attachment.variant(
+    image_url = url_for @deficiency_report.image.attachment_variant(
                   resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
                   format: "jpeg",
-                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                  saver: { interlace: "JPEG", quality: 80 }
                 ) if @deficiency_report.image&.attachment&.attached?
 
     data = {
       resource_type: "deficiency_report",
       id: @deficiency_report.id,
       image_url: image_url,
+      image_ai_label_html: helpers.ai_image_label_html(@deficiency_report.image),
       title: @deficiency_report.title
     }.to_json
 
@@ -186,6 +190,13 @@ class DeficiencyReportsController < ApplicationController
   end
 
   private
+
+  def ensure_submissions_open
+    return if DeficiencyReport.submissions_open?
+
+    redirect_to deficiency_reports_path,
+      notice: t("custom.deficiency_reports.submissions_closed")
+  end
 
   def filter_by_my_posts
     return unless params[:my_posts_filter] == 'true'
@@ -198,16 +209,31 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def deficiency_report_params
-    attributes = [:video_url, :on_behalf_of,
+    attributes = [:video_url,
                   :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                   :deficiency_report_category_id,
+                  :deficiency_report_subcategory_id,
                   :notify_officer_about_new_comments,
                   map_location_attributes: map_location_attributes,
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
+
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
   end
 
+  # Runs before validation because the category is mandatory and the public form does not offer one
+  # while AI categorization is on. Deliberately synchronous: the responsible officer is derived from
+  # the category right after save and notified immediately, so classifying afterwards in a job would
+  # mail the wrong department first and re-route them silently.
+  def categorize_with_ai(deficiency_report)
+    return unless DeficiencyReports::AiCategorizationService.enabled?
+    return if deficiency_report.deficiency_report_category_id.present?
+
+    result = DeficiencyReports::AiCategorizationService.call(deficiency_report)
+
+    deficiency_report.category = result.category
+    deficiency_report.subcategory = result.subcategory
+  end
 
   def destroy_map_location_association
     map_location = params[:deficiency_report][:map_location_attributes]
@@ -255,9 +281,12 @@ class DeficiencyReportsController < ApplicationController
     end
 
     dr.responsible_officers.each do |officer|
-      DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+      if dr.email_officers_individually?
+        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
+        Activity.log(officer.user, "email", dr)
+      end
+
       Notification.add(officer.user, dr)
-      Activity.log(officer.user, "email", dr)
     end
   end
 end

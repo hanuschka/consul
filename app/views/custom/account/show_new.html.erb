@@ -60,6 +60,23 @@
         </div>
       <% end %>
 
+      <% if current_user.identities.any? %>
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.account.connected_accounts.title"), icon_name: "link") do |c| %>
+          <ul class="account-settings-actions">
+            <% current_user.identities.each do |identity| %>
+              <li>
+                <strong><%= t("custom.account.connected_accounts.#{identity.provider}", default: identity.provider.to_s.titleize) %></strong>
+                <%= button_to t("custom.account.connected_accounts.disconnect"),
+                      disconnect_identity_account_path(provider: identity.provider),
+                      method: :delete,
+                      class: "button hollow expanded alert",
+                      data: { confirm: t("custom.account.connected_accounts.disconnect_confirm") } %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% end %>
+
       <%= render Shared::SidebarCardComponent.new(title: t("custom.account.show.personal_settings"), icon_name: "cog") do |c| %>
         <%= form_for @account, as: :account, url: account_path do |f| %>
           <div>

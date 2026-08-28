@@ -23,7 +23,7 @@ class Adm::FileManager::PageComponent < ApplicationComponent
     breadcrumbs:,
     assets:,
     endpoint:,
-    card_component: Files::AssetCardComponent,
+    card_component: ::Files::AssetCardComponent,
     row_component: nil,
     frontend_url: nil,
     upload_endpoint: nil,

@@ -3,7 +3,7 @@
 
   namespace :api do
     namespace :auth do
-      post :rotate_token, to: "auth/rotate_token#create"
+      post :rotate_token, to: "rotate_token#create"
     end
 
     resources :projekts, shallow: true do
@@ -85,6 +85,10 @@
       end
     end
     resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
+
+    namespace :masterportal do
+      resources :category_icons, only: [:create]
+    end
 
     match '*path', to: 'not_found#index', via: [:get, :post, :patch, :put, :delete]
   end

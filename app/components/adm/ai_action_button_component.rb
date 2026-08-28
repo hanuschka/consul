@@ -34,10 +34,6 @@ class Adm::AiActionButtonComponent < ApplicationComponent
     @compact = compact
   end
 
-  def ai_disabled?
-    !Ai::Settings.ai_available?
-  end
-
   def tooltip_description
     description.presence || I18n.t("adm.ai_action_button.feature_description")
   end

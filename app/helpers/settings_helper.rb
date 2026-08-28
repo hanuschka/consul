@@ -5,7 +5,8 @@ module SettingsHelper
       (:facebook if feature?(:facebook_login)),
       (:google_oauth2 if feature?(:google_login)),
       (:wordpress_oauth2 if feature?(:wordpress_login)),
-      (:open_rathaus if feature?(:open_rathaus_login)) #cli
+      (:open_rathaus if feature?(:open_rathaus_login)),
+      (:kobil if feature?(:kobil_login))
     ].compact
   end
 

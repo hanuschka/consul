@@ -8,6 +8,16 @@
   margin-bottom: 24px;
 }
 
+.files-index--results {
+  display: block;
+  transition: opacity 0.15s ease;
+}
+
+.files-index--results[busy] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .files-index--view-controls {
   display: flex;
   justify-content: flex-end;

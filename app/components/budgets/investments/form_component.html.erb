@@ -4,16 +4,9 @@
     <% if projekt_phase_feature?(budget.projekt_phase, "form.voice_assistant") && Ai::Settings.voice_assistant_allowed? %>
       <%= render Dt::VoiceAssistantComponent.new(
         assistant_codename: "budget_proposal_voice_assistant",
-        projekt_phase: investment.projekt_phase,
-        custom_data: { collapsible: true, collapsed: true }
+        projekt_phase: investment.projekt_phase
       ) %>
     <% end %>
-
-    <%= render Dt::VoiceAssistant::PreviewListComponent.new(
-      variant: :vertical,
-      projekt_phase_id: investment.projekt_phase&.id,
-      codename: "budget_proposal_voice_assistant"
-    ) %>
 
     <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form", id: dom_id(investment, :form) }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>

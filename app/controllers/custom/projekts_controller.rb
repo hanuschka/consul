@@ -128,10 +128,10 @@ class ProjektsController < ApplicationController
   def json_data
     @projekt = Projekt.find(params[:id])
 
-    image_url = url_for @projekt.image.attachment.variant(
+    image_url = url_for @projekt.image.attachment_variant(
                   resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
                   format: "jpeg",
-                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                  saver: { interlace: "JPEG", quality: 80 }
                 ) if @projekt.image&.attachment&.attached?
 
     data = {

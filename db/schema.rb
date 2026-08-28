@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_25_100000) do
+ActiveRecord::Schema.define(version: 2026_08_27_150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1342,6 +1342,7 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.string "credits"
     t.boolean "admin", default: false, null: false
     t.boolean "ai_generated", default: false, null: false
+    t.boolean "ai_generated_in_app", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
@@ -3257,6 +3258,7 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.datetime "published_at"
     t.string "footer_key"
     t.integer "footer_position"
+    t.text "landing_ai_context"
     t.index ["footer_key"], name: "index_site_customization_pages_on_footer_key", unique: true
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
@@ -3600,6 +3602,9 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.boolean "notify_moderation_decision", default: true, null: false
     t.datetime "ai_disclosed_at"
     t.bigint "guest_user_id"
+    t.datetime "terms_accepted_at"
+    t.string "reply_language"
+    t.datetime "reply_language_settled_at"
     t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
     t.index ["guest_user_id"], name: "index_whatsapp_accounts_on_guest_user_id", unique: true
     t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"
@@ -3607,6 +3612,18 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id", unique: true
     t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"
     t.index ["wa_id"], name: "index_whatsapp_accounts_on_wa_id", unique: true
+  end
+
+  create_table "whatsapp_contribution_translations", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "source_language", null: false
+    t.string "locale", null: false
+    t.text "title"
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "locale"], name: "index_whatsapp_contribution_translations_on_contribution", unique: true
   end
 
   create_table "whatsapp_conversations", force: :cascade do |t|
@@ -3637,6 +3654,7 @@ ActiveRecord::Schema.define(version: 2026_08_25_100000) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "projekt_id"
+    t.string "language"
     t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"

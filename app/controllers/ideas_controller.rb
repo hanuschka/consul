@@ -84,10 +84,10 @@ class IdeasController < ApplicationController
   end
 
   def json_data
-    image_url = url_for @idea.image.attachment.variant(
+    image_url = url_for @idea.image.attachment_variant(
                   resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
                   format: "jpeg",
-                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                  saver: { interlace: "JPEG", quality: 80 }
     ) if @idea.image&.attachment&.attached?
 
 

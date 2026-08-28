@@ -103,7 +103,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           { name: @deficiency_report.title }
         ]
 
-        @image_url = @deficiency_report.image&.attachment&.variant(
+        @image_url = @deficiency_report.image&.attachment_variant(
           resize_to_limit: [580, nil],
           format: "jpeg"
         )

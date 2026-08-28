@@ -303,6 +303,7 @@ App.Studio.Projekt.Banner = {
     const glightbox = container.querySelector("a.glightbox");
     if (glightbox) glightbox.setAttribute("href", previewUrl);
 
+    this.setAiMarkerGeneratedInApp(container, false);
     this.toggleImageActionButtons(container, true);
     this.applyAiMarkerState(container, false);
 
@@ -317,7 +318,20 @@ App.Studio.Projekt.Banner = {
     // existing banner can be regenerated; the delete button and the AI marker
     // both need a picture to act on.
     if (deleteButton) deleteButton.classList.toggle("d-none", !imagePresent);
-    if (aiMarkerButton) aiMarkerButton.classList.toggle("d-none", !imagePresent);
+
+    if (aiMarkerButton) {
+      const generatedInApp = aiMarkerButton.dataset.aiGeneratedInApp === "true";
+
+      aiMarkerButton.classList.toggle("d-none", !imagePresent || generatedInApp);
+    }
+  },
+
+  // A banner the app generated is marked at attach time, so there is nothing
+  // for the admin to declare or revoke and the marker button has no job left.
+  setAiMarkerGeneratedInApp(container, generatedInApp) {
+    const button = container.querySelector(".js-projekt-banner--ai-marker-button");
+
+    if (button) button.dataset.aiGeneratedInApp = String(generatedInApp);
   },
 
   async toggleAiMarker(e) {
@@ -359,7 +373,7 @@ App.Studio.Projekt.Banner = {
 
   // Reflects what the server just decided: generating a banner marks it,
   // uploading or deleting one leaves nothing marked
-  // (Image#clear_ai_generated_on_replaced_attachment).
+  // (Image#clear_generated_flags_on_replaced_attachment).
   applyAiMarkerState(container, aiGenerated) {
     const button = container.querySelector(".js-projekt-banner--ai-marker-button");
 
@@ -491,6 +505,7 @@ App.Studio.Projekt.Banner = {
     const glightbox = container.querySelector("a.glightbox");
     if (glightbox) glightbox.removeAttribute("href");
 
+    this.setAiMarkerGeneratedInApp(container, false);
     this.toggleImageActionButtons(container, false);
     this.applyAiMarkerState(container, false);
 
@@ -602,6 +617,7 @@ App.Studio.Projekt.Banner = {
 
     this.hideUploadProgress(container);
     this.resetGenerateButton(container);
+    this.setAiMarkerGeneratedInApp(container, true);
     this.toggleImageActionButtons(container, true);
     this.applyAiMarkerState(container, true);
 

@@ -1,0 +1,57 @@
+<%= turbo_frame_tag dom_id(deficiency_report, :official_answer) do %>
+  <%= form_with model: deficiency_report,
+        url: update_official_answer_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        multipart: true do |f| %>
+
+    <%= render Kern::FormFieldComponent.new(
+          hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")),
+          stacked: true, divider: false) do %>
+      <div role="group"
+           aria-label="<%= t("adm.deficiency_reports.deficiency_reports.show.official_answer") %>">
+        <%= f.text_area :official_answer,
+              value: AdminWYSIWYGSanitizer.new.sanitize(deficiency_report.official_answer),
+              label: false,
+              data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+      </div>
+    <% end %>
+
+    <%= render Kern::FormFieldComponent.new(
+          hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_documents_hint",
+                           types: Document.humanized_accepted_content_types,
+                           size: Document.max_file_size,
+                           count: DeficiencyReport.max_documents_allowed)),
+          stacked: true, divider: false) do %>
+      <div role="group"
+           aria-label="<%= t("adm.deficiency_reports.deficiency_reports.show.official_answer_documents") %>">
+        <%= render Kern::Form::AttachmentsComponent.new(
+              form: f,
+              attribute: :official_answer_documents,
+              max: DeficiencyReport.max_documents_allowed,
+              accept: Document.accepted_content_types,
+              attached: deficiency_report.official_answer_documents,
+              remove_path: ->(attachment) {
+                remove_official_answer_document_adm_deficiency_reports_deficiency_report_path(
+                  deficiency_report, attachment_id: attachment.id
+                )
+              }) %>
+      </div>
+    <% end %>
+
+    <%= form_submit_button(autofocus: request.format.turbo_stream?) %>
+  <% end %>
+
+  <% if flash[:attachment_alert].present? %>
+    <div class="kern-alert kern-alert--danger mt-2" role="alert">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
+        <span class="kern-title"><%= flash[:attachment_alert] %></span>
+      </div>
+    </div>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove">
+      <%= flash[:success] %>
+    </div>
+  <% end %>
+<% end %>

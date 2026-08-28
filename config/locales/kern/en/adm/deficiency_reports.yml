@@ -151,8 +151,14 @@ en:
           answer_template_prompt: "— Select template —"
           official_answer: Official response
           official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
+          official_answer_documents: Documents for the response
+          official_answer_documents_hint: >-
+            Allowed file types: %{types}. Up to %{count} documents, each no larger than %{size} MB.
+            Attached documents are publicly visible.
         update_official_answer:
           success: Official response updated successfully.
+        remove_official_answer_document:
+          success: Document removed.
         new:
           title: Create new report
         edit:

@@ -288,29 +288,41 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     ]
   end
 
+  def remove_official_answer_document
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    attachment = @deficiency_report.official_answer_documents.find_by(id: params[:attachment_id])
+    attachment&.purge
+
+    redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+      notice: t(".success")
+  end
+
   def update_official_answer
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     answer_was = @deficiency_report.official_answer.presence
+    documents = Array(params[:deficiency_report][:official_answer_documents]).reject(&:blank?)
 
     if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer))
       answer_now = @deficiency_report.official_answer.presence
 
       notify_watchers_about_change(@deficiency_report) if answer_now != answer_was
-      flash.now[:success] = t(".success")
+
+      if documents.any? && !@deficiency_report.official_answer_documents.attach(documents)
+        flash.now[:attachment_alert] = @deficiency_report.errors.full_messages.first
+        @deficiency_report.reload
+      else
+        flash.now[:success] = t(".success")
+      end
     end
 
     render turbo_stream: turbo_stream.replace(
       helpers.dom_id(@deficiency_report, :official_answer),
-      Adm::AttributeEditorComponent.new(
-        @deficiency_report,
-        :official_answer,
-        :rich_text,
-        path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-        label: t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
-        description: t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")
-      )
+      partial: "adm/deficiency_reports/deficiency_reports/official_answer_form",
+      locals: { deficiency_report: @deficiency_report }
     )
   end
 

@@ -151,8 +151,14 @@ de:
           answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
           official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. <strong>Wichtiger Hinweis:</strong> Dieser Text ist öffentlich sichtbar."
+          official_answer_documents: Dokumente zur Antwort
+          official_answer_documents_hint: >-
+            Erlaubte Dateitypen: %{types}. Maximal %{count} Dokumente, je bis zu %{size} MB.
+            Angehängte Dokumente sind öffentlich sichtbar.
         update_official_answer:
           success: Offizielle Antwort wurde erfolgreich aktualisiert.
+        remove_official_answer_document:
+          success: Dokument wurde entfernt.
         new:
           title: Neue Meldung erstellen
         edit:

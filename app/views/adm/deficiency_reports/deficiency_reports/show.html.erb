@@ -204,20 +204,13 @@
     <% end %>
 
     <% if may_administer %>
-      <%= render Adm::AttributeEditorComponent.new(
-        @deficiency_report,
-        :official_answer,
-        :rich_text,
-        path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-        label: t(".official_answer"),
-        description: t(".official_answer_hint"),
-        hide_label: true,
-        divider: false
-      ) %>
+      <%= render "official_answer_form", deficiency_report: @deficiency_report %>
     <% else %>
       <div class="adm-detail-description">
         <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.official_answer) %>
       </div>
+
+      <%= render "official_answer_documents", deficiency_report: @deficiency_report %>
     <% end %>
   </section>
 

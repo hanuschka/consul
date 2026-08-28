@@ -1,15 +1,16 @@
 # Betriebshandbuch
 
-Dieses Dokument beschreibt auf grober Ebene, wie das Mitmachportal betrieben
-wird. Es richtet sich an Personen, die sich einen Überblick über die
-Betriebsabläufe verschaffen möchten – etwa Verantwortliche in Kommunen oder
-Prüfstellen – und ersetzt keine vollständige Installations- oder
-Administrationsanleitung. Konkrete Infrastrukturdetails, Zugangsdaten und
-interne Prozesse sind bewusst nicht Bestandteil dieses öffentlichen Dokuments.
+Dieses Dokument beschreibt auf grober Ebene, wie die Plattform
+„Dialog- und Beteiligungsportal Osnabrück“ betrieben wird. Es richtet sich
+an Personen, die sich einen Überblick über die Betriebsabläufe verschaffen
+möchten – etwa Verantwortliche in Kommunen oder Prüfstellen –
+und ersetzt keine vollständige Installations- oder Administrationsanleitung.
+Konkrete Infrastrukturdetails, Zugangsdaten und interne Prozesse sind
+bewusst nicht Bestandteil dieses öffentlichen Dokuments.
 
 ## Aufbau der Plattform
 
-Das Mitmachportal ist eine webbasierte Anwendung, die vollständig im Browser
+Die Plattform ist eine webbasierte Anwendung, die vollständig im Browser
 genutzt wird – Bürgerinnen und Bürger müssen keine Software installieren. Die
 Plattform besteht im Wesentlichen aus drei Bausteinen:
 
@@ -106,6 +107,23 @@ Aktualisierungen der eingesetzten Softwarekomponenten, Fehlerbehebungen sowie
 funktionale Weiterentwicklungen. Geplante Wartungsarbeiten, die den Betrieb
 spürbar beeinträchtigen könnten, werden – soweit möglich – außerhalb der
 Hauptnutzungszeiten durchgeführt und vorab angekündigt.
+
+## Software-Stückliste (SBOM)
+
+Die Datei `sbom.cdx.json` im Wurzelverzeichnis des Repositorys enthält eine
+Software-Stückliste im Format CycloneDX (JSON). Sie listet die eingesetzten
+Ruby-Gems aus `Gemfile.lock` und die npm-Pakete aus `package-lock.json` mit
+Version, Package-URL (purl) und – soweit ermittelbar – Lizenz auf.
+
+Die Stückliste wird mit [Trivy](https://github.com/aquasecurity/trivy) erzeugt.
+Nach Änderungen an einer der beiden Lock-Dateien wird sie im Wurzelverzeichnis
+des Repositorys neu erzeugt:
+
+```bash
+trivy fs --format cyclonedx --output sbom.cdx.json --scanners license .
+```
+
+Erzeugt mit Trivy 0.74.0; die Ausgabe folgt der CycloneDX-Spezifikation 1.7.
 
 ## Datenschutz und Sicherheit
 

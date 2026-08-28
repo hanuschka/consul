@@ -1,32 +1,29 @@
 publiccodeYmlVersion: '0.4'
-name: '{{PORTAL_NAME}}' # Public name of the instance, e.g. "Mitmachportal Würzburg".
-url: '{{OPENCODE_REPO_URL}}' # HTTPS URL of the openCoDE repository this file is published in.
-landingURL: '{{PORTAL_URL}}'
-landingUrl: '{{PORTAL_URL}}'
+name: Dialog- und Beteiligungsportal Osnabrück
+url: 'https://gitlab.opencode.de/stadtosnabrueck/smart_city_consul'
+landingURL: 'https://dialog.osnabrueck.de'
 isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
-softwareVersion: '{{RELEASE_DATE}}' # Date of the pushed code state, format YYYY-MM-DD. Keep both in sync.
-releaseDate: '{{RELEASE_DATE}}'
+softwareVersion: '2026-08-28'
+releaseDate: '2026-08-28'
 logo: logo.png
 platforms:
   - web
 categories:
   - digital-citizenship
   - online-community
-  - smart-city
 developmentStatus: stable
 softwareType: standalone/web
 description:
   de:
-    localisedName: '{{PORTAL_LOCALISED_NAME}}' # Long form of the portal name, e.g. "Mitmachportal der Region Würzburg".
+    localisedName: Dialog- und Beteiligungsportal Osnabrück
     genericName: Bürgerbeteiligungsplattform
     shortDescription: >-
-      Digitale Beteiligungsplattform {{CLIENT_GENITIVE}} für Bürgerhaushalt,
+      Digitale Beteiligungsplattform der Stadt Osnabrück für Bürgerhaushalt,
       Vorschläge und weitere Beteiligungsformate.
     longDescription: >-
-      {{PORTAL_NAME}} ist die Online-Beteiligungsplattform
-      {{CLIENT_GENITIVE}}. Bürgerinnen und Bürger können Vorschläge
-      einreichen, diskutieren und über Beteiligungsprojekte wie den
-      Bürgerhaushalt abstimmen.
+      Auf der Plattform „Dialog- und Beteiligungsportal Osnabrück“ können
+      Bürgerinnen und Bürger Vorschläge einreichen, diskutieren und über
+      Beteiligungsprojekte wie den Bürgerhaushalt abstimmen.
       Beteiligungsverfahren werden als Projekte mit eigenen Phasen
       abgebildet – von der Ideensammlung über die Diskussion bis zur
       Abstimmung und der Rückmeldung der Verwaltung. Ortsbezogene Anliegen
@@ -36,8 +33,8 @@ description:
       angepassten Version der Open-Source-Software Consul, ist
       datenschutzfreundlich vorkonfiguriert und wird von demokratie.today
       betrieben, gehostet und weiterentwickelt.
-    documentation: '{{OPENCODE_REPO_URL}}/-/blob/{{CLIENT_BRANCH}}/BETRIEBSHANDBUCH.md'
-    apiDocumentation: '{{PORTAL_URL}}/api/docs'
+    documentation: 'https://gitlab.opencode.de/stadtosnabrueck/smart_city_consul/-/blob/cli_osn_2/BETRIEBSHANDBUCH.md'
+    apiDocumentation: 'https://dialog.osnabrueck.de/api/docs'
     features:
       - Bürgerbeteiligung
       - Bürgerhaushalt
@@ -47,21 +44,51 @@ description:
       - Geschützter Redaktions- und Moderationsbereich
     screenshots:
       - doc/publiccode/screenshot.png
+  en:
+    localisedName: Dialogue and participation portal of Osnabrück
+    genericName: Citizen participation platform
+    shortDescription: >-
+      Digital participation platform of the city of Osnabrück for
+      participatory budgeting, proposals and further participation formats.
+    longDescription: >-
+      On the platform "Dialogue and participation portal of Osnabrück",
+      citizens can submit and discuss proposals and vote on participation
+      projects such as the participatory budget.
+      Participation procedures are modelled as projects with phases of their
+      own - from collecting ideas through discussion to voting and the
+      administration's response. Location-based concerns and projects can be
+      placed on an interactive map. A protected administration area serves
+      editorial work, moderation and the evaluation of the contributions
+      received. The platform is based on a customised version of the open
+      source software Consul, comes preconfigured in a privacy-friendly way
+      and is operated, hosted and further developed by demokratie.today.
+    documentation: 'https://gitlab.opencode.de/stadtosnabrueck/smart_city_consul/-/blob/cli_osn_2/BETRIEBSHANDBUCH.md'
+    apiDocumentation: 'https://dialog.osnabrueck.de/api/docs'
+    features:
+      - Citizen participation
+      - Participatory budgeting
+      - Proposals and voting
+      - Discussion forums
+      - Location-based participation on an interactive map
+      - Protected editorial and moderation area
+    screenshots:
+      - doc/publiccode/screenshot.png
 legal:
   license: AGPL-3.0
   mainCopyrightOwner: demokratie.today
-  repoOwner: '{{CLIENT_NAME}}' # Owner of the openCoDE repository, e.g. "Stadt Würzburg".
+  repoOwner: 'Stadt Osnabrück'
 maintenance:
   type: contract
   contractors:
     - name: demokratie.today
       email: info@demokratie.today
       website: 'https://demokratie.today'
-      until: '{{CONTRACT_UNTIL}}' # End of the current maintenance contract, format YYYY-MM-DD.
+      until: '2026-08-31'
 localisation:
   localisationReady: true
   availableLanguages:
     - de
+    - en
 intendedAudience:
   countries:
     - de
@@ -69,7 +96,7 @@ intendedAudience:
     - local-authorities
 
 usedBy: # Add every public body operating this instance (e.g. city and district).
-  - '{{CLIENT_NAME}}'
+  - 'Stadt Osnabrück'
 dependsOn:
   open:
     - name: Ruby on Rails

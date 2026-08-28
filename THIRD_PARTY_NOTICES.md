@@ -1,14 +1,15 @@
 # Third-Party Notices
 
-Das Mitmachportal nutzt eine Reihe von Open-Source-Komponenten. Diese
-Übersicht listet die wesentlichen Abhängigkeiten und deren Lizenzen. Sie
-dient der Transparenz gegenüber Kommunen und Öffentlichkeit und ersetzt
-keine automatisiert generierte, vollständige Abhängigkeitsliste (siehe
-Abschnitt [Vollständigkeit](#vollständigkeit)).
+Die Plattform „Dialog- und Beteiligungsportal Osnabrück“ nutzt eine Reihe
+von Open-Source-Komponenten. Diese Übersicht listet die wesentlichen
+Abhängigkeiten und deren Lizenzen. Sie dient der Transparenz gegenüber
+Kommunen und Öffentlichkeit und ersetzt keine automatisiert generierte,
+vollständige Abhängigkeitsliste (siehe Abschnitt
+[Vollständigkeit](#vollständigkeit)).
 
 ## Basisplattform
 
-Das Mitmachportal ist eine angepasste Version (Fork) der
+Die Plattform ist eine angepasste Version (Fork) der
 Open-Source-Beteiligungssoftware
 [Consul Democracy](https://github.com/consuldemocracy/consuldemocracy),
 die unter der **GNU Affero General Public License v3 (AGPL-3.0)** steht.

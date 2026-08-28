@@ -1,13 +1,13 @@
 # Security Policy
 
-Die Sicherheit des Mitmachportals und der darauf verarbeiteten Daten hat
-für uns hohe Priorität. Wir freuen uns über Hinweise von
-Sicherheitsforschenden und Nutzer:innen, die uns helfen, die Plattform
-sicherer zu machen.
+Die Sicherheit der Plattform „Dialog- und Beteiligungsportal Osnabrück“
+und der darauf verarbeiteten Daten hat für uns hohe Priorität. Wir freuen
+uns über Hinweise von Sicherheitsforschenden und Nutzer:innen, die uns
+helfen, die Plattform sicherer zu machen.
 
 ## Meldung von Sicherheitslücken
 
-Wenn Sie eine Sicherheitslücke im Mitmachportal entdecken, bitten wir Sie,
+Wenn Sie eine Sicherheitslücke in der Plattform entdecken, bitten wir Sie,
 diese verantwortungsvoll und vertraulich zu melden, bevor Sie sie
 öffentlich machen (Responsible Disclosure / koordinierte Offenlegung).
 
@@ -47,7 +47,7 @@ auf eine Vergütung.
 
 Diese Policy bezieht sich auf:
 
-- die Software des Mitmachportals (dieses Repository) und
+- die Software der Plattform (dieses Repository) und
 - die von demokratie.today betriebenen Instanzen.
 
 **Nicht in den Umfang fallen:**
@@ -57,7 +57,7 @@ Diese Policy bezieht sich auf:
   Anmeldedienste wie BundID/BayernID) — bitte melden Sie Schwachstellen
   dort direkt beim jeweiligen Anbieter,
 - Schwachstellen in Abhängigkeiten ohne konkret nachvollziehbare
-  Auswirkung auf das Mitmachportal (reine Versionshinweise aus Scannern),
+  Auswirkung auf die Plattform (reine Versionshinweise aus Scannern),
 - fehlende Härtungsmaßnahmen ohne demonstrierbares Risiko (z. B. einzelne
   fehlende HTTP-Header ohne ausnutzbare Auswirkung),
 - Social Engineering, Phishing gegen Mitarbeitende oder Nutzer:innen sowie
@@ -82,4 +82,4 @@ werden von uns nicht rechtlich verfolgt. Das setzt voraus, dass Sie
 - die Verfügbarkeit der Plattform nicht beeinträchtigen und
 - die Schwachstelle vertraulich behandeln, bis sie behoben ist.
 
-Vielen Dank, dass Sie zur Sicherheit des Mitmachportals beitragen.
+Vielen Dank, dass Sie zur Sicherheit der Plattform beitragen.

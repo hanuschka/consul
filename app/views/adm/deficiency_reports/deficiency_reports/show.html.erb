@@ -183,6 +183,12 @@
         <p class="adm-detail-value m-0"><%= @deficiency_report.responsible&.name %></p>
       <% end %>
     <% end %>
+
+    <% if show_deficiency_report_visibility_control?(@deficiency_report) %>
+      <%= render Kern::FormFieldComponent.new(label: t(".admin_accepted_status"), hint: t(".admin_accepted_status_hint")) do %>
+        <%= render "admin_accepted_toggle", deficiency_report: @deficiency_report %>
+      <% end %>
+    <% end %>
   </section>
 
   <%# === Section 4: Offizielle Antwort === %>

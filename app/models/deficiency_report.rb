@@ -21,7 +21,8 @@ class DeficiencyReport < ApplicationRecord
 
   audited only: %i[video_url on_behalf_of recorded_by_id cached_votes_up cached_votes_down
                    deficiency_report_status_id deficiency_report_category_id
-                   deficiency_report_subcategory_id responsible_type responsible_id]
+                   deficiency_report_subcategory_id responsible_type responsible_id
+                   admin_accepted]
   has_associated_audits
   translation_class.class_eval do
     audited associated_with: :globalized_model,

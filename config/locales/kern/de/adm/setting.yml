@@ -5,19 +5,19 @@ de:
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
     feature:
       bund_id_login: "BundID-Anmeldung aktivieren"
-      bund_id_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine BundID-Schaltfläche. Nutzer können sich dann mit ihrem BundID-Konto anmelden und registrieren."
+      bund_id_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine BundID-Schaltfläche zur Anmeldung mit BundID-Konto. Die Wohnsitz-Verifizierung ist davon unabhängig. Aktivieren Sie es für Verwaltungskonten. Erfordert Zugangsdaten in der Serverkonfiguration."
       twitter_login: "Twitter-Anmeldung aktivieren"
-      twitter_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Twitter-Konto. Erfordert hinterlegte Twitter-Zugangsdaten in der Serverkonfiguration."
+      twitter_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Twitter-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, wenn Ihre Zielgruppe dort ein Konto hat. Erfordert Zugangsdaten in der Serverkonfiguration."
       facebook_login: "Facebook-Anmeldung aktivieren"
-      facebook_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Facebook-Konto. Erfordert hinterlegte Facebook-Zugangsdaten in der Serverkonfiguration."
+      facebook_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Facebook-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, wenn Sie Menschen über Facebook erreichen. Erfordert Zugangsdaten in der Serverkonfiguration."
       google_login: "Google-Anmeldung aktivieren"
-      google_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Google-Konto. Erfordert hinterlegte Google-Zugangsdaten in der Serverkonfiguration."
+      google_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Google-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, um die Registrierung kurz zu halten. Erfordert Zugangsdaten in der Serverkonfiguration."
       wordpress_login: "Wordpress-Anmeldung aktivieren"
-      wordpress_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Wordpress-Konto. Erfordert hinterlegte Wordpress-Zugangsdaten in der Serverkonfiguration."
+      wordpress_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Wordpress-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, wenn Ihre Nutzer dort ein Konto haben. Erfordert Zugangsdaten in der Serverkonfiguration."
       kobil_login: "KOBIL-Anmeldung aktivieren"
-      kobil_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine Schaltfläche „Mit KOBIL anmelden“. Nutzer können sich dann über ihr KOBIL-Konto (OpenID Connect) anmelden und registrieren. Erfordert hinterlegte KOBIL-Zugangsdaten in der Serverkonfiguration."
+      kobil_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Schaltfläche mit KOBIL-Logo (OpenID Connect). Aktivieren Sie es, wenn KOBIL Ihr zentrales Identitätssystem ist. Erfordert Zugangsdaten in der Serverkonfiguration."
       kobil_address_verification: "KOBIL Adressverifizierung"
-      kobil_address_verification_description: "Übernimmt die vom KOBIL-Konto bereitgestellte Adresse (Straße, PLZ, Ort) in das Nutzerprofil. Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
+      kobil_address_verification_description: "Übernimmt die Adresse aus dem KOBIL-Konto (Straße, PLZ, Ort) in das Nutzerprofil, ohne sie mit dem Adressregister zu verknüpfen. Gebietsbeschränkte Phasen schaltet sie nicht frei. Aktivieren Sie es, um Tipparbeit zu ersparen."
     projekt_option:
       general:
         external_participation_link: Alternativen Link in den Projektressourcen verwenden
@@ -169,9 +169,9 @@ de:
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
       general:
         enable_google_translate: Google Translate aktivieren
-        enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        enable_google_translate_description: 'Bindet das Übersetzungs-Widget von Google Translate ein. Im Hauptmenü erscheint ein Sprach-Symbol, die eigene Sprachauswahl entfällt. Aktivieren Sie es für viele Sprachen und stimmen Sie zuvor den <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">Nutzungsbedingungen</a> zu.'
         show_guest_login_links: Zeige Gast-Login an
-        show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
+        show_guest_login_links_description: "Erlaubt die Anmeldung als Gast, nur mit Anzeigenamen, ohne E-Mail und Passwort. In der Fußzeile erscheint dazu ein Link. Gäste können an Phasen mit Mindeststatus „Gastnutzer“ teilnehmen. Aktivieren Sie es für eine niedrige Hürde."
         users_overview_page: Übersicht aller Nutzer*innen
         users_overview_page_description: "Aktiviert eine öffentliche Übersichtsseite mit allen aktiven Nutzer*innen, die ihrer Anzeige zugestimmt haben. Besucher können Profile durchsuchen und die Beteiligungsaktivität anderer Nutzer*innen einsehen, etwa eingereichte Vorschläge, Kommentare und Abstimmungsteilnahmen."
         enable_projekt_events_page: Veranstaltungskalender

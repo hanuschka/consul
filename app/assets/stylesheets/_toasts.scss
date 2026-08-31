@@ -35,7 +35,7 @@
   border-left: 4px solid #64748b;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   color: #0f172a;
-  font-family: "Asap", sans-serif;
+  font-family: $new-body-font-family;
   font-size: 16px;
   line-height: 1.45;
   animation: toast-in 220ms ease-out both;

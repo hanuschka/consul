@@ -3,6 +3,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
+  include DeficiencyReportAiCategorization
 
   helper_method :assignment_scope_filter?
 
@@ -79,10 +80,14 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     ))
     authorize @deficiency_report, :create?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
+    ai_result = categorize_with_ai(@deficiency_report)
+
     if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
       @deficiency_report.assign_default_responsible
-      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report), notice: t("adm.attribute.create.success")
+      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+        notice: create_notice(ai_result)
     else
+      clear_ai_categorization(@deficiency_report) if ai_result
       @deficiency_report.build_image(user: current_user) unless @deficiency_report.image
       @deficiency_report.build_map_location unless @deficiency_report.map_location
       @breadcrumbs = new_breadcrumbs
@@ -355,12 +360,24 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     def deficiency_report_params
       attributes = [:title, :description, :video_url, :on_behalf_of,
                     :deficiency_report_category_id,
+                    :deficiency_report_subcategory_id,
                     :deficiency_report_status_id,
                     :deficiency_report_intake_channel_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
       params.require(:deficiency_report).permit(attributes)
+    end
+
+    def create_notice(ai_result)
+      return t("adm.attribute.create.success") unless ai_result&.fallback?
+
+      t(".ai_fallback", category: ai_result.category&.name)
+    end
+
+    def clear_ai_categorization(deficiency_report)
+      deficiency_report.category = nil
+      deficiency_report.subcategory = nil
     end
 
     def create_params

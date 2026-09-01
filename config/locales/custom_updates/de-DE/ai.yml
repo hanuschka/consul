@@ -1,0 +1,5 @@
+de:
+  custom:
+    ai:
+      errors:
+        marking_unavailable: "Das Bild konnte nicht als KI-generiert gekennzeichnet und deshalb nicht gespeichert werden. Bitte versuchen Sie es später erneut oder wenden Sie sich an eine Administratorin oder einen Administrator."

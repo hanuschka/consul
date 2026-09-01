@@ -3,39 +3,42 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_imports_path) %>
 
 <div class="kern-container my-5">
-  <div class="projekt-import-from-file"
-       data-controller="projekt-imports--from-file"
-       data-projekt-imports--from-file-create-url-value="<%= adm_projekts_imports_path %>"
-       data-projekt-imports--from-file-max-bytes-value="<%= Adm::Projekts::Imports::FromFilesController::MAX_AGGREGATE_BYTES %>"
-       data-projekt-imports--from-file-allowed-value="<%= Adm::Projekts::Imports::FromFilesController::ALLOWED_EXTENSIONS.join(',') %>"
-       data-projekt-imports--from-file-csrf-value="<%= form_authenticity_token %>"
-       data-projekt-imports--from-file-progress-extracting-value="<%= t('.progress.extracting') %>"
-       data-projekt-imports--from-file-error-too-large-value="<%= t('.errors.too_large') %>"
-       data-projekt-imports--from-file-error-unsupported-value="<%= t('.errors.unsupported_type') %>"
-       data-projekt-imports--from-file-error-no-files-value="<%= t('.errors.no_files') %>">
+  <div class="adm-document-upload"
+       data-controller="shared--document-upload"
+       data-shared--document-upload-create-url-value="<%= adm_projekts_imports_path %>"
+       data-shared--document-upload-max-bytes-value="<%= Adm::Projekts::Imports::FromFilesController::MAX_AGGREGATE_BYTES %>"
+       data-shared--document-upload-allowed-value="<%= Adm::Projekts::Imports::FromFilesController::ALLOWED_EXTENSIONS.join(',') %>"
+       data-shared--document-upload-csrf-value="<%= form_authenticity_token %>"
+       data-shared--document-upload-progress-extracting-value="<%= t('.progress.extracting') %>"
+       data-shared--document-upload-error-too-large-value="<%= t('.errors.too_large') %>"
+       data-shared--document-upload-error-unsupported-value="<%= t('.errors.unsupported_type') %>"
+       data-shared--document-upload-error-no-files-value="<%= t('.errors.no_files') %>"
+       data-shared--document-upload-error-session-expired-value="<%= t('.errors.session_expired') %>"
+       data-shared--document-upload-error-request-failed-value="<%= t('.errors.request_failed') %>"
+       data-shared--document-upload-remove-file-label-value="<%= t('adm.projekts.imports.upload.remove_file') %>">
 
-    <form data-projekt-imports--from-file-target="form"
-          class="projekt-import-from-file--form"
+    <form data-shared--document-upload-target="form"
+          class="adm-document-upload--form"
           enctype="multipart/form-data">
 
       <%# Upload area %>
-      <div class="projekt-import-from-file--upload-area"
-           data-projekt-imports--from-file-target="dropzone">
-        <div class="projekt-import-from-file--upload-icon" aria-hidden="true">
+      <div class="adm-document-upload--upload-area"
+           data-shared--document-upload-target="dropzone">
+        <div class="adm-document-upload--upload-icon" aria-hidden="true">
           <span class="material-symbols-outlined">upload_file</span>
         </div>
 
-        <h2 class="projekt-import-from-file--title"><%= t(".title") %></h2>
+        <h2 class="adm-document-upload--title"><%= t(".title") %></h2>
 
-        <p class="projekt-import-from-file--hint">
+        <p class="adm-document-upload--hint">
           <%= t(".dropzone_label") %>
           <%= t(".dropzone_hint",
                 types: Adm::Projekts::Imports::FromFilesController::ALLOWED_EXTENSIONS.map(&:upcase).join(", "),
-                size: "45MB") %>
+                size: "500MB") %>
         </p>
 
         <label for="projekt-import-file-input"
-               class="projekt-import-from-file--select-button">
+               class="adm-document-upload--select-button">
           <%= t(".select_file") %>
         </label>
 
@@ -43,75 +46,77 @@
                type="file"
                multiple
                accept=".pdf,.docx,.odt,.txt,.md"
-               data-projekt-imports--from-file-target="fileInput"
-               data-action="change->projekt-imports--from-file#filesPicked">
+               data-shared--document-upload-target="fileInput"
+               data-action="change->shared--document-upload#filesPicked">
 
-        <p class="projekt-import-from-file--drop-hint"><%= t(".drop_hint") %></p>
+        <p class="adm-document-upload--drop-hint"><%= t(".drop_hint") %></p>
+
+        <%= render Adm::Projekts::Imports::MissingToolsBannerComponent.new(missing_tools: @missing_tools) %>
       </div>
 
       <%# File preview %>
-      <div class="projekt-import-from-file--file-preview -hidden"
-           data-projekt-imports--from-file-target="secondary">
+      <div class="adm-document-upload--file-preview -hidden"
+           data-shared--document-upload-target="secondary">
 
-        <div class="projekt-import-from-file--file-list"
-             data-projekt-imports--from-file-target="fileList"
+        <div class="adm-document-upload--file-list"
+             data-shared--document-upload-target="fileList"
              aria-live="polite"></div>
 
-        <div class="projekt-import-from-file--user-prompt">
+        <div class="adm-document-upload--user-prompt">
           <label for="projekt-import-instructions">
             <%= t(".instructions_label") %>
           </label>
           <textarea id="projekt-import-instructions"
-                    data-projekt-imports--from-file-target="instructions"
+                    data-shared--document-upload-target="instructions"
                     rows="4"
                     placeholder="<%= t('.instructions_placeholder') %>"></textarea>
         </div>
 
-        <div class="projekt-import-from-file--inline-error"
-             data-projekt-imports--from-file-target="error"
+        <div class="adm-document-upload--inline-error"
+             data-shared--document-upload-target="error"
              hidden></div>
 
-        <div class="projekt-import-from-file--actions">
+        <div class="adm-document-upload--actions">
           <button type="submit"
-                  class="projekt-import-from-file--submit-button"
-                  data-action="click->projekt-imports--from-file#submit"
-                  data-projekt-imports--from-file-target="submitButton">
+                  class="adm-document-upload--submit-button"
+                  data-action="click->shared--document-upload#submit"
+                  data-shared--document-upload-target="submitButton">
             <%= t(".submit_label") %>
           </button>
 
           <button type="button"
-                  class="projekt-import-from-file--ghost-button"
-                  data-action="click->projekt-imports--from-file#resetFiles">
+                  class="adm-document-upload--ghost-button"
+                  data-action="click->shared--document-upload#resetFiles">
             <%= t(".choose_other_file") %>
           </button>
         </div>
 
-        <p class="projekt-import-from-file--drop-hint"><%= t(".drop_hint") %></p>
+        <p class="adm-document-upload--drop-hint"><%= t(".drop_hint") %></p>
       </div>
     </form>
 
     <%# Loader %>
-    <div class="projekt-import-from-file--loader -hidden"
-         data-projekt-imports--from-file-target="progress">
-      <h3 class="projekt-import-from-file--loader-title">
+    <div class="adm-document-upload--loader -hidden"
+         data-shared--document-upload-target="progress">
+      <h3 class="adm-document-upload--loader-title">
         <%= t(".processing_title", default: "Analyse läuft…") %>
       </h3>
 
-      <div class="projekt-import-from-file--progress-wrapper">
-        <div class="projekt-import-from-file--progress-bar">
-          <div class="projekt-import-from-file--progress-bar-fill"
-               data-projekt-imports--from-file-target="progressFill"></div>
+      <div class="adm-document-upload--progress-wrapper">
+        <div class="adm-document-upload--progress-bar">
+          <div class="adm-document-upload--progress-bar-fill"
+               data-shared--document-upload-target="progressFill"></div>
         </div>
-        <span class="projekt-import-from-file--progress-label"
-              data-projekt-imports--from-file-target="progressLabel">
+        <span class="adm-document-upload--progress-label"
+              data-shared--document-upload-target="progressLabel">
           <%= t(".progress.extracting") %>
         </span>
       </div>
 
-      <p class="projekt-import-from-file--loader-message"><%= t(".processing_message") %></p>
+      <p class="adm-document-upload--loader-message"><%= t(".processing_message") %></p>
 
-      <div class="projekt-import-from-file--loader-files"
-           data-projekt-imports--from-file-target="loaderFiles"></div>
+      <div class="adm-document-upload--loader-files"
+           data-shared--document-upload-target="loaderFiles"></div>
     </div>
   </div>
 </div>

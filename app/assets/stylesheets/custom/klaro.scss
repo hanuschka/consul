@@ -10,6 +10,16 @@
       padding: 1.5rem;
       padding-top: 0.8em;
       max-width: 520px;
+      border-radius: 10px;
+    }
+
+    .cn-buttons {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .cm-btn {
+      flex-grow: 1;
     }
 
     button {
@@ -18,6 +28,12 @@
 
     .cn-ok {
       margin-top: 1.2rem !important;
+      flex-wrap: wrap !important;
+      gap: 5px;
+
+      .cm-btn {
+        margin-right: 0 !important;
+      }
 
       .cm-btn.cm-btn-info {
         padding: 10px;

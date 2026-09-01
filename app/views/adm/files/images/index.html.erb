@@ -8,7 +8,8 @@
   endpoint: adm_files_images_path,
   card_component: Files::AssetCardComponent,
   upload_endpoint: ckeditor_pictures_path,
-  upload_accept: "image/*"
+  upload_accept: "image/*",
+  detail_path: ->(admin_image) { adm_files_image_path(admin_image) }
 ) do |page| %>
   <% page.with_description do %>
     <%= t("files.images.index.description") %>

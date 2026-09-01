@@ -3,9 +3,10 @@ import { Controller } from "@hotwired/stimulus"
 const BEGIN_EVENT = "adm-button-with-progress:begin"
 const COMPLETE_EVENT = "adm-button-with-progress:complete"
 const RESTORE_EVENT = "adm-button-with-progress:restore"
+const RENDERER_UNAVAILABLE_STATUS = 503
 
 export default class extends Controller {
-  static targets = ["form", "buttonWrapper"]
+  static targets = ["form", "buttonWrapper", "errorDialog"]
 
   connect() {
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -35,6 +36,13 @@ export default class extends Controller {
         credentials: "same-origin"
       })
 
+      if (response.status === RENDERER_UNAVAILABLE_STATUS) {
+        this.dispatchProgress(RESTORE_EVENT)
+        this.openErrorDialog()
+
+        return
+      }
+
       if (!response.ok) {
         throw new Error(`Server returned ${response.status}`)
       }
@@ -47,6 +55,18 @@ export default class extends Controller {
       console.error("[evaluation_pdf_download]", err)
       this.dispatchProgress(RESTORE_EVENT)
     }
+  }
+
+  openErrorDialog() {
+    if (!this.hasErrorDialogTarget) return
+
+    this.errorDialogTarget.showModal()
+  }
+
+  closeErrorDialog() {
+    if (!this.hasErrorDialogTarget) return
+
+    this.errorDialogTarget.close()
   }
 
   buildUrl() {

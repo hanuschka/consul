@@ -5,12 +5,15 @@
         <th scope="col" class="kern-table__header"></th>
         <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.name") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.url") %></th>
+        <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.projekts") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.landing_pages.landing_pages.index.table.header.status") %></th>
         <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
       </tr>
     </thead>
     <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= reorder_adm_landing_pages_landing_pages_path %>">
-      <%= render partial: "adm/landing_pages/landing_pages/landing_page", collection: @landing_pages %>
+      <%= render partial: "adm/landing_pages/landing_pages/landing_page",
+                 collection: @landing_pages,
+                 locals: { projekt_counts: @landing_projekt_counts } %>
     </tbody>
   </table>
 <% else %>

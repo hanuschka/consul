@@ -1,3 +1,5 @@
 <%= turbo_stream.replace dom_id(@landing_page) do %>
-  <%= render "landing_page", landing_page: @landing_page  %>
+  <%= render "landing_page",
+             landing_page: @landing_page,
+             projekt_counts: { @landing_page.id => @landing_page.landing_projekts.count } %>
 <% end %>

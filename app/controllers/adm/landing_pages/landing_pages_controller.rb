@@ -119,6 +119,7 @@ module Adm
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,
             :landing_desktop_header_image, :landing_mobile_header_image,
             :landing_desktop_header_video, :landing_mobile_header_video,
+            :landing_ai_context,
             landing_page_manager_ids: []
           )
         end

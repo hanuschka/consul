@@ -7,25 +7,30 @@
 <% end %>
 
 <div class="kern-container my-5">
+  <% editor_options = { path: adm_landing_pages_landing_page_path(@landing_page),
+                        policy_class: Adm::LandingPages::LandingPagePolicy } %>
+
   <%= render "navbar_items", landing_page: @landing_page %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :slug, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :slug, :string, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_transparent_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_white_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_image, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_video, :video, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_image, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_video, :video, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_transparent_background, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_white_background, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_image, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_video, :video, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_image, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_video, :video, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :title, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :header_title, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :subtitle, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :title, :string, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :header_title, :string, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :subtitle, :string, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_hide_title_and_subtitle, :boolean, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_follow_to_landing_page, :boolean, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_hide_title_and_subtitle, :boolean, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_follow_to_landing_page, :boolean, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_navigation_link_color, :color, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_navigation_link_color, :color, **editor_options) %>
+
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_ai_context, :text, **editor_options) %>
 
   <% if current_user.administrator? || current_user.landing_page_manager&.manage_all_landing_pages? %>
     <%= render Kern::FormFieldComponent.new(label: t(".managers_title"), hint: t(".managers_description")) do %>

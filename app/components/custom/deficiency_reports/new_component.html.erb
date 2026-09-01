@@ -3,10 +3,7 @@
   <main class="user-resources-form <%= " -no-image" unless Setting["deficiency_reports.image_upload"].present? %>">
     <% if Setting["deficiency_reports.voice_assistant"].present? && Ai::Settings.ai_available? %>
       <%= render Dt::VoiceAssistantComponent.new(
-        assistant_codename: "deficiency_report_voice_assistant",
-        custom_data: {
-          categories: categories_serialized
-        }
+        assistant_codename: "deficiency_report_voice_assistant"
       ) %>
     <% end %>
 
@@ -48,6 +45,9 @@
                   <% end %>
                   <%= f.fields_for :image do |image_builder| %>
                     <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                    <div class="image-upload-meta-row">
+                      <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
+                    </div>
                   <% end %>
                 </div>
               <% end %>
@@ -132,25 +132,6 @@
                           icon_name: "language"
                        ) do |c| %>
                 <%= render "shared/globalize_locales", resource: deficiency_report %>
-            <% end %>
-          <% end %>
-
-          <% if helpers.allowed_to_post_on_behalf_of?(current_user, deficiency_report) %>
-            <%= render Shared::SidebarCardComponent.new(
-                          title: t("custom.deficiency_reports.form.on_behalf_of.title"),
-                          description: t("custom.deficiency_reports.form.on_behalf_of.description"),
-                          icon_name: "user"
-                       ) do |c| %>
-                <%= f.text_field :on_behalf_of, label: false, placeholder: t("custom.deficiency_reports.form.on_behalf_of.placeholder"), class: "light-input" %>
-                <%= f.text_field :on_behalf_of_company_name,
-                      label: t("custom.on_behalf_of_account.company_name.label"),
-                      placeholder: t("custom.on_behalf_of_account.company_name.placeholder"),
-                      class: "light-input" %>
-                <%= f.email_field :on_behalf_of_email,
-                      label: t("custom.on_behalf_of_account.email.label"),
-                      placeholder: t("custom.on_behalf_of_account.email.placeholder"),
-                      class: "light-input" %>
-                <p><%= t("custom.on_behalf_of_account.email.description") %></p>
             <% end %>
           <% end %>
 

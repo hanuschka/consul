@@ -86,7 +86,7 @@ class Resources::ListItemComponent < ApplicationComponent
     def image_variant(image, size)
       return if image.blank?
 
-      image.attachment&.variant(
+      image.attachment_variant(
         coalesce: true,
         resize_to_fill: size,
         saver: { quality: 85 },

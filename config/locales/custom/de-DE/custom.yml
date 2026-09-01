@@ -1,4 +1,9 @@
 de:
+  deficiency_reports:
+    official_answer_documents:
+      too_many: "Es können höchstens %{count} Dokumente an die offizielle Antwort angehängt werden."
+      too_large: "Angehängte Dokumente dürfen höchstens %{size} MB groß sein."
+      wrong_type: "Nur folgende Dateitypen sind erlaubt: %{types}."
   activerecord:
     errors:
       models:

@@ -1,3 +1,7 @@
 <%= turbo_stream.replace dom_id(@deficiency_report) do %>
   <%= render "deficiency_report_row", deficiency_report: @deficiency_report %>
 <% end %>
+
+<%= turbo_stream.replace dom_id(@deficiency_report, :admin_accepted) do %>
+  <%= render "admin_accepted_toggle", deficiency_report: @deficiency_report %>
+<% end %>

@@ -21,4 +21,13 @@ class DeficiencyReports::NewComponent < ApplicationComponent
   def categories_serialized
     DeficiencyReport::Category.all.as_json(only: [:name, :id, :warning_text])
   end
+
+  def intake_channel_field?
+    Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"].present? &&
+      intake_channels.any?
+  end
+
+  def intake_channels
+    @intake_channels ||= DeficiencyReport::IntakeChannel.all
+  end
 end

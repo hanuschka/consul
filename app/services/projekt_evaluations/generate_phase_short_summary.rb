@@ -1,6 +1,7 @@
 class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
-  def initialize(phase)
+  def initialize(phase, projekt_phase:)
     @phase = phase
+    @projekt_phase = projekt_phase
   end
 
   def call
@@ -77,7 +78,7 @@ class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
       response = Ai::RubyLlmFactory
         .chat(feature: "projekt_evaluations.phase_short_summary")
         .with_schema(output_schema)
-        .with_instructions(system_instructions)
+        .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, @projekt_phase))
         .ask(user_prompt)
 
       response.content

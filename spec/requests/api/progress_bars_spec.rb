@@ -6,6 +6,11 @@ RSpec.describe 'Progress Bars API', type: :request, openapi_spec: 'v1/swagger.ya
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_milestone_phase) { create_projekt_phase('ProjektPhase::MilestonePhase') }
+let(:existing_progress_bar) do
+  existing_milestone_phase.progress_bars.create!(kind: :primary, percentage: 45)
+end
+
   PROGRESS_BAR_PARAMS = {
     type: :object,
     properties: {
@@ -200,7 +205,7 @@ RSpec.describe 'Progress Bars API', type: :request, openapi_spec: 'v1/swagger.ya
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_milestone_phase.id } }
     end
   end
 
@@ -298,7 +303,7 @@ RSpec.describe 'Progress Bars API', type: :request, openapi_spec: 'v1/swagger.ya
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_progress_bar.id } }
     end
 
     delete 'Delete a progress bar' do
@@ -329,7 +334,7 @@ RSpec.describe 'Progress Bars API', type: :request, openapi_spec: 'v1/swagger.ya
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_progress_bar.id } }
     end
   end
 end

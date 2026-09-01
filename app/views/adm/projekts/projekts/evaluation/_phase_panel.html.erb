@@ -1,18 +1,10 @@
 <%
-  phase_id = phase["phase_id"]
   processing = row.processing?
   failed = row.failed?
-  status_url = phase_evaluation_status_adm_projekts_projekt_path(projekt, phase_id: phase_id)
-  regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase_id)
+  regenerate_url = regenerate_phase_evaluation_adm_projekts_projekt_path(projekt, phase_id: phase["phase_id"])
 %>
 
-<div
-  role="tabpanel"
-  class="evaluation-phase-panel"
-  data-controller="adm--phase-regenerate"
-  data-adm--phase-regenerate-status-url-value="<%= status_url %>"
-  data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
->
+<div class="evaluation-phase-panel">
   <div
     class="evaluation-phase-panel__loading"
     data-adm--phase-regenerate-target="loading"
@@ -22,9 +14,13 @@
       <h3><%= t("adm.projekts.projekts.evaluation.phase_processing_title") %></h3>
       <p><%= t("adm.projekts.projekts.evaluation.phase_processing_description") %></p>
       <span
-        class="material-symbols-outlined adm-spinner adm-spinner--lg"
+        class="material-symbols-outlined adm-spinner adm-spinner--lg projekt-evaluation-icon-material"
         aria-hidden="true"
       >progress_activity</span>
+      <i
+        class="fas fa-circle-notch adm-spinner adm-spinner--lg projekt-evaluation-icon-fa"
+        aria-hidden="true"
+      ></i>
     </div>
   </div>
 
@@ -42,8 +38,10 @@
           href="<%= regenerate_url %>"
           class="kern-btn kern-btn--primary"
           data-action="click->adm--phase-regenerate#start"
+          data-turbo-prefetch="false"
         >
-          <span class="kern-label material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+          <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">auto_awesome</span>
+          <i class="kern-label fas fa-magic projekt-evaluation-icon-fa" aria-hidden="true"></i>
           <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.phase_retry_button") %></span>
         </a>
       </div>
@@ -56,7 +54,8 @@
           accent_light_color: accent_light_color,
           accent_shades: accent_shades,
           selection: local_assigns.fetch(:selection, nil),
-          regenerate_url: regenerate_url
+          tabbed: local_assigns.fetch(:tabbed, false),
+          exportable: true
         } %>
     <% end %>
   </div>

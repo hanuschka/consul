@@ -1,0 +1,81 @@
+// Chrome for the <custom-tabs> element family. Pack-neutral: every colour is a
+// --custom-tabs-* custom property with a sensible neutral fallback, so the same
+// underline-tab rules render in the main app and in /adm. Consumers theme it by
+// setting those properties on an ancestor: the projekt footer subnav maps them
+// onto the brand colour, /adm maps them onto kern tokens. Theming hooks:
+// --custom-tabs-{text,text-strong,accent,border,border-hover,focus}.
+
+custom-tabs {
+  display: block;
+}
+
+custom-tabs.-single-tab [role="tablist"] {
+  display: none;
+}
+
+.custom-tabs--list {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--custom-tabs-border, #d4d4d8);
+}
+
+custom-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: -1px;
+  padding: 12px 25px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--custom-tabs-text, #52525b);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms ease-out, border-color 150ms ease-out;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &:hover {
+    color: var(--custom-tabs-text-strong, #27272a);
+    border-bottom-color: var(--custom-tabs-border-hover, var(--custom-tabs-border, #d4d4d8));
+  }
+}
+
+// KERN-UX (loaded in the /adm pack) draws a box-shadow focus ring on every
+// [tabindex] element on :focus — mouse clicks included — and zeroes the
+// outline. Opt <custom-tab> out of that ring (via :focus-within so it is also
+// suppressed when a descendant is focused) and use a keyboard-only outline
+// instead. These selectors mirror KERN global.scss specificity so the override
+// wins where KERN is present, and are inert in packs without it.
+custom-tab[tabindex]:not([tabindex="-1"]):focus-within {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+custom-tab[tabindex]:not([tabindex="-1"]):focus:focus-visible {
+  outline: 3px solid var(--custom-tabs-focus, var(--custom-tabs-accent, #1e40af));
+  outline-offset: 2px;
+}
+
+custom-tab.-active {
+  color: var(--custom-tabs-accent, #1e40af);
+  border-bottom-color: var(--custom-tabs-accent, #1e40af);
+  font-weight: 600;
+
+  &:hover {
+    color: var(--custom-tabs-accent, #1e40af);
+    border-bottom-color: var(--custom-tabs-accent, #1e40af);
+  }
+}
+
+custom-tab-panel {
+  display: block;
+}
+
+custom-tab-panel[hidden] {
+  display: none;
+}

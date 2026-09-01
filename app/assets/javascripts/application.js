@@ -58,6 +58,7 @@
 //= require initial
 //= require ahoy
 //= require app
+//= require config/map_zoom
 //= require check_all_none
 //= require comments
 //= require foundation_extras
@@ -133,6 +134,8 @@
 //= require select2/dist/js/select2.full
 //= require siriwave/dist/siriwave.umd.min
 //= require cropperjs/dist/cropper
+//= require leaflet.heat/dist/leaflet-heat
+//= require deficiency_report_subcategories
 //= require custom
 //= require_tree ./custom
 //= require lib/files/filter_serializer
@@ -177,6 +180,8 @@ var initialize_modules = function() {
   App.TagAutocomplete.initialize();
   App.PollsAdmin.initialize();
   App.Map.initialize();
+  App.PollMapPoints.initialize();
+  App.PollMapResults.initialize();
   App.Polls.initialize();
   App.Sortable.initialize();
   App.TableSortable.initialize();
@@ -194,6 +199,7 @@ var initialize_modules = function() {
   App.BudgetEditAssociations.initialize();
   App.BudgetHideMoney.initialize();
   App.Datepicker.initialize();
+  App.DeficiencyReportSubcategories.initialize();
   App.SDGRelatedListSelector.initialize();
   App.SDGManagementRelationSearch.initialize();
   App.Geozones.initialize();
@@ -216,7 +222,6 @@ var initialize_modules = function() {
   App.ModalNotification.initialize();
   App.VerificationForm.initialize();
   App.SharedNewButtonComponent.initialize();
-  App.VCMap.initialize();
 
   App.CustomJS.initialize();
   App.SDGCustom.initialize();
@@ -243,6 +248,8 @@ var destroy_non_idempotent_modules = function() {
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();
+  App.ResponsiveMenu.destroy();
+  App.VoiceAssistantWidget.destroy();
   App.FocusTrap.resetInert();
   App.SharedModal.reset();
 };

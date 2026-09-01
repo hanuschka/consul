@@ -12,6 +12,8 @@ en:
         llm_custom_model_description: Enter a custom model name (used with Ollama or when a custom API endpoint is set)
         llm_api_endpoint: API Endpoint
         llm_api_endpoint_description: Custom API endpoint URL for OpenAI-compatible services (e.g., Azure OpenAI, proxy services)
+        evaluation_context: Global AI context
+        evaluation_context_description: Store background information about your municipality once, for example its name and size, the desired form of address, the names of its districts, agreed spellings and thematic priorities. The text is never shown publicly; it feeds into every AI evaluation generated on this platform afterwards. Fill it in so that AI evaluations match your municipality from the start.
         llm_api_key: API Key
         llm_api_key_description: API key for authenticating with the OpenAI service
       features:

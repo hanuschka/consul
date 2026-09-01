@@ -12,7 +12,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @image_url = @investment.image&.attachment&.variant(
+        @image_url = @investment.image&.attachment_variant(
           resize_to_limit: [500, 500],
           format: "jpeg"
         )

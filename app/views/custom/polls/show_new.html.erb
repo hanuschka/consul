@@ -46,25 +46,16 @@
 
         <div class="margin-bottom">
           <% if @poll.in_wizard_mode? %>
-            <div class="question-wizard js-question-wizard">
+            <div
+              class="question-wizard js-question-wizard"
+              data-wizard-map="<%= @wizard_map.to_json %>"
+            >
               <div class="progress question-wizard--progress js-question-wizard--progress">
                 <span class="meter js-question-wizard--progress-bar"></span>
               </div>
 
               <div class="question-wizard--questions">
-                <% @questions.where(contextualize_by_poll_question_id: nil).each.with_index do |question, index| %>
-                  <div
-                      class="question-wizard-item js-question-wizard-item <%= '-visible' if index == 0 %>"
-                      data-question-id="<%= question.id %>"
-                      data-question-number="<%= index + 1 %>"
-                      data-question-context-source="<%= @poll.questions.pluck(:contextualize_by_poll_question_id).compact.uniq.include?(question.id) %>"
-                      data-question-context-id="<%= question.context&.id %>"
-                      data-question-hidden="false"
-                      data-question-order="<%= question.given_order %>"
-                      >
-                      <%= render Polls::Questions::QuestionComponent.new(question: question) %>
-                  </div>
-                <% end %>
+                <%= render partial: "polls/wizard_item", collection: @wizard_questions, as: :question %>
               </div>
 
               <%= render partial: "polls/poll/closing_note", locals: { poll: @poll } %>
@@ -75,7 +66,7 @@
                     <%= t("custom.polls.questions.prev_question") %>
                   </button>
 
-                  <% single_question = @questions.where(contextualize_by_poll_question_id: nil).count <= 1 %>
+                  <% single_question = @wizard_map.size <= 1 %>
 
                   <button type="button" class="<%= 'd-none' if single_question %> button margin-left hollow js-question-wizard-next">
                     <%= t("custom.polls.questions.next_question") %>

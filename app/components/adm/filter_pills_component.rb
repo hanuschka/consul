@@ -21,7 +21,13 @@ class Adm::FilterPillsComponent < ApplicationComponent
     elsif pill[:remove_array_key]
       key = pill[:remove_array_key].to_s
       remaining = Array(sanitized[key]).map(&:to_s).reject { |v| v == pill[:remove_array_value].to_s }
-      remaining.empty? ? sanitized.delete(key) : sanitized[key] = remaining
+      if remaining.any?
+        sanitized[key] = remaining
+      elsif pill[:keep_empty_marker]
+        sanitized[key] = [""]
+      else
+        sanitized.delete(key)
+      end
     end
     helpers.url_for(sanitized)
   end

@@ -2,10 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
-  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText"]
+  static targets = ["progress", "error", "errorText", "actions", "diff", "diffIcon", "diffText", "color", "colorSave", "colorSaveIcon"]
 
   static values = {
     updateUrl: String,
+    updateColorUrl: String,
     deleteUrl: String,
     statusUrl: String,
     diffUrl: String,
@@ -13,9 +14,6 @@ export default class extends Controller {
     cardUrl: String,
     confirm: String,
     cleanConfirm: String,
-    newLabel: String,
-    staleLabel: String,
-    currentLabel: String,
     checkingLabel: String,
     initialImportStatus: String,
     initialDestroyStatus: String,
@@ -51,6 +49,46 @@ export default class extends Controller {
     this.mode = "import"
     this.showProgress()
     this.sendRequest("PATCH", this.updateUrlValue)
+  }
+
+  async updateColor() {
+    this.colorTarget.disabled = true
+    this.colorSaveTarget.disabled = true
+    this.colorSaveTarget.classList.add("-saving")
+    this.setColorSaveIcon("progress_activity")
+
+    try {
+      const response = await fetch(this.updateColorUrlValue, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "X-CSRF-Token": this.csrfToken()
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({ feature_color: this.colorTarget.value })
+      })
+      if (!response.ok) throw new Error(await this.errorMessage(response))
+
+      this.flashColorSaved()
+    } catch (error) {
+      this.setColorSaveIcon("save")
+      this.showError(error.message)
+    } finally {
+      this.colorTarget.disabled = false
+      this.colorSaveTarget.disabled = false
+      this.colorSaveTarget.classList.remove("-saving")
+    }
+  }
+
+  setColorSaveIcon(name) {
+    if (this.hasColorSaveIconTarget) this.colorSaveIconTarget.textContent = name
+  }
+
+  flashColorSaved() {
+    this.setColorSaveIcon("check")
+
+    window.setTimeout(() => this.setColorSaveIcon("save"), 1200)
   }
 
   remove(event) {
@@ -112,8 +150,7 @@ export default class extends Controller {
       const response = await this.request("GET", this.diffUrlValue)
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
 
-      const body = await response.json()
-      this.applyDiff(body)
+      Turbo.renderStreamMessage(await response.text())
     } catch (error) {
       this.showDiffError(error.message)
     }
@@ -122,12 +159,22 @@ export default class extends Controller {
   async sendRequest(method, url) {
     try {
       const response = await this.request(method, url)
-      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      if (!response.ok) throw new Error(await this.errorMessage(response))
 
       this.startPolling()
     } catch (error) {
       this.showError(error.message)
     }
+  }
+
+  async errorMessage(response) {
+    try {
+      const body = await response.json()
+      if (body && body.message) return body.message
+    } catch (error) {
+    }
+
+    return `HTTP ${response.status}`
   }
 
   request(method, url) {
@@ -210,29 +257,15 @@ export default class extends Controller {
       if (!response.ok) return
 
       Turbo.renderStreamMessage(await response.text())
+      this.reloadPinsSummary()
     } catch (error) {
     }
   }
 
-  applyDiff(body) {
-    const newCount = Number(body.new_count) || 0
-    const staleCount = Number(body.stale_count) || 0
+  reloadPinsSummary() {
+    const frame = document.querySelector("turbo-frame[id^='masterportal_pins_summary_']")
 
-    this.renderDiff(newCount, staleCount)
-  }
-
-  renderDiff(newCount, staleCount) {
-    if (!this.hasDiffTarget) return
-
-    const parts = []
-    if (newCount > 0) parts.push(`+${newCount} ${this.newLabelValue}`)
-    if (staleCount > 0) parts.push(`−${staleCount} ${this.staleLabelValue}`)
-
-    const hasChanges = parts.length > 0
-    this.diffTextTarget.textContent = hasChanges ? parts.join(" · ") : this.currentLabelValue
-    this.setDiffIcon(hasChanges ? "difference" : "check_circle")
-    this.diffTarget.dataset.state = hasChanges ? "changes" : "current"
-    this.diffTarget.hidden = false
+    if (frame && typeof frame.reload === "function") frame.reload()
   }
 
   showChecking() {

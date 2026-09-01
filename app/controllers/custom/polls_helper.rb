@@ -1,6 +1,22 @@
 require_dependency Rails.root.join("app", "helpers", "polls_helper").to_s
 
 module PollsHelper
+  def poll_answers_by_question_for_current_user(poll)
+    @poll_answers_by_question_for_current_user ||= {}
+    @poll_answers_by_question_for_current_user[poll.id] ||=
+      if current_user
+        Poll::Answer.by_question(poll.questions.select(:id)).by_author(current_user).group_by(&:question_id)
+      else
+        {}
+      end
+  end
+
+  def poll_participant_order_seed
+    session[:guest_user_id].presence ||
+      current_user&.id ||
+      (session[:poll_order_seed] ||= SecureRandom.hex(8))
+  end
+
   def any_answer_with_image?(question)
     question.question_answers.any? { |answer| answer.images.any? }
   end

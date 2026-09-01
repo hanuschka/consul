@@ -1,0 +1,80 @@
+<%
+  segments = (phase["stats"] || {})["budget_segments"] || []
+
+  metric_icons = {
+    "visible_proposals_count"      => { material: "lightbulb",     fa: "fa-lightbulb" },
+    "proposal_authors_count"       => { material: "person_edit",   fa: "fa-user-edit" },
+    "comments_count"               => { material: "chat_bubble",   fa: "fa-comment" },
+    "reported_proposals_count"     => { material: "flag",          fa: "fa-flag" },
+    "pending_proposals_count"      => { material: "schedule",      fa: "fa-clock" },
+    "approved_proposals_count"     => { material: "check_circle",  fa: "fa-check-circle" },
+    "rejected_proposals_count"     => { material: "cancel",        fa: "fa-times-circle" },
+    "unique_supporters_count"      => { material: "group",         fa: "fa-users" },
+    "total_votes_count"            => { material: "thumb_up",      fa: "fa-thumbs-up" },
+    "online_votes_count"           => { material: "wifi",          fa: "fa-wifi" },
+    "offline_votes_count"          => { material: "edit_note",     fa: "fa-edit" },
+    "unique_voters_count"          => { material: "how_to_vote",   fa: "fa-check-square" },
+    "weighted_votes_total"         => { material: "balance",       fa: "fa-balance-scale" },
+    "weighted_votes_online"        => { material: "wifi",          fa: "fa-wifi" },
+    "weighted_votes_offline"       => { material: "edit_note",     fa: "fa-edit" },
+    "selected_proposals_count"     => { material: "check_circle",  fa: "fa-check-circle" },
+    "not_selected_proposals_count" => { material: "cancel",        fa: "fa-times-circle" },
+    "winners_count"                => { material: "trophy",        fa: "fa-trophy" }
+  }
+  default_icon = { material: "insights", fa: "fa-chart-simple" }
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
+%>
+
+<% if segments.any? %>
+  <div class="phase-budget-segments">
+    <% segments.each do |segment| %>
+      <% seg_key = segment["key"] %>
+      <div class="evaluation-stat-card">
+        <div class="phase-budget-segment__title">
+          <%= t("custom.projekt_phases.stats.budget_phase.#{seg_key}.title") %>
+        </div>
+
+        <div class="phase-key-metrics-grid">
+          <% (segment["metrics"] || []).each do |metric| %>
+            <% metric_key = metric["key"] %>
+            <% icon = metric_icons[metric_key] || default_icon %>
+            <div class="phase-key-metrics-card">
+              <div
+                class="phase-key-metrics-card__icon"
+                style="color:<%= accent %>;background:<%= accent_light %>"
+                aria-hidden="true"
+              >
+                <span class="phase-key-metrics-card__icon-material material-symbols-outlined">
+                  <%= icon[:material] %>
+                </span>
+                <i class="phase-key-metrics-card__icon-fa fas <%= icon[:fa] %>"></i>
+              </div>
+              <div class="phase-key-metrics-card__content">
+                <div class="phase-key-metrics-card__value"><%= metric["value"] %></div>
+                <div class="phase-key-metrics-card__label">
+                  <%= t("custom.projekt_phases.stats.budget_phase.#{seg_key}.#{metric_key}.title") %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <% if segment["user_segments"].present? %>
+          <details class="phase-budget-segment__distributions" <%= "open" if pdf_mode %>>
+            <summary class="phase-budget-segment__distributions-summary">
+              <span class="phase-budget-segment__distributions-title">
+                <%= t("adm.projekts.projekts.evaluation.user_segments_title") %>
+              </span>
+              <span class="phase-budget-segment__distributions-chevron material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">expand_more</span>
+              <i class="phase-budget-segment__distributions-chevron fas fa-chevron-down projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            </summary>
+            <div class="phase-budget-segment__distributions-body">
+              <%= render partial: "adm/projekts/projekts/evaluation/user_segments_charts",
+                locals: { segments: segment["user_segments"], accent: accent } %>
+            </div>
+          </details>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

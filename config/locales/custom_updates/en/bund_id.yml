@@ -1,0 +1,6 @@
+en:
+  omniauth:
+    bund_id:
+      sign_in: Sign in with BundID
+      sign_up: Sign up with BundID
+      name: BundID

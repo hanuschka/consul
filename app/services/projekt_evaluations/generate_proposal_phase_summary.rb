@@ -1,6 +1,7 @@
 class ProjektEvaluations::GenerateProposalPhaseSummary < ApplicationService
-  def initialize(phase_stats)
+  def initialize(phase_stats, projekt_phase:)
     @phase_stats = phase_stats
+    @projekt_phase = projekt_phase
   end
 
   def call
@@ -76,8 +77,8 @@ class ProjektEvaluations::GenerateProposalPhaseSummary < ApplicationService
 
   def get_ai_response(user_prompt)
     response = Ai::RubyLlmFactory
-      .chat
-      .with_instructions(system_instructions)
+      .chat(feature: "projekt_evaluations.proposal_phase_summary")
+      .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, @projekt_phase))
       .ask(user_prompt)
 
     response.content.to_s

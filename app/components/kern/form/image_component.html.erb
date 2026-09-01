@@ -11,6 +11,7 @@
                          label: false,
                          accept: Image.accepted_content_types.join(","),
                          class: "kern-form-input__input #{'kern-form-input__input--error' if image_errors.any?}",
+                         disabled: @disabled,
                          data: input_data %>
     <% if image_errors.any? %>
       <p class="kern-error" role="alert">
@@ -28,7 +29,7 @@
     <% end %>
   </div>
 
-  <% if @show_actions %>
+  <% if show_actions? %>
     <%= tag.button type: "button",
             class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
             style: "float: right;",

@@ -1,5 +1,8 @@
 <% public_linkable = !deficiency_report.hidden? %>
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
+  <td class="kern-table__cell" data-field="watch">
+    <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle", deficiency_report: deficiency_report %>
+  </td>
   <td class="kern-table__cell" data-field="id"><%= link_to_if public_linkable, deficiency_report.id, deficiency_report_path(deficiency_report), class: "kern-link", target: "_blank", data: { turbo: false } %></td>
   <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
     <% if public_linkable %>
@@ -32,7 +35,8 @@
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         deficiency_report,
         :admin_accepted,
-        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report)
+        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        disabled: !Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report).accept?
       ) %>
     </td>
   <% end %>
@@ -40,10 +44,20 @@
   <td class="kern-table__cell" data-field="updated_at"><%= l(deficiency_report.updated_at, format: "%d.%m.%Y") %></td>
   <td class="kern-table__cell" data-field="status_changed_at"><%= l(deficiency_report.status_changed_at, format: "%d.%m.%Y") if deficiency_report.status_changed_at %></td>
   <td class="kern-table__cell" data-field="author"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell" data-field="on_behalf_of">
+    <%= deficiency_report.on_behalf_of if deficiency_report.on_behalf_of_differs_from_author? %>
+  </td>
+  <td class="kern-table__cell" data-field="recorded_by">
+    <% if deficiency_report.on_behalf_of_account_linked? %>
+      <%= link_to deficiency_report.recorded_by.username, user_path(deficiency_report.recorded_by), target: "_blank", class: "kern-link" %>
+    <% end %>
+  </td>
+  <td class="kern-table__cell" data-field="intake_channel"><%= deficiency_report.intake_channel&.name %></td>
   <td class="kern-table__cell" data-field="status"><%= deficiency_report.status&.title %></td>
   <td class="kern-table__cell" data-field="address"><%= deficiency_report.approximated_address %></td>
   <td class="kern-table__cell" data-field="district"><%= deficiency_report.district&.name %></td>
   <td class="kern-table__cell" data-field="category"><%= deficiency_report.category&.name %></td>
+  <td class="kern-table__cell" data-field="subcategory"><%= deficiency_report.subcategory&.name %></td>
   <td class="kern-table__cell" data-field="responsible"><%= deficiency_report.responsible&.name %></td>
   <td class="kern-table__cell" data-field="archived_state">
     <%= t("adm.deficiency_reports.deficiency_reports.index.archived_state.#{deficiency_report.archived_at.present? ? 'archived' : 'active'}") %>

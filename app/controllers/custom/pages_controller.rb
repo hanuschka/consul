@@ -11,6 +11,8 @@ class PagesController < ApplicationController
   include GuestUsers
   include LandingPageResolvable
 
+  helper DeficiencyReportsHelper
+
   has_orders %w[most_voted newest oldest], only: :show
 
   before_action :set_random_seed
@@ -59,13 +61,16 @@ class PagesController < ApplicationController
         @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
       end
 
-      if @projekt.projekt_phases.active.any?
+      if @projekt.projekt_phases.active.frontend_visible.any? || helpers.show_admin_controls_for_projekt?(@projekt)
         @default_projekt_phase = get_default_projekt_phase(params[:projekt_phase_id])
-        @projekt_phase = @default_projekt_phase
 
-        params[:projekt_phase_id] = @default_projekt_phase.id
-        params[:projekt_id] ||= @projekt.id
-        send("set_#{@default_projekt_phase.name}_footer_tab_variables")
+        if @default_projekt_phase.present?
+          @projekt_phase = @default_projekt_phase
+
+          params[:projekt_phase_id] = @default_projekt_phase.id
+          params[:projekt_id] ||= @projekt.id
+          send("set_#{@default_projekt_phase.name}_footer_tab_variables")
+        end
       end
 
       @cards = @custom_page.cards
@@ -203,7 +208,9 @@ class PagesController < ApplicationController
           take_by_my_posts
         end
 
-        @proposals_map_pin_count = proposal_map_locations_count(@resources, @projekt_phase)
+        @proposals_map_pin_count =
+          proposal_map_pin_count_up_to(@resources, Shared::MapComponent::LAZY_LOAD_THRESHOLD,
+                                       @projekt_phase)
 
         if @proposals_map_pin_count <= Shared::MapComponent::LAZY_LOAD_THRESHOLD
           @proposals_coordinates = all_proposal_map_locations(@resources)
@@ -348,7 +355,7 @@ class PagesController < ApplicationController
       params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
       @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-      @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
+      @valid_orders = @projekt_phase.investment_orders
       @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating",
   "publishing_prices"])
       @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting" && !@projekt_phase.setting("feature.resource.hide_ballots_count").enabled?
@@ -457,6 +464,8 @@ class PagesController < ApplicationController
     end
 
     def set_question_phase_footer_tab_variables
+      auto_sign_in_guest_for(@projekt_phase)
+
       projekt_questions = @projekt_phase.questions.root_questions
 
       if @projekt_phase.question_list_enabled?
@@ -481,6 +490,9 @@ class PagesController < ApplicationController
     def set_argument_phase_footer_tab_variables
       @projekt_arguments_pro = @projekt_phase.projekt_arguments.pro.order(created_at: :desc)
       @projekt_arguments_cons = @projekt_phase.projekt_arguments.cons.order(created_at: :desc)
+    end
+
+    def set_mitmachbox_phase_footer_tab_variables
     end
 
     def set_iframe_phase_footer_tab_variables
@@ -514,9 +526,17 @@ class PagesController < ApplicationController
     end
 
     def get_default_projekt_phase(default_phase_id = nil)
+      scope =
+        if helpers.show_admin_controls_for_projekt?(@projekt)
+          @projekt.projekt_phases
+        else
+          @projekt.projekt_phases.active.frontend_visible
+        end
+
       default_phase_id ||= ProjektSetting.find_by(projekt: @projekt,
-  key: "projekt_custom_feature.default_footer_tab").value
-      @default_projekt_phase = ProjektPhase.find_by(id: default_phase_id) || @projekt.projekt_phases.active.first
+        key: "projekt_custom_feature.default_footer_tab")&.value
+
+      @default_projekt_phase = scope.find_by(id: default_phase_id) || scope.first
     end
 
     def set_resources(resource_model)

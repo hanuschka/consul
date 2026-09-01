@@ -11,4 +11,8 @@ class DeficiencyReports::FormComponent < ApplicationComponent
     def categories
       Tag.category.order(:name)
     end
+
+    def ai_categorization?
+      DeficiencyReports::AiCategorizationService.enabled?
+    end
 end

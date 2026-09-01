@@ -43,6 +43,20 @@
   }
 }
 
+// Same shape as `pulse-highlight`, with the blue saturated further so the
+// tint still reads behind a saved content block template.
+@keyframes saved-content-block-added-highlight {
+  0% {
+    background-color: transparent;
+  }
+  30%, 60% {
+    background-color: #e7f3ff;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);

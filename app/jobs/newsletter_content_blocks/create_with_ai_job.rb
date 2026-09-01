@@ -18,7 +18,8 @@ class NewsletterContentBlocks::CreateWithAiJob < ApplicationJob
       dt_template_section: "newsletter_email",
       prompt: options["prompt"],
       category_hint: options["category_hint"],
-      anchor_template_id: options["anchor_template_id"]
+      anchor_template_id: options["anchor_template_id"],
+      text_locale: options["text_locale"]
     )
   rescue Ai::GenerateContentBlock::AiCancelledError
     handle_cancellation(content_block, mode)

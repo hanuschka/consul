@@ -1,10 +1,17 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
-  INDEX_FILTERS = %w[
-    index_order_underway index_order_all
-    index_order_ongoing index_order_upcoming
-    index_order_expired index_order_individual_list
-  ].freeze
+
+  # The settings that SQL scopes filter on live as columns; every other
+  # projekt setting stays a `projekt_settings` row.
+  KEY_TO_COLUMN = {
+    "projekt_feature.main.activate" => :activated,
+    "projekt_feature.general.show_in_navigation" => :show_in_navigation,
+    "projekt_feature.general.show_in_overview_page" => :show_in_overview_page,
+    "projekt_feature.general.show_in_overview_page_navigation" => :show_in_overview_page_navigation,
+    "projekt_feature.general.show_in_homepage" => :show_in_homepage,
+    "projekt_feature.general.show_in_individual_list" => :show_in_individual_list,
+    "projekt_feature.general.show_in_sidebar_filter" => :show_in_sidebar_filter
+  }.freeze
 
   include Milestoneable
   acts_as_paranoid column: :hidden_at
@@ -25,10 +32,7 @@ class Projekt < ApplicationRecord
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
-  has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
-    inverse_of: :top_level_projekt, dependent: :nullify
   belongs_to :parent, class_name: "Projekt", optional: true
-  belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
@@ -99,23 +103,28 @@ class Projekt < ApplicationRecord
 
   belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
+  belongs_to :copied_from_projekt, class_name: "Projekt", optional: true,
+    inverse_of: :copies
+  has_many :copies, class_name: "Projekt", foreign_key: "copied_from_projekt_id",
+    inverse_of: :copied_from_projekt, dependent: :nullify
+
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity, :assign_author_as_manager
 
-  after_save do
-    if parent_id_previously_changed?
-      Projekt.all.find_each { |projekt| projekt.update_column("level", projekt.calculate_level) }
-    end
-  end
+  after_update :mirror_setting_columns_to_legacy_rows
 
-  before_save :assign_top_level_projekt_from_parent
+  after_save :recalculate_subtree_levels, if: :saved_change_to_parent_id?
+
   before_save :sync_published_at
 
   before_create :initialize_content_updated_at
   before_update :bump_content_updated_at
+
+  after_save :reset_visible_projekt_ids_cache
+  after_destroy :reset_visible_projekt_ids_cache
 
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
@@ -135,6 +144,7 @@ class Projekt < ApplicationRecord
 
   validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
+  validate :hierarchy_should_not_exceed_two_levels
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
@@ -148,6 +158,39 @@ class Projekt < ApplicationRecord
     failed: "failed"
   }, _prefix: true, _default: "never_run"
 
+  enum copy_status: {
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :copy
+
+  # A worker killed mid-copy never reaches CopyJob's rescue, so the row keeps
+  # claiming "processing" with nothing left to finish it. Past this age it is
+  # reported as failed, which is what makes it deletable again.
+  COPY_STALE_AFTER = 30.minutes
+
+  # A copy that never finished: its phases and content are missing or partial,
+  # so the admin screens hide everything that would act on them.
+  def copy_unfinished?
+    copy_processing? || copy_failed?
+  end
+
+  def copy_stalled?
+    return false if !copy_processing?
+
+    updated_at < COPY_STALE_AFTER.ago
+  end
+
+  def copy_in_progress?
+    copy_processing? && !copy_stalled?
+  end
+
+  def reported_copy_status
+    return "failed" if copy_stalled?
+
+    copy_status || "completed"
+  end
+
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
   scope :sort_by_order_number, -> {
@@ -159,15 +202,69 @@ class Projekt < ApplicationRecord
       .where(parent: nil)
   }
 
-  scope :activated, -> {
-    joins("INNER JOIN projekt_settings act ON projekts.id = act.projekt_id")
-      .where("act.key": "projekt_feature.main.activate", "act.value": "active")
-  }
+  # ---------------------------------------------------------------------------
+  # SWITCH: where the 7 promoted settings are read from.
+  #
+  #   true  — read the `projekts` columns (current behaviour). The
+  #           `projekt_settings` rows are still written on every change and
+  #           serve as a synced backup; nothing queries them.
+  #   false — read the `projekt_settings` rows again, exactly as before the
+  #           columns existed.
+  #
+  # To switch: flip this constant and re-deploy. No migration, no data fix —
+  # both stores are kept in sync in both directions (see
+  # `mirror_setting_columns_to_legacy_rows` here and
+  # `ProjektSetting#sync_promoted_projekt_column`), so either side is current
+  # at any time. Everything below that depends on it is in this file, plus the
+  # editor visibility in `ProjektAdminActions#edit` and
+  # `adm/projekts/projekts/visibility.html.erb`.
+  # ---------------------------------------------------------------------------
+  USE_SETTING_COLUMNS = true
 
-  scope :not_activated, -> {
-    joins("INNER JOIN projekt_settings nact ON projekts.id = nact.projekt_id")
-      .where("nact.key": "projekt_feature.main.activate", "nact.value": [nil, ""])
-  }
+  if USE_SETTING_COLUMNS
+    scope :activated, -> { where(activated: true) }
+    scope :not_activated, -> { where(activated: false) }
+    scope :show_in_overview_page, -> { where(show_in_overview_page: true) }
+    scope :show_in_homepage, -> { where(show_in_homepage: true) }
+    scope :show_in_sidebar_filter, -> { where(show_in_sidebar_filter: true) }
+    scope :show_in_navigation, -> { where(show_in_navigation: true) }
+    scope :show_in_overview_page_navigation, -> { where(show_in_overview_page_navigation: true) }
+    scope :in_individual_list, -> { where(show_in_individual_list: true) }
+    scope :not_in_individual_list, -> { where(show_in_individual_list: false) }
+  else
+    scope :activated, -> { with_setting_value("projekt_feature.main.activate", "active") }
+    scope :not_activated, -> { with_setting_value("projekt_feature.main.activate", [nil, ""]) }
+    scope :show_in_overview_page, -> {
+      with_setting_value("projekt_feature.general.show_in_overview_page", "active")
+    }
+    scope :show_in_homepage, -> {
+      with_setting_value("projekt_feature.general.show_in_homepage", "active")
+    }
+    scope :show_in_sidebar_filter, -> {
+      with_setting_value("projekt_feature.general.show_in_sidebar_filter", "active")
+    }
+    scope :show_in_navigation, -> {
+      with_setting_value("projekt_feature.general.show_in_navigation", "active")
+    }
+    scope :show_in_overview_page_navigation, -> {
+      with_setting_value("projekt_feature.general.show_in_overview_page_navigation", "active")
+    }
+    scope :in_individual_list, -> {
+      with_setting_value("projekt_feature.general.show_in_individual_list", "active")
+    }
+    scope :not_in_individual_list, -> {
+      with_setting_value("projekt_feature.general.show_in_individual_list", [nil, ""])
+    }
+  end
+
+  # Only used while USE_SETTING_COLUMNS is false. The alias keeps each setting's
+  # join distinct so several of these scopes can chain in one query.
+  def self.with_setting_value(key, value)
+    join_alias = "ps_#{key.tr(".", "_")}"
+
+    joins("INNER JOIN projekt_settings #{join_alias} ON projekts.id = #{join_alias}.projekt_id")
+      .where("#{join_alias}.key": key, "#{join_alias}.value": value)
+  end
 
   scope :current, ->(timestamp = Time.zone.today) {
     activated
@@ -229,8 +326,7 @@ class Projekt < ApplicationRecord
   scope :index_order_individual_list, -> {
     with_published_custom_page
       .show_in_overview_page
-      .joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
-      .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": "active")
+      .in_individual_list
       .order("projekts.created_at DESC")
   }
 
@@ -259,79 +355,122 @@ class Projekt < ApplicationRecord
       .exists
   end
 
-  scope :not_in_individual_list, -> {
-    joins("INNER JOIN projekt_settings siil ON projekts.id = siil.projekt_id")
-      .where("siil.key": "projekt_feature.general.show_in_individual_list", "siil.value": [nil, ""])
-  }
-
-  scope :show_in_overview_page, -> {
-    joins("INNER JOIN projekt_settings siop ON projekts.id = siop.projekt_id")
-      .where("siop.key": "projekt_feature.general.show_in_overview_page", "siop.value": "active")
-  }
-
-  scope :show_in_homepage, -> {
-    joins("INNER JOIN projekt_settings sihp ON projekts.id = sihp.projekt_id")
-      .where("sihp.key": "projekt_feature.general.show_in_homepage", "sihp.value": "active")
-  }
-
   ##################
 
   scope :visible_for, ->(user) {
     return regular if user&.administrator?
+    return regular.activated.where.missing(:individual_group_values) if user.blank?
 
-    if user.present?
-      user_hard_group_value_ids = user.individual_group_values
-        .joins(:individual_group)
-        .where(individual_groups: { kind: "hard" })
-        .select(:id)
+    projekt_manager = user.projekt_manager
 
-      excluded_projekt_ids = Projekt.joins(:individual_group_values)
-                                    .where.not(id: Projekt
-                                      .joins(:individual_group_values)
-                                      .where(individual_group_values: { id: user_hard_group_value_ids })
-                                    )
-                                    .select(:id)
+    return regular if projekt_manager&.manage_all_projekts?
 
-      permitted_projekt_ids = Projekt.with_pm_permission_to(["manage", "review"], user.projekt_manager).select(:id)
+    individual_group_value_ids = user.hard_individual_group_value_ids
 
-      arel = Projekt.arel_table
-
-      regular.where(
-        arel[:id].in(
-          Projekt.activated.where.not(id: excluded_projekt_ids).select(:id).arel
-        ).or(
-          arel[:id].in(permitted_projekt_ids.arel)
-        )
+    unrestricted_or_member =
+      group_restricted_predicate.not.or(
+        group_membership_predicate(individual_group_value_ids)
       )
-    else
-      regular.activated
-        .where.not(id: Projekt.joins(:individual_group_values).select(:id))
+
+    visible =
+      activated_predicate
+        .and(Arel::Nodes::Grouping.new(unrestricted_or_member))
+
+    if projekt_manager.present?
+      visible =
+        Arel::Nodes::Grouping.new(visible)
+          .or(pm_permission_predicate(projekt_manager, ["manage", "review"]))
     end
+
+    regular.where(visible)
   }
+
+  def self.visible_projekt_ids_for(user)
+    Current.visible_projekt_ids ||= {}
+    Current.visible_projekt_ids[user&.id] ||= visible_for(user).pluck(:id).to_set
+  end
+
+  def self.reset_visible_projekt_ids
+    Current.visible_projekt_ids = nil
+  end
+
+  def self.activated_predicate
+    return arel_table[:activated].eq(true) if USE_SETTING_COLUMNS
+
+    settings = ProjektSetting.arel_table
+
+    settings
+      .project(1)
+      .where(settings[:projekt_id].eq(arel_table[:id]))
+      .where(settings[:key].eq("projekt_feature.main.activate"))
+      .where(settings[:value].eq("active"))
+      .exists
+  end
+
+  # Casts a value in the legacy projekt_settings encoding to its column type.
+  def self.cast_legacy_setting_value(value)
+    value.to_s.in?(%w[active t true])
+  end
+
+  # True when this setting's value is read from its `projekts` column rather
+  # than from its `projekt_settings` row.
+  def self.setting_read_from_column?(key)
+    USE_SETTING_COLUMNS && KEY_TO_COLUMN.key?(key)
+  end
+
+  def self.group_restricted_predicate
+    restrictions = Arel::Table.new(:individual_group_values_projekts)
+
+    restrictions
+      .project(1)
+      .where(restrictions[:projekt_id].eq(arel_table[:id]))
+      .exists
+  end
+
+  def self.group_membership_predicate(individual_group_value_ids)
+    return Arel::Nodes::False.new if individual_group_value_ids.blank?
+
+    restrictions = Arel::Table.new(:individual_group_values_projekts)
+
+    restrictions
+      .project(1)
+      .where(restrictions[:projekt_id].eq(arel_table[:id]))
+      .where(restrictions[:individual_group_value_id].in(individual_group_value_ids))
+      .exists
+  end
+
+  def self.pm_permission_predicate(projekt_manager, permissions)
+    assignments = ProjektManagerAssignment.arel_table
+    quoted_permissions = permissions.map { |permission| connection.quote(permission) }
+    overlaps = Arel::Nodes::InfixOperation.new(
+      "&&",
+      assignments[:permissions],
+      Arel::Nodes::SqlLiteral.new("ARRAY[#{quoted_permissions.join(",")}]::text[]")
+    )
+
+    assignments
+      .project(1)
+      .where(assignments[:projekt_id].eq(arel_table[:id]))
+      .where(assignments[:projekt_manager_id].eq(projekt_manager.id))
+      .where(overlaps)
+      .exists
+  end
 
   scope :for_overview_page_navigation, ->(user) {
     activated
       .visible_for(user)
-      .joins(:projekt_settings)
-      .where(projekt_settings: { key: "projekt_feature.general.show_in_overview_page_navigation", value: "active" })
+      .show_in_overview_page_navigation
       .sort_by_order_number
   }
 
   scope :for_navigation, ->(user) {
     activated
       .visible_for(user)
-      .joins("INNER JOIN projekt_settings vim ON projekts.id = vim.projekt_id")
-      .where("vim.key": "projekt_feature.general.show_in_navigation", "vim.value": "active")
+      .show_in_navigation
       .sort_by_order_number
   }
 
-
   ##################
-
-  scope :show_in_sidebar_filter, -> {
-    joins("INNER JOIN projekt_settings show_in_sidebar_filter_settings ON projekts.id = show_in_sidebar_filter_settings.projekt_id")
-      .where("show_in_sidebar_filter_settings.key": "projekt_feature.general.show_in_sidebar_filter", "show_in_sidebar_filter_settings.value": "active")
-  }
 
   scope :by_my_posts, ->(my_posts_switch, current_user_id) {
     return unless my_posts_switch
@@ -350,12 +489,6 @@ class Projekt < ApplicationRecord
       .where(site_customization_pages: { status: "published" })
   }
 
-  def self.includes_children_projekts_with(*sub_relations)
-    includes(
-      children: [*sub_relations, {children: [*sub_relations]}]
-    )
-  end
-
   def self.overview_page
     find_by(
       special_name: "projekt_overview_page",
@@ -373,20 +506,6 @@ class Projekt < ApplicationRecord
       projekt_manager.id,
       Array(permissions)
     )
-  end
-
-  def self.selectable_in_selector(controller_name, current_user, resource = nil)
-    includes(:individual_group_values, :projekt_settings, { proposal_phases: [:individual_group_values, :settings] })
-      .includes_children_projekts_with(:individual_group_values, :proposal_phases, :individual_group_values, :projekt_settings, :hard_individual_group_values)
-      .includes({ parent: :individual_group_values }, { top_level_projekt: :hard_individual_group_values })
-      .select do |projekt|
-        (!projekt.hidden_for?(current_user) || projekt.all_parent_projekts.none? { |p| p.hidden_for?(current_user) }) &&
-        (projekt.can_assign_resources?(controller_name, current_user, resource) ||
-          projekt.all_children_projekts.any? do |p|
-            p.can_assign_resources?(controller_name, current_user, resource)
-          end
-        )
-      end
   end
 
   def self.search(terms)
@@ -410,27 +529,6 @@ class Projekt < ApplicationRecord
     page&.status == "published"
   end
 
-  def can_assign_resources?(controller_name, user, resource = nil)
-    return false if user.nil?
-    return true if resource&.respond_to?(:author) && resource.author == user
-    return false unless activated? || controller_name == "polls"
-
-    if controller_name == "proposals"
-      proposal_phases.any_selectable?(user, resource)
-
-    elsif controller_name == "debates"
-      debate_phases.any_selectable?(user, resource)
-
-    elsif controller_name == "polls"
-      voting_phases.any_selectable?(user)
-
-    elsif controller_name == "processes"
-      legislation_phases
-        .reject { |lp| lp.legislation_process.present? || !lp.selectable_by?(user) }
-        .any?
-    end
-  end
-
   def top_level?
     order_number.present? && parent.blank?
   end
@@ -445,20 +543,6 @@ class Projekt < ApplicationRecord
     activated? &&
       total_duration_end.present? &&
       total_duration_end < timestamp
-  end
-
-  # def activated?
-  #   projekt_settings.
-  #     find_by(projekt_settings: { key: "projekt_feature.main.activate" }).
-  #     value.
-  #     present?
-  # end
-  def projekt_settings_hash
-    @projekt_settings ||= projekt_settings.reload.pluck(:key, :value).to_h
-  end
-
-  def activated?
-    projekt_settings_hash["projekt_feature.main.activate"].present?
   end
 
   # Re-evaluates publish criteria on every save and sets/clears `published_at`
@@ -498,12 +582,16 @@ class Projekt < ApplicationRecord
     breadcrumb_trail_ids
   end
 
-  def all_parent_ids
-    all_parent_projekts.map(&:id)
+  def breadcrumb_trail(breadcrumb_trail = [])
+    breadcrumb_trail.unshift(self)
+
+    parent.breadcrumb_trail(breadcrumb_trail) if parent.present?
+
+    breadcrumb_trail
   end
 
-  def all_parent_projekts
-    Projekt.where(id: [parent_id, top_level_projekt_id]).compact
+  def all_parent_ids
+    [parent_id].compact
   end
 
   def all_children_ids
@@ -511,8 +599,24 @@ class Projekt < ApplicationRecord
   end
 
   def all_children_projekts
-    children_with_preloaded_grandchildren = children.includes(:children)
-    children_with_preloaded_grandchildren.flat_map { |child| [child, *child.children] }.compact
+    children_with_grandchildren =
+      children_tree_preloaded? ? children : children.includes(:children)
+
+    children_with_grandchildren.flat_map { |child| [child, *child.children] }
+  end
+
+  def children_tree_preloaded?
+    children.loaded? &&
+      children.all? { |child| child.association(:children).loaded? }
+  end
+
+  def assignable_parents
+    Projekt.regular
+      .where(parent_id: nil)
+      .or(Projekt.regular.where(id: parent_id))
+      .where.not(id: id)
+      .includes(page: :translations)
+      .order(:name)
   end
 
   def has_active_phase?(controller_name)
@@ -567,11 +671,23 @@ class Projekt < ApplicationRecord
   end
 
   def create_default_settings
-    ProjektSetting.defaults.each do |name, value|
-      unless ProjektSetting.find_by(key: name, projekt_id: id)
-        ProjektSetting.create!(key: name, value: value, projekt_id: id)
-      end
+    existing_keys = projekt_settings.pluck(:key)
+    now = Time.current
+
+    setting_rows = ProjektSetting.defaults.except(*existing_keys.map(&:to_sym)).map do |key, value|
+      column = KEY_TO_COLUMN[key.to_s]
+
+      {
+        projekt_id: id,
+        key: key,
+        value: column.present? ? legacy_setting_value(column) : value,
+        created_at: now,
+        updated_at: now
+      }
     end
+    return if setting_rows.empty?
+
+    ProjektSetting.insert_all(setting_rows)
   end
 
   def title
@@ -607,20 +723,8 @@ class Projekt < ApplicationRecord
     end
   end
 
-  def all_ids_in_tree
-    all_parent_ids + [id] + all_children_ids
-  end
-
-  def all_projekt_labels
-    ProjektLabel.where(projekt_id: (all_parent_ids + [id]))
-  end
-
-  def all_projekt_labels_in_tree
-    ProjektLabel.where(projekt_id: all_ids_in_tree)
-  end
-
   def visible_for?(user = nil)
-    Projekt.visible_for(user).where(id: id).exists?
+    Projekt.visible_projekt_ids_for(user).include?(id)
   end
 
   def hidden_for?(user = nil)
@@ -637,21 +741,6 @@ class Projekt < ApplicationRecord
 
   def section_tracking_user
     author
-  end
-
-  def vc_map_enabled?
-    projekt_settings.find_by(key: "projekt_feature.general.vc_map_enabled")&.enabled?
-  end
-
-  def self.available_filters(all_projekts)
-    return [] if all_projekts.blank?
-
-    projekts_count_hash = {}
-    INDEX_FILTERS.each do |order|
-      projekts_count_hash[order] = all_projekts.send(order).count
-    end
-
-    projekts_count_hash.select { |_, value| value > 0 }.keys
   end
 
   def current_phases
@@ -677,9 +766,23 @@ class Projekt < ApplicationRecord
     end
   end
 
+  def projekt_settings_hash
+    @projekt_settings_hash ||= projekt_settings.each_with_object({}) do |setting, values|
+      values[setting.key] = setting.value
+    end
+  end
+
+  def activated?
+    return self[:activated] if USE_SETTING_COLUMNS
+
+    projekt_settings_hash["projekt_feature.main.activate"].present?
+  end
+
   def feature?(feature)
-    setting = projekt_settings.find { |setting| setting.key == "projekt_feature.#{feature}"}
-    (setting && (setting.value == 'active' || setting.value == 't'  )) ? true : false
+    key = "projekt_feature.#{feature}"
+    return self[KEY_TO_COLUMN[key]] == true if Projekt.setting_read_from_column?(key)
+
+    projekt_settings_hash[key].in?(%w[active t])
   end
 
   def serialize
@@ -701,21 +804,6 @@ class Projekt < ApplicationRecord
         content: page.content
       }
     }
-  end
-
-  def update_bool_setting(key, value)
-    value_to_set =
-      if (value == "true") || value == true || value == "active"
-        "active"
-      else
-        nil
-      end
-
-    find_setting(key)&.update(value: value_to_set)
-  end
-
-  def find_setting(key)
-    projekt_settings.find { |setting| setting.key == key}
   end
 
   def generate_preview_code_if_nedded!
@@ -742,8 +830,8 @@ class Projekt < ApplicationRecord
   def acceptable_to_be_exported_for_global_overview?
     !special &&
       page&.published? &&
-      projekt_settings.find_by(key: "projekt_feature.main.activate")&.value == "active" &&
-      projekt_settings.find_by(key: "projekt_feature.general.show_in_overview_page")&.value == "active"
+      activated? &&
+      feature?("general.show_in_overview_page")
   end
 
   def any_phase_subscribers_ids
@@ -791,6 +879,18 @@ class Projekt < ApplicationRecord
   end
 
   private
+
+    def hierarchy_should_not_exceed_two_levels
+      return if parent_id.blank? || !parent_id_changed?
+
+      if parent_id == id
+        errors.add(:parent_id, :cannot_be_self)
+      elsif children.exists?
+        errors.add(:parent_id, :cannot_have_children)
+      elsif Projekt.with_hidden.where(id: parent_id).where.not(parent_id: nil).exists?
+        errors.add(:parent_id, :must_be_top_level)
+      end
+    end
 
     def create_corresponding_page
       create_page(
@@ -871,13 +971,34 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
+      MapLayer.default.each do |map_layer|
         map_layers << map_layer.dup
       end
     end
 
     def touch_updated_at(geozone)
+      Projekt.reset_visible_projekt_ids
+
       touch if persisted?
+    end
+
+    def reset_visible_projekt_ids_cache
+      Projekt.reset_visible_projekt_ids
+    end
+
+    def recalculate_subtree_levels
+      update_column("level", calculate_level)
+
+      pending_projekts = [self]
+
+      while pending_projekts.any?
+        current_projekt = pending_projekts.shift
+
+        current_projekt.children.each do |child|
+          child.update_column("level", current_projekt.level + 1)
+          pending_projekts << child
+        end
+      end
     end
 
     def assign_author_as_manager
@@ -890,14 +1011,6 @@ class Projekt < ApplicationRecord
       assignment.save!
     end
 
-    def assign_top_level_projekt_from_parent
-      return unless parent_id_changed?
-
-      if parent&.parent_id.present?
-        self.top_level_projekt_id = parent.parent_id
-      end
-    end
-
     def initialize_content_updated_at
       self.content_updated_at = Time.current
     end
@@ -908,6 +1021,40 @@ class Projekt < ApplicationRecord
       return if relevant_changes.blank?
 
       self.content_updated_at = Time.current
+    end
+
+    def legacy_setting_value(column)
+      self[column] ? "active" : ""
+    end
+
+    # The projekt_settings row stays the value every other reader sees (the
+    # public API, the /admin UI), so a column write has to update it too.
+    def mirror_setting_columns_to_legacy_rows
+      changed_keys = KEY_TO_COLUMN.select do |_key, column|
+        saved_change_to_attribute?(column)
+      end
+      return if changed_keys.empty?
+
+      now = Time.current
+      existing_keys = ProjektSetting.where(projekt_id: id, key: changed_keys.keys).pluck(:key)
+
+      changed_keys.slice(*existing_keys).each do |key, column|
+        ProjektSetting
+          .where(projekt_id: id, key: key)
+          .update_all(value: legacy_setting_value(column), updated_at: now)
+      end
+
+      missing_rows = changed_keys.except(*existing_keys).map do |key, column|
+        {
+          projekt_id: id,
+          key: key,
+          value: legacy_setting_value(column),
+          created_at: now,
+          updated_at: now
+        }
+      end
+
+      ProjektSetting.insert_all(missing_rows) if missing_rows.present?
     end
 
     def sync_for_global_overview_if_changed

@@ -6,6 +6,14 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_question_phase) { create_projekt_phase('ProjektPhase::QuestionPhase') }
+let(:existing_projekt_question) do
+  existing_question_phase.questions.create!(title: 'Existing Question')
+end
+let(:existing_question_option) do
+  existing_projekt_question.question_options.create!(value: 'Existing Option')
+end
+
   path '/api/questions/{question_id}/question_options' do
     parameter name: :question_id, in: :path, type: :integer, description: 'Projekt Question ID'
 
@@ -113,7 +121,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
       unauthorized_response { let(:question_id) { 1 } }
 
-      forbidden_response { let(:question_id) { 1 } }
+      forbidden_response { let(:question_id) { existing_projekt_question.id } }
     end
   end
 
@@ -272,7 +280,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
       unauthorized_response { let(:id) { 1 } }
 
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_question_option.id } }
     end
 
     delete 'Delete a question option' do
@@ -348,7 +356,7 @@ RSpec.describe 'Projekt Question Options API', type: :request, openapi_spec: 'v1
 
       unauthorized_response { let(:id) { 1 } }
 
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_question_option.id } }
     end
   end
 end

@@ -579,6 +579,7 @@
       const clusterColor = App.Utils.hexToRgba(App.Utils.getBrandColor(), 0.75);
 
       this.hasMasterportalPins = masterportalPointFeatures.features.length > 0;
+      this.map.hasMasterportalPins = this.hasMasterportalPins;
 
       if (this.features && Object.keys(this.features).length > 0) {
         this.map.addSource('user-features-points', {
@@ -617,7 +618,9 @@
           paint: {
             'circle-radius': [ 'case', ['==', ['get', 'active'], 'true'], 16, 16 ],
             'circle-color':  [ 'coalesce', ['get', 'feature_color'], ['get', 'color'], this.defaultFeatureColor],
-            'circle-opacity': 0.75
+            'circle-opacity': 0.75,
+            'circle-stroke-width': this.hasMasterportalPins ? 3 : 0,
+            'circle-stroke-color': App.Utils.getBrandColor()
           }
         });
 
@@ -770,10 +773,6 @@
     addMasterportalPinIcons(featureCollection) {
       const iconIdsByUrl = this.collectMasterportalIconIds(featureCollection);
 
-      if (this.masterportalDefaultIconUrl && !iconIdsByUrl[this.masterportalDefaultIconUrl]) {
-        iconIdsByUrl[this.masterportalDefaultIconUrl] = 'masterportal-pin-icon-default';
-      }
-
       const iconUrls = Object.keys(iconIdsByUrl);
 
       if (iconUrls.length === 0) return;
@@ -862,13 +861,10 @@
 
       if (!source) return;
 
-      const defaultIconId = this.masterportalDefaultIconUrl ?
-        loadedIconsByUrl[this.masterportalDefaultIconUrl] : null;
-
       featureCollection.features.forEach(function(feature) {
         if (!feature.properties) return;
 
-        const iconId = loadedIconsByUrl[feature.properties.feature_icon_url] || defaultIconId;
+        const iconId = loadedIconsByUrl[feature.properties.feature_icon_url];
 
         if (iconId) {
           feature.properties.feature_icon_id = iconId;
@@ -944,6 +940,7 @@
 
       const properties = e.features[0].properties;
       const resourceType = properties["resource_type"]
+      const hasMasterportalPins = this.hasMasterportalPins;
 
       // Show empty popup immediately
       var popup = new mapboxgl.Popup({
@@ -964,7 +961,7 @@
         dataType: "json"
       })
         .then(function(data) {
-          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties));
+          popup.setHTML(App.MapPopup.generatePopupContent(data, resourceType, properties, hasMasterportalPins));
         })
         .fail(function() {
           popup.setHTML('<div class="map-popup-status-message error">Failed to load data</div>');

@@ -108,7 +108,7 @@
 
   <% if setting["welcomepage.newsletter_subscription"].present? %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.newsletter.title"), icon_name: "envelope") do |c| %>
-      <% if current_user.present? %>
+      <% if user_signed_in? %>
         <div class="admin">
         <%= render Admin::LivesubmitCheckbox::Component.new(
           url: account_path,

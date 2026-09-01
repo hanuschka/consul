@@ -68,7 +68,7 @@ class MapLocation < ApplicationRecord
     return {} if map_location_ids.blank?
 
     where(id: map_location_ids)
-      .includes(mappable: [:projekt_labels, :sentiment, :masterportal_pin])
+      .includes(mappable: [{ projekt_labels: :masterportal_collection }, :sentiment, :masterportal_pin])
       .index_by(&:id)
       .transform_values(&:features_json_data)
   end

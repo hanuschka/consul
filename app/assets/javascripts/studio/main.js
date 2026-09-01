@@ -26,7 +26,6 @@ window.App.Studio.Projekt = {
 
     App.Studio.Projekt.ProjektStart.initialize()
     App.Studio.Projekt.AiBuildWithPrompt.initialize()
-    App.Studio.ContentBlocks.CreateWithAi.initialize()
 
     // Initialize ContentBlock submodules
     App.Studio.ContentBlocks.Render.initialize()
@@ -34,7 +33,6 @@ window.App.Studio.Projekt = {
 
     App.Studio.initContentBlockModules()
 
-    App.Studio.ContentBlocks.SavedContentBlocks.initialize()
     App.Studio.Projekt.AiFileImport.initialize()
     App.Studio.Projekt.ToggleBackground.initialize()
     // ExplainWithAi.initialize()
@@ -46,10 +44,17 @@ window.App.Studio.Projekt = {
     const projektPage = document.querySelector(".js-projekt-page");
     this.config.defaultMarginBottom = parseInt(projektPage.dataset.defaultMarginBottom);
     this.config.aiAvailable = projektPage.dataset.aiAvailable === "true";
+    this.config.generateUrl = projektPage.dataset.generateUrl;
   },
 
   getCurrentProjektId() {
     return  document.querySelector(".js-projekt-page").dataset.projektId;
+  },
+
+  isAiTriggerDisabled(trigger) {
+    const $trigger = $(trigger);
+
+    return $trigger.is("[disabled]") || $trigger.closest(".-ai-disabled").length > 0;
   },
 
   getDefaultMarginBottom() {

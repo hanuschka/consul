@@ -1,0 +1,47 @@
+<td style="<%= css_for_mailer_content %>">
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.on_behalf_of_account.mailers.account_created.hi", username: @user.username) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.on_behalf_of_account.mailers.account_created.p1", email: @user.email) %>
+  </p>
+
+  <% if @resource_url.present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.resource",
+        resource_link: link_to(
+          @resource.title.presence || @resource.model_name.human,
+          @resource_url,
+          target: "_blank"
+        )) %>
+    </p>
+  <% end %>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.p2",
+      password_link: link_to(
+        t("custom.on_behalf_of_account.mailers.account_created.password_link_text"),
+        edit_user_password_url(reset_password_token: @token),
+        target: "_blank"
+      )) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize t("custom.on_behalf_of_account.mailers.account_created.p3",
+      password_reset_link: link_to(
+        t("custom.on_behalf_of_account.mailers.account_created.password_reset_link_text"),
+        new_user_password_url,
+        target: "_blank"
+      )) %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("custom.on_behalf_of_account.mailers.closing") %><br>
+      <%= t("custom.on_behalf_of_account.mailers.signature") %>
+    </p>
+  <% end %>
+
+</td>

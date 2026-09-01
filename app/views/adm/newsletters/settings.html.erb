@@ -15,7 +15,7 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "newsletter_brand_color"), :value, :color) %>
 
   <%= render Adm::AttributeEditorComponent.new(
-    SiteCustomization::ContentBlock.custom_block_for('newsletter_email_footer_block_1', I18n.default_locale),
+    SiteCustomization::ContentBlock.custom_block_for('newsletter_email_footer_block_1'),
     :body, :rich_text
   ) %>
 </div>

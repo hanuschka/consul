@@ -12,6 +12,8 @@ en:
           allow_attached_image_description: Lets users upload a cover image when creating a proposal. This image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if moderation should be reduced.
           labels: Labels
           labels_description: Enables the label feature for proposals, with which administrators can assign thematic categories or keywords. Labels are displayed as icons on proposals on the frontend and make filtering easier. Use this feature to better structure projects with many proposals.
+          use_masterportal_collections_as_labels: Use masterportal collections instead of labels
+          use_masterportal_collections_as_labels_description: "When enabled, users creating a resource choose from this phase's imported masterportal collections instead of the manually created labels."
           sentiments: Sentiments
           sentiments_description: Enables the sentiment feature, allowing users to express feelings or moods about a proposal. On the frontend, colored markers enable quick emotional categorization. Use this feature in projects where the emotional state of participants should also be captured.
           show_map: Map
@@ -51,10 +53,14 @@ en:
           show_video_as_link_description: Displays added videos not as an embedded player but as a clickable link. Instead of the video player, a text link to the external provider appears on the frontend. Enable this option to reduce page load time or when embedded videos should be avoided for data-protection reasons.
           hide_ballots_count: Hide vote count during proposal voting
           hide_ballots_count_description: Hides the current vote count during the ongoing voting phase, so users cannot see the current vote distribution. The counter is hidden on the frontend. Enable this option to prevent influence from visible results and ensure unbiased voting.
+          hide_comments_count_order: Hide the "most comments" sort option
+          hide_comments_count_order_description: Removes sorting by number of comments from the selector. The option no longer appears on the frontend, and requesting it through the URL falls back to the default order. Enable this when contributions should be judged on quality rather than on how much discussion they attracted.
       option:
         resource:
           max_submissions_per_user: Maximum submissions per user
           max_submissions_per_user_description: Limits the number of investment proposals a single user may submit in this phase. Once the limit is reached, the Create button is disabled on the frontend and a notice appears. Empty or 0 means no limit.
+          max_supports_per_user: Maximum supports per user
+          max_supports_per_user_description: Limits the number of investment proposals a single user may support in this phase. Once the limit is reached, the support button is disabled on the frontend and a notice appears. Empty or 0 means no limit.
         form:
           map_features_limit: Maximum map markers
           map_features_limit_description: "Sets the maximum number of map markers a user can place on the map within a single session. Once the limit is reached, placing additional pins is blocked on the frontend. Use this value to prevent abuse and maintain map clarity."
@@ -96,6 +102,9 @@ en:
         general:
           users_can_create_pins: Place pins
           users_can_create_pins_description: "Allows registered users to place their own pins on the phase's map, thereby submitting location-based notes or suggestions. A Create button is shown on the map view on the frontend. Disable this option when pins should only be placed by the administration and no user input on the map is desired."
+        form:
+          use_masterportal_collections_as_labels: Use masterportal collections instead of categories
+          use_masterportal_collections_as_labels_description: "When enabled, users creating a pin choose from this phase's imported masterportal collections instead of the manually created categories."
       option:
         form:
           map_features_limit: Maximum map markers
@@ -136,6 +145,8 @@ en:
           allow_attached_image_description: "Lets users upload a cover image when creating a proposal. The image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if the moderation effort for image review should be reduced."
           labels: Labels
           labels_description: "Enables the label feature for proposals, with which administrators can assign thematic categories or keywords. Labels are displayed as icons on proposals on the frontend and make thematic filtering easier. Use this feature to better structure projects with many proposals."
+          use_masterportal_collections_as_labels: Use masterportal collections instead of labels
+          use_masterportal_collections_as_labels_description: "When enabled, users creating a resource choose from this phase's imported masterportal collections instead of the manually created labels."
           sentiments: Sentiments
           sentiments_description: "Enables the sentiment feature, allowing users to express their mood or stance on a proposal. On the frontend, colored markers enable quick emotional categorization. Use this feature in projects where, beyond content feedback, the emotional state of participants should also be captured."
           show_map: Map
@@ -190,6 +201,8 @@ en:
           votes_for_proposal_success_description: "Sets the number of supports a proposal must reach to be considered successful. Once this value is reached, the proposal is marked as successful on the frontend and can no longer be supported. Set the value appropriate to the project scope and expected participant count to ensure realistic quorums."
           max_submissions_per_user: Maximum submissions per user
           max_submissions_per_user_description: Limits the number of proposals a single user may submit in this phase. Once the limit is reached, the Create button is disabled on the frontend and a notice appears. Empty or 0 means no limit.
+          max_supports_per_user: Maximum supports per user
+          max_supports_per_user_description: Limits the number of proposals a single user may support in this phase. Once the limit is reached, the support button is disabled on the frontend and a notice appears. Empty or 0 means no limit.
       selectable_setting:
         general:
           default_order: Default sort

@@ -13,6 +13,9 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmSubcategoryCascadeController from "./adm/subcategory_cascade_controller"
+application.register("adm--subcategory-cascade", AdmSubcategoryCascadeController)
+
 import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
 application.register("adm--ai-question-form", AdmAiQuestionFormController)
 
@@ -136,6 +139,9 @@ application.register("adm--form--image", AdmFormImageController)
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
+import AdmPollQuestionsBoundaryMapController from "./adm/poll_questions/boundary_map_controller"
+application.register("adm-poll-questions--boundary-map", AdmPollQuestionsBoundaryMapController)
+
 import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
 application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
 
@@ -211,6 +217,18 @@ application.register("adm--ai-action-button", AdmAiActionButtonController)
 import SharedPollingController from "./shared/polling_controller"
 application.register("shared--polling", SharedPollingController)
 
+import SharedDocumentUploadController from "./shared/document_upload_controller"
+application.register("shared--document-upload", SharedDocumentUploadController)
+
+import SharedScrollToTopController from "./shared/scroll_to_top_controller"
+application.register("shared--scroll-to-top", SharedScrollToTopController)
+
+import PollQuestionImportsAnswerFieldsController from "./poll_question_imports/answer_fields_controller"
+application.register("poll-question-imports--answer-fields", PollQuestionImportsAnswerFieldsController)
+
+import PollQuestionImportsPreviewController from "./poll_question_imports/preview_controller"
+application.register("poll-question-imports--preview", PollQuestionImportsPreviewController)
+
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
@@ -223,8 +241,6 @@ application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 import AdmBudgetResultsController from "./adm/budget_results_controller"
 application.register("adm--budget-results", AdmBudgetResultsController)
 
-import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
-application.register("projekt-imports--from-file", ProjektImportsFromFileController)
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)

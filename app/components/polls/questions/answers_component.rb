@@ -15,16 +15,20 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def user_answer(question_answer)
-    user_answers.find_by(answer: question_answer.title)
+    user_answers_by_title[question_answer.title]
   end
 
   def disable_answer?(question_answer)
-    question.multiple? && user_answers.count == question.max_votes
+    question.multiple? && user_answers.size == question.max_votes
   end
 
   private
 
     def user_answers
-      @user_answers ||= question.answers.by_author(current_user)
+      @user_answers ||= helpers.poll_answers_by_question_for_current_user(question.poll)[question.id] || []
+    end
+
+    def user_answers_by_title
+      @user_answers_by_title ||= user_answers.index_by(&:answer)
     end
 end

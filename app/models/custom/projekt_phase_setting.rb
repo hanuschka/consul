@@ -74,6 +74,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
+          "feature.form.use_masterportal_collections_as_labels": "",
           "feature.form.sentiments": "",
           "feature.form.show_map": "active",
           "feature.form.enable_geoman_controls_in_maps": "active",
@@ -101,7 +102,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.show_comments": "active",
           "option.resource.votes_for_proposal_success": 100,
           "option.resource.minimum_supports_to_show": "0",
-          "option.resource.max_submissions_per_user": ""
+          "option.resource.max_submissions_per_user": "",
+          "option.resource.max_supports_per_user": ""
         },
 
         "ProjektPhase::VotingPhase" => {
@@ -128,6 +130,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
           "feature.form.allow_attached_image": "active",
           "feature.form.labels": "",
+          "feature.form.use_masterportal_collections_as_labels": "",
           "feature.form.sentiments": "",
           "feature.form.show_map": "active",
           "feature.form.enable_geoman_controls_in_maps": "active",
@@ -151,7 +154,9 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_voting": "",
           "feature.resource.show_video_as_link": "",
           "feature.resource.hide_ballots_count": "",
-          "option.resource.max_submissions_per_user": ""
+          "feature.resource.hide_comments_count_order": "",
+          "option.resource.max_submissions_per_user": "",
+          "option.resource.max_supports_per_user": ""
         },
 
         "ProjektPhase::CommentPhase" => {
@@ -193,6 +198,7 @@ class ProjektPhaseSetting < ApplicationRecord
         },
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
+          "feature.form.use_masterportal_collections_as_labels": "",
           "option.general.max_number_of_pins_per_user": "",
           "option.form.map_features_limit": "1"
         }

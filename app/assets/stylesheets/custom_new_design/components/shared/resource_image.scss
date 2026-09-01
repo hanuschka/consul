@@ -8,6 +8,9 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
+    // Named container so the AI disclosure badge can drop its text when the
+    // rendering is too small for it, wherever the image lands.
+    container: resource-image / inline-size;
   }
 
   .resource-image--main {

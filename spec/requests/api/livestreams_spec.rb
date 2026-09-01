@@ -6,6 +6,15 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_livestream_phase) { create_projekt_phase('ProjektPhase::LivestreamPhase') }
+let(:existing_projekt_livestream) do
+  existing_livestream_phase.projekt_livestreams.create!(
+    url: 'https://example.com/existing_livestream',
+    title: 'Existing Livestream',
+    video_platform: 'youtube'
+  )
+end
+
   PROJEKT_LIVESTREAM_PARAMS = {
     type: :object,
     properties: {
@@ -169,7 +178,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_livestream_phase.id } }
     end
   end
 
@@ -366,7 +375,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_livestream.id } }
     end
 
     delete 'Delete a projekt livestream' do
@@ -435,7 +444,7 @@ RSpec.describe 'Projekt Livestreams API', type: :request, openapi_spec: 'v1/swag
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_livestream.id } }
     end
   end
 end

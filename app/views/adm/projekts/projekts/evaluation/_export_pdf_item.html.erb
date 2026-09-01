@@ -1,0 +1,5 @@
+<%= link_to evaluation_pdf_options_adm_projekts_projekt_path(projekt, phase_id: phase["phase_id"]) do %>
+  <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">picture_as_pdf</span>
+  <i class="fas fa-file-pdf projekt-evaluation-icon-fa" aria-hidden="true"></i>
+  <%= t("adm.projekts.projekts.evaluation.phase_download_pdf_button") %>
+<% end %>

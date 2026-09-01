@@ -4,39 +4,27 @@
     "default" => "poll_question_default",
     "scale" => "poll_question_default",
     "multi" => "poll_question_default",
-    "bars" => "poll_question_default"
+    "bars" => "poll_question_default",
+    "measure" => "poll_question_measure",
+    "donut" => "poll_question_donut",
+    "preference" => "poll_question_preference"
   }
 
-  full_width_types = %w[donut preference]
-  full_width_questions = questions.select { |q| full_width_types.include?(q["chart_type"]) }
-  measure_questions = questions.select { |q| q["chart_type"] == "measure" }
-  flow_questions = questions.reject do |q|
-    full_width_types.include?(q["chart_type"]) || q["chart_type"] == "measure"
-  end
-
   exportable = local_assigns.fetch(:exportable, false)
+  pdf_mode = local_assigns.fetch(:pdf_mode, false)
 %>
 
-<% full_width_questions.each do |question| %>
-  <%= render partial: "adm/projekts/projekts/evaluation/poll_question_#{question["chart_type"]}",
-    locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
-<% end %>
+<% questions.each do |question| %>
+  <% if question["vote_type"] == "map_points" %>
+    <%= render partial: "adm/projekts/projekts/evaluation/poll_question_map",
+      locals: { question: question, pdf_mode: pdf_mode } %>
 
-<% if flow_questions.any? %>
-  <div class="poll-question-flow-grid">
-    <% flow_questions.each do |question| %>
-      <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
-      <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
-        locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
-    <% end %>
-  </div>
-<% end %>
-
-<% if measure_questions.any? %>
-  <div class="measure-grid">
-    <% measure_questions.each do |question| %>
-      <%= render partial: "adm/projekts/projekts/evaluation/poll_question_measure",
-        locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable } %>
-    <% end %>
-  </div>
+  <% elsif (question["nested_questions"] || []).any? %>
+    <%= render partial: "adm/projekts/projekts/evaluation/poll_question_bundle",
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable, pdf_mode: pdf_mode } %>
+  <% else %>
+    <% partial_name = chart_partial[question["chart_type"]] || "poll_question_default" %>
+    <%= render partial: "adm/projekts/projekts/evaluation/#{partial_name}",
+      locals: { question: question, accent: accent, accent_light: accent_light, exportable: exportable, pdf_mode: pdf_mode } %>
+  <% end %>
 <% end %>

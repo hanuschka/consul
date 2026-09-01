@@ -5,3 +5,4 @@
 // jQuery would detach all plugins registered on the first one.
 //
 //= require jquery
+//= require cropperjs/dist/cropper

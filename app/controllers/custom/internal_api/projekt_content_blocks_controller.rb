@@ -12,7 +12,7 @@ class InternalApi::ProjektContentBlocksController < InternalApi::BaseController
       name: "custom",
       body: params[:html],
       key: "projekt_content_block_#{@projekt.id}_#{@projekt.content_blocks.count + 1}_#{DateTime.now.to_i}",
-      locale: "de"
+      locale: SiteCustomization::ContentBlock.canonical_locale
     )
 
     if @content_block.save

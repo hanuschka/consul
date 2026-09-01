@@ -3,12 +3,16 @@ module Sentimentable
 
   included do
     belongs_to :sentiment
-    validates :sentiment_id, presence: true, on: :create, if: :sentiments_available?
+    validates :sentiment_id, presence: true, on: :create, if: :sentiment_required?
   end
 
   def sentiments_available?
     return false if projekt_phase.nil?
 
     projekt_phase.feature?("form.sentiments") && projekt_phase.sentiments.exists?
+  end
+
+  def sentiment_required?
+    sentiments_available?
   end
 end

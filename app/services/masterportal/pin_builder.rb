@@ -30,6 +30,7 @@ class Masterportal::PinBuilder < ApplicationService
     pin.description = Masterportal::FeaturePropertyReader.description(@feature)
     pin.latitude = Masterportal::FeaturePropertyReader.latitude(@feature)
     pin.longitude = Masterportal::FeaturePropertyReader.longitude(@feature)
+    pin.geometry = Masterportal::FeaturePropertyReader.geometry(@feature)
     pin.properties = @feature["properties"] || {}
     pin.raw_feature = @feature
     pin.last_imported_at = Time.current

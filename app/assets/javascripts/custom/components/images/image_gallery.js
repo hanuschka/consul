@@ -40,7 +40,7 @@
         this.lightbox.destroy();
       }
 
-      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht">
+      var customLightboxHTML = `<div id="glightbox-body" class="glightbox-container" role="dialog" aria-modal="true" aria-label="Bildansicht" tabindex="-1">
                                   <div class="gloader visible"></div>
                                   <div class="goverlay"></div>
                                   <div class="gcontainer">
@@ -83,14 +83,18 @@
         }
 
         setTimeout(() => {
-          var closeBtn = document.querySelector(".gclose");
+          var modal = this.getLightboxContainer();
 
-          if (closeBtn) {
-            closeBtn.focus();
+          if (modal) {
+            modal.focus();
           }
         }, 100);
+
+        this.bindFocusTrapKeydown();
       });
       this.lightbox.on('close', () => {
+        this.unbindFocusTrapKeydown();
+
         document.body.style.paddingRight = "";
 
         var fixedElement = this.getFixedElement();
@@ -110,7 +114,55 @@
       });
     },
 
-    SLIDE_ALT_FALLBACK: "Vergrößerte Ansicht",
+    bindFocusTrapKeydown() {
+      if (!this.focusTrapKeydownHandler) {
+        this.focusTrapKeydownHandler = this.handleFocusTrapKeydown.bind(this);
+      }
+
+      document.addEventListener("keydown", this.focusTrapKeydownHandler, true);
+    },
+
+    unbindFocusTrapKeydown() {
+      if (this.focusTrapKeydownHandler) {
+        document.removeEventListener("keydown", this.focusTrapKeydownHandler, true);
+      }
+    },
+
+    handleFocusTrapKeydown(event) {
+      if (event.key !== "Tab" && event.which !== 9) return
+
+      var modal = this.getLightboxContainer();
+
+      if (!modal) return
+
+      var focusable = App.FocusTrap.getFocusableElements(modal);
+
+      if (focusable.length === 0) return
+
+      // Take full control of Tab: stop GLightbox's own keydown handler (which
+      // only cycles `.gbtn[data-taborder]` buttons and lets focus escape with
+      // the tabindex-based markup used here) and cycle within the lightbox.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      var currentIndex = focusable.indexOf(document.activeElement);
+      var lastIndex = focusable.length - 1;
+      var nextIndex;
+
+      if (event.shiftKey) {
+        nextIndex = currentIndex <= 0 ? lastIndex : currentIndex - 1;
+      } else {
+        nextIndex = currentIndex === lastIndex ? 0 : currentIndex + 1;
+      }
+
+      focusable[nextIndex].focus();
+    },
+
+    getLightboxContainer() {
+      return document.querySelector(".glightbox-container.glightbox-clean");
+    },
+
+    SLIDE_CAPTION_FALLBACK: "Vergrößerte Ansicht",
 
     applySlideAccessibility(data) {
       var slideEl = data.slideNode || data.slide;
@@ -121,7 +173,7 @@
 
       var sourceImg = this.getSourceImage(data.trigger);
 
-      slideImg.setAttribute("alt", this.resolveSlideAltText(data.trigger, sourceImg));
+      slideImg.setAttribute("alt", this.resolveSlideCaptionText(data.trigger, sourceImg));
     },
 
     getSourceImage(trigger) {

@@ -1,52 +1,64 @@
 class ProjektPhaseSubnavComponent < ApplicationComponent
-  delegate :current_user, :can?, to: :helpers
+  delegate :current_user, :can?, :phase_icon_class,
+    :footer_evaluation_tab_public_visible?, :footer_evaluation_tab_available?,
+    :footer_evaluation_tab_disabled?, :hidden_from_public_tooltip,
+    :footer_evaluation_tab_label, to: :helpers
 
   def initialize(projekt_phase)
     @projekt_phase = projekt_phase
   end
 
   def render?
-    can?(:read_stats, @projekt_phase) && (admin_or_projekt_manager? || any_public_stats_enabled?)
+    return false if !can?(:read_stats, @projekt_phase)
+
+    projekt_phase_subnav_items.size > 1
   end
 
   def projekt_phase_subnav_items
     items = [
       {
-        text: t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
+        text: @projekt_phase.title.presence || t("custom.projekt_phases.subnav.overview.#{@projekt_phase.name}"),
+        icon: phase_icon_class(@projekt_phase) || "fa-list",
         url: url_to_footer_tab(section: "", remote: true),
         active: params[:section].blank? || params[:section] == "overview",
         section: "overview"
       }
     ]
 
-    if show_evaluation_tab?
+    if voting_phase? && show_evaluation_tab?("poll_stats")
       items << {
-        text: t("custom.projekt_phases.subnav.evaluation"),
-        url:  url_to_footer_tab(section: "evaluation", remote: true),
+        text: footer_evaluation_tab_label(@projekt_phase, "poll_stats"),
+        icon: "fa-chart-pie",
+        url: url_to_footer_tab(section: "poll_stats", remote: true),
+        active: params[:section] == "poll_stats",
+        section: "poll_stats",
+        visibility_group: "poll_stats",
+        hidden_from_public: evaluation_tab_hidden_from_public?("poll_stats")
+      }
+    end
+
+    if show_evaluation_tab?("stats")
+      items << {
+        text: stats_tab_text,
+        icon: "fa-chart-bar",
+        url: url_to_footer_tab(section: "evaluation", remote: true),
         active: params[:section] == "evaluation",
         section: "evaluation",
-        hide_on_preview: !public_evaluation_visible?
+        visibility_group: "stats",
+        hidden_from_public: evaluation_tab_hidden_from_public?("stats")
       }
     end
 
-    if show_kpi_stats_tab?
+    if show_evaluation_tab?("ai")
       items << {
-        text: t("custom.projekt_phases.subnav.key_metrics"),
-        url:  url_to_footer_tab(section: "key_metrics", remote: true),
-        active: params[:section] == "key_metrics",
-        section: "key_metrics",
-        hide_on_preview: !@projekt_phase.feature?("general.public_kpi_stats")
-      }
-    end
-
-    if show_ai_analysis_tab?
-      items << {
-        text: t("custom.projekt_phases.subnav.analysis"),
-        url:  url_to_footer_tab(section: "analysis", remote: true),
-        active: params[:section] == "analysis",
-        disabled: !Ai::Settings.ai_available?,
-        section: "analysis",
-        hide_on_preview: !@projekt_phase.feature?("general.public_ai_stats")
+        text: ai_tab_text,
+        icon: "fa-magic",
+        url: url_to_footer_tab(section: "ai_evaluation", remote: true),
+        active: params[:section] == "ai_evaluation",
+        disabled: footer_evaluation_tab_disabled?(@projekt_phase, "ai"),
+        section: "ai_evaluation",
+        visibility_group: "ai",
+        hidden_from_public: evaluation_tab_hidden_from_public?("ai")
       }
     end
 
@@ -55,50 +67,51 @@ class ProjektPhaseSubnavComponent < ApplicationComponent
 
   private
 
-    def admin_or_projekt_manager?
-      current_user&.administrator? || current_user&.projekt_manager?
+    def voting_phase?
+      @projekt_phase.is_a?(ProjektPhase::VotingPhase)
     end
 
-    def show_evaluation_tab?
-      return false if phase_evaluation.blank?
-      return false if !phase_evaluation.completed?
-
-      admin_or_projekt_manager? || public_evaluation_visible?
+    def stats_tab_text
+      footer_evaluation_tab_label(@projekt_phase, "stats")
     end
 
-    def show_kpi_stats_tab?
-      return false if @projekt_phase.is_a?(ProjektPhase::CommentPhase)
-      return false if phase_evaluation_completed?
-
-      admin_or_projekt_manager? || @projekt_phase.feature?("general.public_kpi_stats")
+    def ai_tab_text
+      footer_evaluation_tab_label(@projekt_phase, "ai")
     end
 
-    def show_ai_analysis_tab?
-      return false if phase_evaluation_completed?
-
-      admin_or_projekt_manager? || @projekt_phase.feature?("general.public_ai_stats")
+    def show_evaluation_tab?(tab)
+      footer_evaluation_tab_available?(@projekt_phase, tab)
     end
 
-    def phase_evaluation
-      @projekt_phase.projekt_phase_evaluation
+    def evaluation_tab_hidden_from_public?(tab)
+      !footer_evaluation_tab_public_visible?(@projekt_phase, tab)
     end
 
-    def phase_evaluation_completed?
-      phase_evaluation.present? && phase_evaluation.completed?
+    def tab_tooltip_hidden_state(item)
+      return nil if item[:visibility_group].blank?
+      return nil if !can?(:edit, @projekt_phase.projekt)
+
+      item[:hidden_from_public]
     end
 
-    def public_evaluation_visible?
-      visibility = @projekt_phase.projekt_phase_evaluation_visibility
-      visibility.present? && visibility.any_visible?
+    def subnav_item_leading_icon(item)
+      phase_icon = tag.i(class: "fas #{item[:icon]} projekt-phase-subnav-item--phase-icon", "aria-hidden": "true")
+
+      return phase_icon if %w[stats ai].exclude?(item[:visibility_group])
+      return phase_icon if !can?(:edit, @projekt_phase.projekt)
+
+      eye_icon = tag.i(class: "fas fa-eye-slash projekt-phase-subnav-item--visibility-icon", "aria-hidden": "true")
+
+      safe_join([phase_icon, eye_icon])
     end
 
-    def any_public_stats_enabled?
-      @projekt_phase.feature?("general.public_kpi_stats") ||
-        @projekt_phase.feature?("general.public_ai_stats") ||
-        public_evaluation_visible?
+    def any_tab_public_visible?
+      footer_evaluation_tab_public_visible?(@projekt_phase, "stats") ||
+        footer_evaluation_tab_public_visible?(@projekt_phase, "ai") ||
+        (voting_phase? && footer_evaluation_tab_public_visible?(@projekt_phase, "poll_stats"))
     end
 
     def hide_subnav_on_preview?
-      !any_public_stats_enabled?
+      !any_tab_public_visible?
     end
 end

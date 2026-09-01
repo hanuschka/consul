@@ -1,0 +1,25 @@
+<tr id="<%= dom_id(page) %>" class="kern-table__row" data-sortable-id="<%= page.id %>">
+  <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+    <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+  </td>
+  <th scope="row" class="kern-table__header" data-field="title">
+    <%= link_to page.title, edit_adm_site_customization_page_path(page), class: "kern-link", data: { turbo_frame: "_top" } %>
+  </th>
+  <td class="kern-table__cell" data-field="slug">
+    <%= page.url %>
+  </td>
+  <td class="kern-table__cell" data-field="status">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      page,
+      :status,
+      path: toggle_status_adm_site_customization_page_path(page),
+      aria_label: page.title
+    ) %>
+  </td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(label: t("adm.site_customization.pages.index.edit"), url: edit_adm_site_customization_page_path(page), icon: "edit", style: :edit, data: { turbo_frame: "_top" }) %>
+      <% actions.with_action(label: t("adm.site_customization.pages.index.open_page"), url: page.url, icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
+    <% end %>
+  </td>
+</tr>

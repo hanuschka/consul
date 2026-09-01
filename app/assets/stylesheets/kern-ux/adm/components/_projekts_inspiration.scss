@@ -1,0 +1,36 @@
+.adm-projekts-inspiration {
+  .kern-container {
+    max-width: none;
+  }
+
+  // Desktop: the page itself never scrolls, so the frame takes whatever height
+  // is left once the import field above it has been laid out. Measuring it in
+  // the layout rather than subtracting a guessed offset keeps the two in step
+  // when the field's label or hint wraps.
+  @media (min-width: 992px) {
+    .kern-container-fluid {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - var(--kern-adm-header-height) - 57px);
+    }
+
+    .shared-admin-iframe--wrapper {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  }
+}
+
+.adm-projekts-inspiration-frame {
+  height: calc(100vh - 160px);
+  min-height: 480px;
+  margin-top: 5px;
+  background-color: #e9ebee;
+  background-size: 64px 64px;
+
+  @media (min-width: 992px) {
+    height: 100%;
+    min-height: 0;
+    margin-top: 0;
+  }
+}

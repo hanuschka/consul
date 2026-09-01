@@ -41,11 +41,12 @@ $er-max-tabs: 8;
 
   .measure-grid {
     gap: 0.5rem;
+    position: relative;
   }
 
   .phase-header {
     gap: 1rem;
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
   }
 
   .adm-projekt-evaluation-report .card,
@@ -96,6 +97,20 @@ $er-max-tabs: 8;
   .custom-collapse--head .icon-chevron-down {
     display: none;
   }
+
+  .phase-budget-segment__distributions-summary {
+    background: white;
+    border: none;
+    padding: 0;
+  }
+
+  .phase-budget-segment__distributions-chevron {
+    display: none;
+  }
+}
+
+.adm-projekt-evaluation-report .phase-budget-segment__distributions-summary {
+  background: white;
 }
 
 .phase-ai-questions {
@@ -219,27 +234,11 @@ $er-max-tabs: 8;
 }
 
 .adm-projekt-evaluation-report {
-  --er-primary: #1e40af;
-  --er-primary-light: #3b82f6;
-  --er-primary-lighter: #dbeafe;
-  --er-positive: #059669;
-  --er-positive-light: #d1fae5;
-  --er-bg: #f8fafc;
-  --er-surface: #ffffff;
-  --er-text: #0f172a;
-  --er-text-secondary: #475569;
-  --er-text-muted: #94a3b8;
-  --er-border: #e2e8f0;
-  --er-border-light: #f1f5f9;
-  --er-radius: 8px;
-  --er-radius-lg: 12px;
-  --er-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   color: var(--er-text);
   line-height: 1.6;
-  background: var(--er-bg);
-  padding: 1rem 1rem;
+  // background: var(--er-bg);
+  padding: 0 1rem;
   border-radius: var(--er-radius-lg);
 
   * {
@@ -321,39 +320,11 @@ $er-max-tabs: 8;
   line-height: 1.6;
 }
 
-.meta-item {
-  text-align: center;
-  padding: 0.5rem 0;
-
-  .meta-value {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--er-primary);
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .meta-label {
-    font-size: 0.68rem;
-    color: var(--er-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-top: 2px;
-  }
-}
-
-.meta-divider {
-  width: 1px;
-  height: 40px;
-  background: var(--er-border);
-}
-
 .adm-projekt-evaluation-report .phase-block {
-  background: var(--er-surface);
-  border: 1px solid var(--er-border);
-  border-radius: var(--er-radius-lg);
-  padding: 1.5rem;
+  // background: var(--er-surface);
+  // border: 1px solid var(--er-border);
+  // border-radius: var(--er-radius-lg);
+  // padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -363,136 +334,174 @@ $er-max-tabs: 8;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
 }
 
 
-.evaluation-phase-tabs {
-  margin-bottom: 1.5rem;
+.adm-evaluation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.evaluation-phase-tabs__radio {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-  height: 0;
-}
+.adm-evaluation-card {
+  --card-link-bg: #f6f8ff;
+  --card-link-ink: #3450b4;
 
-.evaluation-phase-tabs__nav {
   display: flex;
-  gap: 0;
-  flex-wrap: wrap;
-  border-bottom: 2px solid var(--er-border);
-  margin-bottom: 1.5rem;
-  padding: 0;
-}
-
-.evaluation-phase-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.75rem 0.95rem;
-  cursor: pointer;
-  color: var(--er-text-secondary);
-  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
-  position: relative;
-  margin-bottom: -2px;
-  border-bottom: 3px solid transparent;
-  user-select: none;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--card-link-ink) 15%, var(--er-border));
+  border-radius: var(--er-radius-lg);
+  background: var(--card-link-bg);
+  color: var(--er-text);
+  transition: border-color 180ms ease-out, box-shadow 180ms ease-out;
 
   &:hover {
-    color: var(--er-text);
+    border-color: color-mix(in srgb, var(--card-link-ink) 40%, var(--er-border));
+    box-shadow: var(--er-shadow-md);
   }
 }
 
-.evaluation-phase-tab__icon {
+.adm-evaluation-card:hover .adm-evaluation-card__cta.kern-btn {
+  background: color-mix(in srgb, var(--card-link-ink) 8%, var(--card-link-bg));
+}
+
+.adm-evaluation-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.adm-evaluation-card__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
-  font-size: 30px;
-  border-radius: var(--er-radius);
-  background: var(--er-border-light);
-  color: var(--er-text-muted);
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
-  transition: background 150ms ease, color 150ms ease;
+  border-radius: var(--er-radius);
+  background: var(--card-accent-light);
+  color: var(--card-accent);
+  font-size: 22px;
 }
 
-.evaluation-phase-tab__body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
+.adm-evaluation-card__icon .projekt-evaluation-icon-fa {
+  font-size: 18px;
 }
 
-.evaluation-phase-tab__name {
+.adm-evaluation-card__title {
+  font-size: 1rem;
   font-weight: 600;
-  color: inherit;
-  line-height: 1.2;
-  letter-spacing: -0.1px;
+  line-height: 1.25;
+  color: var(--er-text);
+  transition: color 150ms ease-out;
 }
 
-.evaluation-phase-tab__meta {
-  font-size: 0.65rem;
-  color: var(--er-text-muted);
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  font-weight: 600;
+.adm-evaluation-card__cta {
+  margin-top: auto;
+  align-self: stretch;
+  width: 100%;
+  justify-content: center;
+  transition: background 150ms ease-out;
+}
 
-  strong {
-    font-size: 0.85rem;
-    color: inherit;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
+.adm-evaluation-card__cta.kern-btn {
+  color: var(--card-link-ink);
+  border: 1px solid var(--card-link-ink) !important;
+
+  &:hover {
+    background: color-mix(in srgb, var(--card-link-ink) 14%, var(--card-link-bg)) !important;
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--card-link-ink) 20%, var(--card-link-bg)) !important;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--card-link-ink);
+    outline-offset: 2px;
   }
 }
 
-.evaluation-phase-tab__generated-at {
-  margin-top: 2px;
-  font-size: 0.7rem;
+.adm-evaluation-card__cta.kern-btn .kern-label {
+  color: var(--card-link-ink);
+}
+
+.adm-evaluation-phase-actions {
+  margin-left: auto;
+}
+
+.adm-evaluation-regenerate-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.kern-container.adm-evaluation-phase-container {
+  max-width: 1050px;
+}
+
+.adm-evaluation-card__kpi {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.adm-evaluation-card__kpi-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--er-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.adm-evaluation-card__kpi-label {
+  font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.3;
+  color: var(--er-text-secondary);
+}
+
+.adm-evaluation-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.adm-evaluation-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.adm-evaluation-card__badge.-on {
+  color: var(--er-positive);
+  background: var(--er-positive-light);
+}
+
+.adm-evaluation-card__badge.-off {
+  color: var(--er-text-muted);
+  background: var(--er-border-light);
+}
+
+.adm-evaluation-card__date {
+  font-size: 0.875rem;
   color: var(--er-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.evaluation-phase-panel {
-  display: none;
-}
-
-@for $i from 1 through $er-max-tabs {
-  .evaluation-phase-tabs
-    > .evaluation-phase-tabs__radio:nth-of-type(#{$i}):checked
-    ~ .evaluation-phase-tabs__panels
-    > .evaluation-phase-panel:nth-child(#{$i}) {
-    display: block;
-  }
-
-  .evaluation-phase-tabs
-    > .evaluation-phase-tabs__radio:nth-of-type(#{$i}):checked
-    ~ .evaluation-phase-tabs__nav
-    > .evaluation-phase-tab:nth-child(#{$i}) {
-    color: var(--tab-accent);
-    border-bottom-color: var(--tab-accent);
-
-    .evaluation-phase-tab__name {
-      font-weight: 700;
-    }
-
-    .evaluation-phase-tab__icon {
-      background: var(--tab-accent-light);
-      color: var(--tab-accent);
-    }
-
-    .evaluation-phase-tab__meta {
-      color: var(--tab-accent);
-    }
-  }
+.adm-evaluation-card__summary-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--er-text-secondary);
 }
 
 @media (max-width: 768px) {
@@ -511,13 +520,6 @@ $er-max-tabs: 8;
   }
   .response-grid {
     columns: 1;
-  }
-  .evaluation-phase-tab {
-    flex: 1 1 calc(50% - 0.25rem);
-    padding: 0.5rem 0.75rem;
-  }
-  .evaluation-phase-tab__meta {
-    font-size: 0.62rem;
   }
 }
 
@@ -630,6 +632,10 @@ $er-max-tabs: 8;
   .material-symbols-outlined {
     font-size: 2.25rem;
   }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 2rem;
+  }
 }
 
 .report-summary--project-body {
@@ -683,6 +689,10 @@ $er-max-tabs: 8;
   .material-symbols-outlined {
     font-size: 1rem;
   }
+
+  .projekt-evaluation-icon-fa {
+    font-size: 0.9rem;
+  }
 }
 
 .report-summary--ai-body {
@@ -693,6 +703,26 @@ $er-max-tabs: 8;
   &.-muted {
     color: var(--er-text-muted);
     font-style: italic;
+  }
+}
+
+.report-summary--ai-body h3 {
+  margin: 1.1rem 0 0.35rem;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--er-text);
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.report-summary--ai-body p {
+  margin: 0 0 0.65rem;
+
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -749,6 +779,10 @@ $er-max-tabs: 8;
     --card-tint: #fff1f2;
     --card-border: #ffe4e6;
   }
+
+  &.-wide {
+    column-span: all;
+  }
 }
 
 .report-summary--stat-card-head {
@@ -793,22 +827,42 @@ $er-max-tabs: 8;
   font-size: 18px;
 }
 
+.report-summary--stat-card-icon .projekt-evaluation-icon-fa {
+  font-size: 14px;
+}
+
 .report-summary--stat-card-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+  columns: 1;
+  column-gap: 0.85rem;
+}
+
+.report-summary--stat-card-list.-cols-2 {
+  columns: 2 30ch;
+}
+
+.report-summary--stat-card-list.-cols-3 {
+  columns: 3 30ch;
 }
 
 .report-summary--stat-card-list li {
+  min-width: 0;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--er-text);
   line-height: 1.4;
   padding-left: 0.85rem;
+  margin-bottom: 0.45rem;
   border-left: 2px solid var(--card-accent, #cbd5e1);
+  overflow-wrap: break-word;
+  hyphens: auto;
+  break-inside: avoid;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .report-summary--stat-card-empty {
@@ -870,7 +924,8 @@ $er-max-tabs: 8;
   flex-direction: column;
   gap: 1.05rem;
   padding: 1.2rem 1.55rem;
-  background: var(--er-surface);
+  // background: var(--er-surface);
+  background: white;
   border: 1px solid var(--er-border);
   border-radius: var(--er-radius-lg);
 }
@@ -895,6 +950,10 @@ $er-max-tabs: 8;
 
 .report-summary--phase-icon .material-symbols-outlined {
   font-size: 22px;
+}
+
+.report-summary--phase-icon .projekt-evaluation-icon-fa {
+  font-size: 19px;
 }
 
 .report-summary--phase-content {
@@ -930,6 +989,26 @@ $er-max-tabs: 8;
   font-size: 0.95rem;
   line-height: 1.65;
   color: var(--er-text-secondary);
+}
+
+.report-summary--phase-section-heading {
+  margin: 1.15rem 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--er-text);
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.report-summary--phase-paragraph {
+  margin: 0 0 0.65rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .report-summary--phase-body-empty {
@@ -1059,14 +1138,6 @@ $er-max-tabs: 8;
   gap: 1rem;
 }
 
-.evaluation-visibility-screen__actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
 .evaluation-visibility-group {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -1135,7 +1206,116 @@ $er-max-tabs: 8;
 .evaluation-visibility-group__body {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 1.25rem;
   padding: 1rem 1.25rem;
 }
 
+.evaluation-visibility-subgroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.evaluation-visibility-subgroup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.evaluation-visibility-subgroup__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+
+  > .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: #94a3b8;
+  }
+}
+
+.evaluation-visibility-subgroup__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.evaluation-visibility-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.evaluation-visibility-row .kern-switch {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.evaluation-visibility-row__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.evaluation-visibility-row__spinner {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #cbd5e1;
+  border-top-color: var(--kern-color-action-default, #1a3da5);
+  border-radius: 50%;
+  animation: evaluation-visibility-spin 700ms linear infinite;
+}
+
+.evaluation-visibility-row__icon {
+  display: none;
+  font-size: 1.25rem;
+}
+
+.evaluation-visibility-row__icon.-saved {
+  color: #16a34a;
+}
+
+.evaluation-visibility-row__icon.-error {
+  color: #dc2626;
+}
+
+.evaluation-visibility-row__status.-saving .evaluation-visibility-row__spinner {
+  display: block;
+}
+
+.evaluation-visibility-row__status.-saved .evaluation-visibility-row__icon.-saved {
+  display: inline-flex;
+}
+
+.evaluation-visibility-row__status.-error .evaluation-visibility-row__icon.-error {
+  display: inline-flex;
+}
+
+@keyframes evaluation-visibility-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.adm-projekt-evaluation-report .card.poll-question-card--full,
+.adm-projekt-evaluation-report .measure-card.poll-question-card--full {
+  background: var(--er-surface);
+}
+
+.adm-projekt-evaluation-report .poll-question-bundle {
+  background: #ffffff;
+}

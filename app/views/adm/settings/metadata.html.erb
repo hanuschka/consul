@@ -16,6 +16,8 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_description"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_keywords"), :value, :string) %>
 
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "apple-touch-icon-200"), :image, :image) %>
+
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "facebook_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "instagram_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_handle"), :value, :string) %>
@@ -23,19 +25,6 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "telegram_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "youtube_handle"), :value, :string) %>
 
-  <div class="kern-row mt-4">
-    <div class="kern-col-12 kern-col-md-10">
-      <h2 class="kern-heading-small mb-2"><%= t(".uploads_title") %></h2>
-      <p class="kern-body mb-4"><%= t(".uploads_intro") %></p>
-    </div>
-  </div>
-
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.images.max_size"), :value, :string) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.images.content_types"), :value, :content_types) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.images.title.min_length"), :value, :string) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.images.title.max_length"), :value, :string) %>
-
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.documents.max_amount"), :value, :string) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.documents.max_size"), :value, :string) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "uploads.documents.content_types"), :value, :content_types) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "social_media_icon"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "social_media_icon_twitter"), :image, :image) %>
 </div>

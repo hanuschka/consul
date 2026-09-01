@@ -9,6 +9,10 @@ const MAX_POLL_ERRORS = 5
 // auto-scroll when the user is already near the bottom.
 const SCROLL_BOTTOM_THRESHOLD = 80
 
+// How long the cover image picker stays highlighted after the summary button
+// scrolls it back into view.
+const TITLE_IMAGE_HIGHLIGHT_DURATION = 1600
+
 // Final-import overlay bar. The import status endpoint only reports
 // completed/failed, so the bar creeps through these staged percents on a timer
 // to signal work is happening, then snaps to 100% on completion. Priming from
@@ -17,9 +21,8 @@ const SCROLL_BOTTOM_THRESHOLD = 80
 const OVERLAY_PROGRESS_INITIAL_DELAY = 1200
 const OVERLAY_PROGRESS_STEP_DELAY = 2500
 const OVERLAY_PROGRESS_STEPS = [
-  { percent: 20, labelValue: "progressFinalizing" },
-  { percent: 40, labelValue: "progressResolving" },
-  { percent: 60, labelValue: "progressCreating" },
+  { percent: 35, labelValue: "progressResolving" },
+  { percent: 65, labelValue: "progressCreating" },
   { percent: 85, labelValue: "progressGeneratingImage" }
 ]
 
@@ -31,7 +34,9 @@ export default class extends Controller {
   static targets = [
     "messages", "form", "textarea", "sendButton",
     "attachments", "typingIndicator", "overlay", "overlayLabel", "overlayFill",
-    "importError", "importErrorMessage", "generateImage", "importButton"
+    "importError", "importErrorMessage", "importWarning", "importWarningList",
+    "importButton", "importSummary",
+    "titleImagePicker", "titleImageSummary", "titleImageSummaryThumb"
   ]
 
   static values = {
@@ -39,16 +44,18 @@ export default class extends Controller {
     sendUrl: String,
     commandUrl: String,
     extractUrl: String,
+    titleImageUrl: String,
+    summaryUrl: String,
     statusUrl: String,
     importId: Number,
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
     confirmStartOver: String,
-    progressFinalizing: String,
     progressResolving: String,
     progressCreating: String,
     progressGeneratingImage: String,
     errorExtractFailed: String,
+    errorSummaryFailed: String,
     userInitials: { type: String, default: "" },
     userImageUrl: { type: String, default: "" },
     importStatus: { type: String, default: "" }
@@ -60,10 +67,12 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
+    this.shownWarningSignature = null
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.chatRunning = false
     this.initialTextareaOffset = this.textareaTarget.offsetHeight - this.textareaTarget.clientHeight
+    this.importSummaryLoadingHtml = this.importSummaryTarget.innerHTML
     this.refreshBusyState()
     this.scheduleMessagesPoll()
 
@@ -77,6 +86,7 @@ export default class extends Controller {
     this.clearPollTimer()
     this.clearStatusPollTimer()
     this.clearOverlayStepTimer()
+    window.clearTimeout(this.titleImageHighlightTimer)
   }
 
   computeLastMessageId() {
@@ -233,6 +243,8 @@ export default class extends Controller {
   }
 
   handleImportState(state) {
+    this.renderImportWarnings(state.warnings)
+
     if (state.status === "submitting") {
       this.showOverlay()
       this.scheduleStatusPoll()
@@ -256,6 +268,8 @@ export default class extends Controller {
   // When the import finishes live in this session (overlay showing), send the
   // user to the created projekt's frontend page. Revisiting an already-completed
   // import (guard) keeps the chat with its success state instead of redirecting.
+  // An import that produced warnings never redirects: leaving the page is the
+  // one thing that guarantees the admin never reads them.
   handleCompletion(redirectPath) {
     if (this.completionShown) {
       this.hideOverlay()
@@ -266,7 +280,7 @@ export default class extends Controller {
     this.completionShown = true
     this.completeOverlayProgress()
 
-    if (redirectPath) {
+    if (redirectPath && !this.hasVisibleWarnings()) {
       window.location.href = redirectPath
       return
     }
@@ -281,8 +295,44 @@ export default class extends Controller {
     this.importErrorTarget.classList.remove("-hidden")
   }
 
-  dismissImportError() {
+  // Both banners share markup and styling; the clicked button's own banner is
+  // the one to hide.
+  dismissBanner(event) {
+    event.currentTarget.closest(".projekt-import-chat--banner").classList.add("-hidden")
+  }
+
+  // Warnings accumulate server-side across the whole import, so the banner is
+  // rebuilt only when the set actually changes. Comparing rendered text rather
+  // than count catches a same-length set from a later run. A dismissal sticks
+  // until the set changes.
+  renderImportWarnings(warnings) {
+    const messages = (Array.isArray(warnings) ? warnings : []).map((w) => w.message || "")
+    const signature = JSON.stringify(messages)
+    if (signature === this.shownWarningSignature) return
+
+    this.shownWarningSignature = signature
+    this.importWarningListTarget.replaceChildren()
+
+    messages.forEach((message) => {
+      const item = document.createElement("li")
+      item.textContent = message
+      this.importWarningListTarget.appendChild(item)
+    })
+
+    this.importWarningTarget.classList.toggle("-hidden", messages.length === 0)
+  }
+
+  hasVisibleWarnings() {
+    return this.importWarningListTarget.children.length > 0
+  }
+
+  // A new import run clears warnings server-side, so the previous run's banners
+  // must not linger while it is in flight.
+  resetBanners() {
     this.importErrorTarget.classList.add("-hidden")
+    this.importWarningTarget.classList.add("-hidden")
+    this.importWarningListTarget.replaceChildren()
+    this.shownWarningSignature = null
   }
 
   scheduleStatusPoll() {
@@ -304,6 +354,8 @@ export default class extends Controller {
     })
       .then((response) => response.json())
       .then((data) => {
+        this.renderImportWarnings(data.warnings)
+
         if (data.status === "completed") {
           this.handleCompletion(data.redirect_path)
           return
@@ -415,6 +467,9 @@ export default class extends Controller {
       .then((data) => {
         this.removeOptimisticBubbles()
         this.renderImmediateMessages(data)
+        // A reply of just a number picks a cover image instead of going to the
+        // AI, and comes back with the new choice already applied.
+        this.renderTitleImageSummary(data)
         this.scheduleMessagesPoll()
       })
       .catch(() => {
@@ -554,19 +609,47 @@ export default class extends Controller {
     this.sendCommand("summarize").then((data) => this.renderImmediateMessages(data))
   }
 
+  // Runs after the dialog is already open, so the loading state is what the
+  // admin sees first. Fetched per open rather than rendered with the page: the
+  // chat keeps rewriting the projekt, and a stale summary here is worse than
+  // none — it is the last thing read before the projekt is created.
+  loadImportSummary() {
+    this.importSummaryTarget.innerHTML = this.importSummaryLoadingHtml
+
+    fetch(this.summaryUrlValue, {
+      credentials: "same-origin",
+      headers: { "Accept": "application/json" }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data || !data.html) return this.renderImportSummaryError()
+
+        this.importSummaryTarget.innerHTML = data.html
+      })
+      .catch(() => this.renderImportSummaryError())
+  }
+
+  renderImportSummaryError() {
+    const alert = document.createElement("div")
+    alert.className = "kern-alert kern-alert--warning"
+    alert.setAttribute("role", "status")
+    alert.textContent = this.errorSummaryFailedValue
+
+    this.importSummaryTarget.innerHTML = ""
+    this.importSummaryTarget.appendChild(alert)
+  }
+
   // Invoked by the shared confirm dialog's "confirmed" event (not directly by
   // the import button), so the modal replaces the old window.confirm.
   startImport() {
-    this.dismissImportError()
+    this.resetBanners()
     this.lastImportStatus = null
     // A fresh import procedure starts now (incl. re-import of a completed one),
     // so its completion should redirect to the projekt even on a revisit.
     this.completionShown = false
     this.showOverlay()
 
-    const params = { generate_image: this.generateImageTarget.checked ? "true" : "false" }
-
-    this.sendCommand("import", params).then((data) => {
+    this.sendCommand("import").then((data) => {
       if (data && data.status === "importing") {
         this.scheduleStatusPoll()
       }
@@ -580,6 +663,82 @@ export default class extends Controller {
         window.location.href = data.redirect_path
       }
     })
+  }
+
+  // The server owns the choice and re-renders the picker message, so the tiles'
+  // selected state is never maintained here — a rejected pick (an image that
+  // cannot be a cover image, an index from a stale page) simply comes back as the
+  // previous selection.
+  selectTitleImage(event) {
+    const input = event.currentTarget
+    const formData = new FormData()
+    formData.append("mode", input.dataset.mode)
+    if (input.dataset.index !== undefined) formData.append("index", input.dataset.index)
+
+    fetch(this.titleImageUrlValue, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": this.csrfValue
+      },
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // A refused pick (an image that cannot be a cover image, an index from a
+        // tab left open while the choice moved) comes back as an error and no
+        // messages. Saying so beats a click that appears to do nothing at all.
+        if (data && data.error) {
+          this.showImportError(data.error)
+          return
+        }
+
+        this.renderImmediateMessages(data)
+        this.renderTitleImageSummary(data)
+      })
+      .catch(() => {
+        console.log("selectTitleImage: request failed")
+      })
+  }
+
+  renderTitleImageSummary(data) {
+    if (!data || !data.title_image) return
+    if (this.hasTitleImageSummaryTarget) {
+      this.titleImageSummaryTarget.textContent = data.title_image.summary
+    }
+    if (!this.hasTitleImageSummaryThumbTarget) return
+
+    this.titleImageSummaryThumbTarget.innerHTML = ""
+    if (data.title_image.thumb_url) {
+      const thumb = document.createElement("img")
+      thumb.src = data.title_image.thumb_url
+      thumb.alt = ""
+      this.titleImageSummaryThumbTarget.appendChild(thumb)
+      return
+    }
+
+    const placeholder = document.createElement("span")
+    placeholder.className = "material-symbols-outlined"
+    placeholder.setAttribute("aria-hidden", "true")
+    placeholder.textContent = "image"
+    this.titleImageSummaryThumbTarget.appendChild(placeholder)
+  }
+
+  // The picker is a chat message, so it can be scrolled out of view. The summary
+  // button in the import bar brings it back rather than duplicating the control.
+  revealTitleImagePicker() {
+    if (!this.hasTitleImagePickerTarget) return
+
+    this.titleImagePickerTarget.scrollIntoView({ behavior: "smooth", block: "center" })
+    this.titleImagePickerTarget.classList.add("-highlighted")
+
+    window.clearTimeout(this.titleImageHighlightTimer)
+    this.titleImageHighlightTimer = window.setTimeout(() => {
+      if (this.hasTitleImagePickerTarget) {
+        this.titleImagePickerTarget.classList.remove("-highlighted")
+      }
+    }, TITLE_IMAGE_HIGHLIGHT_DURATION)
   }
 
   sendCommand(name, params = {}) {

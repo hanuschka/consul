@@ -5,6 +5,7 @@ class Proposal < ApplicationRecord
   include ResourceBelongsToProjekt
   include OnBehalfOfSubmittable
   include Memoable
+  include ConditionallyVotable
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
@@ -24,6 +25,8 @@ class Proposal < ApplicationRecord
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
+
+  after_update_commit :notify_author_about_official_answer
 
   scope :admin_accepted, -> { where(admin_accepted: true) }
   scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
@@ -112,6 +115,10 @@ class Proposal < ApplicationRecord
       .not_retired
   }
 
+  def sentiment_required?
+    super && masterportal_pin_id.blank?
+  end
+
   def self.proposals_orders(user = nil)
     orders = %w[hot_score created_at alphabet votes_up random]
     # orders << "recommendations" if Setting["feature.user.recommendations_on_proposals"] && user&.recommended_proposals
@@ -128,13 +135,16 @@ class Proposal < ApplicationRecord
       ).select(:id)
   end
 
-  # TODO: REFACTOR FOR NEW DESIGN
-  def self.scoped_projekt_ids_for_footer(projekt)
-    projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).select do |projekt|
-      ProjektSetting.find_by(projekt:, key: "projekt_feature.main.activate").value.present? &&
-        projekt.all_children_projekts.unshift(projekt).any? do |p|
- p.proposal_phases.any?(&:current?) || p.proposals.base_selection.any? end
-    end.pluck(:id)
+  # Batched equivalent of user.voted_up_for?(proposal), for rendering a list
+  # without a query per row.
+  def self.up_voted_ids_by(user, proposals)
+    return Set.new if user.blank? || proposals.blank?
+
+    user.votes
+      .where(votable_type: "Proposal", votable_id: proposals.map(&:id),
+             vote_flag: true, vote_scope: nil)
+      .pluck(:votable_id)
+      .to_set
   end
 
   def successful?
@@ -142,13 +152,20 @@ class Proposal < ApplicationRecord
   end
 
   def self.successful
-    ids = Proposal.select { |p| p.cached_votes_up >= p.custom_votes_needed_for_success }.pluck(:id)
+    ids = Proposal
+      .includes(projekt_phase: :settings)
+      .select { |proposal| proposal.cached_votes_up >= proposal.custom_votes_needed_for_success }
+      .pluck(:id)
+
     Proposal.where(id: ids)
   end
 
   def self.unsuccessful
-    ids = Proposal.includes([:projekt_phase]).select do |p|
- p.cached_votes_up < p.custom_votes_needed_for_success end.pluck(:id)
+    ids = Proposal
+      .includes(projekt_phase: :settings)
+      .select { |proposal| proposal.cached_votes_up < proposal.custom_votes_needed_for_success }
+      .pluck(:id)
+
     Proposal.where(id: ids)
   end
 
@@ -185,9 +202,22 @@ class Proposal < ApplicationRecord
     projekt_phase.feature?("form.anonimize_authors")
   end
 
+  def conditional_vote_confirmable_for?(user)
+    !archived? && super
+  end
+
   protected
 
     def set_responsible_name
       self.responsible_name = "unregistriered"
+    end
+
+    def notify_author_about_official_answer
+      return if Setting["proposals.email_on_official_answer"].blank?
+      return unless saved_change_to_official_answer?
+      return if official_answer.blank?
+      return if author.blank? || author.email.blank?
+
+      Mailer.proposal_official_answer(self).deliver_later
     end
 end

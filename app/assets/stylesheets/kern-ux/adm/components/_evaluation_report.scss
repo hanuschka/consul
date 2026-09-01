@@ -41,6 +41,7 @@ $er-max-tabs: 8;
 
   .measure-grid {
     gap: 0.5rem;
+    position: relative;
   }
 
   .phase-header {
@@ -106,6 +107,10 @@ $er-max-tabs: 8;
   .phase-budget-segment__distributions-chevron {
     display: none;
   }
+}
+
+.adm-projekt-evaluation-report .phase-budget-segment__distributions-summary {
+  background: white;
 }
 
 .phase-ai-questions {
@@ -229,22 +234,6 @@ $er-max-tabs: 8;
 }
 
 .adm-projekt-evaluation-report {
-  --er-primary: #1e40af;
-  --er-primary-light: #3b82f6;
-  --er-primary-lighter: #dbeafe;
-  --er-positive: #059669;
-  --er-positive-light: #d1fae5;
-  --er-bg: #f8fafc;
-  --er-surface: #f8fafc;
-  --er-text: #0f172a;
-  --er-text-secondary: #475569;
-  --er-text-muted: #94a3b8;
-  --er-border: #e2e8f0;
-  --er-border-light: #f1f5f9;
-  --er-radius: 8px;
-  --er-radius-lg: 12px;
-  --er-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   color: var(--er-text);
   line-height: 1.6;
@@ -329,34 +318,6 @@ $er-max-tabs: 8;
   font-size: 0.9rem;
   color: var(--er-text-secondary);
   line-height: 1.6;
-}
-
-.meta-item {
-  text-align: center;
-  padding: 0.5rem 0;
-
-  .meta-value {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--er-primary);
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .meta-label {
-    font-size: 0.68rem;
-    color: var(--er-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-top: 2px;
-  }
-}
-
-.meta-divider {
-  width: 1px;
-  height: 40px;
-  background: var(--er-border);
 }
 
 .adm-projekt-evaluation-report .phase-block {
@@ -481,7 +442,7 @@ $er-max-tabs: 8;
 }
 
 .kern-container.adm-evaluation-phase-container {
-  max-width: min(1280px, 80%);
+  max-width: 1050px;
 }
 
 .adm-evaluation-card__kpi {
@@ -1177,14 +1138,6 @@ $er-max-tabs: 8;
   gap: 1rem;
 }
 
-.evaluation-visibility-screen__actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
 .evaluation-visibility-group {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -1253,8 +1206,116 @@ $er-max-tabs: 8;
 .evaluation-visibility-group__body {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 1.25rem;
   padding: 1rem 1.25rem;
 }
 
+.evaluation-visibility-subgroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
 
+.evaluation-visibility-subgroup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.evaluation-visibility-subgroup__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+
+  > .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: #94a3b8;
+  }
+}
+
+.evaluation-visibility-subgroup__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.evaluation-visibility-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.evaluation-visibility-row .kern-switch {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.evaluation-visibility-row__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.evaluation-visibility-row__spinner {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #cbd5e1;
+  border-top-color: var(--kern-color-action-default, #1a3da5);
+  border-radius: 50%;
+  animation: evaluation-visibility-spin 700ms linear infinite;
+}
+
+.evaluation-visibility-row__icon {
+  display: none;
+  font-size: 1.25rem;
+}
+
+.evaluation-visibility-row__icon.-saved {
+  color: #16a34a;
+}
+
+.evaluation-visibility-row__icon.-error {
+  color: #dc2626;
+}
+
+.evaluation-visibility-row__status.-saving .evaluation-visibility-row__spinner {
+  display: block;
+}
+
+.evaluation-visibility-row__status.-saved .evaluation-visibility-row__icon.-saved {
+  display: inline-flex;
+}
+
+.evaluation-visibility-row__status.-error .evaluation-visibility-row__icon.-error {
+  display: inline-flex;
+}
+
+@keyframes evaluation-visibility-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.adm-projekt-evaluation-report .card.poll-question-card--full,
+.adm-projekt-evaluation-report .measure-card.poll-question-card--full {
+  background: var(--er-surface);
+}
+
+.adm-projekt-evaluation-report .poll-question-bundle {
+  background: #ffffff;
+}

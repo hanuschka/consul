@@ -82,6 +82,13 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
     margin: 0;
   }
 
+  .globalize-languages {
+    .small-6, .large-3, .column {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+
   .globalize-languages.highlight {
     background: transparent;
   }

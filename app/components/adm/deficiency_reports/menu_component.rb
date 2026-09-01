@@ -22,6 +22,9 @@ class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
       (if Adm::DeficiencyReports::StatusPolicy.new(current_user, nil).index?
          { label: t("adm.deficiency_reports.menu.items.statuses"), icon: "flag", path: adm_deficiency_reports_statuses_path }
        end),
+      (if Adm::DeficiencyReports::IntakeChannelPolicy.new(current_user, nil).index?
+         { label: t("adm.deficiency_reports.menu.items.intake_channels"), icon: "call_received", path: adm_deficiency_reports_intake_channels_path }
+       end),
       (if Adm::DeficiencyReports::DistrictPolicy.new(current_user, nil).index?
          { label: t("adm.deficiency_reports.menu.items.districts"), icon: "location_city", path: adm_deficiency_reports_districts_path }
        end),

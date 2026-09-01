@@ -90,10 +90,10 @@ class ProposalsController < ApplicationController
   end
 
   def json_data
-    image_url = url_for @proposal.image.attachment.variant(
+    image_url = url_for @proposal.image.attachment_variant(
                   resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
                   format: "jpeg",
-                  saver: { strip: true, interlace: "JPEG", quality: 80 }
+                  saver: { interlace: "JPEG", quality: 80 }
                 ) if @proposal.image&.attachment&.attached?
 
     data = {
@@ -102,6 +102,7 @@ class ProposalsController < ApplicationController
       title: @proposal.title,
       projekt_phase_id: @proposal.projekt_phase_id,
       image_url: image_url,
+      image_ai_label_html: helpers.ai_image_label_html(@proposal.image),
       labels: @proposal.projekt_labels.map { |pl| pl.attributes.slice("name", "icon") },
       sentiment: @proposal.sentiment.present? ? { name: @proposal.sentiment.name, backgroundColor: @proposal.sentiment.color, color: helpers.pick_text_color(@proposal.sentiment.color) } : {},
     }.to_json

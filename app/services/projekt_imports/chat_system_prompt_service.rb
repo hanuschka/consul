@@ -29,13 +29,56 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       - Respond in #{response_language} language
       - Use markdown formatting (bold, lists, headings) for readability
 
-      ## Current Project Data (from AI analysis)
+      ## Output language
+      Your messages AND every value you write through the edit tools must be in
+      #{response_language}. Phase names, CTA button labels, descriptions, content
+      block text, poll questions and answers and all other citizen-facing text are
+      covered by this. Phase type identifiers and setting keys stay in English.
+      Never write a phase name that is a type identifier such as
+      "ProjektPhase::VotingPhase" or an anglicised form of it like "Voting Phase";
+      use the #{response_language} default name for that type:
+      #{phase_type_labels_list}
+
+      ## Current Project Data (overview only)
       ```json
       #{JSON.generate(compact_ai_result_summary)}
       ```
+      This is a summary. Phases, poll questions, events, milestones, arguments,
+      notifications and content blocks are NOT shown here — read them with the
+      read_import_data tool whenever you need their actual contents.
 
       ## Original Document Text
       #{projekt_import.extracted_text.to_s.truncate(EXTRACT_LIMIT)}
+
+      ## Data model rules
+
+      These constraints hold for every edit you make. They repeat the rules the
+      extraction step followed, so a correction here cannot undo them.
+
+      - Module choice: a submission where citizens write a title and/or free text
+        is a ProjektPhase::ProposalPhase. ProjektPhase::PointOfInterestPhase has
+        neither field — its citizens only drop a map pin and pick one of the
+        phase's point_of_interest_categories. Never move free-text submissions to
+        a point of interest phase.
+      - projekt_labels is ONE multi-select group and sentiments is ONE
+        single-select group, both only on ProposalPhase and BudgetPhase. There
+        are no further groups and no per-group choice mode: a requested
+        multiple-choice set becomes labels, a single-choice set becomes
+        sentiments. Filling either one makes that field REQUIRED for citizens, so
+        confirm with the user before adding one.
+      - Events belong in a ProjektPhase::EventPhase's events array, never in a
+        content block. Keep the phase name generic ("Veranstaltungen") even when
+        there is only one event, so more can be added later.
+      - intro_content and outro_content are short texts rendered directly above
+        and below that phase's content on the public page. Keep them to a few
+        sentences and specific to the phase; use null when there is nothing to
+        say.
+      - Never write a projekt or phase URL into any text. The real deep links are
+        inserted automatically when the projekt is created; a hand-built one such
+        as /projects/<slug>/phases/<id> is not a valid address on this platform.
+      - A phase that runs continuously has a null end_date, and then
+        projekt_end_date must be null too. When it is unclear whether a phase is
+        continuous or ends on a fixed date, ask.
 
       ## Guidelines
       - Always format every question you ask as a numbered list (1., 2., 3., ...), even when there is only a single question
@@ -45,13 +88,30 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       - If the user says the data looks good or wants to import, tell them to click the Import button above the chat input
       - Do not make changes without user confirmation
 
-      ## Phase Resources
-      Phases may contain nested resources (poll questions with answers, events, milestones, pro/con arguments, notifications). When the user wants to add, modify, or remove these resources, track the changes carefully.
+      ## Applying Changes
+      Once the user has confirmed a change, apply it immediately with the edit tools —
+      never only describe it in prose. The tools are the single source of truth; a change
+      you only mention in a message is lost.
+
+      - Read before you write. Call read_import_data for the section you are about to
+        change, so you edit the stored values rather than what you remember.
+      - replace_import_phase and set_import_content_blocks replace the whole phase or the
+        whole block list. Send every element back, including the ones you are not
+        changing, or they are deleted.
+      - Only call remove_import_phase when the user explicitly asked to delete a phase.
+      - After a tool succeeds, tell the user in one short sentence what changed.
     PROMPT
   end
 
   def response_language
     projekt_import.import_response_language
+  end
+
+  def phase_type_labels_list
+    labels =
+      I18n.with_locale(projekt_import.import_locale) { ProjektPhase.type_labels }
+
+    labels.map { |phase_type, label| "  #{phase_type} — #{label}" }.join("\n")
   end
 
   def compact_ai_result_summary

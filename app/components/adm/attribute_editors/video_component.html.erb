@@ -2,7 +2,7 @@
   <%= hidden_field_tag :kind, "video" %>
   <%= hidden_field_tag :attribute, @attribute %>
 
-  <%= render Kern::Form::VideoComponent.new(form: form, attribute: @attribute, auto_submit: true) %>
+  <%= render Kern::Form::VideoComponent.new(form: form, attribute: @attribute, auto_submit: true, disabled: disabled?) %>
 <% end %>
 
 <% if flash[:success].present? %>

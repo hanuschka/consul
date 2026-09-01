@@ -14,6 +14,8 @@ $_chat-input-bg-hover: #e4e6ea;
 $_chat-input-bg-focus: #e8eaed;
 $_chat-error: #c0392b;
 $_chat-error-text: #7f1d1d;
+$_chat-warning: #b26a00;
+$_chat-warning-text: #6b4000;
 
 .projekt-import-chat {
   position: relative;
@@ -36,7 +38,7 @@ $_chat-error-text: #7f1d1d;
   }
 }
 
-.projekt-import-chat--error-banner {
+.projekt-import-chat--banner {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -44,9 +46,19 @@ $_chat-error-text: #7f1d1d;
   padding: 12px 16px;
   font-size: 14px;
   line-height: 1.45;
-  color: $_chat-error-text;
-  background: color-mix(in srgb, $_chat-error 8%, white);
-  border-bottom: 1px solid color-mix(in srgb, $_chat-error 25%, white);
+  color: var(--banner-text);
+  background: color-mix(in srgb, var(--banner-accent) 9%, white);
+  border-bottom: 1px solid color-mix(in srgb, var(--banner-accent) 26%, white);
+
+  &.-error {
+    --banner-accent: #{$_chat-error};
+    --banner-text: #{$_chat-error-text};
+  }
+
+  &.-warning {
+    --banner-accent: #{$_chat-warning};
+    --banner-text: #{$_chat-warning-text};
+  }
 
   &.-hidden {
     display: none;
@@ -54,17 +66,24 @@ $_chat-error-text: #7f1d1d;
 
   .material-symbols-outlined {
     font-size: 20px;
-    color: $_chat-error;
+    color: var(--banner-accent);
   }
 }
 
-.projekt-import-chat--error-banner-message {
+.projekt-import-chat--banner-body {
   flex: 1;
   min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   word-break: break-word;
+
+  li + li {
+    margin-top: 4px;
+  }
 }
 
-.projekt-import-chat--error-banner-dismiss {
+.projekt-import-chat--banner-dismiss {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +91,7 @@ $_chat-error-text: #7f1d1d;
   width: 26px;
   height: 26px;
   padding: 0;
-  color: $_chat-error;
+  color: var(--banner-accent);
   background: transparent;
   border: 0;
   border-radius: 6px;
@@ -80,7 +99,7 @@ $_chat-error-text: #7f1d1d;
   transition: background-color 120ms ease;
 
   &:hover {
-    background: color-mix(in srgb, $_chat-error 14%, white);
+    background: color-mix(in srgb, var(--banner-accent) 15%, white);
   }
 
   .material-symbols-outlined {
@@ -712,7 +731,7 @@ $_chat-error-text: #7f1d1d;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, white 90%, transparent);
+  background: white;
   z-index: 10;
 
   &.-hidden {
@@ -765,14 +784,14 @@ $_chat-error-text: #7f1d1d;
   margin-top: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: black;
+  color: $_chat-text-muted;
 }
 
 .projekt-import-chat--overlay-message {
   margin: 20px 0 0;
   font-size: 14px;
   line-height: 1.5;
-  color: black;
+  color: $_chat-text-muted;
 }
 
 .projekt-import-chat--created-banner {
@@ -877,14 +896,226 @@ $_chat-error-text: #7f1d1d;
   max-width: 440px;
 }
 
+// The import summary makes this the one confirm dialog with a body worth
+// scrolling: header and actions stay put, the summary between them scrolls.
+.projekt-import-confirm.-wide {
+  display: flex;
+  flex-direction: column;
+  width: 720px;
+  max-width: 100%;
+  max-height: calc(90vh - 40px);
+}
+
+.projekt-import-confirm--header {
+  flex-shrink: 0;
+}
+
+// Tall by default so the dialog keeps one size whatever the summary holds:
+// it opens on a loader and fills in a moment later, and a box that grows from
+// three rows to ten as the content lands re-reads as a new dialog.
+.projekt-import-confirm--body {
+  flex: 1 1 auto;
+  min-height: min(460px, 52vh);
+  margin: 20px 0 24px;
+  padding: 4px 4px 0;
+  overflow-y: auto;
+}
+
+.projekt-import-confirm--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  // The kern loader ships at 96px, which dominates a dialog body this size.
+  .kern-loader {
+    width: 56px;
+    height: 56px;
+    border-width: 6px;
+  }
+}
+
 .projekt-import-confirm--title {
   margin: 0 0 12px;
   padding-right: 8px;
 }
 
 .projekt-import-confirm--message {
-  margin: 0 0 30px;
+  margin: 0;
   line-height: 1.5;
+  color: $_chat-text-muted;
+}
+
+.projekt-import-confirm.-wide .projekt-import-confirm--actions {
+  flex-shrink: 0;
+  padding-top: 20px;
+  border-top: 1px solid $_chat-border;
+}
+
+// ── Import summary ───────────────────────────────────────────────────────────
+// What the import is about to create, read one last time before it runs.
+
+.projekt-import-summary--head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.projekt-import-summary--cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 128px;
+  aspect-ratio: 16 / 10;
+  border-radius: $_chat-radius-sm;
+  background: $_chat-input-bg;
+  overflow: hidden;
+  color: $_chat-text-faint;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .material-symbols-outlined {
+    font-size: 30px;
+  }
+}
+
+.projekt-import-summary--head-text {
+  min-width: 0;
+}
+
+.projekt-import-summary--title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $_chat-text;
+}
+
+.projekt-import-summary--subtitle {
+  margin: 6px 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: $_chat-text-muted;
+}
+
+.projekt-import-summary--cover-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: $_chat-text-faint;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+.projekt-import-summary--meta {
+  gap: 0;
+  margin-top: 24px;
+  border-top: 1px solid $_chat-border;
+}
+
+.projekt-import-summary--meta .kern-description-list-item {
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid $_chat-border;
+}
+
+.projekt-import-summary--meta .kern-description-list-item__key {
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: $_chat-text-muted;
+}
+
+.projekt-import-summary--meta .kern-description-list-item__value {
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $_chat-text;
+}
+
+@media (min-width: 768px) {
+  .projekt-import-summary--meta .kern-description-list-item__key {
+    width: 34%;
+  }
+
+  .projekt-import-summary--meta .kern-description-list-item__value {
+    width: calc(66% - 16px);
+  }
+}
+
+.projekt-import-summary--phases {
+  margin-top: 24px;
+}
+
+.projekt-import-summary--section-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: $_chat-text-muted;
+}
+
+.projekt-import-summary--phase-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.projekt-import-summary--phase {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: $_chat-radius-sm;
+  background: color-mix(in srgb, #{$_chat-input-bg} 55%, white);
+
+  & + & {
+    margin-top: 6px;
+  }
+}
+
+.projekt-import-summary--phase-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: $_chat-text;
+}
+
+.projekt-import-summary--phase-dates {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: $_chat-text-muted;
+}
+
+.projekt-import-summary--phase-questions {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  font-size: 14px;
+  border-radius: 999px;
+  color: $_chat-text-muted;
+  background: #fff;
+  border: 1px solid $_chat-border;
+
+  &.-empty {
+    color: $_chat-warning-text;
+    background: color-mix(in srgb, #{$_chat-warning} 12%, white);
+    border-color: color-mix(in srgb, #{$_chat-warning} 32%, white);
+  }
+}
+
+.projekt-import-summary--empty {
+  color: $_chat-text-faint;
 }
 
 .projekt-import-confirm--note {
@@ -959,4 +1190,292 @@ $_chat-error-text: #7f1d1d;
   &:active {
     background: color-mix(in srgb, var(--kern-color-feedback-danger, #bd0f09) 78%, black);
   }
+}
+
+// ── Title image picker ───────────────────────────────────────────────────────
+// A regular assistant message whose body is the list of cover image choices:
+// every picture found in the documents, then "generate one" and "none". One row
+// shape for all of them — a grid of thumbnails plus two odd full-width rows read
+// as three unrelated controls, and a single image left the grid mostly empty.
+//
+// Nested inside the bubble content on purpose: the generic markdown list styles
+// above are `--content ul` / `--content li`, which outrank a single class, so a
+// layout declared at the top level silently loses to their flex column.
+
+$_title-image-row-radius: 10px;
+
+.projekt-import-chat-bubble--content {
+  .projekt-import-chat--title-image-intro {
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+
+  // Separate bordered rows rather than one surface divided by hairlines: a tinted
+  // row inside a single white surface reads as a hole punched in it, because the
+  // tint lands close to the bubble's own background showing through the gaps.
+  // Given its own outline, the chosen row reads as picked instead of missing.
+  .projekt-import-chat--title-image-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .projekt-import-chat--title-image-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid $_chat-border;
+    border-radius: $_title-image-row-radius;
+
+    // Marked by an outline, with the background left as it is. An outline takes no
+    // space at all, so the row cannot shift by a pixel when it becomes the choice
+    // and no second ring is needed to reach a 2px weight; the negative offset
+    // draws it over the resting border rather than into the gap below.
+    &.-selected {
+      outline: 2px solid var(--kern-color-action-default);
+      outline-offset: -1px;
+    }
+
+    &.-unavailable {
+      background: $_chat-input-bg;
+    }
+  }
+
+  .projekt-import-chat--title-image-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: $_chat-text-muted;
+    background: $_chat-input-bg;
+  }
+
+  .projekt-import-chat--title-image-option.-selected .projekt-import-chat--title-image-number {
+    color: #fff;
+    background: var(--kern-color-action-default);
+  }
+
+  .projekt-import-chat--title-image-media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 104px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: $_chat-input-bg;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .material-symbols-outlined {
+      font-size: 26px;
+      color: $_chat-text-faint;
+    }
+  }
+
+  // The picture is where the eye lands, so the chosen one is marked on the picture
+  // itself — the same affordance any photo picker uses — rather than leaving the
+  // state to a label at the far end of the row. No ring around the thumbnail on
+  // top of this: with the row outlined too, three concentric accent lines within
+  // 20px read as clutter rather than emphasis.
+  .projekt-import-chat--title-image-check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: var(--kern-color-action-default);
+
+    // The white ring keeps it legible on a bright photo without a scrim.
+    .material-symbols-outlined {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+  }
+
+  .projekt-import-chat--title-image-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .projekt-import-chat--title-image-name {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: $_chat-text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .projekt-import-chat--title-image-meta {
+    font-size: 14px;
+    line-height: 1.4;
+    color: $_chat-text-muted;
+    font-variant-numeric: tabular-nums;
+
+    &.-warning {
+      color: $_chat-warning-text;
+    }
+  }
+
+  // Secondary by design: the page's primary action is "Projekt importieren" in the
+  // bar below, so a row of filled buttons here would compete with it.
+  // The action and the state share a footprint so the right-hand column keeps one
+  // vertical rhythm: a bordered box on one row and a bare label on the next left
+  // the edges ragged, and made the chosen row read as the weaker of the two.
+  .projekt-import-chat--title-image-action,
+  .projekt-import-chat--title-image-state {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: 116px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .projekt-import-chat--title-image-action {
+    border: 1px solid var(--kern-color-action-default);
+    color: var(--kern-color-action-default);
+    background: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s ease-out, color 0.15s ease-out;
+
+    &:hover {
+      color: #fff;
+      background: var(--kern-color-action-default);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--kern-color-action-default);
+      outline-offset: 2px;
+    }
+  }
+
+  // Filled, because it answers the question the list exists to answer — but with a
+  // border matching the buttons' box rather than a heavier one, so it settles the
+  // row instead of shouting over the import button below.
+  .projekt-import-chat--title-image-state {
+    border: 1px solid var(--kern-color-action-default);
+    color: #fff;
+    background: var(--kern-color-action-default);
+  }
+
+  .projekt-import-chat--title-image-reply-hint {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: $_chat-text-muted;
+  }
+}
+
+// Highlight after the summary button scrolls the picker back into view. Drawn as a
+// ring on an overlay whose opacity animates, rather than animating the bubble's own
+// box-shadow — a shadow animation repaints the element on every frame.
+.projekt-import-chat-bubble.-highlighted .projekt-import-chat-bubble--content {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border: 3px solid color-mix(in srgb, var(--kern-color-action-default) 40%, transparent);
+    border-radius: $_chat-radius + 3px;
+    pointer-events: none;
+    animation: projekt-import-title-image-flash 1.6s ease-out forwards;
+  }
+}
+
+@keyframes projekt-import-title-image-flash {
+  0%,
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+// ── Title image summary (import bar) ─────────────────────────────────────────
+
+.projekt-import-chat--title-image-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border: 1px solid $_chat-border;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease-out;
+
+  &:hover {
+    border-color: var(--kern-color-action-default);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.projekt-import-chat--title-image-summary-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: $_chat-input-bg;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    color: $_chat-text-faint;
+  }
+}
+
+.projekt-import-chat--title-image-summary-label {
+  font-size: 14px;
+  color: $_chat-text-muted;
+  white-space: nowrap;
 }

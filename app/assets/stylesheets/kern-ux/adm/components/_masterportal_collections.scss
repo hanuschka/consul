@@ -151,6 +151,25 @@
   color: #0f172a;
 }
 
+.adm-masterportal-collection-card--shape-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding: 1px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #15803d;
+  vertical-align: middle;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+
+  .material-symbols-outlined {
+    font-size: 14px;
+  }
+}
+
 .adm-masterportal-collection-card--source {
   display: inline-flex;
   align-items: center;
@@ -176,6 +195,30 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.adm-masterportal-collection-card--source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  font-size: 13px;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  cursor: help;
+
+  .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
 }
 
 .adm-masterportal-collection-card--meta {
@@ -335,6 +378,94 @@
 
   &[data-state="error"] {
     color: #b91c1c;
+  }
+}
+
+.adm-masterportal-collection-card--color {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.adm-masterportal-collection-card--color-label {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.adm-masterportal-collection-card--color-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 5px;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.adm-masterportal-collection-card--color-input {
+  width: 40px;
+  height: 28px;
+  padding: 2px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.adm-masterportal-collection-card--color-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:not(:disabled):hover {
+    background: #dcfce7;
+  }
+
+  &:not(:disabled):active {
+    background: #bbf7d0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--adm-color-primary, #1b5fd6);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &.-saving .material-symbols-outlined {
+    animation: adm-masterportal-collection-spin 1s linear infinite;
   }
 }
 

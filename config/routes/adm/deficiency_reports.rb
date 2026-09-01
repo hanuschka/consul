@@ -10,10 +10,18 @@ namespace :adm do
 
     resources :categories, only: [:index, :new, :create, :edit, :update, :destroy] do
       patch :order_categories, on: :collection
+
+      resources :subcategories, only: [:index, :new, :create, :edit, :update, :destroy] do
+        patch :order_subcategories, on: :collection
+      end
     end
 
     resources :statuses, only: [:index, :new, :create, :edit, :update, :destroy] do
       patch :order_statuses, on: :collection
+    end
+
+    resources :intake_channels, only: [:index, :new, :create, :edit, :update, :destroy] do
+      patch :order_intake_channels, on: :collection
     end
 
     resources :official_answer_templates, except: :show
@@ -58,6 +66,10 @@ namespace :adm do
         patch :accept
         patch :toggle_image
         patch :update_official_answer
+        delete :remove_official_answer_document
+        patch :toggle_watch
+        get :unwatch
+        post :share
       end
     end
 

@@ -27,7 +27,10 @@ module ProjektImports::ReferencesBuilder
   end
 
   def self.fetch_projekt_settings_defaults
-    ProjektSetting.defaults || {}
+    defaults = ProjektSetting.defaults || {}
+    allowed = ProjektImports::CreateProjektFromImportService::ALLOWED_PROJEKT_SETTINGS.map(&:to_sym)
+
+    defaults.slice(*allowed)
   rescue StandardError => e
     Rails.logger.warn("[ProjektImports::ReferencesBuilder] projekt settings fetch failed: #{e.message}")
     {}

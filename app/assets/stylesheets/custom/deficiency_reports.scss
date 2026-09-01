@@ -165,6 +165,16 @@ ul.deficiency-reports-sidebar-filter {
   margin-bottom: 3em;
 }
 
+.deficiency-report-official-answer--documents {
+  list-style: none;
+  margin: 1em 0 0;
+  padding: 0;
+
+  li + li {
+    margin-top: 0.25em;
+  }
+}
+
 .approve-defficiciency-report-button {
   margin-top: 1rem;
 }

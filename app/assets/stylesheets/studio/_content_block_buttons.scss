@@ -209,6 +209,38 @@
 // }
 
 // =============================================================================
+// Copy-Erfolg-Feedback — grüner Haken + "Kopiert!"-Tooltip links vom Button
+// =============================================================================
+.studio-icon-button.-copied i {
+  color: $green-success-color;
+}
+
+.studio-copy-feedback-tooltip {
+  position: fixed;
+  inset: auto;
+  z-index: 10010;
+  transform: translate(-100%, -50%);
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #1c1c1e;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+
+.studio-copy-feedback-tooltip.-visible {
+  opacity: 1;
+}
+
+// =============================================================================
 // AI-Submit (separates Spezial-Element, behalten)
 // =============================================================================
 .custom-content-block-edit--ai-submit {
@@ -219,6 +251,16 @@
 // Compact-Mode-Overrides (kleinere Toolbar in schmalen Containern)
 // =============================================================================
 .custom-content-block-wrapper.-compact-mode {
+  // The card owns the spacing between compact blocks; the persisted
+  // margin-bottom arrives as an INLINE style (on the block server-side,
+  // moved onto the wrapper by moveMarginToWrapper), so only !important
+  // can neutralize it.
+  margin-bottom: 0 !important;
+
+  .custom-content-block {
+    margin-bottom: 0 !important;
+  }
+
   // In a narrow sidebar/footer card the full studio toolbar would otherwise
   // sit as a fit-content pill on the right and tip its last icon onto a second
   // row. Instead span the toolbar across the card's full width and distribute
@@ -256,9 +298,11 @@
     }
   }
 
-  // .content-block-margin-input {
-  //   display: none !important;
-  // }
+  // Margin-bottom is forced to 0 in compact mode (see top of this block),
+  // so the stepper would silently do nothing — hide it.
+  .content-block-margin-input {
+    display: none !important;
+  }
 
   // .js-content-block-header-dropdown {
   //   display: none !important;

@@ -28,15 +28,27 @@
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
-      <%= render(
-        Shared::ResourcesListComponent.new(
-          resources: @proposals,
-          resource_type: Proposal,
-          current_filter: @current_order,
-          filter_param: "order",
-          text_search_enabled: true,
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: t("custom.proposals.index.empty_list_text")
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.proposals.index",
           filters: @valid_orders,
-          )) %>
+          current_filter: @current_order,
+          param: "order",
+          text_search_enabled: true
+        ) %>
+
+        <% if @proposals.present? %>
+          <% proposal_ids = @proposals.map(&:id) %>
+          <% c.with_items do %>
+            <% @proposals.each do |proposal| %>
+              <%= render Proposals::ListItemComponent.new(proposal: proposal,
+                    proposal_ids: proposal_ids) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
       <%= paginate @proposals %>
 
       <div id="section_help" class="margin" data-magellan-target="section_help">

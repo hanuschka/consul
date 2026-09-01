@@ -66,6 +66,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     sign_in_with :bochum_id_login, :bochum_id
   end
 
+  def kobil
+    sign_in_with :kobil_login, :kobil
+  end
+
   def after_sign_in_path_for(resource)
     if resource.registering_with_oauth
       finish_signup_path
@@ -91,7 +95,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       if save_user
         identity.update!(user: @user)
         preexisting_flash = flash[:notice]
-        set_flash_message(:notice, :success, kind: (provider == :bund_id ? "BundID" : provider.to_s.capitalize)) if is_navigational_format?
+        set_flash_message(:notice, :success, kind: provider_label(provider)) if is_navigational_format?
         flash[:notice] += " #{preexisting_flash}" if preexisting_flash
         flash[:notice] = t("custom.users.omniauth.verification_successfull") if @user.level_three_verified?
         sign_in_and_redirect @user, event: :authentication
@@ -105,7 +109,20 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user.save || @user.save_requiring_finish_signup
     end
 
+    def provider_label(provider)
+      case provider
+      when :bund_id
+        "BundID"
+      when :kobil
+        "KOBIL"
+      else
+        provider.to_s.capitalize
+      end
+    end
+
     def user_attributes_from(auth_data)
+      return kobil_user_attributes_from(auth_data) if auth_data.try(:provider).to_s == "kobil"
+
       user_attributes = {
         first_name:              auth_data.info&.first_name&.capitalize,
         last_name:               auth_data.info&.last_name&.capitalize,
@@ -152,5 +169,32 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       user_attributes.reject { |_, v| v.blank? }
+    end
+
+    def kobil_user_attributes_from(auth_data)
+      raw_info = auth_data.extra&.raw_info
+
+      user_attributes = {
+        first_name:    auth_data.info&.first_name&.capitalize,
+        last_name:     auth_data.info&.last_name&.capitalize,
+        date_of_birth: (Date.parse(raw_info&.birthdate.to_s) rescue nil)
+      }
+
+      if Setting["feature.kobil_address_verification"].present?
+        user_attributes.merge!(kobil_address_attributes_from(raw_info))
+      end
+
+      user_attributes.reject { |_, v| v.blank? }
+    end
+
+    def kobil_address_attributes_from(raw_info)
+      address = raw_info&.address
+      return {} if address.blank?
+
+      {
+        street_name: address["street_address"].presence&.capitalize,
+        plz:         address["postal_code"].presence,
+        city_name:   address["locality"].presence&.capitalize
+      }
     end
 end

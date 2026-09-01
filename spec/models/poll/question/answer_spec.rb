@@ -1,37 +1,30 @@
 require "rails_helper"
 
 describe Poll::Question::Answer do
-  it_behaves_like "globalizable", :poll_question_answer
+  describe "clearing randomize_position once a jump target is configured" do
+    let(:poll) { create(:poll) }
+    let(:question) { create(:poll_question, poll: poll, randomize_position: true) }
+    let(:target) { create(:poll_question, poll: poll, randomize_position: true) }
 
-  describe "#with_content" do
-    it "returns answers with a description" do
-      answer = create(:poll_question_answer, description: "I've got a description")
+    it "clears the flag on the question owning the answer and on the jump target" do
+      create(:poll_question_answer, question: question, next_question_id: target.id)
 
-      expect(Poll::Question::Answer.with_content).to eq [answer]
+      expect(question.reload.randomize_position).to be false
+      expect(target.reload.randomize_position).to be false
     end
 
-    it "returns answers with images and no description" do
-      answer = create(:poll_question_answer, :with_image, description: "")
+    it "leaves questions that are not part of the jump untouched" do
+      bystander = create(:poll_question, poll: poll, randomize_position: true)
 
-      expect(Poll::Question::Answer.with_content).to eq [answer]
+      create(:poll_question_answer, question: question, next_question_id: target.id)
+
+      expect(bystander.reload.randomize_position).to be true
     end
 
-    it "returns answers with documents and no description" do
-      question = create(:poll_question_answer, :with_document, description: "")
+    it "leaves the flag alone for an answer without a jump target" do
+      create(:poll_question_answer, question: question)
 
-      expect(Poll::Question::Answer.with_content).to eq [question]
-    end
-
-    it "returns answers with videos and no description" do
-      question = create(:poll_question_answer, :with_video, description: "")
-
-      expect(Poll::Question::Answer.with_content).to eq [question]
-    end
-
-    it "does not return answers with no description and no images, documents nor videos" do
-      create(:poll_question_answer, description: "")
-
-      expect(Poll::Question::Answer.with_content).to be_empty
+      expect(question.reload.randomize_position).to be true
     end
   end
 end

@@ -63,8 +63,13 @@ class Adm::HeaderComponent < ApplicationComponent
 
       if projekt && projekt.page&.slug.present?
         base = "/#{projekt.page.slug}"
-        url = projekt_phase ? "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer" : base
-        return [url, t.call(:projekt)]
+
+        if projekt_phase
+          url = "#{base}?projekt_phase_id=#{projekt_phase.id}#projekt-footer"
+          return [url, t.call(:projekt_phase)]
+        end
+
+        return [base, t.call(:projekt)]
       end
 
       landing_page = controller.instance_variable_get(:@landing_page)

@@ -14,8 +14,10 @@
     <%= t("files.resource_images.index.description") %>
   <% end %>
 
+  <% images_content_types_setting = Setting.find_by!(key: "uploads.images.content_types") %>
   <% page.with_types_note(
        types: Setting.humanized_content_types_for("images"),
-       settings_link: true
+       settings_link: true,
+       settings_edit_path: file_settings_adm_settings_path(anchor: dom_id(images_content_types_setting, :value))
      ) %>
 <% end %>

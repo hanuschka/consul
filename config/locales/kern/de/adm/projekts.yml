@@ -20,8 +20,17 @@ de:
           home: Home
           projekts: Projekte
           managers: Team
+          inspiration: Projektinspirationen
+          instance_import: Externes Projekt kopieren
           landing_pages: Themenseiten
           settings: Konfiguration
+      inspiration:
+        show:
+          title: Projektinspirationen
+          not_configured: DemokratieToday ist nicht konfiguriert
+          not_configured_hint: >-
+            Es ist keine DemokratieToday-Adresse hinterlegt. Bitte konfigurieren
+            Sie die Verbindung, um die Projektübersicht hier einzubetten.
       settings:
         tabs:
           dashboard: Dashboard-Einstellungen
@@ -71,6 +80,45 @@ de:
           create_projekt: Projekt erstellen
         create:
           success: Das Projekt wurde erfolgreich erstellt.
+        copy:
+          action: Projekt kopieren
+          copy_name: Kopie von %{name}
+          confirm: >
+            Möchten Sie dieses Projekt kopieren? Alle Phasen, Einstellungen, Inhalte und
+            von der Verwaltung angelegten Inhalte werden kopiert – Beiträge, Stimmen und
+            Abonnements der Teilnehmenden nicht. Die Kopie wird deaktiviert angelegt.
+          started: Die Kopie von „%{name}“ wird erstellt. Das kann einen Moment dauern.
+          finished: Die Kopie „%{name}“ wurde erstellt.
+          failed_notice: Die Kopie „%{name}“ konnte nicht erstellt werden.
+          tooltip:
+            title: Projekt kopieren
+            text: >
+              Erstellt eine deaktivierte Kopie dieses Projekts mit allen Phasen,
+              Einstellungen, Inhalten, Karten und von der Verwaltung angelegten Inhalten.
+            note_label: 'Nicht kopiert:'
+            note: Beiträge, Stimmen, Kommentare und Abonnements der Teilnehmenden.
+          status_processing: Wird kopiert …
+          status_failed: Kopieren fehlgeschlagen
+        instance_import:
+          action: Projekt importieren
+          pending_name: Importiertes Projekt (in Arbeit)
+          url_label: Projekt einer anderen Plattform übernehmen
+          url_hint: >
+            Fügen Sie die Adresse eines Projekts ein, das Sie unter
+            Projektinspirationen gefunden haben. Phasen, Einstellungen, Inhalte
+            und Karten werden als neuer, deaktivierter Entwurf auf dieser
+            Plattform angelegt. Bilder, Videos und Beiträge der Teilnehmenden
+            werden nicht übernommen – Bilder kommen als Platzhalter an und
+            können ersetzt werden.
+          browse_inspiration: Projektinspirationen ansehen
+          url_field_label: Projektadresse
+          url_placeholder: z.B. https://app.demokratie.today/beteiligung-innenstadt
+          invalid_url: Bitte fügen Sie eine vollständige Projektadresse inklusive https:// ein.
+          started: Das Projekt wird importiert. Das kann einen Moment dauern.
+          finished: Das importierte Projekt „%{name}“ wurde erstellt.
+          failed_notice: >
+            Das Projekt konnte nicht importiert werden. Bitte prüfen Sie die
+            Adresse und ob das Projekt auf app.demokratie.today veröffentlicht ist.
         projekt:
           top_level_projekt: Top-Level-Projekt
           frontend_page: Projektseite
@@ -104,6 +152,9 @@ de:
           duration_description: Legt den Zeitraum fest, in dem das Projekt auf der Plattform sichtbar und zugänglich ist – unabhängig davon, ob gerade eine aktive Beteiligungsphase läuft. Das Start- und Enddatum bestimmt, wann das Projekt in der öffentlichen Projektübersicht erscheint und von Nutzern aufgerufen werden kann.
           landing_pages_label: Zuordnung zu Themenseiten
           landing_pages_description: Ordnet das Projekt optional einer oder mehreren Themenseiten zu. Themenseiten bündeln thematisch verwandte Projekte auf einer eigenen Einstiegsseite – z. B. für Jugendbeteiligung oder Stadtentwicklung. Ein Projekt kann mehreren Themenseiten gleichzeitig zugeordnet werden.
+          parent_projekt_label: Übergeordnetes Projekt
+          parent_projekt_description: Ordnet das Projekt optional einem übergeordneten Projekt zu. Im Frontend erscheint das Projekt dadurch als Unterseite unterhalb des zugeordneten Projekts, inklusive Navigation und Breadcrumb-Anzeige. Wählen Sie ein übergeordnetes Projekt aus, um Teilprojekte thematisch einem übergeordneten Rahmenprojekt zuzuordnen.
+          no_parent_projekt: Kein übergeordnetes Projekt
           geo_restriction_label: Gebietszuordnung
           geo_restriction_description: Ordnet das Projekt einem geografischen Gebiet zu. Diese Zuordnung wird auf der Projektübersichtsseite als Filteroption angezeigt, sodass Nutzer gezielt nach Projekten in bestimmten Stadtteilen oder dem gesamten Stadtgebiet suchen können. Die Zuordnung hat keinen Einfluss auf die Sichtbarkeit des Projekts.
           geo_restriction:

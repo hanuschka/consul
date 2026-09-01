@@ -1542,7 +1542,7 @@ table {
 }
 
 .button.button-facebook {
-  @include has-fa-icon(facebook-f, brands);
+  @include has-fa-icon(facebook, brands);
   background: #ebeef4;
   border-left: 3px solid #3b5998;
 

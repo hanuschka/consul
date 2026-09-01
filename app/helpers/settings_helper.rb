@@ -5,7 +5,8 @@ module SettingsHelper
       (:facebook if feature?(:facebook_login)),
       (:google_oauth2 if feature?(:google_login)),
       (:wordpress_oauth2 if feature?(:wordpress_login)),
-      (:bochum_id if feature?(:bochum_id_login))
+      (:bochum_id if feature?(:bochum_id_login)),
+      (:kobil if feature?(:kobil_login))
     ].compact
   end
 

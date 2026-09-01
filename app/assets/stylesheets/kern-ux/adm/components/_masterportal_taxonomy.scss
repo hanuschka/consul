@@ -1,0 +1,21 @@
+.adm-masterportal-taxonomy--switch {
+  margin-bottom: 16px;
+}
+
+.adm-masterportal-taxonomy--icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.adm-masterportal-taxonomy--icon.-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+
+  .material-symbols-outlined {
+    font-size: 24px;
+  }
+}

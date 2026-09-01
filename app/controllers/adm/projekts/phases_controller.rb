@@ -1,11 +1,14 @@
 class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
+  include Adm::Projekts::MitmachboxPhaseActions
+
   before_action :find_projekt, only: [:new, :create, :reorder]
   before_action :find_projekt_phase, except: [:new, :create, :reorder]
-  before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats]
+  before_action :set_back_button_url, except: [:new, :create, :reorder, :update, :toggle_active, :toggle_frontend_visibility, :update_age_ranges_for_stats, :send_notifications]
 
   def new
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
     @phase_types = ProjektPhase::PROJEKT_PHASES_TYPES
+    @phase_types -= ["ProjektPhase::MitmachboxPhase"] unless Mitmachbox.configured?
 
     @breadcrumbs = [
       { name: @projekt.page.title },
@@ -16,9 +19,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def create
     authorize @projekt, :create?, policy_class: Adm::Projekts::ProjektPhasePolicy
+
     @projekt_phase = ProjektPhase.new(create_params.merge(active: true))
 
     if @projekt_phase.save
+      create_mitmachbox_remote_survey if @projekt_phase.is_a?(ProjektPhase::MitmachboxPhase)
       redirect_to phases_adm_projekts_projekt_path(@projekt), notice: t(".success")
     else
       redirect_to new_adm_projekts_projekt_phase_path(@projekt), alert: @projekt_phase.errors.full_messages.join(", ")
@@ -82,6 +87,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def toggle_active
     authorize_phase(:update?)
     @projekt_phase.update(active: !@projekt_phase.active)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.json { head :ok }
+    end
   end
 
   def toggle_frontend_visibility
@@ -92,8 +102,27 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def destroy
     authorize_phase(:destroy?)
     @projekt_phase.hide
-    redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
-      notice: t(".success")
+
+    respond_to do |format|
+      format.html do
+        redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+          notice: t(".success")
+      end
+      format.json { head :ok }
+    end
+  end
+
+  def send_notifications
+    authorize_phase(:update?)
+
+    case params[:resource_type]
+    when "projekt_arguments"
+      NotificationServices::ProjektArgumentsNotifier.call(@projekt_phase.id)
+    when "projekt_questions"
+      NotificationServices::ProjektQuestionsNotifier.call(@projekt_phase.id)
+    end
+
+    head :ok
   end
 
   def general_settings
@@ -332,6 +361,14 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
   end
 
+  def go_live
+    authorize_phase(:update?)
+    @projekt_phase.poll.go_live!
+
+    redirect_to poll_questions_adm_projekts_phase_path(@projekt_phase),
+      notice: t(".success")
+  end
+
   def formular
     authorize_phase(:update?)
     @formular = @projekt_phase.formular
@@ -514,17 +551,34 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
   def update_masterportal_collection
     authorize_phase(:update?)
     collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+
+    if collection.file_source? && !collection.geojson_file.attached?
+      return render json: {
+        message: t("adm.projekts.phases.update_masterportal_collection.missing_file")
+      }, status: :unprocessable_entity
+    end
+
     collection.update!(import_status: "running", import_error: nil)
 
-    MasterportalImportJob.perform_later(
-      projekt_phase_id: @projekt_phase.id,
-      endpoint_url: collection.endpoint_url,
-      collection_ids: [collection.collection_id],
-      create_domain_records: collection.create_domain_records,
-      triggered_by_user_id: current_user.id
-    )
+    MasterportalImportJob.perform_later(**masterportal_resync_job_args(collection))
 
     render json: masterportal_collection_status_payload(collection), status: :accepted
+  end
+
+  def update_masterportal_collection_color
+    authorize_phase(:update?)
+    collection = @projekt_phase.masterportal_collections.find(params[:masterportal_collection_id])
+    color = masterportal_feature_color_param
+
+    if color.nil?
+      return render json: {
+        message: t("adm.projekts.phases.update_masterportal_collection_color.invalid_color")
+      }, status: :unprocessable_entity
+    end
+
+    collection.update!(feature_color: color)
+
+    render json: { feature_color: collection.feature_color }
   end
 
   def destroy_masterportal_collection
@@ -557,9 +611,19 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     result = Masterportal::CollectionDiffService.call(masterportal_collection: collection)
 
-    render json: result
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff: result
+      )
+    )
   rescue OgcApiFeatures::Error => e
-    render json: { error: e.message }, status: :bad_gateway
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(collection),
+      Adm::MasterportalCollectionCardComponent.new(
+        collection: collection, projekt_phase: @projekt_phase, diff_error: e.message
+      )
+    )
   end
 
   def masterportal_collection_card
@@ -594,7 +658,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_point_of_interest_categories
     authorize_phase(:update?)
-    @categories = @projekt_phase.projekt_point_of_interest_categories.ordered
+    @categories = @projekt_phase.projekt_point_of_interest_categories.manual.ordered
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -650,7 +716,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def projekt_labels
     authorize_phase(:update?)
-    @projekt_labels = @projekt_phase.projekt_labels
+    @projekt_labels = @projekt_phase.projekt_labels.manual
+    @masterportal_collections = @projekt_phase.masterportal_collections.ordered
+    enqueue_collection_taxonomy_sync
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -748,17 +816,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     @assistant_codename = @projekt_phase.voice_assistant_codename
     @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
 
-    if InternalApiClient.active_dt?
-      @ai_assistant_config_response =
-        DtApi::Client.new(use_cache: true)
-          .ai_assistant_configs
-          .get(
-            codename: @assistant_codename,
-            consul_projekt_phase_id: @projekt_phase.id
-          )
-
-      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
-    end
+    load_ai_assistant_config if InternalApiClient.active_dt?
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
@@ -848,6 +906,23 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   private
 
+    # DtApi::Client raises CacheMissError when the DT service is unreachable
+    # and no cached response exists yet. The page still renders the phase's
+    # local voice-assistant setting, so degrade to an alert instead of a 500.
+    def load_ai_assistant_config
+      @ai_assistant_config_response =
+        DtApi::Client.new(use_cache: true)
+          .ai_assistant_configs
+          .get(
+            codename: @assistant_codename,
+            consul_projekt_phase_id: @projekt_phase.id
+          )
+
+      @ai_assistant_config = @ai_assistant_config_response["client_ai_assistant_config"]
+    rescue DtApi::CacheMissError
+      @dt_api_unavailable = true
+    end
+
     def moderation_filter_options
       ProposalsQuery::MODERATION_STATUSES.map do |status|
         [status, t("shared.moderation_statuses.#{status}")]
@@ -886,6 +961,36 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         destroy_status: collection.destroy_status,
         destroy_error: collection.destroy_error
       }
+    end
+
+    def enqueue_collection_taxonomy_sync
+      return if !Masterportal::CollectionTaxonomySyncService.out_of_sync?(projekt_phase: @projekt_phase)
+
+      MasterportalCollectionTaxonomySyncJob.perform_later(projekt_phase_id: @projekt_phase.id)
+    end
+
+    def masterportal_feature_color_param
+      color = params[:feature_color].to_s.strip
+      return nil if color.blank?
+
+      color.match?(/\A#[0-9a-fA-F]{6}\z/) ? color : nil
+    end
+
+    def masterportal_resync_job_args(collection)
+      args = {
+        projekt_phase_id: @projekt_phase.id,
+        create_domain_records: collection.create_domain_records,
+        triggered_by_user_id: current_user.id
+      }
+
+      if collection.file_source?
+        args[:uploaded_collection_ids] = [collection.id]
+      else
+        args[:endpoint_url] = collection.endpoint_url
+        args[:collection_ids] = [collection.collection_id]
+      end
+
+      args
     end
 
     def find_projekt

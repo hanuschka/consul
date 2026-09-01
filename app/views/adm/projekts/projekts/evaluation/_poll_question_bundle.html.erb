@@ -1,0 +1,22 @@
+<div class="poll-question-card--full poll-question-bundle evaluation-stat-card">
+  <div class="poll-question-bundle--header">
+    <div class="poll-question-bundle--icon">
+      <i class="fas fa-object-group" aria-hidden="true"></i>
+    </div>
+    <div class="poll-question-bundle--heading">
+      <div class="poll-question-bundle--caption">
+        <%= t("adm.projekts.projekts.evaluation.bundle_question_caption") %>
+      </div>
+      <div class="poll-question-bundle--title"><%= question["title"] %></div>
+    </div>
+  </div>
+
+  <%= render partial: "adm/projekts/projekts/evaluation/poll_question_group",
+    locals: {
+      questions: question["nested_questions"] || [],
+      accent: accent,
+      accent_light: accent_light,
+      exportable: exportable,
+      pdf_mode: local_assigns.fetch(:pdf_mode, false)
+    } %>
+</div>

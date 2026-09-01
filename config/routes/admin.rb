@@ -119,8 +119,8 @@ as: :destroy_user_resource_criterion
     end
     resources :projekt_content_blocks, only: [:create] do
       collection do
-        post :import_document
-        post :generate_from_prompt
+        post :ai_generate_with_file
+        post :ai_generate_with_prompt
         post :generate_with_ai
         get :import_status
         delete :destroy_all
@@ -508,6 +508,9 @@ as: :destroy_user_resource_criterion
       member do
         patch :update_inline
         patch :change_with_ai
+        post :generate_with_ai
+        get :ai_generation_status
+        delete :cancel_ai_generation
       end
     end
     delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block",

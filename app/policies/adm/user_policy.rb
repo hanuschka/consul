@@ -23,9 +23,13 @@ class Adm::UserPolicy < ApplicationPolicy
     edit?
   end
 
+  def destroy?
+    edit?
+  end
+
   class Scope < Scope
     def resolve
-      scope.actual
+      scope.with_hidden.active.not_guests.where.not(email: nil)
     end
   end
 end

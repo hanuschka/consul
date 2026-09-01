@@ -19,6 +19,10 @@ class Adm::LandingPages::LandingPagePolicy < ApplicationPolicy
     @user&.administrator? || @user&.landing_page_manager?(@record)
   end
 
+  def destroy?
+    @user&.administrator? || @user&.landing_page_manager&.manage_all_landing_pages?
+  end
+
   class Scope < Scope
     def resolve
       pages = scope.landing

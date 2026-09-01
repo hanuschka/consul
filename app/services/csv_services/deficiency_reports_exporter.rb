@@ -23,10 +23,10 @@ module CsvServices
           "ID", "Sichtbarkeit", "Autor",
           "Titel", "Beschreibungstext",
           "Status", "Standort",
-          "Kategorie",
+          "Kategorie", "Unterkategorie",
           "Gebiet",
           "Sachbearbeiter*in", "Zugewiesen an",
-          "Video URL", "Meldung im Namen von",
+          "Video URL", "Meldung im Namen von", "Erfasst von",
           "Erstellt am",
           "Officielle Antwort"
         ]
@@ -37,10 +37,11 @@ module CsvServices
           dr.id, dr.admin_accepted, sanitize_for_csv(dr.author.username),
           sanitize_for_csv(dr.title), sanitize_for_csv(strip_tags(dr.description)),
           dr.status&.title, dr.map_location&.approximated_address,
-          dr.category&.name,
+          dr.category&.name, dr.subcategory&.name,
           dr.district&.name,
           sanitize_for_csv(dr.responsible&.name), dr.assigned_at,
           sanitize_for_csv(dr.video_url), sanitize_for_csv(dr.on_behalf_of),
+          sanitize_for_csv(dr.on_behalf_of_account_linked? ? dr.recorded_by.username : nil),
           dr.created_at,
           strip_tags(dr.official_answer)
         ]

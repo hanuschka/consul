@@ -1,5 +1,5 @@
 <div
-  class="voice-assistant-standard js-va-demo-list"
+  class="voice-assistant-standard js-va-container"
   data-create-session-url="<%= create_session_url %>"
   data-codename="<%= assistant_codename %>"
   data-projekt-phase-id="<%= projekt_phase&.id %>"
@@ -7,5 +7,74 @@
   data-generate-image-url="<%= ai_generate_image_path %>"
   data-aspect-ratio="16:9"
 >
-  <%= render Dt::VoiceAssistant::V41Component.new %>
+  <div class="voice-assistant-widget--messagebar js-voice-assistant-messagebar" role="status"></div>
+
+  <%= render Dt::VoiceAssistant::AiNoticeComponent.new %>
+
+  <div class="voice-assistant-widget js-va-widget" data-state="idle">
+    <rich-tooltip delay="800" body-class="-dark" class="voice-assistant-widget--dock-tip">
+      <button
+        type="button"
+        class="voice-assistant-widget--dock js-va-toggle"
+        aria-label="<%= open_label %>"
+      >
+        <span class="voice-assistant-widget--dock-icon"><i class="fas fa-microphone"></i></span>
+        <span class="voice-assistant-widget--dock-name"><%= dock_name %></span>
+      </button>
+      <template><%= open_label %></template>
+    </rich-tooltip>
+
+    <div class="voice-assistant-widget--panel">
+      <div class="voice-assistant-widget--head">
+        <span class="voice-assistant-widget--title"><%= title %></span>
+        <rich-tooltip delay="800" body-class="-dark">
+          <button
+            type="button"
+            class="voice-assistant-widget--close js-va-close"
+            aria-label="<%= close_label %>"
+          >
+            <i class="fas fa-xmark"></i>
+          </button>
+          <template><%= close_label %></template>
+        </rich-tooltip>
+      </div>
+
+      <div class="voice-assistant-widget--stage">
+        <rich-tooltip delay="300" body-class="-dark" class="voice-assistant-widget--start-tip">
+          <button
+            type="button"
+            class="voice-assistant-widget--mic js-va-start"
+            aria-label="<%= mic_start_label %>"
+          >
+            <i class="fas fa-microphone"></i>
+          </button>
+          <template><%= mic_start_label %></template>
+        </rich-tooltip>
+
+        <rich-tooltip delay="300" body-class="-dark" class="voice-assistant-widget--mute-tip">
+          <button
+            type="button"
+            class="voice-assistant-widget--mic js-va-mute"
+            aria-label="<%= mic_stop_label %>"
+            data-mute-text="<%= mic_stop_label %>"
+            data-unmute-text="<%= mic_unmute_label %>"
+          >
+            <i class="fas fa-microphone"></i>
+          </button>
+          <template><%= mic_stop_label %></template>
+        </rich-tooltip>
+      </div>
+
+      <div class="voice-assistant-widget--wave">
+        <span class="voice-assistant-widget--wave-canvas js-va-viz" aria-hidden="true"></span>
+        <span class="voice-assistant-widget--muted-overlay"><%= muted_label %></span>
+      </div>
+
+      <div class="voice-assistant-widget--status">
+        <span class="voice-assistant-widget--status-live"><%= listening_label %></span>
+      </div>
+
+      <span class="voice-assistant-widget--starting"><%= starting_label %></span>
+    </div>
+  </div>
 </div>

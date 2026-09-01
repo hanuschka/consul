@@ -77,7 +77,10 @@
         <% sidebar_card_class_mobile << "js-toggle-empty-hint-on-content" if admin_view_mobile %>
         <% sidebar_card_class_mobile << "is-content-empty" if initial_empty_mobile %>
         <% sidebar_card_class_mobile = sidebar_card_class_mobile.join(" ").presence %>
-        <div class="show-on-small-tablet standalone-sidebar-section margin-bottom">
+        <aside
+          class="show-on-small-tablet standalone-sidebar-section margin-bottom"
+          aria-label="<%= t('custom.accessibility.complementary.homepage_mobile') %>"
+        >
           <%= render Shared::SidebarCardComponent.new(title: t("custom.welcome.sidebar.information.title"), icon_name: "info-circle", class_name: sidebar_card_class_mobile) do |c| %>
             <% if admin_view_mobile %>
               <div class="sidebar-card--admin-empty-hint js-studio-hide-on-preview" role="note">
@@ -87,7 +90,7 @@
             <% end %>
             <%= rendered_home_page_sidebar_block_mobile %>
           <% end %>
-        </div>
+        </aside>
       <% end %>
 
       <%= render_custom_block 'home_page_1' %>

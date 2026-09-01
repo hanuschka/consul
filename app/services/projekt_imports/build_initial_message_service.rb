@@ -1,4 +1,6 @@
 class ProjektImports::BuildInitialMessageService < ApplicationService
+  VOTING_PHASE_TYPE = "ProjektPhase::VotingPhase".freeze
+
   attr_reader :projekt_import, :text_truncated
 
   def initialize(projekt_import:, text_truncated: false)
@@ -48,11 +50,25 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
       lines << ""
       lines << "### #{t(:phases)}"
 
+      empty_voting_phase = false
+
       data["phases"].each do |phase|
         phase_text = "- **#{phase['name'] || phase['type']}**"
         dates = [phase["start_date"], phase["end_date"]].compact
         phase_text += " (#{dates.map { |d| format_date(d) }.join(' – ')})" if dates.any?
+
+        if voting_phase?(phase)
+          question_count = poll_question_count(phase)
+          empty_voting_phase ||= question_count.zero?
+          phase_text += " — #{poll_question_summary(question_count)}"
+        end
+
         lines << phase_text
+      end
+
+      if empty_voting_phase
+        lines << ""
+        lines << "**⚠️ #{t(:no_poll_questions_notice)}**"
       end
     end
 
@@ -81,6 +97,21 @@ class ProjektImports::BuildInitialMessageService < ApplicationService
     end
 
     lines.join("\n")
+  end
+
+  def voting_phase?(phase)
+    phase["type"] == VOTING_PHASE_TYPE
+  end
+
+  def poll_question_count(phase)
+    ProjektImports::Builders::PollBuilder.importable_questions(phase["poll_questions"]).size
+  end
+
+  def poll_question_summary(question_count)
+    I18n.t(
+      "adm.projekts.imports.initial_message.poll_questions_count",
+      count: question_count
+    )
   end
 
   def t(key)

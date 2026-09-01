@@ -41,7 +41,7 @@ class Setting < ApplicationRecord
     end
 
     def [](key)
-      all_settings_hash[key]
+      all_settings_hash[key.to_s]
     end
 
     def newsletter_brand_color
@@ -106,7 +106,6 @@ class Setting < ApplicationRecord
         "feature.wordpress_login": false,
         "feature.bund_id_login": false,
         "feature.kobil_login": false,
-        "feature.kobil_single_logout": false,
         "feature.kobil_address_verification": false,
         "feature.public_stats": true,
         "feature.signature_sheets": true,
@@ -160,6 +159,7 @@ class Setting < ApplicationRecord
         "proposals.email_description": nil,
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
+        "proposals.email_on_official_answer": nil,
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
@@ -204,6 +204,7 @@ class Setting < ApplicationRecord
         "ai.llm_model": nil,
         "ai.llm_api_endpoint": nil,
         "ai.llm_custom_model": nil,
+        "ai.evaluation_context": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",
@@ -229,6 +230,10 @@ class Setting < ApplicationRecord
         "welcomepage.share_buttons": "",
 
         "deficiency_reports.admins_must_assign_officer": false,
+        "deficiency_reports.intake_channel_required_for_on_behalf_of": false,
+        "deficiency_reports.officer_groups_only_for_assignment": false,
+        "deficiency_reports.ai_categorization": false,
+        "deficiency_reports.officers_see_all_reports": false,
         "deficiency_reports.allow_voting": false,
         "deficiency_reports.enable_comments": true,
         "deficiency_reports.intro_text": false,

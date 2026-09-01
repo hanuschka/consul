@@ -1,7 +1,5 @@
 FactoryBot.define do
   factory :individual_group do
-    name { "MyString" }
-    kind { 1 }
-    visible { false }
+    sequence(:name) { |n| "Individual group #{n}" }
   end
 end

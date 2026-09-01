@@ -32,6 +32,10 @@ en:
       title: Submission confirmation
       description: Sent to the author when a proposal has been successfully submitted.
       recipient: The user who submitted the proposal.
+    proposal_official_answer:
+      title: Official answer to the proposal
+      description: 'Sent to the author as soon as an official answer to their proposal is saved or changed. Sending also has to be enabled via the “Email notification on official answer (proposals)” setting on this page.'
+      recipient: The user who submitted the proposal.
     formular_answer_created:
       title: Form submission confirmation
       description: Sent to logged-in users after they have successfully completed and submitted a form.

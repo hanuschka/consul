@@ -1,6 +1,9 @@
 (function() {
   "use strict";
 
+  const SEARCH_COUNTRY_CODES = "de";
+  const SEARCH_BIAS_DEGREES = 0.3;
+
   class LeafletMapController {
     constructor(element) {
       this.element = element;
@@ -79,7 +82,7 @@
     createMap() {
       this.map = L.map(this.element.id, {
         gestureHandling: true,
-        maxZoom: 18,
+        maxZoom: App.MapZoom.MAX,
         zoomControl: false,
         keyboard: !!this.editable
       }).setView(this.mapCenterLatLng, this.zoom);
@@ -349,6 +352,7 @@
     }
 
     createLayer(item) {
+      const zoomLimits = App.MapZoom;
       let layer;
 
       if (item.protocol === 'wms') {
@@ -359,12 +363,15 @@
           transparent: (item.transparent),
           show_by_default: (item.show_by_default),
           opacity: (item.opacity ? item.opacity : 1),
+          maxZoom: zoomLimits.MAX
         });
       } else if (item.protocol === 'geojson') {
         layer = this.createGeoJsonOverlay(item);
       } else {
         layer = L.tileLayer(item.provider, {
-          attribution: item.attribution
+          attribution: item.attribution,
+          maxZoom: zoomLimits.MAX,
+          maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
         });
       }
 
@@ -487,7 +494,9 @@
     ensureBaseLayerExistence() {
       if (Object.keys(this.baseLayers).length === 0) {
         const defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: App.MapZoom.MAX,
+          maxNativeZoom: App.MapZoom.MAX_NATIVE_TILE
         });
         this.baseLayers['defaultLayer'] = defaultLayer;
       }
@@ -581,8 +590,15 @@
         locateButton.querySelector('.fa').setAttribute('aria-hidden', 'true');
       }
 
+      const provider = new GeoSearch.OpenStreetMapProvider({
+        params: { countrycodes: SEARCH_COUNTRY_CODES }
+      });
+
+      this.updateSearchViewbox(provider);
+      this.map.on('moveend', () => this.updateSearchViewbox(provider));
+
       const searchControl = new GeoSearch.GeoSearchControl({
-        provider: new GeoSearch.OpenStreetMapProvider(),
+        provider: provider,
         style: 'bar',
         showMarker: false,
         searchLabel: 'Nach Adresse suchen',
@@ -614,6 +630,19 @@
       });
 
       this.deflateFeatures.addTo(this.map);
+    }
+
+    updateSearchViewbox(provider) {
+      const center = this.map.getCenter();
+      const latitudeDelta = SEARCH_BIAS_DEGREES;
+      const longitudeDelta = latitudeDelta / Math.max(Math.cos(center.lat * Math.PI / 180), 0.1);
+
+      provider.options.params.viewbox = [
+        center.lng - longitudeDelta,
+        center.lat + latitudeDelta,
+        center.lng + longitudeDelta,
+        center.lat - latitudeDelta
+      ].map((coordinate) => coordinate.toFixed(6)).join(',');
     }
 
     renderFeatures() {

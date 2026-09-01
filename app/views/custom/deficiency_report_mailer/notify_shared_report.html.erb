@@ -1,0 +1,45 @@
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.notify_shared_report.hi", username: @user.username) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <% if @shared_by.present? %>
+      <%= t("custom.deficiency_reports.mailers.notify_shared_report.p1_by", name: @shared_by.name) %>
+    <% else %>
+      <%= t("custom.deficiency_reports.mailers.notify_shared_report.p1") %>
+    <% end %>
+    <strong><%= @deficiency_report.title %></strong>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.notify_shared_report.p2") %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.notify_officer.adm_page") %>
+    <%= link_to t("custom.deficiency_reports.mailers.notify_officer.adm_page_link_text"),
+                adm_deficiency_reports_deficiency_report_url(@deficiency_report), target: "_blank" %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("custom.deficiency_reports.mailers.unwatch_hint") %>
+    <%= link_to t("custom.deficiency_reports.mailers.unwatch_link_text"),
+                unwatch_adm_deficiency_reports_deficiency_report_url(@deficiency_report), target: "_blank" %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("custom.deficiency_reports.mailers.closing") %><br>
+      <%= t("custom.deficiency_reports.mailers.signature") %>
+    </p>
+
+    <% if Setting["mailer_from_deficiency_report_address"].present? %>
+      <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+        <em><%= sanitize t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"]) %></em>
+      </p>
+    <% end %>
+  <% end %>
+
+</td>

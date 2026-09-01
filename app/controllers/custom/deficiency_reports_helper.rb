@@ -40,12 +40,34 @@ module DeficiencyReportsHelper
       DeficiencyReport::Officer.joins(:user).order("users.username ASC")
   end
 
+  def deficiency_report_officer_groups_only?
+    Setting["deficiency_reports.officer_groups_only_for_assignment"].present?
+  end
+
+  # The officers an assignment field may offer. Whoever is already assigned stays in the list even
+  # while the setting restricts assignment to groups: dropping them would mean the next save of an
+  # unrelated change on that record silently clears a responsibility nobody meant to touch.
+  def deficiency_report_assignable_officers(current_responsible = nil)
+    officers = DeficiencyReport::Officer.joins(:user).order("users.username ASC")
+    return officers unless deficiency_report_officer_groups_only?
+
+    if current_responsible.is_a?(DeficiencyReport::Officer)
+      officers.where(id: current_responsible.id)
+    else
+      officers.none
+    end
+  end
+
   def active_deficiency_report_confirmation_popup
+    return nil unless DeficiencyReport.submissions_open?
+
     popup = DeficiencyReport::ConfirmationPopup.current
     popup.active? ? popup : nil
   end
 
   def deficiency_report_create_cta_button(css_class:, link_data: {}, style: nil)
+    return unless DeficiencyReport.submissions_open?
+
     label = deficiency_reports_create_cta
     common = { class: css_class }
     common[:style] = style if style.present?

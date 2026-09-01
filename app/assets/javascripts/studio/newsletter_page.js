@@ -29,6 +29,7 @@
     loadConfig(contentBlocksList) {
       App.Studio.Projekt.config.defaultMarginBottom = parseInt(contentBlocksList.dataset.defaultMarginBottom);
       App.Studio.Projekt.config.aiAvailable = contentBlocksList.dataset.aiAvailable === "true";
+      App.Studio.Projekt.config.generateUrl = contentBlocksList.dataset.generateUrl;
     },
 
     wrapContentBlocks(contentBlocksList) {
@@ -63,10 +64,8 @@
       App.SharedModal.initialize();
       App.ImageCropper.initialize();
       App.DropdownSelectMenuComponent.initialize();
-      App.Studio.ContentBlocks.CreateWithAi.initialize();
       App.Studio.ContentBlocks.DragDrop.initialize();
       App.Studio.initContentBlockModules();
-      App.Studio.ContentBlocks.SavedContentBlocks.initialize();
 
       window.newsletterContentBlockEditorModulesInitialized = true;
     }

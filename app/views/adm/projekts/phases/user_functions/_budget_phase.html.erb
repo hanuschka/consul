@@ -9,3 +9,6 @@
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.conditional_voting"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.show_video_as_link"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.hide_ballots_count"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.resource.hide_comments_count_order"), :value, :boolean) %>
+
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.resource.max_supports_per_user"), :value, :string) %>

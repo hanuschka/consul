@@ -1,0 +1,26 @@
+<%
+  show_regenerate = local_assigns.fetch(:show_regenerate, false)
+  note = local_assigns[:note]
+%>
+
+<section class="adm-poll-question-status -<%= tone %>">
+  <span class="adm-poll-question-status__icon" aria-hidden="true">
+    <span class="material-symbols-outlined"><%= icon %></span>
+  </span>
+
+  <h2 class="adm-poll-question-status__title"><%= title %></h2>
+
+  <p class="adm-poll-question-status__message"><%= message %></p>
+
+  <div class="adm-poll-question-status__actions">
+    <% if show_regenerate %>
+      <%= render "adm/projekts/poll_question_imports/regenerate_form" %>
+    <% end %>
+
+    <%= kern_link_button link_url, text: link_text, icon: link_icon, style: :secondary %>
+  </div>
+
+  <% if note.present? %>
+    <p class="adm-poll-question-status__note"><%= note %></p>
+  <% end %>
+</section>

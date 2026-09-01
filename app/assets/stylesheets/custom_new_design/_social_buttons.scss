@@ -30,6 +30,7 @@ $oauth-button-columns-tablet: 2;
 }
 
 .button.button-bund-id,
+.button.button-bochum_id,
 .button.button-kobil,
 .button.button-twitter,
 .button.button-facebook,
@@ -65,7 +66,8 @@ $oauth-button-columns-tablet: 2;
   }
 }
 
-.button.button-bund-id {
+.button.button-bund-id,
+.button.button-bochum_id {
   background: $bund-id-surface;
 
   &:hover {
@@ -75,6 +77,10 @@ $oauth-button-columns-tablet: 2;
   &:active {
     background: mix($bund-id-brand, $bund-id-surface, $oauth-button-active-tint);
   }
+}
+
+.button.button-bochum_id {
+  font-weight: bold;
 }
 
 .button.button-kobil {

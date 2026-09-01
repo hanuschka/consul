@@ -1,6 +1,10 @@
 <tr id="<%= dom_id(user) %>" class="kern-table__row">
   <th scope="row" class="kern-table__header" data-field="username"><%= user.username %></th>
   <td class="kern-table__cell" data-field="email"><%= user.email %></td>
+  <td class="kern-table__cell" data-field="status">
+    <% status_key, badge_variant = adm_user_status_badge(user) %>
+    <span class="kern-badge <%= badge_variant %> kern-badge--small"><%= t("adm.users.index.table.statuses.#{status_key}") %></span>
+  </td>
   <td class="kern-table__cell" data-field="first_name"><%= user.first_name %></td>
   <td class="kern-table__cell" data-field="last_name"><%= user.last_name %></td>
   <td class="kern-table__cell" data-field="city_name"><%= user.city_name %></td>
@@ -31,6 +35,7 @@
       <% c.with_action label: t(".table.actions.unverify"), url: unverify_adm_user_path(user), method: :patch, show: user.verified? %>
       <% c.with_action label: t(".table.actions.edit"), url: edit_adm_user_path(user), data: { turbo_frame: "_top" } %>
       <% c.with_action label: t(".table.actions.audits"), url: audits_adm_user_path(user), icon: "history", data: { turbo_frame: "_top" } %>
+      <% c.with_action label: t(".table.actions.delete"), url: adm_user_path(user), style: :delete, icon: "delete", data: { turbo_method: :delete, turbo_confirm: t(".table.actions.delete_confirm"), turbo_frame: "_top" }, show: !user.erased? && user != current_user && !user.administrator? %>
     <% end %>
   </td>
 </tr>

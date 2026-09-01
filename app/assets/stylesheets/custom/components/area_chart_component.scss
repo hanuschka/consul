@@ -44,5 +44,11 @@
   margin-top: 20px;
   gap: 30px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.timeline-stats > div {
+  flex: 1 1 300px;
+  min-width: 0;
 }

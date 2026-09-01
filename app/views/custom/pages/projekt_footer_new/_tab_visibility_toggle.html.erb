@@ -1,0 +1,31 @@
+<%
+  toggle_tab = local_assigns.fetch(:tab)
+  checked = local_assigns.fetch(:checked) { footer_evaluation_tab_public_visible?(@projekt_phase, toggle_tab) }
+  toggle_url = toggle_evaluation_tab_visibility_adm_projekts_projekt_path(@projekt_phase.projekt, format: :json)
+  tab_label = footer_evaluation_tab_label(@projekt_phase, toggle_tab)
+  show_bulk_hint = footer_phase_evaluation_completed?(@projekt_phase) && toggle_tab != "poll_stats"
+%>
+<% if can?(:edit, @projekt_phase.projekt) %>
+  <div
+    class="footer-evaluation-tab-toggle js-studio-hide-on-preview"
+    data-phase-id="<%= @projekt_phase.id %>"
+    data-tab="<%= toggle_tab %>"
+    data-toggle-url="<%= toggle_url %>"
+  >
+    <rich-tooltip delay="1000" trigger-only shadow="heavy" size="big">
+      <span class="footer-evaluation-tab-toggle--trigger">
+        <custom-switch
+          <%= "checked" if checked %>
+          label="<%= t("custom.projekt_phases.footer_evaluation.tab_visibility_toggle_label") %>"
+          input-class="js-footer-evaluation-tab-toggle-input"
+        ></custom-switch>
+      </span>
+      <template>
+        <span class="footer-evaluation-toggle-tooltip--title"><%= t("custom.projekt_phases.footer_evaluation.tab_visibility_toggle_title", tab: tab_label) %></span>
+        <% if show_bulk_hint %>
+          <span class="footer-evaluation-toggle-tooltip--description"><%= t("custom.projekt_phases.footer_evaluation.tab_visibility_toggle_bulk_hint") %></span>
+        <% end %>
+      </template>
+    </rich-tooltip>
+  </div>
+<% end %>

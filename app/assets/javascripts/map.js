@@ -339,10 +339,20 @@
           if (this.dataset.featureMultipleAllowed === "true") {
             this.classList.toggle('marked');
           } else {
-            this.parentElement.querySelectorAll(".js-map-change-feature-style").forEach(function(s) {
+            const clicked = this;
+
+            clicked.parentElement.querySelectorAll(".js-map-change-feature-style").forEach(function(s) {
               s.classList.remove('marked');
+
+              if (s !== clicked) {
+                const checkbox = document.getElementById(s.htmlFor);
+
+                if (checkbox && checkbox.type === "checkbox") {
+                  checkbox.checked = false;
+                }
+              }
             });
-            this.classList.add('marked');
+            clicked.classList.add('marked');
           }
           updateFeatureVariables();
         });

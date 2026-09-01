@@ -1,0 +1,178 @@
+en:
+  adm:
+    projekts:
+      phases:
+        mitmachbox_survey:
+          title: Survey
+          hint_text: >
+            Create and manage the survey that runs on the Mitmachbox devices.
+            Changes are made on a draft and only reach the devices once published.
+          unconfigured_title: Mitmachbox not configured
+          unconfigured_text: The connection to the Mitmachbox platform is not set up on this instance. Please contact your administrator.
+          missing_title: No survey created yet
+          missing_text: No survey has been created on the Mitmachbox platform for this phase yet.
+          lost_title: Survey no longer exists
+          lost_text: The linked survey no longer exists on the Mitmachbox platform. You can create a new survey.
+          create_survey_button: Create survey now
+          recreate_survey_button: Create new survey
+          state_label: Status
+          open_button: Open survey
+          close_button: Close survey
+          archive_button: Archive
+          reopen_button: Reopen
+          open_confirm: The survey will be opened for data collection on the devices. Continue?
+          close_confirm: Data collection will be stopped. Collected responses are retained. Continue?
+          archive_confirm: The survey will be archived and hidden from active lists. Continue?
+          open_requires_published_hint: The survey can only be opened once a version has been published.
+          draft_section_title: Draft (version %{number})
+          published_section_title: Published version %{number}
+          no_published_version: No version published yet.
+          responses_total: "Total responses: %{count}"
+          add_question_button: Add question
+          publish_button: Publish draft
+          publish_confirm: After publishing, this version can no longer be edited. Continue?
+          new_draft_button: Create new draft
+          new_draft_hint: The published version is copied into an editable draft. The current version stays unchanged on the devices until the next publish.
+          read_only_hint: Published versions cannot be edited. Create a new draft to make changes.
+          no_questions: No questions yet.
+          table:
+            prompt: Question
+            question_type: Question type
+            required: Required
+            options: Options
+            actions: Actions
+          move_up: Move up
+          move_down: Move down
+          edit: Edit
+          delete: Delete
+          delete_confirm: Really delete this question?
+        mitmachbox_deployments:
+          title: Devices
+          hint_text: >
+            See the Mitmachbox devices assigned to your municipality and control
+            during which period this phase's survey runs on them.
+          assignments_title: Available devices
+          assignments_empty: No devices are currently assigned to your municipality.
+          deployments_title: Deployments of this survey
+          deployments_empty: This survey is currently not running on any device.
+          assignment_table:
+            serial: Serial number
+            device_status: Device status
+            last_synced_at: Last synced
+            window: Loan period
+            status: Status
+            actions: Actions
+          deployment_table:
+            device: Device
+            location: Location
+            status: Status
+            actions: Actions
+          deploy_button: Assign to this survey
+          showing_this_survey: Already showing this survey
+          showing_other_survey: "Currently showing: %{title}"
+          adjust_button: Edit location
+          end_button: End now
+          end_confirm: The deployment will be ended immediately. Collected responses are retained. Continue?
+          open_ended: open-ended
+          never_synced: never
+          statuses:
+            scheduled: Scheduled
+            active: Active
+            ended: Ended
+        mitmachbox_results:
+          title: Results
+          latency_hint: Results are transferred from the devices in batches and may appear with a delay of up to one day.
+          responses_total: Total responses
+          version_label: Published version %{number}
+          published_at_label: published on %{date}
+          answered_label:
+            one: "%{count} participant answered this question"
+            other: "%{count} participants answered this question"
+          count_label: Count
+          option_label: Option
+          export_button: Download as CSV
+          empty_title: No results yet
+          empty_text: No version has been published yet or no responses have been received.
+      mitmachbox:
+        go_to_survey_tab: Go to survey
+        survey:
+          created: The survey has been created.
+          state_changed: "The survey status has been changed: %{state}."
+          draft_created: A new draft has been created.
+          published: The draft has been published.
+          states:
+            draft: Draft
+            open: Open
+            closed: Closed
+            archived: Archived
+        questions:
+          created: The question has been added.
+          updated: The question has been updated.
+          destroyed: The question has been deleted.
+          prompt_label: Question text
+          prompt_hint: Shown on the Mitmachbox display. Keep the question short and easy to understand.
+          question_type_label: Question type
+          question_type_hint: "Determines how people answer on the device: one answer, several answers, or a rating on a scale."
+          question_types:
+            single_choice: Single choice
+            multiple_choice: Multiple choice
+            rating: Rating scale
+          required_label: Required question
+          required_hint: Required questions must be answered on the device before the next question is shown.
+          save_button: Save
+          options_title: Options
+          options_hint: A maximum of 5 options – the Mitmachbox has 5 selection buttons.
+          add_option_button: Add option
+          no_options: No options yet.
+        options:
+          created: The option has been added.
+          updated: The option has been updated.
+          destroyed: The option has been deleted.
+          label_label: Label
+          label_hint: Shown on the device next to the selection button.
+          value_label: Score
+          value_hint: Only relevant for rating scales, e.g. 1 to 5.
+          save_button: Save
+          delete_confirm: Really delete this option?
+          table:
+            label: Label
+            value: Score
+            actions: Actions
+        deployments:
+          created: The survey is being deployed to the device.
+          updated: The location has been updated.
+          ended: The deployment has been ended.
+          assignment_label: Device
+          assignment_hint: Choose from the Mitmachbox devices assigned to your municipality, shown with their loan period.
+          location_label: Location
+          location_hint: Optional. Where does the box stand during this survey, e.g. "town hall entrance"?
+          save_button: Save
+          replace_warning: >
+            Attention: Assigning replaces any other survey currently running on this device.
+            Its assignment will be ended automatically.
+        errors:
+          connection: The Mitmachbox platform is currently unreachable. Please try again later.
+          auth: Authentication with the Mitmachbox platform failed. Please check the configured credentials.
+          forbidden: Access was denied by the Mitmachbox platform. Please check the configuration.
+          not_found: The requested record was not found on the Mitmachbox platform.
+          conflict: "This action is currently not possible: %{message}"
+          validation: "The input was not accepted by the Mitmachbox platform: %{message}"
+          generic: An error occurred while communicating with the Mitmachbox platform.
+          no_draft: There is no editable draft. Create a new draft first.
+          max_options_reached: A maximum of 5 options per question is possible – the Mitmachbox has 5 selection buttons.
+          not_configured: The Mitmachbox integration is not configured on this instance.
+      mitmachbox_questions:
+        new:
+          title: Add question
+        edit:
+          title: Edit question
+      mitmachbox_options:
+        new:
+          title: Add option
+        edit:
+          title: Edit option
+      mitmachbox_deployments:
+        new:
+          title: Assign device to this survey
+        edit:
+          title: Edit location

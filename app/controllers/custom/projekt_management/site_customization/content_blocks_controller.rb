@@ -1,5 +1,6 @@
 class ProjektManagement::SiteCustomization::ContentBlocksController < ProjektManagement::BaseController
   include AiErrorHandling
+  include SiteContentBlocksAiActions
 
   load_and_authorize_resource :content_block, class: "SiteCustomization::ContentBlock",
                                except: [
@@ -7,7 +8,10 @@ class ProjektManagement::SiteCustomization::ContentBlocksController < ProjektMan
                                  :edit_heading_content_block,
                                  :update_heading_content_block,
                                  :update_inline,
-                                 :change_with_ai
+                                 :change_with_ai,
+                                 :generate_with_ai,
+                                 :ai_generation_status,
+                                 :cancel_ai_generation
                                ]
 
   def edit

@@ -1,143 +1,160 @@
 (function() {
   "use strict";
 
-  App.Studio = {
-    initContentBlockModules() {
-      // Window-level flag: survives re-evaluation of this pack (e.g. Turbo
-      // re-running body scripts), preventing duplicate document-level
-      // event bindings.
-      if (window.studioContentBlockModulesInitialized) return
-      if (typeof ProjektStudio === "undefined") return
+  // This file is pulled into BOTH the studio pack and the application pack
+  // (via require_tree ./custom). The studio pack creates App.Studio in
+  // lib/studio_namespace.js / studio/main.js, but the application pack does
+  // not, so guard the namespace here to avoid a top-level crash there.
+  window.App = window.App || {};
+  window.App.Studio = window.App.Studio || {};
 
-      $(document).on("click", ".js-clear-site-content-block", this.handleClearContentBlock.bind(this));
+  App.Studio.initContentBlockModules = function() {
+    // Window-level flag: survives re-evaluation of this pack (e.g. Turbo
+    // re-running body scripts), preventing duplicate document-level
+    // event bindings.
+    if (window.studioContentBlockModulesInitialized) return
+    if (typeof App.Studio.Projekt === "undefined") return
 
-      App.Tabs.initialize();
-      App.ContentBlockEditor.TemplateSelector.initialize();
-      App.ContentBlockEditor.Crud.initialize();
-      App.ContentBlockEditor.MapEmbed.initialize();
-      App.ContentBlockEditor.ChangeHistory.initialize();
-      App.ContentBlockEditor.CKEditorMode.initialize();
-      App.ContentBlockEditor.EditModeSwitcher.initialize();
-      App.ContentBlockEditor.EditModeButtons.initialize();
-      App.ContentBlockEditor.SimpleEditMode.initialize();
-      App.ContentBlockEditor.SimpleEditMode.TextFormat.initialize();
-      App.ContentBlockEditor.SimpleEditMode.HeaderEdit.initialize();
-      App.ContentBlockEditor.SimpleEditMode.LinkEdit.initialize();
-      App.ContentBlockEditor.SimpleEditMode.ListEdit.initialize();
-      App.ContentBlockEditor.SimpleEditMode.FileManagerDialog.initialize();
-      App.ContentBlockEditor.SimpleEditMode.ImageEdit.initialize();
-      App.ContentBlockEditor.SimpleEditMode.MapEdit.initialize();
-      App.ContentBlockEditor.SimpleEditMode.ImageAltEdit.initialize();
-      App.ContentBlockEditor.AiEditMode.initialize();
-      App.ContentBlockEditor.CodeEditMode.initialize();
-      App.ContentBlockEditor.Copy.initialize();
-      App.ContentBlockEditor.EmptyHintToggle.initialize();
+    $(document).on("click", ".js-clear-site-content-block", this.handleClearContentBlock.bind(this));
 
-      window.studioContentBlockModulesInitialized = true;
+    App.Tabs.initialize();
+    App.Studio.ContentBlocks.TemplateSelector.initialize();
+    App.Studio.ContentBlocks.CreateWithAi.initialize();
+    App.Studio.ContentBlocks.SavedContentBlocks.initialize();
+    App.Studio.ContentBlocks.Crud.initialize();
+    App.Studio.ContentBlocks.MapEmbed.initialize();
+    App.Studio.ContentBlocks.ChangeHistory.initialize();
+    App.Studio.ContentBlocks.CKEditorMode.initialize();
+    App.Studio.ContentBlocks.EditModeSwitcher.initialize();
+    App.Studio.ContentBlocks.EditModeButtons.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.TextFormat.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.HeaderEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.LinkEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.ListEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.ImageEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.MapEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.MapSourceEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.initialize();
+    App.Studio.ContentBlocks.AiEditMode.initialize();
+    App.Studio.ContentBlocks.CodeEditMode.initialize();
+    App.Studio.ContentBlocks.Copy.initialize();
+    App.Studio.ContentBlocks.EmptyHintToggle.initialize();
+
+    window.studioContentBlockModulesInitialized = true;
+  };
+
+  App.Studio.handleClearContentBlock = function(e) {
+    const wrapper = App.Studio.ContentBlocks.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
+    const confirmed = confirm("Soll der Inhalt dieses Blocks wirklich gelöscht werden?");
+
+    if (!confirmed) return
+
+    const currentMode = wrapper.dataset.editMode;
+
+    if (currentMode) {
+      App.Studio.ContentBlocks.EditModeSwitcher.exitCurrentMode(wrapper, currentMode);
+    }
+
+    const contentBlock = wrapper.querySelector(".js-content-block");
+    const emptyHtml = "<div><p></p></div>";
+
+    App.Studio.ContentBlocks.Crud.updateContentBlock(contentBlock, emptyHtml);
+  };
+
+  App.Studio.SiteContentBlockEditor = {
+    initialize() {
+      if (typeof App.Studio.Projekt === "undefined") return
+      if (!this.hasSiteContentBlocks()) return
+
+      this.loadConfig();
+      this.wrapContentBlocks();
+      App.Studio.initContentBlockModules();
     },
 
-    handleClearContentBlock(e) {
-      const wrapper = App.ContentBlockEditor.DomHelpers.getParentContentBlockWrapper(e.currentTarget);
-      const confirmed = confirm("Soll der Inhalt dieses Blocks wirklich gelöscht werden?");
+    loadConfig() {
+      if (App.Studio.Projekt.isProjektPage()) return
 
-      if (!confirmed) return
-
-      const currentMode = wrapper.dataset.editMode;
-
-      if (currentMode) {
-        App.ContentBlockEditor.EditModeSwitcher.exitCurrentMode(wrapper, currentMode);
-      }
-
-      const contentBlock = wrapper.querySelector(".js-content-block");
-      const emptyHtml = "<div><p></p></div>";
-
-      App.ContentBlockEditor.Crud.updateContentBlock(contentBlock, emptyHtml);
+      App.Studio.Projekt.config.aiAvailable = document.body.dataset.aiAvailable === "true";
     },
 
-    SiteContentBlockEditor: {
-      initialize() {
-        if (typeof ProjektStudio === "undefined") return
-        if (!this.hasSiteContentBlocks()) return
+    hasSiteContentBlocks() {
+      return document.querySelectorAll(".js-site-content-block").length > 0;
+    },
 
-        this.wrapContentBlocks();
-        App.Studio.initContentBlockModules();
-      },
+    wrapContentBlocks() {
+      const siteBlocks = document.querySelectorAll(".js-site-content-block");
 
-      hasSiteContentBlocks() {
-        return document.querySelectorAll(".js-site-content-block").length > 0;
-      },
+      siteBlocks.forEach((block) => {
+        const contentBlockId = block.dataset.contentBlockId;
+        const updateUrl = block.dataset.updateUrl;
+        const aiUrl = block.dataset.aiUrl;
+        const generateUrl = block.dataset.generateUrl;
+        const defaultContent = block.dataset.defaultContent;
+        const toolbarPosition = block.dataset.toolbarPosition;
+        const emptyHint = this.detachEmptyHint(block);
 
-      wrapContentBlocks() {
-        const siteBlocks = document.querySelectorAll(".js-site-content-block");
-
-        siteBlocks.forEach((block) => {
-          const contentBlockId = block.dataset.contentBlockId;
-          const updateUrl = block.dataset.updateUrl;
-          const aiUrl = block.dataset.aiUrl;
-          const defaultContent = block.dataset.defaultContent;
-          const toolbarPosition = block.dataset.toolbarPosition;
-          const emptyHint = this.detachEmptyHint(block);
-
-          const wrappedHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
-            block.innerHTML,
-            {
-              contentBlockId: contentBlockId,
-              context: "site",
-              updateUrl: updateUrl,
-              aiUrl: aiUrl,
-              toolbarPosition: toolbarPosition
-            }
-          );
-
-          const tempContainer = document.createElement("div");
-          tempContainer.innerHTML = wrappedHTML;
-          const wrappedElement = tempContainer.firstElementChild;
-
-          if (defaultContent) {
-            wrappedElement.dataset.defaultContent = defaultContent;
+        const wrappedHTML = App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock(
+          block.innerHTML,
+          {
+            contentBlockId: contentBlockId,
+            context: "site",
+            updateUrl: updateUrl,
+            aiUrl: aiUrl,
+            generateUrl: generateUrl,
+            toolbarPosition: toolbarPosition
           }
+        );
 
-          if (block.style.marginBottom) {
-            wrappedElement.style.marginBottom = block.style.marginBottom;
-          }
+        const tempContainer = document.createElement("div");
+        tempContainer.innerHTML = wrappedHTML;
+        const wrappedElement = tempContainer.firstElementChild;
 
-          block.parentNode.replaceChild(wrappedElement, block);
+        if (defaultContent) {
+          wrappedElement.dataset.defaultContent = defaultContent;
+        }
 
-          if (emptyHint) {
-            this.moveEmptyHintIntoWrapper(wrappedElement, emptyHint);
-          }
+        if (block.style.marginBottom) {
+          wrappedElement.style.marginBottom = block.style.marginBottom;
+        }
 
-          if (wrappedElement.closest("aside, .sidebar, footer")) {
-            wrappedElement.classList.add("-compact-mode");
-          }
+        block.parentNode.replaceChild(wrappedElement, block);
 
-          App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(wrappedElement);
+        if (emptyHint) {
+          this.moveEmptyHintIntoWrapper(wrappedElement, emptyHint);
+        }
 
-          App.ImageGallery.initialize();
-        });
-      },
+        if (wrappedElement.closest("aside, .sidebar, footer")) {
+          wrappedElement.classList.add("-compact-mode");
+        }
 
-      detachEmptyHint(block) {
-        const wrap = block.parentElement;
+        App.Studio.ContentBlocks.DomHelpers.reinitFoundationWidgets(wrappedElement);
 
-        if (!wrap) return null
+        App.ImageGallery.initialize();
+      });
+    },
 
-        const hint = wrap.querySelector(".js-content-block-empty-hint");
+    detachEmptyHint(block) {
+      const wrap = block.parentElement;
 
-        if (!hint || hint.parentElement !== wrap) return null
+      if (!wrap) return null
 
-        hint.remove();
+      const hint = wrap.querySelector(".js-content-block-empty-hint");
 
-        return hint;
-      },
+      if (!hint || hint.parentElement !== wrap) return null
 
-      moveEmptyHintIntoWrapper(wrappedElement, hint) {
-        const contentBlock = wrappedElement.querySelector(".js-content-block");
+      hint.remove();
 
-        if (!contentBlock) return
+      return hint;
+    },
 
-        contentBlock.insertAdjacentElement("beforebegin", hint);
-      }
+    moveEmptyHintIntoWrapper(wrappedElement, hint) {
+      const contentBlock = wrappedElement.querySelector(".js-content-block");
+
+      if (!contentBlock) return
+
+      contentBlock.insertAdjacentElement("beforebegin", hint);
     }
   };
 }).call(this);

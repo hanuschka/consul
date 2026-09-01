@@ -24,6 +24,10 @@ class DtApi::Client
     @projekts ||= DtApi::Resources::Projekts.new(self)
   end
 
+  def projekt_exports
+    @projekt_exports ||= DtApi::Resources::ProjektExports.new(self)
+  end
+
   def clients
     @clients ||= DtApi::Resources::Clients.new(self)
   end
@@ -56,6 +60,10 @@ class DtApi::Client
 
   def consul_api_request_logs
     @consul_api_request_logs ||= DtApi::Resources::ConsulApiRequestLogs.new(self)
+  end
+
+  def consul_ai_usage_records
+    @consul_ai_usage_records ||= DtApi::Resources::ConsulAiUsageRecords.new(self)
   end
 
   def get(url, query: nil)

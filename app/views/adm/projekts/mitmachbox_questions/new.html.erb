@@ -1,0 +1,7 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs, narrow: true, back_button_url: mitmachbox_survey_adm_projekts_phase_path(@projekt_phase)) %>
+
+<div class="kern-container my-5">
+  <%= render "form", url: adm_projekts_phase_mitmachbox_questions_path(@projekt_phase) %>
+</div>

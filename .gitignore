@@ -50,5 +50,3 @@ tmp/
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
-tags
-consul_local_scripts/

@@ -8,7 +8,7 @@ class PollsController < ApplicationController
   include GuestUsers
   include LandingPageResolvable
 
-  before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation]
+  before_action :set_geo_limitations, only: [:show, :results, :stats, :report, :evaluation, :ai_analysis]
 
   helper_method :resource_model, :resource_name
   has_filters %w[all current expired]
@@ -85,10 +85,23 @@ class PollsController < ApplicationController
     auto_sign_in_guest_for(@poll.projekt_phase)
 
     @projekt_phase = @poll.projekt_phase
-    @questions = @poll.questions.root_questions
-                                .includes(:context, :translations, :votation_type, :question_answers, nested_questions: [:poll, :votation_type, :translations, :question_answers])
-                                .order(given_order: :asc, id: :asc)
+
+    @questions = @poll.questions_in_participant_order(
+      @poll.questions.root_questions
+                     .with_wizard_associations
+                     .where(contextualize_by_poll_question_id: nil)
+                     .in_configured_order,
+      poll_participant_order_seed
+    )
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
+
+    if @poll.in_wizard_mode?
+      context_source_ids = @poll.questions.where.not(contextualize_by_poll_question_id: nil)
+                                .reorder(nil).distinct.pluck(:contextualize_by_poll_question_id)
+      @wizard_map = Polls::WizardMap.call(@questions, context_source_ids)
+                                    .map { |entry| entry.merge(url: wizard_step_question_path(entry[:id])) }
+      @wizard_questions = @questions.first(1)
+    end
 
     @answers_by_question_id = {}
 
@@ -117,6 +130,7 @@ class PollsController < ApplicationController
   end
 
   def stats
+    @projekt_phase = @poll.projekt_phase
     @stats = Poll::Stats.new(@poll)
 
     if !@poll.projekt.visible_for?(current_user)
@@ -130,10 +144,21 @@ class PollsController < ApplicationController
   end
 
   def results
+    @projekt_phase = @poll.projekt_phase
+
     if !@poll.projekt.visible_for?(current_user)
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+
       render "custom/pages/forbidden", layout: false
     elsif Setting.new_design_enabled?
+      @results_phase =
+        ProjektEvaluations::AggregateStatistics
+          .new(@poll.projekt)
+          .call_for_phase(@poll.projekt_phase)
+          &.deep_stringify_keys
+
+      @frontend_answer_poll = @poll
+
       render :results_new
     else
       render :results
@@ -161,6 +186,16 @@ class PollsController < ApplicationController
     if !can_view_evaluation
       @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
       render "pages/forbidden", layout: false
+    end
+  end
+
+  def ai_analysis
+    @projekt_phase = @poll.projekt_phase
+
+    if !@poll.projekt.visible_for?(current_user)
+      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+
+      render "custom/pages/forbidden", layout: false
     end
   end
 

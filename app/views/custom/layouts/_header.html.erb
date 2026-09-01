@@ -15,20 +15,18 @@
               <span class="menu-icon dark" data-toggle></span>
         </button>
 
-        <div class="top-bar--title">
 
-          <%= link_to (@ui_site_homepage_path.presence || root_path) do %>
-            <% transparent_background_logo =
-                @ui_site_logo_transparent_background.presence || image_path_for("logo_header_for_transparent.png")
-            %>
-            <%= image_tag(transparent_background_logo, alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
+        <%= link_to (@ui_site_homepage_path.presence || root_path), class: "top-bar--title" do %>
+          <% transparent_background_logo =
+              @ui_site_logo_transparent_background.presence || image_path_for("logo_header_for_transparent.png")
+          %>
+          <%= image_tag(transparent_background_logo, alt: Setting["org_name"], class: "top-logo--for-trasparent") %>
 
-            <% white_background_logo =
-                @ui_site_logo_white_background.presence || image_path_for("logo_header.png")
-            %>
-            <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
-          <% end %>
-        </div>
+          <% white_background_logo =
+              @ui_site_logo_white_background.presence || image_path_for("logo_header.png")
+          %>
+          <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
+        <% end %>
 
         <div class="header--navigation expanded not-print hide-for-small-only">
           <nav
@@ -68,7 +66,7 @@
               <%= current_user.name %>
             </div>
             <%= link_to(t("layouts.header.my_account_link"), user_path(current_user), class: "header--responsive-menu--user-profile-link") %>
-            <%= link_to t("layouts.header.administration"), adm_root_path if current_user.administrator? %>
+            <%= link_to t("layouts.header.administration"), adm_root_path, class: "button -compact full-width header--responsive-menu--user-admin-button", role: "button" if current_user.administrator? %>
           </div>
         <% end %>
 

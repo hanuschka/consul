@@ -8,6 +8,16 @@
   data-filename="<%= filename %>"
 >
   <div class="files-asset-card--thumb">
+    <% if detail_url.present? %>
+      <a
+        href="<%= detail_url %>"
+        class="files-asset-card--thumb-link"
+        data-turbo-frame="files-asset-detail"
+        data-action="click->files--asset-modal#open"
+        aria-label="<%= t("files.show.view_details") %>"
+      ></a>
+    <% end %>
+
     <% if image? %>
       <%= render Shared::ImageWithLightboxComponent.new(
         image_url: asset.custom_thumb_url(width: 600, height: 450),

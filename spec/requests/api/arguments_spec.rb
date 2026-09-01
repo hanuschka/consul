@@ -6,6 +6,17 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+  let(:existing_argument_phase) do
+    Projekt.create!(name: 'Projekt').projekt_phases.create!(
+      type: 'ProjektPhase::ArgumentPhase', active: true
+    )
+  end
+  let(:existing_projekt_argument) do
+    existing_argument_phase.projekt_arguments.create!(
+      name: 'Existing Argument', position: 1, note: 'Existing note', pro: true
+    )
+  end
+
   IMAGE_ATTRIBUTES_SCHEMA = {
     type: :object,
     description: 'Optional: Image to support the argument (infographic, chart, diagram, evidence photo, etc.). Upload as base64-encoded data. Recommended for presenting visual evidence or data supporting the argument position.',
@@ -13,6 +24,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
       title: { type: :string, nullable: true, description: 'Image caption, alt text, or brief description. Used for accessibility and displayed with the image. Helps visually-impaired users understand the image content.' },
       credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+      ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
       _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the argument. Does not affect other argument properties.' }
     }
   }.freeze
@@ -177,20 +189,20 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
         run_test!
       end
 
-      response '422', 'projekt argument with invalid image returns validation error' do
+      response '422', 'projekt argument with unsupported image content type returns validation error' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
         let(:projekt_phase_id) { argument_phase.id }
         let(:projekt_argument) do
           {
             projekt_argument: {
-              name: 'Argument with Invalid Image',
+              name: 'Argument with Unsupported Image',
               position: 1,
-              note: 'Test argument with invalid image',
+              note: 'Test argument with unsupported image content type',
               pro: true,
               image_attributes: {
-                attachment: 'invalid-base64-data',
-                title: 'Invalid Image',
+                attachment: 'data:application/pdf;base64,SGVsbG8=',
+                title: 'Unsupported Image',
                 credits: 'Test'
               }
             }
@@ -215,7 +227,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_argument_phase.id } }
     end
   end
 
@@ -362,7 +374,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
         run_test!
       end
 
-      response '422', 'projekt argument update with invalid image returns validation error' do
+      response '422', 'projekt argument update with unsupported image content type returns validation error' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:argument_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ArgumentPhase', active: true) }
         let(:test_projekt_argument) do
@@ -380,8 +392,8 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
               name: 'Updated Argument',
               note: 'Updated note',
               image_attributes: {
-                attachment: 'invalid-base64-data',
-                title: 'Invalid Updated Image',
+                attachment: 'data:application/pdf;base64,SGVsbG8=',
+                title: 'Unsupported Updated Image',
                 credits: 'Test'
               }
             }
@@ -406,7 +418,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_argument.id } }
     end
 
     delete 'Delete a projekt argument' do
@@ -477,7 +489,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_argument.id } }
     end
   end
 end

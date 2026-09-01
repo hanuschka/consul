@@ -14,11 +14,21 @@ class ProjektImports::ChatMessageJob < ApplicationJob
       m.content = ""
     end
 
+    # A retry after the tools already ran must not replay them: the edits are
+    # persisted, so re-asking the model would apply them a second time.
+    if ai_message.tool_activity.present?
+      finish_after_partial_run(ai_message)
+      return
+    end
+
     ai_message.update!(status: "running") if ai_message.status != "running"
 
     ai_chat.update!(running: true)
 
-    result = ProjektImports::ChatResponseService.call(projekt_import: projekt_import)
+    result = ProjektImports::ChatResponseService.call(
+      projekt_import: projekt_import,
+      assistant_message: ai_message
+    )
 
     if result.success?
       ai_message.update!(content: result.data[:content], status: "completed")
@@ -27,5 +37,24 @@ class ProjektImports::ChatMessageJob < ApplicationJob
     end
   ensure
     ai_chat&.update!(running: false) if ai_chat
+  end
+
+  private
+
+  def finish_after_partial_run(ai_message)
+    return if ai_message.status == "completed"
+
+    summaries = ProjektImports::AiEditJournal.summarize(ai_message.tool_activity)
+
+    # An unrecognised action summarizes to nothing, which would leave the admin
+    # with "I applied the following changes: ." naming none of them.
+    content =
+      if summaries.empty?
+        I18n.t("adm.projekts.imports.applied_edits_message_unnamed")
+      else
+        I18n.t("adm.projekts.imports.applied_edits_message", edits: summaries.join("; "))
+      end
+
+    ai_message.update!(content: content, status: "completed")
   end
 end

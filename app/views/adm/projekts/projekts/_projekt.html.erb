@@ -1,15 +1,26 @@
 <% manage_allowed = policy([:adm, :projekts, projekt]).update? %>
-<% landing_path = manage_allowed ? details_adm_projekts_projekt_path(projekt) : phases_adm_projekts_projekt_path(projekt) %>
 <tr class="kern-table__row" id="<%= dom_id(projekt) %>">
   <th scope="row" class="kern-table__header" data-field="name">
     <div class="d-flex align-items-center gap-3">
       <%= link_to projekt_thumbnail(projekt), projekt_path(projekt), target: "_blank", data: { turbo: false }, title: t(".frontend_page") %>
       <div>
-        <%= link_to projekt.title, landing_path, class: "link strong", data: { turbo_frame: "_top" } %>
+        <% if manage_allowed %>
+          <%= link_to projekt.title, details_adm_projekts_projekt_path(projekt), class: "link strong", data: { turbo_frame: "_top" } %>
+        <% else %>
+          <span class="strong"><%= projekt.title %></span>
+        <% end %>
         <% if projekt.imported_by_ai %>
-          <span class="kern-badge kern-badge--info kern-badge--small ml-2" title="<%= t("adm.projekts.imports.badge.imported_by_ai_title") %>">
-            <%= t("adm.projekts.imports.badge.imported_by_ai") %>
-          </span>
+          <rich-tooltip delay="2200" body-class="-wide" class="ml-2">
+            <span class="kern-badge kern-badge--info kern-badge--small">
+              <%= t("adm.projekts.imports.badge.imported_by_ai") %>
+            </span>
+            <template>
+              <span class="rich-tooltip-content">
+                <span class="rich-tooltip-content--title"><%= t("adm.projekts.imports.badge.imported_by_ai_title") %></span>
+                <span class="rich-tooltip-content--text"><%= t("adm.projekts.imports.badge.imported_by_ai_description") %></span>
+              </span>
+            </template>
+          </rich-tooltip>
         <% end %>
         <br>
         <span class="small">
@@ -25,28 +36,51 @@
   <td class="kern-table__cell" data-field="start_date"><%= projekt.total_duration_start %></td>
   <td class="kern-table__cell" data-field="end_date"><%= projekt.total_duration_end %></td>
   <td class="kern-table__cell" data-field="status">
-    <%= render Adm::AttributeEditors::BooleanComponent.new(
-      projekt,
-      :activated?,
-      path: toggle_activated_adm_projekts_projekt_path(projekt),
-      disabled: !manage_allowed
-    ) %>
+    <% if projekt.copy_unfinished? %>
+      <%= render "adm/projekts/projekts/copy_status", projekt: projekt %>
+    <% else %>
+      <%= render Adm::AttributeEditors::BooleanComponent.new(
+        projekt,
+        :activated?,
+        path: toggle_activated_adm_projekts_projekt_path(projekt),
+        disabled: !manage_allowed
+      ) %>
+    <% end %>
   </td>
   <td class="kern-table__cell" data-field="actions">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t(".frontend_page"), url: projekt_path(projekt), icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
-      <% if manage_allowed %>
-        <% actions.with_action(label: t(".details"), url: details_adm_projekts_projekt_path(projekt), icon: "settings", data: { turbo_frame: "_top" }) %>
-        <% actions.with_action(label: t(".visibility"), url: visibility_adm_projekts_projekt_path(projekt), icon: "visibility", data: { turbo_frame: "_top" }) %>
-        <% actions.with_action(label: t(".projekt_managers"), url: projekt_managers_adm_projekts_projekt_path(projekt), icon: "supervisor_account", data: { turbo_frame: "_top" }) %>
-        <% actions.with_action(label: t(".map"), url: map_adm_projekts_projekt_path(projekt), icon: "map", data: { turbo_frame: "_top" }) %>
-      <% end %>
-      <% actions.with_action(label: t(".projekt_phases"), url: phases_adm_projekts_projekt_path(projekt), icon: "dashboard_customize", data: { turbo_frame: "_top" }) %>
-      <% actions.with_action(label: t("adm.projekts.projekts.projekt.images"), url: images_adm_projekts_projekt_path(projekt), icon: "image", data: { turbo_frame: "_top" }) %>
-      <% actions.with_action(label: t("adm.projekts.projekts.projekt.documents"), url: documents_adm_projekts_projekt_path(projekt), icon: "description", data: { turbo_frame: "_top" }) %>
-      <% if manage_allowed %>
-        <% actions.with_action(label: t(".evaluation"), url: evaluation_adm_projekts_projekt_path(projekt), icon: "assessment", data: { turbo_frame: "_top" }) %>
+      <% if !projekt.copy_unfinished? %>
+        <% actions.with_action(label: t(".frontend_page"), url: projekt_path(projekt), icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
 
+        <% if manage_allowed %>
+          <% actions.with_action(label: t(".details"), url: details_adm_projekts_projekt_path(projekt), icon: "settings", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t(".visibility"), url: visibility_adm_projekts_projekt_path(projekt), icon: "visibility", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t(".projekt_managers"), url: projekt_managers_adm_projekts_projekt_path(projekt), icon: "supervisor_account", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t(".map"), url: map_adm_projekts_projekt_path(projekt), icon: "map", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t(".projekt_phases"), url: phases_adm_projekts_projekt_path(projekt), icon: "dashboard_customize", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t("adm.projekts.projekts.projekt.images"), url: images_adm_projekts_projekt_path(projekt), icon: "image", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t("adm.projekts.projekts.projekt.documents"), url: documents_adm_projekts_projekt_path(projekt), icon: "description", data: { turbo_frame: "_top" }) %>
+          <% actions.with_action(label: t(".evaluation"), url: evaluation_adm_projekts_projekt_path(projekt), icon: "assessment", data: { turbo_frame: "_top" }) %>
+
+          <% actions.with_action(
+            label: t("adm.projekts.projekts.copy.action"),
+            url: copy_adm_projekts_projekt_path(projekt),
+            icon: "content_copy",
+            divider: true,
+            data: {
+              turbo_method: :post,
+              turbo_confirm: t("adm.projekts.projekts.copy.confirm"),
+              turbo_frame: "_top",
+              turbo_prefetch: false
+            }
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%# A copy that failed or stalled is half-built, so every action above is
+          hidden -- but it still has to be removable, otherwise the only way out
+          is the console. %>
+      <% if manage_allowed && !projekt.copy_in_progress? %>
         <% actions.with_action(
           label: t(".delete"),
           url: adm_projekts_projekt_path(projekt),

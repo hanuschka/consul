@@ -6,6 +6,8 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_milestone_phase) { create_projekt_phase('ProjektPhase::MilestonePhase') }
+
   MILESTONE_PARAMS = {
     type: :object,
     properties: {
@@ -188,7 +190,7 @@ RSpec.describe 'Milestones API', type: :request, openapi_spec: 'v1/swagger.yaml'
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
 
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_milestone_phase.id } }
     end
   end
 end

@@ -18,17 +18,18 @@ App.Utils = {
     });
   },
 
-  getMasterportalSquareMarker() {
-    const size = 42;
+  getMasterportalDotMarker(color) {
+    color = color || App.Utils.getBrandColor();
+    const size = 20;
     const half = size / 2;
     const title = "Masterportal-Pin";
 
     return L.divIcon({
-      className: "masterportal-square-marker",
+      className: "masterportal-dot-marker",
       iconSize: [size, size],
       iconAnchor: [half, half],
-      popupAnchor: [0, 0],
-      html: '<div role="img" aria-label="' + title + '" title="' + title + '"></div>'
+      popupAnchor: [0, -half],
+      html: '<span role="img" aria-label="' + title + '" title="' + title + '" style="background-color: ' + color + '"></span>'
     });
   },
 

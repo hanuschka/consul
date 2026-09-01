@@ -36,6 +36,16 @@
           <div class="deficiency-report-official-answer">
             <h3><%= t('custom.deficiency_reports.show.official_answer') %></h3>
             <%= AdminWYSIWYGSanitizer.new.sanitize(@deficiency_report.official_answer) %>
+            <% if @deficiency_report.official_answer_documents.attached? %>
+              <ul class="deficiency-report-official-answer--documents">
+                <% @deficiency_report.official_answer_documents.each do |attachment| %>
+                  <li>
+                    <%= link_to attachment.filename.to_s,
+                          rails_blob_path(attachment, disposition: "attachment"), target: :blank %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
           </div>
         <% end %>
 

@@ -9,12 +9,19 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
   end
 
   def call
-    return ServiceResult.success(blocks: []) if blocks.blank?
+    if blocks.blank?
+      return ServiceResult.success(blocks: [], unused_image_urls: image_urls, templates_available: true)
+    end
 
-    input_blocks = build_input_blocks(fetch_templates)
+    templates, catalogue_reachable = fetch_templates
+    input_blocks = build_input_blocks(templates)
 
     if input_blocks.blank?
-      return ServiceResult.success(blocks: blocks.map { |block| { "html" => wrap_plain(block["content_data"]) } })
+      return ServiceResult.success(
+        blocks: blocks.map { |block| { "html" => wrap_plain(block["content_data"]) } },
+        unused_image_urls: image_urls,
+        templates_available: catalogue_reachable
+      )
     end
 
     resolved_by_index = resolve_all(input_blocks).index_by { |block| block["index"] }
@@ -24,7 +31,13 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
       { "html" => html.presence || wrap_plain(block["content_data"]) }
     end
 
-    ServiceResult.success(blocks: resolved_blocks)
+    filled = fill_image_slots(resolved_blocks)
+
+    ServiceResult.success(
+      blocks: filled[:blocks],
+      unused_image_urls: image_urls.drop(filled[:used]),
+      templates_available: true
+    )
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ResolveContentBlockHtmlService] failed: #{e.message}")
     Sentry.capture_exception(e, extra: sentry_context.merge(stage: "resolve_content_blocks")) if defined?(Sentry)
@@ -37,13 +50,20 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
     @sanitizer ||= AdminWYSIWYGSanitizer.new
   end
 
+  # Returns the matched templates and whether the catalogue answered at all, because
+  # an empty match and an empty catalogue call for different things to be said: a
+  # model that named template ids nobody has is not a reason to tell the admin the
+  # templates "could not be loaded, try the import again later".
   def fetch_templates
     ids = blocks.map { |block| block["template_id"] }.compact.uniq
-    return {} if ids.empty?
+    return [{}, true] if ids.empty?
 
-    ProjektImports::ReferencesBuilder.fetch_content_block_templates
+    catalogue = ProjektImports::ReferencesBuilder.fetch_content_block_templates
+    matched = catalogue
       .select { |template| ids.include?(template["id"]) }
       .index_by { |template| template["id"] }
+
+    [matched, catalogue.present?]
   end
 
   def build_input_blocks(templates)
@@ -85,20 +105,32 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
     Array(response.content["blocks"])
   end
 
-  # Without images from the source document the only safe src is a placeholder,
-  # because anything else the model writes is a hallucinated external URL.
+  # The model is never shown the real addresses, whether or not the document had
+  # images: every src it writes is a placeholder, and fill_image_slots swaps the
+  # placeholders for the stored images afterwards. Handing it the addresses
+  # instead only adds ways for them to come back shortened, reordered or used
+  # twice, none of which is visible in the output.
   def image_source_rule
-    if image_urls.blank?
-      return "Any image must use a placeholder URL only " \
-             "(e.g. https://placehold.co/1200x500) — never a real or external image source."
+    "Keep every image the template contains, and give each one a placeholder " \
+      "URL sized to its slot (e.g. https://placehold.co/1200x500) — never a real " \
+      "or external image source, and never a filename from the document."
+  end
+
+  # Slots are filled across blocks in order, so the first picture in the document
+  # lands in the first block that has room for one.
+  def fill_image_slots(resolved_blocks)
+    return { blocks: resolved_blocks, used: 0 } if image_urls.blank?
+
+    used = 0
+
+    filled_blocks = resolved_blocks.map do |block|
+      result = HtmlImageSlots.fill(block["html"], image_urls.drop(used))
+      used += result[:used]
+
+      { "html" => result[:html] }
     end
 
-    "These images come from the source document and are already hosted: " \
-      "#{image_urls.join(', ')}. Use them verbatim in <img src>, each at most once, " \
-      "in the order given, in the blocks whose content they illustrate. When a " \
-      "template needs an image and none of these fits, use a placeholder URL " \
-      "(e.g. https://placehold.co/1200x500). Never use any other real or external " \
-      "image source."
+    { blocks: filled_blocks, used: used }
   end
 
   # Left-hand links to a participation phase were previously invented as

@@ -53,6 +53,8 @@ de:
           show_video_as_link_description: Stellt hinzugefügte Videos nicht als eingebetteten Player, sondern als anklickbaren Link dar. Im Frontend erscheint statt des Video-Players ein Textlink, der zum externen Anbieter führt. Aktivieren Sie diese Option, um die Ladezeit der Seite zu reduzieren oder wenn eingebettete Videos aus datenschutzrechtlichen Gründen vermieden werden sollen.
           hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Vorschläge
           hide_ballots_count_description: Blendet die aktuelle Stimmenanzahl während der laufenden Abstimmungsphase aus, sodass Nutzer die bisherige Stimmverteilung nicht einsehen können. Im Frontend wird der Zähler ausgeblendet. Aktivieren Sie diese Option, um eine Beeinflussung durch sichtbare Ergebnisse zu vermeiden und eine unbeeinflusste Stimmabgabe sicherzustellen.
+          hide_comments_count_order: Sortierung „Meist kommentiert“ ausblenden
+          hide_comments_count_order_description: Entfernt die Sortierung nach Anzahl der Kommentare aus der Auswahl. Im Frontend erscheint die Option nicht mehr, und ein Aufruf über die URL fällt auf die Standardsortierung zurück. Aktivieren Sie diese Option, wenn Beiträge nach Qualität und nicht nach Diskussionsvolumen wahrgenommen werden sollen.
       option:
         resource:
           max_submissions_per_user: Maximale Einreichungen pro Nutzer
@@ -73,7 +75,7 @@ de:
             total_votes: Aktuelles Ranking
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
-            comments_count: Meist Kommentiert
+            comments_count: Meist kommentiert
     formular_phase:
       option:
         general:

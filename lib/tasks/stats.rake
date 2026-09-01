@@ -1,30 +1,33 @@
 namespace :stats do
   desc "Generates stats which are not cached yet"
   task generate: :environment do
-    ApplicationLogger.new.info "Updating budget and poll stats"
+    logger = ApplicationLogger.new
+    logger.info "Updating budget and poll stats"
 
     admin_user = Administrator.first&.user
 
     if admin_user.blank?
-      ApplicationLogger.new.info "No administrator found, skipping stats generation"
+      logger.info "No administrator found, skipping stats generation"
       next
     end
 
     admin_ability = Ability.new(admin_user)
 
-    Budget.find_each do |budget|
-      if admin_ability.can?(:read_stats, budget)
-        Budget::Stats.new(budget).generate
-        print "."
-      end
+    # One unstatisticable record must not stop the remaining ones from being
+    # regenerated, so failures are reported and skipped rather than raised.
+    generate_stats = lambda do |record, ability_action, stats_class|
+      return unless admin_ability.can?(ability_action, record)
+
+      stats_class.new(record).generate
+      print "."
+    rescue StandardError => e
+      print "!"
+      logger.error "Failed to generate stats for #{record.class}##{record.id}: #{e.class}: #{e.message}"
+      Sentry.capture_exception(e, extra: { record: "#{record.class}##{record.id}" }) if defined?(Sentry)
     end
 
-    Poll.find_each do |poll|
-      if admin_ability.can?(:stats, poll)
-        Poll::Stats.new(poll).generate
-        print "."
-      end
-    end
+    Budget.find_each { |budget| generate_stats.call(budget, :read_stats, Budget::Stats) }
+    Poll.find_each { |poll| generate_stats.call(poll, :stats, Poll::Stats) }
   end
 
   desc "Expires stats cache"

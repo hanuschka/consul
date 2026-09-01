@@ -128,8 +128,6 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
-get  "/voice_assistant_designs", to: "voice_assistant_designs#index", as: :voice_assistant_designs
-
 resources :projekt_content_block_templates, only: [:index] do
   collection do
     get :metadata
@@ -140,9 +138,3 @@ get "projekts_map_embed", to: "projekt_map_embeds#index", as: :projekts_map_embe
 get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projekt_map_embed
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
-
-namespace :api do
-  namespace :masterportal do
-    resources :category_icons, only: [:create]
-  end
-end

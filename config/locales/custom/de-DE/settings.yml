@@ -88,7 +88,7 @@ de:
     proposal_notification_minimum_interval_in_days: "Mindestintervall (in Tagen), in dem Autoren von Vorschlägen neue Vorschlagsbenachrichtigungen senden können"
     proposal_notification_minimum_interval_in_days_description: "Die Anzahl der Tage, nach denen Benutzer Benachrichtungen an alle Unterstützer ihres Vorschlags senden können"
     direct_message_max_per_day: "Maximale Anzahl direkter Nachrichten per Tag"
-    direct_message_max_per_day_description: "Maximale Anzahl direkter Nachrichten, die Benutzer*innen am Tag senden können"
+    direct_message_max_per_day_description: "Maximale Anzahl direkter Nachrichten, die Benutzer*innen am Tag senden können. Leer lassen oder 0 eintragen, um die Begrenzung aufzuheben."
     feature:
       twitter_login: "Twitter Login"
       twitter_login_description: "Anmeldung mit Twitter-Account erlauben"

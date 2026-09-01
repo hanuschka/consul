@@ -62,8 +62,10 @@ module ApplicationHelper
     end
   end
 
-  def content_block(name, locale = I18n.locale)
-    SiteCustomization::ContentBlock.block_for(name, locale)
+  def content_block(name)
+    SiteCustomization::ContentBlock.block_for(
+      name, SiteCustomization::ContentBlock.canonical_locale
+    )
   end
 
   def self.asset_data_base64(path)

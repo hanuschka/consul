@@ -1,18 +1,27 @@
 class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
-  attr_reader :blocks, :sentry_context
+  attr_reader :blocks, :phase_links, :image_urls, :sentry_context
 
-  def initialize(blocks:, sentry_context: {})
+  def initialize(blocks:, phase_links: [], image_urls: [], sentry_context: {})
     @blocks = Array(blocks)
+    @phase_links = Array(phase_links)
+    @image_urls = Array(image_urls)
     @sentry_context = sentry_context
   end
 
   def call
-    return ServiceResult.success(blocks: []) if blocks.blank?
+    if blocks.blank?
+      return ServiceResult.success(blocks: [], unused_image_urls: image_urls, templates_available: true)
+    end
 
-    input_blocks = build_input_blocks(fetch_templates)
+    templates, catalogue_reachable = fetch_templates
+    input_blocks = build_input_blocks(templates)
 
     if input_blocks.blank?
-      return ServiceResult.success(blocks: blocks.map { |block| { "html" => wrap_plain(block["content_data"]) } })
+      return ServiceResult.success(
+        blocks: blocks.map { |block| { "html" => wrap_plain(block["content_data"]) } },
+        unused_image_urls: image_urls,
+        templates_available: catalogue_reachable
+      )
     end
 
     resolved_by_index = resolve_all(input_blocks).index_by { |block| block["index"] }
@@ -22,7 +31,13 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
       { "html" => html.presence || wrap_plain(block["content_data"]) }
     end
 
-    ServiceResult.success(blocks: resolved_blocks)
+    filled = fill_image_slots(resolved_blocks)
+
+    ServiceResult.success(
+      blocks: filled[:blocks],
+      unused_image_urls: image_urls.drop(filled[:used]),
+      templates_available: true
+    )
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ResolveContentBlockHtmlService] failed: #{e.message}")
     Sentry.capture_exception(e, extra: sentry_context.merge(stage: "resolve_content_blocks")) if defined?(Sentry)
@@ -35,13 +50,20 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
     @sanitizer ||= AdminWYSIWYGSanitizer.new
   end
 
+  # Returns the matched templates and whether the catalogue answered at all, because
+  # an empty match and an empty catalogue call for different things to be said: a
+  # model that named template ids nobody has is not a reason to tell the admin the
+  # templates "could not be loaded, try the import again later".
   def fetch_templates
     ids = blocks.map { |block| block["template_id"] }.compact.uniq
-    return {} if ids.empty?
+    return [{}, true] if ids.empty?
 
-    ProjektImports::ReferencesBuilder.fetch_content_block_templates
+    catalogue = ProjektImports::ReferencesBuilder.fetch_content_block_templates
+    matched = catalogue
       .select { |template| ids.include?(template["id"]) }
       .index_by { |template| template["id"] }
+
+    [matched, catalogue.present?]
   end
 
   def build_input_blocks(templates)
@@ -68,19 +90,62 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
       - Keep each template's wrapper, tags, CSS classes, and inline styles; match its visual design exactly.
       - Repeated elements (list items <li>, cards, rows, columns) are a REUSABLE PATTERN: render exactly one per content entry. If the content has more entries than the template illustrates, duplicate the example item's markup (identical tags, classes, and styles) for each additional entry; if it has fewer, drop the surplus example items. The number of rendered items MUST equal the number of content entries — never output an empty item, and never drop, truncate, or merge content to fit the template's example count.
       - Replace all sample text with the real content; do not keep the template's placeholder wording.
-      - Output only semantic, inline-styled HTML that matches the template: use H3/H4 for headings (never H1 or H2), <p> for paragraphs, and <ul>/<li> or <ol>/<li> for lists. Do not add <style> or <script> tags, JavaScript, forms, or input elements. Any image must use a placeholder URL only (e.g. https://placehold.co/1200x500) — never a real or external image source. Use FontAwesome or Unicode icons (→ ✓ •).
+      - Output only semantic, inline-styled HTML that matches the template: use H3/H4 for headings (never H1 or H2), <p> for paragraphs, and <ul>/<li> or <ol>/<li> for lists. Do not add <style> or <script> tags, JavaScript, forms, or input elements. #{image_source_rule} Use FontAwesome or Unicode icons (→ ✓ •).
       - Convert every URL and email address in the content into an anchor tag: web links as <a href="URL" target="_blank" rel="noopener noreferrer">label</a> (prefix "https://" when the URL has no scheme); emails as <a href="mailto:ADDRESS">ADDRESS</a>.
-
+      #{phase_links_instruction}
       Input blocks:
       #{JSON.generate(input_blocks)}
     PROMPT
 
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
+        .chat_with_json_output(output_schema, feature: "projekt_imports.resolve_content_block_html")
         .ask(message)
 
     Array(response.content["blocks"])
+  end
+
+  # The model is never shown the real addresses, whether or not the document had
+  # images: every src it writes is a placeholder, and fill_image_slots swaps the
+  # placeholders for the stored images afterwards. Handing it the addresses
+  # instead only adds ways for them to come back shortened, reordered or used
+  # twice, none of which is visible in the output.
+  def image_source_rule
+    "Keep every image the template contains, and give each one a placeholder " \
+      "URL sized to its slot (e.g. https://placehold.co/1200x500) — never a real " \
+      "or external image source, and never a filename from the document."
+  end
+
+  # Slots are filled across blocks in order, so the first picture in the document
+  # lands in the first block that has room for one.
+  def fill_image_slots(resolved_blocks)
+    return { blocks: resolved_blocks, used: 0 } if image_urls.blank?
+
+    used = 0
+
+    filled_blocks = resolved_blocks.map do |block|
+      result = HtmlImageSlots.fill(block["html"], image_urls.drop(used))
+      used += result[:used]
+
+      { "html" => result[:html] }
+    end
+
+    { blocks: filled_blocks, used: used }
+  end
+
+  # Left-hand links to a participation phase were previously invented as
+  # /projects/<slug>/phases/<id>, which is not a route at all. The real deep
+  # links are passed in ready to use — the model must never build one.
+  def phase_links_instruction
+    return "" if phase_links.blank?
+
+    <<~INSTRUCTION.strip
+      - When a block's content refers to a participation phase (a call to
+        participate, vote, submit, comment or attend), link it with the matching
+        URL from this list, copied verbatim. Never construct a phase URL
+        yourself and never link to a phase that is not listed:
+        #{JSON.generate(phase_links)}
+    INSTRUCTION
   end
 
   def output_schema

@@ -27,6 +27,8 @@ module AdmHelper
   end
 
   def restriction_label_for(projekt_phase)
+    return "-" unless projekt_phase.regular?
+
     restrictions = []
     restrictions << I18n.t("adm.projekts.phases.restrictions.user_status.#{projekt_phase.user_status}") if projekt_phase.user_status.present?
     restrictions << projekt_phase.geozone_restrictions_formatted if projekt_phase.geozone_restrictions.any?
@@ -153,6 +155,13 @@ module AdmHelper
     end
 
     tabs
+  end
+
+  def show_deficiency_report_visibility_control?(deficiency_report)
+    return false if Setting["deficiency_reports.admin_acceptance_required"].blank?
+    return false if deficiency_report.hidden?
+
+    Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report).accept?
   end
 
   def legislation_draft_version_tabs(draft_version, current_action: nil)

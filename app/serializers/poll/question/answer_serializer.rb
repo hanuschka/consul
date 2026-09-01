@@ -14,9 +14,7 @@ class Poll::Question::AnswerSerializer < BaseSerializer
         :more_info_link,
         :more_info_iframe,
         :next_question_id,
-        :terminates_poll,
-        :created_at,
-        :updated_at
+        :terminates_poll
       ]
     )
 

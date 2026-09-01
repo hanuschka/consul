@@ -7,25 +7,30 @@
 <% end %>
 
 <div class="kern-container my-5">
+  <% editor_options = { path: adm_landing_pages_landing_page_path(@landing_page),
+                        policy_class: Adm::LandingPages::LandingPagePolicy } %>
+
   <%= render "navbar_items", landing_page: @landing_page %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :slug, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :slug, :string, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_transparent_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_white_background, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_image, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_video, :video, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_image, :image, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_video, :video, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_transparent_background, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_for_white_background, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_image, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_desktop_header_video, :video, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_image, :image, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_mobile_header_video, :video, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :title, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :header_title, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :subtitle, :string, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :title, :string, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :header_title, :string, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :subtitle, :string, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_hide_title_and_subtitle, :boolean, path: adm_landing_pages_landing_page_path(@landing_page)) %>
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_follow_to_landing_page, :boolean, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_hide_title_and_subtitle, :boolean, **editor_options) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_site_logo_follow_to_landing_page, :boolean, **editor_options) %>
 
-  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_navigation_link_color, :color, path: adm_landing_pages_landing_page_path(@landing_page)) %>
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_navigation_link_color, :color, **editor_options) %>
+
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_ai_context, :text, **editor_options) %>
 
   <% if current_user.administrator? || current_user.landing_page_manager&.manage_all_landing_pages? %>
     <%= render Kern::FormFieldComponent.new(label: t(".managers_title"), hint: t(".managers_description")) do %>
@@ -39,4 +44,46 @@
   </p>
 
   <%= render Adm::SiteCustomization::ContentCardsComponent.new(landing_page_id: @landing_page.id) %>
+
+  <div class="kern-row">
+    <div class="kern-col-12 kern-col-md-10">
+      <hr class="kern-divider my-5" aria-hidden="true" />
+    </div>
+  </div>
+
+  <% landing_projekts = @landing_page.landing_projekts.includes(:page).to_a %>
+
+  <%= render "landing_projekts", landing_projekts: landing_projekts %>
+
+  <% if Adm::LandingPages::LandingPagePolicy.new(current_user, @landing_page).destroy? %>
+    <% assigned_projekts_count = landing_projekts.size %>
+
+    <h2 class="kern-title kern-title--small mb-3"><%= t(".destroy_title") %></h2>
+    <p class="kern-body mb-4" style="max-width: 75%">
+      <% if @landing_page.safe_to_destroy? %>
+        <%= t(".destroy_description") %>
+        <% if assigned_projekts_count.positive? %>
+          <%= t(".destroy_detaches_projekts", count: assigned_projekts_count) %>
+        <% end %>
+      <% else %>
+        <%= t(".destroy_blocked_description") %>
+      <% end %>
+    </p>
+
+    <% if @landing_page.safe_to_destroy? %>
+      <% confirm_key = assigned_projekts_count.positive? ? "confirm_with_projekts" : "confirm" %>
+      <%= kern_link_button adm_landing_pages_landing_page_path(@landing_page),
+                           text: t("shared.delete"),
+                           icon: "delete",
+                           style: :danger,
+                           data: {
+                             turbo_method: :delete,
+                             turbo_confirm: t(
+                               "adm.landing_pages.landing_pages.destroy.#{confirm_key}",
+                               title: @landing_page.title,
+                               count: assigned_projekts_count
+                             )
+                           } %>
+    <% end %>
+  <% end %>
 </div>

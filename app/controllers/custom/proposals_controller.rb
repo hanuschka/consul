@@ -4,11 +4,11 @@ class ProposalsController
   include ProposalsHelper
   include ProjektControllerHelper
   include Takeable
-  include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
   include CustomHelper
   include LandingPageResolvable
+  include OnBehalfOfAccountLinking
 
   MAP_PINS_LAZY_LOAD_THRESHOLD = 50
 
@@ -76,6 +76,16 @@ class ProposalsController
       take_by_projekts(@scoped_projekt_ids)
     end
 
+    if request.format.json?
+      render json: JSON.generate(
+        MapLocation.flatten_feature_collections(
+          all_proposal_map_locations(@resources)
+        )
+      )
+
+      return
+    end
+
     @proposals_map_pin_count =
       proposal_map_pin_count_up_to(@resources, MAP_PINS_LAZY_LOAD_THRESHOLD)
 
@@ -97,14 +107,6 @@ class ProposalsController
         end
       end
 
-      format.json do
-        render json: JSON.generate(
-          MapLocation.flatten_feature_collections(
-            all_proposal_map_locations(@resources)
-          )
-        )
-      end
-
       format.csv do
         redirect_to proposals_path and return unless current_user&.administrator?
 
@@ -117,9 +119,9 @@ class ProposalsController
   def new
     @projekt_phase = ProjektPhase::ProposalPhase.find_by(id: params[:projekt_phase_id])
 
-    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
+    if @projekt_phase.blank?
       redirect_to proposals_path
-    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+    elsif !@projekt_phase.selectable_by?(current_user)
       redirect_to page_path(@projekt_phase.projekt.page.slug,
                             projekt_phase_id: @projekt_phase.id,
                             anchor: "filter-subnav")
@@ -160,16 +162,18 @@ class ProposalsController
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
-    if params[:save_draft].present? && @proposal.save
-      redirect_to proposal_path(@proposal),
-        notice: I18n.t("flash.actions.create.proposal")
+    if @proposal.valid? && link_on_behalf_of_account(@proposal) && @proposal.save
+      if params[:save_draft].present?
+        redirect_to proposal_path(@proposal),
+          notice: I18n.t("flash.actions.create.proposal")
 
-    elsif @proposal.save
-      @proposal.publish
+      else
+        @proposal.publish
 
-      Mailer.proposal_created(@proposal).deliver_later
+        Mailer.proposal_created(@proposal).deliver_later
 
-      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+        redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+      end
     else
       params[:projekt_phase_id] = @proposal&.projekt_phase&.id
       params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
@@ -206,7 +210,13 @@ class ProposalsController
       return
     end
 
-    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+    # Acceptance is gated here rather than in CanCan, so the signed link from an on-behalf-of account
+    # mail has to be admitted here too — otherwise that mail sends its recipient to a page that turns
+    # them away. :preview rather than :show because every proposal is :read-able to everyone, so only
+    # an action nothing else grants can single out the record that link names.
+    if !@proposal.admin_accepted? &&
+        !current_user&.has_pm_permission_to?(:manage, @projekt) &&
+        !can?(:preview, @proposal)
       redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
@@ -324,6 +334,7 @@ class ProposalsController
 
     def proposal_params
       attributes = [:id, :video_url, :responsible_name, :tag_list, :on_behalf_of,
+                    :on_behalf_of_company_name, :on_behalf_of_email,
                     :geozone_id, :projekt_id, :projekt_phase_id, :related_sdg_list,
                     :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                     :sentiment_id,

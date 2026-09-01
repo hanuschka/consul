@@ -4,17 +4,21 @@ module Adm
     SORTABLE_FIELDS = %i[id created_at updated_at status_changed_at].freeze
     FILTERABLE_FIELDS = %i[
       deficiency_report_category_id
+      deficiency_report_subcategory_id
       deficiency_report_status_id
+      deficiency_report_intake_channel_id
       responsible
       archived_state
       hidden_state
       district
+      assignment_scope
     ].freeze
     DATE_RANGE_FIELDS = %i[created_at updated_at status_changed_at].freeze
 
-    def initialize(base_scope, params = {})
+    def initialize(base_scope, params = {}, current_user: nil)
       @base_scope = base_scope
       @params = params
+      @current_user = current_user
     end
 
     def call
@@ -28,7 +32,7 @@ module Adm
 
     private
 
-      attr_reader :base_scope, :params
+      attr_reader :base_scope, :params, :current_user
 
       def sortable_fields
         SORTABLE_FIELDS
@@ -46,7 +50,8 @@ module Adm
         scope = apply_id_search(scope)
         scope = apply_title_search(scope)
         scope = apply_address_search(scope)
-        apply_author_search(scope)
+        scope = apply_author_search(scope)
+        apply_on_behalf_of_search(scope)
       end
 
       def apply_id_search(scope)
@@ -84,6 +89,13 @@ module Adm
         scope.joins(:author).where("users.username ILIKE ?", "%#{escape_like(value)}%")
       end
 
+      def apply_on_behalf_of_search(scope)
+        value = params[:on_behalf_of__search]
+        return scope if value.blank?
+
+        scope.where("deficiency_reports.on_behalf_of ILIKE ?", "%#{escape_like(value)}%")
+      end
+
       def apply_filters(scope)
         permitted = filterable_params
         permitted[:archived_state] ||= []
@@ -95,6 +107,7 @@ module Adm
                   when :hidden_state   then filter_by_hidden_state(scope, values)
                   when :responsible    then filter_by_responsible(scope, values)
                   when :district       then filter_by_district(scope, values)
+                  when :assignment_scope then filter_by_assignment_scope(scope, values)
                   else
                     values.blank? ? scope : scope.where(field => values)
                   end
@@ -107,6 +120,23 @@ module Adm
         return scope if values.empty?
 
         scope.joins(:map_location).where(map_locations: { registered_address_district_id: values })
+      end
+
+      # "Mir zugewiesen" / "Unter Beobachtung" / "Alle Anliegen". Only offered while the visibility
+      # setting is on; without it the scope is already narrowed to the officer's own Anliegen and the
+      # three values would have nothing to choose between.
+      def filter_by_assignment_scope(scope, values)
+        values = Array(values).compact_blank.map(&:to_s)
+        return scope if values.empty? || values.include?("all")
+
+        officer = current_user&.deficiency_report_officer
+        subscopes = []
+        subscopes << scope.assigned_to_officer(officer) if values.include?("assigned_to_me") && officer
+        subscopes << scope.watched_by(current_user) if values.include?("watching")
+
+        return scope if subscopes.empty?
+
+        subscopes.reduce { |combined, subscope| combined.or(subscope) }
       end
 
       def filter_by_archived_state(scope, values)

@@ -3,6 +3,7 @@ require_dependency Rails.root.join("app", "controllers", "budgets", "investments
 module Budgets
   class InvestmentsController < ApplicationController
     include GuestUsers
+    include OnBehalfOfAccountLinking
 
     respond_to :js, only: [:stats]
 
@@ -22,7 +23,7 @@ module Budgets
       @investment.author = current_user
       @investment.heading = @budget.heading
 
-      if @investment.save
+      if @investment.valid? && link_on_behalf_of_account(@investment) && @investment.save
         Mailer.budget_investment_created(@investment).deliver_later
         NotificationServices::NewBudgetInvestmentNotifier.call(@investment.id) #custom
         redirect_to budget_investment_path(@budget, @investment),
@@ -69,7 +70,8 @@ module Budgets
     private
 
       def investment_params
-        attributes = [:heading_id, :tag_list, :organization_name, :location, :on_behalf_of, :video_url,
+        attributes = [:heading_id, :tag_list, :organization_name, :location, :on_behalf_of,
+                      :on_behalf_of_company_name, :on_behalf_of_email, :video_url,
                       :related_sdg_list, :implementation_performer, :implementation_contribution, :user_cost_estimate,
                       :terms_of_service, :terms_data_storage, :terms_data_protection, :terms_general, :resource_terms,
                       :sentiment_id,

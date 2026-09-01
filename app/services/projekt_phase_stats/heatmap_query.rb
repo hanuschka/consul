@@ -12,8 +12,8 @@ class ProjektPhaseStats::HeatmapQuery < ApplicationService
   end
 
   def coordinates
-    @coordinates ||= resources_with_map_location.flat_map do |resource|
-      extract_coordinates_from_features(resource.map_location)
+    @coordinates ||= map_location_rows.flat_map do |features, latitude, longitude|
+      extract_coordinates_from_features(features, latitude, longitude)
     end.compact
   end
 
@@ -31,11 +31,8 @@ class ProjektPhaseStats::HeatmapQuery < ApplicationService
 
   private
 
-    def extract_coordinates_from_features(map_location)
-      return [] unless map_location
-
-      features = map_location.features
-      return [[map_location.latitude, map_location.longitude, 1.0]] if features.blank?
+    def extract_coordinates_from_features(features, latitude, longitude)
+      return [[latitude, longitude, 1.0]] if features.blank?
 
       coords = []
 
@@ -49,7 +46,7 @@ class ProjektPhaseStats::HeatmapQuery < ApplicationService
         coords << coord if coord
       end
 
-      coords.presence || [[map_location.latitude, map_location.longitude, 1.0]]
+      coords.presence || [[latitude, longitude, 1.0]]
     end
 
     def extract_point_from_feature(feature)
@@ -81,14 +78,28 @@ class ProjektPhaseStats::HeatmapQuery < ApplicationService
       [lng_sum / coords.size, lat_sum / coords.size]
     end
 
-    def resources_with_map_location
+    def map_location_rows
+      @map_location_rows ||= fetch_map_location_rows
+    end
+
+    def fetch_map_location_rows
       case @projekt_phase
       when ProjektPhase::ProposalPhase
-        @projekt_phase.proposals.base_selection.joins(:map_location).includes(:map_location)
+        MapLocation
+          .where(
+            mappable_type: "Proposal",
+            mappable_id: @projekt_phase.proposals.base_selection.select(:id)
+          )
+          .pluck(:features, :latitude, :longitude)
       when ProjektPhase::BudgetPhase
         return [] if @projekt_phase.budget.blank?
 
-        @projekt_phase.budget.investments.joins(:map_location).includes(:map_location)
+        MapLocation
+          .where(
+            mappable_type: "Budget::Investment",
+            mappable_id: @projekt_phase.budget.investments.select(:id)
+          )
+          .pluck(:features, :latitude, :longitude)
       else
         []
       end

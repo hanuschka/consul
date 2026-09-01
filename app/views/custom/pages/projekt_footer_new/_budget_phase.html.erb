@@ -11,7 +11,7 @@
 
 <div class="flex justify-between items-center">
   <div class="hide-on-small-tablet">
-    <% if (@budget.current_phase.kind == "accepting" || (@budget.current_phase.kind == "reviewing" && current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt))) && params[:section] != "results" && params[:section] != "stats" && params[:section] != "key_metrics" && params[:section] != "analysis" %>
+    <% if (@budget.current_phase.kind == "accepting" || (@budget.current_phase.kind == "reviewing" && current_user&.has_pm_permission_to?("manage", @projekt_phase.projekt))) && !params[:section].in?(%w[results stats evaluation ai_evaluation key_metrics analysis]) %>
       <div class="new-resource-cta <%= 'hide-on-small-tablet' if projekt_feature?(@projekt_phase.projekt, 'sidebar.new_resource_button_in_sidebar') %> <%= 'js-studio-hide-on-preview' if @budget.current_phase.kind == 'reviewing' %>">
         <%= render Shared::NewButtonComponent.new(projekt_phase: @projekt_phase) %>
       </div>
@@ -24,16 +24,8 @@
     <div class="<%= 'js-studio-hide-on-preview' if !@budget.results_enabled? %>">
       <%= render "pages/projekt_footer_new/budget/results" %>
     </div>
-  <% elsif params[:section] == "evaluation" && show_phase_evaluation_in_footer?(@projekt_phase) %>
-    <%= render "custom/pages/projekt_footer_new/evaluation_content" %>
-  <% elsif params[:section] == "key_metrics" && can?(:read_stats, @budget) && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_kpi_stats")) %>
-    <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_kpi_stats') %>">
-      <%= render "custom/pages/projekt_footer_new/kpi_stats_content" %>
-    </div>
-  <% elsif params[:section] == "analysis" && can?(:read_stats, @budget) && Ai::Settings.ai_available? && (current_user&.administrator? || current_user&.projekt_manager? || projekt_phase_feature?(@projekt_phase, "general.public_ai_stats")) %>
-    <div class="<%= 'js-studio-hide-on-preview' if !projekt_phase_feature?(@projekt_phase, 'general.public_ai_stats') %>">
-      <%= render "custom/pages/projekt_footer_new/ai_analysis_content" %>
-    </div>
+  <% elsif params[:section].in?(%w[evaluation ai_evaluation]) %>
+    <%= render "custom/pages/projekt_footer_new/footer_evaluation_dispatch" %>
   <% else %>
   <% if @budget.current_phase.kind == 'informing' %>
     <div class="flex-layout">
@@ -84,20 +76,32 @@
         <div class="flex-layout">
           <% budget_investments_footer_url = projekt_phase_footer_tab_page_path(@projekt_phase.projekt.page, @projekt_phase.id) %>
           <div class="main-column">
-            <%= render(
-              Shared::ResourcesListComponent.new(
-                resources: @investments,
-                resource_type: Budget::Investment,
-                remote_url: budget_investments_footer_url,
-                current_filter: @current_order,
-                filter_param: "order",
+            <% investment_ids = @investments.pluck(:id) %>
+            <%= render Resources::List::BaseComponent.new(
+              empty_text: t("custom.budgets.investments.index.empty_list_text")
+            ) do |c| %>
+              <% c.with_toolbar(
+                i18n_namespace: "custom.budgets.investments.index",
                 filters: @valid_orders,
+                current_filter: @current_order,
+                param: "order",
                 text_search_enabled: true,
-                additional_data: {
-                  ballot: @ballot
-                },
-                projekt_phase: @projekt_phase
-              )) %>
+                remote_url: budget_investments_footer_url,
+                in_projekt_footer_tab: true
+              ) %>
+
+              <% if @investments.present? %>
+                <% c.with_items do %>
+                  <% @investments.each do |investment| %>
+                    <%= render Budgets::Investments::ListItemComponent.new(
+                      budget_investment: investment,
+                      budget_investment_ids: investment_ids,
+                      ballot: @ballot
+                    ) %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
             <%= paginate @investments, remote: true, params: { controller: "pages", action: "projekt_phase_footer_tab" } %>
           </div>
 

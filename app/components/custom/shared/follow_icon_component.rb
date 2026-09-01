@@ -2,28 +2,13 @@
 
 class Shared::FollowIconComponent < ApplicationComponent
   delegate :current_user, :find_or_build_follow, :follow_text, :unfollow_text,
-           :projekt_phase_feature?, :pick_text_color, to: :helpers
+           :pick_text_color, to: :helpers
 
   def initialize(resource:)
     @resource = resource
   end
 
-  def render?
-    current_user &&
-      !current_user&.guest? &&
-      settings_allow?
-  end
-
   private
-
-    def settings_allow?
-      case @resource
-      when Proposal
-        projekt_phase_feature?(@resource&.projekt_phase, "resource.show_follow_button_in_proposal_sidebar")
-      else
-        false
-      end
-    end
 
     def follow_obj
       @follow_obj ||= find_or_build_follow(current_user, @resource)

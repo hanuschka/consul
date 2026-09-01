@@ -1,0 +1,20 @@
+<%
+  field_name = "projekt_phase_evaluation_visibilities[#{phase.id}][show_#{section_key}]"
+  field_id = "projekt_phase_evaluation_visibilities_#{phase.id}_show_#{section_key}"
+  checked = visibility["show_#{section_key}"]
+%>
+<div class="evaluation-visibility-row">
+  <%= render Kern::SwitchComponent.new(
+    name: field_name,
+    id: field_id,
+    checked: checked,
+    row: true,
+    label: t("adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}"),
+    description: t("adm.projekts.projekts.evaluation.pdf_options.section_descriptions.#{section_key}"),
+    input_data: {
+      "adm--visibility-group-target" => "checkbox",
+      "action" => "change->adm--visibility-autosave#save change->adm--visibility-group#updateLabels"
+    }
+  ) %>
+  <%= render "adm/projekts/projekts/evaluation_visibility_row_status" %>
+</div>

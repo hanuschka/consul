@@ -3,7 +3,7 @@ class Projekts::ImportContentFromDocumentJob < ApplicationJob
 
   def perform(projekt_id)
     projekt = Projekt.find(projekt_id)
-    ProjektContentBlocks::ImportWithAi.call(projekt: projekt)
+    ProjektContentBlocks::AiGenerateWithFile.call(projekt: projekt)
   rescue => e
     projekt.update_columns(
       import_file_status: "failed",

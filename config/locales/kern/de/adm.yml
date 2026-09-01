@@ -1,6 +1,7 @@
 de:
   adm:
     not_authorized: Sie sind nicht berechtigt, diese Aktion durchzuführen.
+    not_authorized_edit: Sie haben keine Berechtigung, diesen Inhalt zu bearbeiten.
     title: Administration
     sidebar:
       toggle: Seitenleiste umschalten
@@ -50,6 +51,7 @@ de:
         api_subitems:
           api_clients: API-Clients
           api_request_logs: API-Anfragen-Logs
+          api_changelog: API-Änderungsprotokoll
         developer: Bereich für Entwickler
         developer_subitems:
           connection: DT-Verbindung

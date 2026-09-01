@@ -10,10 +10,10 @@ class Admin::StatsController < Admin::BaseController
     @comments  = Comment.not_valuations.with_hidden.count
 
     @debate_votes   = Vote.where(votable_type: "Debate").count
-    @proposal_votes = Vote.where(votable_type: "Proposal").count
+    @proposal_votes = Vote.where(votable_type: "Proposal", conditional: false).count
     @comment_votes  = Vote.where(votable_type: "Comment").count
 
-    @votes = Vote.count
+    @votes = Vote.where(conditional: false).count
 
     @user_level_two   = User.active.level_two_verified.count
     @user_level_three = User.active.level_three_verified.count

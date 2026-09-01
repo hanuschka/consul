@@ -7,14 +7,17 @@
   assets: @assets,
   endpoint: adm_maintenance_resource_images_path,
   card_component: Files::ImageCardComponent,
-  imageable_type_frame_src: imageable_type_filter_adm_maintenance_resource_images_path(imageable_type: params[:imageable_type])
+  imageable_type_frame_src: imageable_type_filter_adm_maintenance_resource_images_path(imageable_type: params[:imageable_type]),
+  detail_path: ->(image) { adm_maintenance_resource_image_path(image) }
 ) do |page| %>
   <% page.with_description do %>
     <%= t("files.resource_images.index.description") %>
   <% end %>
 
+  <% images_content_types_setting = Setting.find_by!(key: "uploads.images.content_types") %>
   <% page.with_types_note(
        types: Setting.humanized_content_types_for("images"),
-       settings_link: true
+       settings_link: true,
+       settings_edit_path: file_settings_adm_settings_path(anchor: dom_id(images_content_types_setting, :value))
      ) %>
 <% end %>

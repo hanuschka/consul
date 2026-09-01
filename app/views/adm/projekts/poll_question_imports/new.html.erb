@@ -1,0 +1,151 @@
+<% page_title = t("adm.projekts.poll_question_imports.new.title") %>
+<%= content_for :title, [@projekt_phase.title, page_title].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: page_title,
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+      compact: true
+    ) do |header| %>
+  <% header.with_after_title do %>
+    <p><%= t("adm.projekts.poll_question_imports.new.description") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <div
+    class="adm-document-upload"
+    data-controller="shared--document-upload"
+    data-shared--document-upload-create-url-value="<%= adm_projekts_phase_poll_question_imports_path(@projekt_phase) %>"
+    data-shared--document-upload-max-bytes-value="<%= Adm::Projekts::PollQuestionImportsController::MAX_AGGREGATE_BYTES %>"
+    data-shared--document-upload-allowed-value="<%= Adm::Projekts::PollQuestionImportsController::ALLOWED_EXTENSIONS.join(",") %>"
+    data-shared--document-upload-csrf-value="<%= form_authenticity_token %>"
+    data-shared--document-upload-progress-extracting-value="<%= t("adm.projekts.poll_question_imports.new.progress") %>"
+    data-shared--document-upload-error-too-large-value="<%= t("adm.projekts.poll_question_imports.errors.too_large") %>"
+    data-shared--document-upload-error-unsupported-value="<%= t("adm.projekts.poll_question_imports.errors.unsupported_type") %>"
+    data-shared--document-upload-error-no-files-value="<%= t("adm.projekts.poll_question_imports.errors.no_files") %>"
+    data-shared--document-upload-error-session-expired-value="<%= t("adm.projekts.poll_question_imports.errors.session_expired") %>"
+    data-shared--document-upload-error-request-failed-value="<%= t("adm.projekts.poll_question_imports.errors.request_failed") %>"
+    data-shared--document-upload-remove-file-label-value="<%= t("adm.projekts.poll_question_imports.new.remove_file") %>"
+  >
+    <form
+      data-shared--document-upload-target="form"
+      class="adm-document-upload--form"
+      enctype="multipart/form-data"
+    >
+      <div
+        class="adm-document-upload--upload-area"
+        data-shared--document-upload-target="dropzone"
+      >
+        <div class="adm-document-upload--upload-icon" aria-hidden="true">
+          <span class="material-symbols-outlined">upload_file</span>
+        </div>
+
+        <h2 class="adm-document-upload--title">
+          <%= t("adm.projekts.poll_question_imports.new.dropzone_title") %>
+        </h2>
+
+        <p class="adm-document-upload--hint">
+          <%= t("adm.projekts.poll_question_imports.new.dropzone_hint",
+                types: Adm::Projekts::PollQuestionImportsController::ALLOWED_EXTENSIONS.join(", "),
+                size: number_to_human_size(Adm::Projekts::PollQuestionImportsController::MAX_AGGREGATE_BYTES)) %>
+        </p>
+
+        <label
+          for="poll-question-import-file-input"
+          class="adm-document-upload--select-button"
+        >
+          <%= t("adm.projekts.poll_question_imports.new.select_file") %>
+        </label>
+
+        <input
+          id="poll-question-import-file-input"
+          type="file"
+          multiple
+          accept=".pdf,.docx,.odt,.txt,.md"
+          data-shared--document-upload-target="fileInput"
+          data-action="change->shared--document-upload#filesPicked"
+        >
+
+        <p class="adm-document-upload--drop-hint">
+          <%= t("adm.projekts.poll_question_imports.new.drop_hint") %>
+        </p>
+
+        <%= render Adm::Projekts::Imports::MissingToolsBannerComponent.new(missing_tools: @missing_tools) %>
+      </div>
+
+      <div
+        class="adm-document-upload--file-preview -hidden"
+        data-shared--document-upload-target="secondary"
+      >
+        <div
+          class="adm-document-upload--file-list"
+          data-shared--document-upload-target="fileList"
+          aria-live="polite"
+        ></div>
+
+        <div
+          class="adm-document-upload--inline-error"
+          data-shared--document-upload-target="error"
+          hidden
+        ></div>
+
+        <div class="adm-document-upload--actions">
+          <button
+            type="submit"
+            class="adm-document-upload--submit-button"
+            data-action="click->shared--document-upload#submit"
+            data-shared--document-upload-target="submitButton"
+          >
+            <%= t("adm.projekts.poll_question_imports.new.submit") %>
+          </button>
+
+          <button
+            type="button"
+            class="adm-document-upload--ghost-button"
+            data-action="click->shared--document-upload#resetFiles"
+          >
+            <%= t("adm.projekts.poll_question_imports.new.choose_other_file") %>
+          </button>
+        </div>
+
+        <p class="adm-document-upload--drop-hint">
+          <%= t("adm.projekts.poll_question_imports.new.drop_hint") %>
+        </p>
+      </div>
+    </form>
+
+    <div
+      class="adm-document-upload--loader -hidden"
+      data-shared--document-upload-target="progress"
+    >
+      <h3 class="adm-document-upload--loader-title">
+        <%= t("adm.projekts.poll_question_imports.new.processing_title") %>
+      </h3>
+
+      <div class="adm-document-upload--progress-wrapper">
+        <div class="adm-document-upload--progress-bar">
+          <div
+            class="adm-document-upload--progress-bar-fill"
+            data-shared--document-upload-target="progressFill"
+          ></div>
+        </div>
+        <span
+          class="adm-document-upload--progress-label"
+          data-shared--document-upload-target="progressLabel"
+        >
+          <%= t("adm.projekts.poll_question_imports.new.progress") %>
+        </span>
+      </div>
+
+      <p class="adm-document-upload--loader-message">
+        <%= t("adm.projekts.poll_question_imports.new.processing_message") %>
+      </p>
+
+      <div
+        class="adm-document-upload--loader-files"
+        data-shared--document-upload-target="loaderFiles"
+      ></div>
+    </div>
+  </div>
+</div>

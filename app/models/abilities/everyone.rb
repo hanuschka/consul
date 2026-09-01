@@ -7,12 +7,19 @@ module Abilities
       can [:read, :map, :summary, :share, :json_data], Proposal
       can :read, Comment
       can :read, Poll
-      can :results, Poll,
+      can :results, Poll do |poll|
+        poll.budget_id.nil? &&
+          poll.projekt_phase.present? &&
+          poll.projekt_phase.evaluation_tab_publicly_visible?("stats")
+      end
+      can :stats, Poll do |poll|
+        poll.budget_id.nil? &&
+          poll.projekt_phase.present? &&
+          poll.projekt_phase.evaluation_tab_publicly_visible?("poll_stats")
+      end
+      can :ai_analysis, Poll,
           budget_id: nil,
-          projekt_phase: { settings: { key: "feature.resource.results_enabled", value: "active" } }
-      can :stats, Poll,
-          budget_id: nil,
-          projekt_phase: { settings: { key: "feature.resource.stats_enabled", value: "active" } }
+          projekt_phase: { settings: { key: "feature.general.public_ai_stats", value: "active" } }
       can :read, Poll::Question
       can [:read, :refresh_activities], User
       can [:read, :welcome], Budget
@@ -77,7 +84,8 @@ module Abilities
           poll.answerable_by?(user)
         end
 
-        can [:answer, :unanswer, :update_open_answer], Poll::Question do |question|
+        can [:answer, :unanswer, :update_open_answer, :add_map_point, :remove_map_point],
+          Poll::Question do |question|
           question.answerable_by?(user)
         end
 

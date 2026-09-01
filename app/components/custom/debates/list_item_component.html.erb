@@ -1,4 +1,10 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_author(resource: debate) %>
+
+  <% if helpers.form_attached_image_visible?(debate) %>
+    <% c.with_image(image: debate.image, image_placeholder_icon_class: "fa-comments", resource: debate) %>
+  <% end %>
+
   <% c.with_header do %>
     <div>
       <% if @sentiment.present? %>

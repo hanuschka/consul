@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static values = { column: String }
+  static values = { column: String, keepEmpty: Boolean }
   static targets = [ "filterMenu", "searchInput", "dateFromInput", "dateToInput" ]
 
   connect() {
@@ -32,6 +32,9 @@ export default class extends Controller {
     selectedOptions.forEach(value => {
       this.url.searchParams.append(paramName, value);
     });
+    if (selectedOptions.length === 0 && this.keepEmptyValue) {
+      this.url.searchParams.append(paramName, "");
+    }
   }
 
   applyFilter() {

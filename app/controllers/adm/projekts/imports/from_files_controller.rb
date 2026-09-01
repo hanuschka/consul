@@ -1,5 +1,5 @@
 class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseController
-  MAX_AGGREGATE_BYTES = 45.megabytes
+  MAX_AGGREGATE_BYTES = 500.megabytes
   ALLOWED_EXTENSIONS = %w[pdf docx odt txt md].freeze
 
   STATUS_FILTERS = %w[in_progress failed completed].freeze
@@ -18,6 +18,7 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
 
   def new
     @projekt_import = current_user.projekt_imports.build
+    @missing_tools = ProjektImports::RequiredTools.missing
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -83,7 +84,7 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
   end
 
   def status
-    payload = { status: @projekt_import.status }
+    payload = { status: @projekt_import.status, warnings: @projekt_import.warnings }
 
     payload[:chat_url] = adm_projekts_import_chat_path(@projekt_import) if @projekt_import.chatting?
 

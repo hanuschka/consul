@@ -5,12 +5,6 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
     @content_card = content_card
     @limit = @content_card.settings["limit"].to_i
     @custom_page = custom_page
-    @projekts =
-      if custom_page.present?
-        custom_page.landing_projekts.show_in_homepage
-      else
-        Projekt.show_in_homepage
-      end
   end
 
   def render?
@@ -28,23 +22,7 @@ class ContentCard::ActiveProjektsComponent < ApplicationComponent
     end
 
     def active_projekts
-      @active_projekts =
-        @projekts
-          .activated
-          .visible_for(current_user)
-          .where.not(id: excluded_projekts_ids)
-          .includes(
-            :projekt_phases, :projekt_settings, :sdg_relations, :tags,
-            page: [:image, :translations], projekt_phases: [:translations]
-          )
-          .sort_by_order_number
-          .first(@limit)
-    end
-
-    def excluded_projekts_ids
-      current_projekts_ids = @projekts.index_order_underway.pluck(:id)
-      expired_projekts_ids = @projekts.index_order_expired.pluck(:id)
-
-      [current_projekts_ids + expired_projekts_ids].flatten.uniq
+      @active_projekts ||=
+        ContentCard::ProjektBuckets.for(@custom_page, current_user).active.first(@limit)
     end
 end

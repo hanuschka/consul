@@ -16,7 +16,8 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
     base_prompt = fetch_base_prompt
     dt_templates_by_category = fetch_dt_templates
 
-    chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema)
+    chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema,
+                                                    feature: "content_blocks.generate_with_prompt")
 
     if dt_templates_by_category.any?
       templates_tool = Ai::Tools::FetchContentBlockTemplates.new(

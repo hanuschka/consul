@@ -137,7 +137,10 @@ class Officing::Residence
       self.document_number = document_number.gsub(/[^a-z0-9]+/i, "").upcase if document_number.present?
     end
 
+    # The resident never sees this password; it only exists so the account the
+    # officer verifies is valid. The suffix satisfies the password complexity
+    # validation, which a lowercase-only string fails.
     def random_password
-      (0...20).map { ("a".."z").to_a[rand(26)] }.join
+      "#{SecureRandom.alphanumeric(20)}aA1!"
     end
 end

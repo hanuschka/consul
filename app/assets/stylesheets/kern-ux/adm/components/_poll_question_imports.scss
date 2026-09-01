@@ -1,0 +1,519 @@
+// Import list, preview cards and answer controls for the poll question import.
+// The upload screen itself is styled by adm/document_upload, shared with the
+// projekt import.
+
+// The header row is a flex line of title, hint and actions; auto margin is what
+// pushes the action to the far right rather than leaving it beside the title.
+.adm-poll-question-import-list__header-actions {
+  margin-left: auto;
+}
+
+// The preview is a column of long text fields, so it is capped and centred the
+// way the shared upload screen centres its dropzone. The list is a data table
+// and takes the full container instead, so it lines up with the header action
+// above it and the document names have room to show.
+.adm-poll-question-preview {
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.adm-poll-question-import-list__filters {
+  margin-bottom: var(--kern-metric-space-large);
+}
+
+// A document name is the row's identity, so it gets an icon tile and the only
+// bold text in the row; everything the row adds about that document -- the other
+// file names, an error, a stall note -- hangs under it rather than beside it.
+.adm-poll-question-import__files-cell {
+  max-width: 560px;
+  white-space: normal;
+}
+
+.adm-poll-question-import__file {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--kern-metric-space-small);
+}
+
+.adm-poll-question-import__file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: var(--kern-color-layout-text-muted);
+  background: var(--kern-color-layout-background-hued);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 8px;
+
+  .material-symbols-outlined {
+    font-size: 1.25rem;
+  }
+}
+
+.adm-poll-question-import__file-text {
+  min-width: 0;
+}
+
+.adm-poll-question-import__files {
+  font-weight: 700;
+}
+
+.adm-poll-question-import__files-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kern-metric-space-x-small);
+  margin: var(--kern-metric-space-small) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adm-poll-question-import__author {
+  color: var(--kern-color-layout-text-muted);
+  font-size: 0.875rem;
+}
+
+.adm-poll-question-import__created,
+.adm-poll-question-import__author {
+  display: block;
+}
+
+// Counts sit under a right-aligned heading in a column of other counts, so they
+// need figures of one width to line up.
+.adm-poll-question-import__count {
+  font-variant-numeric: tabular-nums;
+}
+
+.adm-poll-question-import__error {
+  margin: var(--kern-metric-space-x-small) 0 0;
+  color: var(--kern-color-feedback-danger);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.adm-poll-question-import__note {
+  margin: var(--kern-metric-space-x-small) 0 0;
+  color: var(--kern-color-feedback-warning);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+// Terminal states -- failed, nothing found, stalled, already applied. One
+// self-contained panel: the action that resolves the state lives inside it
+// rather than orphaned below, which is what the generic empty_state helper left
+// behind here.
+.adm-poll-question-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 560px;
+  margin: var(--kern-metric-space-x-large) auto;
+  padding: var(--kern-metric-space-x-large) var(--kern-metric-space-large);
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.adm-poll-question-status__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--kern-metric-space-default);
+  border-radius: 50%;
+
+  .material-symbols-outlined {
+    font-size: 28px;
+  }
+}
+
+.adm-poll-question-status.-danger .adm-poll-question-status__icon {
+  color: var(--kern-color-feedback-danger);
+  background: var(--kern-color-feedback-danger-background);
+}
+
+.adm-poll-question-status.-warning .adm-poll-question-status__icon {
+  color: var(--kern-color-feedback-warning);
+  background: var(--kern-color-feedback-warning-background);
+}
+
+.adm-poll-question-status.-success .adm-poll-question-status__icon {
+  color: var(--kern-color-feedback-success);
+  background: var(--kern-color-feedback-success-background);
+}
+
+.adm-poll-question-status.-neutral .adm-poll-question-status__icon {
+  color: var(--kern-color-feedback-info);
+  background: var(--kern-color-feedback-info-background);
+}
+
+.adm-poll-question-status__title {
+  margin: 0 0 var(--kern-metric-space-x-small);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.adm-poll-question-status__message {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--kern-color-layout-text-muted);
+  line-height: 1.5;
+}
+
+.adm-poll-question-status__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kern-metric-space-small);
+  margin-top: var(--kern-metric-space-large);
+}
+
+.adm-poll-question-status__note {
+  margin: var(--kern-metric-space-default) 0 0;
+  max-width: 42ch;
+  color: var(--kern-color-layout-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.adm-poll-question-preview__status {
+  display: flex;
+  align-items: center;
+  gap: var(--kern-metric-space-large);
+  padding: var(--kern-metric-space-large);
+  background: var(--kern-color-layout-background-hued);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 8px;
+}
+
+// KERN 2.3.1 ships the loader at one fixed size (96px with a 10px border) and
+// no size modifier, so it has to be resized here the same way the badge does.
+.adm-poll-question-preview__status .kern-loader {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+  flex-shrink: 0;
+
+  // The rounded end caps are absolutely positioned against the 96px geometry,
+  // so their offsets no longer meet the arc once it is this small.
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+.adm-poll-question-preview__status-title {
+  margin: 0 0 var(--kern-metric-space-x-small);
+  font-weight: 700;
+}
+
+.adm-poll-question-preview__status-message {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--kern-color-layout-text-muted);
+}
+
+// What the analysis produced, and the one action that redoes it. Tinted so it
+// reads as the summary of the white question cards below rather than the first
+// of them.
+.adm-poll-question-preview__intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--kern-metric-space-large);
+  margin-bottom: var(--kern-metric-space-x-large);
+  padding: var(--kern-metric-space-large);
+  background: var(--kern-color-layout-background-hued);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 12px;
+}
+
+.adm-poll-question-preview__intro-text {
+  flex: 1;
+  min-width: 240px;
+}
+
+.adm-poll-question-preview__intro-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.adm-poll-question-preview__intro-message {
+  margin: var(--kern-metric-space-x-small) 0 0;
+  max-width: 60ch;
+  color: var(--kern-color-layout-text-muted);
+  line-height: 1.5;
+}
+
+// The document names run long enough to break a line on their own, so each one
+// is its own chip instead of a comma-separated sentence.
+.adm-poll-question-file-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kern-metric-space-x-small);
+  margin: var(--kern-metric-space-default) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+// One chip for a document name, wherever a document name is listed: the summary
+// panel, the analysing panel and the import rows. The names run long enough to
+// break a line on their own, which a comma-separated sentence handles badly.
+.adm-poll-question-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kern-metric-space-x-small);
+  max-width: 100%;
+  padding: var(--kern-metric-space-x-small) var(--kern-metric-space-small);
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 999px;
+  color: var(--kern-color-layout-text-default);
+  font-size: 0.875rem;
+
+  span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .material-symbols-outlined {
+    flex-shrink: 0;
+    color: var(--kern-color-layout-text-muted);
+    font-size: 1.125rem;
+  }
+}
+
+// Every control of the apply form, hoisted into the page title row: the form
+// itself is a hundred questions long, so buttons sitting at its head scroll out
+// of reach and buttons at its foot are never seen. The submit reaches the form
+// through its form attribute rather than by containment, and what each button
+// does is carried by its tooltip instead of a caption under the row.
+.adm-poll-question-preview__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--kern-metric-space-small);
+  margin-left: auto;
+}
+
+// One generated question. With a hundred-question document the preview is a very
+// long run of identical forms, so each question is a bordered card with a head
+// band carrying its number -- the page has to be scannable, not just legible.
+.adm-poll-question-card {
+  margin-bottom: var(--kern-metric-space-large);
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.adm-poll-question-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--kern-metric-space-default);
+  padding: var(--kern-metric-space-default) var(--kern-metric-space-large);
+  background: var(--kern-color-layout-background-hued);
+  border-bottom: 1px solid var(--kern-color-layout-border);
+}
+
+// A filled accent circle on every one of a hundred cards turns the page into a
+// column of blue dots, so the counter is a quiet neutral chip and the question
+// title carries the weight instead.
+.adm-poll-question-card__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 var(--kern-metric-space-x-small);
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 999px;
+  color: var(--kern-color-layout-text-muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+// The head carries the question title as well as its number, so the long
+// preview can be scanned without reading each first field. The title is a copy
+// of the input below it and stays on one line -- it is a marker, not content.
+.adm-poll-question-card__heading {
+  min-width: 0;
+  flex: 1;
+}
+
+.adm-poll-question-card__label {
+  margin: 0;
+  color: var(--kern-color-layout-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.adm-poll-question-card__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.adm-poll-question-card__include {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.adm-poll-question-card__body {
+  padding: var(--kern-metric-space-large);
+}
+
+// Rating captions and answers are their own concerns inside the question. They
+// were tinted panels, which stacked a second card inside the card; a hairline
+// and a section title carry the same grouping without the nesting.
+.adm-poll-question-card__section {
+  margin-top: var(--kern-metric-space-large);
+  padding-top: var(--kern-metric-space-large);
+  border-top: 1px solid var(--kern-color-layout-border);
+}
+
+.adm-poll-question-card__section-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.adm-poll-question-card__section-hint {
+  margin: var(--kern-metric-space-x-small) 0 var(--kern-metric-space-default);
+  max-width: 70ch;
+  color: var(--kern-color-layout-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.adm-poll-question-card__scale {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--kern-metric-space-default);
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+// Answer options are a list, not a stack of little cards: hairlines between the
+// rows keep twenty of them readable where twenty bordered boxes do not.
+.adm-poll-question-answers {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-poll-question-answer {
+  display: flex;
+  align-items: center;
+  gap: var(--kern-metric-space-default);
+  padding: var(--kern-metric-space-small) 0;
+}
+
+.adm-poll-question-answer + .adm-poll-question-answer {
+  border-top: 1px solid var(--kern-color-layout-border);
+}
+
+.adm-poll-question-answer__number {
+  flex-shrink: 0;
+  min-width: 24px;
+  color: var(--kern-color-layout-text-muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.adm-poll-question-answer__fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--kern-metric-space-small);
+  flex: 1;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .kern-form-input {
+    margin-bottom: 0;
+  }
+}
+
+// Resting state is quiet: a column of red outlined buttons next to every answer
+// reads as a column of errors. The danger colour arrives on hover and focus.
+.adm-poll-question-answer__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: var(--kern-color-layout-text-muted);
+  cursor: pointer;
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+
+  &:hover {
+    color: var(--kern-color-feedback-danger);
+    background: var(--kern-color-feedback-danger-background);
+  }
+
+  &:focus-visible {
+    color: var(--kern-color-feedback-danger);
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+}
+
+.adm-poll-question-card__answer-add {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kern-metric-space-x-small);
+  margin-top: var(--kern-metric-space-default);
+  padding: var(--kern-metric-space-small) var(--kern-metric-space-default);
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 8px;
+  color: var(--kern-color-action-default);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+
+  &:hover {
+    background: var(--kern-color-layout-background-hued);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--kern-color-action-default) 12%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.125rem;
+  }
+}

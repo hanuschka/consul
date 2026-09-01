@@ -1,0 +1,83 @@
+<tr class="kern-table__row">
+  <td class="kern-table__cell adm-poll-question-import__files-cell">
+    <div class="adm-poll-question-import__file">
+      <span class="adm-poll-question-import__file-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">description</span>
+      </span>
+
+      <div class="adm-poll-question-import__file-text">
+        <%= link_to files_summary, show_url, class: "kern-link adm-poll-question-import__files" %>
+
+        <% if show_all_file_names? %>
+          <ul
+            class="adm-poll-question-import__files-note"
+            aria-label="<%= t("adm.projekts.poll_question_imports.source_files_label") %>"
+          >
+            <% file_names.each do |file_name| %>
+              <li class="adm-poll-question-file-chip">
+                <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                <span><%= file_name %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+
+        <% if show_error? %>
+          <p class="adm-poll-question-import__error"><%= error_preview %></p>
+        <% end %>
+
+        <% if stalled? %>
+          <p class="adm-poll-question-import__note">
+            <%= t("adm.projekts.poll_question_imports.list.stalled_note") %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </td>
+
+  <td class="kern-table__cell">
+    <span class="kern-badge kern-badge--<%= badge_style %>">
+      <% if analyzing? %>
+        <span class="kern-loader kern-loader--visible" aria-hidden="true"></span>
+      <% end %>
+      <%= state_label %>
+    </span>
+  </td>
+
+  <td class="kern-table__cell adm-poll-question-import__count">
+    <% if applied? %>
+      <%= link_to t("adm.projekts.poll_question_imports.list.applied_questions", count: applied_questions_count),
+            poll_questions_url,
+            class: "kern-link" %>
+    <% elsif question_import.completed? %>
+      <%= t("adm.projekts.poll_question_imports.list.generated_questions", count: generated_questions_count) %>
+    <% else %>
+      <span aria-hidden="true">—</span>
+    <% end %>
+  </td>
+
+  <td class="kern-table__cell">
+    <span class="adm-poll-question-import__created"><%= created_label %></span>
+
+    <% if author_name.present? %>
+      <span class="adm-poll-question-import__author"><%= author_name %></span>
+    <% end %>
+  </td>
+
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(
+           label: t("adm.projekts.poll_question_imports.list.actions.open"),
+           url: show_url,
+           icon: "visibility"
+         ) %>
+      <% actions.with_action(
+           label: t("adm.projekts.poll_question_imports.list.actions.delete"),
+           url: delete_url,
+           style: :delete,
+           method: :delete,
+           data: { turbo_confirm: t("adm.projekts.poll_question_imports.list.actions.delete_confirm") }
+         ) %>
+    <% end %>
+  </td>
+</tr>

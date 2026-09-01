@@ -26,6 +26,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "Mailer#proposal_created" => {
       variables: %w[username proposal_title proposal_url]
     },
+    "Mailer#proposal_official_answer" => {
+      variables: %w[username proposal_title official_answer proposal_url]
+    },
     "Mailer#formular_answer_created" => {
       variables: %w[username projekt_title phase_title]
     },
@@ -142,6 +145,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "NotificationServiceMailer#overdue_deficiency_reports" => {
       variables: %w[officer_name overdue_count]
     },
+    "NotificationServiceMailer#overdue_deficiency_reports_overview" => {
+      variables: %w[officer_name overdue_count fresh_count]
+    },
     "NotificationServiceMailer#not_assigned_deficiency_reports" => {
       variables: %w[admin_name not_assigned_count]
     }
@@ -157,6 +163,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     ["Mailer", "already_confirmed"],
     ["Mailer", "manual_verification_confirmation"],
     ["Mailer", "newsletter_subscription_for_existing_user"],
+    ["Mailer", "proposal_official_answer"],
     ["Mailer", "user_invite"],
     ["Mailer", "pending_role_invite"],
     ["Mailer", "csv_download_ready"],
@@ -189,7 +196,8 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       ["DeficiencyReportMailer", "notify_watcher_about_change"],
       ["NotificationServiceMailer", "not_assigned_deficiency_reports"],
       ["NotificationServiceMailer", "new_comments_for_deficiency_report"],
-      ["NotificationServiceMailer", "overdue_deficiency_reports"]
+      ["NotificationServiceMailer", "overdue_deficiency_reports"],
+      ["NotificationServiceMailer", "overdue_deficiency_reports_overview"]
     ]
   }.freeze
 

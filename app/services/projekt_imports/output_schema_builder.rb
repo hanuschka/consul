@@ -151,13 +151,19 @@ module ProjektImports::OutputSchemaBuilder
     }
   end
 
+  # Every vote type the manual question form offers, plus nil so an import that
+  # cannot tell falls back to PollBuilder's default. Spelled out rather than read
+  # from VotationType.vote_types so the schema does not force the model to load
+  # while the app is still booting.
+  POLL_QUESTION_VOTE_TYPES = ["unique", "multiple", "multiple_with_weight", "rating_scale", nil].freeze
+
   def self.poll_question_schema
     {
       type: "object",
       properties: {
         title: { type: "string", minLength: 4 },
         description: { type: %w[string null] },
-        vote_type: { type: %w[string null], enum: ["unique", "multiple", "rating_scale", nil] },
+        vote_type: { type: %w[string null], enum: POLL_QUESTION_VOTE_TYPES },
         min_rating_scale_label: {
           type: %w[string null],
           description: "Caption for the low end of a rating_scale question. Null otherwise."

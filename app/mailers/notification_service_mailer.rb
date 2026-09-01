@@ -16,6 +16,31 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
+  # The platform-wide escalation digest for officers who manage all Anliegen, so stuck cases stay
+  # visible beyond the individually responsible officer.
+  def overdue_deficiency_reports_overview(officer_id, overdue_reports_ids, fresh_reports_ids = [])
+    @officer = DeficiencyReport::Officer.find(officer_id)
+    return if @officer.user.blank?
+
+    @fresh_reports_ids = Array(fresh_reports_ids)
+
+    # Today's arrivals lead the list — partition rather than sort_by, so the order inside each group
+    # is left alone (Ruby's sort_by is not stable).
+    fresh, carried_over = DeficiencyReport.where(id: overdue_reports_ids)
+                                          .includes(:responsible, :translations)
+                                          .partition { |report| @fresh_reports_ids.include?(report.id) }
+    @overdue_reports = fresh + carried_over
+
+    with_user(@officer.user) do
+      mail_with_custom_template(nil, {
+        "officer_name" => @officer.name,
+        "overdue_count" => @overdue_reports.count,
+        "fresh_count" => @fresh_reports_ids.size
+      }, to: @officer.email,
+        default_subject: t("custom.notification_service_mailers.overdue_deficiency_reports_overview.subject"))
+    end
+  end
+
   def new_comments_for_deficiency_report(deficiency_report, last_notified_time, initial: false)
     @deficiency_report = deficiency_report
     @officer = @deficiency_report.officer

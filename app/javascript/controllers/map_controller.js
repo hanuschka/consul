@@ -65,6 +65,8 @@ export default class extends Controller {
     // Expose map instance for screenshot functionality
     this.containerTarget._mapAdapter = this.adapter
     this.containerTarget._mapLibrary = this.renderingLibraryValue
+
+    this.dispatch("ready", { detail: { adapter: this.adapter } })
   }
 
   disconnect() {

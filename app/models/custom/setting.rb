@@ -165,6 +165,7 @@ class Setting < ApplicationRecord
         "proposals.email_description": nil,
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
+        "proposals.email_on_official_answer": nil,
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
@@ -209,6 +210,7 @@ class Setting < ApplicationRecord
         "ai.llm_model": nil,
         "ai.llm_api_endpoint": nil,
         "ai.llm_custom_model": nil,
+        "ai.evaluation_context": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",
         "remote_census.request.method_name": "",

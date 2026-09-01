@@ -46,7 +46,7 @@ gem 'pagy', '~> 9.4'
 
 gem 'liquid'
 
-gem 'ruby_llm', '1.14.1'
+gem 'ruby_llm', '1.16.0'
 
 gem 'pdf-reader', '2.15.1'
 
@@ -57,6 +57,10 @@ gem 'docx', '0.10.0'
 # DocumentImageExtractor uses Zip::File directly. Held at 2.3.2 rather than the
 # latest 3.4.1 because docx and selenium-webdriver both require rubyzip < 3.
 gem 'rubyzip', '2.3.2'
+
+group :test do
+  gem 'shoulda-matchers', '~> 6.0'
+end
 
 group :development, :test do
   gem 'pry', '~> 0.14'

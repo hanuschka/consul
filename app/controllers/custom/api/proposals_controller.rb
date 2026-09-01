@@ -45,7 +45,8 @@ class Api::ProposalsController < Api::BaseController
 
     proposals =
       proposals
-        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
+                  projekt_phase: [:settings, { projekt: :page }])
         .page(params[:page])
         .per(params[:per_page] || DEFAULT_PER_PAGE)
 
@@ -176,7 +177,8 @@ class Api::ProposalsController < Api::BaseController
 
   def find_proposal
     @proposal = Proposal
-      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
+                  projekt_phase: [:settings, { projekt: :page }])
       .find(params[:id])
   end
 

@@ -17,6 +17,8 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
           resize_to_limit: [500, 500],
           format: "jpeg"
         )
+
+        @similar_contributions = ::SimilarContributions::FindForProjekt.call(@proposal)
       end
       format.pdf do
         pdf_content = PdfServices::ProposalExporter.call(@proposal, request.host)

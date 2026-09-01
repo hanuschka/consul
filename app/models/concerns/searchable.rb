@@ -18,5 +18,21 @@ module Searchable
         query: query
       }
     end
+
+    pg_search_scope :pg_similarity_search, ->(query) do
+      {
+        against: :ignored,
+        using: {
+          tsearch: {
+            tsvector_column: "tsv",
+            dictionary: SearchDictionarySelector.call,
+            any_word: true
+          }
+        },
+        ignoring: :accents,
+        ranked_by: "(:tsearch)",
+        query: query
+      }
+    end
   end
 end

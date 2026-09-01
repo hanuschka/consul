@@ -13,6 +13,10 @@ class UserResources::FormComponent < ApplicationComponent
     @embbeded_in_ai_flow = embbeded_in_ai_flow
   end
 
+  def similar_contributions_check_running?
+    resource.persisted? && resource.similar_contributions_check_processing?
+  end
+
   def render?
     return true unless resource.is_a?(Debate) || resource.is_a?(Proposal)
 

@@ -207,7 +207,10 @@
             </div>
 
           <% end %>
-          <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>
+          <% if !similar_contributions_check_running? %>
+            <%= f.submit(t("custom.user_resources.form.submit_button"),
+                         class: "button js-user-resource-submit") %>
+          <% end %>
         </div>
         <% end %>
       </div>

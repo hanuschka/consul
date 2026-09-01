@@ -9,6 +9,7 @@ class ProposalsController
   include CustomHelper
   include LandingPageResolvable
   include OnBehalfOfAccountLinking
+  include SimilarContributionsCheck
 
   MAP_PINS_LAZY_LOAD_THRESHOLD = 50
 
@@ -19,6 +20,10 @@ class ProposalsController
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
   prepend_before_action :load_draft_proposal_for_admin, only: :show
+
+  skip_load_and_authorize_resource only: [:similar_contributions_status, :publish_draft]
+  skip_authorization_check only: [:similar_contributions_status, :publish_draft]
+  before_action :load_own_similarity_draft, only: [:similar_contributions_status, :publish_draft]
 
   def index_customization
     resolve_landing_page_from_slug
@@ -160,28 +165,37 @@ class ProposalsController
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
-    if @proposal.valid? && link_on_behalf_of_account(@proposal) && @proposal.save
-      if params[:save_draft].present?
-        redirect_to proposal_path(@proposal),
-          notice: I18n.t("flash.actions.create.proposal")
-
-      else
-        @proposal.publish
-
-        Mailer.proposal_created(@proposal).deliver_later
-
-        redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
-      end
-    else
-      params[:projekt_phase_id] = @proposal&.projekt_phase&.id
-      params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
-
-      if @projekt_phase.present?
-        resolve_landing_page_for_projekt(@projekt_phase.projekt)
-      end
-
-      render :new
+    if @proposal.invalid? || !link_on_behalf_of_account(@proposal)
+      return render_new_form
     end
+
+    if similar_contributions_check_requested?(@projekt_phase)
+      start_similar_contributions_check(@proposal)
+
+      return render_new_form
+    end
+
+    return render_new_form if !@proposal.save
+
+    if params[:save_draft].present?
+      redirect_to proposal_path(@proposal),
+        notice: I18n.t("flash.actions.create.proposal")
+
+    else
+      publish_checked_proposal
+
+      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+    end
+  end
+
+  def similar_contributions_status
+    render json: similar_contributions_status_payload(@proposal)
+  end
+
+  def publish_draft
+    publish_checked_proposal
+
+    redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
   end
 
   def publish
@@ -343,6 +357,34 @@ class ProposalsController
                     map_location_attributes:]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
+    end
+
+    # The draft default scope hides unpublished contributions, so the citizen's
+    # own in-flight draft has to be looked up past it.
+    def load_own_similarity_draft
+      @proposal = Proposal
+        .unscope(where: :draft)
+        .where(author: current_user)
+        .find(params[:id])
+      @projekt_phase = @proposal.projekt_phase
+    end
+
+    def publish_checked_proposal
+      @proposal.update!(draft: false)
+      @proposal.publish
+
+      Mailer.proposal_created(@proposal).deliver_later
+    end
+
+    def render_new_form
+      params[:projekt_phase_id] = @proposal&.projekt_phase&.id
+      params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
+      render :new
     end
 
     def voting_user

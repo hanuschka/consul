@@ -6,6 +6,7 @@ class Proposal < ApplicationRecord
   include OnBehalfOfSubmittable
   include Memoable
   include ConditionallyVotable
+  include SimilarContributionsCheckable
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 

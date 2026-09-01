@@ -18,6 +18,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         )
 
         @breadcrumbs = breadcrumbs_for_action(@investment.title)
+        @similar_contributions = ::SimilarContributions::FindForProjekt.call(@investment)
       end
       format.pdf do
         pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment, @projekt_phase)

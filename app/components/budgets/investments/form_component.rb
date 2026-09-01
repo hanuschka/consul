@@ -10,6 +10,10 @@ class Budgets::Investments::FormComponent < ApplicationComponent
     @embbeded_in_ai_flow = embbeded_in_ai_flow
   end
 
+  def similar_contributions_check_running?
+    investment.persisted? && investment.similar_contributions_check_processing?
+  end
+
   private
 
     def budget

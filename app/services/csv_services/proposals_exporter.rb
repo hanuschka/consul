@@ -2,6 +2,8 @@ module CsvServices
   class ProposalsExporter < CsvServices::BaseService
     require "csv"
 
+    COUNT_BATCH_SIZE = 200
+
     def initialize(proposals)
       @proposals = proposals
     end
@@ -10,8 +12,13 @@ module CsvServices
       CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
-        @proposals.includes(:image).each do |proposal|
-          csv << row(proposal)
+        @proposals
+          .includes(:image)
+          .preload(projekt_phase: [:projekt, :settings])
+          .to_a.each_slice(COUNT_BATCH_SIZE) do |batch|
+          @similar_contributions_counts = SimilarContributions::CandidateCounts.call(batch)
+
+          batch.each { |proposal| csv << row(proposal) }
         end
       end
     end
@@ -43,7 +50,8 @@ module CsvServices
           "selected",
           "image_ai_generated",
           "district",
-          "geometry"
+          "geometry",
+          "similar_contributions"
         ]
       end
 
@@ -72,8 +80,13 @@ module CsvServices
           proposal.selected,
           proposal.image&.ai_generated,
           proposal.district&.name,
-          format_geometry(proposal.map_location&.features)
+          format_geometry(proposal.map_location&.features),
+          similar_contributions_count(proposal)
         ]
+      end
+
+      def similar_contributions_count(resource)
+        @similar_contributions_counts.fetch(resource.id, 0)
       end
   end
 end

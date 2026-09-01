@@ -52,6 +52,7 @@
       App.NotifyReviewers.initialize();
       App.LoaderSpinner.initialize();
       App.AccountUsernameEditComponent.initialize();
+      App.SimilarContributionsCheck.initialize();
     }
   };
 }).call(this);

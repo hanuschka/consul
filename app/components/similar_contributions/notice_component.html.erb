@@ -1,0 +1,33 @@
+<section class="similar-contributions-notice" aria-labelledby="similar-contributions-notice-title">
+  <h2 class="similar-contributions-notice--title" id="similar-contributions-notice-title">
+    <%= t(".title") %>
+  </h2>
+
+  <p class="similar-contributions-notice--intro"><%= t(".intro", count: matches.size) %></p>
+
+  <ul class="similar-contributions-notice--list">
+    <% matches.each do |match| %>
+      <li class="similar-contributions-notice--item">
+        <h3 class="similar-contributions-notice--item-title">
+          <%= link_to match.resource.title, path_for(match.resource), target: "_blank",
+                title: t("shared.target_blank") %>
+        </h3>
+
+        <p class="similar-contributions-notice--item-excerpt"><%= excerpt_for(match.resource) %></p>
+
+        <% if supporting_available?(match.resource) %>
+          <div class="similar-contributions-notice--item-support"
+               id="<%= dom_id(match.resource) %>_votes">
+            <%= render votes_component_for(match.resource) %>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="similar-contributions-notice--actions">
+    <%= button_to t(".submit_anyway"), publish_url,
+          method: :patch,
+          class: "button similar-contributions-notice--submit-anyway" %>
+  </div>
+</section>

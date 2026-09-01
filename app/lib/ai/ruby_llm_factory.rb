@@ -1,9 +1,12 @@
 module Ai::RubyLlmFactory
-  def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
-    model = Ai::Settings.current_llm_model
+  def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE, request_timeout: nil, model: nil)
+    model ||= Ai::Settings.current_llm_model
     provider = Ai::Settings.current_llm_provider
 
-    chat = init.chat(
+    context = init
+    context.config.request_timeout = request_timeout if request_timeout.present?
+
+    chat = context.chat(
       model: model,
       provider: provider.to_sym,
       assume_model_exists: true
@@ -12,8 +15,10 @@ module Ai::RubyLlmFactory
     record_usage_from(chat, feature: feature, provider: provider, model: model)
   end
 
-  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE)
-    chat(feature: feature).with_schema(output_schema)
+  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE,
+                                 request_timeout: nil, model: nil)
+    chat(feature: feature, request_timeout: request_timeout, model: model)
+      .with_schema(output_schema)
   end
 
   def self.record_usage_from(chat, feature:, provider:, model:)
@@ -56,7 +61,7 @@ module Ai::RubyLlmFactory
     when "ollama"
       ollama_context
     else
-      RubyLLM
+      RubyLLM.context
     end
   end
 

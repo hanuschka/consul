@@ -1,0 +1,19 @@
+<section class="similar-contributions-check js-similar-contributions-check"
+         data-status-url="<%= status_url %>"
+         data-publish-url="<%= publish_url %>"
+         data-poll-interval="<%= POLL_INTERVAL %>"
+         data-poll-timeout="<%= POLL_TIMEOUT %>"
+         aria-live="polite">
+  <div class="similar-contributions-check--progress js-similar-contributions-check-progress">
+    <%= render Shared::LoadingSpinnerComponent.new(
+      message: t("components.similar_contributions.check_section_component.checking")
+    ) %>
+  </div>
+
+  <div class="similar-contributions-check--result js-similar-contributions-check-result"></div>
+
+  <%= button_to t("components.similar_contributions.check_section_component.publish"),
+        publish_url,
+        method: :patch,
+        class: "button js-similar-contributions-check-publish u-hidden" %>
+</section>

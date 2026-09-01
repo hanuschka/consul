@@ -7,6 +7,8 @@ en:
           browse_mode_in_phase_footer_description: Enables browse mode in the footer area of the proposal view. Users can navigate through all proposals one by one without returning to the overview page. This improves the user experience when there are many entries. Disable this option if the overview page should be the preferred view.
           browse_mode_in_phase_footer_by_default: Browse mode as default
           browse_mode_in_phase_footer_by_default_description: Sets browse mode as the default view so users start directly in the single-item view and can browse through proposals when opening the page. Without this setting, users first see the list view. Enable this option when sequential display of proposals is preferred.
+          similar_contributions_check: Check for similar contributions
+          similar_contributions_check_description: "Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered."
         form:
           allow_attached_image: Cover image
           allow_attached_image_description: Lets users upload a cover image when creating a proposal. This image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if moderation should be reduced.
@@ -138,6 +140,8 @@ en:
           browse_mode_in_phase_footer_by_default_description: Sets browse mode as the default view so users start directly in the single-item view and can browse through proposals when opening the page. Without this setting, users first see the list view. Enable this option when sequential display of proposals is preferred.
           require_admin_acceptance: Admin approval
           require_admin_acceptance_description: "Requires manual approval by an administrator before a user-created proposal becomes visible on the frontend. Without approval, the proposal remains in draft status. Enable this option for sensitive participation processes to ensure content quality."
+          similar_contributions_check: Check for similar contributions
+          similar_contributions_check_description: "Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered."
         form:
           allow_attached_image: Cover image
           allow_attached_image_description: "Lets users upload a cover image when creating a proposal. The image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if the moderation effort for image review should be reduced."

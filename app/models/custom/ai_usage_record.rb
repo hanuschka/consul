@@ -26,6 +26,8 @@ class AiUsageRecord < ApplicationRecord
     proposal_ai_draft.generate_draft
     proposal_ai_draft.hard_criteria
     proposal_ai_draft.soft_criteria
+    similar_contributions.find_for_phase
+    similar_contributions.find_for_projekt
   ].push(UNKNOWN_FEATURE).freeze
 
   COUNTER_COLUMNS = %i[

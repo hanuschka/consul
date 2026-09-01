@@ -2,6 +2,8 @@
   <%= render "pages/brand_color_styles", page: @landing_page %>
 <% end %>
 
+<%= render SimilarContributions::CheckSectionComponent.new(@proposal) %>
+
 <%= render UserResources::FormComponent.new(
   @proposal,
   url: proposals_path,

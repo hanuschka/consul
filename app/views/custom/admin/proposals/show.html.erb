@@ -20,6 +20,10 @@
 
 <hr>
 
+<%= render SimilarContributions::ListComponent.new(@similar_contributions, resource: @proposal) %>
+
+<hr>
+
 <%= form_with(model: [@namespace, @projekt_phase, @proposal]) do |f| %>
   <%= f.text_area :official_answer,
                   value: AdminWYSIWYGSanitizer.new.sanitize(@proposal.official_answer),

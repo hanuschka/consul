@@ -2,4 +2,6 @@
   <%= render "pages/brand_color_styles", page: @landing_page %>
 <% end %>
 
+<%= render SimilarContributions::CheckSectionComponent.new(@investment) %>
+
 <%= render Budgets::Investments::NewComponent.new(@budget) %>

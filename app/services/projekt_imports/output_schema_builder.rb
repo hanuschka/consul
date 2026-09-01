@@ -91,11 +91,38 @@ module ProjektImports::OutputSchemaBuilder
       type: "object",
       properties: {
         type: { type: "string", enum: phase_types },
-        name: { type: %w[string null], description: "Display name" },
+        name: {
+          type: %w[string null],
+          description: "Display name of the phase tab, in the requested output " \
+                       "language. Use the default name listed for this phase type " \
+                       "unless the document states a different one. Never use the " \
+                       "type identifier or an anglicised form of it such as " \
+                       "\"Voting Phase\"."
+        },
         start_date: { type: %w[string null], description: "YYYY-MM-DD" },
         end_date: { type: %w[string null], description: "YYYY-MM-DD" },
-        description: { type: %w[string null], description: "Phase description" },
-        cta_button_name: { type: %w[string null], description: "CTA button label" },
+        description: {
+          type: %w[string null],
+          description: "Phase description, in the requested output language"
+        },
+        cta_button_name: {
+          type: %w[string null],
+          description: "CTA button label, in the requested output language"
+        },
+        intro_content: {
+          type: %w[string null],
+          description: "Short markdown text rendered directly ABOVE this phase's " \
+                       "content in the projekt footer. Two or three sentences at " \
+                       "most, specific to this phase. Null when the document " \
+                       "offers nothing to say."
+        },
+        outro_content: {
+          type: %w[string null],
+          description: "Short markdown text rendered directly BELOW this phase's " \
+                       "content in the projekt footer, e.g. what happens with the " \
+                       "results or where to ask questions. Null when the document " \
+                       "offers nothing to say."
+        },
         user_status: {
           type: %w[string null],
           enum: ["guest", "registered", "verified", nil],
@@ -110,16 +137,25 @@ module ProjektImports::OutputSchemaBuilder
         budget: budget_schema,
         iframe: iframe_schema,
         livestreams: { type: "array", items: livestream_schema },
-        point_of_interest_categories: { type: "array", items: poi_category_schema }
+        point_of_interest_categories: { type: "array", items: poi_category_schema },
+        projekt_labels: { type: "array", items: projekt_label_schema },
+        sentiments: { type: "array", items: sentiment_schema }
       },
       required: %w[
-        type name start_date end_date description cta_button_name user_status
-        poll_questions events milestones arguments notifications progress_bars
-        budget iframe livestreams point_of_interest_categories
+        type name start_date end_date description cta_button_name intro_content
+        outro_content user_status poll_questions events milestones arguments
+        notifications progress_bars budget iframe livestreams
+        point_of_interest_categories projekt_labels sentiments
       ],
       additionalProperties: false
     }
   end
+
+  # Every vote type the manual question form offers, plus nil so an import that
+  # cannot tell falls back to PollBuilder's default. Spelled out rather than read
+  # from VotationType.vote_types so the schema does not force the model to load
+  # while the app is still booting.
+  POLL_QUESTION_VOTE_TYPES = ["unique", "multiple", "multiple_with_weight", "rating_scale", nil].freeze
 
   def self.poll_question_schema
     {
@@ -127,22 +163,34 @@ module ProjektImports::OutputSchemaBuilder
       properties: {
         title: { type: "string", minLength: 4 },
         description: { type: %w[string null] },
-        vote_type: { type: %w[string null], enum: ["unique", "multiple", "rating_scale", nil] },
+        vote_type: { type: %w[string null], enum: POLL_QUESTION_VOTE_TYPES },
+        min_rating_scale_label: {
+          type: %w[string null],
+          description: "Caption for the low end of a rating_scale question. Null otherwise."
+        },
+        max_rating_scale_label: {
+          type: %w[string null],
+          description: "Caption for the high end of a rating_scale question. Null otherwise."
+        },
         answers: {
           type: "array",
           minItems: 2,
+          description: "Selectable options. For a rating_scale question these are the scale points.",
           items: {
             type: "object",
             properties: {
               title: { type: "string", minLength: 1 },
-              description: { type: "string", minLength: 1 }
+              description: { type: %w[string null], description: "Optional explanatory text" }
             },
             required: %w[title description],
             additionalProperties: false
           }
         }
       },
-      required: %w[title description vote_type answers],
+      required: %w[
+        title description vote_type min_rating_scale_label
+        max_rating_scale_label answers
+      ],
       additionalProperties: false
     }
   end
@@ -269,6 +317,37 @@ module ProjektImports::OutputSchemaBuilder
         starts_at: { type: %w[string null], description: "YYYY-MM-DDTHH:MM" }
       },
       required: %w[url title description starts_at],
+      additionalProperties: false
+    }
+  end
+
+  def self.projekt_label_schema
+    {
+      type: "object",
+      description: "One entry of the phase's single multi-select label group. " \
+                   "Only ProposalPhase and BudgetPhase support labels.",
+      properties: {
+        name: { type: "string", description: "Label text shown to citizens" },
+        icon: {
+          type: %w[string null],
+          description: "Font Awesome icon name without the fa- prefix (e.g. tree). Null for no icon."
+        }
+      },
+      required: %w[name icon],
+      additionalProperties: false
+    }
+  end
+
+  def self.sentiment_schema
+    {
+      type: "object",
+      description: "One entry of the phase's single single-select sentiment group. " \
+                   "Only ProposalPhase and BudgetPhase support sentiments.",
+      properties: {
+        name: { type: "string", description: "Sentiment text shown to citizens" },
+        color: { type: %w[string null], description: "Hex color code (e.g. #3366CC)" }
+      },
+      required: %w[name color],
       additionalProperties: false
     }
   end

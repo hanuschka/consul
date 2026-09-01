@@ -6,6 +6,11 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_projekt) { Projekt.create!(name: "Projekt for phases") }
+let(:existing_projekt_phase) do
+  existing_projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true)
+end
+
   path '/api/projekts/{projekt_id}/projekt_phases' do
     parameter name: :projekt_id, in: :path, type: :integer, description: 'Projekt ID'
 
@@ -287,7 +292,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:projekt_id) { 1 } }
-      forbidden_response { let(:projekt_id) { 1 } }
+      forbidden_response { let(:projekt_id) { existing_projekt.id } }
     end
   end
 
@@ -361,7 +366,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_phase.id } }
     end
   end
 
@@ -432,7 +437,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_phase.id } }
     end
   end
 
@@ -665,7 +670,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_phase.id } }
     end
 
     delete 'Delete a projekt phase' do
@@ -720,7 +725,7 @@ RSpec.describe 'Projekt Phases API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_phase.id } }
     end
   end
 end

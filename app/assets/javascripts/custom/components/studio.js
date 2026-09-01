@@ -19,6 +19,8 @@
 
     App.Tabs.initialize();
     App.Studio.ContentBlocks.TemplateSelector.initialize();
+    App.Studio.ContentBlocks.CreateWithAi.initialize();
+    App.Studio.ContentBlocks.SavedContentBlocks.initialize();
     App.Studio.ContentBlocks.Crud.initialize();
     App.Studio.ContentBlocks.MapEmbed.initialize();
     App.Studio.ContentBlocks.ChangeHistory.initialize();
@@ -66,8 +68,15 @@
       if (typeof App.Studio.Projekt === "undefined") return
       if (!this.hasSiteContentBlocks()) return
 
+      this.loadConfig();
       this.wrapContentBlocks();
       App.Studio.initContentBlockModules();
+    },
+
+    loadConfig() {
+      if (App.Studio.Projekt.isProjektPage()) return
+
+      App.Studio.Projekt.config.aiAvailable = document.body.dataset.aiAvailable === "true";
     },
 
     hasSiteContentBlocks() {
@@ -81,6 +90,7 @@
         const contentBlockId = block.dataset.contentBlockId;
         const updateUrl = block.dataset.updateUrl;
         const aiUrl = block.dataset.aiUrl;
+        const generateUrl = block.dataset.generateUrl;
         const defaultContent = block.dataset.defaultContent;
         const toolbarPosition = block.dataset.toolbarPosition;
         const emptyHint = this.detachEmptyHint(block);
@@ -92,6 +102,7 @@
             context: "site",
             updateUrl: updateUrl,
             aiUrl: aiUrl,
+            generateUrl: generateUrl,
             toolbarPosition: toolbarPosition
           }
         );

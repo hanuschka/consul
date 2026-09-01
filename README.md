@@ -27,6 +27,8 @@ Four German-language documents accompany this repository: the
 [Betriebshandbuch](BETRIEBSHANDBUCH.md) (hosting, deployment, backups, monitoring), the
 [Third-Party Notices](THIRD_PARTY_NOTICES.md) (major open-source components and licenses)
 and the [Security Policy](SECURITY.md) (responsible disclosure of vulnerabilities).
+Machine-readable software-directory metadata (openCoDE) lives in
+[publiccode.yml](publiccode.yml).
 
 ## Development setup
 
@@ -281,7 +283,7 @@ RAILS_ENV=production bin/rails runner 'puts Delayed::Job.last&.last_error'
 
 ## License
 
-Code published under AFFERO GPL v3 (see [LICENSE-AGPLv3.txt](LICENSE-AGPLv3.txt)).
+Code published under AFFERO GPL v3 (see [LICENSE](LICENSE)).
 
 ## Contributions
 

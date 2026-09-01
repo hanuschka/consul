@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Resources::ListItem::AuthorComponent < ApplicationComponent
+  # Everything this component reads off the author. Callers rendering a list of
+  # resources should preload it to avoid a query per row.
+  PRELOAD_ASSOCIATIONS = {
+    author: [:organization, { image: { attachment_attachment: :blob } }]
+  }.freeze
+
   attr_reader :resource, :author
 
   def initialize(resource:)

@@ -260,16 +260,19 @@ Devise.setup do |config|
                   Rails.application.secrets.wordpress_oauth2_secret,
                   strategy_class: OmniAuth::Strategies::Wordpress,
                   client_options: { site: Rails.application.secrets.wordpress_oauth2_site }
+  kobil_secrets = Rails.application.secrets.kobil || {}
+
   config.omniauth :kobil,
-                  issuer: Rails.application.secrets.kobil_issuer,
+                  name: :kobil,
+                  issuer: kobil_secrets[:issuer],
                   discovery: true,
                   scope: [:openid, :email, :profile, :address],
                   strategy_class: OmniAuth::Strategies::OpenIDConnect,
-                  post_logout_redirect_uri: Rails.application.secrets.kobil_post_logout_redirect_uri,
+                  post_logout_redirect_uri: kobil_secrets[:post_logout_redirect_uri],
                   client_options: {
-                    identifier: Rails.application.secrets.kobil_client_id,
-                    secret: Rails.application.secrets.kobil_client_secret,
-                    redirect_uri: Rails.application.secrets.kobil_redirect_uri
+                    identifier: kobil_secrets[:client_id],
+                    secret: kobil_secrets[:client_secret],
+                    redirect_uri: kobil_secrets[:redirect_uri]
                   }
 
   # ==> Warden configuration

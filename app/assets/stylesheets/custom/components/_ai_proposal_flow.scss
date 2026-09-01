@@ -306,10 +306,12 @@
   }
 }
 
-.ai-proposal-flow--project-banner--initial {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: var(--brand-color);
+.ai-proposal-flow--project-banner--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--brand-color) 55%, transparent);
+  font-size: 40px;
   line-height: 1;
 }
 

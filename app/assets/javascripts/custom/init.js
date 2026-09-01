@@ -31,9 +31,7 @@
       App.ImageCropper.initialize();
       App.KlaroAccessibility.initialize();
       App.RevealAccessibility.initialize();
-      App.VoiceAssistant.initialize();
-      App.VoiceAssistantV2.initialize();
-      App.VoiceAssistantDesignsPreview.initialize();
+      App.VoiceAssistantWidget.initialize();
       App.HiddenTokenWidgetComponent.initialize();
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();

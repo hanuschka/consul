@@ -1,5 +1,8 @@
 class Adm::DeficiencyReports::DistrictsController < Adm::DeficiencyReports::BaseController
   def index
+    authorize ::RegisteredAddress::District, :index?,
+      policy_class: Adm::DeficiencyReports::DistrictPolicy
+
     @districts = policy_scope(::RegisteredAddress::District, policy_scope_class: Adm::DeficiencyReports::DistrictPolicy::Scope)
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.districts"), icon: "location_city" }]

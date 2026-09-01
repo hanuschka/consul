@@ -36,11 +36,10 @@ class WelcomeController < ApplicationController
   private
 
     def header_image_attachment(image_name, card_title)
-      site_image = SiteCustomization::Image.find_by(name: image_name)
-      if site_image&.persisted_attachment?
-        site_image.image
-      else
-        Widget::Card.header.find_by(title: card_title)&.image&.attachment
-      end
+      site_image = SiteCustomization::Image.by_name(image_name)
+
+      return site_image.image if site_image&.persisted_attachment?
+
+      Widget::Card.header.find_by(title: card_title)&.image&.attachment
     end
 end

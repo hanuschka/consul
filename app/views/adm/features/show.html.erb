@@ -8,14 +8,37 @@
 
 <div class="kern-container">
   <section class="mb-5">
-    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.general.enable_google_translate"),  :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "extended_feature.general.show_guest_login_links"),   :value, :boolean) %>
+    <% @general_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+
+    <% @general_text_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+    <% end %>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.features.show.oauth_logins_title") %></h2>
+    <p class="kern-body mb-3"><%= t("adm.features.show.oauth_logins_intro") %></p>
+
+    <% @oauth_login_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
   </section>
 
   <section class="mb-5">
     <h2 class="kern-title kern-title--small mb-2"><%= t("adm.features.show.kobil_title") %></h2>
-    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "feature.kobil_login"),                :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "feature.kobil_single_logout"),        :value, :boolean) %>
-    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "feature.kobil_address_verification"), :value, :boolean) %>
+
+    <% if Kobil::Settings.missing_required_credential_keys.any? %>
+      <div class="mb-3">
+        <%= kern_alert(title: t("adm.features.show.kobil_credentials_incomplete_title"), style: :warning) do %>
+          <p class="kern-body"><%= t("adm.features.show.kobil_credentials_incomplete_body") %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% @kobil_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
   </section>
 </div>

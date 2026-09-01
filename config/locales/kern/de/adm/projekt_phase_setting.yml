@@ -46,17 +46,21 @@ de:
           show_comments: Kommentare
           show_comments_description: Aktiviert die Kommentarfunktion für Vorschläge in der Budgetphase. Im Frontend wird unterhalb jedes Vorschlags ein Kommentarbereich mit Antwortfunktion angezeigt. Aktivieren Sie diese Funktion, um den Dialog zwischen Nutzern und der Verwaltung zu ermöglichen. Deaktivieren Sie sie, wenn keine öffentliche Diskussion erwünscht ist.
           conditional_balloting: Vereinfachte Stimmabgabe
-          conditional_balloting_description: "Erlaubt Nutzern die Stimmabgabe bereits vor Abschluss der Verifizierung. Die Stimmen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Abstimmungsbutton sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die."
+          conditional_balloting_description: "Erlaubt Nutzern die Stimmabgabe bereits vor Abschluss der Verifizierung. Die Stimmen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Abstimmungsbutton sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die Verifizierung noch aussteht."
           conditional_voting: Vereinfachte Unterstützung
           conditional_voting_description: "Erlaubt Nutzern, Vorschläge in der Auswahlphase bereits vor Abschluss der Verifizierung zu unterstützen. Die Unterstützungen werden erfasst, aber erst nach erfolgreicher Verifizierung in die Auszählung aufgenommen. Im Frontend ist der Unterstützungs-Button sofort sichtbar. Aktivieren Sie diese Option, um die Einstiegshürde zu senken und mehr Teilnahme zu ermöglichen, auch wenn die Verifizierung noch aussteht."
           show_video_as_link: Videos als Link
           show_video_as_link_description: Stellt hinzugefügte Videos nicht als eingebetteten Player, sondern als anklickbaren Link dar. Im Frontend erscheint statt des Video-Players ein Textlink, der zum externen Anbieter führt. Aktivieren Sie diese Option, um die Ladezeit der Seite zu reduzieren oder wenn eingebettete Videos aus datenschutzrechtlichen Gründen vermieden werden sollen.
           hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Vorschläge
           hide_ballots_count_description: Blendet die aktuelle Stimmenanzahl während der laufenden Abstimmungsphase aus, sodass Nutzer die bisherige Stimmverteilung nicht einsehen können. Im Frontend wird der Zähler ausgeblendet. Aktivieren Sie diese Option, um eine Beeinflussung durch sichtbare Ergebnisse zu vermeiden und eine unbeeinflusste Stimmabgabe sicherzustellen.
+          hide_comments_count_order: Sortierung „Meist kommentiert“ ausblenden
+          hide_comments_count_order_description: Entfernt die Sortierung nach Anzahl der Kommentare aus der Auswahl. Im Frontend erscheint die Option nicht mehr, und ein Aufruf über die URL fällt auf die Standardsortierung zurück. Aktivieren Sie diese Option, wenn Beiträge nach Qualität und nicht nach Diskussionsvolumen wahrgenommen werden sollen.
       option:
         resource:
           max_submissions_per_user: Maximale Einreichungen pro Nutzer
           max_submissions_per_user_description: Begrenzt die Anzahl der Investitionsvorschläge, die ein einzelner Nutzer in dieser Phase einreichen darf. Im Frontend wird nach Erreichen des Limits der Erstellen-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
+          max_supports_per_user: Maximale Unterstützungen pro Nutzer
+          max_supports_per_user_description: Begrenzt die Anzahl der Investitionsvorschläge, die ein einzelner Nutzer in dieser Phase unterstützen darf. Im Frontend wird nach Erreichen des Limits der Unterstützungs-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
         form:
           map_features_limit: Maximale Kartenmarkierungen
           map_features_limit_description: "Legt die maximale Anzahl an Kartenmarkierungen fest, die ein Nutzer innerhalb einer einzelnen Sitzung auf der Karte setzen kann. Im Frontend wird nach Erreichen des Limits das Setzen weiterer Pins blockiert. Nutzen Sie diesen Wert, um Missbrauch zu verhindern und die Kartenübersichtlichkeit zu wahren."
@@ -71,7 +75,7 @@ de:
             total_votes: Aktuelles Ranking
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
-            comments_count: Meist Kommentiert
+            comments_count: Meist kommentiert
     formular_phase:
       option:
         general:
@@ -197,6 +201,8 @@ de:
           votes_for_proposal_success_description: "Legt die Anzahl der Unterstützungen fest, die ein Vorschlag erreichen muss, um als erfolgreich zu gelten. Nach Erreichen dieses Werts wird der Vorschlag im Frontend als erfolgreich markiert und kann nicht weiter unterstützt werden. Setzen Sie den Wert passend zum Projektumfang und zur erwarteten Teilnehmerzahl, um realistische Quoren zu gewährleisten."
           max_submissions_per_user: Maximale Einreichungen pro Nutzer
           max_submissions_per_user_description: Begrenzt die Anzahl der Vorschläge, die ein einzelner Nutzer in dieser Phase einreichen darf. Im Frontend wird nach Erreichen des Limits der Erstellen-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
+          max_supports_per_user: Maximale Unterstützungen pro Nutzer
+          max_supports_per_user_description: Begrenzt die Anzahl der Vorschläge, die ein einzelner Nutzer in dieser Phase unterstützen darf. Im Frontend wird nach Erreichen des Limits der Unterstützungs-Button deaktiviert und ein Hinweis angezeigt. Leer oder 0 bedeutet keine Begrenzung.
       selectable_setting:
         general:
           default_order: Standardsortierung

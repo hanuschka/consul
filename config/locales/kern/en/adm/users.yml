@@ -11,6 +11,11 @@ en:
         total_hint: Users in the current view (including active filters).
         table:
           email: Email
+          status: Status
+          statuses:
+            confirmed: Confirmed
+            unconfirmed: Unconfirmed
+            hidden: Hidden
           first_name: First name
           last_name: Last name
           city_name: City

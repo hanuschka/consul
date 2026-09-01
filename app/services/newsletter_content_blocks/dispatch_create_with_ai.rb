@@ -45,7 +45,8 @@ class NewsletterContentBlocks::DispatchCreateWithAi < ApplicationService
     {
       "prompt" => @prompt,
       "category_hint" => @category_hint,
-      "anchor_template_id" => @anchor_template_id
+      "anchor_template_id" => @anchor_template_id,
+      "text_locale" => I18n.locale.to_s
     }
   end
 
@@ -53,7 +54,7 @@ class NewsletterContentBlocks::DispatchCreateWithAi < ApplicationService
     @placeholder = SiteCustomization::ContentBlock.unscoped.new(
       name: "custom",
       body: "",
-      locale: "de",
+      locale: SiteCustomization::ContentBlock.canonical_locale,
       newsletter_id: @newsletter.id,
       key: nil,
       position: nil,

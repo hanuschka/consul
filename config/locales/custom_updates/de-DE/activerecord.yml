@@ -189,6 +189,8 @@ de:
         author: Autor
         deficiency_report_category_id: Kategorie
         deficiency_report_status_id: Status
+        deficiency_report_intake_channel_id: Eingangskanal
+        deficiency_report_subcategory_id: Unterkategorie
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen

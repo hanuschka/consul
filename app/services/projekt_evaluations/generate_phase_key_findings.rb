@@ -7,8 +7,9 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
   MAX_COMMENTS_IN_PROMPT = 30
   MAX_REF_SNIPPET = 180
 
-  def initialize(phase)
+  def initialize(phase, projekt_phase:)
     @phase = phase
+    @projekt_phase = projekt_phase
   end
 
   def call
@@ -210,9 +211,9 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
 
   def get_ai_response(user_prompt)
     response = Ai::RubyLlmFactory
-      .chat
+      .chat(feature: "projekt_evaluations.phase_key_findings")
       .with_schema(output_schema)
-      .with_instructions(system_instructions)
+      .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, @projekt_phase))
       .ask(user_prompt)
 
     response.content

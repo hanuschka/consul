@@ -63,6 +63,42 @@ class DeficiencyReportMailer < ApplicationMailer
     end
   end
 
+  # "This Anliegen was shared with you." Carries the opt-out link, so a recipient who does not want
+  # the follow-up notifications can drop them without hunting for the bell.
+  def notify_shared_report(deficiency_report, user, shared_by)
+    @deficiency_report = deficiency_report
+    @user = user
+    @shared_by = shared_by
+    return if @deficiency_report.blank? || @user.blank?
+
+    @email_to = @user.email
+    return if @email_to.blank?
+
+    with_user(@user) do
+      mail_with_custom_template(nil, watcher_variables.merge("shared_by_name" => @shared_by&.name.to_s),
+        to: @email_to,
+        default_subject: t("custom.deficiency_reports.mailers.notify_shared_report.subject",
+                           identifier: report_identifier))
+    end
+  end
+
+  # Sent to everyone with the bell on when the Anliegen changes, which is what the bell promises.
+  def notify_watcher_about_change(deficiency_report, user)
+    @deficiency_report = deficiency_report
+    @user = user
+    return if @deficiency_report.blank? || @user.blank?
+
+    @email_to = @user.email
+    return if @email_to.blank?
+
+    with_user(@user) do
+      mail_with_custom_template(nil, watcher_variables,
+        to: @email_to,
+        default_subject: t("custom.deficiency_reports.mailers.notify_watcher_about_change.subject",
+                           identifier: report_identifier))
+    end
+  end
+
   def send_feedback_form_link(deficiency_report)
     @deficiency_report = deficiency_report
     @email_to = deficiency_report.author.email
@@ -94,8 +130,18 @@ class DeficiencyReportMailer < ApplicationMailer
     end
 
     def officer_notification_subject
-      t("custom.deficiency_reports.mailers.notify_officer.subject",
-        identifier: "#{@deficiency_report.id}: #{@deficiency_report.title.first(50)}")
+      t("custom.deficiency_reports.mailers.notify_officer.subject", identifier: report_identifier)
+    end
+
+    def report_identifier
+      "#{@deficiency_report.id}: #{@deficiency_report.title.first(50)}"
+    end
+
+    def watcher_variables
+      officer_notification_variables.merge(
+        "username" => @user.username.to_s,
+        "unwatch_url" => unwatch_adm_deficiency_reports_deficiency_report_url(@deficiency_report)
+      )
     end
 
     def with_user(user)

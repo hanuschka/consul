@@ -19,6 +19,24 @@ class ApplicationController < ActionController::Base
   # end
 
   private
+
+    # Overrides CanCan's default so a request arriving from an on-behalf-of account mail can read the
+    # one hidden record that mail was about. Everything else about the visitor is unchanged: the
+    # token adds a single rule and grants nothing when it is missing, stale or forged.
+    def current_ability
+      @current_ability ||= Ability.new(current_user, preview_gid: on_behalf_of_preview_gid)
+    end
+
+    # Memoized with defined? rather than ||= because almost every request has no token, and a nil
+    # result should not mean verifying a signature again on the next call.
+    def on_behalf_of_preview_gid
+      return @on_behalf_of_preview_gid if defined?(@on_behalf_of_preview_gid)
+
+      @on_behalf_of_preview_gid = ResourcePreviewToken.resource_gid(
+        params[:preview_token], purpose: OnBehalfOfAccountMailer::PREVIEW_PURPOSE
+      )
+    end
+
     def sanitize_pagination_params
       %i[page per_page resource_browse_mode_page].each do |key|
         value = params[key]
@@ -166,7 +184,7 @@ class ApplicationController < ActionController::Base
       return if bot_request?
 
       session[:guest_user_id] ||= "guest_#{SecureRandom.uuid}"
-      @current_ability = Ability.new(guest_user)
+      @current_ability = Ability.new(guest_user, preview_gid: on_behalf_of_preview_gid)
     rescue StandardError => e
       Sentry.capture_exception(e)
     end

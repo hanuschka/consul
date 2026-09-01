@@ -147,6 +147,8 @@ class ProjektPhase < ApplicationRecord
            foreign_key: :projekt_phase_id,
            dependent: :destroy
 
+  has_many :poll_question_imports, dependent: :destroy
+
   has_many :officing_manager_assignments, dependent: :destroy
   has_many :officing_managers, through: :officing_manager_assignments
   has_many :user_resource_criteria, class_name: "UserResourceCriteria", dependent: :destroy
@@ -726,7 +728,8 @@ class ProjektPhase < ApplicationRecord
     def age_permission_problem(user)
       return if age_restriction.nil?
       return :missing_user_data if user.age.blank?
-      return if (age_restriction.min_age || 0) <= user.age && user.age <= (age_restriction.max_age || 200)
+      return if age_restriction.effective_min_age <= user.age &&
+                user.age <= age_restriction.effective_max_age
 
       :only_specific_ages
     end

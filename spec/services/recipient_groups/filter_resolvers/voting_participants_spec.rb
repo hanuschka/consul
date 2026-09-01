@@ -6,7 +6,7 @@ describe RecipientGroups::FilterResolvers::VotingParticipants do
   # Must use projekt.projekt_phases.create! to get proper STI subclass instance.
   let(:projekt) { create(:projekt) }
   let(:phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase") }
-  let!(:voter) { create(:user, :level_two, email: "v@x.test", skip_password_validation: true) }
+  let!(:voter) { create(:user, :verified, email: "v@x.test", skip_password_validation: true) }
   let!(:non_voter) { create(:user, email: "n@x.test", skip_password_validation: true) }
 
   before do

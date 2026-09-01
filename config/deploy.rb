@@ -169,6 +169,33 @@ task :add_new_settings do
   end
 end
 
+# Installs exiftool, which a client needs to generate AI images. Marking
+# generated images is mandatory, so on a client with AI enabled every
+# generation fails until this has run once.
+#
+# Deliberately not hooked into deploy: a client without AI has no use for it.
+# Run it per client instead, once:
+#
+#   branch=<client-branch> bundle exec cap production install_ai_marking
+task :install_ai_marking do
+  on roles(:app) do
+    within release_path do
+      execute :bash, "#{release_path}/scripts/install_deps.sh", "marking"
+    end
+  end
+end
+
+# Reports the same dependency checks the internal API stats endpoint exposes,
+# without installing anything. Useful for answering "is this box ready" across
+# several clients before or after a release.
+task :check_deps do
+  on roles(:app) do
+    within release_path do
+      execute :bash, "#{release_path}/scripts/install_deps.sh", "verify"
+    end
+  end
+end
+
 task :execute_release_tasks do
   on roles(:app) do
     within release_path do

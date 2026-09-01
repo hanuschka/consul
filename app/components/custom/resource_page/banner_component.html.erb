@@ -91,7 +91,8 @@
         Shared::ResourceImageComponent.new(
           image_url: image_url,
           image_placeholder_icon_class: "fa-comments",
-          resource: resource
+          resource: resource,
+          ai_generated: resource.image&.ai_generated?
         )
       ) %>
     <% end %>

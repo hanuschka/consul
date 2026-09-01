@@ -15,7 +15,7 @@ class Ai::EditContentBlock < ApplicationService
   def call
     llm_response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
+        .chat_with_json_output(output_schema, feature: "content_blocks.edit")
         .with_instructions(system_instructions)
         .ask(user_prompt)
 

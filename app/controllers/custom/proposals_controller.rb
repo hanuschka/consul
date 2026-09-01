@@ -4,7 +4,6 @@ class ProposalsController
   include ProposalsHelper
   include ProjektControllerHelper
   include Takeable
-  include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
   include CustomHelper
@@ -118,9 +117,9 @@ class ProposalsController
   def new
     @projekt_phase = ProjektPhase::ProposalPhase.find_by(id: params[:projekt_phase_id])
 
-    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("proposals", current_user).empty?
+    if @projekt_phase.blank?
       redirect_to proposals_path
-    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+    elsif !@projekt_phase.selectable_by?(current_user)
       redirect_to page_path(@projekt_phase.projekt.page.slug,
                             projekt_phase_id: @projekt_phase.id,
                             anchor: "filter-subnav")
@@ -209,7 +208,13 @@ class ProposalsController
       return
     end
 
-    if !@proposal.admin_accepted? && !current_user&.has_pm_permission_to?(:manage, @projekt)
+    # Acceptance is gated here rather than in CanCan, so the signed link from an on-behalf-of account
+    # mail has to be admitted here too — otherwise that mail sends its recipient to a page that turns
+    # them away. :preview rather than :show because every proposal is :read-able to everyone, so only
+    # an action nothing else grants can single out the record that link names.
+    if !@proposal.admin_accepted? &&
+        !current_user&.has_pm_permission_to?(:manage, @projekt) &&
+        !can?(:preview, @proposal)
       redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 

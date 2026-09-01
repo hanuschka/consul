@@ -1,11 +1,15 @@
 <%= turbo_frame_tag "administer__responsible" do %>
-  <% has_officers = DeficiencyReport::Officer.any? || DeficiencyReport::OfficerGroup.any? %>
+  <% assignable_officers = deficiency_report_assignable_officers(deficiency_report.responsible) %>
+  <% has_officers = assignable_officers.any? || DeficiencyReport::OfficerGroup.any? %>
   <% if has_officers %>
     <%= form_with model: deficiency_report, url: update_administer_adm_deficiency_reports_deficiency_report_path(deficiency_report), method: :patch do |form| %>
       <% grouped_options = {
-        t("adm.deficiency_reports.deficiency_reports.administer.officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] },
-        t("adm.deficiency_reports.deficiency_reports.administer.officers") => DeficiencyReport::Officer.joins(:user).order("users.username ASC").map { |o| [o.name, "Officer:#{o.id}"] }
+        t("adm.deficiency_reports.deficiency_reports.administer.officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] }
       } %>
+      <% if assignable_officers.any? %>
+        <% grouped_options[t("adm.deficiency_reports.deficiency_reports.administer.officers")] =
+             assignable_officers.map { |o| [o.name, "Officer:#{o.id}"] } %>
+      <% end %>
       <% selected = if deficiency_report.responsible.is_a?(DeficiencyReport::OfficerGroup)
                       "OfficerGroup:#{deficiency_report.responsible.id}"
                     elsif deficiency_report.responsible.is_a?(DeficiencyReport::Officer)

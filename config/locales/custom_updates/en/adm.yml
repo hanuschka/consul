@@ -86,6 +86,9 @@ en:
           parting_words_hint: The parting words are spoken by the AI voice assistant at the end of the dialogue. Leave the field empty to use the default formulations shown in the placeholder.
           update_button: Update
           not_connected: The AI app is not connected
+          not_connected_description: To use this feature, the AI app must first be enabled by demokratie.today. Please contact your demokratie.today representative.
+          unavailable: AI service currently unreachable
+          unavailable_description: The voice assistant settings cannot be loaded right now. Please reload the page later. The setting above can still be changed.
         projekt_phase:
           ai_user_flow: AI flow assistant
           ai_settings: Voice assistant

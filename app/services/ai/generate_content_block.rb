@@ -38,7 +38,7 @@ class Ai::GenerateContentBlock < ApplicationService
       anchor_template = fetch_anchor_template(dt_templates_by_category)
     end
 
-    chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema)
+    chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema, feature: "content_blocks.generate")
 
     if filtered_templates.any?
       tool = Ai::Tools::FetchContentBlockTemplates.new(

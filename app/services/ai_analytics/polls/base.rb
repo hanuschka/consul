@@ -23,7 +23,7 @@ class AiAnalytics::Polls::Base < ApplicationService
   def generate_analysis
     chat = Ai::RubyLlmFactory.chat(feature: "ai_analytics.poll_#{@stat_key}")
       .with_schema(@output_schema)
-      .with_instructions(system_instructions)
+      .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, @poll))
 
     response = chat.ask(user_prompt)
     response.content

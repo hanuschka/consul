@@ -154,7 +154,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       return
     end
 
-    attach_image(projekt, base64)
+    attach_image(projekt, base64, response.parsed_response)
     projekt_import.update!(image_status: "completed")
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::ExecuteImportJob#generate_image] failed: #{e.message}")
@@ -166,13 +166,16 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
   # Raising on failure is deliberate: generate_image_if_requested rescues it and
   # records image_status "failed". Returning quietly would report a completed
   # image generation that attached nothing.
-  def attach_image(projekt, base64)
+  def attach_image(projekt, base64, response_body)
     result = ::Projekts::AttachPageImageService.call(
       projekt: projekt,
       user: projekt.author,
       data: Base64.decode64(base64),
-      filename: "projekt_#{projekt.id}_hero.jpg",
-      content_type: "image/jpeg"
+      filename: "projekt_#{projekt.id}_ai_hero.jpg",
+      content_type: "image/jpeg",
+      ai_generated: true,
+      ai_system: ::DtApi::Resources::Ai.reported_provider(response_body),
+      ai_system_version: ::DtApi::Resources::Ai.reported_model(response_body)
     )
 
     return if result.success?

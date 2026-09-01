@@ -52,20 +52,20 @@ class Projekts::SerializeForOverview < ApplicationService
 
   def serialize_images
     {
+      image_ai_generated: @projekt.image.ai_generated,
       image_url: Rails.application.routes.url_helpers.polymorphic_url(
-        @projekt.image.attachment.variant(
+        @projekt.image.attachment_variant(
           resize_to_fill: [298, 180],
           saver: { quality: 85 },
-          strip: true,
           format: "jpeg"
         ),
         only_path: true
       ),
       popup_image_url: Rails.application.routes.url_helpers.polymorphic_url(
-        @projekt.image.attachment.variant(
+        @projekt.image.attachment_variant(
           resize_to_fill: [251, 185],
           format: "jpeg",
-          saver: { strip: true, interlace: "JPEG", quality: 82 }
+          saver: { interlace: "JPEG", quality: 82 }
         ),
         only_path: true
       )

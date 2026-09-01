@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_17_135136) do
+ActiveRecord::Schema.define(version: 2026_08_27_150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1007,6 +1007,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.datetime "archived_at"
     t.bigint "deficiency_report_intake_channel_id"
     t.bigint "deficiency_report_subcategory_id"
+    t.bigint "recorded_by_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1019,6 +1020,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.index ["deficiency_report_subcategory_id"], name: "index_deficiency_reports_on_subcategory_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
+    t.index ["recorded_by_id"], name: "index_deficiency_reports_on_recorded_by_id"
     t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
     t.index ["tsv"], name: "index_deficiency_reports_on_tsv", using: :gin
   end
@@ -1339,6 +1341,8 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.boolean "concealed", default: false
     t.string "credits"
     t.boolean "admin", default: false, null: false
+    t.boolean "ai_generated", default: false, null: false
+    t.boolean "ai_generated_in_app", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
@@ -1936,6 +1940,15 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 
+  create_table "poll_answer_map_points", force: :cascade do |t|
+    t.bigint "poll_answer_id", null: false
+    t.float "latitude", null: false
+    t.float "longitude", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["poll_answer_id"], name: "index_poll_answer_map_points_on_poll_answer_id"
+  end
+
   create_table "poll_answers", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "author_id"
@@ -1948,6 +1961,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
     t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
+    t.index ["question_id", "author_id"], name: "index_poll_answers_unique_map_point_answer", unique: true, where: "(answer IS NULL)"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
 
@@ -2050,6 +2064,21 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
+  create_table "poll_question_imports", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "author_id"
+    t.text "extracted_text"
+    t.string "content_locale"
+    t.string "status", default: "pending", null: false
+    t.jsonb "result"
+    t.jsonb "created_question_ids", default: []
+    t.text "error_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_poll_question_imports_on_author_id"
+    t.index ["projekt_phase_id", "status"], name: "index_poll_question_imports_on_projekt_phase_id_and_status"
+  end
+
   create_table "poll_question_translations", id: :serial, force: :cascade do |t|
     t.integer "poll_question_id", null: false
     t.string "locale", null: false
@@ -2087,6 +2116,8 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.bigint "contextualize_by_poll_question_id"
     t.bigint "contexted_clone_of_poll_question_id"
     t.bigint "context_id"
+    t.boolean "randomize_answers", default: false, null: false
+    t.boolean "randomize_position", default: false, null: false
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["context_id"], name: "index_poll_questions_on_context_id"
     t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
@@ -3227,6 +3258,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.datetime "published_at"
     t.string "footer_key"
     t.integer "footer_position"
+    t.text "landing_ai_context"
     t.index ["footer_key"], name: "index_site_customization_pages_on_footer_key", unique: true
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
@@ -3570,6 +3602,9 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.boolean "notify_moderation_decision", default: true, null: false
     t.datetime "ai_disclosed_at"
     t.bigint "guest_user_id"
+    t.datetime "terms_accepted_at"
+    t.string "reply_language"
+    t.datetime "reply_language_settled_at"
     t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
     t.index ["guest_user_id"], name: "index_whatsapp_accounts_on_guest_user_id", unique: true
     t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"
@@ -3577,6 +3612,18 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id", unique: true
     t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"
     t.index ["wa_id"], name: "index_whatsapp_accounts_on_wa_id", unique: true
+  end
+
+  create_table "whatsapp_contribution_translations", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "source_language", null: false
+    t.string "locale", null: false
+    t.text "title"
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "locale"], name: "index_whatsapp_contribution_translations_on_contribution", unique: true
   end
 
   create_table "whatsapp_conversations", force: :cascade do |t|
@@ -3607,6 +3654,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "projekt_id"
+    t.string "language"
     t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
@@ -3752,6 +3800,7 @@ ActiveRecord::Schema.define(version: 2026_08_17_135136) do
   add_foreign_key "ogc_import_runs", "projekt_phases"
   add_foreign_key "organizations", "users"
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
+  add_foreign_key "poll_answer_map_points", "poll_answers", on_delete: :cascade
   add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"

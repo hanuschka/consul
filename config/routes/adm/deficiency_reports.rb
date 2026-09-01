@@ -66,6 +66,7 @@ namespace :adm do
         patch :accept
         patch :toggle_image
         patch :update_official_answer
+        delete :remove_official_answer_document
         patch :toggle_watch
         get :unwatch
         post :share

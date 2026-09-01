@@ -26,6 +26,8 @@ class Proposal < ApplicationRecord
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
 
+  after_update_commit :notify_author_about_official_answer
+
   scope :admin_accepted, -> { where(admin_accepted: true) }
   scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
   scope :user_created, -> { where(masterportal_pin_id: nil) }
@@ -208,5 +210,14 @@ class Proposal < ApplicationRecord
 
     def set_responsible_name
       self.responsible_name = "unregistriered"
+    end
+
+    def notify_author_about_official_answer
+      return if Setting["proposals.email_on_official_answer"].blank?
+      return unless saved_change_to_official_answer?
+      return if official_answer.blank?
+      return if author.blank? || author.email.blank?
+
+      Mailer.proposal_official_answer(self).deliver_later
     end
 end

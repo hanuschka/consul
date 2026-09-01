@@ -30,21 +30,20 @@ module Budgets
       @investment.heading = @budget.heading
 
       if @investment.invalid? || !link_on_behalf_of_account(@investment)
-        return render_new_form
+        return respond_with_invalid_investment
       end
 
       if similar_contributions_check_requested?(@budget.projekt_phase)
-        start_similar_contributions_check(@investment)
+        return respond_with_invalid_investment if !start_similar_contributions_check(@investment)
 
-        return render_new_form
+        return respond_with_started_check
       end
 
-      return render_new_form if !@investment.save
+      return respond_with_invalid_investment if !@investment.save
 
       publish_checked_investment
 
-      redirect_to budget_investment_path(@budget, @investment),
-                  notice: t("flash.actions.create.budget_investment")
+      respond_with_published_investment
     end
 
     def similar_contributions_status
@@ -54,8 +53,7 @@ module Budgets
     def publish_draft
       publish_checked_investment
 
-      redirect_to budget_investment_path(@budget, @investment),
-                  notice: t("flash.actions.create.budget_investment")
+      respond_with_published_investment
     end
 
     def update
@@ -104,6 +102,41 @@ module Budgets
 
         Mailer.budget_investment_created(@investment).deliver_later
         NotificationServices::NewBudgetInvestmentNotifier.call(@investment.id) #custom
+      end
+
+      def respond_with_invalid_investment
+        respond_to do |format|
+          format.html { render_new_form }
+          format.json do
+            render json: similar_contributions_invalid_payload(@investment),
+                   status: :unprocessable_entity
+          end
+        end
+      end
+
+      def respond_with_started_check
+        respond_to do |format|
+          format.html { render_new_form }
+          format.json { render json: similar_contributions_check_started_payload(@investment) }
+        end
+      end
+
+      def respond_with_published_investment
+        respond_to do |format|
+          format.html do
+            redirect_to budget_investment_path(@budget, @investment),
+                        notice: t("flash.actions.create.budget_investment")
+          end
+
+          format.json do
+            flash[:notice] = t("flash.actions.create.budget_investment")
+
+            render json: {
+              status: "published",
+              redirect_url: budget_investment_path(@budget, @investment)
+            }
+          end
+        end
       end
 
       def render_new_form

@@ -166,16 +166,16 @@ class ProposalsController
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
     if @proposal.invalid? || !link_on_behalf_of_account(@proposal)
-      return render_new_form
+      return respond_with_invalid_proposal
     end
 
     if similar_contributions_check_requested?(@projekt_phase)
-      start_similar_contributions_check(@proposal)
+      return respond_with_invalid_proposal if !start_similar_contributions_check(@proposal)
 
-      return render_new_form
+      return respond_with_started_check
     end
 
-    return render_new_form if !@proposal.save
+    return respond_with_invalid_proposal if !@proposal.save
 
     if params[:save_draft].present?
       redirect_to proposal_path(@proposal),
@@ -184,7 +184,7 @@ class ProposalsController
     else
       publish_checked_proposal
 
-      redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+      respond_with_published_proposal
     end
   end
 
@@ -195,7 +195,7 @@ class ProposalsController
   def publish_draft
     publish_checked_proposal
 
-    redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+    respond_with_published_proposal
   end
 
   def publish
@@ -374,6 +374,37 @@ class ProposalsController
       @proposal.publish
 
       Mailer.proposal_created(@proposal).deliver_later
+    end
+
+    def respond_with_invalid_proposal
+      respond_to do |format|
+        format.html { render_new_form }
+        format.json do
+          render json: similar_contributions_invalid_payload(@proposal),
+                 status: :unprocessable_entity
+        end
+      end
+    end
+
+    def respond_with_started_check
+      respond_to do |format|
+        format.html { render_new_form }
+        format.json { render json: similar_contributions_check_started_payload(@proposal) }
+      end
+    end
+
+    def respond_with_published_proposal
+      respond_to do |format|
+        format.html do
+          redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+        end
+
+        format.json do
+          flash[:notice] = t("proposals.notice.published")
+
+          render json: { status: "published", redirect_url: proposal_path(@proposal) }
+        end
+      end
     end
 
     def render_new_form

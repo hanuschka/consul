@@ -17,8 +17,43 @@ module SimilarContributionsCheck
       resource.draft = true
       resource.similar_contributions_check_status = "processing"
 
-      if resource.save
-        SimilarContributions::CheckJob.perform_later(resource)
+      return false if !resource.save
+
+      SimilarContributions::CheckJob.perform_later(resource)
+
+      true
+    end
+
+    # The AJAX submission consumed the invisible_captcha timestamp, so without
+    # a fresh one the corrected resubmission from the same page would be
+    # flagged as spam and redirected away.
+    def similar_contributions_invalid_payload(resource)
+      session[:invisible_captcha_timestamp] = Time.zone.now.iso8601
+
+      {
+        status: "invalid",
+        errors_html: render_to_string(
+          partial: "shared/form_errors_summary",
+          locals: { resource: resource },
+          formats: [:html],
+          layout: false
+        )
+      }
+    end
+
+    def similar_contributions_check_started_payload(resource)
+      if resource.is_a?(::Budget::Investment)
+        {
+          status: "processing",
+          status_url: similar_contributions_status_budget_investment_path(resource.budget, resource),
+          publish_url: publish_draft_budget_investment_path(resource.budget, resource)
+        }
+      else
+        {
+          status: "processing",
+          status_url: similar_contributions_status_proposal_path(resource),
+          publish_url: publish_draft_proposal_path(resource)
+        }
       end
     end
 

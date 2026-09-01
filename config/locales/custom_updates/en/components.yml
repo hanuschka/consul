@@ -21,9 +21,8 @@ en:
         text: "AI-generated image"
         tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."
     similar_contributions:
-      check_section_component:
+      progress_component:
         checking: "Checking proposal …"
-        publish: "Submit contribution"
       notice_component:
         title: "Similar contributions found"
         intro:

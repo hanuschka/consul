@@ -139,15 +139,31 @@
   padding: 0;
 }
 
-.similar-contributions-check--progress:empty {
-  display: none;
-}
-
 .similar-contributions-check--result:empty {
   display: none;
 }
 
-.similar-contributions-check--result .similar-contributions-notice {
-  margin-left: 0;
-  margin-right: 0;
+.similar-contributions-progress[hidden] {
+  display: none;
+}
+
+.similar-contributions-progress {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 14px 20px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #f6f9f6;
+}
+
+.similar-contributions-progress .shared-loading-spinner {
+  border-top-color: #1b5e20;
+}
+
+.similar-contributions-progress .shared-loading-spinner--message {
+  font-size: 16px;
+  line-height: 1.4;
+  color: #4a4a4a;
+  text-align: left;
 }

@@ -26,8 +26,10 @@
   </ul>
 
   <div class="similar-contributions-notice--actions">
-    <%= button_to t(".submit_anyway"), publish_url,
-          method: :patch,
-          class: "button similar-contributions-notice--submit-anyway" %>
+    <button type="button"
+            class="button similar-contributions-notice--submit-anyway js-similar-contributions-publish"
+            data-publish-url="<%= publish_url %>">
+      <%= t("components.similar_contributions.notice_component.submit_anyway") %>
+    </button>
   </div>
 </section>

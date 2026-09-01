@@ -1,4 +1,6 @@
 class SimilarContributions::CheckSectionComponent < ApplicationComponent
+  include SimilarContributionsCheckState
+
   POLL_INTERVAL = 1000
   POLL_TIMEOUT = 20_000
 
@@ -8,8 +10,8 @@ class SimilarContributions::CheckSectionComponent < ApplicationComponent
     @resource = resource
   end
 
-  def render?
-    resource.present? && resource.persisted? && resource.similar_contributions_check_processing?
+  def form_id
+    helpers.dom_id(resource, :form)
   end
 
   def status_url

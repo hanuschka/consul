@@ -10,6 +10,13 @@
 
       // Add a submit event listener to the form
       form.addEventListener("submit", function(event) {
+        // The similar-contributions module submits this form via AJAX and
+        // clears the placeholders itself; forcing a native form.submit() here
+        // would fire a second, full-page submission alongside it.
+        if (App.SimilarContributionsCheck.controlsForm(form)) {
+          return;
+        }
+
         // Prevent the form from submitting immediately
         event.preventDefault();
 

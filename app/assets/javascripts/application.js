@@ -252,6 +252,7 @@ var destroy_non_idempotent_modules = function() {
   App.VoiceAssistantWidget.destroy();
   App.FocusTrap.resetInert();
   App.SharedModal.reset();
+  App.SimilarContributionsCheck.destroy();
 };
 
 

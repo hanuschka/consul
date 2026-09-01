@@ -1,5 +1,27 @@
 en:
+  deficiency_reports:
+    official_answer_documents:
+      too_many: "At most %{count} documents can be attached to the official response."
+      too_large: "Attached documents may be at most %{size} MB."
+      wrong_type: "Only these file types are allowed: %{types}."
   custom:
+    polls:
+      questions:
+        map_points:
+          hint: Click on the map to place a pin. Click a placed pin to remove it again.
+          remaining:
+            zero: You have placed all your pins.
+            one: You can place one more pin.
+            other: You can place %{count} more pins.
+          placed: Pin placed.
+          removed: Pin removed.
+          remove_hint: Remove pin
+          csv_pin_count:
+            one: 1 pin placed
+            other: "%{count} pins placed"
+          limit_reached: You have placed the maximum number of pins. Remove one to place another.
+          outside_boundary: This point lies outside the permitted area.
+          error: The pin could not be saved. Please try again.
     content_blocks:
       code_editor_modal:
         title: "Code Editor"
@@ -24,8 +46,7 @@ en:
         success: Content block updated
       import:
         success: Document has been successfully imported
-        categories: Categories
-        sdg_goals: SDG Goals
+      ai_generate_with_file:
         no_file: No file uploaded
         user_prompt_placeholder: |
           "Formulate section XY in a more comprehensible way for the public."
@@ -33,9 +54,9 @@ en:
           "Shorten the introduction and make the beginning more understandable."
           "Summarize long sections in bullet points."
           "Rearrange the content logically if the order in the document is unclear."
-      generate_from_prompt:
-        success: Content has been successfully generated
+      ai_generate_with_prompt:
         no_prompt: Please enter a prompt
+        generation_failed: AI could not create a structure
       ai_create:
         modal_title: Create content block with AI
         description: "Briefly describe the content block you need. The AI uses existing templates as inspiration and can optionally consider the full projekt context to create a new block."
@@ -70,6 +91,7 @@ en:
         ai_create_button:
           label: Create with AI
           title: Let AI create a content block
+          tooltip_description: "Describe what you want and the AI builds a ready-made content block for you — tailored to the projekt — which you can then edit freely."
         visibility:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"

@@ -15,7 +15,7 @@
     height: auto;
     top: 0;
 
-    .projekt-content-block-templates-selector {
+    .custom-content-block-templates-selector {
       display: block;
     }
   }
@@ -102,8 +102,8 @@
 .add-new-content-block-section:hover .add-new-content-block-section--controls,
 .add-new-content-block-section:focus-within .add-new-content-block-section--controls,
 .add-new-content-block-section.-opened .add-new-content-block-section--controls,
-.projekt-content-block-wrapper:hover + .add-new-content-block-section .add-new-content-block-section--controls,
-.add-new-content-block-section:has(+ .projekt-content-block-wrapper:hover) .add-new-content-block-section--controls {
+.custom-content-block-wrapper:hover + .add-new-content-block-section .add-new-content-block-section--controls,
+.add-new-content-block-section:has(+ .custom-content-block-wrapper:hover) .add-new-content-block-section--controls {
   opacity: 1;
 }
 

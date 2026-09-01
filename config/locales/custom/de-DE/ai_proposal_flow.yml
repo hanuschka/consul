@@ -6,6 +6,7 @@ de:
     generate_error: "KI-Entwurf konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
     evaluate_error: "KI-Bewertung fehlgeschlagen. Bitte versuchen Sie es erneut."
     entry_button: "KI-Entwurf erstellen"
+    entry_button_admin_hint: "Bürger lassen sich hier von der KI einen Vorschlagsentwurf erstellen, den sie vor dem Einreichen prüfen und anpassen können. Für Bürger nur sichtbar, wenn die KI aktiv ist."
     steps:
       idea: "Idee"
       ai_draft: "KI-Entwurf"

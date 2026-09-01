@@ -1,4 +1,23 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_image(image: projekt.image, resource: projekt) %>
+
+  <% c.with_subheading do %>
+    <div class="resource-item--tags">
+      <% sorted_tags.first(2).each do |tag| %>
+        <%= link_to(path_for_resource_with_params(projekt, tags: tag.name), class: 'resource-item--tag', rel: "nofollow") do %>
+          <%= tag.name %>
+        <% end %>
+      <% end %>
+
+      <% if sorted_tags[2].present? %>
+        <%= link_to(path_for_resource_with_params(projekt, tags: sorted_tags.map(&:name).join(",")), class: 'resource-item--tag', rel: "nofollow") do %>
+          <% remaining_tags_count = sorted_tags.size - 2 %>
+          <%= t("custom.tags.remaining_count", count: remaining_tags_count) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% c.with_header do %>
     <%= date_formated %>
   <% end %>

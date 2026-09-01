@@ -6,6 +6,7 @@ en:
     generate_error: "AI draft generation failed. Please try again."
     evaluate_error: "AI evaluation failed. Please try again."
     entry_button: "Create AI draft"
+    entry_button_admin_hint: "Lets citizens have the AI generate a proposal draft they can review and adjust before submitting. Visible to citizens only while AI is enabled."
     steps:
       idea: "Idea"
       ai_draft: "AI Draft"

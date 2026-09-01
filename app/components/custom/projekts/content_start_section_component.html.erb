@@ -1,49 +1,53 @@
 <div class="projekt-content-start-section js-content-start-section js-studio-hide-on-preview">
   <h3 class="projekt-content-start-section--title js-content-start-section--title"><%= t('custom.projekts.content_start_section.title') %></h3>
   <div class="projekt-content-start-buttons js-projekt-content-start-buttons">
-    <button
-      type="button"
-      class="projekt-content-start-button js-projekt-file-import-trigger <%= 'ai-feature-disabled' if ai_disabled? %>"
-      title="<%= file_import_button_title %>"
-      tabindex="-1"
-      <%= 'disabled' if ai_disabled? %>
-      <% if ai_disabled? %>
-      data-tooltip
-      <% end %>
-    >
-      <i class="fas fa-file-upload"></i>
-      <div class="projekt-content-start-button--content">
-        <div>
-          <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.file_import_button.button_title') %></div>
-          <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.file_import_button.description') %></div>
+    <%= render Shared::AiFeatureTooltipComponent.new(
+      feature_title: t('custom.projekts.content_start_section.file_import_button.button_title'),
+      feature_text: t('custom.projekts.content_start_section.file_import_button.title'),
+      layout_class: "-block"
+    ) do %>
+      <button
+        type="button"
+        class="projekt-content-start-button -file-import js-projekt-file-import-trigger"
+        tabindex="-1"
+        <%= 'disabled' if ai_disabled? %>
+      >
+        <i class="fas fa-file-upload"></i>
+        <div class="projekt-content-start-button--content">
+          <div>
+            <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.file_import_button.button_title') %></div>
+            <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.file_import_button.description') %></div>
+          </div>
+          <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.file_import_button.action') %></div>
         </div>
-        <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.file_import_button.action') %></div>
-      </div>
-    </button>
+      </button>
+    <% end %>
+
+    <%= render Shared::AiFeatureTooltipComponent.new(
+      feature_title: t('custom.projekts.content_start_section.prompt_button.button_title'),
+      feature_text: t('custom.projekts.content_start_section.prompt_button.title'),
+      layout_class: "-block"
+    ) do %>
+      <button
+        type="button"
+        class="projekt-content-start-button -prompt js-projekt-prompt-trigger"
+        tabindex="-1"
+        <%= 'disabled' if ai_disabled? %>
+      >
+        <i class="fas fa-pen"></i>
+        <div class="projekt-content-start-button--content">
+          <div>
+            <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.prompt_button.button_title') %></div>
+            <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.prompt_button.description') %></div>
+          </div>
+          <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.prompt_button.action') %></div>
+        </div>
+      </button>
+    <% end %>
 
     <button
       type="button"
-      class="projekt-content-start-button js-projekt-prompt-trigger <%= 'ai-feature-disabled' if ai_disabled? %>"
-      title="<%= prompt_button_title %>"
-      tabindex="-1"
-      <%= 'disabled' if ai_disabled? %>
-      <% if ai_disabled? %>
-      data-tooltip
-      <% end %>
-    >
-      <i class="fas fa-pen"></i>
-      <div class="projekt-content-start-button--content">
-        <div>
-          <div class="projekt-content-start-button--title"><%= t('custom.projekts.content_start_section.prompt_button.button_title') %></div>
-          <div class="projekt-content-start-button--description"><%= t('custom.projekts.content_start_section.prompt_button.description') %></div>
-        </div>
-        <div class="projekt-content-start-button--action"><%= t('custom.projekts.content_start_section.prompt_button.action') %></div>
-      </div>
-    </button>
-
-    <button
-      type="button"
-      class="projekt-content-start-button js-projekt-template-trigger"
+      class="projekt-content-start-button -template js-projekt-template-trigger"
       title="<%= t('custom.projekts.content_start_section.template_button.title') %>"
       tabindex="-1"
     >
@@ -59,7 +63,7 @@
 
     <button
       type="button"
-      class="projekt-content-start-button js-projekt-empty-block-trigger"
+      class="projekt-content-start-button -empty-block js-projekt-empty-block-trigger"
       title="<%= t('custom.projekts.content_start_section.empty_block_button.title') %>"
       tabindex="-1"
     >
@@ -121,7 +125,7 @@
         id="projekt-file-import-user-prompt"
         class="js-projekt-file-import-user-prompt"
         rows="4"
-        placeholder="<%= t('custom.projekt_content_blocks.import.user_prompt_placeholder') %>"
+        placeholder="<%= t('custom.projekt_content_blocks.ai_generate_with_file.user_prompt_placeholder') %>"
       ></textarea>
     </div>
     <button

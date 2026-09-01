@@ -1,13 +1,19 @@
 <div class="projekt-point-of-interest-categories">
-  <% @projekt_phase.projekt_point_of_interest_categories.each do |category| %>
+  <% categories.each do |category| %>
+    <% category_icon_url = image_icon_url(category) %>
 
-    <span class="projekt-point-of-interest-category js-map-change-feature-style <%= 'marked' if @categories.first == category %>"
+    <span class="projekt-point-of-interest-category js-map-change-feature-style <%= 'marked' if categories.first == category %>"
           data-feature-color="<%= category.color %>"
           data-feature-icon-name="<%= category.icon %>"
           data-feature-icon-unicode="<%= icon_unicode_for(category) %>"
+          data-feature-icon-url="<%= category_icon_url %>"
           data-feature-category-name="<%= category.name %>"
           style="--category-color: <%= category.color %>;cursor:pointer;">
-      <i class="fas fa-<%= category.icon %>"></i>
+      <% if category_icon_url.present? %>
+        <img class="projekt-point-of-interest-category--image-icon" src="<%= category_icon_url %>" alt="">
+      <% else %>
+        <i class="fas fa-<%= category.icon %>"></i>
+      <% end %>
       <%= category.name %>
     </span>
 

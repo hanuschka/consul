@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   // overflow: hidden;
-  min-height: 55px;
+  min-height: 50px;
 
   > nav {
     min-width: 0;
@@ -45,6 +45,10 @@
 
   &.-ultracompact {
     margin: 1rem 0;
+
+    h1 {
+      font-size: 1.28rem;
+    }
   }
 }
 

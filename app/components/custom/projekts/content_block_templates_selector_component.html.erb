@@ -1,11 +1,11 @@
 <%= render Shared::ModalComponent.new(
   id: "contentBlockTemplatesModal",
-  modal_class: "modern-modal projekt-content-block-templates-selector-wrapper js-content-block-templates-selector",
+  modal_class: "modern-modal custom-content-block-templates-selector-wrapper js-content-block-templates-selector",
   closeable: false,
   content_wrapper: false,
   blur_backdrop: false
 ) do %>
-  <div class="projekt-content-block-templates-selector">
+  <div class="custom-content-block-templates-selector">
     <div class="content-block-templates-selector--header">
       <div class="modern-modal--header -compact-title">
         <h3>Wählen Sie eine Inhaltsblockvorlage aus</h3>
@@ -17,14 +17,18 @@
           <i class="far fa-file"></i>
           <%= t('custom.projekt.content_block_templates_selector.blank_create_button.label') %>
         </button>
-        <button
-          type="button"
-          class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
-          title="<%= t('custom.projekt.content_block_templates_selector.ai_create_button.title') %>"
-        >
-          <i class="fas fa-magic"></i>
-          <%= t('custom.projekt.content_block_templates_selector.ai_create_button.label') %>
-        </button>
+        <%= render Shared::AiFeatureTooltipComponent.new(
+          feature_title: t('custom.projekt.content_block_templates_selector.ai_create_button.label'),
+          feature_text: t('custom.projekt.content_block_templates_selector.ai_create_button.tooltip_description')
+        ) do %>
+          <button
+            type="button"
+            class="studio-edit-button -green content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          >
+            <i class="fas fa-magic"></i>
+            <%= t('custom.projekt.content_block_templates_selector.ai_create_button.label') %>
+          </button>
+        <% end %>
         <button
           class="close-button round-icon-button content-block-templates-selector--close js-shared-modal-close"
           aria-label="<%= t('application.close') %>"
@@ -59,7 +63,7 @@
       </button>
     </div>
     <div
-      class="js-content-block-templates-selector--inner projekt-content-block-templates-selector--inner"
+      class="js-content-block-templates-selector--inner custom-content-block-templates-selector--inner"
       style="display: none;"
     >
     </div>

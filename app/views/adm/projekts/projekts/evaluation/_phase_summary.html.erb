@@ -1,13 +1,14 @@
 <% summary_text = (phase["ai_stats"] || {})["summary"] %>
 
 <% if summary_text.present? %>
-  <div class="phase-summary-card">
+  <div class="phase-summary-card evaluation-stat-card">
     <div
       class="phase-summary-card__icon"
       style="color:<%= accent %>;background:<%= accent_light %>"
       aria-hidden="true"
     >
-      <span class="material-symbols-outlined">summarize</span>
+      <span class="material-symbols-outlined projekt-evaluation-icon-material">summarize</span>
+      <i class="fas fa-align-left projekt-evaluation-icon-fa"></i>
     </div>
     <div class="phase-summary-card__content">
       <div class="phase-summary-card__label">

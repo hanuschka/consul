@@ -149,14 +149,7 @@ class DebatesController < ApplicationController
   end
 
   def update
-    custom_debate_params =
-      if debate_params["image_attributes"]["cached_attachment"].blank?
-        debate_params.except("image_attributes")
-      else
-        debate_params
-      end
-
-    if resource.update(custom_debate_params)
+    if resource.update(debate_params)
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
       load_geozones

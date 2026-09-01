@@ -160,6 +160,8 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
           landing_site_logo_follow_to_landing_page_description: "Wenn aktiviert, führt ein Klick auf das Logo in der Top-Navigation nicht zur allgemeinen Startseite, sondern zur aktuell konfigurierten Themen- oder Gebietsseite."
           landing_navigation_link_color_label: Farbe der Links in der Top-Navigation
           landing_navigation_link_color_description: "Legen Sie die Schriftfarbe der Links in der oberen Navigationsleiste fest. Das ist wichtig, da das Hintergrundbild auf dieser Themenseite von dem auf der Startseite abweichen kann und die Lesbarkeit sichergestellt sein muss."
+          landing_ai_context_label: KI-Kontext dieser Landing Page
+          landing_ai_context_description: "Hier hinterlegen Sie Hintergrundinformationen, die nur für diese Landing Page gelten, zum Beispiel Name und Anrede der jeweiligen Kommune. Der Text wird nirgends öffentlich angezeigt, sondern ersetzt für alle Auswertungen dieser Landing Page den plattformweiten KI-Kontext. Füllen Sie das Feld aus, wenn auf dieser Plattform mehrere Kommunen mit eigener Ansprache vertreten sind."
       budget/phase:
         name_label: Bezeichnung der Phase
         name_description: >

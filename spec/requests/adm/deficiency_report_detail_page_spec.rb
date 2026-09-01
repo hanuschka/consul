@@ -150,40 +150,91 @@ describe "The Anliegen detail page in /adm", type: :request do
   end
 
   describe "release toggle" do
+    let(:toggle_target) { ActionView::RecordIdentifier.dom_id(report, :admin_accepted) }
+
     before { set_setting("deficiency_reports.admin_acceptance_required", true) }
 
-    it "is gone from the detail page even for a manager who may release" do
+    it "is offered on the detail page to a manager who may release" do
       login_as(manager)
 
       get adm_deficiency_reports_deficiency_report_path(report)
 
-      expect(response.body).not_to include(scope("show.admin_accepted_status"))
-      expect(response.body).not_to include(
+      expect(response.body).to include(scope("show.admin_accepted_status"))
+      expect(response.body).to include(%(id="#{toggle_target}"))
+      expect(response.body).to include(
         accept_adm_deficiency_reports_deficiency_report_path(report)
       )
     end
 
-    it "is gone from the detail page for an officer as well" do
+    it "sits at the end of the administration section" do
+      login_as(manager)
+
+      get adm_deficiency_reports_deficiency_report_path(report)
+
+      responsible_hint = ERB::Util.html_escape(scope("administer.responsible_hint")).to_s
+
+      expect(response.body.index(responsible_hint))
+        .to be < response.body.index(scope("show.admin_accepted_status"))
+      expect(response.body.index(scope("show.admin_accepted_status")))
+        .to be < response.body.index(">#{scope("show.official_answer")}</h2>")
+    end
+
+    it "is not offered on the detail page to an officer who may not release" do
       officer = create(:deficiency_report_officer)
+      set_setting("deficiency_reports.admins_must_assign_officer", true)
       report.update!(responsible: officer)
       login_as(officer.user)
 
       get adm_deficiency_reports_deficiency_report_path(report)
 
+      expect(response.body).not_to include(%(id="#{toggle_target}"))
       expect(response.body).not_to include(
         accept_adm_deficiency_reports_deficiency_report_path(report)
       )
     end
 
-    it "is gone from the detail page when release is not required either" do
+    it "is gone from the detail page when release is not required" do
       set_setting("deficiency_reports.admin_acceptance_required", nil)
       login_as(manager)
 
       get adm_deficiency_reports_deficiency_report_path(report)
 
-      expect(response.body).not_to include(
-        accept_adm_deficiency_reports_deficiency_report_path(report)
-      )
+      expect(response.body).not_to include(scope("show.admin_accepted_status"))
+      expect(response.body).not_to include(%(id="#{toggle_target}"))
+    end
+
+    it "is gone from the detail page of a deleted report" do
+      report.destroy
+      login_as(manager)
+
+      get adm_deficiency_reports_deficiency_report_path(report)
+
+      expect(response.body).not_to include(%(id="#{toggle_target}"))
+    end
+
+    it "stores the change and refreshes the toggle in place" do
+      login_as(manager)
+
+      patch accept_adm_deficiency_reports_deficiency_report_path(report),
+            params: { deficiency_report: { admin_accepted: "1" }},
+            headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+      expect(report.reload.admin_accepted).to be true
+      expect(response.body).to include(%(target="#{toggle_target}"))
+    end
+
+    it "records an audit entry for the change" do
+      login_as(manager)
+
+      expect do
+        patch accept_adm_deficiency_reports_deficiency_report_path(report),
+              params: { deficiency_report: { admin_accepted: "1" }},
+              headers: { "Accept" => "text/vnd.turbo-stream.html" }
+      end.to change { report.audits.where(action: "update").count }.by(1)
+
+      audit = report.audits.where(action: "update").last
+      expect(audit.audited_changes["admin_accepted"]).to eq([false, true])
+      expect(audit.user).to eq(manager)
     end
 
     it "stays in the reports table while release is required" do

@@ -30,6 +30,8 @@
 
   <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_navigation_link_color, :color, **editor_options) %>
 
+  <%= render Adm::AttributeEditorComponent.new(@landing_page, :landing_ai_context, :text, **editor_options) %>
+
   <% if current_user.administrator? || current_user.landing_page_manager&.manage_all_landing_pages? %>
     <%= render Kern::FormFieldComponent.new(label: t(".managers_title"), hint: t(".managers_description")) do %>
       <%= render "manager_assignments", landing_page: @landing_page %>

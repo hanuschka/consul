@@ -10,6 +10,8 @@ de:
         llm_custom_model_description: Benutzerdefinierter Modellname (für Ollama oder bei benutzerdefiniertem API-Endpunkt)
         llm_api_endpoint: API-Endpunkt
         llm_api_endpoint_description: Benutzerdefinierte API-Endpunkt-URL für OpenAI-kompatible Dienste (z. B. Azure OpenAI, Proxy-Dienste)
+        evaluation_context: Globaler KI-Kontext
+        evaluation_context_description: Hier hinterlegen Sie einmalig Hintergrundinformationen zu Ihrer Kommune, zum Beispiel Name und Größe, die gewünschte Anrede, Namen von Ortsteilen, Schreibweisen und thematische Schwerpunkte. Der Text wird nirgends öffentlich angezeigt, sondern fließt in alle KI-Auswertungen ein, die danach auf dieser Plattform erzeugt werden. Füllen Sie das Feld aus, damit KI-Auswertungen von Anfang an zu Ihrer Kommune passen.
         llm_api_key: API-Schlüssel
         llm_api_key_description: Der API-Schlüssel authentifiziert Ihre Plattform gegenüber dem gewählten KI-Anbieter. Den Schlüssel erhalten Sie im Entwicklerportal des jeweiligen Anbieters. Er wird verschlüsselt gespeichert und ist nach dem Speichern aus Sicherheitsgründen nicht mehr im Klartext einsehbar. Ohne gültigen Schlüssel sind keine KI-Funktionen verfügbar.
       map_latitude: Breitengrad

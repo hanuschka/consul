@@ -355,7 +355,7 @@ class PagesController < ApplicationController
       params[:filter] ||= "winners" if @budget.current_phase.kind == "finished"
       @current_filter = @valid_filters.include?(params[:filter]) ? params[:filter] : "all"
 
-      @valid_orders = Budget::Investment::DEFAULT_ORDERS.dup
+      @valid_orders = @projekt_phase.investment_orders
       @valid_orders.delete("total_votes") unless @budget.current_phase.kind.in?(["selecting", "valuating",
   "publishing_prices"])
       @valid_orders.delete("ballot_line_weight") unless @budget.current_phase.kind == "balloting" && !@projekt_phase.setting("feature.resource.hide_ballots_count").enabled?

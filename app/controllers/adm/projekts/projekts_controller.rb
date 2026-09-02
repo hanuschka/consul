@@ -16,7 +16,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
     consider_underway
   ].freeze
 
-  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_answer_participation, :poll_answer_crossectional, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :toggle_evaluation_tab_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :regenerate_phase_regular_stats, :regenerate_phase_ai_stats, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :delete_image, :generate_image, :generate_image_status, :copy, :copy_status]
+  before_action :find_projekt, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation, :report_summary, :evaluation_phase, :poll_answer_participation, :poll_answer_crossectional, :evaluation_visibility, :update_evaluation_visibility, :toggle_evaluation_section_visibility, :toggle_evaluation_tab_visibility, :generate_evaluation, :evaluation_status, :regenerate_phase_evaluation, :regenerate_phase_regular_stats, :regenerate_phase_ai_stats, :phase_evaluation_status, :evaluation_pdf_options, :evaluation_pdf, :update, :destroy, :toggle_activated, :update_default_phase, :notify_reviewers, :toggle_hide_content_background, :convert_to_new_content_block_mode, :update_color, :update_taxonomy, :update_image, :update_image_ai_generated, :delete_image, :generate_image, :generate_image_status, :copy, :copy_status]
   before_action :set_back_button_url, only: [:details, :visibility, :projekt_managers, :map, :phases, :images, :documents, :evaluation]
   before_action :process_tags, only: [:update]
 
@@ -584,6 +584,28 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
       page.association(:image).reset
 
       render json: { ok: true, message: t(".success") }
+    else
+      render json: { ok: false, errors: image.errors.full_messages },
+             status: :unprocessable_entity
+    end
+  end
+
+  # The banner is uploaded straight to update_image with no form around it, so
+  # declaring an externally generated picture needs its own write path.
+  def update_image_ai_generated
+    authorize [:adm, :projekts, @projekt], :update?
+
+    image = @projekt.page&.image
+
+    if image.blank?
+      render json: { ok: false }, status: :unprocessable_entity
+      return
+    end
+
+    image.ai_generated = ActiveModel::Type::Boolean.new.cast(params[:ai_generated]) == true
+
+    if image.save
+      render json: { ok: true, ai_generated: image.ai_generated }
     else
       render json: { ok: false, errors: image.errors.full_messages },
              status: :unprocessable_entity

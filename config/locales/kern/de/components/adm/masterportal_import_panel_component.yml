@@ -10,6 +10,7 @@ de:
         collections_label: Verfügbare Datensätze
         collections_hint: Wählen Sie die Datensätze aus, die als Pins in diese Projektphase importiert werden sollen.
         tree_hint: Auf „Datensätze laden“ klicken, um verfügbare Daten zu sehen.
+        or_divider: ODER
         create_resource_label: "%{resource_name} erzeugen"
         create_resource_description: Aus jedem importierten Datensatz wird zusätzlich ein Eintrag im Modul angelegt.
         create_resource_categories_note: Passende Kategorien werden dabei automatisch aus den Datensatz-Kategorien angelegt.

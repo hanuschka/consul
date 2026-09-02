@@ -1,0 +1,7 @@
+<% first = defined?(question_counter) && question_counter.zero? %>
+<div
+    class="question-wizard-item js-question-wizard-item <%= "-visible" if first %>"
+    data-question-id="<%= question.id %>"
+>
+  <%= render Polls::Questions::QuestionComponent.new(question: question) %>
+</div>

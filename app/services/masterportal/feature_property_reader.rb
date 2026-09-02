@@ -31,7 +31,7 @@ module Masterportal
     ].freeze
 
     TECHNICAL_KEYS = %w[
-      FID OBJID OBJIID DATAID ART_ID BEMERKUNG DENKMAL_ID BILD_NAME IMAGE
+      FID OBJID OBJIID DATAID ART_ID BEMERKUNG DENKMAL_ID BILD_NAME IMAGE IMAGE_URL
       FLAECHE X_KOORDINATE Y_KOORDINATE DATE_TIME_UPDATE LAST_UPDATE
     ].freeze
 
@@ -124,16 +124,94 @@ module Masterportal
       sections.join("\n").presence
     end
 
-    def latitude(feature)
-      coords = feature.dig("geometry", "coordinates")
+    def geometry(feature)
+      feature["geometry"].presence
+    end
 
-      coords.is_a?(Array) ? coords[1].to_f : nil
+    def latitude(feature)
+      point = representative_point(feature)
+
+      point.is_a?(Array) ? point[1].to_f : nil
     end
 
     def longitude(feature)
-      coords = feature.dig("geometry", "coordinates")
+      point = representative_point(feature)
 
-      coords.is_a?(Array) ? coords[0].to_f : nil
+      point.is_a?(Array) ? point[0].to_f : nil
+    end
+
+    def representative_point(feature)
+      geometry = feature["geometry"] || {}
+      coordinates = geometry["coordinates"]
+      return nil if coordinates.blank?
+
+      return coordinates if geometry["type"] == "Point"
+
+      centroid_coordinates(geometry)
+    end
+
+    def centroid_coordinates(geometry)
+      rings = exterior_rings(geometry)
+      return nil if rings.empty?
+
+      weighted_x = 0.0
+      weighted_y = 0.0
+      total_area = 0.0
+
+      rings.each do |ring|
+        area, ring_x, ring_y = ring_centroid(ring)
+        weighted_x += ring_x * area
+        weighted_y += ring_y * area
+        total_area += area
+      end
+
+      return vertices_average(rings) if total_area.zero?
+
+      [weighted_x / total_area, weighted_y / total_area]
+    end
+
+    def exterior_rings(geometry)
+      case geometry["type"]
+      when "Polygon"
+        [Array(geometry["coordinates"])[0]].compact
+      when "MultiPolygon"
+        Array(geometry["coordinates"]).map { |polygon| polygon[0] }.compact
+      else
+        []
+      end
+    end
+
+    def ring_centroid(ring)
+      points = Array(ring)
+      return [0.0, 0.0, 0.0] if points.size < 3
+
+      signed_area = 0.0
+      centroid_x = 0.0
+      centroid_y = 0.0
+
+      points.each_with_index do |point, index|
+        x0, y0 = point
+        x1, y1 = points[(index + 1) % points.size]
+        cross = (x0 * y1) - (x1 * y0)
+        signed_area += cross
+        centroid_x += (x0 + x1) * cross
+        centroid_y += (y0 + y1) * cross
+      end
+
+      signed_area /= 2.0
+      return [0.0, 0.0, 0.0] if signed_area.zero?
+
+      [signed_area.abs, centroid_x / (6.0 * signed_area), centroid_y / (6.0 * signed_area)]
+    end
+
+    def vertices_average(rings)
+      points = rings.flatten(1)
+      return nil if points.empty?
+
+      sum_x = points.sum { |point| point[0].to_f }
+      sum_y = points.sum { |point| point[1].to_f }
+
+      [sum_x / points.size, sum_y / points.size]
     end
 
     def inside_regensburg_bbox?(feature)

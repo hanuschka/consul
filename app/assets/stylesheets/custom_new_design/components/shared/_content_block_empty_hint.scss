@@ -35,7 +35,7 @@
 // drops its outer spacing (the wrapper owns block-to-block margin) and sits
 // directly under the toolbar in place of the empty content body.
 .custom-content-block-wrapper .content-block-empty-hint {
-  margin-bottom: 0;
+  margin-bottom: 20px;
 }
 
 .content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) .custom-content-block {

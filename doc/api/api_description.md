@@ -180,4 +180,17 @@
 
           ## Support
 
-          For issues or questions about the API, please refer to the detailed endpoint documentation below or contact support.
+          Most questions can be answered without waiting on a reply:
+
+          - **Changelog** — check it (in the sidebar) for recent endpoint and parameter changes.
+          - **Endpoint reference** — every endpoint below documents its parameters, request body, and example responses.
+          - **Error Handling** — the section above maps each status code (`401`, `403`, `404`, …) to its likely cause.
+
+          If you still need help, contact your platform administrator or demokratie.today support. To speed up diagnosis, please include:
+
+          - the request path and HTTP method (e.g. `GET /api/projekts`);
+          - the timestamp of the request;
+          - the HTTP status code you received; and
+          - your API client name.
+
+          Platform administrators can look up any request — with full timing and response details — under **API → API request logs** in the admin area.

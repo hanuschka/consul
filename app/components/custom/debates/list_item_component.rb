@@ -3,23 +3,17 @@
 class Debates::ListItemComponent < ApplicationComponent
   attr_reader :debate
 
-  def initialize(debate:, hide_projekt_breadcrumb: false)
+  def initialize(debate:)
     @debate = debate
-    @hide_projekt_breadcrumb = hide_projekt_breadcrumb
   end
 
   def component_attributes
     {
       resource: @debate,
       projekt: debate.projekt,
-      hide_projekt_breadcrumb: @hide_projekt_breadcrumb,
       title: debate.title,
       description: debate.description,
-      tags: debate.tags.first(3),
-      url: helpers.debate_path(debate),
-      image: debate.image,
-      image_placeholder_icon_class: "fa-comments",
-      no_footer_bottom_padding: true
+      url: helpers.debate_path(debate)
     }
   end
 

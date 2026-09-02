@@ -77,22 +77,6 @@
     margin-bottom: 15px;
     color: var(--brand-color);
   }
-
-  &:nth-child(1) i {
-    color: var(--content-start-btn-file-import-color);
-  }
-
-  &:nth-child(2) i {
-    color: var(--content-start-btn-prompt-color);
-  }
-
-  &:nth-child(3) i {
-    color: var(--content-start-btn-template-color);
-  }
-
-  &:nth-child(4) i {
-    color: var(--content-start-btn-empty-block-color);
-  }
 }
 
 
@@ -127,6 +111,10 @@
     background-color: color-mix(in srgb, var(--content-start-btn-file-import-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-file-import-color) 24%, transparent);
 
+    i {
+      color: var(--content-start-btn-file-import-color);
+    }
+
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-file-import-color) 48%, transparent);
       background-color: color-mix(in srgb, var(--content-start-btn-file-import-color) 20%, transparent);
@@ -148,6 +136,10 @@
   .projekt-content-start-button.-prompt {
     background-color: color-mix(in srgb, var(--content-start-btn-prompt-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-prompt-color) 24%, transparent);
+
+    i {
+      color: var(--content-start-btn-prompt-color);
+    }
 
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-prompt-color) 48%, transparent);
@@ -171,6 +163,10 @@
     background-color: color-mix(in srgb, var(--content-start-btn-template-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-template-color) 24%, transparent);
 
+    i {
+      color: var(--content-start-btn-template-color);
+    }
+
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-template-color) 48%, transparent);
       background-color: color-mix(in srgb, var(--content-start-btn-template-color) 20%, transparent);
@@ -192,6 +188,10 @@
   .projekt-content-start-button.-empty-block {
     background-color: color-mix(in srgb, var(--content-start-btn-empty-block-color) 10%, transparent);
     border-color: color-mix(in srgb, var(--content-start-btn-empty-block-color) 24%, transparent);
+
+    i {
+      color: var(--content-start-btn-empty-block-color);
+    }
 
     &:hover {
       border-color: color-mix(in srgb, var(--content-start-btn-empty-block-color) 48%, transparent);

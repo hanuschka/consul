@@ -14,11 +14,6 @@
   tags = (report_settings["tags"] || []).reject(&:blank?)
   sdg_goals = report_settings["sdg_goals"] || []
 
-  report_visibility = projekt.projekt_evaluation_visibility
-  show_project_summary = report_visibility.nil? || report_visibility.show_project_summary
-  show_settings = report_visibility.nil? || report_visibility.show_settings
-  show_phase_summaries = report_visibility.nil? || report_visibility.show_phase_summaries
-
   renderable_phases = phases.select { |p| phase_palette.present? && p["phase_type"].present? }
 
   qr_url =
@@ -53,7 +48,6 @@
     </div>
   <% end %>
 
-  <% if show_project_summary %>
   <section class="report-summary--card report-summary--project">
     <h2 class="report-summary--project-title"><%= page_title %></h2>
 
@@ -65,7 +59,8 @@
             alt: page_title %>
         <% else %>
           <div class="report-summary--project-image-fallback">
-            <span class="material-symbols-outlined" aria-hidden="true">image</span>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">image</span>
+            <i class="fas fa-image projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <span><%= t("adm.projekts.projekts.evaluation.report.project_summary_no_image") %></span>
           </div>
         <% end %>
@@ -76,20 +71,17 @@
           <div class="report-summary--project-subtitle">
             <%= sanitize(page_subtitle, tags: ["br"]) %>
           </div>
-        <% else %>
-          <div class="report-summary--project-subtitle -muted">
-            <%= t("adm.projekts.projekts.evaluation.report.project_summary_no_subtitle") %>
-          </div>
         <% end %>
 
         <div class="report-summary--ai-block">
           <div class="report-summary--ai-label">
-            <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">auto_awesome</span>
+            <i class="fas fa-magic projekt-evaluation-icon-fa" aria-hidden="true"></i>
             <%= t("adm.projekts.projekts.evaluation.report.project_summary_ai_label") %>
           </div>
           <% if project_content_summary.present? %>
             <div class="report-summary--ai-body">
-              <%= sanitize(project_content_summary) %>
+              <%= sanitize(project_content_summary, tags: %w[h3 p]) %>
             </div>
           <% else %>
             <div class="report-summary--ai-body -muted">
@@ -100,27 +92,26 @@
       </div>
     </div>
   </section>
-  <% end %>
 
-  <% if show_settings %>
   <section class="report-summary--card report-summary--settings">
     <div class="report-summary--section-label">
       <%= t("adm.projekts.projekts.evaluation.report.settings_label") %>
     </div>
 
     <div class="report-summary--settings-grid">
-      <div class="report-summary--stat-card -emerald">
+      <div class="report-summary--stat-card -emerald <%= "-wide" if open_phases.size > 4 %>">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= open_phases.size %></strong>
           <div class="report-summary--stat-card-label">
             <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">play_circle</span>
+              <i class="fas fa-play-circle projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_open_phases", count: [open_phases.size, 1].max) %>
           </div>
         </div>
         <% if open_phases.any? %>
-          <ul class="report-summary--stat-card-list">
+          <ul class="report-summary--stat-card-list <%= open_phases.size > 4 ? "-cols-3" : "-cols-2" %>">
             <% open_phases.each do |title| %>
               <li><%= title %></li>
             <% end %>
@@ -132,18 +123,19 @@
         <% end %>
       </div>
 
-      <div class="report-summary--stat-card -amber">
+      <div class="report-summary--stat-card -amber <%= "-wide" if tags.size > 4 %>">
         <div class="report-summary--stat-card-head">
           <strong class="report-summary--stat-card-number"><%= tags.size %></strong>
           <div class="report-summary--stat-card-label">
             <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sell</span>
+              <i class="fas fa-tag projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_tags") %>
           </div>
         </div>
         <% if tags.any? %>
-          <ul class="report-summary--stat-card-list">
+          <ul class="report-summary--stat-card-list <%= tags.size > 4 ? "-cols-3" : "-cols-2" %>">
             <% tags.each do |name| %>
               <li><%= name %></li>
             <% end %>
@@ -160,15 +152,17 @@
           <strong class="report-summary--stat-card-number"><%= sdg_goals.size %></strong>
           <div class="report-summary--stat-card-label">
             <span class="report-summary--stat-card-icon">
-              <span class="material-symbols-outlined" aria-hidden="true">eco</span>
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">eco</span>
+              <i class="fas fa-leaf projekt-evaluation-icon-fa" aria-hidden="true"></i>
             </span>
             <%= t("adm.projekts.projekts.evaluation.report.settings_sdgs") %>
           </div>
         </div>
         <% if sdg_goals.any? %>
+          <% sdg_records_by_code = SDG::Goal.where(code: sdg_goals.map { |g| g["code"] }).index_by { |g| g.code.to_s } %>
           <ul class="report-summary--sdg-list">
             <% sdg_goals.each do |goal| %>
-              <% sdg_record = SDG::Goal.find_by(code: goal["code"]) %>
+              <% sdg_record = sdg_records_by_code[goal["code"].to_s] %>
               <% if sdg_record %>
                 <li class="report-summary--sdg-list-item">
                   <span class="report-summary--sdg-list-icon">
@@ -187,9 +181,7 @@
       </div>
     </div>
   </section>
-  <% end %>
 
-  <% if show_phase_summaries %>
   <section class="report-summary--card report-summary--phases">
     <div class="report-summary--section-label">
       <%= t("adm.projekts.projekts.evaluation.report.phases_label") %>
@@ -200,7 +192,7 @@
         <% renderable_phases.each_with_index do |phase, idx| %>
           <%
             color = phase_palette[phase["phase_type"]]
-            short_summary = phase["short_summary"]
+            summary_sections = phase_summary_sections(phase["short_summary"])
           %>
           <div
             class="report-summary--phase-card"
@@ -208,9 +200,10 @@
           >
             <div class="report-summary--phase-head">
               <span class="report-summary--phase-icon">
-                <span class="material-symbols-outlined" aria-hidden="true">
+                <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">
                   <%= ProjektPhase.material_icon_for(phase["phase_type"]) %>
                 </span>
+                <i class="fas <%= ProjektPhase.fa_icon_for(phase["phase_type"]) %> projekt-evaluation-icon-fa" aria-hidden="true"></i>
               </span>
               <div class="report-summary--phase-meta">
                 <div class="report-summary--phase-title"><%= phase["phase_title"] %></div>
@@ -223,9 +216,14 @@
               </div>
             </div>
 
-            <% if short_summary.present? %>
+            <% if summary_sections.any? %>
               <div class="report-summary--phase-body">
-                <%= sanitize(short_summary) %>
+                <% summary_sections.each do |section| %>
+                  <% if section["heading"].present? %>
+                    <h3 class="report-summary--phase-section-heading"><%= section["heading"] %></h3>
+                  <% end %>
+                  <%= simple_format(section["body"], class: "report-summary--phase-paragraph") %>
+                <% end %>
               </div>
             <% else %>
               <div class="report-summary--phase-body-empty">
@@ -241,5 +239,4 @@
       </div>
     <% end %>
   </section>
-  <% end %>
 </section>

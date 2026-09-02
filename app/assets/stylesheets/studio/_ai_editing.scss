@@ -30,7 +30,6 @@
 body:not(.-ai-enabled) {
   .js-content-block-enter-ai-edit-mode,
   .js-content-block-enter-ai-edit-mode-from-simple {
-    pointer-events: none;
     cursor: not-allowed;
     opacity: 0.4;
     filter: grayscale(1);

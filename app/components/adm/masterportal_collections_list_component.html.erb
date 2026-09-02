@@ -8,38 +8,59 @@
     <h3 class="adm-masterportal-collections--title"><%= t(".title") %></h3>
 
     <div class="adm-masterportal-collections--actions">
-      <button
-        type="button"
-        class="adm-masterportal-collections--action-button -resync"
-        title="<%= t(".resync_tooltip") %>"
-        data-adm--masterportal-collections-resync-target="button"
-        data-action="adm--masterportal-collections-resync#resync"
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">published_with_changes</span>
-        <%= t(".resync") %>
-      </button>
+      <rich-tooltip delay="500" trigger-only shadow="heavy">
+        <button
+          type="button"
+          class="adm-masterportal-collections--action-button -resync"
+          data-adm--masterportal-collections-resync-target="button"
+          data-action="adm--masterportal-collections-resync#resync"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">published_with_changes</span>
+          <%= t(".resync") %>
+        </button>
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= t(".resync_tooltip_title") %></span>
+            <span class="rich-tooltip-content--text"><%= t(".resync_tooltip_text") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
 
-      <button
-        type="button"
-        class="adm-masterportal-collections--action-button -update"
-        title="<%= t(".update_all_tooltip") %>"
-        data-adm--masterportal-collections-resync-target="button"
-        data-action="adm--masterportal-collections-resync#updateAll"
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">sync</span>
-        <%= t(".update_all") %>
-      </button>
+      <rich-tooltip delay="500" trigger-only shadow="heavy">
+        <button
+          type="button"
+          class="adm-masterportal-collections--action-button -update"
+          data-adm--masterportal-collections-resync-target="button"
+          data-action="adm--masterportal-collections-resync#updateAll"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">sync</span>
+          <%= t(".update_all") %>
+        </button>
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= t(".update_all_tooltip_title") %></span>
+            <span class="rich-tooltip-content--text"><%= t(".update_all_tooltip_text") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
 
-      <button
-        type="button"
-        class="adm-masterportal-collections--action-button -clean"
-        title="<%= t(".clean_all_tooltip") %>"
-        data-adm--masterportal-collections-resync-target="button"
-        data-action="adm--masterportal-collections-resync#cleanAll"
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">cleaning_services</span>
-        <%= t(".clean_all") %>
-      </button>
+      <rich-tooltip delay="500" trigger-only shadow="heavy">
+        <button
+          type="button"
+          class="adm-masterportal-collections--action-button -clean"
+          data-adm--masterportal-collections-resync-target="button"
+          data-action="adm--masterportal-collections-resync#cleanAll"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">cleaning_services</span>
+          <%= t(".clean_all") %>
+        </button>
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= t(".clean_all_tooltip_title") %></span>
+            <span class="rich-tooltip-content--text"><%= t(".clean_all_tooltip_text") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
     </div>
   </div>
 

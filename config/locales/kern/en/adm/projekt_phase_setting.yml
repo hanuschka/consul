@@ -55,6 +55,8 @@ en:
           show_video_as_link_description: Displays added videos not as an embedded player but as a clickable link. Instead of the video player, a text link to the external provider appears on the frontend. Enable this option to reduce page load time or when embedded videos should be avoided for data-protection reasons.
           hide_ballots_count: Hide vote count during proposal voting
           hide_ballots_count_description: Hides the current vote count during the ongoing voting phase, so users cannot see the current vote distribution. The counter is hidden on the frontend. Enable this option to prevent influence from visible results and ensure unbiased voting.
+          hide_comments_count_order: Hide the "most comments" sort option
+          hide_comments_count_order_description: Removes sorting by number of comments from the selector. The option no longer appears on the frontend, and requesting it through the URL falls back to the default order. Enable this when contributions should be judged on quality rather than on how much discussion they attracted.
       option:
         resource:
           max_submissions_per_user: Maximum submissions per user

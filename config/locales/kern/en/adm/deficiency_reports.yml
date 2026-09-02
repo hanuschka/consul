@@ -151,10 +151,18 @@ en:
           answer_template_prompt: "— Select template —"
           official_answer: Official response
           official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
+          official_answer_documents: Documents for the response
+          official_answer_documents_hint: >-
+            Allowed file types: %{types}. Up to %{count} documents, each no larger than %{size} MB.
+            Attached documents are publicly visible.
         update_official_answer:
           success: Official response updated successfully.
+        remove_official_answer_document:
+          success: Document removed.
         new:
           title: Create new report
+        create:
+          ai_fallback: Report created. The AI could not make a confident match, so the category "%{category}" was assigned. Please review and correct if needed.
         edit:
           title: Edit deficiency report
         form_fields:
@@ -188,6 +196,7 @@ en:
             on_behalf_of: Enter the name of the person on whose behalf the entry was created. This field is used when an officer or administrator records an entry on behalf of a citizen. The name is shown on the detail page and helps with attribution of the entry.
             on_behalf_of_company_name: Optional. The company or organisation the person is reporting for. It is stored on the profile of the linked account, not on the report itself, and is only saved when the account has no company on file yet.
             on_behalf_of_email: Optional. If you enter an email address, the report is assigned to the account behind it. If no account exists for the address, one is created and receives a confirmation email (double opt-in). An existing account is only linked and receives no confirmation email. Leave empty to keep the report attributed to yourself.
+            category_ai: Leave the category empty and the AI assigns main and subcategory on save. Pick one yourself and your choice is kept. When no confident match is possible the report lands in the AI fallback category, and can be corrected at any time afterwards.
             category: The category assigns the entry to a specific thematic area, e.g. road damage, lighting, or green spaces. It influences automatic assignment to responsible officers and is shown as a colored filter in the list view. Correct assignment speeds up processing.
             intake_channel: The route by which the report reached the administration, e.g. phone, email, or in person. It is mandatory as soon as you file a report on behalf of a third person. Reports citizens submit themselves via the platform automatically receive the configured default channel.
             subcategory: The subcategory breaks the report down further within the chosen category, e.g. "Potholes" under "Construction & traffic". Only subcategories of the category selected above are offered; categories without subcategories show no select at all. If the subcategory carries its own default responsibility, the report is assigned there automatically.

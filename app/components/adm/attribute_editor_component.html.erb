@@ -33,7 +33,7 @@
         <% if description.present? %>
           <div class="kern-row">
             <div class="kern-col-12 kern-col-md-9">
-              <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-4"><%= sanitize(description) %></p>
+              <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-4"><%= sanitized_description %></p>
             </div>
           </div>
         <% end %>
@@ -47,7 +47,7 @@
       <% else %>
         <div class="kern-row">
           <div class="kern-col-12 kern-col-md-5">
-            <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitize(description) %></p>
+            <p id="<%= "#{dom_id(@record)}_#{@attribute}_description" %>" class="kern-body mb-3 mb-md-0"><%= sanitized_description %></p>
           </div>
           <div class="kern-col-12 kern-col-md-5">
             <div class="attribute-form <%= @kind %>">

@@ -21,7 +21,8 @@ class DeficiencyReport < ApplicationRecord
 
   audited only: %i[video_url on_behalf_of recorded_by_id cached_votes_up cached_votes_down
                    deficiency_report_status_id deficiency_report_category_id
-                   deficiency_report_subcategory_id responsible_type responsible_id]
+                   deficiency_report_subcategory_id responsible_type responsible_id
+                   admin_accepted]
   has_associated_audits
   translation_class.class_eval do
     audited associated_with: :globalized_model,
@@ -49,8 +50,11 @@ class DeficiencyReport < ApplicationRecord
     inverse_of: :deficiency_report
   has_many :watchers, through: :watches, source: :user
   has_one :feedback_form, class_name: "DeficiencyReport::FeedbackForm", dependent: :destroy
+  has_many_attached :official_answer_documents
 
   delegate :approximated_address, to: :map_location, allow_nil: true
+
+  validate :official_answer_documents_acceptable
 
   validates :deficiency_report_category_id, presence: true
   validates :author, presence: true
@@ -319,6 +323,28 @@ class DeficiencyReport < ApplicationRecord
   end
 
   private
+
+    def official_answer_documents_acceptable
+      return unless attachment_changes.key?("official_answer_documents")
+
+      blobs = official_answer_documents.map(&:blob)
+      allowed = Document.accepted_content_types
+      limit = self.class.max_documents_allowed
+
+      if allowed.present? && blobs.any? { |blob| allowed.exclude?(blob.content_type) }
+        errors.add(:base, I18n.t("deficiency_reports.official_answer_documents.wrong_type",
+                                 types: Document.humanized_accepted_content_types))
+      end
+
+      if blobs.any? { |blob| blob.byte_size > Document.max_file_size.megabytes }
+        errors.add(:base, I18n.t("deficiency_reports.official_answer_documents.too_large",
+                                 size: Document.max_file_size))
+      end
+
+      if limit.positive? && blobs.size > limit
+        errors.add(:base, I18n.t("deficiency_reports.official_answer_documents.too_many", count: limit))
+      end
+    end
 
     def assign_default_intake_channel
       return if deficiency_report_intake_channel_id.present? || intake_channel_required?

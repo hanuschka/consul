@@ -146,6 +146,10 @@ en:
         one: Local census record
         other: Local census records
     attributes:
+      deficiency_report:
+        admin_accepted: "Visibility"
+        admin_accepted_true: "Published"
+        admin_accepted_false: "Not published"
       budget:
         name: "Name"
         description_accepting: "Description during Accepting phase"

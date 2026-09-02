@@ -81,6 +81,16 @@ class ProposalsController
       take_by_projekts(@scoped_projekt_ids)
     end
 
+    if request.format.json?
+      render json: JSON.generate(
+        MapLocation.flatten_feature_collections(
+          all_proposal_map_locations(@resources)
+        )
+      )
+
+      return
+    end
+
     @proposals_map_pin_count =
       proposal_map_pin_count_up_to(@resources, MAP_PINS_LAZY_LOAD_THRESHOLD)
 
@@ -100,14 +110,6 @@ class ProposalsController
         else
           render :index
         end
-      end
-
-      format.json do
-        render json: JSON.generate(
-          MapLocation.flatten_feature_collections(
-            all_proposal_map_locations(@resources)
-          )
-        )
       end
 
       format.csv do

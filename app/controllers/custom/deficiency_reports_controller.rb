@@ -5,6 +5,7 @@ class DeficiencyReportsController < ApplicationController
   include ImageAttributes
   include DocumentAttributes
   include DeficiencyReportsHelper
+  include DeficiencyReportAiCategorization
   include Search
 
   before_action :ensure_submissions_open, only: [:new, :create]
@@ -42,6 +43,16 @@ class DeficiencyReportsController < ApplicationController
     filter_by_archived_status
     filter_by_my_posts
 
+    if request.format.json?
+      render json: JSON.generate(
+        MapLocation.flatten_feature_collections(
+          all_deficiency_report_map_locations(@deficiency_reports)
+        )
+      )
+
+      return
+    end
+
     @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @deficiency_reports_map_pin_count = deficiency_report_map_locations_count(@deficiency_reports)
@@ -62,14 +73,6 @@ class DeficiencyReportsController < ApplicationController
         else
           render :index
         end
-      end
-
-      format.json do
-        render json: JSON.generate(
-          MapLocation.flatten_feature_collections(
-            all_deficiency_report_map_locations(@deficiency_reports)
-          )
-        )
       end
 
       format.csv do
@@ -219,20 +222,6 @@ class DeficiencyReportsController < ApplicationController
                   image_attributes: image_attributes]
 
     params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
-  end
-
-  # Runs before validation because the category is mandatory and the public form does not offer one
-  # while AI categorization is on. Deliberately synchronous: the responsible officer is derived from
-  # the category right after save and notified immediately, so classifying afterwards in a job would
-  # mail the wrong department first and re-route them silently.
-  def categorize_with_ai(deficiency_report)
-    return unless DeficiencyReports::AiCategorizationService.enabled?
-    return if deficiency_report.deficiency_report_category_id.present?
-
-    result = DeficiencyReports::AiCategorizationService.call(deficiency_report)
-
-    deficiency_report.category = result.category
-    deficiency_report.subcategory = result.subcategory
   end
 
   def destroy_map_location_association

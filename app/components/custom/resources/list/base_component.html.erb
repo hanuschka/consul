@@ -1,0 +1,25 @@
+<div class="resources-list js-resources-list <%= class_names %>">
+  <% if @title.present? %>
+    <h2 class="resources-list--title">
+      <%= @title %>
+    </h2>
+  <% end %>
+
+  <%= toolbar %>
+
+  <%= content %>
+
+  <% if items? %>
+    <div class="no-ul-style resources-list--body js-resources-list--body">
+      <ul class="no-ul-style resources-list--inner">
+        <%= items %>
+      </ul>
+    </div>
+  <% elsif @empty_text.present? %>
+    <div class="no-ul-style resources-list--body js-resources-list--body">
+      <%= render Resources::List::EmptyComponent.new(text: @empty_text) %>
+    </div>
+  <% end %>
+
+  <%= footer %>
+</div>

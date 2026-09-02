@@ -5,12 +5,20 @@ en:
         key_metrics: Key Metrics
         analysis: Analysis
         evaluation: Evaluation
+        ai_evaluation: AI Evaluation
         full_stats: Full Evaluation
         overview:
           proposal_phase: Proposals
           budget_phase: Investments
           comment_phase: Comments
+          debate_phase: Debates
           voting_phase: Polls
+      footer_evaluation:
+        section_visibility_toggle_title: "Show or hide the “%{section}” section for visitors"
+        tab_visibility_toggle_label: Publicly visible
+        tab_visibility_toggle_title: "Show or hide the “%{tab}” tab for visitors"
+        tab_visibility_toggle_bulk_hint: Switching also shows or hides all sections of this tab.
+        tab_hidden_from_public_tooltip: This tab is currently hidden from visitors
       stats:
         title: Statistics
         banner_title: "Evaluation of %{phase_title}"
@@ -68,6 +76,9 @@ en:
         legislation_phase: Participate now
         comment_phase: Participate now
         livestream_phase: Participate now
+        mitmachbox_phase: Participate on site
+      mitmachbox_phase:
+        public_info: During this phase you can take part in a survey on site. You will find the Mitmachbox devices at the designated locations.
       permission_problem:
         new_button_component:
           shared:
@@ -97,6 +108,10 @@ en:
             not_enabled: Adding points of interest is not enabled
             max_pins_reached: Maximum number of pins per user is limited to %{max_pin_number}. You have already reached this number.
         votes_component:
+          proposal_phase:
+            supports_limit_exceeded: You have reached the maximum number of supports (%{max_supports}) for this phase.
+          budget_phase:
+            supports_limit_exceeded: You have reached the maximum number of supports (%{max_supports}) for this phase.
           shared:
             guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
             not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
@@ -170,6 +185,7 @@ en:
           phase_not_current: This project phase has not yet started
           poll_expired: This poll has already expired
           poll_not_current: This poll has not yet started
+          poll_not_live: This poll is not yet available.
           only_admins: Participation is limited to admin users.
           no_registered_address: A registered address could not be assigned to your account. Please update your account.
           only_specific_registered_address_groupings: Participation is limited to another area.

@@ -8,7 +8,8 @@
   endpoint: adm_maintenance_resource_documents_path,
   card_component: Files::DocumentCardComponent,
   row_component: Files::DocumentRowComponent,
-  documentable_type_frame_src: documentable_type_filter_adm_maintenance_resource_documents_path(documentable_type: params[:documentable_type])
+  documentable_type_frame_src: documentable_type_filter_adm_maintenance_resource_documents_path(documentable_type: params[:documentable_type]),
+  detail_path: ->(document) { adm_maintenance_resource_document_path(document) }
 ) do |page| %>
   <% page.with_description do %>
     <%= t("files.resource_documents.index.description") %>
@@ -20,8 +21,8 @@
        types: Document.humanized_accepted_content_types,
        note_key: "files.allowed_types_note_users_html",
        settings_link: true,
-       settings_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_content_types_setting, :value)),
+       settings_edit_path: file_settings_adm_settings_path(anchor: dom_id(documents_content_types_setting, :value)),
        max_file_size: Document.max_file_size,
-       max_size_edit_path: metadata_adm_settings_path(anchor: dom_id(documents_max_size_setting, :value))
+       max_size_edit_path: file_settings_adm_settings_path(anchor: dom_id(documents_max_size_setting, :value))
      ) %>
 <% end %>

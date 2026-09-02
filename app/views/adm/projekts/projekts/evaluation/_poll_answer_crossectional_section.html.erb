@@ -1,0 +1,30 @@
+<%
+  accent = evaluation_phase_palette["ProjektPhase::VotingPhase"][:accent]
+  groups = crossectional[:groups] || []
+%>
+
+<%= turbo_frame_tag "poll-answer-crossectional-#{answer_id}" do %>
+  <% if groups.any? %>
+    <% groups.each do |group| %>
+      <div class="answer-detail-crosstab">
+        <div class="answer-detail-crosstab--question"><%= group[:question] %></div>
+        <% group[:answers].each do |row| %>
+          <div class="answer-detail-bar">
+            <div class="answer-detail-bar--top">
+              <span class="answer-detail-bar--label"><%= row[:title] %></span>
+              <span class="answer-detail-bar--value"><%= row[:count] %> &middot; <%= row[:share] %>%</span>
+            </div>
+            <div class="answer-detail-bar--track">
+              <div
+                class="answer-detail-bar--fill"
+                style="width:<%= row[:share] %>%;background:<%= accent %>"
+              ></div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="answer-detail-empty"><%= t("adm.projekts.projekts.evaluation.answer_no_data") %></div>
+  <% end %>
+<% end %>

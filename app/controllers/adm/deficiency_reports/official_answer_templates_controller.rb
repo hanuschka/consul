@@ -1,5 +1,8 @@
 class Adm::DeficiencyReports::OfficialAnswerTemplatesController < Adm::DeficiencyReports::BaseController
   def index
+    authorize DeficiencyReport::OfficialAnswerTemplate, :index?,
+      policy_class: Adm::DeficiencyReports::OfficialAnswerTemplatePolicy
+
     @official_answer_templates = policy_scope(DeficiencyReport::OfficialAnswerTemplate, policy_scope_class: Adm::DeficiencyReports::OfficialAnswerTemplatePolicy::Scope)
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.official_answer_templates"), icon: "description" }]

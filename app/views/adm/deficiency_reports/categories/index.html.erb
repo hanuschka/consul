@@ -19,6 +19,7 @@
             <th scope="col" class="kern-table__header"><%= t(".table.color") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.icon") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.default_responsible") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.subcategories") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.warning_text") %></th>
             <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
           </tr>
@@ -42,10 +43,15 @@
                 <% end %>
               </td>
               <td class="kern-table__cell"><%= category.default_responsible&.name %></td>
+              <td class="kern-table__cell">
+                <%= link_to t(".subcategories_link", count: category.subcategories.size),
+                      adm_deficiency_reports_category_subcategories_path(category), class: "kern-link" %>
+              </td>
               <td class="kern-table__cell"><%= truncate(strip_tags(category.warning_text), length: 50) %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
                   <% actions.with_action(label: t("shared.edit"), url: edit_adm_deficiency_reports_category_path(category)) %>
+                  <% actions.with_action(label: t(".manage_subcategories"), url: adm_deficiency_reports_category_subcategories_path(category)) %>
                   <% actions.with_action(
                     label: t("shared.delete"),
                     url: adm_deficiency_reports_category_path(category),

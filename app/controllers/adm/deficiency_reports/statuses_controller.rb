@@ -2,6 +2,9 @@ class Adm::DeficiencyReports::StatusesController < Adm::DeficiencyReports::BaseC
   include Translatable
 
   def index
+    authorize DeficiencyReport::Status, :index?,
+      policy_class: Adm::DeficiencyReports::StatusPolicy
+
     @statuses = policy_scope(DeficiencyReport::Status, policy_scope_class: Adm::DeficiencyReports::StatusPolicy::Scope)
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.statuses"), icon: "flag" }]

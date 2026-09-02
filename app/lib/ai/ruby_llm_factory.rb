@@ -1,14 +1,34 @@
 module Ai::RubyLlmFactory
-  def self.chat
-    init.chat(
-      model: Ai::Settings.current_llm_model,
-      provider: Ai::Settings.current_llm_provider.to_sym,
+  def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
+    model = Ai::Settings.current_llm_model
+    provider = Ai::Settings.current_llm_provider
+
+    chat = init.chat(
+      model: model,
+      provider: provider.to_sym,
       assume_model_exists: true
     )
+
+    record_usage_from(chat, feature: feature, provider: provider, model: model)
   end
 
-  def self.chat_with_json_output(output_schema)
-    chat.with_schema(output_schema)
+  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE)
+    chat(feature: feature).with_schema(output_schema)
+  end
+
+  def self.record_usage_from(chat, feature:, provider:, model:)
+    chat.after_message do |message|
+      AiUsageRecords::RecordChatUsage.call(
+        message: message,
+        feature: feature,
+        provider: provider,
+        requested_model: model
+      )
+    rescue => e
+      Rails.logger.error("[AiUsageRecord] Failed to record usage for #{feature}: #{e.message}")
+    end
+
+    chat
   end
 
   def self.init

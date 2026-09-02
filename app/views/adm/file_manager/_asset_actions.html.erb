@@ -1,0 +1,22 @@
+<% if detail.attachment_url.present? %>
+  <div class="files-detail--actions">
+    <a
+      href="<%= detail.attachment_url %>"
+      target="_blank"
+      rel="noopener"
+      class="files-detail--action -primary"
+    >
+      <i class="fa fa-arrow-up-right-from-square"></i>
+      <%= t("files.show.open_file") %>
+    </a>
+
+    <a
+      href="<%= detail.attachment_url %>"
+      download="<%= detail.filename %>"
+      class="files-detail--action"
+    >
+      <i class="fa fa-download"></i>
+      <%= t("files.show.download") %>
+    </a>
+  </div>
+<% end %>

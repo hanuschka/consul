@@ -6,6 +6,7 @@
   headers = {
     username:      Kern::Table::HeaderComponent.new(:username, User.human_attribute_name(:username), **@username_header_options.merge(data_field: "username")),
     email:         Kern::Table::HeaderComponent.new(:email, User.human_attribute_name(:email), **@email_header_options.merge(data_field: "email")),
+    status:        Kern::Table::HeaderComponent.new(:status, t(".table.status"), **@status_header_options.merge(data_field: "status")),
     first_name:    Kern::Table::HeaderComponent.new(:first_name, User.human_attribute_name(:first_name), **@first_name_header_options.merge(data_field: "first_name")),
     last_name:     Kern::Table::HeaderComponent.new(:last_name, User.human_attribute_name(:last_name), **@last_name_header_options.merge(data_field: "last_name")),
     city_name:     Kern::Table::HeaderComponent.new(:city_name, t(".table.city_name"), **@city_name_header_options.merge(data_field: "city_name")),
@@ -23,10 +24,10 @@
         records: @users,
         pagy: @pagy,
         headers: headers,
-        column_count: 19,
+        column_count: 20,
         column_selector: {
           storage_key: "adm-users-columns",
-          defaults: "username,email"
+          defaults: "username,email,status"
         },
         empty_state: {
           title: t(".no_users_title"),
@@ -50,7 +51,7 @@
       <a href="<%= adm_users_path(params.permit(
                      :sort_by, :sort_direction,
                      :username__search, :email__search, :first_name__search, :last_name__search,
-                     gender: [], reverify: [], document_type: []
+                     gender: [], reverify: [], document_type: [], status: []
                    ).merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
         <span class="material-symbols-outlined" aria-hidden="true">download</span>
         <%= t(".download_csv") %>
@@ -60,6 +61,7 @@
     <% c.with_header_row do %>
       <%= render headers[:username] %>
       <%= render headers[:email] %>
+      <%= render headers[:status] %>
       <%= render headers[:first_name] %>
       <%= render headers[:last_name] %>
       <%= render headers[:city_name] %>

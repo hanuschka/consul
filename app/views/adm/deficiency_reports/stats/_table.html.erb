@@ -20,7 +20,7 @@
     <tbody class="kern-table__body">
       <% groups.each do |group| %>
         <tr class="kern-table__row">
-          <td class="kern-table__cell"><%= group[0]&.name || t("adm.deficiency_reports.stats.show.without_status") %></td>
+          <td class="kern-table__cell"><%= group[0]&.name || t("adm.deficiency_reports.stats.show.without.#{type}") %></td>
           <td class="kern-table__cell"><%= group[1].count %></td>
           <td class="kern-table__cell"><%= group[1].where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).count %></td>
           <td class="kern-table__cell"><%= group[1].where(created_at: Time.zone.now.prev_week.beginning_of_week..Time.zone.now.prev_week.end_of_week).count %></td>

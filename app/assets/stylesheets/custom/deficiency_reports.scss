@@ -74,8 +74,8 @@ ul.deficiency-reports-sidebar-filter {
     position: absolute;
     opacity: 0;
     cursor: pointer;
-    height: 0;
-    width: 0;
+    height: 1px;
+    width: 1px;
   }
 
   .checkmark {
@@ -163,6 +163,16 @@ ul.deficiency-reports-sidebar-filter {
   border-top: 1px solid;
   padding-top: 2em;
   margin-bottom: 3em;
+}
+
+.deficiency-report-official-answer--documents {
+  list-style: none;
+  margin: 1em 0 0;
+  padding: 0;
+
+  li + li {
+    margin-top: 0.25em;
+  }
 }
 
 .approve-defficiciency-report-button {

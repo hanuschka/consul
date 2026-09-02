@@ -1,7 +1,9 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
+  # preview_gid is the record named by a signed link from the on-behalf-of account mail, if the
+  # request carried one. See ApplicationController#on_behalf_of_preview_gid.
+  def initialize(user, preview_gid: nil)
     if user # logged-in users
       can :use, :voice_assistant
 
@@ -28,5 +30,23 @@ class Ability
     else
       merge Abilities::Everyone.new(user)
     end
+
+    # Last, so the link only ever widens: in CanCan the rule defined latest wins, and a pass for one
+    # record must not become the reason a rule that already applied stops applying.
+    #
+    # Two actions because the gates this has to get past are not all CanCan's. Idea and
+    # DeficiencyReport gate :show on admin acceptance in Abilities::Everyone, so :show is what opens
+    # those. Proposal gates acceptance in its own controller and is already :read-able to everyone,
+    # so asking :show there would answer true for every pending proposal — :preview is granted by
+    # nothing else, which lets that controller test for this token exactly.
+    #
+    # safe_constantize because a token outlives a rename: the gid is signed, so the class name came
+    # from us, but it can still name a model that no longer exists by the time the mail is opened.
+    if (previewed = GlobalID.parse(preview_gid))
+      previewable = previewed.model_name.safe_constantize
+      can [:show, :preview], previewable, id: previewed.model_id.to_i if previewable
+    end
+
+    alias_action :wizard_step, to: :read
   end
 end

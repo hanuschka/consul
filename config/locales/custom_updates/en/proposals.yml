@@ -9,18 +9,21 @@ en:
         tags_custom: User tags
         tags_placeholder: Separate the tags with a comma (',')
         required: Your input
-        title_placeholder: "Give your post a catchy title, for example
-          “Zebra crossing in front of the XY primary school” or “More diversity on the
-          Weekly markets”.
-         "
+        title_placeholder: "
+          Add a title\n\n
+          Give your contribution a catchy title, for example
+          “Zebra crossing in front of the XY primary school” or “More diversity at the
+          weekly markets”.
+        "
         description_placeholder: "
-          Describe your contribution here. The following procedure has proven successful:\n\n
-          Start with a general description of your idea and then show what would improve with the implementation of your suggestion.\n\n
-          When writing, keep sentences as short as possible.\n\n
-          Also use paragraphs to make your text more readable. (Many users read your text on mobile devices.)\n\n
-          If possible, limit your content to a maximum of three paragraphs.\n\n
-          If appropriate, use lists and bullet points for better clarity.
-          "
+          Add a description\n\n
+          Describe your contribution here. The following approach has proven successful:\n\n
+          Start with a general description of your idea and then explain\n what would improve if your proposal were implemented.\n\n
+          Try to keep your sentences short.\n
+          Limit your content – where possible – to a maximum of three paragraphs.\n\n
+          Also use paragraphs to make your text easier to read. (Many users read your text on mobile devices.)\n\n
+          Where appropriate, use lists and bullet points for better clarity.
+        "
         buttons:
           save_draft: Save draft
           publish: Publish proposal

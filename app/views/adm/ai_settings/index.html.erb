@@ -38,8 +38,19 @@
       </div>
     <% end %>
 
+    <% if @evaluation_context_setting.present? %>
+      <%= render Kern::FormFieldComponent.new(
+            label: t("custom.settings.#{@evaluation_context_setting.key}"),
+            hint: t("custom.settings.#{@evaluation_context_setting.key}_description"),
+            stacked: true
+          ) do %>
+        <%= render Adm::AiSettings::FormComponent.new(@evaluation_context_setting) %>
+      <% end %>
+    <% end %>
+
     <% if @ai_settings.any? %>
       <% @ai_settings.each do |setting| %>
+        <% next if setting.key == ::Ai::EvaluationContext::SETTING_KEY %>
         <% next if setting.key == "ai.llm_api_endpoint" && !show_api_endpoint? %>
         <% next if setting.key == "ai.llm_model" && !show_model_field? %>
         <% next if setting.key == "ai.llm_custom_model" && !show_custom_model_field? %>
@@ -58,7 +69,7 @@
               </p>
             </div>
             <div class="kern-col-12 kern-col-md-5">
-              <%= render Adm::AiSettings::FormComponent.new(setting, setting.key) %>
+              <%= render Adm::AiSettings::FormComponent.new(setting) %>
 
               <% if highlight_custom_model %>
                 <p class="kern-ai-setting--inline-warning" role="alert">

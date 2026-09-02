@@ -8,11 +8,28 @@
 .image-cropper-modal {
   width: 880px;
   max-width: 92vw;
+  max-height: 90vh;
+  box-sizing: border-box;
 }
 
+// Flex column chain from the open <dialog> down to the canvas wrapper, so
+// the wrapper is the one element that shrinks when a tall image would push
+// the actions below the fold. Scoped to [open] because the UA stylesheet
+// hides a closed dialog via display: none.
+.image-cropper-modal[open],
+.image-cropper-modal .shared-modal--content,
 .image-cropper {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+}
+
+.image-cropper-modal .shared-modal--content,
+.image-cropper {
+  flex: 1 1 auto;
+}
+
+.image-cropper {
   gap: 16px;
 }
 
@@ -37,8 +54,9 @@
 // so its resize handles sit right on the wrapper's edges — clipping hides the
 // bottom/right handles and makes the crop area impossible to resize.
 .image-cropper--canvas-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
-  max-height: 72vh;
   background-color: #f3f3f3;
   border-radius: 8px;
 }
@@ -50,6 +68,7 @@
 }
 
 .image-cropper--actions {
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
   gap: 12px;

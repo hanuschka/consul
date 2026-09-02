@@ -21,7 +21,7 @@
                   default: t("custom.user_resources.image_upload.bottom_line_default")) %>
           </div>
           <div class="user-resource-image-upload--hint">
-            <%= t("custom.user_resources.image_upload.max_image_size", size: 10) %>
+            <%= t("custom.user_resources.image_upload.max_image_size", size: @f.object.max_file_size) %>
           </div>
           <div class="user-resource-image-upload--hint">
             <%= t("custom.user_resources.image_upload.supported_formats",

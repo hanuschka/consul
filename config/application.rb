@@ -6,6 +6,11 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Opt into RubyLLM's association-based Active Record API. Must run before any
+# initializer loads ActiveRecord::Base, since the gem picks the legacy or the
+# new acts_as module inside an `on_load :active_record` hook.
+RubyLLM.config.use_new_acts_as = true
+
 module Consul
   class Application < Rails::Application
     config.load_defaults 6.1

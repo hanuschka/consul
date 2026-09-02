@@ -18,7 +18,6 @@
         <thead class="kern-table__head">
           <tr class="kern-table__row">
             <% @formular_fields.each do |field| %>
-              <% next if field.kind.in?(["image", "document"]) %>
               <th scope="col" class="kern-table__header"><%= field.name %></th>
             <% end %>
             <th scope="col" class="kern-table__header"><%= t(".table.submitter") %></th>
@@ -31,8 +30,28 @@
           <% @formular_answers.each do |answer| %>
             <tr id="<%= dom_id(answer) %>" class="kern-table__row">
               <% @formular_fields.each do |field| %>
-                <% next if field.kind.in?(["image", "document"]) %>
-                <td class="kern-table__cell"><%= answer.answers[field.key] %></td>
+                <td class="kern-table__cell">
+                  <% case field.kind %>
+                  <% when "image" %>
+                    <% answer.formular_answer_images.select { |img| img.formular_field_key == field.key }.each do |image| %>
+                      <% if image.attachment.attached? %>
+                        <%= link_to image.title.presence || field.name,
+                              rails_blob_path(image.attachment, disposition: "inline"),
+                              target: "_blank", rel: "noopener" %><br>
+                      <% end %>
+                    <% end %>
+                  <% when "document" %>
+                    <% answer.formular_answer_documents.select { |doc| doc.formular_field_key == field.key }.each do |document| %>
+                      <% if document.attachment.attached? %>
+                        <%= link_to document.title.presence || field.name,
+                              rails_blob_path(document.attachment, disposition: "attachment"),
+                              target: "_blank", rel: "noopener" %><br>
+                      <% end %>
+                    <% end %>
+                  <% else %>
+                    <%= answer.answers[field.key] %>
+                  <% end %>
+                </td>
               <% end %>
               <td class="kern-table__cell"><%= answer.submitter_id %></td>
               <td class="kern-table__cell"><%= answer.original_submitter_email %></td>
@@ -41,6 +60,10 @@
           <% end %>
         </tbody>
       </table>
+    </div>
+
+    <div class="my-5">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
     </div>
   <% else %>
     <%= empty_state(title: t(".no_answers_title"), description: t(".no_answers_description"), icon: "description") %>

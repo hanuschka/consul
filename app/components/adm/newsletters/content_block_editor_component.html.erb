@@ -8,19 +8,23 @@
     data-generate-url="<%= generate_url %>"
     data-template-section="newsletter_email"
     data-default-margin-bottom="<%= default_margin_bottom %>"
+    data-ai-available="<%= Ai::Settings.ai_available? %>"
   >
     <div
       class="add-new-content-block-section js-show-content-block-templates-section js-add-content-block-at-top -at-top"
       <% if content_blocks.empty? %>style="display: none;"<% end %>
     >
       <div class="add-new-content-block-section--controls">
-        <button
-          type="button"
-          class="add-new-content-block-floating-control content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
-          title="<%= t('custom.newsletters.content_block_editor.add_with_ai_title') %>"
-        >
-          <i class="fas fa-magic"></i>
-        </button>
+        <%= render Shared::AiFeatureTooltipComponent.new(
+          feature_text: t('custom.newsletters.content_block_editor.add_with_ai_title')
+        ) do %>
+          <button
+            type="button"
+            class="add-new-content-block-floating-control content-block-templates-selector--ai-create js-open-create-content-block-with-ai"
+          >
+            <i class="fas fa-magic"></i>
+          </button>
+        <% end %>
         <button
           type="button"
           class="js-show-content-block-templates add-new-content-block-button"
@@ -63,13 +67,18 @@
         <i class="fas fa-plus"></i>
         <%= t('custom.newsletters.content_block_editor.start_section_add_template') %>
       </button>
-      <button
-        type="button"
-        class="studio-edit-button -green -with-background js-open-create-content-block-with-ai"
-      >
-        <i class="fas fa-magic"></i>
-        <%= t('custom.newsletters.content_block_editor.start_section_add_with_ai') %>
-      </button>
+      <%= render Shared::AiFeatureTooltipComponent.new(
+        feature_title: t('custom.newsletters.content_block_editor.start_section_add_with_ai'),
+        feature_text: t('custom.newsletters.content_block_editor.add_with_ai_title')
+      ) do %>
+        <button
+          type="button"
+          class="studio-edit-button -green -with-background js-open-create-content-block-with-ai"
+        >
+          <i class="fas fa-magic"></i>
+          <%= t('custom.newsletters.content_block_editor.start_section_add_with_ai') %>
+        </button>
+      <% end %>
     </div>
   </div>
 </div>

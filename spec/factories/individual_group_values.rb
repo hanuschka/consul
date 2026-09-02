@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :individual_group_value do
-    name { "MyString" }
-    individual_group { nil }
+    individual_group
+    sequence(:name) { |n| "Individual group value #{n}" }
   end
 end

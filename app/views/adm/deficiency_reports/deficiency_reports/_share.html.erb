@@ -1,0 +1,62 @@
+<% watchers = deficiency_report.watchers.includes(:organization).to_a %>
+<% watcher_user_ids = watchers.map(&:id) %>
+<% officer_groups = DeficiencyReport::OfficerGroup.all.order(:name).to_a %>
+<%# Every officer is offered here rather than deficiency_report_assignable_officers: the "groups
+    only" setting narrows who an Anliegen may be assigned to, which is a different decision from
+    who may be looped in on it. %>
+<% shareable_officers = DeficiencyReport::Officer.joins(:user).includes(user: :organization)
+                                                 .order("users.username ASC") %>
+<% shareable_officers = shareable_officers.where.not(user_id: watcher_user_ids) if watcher_user_ids.any? %>
+<% shareable_officers = shareable_officers.to_a %>
+
+<% grouped_options = {} %>
+<% if officer_groups.any? %>
+  <% grouped_options[t(".officer_groups")] = officer_groups.map { |group| [group.name, "OfficerGroup:#{group.id}"] } %>
+<% end %>
+<% if shareable_officers.any? %>
+  <% grouped_options[t(".officers")] = shareable_officers.map { |officer| [officer.name, "Officer:#{officer.id}"] } %>
+<% end %>
+
+<div class="adm-share-menu" data-controller="adm--menu-popover">
+  <%= kern_button(
+        text: t(".trigger"),
+        icon: "share",
+        style: :secondary,
+        data: { action: "adm--menu-popover#toggle", "adm--menu-popover-target": "button" },
+        "aria-haspopup": "true",
+        "aria-expanded": "false"
+      ) %>
+
+  <div class="adm-share-menu__panel" data-adm--menu-popover-target="menu" role="group" aria-label="<%= t(".title") %>">
+    <p class="kern-label mb-1"><%= t(".title") %></p>
+    <p class="kern-body mb-3"><%= t(".hint") %></p>
+
+    <% if grouped_options.any? %>
+      <%= form_with url: share_adm_deficiency_reports_deficiency_report_path(deficiency_report), method: :post do %>
+        <div class="adm-share-menu__list">
+          <% grouped_options.each do |group_label, options| %>
+            <p class="kern-label mb-1"><%= group_label %></p>
+            <div class="mb-3">
+              <% options.each do |option_label, option_value| %>
+                <% checkbox_id = "share_recipient_#{option_value.tr(":", "_").downcase}" %>
+                <div class="kern-form-check mb-2">
+                  <%= check_box_tag "recipients[]", option_value, false, id: checkbox_id, class: "kern-form-check__checkbox" %>
+                  <%= label_tag checkbox_id, option_label, class: "kern-label" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <%= kern_button(text: t(".submit"), icon: "share", type: :submit) %>
+      <% end %>
+    <% else %>
+      <%= empty_state(title: t(".no_officers"), icon: "person_off") %>
+    <% end %>
+
+    <% if watchers.any? %>
+      <p class="kern-label mb-1 mt-3"><%= t(".current_watchers") %></p>
+      <p class="kern-body mb-0"><%= watchers.map(&:name).join(", ") %></p>
+    <% end %>
+  </div>
+</div>

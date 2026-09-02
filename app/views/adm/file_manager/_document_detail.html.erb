@@ -1,0 +1,28 @@
+<div class="files-detail files-detail--document">
+  <div class="files-detail--doc-header">
+    <span class="files-detail--doc-icon">
+      <i class="fa <%= detail.icon_class %>"></i>
+    </span>
+
+    <div class="files-detail--doc-headings">
+      <h2 class="files-detail--title"><%= detail.display_title %></h2>
+      <p class="files-detail--filename">
+        <%= detail.filename %><% if detail.file_extension.present? %> <span class="files-detail--filetype-tag"><%= detail.file_extension %></span><% end %>
+      </p>
+    </div>
+  </div>
+
+  <% if detail.preview_image_url.present? %>
+    <div class="files-detail--doc-preview">
+      <img
+        src="<%= detail.preview_image_url %>"
+        alt="<%= detail.display_title %>"
+        class="files-detail--doc-preview-image"
+      >
+    </div>
+  <% end %>
+
+  <%= render "adm/file_manager/asset_facts", detail: detail %>
+
+  <%= render "adm/file_manager/asset_actions", detail: detail %>
+</div>

@@ -3,7 +3,8 @@ class ProjektPointOfInterestCategory < ApplicationRecord
   MAX_ICON_BYTE_SIZE = 512.kilobytes
 
   belongs_to :projekt_phase
-  has_many :projekt_point_of_interest_pins
+  belongs_to :masterportal_collection, optional: true
+  has_many :projekt_point_of_interest_pins, dependent: :nullify
   has_one_attached :icon_image
 
   validates :name, presence: true
@@ -13,6 +14,12 @@ class ProjektPointOfInterestCategory < ApplicationRecord
   validate :icon_image_size
 
   scope :ordered, -> { order(name: :asc) }
+  scope :collection_backed, -> { where.not(masterportal_collection_id: nil) }
+  scope :manual, -> { where(masterportal_collection_id: nil) }
+
+  def collection_backed?
+    masterportal_collection_id.present?
+  end
 
   private
 

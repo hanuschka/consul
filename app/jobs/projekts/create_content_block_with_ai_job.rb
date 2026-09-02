@@ -6,7 +6,7 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
     return if content_block.blank?
 
     projekt = content_block.projekt
-    return if projekt.blank?
+    return if projekt.blank? && mode.to_s != "replace"
 
     data = content_block.ai_generation_data || {}
     options = data["options"] || {}
@@ -17,7 +17,8 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
       prompt: options["prompt"],
       category_hint: options["category_hint"],
       anchor_template_id: options["anchor_template_id"],
-      use_projekt_context: options["use_projekt_context"]
+      use_projekt_context: options["use_projekt_context"],
+      text_locale: options["text_locale"]
     )
   rescue Ai::GenerateContentBlock::AiCancelledError
     handle_cancellation(content_block, mode)

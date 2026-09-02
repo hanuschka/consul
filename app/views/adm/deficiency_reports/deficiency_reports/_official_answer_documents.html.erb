@@ -1,0 +1,13 @@
+<% if deficiency_report.official_answer_documents.attached? %>
+  <h3 class="kern-title kern-title--small mt-4 mb-2">
+    <%= t("adm.deficiency_reports.deficiency_reports.show.official_answer_documents") %>
+  </h3>
+  <ul class="mb-3">
+    <% deficiency_report.official_answer_documents.each do |attachment| %>
+      <li>
+        <%= link_to attachment.filename.to_s,
+              rails_blob_path(attachment, disposition: "attachment"), target: :blank %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

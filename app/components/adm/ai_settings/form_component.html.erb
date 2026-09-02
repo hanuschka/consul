@@ -6,6 +6,8 @@
         <%= form.select :value, ai_provider_options, { include_blank: "Anbieter wählen" }, { label: false, class: "kern-select" } %>
       <% when "ai.llm_model" %>
         <%= form.select :value, ai_model_options, { include_blank: "Modell wählen" }, { label: false, class: "kern-select" } %>
+      <% when ::Ai::EvaluationContext::SETTING_KEY %>
+        <%= form.text_area :value, label: false, rows: 8 %>
       <% else %>
         <%= form.text_field :value, label: false, class: "kern-input", required: custom_model_required? %>
       <% end %>

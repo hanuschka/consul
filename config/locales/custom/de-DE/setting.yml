@@ -10,6 +10,8 @@ de:
         llm_custom_model_description: Benutzerdefinierter Modellname (für Ollama oder bei benutzerdefiniertem API-Endpunkt)
         llm_api_endpoint: API-Endpunkt
         llm_api_endpoint_description: Benutzerdefinierte API-Endpunkt-URL für OpenAI-kompatible Dienste (z. B. Azure OpenAI, Proxy-Dienste)
+        evaluation_context: Globaler KI-Kontext
+        evaluation_context_description: Hier hinterlegen Sie einmalig Hintergrundinformationen zu Ihrer Kommune, zum Beispiel Name und Größe, die gewünschte Anrede, Namen von Ortsteilen, Schreibweisen und thematische Schwerpunkte. Der Text wird nirgends öffentlich angezeigt, sondern fließt in alle KI-Auswertungen ein, die danach auf dieser Plattform erzeugt werden. Füllen Sie das Feld aus, damit KI-Auswertungen von Anfang an zu Ihrer Kommune passen.
         llm_api_key: API-Schlüssel
         llm_api_key_description: Der API-Schlüssel authentifiziert Ihre Plattform gegenüber dem gewählten KI-Anbieter. Den Schlüssel erhalten Sie im Entwicklerportal des jeweiligen Anbieters. Er wird verschlüsselt gespeichert und ist nach dem Speichern aus Sicherheitsgründen nicht mehr im Klartext einsehbar. Ohne gültigen Schlüssel sind keine KI-Funktionen verfügbar.
       map_latitude: Breitengrad
@@ -326,9 +328,9 @@ de:
         send_feedback_form_link: Feedback-Formular versenden
         send_feedback_form_link_description: >
           Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
-        show_create_report_button: Button zum Einreichen anzeigen
+        show_create_report_button: Einreichung neuer Mängelmeldungen
         show_create_report_button_description: >
-          Zeigt einen gut sichtbaren Button zum Einreichen neuer Mangelmeldungen in der Seitenleiste der Mängelübersichtsseite an. Der Button erleichtert den Einstieg für Nutzer, die einen neuen Mangel melden möchten. Deaktivieren Sie diese Option, wenn die Einreichung über andere Wege erfolgen soll oder vorübergehend keine neuen Meldungen erwünscht sind.
+          Steuert, ob Nutzende neue Mängelmeldungen einreichen können. Ist die Option deaktiviert, werden alle Schaltflächen zum Einreichen ausgeblendet und das Meldeformular ist auch über einen direkten Link nicht mehr erreichbar; bereits eingegangene Meldungen bleiben weiterhin öffentlich sichtbar. Deaktivieren Sie diese Option, wenn vorübergehend keine neuen Meldungen entgegengenommen werden sollen, etwa während einer Betriebspause.
       ideas:
         show_in_main_menu: Ideen in Navigation anzeigen
         show_in_main_menu_description: Zeigt Ideen in der Hauptnavigation an

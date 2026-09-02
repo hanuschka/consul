@@ -31,5 +31,17 @@
     </div>
   <% else %>
     <p class="kern-body"><%= t("adm.individual_group_values.search_user.not_found") %></p>
+
+    <% if params[:search].to_s.match?(URI::MailTo::EMAIL_REGEXP) %>
+      <% if @individual_group_value.stored_email?(params[:search]) %>
+        <p class="kern-body"><%= t("adm.individual_group_values.search_user.already_stored") %></p>
+      <% else %>
+        <%= link_to t("adm.individual_group_values.search_user.add_email", email: params[:search]),
+              add_email_adm_individual_group_value_path(@individual_group, @individual_group_value,
+                                                        email: params[:search]),
+              data: { turbo_method: :post, turbo_frame: "_top" },
+              class: "kern-link" %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>

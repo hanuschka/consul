@@ -1,0 +1,42 @@
+<div class="mb-5">
+  <h2 class="kern-title kern-title--small mb-3"><%= t("adm.landing_pages.landing_pages.edit.projekts_title") %></h2>
+  <p class="kern-body mb-4" style="max-width: 75%"><%= t("adm.landing_pages.landing_pages.edit.projekts_description") %></p>
+
+  <% if landing_projekts.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"><%= Projekt.model_name.human %></th>
+            <th scope="col" class="kern-table__header"><%= t("adm.projekts.projekts.index.table.status") %></th>
+          </tr>
+        </thead>
+        <tbody class="kern-table__body">
+          <% landing_projekts.each do |projekt| %>
+            <tr class="kern-table__row">
+              <th scope="row" class="kern-table__header">
+                <% if policy([:adm, :projekts, projekt]).update? %>
+                  <%= link_to projekt.title,
+                              details_adm_projekts_projekt_path(projekt),
+                              class: "link",
+                              data: { turbo_frame: "_top" } %>
+                <% else %>
+                  <%= projekt.title %>
+                <% end %>
+              </th>
+              <td class="kern-table__cell">
+                <%= t("shared.#{projekt.activated?}") %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= empty_state(
+      title: t("adm.landing_pages.landing_pages.edit.projekts_empty_title"),
+      description: t("adm.landing_pages.landing_pages.edit.projekts_empty_description"),
+      icon: "folder"
+    ) %>
+  <% end %>
+</div>

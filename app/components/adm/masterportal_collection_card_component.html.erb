@@ -4,6 +4,7 @@
   data-controller="adm--masterportal-collection"
   data-adm--masterportal-collections-resync-target="card"
   data-adm--masterportal-collection-update-url-value="<%= update_url %>"
+  data-adm--masterportal-collection-update-color-url-value="<%= update_color_url %>"
   data-adm--masterportal-collection-delete-url-value="<%= delete_url %>"
   data-adm--masterportal-collection-status-url-value="<%= status_url %>"
   data-adm--masterportal-collection-diff-url-value="<%= diff_url %>"
@@ -11,15 +12,38 @@
   data-adm--masterportal-collection-card-url-value="<%= card_url %>"
   data-adm--masterportal-collection-confirm-value="<%= t(".delete_confirm", name: collection.display_name) %>"
   data-adm--masterportal-collection-clean-confirm-value="<%= t(".clean_confirm", name: collection.display_name) %>"
-  data-adm--masterportal-collection-new-label-value="<%= t(".diff.new_label") %>"
-  data-adm--masterportal-collection-stale-label-value="<%= t(".diff.stale_label") %>"
-  data-adm--masterportal-collection-current-label-value="<%= t(".diff.current_label") %>"
   data-adm--masterportal-collection-checking-label-value="<%= t(".diff.checking_label") %>"
   data-adm--masterportal-collection-initial-import-status-value="<%= collection.import_status %>"
   data-adm--masterportal-collection-initial-destroy-status-value="<%= collection.destroy_status %>"
 >
+  <% if icon_src.present? %>
+    <img
+      class="adm-masterportal-collection-card--icon"
+      src="<%= icon_src %>"
+      alt=""
+      loading="lazy"
+      referrerpolicy="no-referrer"
+    >
+  <% else %>
+    <span
+      class="adm-masterportal-collection-card--icon -placeholder"
+      title="<%= t(".icon_missing") %>"
+      aria-hidden="true"
+    >
+      <span class="material-symbols-outlined">image_not_supported</span>
+    </span>
+  <% end %>
+
   <div class="adm-masterportal-collection-card--info">
-    <h4 class="adm-masterportal-collection-card--name"><%= collection.display_name %> (<%= collection.pins_count %>)</h4>
+    <h4 class="adm-masterportal-collection-card--name">
+      <%= collection.display_name %> (<%= collection.pins_count %>)
+      <% if shapes? %>
+        <span class="adm-masterportal-collection-card--shape-badge">
+          <span class="material-symbols-outlined" aria-hidden="true">polyline</span>
+          <%= t(".shape_badge") %>
+        </span>
+      <% end %>
+    </h4>
 
     <% if collection.source_url.present? %>
       <a
@@ -31,6 +55,20 @@
       >
         <span class="material-symbols-outlined" aria-hidden="true">link</span>
       </a>
+    <% elsif collection.file_source? %>
+      <rich-tooltip trigger-only shadow="heavy">
+        <span class="adm-masterportal-collection-card--source-chip" tabindex="0">
+          <span class="material-symbols-outlined" aria-hidden="true">description</span>
+          <%= t(".source_file_label") %>
+        </span>
+
+        <template>
+          <span class="rich-tooltip-content">
+            <span class="rich-tooltip-content--title"><%= t(".source_file_tooltip_title") %></span>
+            <span class="rich-tooltip-content--text"><%= t(".source_file_tooltip_text") %></span>
+          </span>
+        </template>
+      </rich-tooltip>
     <% end %>
 
     <dl class="adm-masterportal-collection-card--meta">
@@ -61,12 +99,17 @@
     <div
       class="adm-masterportal-collection-card--diff"
       data-adm--masterportal-collection-target="diff"
+      data-state="<%= diff_badge_state %>"
       role="status"
       aria-live="polite"
-      hidden
+      <%= "hidden" if diff_badge_hidden? %>
     >
-      <span class="material-symbols-outlined" aria-hidden="true">difference</span>
-      <span data-adm--masterportal-collection-target="diffText"></span>
+      <span
+        class="material-symbols-outlined"
+        aria-hidden="true"
+        data-adm--masterportal-collection-target="diffIcon"
+      ><%= diff_badge_icon %></span>
+      <span data-adm--masterportal-collection-target="diffText"><%= diff_badge_text %></span>
     </div>
   </div>
 
@@ -91,27 +134,90 @@
     <span data-adm--masterportal-collection-target="errorText"></span>
   </div>
 
+  <% if colorable? %>
+    <div class="adm-masterportal-collection-card--color">
+      <label
+        class="adm-masterportal-collection-card--color-label"
+        for="<%= dom_id(collection, :feature_color) %>"
+      >
+        <%= t(".feature_color_label") %>
+      </label>
+      <div class="adm-masterportal-collection-card--color-group">
+        <rich-tooltip trigger-only shadow="heavy">
+          <input
+            id="<%= dom_id(collection, :feature_color) %>"
+            class="adm-masterportal-collection-card--color-input"
+            type="color"
+            value="<%= feature_color %>"
+            data-adm--masterportal-collection-target="color"
+          >
+
+          <template>
+            <span class="rich-tooltip-content">
+              <span class="rich-tooltip-content--text"><%= t(".feature_color_hint") %></span>
+            </span>
+          </template>
+        </rich-tooltip>
+        <rich-tooltip trigger-only shadow="heavy">
+          <button
+            type="button"
+            class="adm-masterportal-collection-card--color-save"
+            data-adm--masterportal-collection-target="colorSave"
+            data-action="adm--masterportal-collection#updateColor"
+          >
+            <span
+              class="material-symbols-outlined"
+              aria-hidden="true"
+              data-adm--masterportal-collection-target="colorSaveIcon"
+            >save</span>
+            <span class="kern-sr-only"><%= t(".feature_color_save") %></span>
+          </button>
+
+          <template>
+            <span class="rich-tooltip-content">
+              <span class="rich-tooltip-content--text"><%= t(".feature_color_save") %></span>
+            </span>
+          </template>
+        </rich-tooltip>
+      </div>
+    </div>
+  <% end %>
+
   <div
     class="adm-masterportal-collection-card--actions"
     data-adm--masterportal-collection-target="actions"
   >
-    <button
-      type="button"
-      class="adm-masterportal-collection-card--button -resync"
-      title="<%= t(".clean_tooltip") %>"
-      data-action="adm--masterportal-collection#importAndClean"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
-      <%= t(".clean") %>
-    </button>
-    <button
-      type="button"
-      class="adm-masterportal-collection-card--button -delete"
-      title="<%= t(".delete_tooltip") %>"
-      data-action="adm--masterportal-collection#remove"
-    >
-      <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-      <%= t(".delete") %>
-    </button>
+    <rich-tooltip trigger-only shadow="heavy">
+      <button
+        type="button"
+        class="adm-masterportal-collection-card--button -resync"
+        data-action="adm--masterportal-collection#importAndClean"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
+        <%= t(".clean") %>
+      </button>
+
+      <template>
+        <span class="rich-tooltip-content">
+          <span class="rich-tooltip-content--text"><%= t(".clean_tooltip") %></span>
+        </span>
+      </template>
+    </rich-tooltip>
+    <rich-tooltip trigger-only shadow="heavy">
+      <button
+        type="button"
+        class="adm-masterportal-collection-card--button -delete"
+        data-action="adm--masterportal-collection#remove"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+        <%= t(".delete") %>
+      </button>
+
+      <template>
+        <span class="rich-tooltip-content">
+          <span class="rich-tooltip-content--text"><%= t(".delete_tooltip") %></span>
+        </span>
+      </template>
+    </rich-tooltip>
   </div>
 </article>

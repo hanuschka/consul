@@ -31,26 +31,35 @@
       class: "pdf-options-form"
     ) do |form| %>
 
-      <div class="pdf-options-phase">
-        <label class="pdf-options-phase__toggle">
-          <%= check_box_tag(
-            "pdf_options[include_report]",
-            "1",
-            @selection_defaults.include_report?,
-            id: "pdf_options_include_report"
-          ) %>
-          <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
-          <span class="pdf-options-phase__type">
-            <%= t("adm.projekts.projekts.evaluation.pdf_options.include_report") %>
-          </span>
-        </label>
-      </div>
+      <% if @originating_phase_id.blank? %>
+        <div class="pdf-options-phase">
+          <label class="pdf-options-phase__toggle">
+            <%= check_box_tag(
+              "pdf_options[include_report]",
+              "1",
+              @selection_defaults.include_report?,
+              id: "pdf_options_include_report"
+            ) %>
+            <strong><%= t("adm.projekts.projekts.evaluation.report_tab.title") %></strong>
+            <span class="pdf-options-phase__type">
+              <%= t("adm.projekts.projekts.evaluation.pdf_options.include_report") %>
+            </span>
+          </label>
+        </div>
+      <% end %>
 
-      <% phases = @evaluation.phases_data %>
+      <%
+        phases =
+          if @originating_phase_id.present?
+            @evaluation.phases_data.select { |p| p["phase_id"].to_i == @originating_phase_id.to_i }
+          else
+            @evaluation.phases_data
+          end
+      %>
       <% phases.each do |phase| %>
         <%
           phase_id = phase["phase_id"].to_i
-          available_sections = PdfServices::EvaluationPdfSelection.available_sections(phase["phase_type"])
+          available_sections = PdfServices::EvaluationPdfSelection.pdf_available_sections(phase["phase_type"])
         %>
         <div class="pdf-options-phase" data-controller="check-all">
           <label class="pdf-options-phase__toggle">
@@ -99,4 +108,25 @@
       </div>
     <% end %>
   </div>
+
+  <%= render Shared::ModalComponent.new(
+    id: "evaluation-pdf-renderer-unavailable-modal",
+    title: t("adm.projekts.projekts.evaluation_pdf_options.renderer_unavailable.title"),
+    closeable: false,
+    data: { "adm--evaluation-pdf-download-target": "errorDialog" }
+  ) do %>
+    <p class="mb-4">
+      <%= t("adm.projekts.projekts.evaluation_pdf_options.renderer_unavailable.body") %>
+    </p>
+
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="kern-btn kern-btn--primary"
+        data-action="click->adm--evaluation-pdf-download#closeErrorDialog"
+      >
+        <%= t("adm.projekts.projekts.evaluation_pdf_options.renderer_unavailable.close") %>
+      </button>
+    </div>
+  <% end %>
 </div>

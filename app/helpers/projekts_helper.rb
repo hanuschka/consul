@@ -8,9 +8,7 @@ module ProjektsHelper
       items << link_to(t('custom.projekt.page.breadcrumbs.homepage'), root_path, class: 'breadcrumbs-item')
     end
 
-    base_projekt.breadcrumb_trail_ids.each do |projekt_id|
-      projekt = Projekt.find(projekt_id)
-
+    base_projekt.breadcrumb_trail.each do |projekt|
       if !projekt.page.published? || (projekt == base_projekt && home_page_link)
         items << content_tag(:span, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
       else

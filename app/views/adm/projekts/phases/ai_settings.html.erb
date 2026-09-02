@@ -42,6 +42,10 @@
 
       <%= form_submit_button(text: t(".update_button")) %>
     <% end %>
+  <% elsif @dt_api_unavailable %>
+    <%= kern_alert(title: t("adm.projekts.phases.ai_settings.unavailable"), style: :warning) do %>
+      <p class="kern-body"><%= t("adm.projekts.phases.ai_settings.unavailable_description") %></p>
+    <% end %>
   <% elsif @ai_assistant_config_response.present? && @ai_assistant_config_response["error"].present? %>
     <div class="kern-alert kern-alert--danger" role="alert">
       <div class="kern-alert__header">

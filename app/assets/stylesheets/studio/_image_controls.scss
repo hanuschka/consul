@@ -96,6 +96,14 @@
   }
 }
 
+.image-edit-overlay--action-button.-pan-only {
+  display: none;
+}
+
+.image-edit-overlay.-pannable .image-edit-overlay--action-button.-pan-only {
+  display: flex;
+}
+
 .image-edit-overlay--actions .rich-tooltip--body {
   max-width: 360px;
   padding: 12px 14px;
@@ -305,7 +313,7 @@
 
 // --- Legacy styles kept for non-overlay contexts ---
 
-.projekt-content-block {
+.custom-content-block {
   .orbit-image {
     object-fit: cover;
   }
@@ -335,7 +343,7 @@
   }
 }
 
-.projekt-content-block {
+.custom-content-block {
   li:hover {
     .content-block--item-button {
       display: block;
@@ -378,7 +386,7 @@
   }
 }
 
-.projekt-content-block .image-gallery-with-ligthbox {
+.custom-content-block .image-gallery-with-ligthbox {
   img {
     object-fit: contain;
   }

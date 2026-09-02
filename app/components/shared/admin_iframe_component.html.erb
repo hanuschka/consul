@@ -2,7 +2,9 @@
   <iframe
     src="<%= src %>"
     class="<%= iframe_classes %>"
+    <% if title.present? %>title="<%= title %>"<% end %>
     <% if allow.present? %>allow="<%= allow %>"<% end %>
+    <% if referrerpolicy.present? %>referrerpolicy="<%= referrerpolicy %>"<% end %>
     data-shared--admin-iframe-target="iframe"
     data-action="load->shared--admin-iframe#loaded"
   ></iframe>

@@ -8,6 +8,7 @@
                          label: false,
                          accept: "video/mp4,video/webm",
                          class: "kern-form-input__input #{'kern-form-input__input--error' if video_errors.any?}",
+                         disabled: @disabled,
                          data: { kern__form__video_target: "input", action: "change->kern--form--video#change" } %>
     <% if video_errors.any? %>
       <p class="kern-error" role="alert">
@@ -25,7 +26,7 @@
     <% end %>
   </div>
 
-  <% if @show_actions %>
+  <% if show_actions? %>
     <%= tag.button type: "button",
             class: "kern-btn kern-btn--secondary mt-2 #{'d-none' unless show_preview?}",
             style: "float: right;",

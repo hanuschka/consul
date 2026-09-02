@@ -49,10 +49,10 @@ rich-tooltip[hidden] {
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
   opacity: 1;
   scale: 1;
-  transition: opacity 90ms ease-out, scale 90ms ease-out;
+  transition: opacity 120ms ease-out, scale 120ms ease-out;
 }
 
-// Subtle, fast fade-and-rise on appear. Entry only: the popover supplies the
+// Modest, fast fade-and-rise on appear. Entry only: the popover provides the
 // from-state via @starting-style; on close it hides immediately (no display/
 // overlay in the transition). `scale` is used instead of `transform` so it
 // composes with the inline `transform` the non-anchor fallback sets for
@@ -60,7 +60,7 @@ rich-tooltip[hidden] {
 @starting-style {
   .rich-tooltip--body:popover-open {
     opacity: 0;
-    scale: 0.99;
+    scale: 0.97;
   }
 }
 

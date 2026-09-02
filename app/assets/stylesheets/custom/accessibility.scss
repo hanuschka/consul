@@ -51,7 +51,7 @@ form.button_to {
 
 
 // Add outline to labels
-.focusable:focus {
+.focusable:focus-visible {
   outline: $outline-focus;
 }
 
@@ -107,16 +107,16 @@ button,
 [type="button"],
 [type="submit"] {
   &:focus {
-    outline: $outline-focus;
+    outline: none !important;
+    text-decoration: none !important;
+  }
+
+  &:active {
+    outline: none;
   }
 
   &:focus-visible {
-    outline: $outline-focus;
-  }
-
-  &:active,
-  &:focus:active {
-    outline: $outline-focus;
+    outline: $outline-focus !important;
   }
 }
 
@@ -197,6 +197,14 @@ input[type="date"]:focus-visible {
 }
 
 
+// Deficiency reports sidebar filter focus indicator (hidden native radio/checkbox)
+
+.deficiency-reports-sidebar-filter input:focus-visible ~ .checkmark {
+  outline: $outline-focus;
+  outline-offset: 2px;
+}
+
+
 // Language selector focus override (overrides base locale_switcher.scss yellow outline)
 
 .locale .locale-form select:focus {
@@ -208,13 +216,18 @@ input[type="date"]:focus-visible {
 }
 
 
-// Foundation accordion focus indicator: inset outline so the 3px ring is
-// drawn inside the title and not clipped by the accordion item borders.
+// Foundation accordion focus indicator: inset, rounded outline so the 3px
+// ring is drawn inside the title and not clipped by the accordion item
+// borders / the surrounding ul overflow:hidden.
 
-.accordion-title:focus,
+.accordion-title:focus {
+  outline: none;
+}
+
 .accordion-title:focus-visible {
-  outline: $outline-focus;
-  outline-offset: -3px;
+  outline: $outline-focus !important;
+  outline-offset: -3px !important;
+  border-radius: 3px !important;
 }
 
 
@@ -241,7 +254,7 @@ input[role="switch"]:focus-visible {
 
 // Override remaining yellow focus indicators from non-custom stylesheets
 
-.sdg-help-content > .tabs li:focus {
+.sdg-help-content > .tabs li:focus-visible {
   outline: $outline-focus;
 }
 

@@ -1,0 +1,63 @@
+dialog.projekt-banner-generate-modal {
+  max-width: 620px;
+  padding: 24px 28px;
+  // The modal is a DOM descendant of the banner glightbox area (cursor:
+  // zoom-in); reset so that inherited magnifier cursor does not bleed into the
+  // dialog around the switch/fields.
+  cursor: default;
+}
+
+.projekt-banner-generate-modal--header {
+  margin-bottom: 16px;
+
+  h3 {
+    font-size: 22px;
+    margin: 0;
+  }
+}
+
+.projekt-banner-generate-modal--description {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4b5563;
+}
+
+.projekt-banner-generate-modal--form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.projekt-banner-generate-modal--field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2937;
+  }
+
+  textarea {
+    font-size: 16px;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #fff;
+    resize: vertical;
+    min-height: 96px;
+  }
+}
+
+.projekt-banner-generate-modal--warning {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+.projekt-banner-generate-modal--actions {
+  display: flex;
+  justify-content: flex-end;
+}

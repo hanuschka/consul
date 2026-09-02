@@ -21,11 +21,13 @@
   //                 pointer events)
   //   hover-only    show on pointer hover only; do not show on keyboard
   //                 focus / focusout
-  //   instant       near-instant: forces show delay to 100ms and hide delay
-  //                 to 80ms, and disables the body show/hide transition +
-  //                 animation
+  //   instant       near-instant: defaults show delay to 100ms and hide delay
+  //                 to 80ms (explicit delay/hide-delay attributes still win),
+  //                 and disables the body show/hide transition + animation
   //   template-id   use an external <template> by id instead of an inline one
   //   body-class    extra css class(es) added to the tooltip body element
+  //   disabled      never show while present; checked at show time, so it can
+  //                 be toggled live from JS
   class RichTooltip extends HTMLElement {
     connectedCallback() {
       if (this.tooltipBody) return
@@ -49,8 +51,8 @@
       if (!this.trigger || !template) return
 
       this.instant = this.hasAttribute("instant")
-      this.showDelay = this.instant ? INSTANT_SHOW_DELAY : this.parseDelay("delay", DEFAULT_SHOW_DELAY)
-      this.hideDelay = this.instant ? INSTANT_HIDE_DELAY : this.parseDelay("hide-delay", DEFAULT_HIDE_DELAY)
+      this.showDelay = this.parseDelay("delay", this.instant ? INSTANT_SHOW_DELAY : DEFAULT_SHOW_DELAY)
+      this.hideDelay = this.parseDelay("hide-delay", this.instant ? INSTANT_HIDE_DELAY : DEFAULT_HIDE_DELAY)
       this.placement = this.getAttribute("placement") || "top"
       this.size = this.getAttribute("size") || "default"
       this.shadow = this.getAttribute("shadow") || "default"
@@ -146,7 +148,7 @@
       this.trigger.addEventListener("pointerdown", this.suppressShow.bind(this))
 
       if (!this.hoverOnly) {
-        this.trigger.addEventListener("focusin", this.scheduleShow.bind(this))
+        this.trigger.addEventListener("focusin", this.handleFocusin.bind(this))
         this.trigger.addEventListener("focusout", this.scheduleHide.bind(this))
       }
 
@@ -163,8 +165,28 @@
       }
     }
 
+    // Focus re-shows the tooltip only for keyboard-originated focus
+    // (:focus-visible). A pointer click that focuses the trigger — or focus
+    // restored to it after a modal/dialog it opened closes — must not pop the
+    // tooltip back up over the action the user just took;
+    // matches(":focus-visible") is false in both those pointer-driven cases.
+    handleFocusin() {
+      if (!this.focusIsVisible()) return
+
+      this.scheduleShow()
+    }
+
+    focusIsVisible() {
+      try {
+        return this.trigger.matches(":focus-visible")
+      } catch (error) {
+        return true
+      }
+    }
+
     scheduleShow() {
       if (this.showSuppressed) return
+      if (this.hasAttribute("disabled")) return
 
       clearTimeout(this.hideTimeout)
       clearTimeout(this.showTimeout)

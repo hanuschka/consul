@@ -8,6 +8,7 @@ class Shared::MapComponent < ApplicationComponent
     editable: false,
     process: nil,
     placement: nil,
+    rendering_library: nil,
     map_data_url: nil,
     lazy_load_threshold: LAZY_LOAD_THRESHOLD,
     masterportal_focus_view: false,
@@ -19,6 +20,7 @@ class Shared::MapComponent < ApplicationComponent
     @editable = editable
     @process = process
     @placement = placement
+    @rendering_library_override = rendering_library
     @map_data_url = map_data_url
     @lazy_load_threshold = lazy_load_threshold
     @masterportal_focus_view = masterportal_focus_view
@@ -110,6 +112,8 @@ class Shared::MapComponent < ApplicationComponent
 
       options[:masterportal_pins_layer_label] =
         I18n.t("components.shared.map_component.layers.masterportal_pins")
+      options[:masterportal_default_icon_url] =
+        helpers.path_to_image("masterportal/pins/default_pin.svg")
 
       options[:admin_features] = admin_features
 
@@ -160,7 +164,7 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def rendering_library
-      lib = map_location&.rendering_library || "leaflet"
+      lib = @rendering_library_override || map_location&.rendering_library || "leaflet"
       @rendering_library ||= lib == "leaflet_plus_masterportal" ? "leaflet" : lib
     end
 
@@ -179,7 +183,8 @@ class Shared::MapComponent < ApplicationComponent
       base = if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
                @mappable.map_layers
              else
-               @mappable.try(:projekt_phase)&.map_layers ||
+               @mappable.try(:inherited_map_layers) ||
+                 @mappable.try(:projekt_phase)&.map_layers ||
                  @mappable.try(:projekt)&.map_layers ||
                  MapLayer.default
              end

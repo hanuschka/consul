@@ -4,7 +4,7 @@
   negative_answer = answers.find { |a| a != positive_answer }
 %>
 
-<div class="card">
+<div class="card poll-question-card--full evaluation-stat-card">
   <div class="card-title"><%= question["title"] %></div>
   <div class="card-subtitle">n = <%= question["total_responses"].to_i %></div>
 
@@ -22,10 +22,15 @@
       <% color = idx.zero? ? "#059669" : "#DC2626" %>
       <div class="stacked-legend-item">
         <span class="legend-dot" style="background:<%= color %>"></span>
-        <%= answer["title"] %>: <%= answer["count"].to_i %>
+        <span class="stacked-legend-item--text"><%= answer["title"] %>: <%= answer["count"].to_i %></span>
+        <%= render "adm/projekts/projekts/evaluation/poll_answer_detail_actions",
+          answer: answer, exportable: local_assigns.fetch(:exportable, false) %>
       </div>
     <% end %>
   </div>
 
   <%= render "adm/projekts/projekts/evaluation/poll_question_exports", question: question, exportable: local_assigns.fetch(:exportable, false) %>
+
+  <%= render partial: "adm/projekts/projekts/evaluation/poll_open_answers",
+    locals: { question: question, accent: accent, accent_light: accent_light, pdf_mode: local_assigns.fetch(:pdf_mode, false) } %>
 </div>

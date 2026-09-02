@@ -14,12 +14,24 @@
 .adm-anchor-highlight {
   --adm-anchor-highlight-tint: hsl(210, 88%, 93%);
 
-  border-radius: 6px;
-  animation: adm-anchor-highlight-blink 1.4s ease-out 1;
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -20px;
+    z-index: -1;
+    border-radius: 6px;
+    pointer-events: none;
+    animation: adm-anchor-highlight-blink 1.4s ease-out 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .adm-anchor-highlight {
-    animation: adm-anchor-highlight-fade 1.2s ease-out 1;
+    &::before {
+      animation: adm-anchor-highlight-fade 1.2s ease-out 1;
+    }
   }
 }

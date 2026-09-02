@@ -1,11 +1,13 @@
 class Charts::PieChartComponent < ApplicationComponent
-  def initialize(title:, labels:, values:, colors: nil, show_legend: true, labels_at_edges: false)
+  def initialize(title:, labels:, values:, colors: nil, show_legend: true, labels_at_edges: false,
+                 height: nil)
     @title = title
     @labels = labels
     @values = values
     @colors = colors
     @show_legend = show_legend
     @labels_at_edges = labels_at_edges
+    @height = height
   end
 
   def render?
@@ -30,5 +32,11 @@ class Charts::PieChartComponent < ApplicationComponent
 
   def labels_at_edges?
     @labels_at_edges
+  end
+
+  def height_style
+    return if @height.blank?
+
+    @height.is_a?(Integer) ? "height: #{@height}px" : "height: #{@height}"
   end
 end

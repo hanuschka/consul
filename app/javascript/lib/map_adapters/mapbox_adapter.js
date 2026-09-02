@@ -39,10 +39,13 @@ export default class MapboxAdapter extends BaseAdapter {
       this.addResetViewControl()
       this.setupPlugins()
       this.setupFormSyncListeners()
+      this.observeContainerResize()
     })
   }
 
   destroy() {
+    this.stopObservingContainerResize()
+
     if (this._geojsonLegends) {
       this._geojsonLegends.forEach(legend => legend.remove())
       this._geojsonLegends = []
@@ -128,7 +131,7 @@ export default class MapboxAdapter extends BaseAdapter {
 
     this.initialCenter = [options.longitude, options.latitude]
     this.initialZoom = options.zoom
-    this.initialPitch = 53
+    this.initialPitch = 10
 
     this.map = new mapboxgl.Map({
       container: container,

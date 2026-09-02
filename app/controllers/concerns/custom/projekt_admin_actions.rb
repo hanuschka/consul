@@ -21,11 +21,11 @@ module ProjektAdminActions
 
     all_settings = ProjektSetting.where(projekt: @projekt).group_by(&:type)
     all_projekt_features = all_settings["projekt_feature"].group_by(&:projekt_feature_type)
-    @projekt_features_main = all_projekt_features["main"]
-    @projekt_features_general = all_projekt_features["general"]
-    @projekt_features_sidebar = all_projekt_features["sidebar"]
+    @projekt_features_main = editable_settings(all_projekt_features["main"])
+    @projekt_features_general = editable_settings(all_projekt_features["general"])
+    @projekt_features_sidebar = editable_settings(all_projekt_features["sidebar"])
     all_projekt_options = all_settings["projekt_option"].group_by(&:projekt_feature_type)
-    @projekt_options_general = all_projekt_options["general"]
+    @projekt_options_general = editable_settings(all_projekt_options["general"])
 
     @default_footer_tab_setting = ProjektSetting.find_by(
       projekt: @projekt,
@@ -123,6 +123,13 @@ module ProjektAdminActions
   end
 
   private
+
+    # A setting promoted to a `projekts` column is edited on /adm instead; its
+    # row is kept only as a backup, so hide it here. Switching
+    # Projekt::USE_SETTING_COLUMNS back to false brings these rows back.
+    def editable_settings(settings)
+      Array(settings).reject { |setting| Projekt.setting_read_from_column?(setting.key) }
+    end
 
     def projekt_params
       attributes = [

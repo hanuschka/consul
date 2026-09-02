@@ -4,6 +4,10 @@ export default class extends Controller {
   static targets = ["entries", "template", "addButton", "entry", "destroy"]
   static values = { max: { type: Number, default: 10 } }
 
+  connect() {
+    this.updateAddButton()
+  }
+
   add() {
     const content = this.templateTarget.content.cloneNode(true)
     const timestamp = Date.now()

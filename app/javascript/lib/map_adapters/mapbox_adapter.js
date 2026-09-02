@@ -39,10 +39,13 @@ export default class MapboxAdapter extends BaseAdapter {
       this.addResetViewControl()
       this.setupPlugins()
       this.setupFormSyncListeners()
+      this.observeContainerResize()
     })
   }
 
   destroy() {
+    this.stopObservingContainerResize()
+
     if (this._geojsonLegends) {
       this._geojsonLegends.forEach(legend => legend.remove())
       this._geojsonLegends = []

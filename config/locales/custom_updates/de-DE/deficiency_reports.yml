@@ -56,6 +56,7 @@ de:
         submit_button_new_design: Jetzt einreichen
       create:
         flash_success: Ihre Meldung wurde erfolgreich übermittelt.
+      submissions_closed: Es können derzeit keine neuen Meldungen eingereicht werden.
       index:
         empty_list_text: "Keine Ergebnisse"
         title: Mängelmelder

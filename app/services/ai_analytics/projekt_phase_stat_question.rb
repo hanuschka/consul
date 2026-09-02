@@ -79,8 +79,8 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
 
       response =
         Ai::RubyLlmFactory
-          .chat
-          .with_instructions(system_instructions)
+          .chat(feature: "ai_analytics.phase_stat_question")
+          .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, projekt_phase))
           .ask(user_prompt)
 
       response.content.strip

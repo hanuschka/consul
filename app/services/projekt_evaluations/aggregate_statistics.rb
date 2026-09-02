@@ -306,6 +306,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     {
       weighted: Poll::Answer
         .where(question_id: question_ids)
+        .where.not(answer: nil)
         .group(:question_id, :answer)
         .sum(:answer_weight),
       open_counts: Poll::Answer

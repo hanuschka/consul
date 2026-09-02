@@ -59,11 +59,15 @@ module DeficiencyReportsHelper
   end
 
   def active_deficiency_report_confirmation_popup
+    return nil unless DeficiencyReport.submissions_open?
+
     popup = DeficiencyReport::ConfirmationPopup.current
     popup.active? ? popup : nil
   end
 
   def deficiency_report_create_cta_button(css_class:, link_data: {}, style: nil)
+    return unless DeficiencyReport.submissions_open?
+
     label = deficiency_reports_create_cta
     common = { class: css_class }
     common[:style] = style if style.present?

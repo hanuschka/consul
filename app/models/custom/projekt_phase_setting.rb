@@ -9,6 +9,10 @@ class ProjektPhaseSetting < ApplicationRecord
     feature.general.similar_contributions_check
   ].freeze
 
+  AI_SETTINGS_TAB_KEYS = %w[
+    feature.form.voice_assistant
+  ].freeze
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
   belongs_to :projekt_phase, touch: true

@@ -67,6 +67,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       ::Whatsapp::ListWindow.page(all_open_projekt_phases, from: from)
     end
 
+    # How many phases the bot could take a submission into, per projekt. Grouped
+    # off the pass above rather than asked per projekt, because every tool that
+    # lists projekts has to say which of them can be contributed to and asking
+    # that a row at a time is the most expensive question the bot asks, ten times
+    # over for one message.
+    def open_phase_counts
+      @open_phase_counts ||=
+        all_open_projekt_phases.each_with_object(Hash.new(0)) do |projekt_phase, counts|
+          counts[projekt_phase.projekt_id] += 1
+        end
+    end
+
     # The phase whose projekt the citizen named, resolved against everything open
     # rather than against the listed rows. Matching is
     # Whatsapp::ProjektByNameQuery's — exact wins, a partial only when it is the

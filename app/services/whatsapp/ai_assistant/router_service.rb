@@ -390,6 +390,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     # Each returns facts and sends nothing.
     READ_TOOLS = [
+      ::Ai::Tools::WhatsappAiAssistant::ListOpenProjekts,
+      ::Ai::Tools::WhatsappAiAssistant::FindProjektsByTopic,
       ::Ai::Tools::WhatsappAiAssistant::ListOpenPhases,
       ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
       ::Ai::Tools::WhatsappAiAssistant::DescribeProjekt,

@@ -104,6 +104,7 @@ module Whatsapp::FlowActions
   # than something read off the id. A scope name arriving from a chat message is
   # the shape that reaches a query nobody meant to expose.
   MORE_SCOPES = %w[
+    open_projekts
     eligible_phases
     my_contributions
     results

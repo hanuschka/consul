@@ -1,6 +1,10 @@
 class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Lists the participation phases that are currently open for submissions across " \
-              "the whole portal, each with the link to its projekt. Returns the " \
+              "the whole portal, each with the link to its projekt. Not the answer to a general " \
+              "wish to take part — a phase named without its projekt says nothing about what it " \
+              "is for, so that is list_open_projekts. This is for a question actually asked " \
+              "portal-wide — \"was ist gerade überall offen?\" — and for the phases of a projekt " \
+              "already picked, where describe_projekt is the narrower answer. Returns the " \
               "projekt_phase_id that describe_projekt, check_participation_eligibility and " \
               "start_draft expect. Ten at a time: say how many there are altogether, name " \
               "the ones that fit this moment, and offer more_action_id as a button so the rest " \

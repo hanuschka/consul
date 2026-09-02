@@ -7,16 +7,16 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
   MAX_COMMENTS_IN_PROMPT = 30
   MAX_REF_SNIPPET = 180
 
-  def initialize(phase)
+  def initialize(phase, projekt_phase:)
     @phase = phase
+    @projekt_phase = projekt_phase
   end
 
   def call
     return [] if empty_phase?
 
-    prompt = build_user_prompt
-    response_text = get_ai_response(prompt)
-    parse_response(response_text)
+    response_data = get_ai_response(build_user_prompt)
+    parse_response(response_data)
   rescue StandardError => e
     Rails.logger.error("[Evaluation] GeneratePhaseKeyFindings failed for #{phase_type}: #{e.message}")
     []
@@ -57,6 +57,14 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
 
   def top_proposals
     stat_value(:top_proposals) || []
+  end
+
+  def top_investments
+    stat_value(:top_investments) || []
+  end
+
+  def top_comments
+    stat_value(:top_comments) || []
   end
 
   def polls
@@ -167,91 +175,121 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
   end
 
   def serialize_budget_phase
+    investments_text = top_investments.first(15).map do |i|
+      id = i[:id] || i["id"]
+      title = i[:title] || i["title"]
+      supports = i[:supports] || i["supports"]
+      winner = i[:winner] || i["winner"]
+      "  - investment id=#{id}: \"#{title}\" (#{supports} supports)#{winner ? " [winner]" : ""}"
+    end.join("\n")
+
     <<~TEXT
       Investments: #{stat_value(:investments_count)}
       Supports: #{stat_value(:supports_count)}
       Participants: #{stat_value(:unique_participants)}
+
+      Investments:
+      #{investments_text}
     TEXT
   end
 
   def serialize_comment_phase
+    comments_text = top_comments.first(MAX_COMMENTS_IN_PROMPT).map do |c|
+      id = c[:id] || c["id"]
+      body = (c[:body] || c["body"]).to_s.gsub(/\s+/, " ").truncate(300)
+      "  - comment id=#{id}: \"#{body}\""
+    end.join("\n")
+
     <<~TEXT
       Comments: #{stat_value(:comments_count)}
       Unique commenters: #{stat_value(:unique_commenters)}
+
+      Comments:
+      #{comments_text}
     TEXT
   end
 
   def get_ai_response(user_prompt)
     response = Ai::RubyLlmFactory
-      .chat
-      .with_instructions(system_instructions)
+      .chat(feature: "projekt_evaluations.phase_key_findings")
+      .with_schema(output_schema)
+      .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, @projekt_phase))
       .ask(user_prompt)
 
-    response.content.to_s
+    response.content
+  end
+
+  def output_schema
+    {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        findings: {
+          type: "array",
+          items: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              label: { type: "string", description: "1-3 word theme derived from the finding, in the target language" },
+              title: { type: "string", description: "3-8 word headline in the target language" },
+              body: { type: "string", description: "1-3 sentences; numbers in <strong> tags; inline [1],[2] citations" },
+              sentiment: { type: "string", enum: VALID_SENTIMENTS },
+              references: {
+                type: "array",
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  properties: {
+                    type: { type: "string", enum: VALID_TYPES },
+                    id: { type: "integer", description: "exact integer id from the provided data" },
+                    poll_id: { type: "integer", description: "poll id for comment/question refs in voting phases, otherwise 0" },
+                    snippet: { type: "string" }
+                  },
+                  required: %w[type id poll_id snippet]
+                }
+              }
+            },
+            required: %w[label title body sentiment references]
+          }
+        }
+      },
+      required: %w[findings]
+    }
   end
 
   def system_instructions
     <<~TEXT
       You are generating "Key Findings" for a single phase of a citizen participation project.
 
-      Return ONLY valid JSON in exactly this shape:
-      {
-        "findings": [
-          {
-            "label": "Kernaussage",
-            "title": "...",
-            "body": "...",
-            "sentiment": "...",
-            "references": [
-              {
-                "type": "comment|question|proposal|investment",
-                "id": <integer, exactly as shown in the provided data>,
-                "poll_id": <integer, required for comment/question in a voting phase>,
-                "snippet": "..."
-              }
-            ]
-          },
-          {"label": "Konsens", ...},
-          {"label": "Ursache", ...},
-          {"label": "Emotion", ...}
-        ]
-      }
-
-      FOUR FINDINGS — one per label. Do not change the labels.
-
-      - Kernaussage: core headline
-      - Konsens: point of agreement
-      - Ursache: main driver/cause
-      - Emotion: emotionally charged topic
+      Produce EXACTLY FOUR findings, derived from the data itself: the four most
+      important and distinct insights — do NOT force fixed categories. Order them
+      from most to least important.
 
       EACH FINDING:
+      - label: a 1-3 word theme in #{target_language} that you derive from the
+        finding's content (the topic, tension, or driver it captures)
       - title: 3-8 words in #{target_language}
-      - body: 1-3 sentences in #{target_language}, numbers in <strong> tags.
-        Mark citations inline with [1], [2], [3] matching the references array indices of THAT finding.
+      - body: 1-3 sentences in #{target_language}. Put numbers in <strong> tags,
+        use inline <strong> only (no other HTML, no markdown), and mark citations
+        inline with [1], [2], [3] matching the references indices of THAT finding.
         Example: "68,5% lehnen ab[1]. Parken ist emotional[2]."
-      - sentiment: "negative" | "positive" | "warning" | "primary"
-      - references: 1 to #{MAX_REFS_PER_FINDING} items, each drawn DIRECTLY from the provided data.
-        - id: use the exact integer id from the data (e.g. comment id=501 → "id": 501)
-        - poll_id: include for comment/question references in voting phases (from "poll_id=X" in the data)
-        - snippet: verbatim quote or formatted label (<=150 chars). For questions, use "title → winning answer (pct%)".
-
-      Use inline <strong> tags only, no other HTML, no markdown.
-      Do not include any text outside the JSON.
+      - sentiment: one of #{VALID_SENTIMENTS.join(", ")}.
+      - references: 1 to #{MAX_REFS_PER_FINDING} items, each drawn DIRECTLY from
+        the provided data.
+        - id: the exact integer id from the data (e.g. comment id=501 → 501)
+        - poll_id: for comment/question references in voting phases use the
+          poll_id from the data ("poll_id=X"); otherwise 0.
+        - snippet: verbatim quote or formatted label (<=150 chars). For questions,
+          use "title → winning answer (pct%)".
     TEXT
   end
 
   def parse_response(content)
-    cleaned = content.strip.gsub(/^```json\s*/, "").gsub(/\s*```$/, "")
-    first_brace = cleaned.index("{")
-    last_brace = cleaned.rindex("}")
+    data = content.is_a?(String) ? JSON.parse(content) : content
+    return [] unless data.is_a?(Hash)
 
-    return [] if first_brace.nil? || last_brace.nil?
-
-    json_str = cleaned[first_brace..last_brace]
-    data = JSON.parse(json_str)
-    findings = data["findings"]
-
-    return [] if findings.nil? || !findings.is_a?(Array)
+    findings = data["findings"] || data[:findings]
+    return [] unless findings.is_a?(Array)
 
     findings.map { |f| build_finding(f) }
   rescue JSON::ParserError => e
@@ -310,14 +348,36 @@ class ProjektEvaluations::GeneratePhaseKeyFindings < ApplicationService
 
       poll_path(poll_id, anchor: "question-#{id}")
     when "comment"
-      return nil if poll_id.nil? || poll_id.zero?
-
-      poll_path(poll_id, anchor: "comment_#{id}")
+      if poll_id.present? && !poll_id.zero?
+        poll_path(poll_id, anchor: "comment_#{id}")
+      else
+        comment_phase_comment_path(id)
+      end
     when "investment"
-      nil
+      budget_id = Budget::Investment.where(id: id).pick(:budget_id)
+      return nil if budget_id.nil?
+
+      budget_investment_path(budget_id, id)
     end
   rescue StandardError => e
     Rails.logger.warn("[Evaluation] URL resolution failed for #{type}##{id}: #{e.message}")
     nil
+  end
+
+  def comment_phase_comment_path(comment_id)
+    return nil if phase_page_slug.blank?
+
+    page_path(phase_page_slug, projekt_phase_id: phase_id_value, anchor: "comment_#{comment_id}")
+  end
+
+  def phase_id_value
+    @phase[:phase_id] || @phase["phase_id"]
+  end
+
+  def phase_page_slug
+    return @phase_page_slug if defined?(@phase_page_slug)
+
+    projekt_phase = ProjektPhase.find_by(id: phase_id_value)
+    @phase_page_slug = projekt_phase&.projekt&.page&.slug
   end
 end

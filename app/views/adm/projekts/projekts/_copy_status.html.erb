@@ -1,0 +1,22 @@
+<%# Only rendered for an unfinished copy, so anything not still running is a
+    copy that will never finish -- failed outright, or stalled with its worker
+    gone. %>
+<% if !projekt.copy_in_progress? %>
+  <span class="kern-badge kern-badge--danger">
+    <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
+    <span class="kern-label"><%= t("adm.projekts.projekts.copy.status_failed") %></span>
+  </span>
+<% else %>
+  <span
+    class="kern-badge kern-badge--info"
+    role="status"
+    data-controller="shared--polling"
+    data-shared--polling-url-value="<%= copy_status_adm_projekts_projekt_path(projekt) %>"
+    data-shared--polling-interval-value="4000"
+    data-shared--polling-max-attempts-value="150"
+    data-shared--polling-on-terminal-value="redirect"
+  >
+    <span class="kern-loader kern-loader--visible" aria-hidden="true"></span>
+    <span class="kern-label"><%= t("adm.projekts.projekts.copy.status_processing") %></span>
+  </span>
+<% end %>

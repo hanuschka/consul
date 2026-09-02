@@ -19,11 +19,33 @@
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase)) %>
 
 <div class="kern-container mb-5">
+  <%= render "adm/projekts/phases/test_mode_banner", poll: @poll %>
+
   <div class="d-flex justify-content-start gap-2 mb-4">
     <%= kern_link_button new_adm_projekts_phase_poll_question_path(@projekt_phase),
           text: t(".create_question"), icon: "add", style: :secondary %>
     <%= kern_link_button new_adm_projekts_phase_poll_question_path(@projekt_phase, bundle_question: true),
           text: t(".create_bundle_question"), icon: "add", style: :secondary %>
+
+    <% if @poll.present? && Ai::Settings.ai_available? %>
+      <%= render Shared::AiFeatureTooltipComponent.new(
+            feature_title: t("adm.projekts.poll_question_imports.trigger.title"),
+            feature_text: t("adm.projekts.poll_question_imports.trigger.tooltip"),
+            requires_ai: false
+          ) do %>
+        <%= kern_link_button adm_projekts_phase_poll_question_imports_path(@projekt_phase),
+              text: t("adm.projekts.poll_question_imports.trigger.button"),
+              icon: "auto_awesome",
+              style: :secondary %>
+      <% end %>
+    <% end %>
+
+    <% if @poll.present? && !@poll.live? %>
+      <%= form_with url: go_live_adm_projekts_phase_path(@projekt_phase), method: :patch,
+            data: { turbo_confirm: t(".test_mode.go_live_confirm") } do %>
+        <%= kern_button type: :submit, text: t(".test_mode.go_live"), icon: "rocket_launch", style: :primary %>
+      <% end %>
+    <% end %>
   </div>
 
   <% if @questions.any? %>
@@ -48,9 +70,13 @@
               </td>
               <th scope="row" class="kern-table__header">
                 <%= question.title %>
-                <% if question.contextualize_by_poll_question_id.present? %>
+                <% if question.contextualize_by_question.present? %>
                   <br>
                   <small><%= t(".table.contextualized_by") %> <%= question.contextualize_by_question.title %></small>
+                <% end %>
+                <% if question.randomize_position? %>
+                  <br>
+                  <small><%= t(".table.randomized_position") %></small>
                 <% end %>
               </th>
               <td class="kern-table__cell">
@@ -63,7 +89,7 @@
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
                   <% actions.with_action(label: question.bundle_question? ? t(".table.edit_questions") : t(".table.edit_answers"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "list") %>
-                  <% actions.with_action(label: t(".table.edit_question"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "edit", style: :edit, divider: true) %>
+                  <% actions.with_action(label: question.bundle_question? ? t(".table.edit_bundle_question") : t(".table.edit_question"), url: edit_adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "edit", style: :edit, divider: true) %>
                   <% actions.with_action(label: t("shared.delete"), url: adm_projekts_phase_poll_question_path(@projekt_phase, question), icon: "delete", style: :delete, data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }) %>
                 <% end %>
               </td>

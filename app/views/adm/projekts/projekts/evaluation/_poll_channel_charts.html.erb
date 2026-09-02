@@ -1,0 +1,59 @@
+<%
+  channels = stats.channels
+  breakdown = stats.channel_breakdown
+  channel_labels = channels.map { |channel| t("polls.show.stats.#{channel == "letter" ? "mail" : channel}") }
+  channel_colors = evaluation_chart_colors(channels)
+  vote_type_labels = [
+    t("polls.show.stats.valid"),
+    t("polls.show.stats.white"),
+    t("polls.show.stats.null_votes")
+  ]
+  vote_type_series = channels.each_with_index.map do |channel, index|
+    {
+      label: channel_labels[index],
+      values: [
+        breakdown[channel][:valid],
+        breakdown[channel][:white],
+        breakdown[channel][:null_votes]
+      ],
+      color: channel_colors[index]
+    }
+  end
+%>
+
+<div class="adm-poll-stats--advanced evaluation-stat-card">
+  <div class="phase-segments-card__header">
+    <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">insights</span>
+    <i class="fas fa-chart-line projekt-evaluation-icon-fa" aria-hidden="true"></i>
+    <span class="phase-segments-card__title"><%= t("stats.advanced") %></span>
+  </div>
+
+  <div class="phase-segments-card__grid">
+    <div class="phase-segments-card__panel">
+      <div class="phase-segments-card__panel-label"><%= t("stats.polls.by_channel") %></div>
+      <div
+        class="phase-segments-card__chart"
+        data-pie-chart
+        data-chart-labels="<%= channel_labels.to_json %>"
+        data-chart-values="<%= channels.map { |channel| breakdown[channel][:participants] }.to_json %>"
+        data-chart-colors="<%= channel_colors.to_json %>"
+      >
+        <canvas></canvas>
+      </div>
+    </div>
+
+    <div class="phase-segments-card__panel">
+      <div class="phase-segments-card__panel-label"><%= t("stats.polls.vote_by_channel") %></div>
+      <div
+        class="phase-segments-card__chart"
+        data-bar-chart
+        data-chart-orientation="horizontal"
+        data-chart-stacked="true"
+        data-chart-labels="<%= vote_type_labels.to_json %>"
+        data-chart-series="<%= vote_type_series.to_json %>"
+      >
+        <canvas></canvas>
+      </div>
+    </div>
+  </div>
+</div>

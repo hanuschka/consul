@@ -1,8 +1,10 @@
-window.ProjektStudio = {
+window.App = window.App || {};
+window.App.Studio = window.App.Studio || {};
+
+window.App.Studio.Projekt = {
   modules: {},
   templateFunctions: {},
-  utils: {},
-  ContentBlock: App.ContentBlockEditor,
+  ContentBlock: App.Studio.ContentBlocks,
   config: {},
 
   // Fallback used outside projekt-studio pages (e.g. inline site content
@@ -18,39 +20,41 @@ window.ProjektStudio = {
 
     this.loadConfig();
 
-    ProjektStudio.Sidebar.initialize()
-    ProjektStudio.PhasesTabs.initialize()
-    ProjektStudio.Banner.initialize()
+    App.Studio.Projekt.Sidebar.initialize()
+    App.Studio.Projekt.PhasesTabs.initialize()
+    App.Studio.Projekt.Banner.initialize()
 
-    ProjektStudio.ProjektStart.initialize()
-    ProjektStudio.BuildWithPrompt.initialize()
-    App.ContentBlockEditor.CreateWithAi.initialize()
+    App.Studio.Projekt.ProjektStart.initialize()
+    App.Studio.Projekt.AiBuildWithPrompt.initialize()
 
     // Initialize ContentBlock submodules
-    App.ContentBlockEditor.Render.initialize()
-    App.ContentBlockEditor.DragDrop.initialize()
+    App.Studio.ContentBlocks.Render.initialize()
+    App.Studio.ContentBlocks.DragDrop.initialize()
 
     App.Studio.initContentBlockModules()
 
-    App.ContentBlockEditor.SavedContentBlocks.initialize()
-    ProjektStudio.FileImport.initialize()
-    ProjektStudio.ToggleBackground.initialize()
+    App.Studio.Projekt.AiFileImport.initialize()
+    App.Studio.Projekt.ToggleBackground.initialize()
     // ExplainWithAi.initialize()
 
     this.initialized = true;
   },
 
-  get isEmbedded() {
-    return window.self !== window.top;
-  },
-
   loadConfig() {
     const projektPage = document.querySelector(".js-projekt-page");
     this.config.defaultMarginBottom = parseInt(projektPage.dataset.defaultMarginBottom);
+    this.config.aiAvailable = projektPage.dataset.aiAvailable === "true";
+    this.config.generateUrl = projektPage.dataset.generateUrl;
   },
 
   getCurrentProjektId() {
     return  document.querySelector(".js-projekt-page").dataset.projektId;
+  },
+
+  isAiTriggerDisabled(trigger) {
+    const $trigger = $(trigger);
+
+    return $trigger.is("[disabled]") || $trigger.closest(".-ai-disabled").length > 0;
   },
 
   getDefaultMarginBottom() {
@@ -75,28 +79,28 @@ window.ProjektStudio = {
 
 
 // Check if DOMContentLoaded event already finished
-// if so, the initialize ProjektStudio immidiately,
+// if so, the initialize App.Studio.Projekt immidiately,
 // othewise init it on DOMContentLoaded
 if (
   document.readyState === "complete"
   || document.readyState === "loaded"
   || document.readyState === "interactive"
 ) {
-  ProjektStudio.initialize()
+  App.Studio.Projekt.initialize()
 }
 else {
   document.addEventListener("DOMContentLoaded", () => {
-    ProjektStudio.initialize()
+    App.Studio.Projekt.initialize()
   })
 }
 
-// Reinit ProjektStudio UI on turbolinks navigation (not initial page load)
+// Reinit App.Studio.Projekt UI on turbolinks navigation (not initial page load)
 // Use capture option to ensure this event will fire before any other
 // "turbolinks:load" events
 document.addEventListener("turbolinks:load", () => {
-  if (ProjektStudio.initialLoadComplete) {
-    ProjektStudio.reinitializeUI()
+  if (App.Studio.Projekt.initialLoadComplete) {
+    App.Studio.Projekt.reinitializeUI()
   }
 
-  ProjektStudio.initialLoadComplete = true
+  App.Studio.Projekt.initialLoadComplete = true
 }, { capture: true })

@@ -4,7 +4,27 @@ de:
       banner_upload:
         uploading: "Bild wird hochgeladen…"
         processing: "Bild wird verarbeitet…"
+        generating: "Titelbild wird mit KI generiert…"
         min_image_size_hint: "Empfohlene Mindestbildgröße: %{width}×%{height} px"
+        upload_failed: "Das Bild konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut."
+        generate_failed: "Das Bild konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+        generate_tooltip_title: "Titelbild mit KI generieren"
+        generate_tooltip_text: "Öffnet einen Dialog, um ein Titelbild aus Projekttitel und Untertitel zu erzeugen. Optional lassen sich der vollständige Projektkontext einbeziehen und ein eigener Prompt für ein genaueres Ergebnis ergänzen."
+        generate_disabled_tooltip_title: "KI-Bildgenerierung nicht verfügbar"
+        generate_disabled_tooltip_text: "DT AI ist nicht aktiviert. Aktivieren Sie die KI-Funktionen in den Einstellungen, um Titelbilder generieren zu lassen."
+        ai_marker_failed: "Die Kennzeichnung konnte nicht gespeichert werden. Bitte laden Sie die Seite neu."
+        ai_marker_tooltip_title: "Titelbild als KI-Bild kennzeichnen"
+        ai_marker_tooltip_text: "Setzt den Hinweis „KI-generiertes Bild“ auf dem Titelbild. Aktivieren Sie ihn für Bilder, die mit KI erstellt oder bearbeitet wurden."
+        ai_marker_tooltip_note: "Bilder, die über die Funktion „Bild generieren“ auf der Projektseite erstellt werden, werden automatisch als KI-generiert gekennzeichnet."
+      banner_generate_modal:
+        title: "Titelbild mit KI generieren"
+        description: "Erstellt ein Titelbild auf Basis von Projekttitel, Untertitel und optional den Projektinhalten. Mit einem eigenen Prompt können Sie das gewünschte Motiv genauer beschreiben."
+        prompt_label: "Eigener Prompt (optional)"
+        prompt_placeholder: "z. B. Ein sonniger Stadtplatz mit Sitzbänken und Bäumen …"
+        use_content_label: "Vollständigen Projektkontext verwenden"
+        use_content_hint: "Bezieht die Inhaltsblöcke der Projektseite in die Bildgenerierung ein."
+        empty_content_warning: "Die Projektseite hat noch keine Inhalte. Beschreiben Sie das gewünschte Bild möglichst genau im Prompt oder pflegen Sie zuerst Projektinhalte ein."
+        submit: "Generieren"
       empty_list_text: Keine Projekte für aktuellen Filter
       overview_page:
         projekt_name: Projektübersichtsseite
@@ -177,6 +197,7 @@ de:
         legislation_phase: Textbearbeitung
         milestone_phase: Meilensteine
         newsfeed_phase: Newsfeed
+        mitmachbox_phase: Mitmachbox
         projekt_notification_phase: Benachrichtigungen
         proposal_phase: Vorschläge
         question_phase: Kurzumfrage

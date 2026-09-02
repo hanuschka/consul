@@ -8,7 +8,13 @@
     <% if projekt_image&.attached? %>
       <%= image_tag projekt_image.variant(:card_thumb), alt: projekt.page.title %>
     <% else %>
-      <span class="ai-proposal-flow--project-banner--initial"><%= initial %></span>
+      <span
+        class="ai-proposal-flow--project-banner--placeholder"
+        role="img"
+        aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
+      >
+        <i class="fa fa-comments" aria-hidden="true"></i>
+      </span>
     <% end %>
   </div>
   <div class="ai-proposal-flow--project-banner--content">

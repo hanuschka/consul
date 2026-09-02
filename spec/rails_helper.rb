@@ -8,7 +8,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 
 require "rspec/rails"
 require "spec_helper"
-require "custom_spec_helper"
 require "capybara/rails"
 require "capybara/rspec"
 require "selenium/webdriver"
@@ -42,27 +41,18 @@ RSpec.configure do |config|
   config.after do
     Warden.test_reset!
   end
-
-  config.include CustomExtension::SharedActions, type: :feature # custom line
-  config.include CustomExtension::SharedActions, type: :system # custom line
-  config.include CustomExtension::Helpers, type: :feature # custom line
-  config.include CustomExtension::Helpers, type: :system # custom line
 end
 
 FactoryBot.use_parent_strategy = false
 
 Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    "goog:chromeOptions" => {
-      args: %W[headless no-sandbox window-size=1200,800 proxy-server=#{Capybara.app_host}:#{Capybara::Webmock.port_number}]
-    }
-  )
+  options = Selenium::WebDriver::Options.chrome
+  options.add_argument("--headless=new")
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--window-size=1200,800")
 
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    desired_capabilities: capabilities
-  )
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
 Capybara.exact = true
@@ -70,3 +60,10 @@ Capybara.enable_aria_label = true
 Capybara.disable_animation = true
 
 OmniAuth.config.test_mode = true
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end

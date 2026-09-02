@@ -1,0 +1,13 @@
+<div class="projekt-footer--inner">
+<%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
+
+<div class="row">
+  <div class="column">
+    <% if @projekt_phase.description.present? %>
+      <%= AdminWYSIWYGSanitizer.new.sanitize(@projekt_phase.description) %>
+    <% else %>
+      <p><%= t("custom.projekt_phases.mitmachbox_phase.public_info") %></p>
+    <% end %>
+  </div>
+</div>
+</div>

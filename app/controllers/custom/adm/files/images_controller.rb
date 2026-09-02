@@ -8,7 +8,7 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
         .call
         .with_attached_storage_data
         .merge(policy_scope([:adm, AdminImage]))
-        .preload({ projekt: :page }, user: :image)
+        .preload({ projekt: { page: :translations } }, user: :image)
         .page(params[:page])
         .per(24)
 
@@ -17,7 +17,22 @@ class Adm::Files::ImagesController < Adm::Files::BaseController
       { name: t("adm.menu.items.files_subitems.images") }
     ]
 
-    render layout: !request.xhr?
+    render layout: !turbo_frame_request?
+  end
+
+  def show
+    admin_image = AdminImage.find(params[:id])
+    authorize [:adm, admin_image]
+
+    @detail = ::Files::AdminImageShowComponent.new(record: admin_image)
+
+    @breadcrumbs = [
+      { name: t("adm.menu.items.files"), icon: "folder" },
+      { name: t("adm.menu.items.files_subitems.images"), url: adm_files_images_path },
+      { name: @detail.display_title }
+    ]
+
+    render layout: !turbo_frame_request?
   end
 
   private

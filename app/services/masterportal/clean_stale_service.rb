@@ -4,10 +4,7 @@ class Masterportal::CleanStaleService < ApplicationService
   end
 
   def call
-    source_ids = Masterportal::SourceExternalIdsService.call(
-      endpoint_url: @collection.endpoint_url,
-      collection_id: @collection.collection_id
-    )
+    source_ids = Masterportal::SourceExternalIdsService.call(masterportal_collection: @collection)
 
     if source_ids.empty?
       raise OgcApiFeatures::Error, "Source returned no features; refusing to delete pins"

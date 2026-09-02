@@ -6,6 +6,13 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+let(:existing_event_phase) { create_projekt_phase('ProjektPhase::EventPhase') }
+let(:existing_projekt_event) do
+  existing_event_phase.projekt_events.create!(
+    title: 'Existing Event', datetime: '2025-02-01T18:00:00Z'
+  )
+end
+
   path '/api/projekt_phases/{projekt_phase_id}/events' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (EventPhase)'
 
@@ -88,6 +95,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer name, or copyright information.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current event image.' }
                 }
@@ -187,7 +195,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:projekt_phase_id) { 1 } }
-      forbidden_response { let(:projekt_phase_id) { 1 } }
+      forbidden_response { let(:projekt_phase_id) { existing_event_phase.id } }
     end
   end
 
@@ -268,6 +276,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Provide to replace the current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB).' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer name, or copyright information.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current event image.' }
                 }
@@ -363,7 +372,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_event.id } }
     end
 
     delete 'Delete a projekt event' do
@@ -412,7 +421,7 @@ RSpec.describe 'Projekt Events API', type: :request, openapi_spec: 'v1/swagger.y
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_projekt_event.id } }
     end
   end
 

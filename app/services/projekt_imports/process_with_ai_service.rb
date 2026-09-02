@@ -3,17 +3,27 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
   MAX_INPUT_CHARS = 200_000
 
-  attr_reader :text, :additional_user_instructions
+  attr_reader :text, :additional_user_instructions, :source_images
 
-  def initialize(text:, additional_user_instructions: nil)
+  def initialize(text:, additional_user_instructions: nil, response_language: nil, source_images: [])
     @text = text
     @additional_user_instructions = additional_user_instructions
+    @response_language = response_language
+    @source_images = Array(source_images)
   end
 
   def call
     base_prompt = load_base_prompt
+
     refs = ProjektImports::ReferencesBuilder.build
-    system_prompt = ProjektImports::PromptBuilder.new(base_prompt: base_prompt, refs: refs).call
+
+    system_prompt = ProjektImports::PromptBuilder.new(
+      base_prompt: base_prompt,
+      refs: refs,
+      response_language: @response_language,
+      source_images: source_images
+    ).call
+
     schema = ProjektImports::OutputSchemaBuilder.build(refs)
     message = build_user_message
 
@@ -51,7 +61,7 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   private
 
   def load_base_prompt
-    response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(:admin_projekt_import)
+    response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(prompt_key)
     prompt = response.parsed_response&.dig("consul_ai_prompt", "prompt")
 
     if prompt.blank?
@@ -59,6 +69,12 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     end
 
     prompt
+  end
+
+  def prompt_key
+    return :admin_projekt_import_staging if Rails.env.staging?
+
+    :admin_projekt_import
   end
 
   def build_user_message
@@ -115,7 +131,7 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   def call_ai(system_prompt:, schema:, message:)
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(schema)
+        .chat_with_json_output(schema, feature: "projekt_imports.process")
         .with_instructions(system_prompt)
         .ask(message)
 

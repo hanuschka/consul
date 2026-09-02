@@ -6,10 +6,13 @@
   <%= form_with model: @district, url: adm_deficiency_reports_district_path(@district), method: :put do |f| %>
     <div class="mb-4">
       <%= render Kern::FormFieldComponent.new(label: t(".default_responsible_label"), inline: true, hint: t(".default_responsible_hint")) do %>
+        <% assignable_officers = deficiency_report_assignable_officers(@district.default_deficiency_report_responsible) %>
         <% grouped_options = {
-          t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] },
-          t(".officers") => DeficiencyReport::Officer.all.map { |o| [o.name, "Officer:#{o.id}"] }
+          t(".officer_groups") => DeficiencyReport::OfficerGroup.all.order(:name).map { |g| [g.name, "OfficerGroup:#{g.id}"] }
         } %>
+        <% if assignable_officers.any? %>
+          <% grouped_options[t(".officers")] = assignable_officers.map { |o| [o.name, "Officer:#{o.id}"] } %>
+        <% end %>
         <% selected = if @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::OfficerGroup)
                         "OfficerGroup:#{@district.default_deficiency_report_responsible.id}"
                       elsif @district.default_deficiency_report_responsible.is_a?(DeficiencyReport::Officer)

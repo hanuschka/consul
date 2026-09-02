@@ -5,8 +5,7 @@ class RemoteTranslations::Microsoft::Client
 
   def call(fields_values, locale)
     texts = prepare_texts(fields_values)
-    valid_locale = RemoteTranslations::Microsoft::AvailableLocales.app_locale_to_remote_locale(locale)
-    request_translation(texts, valid_locale)
+    request_translation(texts, locale)
   end
 
   def fragments_for(text)
@@ -22,7 +21,7 @@ class RemoteTranslations::Microsoft::Client
   private
 
     def client
-      @client ||= BingTranslator.new(Tenant.current_secrets.microsoft_api_key)
+      @client ||= BingTranslator.new(Rails.application.secrets.microsoft_api_key)
     end
 
     def request_translation(texts, locale)

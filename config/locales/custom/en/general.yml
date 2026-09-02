@@ -4,6 +4,8 @@ en:
       model_not_configured: "Error: AI model not configured"
       generation_failed: "Error: Failed to generate content block with AI"
     disabled_tooltip: "AI features unavailable. Contact administrator."
+    disabled_note_label: "Enable AI to use feature"
+    disabled_note_text: "Contact info@demokratie.today to enable the AI feature."
     instructions_placeholder: "Enter your instructions for editing this content block. By default, the project title, subtitle, and the content of this content block are provided as context."
     submit: Submit
     cancel: Cancel
@@ -14,6 +16,10 @@ en:
     use_full_projekt_context: "Use additional projekt context"
     use_full_projekt_context_hint: "The basic projekt context is always included for the AI. When enabled, additional content (all content blocks, projekt dates, SDGs, categories, and phases) is added — this consumes more tokens and is therefore more expensive."
     use_full_projekt_context_hint_short: "Additional context for more comprehensive AI responses"
+  proposals:
+    retire_form:
+      retired_explanation_hint: "Maximum 500 characters"
+      back_to_proposal: "Back to proposal"
   shared:
     suggest:
       deficiency_report:

@@ -20,6 +20,7 @@ class ImageSerializer
       id: image.id,
       title: image.title,
       credits: image.credits,
+      ai_generated: image.ai_generated,
       url: rails_blob_url(image.attachment, **image_url_options)
     }
 
@@ -49,7 +50,7 @@ class ImageSerializer
   def variant_url_by_width(width)
     return nil if !image.attachment.attached?
 
-    variant = image.attachment.variant(resize_to_limit: [width, nil])
+    variant = image.attachment_variant(resize_to_limit: [width, nil])
     rails_representation_url(variant, **image_url_options)
   rescue StandardError
     nil

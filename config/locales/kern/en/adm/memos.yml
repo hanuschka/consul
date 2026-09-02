@@ -13,3 +13,4 @@ en:
         last_notification: "Last notification sent at %{datetime}"
         delete: Delete
         delete_confirm: Are you sure you want to delete this note?
+        user_deleted: User deleted

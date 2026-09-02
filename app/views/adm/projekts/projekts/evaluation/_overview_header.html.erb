@@ -1,0 +1,44 @@
+<%
+  modules_count = evaluation.phase_rows.size
+  updated_at_text = l(evaluation.generated_at, format: :evaluation_header) if evaluation.generated_at.present?
+%>
+
+<div class="adm-evaluation-overview__header">
+  <div class="adm-evaluation-overview__heading">
+    <p class="adm-evaluation-overview__subtitle">
+      <%= t("adm.projekts.projekts.evaluation.overview.subtitle_html",
+        modules: content_tag(:strong, t("adm.projekts.projekts.evaluation.overview.modules_count", count: modules_count)),
+        updated: content_tag(:strong, updated_at_text)).html_safe %>
+    </p>
+  </div>
+
+  <div class="adm-evaluation-overview__actions">
+    <%= kern_link_button(
+      evaluation_visibility_adm_projekts_projekt_path(projekt),
+      text: t("adm.projekts.projekts.evaluation.overview.action_visibility"),
+      icon: "visibility",
+      style: :secondary
+    ) %>
+
+    <%= render Adm::AiActionButtonComponent.new(
+      url: generate_evaluation_adm_projekts_projekt_path(projekt),
+      text: t("adm.projekts.projekts.evaluation.overview.action_regenerate"),
+      icon: "autorenew",
+      style: :secondary,
+      progress_mode: :inline,
+      processing_text: t("adm.projekts.projekts.evaluation.processing_title"),
+      status_url: evaluation_status_adm_projekts_projekt_path(projekt),
+      confirm: t("adm.projekts.projekts.evaluation.regenerate_confirm")
+    ) %>
+
+    <%= render Adm::ButtonWithProgressComponent.new(
+      label: t("adm.projekts.projekts.evaluation.download_pdf"),
+      loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
+      success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
+      icon: "picture_as_pdf",
+      success_icon: "check_circle",
+      style: :primary,
+      url: evaluation_pdf_options_adm_projekts_projekt_path(projekt)
+    ) %>
+  </div>
+</div>

@@ -8,6 +8,10 @@ de:
       subject: Ihr Konto ist bereits bestätigt.
     proposal_created:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
+    proposal_official_answer:
+      subject: "Es gibt eine offizielle Antwort zu Ihrem Vorschlag"
+      hi: "Hallo %{username},"
+      text1: "zu Ihrem Vorschlag %{proposal_link} liegt eine offizielle Antwort der Verwaltung vor:"
     formular_answer_created:
       subject: "Vielen Dank für Ihre Einsendung!"
     comment:

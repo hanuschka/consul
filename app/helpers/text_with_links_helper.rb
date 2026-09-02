@@ -16,8 +16,4 @@ module TextWithLinksHelper
   def simple_format_no_tags_no_sanitize(html)
     simple_format(html, {}, sanitize: false)
   end
-
-  def html_to_paragraphs(html)
-    Nokogiri::HTML(html).css("p").map { |p| p.text.strip }.join("\n\n")
-  end
 end

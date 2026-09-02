@@ -14,6 +14,12 @@ rich-tooltip[trigger-only] {
   display: contents;
 }
 
+// A focusable tooltip's body must be reachable by the mouse, so the host needs
+// a real box (the trigger↔body hover-bridge relies on it) even with trigger-only.
+rich-tooltip[trigger-only][focusable] {
+  display: inline-block;
+}
+
 rich-tooltip[hidden] {
   display: none;
 }
@@ -41,6 +47,21 @@ rich-tooltip[hidden] {
   border: 1px solid #dddddd;
   border-radius: 8px;
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+  opacity: 1;
+  scale: 1;
+  transition: opacity 120ms ease-out, scale 120ms ease-out;
+}
+
+// Modest, fast fade-and-rise on appear. Entry only: the popover provides the
+// from-state via @starting-style; on close it hides immediately (no display/
+// overlay in the transition). `scale` is used instead of `transform` so it
+// composes with the inline `transform` the non-anchor fallback sets for
+// positioning. The `-instant` modifier zeroes this transition.
+@starting-style {
+  .rich-tooltip--body:popover-open {
+    opacity: 0;
+    scale: 0.97;
+  }
 }
 
 .rich-tooltip--body.-dark {
@@ -137,6 +158,11 @@ rich-tooltip[hidden] {
 
 .rich-tooltip--body.-no-paddings {
   padding: 0;
+}
+
+.rich-tooltip--body.-instant {
+  transition: none;
+  animation: none;
 }
 
 .rich-tooltip--body:not([popover]) {

@@ -13,80 +13,15 @@
 %>
 
 <% if has_gender || has_age || has_geozone || has_individual %>
-  <div class="phase-segments-card" data-controller="adm-charts">
+  <div class="evaluation-stat-card">
     <div class="phase-segments-card__header">
-      <span class="material-symbols-outlined" aria-hidden="true">groups_3</span>
+      <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">groups_3</span>
+      <i class="fas fa-user-friends projekt-evaluation-icon-fa" aria-hidden="true"></i>
       <span class="phase-segments-card__title">
         <%= t("adm.projekts.projekts.evaluation.user_segments_title") %>
       </span>
     </div>
-    <div class="phase-segments-card__grid">
-      <% if has_gender %>
-        <div class="phase-segments-card__panel">
-          <div class="phase-segments-card__panel-label">
-            <%= t("stats.by_gender") %>
-          </div>
-          <div
-            class="phase-segments-card__chart"
-            data-bar-chart
-            data-chart-labels="<%= (gender["labels"] || []).to_json %>"
-            data-chart-values="<%= (gender["values"] || []).to_json %>"
-            data-chart-color="<%= accent %>"
-          >
-            <canvas></canvas>
-          </div>
-        </div>
-      <% end %>
-
-      <% if has_age %>
-        <div class="phase-segments-card__panel">
-          <div class="phase-segments-card__panel-label">
-            <%= t("stats.by_age") %>
-          </div>
-          <div
-            class="phase-segments-card__chart"
-            data-bar-chart
-            data-chart-labels="<%= (age["labels"] || []).to_json %>"
-            data-chart-values="<%= (age["values"] || []).to_json %>"
-            data-chart-color="<%= accent %>"
-          >
-            <canvas></canvas>
-          </div>
-        </div>
-      <% end %>
-
-      <% if has_geozone %>
-        <div class="phase-segments-card__panel">
-          <div class="phase-segments-card__panel-label">
-            <%= t("adm.projekts.projekts.evaluation.geozone_distribution") %>
-          </div>
-          <div
-            class="phase-segments-card__chart"
-            data-bar-chart
-            data-chart-labels="<%= (geozone["labels"] || []).to_json %>"
-            data-chart-values="<%= (geozone["values"] || []).to_json %>"
-            data-chart-color="<%= accent %>"
-          >
-            <canvas></canvas>
-          </div>
-        </div>
-      <% end %>
-
-      <% individual_groups.each do |group| %>
-        <% next if (group["values"] || []).none? { |v| v.to_i > 0 } %>
-        <div class="phase-segments-card__panel">
-          <div class="phase-segments-card__panel-label"><%= group["name"] %></div>
-          <div
-            class="phase-segments-card__chart"
-            data-bar-chart
-            data-chart-labels="<%= (group["labels"] || []).to_json %>"
-            data-chart-values="<%= (group["values"] || []).to_json %>"
-            data-chart-color="<%= accent %>"
-          >
-            <canvas></canvas>
-          </div>
-        </div>
-      <% end %>
-    </div>
+    <%= render partial: "adm/projekts/projekts/evaluation/user_segments_charts",
+      locals: { segments: segments, accent: accent } %>
   </div>
 <% end %>

@@ -125,23 +125,8 @@ class Users::NewPublicActivityComponent < ApplicationComponent
       ].flatten.compact
     end
 
-    def list_params
-      params = {
-        title: current_user == user ? t("custom.users.my_activity") : t("custom.users.activity"),
-        current_filter: current_filter,
-        filters: valid_filters,
-        filter_param: "filter",
-        filter_i18n_namespace: "custom.user_page",
-        remote_url: remote_url
-      }
-
-      if current_filter == "comments"
-        params[:hide_view_mode_button] = true
-      else
-        params[:resources] = resources
-      end
-
-      params
+    def title
+      current_user == user ? t("custom.users.my_activity") : t("custom.users.activity")
     end
 
     def remote_url

@@ -3,13 +3,11 @@
     <h4><%= title %></h4>
 
     <% if tooltip.present? %>
-      <i
-        title="<%= tooltip %>"
-        data-tooltip
-        class="fas fa-info-circle"
-      >
+      <rich-tooltip delay="100" trigger-only shadow="heavy">
+        <i class="fas fa-info-circle" tabindex="0"></i>
+        <template><%= tooltip %></template>
+      </rich-tooltip>
     <% end %>
-    </i>
   </div>
   <%= content %>
 </div>

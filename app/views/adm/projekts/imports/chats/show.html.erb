@@ -20,12 +20,14 @@
        data-projekt-imports--chat-send-url-value="<%= message_adm_projekts_import_chat_path(@projekt_import) %>"
        data-projekt-imports--chat-command-url-value="<%= command_adm_projekts_import_chat_path(@projekt_import) %>"
        data-projekt-imports--chat-extract-url-value="<%= extract_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-title-image-url-value="<%= title_image_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-summary-url-value="<%= summary_adm_projekts_import_chat_path(@projekt_import) %>"
+       data-projekt-imports--chat-error-summary-failed-value="<%= t('.errors.summary_failed') %>"
        data-projekt-imports--chat-status-url-value="<%= status_adm_projekts_import_path(@projekt_import) %>"
        data-projekt-imports--chat-import-id-value="<%= @projekt_import.id %>"
        data-projekt-imports--chat-csrf-value="<%= form_authenticity_token %>"
        data-projekt-imports--chat-poll-interval-value="3500"
        data-projekt-imports--chat-confirm-start-over-value="<%= t('.confirm_start_over') %>"
-       data-projekt-imports--chat-progress-finalizing-value="<%= t('.progress.finalizing_data') %>"
        data-projekt-imports--chat-progress-resolving-value="<%= t('.progress.resolving_content_blocks') %>"
        data-projekt-imports--chat-progress-creating-value="<%= t('.progress.creating_projekt') %>"
        data-projekt-imports--chat-progress-generating-image-value="<%= t('.progress.generating_image') %>"
@@ -35,17 +37,32 @@
        data-projekt-imports--chat-import-status-value="<%= @projekt_import.status %>">
 
     <%# Import error banner (shown once on failure, dismissible) %>
-    <div class="projekt-import-chat--error-banner -hidden"
+    <div class="projekt-import-chat--banner -error -hidden"
          role="alert"
          data-projekt-imports--chat-target="importError"
          data-fallback="<%= t('.errors.import_failed') %>">
       <span class="material-symbols-outlined" aria-hidden="true">error</span>
-      <span class="projekt-import-chat--error-banner-message"
+      <span class="projekt-import-chat--banner-body"
             data-projekt-imports--chat-target="importErrorMessage"></span>
       <button type="button"
-              class="projekt-import-chat--error-banner-dismiss"
+              class="projekt-import-chat--banner-dismiss"
               aria-label="<%= t('.errors.dismiss') %>"
-              data-action="click->projekt-imports--chat#dismissImportError">
+              data-action="click->projekt-imports--chat#dismissBanner">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    <%# Import warnings banner (non-fatal problems, dismissible) %>
+    <div class="projekt-import-chat--banner -warning -hidden"
+         role="status"
+         data-projekt-imports--chat-target="importWarning">
+      <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+      <ul class="projekt-import-chat--banner-body"
+          data-projekt-imports--chat-target="importWarningList"></ul>
+      <button type="button"
+              class="projekt-import-chat--banner-dismiss"
+              aria-label="<%= t('.errors.dismiss') %>"
+              data-action="click->projekt-imports--chat#dismissBanner">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
     </div>
@@ -56,7 +73,8 @@
          aria-live="polite"
          data-projekt-imports--chat-target="messages">
       <% @messages.each do |message| %>
-        <%= render "adm/projekts/imports/chats/message", message: message, user: @chat_user %>
+        <%= render "adm/projekts/imports/chats/message",
+              message: message, user: @chat_user, projekt_import: @projekt_import %>
       <% end %>
 
       <% if @created_projekts.any? %>
@@ -126,17 +144,6 @@
           <%= render "adm/projekts/imports/chats/action_tooltip", key: "summarize" %>
         </rich-tooltip>
       </div>
-
-      <div class="projekt-import-chat--topbar-import-group">
-        <rich-tooltip delay="700">
-          <%= render Kern::SwitchComponent.new(
-                label: t(".generate_image_toggle"),
-                checked: @projekt_import.generate_image,
-                input_data: { "projekt-imports--chat-target" => "generateImage" }
-              ) %>
-          <%= render "adm/projekts/imports/chats/action_tooltip", key: "generate_image" %>
-        </rich-tooltip>
-      </div>
     </div>
 
     <%# Input area %>
@@ -180,15 +187,48 @@
 
     <%# Import action %>
     <div class="projekt-import-chat--import-action">
+      <%# Status, not a second control: the choice itself is made in the picker
+          message, and this button scrolls back to it. %>
+      <rich-tooltip delay="700">
+        <button type="button"
+                class="projekt-import-chat--title-image-summary"
+                data-action="click->projekt-imports--chat#revealTitleImagePicker">
+          <span class="projekt-import-chat--title-image-summary-thumb"
+                data-projekt-imports--chat-target="titleImageSummaryThumb">
+            <% summary_url = import_title_image_summary_url(@projekt_import) %>
+            <% if summary_url.present? %>
+              <%= image_tag summary_url, alt: "" %>
+            <% else %>
+              <span class="material-symbols-outlined" aria-hidden="true">image</span>
+            <% end %>
+          </span>
+          <span class="projekt-import-chat--title-image-summary-label"
+                data-projekt-imports--chat-target="titleImageSummary">
+            <%= import_title_image_summary(@projekt_import) %>
+          </span>
+        </button>
+        <%= render "adm/projekts/imports/chats/action_tooltip", key: "title_image" %>
+      </rich-tooltip>
+
       <div class="projekt-import-chat--import-confirm"
            data-controller="shared--confirm-dialog"
            data-action="shared--confirm-dialog:confirmed->projekt-imports--chat#startImport">
-        <button type="button"
-                class="projekt-import-chat--topbar-button -primary"
-                data-action="click->shared--confirm-dialog#open">
-          <span class="material-symbols-outlined" aria-hidden="true">upload</span>
-          <%= @created_projekts.any? ? t(".commands.import_again") : t(".commands.import") %>
-        </button>
+        <rich-tooltip delay="700">
+          <button type="button"
+                  class="projekt-import-chat--topbar-button -primary"
+                  data-projekt-imports--chat-target="importButton"
+                  data-action="click->projekt-imports--chat#guardImport click->shared--confirm-dialog#open click->projekt-imports--chat#loadImportSummary">
+            <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+            <%= @created_projekts.any? ? t(".commands.import_again") : t(".commands.import") %>
+          </button>
+          <template>
+            <span class="projekt-import-chat--tooltip">
+              <span class="projekt-import-chat--tooltip-title"><%= t(".tooltips.import.title") %></span>
+              <span class="projekt-import-chat--tooltip-text projekt-import-chat--tooltip-text-default"><%= t(".tooltips.import.text") %></span>
+              <span class="projekt-import-chat--tooltip-text projekt-import-chat--tooltip-text-busy"><%= t(".tooltips.import.busy_text") %></span>
+            </span>
+          </template>
+        </rich-tooltip>
 
         <%= render Shared::ModalComponent.new(
               id: "projekt-import-confirm-modal",
@@ -197,15 +237,27 @@
                 "shared--confirm-dialog-target": "dialog",
                 action: "click->shared--confirm-dialog#backdrop"
               }) do %>
-          <div class="projekt-import-confirm">
+          <div class="projekt-import-confirm -wide">
             <button type="button"
                     class="close-button round-icon-button"
                     data-action="click->shared--confirm-dialog#close"
                     aria-label="<%= t(".import_dialog.cancel") %>">
               <span class="material-symbols-outlined" aria-hidden="true">close</span>
             </button>
-            <h2 class="kern-title kern-title--large projekt-import-confirm--title"><%= t(".import_dialog.title") %></h2>
-            <p class="kern-body projekt-import-confirm--message"><%= t(".confirm_import") %></p>
+
+            <div class="projekt-import-confirm--header">
+              <h2 class="kern-title kern-title--large projekt-import-confirm--title"><%= t(".import_dialog.title") %></h2>
+              <p class="kern-body projekt-import-confirm--message"><%= t(".confirm_import") %></p>
+            </div>
+
+            <div class="projekt-import-confirm--body"
+                 data-projekt-imports--chat-target="importSummary">
+              <div class="projekt-import-confirm--loading" role="status">
+                <span class="kern-loader kern-loader--visible" aria-hidden="true"></span>
+                <span class="kern-sr-only"><%= t(".import_dialog.summary_loading") %></span>
+              </div>
+            </div>
+
             <div class="projekt-import-confirm--actions">
               <button type="button" class="projekt-import-confirm--button -cancel" data-action="click->shared--confirm-dialog#close">
                 <span class="kern-label"><%= t(".import_dialog.cancel") %></span>
@@ -223,8 +275,22 @@
     <div class="projekt-import-chat--overlay -hidden"
          data-projekt-imports--chat-target="overlay">
       <div class="projekt-import-chat--overlay-content">
-        <div class="projekt-import-chat--overlay-spinner" aria-hidden="true"></div>
-        <p data-projekt-imports--chat-target="overlayLabel"></p>
+        <h3 class="projekt-import-chat--overlay-title">
+          <%= t("adm.projekts.imports.chats.show.import_overlay_title") %>
+        </h3>
+
+        <div class="projekt-import-chat--overlay-progress">
+          <div class="projekt-import-chat--overlay-progress-bar" role="progressbar" aria-label="<%= t('adm.projekts.imports.chats.show.import_overlay_title') %>">
+            <div class="projekt-import-chat--overlay-progress-fill"
+                 data-projekt-imports--chat-target="overlayFill"></div>
+          </div>
+          <span class="projekt-import-chat--overlay-label"
+                data-projekt-imports--chat-target="overlayLabel"></span>
+        </div>
+
+        <p class="projekt-import-chat--overlay-message">
+          <%= t("adm.projekts.imports.chats.show.import_overlay_message") %>
+        </p>
       </div>
     </div>
   </div>

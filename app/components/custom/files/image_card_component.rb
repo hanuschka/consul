@@ -1,14 +1,41 @@
 class Files::ImageCardComponent < Files::ResourceAssetComponent
   with_collection_parameter :image
 
-  def initialize(image:, type:)
+  def initialize(image:, type:, detail_path: nil)
     @image = image
     @type = type
+    @detail_path = detail_path
   end
 
   private
 
-    attr_reader :image, :type
+    attr_reader :image, :type, :detail_path
+
+    def detail_url
+      return nil if detail_path.blank?
+
+      detail_path.call(image)
+    end
+
+    def owning_resource_label
+      owning_resource_type_label(image.imageable)
+    end
+
+    def owning_resource_name
+      resource_name(owning_resource(image.imageable))
+    end
+
+    def owning_resource_url
+      resource_url(owning_resource(image.imageable))
+    end
+
+    def projekt_name
+      resource_name(resource_projekt(image.imageable))
+    end
+
+    def projekt_url
+      resource_url(resource_projekt(image.imageable))
+    end
 
     def uploaded_by
       image.user
@@ -96,14 +123,6 @@ class Files::ImageCardComponent < Files::ResourceAssetComponent
     def imageable_type_label
       type_string = image.imageable_type.to_s
       type_string.safe_constantize&.model_name&.human || type_string
-    end
-
-    def imageable_name
-      resource_name(image.imageable)
-    end
-
-    def imageable_url
-      resource_url(image.imageable)
     end
 
     def admin_upload?

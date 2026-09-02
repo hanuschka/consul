@@ -140,7 +140,7 @@ $phase-marker-border: #cbd5e1;
       font-size: 14px;
       font-weight: 500;
       line-height: 1.35;
-      color: inherit;
+      // color: inherit;
 
       i {
         opacity: 0;
@@ -229,81 +229,6 @@ $phase-marker-border: #cbd5e1;
     opacity: 1;
   }
 
-  .sidebar {
-    ul.projekt-navigator {
-      margin-left: 0;
-      padding-left: 0;
-      list-style: none;
-    }
-
-    li.projekt-navigator {
-      position: relative;
-      padding: 7px 10px 7px 26px;
-      margin-bottom: 2px;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: background-color 150ms ease;
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 12px;
-        top: 14px;
-        width: 6px;
-        height: 6px;
-        font-size: 0;
-        font-family: inherit;
-        background: $accent-blue !important;
-        border-radius: 50%;
-        transition: background-color 150ms ease, width 150ms ease, height 150ms ease, top 150ms ease, left 150ms ease;
-      }
-
-      a {
-        color: rgba(0, 0, 0, 0.75) !important;
-        text-decoration: none !important;
-        display: block;
-        line-height: 1.35;
-        font-family: $body-font;
-
-        &:hover,
-        &:focus,
-        &:active {
-          color: var(--brand-color) !important;
-        }
-      }
-
-      &:hover {
-        background: rgba(0, 0, 0, 0.03);
-
-        &::before {
-          background: var(--brand-color);
-        }
-      }
-
-      &.current-projekt {
-        background: color-mix(in srgb, var(--brand-color) 10%, transparent);
-
-        &::before {
-          background: var(--brand-color);
-          width: 8px;
-          height: 8px;
-          top: 13px;
-          left: 11px;
-        }
-
-        > a {
-          color: $accent-blue !important;
-          font-weight: 600;
-        }
-      }
-
-      // Sub-Liste: leichte Einrückung
-      ul.projekt-navigator {
-        margin-top: 4px;
-        margin-left: 8px;
-      }
-    }
-  }
 
   .projekt-sidebar {
     .button {
@@ -355,7 +280,7 @@ $phase-marker-border: #cbd5e1;
     overflow: visible;
 
     @media(max-width: $big-tablet-viewport-start) {
-      padding: 0 30px;
+      padding: 25px 30px;
 
       h1 {
         margin-bottom: 10px;
@@ -363,7 +288,7 @@ $phase-marker-border: #cbd5e1;
     }
 
     @media(max-width: $small-tablet-viewport-start) {
-      padding: 0 30px;
+      padding: 25px 30px;
     }
 
     @media(max-width: $mobile-viewport-start) {
@@ -490,9 +415,11 @@ $phase-marker-border: #cbd5e1;
     justify-content: flex-start;
     max-width: 50%;
     flex-grow: 1;
+    padding-top: 50px;
+    padding-bottom: 50px;
 
     @media(max-width: $big-tablet-viewport-start) {
-      padding-top: 25px;
+      padding-top: 45px;
       padding-bottom: 25px;
     }
 
@@ -512,6 +439,24 @@ $phase-marker-border: #cbd5e1;
   .custom-page--banner-text-section {
     // max-width: 90%;
     padding-top: 75px;
+
+    @media(max-width: $big-tablet-viewport-start) {
+      padding-top: 55px;
+      padding-bottom: 25px;
+    }
+
+    @media(max-width: $small-tablet-viewport-start) {
+      padding-top: 25px;
+    }
+
+    @media(max-width: $mobile-viewport-start) {
+      // Bottom padding muss Description + Chips komplett umschließen, sonst rutscht
+      // der Inhalt im Studio-Edit-Modus (Edit-Pencil rechts, +44px Right-Padding
+      // auf `.projekt-banner-edit-field-container`) optisch unter den Banner-Hintergrund.
+      padding-top: 10px;
+      padding-bottom: 0;
+      max-width: 100%;
+    }
   }
 
   .custom-page--banner-image {
@@ -519,7 +464,6 @@ $phase-marker-border: #cbd5e1;
     max-width: 590px;
     width: 100%;
     height: 355px !important;
-    align-self: center;
     cursor: zoom-in;
     overflow: hidden;
     border-radius: 10px;
@@ -737,8 +681,6 @@ $phase-marker-border: #cbd5e1;
 
         // Submit button
         input[type="submit"], button[type="submit"], .button.is-outlined {
-          background: $cta-orange !important;
-          color: #FFFFFF !important;
           border: none !important;
           border-radius: 6px !important;
           font-family: $heading-font;
@@ -841,7 +783,7 @@ $phase-marker-border: #cbd5e1;
   }
 
   .content-blocks-container {
-    .projekt-content-block:first-child  {
+    .custom-content-block:first-child  {
       h1:first-child, h2:first-child, h3:first-child {
         margin-top: 0;
       }

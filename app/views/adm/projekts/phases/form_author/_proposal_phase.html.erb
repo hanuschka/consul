@@ -6,7 +6,7 @@
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.anonimize_authors"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.allow_attached_documents"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.enable_external_video"), :value, :boolean) %>
-<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.voice_assistant"), :value, :boolean) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.general.similar_contributions_check"), :value, :boolean) %>
 
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.map_features_limit"), :value, :string) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.description_max_length"), :value, :string) %>

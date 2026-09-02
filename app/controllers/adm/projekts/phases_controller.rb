@@ -837,7 +837,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
 
     @assistant_codename = @projekt_phase.voice_assistant_codename
-    @ai_settings = @projekt_phase.settings.where(key: ::ProjektPhaseSetting::AI_GATED_KEYS)
+    @ai_settings = @projekt_phase.settings.where(key: ::ProjektPhaseSetting::AI_SETTINGS_TAB_KEYS)
 
     load_ai_assistant_config if InternalApiClient.active_dt?
 

@@ -22,7 +22,7 @@
 
           <% if supporting_available?(match.resource) %>
             <div class="similar-contributions-notice--item-support"
-                 id="<%= dom_id(match.resource) %>_votes">
+                 id="<%= votes_container_id(match.resource) %>">
               <%= render votes_component_for(match.resource) %>
             </div>
           <% end %>
@@ -32,14 +32,29 @@
   </div>
 
   <div class="similar-contributions-notice--actions">
-    <button type="button" class="button hollow js-shared-modal-close">
-      <%= t(".back_to_form") %>
-    </button>
+    <%# Supporting a match ends the flow, so its link replaces the two default
+        actions. One link per supportable match, revealed by the JS that reads
+        the refreshed vote markup. %>
+    <% matches.each do |match| %>
+      <% if supporting_available?(match.resource) %>
+        <%= link_to t(".supported_link"), path_for(match.resource),
+              class: "button similar-contributions-notice--supported-link " \
+                     "js-similar-contributions-supported-link",
+              data: { votes_container: votes_container_id(match.resource) },
+              hidden: true %>
+      <% end %>
+    <% end %>
 
-    <button type="button"
-            class="button similar-contributions-notice--submit-anyway js-similar-contributions-publish"
-            data-publish-url="<%= publish_url %>">
-      <%= t(".submit_anyway") %>
-    </button>
+    <div class="similar-contributions-notice--default-actions js-similar-contributions-default-actions">
+      <button type="button" class="button hollow js-shared-modal-close">
+        <%= t(".back_to_form") %>
+      </button>
+
+      <button type="button"
+              class="button similar-contributions-notice--submit-anyway js-similar-contributions-publish"
+              data-publish-url="<%= publish_url %>">
+        <%= t(".submit_anyway") %>
+      </button>
+    </div>
   </div>
 <% end %>

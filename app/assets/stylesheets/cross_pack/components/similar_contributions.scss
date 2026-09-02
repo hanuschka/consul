@@ -68,6 +68,8 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
+  max-width: none;
+  margin: 0;
   text-align: left;
 }
 
@@ -101,8 +103,21 @@
   border-top: 1px solid #e2e2e2;
 }
 
+.similar-contributions-notice--default-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .similar-contributions-notice--actions .button {
   margin: 0;
+}
+
+// .button and the flex row above both beat the UA rule for [hidden], so the
+// toggled-off state needs its own declaration.
+.similar-contributions-notice--supported-link[hidden],
+.similar-contributions-notice--default-actions[hidden] {
+  display: none;
 }
 
 .similar-contributions-list {

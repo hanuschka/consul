@@ -18,6 +18,7 @@
 
       this.bindFormSubmit();
       this.bindPublishButtons();
+      this.bindVoteRefresh();
 
       if (this.statusUrl) {
         this.startPolling();
@@ -74,6 +75,46 @@
       };
 
       document.addEventListener("click", this.boundHandleDocumentClick);
+    },
+
+    // A vote response replaces the match's whole votes markup, which detaches
+    // the form that sent the request -- so its own ajax:success never reaches
+    // the document. jQuery's global ajax event fires on the document itself
+    // and survives that.
+    bindVoteRefresh: function() {
+      this.boundRefreshSupportedState = () => this.refreshSupportedState();
+
+      $(document).on("ajaxComplete", this.boundRefreshSupportedState);
+    },
+
+    // "unvote" is the support button of a single-support phase once it is
+    // supported; "like voted" is the up-and-down-voting variant of the same
+    // state.
+    refreshSupportedState: function() {
+      const supportedLinks = document.querySelectorAll(".js-similar-contributions-supported-link");
+
+      if (supportedLinks.length === 0) {
+        return;
+      }
+
+      let anySupported = false;
+
+      supportedLinks.forEach((supportedLink) => {
+        const votesContainer = document.getElementById(supportedLink.dataset.votesContainer);
+        const supported = !!votesContainer && !!votesContainer.querySelector(".unvote, .like.voted");
+
+        supportedLink.hidden = !supported;
+
+        if (supported) {
+          anySupported = true;
+        }
+      });
+
+      this.getDefaultActions().hidden = anySupported;
+    },
+
+    getDefaultActions: function() {
+      return document.querySelector(".js-similar-contributions-default-actions");
     },
 
     handleSubmit: function(event) {
@@ -332,6 +373,11 @@
       if (this.boundHandleDocumentClick) {
         document.removeEventListener("click", this.boundHandleDocumentClick);
         this.boundHandleDocumentClick = null;
+      }
+
+      if (this.boundRefreshSupportedState) {
+        $(document).off("ajaxComplete", this.boundRefreshSupportedState);
+        this.boundRefreshSupportedState = null;
       }
     }
   };

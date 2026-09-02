@@ -67,9 +67,12 @@ class SimilarContributions::Ranking < ApplicationService
     def request_ranking
       response =
         Ai::RubyLlmFactory
-          .chat_with_json_output(output_schema, feature: feature,
-                                 request_timeout: REQUEST_TIMEOUT,
-                                 model: Ai::Settings.ultrafast_model)
+          .chat_with_json_output(
+            output_schema,
+            feature: feature,
+            request_timeout: REQUEST_TIMEOUT,
+            model: Ai::Settings.ultrafast_model
+          )
           .with_instructions(system_instructions)
           .ask(user_prompt)
 

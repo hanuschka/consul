@@ -28,6 +28,10 @@ class SimilarContributions::NoticeComponent < ApplicationComponent
       .truncate(EXCERPT_LENGTH)
   end
 
+  def votes_container_id(match_resource)
+    "#{dom_id(match_resource)}_votes"
+  end
+
   def path_for(match_resource)
     if match_resource.is_a?(::Budget::Investment)
       budget_investment_path(match_resource.budget, match_resource)

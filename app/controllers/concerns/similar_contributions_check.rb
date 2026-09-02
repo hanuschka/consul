@@ -19,9 +19,35 @@ module SimilarContributionsCheck
 
       return false if !resource.save
 
+      discard_superseded_similar_contributions_drafts(resource)
+
       SimilarContributions::CheckJob.perform_later(resource)
 
       true
+    end
+
+    # A citizen who dismisses the check and submits again -- or walks away and
+    # comes back -- parks another draft, because create always builds a new
+    # record. The superseded ones would stay behind the draft default scope
+    # forever, so they go now that a newer draft has taken over. Drafts the
+    # citizen saved on purpose never ran a check and carry no status, which is
+    # what keeps them out of this.
+    def discard_superseded_similar_contributions_drafts(resource)
+      superseded_similar_contributions_drafts(resource).destroy_all
+    end
+
+    def superseded_similar_contributions_drafts(resource)
+      drafts = resource.class
+        .unscope(where: :draft)
+        .where(author_id: resource.author_id, draft: true)
+        .where.not(similar_contributions_check_status: nil)
+        .where.not(id: resource.id)
+
+      if resource.is_a?(::Budget::Investment)
+        drafts.where(budget_id: resource.budget_id)
+      else
+        drafts.where(projekt_phase_id: resource.projekt_phase_id)
+      end
     end
 
     # The AJAX submission consumed the invisible_captcha timestamp, so without

@@ -1,6 +1,8 @@
 class SimilarContributions::CheckSectionComponent < ApplicationComponent
   include SimilarContributionsCheckState
 
+  MODAL_ID = "similar-contributions-notice"
+
   POLL_INTERVAL = 1000
   POLL_TIMEOUT = 20_000
 

@@ -1,12 +1,54 @@
+// One width for both states, so the dialog does not resize under the citizen
+// when the spinner gives way to the matches. .shared-modal's own 90vw cap is
+// restated here because the desktop width below replaces it.
 .shared-modal.-similar-contributions {
-  // sassc (main-app Sprockets pack) evaluates CSS min() as a Sass function and
-  // fails on mixed units, so the viewport cap stays on .shared-modal.
-  width: 640px;
+  width: 90vw;
+  max-width: 90vw;
+}
+
+@media (min-width: 980px) {
+  .shared-modal.-similar-contributions {
+    width: 880px;
+    max-width: 880px;
+  }
+}
+
+.similar-contributions-check--modal-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.similar-contributions-check--modal-progress-title {
+  margin: 24px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.similar-contributions-check--modal-progress-hint {
+  max-width: 460px;
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.similar-contributions-check--modal-progress[hidden] {
+  display: none;
+}
+
+.similar-contributions-check--modal-progress .shared-loading-spinner {
+  border-top-color: #1b5e20;
 }
 
 // Many matches must not push the actions out of a 90vh dialog.
 .similar-contributions-notice {
-  max-height: 50vh;
+  max-height: 55vh;
   overflow-y: auto;
 }
 
@@ -24,7 +66,10 @@
 }
 
 .similar-contributions-notice--item {
-  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
   border-top: 1px solid #e2e2e2;
 
   &:first-child {
@@ -35,6 +80,63 @@
   &:last-child {
     padding-bottom: 0;
   }
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+.similar-contributions-notice--item-image {
+  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+
+  @media (min-width: 600px) {
+    width: 200px;
+  }
+}
+
+// The shared placeholder is drawn for a card-sized image; at thumbnail size
+// its 80px icon leaves no room for anything else.
+.similar-contributions-notice--item-image .resource-image--missing-image-placeholder-icon {
+  margin-top: 0;
+  font-size: 40px;
+}
+
+.similar-contributions-notice--item-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.similar-contributions-notice--item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-bottom: 10px;
+}
+
+.similar-contributions-notice--item-meta .projekt-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+}
+
+.similar-contributions-notice--item-meta .projekt-label {
+  margin: 0;
+}
+
+.similar-contributions-notice--item-sentiment {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .similar-contributions-notice--item-title {
@@ -57,7 +159,7 @@
 }
 
 .similar-contributions-notice--item-support {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 // The shared votes markup is built for a centered sidebar column: here it has

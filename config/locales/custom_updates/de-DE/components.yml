@@ -21,6 +21,8 @@ de:
         text: "KI-generiertes Bild"
         tooltip: "Dieses Bild wurde mit künstlicher Intelligenz erstellt oder bearbeitet und zeigt keine reale Aufnahme. Der Hinweis ist gesetzlich vorgeschrieben."
     similar_contributions:
+      check_section_component:
+        checking_hint: "Ihr Beitrag wird mit den bereits eingereichten Beiträgen dieser Phase verglichen. Das dauert nur einen Moment."
       progress_component:
         checking: "Beitrag wird geprüft …"
       notice_component:

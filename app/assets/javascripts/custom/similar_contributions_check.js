@@ -17,10 +17,11 @@
       this.publishing = false;
 
       this.bindFormSubmit();
-      this.bindPublishButtons();
+      this.bindModalButtons();
       this.bindVoteRefresh();
 
       if (this.statusUrl) {
+        this.openModal();
         this.startPolling();
       }
     },
@@ -53,6 +54,14 @@
       return this.getSection().querySelector(".js-similar-contributions-check-result");
     },
 
+    getModal: function() {
+      return this.getSection().querySelector(".js-similar-contributions-notice-modal");
+    },
+
+    getModalProgress: function() {
+      return this.getSection().querySelector(".js-similar-contributions-modal-progress");
+    },
+
     bindFormSubmit: function() {
       const form = this.getForm();
 
@@ -65,12 +74,17 @@
       form.addEventListener("submit", this.boundHandleSubmit);
     },
 
-    bindPublishButtons: function() {
+    bindModalButtons: function() {
       this.boundHandleDocumentClick = (event) => {
         const publishButton = event.target.closest(".js-similar-contributions-publish");
 
         if (publishButton) {
           this.handlePublishClick(publishButton);
+          return;
+        }
+
+        if (event.target.closest(".js-similar-contributions-dismiss")) {
+          this.dismissModal();
         }
       };
 
@@ -127,6 +141,7 @@
       this.submitting = true;
 
       this.showProgress();
+      this.openModal();
       this.clearEditorPlaceholders();
       this.syncRichTextEditors();
       this.submitForm();
@@ -171,6 +186,25 @@
       }
 
       this.submitting = false;
+    },
+
+    // The modal carries the whole check: the spinner while it runs, the matches
+    // once they are in. It is opened the instant the citizen submits, so the
+    // wait happens on the surface that will hold the answer.
+    openModal: function() {
+      App.SharedModal.open(this.getModal().id);
+    },
+
+    closeModal: function() {
+      App.SharedModal.closeById(this.getModal().id);
+    },
+
+    // Back to the form: the matches go with the modal, so the next submission
+    // opens it on the spinner again instead of on a stale answer.
+    dismissModal: function() {
+      this.closeModal();
+      this.getResultContainer().innerHTML = "";
+      this.getModalProgress().hidden = false;
     },
 
     // CKEditor writes back to its source textarea on native form submission,
@@ -227,6 +261,7 @@
 
       console.error("[SimilarContributionsCheck] create request failed", request);
 
+      this.closeModal();
       this.restoreSubmitButton();
     },
 
@@ -237,6 +272,7 @@
     showFormErrors: function(errorsHtml) {
       const errorsContainer = this.getErrorsContainer();
 
+      this.closeModal();
       this.restoreSubmitButton();
 
       if (errorsContainer) {
@@ -307,27 +343,10 @@
     // and it is already there whichever way the citizen dismisses the modal --
     // no dependency on the dialog "close" event.
     showMatches: function(html) {
-      const resultContainer = this.getResultContainer();
-
       this.restoreSubmitButton();
 
-      resultContainer.innerHTML = html;
-
-      this.openNoticeModal();
-    },
-
-    // The matches are shown in a modal so the half-submitted form behind them
-    // stops competing for the decision. Dismissing it hands the form back --
-    // the draft stays unpublished until a match is supported or the citizen
-    // submits anyway.
-    openNoticeModal: function() {
-      const modal = document.querySelector(".js-similar-contributions-notice-modal");
-
-      if (!modal) {
-        return;
-      }
-
-      App.SharedModal.open(modal.id);
+      this.getResultContainer().innerHTML = html;
+      this.getModalProgress().hidden = true;
     },
 
     handlePublishClick: function(publishButton) {
@@ -358,9 +377,11 @@
 
       if (publishButton) {
         publishButton.disabled = false;
-      } else {
-        this.restoreSubmitButton();
+        return;
       }
+
+      this.closeModal();
+      this.restoreSubmitButton();
     },
 
     redirect: function(url) {

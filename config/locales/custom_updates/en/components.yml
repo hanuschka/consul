@@ -21,6 +21,8 @@ en:
         text: "AI-generated image"
         tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."
     similar_contributions:
+      check_section_component:
+        checking_hint: "Your contribution is being compared with the ones already submitted in this phase. This only takes a moment."
       progress_component:
         checking: "Checking proposal …"
       notice_component:

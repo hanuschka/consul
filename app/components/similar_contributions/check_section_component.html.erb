@@ -7,5 +7,29 @@
            data-publish-url="<%= publish_url %>"
          <% end %>
          aria-live="polite">
-  <div class="similar-contributions-check--result js-similar-contributions-check-result"></div>
+  <%# Not dismissable: the citizen decides between supporting a match and
+      submitting anyway, and while the check runs there is nothing to dismiss.
+      The JS closes it on the error paths so a broken request never traps
+      anyone behind the backdrop. %>
+  <%= render Shared::ModalComponent.new(
+    id: MODAL_ID,
+    modal_class: "-similar-contributions js-similar-contributions-notice-modal",
+    closeable: false,
+    close_on_backdrop: false,
+    close_on_esc: false
+  ) do %>
+    <div class="similar-contributions-check--modal-progress js-similar-contributions-modal-progress">
+      <%= render Shared::LoadingSpinnerComponent.new(size: "large") %>
+
+      <p class="similar-contributions-check--modal-progress-title">
+        <%= t("components.similar_contributions.progress_component.checking") %>
+      </p>
+
+      <p class="similar-contributions-check--modal-progress-hint">
+        <%= t(".checking_hint") %>
+      </p>
+    </div>
+
+    <div class="similar-contributions-check--result js-similar-contributions-check-result"></div>
+  <% end %>
 </section>

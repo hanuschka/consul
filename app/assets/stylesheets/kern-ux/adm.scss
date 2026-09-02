@@ -1,4 +1,5 @@
 @use "adm/variables";
+@use "adm/colors";
 
 @use "adm/components/header_component";
 @use "adm/components/hint_component";
@@ -13,6 +14,7 @@
 @use "adm/components/anchor_highlight";
 @use "adm/components/detail_page";
 @use "adm/components/form_image_component";
+@use "adm/components/form_attachments_component";
 @use "adm/components/button_with_progress";
 @use "adm/components/image_with_lightbox";
 @use "adm/components/home_dashboard";
@@ -27,6 +29,7 @@
 @use "adm/components/column_selector";
 @use "adm/components/icon_rail";
 @use "adm/components/table";
+@use "adm/components/scroll_to_top";
 @use "adm/components/email_template_component";
 @use "adm/components/recipient_group_filter_card_component";
 @use "adm/components/name_autosave_status";
@@ -34,15 +37,17 @@
 @use "components/map";
 @use "components/shared_admin_iframe";
 @use "components/subnavigation_konto_component";
-@use "adm/components/admin_projekt_import";
 @use "adm/components/kern_ai_setting";
 @use "adm/components/files";
 @use "adm/components/evaluation_report";
+@use "adm/components/evaluation_overview";
 @use "adm/components/masterportal_import_panel";
+@use "adm/components/masterportal_file_upload";
 @use "adm/components/masterportal_pins_list";
 @use "adm/components/masterportal_pins_summary";
 @use "adm/components/masterportal_integration";
 @use "adm/components/masterportal_collections";
+@use "adm/components/masterportal_taxonomy";
 @use "adm/components/system_user_info";
 @use "adm/components/delete_collection";
 @use "adm/components/turbo_frame_placeholder";
@@ -56,10 +61,14 @@
 @use "adm/components/phase_key_metrics_card_overrides";
 @use "cross_pack/components/ai_clustering_component";
 @use "cross_pack/components/phase_evaluation_sections";
+@use "cross_pack/components/shared_spinner";
+@use "adm/components/evaluation_report_icon_overrides";
+@use "adm/components/evaluation_view_tabs";
+@use "cross_pack/components/evaluation_poll_stats";
 @use "cross_pack/components/shared_accordion";
 @use "cross_pack/components/shared_tabs";
 @use "cross_pack/components/ai_question_section";
-@use "cross_pack/components/masterportal_square_marker";
+@use "cross_pack/components/masterportal_dot_marker";
 @use "cross_pack/components/shared_pagination";
 @use "cross_pack/components/shared_modal";
 @use "cross_pack/components/modern_modal_header";
@@ -67,9 +76,15 @@
 @use "cross_pack/components/flyout_item_link";
 @use "cross_pack/components/image_cropper";
 @use "cross_pack/components/ai_feature_tooltip";
+@use "cross_pack/components/custom_switch";
 
 @use "adm/components/newsletter_email_preview";
 @use "adm/components/image_cropper_dialog";
+@use "adm/components/projekts_inspiration";
+@use "adm/components/projekts_instance_import";
+@use "adm/components/budget_results_tab";
+@use "adm/components/loader";
+@use "adm/components/poll_question_imports";
 
 @use "adm/partials/navbar_items";
 

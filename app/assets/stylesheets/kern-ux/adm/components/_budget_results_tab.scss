@@ -1,0 +1,93 @@
+// Styles the shared frontend partial budgets/results/_results_table inside the
+// /adm evaluation "budget_results" tab. The partial ships Foundation utility
+// classes (show-for-*, table-for-mobile) that have no rules in the adm pack,
+// so the equivalents are scoped here.
+.adm-budget-results {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.adm-budget-results table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  background: var(--kern-color-layout-background-default);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 8px;
+}
+
+.adm-budget-results th,
+.adm-budget-results td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--kern-color-layout-border);
+  text-align: left;
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-budget-results thead th {
+  font-weight: 600;
+  color: var(--kern-color-layout-text-subtle);
+}
+
+.adm-budget-results tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.adm-budget-results .text-center {
+  text-align: center;
+}
+
+.adm-budget-results .text-right {
+  text-align: right;
+}
+
+.adm-budget-results .show-for-small-only {
+  display: none;
+}
+
+.adm-budget-results .show-for-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.adm-budget-results .icon-check,
+.adm-budget-results .icon-x {
+  display: inline-block;
+  margin-right: 8px;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.adm-budget-results .icon-check {
+  color: var(--kern-color-feedback-success);
+
+  &::before {
+    content: "\f00c";
+  }
+}
+
+.adm-budget-results .icon-x {
+  color: var(--kern-color-feedback-danger);
+
+  &::before {
+    content: "\f00d";
+  }
+}
+
+.adm-budget-results tr.success {
+  background: var(--kern-color-feedback-success-background);
+}
+
+.adm-budget-results a {
+  color: var(--kern-color-action-default);
+}
+
+.adm-budget-results--actions {
+  display: flex;
+  justify-content: flex-end;
+}

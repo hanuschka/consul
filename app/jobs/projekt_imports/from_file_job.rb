@@ -14,12 +14,21 @@ class ProjektImports::FromFileJob < ApplicationJob
 
     projekt_import.update!(
       status: "processing",
-      extracted_text: extract_result.data[:text]
+      extracted_text: extract_result.data[:text],
+      content_locale: ProjektImport.default_content_locale
     )
+
+    # Before the analysis call on purpose: the model can only reserve a content
+    # block with an image slot for images it knows about, and an image that
+    # cannot be carried over is worth reporting while the admin is still in the
+    # chat and can upload it by hand.
+    images_result = ProjektImports::ExtractSourceImagesService.call(projekt_import: projekt_import)
 
     ai_result = ProjektImports::ProcessWithAiService.call(
       text: extract_result.data[:text],
-      additional_user_instructions: projekt_import.additional_user_instructions
+      additional_user_instructions: projekt_import.additional_user_instructions,
+      response_language: projekt_import.import_response_language,
+      source_images: images_result.data[:source_images]
     )
 
     if !ai_result.success?
@@ -33,7 +42,8 @@ class ProjektImports::FromFileJob < ApplicationJob
 
     if text_truncated
       projekt_import.add_warning!(
-        "input_truncated: analyzed #{ai_result.data[:analyzed_text_length]} of #{ai_result.data[:original_text_length]} chars"
+        "input_truncated: analyzed #{ai_result.data[:analyzed_text_length]} of #{ai_result.data[:original_text_length]} chars",
+        stage: ProjektImport::ANALYSIS_WARNING_STAGE
       )
     end
 
@@ -68,12 +78,7 @@ class ProjektImports::FromFileJob < ApplicationJob
   end
 
   def extract_single_file(source_file)
-    source_file.blob.open do |tmp|
-      file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: tmp,
-        filename: source_file.blob.filename.to_s,
-        type: source_file.blob.content_type
-      )
+    ::AttachmentUpload.open(source_file) do |file|
       DocumentTextExtractor.call(file: file)
     end
   end
@@ -94,6 +99,22 @@ class ProjektImports::FromFileJob < ApplicationJob
       )
     end
 
+    post_title_image_picker(ai_chat)
+
     projekt_import.update!(status: "chatting")
+  end
+
+  # A message rather than a control in the chrome: the choice is part of what the
+  # assistant reports back about the uploaded documents, and it belongs next to
+  # the summary of what it found in them. The message carries no text of its own —
+  # the partial renders the candidates from the import's stored images, so it keeps
+  # showing the current choice however often it is re-rendered.
+  def post_title_image_picker(ai_chat)
+    ai_chat.ai_chat_messages.create!(
+      role: "assistant",
+      content: "",
+      status: "completed",
+      custom_command: ProjektImport::TITLE_IMAGE_PICKER_COMMAND
+    )
   end
 end

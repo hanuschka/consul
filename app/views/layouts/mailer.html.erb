@@ -26,7 +26,7 @@
   <% if @newsletter.present? %>
     <%= render "mailer/newsletter_simple_footer" %>
   <% else %>
-    <%= render "layouts/mailer_footer" %>
+    <%= render "layouts/mailer_footer", hide_sender_info: custom_email_footer_present? %>
   <% end %>
 </body>
 </html>

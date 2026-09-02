@@ -8,9 +8,24 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     "progress_bars" => ProjektImports::Builders::ProgressBarBuilder,
     "livestreams" => ProjektImports::Builders::LivestreamBuilder,
     "point_of_interest_categories" => ProjektImports::Builders::PoiCategoryBuilder,
+    "projekt_labels" => ProjektImports::Builders::ProjektLabelBuilder,
+    "sentiments" => ProjektImports::Builders::SentimentBuilder,
     "iframe" => ProjektImports::Builders::IframeBuilder,
     "budget" => ProjektImports::Builders::BudgetBuilder
   }.freeze
+
+  ALLOWED_PROJEKT_SETTINGS = %w[
+    projekt_feature.general.allow_downvoting_comments
+    projekt_feature.general.consider_underway
+    projekt_custom_feature.default_footer_tab
+  ].freeze
+
+  HIDDEN_DRAFT_SETTINGS = %w[
+    projekt_feature.general.show_in_navigation
+    projekt_feature.general.show_in_overview_page
+    projekt_feature.general.show_in_homepage
+    projekt_feature.general.allow_indexing
+  ].freeze
 
   attr_reader :projekt_import
 
@@ -25,25 +40,32 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     end
 
     projekt = nil
+    phase_entries = []
 
     ActiveRecord::Base.transaction do
       projekt = create_projekt(data)
       apply_subtitle(projekt, data["subtitle"])
       apply_tags_and_sdgs(projekt, data)
 
-      phases = create_phases(projekt, data["phases"])
-      create_content_blocks(projekt, data["content_blocks"])
+      phase_entries = create_phases(projekt, data["phases"])
 
       apply_projekt_settings(projekt, data["projekt_settings"])
-      apply_phase_settings(phases, data["projekt_phase_settings"])
+      apply_phase_settings(phase_entries, data["projekt_phase_settings"])
+      enforce_hidden_draft_state(projekt)
 
-      phases.each { |entry| build_long_tail(projekt, entry) }
+      phase_entries.each { |entry| build_long_tail(projekt, entry) }
+      enable_form_features(phase_entries)
+      create_phase_footer_blocks(phase_entries)
+      apply_continuous_duration(projekt, phase_entries)
 
       projekt.update!(imported_by_ai: true)
       projekt_import.record_created_projekt!(projekt)
     end
 
-    ServiceResult.success(projekt: projekt)
+    ServiceResult.success(
+      projekt: projekt,
+      phases: phase_entries.map { |entry| entry[:record] }
+    )
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::CreateProjektFromImportService] failed: #{e.message}\n#{e.backtrace.first(10).join("\n")}")
     Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "create_projekt" }) if defined?(Sentry)
@@ -73,17 +95,70 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
   end
 
   def apply_tags_and_sdgs(projekt, data)
-    if data["categories"].present?
-      projekt.tag_list = Array(data["categories"]).compact_blank.join(", ")
-      projekt.save!
-    end
-
-    if data["sdg_codes"].present? && projekt.respond_to?(:related_sdg_list=)
-      projekt.related_sdg_list = Array(data["sdg_codes"]).compact_blank.join(", ")
-      projekt.save!
-    end
+    apply_categories(projekt, data["categories"])
+    apply_sdg_codes(projekt, data["sdg_codes"])
   rescue StandardError => e
     projekt_import.add_warning!("tags/sdg: #{e.message}")
+  end
+
+  # acts_as_taggable creates whatever tag name it is handed, so a category the
+  # model invented would become a real Tag row the whole platform then offers in
+  # its filters. Only names that already exist are applied, and the rest are
+  # reported so an admin can add them deliberately.
+  def apply_categories(projekt, categories)
+    names = existing_names(categories)
+    return if names.blank?
+
+    projekt.tag_list = names.join(", ")
+    projekt.save!
+  end
+
+  def existing_names(categories)
+    names = normalized_list(categories)
+    return [] if names.empty?
+
+    known = Tag.where(name: names).pluck(:name)
+    unknown = names - known
+
+    if unknown.any?
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.unknown_categories", categories: unknown.join(", "))
+      )
+    end
+
+    names & known
+  end
+
+  def apply_sdg_codes(projekt, sdg_codes)
+    codes = normalized_list(sdg_codes)
+    return if codes.empty?
+    return if !projekt.respond_to?(:related_sdg_list=)
+    return if !sdg_goals_available?
+
+    known = SDG::Goal.where(code: codes).pluck(:code).map(&:to_s)
+    unknown = codes - known
+
+    if unknown.any?
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.unknown_sdg_codes", codes: unknown.join(", "))
+      )
+    end
+
+    applicable = codes & known
+    return if applicable.empty?
+
+    projekt.related_sdg_list = applicable.join(", ")
+    projekt.save!
+  end
+
+  def normalized_list(values)
+    Array(values).map { |value| value.to_s.strip }.compact_blank.uniq
+  end
+
+  def sdg_goals_available?
+    SDG::Goal.exists?
+  rescue NameError
+    false
   end
 
   def create_phases(projekt, phases_data)
@@ -91,12 +166,12 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     return [] if phases_data.empty?
 
     phases_data.map.with_index do |phase_data, index|
-      type = phase_data["type"]
-      next nil if type.blank? || ProjektPhase::ALL_PHASE_TYPES.exclude?(type)
+      phase_class = phase_class_for(phase_data["type"])
+      next nil if phase_class.blank?
 
-      record = type.constantize.create!(
+      record = phase_class.create!(
         projekt: projekt,
-        phase_tab_name: phase_data["name"].presence,
+        phase_tab_name: phase_tab_name_for(phase_data),
         start_date: phase_data["start_date"].presence,
         end_date: phase_data["end_date"].presence,
         description: phase_data["description"].presence,
@@ -110,30 +185,12 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     end.compact
   end
 
-  def create_content_blocks(projekt, blocks)
-    Array(blocks).each_with_index do |block, position|
-      body = block["html"].presence || block["content_data"].to_s
-      next if body.blank?
-
-      projekt.content_blocks.create!(
-        name: "custom",
-        key: "projekt_content_block_#{projekt.id}_#{position + 1}_#{DateTime.now.to_i}",
-        body: body,
-        locale: I18n.locale.to_s,
-        position: position + 1
-      )
-    rescue ActiveRecord::RecordInvalid => e
-      raise "content_block(##{position + 1}): #{e.message}"
-    end
-  end
-
   def apply_projekt_settings(projekt, settings)
-    blocked_keys = %w[projekt_feature.main.activate projekt_feature.general.show_in_navigation]
     return if settings.blank?
 
     settings.each do |key, value|
       next if value.nil?
-      next if blocked_keys.include?(key)
+      next if ALLOWED_PROJEKT_SETTINGS.exclude?(key)
 
       setting = projekt.projekt_settings.find_by(key: key)
       next if setting.blank?
@@ -172,6 +229,8 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
     record = entry[:record]
     data = entry[:data]
 
+    warn_about_missing_poll_questions(record, data)
+
     LONG_TAIL_BUILDERS.each do |key, builder_class|
       payload = data[key]
       next if payload.blank?
@@ -183,6 +242,136 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       rescue StandardError => e
         projekt_import.add_warning!("#{record.type}/#{key}: unexpected error: #{e.message}")
       end
+    end
+  end
+
+  # Labels and sentiments only reach the citizen form once the phase's own
+  # feature setting is on, and only ProposalPhase and BudgetPhase define those
+  # keys. Turning one on also makes the field mandatory for citizens, so it is
+  # done only for phases that actually received records.
+  def enable_form_features(phase_entries)
+    phase_entries.each do |entry|
+      record = entry[:record]
+
+      if record.projekt_labels.exists?
+        activate_form_feature(record, "feature.form.labels")
+      end
+
+      if record.sentiments.exists?
+        activate_form_feature(record, "feature.form.sentiments")
+      end
+    end
+  end
+
+  # A regular phase without an end date runs continuously ("fortlaufend"), and
+  # the projekt hosting it has to be treated the same way. An independently
+  # derived projekt end date would expire the projekt while that phase is still
+  # accepting participation. ProjektPhase#regular? queries the database, so the
+  # type list is compared directly instead.
+  def apply_continuous_duration(projekt, phase_entries)
+    return if projekt.total_duration_end.blank?
+
+    regular_phases = phase_entries
+      .map { |entry| entry[:record] }
+      .select { |phase| ProjektPhase::SPECIAL_PROJEKT_PHASES.exclude?(phase.type) }
+
+    return if regular_phases.none? { |phase| phase.end_date.blank? }
+
+    projekt.update!(total_duration_end: nil)
+  end
+
+  def create_phase_footer_blocks(phase_entries)
+    ProjektImports::CreatePhaseFooterBlocksService.call(phase_entries: phase_entries)
+  rescue StandardError => e
+    projekt_import.add_warning!("phase_footer_blocks: #{e.message}")
+  end
+
+  def activate_form_feature(record, key)
+    setting = record.settings.find_by(key: key)
+
+    if setting.blank?
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.form_feature_unsupported",
+          phase: record.title, feature: key)
+      )
+      return
+    end
+
+    setting.update!(value: "active")
+  rescue StandardError => e
+    projekt_import.add_warning!("form_feature(#{key}): #{e.message}")
+  end
+
+  def warn_about_missing_poll_questions(record, data)
+    return if !record.is_a?(ProjektPhase::VotingPhase)
+
+    questions = ProjektImports::Builders::PollBuilder.importable_questions(data["poll_questions"])
+    return if questions.any?
+
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.voting_phase_without_questions",
+        phase: record.title)
+    )
+  end
+
+  # The AI is asked for a localized phase name, but it sometimes falls back to
+  # anglicising the phase type identifier ("ProjektPhase::VotingPhase" ->
+  # "Voting Phase"). Dropping such a name lets ProjektPhase#title serve the
+  # translated default instead.
+  def phase_tab_name_for(phase_data)
+    name = phase_data["name"].to_s.strip
+    return nil if name.blank?
+    return nil if echoes_phase_type?(name, phase_data["type"])
+
+    name
+  end
+
+  def echoes_phase_type?(name, type)
+    return false if type.blank?
+
+    normalized = comparable(name)
+    return false if normalized.blank?
+
+    # Several types are named identically in both locales ("Budget", "Iframe",
+    # "Formular"), so their translated label collides with the anglicised
+    # identifier. That label is what the prompt asked for — keep it.
+    return false if normalized == comparable(localized_type_labels[type])
+
+    identifier = type.to_s.demodulize.underscore.delete("_")
+    echoes = [
+      identifier,
+      identifier.delete_suffix("phase"),
+      type.to_s.underscore.gsub(/[^a-z]/, "")
+    ]
+
+    echoes.include?(normalized)
+  end
+
+  def comparable(value)
+    value.to_s.downcase.gsub(/[^a-z]/, "")
+  end
+
+  def localized_type_labels
+    @localized_type_labels ||=
+      I18n.with_locale(projekt_import.import_locale) { ProjektPhase.type_labels }
+  end
+
+  def phase_class_for(type)
+    return nil if type.blank?
+
+    phase_class_map[type]
+  end
+
+  def phase_class_map
+    @phase_class_map ||= ProjektPhase::ALL_PHASE_TYPES.index_with(&:safe_constantize)
+  end
+
+  def enforce_hidden_draft_state(projekt)
+    HIDDEN_DRAFT_SETTINGS.each do |key|
+      setting = projekt.projekt_settings.find_by(key: key)
+      next if setting.blank?
+
+      setting.update!(value: "")
     end
   end
 end

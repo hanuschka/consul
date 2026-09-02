@@ -119,7 +119,7 @@ module Budgets
     end
 
     def destroy
-      @investment.destroy!
+      @investment.hide
       redirect_to user_path(current_user, filter: "budget_investments"), notice: t("flash.actions.destroy.budget_investment")
     end
 
@@ -131,10 +131,10 @@ module Budgets
 
     def json_data
       investment = Budget::Investment.find(params[:id])
-      image_url = url_for investment.image.attachment.variant(
+      image_url = url_for investment.image.attachment_variant(
                     resize_to_fill: MapLocation::MAP_POPUP_STANDARD_IMAGE_SIZE,
                     format: "jpeg",
-                    saver: { strip: true, interlace: "JPEG", quality: 80 }
+                    saver: { interlace: "JPEG", quality: 80 }
                   ) if investment.image&.attachment&.attached?
 
       data = {
@@ -142,7 +142,8 @@ module Budgets
         id: investment.id,
         title: investment.title,
         budget_id: investment.budget.id,
-        image_url: image_url
+        image_url: image_url,
+        image_ai_label_html: helpers.ai_image_label_html(investment.image)
       }.to_json
 
       respond_to do |format|

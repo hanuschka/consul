@@ -18,7 +18,14 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     :balloting_weighted_votes_total,
     :balloting_weighted_votes_online,
     :balloting_weighted_votes_offline,
-    :finished_winners_count
+    :finished_winners_count,
+    :total_male_participants,
+    :total_female_participants,
+    :total_other_gen_participants,
+    :male_percentage,
+    :female_percentage,
+    :other_gen_percentage,
+    :individual_group_value_counts
 
   def has_accepting_stats?
     accepting_visible_proposals_count.to_i > 0 || accepting_proposal_authors_count.to_i > 0
@@ -48,39 +55,61 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def gender?
-    false
+    total_male_participants.to_i > 0 ||
+      total_female_participants.to_i > 0 ||
+      total_other_gen_participants.to_i > 0
   end
 
   def age?
-    false
+    participants_by_age.values.any? { |v| v[:count].to_i > 0 }
   end
 
   def geozone?
-    false
+    participants_by_geozone.values.any? { |v| v[:count].to_i > 0 }
   end
 
   def individual_group?
-    false
+    group_value_counts.values.any? { |count| count.to_i > 0 }
   end
 
   def participations
-    []
+    [].tap do |result|
+      result << "gender" if gender?
+      result << "age" if age?
+      result << "geozone" if geozone?
+    end
   end
 
   def soft_individual_groups
-    IndividualGroup.none
+    @soft_individual_groups ||= begin
+      value_ids = group_value_counts.select { |_, count| count.to_i > 0 }.keys
+
+      if value_ids.blank?
+        IndividualGroup.none
+      else
+        IndividualGroup
+          .joins(:individual_group_values)
+          .where(kind: "soft", individual_group_values: { id: value_ids })
+          .distinct
+          .preload(:individual_group_values)
+      end
+    end
   end
 
-  def total_individual_group_value_participants(_value)
-    0
+  def total_individual_group_value_participants(individual_group_value)
+    group_value_counts.fetch(individual_group_value.id.to_s, 0).to_i
   end
 
   def participants_by_age
-    {}
+    (stats["participants_by_age"] || {}).transform_values(&:with_indifferent_access)
   end
 
   def participants_by_geozone
-    {}
+    (stats["participants_by_geozone"] || {}).transform_values(&:with_indifferent_access)
+  end
+
+  def segment_stats(segment_key)
+    ProjektPhase::BudgetPhase::SegmentStats.new(self, segment_key)
   end
 
   has_one :budget, foreign_key: :projekt_phase_id,
@@ -104,6 +133,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
   def default_order
     5
+  end
+
+  def investment_orders
+    orders = Budget::Investment::DEFAULT_ORDERS.dup
+    orders.delete("comments_count") if feature?("resource.hide_comments_count_order")
+    orders
   end
 
   def resource_count
@@ -200,18 +235,43 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget.investments.winners.pluck(:author_id).uniq
   end
 
+  def supports_limit_applies?
+    max_supports_per_user.positive?
+  end
+
   private
+
+    def group_value_counts
+      individual_group_value_counts || {}
+    end
 
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization?
 
-      :submissions_limit_exceeded if submissions_limit_exceeded?(user)
+      if location == :new_button_component && submissions_limit_exceeded?(user)
+        :submissions_limit_exceeded
+      elsif location == :votes_component && supports_limit_exceeded?(user)
+        :supports_limit_exceeded
+      end
     end
 
     def submissions_limit_exceeded?(user)
       return false if max_submissions_per_user.zero?
 
       budget.investments.where(author: user).count >= max_submissions_per_user
+    end
+
+    def supports_limit_exceeded?(user)
+      return false unless supports_limit_applies?
+
+      supports_count_for(user) >= max_supports_per_user
+    end
+
+    # Conditional supports count too, otherwise an unverified user could cast any number of
+    # them and have them all confirmed at once.
+    def supports_count_for(user)
+      ActsAsVotable::Vote.where(voter: user, vote_flag: true, votable_type: "Budget::Investment",
+                                votable_id: budget.investments.select(:id)).count
     end
 
     def create_budget

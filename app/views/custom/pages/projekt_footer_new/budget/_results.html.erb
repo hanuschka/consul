@@ -10,7 +10,9 @@
                               investments: @investments.incompatible %>
 <% end %>
 
-<%= link_to t("budgets.results.show_all_link"), "#",
-            class: "js-toggle-link button hollow margin-bottom float-right-medium",
-            data: { "toggle-selector" => ".js-discarded",
-                    "toggle-text" => t("budgets.results.hide_discarded_link") } %>
+<div class="flex justify-end">
+  <%= link_to t("budgets.results.show_all_link"), "#",
+              class: "js-toggle-link button hollow margin-bottom",
+              data: { "toggle-selector" => ".js-discarded",
+                      "toggle-text" => t("budgets.results.hide_discarded_link") } %>
+</div>

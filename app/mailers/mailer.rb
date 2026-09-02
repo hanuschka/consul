@@ -133,6 +133,21 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def proposal_official_answer(proposal)
+    @proposal = proposal
+    @author = @proposal.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail_with_custom_template(nil, {
+        "username" => @author.username,
+        "proposal_title" => @proposal.title,
+        "official_answer" => @proposal.official_answer,
+        "proposal_url" => proposal_url(@proposal)
+      }, to: @email_to, default_subject: t("mailers.proposal_official_answer.subject"))
+    end
+  end
+
   def budget_investment_created(investment)
     @investment = investment
     @projekt = investment.projekt

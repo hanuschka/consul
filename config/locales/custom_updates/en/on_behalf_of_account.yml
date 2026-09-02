@@ -1,0 +1,37 @@
+en:
+  attributes:
+    company_name: Company
+    on_behalf_of_company_name: Company
+    on_behalf_of_email: Email address
+  custom:
+    on_behalf_of_account:
+      company_name:
+        label: Company
+        placeholder: e.g. Doe Construction Ltd.
+      email:
+        label: Email address
+        placeholder: e.g. jane.doe@example.com
+        description: >
+          Optional. The entry is assigned to the account with this email address. If no account
+          exists yet, one is created, activated right away and notified by email. An existing
+          account is only linked.
+      errors:
+        blocked_account: There is a blocked account for this email address. Please contact the administration.
+      mailers:
+        closing: Best regards
+        signature: Your participation team
+        account_created:
+          subject: Your account has been created
+          hi: "Hello %{username},"
+          p1: >
+            an account has been created for you with the email address %{email}, because a
+            contribution was submitted on your behalf. The account is already activated.
+          resource: >
+            This is the contribution in question: %{resource_link}.
+          p2: >
+            To log in, please choose a password first: %{password_link}.
+          password_link_text: set a password
+          p3: >
+            For security reasons the link is only valid for a limited time. If it has already
+            expired, you can have a new one sent to you here: %{password_reset_link}.
+          password_reset_link_text: request a new link

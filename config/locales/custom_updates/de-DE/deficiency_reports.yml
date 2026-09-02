@@ -22,6 +22,10 @@ de:
           title: Kategorie
           description: "Bitte ordnen Sie Ihr Meldung einer Kategorie zu:"
           placeholder: Bitte wählen
+        subcategory:
+          title: Unterkategorie
+          description: "Bitte wählen Sie eine passende Unterkategorie:"
+          placeholder: Bitte wählen
         documents:
           title: Dokumente hinzufügen
         languages:
@@ -35,6 +39,10 @@ de:
           title: Veröffentlichen für
           description: Dieses Feld sehen nur Admin. Sie können hier einen Beitrag im Namen von jemandem erstellen.
           placeholder: Namen eingeben...
+        intake_channel:
+          label: Eingangskanal
+          description: Pflichtangabe, wenn Sie das Anliegen im Namen einer dritten Person erfassen. Geben Sie an, auf welchem Weg das Anliegen bei Ihnen eingegangen ist.
+          placeholder: Bitte wählen
         create:
           submit_button: Anliegen melden
         labels:
@@ -48,6 +56,7 @@ de:
         submit_button_new_design: Jetzt einreichen
       create:
         flash_success: Ihre Meldung wurde erfolgreich übermittelt.
+      submissions_closed: Es können derzeit keine neuen Meldungen eingereicht werden.
       index:
         empty_list_text: "Keine Ergebnisse"
         title: Anliegen

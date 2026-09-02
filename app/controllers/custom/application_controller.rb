@@ -2,6 +2,7 @@ require_dependency Rails.root.join("app", "controllers", "application_controller
 
 class ApplicationController < ActionController::Base
   before_action :sanitize_pagination_params
+  before_action :normalize_tags_param
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   helper_method :set_comment_flags
@@ -18,12 +19,45 @@ class ApplicationController < ActionController::Base
   # end
 
   private
+
+    # Overrides CanCan's default so a request arriving from an on-behalf-of account mail can read the
+    # one hidden record that mail was about. Everything else about the visitor is unchanged: the
+    # token adds a single rule and grants nothing when it is missing, stale or forged.
+    def current_ability
+      @current_ability ||= Ability.new(current_user, preview_gid: on_behalf_of_preview_gid)
+    end
+
+    # Memoized with defined? rather than ||= because almost every request has no token, and a nil
+    # result should not mean verifying a signature again on the next call.
+    def on_behalf_of_preview_gid
+      return @on_behalf_of_preview_gid if defined?(@on_behalf_of_preview_gid)
+
+      @on_behalf_of_preview_gid = ResourcePreviewToken.resource_gid(
+        params[:preview_token], purpose: OnBehalfOfAccountMailer::PREVIEW_PURPOSE
+      )
+    end
+
     def sanitize_pagination_params
       %i[page per_page resource_browse_mode_page].each do |key|
         value = params[key]
         next if value.nil? || value.is_a?(String) || value.is_a?(Numeric)
 
         params[key] = nil
+      end
+    end
+
+    # Tag names that match no tag are dropped here so nothing downstream can
+    # echo them back into links, hidden fields or filter queries.
+    def normalize_tags_param
+      return if params[:tags].blank?
+
+      normalized_tags = ::Tags::ExistingNamesService.call(params[:tags]).presence&.join(",")
+      params[:tags] = normalized_tags
+
+      if normalized_tags.blank?
+        request.query_parameters.delete("tags")
+      else
+        request.query_parameters["tags"] = normalized_tags
       end
     end
 
@@ -53,14 +87,6 @@ class ApplicationController < ActionController::Base
     def show_launch_page
       @header_launch = Widget::Card.header.find_by(title: "header_large_launch")
       render "welcome/launch", layout: "launch_page"
-    end
-
-    def all_selected_tags
-      if params[:tags]
-        params[:tags].split(",").map { |tag_name| Tag.find_by(name: tag_name) }.compact || []
-      else
-        []
-      end
     end
 
     def set_projekts_for_overview_page_navigation
@@ -129,7 +155,7 @@ class ApplicationController < ActionController::Base
 
     BOT_USER_AGENT_REGEX = /
       bot|crawl|spider|slurp|fetch|preview|monitor|
-      google|bing|yandex|baidu|duckduckbot|
+      bing|yandex|baidu|duckduckbot|
       facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|telegram|discordbot|
       curl|wget|python|java\/|go-http-client|httpclient|ruby|okhttp|
       pingdom|uptimerobot|statuscake|newrelic|datadog
@@ -158,7 +184,7 @@ class ApplicationController < ActionController::Base
       return if bot_request?
 
       session[:guest_user_id] ||= "guest_#{SecureRandom.uuid}"
-      @current_ability = Ability.new(guest_user)
+      @current_ability = Ability.new(guest_user, preview_gid: on_behalf_of_preview_gid)
     rescue StandardError => e
       Sentry.capture_exception(e)
     end

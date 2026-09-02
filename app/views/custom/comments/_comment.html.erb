@@ -51,6 +51,8 @@
 
             <% if comment.user.hidden? || comment.user.erased? %>
               <span class="user-name"><%= t("comments.comment.user_deleted") %></span>
+            <% elsif comment.user.guest? %>
+              <span class="user-name"><%= User.human_attribute_name(:guest) %></span>
             <% else %>
               <span class="user-name" aria-label="Er antwortete"><%= link_to comment.user.name, user_path(comment.user), title: 'sagte'  %></span>
               <% if comment.user.display_official_position_badge? %>

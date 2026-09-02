@@ -1,10 +1,28 @@
 <div class="new-public-activity">
   <% if valid_access? %>
     <% if valid_filters.any? %>
-      <%= render Shared::ResourcesListComponent.new(**list_params) do |c| %>
+      <%= render Resources::List::BaseComponent.new(
+        title: title,
+        empty_text: (comments? ? nil : t("empty_list_text"))
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.user_page",
+          filters: valid_filters,
+          current_filter: current_filter,
+          param: "filter",
+          remote_url: remote_url,
+          hide_view_mode_button: comments?
+        ) %>
+
         <% if comments? %>
-          <% c.with_custom_body do %>
+          <div class="no-ul-style resources-list--body js-resources-list--body">
             <%= render Comments::UserCommentsComponent.new(comments: resources) %>
+          </div>
+        <% elsif resources.present? %>
+          <% c.with_items do %>
+            <% resources.each do |resource| %>
+              <%= render helpers.resources_list_item_component(resource) %>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>

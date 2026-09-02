@@ -10,6 +10,7 @@
 .polls-show {
   .poll-question {
     background: $white;
+    padding-bottom: 20px;
   }
 }
 
@@ -20,6 +21,25 @@
   table.results-table {
     margin-bottom: 0.5rem;
   }
+}
+
+.polls-results-export {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.polls-results-export .dropdown-select-container {
+  margin: 0;
+}
+
+.polls-results-toolbar {
+  justify-content: flex-end;
+}
+
+.polls-results-toolbar .polls-results-export,
+.poll-header__extra .polls-results-export {
+  margin-bottom: 0;
 }
 
 
@@ -392,9 +412,15 @@ td.answers-column  {
   }
 }
 
+.poll-question-list {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
 .poll-question--nested-question {
   align-items: center;
-  margin-bottom: 8px;
+  // margin-bottom: 8px;
 
   .poll-question-answers {
     margin: 0 !important;

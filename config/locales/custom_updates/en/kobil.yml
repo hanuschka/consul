@@ -1,0 +1,14 @@
+en:
+  omniauth:
+    kobil:
+      sign_in: Sign in with KOBIL
+      sign_up: Sign up with KOBIL
+      name: KOBIL
+  custom:
+    account:
+      connected_accounts:
+        title: Connected accounts
+        kobil: KOBIL
+        disconnect: Disconnect
+        disconnect_confirm: Are you sure you want to disconnect this linked account?
+        disconnected: The linked account has been disconnected.

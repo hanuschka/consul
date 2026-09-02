@@ -4,10 +4,7 @@ class Masterportal::CollectionDiffService < ApplicationService
   end
 
   def call
-    source_ids = Masterportal::SourceExternalIdsService.call(
-      endpoint_url: @collection.endpoint_url,
-      collection_id: @collection.collection_id
-    )
+    source_ids = Masterportal::SourceExternalIdsService.call(masterportal_collection: @collection)
     stored_ids = stored_external_ids
 
     {

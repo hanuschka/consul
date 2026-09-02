@@ -76,10 +76,9 @@
 
       <% if @custom_page.image.present? %>
         <% big_projekt_image_url =
-          polymorphic_path(@custom_page.image.attachment.variant(
+          polymorphic_path(@custom_page.image.attachment_variant(
             resize_to_limit: [1750, 900],
             saver: { quality: 90 },
-            strip: true,
             format: "jpeg"
           ))
         %>
@@ -101,15 +100,15 @@
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(
+              image_url: @custom_page.image&.attachment_variant(
                 resize_to_fill: [590, 355],
                 saver: { quality: 95 },
-                strip: true,
                 format: "jpeg"
               ),
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page,
-              placeholder_hint: show_admin_controls? ? t("custom.projekts.banner_upload.min_image_size_hint", width: 590, height: 355) : nil
+              ai_generated: @custom_page.image&.ai_generated?,
+              placeholder_hint: show_admin_controls? ? banner_image_size_hint : nil
             )
           ) %>
         <% end %>
@@ -120,11 +119,30 @@
           <div
             data-update-url="<%= update_image_adm_projekts_projekt_path(@projekt) %>"
             data-delete-url="<%= delete_image_adm_projekts_projekt_path(@projekt) %>"
+            data-generate-url="<%= generate_image_adm_projekts_projekt_path(@projekt) %>"
+            data-generate-status-url="<%= generate_image_status_adm_projekts_projekt_path(@projekt) %>"
+            data-ai-generated-url="<%= update_image_ai_generated_adm_projekts_projekt_path(@projekt) %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
+            data-placeholder-hint="<%= banner_image_size_hint %>"
             data-delete-confirm="<%= t('custom.accessibility.banner-image.delete-confirm') %>"
             class="projekt-image-upload-wrapper js-projekt-image-uploader">
+            <div
+              class="projekt-banner-upload-error js-projekt-banner-upload-error"
+              role="alert"
+              aria-label="<%= t('custom.accessibility.banner-image.upload-error-label') %>"
+              hidden
+            >
+              <i class="fas fa-exclamation-circle projekt-banner-upload-error--icon" aria-hidden="true"></i>
+              <span
+                class="projekt-banner-upload-error--message js-projekt-banner-upload-error-message"
+                data-fallback-text="<%= t('custom.projekts.banner_upload.upload_failed') %>"
+                data-generate-failed-text="<%= t('custom.projekts.banner_upload.generate_failed') %>"
+                data-ai-marker-failed-text="<%= t('custom.projekts.banner_upload.ai_marker_failed') %>"
+              ></span>
+            </div>
             <%= banner_image %>
+            <template class="js-projekt-banner--ai-label-template"><%= render Shared::AiImageLabelComponent.new %></template>
             <img class="projekt-image-upload-preview js-projekt-image-upload-preview" src="" alt="" aria-hidden="true">
             <div
               class="projekt-banner-upload-progress js-projekt-banner-upload-progress"
@@ -139,6 +157,7 @@
                 class="projekt-banner-upload-progress--message js-projekt-banner-upload-progress-message"
                 data-uploading-text="<%= t('custom.projekts.banner_upload.uploading') %>"
                 data-processing-text="<%= t('custom.projekts.banner_upload.processing') %>"
+                data-generating-text="<%= t('custom.projekts.banner_upload.generating') %>"
               >
                 <%= t('custom.projekts.banner_upload.uploading') %>
               </div>
@@ -152,6 +171,22 @@
                 <i class="fas fa-pencil-alt"></i>
               </label>
             <% end %>
+            <%= studio_rich_tooltip(
+              title: generate_image_tooltip_title,
+              text: generate_image_tooltip_text,
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-generate-button js-projekt-banner--image-generate-button js-studio-hide-on-preview"
+                      aria-label="<%= t('custom.accessibility.banner-image.generate-aria-label') %>"
+                      <%= "disabled" if !ai_available? %>
+                      tabindex="-1">
+                <i class="fas fa-magic"></i>
+              </button>
+            <% end %>
+            <% if ai_available? %>
+              <%= render Projekts::BannerImageGenerateModalComponent.new(custom_page: @custom_page) %>
+            <% end %>
             <input
               id="projektImageUploadInput"
               type="file"
@@ -159,6 +194,21 @@
               class="d-none js-projekt-banner--image-upload-input"
             >
             </input>
+            <%= studio_rich_tooltip(
+              title: ai_marker_tooltip_title,
+              text: ai_marker_tooltip_text,
+              note: ai_marker_tooltip_note,
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %> <%= 'd-none' if ai_marker_button_hidden? %>"
+                      aria-label="<%= ai_marker_tooltip_title %>"
+                      aria-pressed="<%= banner_ai_generated? %>"
+                      data-ai-generated-in-app="<%= banner_ai_generated_in_app? %>"
+                      tabindex="-1">
+                <span class="projekt-image-ai-marker-button--text" aria-hidden="true">AI</span>
+              </button>
+            <% end %>
             <%= studio_rich_tooltip(
               title: "Titelbild entfernen",
               text: "Entfernt das aktuelle Titelbild. Die Seite wird anschließend ohne Banner angezeigt.",

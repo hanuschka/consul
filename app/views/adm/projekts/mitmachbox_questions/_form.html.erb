@@ -1,0 +1,26 @@
+<%= form_with scope: :question, url: url, method: local_assigns.fetch(:method, :post) do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.prompt_label"),
+                                          hint: t("adm.projekts.mitmachbox.questions.prompt_hint")) do %>
+    <%= f.text_field :prompt, label: false, value: @question["prompt"] %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.question_type_label"),
+                                          hint: t("adm.projekts.mitmachbox.questions.question_type_hint")) do %>
+    <%= f.select :question_type,
+          options_for_select(
+            Adm::Projekts::MitmachboxQuestionsController::QUESTION_TYPES.map do |question_type|
+              [t("adm.projekts.mitmachbox.questions.question_types.#{question_type}"), question_type]
+            end,
+            @question["question_type"]
+          ),
+          {},
+          { label: false } %>
+  <% end %>
+
+  <%= f.check_box :required,
+        label: t("adm.projekts.mitmachbox.questions.required_label"),
+        hint: t("adm.projekts.mitmachbox.questions.required_hint"),
+        checked: @question["required"] == true %>
+
+  <%= form_submit_button(text: t("adm.projekts.mitmachbox.questions.save_button")) %>
+<% end %>

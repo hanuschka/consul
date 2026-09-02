@@ -11,7 +11,8 @@ class Ai::GenerateContentBlock < ApplicationService
     anchor_template_id: nil,
     use_projekt_context: false,
     newsletter: nil,
-    dt_template_section: nil
+    dt_template_section: nil,
+    text_locale: nil
   )
     @content_block = content_block
     @projekt = projekt
@@ -21,6 +22,7 @@ class Ai::GenerateContentBlock < ApplicationService
     @use_projekt_context = use_projekt_context
     @newsletter = newsletter
     @dt_template_section = dt_template_section.presence
+    @text_locale = text_locale.presence
   end
 
   def call
@@ -36,7 +38,7 @@ class Ai::GenerateContentBlock < ApplicationService
       anchor_template = fetch_anchor_template(dt_templates_by_category)
     end
 
-    chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema)
+    chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema, feature: "content_blocks.generate")
 
     if filtered_templates.any?
       tool = Ai::Tools::FetchContentBlockTemplates.new(
@@ -310,8 +312,10 @@ class Ai::GenerateContentBlock < ApplicationService
     ""
   end
 
+  # Runs in a background job, where I18n.locale is always the default: the
+  # editor's locale has to arrive with the job payload or not at all.
   def target_language
-    Rails.env.development? ? "English" : "German"
+    Ai::OutputLanguage.name_for(@text_locale)
   end
 
   def output_schema

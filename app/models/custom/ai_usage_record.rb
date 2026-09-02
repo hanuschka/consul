@@ -12,6 +12,7 @@ class AiUsageRecord < ApplicationRecord
     content_blocks.generate
     content_blocks.generate_with_prompt
     deficiency_reports.categorization
+    projekt_evaluations.ai_project_summary
     projekt_evaluations.phase_key_findings
     projekt_evaluations.phase_short_summary
     projekt_evaluations.project_content_summary
@@ -26,6 +27,8 @@ class AiUsageRecord < ApplicationRecord
     proposal_ai_draft.hard_criteria
     proposal_ai_draft.soft_criteria
     whatsapp.bot_copy
+    similar_contributions.find_for_phase
+    similar_contributions.find_for_projekt
   ].push(UNKNOWN_FEATURE).freeze
 
   COUNTER_COLUMNS = %i[

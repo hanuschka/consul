@@ -25,6 +25,13 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:description].presence || I18n.t(i18n_key(:description), default: nil)
   end
 
+  DESCRIPTION_ALLOWED_ATTRIBUTES =
+    (Rails::Html::SafeListSanitizer.allowed_attributes.to_a + %w[target rel]).freeze
+
+  def sanitized_description
+    helpers.sanitize(description, attributes: DESCRIPTION_ALLOWED_ATTRIBUTES)
+  end
+
   def note
     @options[:note].presence || ai_gated_note || not_permitted_note
   end

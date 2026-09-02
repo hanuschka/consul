@@ -6,6 +6,7 @@ class ProjektPhaseSetting < ApplicationRecord
 
   AI_GATED_KEYS = %w[
     feature.form.voice_assistant
+    feature.general.similar_contributions_check
   ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
@@ -76,6 +77,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.require_admin_acceptance": "",
           "feature.general.public_kpi_stats": "",
           "feature.general.public_ai_stats": "",
+          "feature.general.similar_contributions_check": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -132,6 +134,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "feature.general.public_kpi_stats": "",
           "feature.general.public_ai_stats": "",
+          "feature.general.similar_contributions_check": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -160,6 +163,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_voting": "",
           "feature.resource.show_video_as_link": "",
           "feature.resource.hide_ballots_count": "",
+          "feature.resource.hide_comments_count_order": "",
           "option.resource.max_submissions_per_user": "",
           "option.resource.max_supports_per_user": ""
         },

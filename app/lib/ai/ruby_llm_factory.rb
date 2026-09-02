@@ -7,8 +7,16 @@ module Ai::RubyLlmFactory
     build_chat(context_with_request_timeout(seconds), feature: feature, gpt_model: gpt_model)
   end
 
-  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE)
-    chat(feature: feature).with_schema(output_schema)
+  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE,
+                                 request_timeout: nil, gpt_model: nil)
+    base =
+      if request_timeout.present?
+        chat_with_request_timeout(request_timeout, feature: feature, gpt_model: gpt_model)
+      else
+        build_chat(init, feature: feature, gpt_model: gpt_model)
+      end
+
+    base.with_schema(output_schema)
   end
 
   # The cheap model on a bounded clock, for the short judgements made while
@@ -19,7 +27,7 @@ module Ai::RubyLlmFactory
     chat_with_request_timeout(
       timeout_seconds,
       feature: feature,
-      gpt_model: Ai::Settings::DEFAULT_GPT_FAST_MODEL
+      gpt_model: Ai::Settings::FAST_MODEL
     )
   end
 
@@ -98,7 +106,7 @@ module Ai::RubyLlmFactory
     when "ollama"
       ollama_context
     else
-      RubyLLM
+      RubyLLM.context
     end
   end
 

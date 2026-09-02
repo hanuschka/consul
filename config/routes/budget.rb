@@ -9,6 +9,8 @@ resources :budgets, only: [:show, :index] do
       put :flag
       put :unflag
       get :read_stats
+      patch :publish_draft
+      get :similar_contributions_status
     end
 
     collection { get :suggest }

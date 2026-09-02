@@ -148,6 +148,10 @@ de:
         one: Import von Datensatz aus dem Melderegister
         other: Import von Datensätzen aus dem Melderegister
     attributes:
+      deficiency_report:
+        admin_accepted: "Sichtbarkeit"
+        admin_accepted_true: "Veröffentlicht"
+        admin_accepted_false: "Nicht veröffentlicht"
       budget:
         name: "Name"
         description_accepting: "Beschreibung während der Vorschlagsphase"

@@ -1,8 +1,9 @@
 class ProposalSerializer < BaseSerializer
   attr_reader :proposal
 
-  def initialize(proposal)
+  def initialize(proposal, similar_contributions_count: nil)
     @proposal = proposal
+    @similar_contributions_count = similar_contributions_count
   end
 
   def serialize
@@ -29,6 +30,8 @@ class ProposalSerializer < BaseSerializer
         :officing_bulk_votes
       ]
     )
+
+    proposal_data[:similar_contributions_count] = similar_contributions_count
 
     proposal_data.merge!(
       title: proposal.title,
@@ -119,7 +122,18 @@ class ProposalSerializer < BaseSerializer
   end
 
   def self.serialize_collection(proposals)
-    proposals.map { |proposal| new(proposal).serialize }
+    counts = SimilarContributions::CandidateCounts.call(proposals)
+
+    proposals.map do |proposal|
+      new(proposal, similar_contributions_count: counts.fetch(proposal.id, 0)).serialize
+    end
   end
+
+  private
+
+    def similar_contributions_count
+      @similar_contributions_count ||=
+        SimilarContributions::CandidateCounts.call([proposal]).fetch(proposal.id, 0)
+    end
 end
 

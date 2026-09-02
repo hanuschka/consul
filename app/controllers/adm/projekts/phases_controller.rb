@@ -158,7 +158,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @proposals = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
+        @pagy, @proposals = pagy(
+          base_scope.preload(:author,
+                             { projekt_phase: [:settings, :projekt] },
+                             image: { attachment_attachment: :blob })
+        )
+        @similar_contributions_counts = ::SimilarContributions::CandidateCounts.call(@proposals)
 
         @title_header_options = { search: true }
         @moderation_header_options = { filter_options: moderation_filter_options }
@@ -316,7 +321,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @investments = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
+        @pagy, @investments = pagy(
+          base_scope.preload(:author,
+                             { budget: { projekt_phase: [:settings, :projekt] } },
+                             image: { attachment_attachment: :blob })
+        )
+        @similar_contributions_counts = ::SimilarContributions::CandidateCounts.call(@investments)
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 
@@ -827,7 +837,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
 
     @assistant_codename = @projekt_phase.voice_assistant_codename
-    @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
+    @ai_settings = @projekt_phase.settings.where(key: ::ProjektPhaseSetting::AI_GATED_KEYS)
 
     load_ai_assistant_config if InternalApiClient.active_dt?
 

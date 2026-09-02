@@ -42,6 +42,8 @@ de:
             public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
             public_ai_stats: KI-Analyse öffentlich anzeigen
             public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
+            similar_contributions_check: Prüfung auf ähnliche Beiträge
+            similar_contributions_check_description: Prüft neu eingereichte Beiträge dieser Phase auf inhaltlich ähnliche, bereits vorhandene Beiträge und zeigt der Verwaltung bei der Bearbeitung passende Beiträge aus demselben Projekt an. Im Frontend erscheint vor dem Absenden ein Hinweis mit bis zu drei ähnlichen Beiträgen, die stattdessen unterstützt werden können. Aktivieren Sie diese Funktion, um Doppeleinreichungen zu vermeiden und die Bearbeitung durch Verweise auf bereits beantwortete Beiträge zu beschleunigen.
           form:
             allow_attached_image: Titelbild
             allow_attached_image_description: Ermöglicht es den Bürger*innen ein Titelbild hinzuzufügen.
@@ -156,6 +158,8 @@ de:
             public_kpi_stats_description: Zeigt die Kennzahlen (KPI) auch für nicht-administrative Nutzer an
             public_ai_stats: KI-Analyse öffentlich anzeigen
             public_ai_stats_description: Zeigt die KI-Analyse auch für nicht-administrative Nutzer an
+            similar_contributions_check: Prüfung auf ähnliche Beiträge
+            similar_contributions_check_description: Prüft neu eingereichte Beiträge dieser Phase auf inhaltlich ähnliche, bereits vorhandene Beiträge und zeigt der Verwaltung bei der Bearbeitung passende Beiträge aus demselben Projekt an. Im Frontend erscheint vor dem Absenden ein Hinweis mit bis zu drei ähnlichen Beiträgen, die stattdessen unterstützt werden können. Aktivieren Sie diese Funktion, um Doppeleinreichungen zu vermeiden und die Bearbeitung durch Verweise auf bereits beantwortete Beiträge zu beschleunigen.
           resource:
             create_investment_with_ai: Investitionsvorschlag mit KI erstellen
             create_investment_with_ai_description: Aktiviert die Schaltfläche "Investitionsvorschlag mit KI erstellen" im Frontend. Nutzer können mithilfe eines KI-Assistenten einen Investitionsvorschlag formulieren lassen, indem sie ihr Anliegen in eigenen Worten beschreiben. Die KI unterstützt bei Titel, Zusammenfassung und Beschreibung. Der Entwurf bleibt vor dem Einreichen vollständig editierbar.

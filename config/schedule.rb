@@ -49,6 +49,10 @@ every 6.hours, roles: [:cron] do
   runner "AiUsageRecords::PushCurrentMonths.call", job_template: staggered_job_template
 end
 
+every 1.day, at: "3:30 am", roles: [:cron] do
+  rake "-s similar_contributions:prune_abandoned_drafts"
+end
+
 # Temporally not send dashboard's notifications
 # every 1.day, at: "7:00 am" do
 #   rake "dashboards:send_notifications"

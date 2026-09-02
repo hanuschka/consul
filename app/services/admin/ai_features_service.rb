@@ -8,7 +8,7 @@ class Admin::AiFeaturesService < ApplicationService
       custom_endpoint: custom_endpoint,
       projekt_import_tools: projekt_import_tools,
       headless_browser_libraries: headless_browser_libraries,
-      image_watermarking: image_watermarking
+      image_ai_marking: image_ai_marking
     }
   end
 
@@ -68,20 +68,15 @@ class Admin::AiFeaturesService < ApplicationService
     }
   end
 
-  # Marking generated images is mandatory, so a box missing these packages
-  # cannot generate AI images at all -- unlike the other tool checks here, this
-  # one reports a hard outage rather than a degraded feature.
-  def image_watermarking
-    packages = ::TrustmarkCommand.packages_status
-    missing_packages = packages.reject { |_package, status| status[:installed] }.keys
-
+  # Marking generated images is mandatory, so a box without exiftool cannot
+  # generate AI images at all -- unlike the other tool checks here, this one
+  # reports a hard outage rather than a degraded feature.
+  def image_ai_marking
     {
-      status: ::TrustmarkCommand.runtime_status,
-      interpreter_configured: ::TrustmarkCommand.python_path.present?,
-      all_installed: missing_packages.empty?,
-      packages: packages,
-      missing_packages: missing_packages,
-      install_command: ::TrustmarkCommand::INSTALL_COMMAND
+      status: ::ExiftoolCommand.runtime_status,
+      binary_path: ::ExiftoolCommand.binary_path,
+      all_installed: ::ExiftoolCommand.available?,
+      install_command: ::ExiftoolCommand::INSTALL_COMMAND
     }
   end
 

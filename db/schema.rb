@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_26_075751) do
+ActiveRecord::Schema.define(version: 2026_08_31_135239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -525,6 +525,8 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
+    t.string "similar_contributions_check_status"
+    t.jsonb "similar_contributions_matches"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id", "source", "source_collection"], name: "index_budget_investments_on_budget_source_collection"
@@ -1007,6 +1009,7 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.datetime "archived_at"
     t.bigint "deficiency_report_intake_channel_id"
     t.bigint "deficiency_report_subcategory_id"
+    t.bigint "recorded_by_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
@@ -1019,6 +1022,7 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.index ["deficiency_report_subcategory_id"], name: "index_deficiency_reports_on_subcategory_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
+    t.index ["recorded_by_id"], name: "index_deficiency_reports_on_recorded_by_id"
     t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
     t.index ["tsv"], name: "index_deficiency_reports_on_tsv", using: :gin
   end
@@ -1340,10 +1344,9 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.string "credits"
     t.boolean "admin", default: false, null: false
     t.boolean "ai_generated", default: false, null: false
-    t.string "watermark_identifier"
+    t.boolean "ai_generated_in_app", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
-    t.index ["watermark_identifier"], name: "index_images_on_watermark_identifier", unique: true, where: "(watermark_identifier IS NOT NULL)"
   end
 
   create_table "individual_group_values", force: :cascade do |t|
@@ -2834,6 +2837,8 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
+    t.string "similar_contributions_check_status"
+    t.jsonb "similar_contributions_matches"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -3257,6 +3262,7 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.datetime "published_at"
     t.string "footer_key"
     t.integer "footer_position"
+    t.text "landing_ai_context"
     t.index ["footer_key"], name: "index_site_customization_pages_on_footer_key", unique: true
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
@@ -3601,6 +3607,8 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.datetime "ai_disclosed_at"
     t.bigint "guest_user_id"
     t.datetime "terms_accepted_at"
+    t.string "reply_language"
+    t.datetime "reply_language_settled_at"
     t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
     t.index ["guest_user_id"], name: "index_whatsapp_accounts_on_guest_user_id", unique: true
     t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"
@@ -3608,6 +3616,18 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id", unique: true
     t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"
     t.index ["wa_id"], name: "index_whatsapp_accounts_on_wa_id", unique: true
+  end
+
+  create_table "whatsapp_contribution_translations", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "source_language", null: false
+    t.string "locale", null: false
+    t.text "title"
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "locale"], name: "index_whatsapp_contribution_translations_on_contribution", unique: true
   end
 
   create_table "whatsapp_conversations", force: :cascade do |t|
@@ -3638,6 +3658,7 @@ ActiveRecord::Schema.define(version: 2026_08_26_075751) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "projekt_id"
+    t.string "language"
     t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"

@@ -1,4 +1,9 @@
 en:
+  deficiency_reports:
+    official_answer_documents:
+      too_many: "At most %{count} documents can be attached to the official response."
+      too_large: "Attached documents may be at most %{size} MB."
+      wrong_type: "Only these file types are allowed: %{types}."
   custom:
     polls:
       questions:

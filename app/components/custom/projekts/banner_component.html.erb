@@ -76,10 +76,9 @@
 
       <% if @custom_page.image.present? %>
         <% big_projekt_image_url =
-          polymorphic_path(@custom_page.image.attachment.variant(
+          polymorphic_path(@custom_page.image.attachment_variant(
             resize_to_limit: [1750, 900],
             saver: { quality: 90 },
-            strip: true,
             format: "jpeg"
           ))
         %>
@@ -101,10 +100,9 @@
           </span>
           <%= render(
             Shared::ResourceImageComponent.new(
-              image_url: @custom_page.image&.attachment&.variant(
+              image_url: @custom_page.image&.attachment_variant(
                 resize_to_fill: [590, 355],
                 saver: { quality: 95 },
-                strip: true,
                 format: "jpeg"
               ),
               image_placeholder_icon_class: "fa-comments",
@@ -203,9 +201,10 @@
               delay: 1200
             ) do %>
               <button type="button"
-                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %> <%= 'd-none' if @custom_page.image.blank? %>"
+                      class="image-change-button projekt-image-upload-button projekt-image-ai-marker-button js-projekt-banner--ai-marker-button js-studio-hide-on-preview <%= '-active' if banner_ai_generated? %> <%= 'd-none' if ai_marker_button_hidden? %>"
                       aria-label="<%= ai_marker_tooltip_title %>"
                       aria-pressed="<%= banner_ai_generated? %>"
+                      data-ai-generated-in-app="<%= banner_ai_generated_in_app? %>"
                       tabindex="-1">
                 <span class="projekt-image-ai-marker-button--text" aria-hidden="true">AI</span>
               </button>

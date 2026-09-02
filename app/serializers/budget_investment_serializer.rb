@@ -3,8 +3,9 @@
 class BudgetInvestmentSerializer < BaseSerializer
   attr_reader :budget_investment
 
-  def initialize(budget_investment)
+  def initialize(budget_investment, similar_contributions_count: nil)
     @budget_investment = budget_investment
+    @similar_contributions_count = similar_contributions_count
   end
 
   def serialize
@@ -36,6 +37,8 @@ class BudgetInvestmentSerializer < BaseSerializer
         :administrator_id
       ]
     )
+
+    investment_data[:similar_contributions_count] = similar_contributions_count
 
     # Add translated attributes
     investment_data.merge!(
@@ -199,6 +202,20 @@ class BudgetInvestmentSerializer < BaseSerializer
   end
 
   def self.serialize_collection(budget_investments)
-    budget_investments.map { |budget_investment| new(budget_investment).serialize }
+    counts = SimilarContributions::CandidateCounts.call(budget_investments)
+
+    budget_investments.map do |budget_investment|
+      new(budget_investment,
+          similar_contributions_count: counts.fetch(budget_investment.id, 0)).serialize
+    end
   end
+
+  private
+
+    def similar_contributions_count
+      @similar_contributions_count ||=
+        SimilarContributions::CandidateCounts
+          .call([budget_investment])
+          .fetch(budget_investment.id, 0)
+    end
 end

@@ -6,6 +6,7 @@ class Proposal < ApplicationRecord
   include OnBehalfOfSubmittable
   include Memoable
   include ConditionallyVotable
+  include SimilarContributionsCheckable
 
   VOTES_FOR_SUCCESS_KEY = "option.resource.votes_for_proposal_success".freeze
 

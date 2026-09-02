@@ -144,7 +144,7 @@
         }
       };
 
-      if (this.dataChannel) {
+      if (this.dataChannel && this.dataChannel.readyState === "open") {
         this.dataChannel.send(JSON.stringify(doneMessage));
       }
 

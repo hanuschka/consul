@@ -58,6 +58,8 @@
 
   <hr class="kern-divider my-5">
 
+  <%= render ::SimilarContributions::ListComponent.new(@similar_contributions, resource: @proposal) %>
+
   <%= render Adm::AttributeEditorComponent.new(
     @proposal,
     :official_answer,

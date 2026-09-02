@@ -10,6 +10,8 @@ class Adm::AiSettingsController < Adm::BaseController
     @ai_settings = policy_scope(Setting, policy_scope_class: Adm::AiSettingPolicy::Scope)
       .where("key LIKE ?", "ai.%")
       .order(:key)
+    @evaluation_context_setting =
+      @ai_settings.find { |setting| setting.key == Ai::EvaluationContext::SETTING_KEY }
 
     @breadcrumbs = [
       { name: t("adm.ai_settings.index.title"), icon: "smart_toy" }

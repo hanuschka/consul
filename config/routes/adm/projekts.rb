@@ -12,6 +12,10 @@ namespace :adm do
       get :contact_persons, on: :member
     end
 
+    resource :inspiration, only: [:show], controller: "inspiration"
+
+    resource :instance_import, only: [:new, :create], controller: "instance_imports"
+
     resources :contact_persons, controller: "/adm/section_contact_people",
               only: [:new, :create, :edit, :update, :destroy],
               path: "settings/contact_persons",
@@ -50,6 +54,16 @@ namespace :adm do
         get :formular
         get :formular_answers
         get :formular_follow_up_emails
+
+        # Mitmachbox
+        get :mitmachbox_survey
+        post :mitmachbox_create_survey
+        patch :mitmachbox_survey_state
+        post :mitmachbox_create_draft
+        post :mitmachbox_publish_draft
+        get :mitmachbox_deployments
+        get :mitmachbox_results
+        get :mitmachbox_results_export
         get :milestones
         get :progress_bars
         get :legislation_process_draft_versions
@@ -64,6 +78,9 @@ namespace :adm do
                as: :destroy_masterportal_pin
         patch "masterportal_collections/:masterportal_collection_id" =>
               "phases#update_masterportal_collection", as: :update_masterportal_collection
+        patch "masterportal_collections/:masterportal_collection_id/color" =>
+              "phases#update_masterportal_collection_color",
+              as: :update_masterportal_collection_color
         delete "masterportal_collections/:masterportal_collection_id" =>
                "phases#destroy_masterportal_collection", as: :destroy_masterportal_collection
         get "masterportal_collections/:masterportal_collection_id/status" =>
@@ -131,6 +148,14 @@ namespace :adm do
           patch :reorder
         end
       end
+      resources :mitmachbox_questions, only: %i[new create edit update destroy] do
+        member do
+          patch :move_up
+          patch :move_down
+        end
+        resources :mitmachbox_options, only: %i[new create edit update destroy]
+      end
+      resources :mitmachbox_deployments, only: %i[new create edit update destroy]
       resources :projekt_events, except: %i[index] do
         member do
           post :send_notifications
@@ -185,6 +210,14 @@ namespace :adm do
           put :recalculate_winners
         end
       end
+      resources :poll_question_imports, only: %i[index new create show destroy] do
+        member do
+          get :status
+          post :apply
+          post :regenerate
+        end
+      end
+
       resources :poll_questions, only: [:new, :create, :show, :edit, :update, :destroy] do
         patch :order_questions, on: :collection
         resources :poll_question_answers, only: [:new, :create, :edit, :update, :destroy] do
@@ -226,10 +259,12 @@ namespace :adm do
 
       resource :chat, only: [:show], controller: "imports/chats" do
         get :messages
+        get :summary
         post :message
         post :command
         post :extract
         post :execute
+        post :title_image
       end
     end
 
@@ -245,8 +280,12 @@ namespace :adm do
       get :report_summary, on: :member
       get "evaluation/:phase_id", on: :member, action: :evaluation_phase,
           as: :evaluation_phase, constraints: { phase_id: /\d+/ }
+      get :poll_answer_participation, on: :member
+      get :poll_answer_crossectional, on: :member
       get :evaluation_visibility, on: :member
       patch :update_evaluation_visibility, on: :member
+      patch :toggle_evaluation_section_visibility, on: :member
+      patch :toggle_evaluation_tab_visibility, on: :member
       post :generate_evaluation, on: :member
       get :evaluation_status, on: :member
       post :regenerate_phase_evaluation, on: :member
@@ -255,6 +294,8 @@ namespace :adm do
       get :phase_evaluation_status, on: :member
       get :evaluation_pdf_options, on: :member
       get :evaluation_pdf, on: :member
+      post :copy, on: :member
+      get :copy_status, on: :member
       patch :toggle_activated, on: :member
       post :notify_reviewers, on: :member
       patch :toggle_hide_content_background, on: :member
@@ -263,6 +304,7 @@ namespace :adm do
       patch :convert_to_new_content_block_mode, on: :member
       patch :update_default_phase, on: :member
       patch :update_image, on: :member
+      patch :update_image_ai_generated, on: :member
       delete :delete_image, on: :member
       post :generate_image, on: :member
       get :generate_image_status, on: :member

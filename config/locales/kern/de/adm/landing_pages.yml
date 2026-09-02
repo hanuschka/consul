@@ -33,6 +33,7 @@ de:
             header:
               name: Themenseiten
               url: URL
+              projekts: Projekte
               status: Status
             no_landing_pages: Es wurden noch keine Themenseiten erstellt.
         new:
@@ -51,6 +52,16 @@ de:
           managers_empty_title: Keine Themenseiten-Manager vorhanden
           managers_empty_description: Es sind noch keine Themenseiten-Manager angelegt. Erstellen Sie zunächst einen Manager, um diesen anschließend dieser Themenseite zuzuweisen.
           managers_empty_link: Manager anlegen
+          projekts_title: Zugeordnete Projekte
+          projekts_description: Diese Projekte sind dieser Themenseite aktuell zugeordnet und werden auf ihr angezeigt. Die Zuordnung erfolgt am Projekt selbst unter Projekte > Details. Beim Löschen dieser Themenseite werden die Projekte wieder der Hauptseite zugeordnet.
+          projekts_empty_title: Keine Projekte zugeordnet
+          projekts_empty_description: Dieser Themenseite ist noch kein Projekt zugeordnet. Öffnen Sie ein Projekt unter Projekte > Details und wählen Sie dort diese Themenseite aus.
+          destroy_title: Themenseite löschen
+          destroy_description: Beim Löschen dieser Themenseite werden auch ihre Navigationseinträge und Inhaltskarten entfernt. Dies kann nicht rückgängig gemacht werden.
+          destroy_detaches_projekts:
+            one: Das zugeordnete Projekt bleibt erhalten und wird wieder der Hauptseite zugeordnet.
+            other: Die %{count} zugeordneten Projekte bleiben erhalten und werden wieder der Hauptseite zugeordnet.
+          destroy_blocked_description: Diese Themenseite kann nicht gelöscht werden, da sie zu einem Projekt gehört.
         navbar_items:
           title: Navigation
           description: >
@@ -59,6 +70,13 @@ de:
           new_item: Neuen Eintrag erstellen
         update:
           success: Der Wert wurde erfolgreich aktualisiert.
+        destroy:
+          success: Die Themenseite wurde erfolgreich gelöscht.
+          confirm: "Themenseite „%{title}“ wirklich löschen? Ihre Navigationseinträge und Inhaltskarten werden ebenfalls entfernt, zugeordnete Projekte werden wieder der Hauptseite zugeordnet. Dies kann nicht rückgängig gemacht werden."
+          confirm_with_projekts:
+            one: "Themenseite „%{title}“ wirklich löschen? Ihre Navigationseinträge und Inhaltskarten werden ebenfalls entfernt. Das zugeordnete Projekt bleibt erhalten und wird wieder der Hauptseite zugeordnet. Dies kann nicht rückgängig gemacht werden."
+            other: "Themenseite „%{title}“ wirklich löschen? Ihre Navigationseinträge und Inhaltskarten werden ebenfalls entfernt. Die %{count} zugeordneten Projekte bleiben erhalten und werden wieder der Hauptseite zugeordnet. Dies kann nicht rückgängig gemacht werden."
+          cannot_destroy: Die Themenseite kann nicht gelöscht werden, da sie zu einem Projekt gehört.
       managers:
         index:
           title: Themenseiten Manager

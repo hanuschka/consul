@@ -13,6 +13,9 @@ application.register("adm-menu", AdmMenuController)
 import AdmSidebarController from "./adm/sidebar_controller"
 application.register("adm-sidebar", AdmSidebarController)
 
+import AdmSubcategoryCascadeController from "./adm/subcategory_cascade_controller"
+application.register("adm--subcategory-cascade", AdmSubcategoryCascadeController)
+
 import AdmAiQuestionFormController from "./adm/ai_question_form_controller"
 application.register("adm--ai-question-form", AdmAiQuestionFormController)
 
@@ -28,6 +31,9 @@ application.register("adm--menu-popover", AdmMenuPopoverController)
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
+
+import AdmVisibilityAutosaveController from "./adm/visibility_autosave_controller"
+application.register("adm--visibility-autosave", AdmVisibilityAutosaveController)
 
 import SortableController from "./sortable_controller"
 application.register("sortable", SortableController)
@@ -72,6 +78,9 @@ application.register("table-actions", TableActionsController)
 import MapController from "./map_controller"
 application.register("map", MapController)
 
+import AdmEvaluationHeatmapController from "./adm/evaluation_heatmap_controller"
+application.register("adm--evaluation-heatmap", AdmEvaluationHeatmapController)
+
 import RelatedContentController from "./related_content_controller"
 application.register("related-content", RelatedContentController)
 
@@ -108,6 +117,9 @@ application.register("adm-nested-fields", AdmNestedFieldsController)
 import AdmChartsController from "./adm/charts_controller"
 application.register("adm-charts", AdmChartsController)
 
+import AdmChartRangeController from "./adm/chart_range_controller"
+application.register("adm-chart-range", AdmChartRangeController)
+
 
 import CheckAllController from "./check_all_controller"
 application.register("check-all", CheckAllController)
@@ -126,6 +138,9 @@ application.register("adm--form--image", AdmFormImageController)
 
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
+
+import AdmPollQuestionsBoundaryMapController from "./adm/poll_questions/boundary_map_controller"
+application.register("adm-poll-questions--boundary-map", AdmPollQuestionsBoundaryMapController)
 
 import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
 application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
@@ -202,6 +217,18 @@ application.register("adm--ai-action-button", AdmAiActionButtonController)
 import SharedPollingController from "./shared/polling_controller"
 application.register("shared--polling", SharedPollingController)
 
+import SharedDocumentUploadController from "./shared/document_upload_controller"
+application.register("shared--document-upload", SharedDocumentUploadController)
+
+import SharedScrollToTopController from "./shared/scroll_to_top_controller"
+application.register("shared--scroll-to-top", SharedScrollToTopController)
+
+import PollQuestionImportsAnswerFieldsController from "./poll_question_imports/answer_fields_controller"
+application.register("poll-question-imports--answer-fields", PollQuestionImportsAnswerFieldsController)
+
+import PollQuestionImportsPreviewController from "./poll_question_imports/preview_controller"
+application.register("poll-question-imports--preview", PollQuestionImportsPreviewController)
+
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
@@ -211,8 +238,9 @@ application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadCon
 import AdmEvaluationTabsController from "./adm/evaluation_tabs_controller"
 application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 
-import ProjektImportsFromFileController from "./projekt_imports/from_file_controller"
-application.register("projekt-imports--from-file", ProjektImportsFromFileController)
+import AdmBudgetResultsController from "./adm/budget_results_controller"
+application.register("adm--budget-results", AdmBudgetResultsController)
+
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)
@@ -231,3 +259,6 @@ application.register("shared--image-cropper", SharedImageCropperController)
 
 import SharedAnchorHighlightController from "./shared/anchor_highlight_controller"
 application.register("shared--anchor-highlight", SharedAnchorHighlightController)
+
+import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
+application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)

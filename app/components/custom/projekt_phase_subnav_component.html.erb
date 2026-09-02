@@ -1,18 +1,34 @@
-<div class='projekt-phase-subnav <%= "js-studio-hide-on-preview" if hide_subnav_on_preview? %>'>
-  <div class='projekt-phase-subnav--items'>
+<custom-tabs
+  class="projekt-phase-subnav js-projekt-footer-tabs <%= "js-studio-hide-on-preview" if hide_subnav_on_preview? %>"
+  default="<%= params[:section].presence || "overview" %>"
+  all-tabbable
+>
+  <div class="projekt-phase-subnav--items">
     <% projekt_phase_subnav_items.each do |item| %>
       <% if item[:disabled] %>
         <%= render Shared::AiFeatureTooltipComponent.new(feature_text: item[:text]) do %>
           <span
-            class="projekt-phase-subnav-item <%= 'js-studio-hide-on-preview' if item[:hide_on_preview] %>"
+            class="projekt-phase-subnav-item -disabled <%= "js-studio-hide-on-preview" if item[:hidden_from_public] %>"
             tabindex="-1"
           >
+            <i class="fas <%= item[:icon] %>" aria-hidden="true"></i>
             <%= item[:text] %>
           </span>
         <% end %>
       <% else %>
-        <%= link_to item[:text], item[:url], class: "js-projekt-footer-subnav-item projekt-phase-subnav-item #{"is-active" if item[:active]} #{'js-studio-hide-on-preview' if item[:hide_on_preview]}", remote: true, onclick: '$(".spinner-placeholder").addClass("show-loader")', data: { section: item[:section] } %>
+        <% tab_markup = capture do %>
+          <custom-tab
+            for="<%= item[:section] %>"
+            class="projekt-phase-subnav-item <%= "-active" if item[:active] %> <%= "-hidden-from-public js-studio-hide-on-preview" if item[:hidden_from_public] %>"
+            data-url="<%= item[:url] %>"
+            <% if item[:visibility_group] %>data-visibility-group="<%= item[:visibility_group] %>"<% end %>
+          >
+            <%= subnav_item_leading_icon(item) %>
+            <%= item[:text] %>
+          </custom-tab>
+        <% end %>
+        <%= hidden_from_public_tooltip(tab_tooltip_hidden_state(item), tab_markup) %>
       <% end %>
     <% end %>
   </div>
-</div>
+</custom-tabs>

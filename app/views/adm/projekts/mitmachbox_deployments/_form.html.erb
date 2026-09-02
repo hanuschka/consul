@@ -1,0 +1,42 @@
+<%= form_with scope: :deployment, url: url, method: local_assigns.fetch(:method, :post) do |f| %>
+  <% if local_assigns.fetch(:show_assignment_select, false) %>
+    <div class="mb-4">
+      <%= kern_alert(title: t("adm.projekts.mitmachbox.deployments.replace_warning"), style: :warning) %>
+    </div>
+
+    <% assignment_text = ->(assignment) do
+         window_start = assignment["starts_at"].present? ? l(Time.zone.parse(assignment["starts_at"]), format: :short) : "–"
+         window_end = assignment["ends_at"].present? ? l(Time.zone.parse(assignment["ends_at"]), format: :short) : t("adm.projekts.phases.mitmachbox_deployments.open_ended")
+         "#{assignment.dig("device", "serial")} (#{window_start} – #{window_end})"
+       end %>
+    <% fixed_assignment = (@assignments || []).find do |assignment|
+         @deployment["assignment_id"].present? && assignment["id"].to_s == @deployment["assignment_id"].to_s
+       end %>
+
+    <% if fixed_assignment %>
+      <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.deployments.assignment_label")) do %>
+        <span class="kern-body"><%= assignment_text.call(fixed_assignment) %></span>
+        <%= f.hidden_field :assignment_id, value: @deployment["assignment_id"] %>
+      <% end %>
+    <% else %>
+      <% assignment_choices = (@assignments || []).map do |assignment|
+           [assignment_text.call(assignment), assignment["id"]]
+         end %>
+
+      <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.deployments.assignment_label"),
+                                              hint: t("adm.projekts.mitmachbox.deployments.assignment_hint")) do %>
+        <%= f.select :assignment_id,
+              options_for_select(assignment_choices, @deployment["assignment_id"]),
+              {},
+              { label: false } %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.deployments.location_label"),
+                                          hint: t("adm.projekts.mitmachbox.deployments.location_hint")) do %>
+    <%= f.text_field :location, label: false, value: @deployment["location"] %>
+  <% end %>
+
+  <%= form_submit_button(text: t("adm.projekts.mitmachbox.deployments.save_button")) %>
+<% end %>

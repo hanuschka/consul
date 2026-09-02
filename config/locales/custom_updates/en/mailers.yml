@@ -106,6 +106,10 @@ en:
       share_link_text: "Here you can learn more about the topic and the topic selection – and sign my proposal:"
       share_closing: "Best regards"
       share_signature: "Your Name"
+    proposal_official_answer:
+      subject: "There is an official answer to your proposal"
+      hi: "Hello %{username},"
+      text1: "An official answer from the administration is available for your proposal %{proposal_link}:"
     new_valuator_assignment:
       subject: New valuation assignment
       hi: "Hello %{username},"

@@ -1,4 +1,4 @@
-get "/evaluations/:token", to: "public/evaluations#show", as: :public_evaluation
+delete "account/disconnect_identity", to: "account#disconnect_identity", as: :disconnect_identity_account
 
 get "/map_data", to: "map_data#show", as: :map_data
 
@@ -103,6 +103,12 @@ resources :masterportal_pins, only: [] do
   end
 end
 
+resources :polls, only: [] do
+  member do
+    get :ai_analysis
+  end
+end
+
 get "/:landing_page_slug/projekts", to: "projekts#index", as: :landing_page_projekts
 get "/:landing_page_slug/events", to: "projekt_events#index", as: :landing_page_events
 get "/:landing_page_slug/proposals", to: "proposals#index", as: :landing_page_proposals
@@ -122,8 +128,6 @@ post "/voice_assistant/create_session",               to: "voice_assistant#creat
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
-get  "/voice_assistant_designs", to: "voice_assistant_designs#index", as: :voice_assistant_designs
-
 resources :projekt_content_block_templates, only: [:index] do
   collection do
     get :metadata
@@ -134,9 +138,3 @@ get "projekts_map_embed", to: "projekt_map_embeds#index", as: :projekts_map_embe
 get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projekt_map_embed
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
-
-namespace :api do
-  namespace :masterportal do
-    resources :category_icons, only: [:create]
-  end
-end

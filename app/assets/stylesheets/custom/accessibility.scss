@@ -51,7 +51,7 @@ form.button_to {
 
 
 // Add outline to labels
-.focusable:focus {
+.focusable:focus-visible {
   outline: $outline-focus;
 }
 
@@ -107,16 +107,16 @@ button,
 [type="button"],
 [type="submit"] {
   &:focus {
-    outline: $outline-focus;
+    outline: none !important;
+    text-decoration: none !important;
+  }
+
+  &:active {
+    outline: none;
   }
 
   &:focus-visible {
-    outline: $outline-focus;
-  }
-
-  &:active,
-  &:focus:active {
-    outline: $outline-focus;
+    outline: $outline-focus !important;
   }
 }
 
@@ -220,7 +220,10 @@ input[type="date"]:focus-visible {
 // ring is drawn inside the title and not clipped by the accordion item
 // borders / the surrounding ul overflow:hidden.
 
-.accordion-title:focus,
+.accordion-title:focus {
+  outline: none;
+}
+
 .accordion-title:focus-visible {
   outline: $outline-focus !important;
   outline-offset: -3px !important;
@@ -251,7 +254,7 @@ input[role="switch"]:focus-visible {
 
 // Override remaining yellow focus indicators from non-custom stylesheets
 
-.sdg-help-content > .tabs li:focus {
+.sdg-help-content > .tabs li:focus-visible {
   outline: $outline-focus;
 }
 

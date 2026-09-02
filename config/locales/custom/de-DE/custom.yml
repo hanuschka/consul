@@ -1,4 +1,9 @@
 de:
+  deficiency_reports:
+    official_answer_documents:
+      too_many: "Es können höchstens %{count} Dokumente an die offizielle Antwort angehängt werden."
+      too_large: "Angehängte Dokumente dürfen höchstens %{size} MB groß sein."
+      wrong_type: "Nur folgende Dateitypen sind erlaubt: %{types}."
   activerecord:
     errors:
       models:
@@ -36,8 +41,7 @@ de:
         success: Inhaltsblock aktualisiert
       import:
         success: Dokument wurde erfolgreich importiert
-        categories: Kategorien
-        sdg_goals: SDG-Ziele
+      ai_generate_with_file:
         no_file: Keine Datei hochgeladen
         user_prompt_placeholder: |
           „Formuliere die Sektion XY verständlicher für die Öffentlichkeit."
@@ -45,9 +49,9 @@ de:
           „Kürze die Einleitung und mache den Einstieg verständlicher."
           „Fasse lange Abschnitte in Stichpunkten zusammen."
           „Ordne die Inhalte logisch neu, falls die Reihenfolge im Dokument unklar ist."
-      generate_from_prompt:
-        success: Inhalte wurden erfolgreich generiert
+      ai_generate_with_prompt:
         no_prompt: Bitte geben Sie einen Prompt ein
+        generation_failed: KI konnte keine Struktur erstellen
       ai_create:
         modal_title: Inhaltsblock mit KI erstellen
         description: "Beschreiben Sie kurz, welchen Inhaltsblock Sie benötigen. Die KI nutzt vorhandene Vorlagen als Inspiration und kann optional den vollständigen Projektkontext einbeziehen, um einen neuen Block zu erstellen."
@@ -361,6 +365,21 @@ de:
           more_info: Mehr Infos
           save_open_answer: Texteingabe speichern
           update_open_answer: Texteingabe editieren
+        map_points:
+          hint: Klicken Sie in die Karte, um einen Pin zu setzen. Klicken Sie auf einen gesetzten Pin, um ihn wieder zu entfernen.
+          remaining:
+            zero: Sie haben alle Pins gesetzt.
+            one: Sie können noch einen Pin setzen.
+            other: Sie können noch %{count} Pins setzen.
+          placed: Pin gesetzt.
+          removed: Pin entfernt.
+          remove_hint: Pin entfernen
+          csv_pin_count:
+            one: 1 Pin gesetzt
+            other: "%{count} Pins gesetzt"
+          limit_reached: Sie haben die maximale Anzahl an Pins gesetzt. Entfernen Sie einen Pin, um einen anderen zu setzen.
+          outside_boundary: Dieser Punkt liegt außerhalb des zugelassenen Gebiets.
+          error: Der Pin konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.
       results:
         open_answers: Offene Antworten
     debates:

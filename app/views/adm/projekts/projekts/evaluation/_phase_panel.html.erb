@@ -38,6 +38,7 @@
           href="<%= regenerate_url %>"
           class="kern-btn kern-btn--primary"
           data-action="click->adm--phase-regenerate#start"
+          data-turbo-prefetch="false"
         >
           <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">auto_awesome</span>
           <i class="kern-label fas fa-magic projekt-evaluation-icon-fa" aria-hidden="true"></i>
@@ -53,6 +54,7 @@
           accent_light_color: accent_light_color,
           accent_shades: accent_shades,
           selection: local_assigns.fetch(:selection, nil),
+          tabbed: local_assigns.fetch(:tabbed, false),
           exportable: true
         } %>
     <% end %>

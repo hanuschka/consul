@@ -1,6 +1,7 @@
 en:
   adm:
     not_authorized: You are not authorized to perform this action.
+    not_authorized_edit: You are not authorized to edit this content.
     title: Administration
     sidebar:
       toggle: Toggle sidebar
@@ -50,6 +51,7 @@ en:
         api_subitems:
           api_clients: API clients
           api_request_logs: API request logs
+          api_changelog: API changelog
         developer: Developer area
         developer_subitems:
           connection: DT connection

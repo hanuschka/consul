@@ -34,7 +34,8 @@
         <% if voted? %>
           <%= button_to unvote_proposal_url(proposal, offline_user_id: params[:offline_user_id]),
               class: "button button-support small expanded unvote",
-              title: t("proposals.proposal.support_title"), method: "post", remote: true do %>
+              title: t("proposals.proposal.support_title"), method: "post", remote: true,
+              params: refresh_params do %>
             <%= t("custom.proposals.proposal.unsupport") %>
           <% end %>
 
@@ -43,7 +44,8 @@
               class: "button button-support small expanded",
               title: t("proposals.proposal.support_title"),
               method: "post",
-              remote: true do %>
+              remote: true,
+              params: refresh_params do %>
             <%= support_button_text %>
           <% end %>
         <% end %>
@@ -56,6 +58,12 @@
     <%# supports_key = projekt_phase_feature?(proposal.projekt_phase, "resource.enable_up_and_down_voting") ? "custom.proposals.proposal.votes_cast" : "custom.proposals.proposal.supports" %>
     <%#= t(supports_key, count: proposal.total_votes) %>&nbsp;
   </span>
+
+  <% if current_user && proposal.votable_by?(current_user) && proposal.conditional_vote_cast_by?(current_user) %>
+    <div class="callout warning">
+      <%= t("custom.shared.conditional_vote_note") %>
+    </div>
+  <% end %>
 
   <%= render Shared::ParticipationNotAllowedComponent.new(proposal, cannot_vote_text: cannot_vote_text) %>
 </div>

@@ -66,6 +66,7 @@ de:
       projekt_phase/projekt_notification_phase: Benachrichtigungen
       projekt_phase/legislation_phase: Textbearbeitung
       projekt_phase/newsfeed_phase: Newsfeed
+      projekt_phase/mitmachbox_phase: Mitmachbox
       projekt_phase/formular_phase: Formular
       projekt_phase/iframe_phase: Iframe
       projekt_phase/point_of_interest_phase: Orte von Interesse
@@ -190,6 +191,8 @@ de:
         author: Autor
         deficiency_report_category_id: Kategorie
         deficiency_report_status_id: Status
+        deficiency_report_intake_channel_id: Eingangskanal
+        deficiency_report_subcategory_id: Unterkategorie
         video_url: Externes Video URL
         official_answer: Offizielle Antwort
         on_behalf_of: Meldung im Namen von jemanden erstellen

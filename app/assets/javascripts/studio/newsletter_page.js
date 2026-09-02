@@ -18,8 +18,8 @@
       this.wrapContentBlocks(contentBlocksList);
       this.initModules();
 
-      App.ContentBlockEditor.DragDrop.initSortable();
-      App.ContentBlockEditor.Crud.rerenderContentBlockListControls();
+      App.Studio.ContentBlocks.DragDrop.initSortable();
+      App.Studio.ContentBlocks.Crud.rerenderContentBlockListControls();
     },
 
     getContentBlocksList() {
@@ -27,15 +27,16 @@
     },
 
     loadConfig(contentBlocksList) {
-      ProjektStudio.config.defaultMarginBottom = parseInt(contentBlocksList.dataset.defaultMarginBottom);
-      ProjektStudio.config.aiAvailable = contentBlocksList.dataset.aiAvailable === "true";
+      App.Studio.Projekt.config.defaultMarginBottom = parseInt(contentBlocksList.dataset.defaultMarginBottom);
+      App.Studio.Projekt.config.aiAvailable = contentBlocksList.dataset.aiAvailable === "true";
+      App.Studio.Projekt.config.generateUrl = contentBlocksList.dataset.generateUrl;
     },
 
     wrapContentBlocks(contentBlocksList) {
       const blocks = contentBlocksList.querySelectorAll(".js-newsletter-content-block");
 
       blocks.forEach((block) => {
-        const wrappedHTML = ProjektStudio.templateFunctions.addStudioControlsToContentBlock(
+        const wrappedHTML = App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock(
           block.innerHTML,
           {
             contentBlockId: block.dataset.contentBlockId,
@@ -47,7 +48,7 @@
           }
         );
 
-        const wrappedElement = ProjektStudio.utils.htmlToDomElement(wrappedHTML).firstChild;
+        const wrappedElement = App.Studio.utils.htmlToDomElement(wrappedHTML).firstChild;
 
         if (block.style.marginBottom) {
           wrappedElement.style.marginBottom = block.style.marginBottom;
@@ -63,10 +64,8 @@
       App.SharedModal.initialize();
       App.ImageCropper.initialize();
       App.DropdownSelectMenuComponent.initialize();
-      App.ContentBlockEditor.CreateWithAi.initialize();
-      App.ContentBlockEditor.DragDrop.initialize();
+      App.Studio.ContentBlocks.DragDrop.initialize();
       App.Studio.initContentBlockModules();
-      App.ContentBlockEditor.SavedContentBlocks.initialize();
 
       window.newsletterContentBlockEditorModulesInitialized = true;
     }

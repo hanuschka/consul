@@ -21,10 +21,20 @@
           <%= render ResourcePage::BannerComponent.new(resource: @proposal, heading_level: :h2) %>
         </div>
 
-        <%= render Shared::ResourcesListComponent.new(
-          resources: @polls,
-          resource_type: Poll,
-          title: "#{t("polls.index.title")} (#{@polls.size})") %>
+        <%= render Resources::List::BaseComponent.new(
+          title: "#{t("polls.index.title")} (#{@polls.size})",
+          empty_text: t("custom.polls.index.empty_list_text")
+        ) do |c| %>
+          <% c.with_toolbar %>
+
+          <% if @polls.present? %>
+            <% c.with_items do %>
+              <% @polls.each do |poll| %>
+                <%= render Polls::ListItemComponent.new(poll: poll) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
       </div>
 
       <aside class="sidebar">

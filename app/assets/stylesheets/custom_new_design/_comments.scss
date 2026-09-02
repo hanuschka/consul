@@ -3,6 +3,12 @@
     padding-bottom: 20px;
     background: transparent !important;
 
+    .resources-list--filter {
+      position: static;
+      height: auto;
+      margin-left: 12px;
+    }
+
     .comment-form, .comment {
       background: white;
       border-radius: 10px;

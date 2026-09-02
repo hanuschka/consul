@@ -148,6 +148,10 @@ de:
         one: Import von Datensatz aus dem Melderegister
         other: Import von Datensätzen aus dem Melderegister
     attributes:
+      deficiency_report:
+        admin_accepted: "Sichtbarkeit"
+        admin_accepted_true: "Veröffentlicht"
+        admin_accepted_false: "Nicht veröffentlicht"
       budget:
         name: "Name"
         description_accepting: "Beschreibung während der Vorschlagsphase"
@@ -549,6 +553,12 @@ de:
         service_api_token: Service-API-Token
     errors:
       models:
+        projekt:
+          attributes:
+            parent_id:
+              cannot_be_self: "Ein Projekt kann nicht sich selbst übergeordnet sein"
+              cannot_have_children: "Ein Projekt mit untergeordneten Projekten kann keinem übergeordneten Projekt zugeordnet werden"
+              must_be_top_level: "Als übergeordnetes Projekt kann nur ein Projekt der obersten Ebene ausgewählt werden"
         user:
           attributes:
             email:

@@ -3,8 +3,9 @@ class MasterportalImportJob < ApplicationJob
 
   def perform(
     projekt_phase_id:,
-    endpoint_url:,
-    collection_ids:,
+    endpoint_url: nil,
+    collection_ids: [],
+    uploaded_collection_ids: [],
     create_domain_records:,
     triggered_by_user_id: nil
   )
@@ -15,6 +16,7 @@ class MasterportalImportJob < ApplicationJob
       projekt_phase: projekt_phase,
       endpoint_url: endpoint_url,
       collection_ids: collection_ids,
+      uploaded_collection_ids: uploaded_collection_ids,
       create_domain_records: create_domain_records,
       triggered_by_user: triggered_by
     )

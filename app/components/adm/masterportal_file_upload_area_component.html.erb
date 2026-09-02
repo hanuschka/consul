@@ -1,0 +1,43 @@
+<div class="masterportal-file-upload">
+  <div class="masterportal-file-upload--label">
+    <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+    <%= t(".label") %>
+  </div>
+
+  <div class="masterportal-file-upload--box">
+    <div class="masterportal-file-upload--hint-row">
+      <span class="material-symbols-outlined masterportal-file-upload--hint-icon" aria-hidden="true">
+        cloud_upload
+      </span>
+      <p class="masterportal-file-upload--hint"><%= t(".explanation", size: max_file_size_mb) %></p>
+    </div>
+
+    <div class="masterportal-file-upload--prompt">
+      <button
+        type="button"
+        class="masterportal-file-upload--attach-button"
+        data-action="click->adm--masterportal-import-panel#openFileDialog"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+        <span><%= t(".attach_button") %></span>
+      </button>
+    </div>
+
+    <ul
+      class="masterportal-file-upload--rows"
+      data-adm--masterportal-import-panel-target="fileRows"
+      hidden
+    ></ul>
+  </div>
+
+  <input
+    type="file"
+    class="masterportal-file-upload--input"
+    multiple
+    accept="<%= accept_attribute %>"
+    hidden
+    data-adm--masterportal-import-panel-target="fileInput"
+    data-config="<%= js_config.to_json %>"
+    data-action="change->adm--masterportal-import-panel#addFiles"
+  >
+</div>

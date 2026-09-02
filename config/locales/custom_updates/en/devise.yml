@@ -34,3 +34,4 @@ en:
             success: You have successfully signed out as Guest
           create:
             existing_user_with_same_stamp: Please use the email address you originally registered with to log in to your account.
+            email_taken_by_unconfirmed_account: An account with this email address already exists but has not been confirmed yet. We have sent you the confirmation email again. Please check your inbox.

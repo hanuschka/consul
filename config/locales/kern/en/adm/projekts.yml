@@ -20,8 +20,17 @@ en:
           home: Home
           projekts: Projects
           managers: Team
+          inspiration: Project inspirations
+          instance_import: Copy external projekt
           landing_pages: Topic pages
           settings: Configuration
+      inspiration:
+        show:
+          title: Project inspirations
+          not_configured: DemokratieToday is not configured
+          not_configured_hint: >-
+            No DemokratieToday address is set. Please configure the connection to
+            embed the project overview here.
       settings:
         tabs:
           dashboard: Dashboard settings
@@ -71,6 +80,44 @@ en:
           create_projekt: Create project
         create:
           success: The project was created successfully.
+        copy:
+          action: Copy project
+          copy_name: Copy of %{name}
+          confirm: >
+            Copy this project? All phases, settings, content and admin-created
+            resources are copied — participant contributions, votes and subscriptions
+            are not. The copy is created deactivated.
+          started: The copy of "%{name}" is being created. This may take a moment.
+          finished: The copy "%{name}" was created.
+          failed_notice: The copy "%{name}" could not be created.
+          tooltip:
+            title: Copy project
+            text: >
+              Creates a deactivated copy of this project with all phases, settings,
+              content, maps and admin-created resources.
+            note_label: 'Not copied:'
+            note: Participant contributions, votes, comments and subscriptions.
+          status_processing: Copying …
+          status_failed: Copy failed
+        instance_import:
+          action: Import project
+          pending_name: Imported project (in progress)
+          url_label: Reuse a project from another platform
+          url_hint: >
+            Paste the address of a project you found under Project
+            inspirations. Its phases, settings, content and maps are copied into
+            a new deactivated draft on this platform. Images, videos and
+            participant contributions are not copied — pictures arrive as
+            placeholders you can replace.
+          browse_inspiration: Browse project inspirations
+          url_field_label: Project address
+          url_placeholder: e.g. https://app.demokratie.today/beteiligung-innenstadt
+          invalid_url: Please paste a complete project address, including https://.
+          started: The project is being imported. This may take a moment.
+          finished: The imported project "%{name}" was created.
+          failed_notice: >
+            The project could not be imported. Please check the address and make
+            sure the project is published on app.demokratie.today.
         projekt:
           top_level_projekt: Top-level project
           frontend_page: Project page
@@ -104,6 +151,9 @@ en:
           duration_description: Defines the period during which the project is visible and accessible on the platform — regardless of whether an active participation phase is running. The start and end date determine when the project appears in the public projects overview and can be accessed by users.
           landing_pages_label: Assignment to topic pages
           landing_pages_description: Optionally assigns the project to one or more topic pages. Topic pages bundle thematically related projects on their own entry page — e.g. for youth participation or urban development. A project can be assigned to multiple topic pages at once.
+          parent_projekt_label: Parent project
+          parent_projekt_description: Optionally assigns the project to a parent project. In the frontend the project then appears as a subpage below the assigned project, including navigation and breadcrumb display. Select a parent project to group sub-projects thematically under an overarching project.
+          no_parent_projekt: No parent project
           geo_restriction_label: Area assignment
           geo_restriction_description: Assigns the project to a geographic area. This assignment is shown on the projects overview page as a filter option, letting users search specifically for projects in particular neighborhoods or the whole city. The assignment does not affect the project's visibility.
           geo_restriction:

@@ -36,7 +36,7 @@
                 <span class="material-symbols-outlined">drag_indicator</span>
               </td>
               <td scope="row" class="kern-table__header"><%= age_range.name %></td>
-              <td class="kern-table__cell"><%= "#{age_range.min_age} - #{age_range.max_age}" %></td>
+              <td class="kern-table__cell"><%= age_range.range_label %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
                   <% actions.with_action(label: t('.table.edit'), url: edit_adm_age_range_path(age_range), icon: "edit", style: :edit) %>

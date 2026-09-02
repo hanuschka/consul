@@ -1,44 +1,23 @@
+// Evaluation-specific styling for the <custom-tabs> element used on the phase
+// evaluation page. The generic tab chrome lives with the element in
+// elements/custom_tabs.scss; here we (1) map the element's --custom-tabs-*
+// theming hooks onto kern tokens and (2) lay out the evaluation tab's stacked
+// label + "generated at" date, which the generic tab does not assume.
+
 .adm-evaluation-view-tabs {
-  display: flex;
-  gap: 0.5rem;
+  --custom-tabs-border: var(--kern-grey-350);
+  --custom-tabs-text: var(--kern-color-layout-text-subtle);
+  --custom-tabs-text-strong: var(--kern-color-layout-text-default);
+  --custom-tabs-accent: var(--kern-color-action-default);
   margin-bottom: 1rem;
-  border-bottom: 1px solid var(--kern-grey-350);
 }
 
 .adm-evaluation-view-tabs--tab {
-  display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.3rem;
   padding: 0.65rem 1.55rem;
-  margin-bottom: -1px;
   line-height: 1.2;
-  color: var(--kern-color-layout-text-subtle);
-  background: transparent;
-  border: 0;
-  border-bottom: 3px solid transparent;
-  cursor: pointer;
-  transition: color 150ms ease-out, border-color 150ms ease-out;
-
-  &:hover {
-    color: var(--kern-color-layout-text-default);
-    border-bottom-color: var(--kern-grey-350);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--kern-color-action-default);
-    outline-offset: 2px;
-  }
-}
-
-.adm-evaluation-view-tabs--tab.-active {
-  color: var(--kern-color-action-default);
-  border-bottom-color: var(--kern-color-action-default);
-
-  &:hover {
-    color: var(--kern-color-action-default);
-    border-bottom-color: var(--kern-color-action-default);
-  }
 }
 
 .adm-evaluation-view-tabs--tab-label {
@@ -51,6 +30,14 @@
 
 .adm-evaluation-view-tabs--tab.-active .adm-evaluation-view-tabs--tab-label {
   font-weight: 600;
+}
+
+.adm-evaluation-view-tabs--tab.-disabled {
+  cursor: not-allowed;
+}
+
+.adm-evaluation-view-tabs--tab.-disabled .adm-evaluation-view-tabs--tab-label {
+  color: var(--kern-color-layout-text-subtle);
 }
 
 .adm-evaluation-view-tabs--icon {
@@ -67,10 +54,33 @@
   color: var(--kern-color-layout-text-subtle);
 }
 
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-material,
+.adm-evaluation-view-tabs--date.-live .projekt-evaluation-icon-fa {
+  color: var(--kern-color-action-default);
+}
+
+
 .adm-evaluation-view-tabs__actions {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+}
+
+.adm-evaluation-view-tabs__actions-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.adm-evaluation-view-tabs__auto-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--kern-color-layout-text-subtle);
 }

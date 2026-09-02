@@ -1,9 +1,0 @@
-<div class="ai-question-item ai-question-item--pending"
-     data-question-id="<%= pending_question_item.id %>"
-     data-status-url="<%= stat_question_status_projekt_phase_path(projekt_phase, question_id: pending_question_item.id) %>">
-  <%= render Shared::SpinnerComponent.new(size: :medium) %>
-  <p class="ai-question-item--text"><%= truncate(pending_question_item.question, length: 150) %></p>
-  <p class="ai-question-item--status">
-    <%= t("custom.participation_stats.ai_question.processing_message") %>
-  </p>
-</div>

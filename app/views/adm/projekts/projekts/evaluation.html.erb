@@ -1,7 +1,7 @@
 <%= content_for :title, [(@projekt.page&.title || @projekt.name), t(".title")].join(" | ") %>
 
 <%= render Adm::HeaderComponent.new(
-  title: (@projekt.page&.title || @projekt.name),
+  title: t("adm.projekts.projekts.evaluation.overview.title"),
   breadcrumbs: @breadcrumbs,
   frontend_url: projekt_path(@projekt),
   compact: true
@@ -26,9 +26,6 @@
 
   <% elsif @evaluation.processing? %>
     <div class="adm-empty-state">
-      <h3><%= t(".not_generated_title") %></h3>
-      <p><%= t(".not_generated_description") %></p>
-
       <%= render Adm::AiActionButtonComponent.new(
         url: generate_evaluation_adm_projekts_projekt_path(@projekt),
         text: t(".generate_button"),
@@ -38,6 +35,8 @@
         status_url: evaluation_status_adm_projekts_projekt_path(@projekt),
         loading: true
       ) %>
+
+      <p class="adm-evaluation-processing-note"><%= t(".processing_description") %></p>
     </div>
 
   <% elsif @evaluation.failed? %>
@@ -56,35 +55,11 @@
     </div>
 
   <% elsif @evaluation.completed? %>
-    <div class="d-flex justify-content-end align-items-center mb-4">
-      <div class="d-flex gap-2">
-        <%= kern_link_button(
-          evaluation_visibility_adm_projekts_projekt_path(@projekt),
-          text: t(".configure_visibility_button"),
-          icon: "visibility",
-          style: :secondary
-        ) %>
-        <%= render Adm::ButtonWithProgressComponent.new(
-          label: t(".download_pdf"),
-          loading_label: t("adm.projekts.projekts.evaluation_pdf_options.downloading"),
-          success_label: t("adm.projekts.projekts.evaluation_pdf_options.ready"),
-          icon: "picture_as_pdf",
-          success_icon: "check_circle",
-          style: :primary,
-          url: evaluation_pdf_options_adm_projekts_projekt_path(@projekt)
-        ) %>
-        <%= render Adm::AiActionButtonComponent.new(
-          url: generate_evaluation_adm_projekts_projekt_path(@projekt),
-          text: t(".regenerate_button"),
-          icon: "auto_awesome",
-          style: :secondary,
-          processing_text: t(".processing_title"),
-          confirm: t(".regenerate_confirm")
-        ) %>
-      </div>
-    </div>
+    <div class="adm-projekt-evaluation-report adm-evaluation-overview">
+      <%= render "adm/projekts/projekts/evaluation/overview_header",
+        evaluation: @evaluation,
+        projekt: @projekt %>
 
-    <div class="adm-projekt-evaluation-report">
       <%= render "adm/projekts/projekts/evaluation/phase_cards",
         evaluation: @evaluation,
         projekt: @projekt %>

@@ -46,6 +46,8 @@ class Whatsapp::Contributions::CreateCommentService < ApplicationService
   end
 
   def call
+    return :duplicate if already_posted?
+
     refusal = self.class.refusal(proposal: @proposal, user: @user, body: @body)
 
     return refusal if refusal.present?
@@ -56,4 +58,26 @@ class Whatsapp::Contributions::CreateCommentService < ApplicationService
 
     comment
   end
+
+  private
+
+    # Asked before the refusals rather than after them, because it answers a
+    # different question: a turn that saved the comment and then failed before
+    # answering is retried with the same words, and the retry must be told the
+    # comment is on the page. Behind the refusals it was not — a phase that closed
+    # between the save and the retry answered "nothing was posted" about a comment
+    # the citizen can see, and left the words stashed to be offered again.
+    #
+    # Hidden ones count: a comment moderation took down is still one they posted.
+    # Unbounded in time on purpose — the snapshot the retry replays is cleared only
+    # by the next turn that succeeds, so it can be tapped a day later, and an hour's
+    # window would miss exactly the case this exists for. The cost is that a citizen
+    # who wants to write the identical sentence on the same proposal a second time
+    # is told it is already there; CONFIRMATION_WORDS already refuses the one-word
+    # bodies where that is plausible.
+    def already_posted?
+      return false if @proposal.blank? || @user.blank? || @body.blank?
+
+      ::Comment.with_hidden.where(commentable: @proposal, user_id: @user.id, body: @body).exists?
+    end
 end

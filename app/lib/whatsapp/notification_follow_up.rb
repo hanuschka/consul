@@ -28,13 +28,9 @@ module Whatsapp::NotificationFollowUp
 
     return if projekt.blank?
 
-    send_offer(
-      account: account,
-      body: copy(account, "notifications.follow_up.#{kind}"),
-      pills: deadline_pills(
-        account, kind: kind, projekt_phase: projekt_phase, projekt: projekt
-      )
-    )
+    send_offer(account: account, body: copy(account, "notifications.follow_up.#{kind}")) do
+      deadline_pills(account, kind: kind, projekt_phase: projekt_phase, projekt: projekt)
+    end
   end
 
   # The push about the citizen's own proposal. Their own contributions is the
@@ -45,26 +41,35 @@ module Whatsapp::NotificationFollowUp
 
     return if projekt.blank?
 
-    send_offer(
-      account: account,
-      body: copy(account, "notifications.follow_up.status_change"),
-      pills: [
+    send_offer(account: account, body: copy(account, "notifications.follow_up.status_change")) do
+      [
         pill(account, :my_contributions, label: "my_contributions"),
-        pill(account, :view_projekt, param: projekt.id, label: "view_projekt")
-      ]
-    )
+        view_projekt_pill(account, projekt)
+      ].compact
+    end
   end
 
   def deadline_pills(account, kind:, projekt_phase:, projekt:)
-    return [
-      pill(account, :view_projekt, param: projekt.id, label: "view_projekt"),
-      pill(account, :my_contributions, label: "my_contributions")
-    ] if kind.to_s == "deadline_passed"
+    if kind.to_s == "deadline_passed"
+      return [
+        view_projekt_pill(account, projekt),
+        pill(account, :my_contributions, label: "my_contributions")
+      ].compact
+    end
 
     [
       pill(account, :idea_start, param: projekt_phase.id, label: "take_part"),
-      pill(account, :view_projekt, param: projekt.id, label: "view_projekt")
-    ]
+      view_projekt_pill(account, projekt)
+    ].compact
+  end
+
+  # Nil where the projekt has nothing to tell beyond its card, for the same reason
+  # the card itself leaves the pill out: the tap would deliver what the citizen has
+  # already read, and the pills that do something move up into its slot.
+  def view_projekt_pill(account, projekt)
+    return if !::Whatsapp::ProjektCard.tells_more?(projekt)
+
+    pill(account, :view_projekt, param: projekt.id, label: "view_projekt")
   end
 
   def pill(account, action, label:, param: nil)
@@ -97,9 +102,14 @@ module Whatsapp::NotificationFollowUp
   # account in a fan-out where most accounts are *outside* the window — that being
   # the whole reason the notification itself is a template. Left to Send, every
   # daily run would pay for a translation per recipient and throw it away.
-  def send_offer(account:, body:, pills:)
+  #
+  # The pills arrive as a block for the same reason: deciding whether a projekt has
+  # more to tell reads its page and its phases, and that too would otherwise run once
+  # per recipient outside the window.
+  def send_offer(account:, body:)
     return if !::Whatsapp::ServiceWindow.open?(account)
 
+    pills = yield
     lines = ::Whatsapp::AiAssistant::BotCopyService.call(
       account: account, lines: [body, *pills.map { |pill| pill[:title] }]
     )

@@ -46,7 +46,11 @@ class Whatsapp::ProjektByNameQuery < ApplicationQuery
   # Shared with .suggestions, so a name that nearly matches an unlisted projekt is
   # offered back rather than reported as matching nothing at all.
   def self.readable_candidates
-    Projekt.activated.with_published_custom_page.order("projekts.created_at DESC").includes(:page)
+    Projekt
+      .activated
+      .with_published_custom_page
+      .order("projekts.created_at DESC")
+      .includes(page: :translations)
   end
 
   # The titles that nearly matched, for a caller with nothing to report. The

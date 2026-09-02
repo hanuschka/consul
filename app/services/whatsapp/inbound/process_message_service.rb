@@ -63,6 +63,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     disclose_ai
 
     return if handle_cancel_tap
+    return if handle_retry_tap
 
     apply_start_over_tap
 
@@ -74,7 +75,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     inbound_note = tap_note || entry_note(entry) || reading.text.presence || media_note
 
-    answer(inbound_note)
+    answer(inbound_note, inbound_message_id: reading.message_id)
   end
 
   private
@@ -83,35 +84,61 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # citizen's own words, a note saying which button they tapped, or a note saying
     # which QR code they scanned. All three are the same thing to a model reading one
     # conversation: something happened, and a reply is owed.
-    def answer(inbound_text)
+    #
+    # The message id travels separately because a retry puts the failed inbound back
+    # under its own id, not under the tap that asked for it.
+    def answer(inbound_text, inbound_message_id:)
       return send_unavailable_line if !::Ai::Settings.ai_available?
 
       result = ::Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
         inbound_text: inbound_text,
-        inbound_message_id: reading.message_id,
+        inbound_message_id: inbound_message_id,
         previous_inbound_at: previous_inbound_at
       )
 
-      return if result.success?
+      return conversation.clear_retry_inbound! if result.success?
 
-      send_unavailable_line
+      # The tap is snapshotted beside the note describing it: the note says what was
+      # tapped in words, and the tools that refuse to answer a tap with the message
+      # it sat under read the tap itself.
+      conversation.store_retry_inbound!(
+        text: inbound_text,
+        message_id: inbound_message_id,
+        tap: conversation.inbound_tap
+      )
+
+      send_retryable_unavailable_line
     end
 
-    # The whole deterministic surface left, and it is one sentence with one button.
+    # The whole deterministic surface left, and it is one sentence with a way out.
     # It is reached for a provider that cannot be reached, a turn that timed out, a
     # blank reply, a tool loop that ran away, and a tenant with AI switched off —
     # which is a change in the deployment story rather than in this method: before,
     # nine services degraded to fixed copy and a keyless tenant had a working bot.
+    #
+    # Only the transient failures carry the retry pill, and only their sentence points
+    # at it. A tenant with AI switched off cannot be helped by asking again, and a
+    # button that never works is the dead end the pill exists to remove.
     def send_unavailable_line
+      send_unavailable_line_offering(
+        body: I18n.t("whatsapp.bot.assistant_unavailable"), actions: [:cancel]
+      )
+    end
+
+    def send_retryable_unavailable_line
+      send_unavailable_line_offering(
+        body: I18n.t("whatsapp.bot.assistant_unavailable_retryable"), actions: %i[retry cancel]
+      )
+    end
+
+    def send_unavailable_line_offering(body:, actions:)
       ::Whatsapp::AiAssistant::DecisionLog.record(
         event: :assistant_unavailable, conversation: conversation
       )
 
       ::Whatsapp::Send.recovery_without_assistant(
-        conversation: conversation,
-        body: I18n.t("whatsapp.bot.assistant_unavailable"),
-        actions: [:cancel]
+        conversation: conversation, body: body, actions: actions
       )
     end
 
@@ -212,6 +239,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
+      conversation.note_inbound_tap!(action: flow_action[:action], param: flow_action[:param])
 
       tapped_line(action: flow_action[:action], param: flow_action[:param])
     end
@@ -318,6 +346,45 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       send_cancelled_line
 
       true
+    end
+
+    # The retry pill under the "cannot answer" line. It repeats the turn that failed
+    # rather than describing the tap to the assistant: the snapshot is the inbound
+    # exactly as it was put to the model the first time, so whatever the citizen had
+    # entered is still what is being answered. Sitting above the assistant like the
+    # cancel gate, it answers with the same line again when the retry fails too —
+    # `answer` re-snapshots on failure, so the pill stays on.
+    #
+    # This id is not the one the link-outcome message offers, which has `link_retry`
+    # of its own. The two pills read the same to a citizen and mean different things
+    # — replay the turn, and follow the login link once more — so while they shared
+    # an id, tapping the link one with any snapshot left over answered it with
+    # whatever turn the assistant had last failed to write.
+    #
+    # Without a snapshot the tap falls through to the note path, where the assistant
+    # is the one that knows what "again" means.
+    def handle_retry_tap
+      return false if ::Whatsapp::Send.recovery_action_from(reading.tapped_reply_id) != :retry
+
+      snapshot = conversation.retry_inbound.to_h
+
+      return false if snapshot["text"].blank?
+
+      record_tap(:retry, nil)
+      restore_snapshotted_tap(snapshot["tap"])
+
+      answer(snapshot["text"], inbound_message_id: snapshot["message_id"])
+
+      true
+    end
+
+    # The retry is a tap on the retry pill, so nothing has noted the tap the failed
+    # turn was answering. Put back before the assistant is asked, because that is
+    # when the tools read it.
+    def restore_snapshotted_tap(tap)
+      return if tap.blank?
+
+      conversation.note_inbound_tap!(action: tap["action"], param: tap["param"])
     end
 
     def send_bot_line(body)

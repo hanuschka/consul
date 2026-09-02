@@ -133,6 +133,7 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
 
     def refusal_for(outcome)
       return gone_error if outcome == :gone
+      return already_posted_answer if outcome == :duplicate
       return closed_error if outcome == :closed
       return blank_error if outcome == :blank
       return confirmation_only_error if outcome == :confirmation_only
@@ -149,6 +150,19 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
 
       { error: "That proposal is not there any more, so there is nothing to comment on. Tell the " \
                "citizen so; nothing was posted." }
+    end
+
+    # The stash is cleared like after a post: the words are on the page already, and
+    # leaving them would have the next turn offer to post them once more.
+    def already_posted_answer
+      conversation.clear_pending_comment!
+
+      {
+        posted: false,
+        already: true,
+        hint: "This exact comment is already on the page under their name. Say so plainly " \
+              "rather than as a failure, and do not post it again."
+      }
     end
 
     def closed_error

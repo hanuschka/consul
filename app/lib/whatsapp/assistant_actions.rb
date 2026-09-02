@@ -54,6 +54,7 @@ module Whatsapp::AssistantActions
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
+    return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
     title = title_for(action: action, param: param, label: label, conversation: conversation)
 
@@ -64,15 +65,31 @@ module Whatsapp::AssistantActions
     { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
-  # The one parameter checked before the label rather than through it. Every other
-  # parameterised pill points at a record, and a label the model wrote is accepted
-  # without reading that record because the dispatcher resolves it again on the tap.
-  # `show_more`'s parameter is a scope name instead: nothing resolves it later, so an
-  # invented one is a pill that is tapped and does nothing.
+  # One of the two parameters checked before the label rather than through it —
+  # `view_projekt` below is the other, for a different reason. Most parameterised
+  # pills point at a record, and a label the model wrote is accepted without reading
+  # that record because the dispatcher resolves it again on the tap. `show_more`'s
+  # parameter is a scope name instead: nothing resolves it later, so an invented one
+  # is a pill that is tapped and does nothing.
   def known_scope?(action, param)
     return true if action != :show_more
 
     ::Whatsapp::FlowActions::MORE_SCOPES.include?(param.to_s)
+  end
+
+  # The other one, and the one pill that does read its record before the label: a
+  # "view projekt" on a projekt whose card already says everything would deliver
+  # that card again, so it is not offered — the same rule the card and the
+  # notification follow-ups apply. A projekt that does not exist has nothing to
+  # tell either.
+  def tells_more?(action, param)
+    return true if action != :view_projekt
+
+    projekt = ::Projekt.find_by(id: param.to_i)
+
+    return false if projekt.blank?
+
+    ::Whatsapp::ProjektCard.tells_more?(projekt)
   end
 
   # A recovery pill keeps its own id namespace — the inbound side reads those

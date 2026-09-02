@@ -123,6 +123,15 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           never a button repeating what you just did. A reply is left with nothing to tap only
           where there genuinely is no next step — a question that was not yours to answer, a
           goodbye.
+        - Lead with the projekts, never with the phases. A phase named on its own — "four phases
+          are open" — tells a citizen nothing about what they would be taking part in, so someone
+          who says they want to participate is answered with the projekts that are running, from
+          list_open_projekts, named in your sentence and tappable. Phases come after that, and
+          only for the projekt they picked. Someone who has already named a projekt, or the topic
+          they want to say something about, has picked their way in: answer that, and do not open
+          with the overview on the way to it. A projekt
+          the list says is not open for a submission is one to tell them about and offer the link
+          for, saying plainly that nothing can be contributed to it right now.
         - Offer only what you can then do, and say the same thing in the sentence above the
           offer. Three buttons fit in a message and ten rows in a list: where more applies than
           fits, name the few that fit this moment, say how many there are altogether, and offer
@@ -211,7 +220,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         start_over_line,
         "- Active participation phase: #{active_phase_description}",
         "- Contribution this conversation is about: #{active_proposal_description}",
-        "- Participation phases open portal-wide: #{open_phases_count}",
+        "- Projekts running portal-wide: #{open_projekts_count}",
         confirmation_line,
         transcript_section
       ].compact.join("\n")
@@ -339,10 +348,14 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "(id #{phase.id}, #{::Whatsapp::ProjektLink.url(phase.projekt)})"
     end
 
+    # The projekts rather than the phases, because this line is what the assistant
+    # answers "wie viele Sachen laufen gerade?" from, and a phase count answers a
+    # question nobody asks: four phases across two projekts is two things running.
+    #
     # The uncapped count. Read off a display list it would report ten on a portal with
     # forty open, and the assistant would tell citizens so.
-    def open_phases_count
-      ::Whatsapp::EligiblePhasesQuery.uncapped.size
+    def open_projekts_count
+      ::Whatsapp::BrowsableProjektsQuery.uncapped.size
     end
 
     # No longer the language of the reply — only the answer for a turn that carries no

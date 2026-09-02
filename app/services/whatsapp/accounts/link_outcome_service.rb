@@ -35,7 +35,7 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
       I18n.t(
         "whatsapp.bot.onboarding.#{key}", register_url: ::Whatsapp::PortalLinks.register_url
       ),
-      actions: %i[retry help]
+      actions: %i[link_retry help]
     )
   end
 

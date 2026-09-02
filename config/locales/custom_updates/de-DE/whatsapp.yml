@@ -86,6 +86,9 @@ de:
       assistant_unavailable: >-
         Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
         Versuchen Sie es in ein paar Minuten noch einmal.
+      assistant_unavailable_retryable: >-
+        Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
+        Tippen Sie auf „Nochmal versuchen“, dann mache ich genau dort weiter.
       cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       compliance:
@@ -150,6 +153,7 @@ de:
         number_taken: Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchten Sie wechseln?
       buttons:
         retry: Nochmal versuchen
+        link_retry: Nochmal versuchen
         cancel: Abbrechen
         help: Hilfe
         login: 🔗 Anmelden

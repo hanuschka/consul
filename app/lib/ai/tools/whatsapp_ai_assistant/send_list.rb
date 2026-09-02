@@ -13,6 +13,12 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   # WhatsApp truncates a row description past this without saying so.
   MAX_DESCRIPTION_LENGTH = 72
 
+  # The phase and projekt selections: their row is the name alone. A second line
+  # under a projekt's title says nothing that helps the citizen choose between
+  # two projekts, and it is repeated back in their own reply. Enforced here
+  # rather than asked for in the description, so the model cannot write one.
+  NAME_ONLY_ACTIONS = %i[view_projekt participate_projekt idea_start discover_category].freeze
+
   description "Sends the citizen a selectable list — up to nine rows, each with a label you write " \
               "and an optional one-line description. Use it instead of buttons whenever there " \
               "are more than three things to choose between, or when each option needs a line " \
@@ -78,11 +84,19 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
       return if button.blank?
 
+      return button if name_only?(button)
+
       description = row_value(row, "description").to_s.squish
 
       return button if description.blank?
 
       button.merge(description: description.truncate(MAX_DESCRIPTION_LENGTH))
+    end
+
+    def name_only?(button)
+      action = ::Whatsapp::FlowActions.parse(button[:id])&.dig(:action)
+
+      NAME_ONLY_ACTIONS.include?(action)
     end
 
     def row_value(row, key)

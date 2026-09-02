@@ -66,9 +66,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     turn = ask
     outcome = deliver(turn)
 
-    persist(turn)
-
+    # Written down only for a turn that answered. A blank reply is a failure the
+    # caller retries with the same words, and persisting it first would have the
+    # retry asking on top of the inbound and the empty answer it is replacing —
+    # which is why the rescue below returns without persisting either.
     return ServiceResult.failure(error: EMPTY_ANSWER_ERROR) if outcome == :empty
+
+    persist(turn)
 
     ServiceResult.success(outcome: outcome)
   rescue StandardError => e

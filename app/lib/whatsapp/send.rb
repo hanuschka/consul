@@ -5,8 +5,14 @@ module Whatsapp::Send
   # `help` replaced `menu` when the portal-wide list menu was archived: the
   # catalog's way out of a dead end is the help overview, and a button that
   # opened a menu which no longer exists would be the dead end itself.
+  # `retry` and `link_retry` are two different offers wearing one word. The first
+  # replays the turn the assistant could not answer, which the inbound chain does
+  # from a snapshot it holds; the second asks the citizen to follow their login
+  # link again, which no snapshot has anything to do with. One id for both had a
+  # tap on the link pill answered with whatever turn had last failed.
   RECOVERY_ACTION_IDS = {
     retry: "whatsapp_retry",
+    link_retry: "whatsapp_link_retry",
     cancel: "whatsapp_cancel",
     help: "whatsapp_help"
   }.freeze
@@ -36,8 +42,30 @@ module Whatsapp::Send
 
   def buttons(account:, body:, buttons:, header_image_url: nil)
     offered = with_main_menu(account: account, buttons: buttons)
+    message = deliver_buttons(
+      account: account, body: body, offered: offered, header_image_url: header_image_url
+    )
 
-    message = deliver_within_service_window(
+    remember_confirmations(account: account, entries: offered, message: message)
+  end
+
+  # The same send without the confirmation record, for the recovery lines. Their
+  # pills are locale copy from a fixed list and never irreversible, so there is
+  # nothing here to remember — but going through `buttons` would still overwrite
+  # what the previous message offered with an empty list, and the citizen's screen
+  # still shows that message. A "could not answer" line under a comment awaiting a
+  # yes would have thrown the yes away.
+  def recovery_buttons_message(account:, body:, buttons:)
+    deliver_buttons(
+      account: account,
+      body: body,
+      offered: with_main_menu(account: account, buttons: buttons),
+      header_image_url: nil
+    )
+  end
+
+  def deliver_buttons(account:, body:, offered:, header_image_url:)
+    deliver_within_service_window(
       account: account, kind: "interactive", body: body
     ) do |messages|
       messages.send_buttons(
@@ -47,8 +75,6 @@ module Whatsapp::Send
         header_image_url: header_image_url
       )
     end
-
-    remember_confirmations(account: account, entries: offered, message: message)
   end
 
   # For a picture that exists only on an unpublished record. Uploading it to
@@ -246,7 +272,7 @@ module Whatsapp::Send
       lines: [body, *pills.map { |pill| pill[:title] }]
     )
 
-    buttons(
+    recovery_buttons_message(
       account: conversation.whatsapp_account,
       body: lines.first,
       buttons: pills.zip(lines.drop(1)).map do |pill, title|
@@ -265,7 +291,7 @@ module Whatsapp::Send
   # It goes out in the portal's own language, which is the point of there being fixed
   # copy at all.
   def recovery_without_assistant(conversation:, body:, actions:)
-    buttons(
+    recovery_buttons_message(
       account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
     )
   end
@@ -460,5 +486,5 @@ module Whatsapp::Send
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
   private_class_method :with_main_menu, :with_main_menu_row, :with_main_menu_section
   private_class_method :trimmed_sections, :main_menu_pill, :main_menu_button?
-  private_class_method :remember_confirmations, :irreversible_ids, :delivered?
+  private_class_method :deliver_buttons, :remember_confirmations, :irreversible_ids, :delivered?
 end

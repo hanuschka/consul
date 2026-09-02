@@ -140,6 +140,7 @@ en:
         number_taken: This number is already linked to a different account. Would you like to switch?
       buttons:
         retry: Try again
+        link_retry: Try again
         cancel: Cancel
         help: Help
         login: 🔗 Log in

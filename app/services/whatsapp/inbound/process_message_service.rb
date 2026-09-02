@@ -97,13 +97,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         previous_inbound_at: previous_inbound_at
       )
 
-      # Cleared on both outcomes: a tap left behind by a failed turn would refuse a
-      # card the citizen asks for later in their own words.
-      conversation.clear_inbound_tap!
-
       return conversation.clear_retry_inbound! if result.success?
 
-      conversation.store_retry_inbound!(text: inbound_text, message_id: inbound_message_id)
+      # The tap is snapshotted beside the note describing it: the note says what was
+      # tapped in words, and the tools that refuse to answer a tap with the message
+      # it sat under read the tap itself.
+      conversation.store_retry_inbound!(
+        text: inbound_text,
+        message_id: inbound_message_id,
+        tap: conversation.inbound_tap
+      )
 
       send_retryable_unavailable_line
     end
@@ -236,7 +239,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
-      conversation.store_inbound_tap!(action: flow_action[:action], param: flow_action[:param])
+      conversation.note_inbound_tap!(action: flow_action[:action], param: flow_action[:param])
 
       tapped_line(action: flow_action[:action], param: flow_action[:param])
     end
@@ -352,8 +355,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # cancel gate, it answers with the same line again when the retry fails too —
     # `answer` re-snapshots on failure, so the pill stays on.
     #
-    # Without a snapshot the tap falls through to the note path: the link-outcome
-    # message offers the same pill with no inbound behind it, and there the assistant
+    # This id is not the one the link-outcome message offers, which has `link_retry`
+    # of its own. The two pills read the same to a citizen and mean different things
+    # — replay the turn, and follow the login link once more — so while they shared
+    # an id, tapping the link one with any snapshot left over answered it with
+    # whatever turn the assistant had last failed to write.
+    #
+    # Without a snapshot the tap falls through to the note path, where the assistant
     # is the one that knows what "again" means.
     def handle_retry_tap
       return false if ::Whatsapp::Send.recovery_action_from(reading.tapped_reply_id) != :retry
@@ -363,10 +371,20 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if snapshot["text"].blank?
 
       record_tap(:retry, nil)
+      restore_snapshotted_tap(snapshot["tap"])
 
       answer(snapshot["text"], inbound_message_id: snapshot["message_id"])
 
       true
+    end
+
+    # The retry is a tap on the retry pill, so nothing has noted the tap the failed
+    # turn was answering. Put back before the assistant is asked, because that is
+    # when the tools read it.
+    def restore_snapshotted_tap(tap)
+      return if tap.blank?
+
+      conversation.note_inbound_tap!(action: tap["action"], param: tap["param"])
     end
 
     def send_bot_line(body)

@@ -38,10 +38,14 @@ module Whatsapp::ProjektCard
   # under: a description longer than the card's summary can hold, or phases to
   # report on. A thin projekt with no phases is fully told by the card itself, so
   # the pill is not offered and the remaining ones move up.
+  # The phase query first: it is one indexed existence check, where the description
+  # side loads every content block and sanitizes the lot. The two are independent,
+  # so asking the cheap one first is free and skips the render for every projekt
+  # that has a phase to report on.
   def tells_more?(projekt)
-    return true if long_description?(projekt)
+    return true if ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt).exists?
 
-    ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt).exists?
+    long_description?(projekt)
   end
 
   def long_description?(projekt)

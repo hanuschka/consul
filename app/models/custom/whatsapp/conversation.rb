@@ -509,12 +509,19 @@ class Whatsapp::Conversation < ApplicationRecord
   # Inbound::ProcessMessageService when a turn fails, read by its retry gate, and
   # cleared by the next turn that succeeds; a cancel wipes it with the rest of the
   # context. One snapshot only: a retry that fails again overwrites it with itself.
+  #
+  # The tap travels with the text because the note alone does not carry it: the
+  # tools that must not answer a tap with the message it sat under read
+  # #inbound_tap, and a retry that replayed the words without it would send the
+  # card the tap was asking to move past.
   def retry_inbound
     context["retry_inbound"]
   end
 
-  def store_retry_inbound!(text:, message_id:)
-    merge_context!(retry_inbound: { "text" => text, "message_id" => message_id })
+  def store_retry_inbound!(text:, message_id:, tap: nil)
+    merge_context!(
+      retry_inbound: { "text" => text, "message_id" => message_id, "tap" => tap }.compact
+    )
   end
 
   # No UPDATE on the common path, for the same reason as remember_confirmations!:
@@ -525,25 +532,22 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(retry_inbound: nil)
   end
 
-  # The catalog pill the citizen tapped to start the current turn, kept only for
-  # that turn: written by Inbound::ProcessMessageService before the assistant is
-  # asked, read by the tools that must not answer a tap with the message it sat
-  # under, and cleared once the turn has been answered either way. Persisted
-  # rather than held in memory because the tools reach the conversation through
-  # the router, not through the object the inbound service holds.
+  # The catalog pill the citizen tapped to start the current turn, held in memory
+  # rather than written down — the same arrangement as the held confirmations and
+  # the start-over note above, and for the same reason: it is true for the reply
+  # being composed and meaningless by the next message. The router hands the tools
+  # the very object the inbound chain noted it on, so there is nothing for a
+  # context key to carry.
+  #
+  # Persisting it was a leak: a turn that ended before the clear — AI switched off,
+  # an exception out of the router — left the tap in the record, and every later
+  # turn read it as though the citizen had just tapped.
   def inbound_tap
-    context["inbound_tap"]
+    @inbound_tap
   end
 
-  def store_inbound_tap!(action:, param:)
-    merge_context!(inbound_tap: { "action" => action.to_s, "param" => param.to_s })
-  end
-
-  # No UPDATE on the common path: most turns are typed, not tapped.
-  def clear_inbound_tap!
-    return if context["inbound_tap"].blank?
-
-    merge_context!(inbound_tap: nil)
+  def note_inbound_tap!(action:, param:)
+    @inbound_tap = { "action" => action.to_s, "param" => param.to_s }
   end
 
   # The ruby_llm message history. Written and read only through

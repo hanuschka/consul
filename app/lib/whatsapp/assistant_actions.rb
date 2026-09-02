@@ -54,14 +54,9 @@ module Whatsapp::AssistantActions
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
+    return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
-    projekt = viewed_projekt(action, param)
-
-    return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, projekt)
-
-    title = title_for(
-      action: action, param: param, label: label, conversation: conversation, projekt: projekt
-    )
+    title = title_for(action: action, param: param, label: label, conversation: conversation)
 
     return dropped(spec, conversation, :unlabelled) if title.blank?
 
@@ -70,32 +65,28 @@ module Whatsapp::AssistantActions
     { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
-  # The one parameter checked before the label rather than through it. Every other
-  # parameterised pill points at a record, and a label the model wrote is accepted
-  # without reading that record because the dispatcher resolves it again on the tap.
-  # `show_more`'s parameter is a scope name instead: nothing resolves it later, so an
-  # invented one is a pill that is tapped and does nothing.
+  # One of the two parameters checked before the label rather than through it —
+  # `view_projekt` below is the other, for a different reason. Most parameterised
+  # pills point at a record, and a label the model wrote is accepted without reading
+  # that record because the dispatcher resolves it again on the tap. `show_more`'s
+  # parameter is a scope name instead: nothing resolves it later, so an invented one
+  # is a pill that is tapped and does nothing.
   def known_scope?(action, param)
     return true if action != :show_more
 
     ::Whatsapp::FlowActions::MORE_SCOPES.include?(param.to_s)
   end
 
-  # The other parameter read before the label: a "view projekt" pill on a projekt
-  # whose card already says everything would deliver that card again, so it is not
-  # offered — the same rule the card and the notification follow-ups apply. A
-  # projekt that does not exist has nothing to tell either.
-  #
-  # Resolved once here and handed down to the label, so the one pill that has to
-  # read its record before the label does not read it twice.
-  def viewed_projekt(action, param)
-    return if action != :view_projekt
-
-    ::Projekt.find_by(id: param.to_i)
-  end
-
-  def tells_more?(action, projekt)
+  # The other one, and the one pill that does read its record before the label: a
+  # "view projekt" on a projekt whose card already says everything would deliver
+  # that card again, so it is not offered — the same rule the card and the
+  # notification follow-ups apply. A projekt that does not exist has nothing to
+  # tell either.
+  def tells_more?(action, param)
     return true if action != :view_projekt
+
+    projekt = ::Projekt.find_by(id: param.to_i)
+
     return false if projekt.blank?
 
     ::Whatsapp::ProjektCard.tells_more?(projekt)
@@ -124,15 +115,13 @@ module Whatsapp::AssistantActions
   # Falls back to the record's own name for a parameterised pill the model left
   # unlabelled — a projekt's title as the portal writes it is better than a
   # paraphrase, and it is also what proves the record exists.
-  def title_for(action:, param:, label:, conversation:, projekt: nil)
+  def title_for(action:, param:, label:, conversation:)
     written = truncated(label)
 
     return written if written.present?
     return if !::Whatsapp::FlowActions.parameterised?(action)
 
-    truncated(
-      record_label(action: action, param: param, conversation: conversation, projekt: projekt)
-    )
+    truncated(record_label(action: action, param: param, conversation: conversation))
   end
 
   def truncated(label)
@@ -185,12 +174,11 @@ module Whatsapp::AssistantActions
   # nobody has heard of all come back blank, and a blank pill is not offered —
   # which is the same check that keeps a stale record id from being sent as a
   # button in the first place.
-  def record_label(action:, param:, conversation:, projekt: nil)
+  def record_label(action:, param:, conversation:)
     return if param.blank?
 
     case action
-    when :view_projekt then ::Whatsapp::ProjektLink.title(projekt)
-    when :participate_projekt then projekt_label(param)
+    when :view_projekt, :participate_projekt then projekt_label(param)
     when :idea_start then phase_projekt_label(param)
     when :support then proposal_label(param)
     when :category

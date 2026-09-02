@@ -64,6 +64,7 @@ class PollQuestionDetailsQuery < ApplicationQuery
 
       Poll::Answer
         .where(question_id: other_questions.map(&:id), author_id: voter_ids)
+        .where.not(answer: nil)
         .group(:question_id, :answer)
         .count
         .each_with_object({}) do |((question_id, answer), count), acc|

@@ -3,8 +3,8 @@ name: Öffentlichkeitsbeteiligung in der Stadt Regensburg
 url: 'https://gitlab.opencode.de/regensburg_next/mein.regensburg'
 landingURL: 'https://mein.regensburg.de'
 isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
-softwareVersion: '2026-08-12'
-releaseDate: '2026-08-12'
+softwareVersion: '2026-09-02'
+releaseDate: '2026-09-02'
 logo: logo.png
 platforms:
   - web

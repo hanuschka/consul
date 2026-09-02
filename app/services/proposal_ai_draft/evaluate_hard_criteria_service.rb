@@ -11,7 +11,7 @@ class ProposalAiDraft::EvaluateHardCriteriaService < ApplicationService
 
     response =
       Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
+        .chat_with_json_output(output_schema, feature: "proposal_ai_draft.hard_criteria")
         .with_instructions(build_system_instructions)
         .ask(build_user_prompt(criteria))
 

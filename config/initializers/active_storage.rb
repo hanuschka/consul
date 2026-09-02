@@ -12,3 +12,23 @@ Rails.application.config.to_prepare do
       end
   end
 end
+
+Rails.application.config.to_prepare do
+  ActiveStorage::Representations::BaseController.class_eval do
+    rescue_from "MiniMagick::Error", "MiniMagick::Invalid", with: :serve_unprocessed_blob
+
+    private
+
+      def serve_unprocessed_blob(exception)
+        Rails.logger.error("[ActiveStorage] representation failed, serving original: #{exception.message}")
+        Sentry.capture_exception(exception, level: :warning) if defined?(Sentry)
+
+        if @blob.present?
+          expires_in ActiveStorage.service_urls_expire_in
+          redirect_to @blob.url(disposition: params[:disposition])
+        else
+          head :not_found
+        end
+      end
+  end
+end

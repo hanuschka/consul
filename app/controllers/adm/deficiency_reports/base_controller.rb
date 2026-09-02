@@ -8,8 +8,7 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
   helper_method :deficiency_report_officer_groups_only?, :deficiency_report_assignable_officers
 
   rescue_from Pundit::NotAuthorizedError do |exception|
-    Sentry.capture_exception(exception, level: :warning)
-    redirect_to adm_deficiency_reports_root_path, alert: t("adm.not_authorized")
+    handle_not_authorized(exception, adm_deficiency_reports_root_path)
   end
 
   private
@@ -30,6 +29,17 @@ class Adm::DeficiencyReports::BaseController < Adm::BaseController
 
     def authenticate_user!
       redirect_to new_user_session_path unless current_user
+    end
+
+    # Everyone following this Anliegen except whoever caused the change — mailing somebody about their
+    # own edit is noise. The responsible officers are excluded too when they are already receiving the
+    # assignment mail for the same event.
+    def notify_watchers_about_change(dr, except: [])
+      excluded = ([current_user] + Array(except)).compact.map(&:id)
+
+      dr.watchers.where.not(id: excluded).find_each do |user|
+        DeficiencyReportMailer.notify_watcher_about_change(dr, user).deliver_later
+      end
     end
 
     def scoped_deficiency_reports

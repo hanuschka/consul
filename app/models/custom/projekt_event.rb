@@ -34,14 +34,6 @@ class ProjektEvent < ApplicationRecord
     joins(projekt_phase: :projekt).merge(Projekt.activated).merge(ProjektPhase.active)
   }
 
-  def self.scoped_projekt_ids_for_footer(projekt)
-    projekt
-      .top_parent
-      .all_children_projekts
-      .unshift(projekt.top_parent)
-      .ids
-  end
-
   def registration_enabled?
     max_attendees.present?
   end

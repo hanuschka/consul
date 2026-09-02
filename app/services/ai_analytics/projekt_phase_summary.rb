@@ -142,7 +142,9 @@ class AiAnalytics::ProjektPhaseSummary < ApplicationService
     end
 
     def get_ai_response(system_instructions, user_prompt)
-      response = Ai::RubyLlmFactory.chat.with_instructions(system_instructions).ask(user_prompt)
+      response = Ai::RubyLlmFactory.chat(feature: "ai_analytics.phase_summary")
+        .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, projekt_phase))
+        .ask(user_prompt)
       response.content.strip
     end
 end

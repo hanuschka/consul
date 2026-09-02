@@ -11,7 +11,7 @@ module CsvServices
       CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
-        @budget_investments.each do |budget_investment|
+        @budget_investments.includes(:image).each do |budget_investment|
           csv << row(budget_investment)
         end
       end
@@ -36,6 +36,7 @@ module CsvServices
           "Anzahl Votes bei Vorauswahl",
           "Anzahl Votes bei Auswahl",
           "Gebiet",
+          "KI-generiertes Bild",
           "URL"
         ]
       end
@@ -57,6 +58,7 @@ module CsvServices
           investment.total_votes.to_s,
           investment.total_ballot_votes.to_s,
           investment.district&.name,
+          investment.image&.ai_generated,
           Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host)
         ]
       end

@@ -11,6 +11,6 @@ module Labelable
   def labels_available?
     return false if projekt_phase.nil?
 
-    projekt_phase.feature?("form.labels") && projekt_phase.projekt_labels.any?
+    projekt_phase.labels_selector_available?
   end
 end

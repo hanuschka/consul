@@ -1,31 +1,28 @@
 class ProjektImports::ResolveContentBlocksService < ApplicationService
-  attr_reader :projekt_import
+  attr_reader :projekt_import, :phases, :image_urls
 
-  def initialize(projekt_import:)
+  def initialize(projekt_import:, phases: [], image_urls: [])
     @projekt_import = projekt_import
+    @phases = Array(phases)
+    @image_urls = Array(image_urls)
   end
 
   def call
     data = projekt_import.ai_result
-    blocks = data["content_blocks"]
-    return ServiceResult.success(ai_result: data) if blocks.blank?
+    return ServiceResult.success(ai_result: data) if data["content_blocks"].blank?
 
-    templates = fetch_templates(blocks)
-    input_blocks = build_input_blocks(blocks, templates)
+    resolve_result = ProjektImports::ResolveContentBlockHtmlService.call(
+      blocks: data["content_blocks"],
+      phase_links: build_phase_links,
+      image_urls: image_urls,
+      sentry_context: { projekt_import_id: projekt_import.id }
+    )
+    return resolve_result if !resolve_result.success?
 
-    if input_blocks.blank?
-      data["content_blocks"] = blocks.map { |b| { "html" => wrap_plain(b["content_data"]) } }
-      projekt_import.update!(ai_result: data)
-      return ServiceResult.success(ai_result: data)
-    end
+    warn_about_missing_templates if !resolve_result.data[:templates_available]
+    warn_about_unused_images(resolve_result.data[:unused_image_urls])
 
-    resolved_by_index = resolve_all(input_blocks).index_by { |b| b["index"] }
-
-    data["content_blocks"] = blocks.each_with_index.map do |block, i|
-      html = resolved_by_index[i]&.dig("html")
-      { "html" => html.presence || wrap_plain(block["content_data"]) }
-    end
-
+    data["content_blocks"] = resolve_result.data[:blocks]
     projekt_import.update!(ai_result: data)
 
     ServiceResult.success(ai_result: data)
@@ -37,75 +34,34 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
 
   private
 
-  def fetch_templates(blocks)
-    ids = blocks.map { |b| b["template_id"] }.compact.uniq
-    return {} if ids.empty?
-
-    ProjektImports::ReferencesBuilder.fetch_content_block_templates
-      .select { |template| ids.include?(template["id"]) }
-      .index_by { |template| template["id"] }
+  # Every block falls back to escaped plain text when the template catalogue
+  # cannot be reached, which looks like a styling bug rather than an outage
+  # unless it is said out loud.
+  def warn_about_missing_templates
+    projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.content_block_templates_unavailable"))
   end
 
-  def build_input_blocks(blocks, templates)
-    results = []
+  # The images are stored and reachable from the projekt's image gallery, so the
+  # admin can place them by hand — but only if they are told the import did not.
+  def warn_about_unused_images(unused_image_urls)
+    count = Array(unused_image_urls).size
+    return if count.zero?
 
-    blocks.each_with_index do |block, i|
-      template = templates[block["template_id"]]
-      next if template.blank?
+    projekt_import.add_warning!(
+      I18n.t("adm.projekts.imports.warnings.source_images_unplaced", count: count)
+    )
+  end
 
-      results << {
-        "index" => i,
-        "template_id" => block["template_id"],
-        "template_html" => template["content"] || template["html"] || "",
-        "content_data" => block["content_data"]
+  # The phases already exist by the time blocks are rendered, so the model is
+  # handed the real deep links instead of inventing a URL shape.
+  def build_phase_links
+    phases.each_with_index.map do |phase, index|
+      {
+        "phase_index" => index,
+        "type" => phase.type,
+        "name" => phase.title,
+        "url" => phase.absolute_url
       }
     end
-
-    results
-  end
-
-  def resolve_all(input_blocks)
-    message = <<~PROMPT
-      Fill each HTML template with its provided content.
-      Replace ALL placeholder text with the actual content.
-      Keep HTML structure, CSS classes, and attributes exactly as they are.
-      Only replace text content — never modify tags, classes, or attributes.
-
-      Input blocks:
-      #{JSON.generate(input_blocks)}
-    PROMPT
-
-    response =
-      Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
-        .ask(message)
-
-    Array(response.content["blocks"])
-  end
-
-  def output_schema
-    {
-      type: "object",
-      properties: {
-        blocks: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              index: { type: "integer", description: "Block index from input" },
-              html: { type: "string", description: "Filled HTML template" }
-            },
-            required: %w[index html],
-            additionalProperties: false
-          }
-        }
-      },
-      required: %w[blocks],
-      additionalProperties: false
-    }
-  end
-
-  def wrap_plain(text)
-    "<div><p>#{ERB::Util.html_escape(text.to_s)}</p></div>"
   end
 end

@@ -1,16 +1,26 @@
 class ProjektImports::Builders::LivestreamBuilder < ProjektImports::Builders::Base
   def call
-    Array(payload).filter_map do |ls|
-      next nil if ls["url"].blank?
+    Array(payload).filter_map do |livestream|
+      next nil if !http_url?(livestream["url"])
 
       phase.projekt_livestreams.create!(
-        url: ls["url"],
-        title: ls["title"],
-        description: ls["description"],
-        starts_at: ls["starts_at"]
+        url: livestream["url"],
+        title: livestream["title"],
+        description: livestream["description"],
+        starts_at: livestream["starts_at"]
       )
     rescue ActiveRecord::RecordInvalid => e
-      raise ProjektImports::Builders::BuilderError, "livestream(#{ls['url']}): #{e.message}"
+      raise ProjektImports::Builders::BuilderError,
+        "livestream(#{livestream["url"]}): #{e.message}"
     end
+  end
+
+  private
+
+  # ProjektLivestream runs UrlValidator on this value. Asking the validator
+  # itself keeps the two in step instead of copying its predicate, so a
+  # model-invented URL is dropped here rather than failing the whole phase.
+  def http_url?(value)
+    UrlValidator.new(attributes: [:url]).url_valid?(value)
   end
 end

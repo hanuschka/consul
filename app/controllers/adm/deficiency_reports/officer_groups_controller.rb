@@ -1,5 +1,8 @@
 class Adm::DeficiencyReports::OfficerGroupsController < Adm::DeficiencyReports::BaseController
   def index
+    authorize DeficiencyReport::OfficerGroup, :index?,
+      policy_class: Adm::DeficiencyReports::OfficerGroupPolicy
+
     @officer_groups = policy_scope(DeficiencyReport::OfficerGroup, policy_scope_class: Adm::DeficiencyReports::OfficerGroupPolicy::Scope)
                         .order(:name)
 

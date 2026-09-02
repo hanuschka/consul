@@ -1,4 +1,6 @@
 class DowncaseRoute
+  REDIRECTABLE_METHODS = %w[GET HEAD].freeze
+
   SKIP_PREFIXES = %w[
     /assets
     /rails/active_storage
@@ -9,6 +11,7 @@ class DowncaseRoute
     /admin
     /letter_opener
     /unregistered_newsletter_subscribers
+    /sp/SAML2
   ].freeze
 
   def initialize(app)
@@ -18,7 +21,7 @@ class DowncaseRoute
   def call(env)
     path = env["PATH_INFO"]
 
-    if needs_redirect?(path)
+    if needs_redirect?(env, path)
       lowered = path.downcase
       query = env["QUERY_STRING"]
       location = !query.to_s.empty? ? "#{lowered}?#{query}" : lowered
@@ -31,8 +34,10 @@ class DowncaseRoute
 
   private
 
-    def needs_redirect?(path)
-      path != path.downcase && !skip_path?(path)
+    def needs_redirect?(env, path)
+      env["REQUEST_METHOD"].in?(REDIRECTABLE_METHODS) &&
+        path != path.downcase &&
+        !skip_path?(path)
     end
 
     def skip_path?(path)

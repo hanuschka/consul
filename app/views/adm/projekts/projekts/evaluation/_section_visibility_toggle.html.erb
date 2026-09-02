@@ -1,0 +1,32 @@
+<%
+  section_label = t(
+    "adm.projekts.projekts.evaluation.pdf_options.sections.#{section_key}",
+    default: section_key.to_s.humanize
+  )
+  section_description = t(
+    "adm.projekts.projekts.evaluation.pdf_options.section_descriptions.#{section_key}",
+    default: ""
+  )
+%>
+<div
+  class="footer-evaluation-section-toggle js-studio-hide-on-preview"
+  data-phase-id="<%= phase_id %>"
+  data-section-key="<%= section_key %>"
+  data-toggle-url="<%= toggle_url %>"
+>
+  <rich-tooltip delay="1000" trigger-only shadow="heavy" size="big">
+    <span class="footer-evaluation-section-toggle--trigger">
+      <custom-switch
+        <%= "checked" if checked %>
+        label="<%= section_label %>"
+        input-class="js-footer-evaluation-section-toggle-input"
+      ></custom-switch>
+    </span>
+    <template>
+      <span class="footer-evaluation-toggle-tooltip--title"><%= t("custom.projekt_phases.footer_evaluation.section_visibility_toggle_title", section: section_label) %></span>
+      <% if section_description.present? %>
+        <span class="footer-evaluation-toggle-tooltip--description"><%= section_description %></span>
+      <% end %>
+    </template>
+  </rich-tooltip>
+</div>

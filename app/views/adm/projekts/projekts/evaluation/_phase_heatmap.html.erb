@@ -1,0 +1,19 @@
+<%
+  heatmap = (phase["full_stats"] || {})["heatmap"] || {}
+  coordinates = heatmap["coordinates"] || []
+  center = heatmap["map_center"] || []
+  zoom = heatmap["map_zoom"] || 12
+%>
+
+<div class="card phase-heatmap-card">
+  <div class="card-title"><%= t("adm.projekts.projekts.evaluation.heatmap_title") %></div>
+  <div class="card-subtitle"><%= t("adm.projekts.projekts.evaluation.heatmap_subtitle") %></div>
+  <div
+    class="phase-heatmap"
+    data-controller="adm--evaluation-heatmap"
+    data-adm--evaluation-heatmap-coordinates-value="<%= coordinates.to_json %>"
+    data-adm--evaluation-heatmap-center-value="<%= center.to_json %>"
+    data-adm--evaluation-heatmap-zoom-value="<%= zoom %>"
+    data-adm--evaluation-heatmap-empty-text-value="<%= t("adm.projekts.projekts.evaluation.heatmap_empty") %>"
+  ></div>
+</div>

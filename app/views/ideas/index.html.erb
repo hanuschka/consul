@@ -20,16 +20,25 @@
 
   <div class="flex-layout">
     <div class="main-column">
-      <%= render(
-        Shared::ResourcesListComponent.new(
-          resources: @ideas,
-          resource_type: Idea,
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: t("custom.ideas.index.empty_list_text")
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.ideas.index",
+          filters: @valid_orders,
           current_filter: @current_order,
-          filter_param: "order",
-          text_search_enabled: true,
-          filters: @valid_orders
-        )
-      ) %>
+          param: "order",
+          text_search_enabled: true
+        ) %>
+
+        <% if @ideas.present? %>
+          <% c.with_items do %>
+            <% @ideas.each do |idea| %>
+              <%= render Ideas::ListItemComponent.new(idea: idea) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
 
       <%= paginate @ideas %>
     </div>

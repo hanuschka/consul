@@ -6,11 +6,11 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
   end
 
   def show?
-    manage_permitted? || moderate_permitted? || create_on_behalf_of_permitted? || review_permitted?
+    manage_permitted?
   end
 
   def create?
-    @user&.administrator? || @user&.projekt_manager&.manage_all_projekts?
+    @user&.administrator? || @user&.projekt_manager?
   end
 
   def update?

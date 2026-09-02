@@ -21,14 +21,20 @@ class Stats::AgeStatsComponent < ApplicationComponent
 
   def colors
     [
-      "#6BA3D6",
-      "#E89A6F",
-      "#B0B0B0",
-      "#7AB85C",
-      "#FFCB4D",
-      "#5682C4",
-      "#B56A47",
-      "#7A7A7A"
+      "#3969AC",
+      "#E68310",
+      "#11A579",
+      "#CF1C90",
+      "#F2B701",
+      "#008695",
+      "#E73F74",
+      "#80BA5A",
+      "#7F3C8D",
+      "#F97B72",
+      "#2F8AC4",
+      "#DAA51B",
+      "#764E9F",
+      "#52BCA3"
     ]
   end
 

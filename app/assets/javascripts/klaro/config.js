@@ -298,29 +298,9 @@ var klaroConfig = {
         //     purposes: ['styling'],
         //     required: true,
         // },
-        // { // uncomment if translate widget is enabled
-        //   name: 'google_translate_accepted',
-        //   default: false,
-        //   purposes: ['translation'],
-        //   translations: {
-        //     en: {
-        //       title: 'Google Translate'
-        //     },
-        //     de: {
-        //       title: 'Google Übersetzer',
-        //     },
-        //   },
-        //   cookies: ['googtrans'],
-        //   callback: function(consent, service) {
-        //     if ( !document.querySelector(".translate-widget") ) { return; }
-
-        //     if ( consent == false && document.getElementById("google_translate_element_desktop") ) {
-        //       location.reload();
-        //     } else if ( consent == true && !document.getElementById("google_translate_element_desktop")) {
-        //       location.reload();
-        //     }
-        //   }
-        // },
+        // Google Translate consent service is injected server-side in
+        // app/views/custom/layouts/_common_head.html.erb when the
+        // `enable_google_translate` feature is enabled.
         {
             name: 'system',
             title: 'Session cookie',

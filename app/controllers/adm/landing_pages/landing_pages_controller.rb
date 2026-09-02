@@ -59,6 +59,18 @@ module Adm
         end
       end
 
+      def destroy
+        @landing_page = ::SiteCustomization::Page.landing.find(params[:id])
+        authorize [:adm, :landing_pages, @landing_page], policy_class: Adm::LandingPages::LandingPagePolicy
+
+        if @landing_page.safe_to_destroy?
+          @landing_page.destroy!
+          redirect_to adm_landing_pages_root_path, notice: t(".success")
+        else
+          redirect_to adm_landing_pages_root_path, alert: t(".cannot_destroy")
+        end
+      end
+
       def toggle_active
         @landing_page = ::SiteCustomization::Page.find(params[:id])
         authorize [:adm, :landing_pages, @landing_page], :update?, policy_class: Adm::LandingPages::LandingPagePolicy
@@ -107,6 +119,7 @@ module Adm
             :landing_site_logo_for_transparent_background, :landing_site_logo_for_white_background,
             :landing_desktop_header_image, :landing_mobile_header_image,
             :landing_desktop_header_video, :landing_mobile_header_video,
+            :landing_ai_context,
             landing_page_manager_ids: []
           )
         end

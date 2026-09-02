@@ -12,6 +12,7 @@ en:
           success: Answer deleted successfully.
           error: Answers cannot be deleted because votes have already been cast.
         form:
+          title_label: Answer
           image_label: Images
           documents_label: Documents
           video_label: Videos

@@ -20,6 +20,10 @@ en:
           title: Category
           description: Please assign a category to your report
           placeholder: Please select
+        subcategory:
+          title: Subcategory
+          description: Please choose a fitting subcategory
+          placeholder: Please select
         documents:
           title: Add documents
         languages:
@@ -33,6 +37,10 @@ en:
           title: On behalf of
           description: Only admins can see this field. You can create a post on behalf of someone here.
           placeholder: Enter name...
+        intake_channel:
+          label: Intake channel
+          description: Required when you file the report on behalf of a third person. State how the report reached you.
+          placeholder: Please select
         create:
           submit_button: Submit now
         labels:
@@ -46,6 +54,7 @@ en:
         submit_button_new_design: Submit now
       create:
         flash_success: Your report has been successfully submitted.
+      submissions_closed: New reports cannot be submitted at the moment.
       index:
         title: Mängelmelder
         welcome_default_text_html: In every city there are deficiencies every now and then - it's good if they are reported by attentive citizens so that they can be rectified quickly.

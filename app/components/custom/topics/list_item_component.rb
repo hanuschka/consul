@@ -13,9 +13,7 @@ class Topics::ListItemComponent < ApplicationComponent
       title: topic.title,
       description: topic.description,
       url: helpers.community_topic_path(topic.community, topic),
-      date: topic.created_at,
-      subline: "#{topic.comments_count} kommentare",
-      image_placeholder_icon_class: "fa-users",
+      date: topic.created_at
     }
   end
 end

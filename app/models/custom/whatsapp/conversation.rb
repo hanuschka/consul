@@ -525,6 +525,27 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(retry_inbound: nil)
   end
 
+  # The catalog pill the citizen tapped to start the current turn, kept only for
+  # that turn: written by Inbound::ProcessMessageService before the assistant is
+  # asked, read by the tools that must not answer a tap with the message it sat
+  # under, and cleared once the turn has been answered either way. Persisted
+  # rather than held in memory because the tools reach the conversation through
+  # the router, not through the object the inbound service holds.
+  def inbound_tap
+    context["inbound_tap"]
+  end
+
+  def store_inbound_tap!(action:, param:)
+    merge_context!(inbound_tap: { "action" => action.to_s, "param" => param.to_s })
+  end
+
+  # No UPDATE on the common path: most turns are typed, not tapped.
+  def clear_inbound_tap!
+    return if context["inbound_tap"].blank?
+
+    merge_context!(inbound_tap: nil)
+  end
+
   # The ruby_llm message history. Written and read only through
   # Whatsapp::AiAssistant::ChatState, which owns the message shape, the trimming,
   # and the replay.

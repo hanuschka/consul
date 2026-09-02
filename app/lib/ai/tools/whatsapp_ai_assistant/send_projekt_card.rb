@@ -13,9 +13,12 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "address into your reply. Identified by name rather than by id, so it reaches " \
               "finished projekts too. Write the summary from what describe_projekt returned, in " \
               "the citizen's language, and do not repeat it or the link in a reply afterwards. " \
-              "Naming several projekts at once is send_list, not a card each. The card carries " \
-              "its own buttons — the projekt and, where its phase is open, taking part in it — " \
-              "so do not offer those again yourself."
+              "The summary itself says what the projekt is about — never send the citizen to " \
+              "the link to find that out. Naming several projekts at once is send_list, not a " \
+              "card each. The card carries its own buttons — telling more about the projekt " \
+              "and, where its phase is open, taking part in it — so do not offer those again " \
+              "yourself. Never call it in answer to a tapped view_projekt button: that tap asks " \
+              "for more than the card, which is describe_projekt and a plain reply."
 
   params do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
@@ -28,6 +31,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     projekt = readable_projekt(projekt_name)
 
     return unknown_projekt_error(projekt_name) if projekt.blank?
+    return card_repeat_error(projekt) if answers_own_tap?(projekt)
 
     send_card(projekt, summary)
 
@@ -39,6 +43,31 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
   end
 
   private
+
+    # The card must never answer with itself. The inbound side records which pill
+    # the citizen tapped before the model is asked, so a card sent in reply to the
+    # card's own "view projekt" pill is refused here rather than left to the prompt —
+    # a sentence in a description is something a model can talk itself past, and
+    # what is on the other side of this one is the loop the ticket describes.
+    def answers_own_tap?(projekt)
+      tap = conversation.inbound_tap.to_h
+
+      tap["action"].to_s == "view_projekt" && tap["param"].to_s == projekt.id.to_s
+    end
+
+    def card_repeat_error(projekt)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :card_repeat_refused, conversation: conversation, projekt_id: projekt.id
+      )
+
+      {
+        error: "The citizen just tapped the view_projekt button on the card for " \
+               "#{projekt_title(projekt)}, so sending that card again would only repeat it. " \
+               "Call describe_projekt and tell them in your own words what the projekt is " \
+               "about, which phases are open and until when, in a plain reply that stays open " \
+               "for follow-up questions."
+      }
+    end
 
     # Buttons rather than a caption on its own, which is what this sent before: a
     # card is the one message where the next step is never in doubt — the citizen is
@@ -61,17 +90,26 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # pill only where a phase is actually open — offering a submission into a closed
     # projekt is the one thing the ticket's rule about reachability forbids.
     #
+    # The "view projekt" pill only where there is more to tell than the card already
+    # carries: on a thin projekt with no phases it would deliver the card again, and
+    # it would take a button slot from the pills that do something.
+    #
     # Labelled from the locale copy rather than the record: the title is already the
     # first line of the card, so a pill repeating it says nothing, and the projekt's
     # own name is routinely longer than a label holds.
     def card_buttons(projekt)
       open_phase = ::Whatsapp::EligiblePhasesQuery.new(projekt: projekt).call.first
+      pills = []
 
-      pills = [pill(:view_projekt, projekt.id, "view_projekt")]
+      if ::Whatsapp::ProjektCard.tells_more?(projekt)
+        pills << pill(:view_projekt, projekt.id, "view_projekt")
+      end
 
-      return pills if open_phase.blank?
+      if open_phase.present?
+        pills << pill(:idea_start, open_phase.id, "take_part")
+      end
 
-      pills + [pill(:idea_start, open_phase.id, "take_part")]
+      pills
     end
 
     def pill(action, param, label)

@@ -55,7 +55,13 @@ module Whatsapp::AssistantActions
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
 
-    title = title_for(action: action, param: param, label: label, conversation: conversation)
+    projekt = viewed_projekt(action, param)
+
+    return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, projekt)
+
+    title = title_for(
+      action: action, param: param, label: label, conversation: conversation, projekt: projekt
+    )
 
     return dropped(spec, conversation, :unlabelled) if title.blank?
 
@@ -73,6 +79,26 @@ module Whatsapp::AssistantActions
     return true if action != :show_more
 
     ::Whatsapp::FlowActions::MORE_SCOPES.include?(param.to_s)
+  end
+
+  # The other parameter read before the label: a "view projekt" pill on a projekt
+  # whose card already says everything would deliver that card again, so it is not
+  # offered — the same rule the card and the notification follow-ups apply. A
+  # projekt that does not exist has nothing to tell either.
+  #
+  # Resolved once here and handed down to the label, so the one pill that has to
+  # read its record before the label does not read it twice.
+  def viewed_projekt(action, param)
+    return if action != :view_projekt
+
+    ::Projekt.find_by(id: param.to_i)
+  end
+
+  def tells_more?(action, projekt)
+    return true if action != :view_projekt
+    return false if projekt.blank?
+
+    ::Whatsapp::ProjektCard.tells_more?(projekt)
   end
 
   # A recovery pill keeps its own id namespace — the inbound side reads those
@@ -98,13 +124,15 @@ module Whatsapp::AssistantActions
   # Falls back to the record's own name for a parameterised pill the model left
   # unlabelled — a projekt's title as the portal writes it is better than a
   # paraphrase, and it is also what proves the record exists.
-  def title_for(action:, param:, label:, conversation:)
+  def title_for(action:, param:, label:, conversation:, projekt: nil)
     written = truncated(label)
 
     return written if written.present?
     return if !::Whatsapp::FlowActions.parameterised?(action)
 
-    truncated(record_label(action: action, param: param, conversation: conversation))
+    truncated(
+      record_label(action: action, param: param, conversation: conversation, projekt: projekt)
+    )
   end
 
   def truncated(label)
@@ -157,11 +185,12 @@ module Whatsapp::AssistantActions
   # nobody has heard of all come back blank, and a blank pill is not offered —
   # which is the same check that keeps a stale record id from being sent as a
   # button in the first place.
-  def record_label(action:, param:, conversation:)
+  def record_label(action:, param:, conversation:, projekt: nil)
     return if param.blank?
 
     case action
-    when :view_projekt, :participate_projekt then projekt_label(param)
+    when :view_projekt then ::Whatsapp::ProjektLink.title(projekt)
+    when :participate_projekt then projekt_label(param)
     when :idea_start then phase_projekt_label(param)
     when :support then proposal_label(param)
     when :category

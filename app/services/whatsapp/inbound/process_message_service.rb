@@ -97,6 +97,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         previous_inbound_at: previous_inbound_at
       )
 
+      # Cleared on both outcomes: a tap left behind by a failed turn would refuse a
+      # card the citizen asks for later in their own words.
+      conversation.clear_inbound_tap!
+
       return conversation.clear_retry_inbound! if result.success?
 
       conversation.store_retry_inbound!(text: inbound_text, message_id: inbound_message_id)
@@ -232,6 +236,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
+      conversation.store_inbound_tap!(action: flow_action[:action], param: flow_action[:param])
 
       tapped_line(action: flow_action[:action], param: flow_action[:param])
     end

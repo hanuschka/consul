@@ -30,10 +30,15 @@ module Whatsapp::AiAssistant::DecisionLog
   # reply must carry a pill — and some replies genuinely end the exchange. A rate
   # is what tells those apart from the ones where the citizen was left typing;
   # a single line never could.
+  #
   # `start_over` is the citizen asking to be put back at the beginning, and it is
   # counted for what it says about the replies before it: a bot that answers well
   # is one nobody has to escape from, so this rising is the readable sign that
   # they are being led somewhere they did not want to go.
+  #
+  # `card_repeat_refused` is a projekt card refused because the citizen had just
+  # tapped that card's own "view projekt" pill — the loop the pill used to produce,
+  # now counted instead of sent.
   EVENTS = %i[
     tool_called
     action_dropped
@@ -44,6 +49,7 @@ module Whatsapp::AiAssistant::DecisionLog
     tap_unhandled
     start_over
     assistant_unavailable
+    card_repeat_refused
   ].freeze
 
   COUNTER_TTL = 40.days

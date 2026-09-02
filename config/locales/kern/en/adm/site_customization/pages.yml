@@ -5,17 +5,32 @@ en:
         default_titles:
           privacy: Privacy policy
           conditions: General terms of use
+          accessibility: Accessibility
           impressum: Legal notice
           contact_us: Contact
-        tabs:
-          privacy: Privacy policy
-          conditions: Terms of use
-          impressum: Legal notice
-          contact_us: Contact
+          netiquette: Netiquette
+          additional_privacy: Additional privacy agreement
+          open_source: Open source
+        index:
+          headers:
+            title: Title
+            slug: URL
+            status: Published
+            actions: Actions
+          edit: Edit
+          open_page: Open page
+          empty_state:
+            title: No pages available
+            description: The default pages are created automatically when this overview is opened.
         edit:
+          title_label: Title
+          title_hint: Shown as the heading on the page and used as the link label in the footer.
+          slug_label: URL slug
+          slug_hint: Sets the public address of the page. After a change, links to the old address will no longer work.
           status_legend: Status
+          status_hint: Determines whether the page is publicly accessible. Unpublished pages are not linked in the footer.
           status_options:
-            draft: Draft
+            draft: Not published
             published: Published
           content_label: Content
           save: Save

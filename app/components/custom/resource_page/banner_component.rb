@@ -18,12 +18,11 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def image_url
     return nil unless resource.image&.attached?
 
-    polymorphic_path(resource.image.attachment.variant(
+    polymorphic_path(resource.image.attachment_variant(
       # TODO Resize to `[415, 260]` when image croping will be inroduced
       # resize_to_limit: [415, 260],
       resize_to_limit: [500, 500],
       saver: { quality: 80 },
-      strip: true,
       format: "jpeg"
     ))
   rescue ArgumentError, URI::InvalidURIError, ActiveStorage::InvariableError
@@ -33,10 +32,9 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def big_image_url
     return nil unless resource.image&.attached?
 
-    polymorphic_path(resource.image.attachment.variant(
+    polymorphic_path(resource.image.attachment_variant(
       resize_to_limit: [1750, 900],
       saver: { quality: 80 },
-      strip: true,
       format: "jpeg"
     ))
   rescue ArgumentError, URI::InvalidURIError, ActiveStorage::InvariableError

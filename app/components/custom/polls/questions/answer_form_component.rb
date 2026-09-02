@@ -25,7 +25,7 @@ class Polls::Questions::AnswerFormComponent < ApplicationComponent
       raise "available_vote_weight called for a non multiple_with_weight question"
     end
 
-    available_weight = question.max_votes - question.answers.where(author_id: current_user.id).sum(:answer_weight)
+    available_weight = question.max_votes - user_answers.sum { |answer| answer.answer_weight.to_i }
     available_weight += user_answer.answer_weight if user_answer.present?
 
     [available_weight, question.votation_type.max_votes_per_answer].compact.min
@@ -57,6 +57,6 @@ class Polls::Questions::AnswerFormComponent < ApplicationComponent
   private
 
     def user_answers
-      @user_answers ||= question.answers.by_author(current_user)
+      @user_answers ||= helpers.poll_answers_by_question_for_current_user(question.poll)[question.id] || []
     end
 end

@@ -1,0 +1,55 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t(".title_for_category", category: @category.name),
+  breadcrumbs: @breadcrumbs,
+  back_button_url: adm_deficiency_reports_categories_path
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <%= new_resource_link(new_adm_deficiency_reports_category_subcategory_path(@category), t(".new_subcategory")) %>
+
+  <% if @subcategories.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header"></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.name") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".table.default_responsible") %></th>
+            <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body" data-controller="sortable" data-sortable-url-value="<%= order_subcategories_adm_deficiency_reports_category_subcategories_path(@category) %>">
+          <% @subcategories.each do |subcategory| %>
+            <tr id="<%= dom_id(subcategory) %>" class="kern-table__row" data-sortable-id="<%= subcategory.id %>">
+              <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+                <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+              </td>
+              <th scope="row" class="kern-table__header"><%= subcategory.name %></th>
+              <td class="kern-table__cell"><%= subcategory.default_responsible&.name %></td>
+              <td class="kern-table__cell">
+                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                  <% actions.with_action(label: t("shared.edit"), url: edit_adm_deficiency_reports_category_subcategory_path(@category, subcategory), icon: "edit", style: :edit) %>
+                  <% actions.with_action(
+                    label: t("shared.delete"),
+                    url: adm_deficiency_reports_category_subcategory_path(@category, subcategory),
+                    icon: "delete", style: :delete,
+                    data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
+                  ) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%= empty_state(title: t(".no_items_title"), description: t(".no_items_description"), icon: "category") %>
+  <% end %>
+</div>

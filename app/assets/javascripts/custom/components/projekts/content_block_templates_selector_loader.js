@@ -100,7 +100,7 @@
 
     reinitContentComponents($container) {
       this.storeOrbitHeights($container);
-      App.ContentBlockEditor.DomHelpers.reinitFoundationWidgets(document);
+      App.Studio.ContentBlocks.DomHelpers.reinitFoundationWidgets(document);
       this.restoreOrbitHeights($container);
 
       $container.find('.js-tabs').on('tabs:changed', () => this.handleTabsChanged($container));
@@ -120,7 +120,7 @@
 
       if (!activePanel) return
 
-      App.ContentBlockEditor.MapEmbed.hydrateIn(activePanel);
+      App.Studio.ContentBlocks.MapEmbed.hydrateIn(activePanel);
     },
 
     storeOrbitHeights($container) {

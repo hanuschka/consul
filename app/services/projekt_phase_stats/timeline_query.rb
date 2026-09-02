@@ -21,11 +21,11 @@ class ProjektPhaseStats::TimelineQuery < ApplicationService
   end
 
   def total_submissions
-    resources.count
+    @total_submissions ||= resources.count
   end
 
   def total_comments
-    comments.count
+    @total_comments ||= comments.count
   end
 
   private

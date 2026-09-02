@@ -4,8 +4,12 @@ require_dependency Rails.root.join(
 
 class Admin::SiteCustomization::ContentBlocksController
   include AiErrorHandling
+  include SiteContentBlocksAiActions
 
-  skip_load_and_authorize_resource only: [:update_inline, :change_with_ai]
+  skip_load_and_authorize_resource only: [
+    :update_inline, :change_with_ai,
+    :generate_with_ai, :ai_generation_status, :cancel_ai_generation
+  ]
 
   def update_inline
     @content_block = SiteCustomization::ContentBlock.find(params[:id])

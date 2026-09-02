@@ -1,0 +1,44 @@
+<section class="adm-masterportal-taxonomy">
+  <% if switch_setting.present? %>
+    <div class="adm-masterportal-taxonomy--switch">
+      <%= render Adm::AttributeEditorComponent.new(switch_setting, :value, :boolean) %>
+    </div>
+  <% end %>
+
+  <div class="kern-table-responsive" tabindex="0">
+    <table class="kern-table">
+      <thead class="kern-table__head">
+        <tr class="kern-table__row">
+          <th scope="col" class="kern-table__header"><%= t(".table.icon") %></th>
+          <th scope="col" class="kern-table__header"><%= t(".table.name") %></th>
+          <th scope="col" class="kern-table__header"><%= t(".table.pins") %></th>
+        </tr>
+      </thead>
+
+      <tbody class="kern-table__body">
+        <% collections.each do |collection| %>
+          <% icon = collection.encoded_icon_url %>
+          <tr class="kern-table__row">
+            <td class="kern-table__cell">
+              <% if icon.present? %>
+                <img
+                  class="adm-masterportal-taxonomy--icon"
+                  src="<%= icon %>"
+                  alt=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                >
+              <% else %>
+                <span class="adm-masterportal-taxonomy--icon -placeholder" aria-hidden="true">
+                  <span class="material-symbols-outlined">image_not_supported</span>
+                </span>
+              <% end %>
+            </td>
+            <th scope="row" class="kern-table__header"><%= collection.display_name %></th>
+            <td class="kern-table__cell"><%= collection.pins_count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,1 +1,3 @@
+<% if resource_follow_icon_visible?(@follow.followable) %>
 $("#<%= dom_id(@follow.followable, :follow_icon) %>").replaceWith("<%= j render Shared::FollowIconComponent.new(resource: @follow.followable) %>");
+<% end %>

@@ -4,6 +4,12 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
   let!(:api_client) { create_api_client }
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
+  let(:existing_deficiency_report) do
+    status, category, user = create_minimal_prereqs
+
+    create_deficiency_report(user, category, status)
+  end
+
   def create_minimal_prereqs
     status = DeficiencyReport::Status.create!(title: 'Open', color: 'red', icon: 'hourglass-start')
     category = DeficiencyReport::Category.create!(name: 'Road', color: 'blue', icon: 'road')
@@ -20,13 +26,14 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
     [status, category, user]
   end
 
-  def create_deficiency_report(author, category, status)
+  def create_deficiency_report(author, category, status, title: 'Existing Deficiency Report')
     report = DeficiencyReport.new(
       author: author,
       deficiency_report_category_id: category.id,
       deficiency_report_status_id: status.id,
       admin_accepted: true,
       resource_terms: true,
+      title: title,
       map_location_attributes: { latitude: 40.0, longitude: -3.0, zoom: 12 }
     )
     report.save!
@@ -132,6 +139,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Required when adding a new image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB for optimal performance).' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution, photographer/artist name, or copyright information. Displayed with the image to give proper credit.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image from the deficiency report. Does not affect other report properties.' }
                 }
@@ -348,6 +356,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file to replace current image. Supported formats: JPEG, PNG, GIF, WebP (recommended max 5MB). Omit to keep existing image.' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Updated image source attribution, photographer/artist name, or copyright notice. Properly credits original creators.' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image entirely from the deficiency report while preserving the report text and other properties.' }
                 }
@@ -494,7 +503,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       end
 
       unauthorized_response { let(:id) { 1 } }
-      forbidden_response { let(:id) { 1 } }
+      forbidden_response { let(:id) { existing_deficiency_report.id } }
     end
   end
 

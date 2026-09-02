@@ -1,0 +1,17 @@
+<%= turbo_frame_tag "details__parent_projekt" do %>
+  <%= form_with model: projekt, url: adm_projekts_projekt_path(projekt) do |f| %>
+    <div class="mb-4">
+      <%= f.select(
+        :parent_id,
+        projekt.assignable_parents.map { |p| [p.page&.title || p.name, p.id] },
+        { include_blank: t("adm.projekts.projekts.details.no_parent_projekt") },
+        { label: false }
+      ) %>
+    </div>
+    <%= form_submit_button %>
+  <% end %>
+
+  <% if flash[:success].present? %>
+    <div class="input-success-message mt-2" data-controller="auto-remove"><%= flash[:success] %></div>
+  <% end %>
+<% end %>

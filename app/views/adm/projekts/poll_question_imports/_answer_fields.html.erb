@@ -1,0 +1,25 @@
+<div class="adm-poll-question-answer">
+  <span class="adm-poll-question-answer__number" aria-hidden="true"><%= position %></span>
+
+  <div class="adm-poll-question-answer__fields">
+    <%= fields_for "questions[#{question_index}][answers][#{answer_index}]" do |answer_fields| %>
+      <%= answer_fields.text_field :title,
+            value: answer["title"],
+            label: Poll::Question::Answer.human_attribute_name(:title) %>
+      <%= answer_fields.text_field :description,
+            value: answer["description"],
+            label: Poll::Question::Answer.human_attribute_name(:description) %>
+    <% end %>
+  </div>
+
+  <button
+    type="button"
+    class="adm-poll-question-answer__remove"
+    data-action="click->poll-question-imports--answer-fields#remove"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+    <span class="kern-sr-only">
+      <%= t("adm.projekts.poll_question_imports.question.remove_answer") %>
+    </span>
+  </button>
+</div>

@@ -19,6 +19,8 @@ class Admin::AgeRangesController < Admin::BaseController
 
     if @age_range.save
       redirect_to admin_age_ranges_path(filter: return_filter)
+    else
+      render :new
     end
   end
 
@@ -28,6 +30,8 @@ class Admin::AgeRangesController < Admin::BaseController
   def update
     if @age_range.update(age_range_params)
       redirect_to admin_age_ranges_path
+    else
+      render :edit
     end
   end
 

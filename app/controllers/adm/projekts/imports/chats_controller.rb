@@ -1,6 +1,6 @@
 class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   ALLOWED_COMMANDS = %w[regenerate summarize import start_over].freeze
-  MAX_AGGREGATE_BYTES = 45.megabytes
+  MAX_AGGREGATE_BYTES = 500.megabytes
 
   before_action :authorize_create
   before_action :find_projekt_import
@@ -45,6 +45,26 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     }
   end
 
+  # Read when the confirm dialog opens rather than baked into the page: the chat
+  # rewrites ai_result, so a summary rendered at page load would describe a
+  # projekt the import no longer creates.
+  def summary
+    result = ProjektImports::BuildImportSummaryService.call(projekt_import: @projekt_import)
+
+    if !result.success?
+      render json: { error: result.error }, status: :unprocessable_entity
+      return
+    end
+
+    render json: {
+      html: render_to_string(
+        partial: "adm/projekts/imports/chats/import_summary",
+        locals: { summary: result.summary, projekt_import: @projekt_import },
+        formats: [:html]
+      )
+    }
+  end
+
   def message
     attached_documents = parse_attached_documents(params[:attached_documents])
 
@@ -60,6 +80,13 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       status: "completed",
       attached_documents: attached_documents
     )
+
+    reply = title_image_reply_for(user_message.content, attached_documents)
+
+    if reply.present?
+      render_title_image_reply(user_message, reply)
+      return
+    end
 
     assistant_message = create_assistant_placeholder(user_message)
     ProjektImports::ChatMessageJob.perform_later(user_message.id)
@@ -84,10 +111,6 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       @projekt_import.mark_abandoned!
       render json: { status: "abandoned", redirect_path: new_adm_projekts_import_path }
     when "import"
-      if params.key?(:generate_image)
-        @projekt_import.update!(generate_image: ActiveModel::Type::Boolean.new.cast(params[:generate_image]))
-      end
-
       ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
 
       render json: { status: "importing" }
@@ -133,6 +156,29 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
 
     render json: { status: "importing" }
+  end
+
+  # The picker message is re-rendered server side and handed back, so the tiles,
+  # the selected state and the summary in the import bar all come from one place
+  # instead of being kept in step by the browser.
+  def title_image
+    result = ProjektImports::SelectTitleImageService.call(
+      projekt_import: @projekt_import,
+      mode: params[:mode],
+      index: params[:index]
+    )
+
+    if !result.success?
+      render json: { error: result.error }, status: :unprocessable_entity
+      return
+    end
+
+    picker_message = title_image_picker_message
+
+    render json: {
+      messages: picker_message.present? ? [serialize_message(picker_message)] : [],
+      title_image: title_image_state
+    }
   end
 
   private
@@ -203,6 +249,80 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     end
   end
 
+  # A message of nothing but a number picks that option out of the picker instead
+  # of being sent to the AI, which would answer about it in prose and change
+  # nothing. Only while a picker exists, and never together with an attachment —
+  # that is a document to analyse, not an answer.
+  #
+  # Returns the assistant's reply text, or nil when the message is not a pick and
+  # belongs to the model. Deciding and rendering are kept apart so the action has
+  # one render per path; returning a rendered/not-rendered boolean instead made a
+  # forgotten return value a double render.
+  def title_image_reply_for(content, attached_documents)
+    return nil if attached_documents.present?
+    return nil if title_image_picker_message.blank?
+
+    option = ProjektImports::TitleImageOptions.from_message(@projekt_import, content)
+    return nil if option.blank?
+
+    # A number naming a picture that cannot be a title image is answered here with
+    # the reason: sending it to the model would get prose about an image it knows
+    # nothing about.
+    return helpers.import_title_image_ineligible_hint(option.candidate) if !option.selectable?
+
+    result = ProjektImports::SelectTitleImageService.call(
+      projekt_import: @projekt_import,
+      mode: option.mode,
+      index: option.index
+    )
+    return nil if !result.success?
+
+    helpers.import_title_image_confirmation(@projekt_import)
+  end
+
+  # The reply is stamped as a command before anything is rendered. Without it
+  # ExecuteImportJob counts a plain user message that produced no tool call and
+  # warns "none of your chat changes were applied" on import — after applying the
+  # pick — which also suppresses the redirect to the finished projekt.
+  def render_title_image_reply(user_message, content)
+    user_message.update!(custom_command: ProjektImport::TITLE_IMAGE_REPLY_COMMAND)
+
+    confirmation = @ai_chat.ai_chat_messages.create!(
+      role: "assistant",
+      content: content,
+      status: "completed"
+    )
+
+    render json: {
+      status: "completed",
+      messages: [
+        serialize_message(user_message),
+        serialize_message(title_image_picker_message),
+        serialize_message(confirmation)
+      ],
+      title_image: title_image_state
+    }
+
+    true
+  end
+
+  def title_image_state
+    {
+      summary: helpers.import_title_image_summary(@projekt_import),
+      thumb_url: helpers.import_title_image_summary_url(@projekt_import)
+    }
+  end
+
+  def title_image_picker_message
+    return @title_image_picker_message if defined?(@title_image_picker_message)
+
+    @title_image_picker_message = @ai_chat
+      .ai_chat_messages
+      .where(custom_command: ProjektImport::TITLE_IMAGE_PICKER_COMMAND)
+      .order(created_at: :asc)
+      .last
+  end
+
   def chat_user_initials(user)
     return "" if user.blank?
 
@@ -251,7 +371,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       created_at: message.created_at.iso8601,
       html: render_to_string(
         partial: "adm/projekts/imports/chats/message",
-        locals: { message: message, user: @projekt_import.user },
+        locals: { message: message, user: @projekt_import.user, projekt_import: @projekt_import },
         formats: [:html]
       )
     }

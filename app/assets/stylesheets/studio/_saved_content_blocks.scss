@@ -71,6 +71,7 @@
 .saved-content-block-item {
   margin-bottom: 25px;
   position: relative;
+  scroll-margin: 15px;
 
   .custom-content-template--item {
     margin-bottom: 10px;
@@ -85,6 +86,18 @@
   /*   height: 380px; */
   /*   position: relative; */
   /* } */
+
+  &.-highlight-added {
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      z-index: -1;
+      border-radius: 10px;
+      pointer-events: none;
+      animation: saved-content-block-added-highlight 1.5s ease;
+    }
+  }
 
   &.-edit-mode {
     .saved-content-block-form {

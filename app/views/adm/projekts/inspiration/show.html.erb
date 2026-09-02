@@ -1,0 +1,20 @@
+<%= content_for :title, t(".title") %>
+
+<div class="adm-projekts-inspiration">
+  <%= render Adm::HeaderComponent.new(breadcrumbs: @breadcrumbs, compact: true) %>
+
+  <div class="kern-container-fluid">
+    <% if @embed_url.present? %>
+      <%= render Shared::AdminIframeComponent.new(
+            src: @embed_url,
+            css_class: "adm-projekts-inspiration-frame",
+            title: t("adm.projekts.inspiration.show.title"),
+            referrerpolicy: "origin"
+          ) %>
+    <% else %>
+      <%= kern_alert(title: t(".not_configured"), style: :warning) do %>
+        <%= t(".not_configured_hint") %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

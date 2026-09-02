@@ -1,14 +1,21 @@
 class Files::AssetCardComponent < Files::ResourceAssetComponent
   with_collection_parameter :asset
 
-  def initialize(asset:, type:)
+  def initialize(asset:, type:, detail_path: nil)
     @asset = asset
     @type = type
+    @detail_path = detail_path
   end
 
   private
 
-    attr_reader :asset, :type
+    attr_reader :asset, :type, :detail_path
+
+    def detail_url
+      return nil if detail_path.blank?
+
+      detail_path.call(asset)
+    end
 
     def projekt_name
       resource_name(asset.projekt)

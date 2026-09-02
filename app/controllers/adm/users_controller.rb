@@ -21,6 +21,11 @@ module Adm
           @gender_header_options = { filter_options: gender_options }
           @reverify_header_options = { filter_options: { true => t("shared.true"), false => t("shared.false") } }
 
+          status_options = UsersQuery::STATUSES.index_with do |status|
+            t("adm.users.index.table.statuses.#{status}")
+          end
+          @status_header_options = { filter_options: status_options }
+
           document_type_options = policy_scope([:adm, User]).distinct.pluck(:document_type).compact.index_by(&:itself)
           @document_type_header_options = { filter_options: document_type_options }
 
@@ -55,14 +60,14 @@ module Adm
     end
 
     def edit
-      @user = User.find(params[:id])
+      @user = User.with_hidden.find(params[:id])
       authorize [:adm, @user]
 
       @breadcrumbs = edit_breadcrumbs
     end
 
     def update
-      @user = User.find(params[:id])
+      @user = User.with_hidden.find(params[:id])
       authorize [:adm, @user]
 
       # Email changes made by an admin here are confirmed immediately: write the
@@ -87,14 +92,25 @@ module Adm
     end
 
     def audits
-      @user = User.find(params[:id])
+      @user = User.with_hidden.find(params[:id])
       authorize [:adm, @user]
 
       @breadcrumbs = audits_breadcrumbs
     end
 
+    def destroy
+      @user = User.with_hidden.find(params[:id])
+      authorize [:adm, @user]
+
+      @user.erase(
+        "Gelöscht von #{current_user.username} (id: #{current_user.id})"
+      )
+
+      redirect_to adm_users_path, notice: t("adm.users.flash.deleted")
+    end
+
     def verify
-      @user = User.find(params[:id])
+      @user = User.with_hidden.find(params[:id])
       authorize [:adm, @user]
 
       if @user.verify!
@@ -108,7 +124,7 @@ module Adm
     end
 
     def unverify
-      @user = User.find(params[:id])
+      @user = User.with_hidden.find(params[:id])
       authorize [:adm, @user]
 
       @user.unverify!

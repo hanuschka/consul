@@ -3,17 +3,22 @@
 
 $_list-radius: 12px;
 $_list-radius-sm: 10px;
-$_list-max-width: 800px;
+$_list-max-width: 880px;
 $_list-text: #1a2332;
 $_list-text-muted: #5b6472;
 $_list-border: #dbdfe4;
 $_list-surface: #fff;
 $_list-neutral-bg: #f0f1f3;
 
+.projekt-import-list-container {
+  max-width: $_list-max-width;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .projekt-import-list {
   width: 100%;
-  max-width: $_list-max-width;
-  margin: 16px auto 0;
+  margin: 16px 0 0;
 }
 
 .projekt-import-list--header-actions {
@@ -22,8 +27,7 @@ $_list-neutral-bg: #f0f1f3;
 
 // Positioning only — the chips themselves are the shared Kern::FilterChips.
 .projekt-import-list--filters {
-  max-width: $_list-max-width;
-  margin: 0 auto 4px;
+  margin: 0 0 4px;
 }
 
 .projekt-import-list--empty {
@@ -223,6 +227,15 @@ $_list-neutral-bg: #f0f1f3;
   background: $_list-neutral-bg;
   border: 1px solid $_list-border;
   border-radius: $_list-radius-sm;
+  transition: background-color 150ms ease-out;
+
+  &:hover {
+    background: color-mix(in srgb, $_list-neutral-bg 92%, $_list-text);
+  }
+
+  &:active {
+    background: color-mix(in srgb, $_list-neutral-bg 86%, $_list-text);
+  }
 
   &:focus-visible {
     outline: 2px solid var(--kern-color-action-default);
@@ -372,8 +385,10 @@ $_list-neutral-bg: #f0f1f3;
 
 .projekt-import-detail--files {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 16px;
   width: 100%;
   margin-bottom: 24px;
 }
@@ -383,8 +398,10 @@ $_list-neutral-bg: #f0f1f3;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  max-width: 100%;
   font-size: 14px;
   color: $_list-text-muted;
+  overflow-wrap: anywhere;
 }
 
 .projekt-import-detail--actions {

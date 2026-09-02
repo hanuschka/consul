@@ -385,8 +385,10 @@ $_list-neutral-bg: #f0f1f3;
 
 .projekt-import-detail--files {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 16px;
   width: 100%;
   margin-bottom: 24px;
 }
@@ -396,8 +398,10 @@ $_list-neutral-bg: #f0f1f3;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  max-width: 100%;
   font-size: 14px;
   color: $_list-text-muted;
+  overflow-wrap: anywhere;
 }
 
 .projekt-import-detail--actions {

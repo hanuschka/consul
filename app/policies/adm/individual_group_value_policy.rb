@@ -23,6 +23,10 @@ class Adm::IndividualGroupValuePolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def add_email?
+    @user&.administrator?
+  end
+
   def add_from_csv?
     @user&.administrator?
   end

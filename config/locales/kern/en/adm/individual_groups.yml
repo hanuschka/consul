@@ -98,6 +98,8 @@ en:
         add_user: Add
         already_assigned: Already assigned
         not_found: No users found.
+        add_email: "Add %{email} without an account"
+        already_stored: This address is already stored.
       new:
         title: Create new value
       edit:
@@ -108,6 +110,11 @@ en:
         success: Value successfully updated.
       destroy:
         success: Value successfully deleted.
+      add_email:
+        success: >
+          Address added. The person joins the group automatically when they register.
+        already_stored: This address is already stored.
+        invalid: Please enter a valid email address.
       add_from_csv:
         no_file: Please select a file.
         invalid_format: Please select a CSV file.

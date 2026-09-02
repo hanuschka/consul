@@ -79,7 +79,10 @@ App.MapPopup = {
     }
 
     if (data.image_url) {
+      popupHtml += "<span class='resource-map-popup-image-wrap'>";
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
+      popupHtml += data.image_ai_label_html || "";
+      popupHtml += "</span>";
     }
 
     if ((data.labels || data.sentiments) && (data.labels.length || Object.keys(data.sentiment).length)) {

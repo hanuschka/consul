@@ -1,4 +1,11 @@
+// Voice assistant widget — compact dark capsule that docks in the page and
+// slides to the bottom centre when activated.
+$va-capsule-bottom: 24px;
+$va-capsule-height: 54px;
+$va-stack-gap: 8px;
+$va-notice-delay: 1200ms;
 
+// Docked state: a narrow strip at the page edge holding just the dock button.
 .voice-assistant-standard {
   position: fixed;
   right: 16px;
@@ -6,399 +13,376 @@
   width: 320px;
   max-width: calc(100vw - 32px);
   z-index: 500;
+  --x-bg: #2c2c2e;
+  --x-ink: #ffffff;
+  --x-muted: #aeaeb2;
+  --x-border: #3a3a3c;
+  --va-wave-color: #97d8ff;
 }
 
-.voice-assistant {
-  width: 430px;
-  height: 124px;
-  position: fixed;
-  bottom: 8px;
+// Active state: the container itself becomes the bottom-centre stack, so the
+// notice and the capsule share one anchor instead of each positioning itself.
+.voice-assistant-standard:has(.voice-assistant-widget.-active) {
   left: 0;
   right: 0;
-  border-radius: 16px;
-  border: 1px solid #3a3a3c;
-  background-color: #2c2c2e;
-  backdrop-filter: blur(7px);
+  bottom: $va-capsule-bottom;
   margin: auto;
-  z-index: 500;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.48), 0 2px 8px rgba(0, 0, 0, 0.32);
-  color: white;
+  width: 400px;
+  max-width: calc(100vw - 24px);
+  z-index: 600;
   display: flex;
   flex-direction: column;
-
-  @media (max-width: 480px) {
-    position: static;
-    margin: 8px auto;
-  }
-
-  .voice-assistant--inner {
-    visibility: hidden;
-  }
-
-  &.-initialized {
-    .voice-assistant--inner {
-      visibility: visible;
-    }
-  }
-
-  &.-collapsed {
-    right: 10px;
-    left: unset;
-    height: 66px;
-    width: 312px;
-    border-radius: 20px;
-    transition: none;
-    overflow: hidden;
-
-    .voice-assistant--inner,
-    .voice-assistant-topbar,
-    .voice-assistant--collapse-button {
-      display: none;
-    }
-
-    .voice-assistant--expand-button {
-      display: flex;
-    }
-  }
-
-  h2 {
-    font-size: 18px !important;
-    color: white !important;
-    margin-bottom: 0;
-    margin-top: 0;
-  }
-
-  &[data-status="starting"],
-  &[data-status="running"],
-  &[data-status="paused"] {
-    transition: width 500ms ease;
-    width: 480px;
-  }
-
-  &[data-status="starting"] {
-    background-color: #2c2c2e;
-
-    .voice-assistant-round-button {
-      border: transparent;
-    }
-
-    button {
-      background-color: transparent !important;
-    }
-
-    i::before {
-      content: "\f04d";
-    }
-
-    i {
-      opacity: 0.7;
-    }
-
-    .voice-assistant-statusbar-value[data-status-value="starting"] {
-      display: flex;
-      align-items: center;
-      animation: startingTextAnimation infinite 550ms alternate;
-    }
-  }
-
-  &[data-status="running"] {
-    // background-image: radial-gradient(18% 28% at 24% 50%, #0084FF99 7%, #383838CC 100%),radial-gradient(18% 28% at 18% 71%, #0099FF80 6%, #383838CC 100%),radial-gradient(70% 53% at 36% 76%, #00B4FF99 0%, #383838CC 100%),radial-gradient(42% 53% at 15% 94%, #007AFF99 7%, #383838CC 100%),radial-gradient(42% 53% at 34% 72%, #0084FF99 7%, #383838CC 100%),radial-gradient(18% 28% at 35% 87%, #0099FF99 7%, #383838CC 100%),radial-gradient(31% 43% at 7% 98%, #007AFF80 24%, #383838CC 100%),radial-gradient(21% 37% at 72% 23%, #00B4FF99 24%, #383838CC 100%),radial-gradient(35% 56% at 91% 74%, #1E90FF99 9%, #383838CC 100%),radial-gradient(74% 86% at 67% 38%, #0084FFAA 24%, #383838CC 100%),linear-gradient(125deg, #00A8FFAA 1%, #0084FFAA 100%);
-    background-color: #2c2c2e;
-    // background-image: radial-gradient(18% 28% at 24% 50%, #38383899 7%, #073AFF00 100%),radial-gradient(18% 28% at 18% 71%, #38383866 6%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #0084FF66 0%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #38383899 7%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #38383899 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #38383899 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #38383899 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #0099FF66 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #38383899 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #007AFF80 24%, #073AFF00 100%),linear-gradient(125deg, #38383899 1%, #0084FF80 100%);
-    // animation: backgroundGradientPulse 3s ease-in-out infinite;
-
-    .voice-assistant-speak-button:not(:disabled) {
-      i::before {
-        content: "\f130";
-      }
-
-      &:hover {
-        color: #f36868;
-      }
-    }
-  }
-
-  &[data-status="paused"] {
-    .voice-assistant-statusbar-value[data-status-value="paused"] {
-      display: block;
-      color: #f36868;
-    }
-
-    .voice-assistant-speak-button {
-      color: #f36868;
-
-      i::before {
-        content: "\f131";
-      }
-    }
-  }
-
-  &[data-status="running"],
-  &[data-status="paused"] {
-    .voice-assistant--collapse-button {
-      display: none;
-    }
-
-    .voice-assistant-round-button {
-      width: 46px;
-      height: 46px;
-      font-size: 20px;
-
-      i {
-        font-size: 20px;
-      }
-    }
-
-    .voice-assistant-stop-button {
-      display: flex;
-      animation: showElement 0.5s forwards;
-    }
-
-    .voice-assistant-speak-button {
-      animation: speakButtonStartAnimation 0.5s forwards;
-    }
-
-    .js-voice-assistant-visualization,
-    .js-voice-assistant-visualization-blur {
-      animation: 500ms showElement forwards;
-      opacity: 1;
-    }
-  }
+  gap: $va-stack-gap;
 }
 
-.voice-assistant.-collapsible:not(.-collapsed) {
-  animation: voice-assistant-rise 320ms ease-out;
+// The EU AI Act disclosure. Up from the moment the panel opens, held well past
+// what a slow reader needs, then faded once the conversation is under way.
+// Never dismissable by hand, and back again on the next open.
+.voice-assistant-widget--ai-notice {
+  display: none;
 }
 
-.voice-assistant-round-button {
+.voice-assistant-standard:has(.voice-assistant-widget.-active) .voice-assistant-widget--ai-notice {
   display: flex;
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid var(--x-border);
+  border-radius: 999px;
+  background-color: var(--x-bg);
+  color: var(--x-ink);
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.46), 0 1px 4px rgba(0, 0, 0, 0.30);
+  width: max-content;
+  max-width: calc(100vw - 24px);
   margin: auto;
-  width: 52px;
-  height: 52px;
-  padding: 0;
-  border-radius: 100%;
-  color: white;
-  background-color: #4a4a4a;
-  font-size: 30px;
-  justify-content: center;
-  align-items: center;
-  transition: 200ms ease all;
-  will-change: left;
-  z-index: 2;
-  margin-top: 0;
-  border-top: 1px solid hsla(0, 0%, 100%, .1);
-  border-right: 1px solid hsla(0, 0%, 100%, .05);
-  margin-bottom: 0 !important;
-
-  &:not(:disabled) {
-    &:hover {
-      background-color: #5b5959;
-    }
-
-    &:active {
-      background-color: #5f5f5f;
-    }
-  }
-
-  &:disabled {
-    opacity: 1;
-
-    &:hover {
-      background-color: #4a4a4a;
-      color: inherit;
-    }
-  }
+  opacity: 1;
+  transition: opacity 400ms ease;
+  // `backwards` holds the from-state through the delay only. `forwards`/`both`
+  // would keep overriding opacity after the run and block the fade-out below.
+  animation: voice-assistant-notice-rise 320ms ease-out $va-notice-delay backwards;
 }
 
-.voice-assistant-topbar {
-  display: flex;
-  justify-content: flex-start;
-  position: relative;
-  padding-left: 15px;
-  padding-top: 2px;
-  margin-bottom: 5px;
-
-  h2 {
-    text-align: left;
-    margin-bottom: 0 !important;
-    padding-top: 3px;
-    padding-bottom: 2px;
-  }
+// Floor on the delay above: the moment the session goes live, speech becomes
+// possible, so the notice is forced up even if the connection beat the delay.
+.voice-assistant-standard:has(.voice-assistant-widget.-active.-va-notice-shown) .voice-assistant-widget--ai-notice {
+  animation: none;
 }
 
-@keyframes startingTextAnimation {
-  from { opacity: 0.55; }
-  to   { opacity: 0.8; }
-}
-
-.voice-assistant-statusbar-value[data-status-value="starting"] {
-  opacity: 0.55;
-  will-change: opacity;
-}
-
-.voice-assistant-panel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 54px;
-  position: relative;
-  transition: 200ms background-color ease;
-  margin: 0 18px;
-
-  .voice-assistant-speak-button {
-    i::before {
-      content: "\f130";
-    }
-  }
-}
-
-@keyframes visualizationAnimation {
-  0%   { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-
-.js-voice-assistant-visualization {
+// Faded rather than pulled from the flow: the capsule is the last child of a
+// bottom-anchored stack, so it holds its place either way and nothing jumps.
+.voice-assistant-standard:has(.voice-assistant-widget.-active.-va-notice-hidden) .voice-assistant-widget--ai-notice {
   opacity: 0;
-  width: 250px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 10px;
+  pointer-events: none;
 }
 
-// .js-voice-assistant-visualization-blur {
-//   opacity: 0;
-//   width: 250px;
-//   position: absolute;
-//   top: 0;
-//   bottom: 0;
-//   right: 10px;
-//   filter: blur(8px);
-//   transform: scale(7.5);
-// }
-
-@keyframes showElement {
-  0%   { opacity: 0; }
-  50%  { opacity: 0; }
-  80%  { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-@keyframes speakButtonStartAnimation {
-  0%   {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  100% {
-    left: 47px;
-    transform: translateX(0);
-  }
-}
-
-@keyframes backgroundGradientPulse {
-  0%   {
-    filter: brightness(1);
-  }
-  50%  {
-    filter: brightness(1.15);
-  }
-  100% {
-    filter: brightness(1);
-  }
-}
-
-.voice-assistant-stop-button {
-  display: none;
-  left: 0px;
-  background: #2c2c2e !important;
-  color: #2c2c2e !important;
-  font-size: 25px !important;
-
-  i::before {
-    content: "\f04d";
-  }
-
-  &:hover {
-    background-color: #d67d7d !important;
-  }
-}
-
-.voice-assistant-speak-button {
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  z-index: 2;
-}
-
-.voice-assistant-statusbar {
-  padding-top: 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15px;
-}
-
-.voice-assistant-statusbar-value {
-  display: none;
-}
-
-.voice-assistant-messagebar {
-  display: flex;
-  font-size: 12px;
-  color: #93d98e;
-  justify-content: center;
-  opacity: 0;
-  transition: 500ms ease opacity;
-  overflow: hidden;
-  text-wrap: nowrap;
-
-  &.-visible {
-    opacity: 1;
-  }
-
-  &.-error {
-    color: #b85050;
-  }
-}
-
-.voice-assistant--expand-button {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  position: static;
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-  padding: 8px 18px;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.voice-assistant--expand-icon {
+// Matches the tooltip trigger's box on the other end, so the sentence sits
+// centred in the pill rather than pushed left by the wider trailing button.
+.voice-assistant-widget--ai-notice > i {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #4a4a4a;
-  font-size: 18px;
+  width: 22px;
+  color: var(--x-muted);
 }
 
-.voice-assistant--collapse-button {
+.voice-assistant-widget--ai-notice-tip {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.voice-assistant-widget--ai-notice-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--x-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 160ms ease-out, color 160ms ease-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--x-ink);
+  }
+
+  &:focus-visible { outline: 2px solid #8e8e93; outline-offset: 2px; }
+}
+
+// Geocoding feedback from the assistant. Floats above the stack so a message
+// arriving mid-conversation never shifts the capsule under the user's cursor.
+.voice-assistant-widget--messagebar {
+  display: none;
+}
+
+.voice-assistant-standard:has(.voice-assistant-widget.-active) .voice-assistant-widget--messagebar {
   position: absolute;
-  right: 5px;
-  top: 5px;
-  font-size: 18px;
-  width: 28px !important;
-  height: 28px !important;
-  padding: 0 !important;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background-color: var(--x-bg);
+  color: #93d98e;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms ease;
+
+  &.-visible:not(:empty) { opacity: 1; }
+  &.-error { color: #b85050; }
+}
+
+// Dock trigger is wrapped in <rich-tooltip> (inline-block by default) — keep
+// the dock full-width.
+.voice-assistant-widget--dock-tip {
   display: block;
+  width: 100%;
+}
+
+.voice-assistant-widget--dock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 14px 9px 9px;
+  border: 1px solid var(--x-border);
+  border-radius: 999px;
+  background-color: var(--x-bg);
+  color: var(--x-ink);
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.36);
+  transition: background-color 160ms ease-out;
+
+  &:hover { background-color: #3a3a3c; }
+  &:focus-visible { outline: 2px solid #8e8e93; outline-offset: 2px; }
+}
+
+.voice-assistant-widget--dock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #4a4a4a;
+  color: #fff;
+  font-size: 15px;
+}
+
+.voice-assistant-widget--dock-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+// Positioning context so the connecting overlay can centre over the panel.
+.voice-assistant-widget--panel {
+  position: relative;
+  display: none;
+}
+
+.voice-assistant-widget.-active .voice-assistant-widget--dock { display: none; }
+
+.voice-assistant-widget.-active .voice-assistant-widget--panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: $va-capsule-height;
+  border: 1px solid var(--x-border);
+  border-radius: 999px;
+  background-color: var(--x-bg);
+  color: var(--x-ink);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.46), 0 1px 4px rgba(0, 0, 0, 0.30);
+  animation: voice-assistant-rise 280ms ease-out;
+}
+
+.voice-assistant-widget--head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+}
+
+.voice-assistant-widget--title { display: none; }
+
+.voice-assistant-widget--close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background-color: #3a3a3c;
+  color: var(--x-muted);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 160ms ease-out;
+
+  &:hover { background-color: #5a5a5e; }
+  &:focus-visible { outline: 2px solid #8e8e93; outline-offset: 2px; }
+}
+
+.voice-assistant-widget--stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+// Start vs mute/unmute: identical-looking buttons toggled by session state.
+// Start shows until the session is live; the mute/unmute toggle replaces it.
+.voice-assistant-widget--mute-tip {
+  display: none;
+}
+
+.voice-assistant-widget.-va-live .voice-assistant-widget--start-tip {
+  display: none;
+}
+
+.voice-assistant-widget.-va-live .voice-assistant-widget--mute-tip {
+  display: inline-block;
+}
+
+.voice-assistant-widget--mic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background-color: #4a4a4a;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 160ms ease-out;
+
+  &:hover { background-color: #5b5959; }
+  &:focus-visible { outline: 2px solid #8e8e93; outline-offset: 3px; }
+}
+
+.voice-assistant-widget.-listening .voice-assistant-widget--mic {
+  background-color: #c0392b;
+}
+
+// Shared SiriWave host. The JS drops the visualization into the canvas node
+// and reads its accent from --va-wave-color.
+.voice-assistant-widget--wave {
+  position: relative;
+  flex: 1;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.voice-assistant-widget--wave-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+// Muted (paused) state: slashed mic + a frosted overlay that blurs the
+// visualization behind it and carries the muted message.
+.voice-assistant-widget--muted-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+}
+
+.voice-assistant-widget.-va-muted .voice-assistant-widget--muted-overlay {
+  display: flex;
+}
+
+.voice-assistant-widget.-va-muted .voice-assistant-widget--mic i::before {
+  content: "\f131";
+}
+
+.voice-assistant-widget--status {
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: var(--x-muted);
+  white-space: nowrap;
+}
+
+.voice-assistant-widget--status-live {
+  display: none;
+  color: #8e8e93;
+  font-weight: 600;
+}
+
+.voice-assistant-widget.-listening .voice-assistant-widget--status-live {
+  display: inline;
+}
+
+// Connecting state: a blinking message centred over the panel until the
+// session is live (overlays the panel; lets clicks pass through).
+.voice-assistant-widget--starting {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--x-muted);
+}
+
+.voice-assistant-widget.-va-starting .voice-assistant-widget--starting {
+  display: flex;
+  animation: voice-assistant-blink 1300ms ease-in-out 2;
+}
+
+@keyframes voice-assistant-rise {
+  from {
+    opacity: 0;
+    transform: translate(64px, 16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+// Notice enters a beat behind the capsule so the two read as one stack
+// assembling, rather than both landing at once.
+@keyframes voice-assistant-notice-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Blink from dim to the regular (inherited) text colour, twice, slowly.
+@keyframes voice-assistant-blink {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }

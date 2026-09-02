@@ -1,0 +1,29 @@
+en:
+  components:
+    adm:
+      masterportal_file_upload_area_component:
+        label: Upload GeoJSON files
+        attach_button: Choose files
+        explanation: >-
+          Upload GeoJSON files directly instead of fetching them from an endpoint URL.
+          The expected format is an OGC API Features "items" response (a FeatureCollection
+          of point features), e.g. the download from "…/collections/trinkbrunnen/items?f=json".
+          Each file becomes its own dataset and is processed together with the selected
+          datasets on import. Maximum file size: %{size} MB.
+        from_file: "From file:"
+        name_label: Dataset name
+        name_hint: >-
+          This name identifies the dataset. Re-importing under the same name updates that dataset;
+          a different name creates a new one. File names are often generic (e.g. items.geojson), so
+          choose a clear, descriptive name such as the collection it came from.
+        name_placeholder: "e.g. Drinking fountains"
+        remove: Remove
+        errors:
+          too_large: "File is too large (max. %{size} MB)."
+          invalid_type: File must be a .json or .geojson file.
+          invalid_json: File is not valid JSON.
+          not_feature_collection: File is not a GeoJSON FeatureCollection.
+          empty: File is empty.
+          duplicate_name: Another file in this upload uses the same dataset name.
+          name_taken: A live dataset already uses this name — choose a different one.
+          generic: File could not be processed.

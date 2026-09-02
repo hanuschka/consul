@@ -1,4 +1,4 @@
-<aside class="sidebar">
+<aside class="sidebar" aria-label="<%= t('custom.accessibility.complementary.projekt_page') %>">
   <%# <% if show_admin_controls_for_projekt?(@projekt) %1> %>
   <%#   <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.admin_controls.title"), icon_name: "cog", class_name: "js-sidebar-admin-controlls") do |c| %1> %>
   <%#     <%= render partial: 'pages/sidebar/admin_controls' %1> %>
@@ -62,7 +62,7 @@
   <% if feature?("sdg") && (projekt.sdg_goals.any? || show_admin_controls_for_projekt?(@projekt)) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.sdgs.title"), icon_name: "tag") do |c| %>
       <% if show_admin_controls_for_projekt?(@projekt) %>
-        <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
+        <%= form_for(@projekt, url: update_taxonomy_adm_projekts_projekt_path(@projekt), method: :patch, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
           <%= render SDG::SimpleEditSelectorComponent.new(f) %>
         <% end %>
       <% else %>
@@ -76,7 +76,7 @@
   <% if Tag.any? && (projekt.tags.category.any? || show_admin_controls_for_projekt?(@projekt)) %>
     <%= render Shared::SidebarCardComponent.new(title: t("custom.projekts.page.sidebar.tags.title"), icon_name: "tag") do |c| %>
       <% if show_admin_controls_for_projekt?(@projekt) %>
-        <%= form_for(@projekt, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
+        <%= form_for(@projekt, url: update_taxonomy_adm_projekts_projekt_path(@projekt), method: :patch, html: { data: {resource: "projekt", id: @projekt.id}, class: "js-update-projekt-form"}) do |f| %>
           <%= render Categories::SimpleEditSelectorComponent.new(f) %>
         <% end %>
       <% else %>

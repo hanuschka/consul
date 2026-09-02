@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_25_124215) do
+ActiveRecord::Schema.define(version: 2026_08_27_150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -224,6 +224,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.bigint "user_message_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.jsonb "tool_activity", default: [], null: false
     t.index ["ai_chat_id", "created_at"], name: "index_ai_chat_messages_on_ai_chat_id_and_created_at"
     t.index ["ai_chat_id"], name: "index_ai_chat_messages_on_ai_chat_id"
     t.index ["user_message_id"], name: "index_ai_chat_messages_on_user_message_id"
@@ -238,6 +239,27 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["resource_type", "resource_id"], name: "index_ai_chats_on_resource_type_and_resource_id"
+  end
+
+  create_table "ai_usage_records", force: :cascade do |t|
+    t.date "period_month", null: false
+    t.string "feature", null: false
+    t.string "provider", null: false
+    t.string "model", null: false
+    t.integer "request_count", default: 0, null: false
+    t.integer "unpriced_request_count", default: 0, null: false
+    t.bigint "input_tokens", default: 0, null: false
+    t.bigint "output_tokens", default: 0, null: false
+    t.bigint "cache_read_tokens", default: 0, null: false
+    t.bigint "cache_write_tokens", default: 0, null: false
+    t.bigint "thinking_tokens", default: 0, null: false
+    t.float "audio_seconds", default: 0.0, null: false
+    t.decimal "cost_total", precision: 14, scale: 6, default: "0.0", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "version", default: 0, null: false
+    t.index ["period_month", "feature", "provider", "model"], name: "index_ai_usage_records_on_period_and_breakdown", unique: true
+    t.index ["period_month"], name: "index_ai_usage_records_on_period_month"
   end
 
   create_table "api_clients", force: :cascade do |t|
@@ -788,6 +810,8 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.text "warning_text", default: ""
     t.string "default_responsible_type"
     t.bigint "default_responsible_id"
+    t.boolean "ai_fallback", default: false, null: false
+    t.text "ai_hint"
     t.index ["default_responsible_type", "default_responsible_id"], name: "index_deficiency_report_categories_on_default_responsible"
   end
 
@@ -830,6 +854,23 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["deficiency_report_id"], name: "index_deficiency_report_feedback_forms_on_deficiency_report_id"
+  end
+
+  create_table "deficiency_report_intake_channel_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_intake_channel_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_3ee3fbfe2e51b97debe9275dca58a65df747c9da"
+    t.index ["locale"], name: "index_deficiency_report_intake_channel_translations_on_locale"
+  end
+
+  create_table "deficiency_report_intake_channels", force: :cascade do |t|
+    t.integer "given_order"
+    t.boolean "default", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "deficiency_report_managers", force: :cascade do |t|
@@ -893,6 +934,28 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.integer "reminder_delay"
   end
 
+  create_table "deficiency_report_subcategories", force: :cascade do |t|
+    t.bigint "deficiency_report_category_id", null: false
+    t.integer "given_order"
+    t.string "default_responsible_type"
+    t.bigint "default_responsible_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "ai_hint"
+    t.index ["default_responsible_type", "default_responsible_id"], name: "index_dr_subcategories_on_default_responsible"
+    t.index ["deficiency_report_category_id"], name: "index_dr_subcategories_on_category_id"
+  end
+
+  create_table "deficiency_report_subcategory_translations", force: :cascade do |t|
+    t.bigint "deficiency_report_subcategory_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["deficiency_report_subcategory_id"], name: "index_5cceb5c9355a5d7ca9bee41d38d557369ce7db46"
+    t.index ["locale"], name: "index_deficiency_report_subcategory_translations_on_locale"
+  end
+
   create_table "deficiency_report_translations", force: :cascade do |t|
     t.bigint "deficiency_report_id", null: false
     t.string "locale", null: false
@@ -904,6 +967,15 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.text "official_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
+  end
+
+  create_table "deficiency_report_watches", force: :cascade do |t|
+    t.bigint "deficiency_report_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deficiency_report_id", "user_id"], name: "index_dr_watches_on_report_and_user", unique: true
+    t.index ["user_id"], name: "index_dr_watches_on_user_id"
   end
 
   create_table "deficiency_reports", force: :cascade do |t|
@@ -933,16 +1005,22 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.bigint "responsible_id"
     t.datetime "status_changed_at"
     t.datetime "archived_at"
+    t.bigint "deficiency_report_intake_channel_id"
+    t.bigint "deficiency_report_subcategory_id"
+    t.bigint "recorded_by_id"
     t.index ["cached_anonymous_votes_total"], name: "index_deficiency_reports_on_cached_anonymous_votes_total"
     t.index ["cached_votes_down"], name: "index_deficiency_reports_on_cached_votes_down"
     t.index ["cached_votes_score"], name: "index_deficiency_reports_on_cached_votes_score"
     t.index ["cached_votes_total"], name: "index_deficiency_reports_on_cached_votes_total"
     t.index ["cached_votes_up"], name: "index_deficiency_reports_on_cached_votes_up"
     t.index ["deficiency_report_category_id"], name: "index_deficiency_reports_on_deficiency_report_category_id"
+    t.index ["deficiency_report_intake_channel_id"], name: "index_deficiency_reports_on_intake_channel_id"
     t.index ["deficiency_report_officer_id"], name: "index_deficiency_reports_on_deficiency_report_officer_id"
     t.index ["deficiency_report_status_id"], name: "index_deficiency_reports_on_deficiency_report_status_id"
+    t.index ["deficiency_report_subcategory_id"], name: "index_deficiency_reports_on_subcategory_id"
     t.index ["hidden_at"], name: "index_deficiency_reports_on_hidden_at"
     t.index ["hot_score"], name: "index_deficiency_reports_on_hot_score"
+    t.index ["recorded_by_id"], name: "index_deficiency_reports_on_recorded_by_id"
     t.index ["responsible_type", "responsible_id"], name: "index_deficiency_reports_on_responsible"
     t.index ["tsv"], name: "index_deficiency_reports_on_tsv", using: :gin
   end
@@ -1263,6 +1341,8 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.boolean "concealed", default: false
     t.string "credits"
     t.boolean "admin", default: false, null: false
+    t.boolean "ai_generated", default: false, null: false
+    t.boolean "ai_generated_in_app", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
   end
@@ -1280,11 +1360,15 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
   create_table "individual_group_values_projekt_phases", id: false, force: :cascade do |t|
     t.bigint "individual_group_value_id", null: false
     t.bigint "projekt_phase_id", null: false
+    t.index ["individual_group_value_id", "projekt_phase_id"], name: "idx_igv_projekt_phases_on_value_id_and_phase_id"
+    t.index ["projekt_phase_id", "individual_group_value_id"], name: "idx_igv_projekt_phases_on_phase_id_and_value_id"
   end
 
   create_table "individual_group_values_projekts", id: false, force: :cascade do |t|
     t.bigint "individual_group_value_id", null: false
     t.bigint "projekt_id", null: false
+    t.index ["individual_group_value_id", "projekt_id"], name: "idx_igv_projekts_on_value_id_and_projekt_id"
+    t.index ["projekt_id", "individual_group_value_id"], name: "idx_igv_projekts_on_projekt_id_and_value_id"
   end
 
   create_table "individual_groups", force: :cascade do |t|
@@ -1594,6 +1678,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.bigint "mappable_id"
     t.decimal "opacity", precision: 2, scale: 1, default: "1.0"
     t.jsonb "config", default: {}, null: false
+    t.string "layer_defs"
     t.index ["mappable_type", "mappable_id"], name: "index_map_layers_on_mappable_type_and_mappable_id"
     t.index ["projekt_id"], name: "index_map_layers_on_projekt_id"
   end
@@ -1635,6 +1720,11 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.text "destroy_error"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "source", default: "geoserver", null: false
+    t.string "icon_url"
+    t.string "feature_color"
+    t.boolean "contains_shapes", default: false, null: false
+    t.boolean "has_default_icon_pins", default: false, null: false
     t.index ["projekt_phase_id", "collection_id"], name: "index_masterportal_collections_on_phase_and_collection_id", unique: true
     t.index ["projekt_phase_id"], name: "index_masterportal_collections_on_projekt_phase_id"
   end
@@ -1655,6 +1745,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "collection_title"
     t.bigint "masterportal_collection_id"
+    t.jsonb "geometry"
     t.index "((properties)::text) gin_trgm_ops", name: "index_masterportal_pins_on_properties_text_trgm", using: :gin
     t.index ["collection_id"], name: "index_masterportal_pins_on_collection_id_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["description"], name: "index_masterportal_pins_on_description_trgm", opclass: :gin_trgm_ops, using: :gin
@@ -1849,6 +1940,15 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
   end
 
+  create_table "poll_answer_map_points", force: :cascade do |t|
+    t.bigint "poll_answer_id", null: false
+    t.float "latitude", null: false
+    t.float "longitude", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["poll_answer_id"], name: "index_poll_answer_map_points_on_poll_answer_id"
+  end
+
   create_table "poll_answers", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "author_id"
@@ -1861,6 +1961,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
     t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
+    t.index ["question_id", "author_id"], name: "index_poll_answers_unique_map_point_answer", unique: true, where: "(answer IS NULL)"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
   end
 
@@ -1963,6 +2064,21 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.index ["question_id"], name: "index_poll_question_answers_on_question_id"
   end
 
+  create_table "poll_question_imports", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "author_id"
+    t.text "extracted_text"
+    t.string "content_locale"
+    t.string "status", default: "pending", null: false
+    t.jsonb "result"
+    t.jsonb "created_question_ids", default: []
+    t.text "error_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_poll_question_imports_on_author_id"
+    t.index ["projekt_phase_id", "status"], name: "index_poll_question_imports_on_projekt_phase_id_and_status"
+  end
+
   create_table "poll_question_translations", id: :serial, force: :cascade do |t|
     t.integer "poll_question_id", null: false
     t.string "locale", null: false
@@ -2000,11 +2116,14 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.bigint "contextualize_by_poll_question_id"
     t.bigint "contexted_clone_of_poll_question_id"
     t.bigint "context_id"
+    t.boolean "randomize_answers", default: false, null: false
+    t.boolean "randomize_position", default: false, null: false
     t.index ["author_id"], name: "index_poll_questions_on_author_id"
     t.index ["context_id"], name: "index_poll_questions_on_context_id"
     t.index ["contexted_clone_of_poll_question_id"], name: "index_poll_questions_on_contexted_clone_of_poll_question_id"
     t.index ["contextualize_by_poll_question_id"], name: "index_poll_questions_on_contextualize_by_poll_question_id"
     t.index ["next_question_id"], name: "index_poll_questions_on_next_question_id"
+    t.index ["parent_question_id"], name: "index_poll_questions_on_parent_question_id"
     t.index ["poll_id"], name: "index_poll_questions_on_poll_id"
     t.index ["proposal_id"], name: "index_poll_questions_on_proposal_id"
     t.index ["tsv"], name: "index_poll_questions_on_tsv", using: :gin
@@ -2108,6 +2227,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.jsonb "ai_stats", default: {}
     t.string "ai_stats_refresh_status"
     t.datetime "ai_stats_refreshed_at"
+    t.boolean "live", default: true, null: false
     t.index ["budget_id"], name: "index_polls_on_budget_id", unique: true
     t.index ["geozone_restricted"], name: "index_polls_on_geozone_restricted"
     t.index ["projekt_id"], name: "index_polls_on_projekt_id"
@@ -2149,27 +2269,15 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.index ["projekt_phase_id"], name: "index_projekt_arguments_on_projekt_phase_id"
   end
 
-  create_table "projekt_evaluation_visibilities", force: :cascade do |t|
-    t.bigint "projekt_id", null: false
-    t.boolean "show_project_summary", default: false, null: false
-    t.boolean "show_settings", default: false, null: false
-    t.boolean "show_phase_summaries", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["projekt_id"], name: "index_projekt_evaluation_visibilities_on_projekt_id", unique: true
-  end
-
   create_table "projekt_evaluations", force: :cascade do |t|
     t.bigint "projekt_id", null: false
     t.jsonb "data", default: {}
     t.jsonb "selected_question_ids", default: []
     t.datetime "generated_at"
-    t.string "share_token"
     t.string "status", default: "pending", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_id"], name: "index_projekt_evaluations_on_projekt_id"
-    t.index ["share_token"], name: "index_projekt_evaluations_on_share_token", unique: true
     t.index ["status"], name: "index_projekt_evaluations_on_status"
   end
 
@@ -2222,7 +2330,6 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.text "extracted_text"
     t.jsonb "ai_result"
     t.text "additional_user_instructions"
-    t.boolean "generate_image", default: false, null: false
     t.bigint "user_id", null: false
     t.bigint "projekt_id"
     t.text "error_message"
@@ -2234,6 +2341,10 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.integer "created_projekt_ids", default: [], null: false, array: true
     t.string "failure_stage"
     t.jsonb "error_details", default: {}, null: false
+    t.string "content_locale"
+    t.jsonb "source_images", default: [], null: false
+    t.string "title_image_mode", default: "document", null: false
+    t.integer "title_image_index"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
     t.index ["status"], name: "index_projekt_imports_on_status"
@@ -2267,7 +2378,9 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "projekt_phase_id"
+    t.integer "masterportal_collection_id"
     t.index ["projekt_id"], name: "index_projekt_labels_on_projekt_id"
+    t.index ["projekt_phase_id", "masterportal_collection_id"], name: "index_projekt_labels_on_phase_and_masterportal_collection", unique: true, where: "(masterportal_collection_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_labels_on_projekt_phase_id"
   end
 
@@ -2336,6 +2449,9 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.boolean "show_open_responses", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "show_budget_segments", default: true, null: false
+    t.boolean "show_heatmap", default: false, null: false
+    t.boolean "show_poll_stats", default: false, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_evaluation_visibilities_on_projekt_phase_id", unique: true
   end
 
@@ -2443,6 +2559,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.string "masterportal_last_collection_ids"
     t.string "masterportal_destroy_status"
     t.text "masterportal_destroy_error"
+    t.string "mitmachbox_survey_id"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2456,6 +2573,8 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.integer "position", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "masterportal_collection_id"
+    t.index ["projekt_phase_id", "masterportal_collection_id"], name: "index_poi_categories_on_phase_and_masterportal_collection", unique: true, where: "(masterportal_collection_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_categories_on_projekt_phase_id"
   end
 
@@ -2558,6 +2677,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["key", "value", "projekt_id"], name: "index_projekt_settings_on_key_and_value_and_projekt_id"
     t.index ["projekt_id", "key", "value"], name: "index_projekt_settings_on_projekt_id_key_value"
     t.index ["projekt_id"], name: "index_projekt_settings_on_projekt_id"
   end
@@ -2613,11 +2733,32 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.bigint "landing_page_id"
     t.datetime "published_at"
     t.boolean "imported_by_ai", default: false, null: false
+    t.string "banner_image_generation_status"
+    t.datetime "content_updated_at"
+    t.boolean "activated", default: false, null: false
+    t.boolean "show_in_navigation", default: true, null: false
+    t.boolean "show_in_overview_page", default: true, null: false
+    t.boolean "show_in_overview_page_navigation", default: false, null: false
+    t.boolean "show_in_homepage", default: true, null: false
+    t.boolean "show_in_individual_list", default: false, null: false
+    t.boolean "show_in_sidebar_filter", default: true, null: false
+    t.datetime "whatsapp_broadcast_sent_at"
+    t.string "whatsapp_broadcast_slug"
+    t.string "copy_status"
+    t.bigint "copied_from_projekt_id"
+    t.index ["activated"], name: "index_projekts_on_activated"
+    t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
+    t.index ["show_in_homepage"], name: "index_projekts_on_show_in_homepage"
+    t.index ["show_in_individual_list"], name: "index_projekts_on_show_in_individual_list"
+    t.index ["show_in_navigation"], name: "index_projekts_on_show_in_navigation"
+    t.index ["show_in_overview_page"], name: "index_projekts_on_show_in_overview_page"
+    t.index ["show_in_overview_page_navigation"], name: "index_projekts_on_show_in_overview_page_navigation"
+    t.index ["show_in_sidebar_filter"], name: "index_projekts_on_show_in_sidebar_filter"
     t.index ["tsv"], name: "index_projekts_on_tsv", using: :gin
   end
 
@@ -3115,6 +3256,10 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.string "landing_navigation_link_color", default: "#000000"
     t.string "brand_color"
     t.datetime "published_at"
+    t.string "footer_key"
+    t.integer "footer_position"
+    t.text "landing_ai_context"
+    t.index ["footer_key"], name: "index_site_customization_pages_on_footer_key", unique: true
     t.index ["landing_show_in_top_nav"], name: "pages_landing_show_in_top_nav"
     t.index ["projekt_id"], name: "index_site_customization_pages_on_projekt_id"
   end
@@ -3317,6 +3462,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.text "keycloak_id_token", default: ""
     t.string "guest_user_agent"
     t.boolean "system_user", default: false, null: false
+    t.string "company_name"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["date_of_birth"], name: "index_users_on_date_of_birth"
@@ -3421,6 +3567,8 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "signature_id"
+    t.boolean "conditional", default: false, null: false
+    t.index ["conditional"], name: "index_votes_on_conditional", where: "conditional"
     t.index ["signature_id"], name: "index_votes_on_signature_id"
     t.index ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope"
     t.index ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope"
@@ -3430,6 +3578,106 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
     t.text "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "whatsapp_accounts", force: :cascade do |t|
+    t.string "wa_id", null: false
+    t.string "phone"
+    t.string "profile_name"
+    t.integer "user_id"
+    t.string "state", default: "unlinked", null: false
+    t.datetime "verified_at"
+    t.datetime "opt_in_at"
+    t.datetime "opt_out_at"
+    t.datetime "last_inbound_at"
+    t.string "link_token"
+    t.datetime "link_token_sent_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "notify_new_projekt", default: true, null: false
+    t.boolean "notify_deadline_approaching", default: true, null: false
+    t.boolean "notify_deadline_passed", default: true, null: false
+    t.boolean "notify_new_supports", default: true, null: false
+    t.boolean "notify_new_comments", default: true, null: false
+    t.boolean "notify_moderation_decision", default: true, null: false
+    t.datetime "ai_disclosed_at"
+    t.bigint "guest_user_id"
+    t.datetime "terms_accepted_at"
+    t.string "reply_language"
+    t.datetime "reply_language_settled_at"
+    t.index "COALESCE(last_inbound_at, created_at) DESC", name: "index_whatsapp_accounts_on_last_activity"
+    t.index ["guest_user_id"], name: "index_whatsapp_accounts_on_guest_user_id", unique: true
+    t.index ["last_inbound_at"], name: "index_whatsapp_accounts_on_last_inbound_at"
+    t.index ["link_token"], name: "index_whatsapp_accounts_on_link_token", unique: true
+    t.index ["user_id"], name: "index_whatsapp_accounts_on_user_id", unique: true
+    t.index ["verified_at", "opt_out_at"], name: "index_whatsapp_accounts_on_verified_at_and_opt_out_at"
+    t.index ["wa_id"], name: "index_whatsapp_accounts_on_wa_id", unique: true
+  end
+
+  create_table "whatsapp_contribution_translations", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "source_language", null: false
+    t.string "locale", null: false
+    t.text "title"
+    t.text "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "locale"], name: "index_whatsapp_contribution_translations_on_contribution", unique: true
+  end
+
+  create_table "whatsapp_conversations", force: :cascade do |t|
+    t.integer "whatsapp_account_id", null: false
+    t.string "step", default: "idle", null: false
+    t.integer "projekt_phase_id"
+    t.jsonb "context", default: {}, null: false
+    t.integer "revisions_count", default: 0, null: false
+    t.datetime "last_inbound_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "draft_resource_type"
+    t.bigint "draft_resource_id"
+    t.index ["draft_resource_type", "draft_resource_id"], name: "index_whatsapp_conversations_on_draft_resource"
+    t.index ["projekt_phase_id"], name: "index_whatsapp_conversations_on_projekt_phase_id"
+    t.index ["whatsapp_account_id"], name: "index_whatsapp_conversations_on_whatsapp_account_id", unique: true
+  end
+
+  create_table "whatsapp_messages", force: :cascade do |t|
+    t.integer "whatsapp_account_id", null: false
+    t.string "direction", null: false
+    t.string "kind", default: "text", null: false
+    t.text "body"
+    t.string "wa_message_id"
+    t.string "status"
+    t.datetime "sent_at"
+    t.jsonb "error", default: {}, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "projekt_id"
+    t.string "language"
+    t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
+    t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
+    t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
+    t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
+  end
+
+  create_table "whatsapp_notification_deliveries", force: :cascade do |t|
+    t.bigint "whatsapp_account_id", null: false
+    t.bigint "projekt_phase_id"
+    t.string "kind", null: false
+    t.datetime "sent_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["whatsapp_account_id", "projekt_phase_id", "kind"], name: "index_whatsapp_notification_deliveries_on_account_phase_kind", unique: true
+  end
+
+  create_table "whatsapp_webhook_events", force: :cascade do |t|
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "processed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["created_at"], name: "index_whatsapp_webhook_events_on_created_at"
+    t.index ["processed_at"], name: "index_whatsapp_webhook_events_on_processed_at"
   end
 
   create_table "widget_card_translations", id: :serial, force: :cascade do |t|
@@ -3469,7 +3717,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
   add_foreign_key "administrators", "users"
   add_foreign_key "age_range_projekt_phases", "age_ranges"
   add_foreign_key "age_range_projekt_phases", "projekt_phases"
-  add_foreign_key "ai_chat_messages", "ai_chat_messages", column: "user_message_id"
+  add_foreign_key "ai_chat_messages", "ai_chat_messages", column: "user_message_id", on_delete: :nullify
   add_foreign_key "ai_chat_messages", "ai_chats"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
@@ -3493,9 +3741,14 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
   add_foreign_key "deficiency_report_officers", "users"
+  add_foreign_key "deficiency_report_subcategories", "deficiency_report_categories"
+  add_foreign_key "deficiency_report_watches", "deficiency_reports"
+  add_foreign_key "deficiency_report_watches", "users"
   add_foreign_key "deficiency_reports", "deficiency_report_categories"
+  add_foreign_key "deficiency_reports", "deficiency_report_intake_channels"
   add_foreign_key "deficiency_reports", "deficiency_report_officers"
   add_foreign_key "deficiency_reports", "deficiency_report_statuses"
+  add_foreign_key "deficiency_reports", "deficiency_report_subcategories"
   add_foreign_key "documents", "users"
   add_foreign_key "failed_census_calls", "poll_officers"
   add_foreign_key "failed_census_calls", "users"
@@ -3547,6 +3800,7 @@ ActiveRecord::Schema.define(version: 2026_06_25_124215) do
   add_foreign_key "ogc_import_runs", "projekt_phases"
   add_foreign_key "organizations", "users"
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
+  add_foreign_key "poll_answer_map_points", "poll_answers", on_delete: :cascade
   add_foreign_key "poll_answers", "officing_managers"
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"

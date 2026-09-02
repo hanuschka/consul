@@ -24,18 +24,16 @@ class Kern::Table::HeaderComponent < ApplicationComponent
 
     if @filter_options.present?
       current = Array(current_params[@column]).map(&:to_s).compact_blank
-      default_values = Array(@default).map(&:to_s)
 
-      unless default_values.present? && current.sort == default_values.sort
-        current.each do |value|
-          option = @filter_options.find { |v, _| v.to_s == value }
-          option_label = option ? option[1] : value
-          pills << {
-            label: "#{@label}: #{option_label}",
-            remove_array_key: @column,
-            remove_array_value: value
-          }
-        end
+      current.each do |value|
+        option = @filter_options.find { |v, _| v.to_s == value }
+        option_label = option ? option[1] : value
+        pills << {
+          label: "#{@label}: #{option_label}",
+          remove_array_key: @column,
+          remove_array_value: value,
+          keep_empty_marker: @default.present?
+        }
       end
     end
 
@@ -71,7 +69,7 @@ class Kern::Table::HeaderComponent < ApplicationComponent
 
     def filtered?
       params["#{@column}__search"].present? ||
-        params[@column].present? ||
+        Array(params[@column]).map(&:to_s).compact_blank.present? ||
         params["#{@column}__from"].present? ||
         params["#{@column}__to"].present?
     end

@@ -15,6 +15,14 @@ en:
           edit_bundle: Edit question bundle
           answers_title: Answers
           add_answer: Create new answer
+          map_points:
+            title: Map question
+            description: "This question is answered on a map. Participants place pins instead of choosing predefined answer options, so there is no answer list here. The pin limit and the area boundary are configured in the question settings."
+            pin_count:
+              zero: No pins placed
+              one: 1 pin placed
+              other: "%{count} pins placed"
+            download_geojson: Download pins as GeoJSON
           no_answers_title: No answer options available
           no_answers_description: Create answer options users can choose from for this question.
           nested_questions_title: Sub-questions
@@ -33,6 +41,11 @@ en:
             actions: Actions
         destroy:
           success: Question deleted successfully.
+        contexted_clones:
+          skipped: >
+            The contextualized copies were not updated automatically because this poll already has
+            votes. While real votes exist, the contextualized questions can no longer be updated
+            automatically.
         form:
           bundle_title: Topic bundle
           title_placeholder: "e.g. Which measure do you support?"
@@ -68,6 +81,27 @@ en:
           description_hint: Supplements the question with a more detailed description or explanation. The text is shown on the frontend below the question and can contain additional information, explanations, or notes on the voting matter. The text supports rich-text formatting and can contain links.
           answer_mandatory_hint: Defines whether answering this question is mandatory before the user can move to the next question or the closing page. Enable this option for core questions of the participation. Disable it for optional supplementary questions where abstention should be possible.
           show_images_hint: Enables display of images on answer options. Images are shown on the frontend above the respective answer option and help users visually grasp the options. Especially suitable for design questions, location comparisons, or draft votes where visual impressions support the decision.
+          randomize_answers_hint: Shows this question's answer options to participants in random rather than fixed order. On the frontend the answer options appear in an individual but consistent order for each participant; an open answer option always stays in last place. Enable this option to avoid position effects on sensitive or contested questions.
+          randomize_position_hint: Allows this question to swap its position within the poll with other questions that are also randomized, instead of always appearing at its configured place. On the frontend different participants see the randomized questions in a different order, which stays the same for each of them. Enable this option only for questions without branching logic, to reduce order effects between independent questions.
+          max_map_points_label: "Map question: maximum number of pins"
+          max_map_points_hint: "Defines how many pins a participant may place on this map question. On the frontend, placing further pins is blocked once the limit is reached. Set this to match the desired depth of answer, e.g. 1 for a single location or several for collections of places."
+          boundary_import:
+            title: Import area boundary from a GeoJSON file
+            hint: Takes the area polygons from a GeoJSON file over as the boundary, for example a district or development plan area exported from your geoportal. The imported polygons replace what is currently drawn on the map and are saved with the question.
+            file_label: GeoJSON file
+            messages:
+              imported: Boundary taken over. Check the map and save the question.
+              no_polygons: This file contains no area geometries.
+              too_many: This file contains too many areas to be used as a boundary. Please choose a file with fewer areas.
+              too_large: "This file is larger than %{size} MB."
+              invalid_file: This file could not be read as GeoJSON.
+              map_missing: The map is not ready yet. Please reload the page.
+          boundary_label: "Map question: area boundary"
+          boundary_hint: "Restricts the area in which participants can place pins on this map question to a drawn boundary polygon. Draw the area with the maps drawing tools; pins outside it are rejected. Without a drawn area the map stays unrestricted."
+          randomize_position_blocked:
+            branching: Not possible because this question is part of a branch – either one of its answers jumps to another question, or an answer of another question jumps to this one. Remove the jump targets to randomize the position.
+            contextualization: Not possible because this question is contextualized or serves as the context source for another question. The position of those questions is tied to their context question.
+            bundle: Not possible because this question is a question bundle or belongs to one. A bundle always appears as one connected block at its configured position.
           vote_type_hint: "Defines how users can vote on this question. With 'Single vote' each user chooses exactly one answer. With 'Multiple choice' votes can be distributed across multiple answers. With 'Weighted multiple choice' votes can be weighted differently. The rating scale is suitable for questions with gradations."
           min_rating_scale_label_hint: Optional label at the left end of the rating scale, e.g. "Disagree" or "Poor". If the field is empty, the label is taken automatically from the question description. Use this field only if you want a different or shorter label for the minimum of the scale.
           min_rating_scale_placeholder: "e.g. Disagree"

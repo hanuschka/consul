@@ -1,0 +1,26 @@
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("mailers.proposal_official_answer.hi", username: @author.username) %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= sanitize(
+      t("mailers.proposal_official_answer.text1",
+        proposal_link: link_to(@proposal.title,
+                               proposal_url(@proposal)))
+    ) %>
+  </p>
+
+  <div style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= auto_link_already_sanitized_html wysiwyg(@proposal.official_answer) %>
+  </div>
+
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
+</td>

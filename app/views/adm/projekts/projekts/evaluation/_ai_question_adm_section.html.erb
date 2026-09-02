@@ -37,7 +37,7 @@
             data: { turbo: "true", adm__ai_question_form_target: "form" },
             class: "ai-question-form" do |f| %>
             <%= f.text_area :question,
-              label: t("custom.participation_stats.ai_question.question_label"),
+              label: false,
               placeholder: t("custom.participation_stats.ai_question.placeholder"),
               class: "ai-question-form--input",
               required: true,

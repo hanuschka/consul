@@ -1,0 +1,284 @@
+<%
+  phase = @phase_row.data || {}
+
+  if @live_phase_stats.present?
+    phase = phase.merge("stats" => @live_phase_stats)
+  end
+
+  stats = phase["stats"] || {}
+  poll_based = (stats["polls"] || []).any?
+  color = evaluation_phase_palette[phase["phase_type"]]
+  partial = evaluation_phase_section_partial[phase["phase_type"]]
+  status_url = phase_evaluation_status_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
+  regular_stats_url = regenerate_phase_regular_stats_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
+  ai_stats_url = regenerate_phase_ai_stats_adm_projekts_projekt_path(@projekt, phase_id: phase["phase_id"])
+
+  poll_stats_available = @poll_stats_entries.present?
+  budget_results_available = @budget_results_investments.present?
+
+  default_tab =
+    if budget_results_available
+      "budget_results"
+    elsif poll_stats_available
+      "poll_stats"
+    else
+      "stats"
+    end
+
+  format_generated_at = ->(iso_value) do
+    time = iso_value.present? ? Time.zone.parse(iso_value.to_s) : @phase_row.generated_at
+
+    if time.present?
+      t("adm.projekts.projekts.evaluation.phase_tab.generated_at", date: l(time, format: :long))
+    else
+      t("adm.projekts.projekts.evaluation.phase_tab.generated_at_unknown")
+    end
+  end
+
+  ai_generated_at_text = format_generated_at.call(phase["ai_generated_at"])
+  regular_generated_at_text = format_generated_at.call(phase["regular_generated_at"])
+  stats_live = @live_phase_stats.present?
+  ai_tab_disabled = !Ai::Settings.ai_available? && !phase_has_ai_content?(phase)
+  ai_regen_blocked = !Ai::Settings.ai_available? && phase_has_ai_content?(phase)
+%>
+
+<%= content_for :title, [
+  (@projekt.page&.title || @projekt.name),
+  t("adm.projekts.projekts.evaluation.title"),
+  phase["phase_title"]
+].compact.join(" | ") %>
+
+<div
+  data-controller="adm--phase-regenerate"
+  data-adm--phase-regenerate-status-url-value="<%= status_url %>"
+  data-adm--phase-regenerate-confirm-value="<%= t('adm.projekts.projekts.evaluation.regenerate_phase_confirm') %>"
+>
+  <%= render Adm::HeaderComponent.new(
+    breadcrumbs: @breadcrumbs,
+    back_button_url: evaluation_adm_projekts_projekt_path(@projekt),
+    frontend_url: projekt_path(@projekt),
+    compact: true
+  ) %>
+
+  <custom-tabs
+    class="kern-container adm-evaluation-phase-container mb-5"
+    param="tab"
+    default="<%= default_tab %>"
+    data-controller="adm--evaluation-tabs"
+    data-action="custom-tabs:change->adm--evaluation-tabs#change"
+    data-adm--evaluation-tabs-regular-url-value="<%= regular_stats_url %>"
+    data-adm--evaluation-tabs-ai-url-value="<%= ai_stats_url %>"
+    data-adm--evaluation-tabs-regular-label-value="<%= t('adm.projekts.projekts.evaluation.regenerate_regular_stats_button') %>"
+    data-adm--evaluation-tabs-ai-label-value="<%= t('adm.projekts.projekts.evaluation.regenerate_ai_stats_button') %>"
+    data-adm--evaluation-tabs-ai-regen-blocked-value="<%= ai_regen_blocked %>"
+  >
+    <% if !@phase_row.processing? && !@phase_row.failed? %>
+      <div class="adm-evaluation-view-tabs-wrap" data-adm--evaluation-tabs-target="bar">
+      <div
+        class="custom-tabs--list adm-evaluation-view-tabs"
+        role="tablist"
+        aria-label="<%= t("adm.projekts.projekts.evaluation.view_tabs.aria_label") %>"
+      >
+        <% if budget_results_available %>
+          <custom-tab
+            for="budget_results"
+            class="adm-evaluation-view-tabs--tab -active"
+          >
+            <span class="adm-evaluation-view-tabs--tab-label">
+              <span
+                class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+                aria-hidden="true"
+              >emoji_events</span>
+              <i
+                class="adm-evaluation-view-tabs--icon fas fa-trophy projekt-evaluation-icon-fa"
+                aria-hidden="true"
+              ></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.budget_results") %>
+            </span>
+            <span class="adm-evaluation-view-tabs--date -live">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+              <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
+            </span>
+          </custom-tab>
+        <% end %>
+        <% if @poll_stats_entries.present? %>
+          <custom-tab
+            for="poll_stats"
+            class="adm-evaluation-view-tabs--tab -active"
+          >
+            <span class="adm-evaluation-view-tabs--tab-label">
+              <span
+                class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+                aria-hidden="true"
+              >insert_chart</span>
+              <i
+                class="adm-evaluation-view-tabs--icon fas fa-chart-pie projekt-evaluation-icon-fa"
+                aria-hidden="true"
+              ></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats") %>
+            </span>
+            <span class="adm-evaluation-view-tabs--date -live">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+              <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
+            </span>
+          </custom-tab>
+        <% end %>
+        <custom-tab
+          for="stats"
+          class="adm-evaluation-view-tabs--tab<%= " -active" if default_tab == "stats" %>"
+        >
+          <span class="adm-evaluation-view-tabs--tab-label">
+            <span
+              class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+              aria-hidden="true"
+            >monitoring</span>
+            <i
+              class="adm-evaluation-view-tabs--icon fas fa-chart-bar projekt-evaluation-icon-fa"
+              aria-hidden="true"
+            ></i>
+            <%= t("adm.projekts.projekts.evaluation.view_tabs.stats") %>
+          </span>
+          <% if stats_live %>
+            <span class="adm-evaluation-view-tabs--date -live">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">sensors</span>
+              <i class="fas fa-broadcast-tower projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.poll_stats_live") %>
+            </span>
+          <% else %>
+            <span class="adm-evaluation-view-tabs--date">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
+              <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= regular_generated_at_text %>
+            </span>
+          <% end %>
+        </custom-tab>
+        <custom-tab
+          for="ai"
+          class="adm-evaluation-view-tabs--tab<%= " -disabled" if ai_tab_disabled %>"
+          <%= "disabled" if ai_tab_disabled %>
+        >
+          <% ai_tab_label = capture do %>
+            <span class="adm-evaluation-view-tabs--tab-label">
+              <span
+                class="adm-evaluation-view-tabs--icon material-symbols-outlined projekt-evaluation-icon-material"
+                aria-hidden="true"
+              >auto_awesome</span>
+              <i
+                class="adm-evaluation-view-tabs--icon fas fa-magic projekt-evaluation-icon-fa"
+                aria-hidden="true"
+              ></i>
+              <%= t("adm.projekts.projekts.evaluation.view_tabs.ai") %>
+            </span>
+          <% end %>
+          <% if ai_tab_disabled %>
+            <%= render Shared::AiFeatureTooltipComponent.new(
+              feature_title: t("adm.projekts.projekts.evaluation.view_tabs.ai"),
+              feature_text: t("adm.projekts.projekts.evaluation.view_tabs.ai_tab_disabled_hint")
+            ) do %>
+              <%= ai_tab_label %>
+            <% end %>
+          <% else %>
+            <%= ai_tab_label %>
+            <span class="adm-evaluation-view-tabs--date">
+              <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
+              <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <%= ai_generated_at_text %>
+            </span>
+          <% end %>
+        </custom-tab>
+      </div>
+
+      <div class="adm-evaluation-view-tabs__actions">
+        <% if poll_based %>
+          <div class="poll-meta">
+            <%= t("adm.projekts.projekts.evaluation.poll_meta",
+              voters: stats["participants_count"].to_i,
+              questions: stats["questions_count"].to_i) %>
+          </div>
+        <% end %>
+
+        <div class="adm-evaluation-view-tabs__actions-buttons">
+          <%= kern_link_button(
+            evaluation_visibility_adm_projekts_projekt_path(@projekt, phase_id: @active_phase_id),
+            text: t("adm.projekts.projekts.evaluation.overview.action_visibility"),
+            icon: "visibility",
+            style: :secondary,
+            class: "kern-btn--compact"
+          ) %>
+
+          <rich-tooltip delay="500" trigger-only shadow="heavy">
+            <a
+              href="<%= regular_stats_url %>"
+              class="kern-btn kern-btn--secondary kern-btn--compact"
+              data-adm--evaluation-tabs-target="regenerateButton"
+              data-action="click->adm--phase-regenerate#start"
+              data-turbo-prefetch="false"
+            >
+              <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">autorenew</span>
+              <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+              <span class="kern-label" data-adm--evaluation-tabs-target="regenerateLabel"><%= t("adm.projekts.projekts.evaluation.regenerate_regular_stats_button") %></span>
+            </a>
+            <template><%= t("adm.projekts.projekts.evaluation.regenerate_tooltip") %></template>
+          </rich-tooltip>
+
+          <span
+            class="adm-evaluation-view-tabs__auto-note"
+            data-adm--evaluation-tabs-target="statsAction"
+            <%= "hidden" if default_tab == "ai" %>
+          >
+            <span class="material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">schedule</span>
+            <i class="fas fa-clock projekt-evaluation-icon-fa" aria-hidden="true"></i>
+            <%= t("adm.projekts.projekts.evaluation.regenerate_auto_hourly_note") %>
+          </span>
+
+          <% if ai_regen_blocked %>
+            <span data-adm--evaluation-tabs-target="regenerateAiDisabled" hidden>
+              <%= render Shared::AiFeatureTooltipComponent.new(
+                feature_title: t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button"),
+                feature_text: t("adm.projekts.projekts.evaluation.view_tabs.ai_tab_disabled_hint")
+              ) do %>
+                <span class="kern-btn kern-btn--secondary kern-btn--compact" aria-disabled="true">
+                  <span class="kern-label material-symbols-outlined projekt-evaluation-icon-material" aria-hidden="true">autorenew</span>
+                  <i class="kern-label fas fa-sync-alt projekt-evaluation-icon-fa" aria-hidden="true"></i>
+                  <span class="kern-label"><%= t("adm.projekts.projekts.evaluation.regenerate_ai_stats_button") %></span>
+                </span>
+              <% end %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+      </div>
+    <% end %>
+
+    <div class="adm-projekt-evaluation-report">
+      <%= render "adm/projekts/projekts/evaluation/phase_panel",
+        projekt: @projekt,
+        row: @phase_row,
+        phase: phase,
+        partial_name: partial,
+        accent_color: color[:accent],
+        accent_light_color: color[:accent_light],
+        accent_shades: color[:shades],
+        selection: @selection,
+        tabbed: !@phase_row.processing? && !@phase_row.failed? %>
+    </div>
+
+    <% if @poll_stats_entries.present? && !@phase_row.processing? && !@phase_row.failed? %>
+      <custom-tab-panel for="poll_stats">
+        <div class="adm-projekt-evaluation-report">
+          <%= render "adm/projekts/projekts/evaluation/poll_stats_tab", entries: @poll_stats_entries %>
+        </div>
+      </custom-tab-panel>
+    <% end %>
+
+    <% if budget_results_available && !@phase_row.processing? && !@phase_row.failed? %>
+      <custom-tab-panel for="budget_results">
+        <div class="adm-projekt-evaluation-report">
+          <%= render "adm/projekts/projekts/evaluation/budget_results_tab" %>
+        </div>
+      </custom-tab-panel>
+    <% end %>
+  </custom-tabs>
+</div>

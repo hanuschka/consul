@@ -1,14 +1,20 @@
 class Kern::Form::ImageComponent < ApplicationComponent
-  def initialize(form:, attribute:, auto_submit: false, show_actions: true, crop: false, crop_aspect_ratio: nil)
+  def initialize(form:, attribute:, auto_submit: false, show_actions: true, crop: false,
+                 crop_aspect_ratio: nil, disabled: false)
     @form = form
     @attribute = attribute
     @auto_submit = auto_submit
+    @disabled = disabled
     @show_actions = show_actions
     @crop = crop
     @crop_aspect_ratio = crop_aspect_ratio
   end
 
   private
+
+    def show_actions?
+      @show_actions && !@disabled
+    end
 
     def root_controllers
       return "kern--form--image shared--image-cropper" if @crop

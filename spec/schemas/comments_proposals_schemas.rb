@@ -80,6 +80,7 @@ module Schemas
         attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Supported formats: JPEG, PNG, GIF, WebP' },
         cached_attachment: { type: :string, nullable: true },
         credits: { type: :string, nullable: true, description: 'Image source attribution' },
+        ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
         user_id: { type: :integer, nullable: true },
         _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image' }
       }
@@ -95,6 +96,7 @@ module Schemas
         attachment: { type: :string, nullable: true, description: 'Base64-encoded image file. Supported formats: JPEG, PNG, GIF, WebP' },
         cached_attachment: { type: :string, nullable: true },
         credits: { type: :string, nullable: true, description: 'Image source attribution' },
+        ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
         user_id: { type: :integer, nullable: true },
         _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the current image' }
       }

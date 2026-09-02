@@ -1,14 +1,41 @@
 class Files::DocumentCardComponent < Files::ResourceAssetComponent
   with_collection_parameter :document
 
-  def initialize(document:, type:)
+  def initialize(document:, type:, detail_path: nil)
     @document = document
     @type = type
+    @detail_path = detail_path
   end
 
   private
 
-    attr_reader :document, :type
+    attr_reader :document, :type, :detail_path
+
+    def detail_url
+      return nil if detail_path.blank?
+
+      detail_path.call(document)
+    end
+
+    def owning_resource_label
+      owning_resource_type_label(document.documentable)
+    end
+
+    def owning_resource_name
+      resource_name(owning_resource(document.documentable))
+    end
+
+    def owning_resource_url
+      resource_url(owning_resource(document.documentable))
+    end
+
+    def projekt_name
+      resource_name(resource_projekt(document.documentable))
+    end
+
+    def projekt_url
+      resource_url(resource_projekt(document.documentable))
+    end
 
     def uploaded_by
       document.user
@@ -58,14 +85,6 @@ class Files::DocumentCardComponent < Files::ResourceAssetComponent
     def documentable_type_label
       type_string = document.documentable_type.to_s
       type_string.safe_constantize&.model_name&.human || type_string
-    end
-
-    def documentable_name
-      resource_name(document.documentable)
-    end
-
-    def documentable_url
-      resource_url(document.documentable)
     end
 
     def admin_upload?

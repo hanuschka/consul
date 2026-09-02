@@ -11,6 +11,11 @@ de:
         total_hint: Anzahl der Nutzer in der aktuellen Ansicht (inkl. aktiver Filter).
         table:
           email: E-Mail
+          status: Status
+          statuses:
+            confirmed: Bestätigt
+            unconfirmed: Nicht bestätigt
+            hidden: Verborgen
           first_name: Vorname
           last_name: Nachname
           city_name: Stadt
@@ -36,6 +41,8 @@ de:
             unverify: Verifizierung aufheben
             edit: Bearbeiten
             audits: Änderungslog
+            delete: Vollständig löschen
+            delete_confirm: Diesen Nutzer und alle personenbezogenen Daten unwiderruflich löschen? Dies kann nicht rückgängig gemacht werden.
       csv_download:
         not_found: Die angeforderte Datei wurde nicht gefunden oder ist abgelaufen.
       edit:
@@ -59,3 +66,4 @@ de:
         verified: Nutzer verifiziert
         verify_failed: Nutzer konnte nicht verifiziert werden
         unverified: Verifizierung aufgehoben
+        deleted: Nutzer gelöscht

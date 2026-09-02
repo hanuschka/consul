@@ -54,6 +54,7 @@ en:
       projekt_phase/projekt_notification_phase: Notifications
       projekt_phase/legislation_phase: Text editing
       projekt_phase/newsfeed_phase: Newsfeed
+      projekt_phase/mitmachbox_phase: Mitmachbox
       projekt_phase/formular_phase: Form
       projekt_phase/iframe_phase: Iframe
       projekt_phase/point_of_interest_phase: Points of interest
@@ -135,6 +136,8 @@ en:
         card_category: Category
       deficiency_report:
         deficiency_report_category_id: Category
+        deficiency_report_intake_channel_id: Intake channel
+        deficiency_report_subcategory_id: Subcategory
         video_url: External video URL
         official_answer: Official answer
         on_behalf_of: Create report on behalf of someone

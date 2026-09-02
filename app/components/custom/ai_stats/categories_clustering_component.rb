@@ -65,9 +65,25 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
     query = query.base_selection if @resource_class.respond_to?(:base_selection)
 
     if @resource_class == Comment
-      query.includes(:user)
+      comments = query.includes(:user, :translations, :commentable).to_a
+      budget_commentables = comments.filter_map(&:commentable).select do |commentable|
+        commentable.is_a?(Budget::Investment)
+      end
+
+      ActiveRecord::Associations::Preloader.new.preload(budget_commentables, :budget)
+
+      comments
+    elsif @resource_class == Budget::Investment
+      query.includes(
+        :translations,
+        :budget,
+        image: { attachment_attachment: :blob },
+        projekt_labels: :translations,
+        sentiment: :translations
+      )
     else
       query.includes(
+        :translations,
         image: { attachment_attachment: :blob },
         projekt_labels: :translations,
         sentiment: :translations
@@ -102,6 +118,24 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
     return false if resource.is_a?(Comment)
 
     resource.image&.attached?
+  end
+
+  def resource_title(resource)
+    return resource.body.to_s.truncate(140) if resource.is_a?(Comment)
+
+    resource.title
+  end
+
+  def resource_labels(resource)
+    return [] if resource.is_a?(Comment)
+
+    resource.projekt_labels
+  end
+
+  def resource_sentiment(resource)
+    return nil if resource.is_a?(Comment)
+
+    resource.sentiment
   end
 end
 

@@ -1,6 +1,6 @@
 <div class="sidebar-users-list">
   <div class="sidebar-users-list--images" role="list">
-    <% @users.last(5).each do |user| %>
+    <% visible_users.each do |user| %>
       <%= link_to user, class: "sidebar-users-list--image", role: "listitem", title: t("custom.accessibility.sidebar.user_avatar_title", name: user.name) do %>
         <% if user.image.present? %>
           <%= image_tag(user.image&.variant(:thumb)) %>

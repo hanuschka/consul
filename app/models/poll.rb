@@ -53,8 +53,8 @@ class Poll < ApplicationRecord
   scope :created_by_admin, -> { where(related_type: nil) }
 
   def self.sort_for_list(user = nil)
-    all.sort do |poll, another_poll|
-      [poll.weight(user), poll.projekt_phase.start_date || Date.new(9999, 12, 31), poll.name] <=> [another_poll.weight(user), another_poll.starts_at || Date.new(9999, 12, 31), another_poll.name]
+    all.sort_by do |poll|
+      [poll.weight(user), poll.projekt_phase.start_date || Date.new(9999, 12, 31), poll.name.to_s, poll.id]
     end
   end
 
@@ -136,7 +136,10 @@ class Poll < ApplicationRecord
   end
 
   def voted_in_booth?(user)
-    Poll::Voter.where(poll: self, user: user, origin: "booth").exists?
+    @voted_in_booth ||= {}
+    return @voted_in_booth[user&.id] if @voted_in_booth.key?(user&.id)
+
+    @voted_in_booth[user&.id] = Poll::Voter.where(poll: self, user: user, origin: "booth").exists?
   end
 
   def voted_in_web?(user)

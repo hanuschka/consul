@@ -78,6 +78,9 @@ en:
       assistant_unavailable: >-
         I can't answer you right now — hopefully only for a moment. Please try again in a
         few minutes.
+      assistant_unavailable_retryable: >-
+        I can't answer you right now — hopefully only for a moment. Tap "Try again" and I'll
+        pick up right where we were.
       cancelled: OK, cancelled. Just message me again whenever you'd like.
       opted_in: You will receive messages from us again.
       compliance:

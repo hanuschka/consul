@@ -503,6 +503,28 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(pending_confirmations: action_ids)
   end
 
+  # The inbound the assistant failed to answer — the citizen's words, or the note
+  # describing their tap or scan — kept so the retry pill under the "cannot answer"
+  # line can put exactly that turn to the assistant again. Written by
+  # Inbound::ProcessMessageService when a turn fails, read by its retry gate, and
+  # cleared by the next turn that succeeds; a cancel wipes it with the rest of the
+  # context. One snapshot only: a retry that fails again overwrites it with itself.
+  def retry_inbound
+    context["retry_inbound"]
+  end
+
+  def store_retry_inbound!(text:, message_id:)
+    merge_context!(retry_inbound: { "text" => text, "message_id" => message_id })
+  end
+
+  # No UPDATE on the common path, for the same reason as remember_confirmations!:
+  # most turns succeed with nothing to clear.
+  def clear_retry_inbound!
+    return if context["retry_inbound"].blank?
+
+    merge_context!(retry_inbound: nil)
+  end
+
   # The ruby_llm message history. Written and read only through
   # Whatsapp::AiAssistant::ChatState, which owns the message shape, the trimming,
   # and the replay.

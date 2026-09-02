@@ -49,6 +49,7 @@ class Whatsapp::Contributions::CreateCommentService < ApplicationService
     refusal = self.class.refusal(proposal: @proposal, user: @user, body: @body)
 
     return refusal if refusal.present?
+    return :duplicate if already_posted?
 
     comment = ::Comment.build(@proposal, @user, @body)
 
@@ -56,4 +57,14 @@ class Whatsapp::Contributions::CreateCommentService < ApplicationService
 
     comment
   end
+
+  private
+
+    # Checked at the write only, not in the refusal the drafting tool asks first: a
+    # turn that saved the comment and then failed before answering is retried with
+    # the same words, and the retry must find the comment rather than post it twice.
+    # Hidden ones count — a comment moderation took down is still one they posted.
+    def already_posted?
+      ::Comment.with_hidden.where(commentable: @proposal, user_id: @user.id, body: @body).exists?
+    end
 end
